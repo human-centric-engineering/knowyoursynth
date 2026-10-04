@@ -1,0 +1,3480 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-2-xm",
+    "manufacturer": "Behringer",
+    "model": "2-XM",
+    "category": "duophonic analogue synthesizer: two expander modules in one desktop / Eurorack (80 HP) case",
+    "based_on": "Oberheim Two Voice, which paired two SEMs (Synthesizer Expander Modules). The guide never names Oberheim; the module name, the notch-sweeping 12 dB state-variable filter and the bipolar mix controls are the SEM's.",
+    "sources": [
+      {
+        "id": "xm",
+        "title": "2-XM Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_2-XM_Manual.pdf",
+        "pages": 31,
+        "note": "108 numbered controls on pages 22 to 23 (1 to 28 for XM1, 29 to 56 for XM2, 70 to 85 and 86 to 101 for the two patchbays), a poly chain note and a specifications table. Unusually for a quick start guide it gives envelope times and the LFO range."
+      },
+      {
+        "id": "panel",
+        "title": "2-XM front panel image",
+        "kind": "measurement",
+        "file": "Behringer_2-XM.png",
+        "note": "Used for switch position labels and the patchbay layout."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 2,
+    "timbrality": 2,
+    "polyphony_mode": "duophonic: unison, split or duo across the two modules; poly chain across units",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 48,
+      "switches": 16,
+      "jacks_3_5mm": 33
+    },
+    "summary": "Two complete, independent synthesizer voices side by side, each with its own panel: two VCOs with sawtooth and pulse (VCO2 syncable to VCO1), a bipolar modulation knob per VCO that gives frequency modulation one way and pulse width modulation the other, a 12 dB/octave multimode filter whose NOTCH knob sweeps continuously from low-pass through notch to high-pass (or switches to band-pass), bipolar crossfade controls that mix each VCO's saw against its pulse and external audio against white noise, two ADS envelopes, an LFO and a VCA. Each module has a 16-jack patchbay. A master section sets each module's level, pan, external input level and portamento, and assigns the two voices as unison, split or duo."
+  },
+  "modules": [
+    {
+      "id": "alloc",
+      "type": "voice_allocator",
+      "name": "Voice assignment",
+      "panel_section": "MASTER SECTION",
+      "description": "Receives MIDI and hands notes to the two modules. UNISON: both play one note; a second note goes to one module by the priority set in SynthTRIBE (highest, lowest or last for XM1, XM2 takes the other). SPLIT: XM1 below the split point (default C4), XM2 above, XM2 on the next MIDI channel up. DUO: both modules on one channel duophonically, or on separate channels. Also produces each module's MIDI-derived CV, gate and velocity.",
+      "properties": {
+        "voice_count": 2
+      },
+      "inputs": [],
+      "outputs": [
+        "alloc.xm1_pitch",
+        "alloc.xm1_gate",
+        "alloc.xm2_pitch",
+        "alloc.xm2_gate",
+        "alloc.velocity"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "White noise",
+      "panel_section": "VCF (EXT)",
+      "description": "White noise source reached through each module's EXT crossfade control. Shared between the modules by inference; the guide does not say.",
+      "inputs": [],
+      "outputs": [
+        "noise.white"
+      ]
+    },
+    {
+      "id": "tuning_ref",
+      "type": "oscillator",
+      "name": "A440 tuning reference",
+      "panel_section": "VCF (EXT)",
+      "description": "A fixed 440 Hz tone that replaces the external input when nothing is patched into a module's EXT jack, for tuning.",
+      "properties": {
+        "frequency_hz": {
+          "min": 440,
+          "max": 440
+        }
+      },
+      "inputs": [],
+      "outputs": [
+        "tuning_ref.out"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Master output",
+      "panel_section": "MASTER SECTION",
+      "description": "Sums the two modules with their own level and pan into a stereo pair, then master volume, to the 3.5 mm stereo jack on top and two 6.35 mm jacks on the rear.",
+      "inputs": [
+        "output.in_xm1",
+        "output.in_xm2"
+      ],
+      "outputs": [
+        "output.left",
+        "output.right",
+        "output.stereo"
+      ]
+    },
+    {
+      "id": "xm1_pitch",
+      "type": "pitch_control",
+      "name": "XM1 pitch",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1",
+      "description": "Takes this module's MIDI pitch through portamento, and the two pitch patch points. VCO1 CV drives VCO1, and VCO2 as well unless VCO2 CV is patched.",
+      "inputs": [
+        "xm1_pitch.midi_in",
+        "xm1_pitch.cv1_in",
+        "xm1_pitch.cv2_in"
+      ],
+      "outputs": [
+        "xm1_pitch.to_vco1",
+        "xm1_pitch.to_vco2"
+      ]
+    },
+    {
+      "id": "xm1_gate",
+      "type": "gate_logic",
+      "name": "XM1 envelope gate",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1",
+      "description": "Gate that fires both envelopes: MIDI by default, ENV GATE jack when patched.",
+      "inputs": [
+        "xm1_gate.in"
+      ],
+      "outputs": [
+        "xm1_gate.out"
+      ]
+    },
+    {
+      "id": "xm1_vco1",
+      "type": "oscillator",
+      "name": "XM1 VCO 1",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1 / VCO 1",
+      "description": "Sawtooth and pulse, both always running, mixed into the filter by a bipolar crossfade. Coarse tuning over five octaves, fine tuning, pulse width 10 to 90%. One bipolar MODULATION knob: counter-clockwise frequency modulation, clockwise pulse width modulation, from the source on its switch.",
+      "properties": {
+        "waveforms": [
+          "sawtooth",
+          "pulse"
+        ],
+        "simultaneous_outputs": true,
+        "coarse_range_octaves": 5
+      },
+      "inputs": [
+        "xm1_vco1.pitch_in",
+        "xm1_vco1.fm_in",
+        "xm1_vco1.pwm_in"
+      ],
+      "outputs": [
+        "xm1_vco1.saw",
+        "xm1_vco1.pulse",
+        "xm1_vco1.out",
+        "xm1_vco1.sync_out"
+      ]
+    },
+    {
+      "id": "xm1_vco2",
+      "type": "oscillator",
+      "name": "XM1 VCO 2",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1 / VCO 2",
+      "description": "Sawtooth and pulse, both always running, mixed into the filter by a bipolar crossfade. Coarse tuning over five octaves, fine tuning, pulse width 10 to 90%. One bipolar MODULATION knob: counter-clockwise frequency modulation, clockwise pulse width modulation, from the source on its switch. Syncable to VCO1.",
+      "properties": {
+        "waveforms": [
+          "sawtooth",
+          "pulse"
+        ],
+        "simultaneous_outputs": true,
+        "coarse_range_octaves": 5
+      },
+      "inputs": [
+        "xm1_vco2.pitch_in",
+        "xm1_vco2.fm_in",
+        "xm1_vco2.pwm_in",
+        "xm1_vco2.sync_in"
+      ],
+      "outputs": [
+        "xm1_vco2.saw",
+        "xm1_vco2.pulse",
+        "xm1_vco2.out"
+      ]
+    },
+    {
+      "id": "xm1_lfo",
+      "type": "lfo",
+      "name": "XM1 LFO",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1",
+      "description": "LFO, 0.1 to 55 Hz, one rate control, retriggerable from the LFO TRIG jack. Shape not stated.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.1,
+          "max": 55
+        }
+      },
+      "inputs": [
+        "xm1_lfo.trig_in"
+      ],
+      "outputs": [
+        "xm1_lfo.out"
+      ]
+    },
+    {
+      "id": "xm1_env1",
+      "type": "envelope",
+      "name": "XM1 ENV 1 (VCA)",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1 / ENV 1 (VCA)",
+      "description": "Attack, decay, sustain envelope for the VCA and VCO1's modulation. DECAY also sets release. Times are specified.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ],
+        "attack_s": [
+          0.003,
+          6
+        ],
+        "decay_s": [
+          0.014,
+          18
+        ],
+        "release_s": [
+          0.01,
+          15
+        ]
+      },
+      "inputs": [
+        "xm1_env1.gate_in",
+        "xm1_env1.velocity_in"
+      ],
+      "outputs": [
+        "xm1_env1.out"
+      ]
+    },
+    {
+      "id": "xm1_env2",
+      "type": "envelope",
+      "name": "XM1 ENV 2",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1 / ENV 2",
+      "description": "Attack, decay, sustain envelope for the filter and VCO2's modulation. DECAY also sets release.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ],
+        "attack_s": [
+          0.003,
+          6
+        ],
+        "decay_s": [
+          0.014,
+          18
+        ],
+        "release_s": [
+          0.01,
+          15
+        ]
+      },
+      "inputs": [
+        "xm1_env2.gate_in",
+        "xm1_env2.velocity_in"
+      ],
+      "outputs": [
+        "xm1_env2.out"
+      ]
+    },
+    {
+      "id": "xm1_vcf",
+      "type": "filter",
+      "name": "XM1 VCF",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1 / VCF",
+      "description": "12 dB/octave multimode filter. With RESPONSE at LP-HP, the NOTCH knob sweeps continuously from low-pass (fully counter-clockwise) through a notch (centre) to high-pass (fully clockwise); at BP it is band-pass. Inputs are the two VCO crossfades and the external/noise crossfade. Bipolar modulation depth from ENV 2, an external CV or velocity, or the LFO.",
+      "properties": {
+        "slope_db_per_octave": 12,
+        "modes": [
+          "lowpass",
+          "notch",
+          "highpass",
+          "bandpass"
+        ],
+        "continuous_mode_sweep": "lowpass -> notch -> highpass"
+      },
+      "inputs": [
+        "xm1_vcf.in_vco1",
+        "xm1_vcf.in_vco2",
+        "xm1_vcf.in_ext",
+        "xm1_vcf.in_noise",
+        "xm1_vcf.mod_in",
+        "xm1_vcf.ext_mod_in"
+      ],
+      "outputs": [
+        "xm1_vcf.out"
+      ]
+    },
+    {
+      "id": "xm1_vca",
+      "type": "vca",
+      "name": "XM1 VCA",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 1",
+      "description": "Output amplifier, driven by ENV 1, by ENV 1 scaled by velocity, or held open (ON/EXT), in which case a CV in VCA CV takes control.",
+      "inputs": [
+        "xm1_vca.in",
+        "xm1_vca.env_in",
+        "xm1_vca.cv_in"
+      ],
+      "outputs": [
+        "xm1_vca.out"
+      ]
+    },
+    {
+      "id": "xm2_pitch",
+      "type": "pitch_control",
+      "name": "XM2 pitch",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2",
+      "description": "Takes this module's MIDI pitch through portamento, and the two pitch patch points. VCO1 CV drives VCO1, and VCO2 as well unless VCO2 CV is patched.",
+      "inputs": [
+        "xm2_pitch.midi_in",
+        "xm2_pitch.cv1_in",
+        "xm2_pitch.cv2_in"
+      ],
+      "outputs": [
+        "xm2_pitch.to_vco1",
+        "xm2_pitch.to_vco2"
+      ]
+    },
+    {
+      "id": "xm2_gate",
+      "type": "gate_logic",
+      "name": "XM2 envelope gate",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2",
+      "description": "Gate that fires both envelopes: MIDI by default, ENV GATE jack when patched.",
+      "inputs": [
+        "xm2_gate.in"
+      ],
+      "outputs": [
+        "xm2_gate.out"
+      ]
+    },
+    {
+      "id": "xm2_vco1",
+      "type": "oscillator",
+      "name": "XM2 VCO 1",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2 / VCO 1",
+      "description": "Sawtooth and pulse, both always running, mixed into the filter by a bipolar crossfade. Coarse tuning over five octaves, fine tuning, pulse width 10 to 90%. One bipolar MODULATION knob: counter-clockwise frequency modulation, clockwise pulse width modulation, from the source on its switch.",
+      "properties": {
+        "waveforms": [
+          "sawtooth",
+          "pulse"
+        ],
+        "simultaneous_outputs": true,
+        "coarse_range_octaves": 5
+      },
+      "inputs": [
+        "xm2_vco1.pitch_in",
+        "xm2_vco1.fm_in",
+        "xm2_vco1.pwm_in"
+      ],
+      "outputs": [
+        "xm2_vco1.saw",
+        "xm2_vco1.pulse",
+        "xm2_vco1.out",
+        "xm2_vco1.sync_out"
+      ]
+    },
+    {
+      "id": "xm2_vco2",
+      "type": "oscillator",
+      "name": "XM2 VCO 2",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2 / VCO 2",
+      "description": "Sawtooth and pulse, both always running, mixed into the filter by a bipolar crossfade. Coarse tuning over five octaves, fine tuning, pulse width 10 to 90%. One bipolar MODULATION knob: counter-clockwise frequency modulation, clockwise pulse width modulation, from the source on its switch. Syncable to VCO1.",
+      "properties": {
+        "waveforms": [
+          "sawtooth",
+          "pulse"
+        ],
+        "simultaneous_outputs": true,
+        "coarse_range_octaves": 5
+      },
+      "inputs": [
+        "xm2_vco2.pitch_in",
+        "xm2_vco2.fm_in",
+        "xm2_vco2.pwm_in",
+        "xm2_vco2.sync_in"
+      ],
+      "outputs": [
+        "xm2_vco2.saw",
+        "xm2_vco2.pulse",
+        "xm2_vco2.out"
+      ]
+    },
+    {
+      "id": "xm2_lfo",
+      "type": "lfo",
+      "name": "XM2 LFO",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2",
+      "description": "LFO, 0.1 to 55 Hz, one rate control, retriggerable from the LFO TRIG jack. Shape not stated.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.1,
+          "max": 55
+        }
+      },
+      "inputs": [
+        "xm2_lfo.trig_in"
+      ],
+      "outputs": [
+        "xm2_lfo.out"
+      ]
+    },
+    {
+      "id": "xm2_env1",
+      "type": "envelope",
+      "name": "XM2 ENV 1 (VCA)",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2 / ENV 1 (VCA)",
+      "description": "Attack, decay, sustain envelope for the VCA and VCO1's modulation. DECAY also sets release. Times are specified.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ],
+        "attack_s": [
+          0.003,
+          6
+        ],
+        "decay_s": [
+          0.014,
+          18
+        ],
+        "release_s": [
+          0.01,
+          15
+        ]
+      },
+      "inputs": [
+        "xm2_env1.gate_in",
+        "xm2_env1.velocity_in"
+      ],
+      "outputs": [
+        "xm2_env1.out"
+      ]
+    },
+    {
+      "id": "xm2_env2",
+      "type": "envelope",
+      "name": "XM2 ENV 2",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2 / ENV 2",
+      "description": "Attack, decay, sustain envelope for the filter and VCO2's modulation. DECAY also sets release.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ],
+        "attack_s": [
+          0.003,
+          6
+        ],
+        "decay_s": [
+          0.014,
+          18
+        ],
+        "release_s": [
+          0.01,
+          15
+        ]
+      },
+      "inputs": [
+        "xm2_env2.gate_in",
+        "xm2_env2.velocity_in"
+      ],
+      "outputs": [
+        "xm2_env2.out"
+      ]
+    },
+    {
+      "id": "xm2_vcf",
+      "type": "filter",
+      "name": "XM2 VCF",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2 / VCF",
+      "description": "12 dB/octave multimode filter. With RESPONSE at LP-HP, the NOTCH knob sweeps continuously from low-pass (fully counter-clockwise) through a notch (centre) to high-pass (fully clockwise); at BP it is band-pass. Inputs are the two VCO crossfades and the external/noise crossfade. Bipolar modulation depth from ENV 2, an external CV or velocity, or the LFO.",
+      "properties": {
+        "slope_db_per_octave": 12,
+        "modes": [
+          "lowpass",
+          "notch",
+          "highpass",
+          "bandpass"
+        ],
+        "continuous_mode_sweep": "lowpass -> notch -> highpass"
+      },
+      "inputs": [
+        "xm2_vcf.in_vco1",
+        "xm2_vcf.in_vco2",
+        "xm2_vcf.in_ext",
+        "xm2_vcf.in_noise",
+        "xm2_vcf.mod_in",
+        "xm2_vcf.ext_mod_in"
+      ],
+      "outputs": [
+        "xm2_vcf.out"
+      ]
+    },
+    {
+      "id": "xm2_vca",
+      "type": "vca",
+      "name": "XM2 VCA",
+      "panel_section": "SYNTHESIZER EXPANDER MODULE 2",
+      "description": "Output amplifier, driven by ENV 1, by ENV 1 scaled by velocity, or held open (ON/EXT), in which case a CV in VCA CV takes control.",
+      "inputs": [
+        "xm2_vca.in",
+        "xm2_vca.env_in",
+        "xm2_vca.cv_in"
+      ],
+      "outputs": [
+        "xm2_vca.out"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "output.master",
+      "module": "output",
+      "label": "MASTER",
+      "manual_ref": 59,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master output level."
+    },
+    {
+      "id": "alloc.assign",
+      "module": "alloc",
+      "label": "ASSIGN",
+      "manual_ref": 60,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "unison",
+          "label": "UNI"
+        },
+        {
+          "value": "split",
+          "label": "SPLIT",
+          "meaning": "XM1 below the split point, default C4"
+        },
+        {
+          "value": "duo",
+          "label": "DUO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "How the two modules share incoming notes."
+    },
+    {
+      "id": "alloc.portamento_on",
+      "module": "alloc",
+      "label": "ON (portamento)",
+      "manual_ref": 65,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Turns portamento on for both modules."
+    },
+    {
+      "id": "alloc.priority",
+      "module": "alloc",
+      "label": "Note priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "highest"
+        },
+        {
+          "value": "lowest"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTRIBE"
+        }
+      ],
+      "function": "Which note XM1 takes when two are held in unison; XM2 takes the other. Set in SynthTRIBE."
+    },
+    {
+      "id": "alloc.split_point",
+      "module": "alloc",
+      "label": "Split point",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 60,
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTRIBE, by inference"
+        }
+      ],
+      "function": "Split note, default C4 (MIDI 60). How it is changed is not described.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "alloc.poly_chain",
+      "module": "alloc",
+      "label": "Poly chain",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTRIBE"
+        }
+      ],
+      "function": "Passes unhandled notes to the next 2-XM. Set in SynthTRIBE; the power LED turns red."
+    },
+    {
+      "id": "alloc.midi_channel",
+      "module": "alloc",
+      "label": "CHANNEL",
+      "manual_ref": 104,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "MIDI receive channel. In split, XM1 uses it and XM2 the next channel up (15 if 16 is set)."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER SWITCH",
+      "manual_ref": 107,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "button"
+        }
+      ],
+      "function": "Rear push-button power switch."
+    },
+    {
+      "id": "xm1_vco1.fine",
+      "module": "xm1_vco1",
+      "label": "FREQUENCY (fine)",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of VCO 1."
+    },
+    {
+      "id": "xm1_vco1.coarse",
+      "module": "xm1_vco1",
+      "label": "FREQUENCY (coarse)",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning of VCO 1 over five octaves."
+    },
+    {
+      "id": "xm1_vco1.modulation",
+      "module": "xm1_vco1",
+      "label": "MODULATION",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "FREQ to PW"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre: none. Counter-clockwise: frequency modulation. Clockwise: pulse width modulation. Source on the switch below."
+    },
+    {
+      "id": "xm1_vco1.mod_source",
+      "module": "xm1_vco1",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 4,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1",
+          "label": "ENV 1"
+        },
+        {
+          "value": "env1_vel",
+          "label": "E+V",
+          "meaning": "ENV 1 scaled by MIDI velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for VCO 1 modulation."
+    },
+    {
+      "id": "xm1_vco1.pulse_width",
+      "module": "xm1_vco1",
+      "label": "PULSE WIDTH",
+      "manual_ref": 5,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width; 50% is square."
+    },
+    {
+      "id": "xm1_vco2.fine",
+      "module": "xm1_vco2",
+      "label": "FREQUENCY (fine)",
+      "manual_ref": 7,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of VCO 2."
+    },
+    {
+      "id": "xm1_vco2.coarse",
+      "module": "xm1_vco2",
+      "label": "FREQUENCY (coarse)",
+      "manual_ref": 8,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning of VCO 2 over five octaves."
+    },
+    {
+      "id": "xm1_vco2.modulation",
+      "module": "xm1_vco2",
+      "label": "MODULATION",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "FREQ to PW"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre: none. Counter-clockwise: frequency modulation. Clockwise: pulse width modulation. Source on the switch below."
+    },
+    {
+      "id": "xm1_vco2.mod_source",
+      "module": "xm1_vco2",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 10,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env2",
+          "label": "ENV 2"
+        },
+        {
+          "value": "env2_vel",
+          "label": "E+V",
+          "meaning": "ENV 2 scaled by MIDI velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for VCO 2 modulation."
+    },
+    {
+      "id": "xm1_vco2.pulse_width",
+      "module": "xm1_vco2",
+      "label": "PULSE WIDTH",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width; 50% is square."
+    },
+    {
+      "id": "xm1_vco2.sync",
+      "module": "xm1_vco2",
+      "label": "SYNC",
+      "manual_ref": 6,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Hard-syncs VCO2 to VCO1."
+    },
+    {
+      "id": "xm1_lfo.rate",
+      "module": "xm1_lfo",
+      "label": "LFO",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.1,
+        "max": 55,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO rate."
+    },
+    {
+      "id": "xm1_env1.attack",
+      "module": "xm1_env1",
+      "label": "ATTACK",
+      "manual_ref": 13,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.003,
+        "max": 6,
+        "unit": "s",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "xm1_env1.decay",
+      "module": "xm1_env1",
+      "label": "DECAY",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 18,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "release follows the same knob over 0.010 to 15 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time, 14 ms to 18 s, and release time, 10 ms to 15 s."
+    },
+    {
+      "id": "xm1_env1.sustain",
+      "module": "xm1_env1",
+      "label": "SUSTAIN",
+      "manual_ref": 15,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "xm1_env2.attack",
+      "module": "xm1_env2",
+      "label": "ATTACK",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.003,
+        "max": 6,
+        "unit": "s",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "xm1_env2.decay",
+      "module": "xm1_env2",
+      "label": "DECAY",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 18,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "release follows the same knob over 0.010 to 15 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time, 14 ms to 18 s, and release time, 10 ms to 15 s."
+    },
+    {
+      "id": "xm1_env2.sustain",
+      "module": "xm1_env2",
+      "label": "SUSTAIN",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "xm1_vca.mode",
+      "module": "xm1_vca",
+      "label": "VCA",
+      "manual_ref": 16,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env",
+          "label": "ENV"
+        },
+        {
+          "value": "env_vel",
+          "label": "E+V",
+          "meaning": "ENV 1 scaled by velocity"
+        },
+        {
+          "value": "on_ext",
+          "label": "ON/EXT",
+          "meaning": "held open, or controlled by the VCA CV jack when patched"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "What opens the VCA."
+    },
+    {
+      "id": "xm1_vcf.frequency",
+      "module": "xm1_vcf",
+      "label": "FREQUENCY",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "xm1_vcf.resonance",
+      "module": "xm1_vcf",
+      "label": "RESONANCE",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis around cutoff."
+    },
+    {
+      "id": "xm1_vcf.modulation",
+      "module": "xm1_vcf",
+      "label": "MODULATION",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar cutoff modulation: centre none, counter-clockwise subtracts, clockwise adds."
+    },
+    {
+      "id": "xm1_vcf.notch",
+      "module": "xm1_vcf",
+      "label": "NOTCH",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "LP to HP"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "With RESPONSE at LP-HP: centre is a narrow notch; counter-clockwise widens it to low-pass, clockwise narrows it to high-pass."
+    },
+    {
+      "id": "xm1_vcf.mod_source",
+      "module": "xm1_vcf",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 24,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env2",
+          "label": "ENV 2"
+        },
+        {
+          "value": "ext",
+          "label": "EXT",
+          "meaning": "VCF CV jack if patched, otherwise ENV 2 scaled by velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for filter modulation."
+    },
+    {
+      "id": "xm1_vcf.response",
+      "module": "xm1_vcf",
+      "label": "RESPONSE",
+      "manual_ref": 25,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lp_hp",
+          "label": "LP-HP"
+        },
+        {
+          "value": "bp",
+          "label": "BP"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LP-HP (swept by NOTCH) or band-pass."
+    },
+    {
+      "id": "xm1_vcf.mix_vco1",
+      "module": "xm1_vcf",
+      "label": "VCO 1",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "SAW to PUL"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Crossfade into the filter: centre silent, counter-clockwise VCO1 saw, clockwise VCO1 pulse."
+    },
+    {
+      "id": "xm1_vcf.mix_vco2",
+      "module": "xm1_vcf",
+      "label": "VCO 2",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "SAW to PUL"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "As VCO 1, for VCO2."
+    },
+    {
+      "id": "xm1_vcf.mix_ext",
+      "module": "xm1_vcf",
+      "label": "EXT",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "IN to NOISE"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Crossfade: centre silent, counter-clockwise the external input (or the A440 tuning tone), clockwise white noise."
+    },
+    {
+      "id": "xm1.level",
+      "module": "xm1_vca",
+      "label": "XM1 LEVEL",
+      "manual_ref": 61,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of XM1 in the master mix."
+    },
+    {
+      "id": "xm1.pan",
+      "module": "xm1_vca",
+      "label": "XM1 PAN",
+      "manual_ref": 62,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Position of XM1 in the stereo field."
+    },
+    {
+      "id": "xm1.ext_level",
+      "module": "xm1_vcf",
+      "label": "XM1 EXT LVL",
+      "manual_ref": 63,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the external source on XM1's EXT jack, or of the A440 tone."
+    },
+    {
+      "id": "xm1_pitch.portamento",
+      "module": "xm1_pitch",
+      "label": "XM1 PORTAMENTO",
+      "manual_ref": 64,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Portamento amount for XM1."
+    },
+    {
+      "id": "xm2_vco1.fine",
+      "module": "xm2_vco1",
+      "label": "FREQUENCY (fine)",
+      "manual_ref": 29,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of VCO 1."
+    },
+    {
+      "id": "xm2_vco1.coarse",
+      "module": "xm2_vco1",
+      "label": "FREQUENCY (coarse)",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning of VCO 1 over five octaves."
+    },
+    {
+      "id": "xm2_vco1.modulation",
+      "module": "xm2_vco1",
+      "label": "MODULATION",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "FREQ to PW"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre: none. Counter-clockwise: frequency modulation. Clockwise: pulse width modulation. Source on the switch below."
+    },
+    {
+      "id": "xm2_vco1.mod_source",
+      "module": "xm2_vco1",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 32,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1",
+          "label": "ENV 1"
+        },
+        {
+          "value": "env1_vel",
+          "label": "E+V",
+          "meaning": "ENV 1 scaled by MIDI velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for VCO 1 modulation."
+    },
+    {
+      "id": "xm2_vco1.pulse_width",
+      "module": "xm2_vco1",
+      "label": "PULSE WIDTH",
+      "manual_ref": 33,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width; 50% is square."
+    },
+    {
+      "id": "xm2_vco2.fine",
+      "module": "xm2_vco2",
+      "label": "FREQUENCY (fine)",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of VCO 2."
+    },
+    {
+      "id": "xm2_vco2.coarse",
+      "module": "xm2_vco2",
+      "label": "FREQUENCY (coarse)",
+      "manual_ref": 36,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning of VCO 2 over five octaves."
+    },
+    {
+      "id": "xm2_vco2.modulation",
+      "module": "xm2_vco2",
+      "label": "MODULATION",
+      "manual_ref": 37,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "FREQ to PW"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre: none. Counter-clockwise: frequency modulation. Clockwise: pulse width modulation. Source on the switch below."
+    },
+    {
+      "id": "xm2_vco2.mod_source",
+      "module": "xm2_vco2",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 38,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env2",
+          "label": "ENV 2"
+        },
+        {
+          "value": "env2_vel",
+          "label": "E+V",
+          "meaning": "ENV 2 scaled by MIDI velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for VCO 2 modulation."
+    },
+    {
+      "id": "xm2_vco2.pulse_width",
+      "module": "xm2_vco2",
+      "label": "PULSE WIDTH",
+      "manual_ref": 39,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width; 50% is square."
+    },
+    {
+      "id": "xm2_vco2.sync",
+      "module": "xm2_vco2",
+      "label": "SYNC",
+      "manual_ref": 34,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Hard-syncs VCO2 to VCO1."
+    },
+    {
+      "id": "xm2_lfo.rate",
+      "module": "xm2_lfo",
+      "label": "LFO",
+      "manual_ref": 40,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.1,
+        "max": 55,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO rate."
+    },
+    {
+      "id": "xm2_env1.attack",
+      "module": "xm2_env1",
+      "label": "ATTACK",
+      "manual_ref": 41,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.003,
+        "max": 6,
+        "unit": "s",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "xm2_env1.decay",
+      "module": "xm2_env1",
+      "label": "DECAY",
+      "manual_ref": 42,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 18,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "release follows the same knob over 0.010 to 15 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time, 14 ms to 18 s, and release time, 10 ms to 15 s."
+    },
+    {
+      "id": "xm2_env1.sustain",
+      "module": "xm2_env1",
+      "label": "SUSTAIN",
+      "manual_ref": 43,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "xm2_env2.attack",
+      "module": "xm2_env2",
+      "label": "ATTACK",
+      "manual_ref": 45,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.003,
+        "max": 6,
+        "unit": "s",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "xm2_env2.decay",
+      "module": "xm2_env2",
+      "label": "DECAY",
+      "manual_ref": 46,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 18,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "release follows the same knob over 0.010 to 15 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time, 14 ms to 18 s, and release time, 10 ms to 15 s."
+    },
+    {
+      "id": "xm2_env2.sustain",
+      "module": "xm2_env2",
+      "label": "SUSTAIN",
+      "manual_ref": 47,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "xm2_vca.mode",
+      "module": "xm2_vca",
+      "label": "VCA",
+      "manual_ref": 44,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env",
+          "label": "ENV"
+        },
+        {
+          "value": "env_vel",
+          "label": "E+V",
+          "meaning": "ENV 1 scaled by velocity"
+        },
+        {
+          "value": "on_ext",
+          "label": "ON/EXT",
+          "meaning": "held open, or controlled by the VCA CV jack when patched"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "What opens the VCA."
+    },
+    {
+      "id": "xm2_vcf.frequency",
+      "module": "xm2_vcf",
+      "label": "FREQUENCY",
+      "manual_ref": 48,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "xm2_vcf.resonance",
+      "module": "xm2_vcf",
+      "label": "RESONANCE",
+      "manual_ref": 49,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis around cutoff."
+    },
+    {
+      "id": "xm2_vcf.modulation",
+      "module": "xm2_vcf",
+      "label": "MODULATION",
+      "manual_ref": 50,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar cutoff modulation: centre none, counter-clockwise subtracts, clockwise adds."
+    },
+    {
+      "id": "xm2_vcf.notch",
+      "module": "xm2_vcf",
+      "label": "NOTCH",
+      "manual_ref": 51,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "LP to HP"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "With RESPONSE at LP-HP: centre is a narrow notch; counter-clockwise widens it to low-pass, clockwise narrows it to high-pass."
+    },
+    {
+      "id": "xm2_vcf.mod_source",
+      "module": "xm2_vcf",
+      "label": "MODULATION SOURCE",
+      "manual_ref": 52,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env2",
+          "label": "ENV 2"
+        },
+        {
+          "value": "ext",
+          "label": "EXT",
+          "meaning": "VCF CV jack if patched, otherwise ENV 2 scaled by velocity"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for filter modulation."
+    },
+    {
+      "id": "xm2_vcf.response",
+      "module": "xm2_vcf",
+      "label": "RESPONSE",
+      "manual_ref": 53,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lp_hp",
+          "label": "LP-HP"
+        },
+        {
+          "value": "bp",
+          "label": "BP"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LP-HP (swept by NOTCH) or band-pass."
+    },
+    {
+      "id": "xm2_vcf.mix_vco1",
+      "module": "xm2_vcf",
+      "label": "VCO 1",
+      "manual_ref": 54,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "SAW to PUL"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Crossfade into the filter: centre silent, counter-clockwise VCO1 saw, clockwise VCO1 pulse."
+    },
+    {
+      "id": "xm2_vcf.mix_vco2",
+      "module": "xm2_vcf",
+      "label": "VCO 2",
+      "manual_ref": 55,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "SAW to PUL"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "As VCO 1, for VCO2."
+    },
+    {
+      "id": "xm2_vcf.mix_ext",
+      "module": "xm2_vcf",
+      "label": "EXT",
+      "manual_ref": 56,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "IN to NOISE"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Crossfade: centre silent, counter-clockwise the external input (or the A440 tuning tone), clockwise white noise."
+    },
+    {
+      "id": "xm2.level",
+      "module": "xm2_vca",
+      "label": "XM2 LEVEL",
+      "manual_ref": 66,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of XM2 in the master mix."
+    },
+    {
+      "id": "xm2.pan",
+      "module": "xm2_vca",
+      "label": "XM2 PAN",
+      "manual_ref": 67,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Position of XM2 in the stereo field."
+    },
+    {
+      "id": "xm2.ext_level",
+      "module": "xm2_vcf",
+      "label": "XM2 EXT LVL",
+      "manual_ref": 68,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the external source on XM2's EXT jack, or of the A440 tone."
+    },
+    {
+      "id": "xm2_pitch.portamento",
+      "module": "xm2_pitch",
+      "label": "XM2 PORTAMENTO",
+      "manual_ref": 69,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Portamento amount for XM2."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.stereo_out",
+      "label": "STEREO OUT",
+      "manual_ref": 57,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.stereo",
+      "function": "Stereo output of both modules, placed by their pan controls."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 58,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from an external source."
+    },
+    {
+      "id": "jack.out_l",
+      "label": "AUDIO OUTPUT L",
+      "manual_ref": 102,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS unbalanced",
+      "node": "output.left",
+      "function": "Duplicates the stereo output, left."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "AUDIO OUTPUT R",
+      "manual_ref": 103,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS unbalanced",
+      "node": "output.right",
+      "function": "Duplicates the stereo output, right."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 105,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Retransmits MIDI IN."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 106,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "USB MIDI, SynthTRIBE settings and firmware updates."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER SOCKET",
+      "manual_ref": 108,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 2000
+      },
+      "function": "12 V DC from the supplied 2000 mA adaptor."
+    },
+    {
+      "id": "jack.xm1_ext",
+      "label": "EXT (XM1)",
+      "manual_ref": 70,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm1_vcf.in_ext",
+      "combine": "replace",
+      "function": "External audio into the filter via the EXT crossfade."
+    },
+    {
+      "id": "jack.xm1_vcf_cv",
+      "label": "VCF CV (XM1)",
+      "manual_ref": 71,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_vcf.ext_mod_in",
+      "combine": "replace",
+      "function": "External CV for filter modulation, used when the source switch is at EXT."
+    },
+    {
+      "id": "jack.xm1_vca_cv",
+      "label": "VCA CV (XM1)",
+      "manual_ref": 72,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_vca.cv_in",
+      "function": "External CV for the VCA, used when the VCA switch is at ON/EXT."
+    },
+    {
+      "id": "jack.xm1_vco1_cv",
+      "label": "VCO1 CV (XM1)",
+      "manual_ref": 73,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_pitch.cv1_in",
+      "combine": "replace",
+      "function": "External pitch CV for VCO1, and for VCO2 unless VCO2 CV is patched.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.xm1_vco2_cv",
+      "label": "VCO2 CV (XM1)",
+      "manual_ref": 74,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_pitch.cv2_in",
+      "combine": "replace",
+      "function": "External pitch CV for VCO2 only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.xm1_lfo_trig",
+      "label": "LFO TRIG (XM1)",
+      "manual_ref": 75,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "xm1_lfo.trig_in",
+      "function": "Retriggers the LFO from an external trigger, with external CV and gate. Not available under MIDI."
+    },
+    {
+      "id": "jack.xm1_env_gate",
+      "label": "ENV GATE (XM1)",
+      "manual_ref": 76,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "xm1_gate.in",
+      "combine": "replace",
+      "function": "External gate for both envelopes."
+    },
+    {
+      "id": "jack.xm1_cv_out",
+      "label": "CV 1 (XM1)",
+      "manual_ref": 77,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "alloc.xm1_pitch",
+      "function": "MIDI-derived pitch CV.",
+      "note": "Printed in the IN column on the panel; the guide lists it under OUTPUTS."
+    },
+    {
+      "id": "jack.xm1_vca_out",
+      "label": "VCA (XM1)",
+      "manual_ref": 78,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm1_vca.out",
+      "function": "VCA output."
+    },
+    {
+      "id": "jack.xm1_vcf_out",
+      "label": "VCF (XM1)",
+      "manual_ref": 79,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm1_vcf.out",
+      "function": "Filter output."
+    },
+    {
+      "id": "jack.xm1_vco1_out",
+      "label": "VCO1 (XM1)",
+      "manual_ref": 80,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm1_vco1.out",
+      "function": "VCO1 output.",
+      "note": "Which waveform, or mix, appears here is not stated."
+    },
+    {
+      "id": "jack.xm1_vco2_out",
+      "label": "VCO2 (XM1)",
+      "manual_ref": 81,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm1_vco2.out",
+      "function": "VCO2 output.",
+      "note": "Which waveform, or mix, appears here is not stated."
+    },
+    {
+      "id": "jack.xm1_env1_out",
+      "label": "ENV1 (XM1)",
+      "manual_ref": 82,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_env1.out",
+      "function": "ENV 1 output."
+    },
+    {
+      "id": "jack.xm1_env2_out",
+      "label": "ENV2 (XM1)",
+      "manual_ref": 83,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_env2.out",
+      "function": "ENV 2 output."
+    },
+    {
+      "id": "jack.xm1_lfo_out",
+      "label": "LFO (XM1)",
+      "manual_ref": 84,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm1_lfo.out",
+      "function": "LFO output."
+    },
+    {
+      "id": "jack.xm1_gate_out",
+      "label": "GATE 1 (XM1)",
+      "manual_ref": 85,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "alloc.xm1_gate",
+      "function": "MIDI-derived gate, paired with CV."
+    },
+    {
+      "id": "jack.xm2_ext",
+      "label": "EXT (XM2)",
+      "manual_ref": 86,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm2_vcf.in_ext",
+      "combine": "replace",
+      "function": "External audio into the filter via the EXT crossfade."
+    },
+    {
+      "id": "jack.xm2_vcf_cv",
+      "label": "VCF CV (XM2)",
+      "manual_ref": 87,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_vcf.ext_mod_in",
+      "combine": "replace",
+      "function": "External CV for filter modulation, used when the source switch is at EXT."
+    },
+    {
+      "id": "jack.xm2_vca_cv",
+      "label": "VCA CV (XM2)",
+      "manual_ref": 88,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_vca.cv_in",
+      "function": "External CV for the VCA, used when the VCA switch is at ON/EXT."
+    },
+    {
+      "id": "jack.xm2_vco1_cv",
+      "label": "VCO1 CV (XM2)",
+      "manual_ref": 89,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_pitch.cv1_in",
+      "combine": "replace",
+      "function": "External pitch CV for VCO1, and for VCO2 unless VCO2 CV is patched.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.xm2_vco2_cv",
+      "label": "VCO2 CV (XM2)",
+      "manual_ref": 90,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_pitch.cv2_in",
+      "combine": "replace",
+      "function": "External pitch CV for VCO2 only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.xm2_lfo_trig",
+      "label": "LFO TRIG (XM2)",
+      "manual_ref": 91,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "xm2_lfo.trig_in",
+      "function": "Retriggers the LFO from an external trigger, with external CV and gate. Not available under MIDI."
+    },
+    {
+      "id": "jack.xm2_env_gate",
+      "label": "ENV GATE (XM2)",
+      "manual_ref": 92,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "xm2_gate.in",
+      "combine": "replace",
+      "function": "External gate for both envelopes."
+    },
+    {
+      "id": "jack.xm2_cv_out",
+      "label": "CV 2 (XM2)",
+      "manual_ref": 93,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "alloc.xm2_pitch",
+      "function": "MIDI-derived pitch CV.",
+      "note": "Printed in the IN column on the panel; the guide lists it under OUTPUTS."
+    },
+    {
+      "id": "jack.xm2_vca_out",
+      "label": "VCA (XM2)",
+      "manual_ref": 94,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm2_vca.out",
+      "function": "VCA output."
+    },
+    {
+      "id": "jack.xm2_vcf_out",
+      "label": "VCF (XM2)",
+      "manual_ref": 95,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm2_vcf.out",
+      "function": "Filter output."
+    },
+    {
+      "id": "jack.xm2_vco1_out",
+      "label": "VCO1 (XM2)",
+      "manual_ref": 96,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm2_vco1.out",
+      "function": "VCO1 output.",
+      "note": "Which waveform, or mix, appears here is not stated."
+    },
+    {
+      "id": "jack.xm2_vco2_out",
+      "label": "VCO2 (XM2)",
+      "manual_ref": 97,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "xm2_vco2.out",
+      "function": "VCO2 output.",
+      "note": "Which waveform, or mix, appears here is not stated."
+    },
+    {
+      "id": "jack.xm2_env1_out",
+      "label": "ENV1 (XM2)",
+      "manual_ref": 98,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_env1.out",
+      "function": "ENV 1 output."
+    },
+    {
+      "id": "jack.xm2_env2_out",
+      "label": "ENV2 (XM2)",
+      "manual_ref": 99,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_env2.out",
+      "function": "ENV 2 output."
+    },
+    {
+      "id": "jack.xm2_lfo_out",
+      "label": "LFO (XM2)",
+      "manual_ref": 100,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "xm2_lfo.out",
+      "function": "LFO output."
+    },
+    {
+      "id": "jack.xm2_gate_out",
+      "label": "GATE 2 (XM2)",
+      "manual_ref": 101,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "alloc.xm2_gate",
+      "function": "MIDI-derived gate, paired with CV."
+    }
+  ],
+  "connections": [
+    {
+      "id": "xm1_c01",
+      "from": "alloc.xm1_pitch",
+      "to": "xm1_pitch.midi_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm1_pitch.portamento"
+    },
+    {
+      "id": "xm1_c02",
+      "from": "xm1_pitch.to_vco1",
+      "to": "xm1_vco1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm1_vco1.coarse"
+    },
+    {
+      "id": "xm1_c03",
+      "from": "xm1_pitch.to_vco2",
+      "to": "xm1_vco2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm1_vco2.coarse"
+    },
+    {
+      "id": "xm1_c04",
+      "from": "alloc.xm1_gate",
+      "to": "xm1_gate.in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.xm1_env_gate"
+    },
+    {
+      "id": "xm1_c05",
+      "from": "xm1_gate.out",
+      "to": "xm1_env1.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm1_c06",
+      "from": "xm1_gate.out",
+      "to": "xm1_env2.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm1_c08",
+      "from": "alloc.velocity",
+      "to": "xm1_env1.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Velocity scales ENV 1 only where a switch is in its E+V position (VCO1 modulation, VCA); elsewhere ENV 1 is used unscaled."
+    },
+    {
+      "id": "xm1_c09",
+      "from": "alloc.velocity",
+      "to": "xm1_env2.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Velocity scales ENV 2 only in the E+V or EXT positions of the VCO2 and filter modulation switches."
+    },
+    {
+      "id": "xm1_c07",
+      "from": "xm1_vco1.sync_out",
+      "to": "xm1_vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "xm1_c10",
+      "from": "xm1_env1.out",
+      "to": "xm1_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "env1"
+      },
+      "amount_expr": "max(0, -xm1_vco1.modulation)"
+    },
+    {
+      "id": "xm1_c11",
+      "from": "xm1_env1.out",
+      "to": "xm1_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "env1"
+      },
+      "amount_expr": "max(0, xm1_vco1.modulation)"
+    },
+    {
+      "id": "xm1_c12",
+      "from": "xm1_env1.out",
+      "to": "xm1_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "env1_vel"
+      },
+      "amount_expr": "max(0, -xm1_vco1.modulation)",
+      "note": "Envelope scaled by MIDI velocity."
+    },
+    {
+      "id": "xm1_c13",
+      "from": "xm1_env1.out",
+      "to": "xm1_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "env1_vel"
+      },
+      "amount_expr": "max(0, xm1_vco1.modulation)"
+    },
+    {
+      "id": "xm1_c14",
+      "from": "xm1_lfo.out",
+      "to": "xm1_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, -xm1_vco1.modulation)"
+    },
+    {
+      "id": "xm1_c15",
+      "from": "xm1_lfo.out",
+      "to": "xm1_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco1.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, xm1_vco1.modulation)"
+    },
+    {
+      "id": "xm1_c16",
+      "from": "xm1_vco1.saw",
+      "to": "xm1_vcf.in_vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, -xm1_vcf.mix_vco1)"
+    },
+    {
+      "id": "xm1_c17",
+      "from": "xm1_vco1.pulse",
+      "to": "xm1_vcf.in_vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm1_vcf.mix_vco1)"
+    },
+    {
+      "id": "xm1_c18",
+      "from": "xm1_env2.out",
+      "to": "xm1_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "env2"
+      },
+      "amount_expr": "max(0, -xm1_vco2.modulation)"
+    },
+    {
+      "id": "xm1_c19",
+      "from": "xm1_env2.out",
+      "to": "xm1_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "env2"
+      },
+      "amount_expr": "max(0, xm1_vco2.modulation)"
+    },
+    {
+      "id": "xm1_c20",
+      "from": "xm1_env2.out",
+      "to": "xm1_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "env2_vel"
+      },
+      "amount_expr": "max(0, -xm1_vco2.modulation)",
+      "note": "Envelope scaled by MIDI velocity."
+    },
+    {
+      "id": "xm1_c21",
+      "from": "xm1_env2.out",
+      "to": "xm1_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "env2_vel"
+      },
+      "amount_expr": "max(0, xm1_vco2.modulation)"
+    },
+    {
+      "id": "xm1_c22",
+      "from": "xm1_lfo.out",
+      "to": "xm1_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, -xm1_vco2.modulation)"
+    },
+    {
+      "id": "xm1_c23",
+      "from": "xm1_lfo.out",
+      "to": "xm1_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vco2.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, xm1_vco2.modulation)"
+    },
+    {
+      "id": "xm1_c24",
+      "from": "xm1_vco2.saw",
+      "to": "xm1_vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, -xm1_vcf.mix_vco2)"
+    },
+    {
+      "id": "xm1_c25",
+      "from": "xm1_vco2.pulse",
+      "to": "xm1_vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm1_vcf.mix_vco2)"
+    },
+    {
+      "id": "xm1_c30",
+      "from": "tuning_ref.out",
+      "to": "xm1_vcf.in_ext",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.xm1_ext",
+      "amount_expr": "xm1.ext_level * max(0, -xm1_vcf.mix_ext)",
+      "note": "With nothing patched into EXT, the A440 tuning tone takes its place."
+    },
+    {
+      "id": "xm1_c31",
+      "from": "noise.white",
+      "to": "xm1_vcf.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm1_vcf.mix_ext)"
+    },
+    {
+      "id": "xm1_c32",
+      "from": "xm1_env2.out",
+      "to": "xm1_vcf.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vcf.mod_source",
+        "equals": "env2"
+      },
+      "amount": "xm1_vcf.modulation"
+    },
+    {
+      "id": "xm1_c33",
+      "from": "xm1_lfo.out",
+      "to": "xm1_vcf.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm1_vcf.mod_source",
+        "equals": "lfo"
+      },
+      "amount": "xm1_vcf.modulation"
+    },
+    {
+      "id": "xm1_c34",
+      "from": "xm1_env2.out",
+      "to": "xm1_vcf.ext_mod_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.xm1_vcf_cv",
+      "note": "Velocity-scaled ENV 2, reaching the cutoff only with the source switch at EXT; the VCF CV jack replaces it.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "xm1_c35",
+      "from": "xm1_vcf.out",
+      "to": "xm1_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm1_c36",
+      "from": "xm1_env1.out",
+      "to": "xm1_vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "xm1_vca.mode",
+            "equals": "env"
+          },
+          {
+            "param": "xm1_vca.mode",
+            "equals": "env_vel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "xm1_c37",
+      "from": "xm1_vca.out",
+      "to": "output.in_xm1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "xm1.level",
+      "note": "Panned by the module's PAN control."
+    },
+    {
+      "id": "xm2_c01",
+      "from": "alloc.xm2_pitch",
+      "to": "xm2_pitch.midi_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm2_pitch.portamento"
+    },
+    {
+      "id": "xm2_c02",
+      "from": "xm2_pitch.to_vco1",
+      "to": "xm2_vco1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm2_vco1.coarse"
+    },
+    {
+      "id": "xm2_c03",
+      "from": "xm2_pitch.to_vco2",
+      "to": "xm2_vco2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "xm2_vco2.coarse"
+    },
+    {
+      "id": "xm2_c04",
+      "from": "alloc.xm2_gate",
+      "to": "xm2_gate.in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.xm2_env_gate"
+    },
+    {
+      "id": "xm2_c05",
+      "from": "xm2_gate.out",
+      "to": "xm2_env1.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm2_c06",
+      "from": "xm2_gate.out",
+      "to": "xm2_env2.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm2_c08",
+      "from": "alloc.velocity",
+      "to": "xm2_env1.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Velocity scales ENV 1 only where a switch is in its E+V position (VCO1 modulation, VCA); elsewhere ENV 1 is used unscaled."
+    },
+    {
+      "id": "xm2_c09",
+      "from": "alloc.velocity",
+      "to": "xm2_env2.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Velocity scales ENV 2 only in the E+V or EXT positions of the VCO2 and filter modulation switches."
+    },
+    {
+      "id": "xm2_c07",
+      "from": "xm2_vco1.sync_out",
+      "to": "xm2_vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "xm2_c10",
+      "from": "xm2_env1.out",
+      "to": "xm2_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "env1"
+      },
+      "amount_expr": "max(0, -xm2_vco1.modulation)"
+    },
+    {
+      "id": "xm2_c11",
+      "from": "xm2_env1.out",
+      "to": "xm2_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "env1"
+      },
+      "amount_expr": "max(0, xm2_vco1.modulation)"
+    },
+    {
+      "id": "xm2_c12",
+      "from": "xm2_env1.out",
+      "to": "xm2_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "env1_vel"
+      },
+      "amount_expr": "max(0, -xm2_vco1.modulation)",
+      "note": "Envelope scaled by MIDI velocity."
+    },
+    {
+      "id": "xm2_c13",
+      "from": "xm2_env1.out",
+      "to": "xm2_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "env1_vel"
+      },
+      "amount_expr": "max(0, xm2_vco1.modulation)"
+    },
+    {
+      "id": "xm2_c14",
+      "from": "xm2_lfo.out",
+      "to": "xm2_vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, -xm2_vco1.modulation)"
+    },
+    {
+      "id": "xm2_c15",
+      "from": "xm2_lfo.out",
+      "to": "xm2_vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco1.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, xm2_vco1.modulation)"
+    },
+    {
+      "id": "xm2_c16",
+      "from": "xm2_vco1.saw",
+      "to": "xm2_vcf.in_vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, -xm2_vcf.mix_vco1)"
+    },
+    {
+      "id": "xm2_c17",
+      "from": "xm2_vco1.pulse",
+      "to": "xm2_vcf.in_vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm2_vcf.mix_vco1)"
+    },
+    {
+      "id": "xm2_c18",
+      "from": "xm2_env2.out",
+      "to": "xm2_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "env2"
+      },
+      "amount_expr": "max(0, -xm2_vco2.modulation)"
+    },
+    {
+      "id": "xm2_c19",
+      "from": "xm2_env2.out",
+      "to": "xm2_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "env2"
+      },
+      "amount_expr": "max(0, xm2_vco2.modulation)"
+    },
+    {
+      "id": "xm2_c20",
+      "from": "xm2_env2.out",
+      "to": "xm2_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "env2_vel"
+      },
+      "amount_expr": "max(0, -xm2_vco2.modulation)",
+      "note": "Envelope scaled by MIDI velocity."
+    },
+    {
+      "id": "xm2_c21",
+      "from": "xm2_env2.out",
+      "to": "xm2_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "env2_vel"
+      },
+      "amount_expr": "max(0, xm2_vco2.modulation)"
+    },
+    {
+      "id": "xm2_c22",
+      "from": "xm2_lfo.out",
+      "to": "xm2_vco2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, -xm2_vco2.modulation)"
+    },
+    {
+      "id": "xm2_c23",
+      "from": "xm2_lfo.out",
+      "to": "xm2_vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vco2.mod_source",
+        "equals": "lfo"
+      },
+      "amount_expr": "max(0, xm2_vco2.modulation)"
+    },
+    {
+      "id": "xm2_c24",
+      "from": "xm2_vco2.saw",
+      "to": "xm2_vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, -xm2_vcf.mix_vco2)"
+    },
+    {
+      "id": "xm2_c25",
+      "from": "xm2_vco2.pulse",
+      "to": "xm2_vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm2_vcf.mix_vco2)"
+    },
+    {
+      "id": "xm2_c30",
+      "from": "tuning_ref.out",
+      "to": "xm2_vcf.in_ext",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.xm2_ext",
+      "amount_expr": "xm2.ext_level * max(0, -xm2_vcf.mix_ext)",
+      "note": "With nothing patched into EXT, the A440 tuning tone takes its place."
+    },
+    {
+      "id": "xm2_c31",
+      "from": "noise.white",
+      "to": "xm2_vcf.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "max(0, xm2_vcf.mix_ext)"
+    },
+    {
+      "id": "xm2_c32",
+      "from": "xm2_env2.out",
+      "to": "xm2_vcf.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vcf.mod_source",
+        "equals": "env2"
+      },
+      "amount": "xm2_vcf.modulation"
+    },
+    {
+      "id": "xm2_c33",
+      "from": "xm2_lfo.out",
+      "to": "xm2_vcf.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "xm2_vcf.mod_source",
+        "equals": "lfo"
+      },
+      "amount": "xm2_vcf.modulation"
+    },
+    {
+      "id": "xm2_c34",
+      "from": "xm2_env2.out",
+      "to": "xm2_vcf.ext_mod_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.xm2_vcf_cv",
+      "note": "Velocity-scaled ENV 2, reaching the cutoff only with the source switch at EXT; the VCF CV jack replaces it.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "xm2_c35",
+      "from": "xm2_vcf.out",
+      "to": "xm2_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "xm2_c36",
+      "from": "xm2_env1.out",
+      "to": "xm2_vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "xm2_vca.mode",
+            "equals": "env"
+          },
+          {
+            "param": "xm2_vca.mode",
+            "equals": "env_vel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "xm2_c37",
+      "from": "xm2_vca.out",
+      "to": "output.in_xm2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "xm2.level",
+      "note": "Panned by the module's PAN control."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "Power",
+      "kind": "led",
+      "led_colour": "multi",
+      "manual_ref": null,
+      "function": "Power indicator. Turns red when poly chain is enabled; its normal colour is not stated."
+    }
+  ],
+  "led_legend": {
+    "rule": "One LED. Red means poly chain is enabled.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "poly chain enabled"
+      }
+    ],
+    "confidence": "stated",
+    "note": "From the poly chaining paragraph. The normal colour is not given."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Two independent voices",
+      "applies_to": [
+        "alloc",
+        "output"
+      ],
+      "rule": "XM1 and XM2 are complete, separately-controlled voices, not two instances of one patch. The ASSIGN switch sets how notes reach them: UNISON (both on one note), SPLIT (XM1 low, XM2 high, split at C4 by default, XM2 on the next MIDI channel) or DUO (one note each, same or separate channels). Each module has its own level and pan."
+    },
+    {
+      "id": "b02",
+      "name": "Bipolar VCO modulation",
+      "applies_to": [
+        "xm1_vco1",
+        "xm1_vco2",
+        "xm2_vco1",
+        "xm2_vco2"
+      ],
+      "rule": "Each VCO's MODULATION knob does nothing at 12 o'clock, frequency modulation as it turns counter-clockwise and pulse width modulation as it turns clockwise, from the source on its switch. VCO1's switch offers ENV 1, ENV 1 x velocity or the LFO; VCO2's offers ENV 2, ENV 2 x velocity or the LFO. Recorded with amount_expr on the connections."
+    },
+    {
+      "id": "b03",
+      "name": "Bipolar mix crossfades",
+      "applies_to": [
+        "xm1_vcf",
+        "xm2_vcf"
+      ],
+      "rule": "There are no level knobs in the usual sense. VCO 1 and VCO 2 each crossfade saw (counter-clockwise) against pulse (clockwise) with silence at 12 o'clock; EXT crossfades the external input against white noise the same way."
+    },
+    {
+      "id": "b04",
+      "name": "Notch-sweeping filter",
+      "applies_to": [
+        "xm1_vcf",
+        "xm2_vcf"
+      ],
+      "rule": "A 12 dB/octave state-variable filter. At LP-HP, NOTCH morphs the response: fully counter-clockwise low-pass, centre a narrow notch, fully clockwise high-pass; between them the notch widens or narrows. BP switches to band-pass. This continuous mode sweep is the defining sound of the SEM."
+    },
+    {
+      "id": "b05",
+      "name": "Velocity through E+V",
+      "applies_to": [
+        "xm1_vca",
+        "xm2_vca",
+        "xm1_vcf",
+        "xm2_vcf"
+      ],
+      "rule": "The middle position of the VCO modulation, VCA and filter modulation switches scales the envelope by MIDI velocity. On the filter this position is labelled EXT: a CV in the VCF CV jack replaces the velocity-scaled envelope."
+    },
+    {
+      "id": "b06",
+      "name": "VCA ON/EXT",
+      "applies_to": [
+        "xm1_vca",
+        "xm2_vca"
+      ],
+      "rule": "At ON/EXT the VCA is held fully open, making the module a drone, unless a CV is patched into VCA CV, which then controls it."
+    },
+    {
+      "id": "b07",
+      "name": "A440 tuning tone",
+      "applies_to": [
+        "tuning_ref",
+        "xm1_vcf",
+        "xm2_vcf"
+      ],
+      "rule": "With nothing in a module's EXT jack, its external input carries a 440 Hz reference tone, heard through the EXT crossfade and the module's EXT LVL. Useful for tuning, and a surprise if the EXT knob is not centred."
+    },
+    {
+      "id": "b08",
+      "name": "Pitch normalling",
+      "applies_to": [
+        "xm1_pitch",
+        "xm2_pitch"
+      ],
+      "rule": "MIDI pitch drives both VCOs. VCO1 CV replaces it for VCO1 and also for VCO2 unless VCO2 CV is patched, so one cable plays both oscillators and a second separates them."
+    },
+    {
+      "id": "b09",
+      "name": "ADS envelopes",
+      "applies_to": [
+        "xm1_env1",
+        "xm1_env2",
+        "xm2_env1",
+        "xm2_env2"
+      ],
+      "rule": "Attack 3 ms to 6 s. DECAY sets decay (14 ms to 18 s) and release (10 ms to 15 s) together. Sustain level."
+    },
+    {
+      "id": "b10",
+      "name": "Poly chain",
+      "applies_to": [
+        "alloc"
+      ],
+      "rule": "Units with the same MIDI channel and poly chain on in SynthTRIBE pass unhandled notes down the chain; the first unit plays the first note and so on. With poly chain on in the last unit, notes beyond the chain are dropped; with it off, the last unit steals its last note. The guide adds that a 2-XM in paraphonic mode handles two notes, without describing a paraphonic mode."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "velocity (through the E+V switch positions)"
+    ],
+    "transmits": [
+      "MIDI THRU pass-through",
+      "USB MIDI"
+    ],
+    "channel": {
+      "range": [
+        1,
+        16
+      ],
+      "set_by": "rear DIP switches or SynthTRIBE; XM2 uses channel + 1 in split"
+    },
+    "cc_map": null,
+    "nrpn": null,
+    "sysex": null,
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows 7 or higher, Mac OS 10.10 or higher"
+    },
+    "app": "SynthTRIBE: note priority, poly chain, firmware"
+  },
+  "specifications": {
+    "voices": "2 (duophonic)",
+    "oscillators": 4,
+    "lfos": 2,
+    "vcf": "2 x 12 dB/octave",
+    "envelopes": "4 ADS",
+    "envelope_times_s": {
+      "attack_s": [
+        0.003,
+        6
+      ],
+      "decay_s": [
+        0.014,
+        18
+      ],
+      "release_s": [
+        0.01,
+        15
+      ]
+    },
+    "lfo_hz": {
+      "min": 0.1,
+      "max": 55
+    },
+    "patchbay": "32 x 3.5 mm TR",
+    "outputs": {
+      "top": "3.5 mm TRS stereo",
+      "rear": "2 x 6.35 mm TR"
+    },
+    "power": {
+      "adaptor": "12 V DC, 2000 mA"
+    },
+    "dimensions_mm": {
+      "h": 91.4,
+      "w": 424.4,
+      "d": 135.6
+    },
+    "eurorack_hp": 80,
+    "weight_kg": 1.8,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in several languages",
+    "warranty and compliance declarations",
+    "hook-up diagrams",
+    "non-English duplicates",
+    "Eurorack installation instructions",
+    "the MIDI channel DIP switch table"
+  ],
+  "not_in_source": [
+    "the LFO waveform; there is no shape control and none is stated",
+    "which waveform or mix appears at each VCO OUT jack",
+    "whether the white noise source is shared between the two modules",
+    "how the split point is changed from its C4 default",
+    "what 'paraphonic mode' refers to; no such setting is described",
+    "filter cutoff range and resonance behaviour, including self-oscillation",
+    "pitch CV scaling; 1 V/octave is likely but not stated",
+    "the normal colour of the power LED",
+    "any MIDI implementation beyond notes and velocity"
+  ],
+  "source_inconsistencies": [
+    "CV 1 and CV 2 are printed in the IN column of each patchbay but the guide lists them as outputs (77, 93).",
+    "The VCF modulation source middle position is EXT on the panel and 'External/ENV2 controlled by MIDI velocity' in the guide.",
+    "Item 24 refers the VCF modulation knob to 'switches 22 & 52'; the switches are 24 and 52.",
+    "The specifications list the filters as '2 LPF 12 dB/octave'; the controls describe low-pass, notch, high-pass and band-pass.",
+    "Items 63 and 68 say 'Where no external source is present a tuning tone of A 440 Hz will be heard' and item 28 says it 'will be routed'; consistent in meaning, but the level control and the crossfade both claim it.",
+    "Item 73 contains the typo 'no jack ios inserted'."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Filter",
+      "detail": "The notch sweep is described qualitatively. No cutoff range, resonance law, or statement of how the notch width maps to the knob."
+    },
+    {
+      "topic": "Tapers",
+      "detail": "Envelope and LFO end points are given; the mapping from knob position to time or rate is not."
+    },
+    {
+      "topic": "Bipolar controls",
+      "detail": "Modelled with amount_expr as max(0, -x) and max(0, x). The actual crossfade law (linear, equal-power, overlap at centre) is not stated."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "No Oberheim SEM or Two Voice documentation was supplied; it would settle filter behaviour and the VCO output waveforms."
+    }
+  ]
+}

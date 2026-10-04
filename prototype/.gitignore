@@ -1,0 +1,10 @@
+# Build output and scratch from build.mjs / check.mjs
+.cache/
+dist/
+
+# Panel photos stay local: product shots are usually someone else's copyright.
+# Put them in ref/ to measure from; only the *.synth.json files are committed.
+ref/*.jpg
+ref/*.jpeg
+ref/*.png
+ref/*.webp

@@ -1,0 +1,2620 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "moog-grandmother",
+    "manufacturer": "Moog Music",
+    "model": "Grandmother",
+    "category": "monophonic semi-modular analogue synthesizer with 32-key keyboard, spring reverb, arpeggiator and sequencer",
+    "based_on": "Moog modular (Model 15) and Minimoog circuits; released 2018.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Moog Grandmother Owner's Manual",
+        "kind": "user_manual",
+        "file": "Grandmother_Manual.pdf",
+        "pages": 56,
+        "note": "Full controls, patch point index with impedances and ranges, normals, arpeggiator and sequencer, global settings, MIDI CC table, specifications."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic; note priority low, high or last",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory; three sequences of up to 256 steps, kept with power off.",
+    "semi_modular": true,
+    "panel_counts": {
+      "keys": 32,
+      "patch_inputs": 21,
+      "patch_outputs": 16,
+      "mult_jacks": 4,
+      "patch_points": 41
+    },
+    "summary": "Two VCOs (triangle, saw, square, narrow pulse) with hard sync and linear FM on Oscillator 2, white noise and an instrument input into a DC-coupled mixer that overdrives above 1 o'clock, a 24 dB Moog ladder filter, a separate static 6 dB high-pass filter, one ADSR, a VCA set to ENV, KB RLS or DRONE, an LFO from 0.07 Hz to 1.3 kHz with sample and hold, a bipolar attenuator, a four-jack mult and a real spring reverb tank. Plays without patching; 41 jacks extend or override the normals."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and left-hand controller",
+      "panel_section": "KEYBOARD / LEFT HAND CONTROLLER",
+      "description": "32-key velocity-sensing keyboard with pitch and mod wheels, glide, octave transpose and the ARP/SEQ transport buttons. Produces pitch CV, gate and velocity, routed through the arpeggiator or sequencer when playing.",
+      "properties": {
+        "keys": 32,
+        "velocity": "not hard-wired; KB VEL OUT and MIDI only"
+      },
+      "inputs": [
+        "kbd.clock_in",
+        "kbd.on_in",
+        "kbd.reset_in"
+      ],
+      "outputs": [
+        "kbd.cv",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.clock_out",
+        "kbd.bend"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATORS",
+      "description": "Triangle, saw, square or narrow pulse (25%) at 32'-4'. Tuned by the rear FINE TUNE.",
+      "inputs": [
+        "osc1.pitch_cv",
+        "osc1.pwm"
+      ],
+      "outputs": [
+        "osc1.out"
+      ]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATORS",
+      "description": "Triangle, saw, square or narrow pulse at 16'-2', detunable ±7 semitones, hard sync to Oscillator 1 and linear FM.",
+      "inputs": [
+        "osc2.pitch_cv",
+        "osc2.fm",
+        "osc2.pwm",
+        "osc2.sync_in"
+      ],
+      "outputs": [
+        "osc2.out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "description": "White noise generator.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "instr",
+      "type": "preamp",
+      "name": "Instrument input",
+      "panel_section": "REAR PANEL",
+      "description": "High-gain preamp for the 1/4\" INSTRUMENT IN, bringing guitar-level signals to 10 Vpp in the mixer; no gain control.",
+      "inputs": [
+        "instr.in"
+      ],
+      "outputs": [
+        "instr.out"
+      ]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "DC-coupled three-channel mixer plus the instrument input; levels above 1 o'clock overdrive gently, higher settings harder.",
+      "inputs": [
+        "mixer.in1",
+        "mixer.in2",
+        "mixer.in3",
+        "mixer.ext"
+      ],
+      "outputs": [
+        "mixer.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Low pass filter",
+      "panel_section": "FILTER",
+      "description": "Moog 24 dB/oct ladder, 10 Hz-20 kHz, self-oscillating, with bipolar envelope amount and key tracking.",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [
+          10,
+          20000
+        ],
+        "key_tracking_1_1": "1 V/oct"
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.cutoff_cv",
+        "vcf.env_amt_cv",
+        "vcf.env_in",
+        "vcf.key_cv"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "High pass filter",
+      "panel_section": "UTILITIES",
+      "description": "Static 6 dB/oct (one-pole) high-pass, only in the path when patched.",
+      "properties": {
+        "slope_db_per_oct": 6
+      },
+      "inputs": [
+        "hpf.in"
+      ],
+      "outputs": [
+        "hpf.out"
+      ]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "ENVELOPE",
+      "description": "ADSR with normal and inverted outputs; retriggers above 1.2 V.",
+      "inputs": [
+        "env.trig"
+      ],
+      "outputs": [
+        "env.pos",
+        "env.neg"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "OUTPUT",
+      "description": "ENV follows the envelope; KB RLS opens fully on key down and closes with the release; DRONE stays open. VCA AMT IN multiplies (or, in DRONE, sets) the level.",
+      "inputs": [
+        "vca.in",
+        "vca.cv",
+        "vca.env_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "Modulation",
+      "panel_section": "MODULATION",
+      "description": "LFO from 0.07 Hz to 1.3 kHz (sine, sawtooth, ramp, square), 1 V/oct rate input, reset input, and sample and hold.",
+      "properties": {
+        "rate_hz": [
+          0.07,
+          1300
+        ]
+      },
+      "inputs": [
+        "lfo.rate_cv",
+        "lfo.sync"
+      ],
+      "outputs": [
+        "lfo.out"
+      ]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "MODULATION",
+      "description": "Samples the noise source at each zero crossing of the LFO. No internal routing: patch S/H OUT.",
+      "inputs": [
+        "snh.in",
+        "snh.clock"
+      ],
+      "outputs": [
+        "snh.out"
+      ]
+    },
+    {
+      "id": "att",
+      "type": "attenuator",
+      "name": "Attenuator",
+      "panel_section": "UTILITIES",
+      "description": "Bipolar attenuator: centre off, clockwise up to unity, anticlockwise up to unity inverted. Input normalled to a positive voltage, so unpatched it is a ±8 V DC source.",
+      "inputs": [
+        "att.in"
+      ],
+      "outputs": [
+        "att.out"
+      ]
+    },
+    {
+      "id": "ref",
+      "type": "cv_source_selector",
+      "name": "Attenuator reference",
+      "panel_section": "UTILITIES",
+      "description": "Internal positive voltage normalled to the attenuator input.",
+      "inputs": [],
+      "outputs": [
+        "ref.pos"
+      ]
+    },
+    {
+      "id": "mult",
+      "type": "mult",
+      "name": "Mult",
+      "panel_section": "UTILITIES",
+      "description": "Four unbuffered parallel jacks; any can be an input or output. Can merge two AC-coupled audio signals.",
+      "inputs": [
+        "mult.in"
+      ],
+      "outputs": [
+        "mult.out"
+      ]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Spring reverb",
+      "panel_section": "OUTPUT",
+      "description": "6-inch analogue spring reverb tank, with its own input and 100% wet rear output; sensitive to vibration and interference.",
+      "properties": {
+        "tank": "6-inch spring"
+      },
+      "inputs": [
+        "reverb.in"
+      ],
+      "outputs": [
+        "reverb.out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT",
+      "description": "Reverb MIX blends dry VCA and wet reverb; VOLUME then sets the main/headphone level. The Eurorack out is taken after MIX, before VOLUME.",
+      "inputs": [
+        "out.dry",
+        "out.wet"
+      ],
+      "outputs": [
+        "out.main",
+        "out.eurorack"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "kbd.pitch_wheel",
+      "module": "kbd",
+      "label": "PITCH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Spring-loaded pitch bend; range 1-12 semitones (default 2) in global settings."
+    },
+    {
+      "id": "kbd.mod_wheel",
+      "module": "kbd",
+      "label": "MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1"
+        }
+      ],
+      "function": "Scales the Modulation section from off to the PITCH AMT, CUTOFF AMT and PULSE WIDTH AMT settings."
+    },
+    {
+      "id": "kbd.glide",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Glide time; minimum is off. HOLD (or SHIFT) + GLIDE right/left turns legato glide on/off."
+    },
+    {
+      "id": "kbd.play",
+      "module": "kbd",
+      "label": "PLAY (TIE)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts the ARP/SEQ; enters a tie when recording."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD (REST)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keeps the ARP/SEQ playing after keys are released; enters a rest when recording."
+    },
+    {
+      "id": "kbd.tap",
+      "module": "kbd",
+      "label": "TAP (ACCENT)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Three or more taps set the tempo (hold one second to exit); adds an accent when recording."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "<KB / KB>",
+      "kind": "integer",
+      "range": {
+        "min": -2,
+        "max": 2
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold SHIFT and press <KB or KB>",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "Keyboard octave transpose, with SHIFT."
+    },
+    {
+      "id": "arpseq.rate",
+      "module": "kbd",
+      "label": "RATE",
+      "kind": "continuous",
+      "physical": {
+        "min": 20,
+        "max": 280,
+        "unit": "BPM"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8"
+        }
+      ],
+      "function": "ARP/SEQ tempo 20-280 BPM; when synced, selects divisions (SHIFT for triplets)."
+    },
+    {
+      "id": "arpseq.mode",
+      "module": "kbd",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "arp"
+        },
+        {
+          "value": "seq"
+        },
+        {
+          "value": "rec"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Arpeggiator, sequencer, or sequencer record."
+    },
+    {
+      "id": "arpseq.direction",
+      "module": "kbd",
+      "label": "DIRECTION",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ordr"
+        },
+        {
+          "value": "fwd_bkwd"
+        },
+        {
+          "value": "rndm"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Order played / start to end; forward then backward; random."
+    },
+    {
+      "id": "arpseq.oct_seq",
+      "module": "kbd",
+      "label": "OCT / SEQ",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Arpeggio range in octaves, or sequence 1-3."
+    },
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 1 footage."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 1 waveform."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "Hard-syncs Oscillator 2 to Oscillator 1 (lit button)."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 2 footage."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        }
+      ],
+      "function": "Detune ±7 semitones; with sync on, a much wider range that sweeps the sync timbre."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 2 waveform."
+    },
+    {
+      "id": "osc.fine_tune",
+      "module": "osc1",
+      "label": "FINE TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rear panel: fine tuning of both oscillators."
+    },
+    {
+      "id": "mixer.level1",
+      "module": "mixer",
+      "label": "OSCILLATOR 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 1 (or whatever is patched in its place); overdrives above 1 o'clock."
+    },
+    {
+      "id": "mixer.level2",
+      "module": "mixer",
+      "label": "OSCILLATOR 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 2 (or whatever is patched in its place); overdrives above 1 o'clock."
+    },
+    {
+      "id": "mixer.level3",
+      "module": "mixer",
+      "label": "NOISE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of noise (or whatever is patched in its place); overdrives above 1 o'clock."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 20000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff frequency."
+    },
+    {
+      "id": "vcf.kbd_track",
+      "module": "vcf",
+      "label": "KBD TRACK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1:2",
+          "meaning": "half"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "1:1",
+          "meaning": "1 V/oct"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff."
+    },
+    {
+      "id": "vcf.env_amt",
+      "module": "vcf",
+      "label": "ENVELOPE AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar envelope depth on cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Feedback to self-oscillation; may reduce level and bass."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack time."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay time."
+    },
+    {
+      "id": "env.release",
+      "module": "env",
+      "label": "RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release time."
+    },
+    {
+      "id": "env.sustain",
+      "module": "env",
+      "label": "SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.07,
+        "max": 1300,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3"
+        }
+      ],
+      "function": "LFO rate; SHIFT for fine adjustment."
+    },
+    {
+      "id": "lfo.waveform",
+      "module": "lfo",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.pitch_amt",
+      "module": "lfo",
+      "label": "PITCH AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on both oscillators' pitch, at full MOD wheel."
+    },
+    {
+      "id": "lfo.cutoff_amt",
+      "module": "lfo",
+      "label": "CUTOFF AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on cutoff, at full MOD wheel."
+    },
+    {
+      "id": "lfo.pw_amt",
+      "module": "lfo",
+      "label": "PULSE WIDTH AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on square and narrow pulse width, at full MOD wheel."
+    },
+    {
+      "id": "hpf.cutoff",
+      "module": "hpf",
+      "label": "HIGH PASS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "High-pass cutoff."
+    },
+    {
+      "id": "att.amount",
+      "module": "att",
+      "label": "ATTENUATOR",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre off; clockwise to unity, anticlockwise to unity inverted."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Main and headphone level, after the reverb MIX."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "VCA MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env"
+        },
+        {
+          "value": "kb_rls"
+        },
+        {
+          "value": "drone"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Envelope, keyboard release, or drone."
+    },
+    {
+      "id": "reverb.mix",
+      "module": "reverb",
+      "label": "MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Dry to fully wet spring reverb."
+    },
+    {
+      "id": "kbd.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions: octave transpose, fine LFO rate, triplet divisions, legato glide."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "MIDI channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 13
+        },
+        {
+          "value": 14
+        },
+        {
+          "value": 15
+        },
+        {
+          "value": 16
+        }
+      ],
+      "default": 1,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key F#0 then F0-G2",
+          "when": "any_time"
+        }
+      ],
+      "function": "Send and receive channel."
+    },
+    {
+      "id": "sys.midi_clock_in",
+      "module": "kbd",
+      "label": "MIDI clock input",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "clock_and_start_stop"
+        },
+        {
+          "value": "clock_only"
+        },
+        {
+          "value": "ignore"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key G#0",
+          "when": "any_time"
+        }
+      ],
+      "function": "Follow MIDI clock and start/stop, clock only, or ignore."
+    },
+    {
+      "id": "sys.midi_clock_out",
+      "module": "kbd",
+      "label": "MIDI clock output",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "clock_and_start_stop"
+        },
+        {
+          "value": "clock_only"
+        },
+        {
+          "value": "none"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key A#0",
+          "when": "any_time"
+        }
+      ],
+      "function": "Send MIDI clock and start/stop, clock only, or nothing."
+    },
+    {
+      "id": "sys.note_priority",
+      "module": "kbd",
+      "label": "Note priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "default": "last",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key C#1",
+          "when": "any_time"
+        }
+      ],
+      "function": "Which note wins on the mono keyboard."
+    },
+    {
+      "id": "sys.bend_range",
+      "module": "kbd",
+      "label": "Pitch bend range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        }
+      ],
+      "default": 2,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key D#1",
+          "when": "any_time"
+        }
+      ],
+      "function": "Bend range in semitones."
+    },
+    {
+      "id": "sys.ext_clock_mode",
+      "module": "kbd",
+      "label": "External clock mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "clock"
+        },
+        {
+          "value": "step_advance"
+        }
+      ],
+      "default": "clock",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key F#1",
+          "when": "any_time"
+        }
+      ],
+      "function": "CLOCK IN sets tempo, or advances one step per pulse."
+    },
+    {
+      "id": "sys.clock_in_ppqn",
+      "module": "kbd",
+      "label": "Clock input PPQN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 24
+        },
+        {
+          "value": 48
+        }
+      ],
+      "default": 2,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key G#1",
+          "when": "any_time"
+        }
+      ],
+      "function": "Pulses per quarter note expected at CLOCK IN."
+    },
+    {
+      "id": "sys.clock_out_ppqn",
+      "module": "kbd",
+      "label": "Clock output PPQN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 24
+        },
+        {
+          "value": 48
+        }
+      ],
+      "default": 2,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key A#1",
+          "when": "any_time"
+        }
+      ],
+      "function": "Pulses per quarter note sent at CLOCK OUT."
+    },
+    {
+      "id": "sys.kb_out_range",
+      "module": "kbd",
+      "label": "KB OUT range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-5_to_5"
+        },
+        {
+          "value": "0_to_10"
+        }
+      ],
+      "default": "-5_to_5",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key C#2",
+          "when": "any_time"
+        }
+      ],
+      "function": "Pitch CV range at KB OUT."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local control",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "default": "on",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "global settings (hold HOLD + SYNC), then key D#2",
+          "when": "any_time"
+        }
+      ],
+      "function": "Off: keyboard, wheel and arpeggiator only reach the CV jacks and MIDI."
+    },
+    {
+      "id": "kbd.glide_type",
+      "module": "kbd",
+      "label": "Glide type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lcr"
+        },
+        {
+          "value": "lct"
+        },
+        {
+          "value": "exponential"
+        }
+      ],
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Linear constant rate, linear constant time, or exponential."
+    },
+    {
+      "id": "kbd.gated_glide",
+      "module": "kbd",
+      "label": "Gated glide",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 103"
+        }
+      ],
+      "function": "Glide only while a key is held."
+    },
+    {
+      "id": "kbd.legato_glide",
+      "module": "kbd",
+      "label": "Legato glide",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold HOLD (or SHIFT) and turn GLIDE right to enable, left to disable",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Glide only between overlapping notes."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.gate_out",
+      "label": "GATE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.gate",
+      "function": "Gate from keyboard, arpeggiator or sequencer, +8 V."
+    },
+    {
+      "id": "jack.kb_out",
+      "label": "KB OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv",
+      "function": "Pitch CV, 1 V/oct, -5 to +5 V (or 0 to 10 V)."
+    },
+    {
+      "id": "jack.kb_vel_out",
+      "label": "KB VEL OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.velocity",
+      "function": "Velocity CV 0 to +5 V; during sequencer playback, an accent envelope on accented steps."
+    },
+    {
+      "id": "jack.osc1_wave",
+      "label": "OSC 1 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc1.out",
+      "function": "Oscillator 1, 10 Vpp, AC coupled."
+    },
+    {
+      "id": "jack.osc1_pitch",
+      "label": "OSC 1 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc1.pitch_cv",
+      "function": "Summed with the keyboard pitch CV. -5 to +5 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.osc1_pwm",
+      "label": "OSC 1 PWM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc1.pwm",
+      "function": "Pulse width of square (from 50%) or narrow pulse (from 25%). 0 to +5 V."
+    },
+    {
+      "id": "jack.osc2_wave",
+      "label": "OSC 2 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.out",
+      "function": "Oscillator 2, 10 Vpp, AC coupled."
+    },
+    {
+      "id": "jack.osc2_pitch",
+      "label": "OSC 2 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc2.pitch_cv",
+      "function": "Summed with the keyboard pitch CV.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.osc2_fm",
+      "label": "OSC 2 LIN FM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.fm",
+      "function": "Linear FM of Oscillator 2."
+    },
+    {
+      "id": "jack.mix_in1",
+      "label": "OSC 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in1",
+      "function": "Replaces Oscillator 1 in the mixer; the same level knob applies."
+    },
+    {
+      "id": "jack.mix_in2",
+      "label": "OSC 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in2",
+      "function": "Replaces Oscillator 2 in the mixer; the same level knob applies."
+    },
+    {
+      "id": "jack.mix_in3",
+      "label": "NOISE IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in3",
+      "function": "Replaces the noise generator in the mixer; the same level knob applies."
+    },
+    {
+      "id": "jack.mixer_out",
+      "label": "MIXER OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.out",
+      "function": "Mixer output."
+    },
+    {
+      "id": "jack.mult_1",
+      "label": "MULT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult.in",
+      "function": "Unbuffered parallel jack; usable as input or output (modelled with jack 1 as the input)."
+    },
+    {
+      "id": "jack.mult_2",
+      "label": "MULT 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult.out",
+      "function": "Unbuffered parallel jack; usable as input or output (modelled with jack 1 as the input)."
+    },
+    {
+      "id": "jack.mult_3",
+      "label": "MULT 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult.out",
+      "function": "Unbuffered parallel jack; usable as input or output (modelled with jack 1 as the input)."
+    },
+    {
+      "id": "jack.mult_4",
+      "label": "MULT 4",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult.out",
+      "function": "Unbuffered parallel jack; usable as input or output (modelled with jack 1 as the input)."
+    },
+    {
+      "id": "jack.hpf_in",
+      "label": "HIGH PASS FILTER INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "hpf.in",
+      "function": "Into the high-pass filter."
+    },
+    {
+      "id": "jack.hpf_out",
+      "label": "HIGH PASS FILTER OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "hpf.out",
+      "function": "High-pass output, AC coupled."
+    },
+    {
+      "id": "jack.att_in",
+      "label": "ATTENUATOR INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att.in",
+      "function": "Attenuator input; unpatched, it reads a positive reference."
+    },
+    {
+      "id": "jack.att_out",
+      "label": "ATTENUATOR OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att.out",
+      "function": "Attenuator output."
+    },
+    {
+      "id": "jack.filter_in",
+      "label": "FILTER INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.in",
+      "function": "Replaces the mixer feed to the filter."
+    },
+    {
+      "id": "jack.filter_out",
+      "label": "FILTER OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.out",
+      "function": "Low-pass output, AC coupled."
+    },
+    {
+      "id": "jack.env_amt_in",
+      "label": "ENV AMT IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.env_amt_cv",
+      "function": "Summed with ENVELOPE AMT. -8 to +8 V."
+    },
+    {
+      "id": "jack.cutoff_in",
+      "label": "CUTOFF IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.cutoff_cv",
+      "function": "Summed into cutoff. -5 to +5 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.trigger_in",
+      "label": "TRIGGER IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env.trig",
+      "function": "Replaces the keyboard gate as envelope trigger (above 1.2 V)."
+    },
+    {
+      "id": "jack.env_pos",
+      "label": "+ ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env.pos",
+      "function": "Envelope, 10 Vpp."
+    },
+    {
+      "id": "jack.env_neg",
+      "label": "– ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env.neg",
+      "function": "Inverted envelope."
+    },
+    {
+      "id": "jack.vca_amt_in",
+      "label": "VCA AMT IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca.cv",
+      "function": "Multiplies the level in ENV and KB RLS; sets it alone in DRONE (0 to +8 V)."
+    },
+    {
+      "id": "jack.vca_in",
+      "label": "VCA IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca.in",
+      "function": "Replaces the filter feed to the VCA."
+    },
+    {
+      "id": "jack.reverb_in",
+      "label": "REVERB IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "reverb.in",
+      "function": "Replaces the VCA feed to the reverb."
+    },
+    {
+      "id": "jack.rate_in",
+      "label": "RATE IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.rate_cv",
+      "function": "Added to RATE, 1 V/oct; patch KB OUT here to play the LFO."
+    },
+    {
+      "id": "jack.lfo_sync",
+      "label": "SYNC IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "lfo.sync",
+      "function": "Resets the LFO on a rising edge; steps the S/H."
+    },
+    {
+      "id": "jack.lfo_out",
+      "label": "WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.out",
+      "function": "LFO, 10 Vpp, DC coupled."
+    },
+    {
+      "id": "jack.snh_out",
+      "label": "S/H OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "snh.out",
+      "function": "Sampled noise, -5 to +5 V."
+    },
+    {
+      "id": "jack.clock_in",
+      "label": "CLOCK IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "kbd.clock_in",
+      "function": "External clock (or step advance) on rising edges.",
+      "combine": "replace"
+    },
+    {
+      "id": "jack.on_off_in",
+      "label": "ON / OFF IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.on_in",
+      "function": "Above 2.5 V runs the ARP/SEQ, below stops it."
+    },
+    {
+      "id": "jack.reset_in",
+      "label": "RESET IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.reset_in",
+      "function": "Above 2.5 V resets the pattern without stopping."
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLOCK OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "kbd.clock_out",
+      "function": "Clock at the ARP/SEQ rate, 0 to +5 V."
+    },
+    {
+      "id": "jack.eurorack_out",
+      "label": "EURORACK OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.eurorack",
+      "function": "Main signal at Eurorack level, after MIX, before VOLUME."
+    },
+    {
+      "id": "jack.reverb_out",
+      "label": "REVERB OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "reverb.out",
+      "function": "Reverb only, 100% wet."
+    },
+    {
+      "id": "jack.main_out",
+      "label": "MAIN OUT / HEADPHONE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main",
+      "function": "Mono line or headphones; use a TS cable for line."
+    },
+    {
+      "id": "jack.instrument_in",
+      "label": "INSTRUMENT IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "instr.in",
+      "function": "Guitar or other external audio into the mixer; no gain control."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "MIDI over USB."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC, 2 A, positive tip."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sys.local",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c02",
+      "from": "kbd.cv",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sys.local",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c03",
+      "from": "kbd.bend",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.bend",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.cv",
+      "to": "vcf.key_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.kbd_track",
+        "not_equals": "off"
+      },
+      "note": "Full at 1:1, half at 1:2."
+    },
+    {
+      "id": "c06",
+      "from": "kbd.gate",
+      "to": "env.trig",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.trigger_in"
+    },
+    {
+      "id": "c07",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c08",
+      "from": "osc1.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_in1"
+    },
+    {
+      "id": "c09",
+      "from": "osc2.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_in2"
+    },
+    {
+      "id": "c10",
+      "from": "noise.out",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_in3"
+    },
+    {
+      "id": "c11",
+      "from": "instr.out",
+      "to": "mixer.ext",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.filter_in"
+    },
+    {
+      "id": "c13",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_in"
+    },
+    {
+      "id": "c14",
+      "from": "env.pos",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amt"
+    },
+    {
+      "id": "c15",
+      "from": "env.pos",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "not_equals": "drone"
+      },
+      "note": "In KB RLS only the release stage shapes the level."
+    },
+    {
+      "id": "c16",
+      "from": "vca.out",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.reverb_in"
+    },
+    {
+      "id": "c17",
+      "from": "vca.out",
+      "to": "out.dry",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "reverb.out",
+      "to": "out.wet",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "reverb.mix"
+    },
+    {
+      "id": "c19",
+      "from": "lfo.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c20",
+      "from": "lfo.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c21",
+      "from": "lfo.out",
+      "to": "osc1.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c22",
+      "from": "lfo.out",
+      "to": "osc2.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c23",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.cutoff_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c24",
+      "from": "noise.out",
+      "to": "snh.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c25",
+      "from": "lfo.out",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "Samples at each zero crossing of the LFO."
+    },
+    {
+      "id": "c26",
+      "from": "ref.pos",
+      "to": "att.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att_in"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "arpseq.led",
+      "module": "kbd",
+      "label": "RATE LED",
+      "kind": "led",
+      "function": "Flashes at the ARP/SEQ rate."
+    },
+    {
+      "id": "lfo.led",
+      "module": "lfo",
+      "label": "RATE LED",
+      "kind": "led",
+      "function": "Flashes at the LFO rate."
+    },
+    {
+      "id": "kbd.tap_led",
+      "module": "kbd",
+      "label": "TAP light",
+      "kind": "led",
+      "function": "Lit while tap tempo is active."
+    },
+    {
+      "id": "osc2.sync_led",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "led",
+      "function": "Lit when sync is on; blinks in global settings."
+    },
+    {
+      "id": "kbd.midi_led",
+      "module": "kbd",
+      "label": "MIDI LED",
+      "kind": "led",
+      "function": "Blinks on MIDI input."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Default signal path",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "noise",
+        "mixer",
+        "vcf",
+        "vca",
+        "reverb",
+        "out"
+      ],
+      "rule": "Oscillators and noise (plus the instrument input) into the mixer, then the ladder filter, VCA, spring reverb and output. Keyboard CV to both oscillators and, by KBD TRACK, the filter; gate to the envelope. Patching OSC 1/2 IN, NOISE IN, FILTER INPUT, VCA IN, REVERB IN or TRIGGER IN breaks that normal. The high-pass filter, attenuator, mult and S/H are unpatched resources."
+    },
+    {
+      "id": "b02",
+      "name": "Pitch inputs sum",
+      "applies_to": [
+        "osc1",
+        "osc2"
+      ],
+      "rule": "OSC PITCH IN, LIN FM IN and the LFO add to the keyboard pitch; nothing breaks the keyboard normal except Local off."
+    },
+    {
+      "id": "b03",
+      "name": "MOD wheel",
+      "applies_to": [
+        "lfo",
+        "kbd"
+      ],
+      "rule": "PITCH AMT, CUTOFF AMT and PULSE WIDTH AMT set maximum depths; the MOD wheel sets how much is applied. At minimum MOD, no LFO modulation is heard. PWM needs a square or narrow pulse selected."
+    },
+    {
+      "id": "b04",
+      "name": "VCA modes",
+      "applies_to": [
+        "vca",
+        "env"
+      ],
+      "rule": "ENV: envelope sets the level. KB RLS: full level on key down, then the envelope release on key up (a variant of the Moog KB GATE). DRONE: always on; a VCA AMT IN connection then sets the level alone."
+    },
+    {
+      "id": "b05",
+      "name": "Mixer drive",
+      "applies_to": [
+        "mixer"
+      ],
+      "rule": "The mixer is DC coupled, so it also sums CVs. Levels above 1 o'clock add gentle distortion, higher settings overdrive."
+    },
+    {
+      "id": "b06",
+      "name": "Sample and hold",
+      "applies_to": [
+        "snh",
+        "lfo"
+      ],
+      "rule": "Noise is sampled at each zero crossing of the LFO. Patching GATE OUT to SYNC IN with RATE at minimum steps the S/H with each key."
+    },
+    {
+      "id": "b07",
+      "name": "Arpeggiator",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Plays held notes in order, forward then backward, or randomly, over 1-3 octaves, at 20-280 BPM or synced divisions (MIDI, CLOCK IN, tap). HOLD latches; notes added while holding join the pattern."
+    },
+    {
+      "id": "b08",
+      "name": "Sequencer",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Three sequences of up to 256 steps, kept without power. REC then play notes; HOLD adds a rest, PLAY a tie, TAP an accent, overlapping keys give legato. SEQ ends recording; PLAY then a key starts it, and keys transpose. Edit only while playing (switch to REC during playback); a key in REC while stopped erases the sequence. Accents leave on KB VEL OUT as a fast envelope; patch it to CUTOFF IN to hear them."
+    },
+    {
+      "id": "b09",
+      "name": "Velocity",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "The keyboard senses velocity but it is not wired internally; use KB VEL OUT or MIDI."
+    },
+    {
+      "id": "b10",
+      "name": "Stuck notes",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Holding all three left-hand buttons for about a second clears the note stack and sends All Notes Off."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "kbd.mod_wheel"
+      },
+      {
+        "message": "control_change",
+        "cc": 3,
+        "parameter": "lfo.rate"
+      },
+      {
+        "message": "control_change",
+        "cc": 5,
+        "parameter": "kbd.glide"
+      },
+      {
+        "message": "control_change",
+        "cc": 8,
+        "parameter": "arpseq.rate"
+      },
+      {
+        "message": "control_change",
+        "cc": 12,
+        "parameter": "osc2.frequency"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "sustain pedal"
+      },
+      {
+        "message": "control_change",
+        "cc": 65,
+        "parameter": "glide on/off"
+      },
+      {
+        "message": "control_change",
+        "cc": 69,
+        "parameter": "arp/seq hold"
+      },
+      {
+        "message": "control_change",
+        "cc": 73,
+        "parameter": "arp/seq play"
+      },
+      {
+        "message": "control_change",
+        "cc": 74,
+        "parameter": "osc 1 octave"
+      },
+      {
+        "message": "control_change",
+        "cc": 75,
+        "parameter": "osc 2 octave"
+      },
+      {
+        "message": "control_change",
+        "cc": 77,
+        "parameter": "osc2.sync"
+      },
+      {
+        "message": "control_change",
+        "cc": 85,
+        "parameter": "kbd.glide_type"
+      },
+      {
+        "message": "control_change",
+        "cc": 89,
+        "parameter": "kbd.octave"
+      },
+      {
+        "message": "control_change",
+        "cc": 90,
+        "parameter": "arp/seq clock division"
+      },
+      {
+        "message": "control_change",
+        "cc": 91,
+        "parameter": "arpseq.mode"
+      },
+      {
+        "message": "control_change",
+        "cc": 92,
+        "parameter": "arpseq.direction"
+      },
+      {
+        "message": "control_change",
+        "cc": 93,
+        "parameter": "arpseq.oct_seq"
+      },
+      {
+        "message": "control_change",
+        "cc": 94,
+        "parameter": "kbd.legato_glide"
+      },
+      {
+        "message": "control_change",
+        "cc": 103,
+        "parameter": "kbd.gated_glide"
+      },
+      {
+        "message": "control_change",
+        "cc": 107,
+        "parameter": "pitch bend up amount"
+      },
+      {
+        "message": "control_change",
+        "cc": 108,
+        "parameter": "pitch bend down amount"
+      },
+      {
+        "message": "control_change",
+        "cc": 119,
+        "parameter": "keyboard transpose (semitones)"
+      },
+      {
+        "message": "control_change",
+        "cc": 120,
+        "parameter": "all sounds off"
+      },
+      {
+        "message": "control_change",
+        "cc": 122,
+        "parameter": "local control"
+      },
+      {
+        "message": "control_change",
+        "cc": 123,
+        "parameter": "all notes off"
+      },
+      {
+        "message": "rpn",
+        "number": 0,
+        "parameter": "pitch bend amount"
+      },
+      {
+        "message": "rpn",
+        "number": 1,
+        "parameter": "fine tuning"
+      },
+      {
+        "message": "rpn",
+        "number": 2,
+        "parameter": "coarse tuning"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "clock",
+        "note": "per global setting"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "channel_note": "Channel 1-16 in global settings; default 1. 14-bit pairs available for CC 1, 3, 5, 8 and 12.",
+    "note": "Only CC 1, 3, 5, 8 and 12 address analogue controls; switch-position CCs cover octaves, sync and the ARP/SEQ."
+  },
+  "specifications": {
+    "keys": "32 full-size, velocity sensing",
+    "polyphony": "monophonic",
+    "oscillators": 2,
+    "noise": "white",
+    "filters": {
+      "vcf": "-24 dB/oct ladder, self-oscillating, 10 Hz-20 kHz",
+      "hpf": "-6 dB/oct static"
+    },
+    "lfo_rate_hz": [
+      0.07,
+      1300
+    ],
+    "envelope": "ADSR",
+    "arp_seq": {
+      "steps": 256,
+      "sequences": 3,
+      "tempo_bpm": [
+        20,
+        280
+      ]
+    },
+    "effects": "6-inch spring reverb",
+    "patch_points": {
+      "total": 41,
+      "inputs": 21,
+      "outputs": 16,
+      "mults": 4
+    },
+    "audio_in": "1/4\" TS instrument (rear)",
+    "audio_out": "1/4\" TRS main/headphones (rear)",
+    "midi": "5-pin DIN in, out, thru; USB",
+    "dimensions_mm": {
+      "w": 548.2,
+      "d": 361.9,
+      "h": 139.7
+    },
+    "weight_kg": 7.25,
+    "power": {
+      "adaptor": "12 V DC, 2 A, positive tip; 100-240 V AC"
+    }
+  },
+  "omitted_from_source": [
+    "unpacking, safety and warranty text",
+    "the waveform and envelope primer text",
+    "the full clock division table values for CC 90",
+    "pitch bend and transpose CC value tables"
+  ],
+  "not_in_source": [
+    "envelope stage times",
+    "LFO and oscillator pitch ranges in Hz beyond the panel footages",
+    "the attenuator reference voltage's exact value (output reaches ±8 V)",
+    "oscillator 2 FREQUENCY range options in global settings"
+  ],
+  "source_inconsistencies": [
+    "The overview page counts 41 patch points as 21 inputs and 20 outputs; the specifications give 21 inputs, 16 outputs and 4 mults.",
+    "The feature summary and CUTOFF text give a 10 Hz lower cutoff; the panel scale starts at 20 Hz.",
+    "Legato glide is toggled with HOLD + GLIDE in the left-hand controller section and with SHIFT + GLIDE in the sequencing tip.",
+    "MIDI CC 74 and 75 both list 32' as a value, but Oscillator 2's octave switch runs 16' to 2'."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Mult",
+      "detail": "Four bidirectional parallel jacks are modelled as one input and three outputs on a shared bus."
+    },
+    {
+      "topic": "Spring reverb",
+      "detail": "A physical tank; its decay and colour are not documented."
+    }
+  ]
+}

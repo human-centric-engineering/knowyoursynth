@@ -49,3 +49,6 @@ coverage
 # Per-developer local Claude Code settings (gitignored, written by the CLI).
 # Format is owned by the tool, so Prettier should not gate `npm run validate` on it.
 .claude/settings.local.json
+
+# The original single-file artefact, kept verbatim as the reference to port from
+prototype

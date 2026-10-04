@@ -39,6 +39,10 @@ export default tseslint.config(
       // Throwaway scripts (one-shot codemods, scratch utilities). Gitignored
       // but visible to eslint without this exclusion.
       '.claude/tmp/**',
+      // The single-file artefact this app is being built from. Plain JS/JSX on its
+      // own '@/' alias (prototype/src), kept as the reference to port from, not
+      // app code — see prototype/README.md.
+      'prototype/**',
     ],
   },
 

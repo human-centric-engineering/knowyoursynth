@@ -1,0 +1,2027 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-kobol-expander",
+    "manufacturer": "Behringer",
+    "model": "Kobol Expander",
+    "category": "monophonic analogue synthesizer, semi-modular, desktop / Eurorack",
+    "based_on": "RSF Kobol Expander (France, late 1970s). The Behringer guide never names it; the panel layout, the morphing oscillator waveforms and the per-oscillator VCAs are the Kobol's.",
+    "sources": [
+      {
+        "id": "kobol",
+        "title": "KOBOL EXPANDER Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_KOBOL-EXPANDER_manual.pdf",
+        "pages": 38,
+        "note": "66 numbered controls with one-line descriptions, a Hints and Tips box, a getting-started page and a specifications table. English controls are on pages 26 to 28. No CC map, no envelope times."
+      },
+      {
+        "id": "panel",
+        "title": "Kobol Expander front panel image",
+        "kind": "measurement",
+        "file": "Behringer_KOBOL-EXPANDER.png",
+        "note": "Used for control ranges printed on the panel (VCO 10 Hz to 10 kHz, VCF 16 Hz to 16 kHz, voltage processor gains 0 to 2), the signal-flow lines, and the LED colours."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic; poly chain across multiple units through the SynthTRIBE app",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 25,
+      "switches": 6,
+      "jacks_3_5mm": 36
+    },
+    "summary": "Two VCOs, each with a waveform control that morphs continuously from triangle through ramp and sawtooth to square and pulse, with pulse width modulation from the LFO, the filter envelope or both at the pulse end. Each VCO has its own VCA for level, and both feed a 24 dB/octave low-pass filter that self-oscillates. A second VCA shaped by its own ADS envelope follows the filter. One LFO (triangle or square, 0.01 to 100 Hz) is normalled to both oscillators' pitch, with a switch to exempt VCO1. A noise generator, a two-input voltage processor with a normal and an inverted output, and 30 CV and audio patch points: almost every knob has a matching CV input, including both waveform controls and all six envelope stages."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI interface",
+      "panel_section": "MIDI IN",
+      "description": "Converts MIDI notes to pitch and gate. There is no keyboard; notes arrive on the top-panel MIDI IN or over USB.",
+      "inputs": [],
+      "outputs": [
+        "kbd.pitch",
+        "kbd.gate"
+      ]
+    },
+    {
+      "id": "pitch_bus",
+      "type": "pitch_control",
+      "name": "Pitch and tune",
+      "panel_section": "TUNE",
+      "description": "Combines the MIDI pitch with the external 1 V/octave CV IN and the master tune, and feeds both oscillators and the filter's keyboard tracking.",
+      "inputs": [
+        "pitch_bus.midi_in",
+        "pitch_bus.cv_in"
+      ],
+      "outputs": [
+        "pitch_bus.out"
+      ]
+    },
+    {
+      "id": "gate_bus",
+      "type": "gate_logic",
+      "name": "Gate routing",
+      "panel_section": "GATE IN",
+      "description": "Delivers the gate that fires both envelopes. MIDI note gate by default; the GATE IN jack substitutes an external gate, for example from an analogue sequencer. Polarity can be inverted in SynthTRIBE. The GATE LED shows it.",
+      "inputs": [
+        "gate_bus.in"
+      ],
+      "outputs": [
+        "gate_bus.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "description": "Triangle or square, 0.01 to 100 Hz, with a rate CV input. One output is scaled by the LFO VOLUME knob, the other is unattenuated. The scaled output is normalled to the oscillators' modulation input.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.01,
+          "max": 100
+        },
+        "shapes": [
+          "triangle",
+          "square"
+        ]
+      },
+      "inputs": [
+        "lfo.rate_cv_in"
+      ],
+      "outputs": [
+        "lfo.out",
+        "lfo.out_raw"
+      ]
+    },
+    {
+      "id": "mod_bus",
+      "type": "modulation_bus",
+      "name": "VCO modulation routing",
+      "panel_section": "VCO MOD IN",
+      "description": "Distributes the pitch modulation (the LFO via LFO VOLUME unless VCO MOD IN is patched) to both oscillators, with VCO 1 MOD OFF removing VCO1 from it. Also holds the switch that picks the pulse-width modulation source.",
+      "inputs": [
+        "mod_bus.in"
+      ],
+      "outputs": [
+        "mod_bus.out"
+      ]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO 1",
+      "panel_section": "VCO 1",
+      "description": "Analogue VCO whose single WAVEFORM control morphs continuously from triangle through ramp and sawtooth to square and pulse; at fully clockwise the pulse width follows the selected PWM source. Frequency, waveform and level each have a CV input.",
+      "properties": {
+        "waveform_morph": [
+          "triangle",
+          "ramp",
+          "sawtooth",
+          "square",
+          "pulse"
+        ],
+        "frequency_hz": {
+          "min": 10,
+          "max": 10000,
+          "note": "panel scale, 440 Hz at centre; the guide says plus or minus 2 octaves"
+        }
+      },
+      "inputs": [
+        "vco1.pitch_in",
+        "vco1.freq_cv_in",
+        "vco1.fm_in",
+        "vco1.wave_cv_in",
+        "vco1.pwm_in"
+      ],
+      "outputs": [
+        "vco1.out",
+        "vco1.sync_out"
+      ]
+    },
+    {
+      "id": "vca1",
+      "type": "vca",
+      "name": "VCO 1 VCA",
+      "panel_section": "VCA (VCO 1)",
+      "description": "Level control for VCO 1 before the filter, set by its VOLUME knob and a CV input. This is how the two oscillators are mixed, and why the mix can be voltage controlled.",
+      "inputs": [
+        "vca1.in",
+        "vca1.cv_in"
+      ],
+      "outputs": [
+        "vca1.out"
+      ]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO 2",
+      "panel_section": "VCO 2",
+      "description": "Analogue VCO whose single WAVEFORM control morphs continuously from triangle through ramp and sawtooth to square and pulse; at fully clockwise the pulse width follows the selected PWM source. Frequency, waveform and level each have a CV input. Can be hard-synced to VCO1, and has the fine BEAT control against it.",
+      "properties": {
+        "waveform_morph": [
+          "triangle",
+          "ramp",
+          "sawtooth",
+          "square",
+          "pulse"
+        ],
+        "frequency_hz": {
+          "min": 10,
+          "max": 10000,
+          "note": "panel scale, 440 Hz at centre; the guide says plus or minus 2 octaves"
+        }
+      },
+      "inputs": [
+        "vco2.pitch_in",
+        "vco2.freq_cv_in",
+        "vco2.fm_in",
+        "vco2.wave_cv_in",
+        "vco2.pwm_in",
+        "vco2.sync_in"
+      ],
+      "outputs": [
+        "vco2.out"
+      ]
+    },
+    {
+      "id": "vca2",
+      "type": "vca",
+      "name": "VCO 2 VCA",
+      "panel_section": "VCA (VCO 2)",
+      "description": "Level control for VCO 2 before the filter, set by its VOLUME knob and a CV input. This is how the two oscillators are mixed, and why the mix can be voltage controlled.",
+      "inputs": [
+        "vca2.in",
+        "vca2.cv_in"
+      ],
+      "outputs": [
+        "vca2.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "description": "24 dB/octave low-pass filter. Self-oscillates at the top of the resonance range. Keyboard tracking from 0 to 200%, envelope depth from ADS 2, and CV inputs for frequency, resonance and envelope depth. Takes both VCO VCAs and an external audio input.",
+      "properties": {
+        "slope_db_per_octave": 24,
+        "modes": [
+          "lowpass"
+        ],
+        "cutoff_hz": {
+          "min": 16,
+          "max": 16000,
+          "note": "panel scale"
+        },
+        "self_oscillates": true
+      },
+      "inputs": [
+        "vcf.in_vco1",
+        "vcf.in_vco2",
+        "vcf.in_ext",
+        "vcf.kbd_in",
+        "vcf.env_in",
+        "vcf.freq_cv_in",
+        "vcf.res_cv_in",
+        "vcf.env_amount_cv_in"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "ads1",
+      "type": "envelope",
+      "name": "ADS 1",
+      "panel_section": "ADS 1",
+      "description": "Attack, decay and sustain envelope driving the output VCA. There is no release control: DECAY sets both the decay and the release time. Every stage has its own CV input. DECAY OFF forces decay and release to zero.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ]
+      },
+      "inputs": [
+        "ads1.gate_in",
+        "ads1.attack_cv_in",
+        "ads1.decay_cv_in",
+        "ads1.sustain_cv_in"
+      ],
+      "outputs": [
+        "ads1.out"
+      ]
+    },
+    {
+      "id": "ads2",
+      "type": "envelope",
+      "name": "ADS 2",
+      "panel_section": "ADS 2",
+      "description": "Attack, decay and sustain envelope driving the filter. There is no release control: DECAY sets both the decay and the release time. Every stage has its own CV input.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ]
+      },
+      "inputs": [
+        "ads2.gate_in",
+        "ads2.attack_cv_in",
+        "ads2.decay_cv_in",
+        "ads2.sustain_cv_in"
+      ],
+      "outputs": [
+        "ads2.out"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "Output VCA",
+      "panel_section": "VCA",
+      "description": "Amplifier after the filter, opened by ADS 1.",
+      "inputs": [
+        "vca.in",
+        "vca.env_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "NOISE GENERATOR",
+      "description": "White or pink noise, patch-only: the panel draws its line to the NOISE OUT jack and nowhere else.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "volt_proc",
+      "type": "summer",
+      "name": "Voltage processor",
+      "panel_section": "VOLTAGE PROCESSOR",
+      "description": "Two-input voltage processor. Input 1 carries +10 V DC unless something is patched, scaled by IN 1 GAIN; input 2 has a fixed gain of 2. The sum is scaled by OUT GAIN and available normal and inverted. With nothing patched it is a manual offset voltage source.",
+      "inputs": [
+        "volt_proc.in1",
+        "volt_proc.in2"
+      ],
+      "outputs": [
+        "volt_proc.out",
+        "volt_proc.rev_out"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME",
+      "description": "Master volume feeding the 3.5 mm front and 6.35 mm rear audio outputs and the headphone socket.",
+      "inputs": [
+        "output.in"
+      ],
+      "outputs": [
+        "output.main",
+        "output.phones"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.01,
+        "max": 100,
+        "unit": "Hz",
+        "taper": "logarithmic (panel marked 0.01, 0.1, 1, 10, 100)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO rate."
+    },
+    {
+      "id": "lfo.volume",
+      "module": "lfo",
+      "label": "VOLUME (LFO)",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuates the LFO's modulation of the VCOs and its OUT 1 output."
+    },
+    {
+      "id": "lfo.waveform",
+      "module": "lfo",
+      "label": "LFO",
+      "manual_ref": 29,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "pitch_bus.tune",
+      "module": "pitch_bus",
+      "label": "TUNE",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "physical": {
+        "min": -50,
+        "max": 50,
+        "unit": "cents"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tune, plus or minus 50 cents."
+    },
+    {
+      "id": "mod_bus.vco1_mod_off",
+      "module": "mod_bus",
+      "label": "VCO 1 MOD OFF",
+      "manual_ref": 30,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Removes VCO1 from the pitch modulation, leaving it on VCO2 only."
+    },
+    {
+      "id": "mod_bus.pwm_source",
+      "module": "mod_bus",
+      "label": "LFO / BOTH / ADS",
+      "manual_ref": 32,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo",
+          "label": "LFO"
+        },
+        {
+          "value": "both",
+          "label": "Both"
+        },
+        {
+          "value": "ads",
+          "label": "ADS",
+          "meaning": "the VCF envelope, ADS 2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source of pulse width modulation for both VCOs at the pulse end of their waveform controls."
+    },
+    {
+      "id": "vco1.frequency",
+      "module": "vco1",
+      "label": "FREQUENCY",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 10,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "logarithmic",
+        "note": "panel scale 10 Hz to 10 kHz with 440 Hz at centre; the guide says plus or minus 2 octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Base frequency of VCO 1."
+    },
+    {
+      "id": "vco1.waveform",
+      "module": "vco1",
+      "label": "WAVEFORM",
+      "manual_ref": 21,
+      "kind": "morph",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "pulse",
+          "meaning": "fully clockwise; width modulated by the selected PWM source"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Morphs VCO 1's wave continuously from triangle through ramp and sawtooth to square and pulse. At fully clockwise the pulse width follows the PWM source switch."
+    },
+    {
+      "id": "vca1.level",
+      "module": "vca1",
+      "label": "VOLUME",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 1 into the filter."
+    },
+    {
+      "id": "vco2.frequency",
+      "module": "vco2",
+      "label": "FREQUENCY",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 10,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "logarithmic",
+        "note": "panel scale 10 Hz to 10 kHz with 440 Hz at centre; the guide says plus or minus 2 octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Base frequency of VCO 2."
+    },
+    {
+      "id": "vco2.waveform",
+      "module": "vco2",
+      "label": "WAVEFORM",
+      "manual_ref": 21,
+      "kind": "morph",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "pulse",
+          "meaning": "fully clockwise; width modulated by the selected PWM source"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Morphs VCO 2's wave continuously from triangle through ramp and sawtooth to square and pulse. At fully clockwise the pulse width follows the PWM source switch."
+    },
+    {
+      "id": "vca2.level",
+      "module": "vca2",
+      "label": "VOLUME",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of VCO 2 into the filter."
+    },
+    {
+      "id": "vco2.beat",
+      "module": "vco2",
+      "label": "VCO 2 BEAT",
+      "manual_ref": 37,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of VCO2 against VCO1, for beating and detune."
+    },
+    {
+      "id": "vco2.sync",
+      "module": "vco2",
+      "label": "SYNCHRO",
+      "manual_ref": 31,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Hard-syncs VCO2 to VCO1."
+    },
+    {
+      "id": "vcf.frequency",
+      "module": "vcf",
+      "label": "VCF FREQ",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 16,
+        "max": 16000,
+        "unit": "Hz",
+        "taper": "logarithmic"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "manual_ref": 24,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis at cutoff; self-oscillates at the top of the range, marked OSC on the panel."
+    },
+    {
+      "id": "vcf.keyb_ctrl",
+      "module": "vcf",
+      "label": "KEYB CTRL / STEP LENGTH",
+      "manual_ref": 38,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 2,
+        "unit": "V/octave"
+      },
+      "physical": {
+        "min": 0,
+        "max": 200,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff from 0 to 200% (2 V/octave). The STEP LENGTH half of the label is not explained."
+    },
+    {
+      "id": "vcf.ads_ctrl",
+      "module": "vcf",
+      "label": "ADS CONTROL",
+      "manual_ref": 39,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of ADS 2 on cutoff. The panel scale runs 5 to 0 to 5, which suggests a bipolar control; the guide does not say.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "ads1.attack",
+      "module": "ads1",
+      "label": "ATTACK",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 1,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the VCA envelope. No time scale given."
+    },
+    {
+      "id": "ads1.decay",
+      "module": "ads1",
+      "label": "DECAY",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 1,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay and release time of the VCA envelope."
+    },
+    {
+      "id": "ads1.sustain",
+      "module": "ads1",
+      "label": "SUSTAIN",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the VCA envelope."
+    },
+    {
+      "id": "ads2.attack",
+      "module": "ads2",
+      "label": "ATTACK",
+      "manual_ref": 40,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 1,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the VCF envelope. No time scale given."
+    },
+    {
+      "id": "ads2.decay",
+      "module": "ads2",
+      "label": "DECAY",
+      "manual_ref": 41,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 1,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay and release time of the VCF envelope."
+    },
+    {
+      "id": "ads2.sustain",
+      "module": "ads2",
+      "label": "SUSTAIN",
+      "manual_ref": 42,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the VCF envelope."
+    },
+    {
+      "id": "ads1.decay_off",
+      "module": "ads1",
+      "label": "DECAY OFF",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Temporarily sets the VCA envelope's decay (and so release) to zero.",
+      "note": "The specifications call this 'ADS 2 Decay Off'. The guide assigns it to the VCA envelope, which is ADS 1."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall output level."
+    },
+    {
+      "id": "volt_proc.in1_gain",
+      "module": "volt_proc",
+      "label": "IN 1 GAIN",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 2,
+        "unit": "gain"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Scales voltage processor input 1, which is +10 V unless patched."
+    },
+    {
+      "id": "volt_proc.out_gain",
+      "module": "volt_proc",
+      "label": "OUT GAIN",
+      "manual_ref": 36,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 2,
+        "unit": "gain"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Scales the voltage processor's output."
+    },
+    {
+      "id": "noise.colour",
+      "module": "noise",
+      "label": "WHITE / PINK",
+      "manual_ref": 28,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "white"
+        },
+        {
+          "value": "pink"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Noise colour."
+    },
+    {
+      "id": "gate_bus.invert",
+      "module": "gate_bus",
+      "label": "Gate polarity",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTRIBE"
+        }
+      ],
+      "function": "Inverts the GATE IN polarity for sequencers that use inverted gates. Set in SynthTRIBE only."
+    },
+    {
+      "id": "kbd.poly_chain",
+      "module": "kbd",
+      "label": "Poly chain",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTRIBE"
+        }
+      ],
+      "function": "Chains multiple Expanders for polyphony. Set up in SynthTRIBE."
+    },
+    {
+      "id": "kbd.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CHANNEL DIP SWITCH",
+      "manual_ref": 62,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "MIDI receive channel, four rear DIP switches; table in the guide."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER SWITCH",
+      "manual_ref": 65,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "button"
+        }
+      ],
+      "function": "Power on and off. The specifications describe both a top-panel slider and a rear push button."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lfo.rate_led",
+      "module": "lfo",
+      "label": "LFO rate",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": null,
+      "function": "Blinks at the LFO rate. Shown on the panel, not described in the guide."
+    },
+    {
+      "id": "gate_bus.gate_led",
+      "module": "gate_bus",
+      "label": "Gate",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": null,
+      "function": "Lit while a gate is present."
+    },
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "Power",
+      "kind": "led",
+      "led_colour": "green",
+      "manual_ref": null,
+      "function": "Lit when the unit is on."
+    }
+  ],
+  "led_legend": {
+    "rule": "Green is power; red is activity (LFO rate, gate).",
+    "colours": [
+      {
+        "colour": "green",
+        "meaning": "power"
+      },
+      {
+        "colour": "red",
+        "meaning": "activity: LFO cycle, gate present"
+      }
+    ],
+    "confidence": "inferred",
+    "note": "From the panel image. The guide lists a power LED in the specifications and describes none of the others."
+  },
+  "ports": [
+    {
+      "id": "jack.lfo_rate_in",
+      "label": "LFO RATE",
+      "manual_ref": 1,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.rate_cv_in",
+      "combine": "sum",
+      "function": "CV control of LFO rate.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.lfo_out1",
+      "label": "LFO OUT 1",
+      "manual_ref": 2,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.out",
+      "function": "LFO output, scaled by LFO VOLUME."
+    },
+    {
+      "id": "jack.lfo_out2",
+      "label": "LFO OUT 2",
+      "manual_ref": 3,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.out_raw",
+      "function": "Unattenuated LFO output."
+    },
+    {
+      "id": "jack.vco_mod_in",
+      "label": "VCO MOD IN",
+      "manual_ref": 4,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "mod_bus.in",
+      "combine": "replace",
+      "function": "External modulation of both VCOs, replacing the LFO normal."
+    },
+    {
+      "id": "jack.vco1_freq_in",
+      "label": "VCO 1 FREQ",
+      "manual_ref": 5,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.freq_cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 1 frequency.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco1_wave_in",
+      "label": "VCO 1 WAVEFORM",
+      "manual_ref": 6,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.wave_cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 1's waveform morph.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco1_vol_in",
+      "label": "VCO 1 VOLUME",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca1.cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 1's level into the filter.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco2_freq_in",
+      "label": "VCO 2 FREQ",
+      "manual_ref": 49,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.freq_cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 2 frequency.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco2_wave_in",
+      "label": "VCO 2 WAVEFORM",
+      "manual_ref": 50,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.wave_cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 2's waveform morph.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco2_vol_in",
+      "label": "VCO 2 VOLUME",
+      "manual_ref": 51,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca2.cv_in",
+      "combine": "sum",
+      "function": "CV control of VCO 2's level into the filter.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco1_out",
+      "label": "VCO 1 OUT",
+      "manual_ref": 8,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vco1.out",
+      "function": "Unprocessed VCO1. Patching it does not interrupt VCO1's feed to the filter."
+    },
+    {
+      "id": "jack.vco2_insert_send",
+      "label": "VCO 2 OUT (tip)",
+      "manual_ref": 52,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vco2.out",
+      "function": "Unprocessed VCO2. Unlike VCO 1 OUT, plugging in cuts VCO2's feed to the filter. The jack is a TRS insert: tip is the VCO2 send.",
+      "note": "One physical jack, modelled as a send and a return because the schema's direction is single-valued."
+    },
+    {
+      "id": "jack.vco2_insert_return",
+      "label": "VCO 2 OUT (ring)",
+      "manual_ref": 52,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca2.in",
+      "combine": "replace",
+      "function": "Ring of the VCO 2 OUT insert: a return into VCO2's path to the filter, per the guide's Y-cable tip. A mono plug grounds it, which is why patching cuts the feed.",
+      "confidence": "inferred",
+      "note": "Whether the return enters before or after VCO2's VCA is not stated; modelled before, since the send is 'unprocessed'."
+    },
+    {
+      "id": "jack.vcf_freq_in",
+      "label": "VCF FREQUENCY",
+      "manual_ref": 9,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.freq_cv_in",
+      "combine": "sum",
+      "function": "CV control of cutoff.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.res_in",
+      "label": "RESONANCE",
+      "manual_ref": 10,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.res_cv_in",
+      "combine": "sum",
+      "function": "CV control of resonance.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.gate_in",
+      "label": "GATE IN",
+      "manual_ref": 11,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "gate_bus.in",
+      "combine": "replace",
+      "function": "External gate for both envelopes, for example from an analogue sequencer.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads1_attack_in",
+      "label": "ATTACK (ADS 1)",
+      "manual_ref": 12,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads1.attack_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCA envelope attack time.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads1_decay_in",
+      "label": "DECAY (ADS 1)",
+      "manual_ref": 13,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads1.decay_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCA envelope decay and release times.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads1_sustain_in",
+      "label": "SUSTAIN (ADS 1)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads1.sustain_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCA envelope sustain level.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads1_out",
+      "label": "ADS 1 OUT",
+      "manual_ref": 15,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads1.out",
+      "function": "VCA envelope output."
+    },
+    {
+      "id": "jack.ads2_attack_in",
+      "label": "ATTACK (ADS 2)",
+      "manual_ref": 57,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads2.attack_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCF envelope attack time.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads2_decay_in",
+      "label": "DECAY (ADS 2)",
+      "manual_ref": 58,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads2.decay_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCF envelope decay and release times.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads2_sustain_in",
+      "label": "SUSTAIN (ADS 2)",
+      "manual_ref": 59,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads2.sustain_cv_in",
+      "combine": "sum",
+      "function": "CV control of the VCF envelope sustain level.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ads2_out",
+      "label": "ADS 2 OUT",
+      "manual_ref": 56,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ads2.out",
+      "function": "VCF envelope output."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 16,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI into the Expander. Poly chain is set up in SynthTRIBE."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 43,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.phones",
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.vp_in1",
+      "label": "IN 1",
+      "manual_ref": 44,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "volt_proc.in1",
+      "combine": "replace",
+      "electrical": {
+        "normalled_voltage_v": 10
+      },
+      "function": "Voltage processor input 1, scaled by IN 1 GAIN. +10 V DC is present unless a jack is inserted."
+    },
+    {
+      "id": "jack.vp_in2",
+      "label": "IN 2",
+      "manual_ref": 45,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "volt_proc.in2",
+      "electrical": {
+        "gain": 2
+      },
+      "function": "Voltage processor input 2, fixed gain of 2."
+    },
+    {
+      "id": "jack.vp_out",
+      "label": "OUT",
+      "manual_ref": 46,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "volt_proc.out",
+      "function": "Voltage processor output, scaled by OUT GAIN."
+    },
+    {
+      "id": "jack.vp_rev_out",
+      "label": "REV OUT",
+      "manual_ref": 47,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "volt_proc.rev_out",
+      "function": "Inverted voltage processor output."
+    },
+    {
+      "id": "jack.noise_out",
+      "label": "NOISE OUT",
+      "manual_ref": 48,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "noise.out",
+      "function": "Noise generator output."
+    },
+    {
+      "id": "jack.vcf_audio_in",
+      "label": "VCF AUDIO IN",
+      "manual_ref": 53,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.in_ext",
+      "combine": "sum",
+      "function": "External audio into the filter, alongside the VCOs.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.cv_in",
+      "label": "CV IN 1V/OCT",
+      "manual_ref": 54,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "pitch_bus.cv_in",
+      "combine": "unknown",
+      "function": "External 1 V/octave pitch for both VCOs and the filter tracking."
+    },
+    {
+      "id": "jack.ads_ctrl_in",
+      "label": "ADS CTRL",
+      "manual_ref": 55,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.env_amount_cv_in",
+      "combine": "sum",
+      "function": "CV control of the filter envelope depth.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.audio_out_mini",
+      "label": "AUDIO OUT",
+      "manual_ref": 60,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.main",
+      "function": "Line-level output, 3.5 mm TS, front panel."
+    },
+    {
+      "id": "jack.audio_out_quarter",
+      "label": "AUDIO OUT",
+      "manual_ref": 61,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.main",
+      "function": "Line-level output, 6.35 mm TS, rear panel."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 63,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Mirror of MIDI IN."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 64,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "USB MIDI, firmware updates and SynthTRIBE.",
+      "note": "The specifications say USB Micro; the controls list says type B."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC IN",
+      "manual_ref": 66,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 1000
+      },
+      "function": "12 V DC from the supplied adaptor, 1000 mA."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.pitch",
+      "to": "pitch_bus.midi_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch_bus.tune"
+    },
+    {
+      "id": "c02",
+      "from": "pitch_bus.out",
+      "to": "vco1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco1.frequency"
+    },
+    {
+      "id": "c03",
+      "from": "pitch_bus.out",
+      "to": "vco2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco2.frequency"
+    },
+    {
+      "id": "c04",
+      "from": "pitch_bus.out",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.keyb_ctrl"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.gate",
+      "to": "gate_bus.in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.gate_in"
+    },
+    {
+      "id": "c06",
+      "from": "gate_bus.out",
+      "to": "ads1.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "gate_bus.out",
+      "to": "ads2.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c10",
+      "from": "lfo.out",
+      "to": "mod_bus.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco_mod_in",
+      "note": "The LFO reaches the VCOs through LFO VOLUME unless VCO MOD IN is patched."
+    },
+    {
+      "id": "c11",
+      "from": "mod_bus.out",
+      "to": "vco1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.vco1_mod_off",
+        "equals": false
+      }
+    },
+    {
+      "id": "c12",
+      "from": "mod_bus.out",
+      "to": "vco2.fm_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "lfo.out",
+      "to": "vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "lfo"
+          },
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "both"
+          }
+        ]
+      },
+      "note": "Only audible at the pulse end of the WAVEFORM control."
+    },
+    {
+      "id": "c14",
+      "from": "ads2.out",
+      "to": "vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "ads"
+          },
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "both"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c15",
+      "from": "lfo.out",
+      "to": "vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "lfo"
+          },
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "both"
+          }
+        ]
+      },
+      "note": "Only audible at the pulse end of the WAVEFORM control."
+    },
+    {
+      "id": "c16",
+      "from": "ads2.out",
+      "to": "vco2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "ads"
+          },
+          {
+            "param": "mod_bus.pwm_source",
+            "equals": "both"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c17",
+      "from": "vco1.sync_out",
+      "to": "vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c20",
+      "from": "vco1.out",
+      "to": "vca1.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "vco2.out",
+      "to": "vca2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_insert_return",
+      "note": "Broken by any plug in VCO 2 OUT; see the insert-jack ports."
+    },
+    {
+      "id": "c22",
+      "from": "vca1.out",
+      "to": "vcf.in_vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vca1.level"
+    },
+    {
+      "id": "c23",
+      "from": "vca2.out",
+      "to": "vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vca2.level"
+    },
+    {
+      "id": "c24",
+      "from": "ads2.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.ads_ctrl"
+    },
+    {
+      "id": "c25",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c26",
+      "from": "ads1.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c27",
+      "from": "vca.out",
+      "to": "output.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Morphing waveforms",
+      "applies_to": [
+        "vco1",
+        "vco2"
+      ],
+      "rule": "Each VCO has one WAVEFORM knob and one waveform CV input that sweep continuously through triangle, ramp, sawtooth, square and pulse. Intermediate positions are valid timbres, not detents. At fully clockwise the pulse width is modulated by the source chosen on the LFO/BOTH/ADS switch."
+    },
+    {
+      "id": "b02",
+      "name": "Per-oscillator VCAs",
+      "applies_to": [
+        "vca1",
+        "vca2",
+        "vcf"
+      ],
+      "rule": "Each VCO has its own VCA before the filter, set by its VOLUME knob and a CV input. The oscillator mix is therefore voltage controllable: an envelope or LFO into VCO 1 VOLUME and VCO 2 VOLUME crossfades them."
+    },
+    {
+      "id": "b03",
+      "name": "Pitch modulation normal",
+      "applies_to": [
+        "lfo",
+        "mod_bus",
+        "vco1",
+        "vco2"
+      ],
+      "rule": "The LFO, scaled by LFO VOLUME, is normalled to both VCOs' modulation input. VCO MOD IN replaces it. VCO 1 MOD OFF exempts VCO1, which with SYNCHRO on gives sync sweeps with a stable fundamental."
+    },
+    {
+      "id": "b04",
+      "name": "Asymmetric VCO outputs",
+      "applies_to": [
+        "vco1",
+        "vco2"
+      ],
+      "rule": "VCO 1 OUT is a tap; VCO1 still feeds the filter. VCO 2 OUT is a TRS insert: a mono plug takes VCO2 out and cuts it from the filter; a Y-cable (tip send, ring return) lets VCO2 be processed externally and returned."
+    },
+    {
+      "id": "b05",
+      "name": "ADS envelopes",
+      "applies_to": [
+        "ads1",
+        "ads2"
+      ],
+      "rule": "Both envelopes are attack, decay, sustain; DECAY also sets the release, as on a Minimoog. DECAY OFF on the VCA envelope zeroes decay and release for an organ-style gate. The gate input description calls them ASR."
+    },
+    {
+      "id": "b06",
+      "name": "Voltage processor",
+      "applies_to": [
+        "volt_proc"
+      ],
+      "rule": "Out = OUT GAIN x (IN 1 GAIN x in1 + 2 x in2), with REV OUT its inverse. With nothing patched, in1 is +10 V, so OUT and REV OUT are manual positive and negative offsets. Gains are marked 0 to 2 on the panel.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b07",
+      "name": "Everything is voltage controllable",
+      "applies_to": [
+        "vco1",
+        "vco2",
+        "vcf",
+        "ads1",
+        "ads2",
+        "lfo"
+      ],
+      "rule": "Almost every knob has a matching CV input: VCO frequency, waveform and level, filter frequency, resonance and envelope depth, every envelope stage, LFO rate. The guide suggests external modulation sources such as the Behringer Abacus. Whether each input sums with its knob or replaces it is not stated; sum is assumed."
+    },
+    {
+      "id": "b08",
+      "name": "Self-oscillating filter",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "The filter self-oscillates at the top of the resonance range. With KEYB CTRL at 100% (1 V/octave) it tracks pitch as a sine source. KEYB CTRL goes to 200%."
+    },
+    {
+      "id": "b09",
+      "name": "Refiltering and fuzz",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "The guide suggests feeding one of the Expander's own outputs back into VCF AUDIO IN to refilter, and overdriving that input for fuzz before the filter."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off"
+    ],
+    "transmits": [
+      "MIDI THRU pass-through",
+      "USB MIDI"
+    ],
+    "channel": {
+      "range": [
+        1,
+        16
+      ],
+      "set_by": "four rear DIP switches"
+    },
+    "cc_map": null,
+    "nrpn": null,
+    "sysex": null,
+    "note_to_cv": {
+      "scaling": "1 V/octave (CV IN is 1 V/octave; MIDI is assumed to match)"
+    },
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows 7 or higher, Mac OS X 10.10 or higher"
+    },
+    "app": "SynthTRIBE: firmware, poly chain, gate polarity"
+  },
+  "specifications": {
+    "voices": "monophonic",
+    "oscillators": 2,
+    "lfo": 1,
+    "vcf": "LPF 24 dB/octave",
+    "envelopes": "2 ADS",
+    "outputs": {
+      "front": "3.5 mm TS",
+      "rear": "6.35 mm TS"
+    },
+    "midi": "In (top panel), Thru (rear), 5-pin DIN, 16 channels by DIP switch; USB",
+    "power": {
+      "adaptor": "12 V DC, 1000 mA"
+    },
+    "dimensions_mm": {
+      "h": 94,
+      "w": 424,
+      "d": 136
+    },
+    "weight_kg": 1.65,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in nine languages",
+    "warranty and FCC/EU declarations",
+    "hook-up diagrams",
+    "non-English duplicates",
+    "Eurorack installation instructions",
+    "the MIDI channel DIP switch table"
+  ],
+  "not_in_source": [
+    "envelope times in seconds for either envelope",
+    "whether the CV inputs sum with their knobs or replace them",
+    "whether CV IN sums with MIDI pitch or overrides it",
+    "the meaning of STEP LENGTH on the KEYB CTRL knob",
+    "the ADS CONTROL polarity; the panel scale suggests bipolar",
+    "whether the VCO 2 OUT return enters before or after VCO2's VCA",
+    "any MIDI implementation beyond note on and off",
+    "the number of units a poly chain supports",
+    "the sample-and-hold LFO shape that the specifications list"
+  ],
+  "source_inconsistencies": [
+    "The LFO waveform switch (29) offers triangle and square; the specifications list square, S&H and triangle.",
+    "DECAY OFF (33) acts on the VCA envelope, which is ADS 1; the specifications call it ADS 2 Decay Off.",
+    "GATE IN (11) calls the envelopes ASR; everywhere else they are ADS.",
+    "VCO FREQUENCY (20) is described as plus or minus 2 octaves; the panel scale runs 10 Hz to 10 kHz, about ten octaves.",
+    "USB (64) is type B in the controls list and USB Micro in the specifications.",
+    "The specifications describe a top-panel slider power switch and a rear push button; the controls list has one POWER SWITCH.",
+    "LFO OUTPUT 2 is printed as 'LFO OUTPUT 1' in the Chinese section."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Envelope times",
+      "detail": "None given anywhere; the knobs are marked 1 to 10."
+    },
+    {
+      "topic": "Waveform morph law",
+      "detail": "The order of shapes is stated; where each shape sits on the knob, and what the in-between shapes are, is not."
+    },
+    {
+      "topic": "Filter",
+      "detail": "Self-oscillation is stated; resonance law, cutoff taper and filter topology are not."
+    },
+    {
+      "topic": "CV scaling",
+      "detail": "Only CV IN (1 V/octave) and KEYB CTRL (0 to 2 V/octave) have stated scaling. No input voltage ranges are given for any other jack."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "No RSF Kobol documentation was supplied; it would be the source for ranges and the waveform morph."
+    }
+  ]
+}

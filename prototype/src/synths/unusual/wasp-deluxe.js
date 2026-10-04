@@ -1,0 +1,20 @@
+// What the Behringer WASP Deluxe (and the EDP Wasp it follows) names or does differently from most synths. Attached with annotate() in the SynthDef.
+export default {
+  'mix.ext': 'With nothing patched into EXT AUDIO, this channel carries the WASP’s own output back into its mixer. So EXT is a feedback control as well as an input level, something most synths only get with a patch cable.',
+  'osc1.wave': 'The oscillators are made digitally, as on the original Wasp, which gives them a hard, buzzy edge; the filter and VCA are analogue. Each oscillator has an OFF position on its waveform switch as well as a level knob in the mixer.',
+  'osc1.ft': 'Octaves are marked in organ feet (32 to 2), as on many older synths: halving the number raises the pitch an octave.',
+  'osc1.width': 'Only the upper oscillator has a WIDTH control. The guide does not say whether it also affects the lower oscillator or the ENH shape; here it acts on the upper oscillator’s square and ENH.',
+  'osc2.pitch': 'Only the lower oscillator has a PITCH knob. It tunes that oscillator against the upper one, so the upper oscillator is the fixed reference.',
+  'ctrl.freq': 'Wasp calls its LFO the control oscillator. It reaches 100 Hz, well into audio rates, so it can roughen and growl as well as wobble.',
+  'ctrl.wave': 'Six shapes, including a rising and a falling sawtooth, NOISE and RND. RND is a sample and hold built into the LFO: a new random level each cycle.',
+  'ctrl.pitchMod': 'There is one pitch modulation depth for both oscillators. The guide describes it as varying the pitch difference between them; here it moves both together.',
+  'vcf.mode': 'One filter with four responses, including NOTCH, which is rare on a small mono synth. The original Wasp filter was built from CMOS logic chips rather than a transistor ladder or a filter chip.',
+  'vcf.q': 'The panel calls resonance ‘Q’. The guide says it sets the slope in LO and HI and the width of the band in BAND and NOTCH.',
+  'vcf.oscAmt': 'Both FILTER CONTROL knobs have 0 at the top: turned anticlockwise they turn their source upside down. Most synths only have a positive LFO or envelope amount. These two knobs are not numbered in the guide.',
+  'vcf.envAmt': 'The envelope depth is bipolar: anticlockwise, each note makes the filter dip instead of open. Most synths need an inverted envelope setting for that.',
+  'vca.sustain': 'The sustain knob’s far end, REPEAT, makes the envelope loop: rise over ATTACK, fall over DECAY, and start again while the key is held. Most synths need an LFO to retrigger an envelope.',
+  'vca.decay': 'There is no separate release: DECAY sets both the fall to the sustain level and the fade after the key is let go.',
+  'vca.hold': 'HOLD freezes the loudness envelope wherever it is when flipped, part way through a decay for example, until it is flipped back. It is not a sustain pedal or a latch for the key.',
+  'cenv.delay': 'The control envelope can wait up to a second before it starts, which few synths offer on a filter envelope. The same knob’s far end is REPEAT, which cycles the envelope instead.',
+  cenv: 'The filter’s envelope has no sustain: it rises and falls on each note, even while the key is held. It reaches the filter only through the right-hand FILTER CONTROL knob.',
+};

@@ -1,0 +1,2690 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-cat",
+    "manufacturer": "Behringer",
+    "model": "CAT",
+    "category": "duophonic analogue synthesizer, desktop / Eurorack (70 HP)",
+    "based_on": "Octave CAT SRM II (USA, early 1980s), the last CAT revision, with CEM3340 VCOs and an SSM2044 filter. Behringer's own product text calls it an 'authentic reproduction of original CAT SRM II circuitry'. The Octave manual supplied covers the earlier CAT and CAT SRM, so figures carried over from it are one revision removed.",
+    "sources": [
+      {
+        "id": "cat",
+        "title": "CAT Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_CAT_Manual.pdf",
+        "pages": 53,
+        "version": "V 4.0",
+        "note": "59 numbered controls with prose descriptions (pages 14 to 19), a poly chain LED table, a MIDI message table and a specifications table with every jack voltage. No envelope times."
+      },
+      {
+        "id": "panel",
+        "title": "CAT front panel image",
+        "kind": "measurement",
+        "file": "Behringer_CAT.jpeg",
+        "note": "Used for the modulation switch positions (the guide only says 'patch different waveforms'), the three-position SYNC switch and the panel ranges."
+      },
+      {
+        "id": "octave",
+        "title": "Octave CAT Instruction Manual (with CAT SRM modifications and specifications)",
+        "kind": "user_manual",
+        "file": "Octave_Cat_Instruction_Manual.pdf",
+        "pages": 38,
+        "note": "Scanned, read by OCR at 300 dpi. Covers the original CAT (model 1853) and the later CAT SRM, with a separate specification sheet for each and a page of SRM changes. The Behringer matches the SRM (sine LFO, LFO delay, 0.03 to 30 Hz, two-note memory), so SRM figures are used. Where OCR was unclear the value is noted."
+      },
+      {
+        "id": "maffez",
+        "title": "Some Modifications for the Behringer CAT Synthesizer (maffez, V1, May 2022)",
+        "kind": "circuit_analysis",
+        "file": "https://maffez.com/wp-content/uploads/2022/05/Behringer_Cat_Modifications_V1.pdf",
+        "note": "A modder's circuit notes from opening a Behringer CAT and comparing it with the CAT SRM service manual. Source for the filter and VCA chips, the digital glide, the summing of the VCO CV inputs and the S&H clocking."
+      },
+      {
+        "id": "forums",
+        "title": "Gearspace 'Behringer - The Cat' thread and Mod Wiggler 'Introducing the CAT Synthesizer' thread",
+        "kind": "other",
+        "file": "https://gearspace.com/threads/behringer-the-cat.1226541/ ; https://www.modwiggler.com/forum/viewtopic.php?t=225491",
+        "note": "Owner reports, including a former Behringer tester. Source for what the two sync modes do, the SRM II lineage, and the note priority setting."
+      },
+      {
+        "id": "retail",
+        "title": "Behringer product page and retailer descriptions (Perfect Circuit, B&H, ModularGrid)",
+        "kind": "other",
+        "file": "https://www.behringer.com/en/products/0718-AAH ; https://www.perfectcircuit.com/behringer-cat.html",
+        "note": "Confirm the SRM II basis and describe the GATE input as triggering the envelopes."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 2,
+    "polyphony_mode": "duophonic (VCO1 highest note, VCO2 lowest, one filter and one VCA shared) or monophonic; poly chain across units",
+    "poly_chain_max_units": 16,
+    "patch_memory": false,
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 13,
+      "sliders": 21,
+      "switches": 16,
+      "jacks_3_5mm": 13
+    },
+    "summary": "Two VCOs, each a set of simultaneous waveforms with its own level sliders (VCO1: sub-octave, sawtooth, triangle, pulse; VCO2: sub-octave, square, sawtooth), feeding one 24 dB/octave low-pass filter with white noise and an external input, then a VCA. In duophonic mode VCO1 plays the highest held note and VCO2 the lowest, sharing the filter and VCA. Modulation is by three-way switches, each feeding a depth knob: every VCO and the filter has one group choosing LFO sine, LFO square or sample-and-hold, and one choosing ADSR, AR or the other VCO. VCO1 also has switched pulse width modulation. Two envelopes (ADSR and AR), a delayed LFO, a sample-and-hold of VCO1 or noise, and an ADSR repeat mode clocked by the LFO."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI and keyboard assignment",
+      "panel_section": "KEYBOARD",
+      "description": "MIDI notes in, split into a lowest-note and a highest-note pitch for duophonic playing, plus gate and pitch bend. There is no keyboard on this model.",
+      "inputs": [],
+      "outputs": [
+        "kbd.low_note",
+        "kbd.high_note",
+        "kbd.gate",
+        "kbd.bend"
+      ]
+    },
+    {
+      "id": "pitch",
+      "type": "pitch_control",
+      "name": "Pitch, glide and bend",
+      "panel_section": "KEYBOARD",
+      "description": "Glide, octave shift and pitch bend applied to both note pitches, and the VCO CV patch points. The KEYBOARD CONTROL switch decides which note VCO1 follows.",
+      "inputs": [
+        "pitch.low_in",
+        "pitch.high_in",
+        "pitch.bend_in",
+        "pitch.cv1_in",
+        "pitch.cv2_in"
+      ],
+      "outputs": [
+        "pitch.to_vco1_low",
+        "pitch.to_vco1_high",
+        "pitch.to_vco2"
+      ]
+    },
+    {
+      "id": "gate_bus",
+      "type": "gate_logic",
+      "name": "Gate and ADSR repeat",
+      "panel_section": "TRANSIENT GENERATORS",
+      "description": "Delivers the gate to both envelopes. ADSR REPEAT set to GATED retriggers the envelopes at the LFO rate while a key is held; AUTO retriggers them continuously. The GATE input jack feeds external gates into the same circuit, so it triggers the envelopes from a sequencer; the guide mentions it only in connection with GATED repeat.",
+      "inputs": [
+        "gate_bus.midi_in",
+        "gate_bus.ext_in",
+        "gate_bus.clock_in"
+      ],
+      "outputs": [
+        "gate_bus.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "KEYBOARD / TRANSIENT GENERATORS",
+      "description": "0.03 to 30 Hz, with simultaneous sine and square. The sine fades in after each key by the LFO DELAY time (0 to 5 s). Also clocks the sample-and-hold and the ADSR repeat. Internally it also generates a triangle, which is not brought out. The square swings about plus and minus 12 V, and its rising edge clocks the sample-and-hold.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.03,
+          "max": 30
+        },
+        "shapes": [
+          "sine",
+          "square"
+        ],
+        "delay_s": {
+          "min": 0,
+          "max": 5
+        }
+      },
+      "inputs": [],
+      "outputs": [
+        "lfo.sine",
+        "lfo.square",
+        "lfo.clock"
+      ]
+    },
+    {
+      "id": "sample_hold",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "TRANSIENT GENERATORS",
+      "description": "Samples VCO1's mixed output or the noise generator at the LFO rate; its stepped output is one of the modulation choices.",
+      "inputs": [
+        "sample_hold.in_vco1",
+        "sample_hold.in_noise",
+        "sample_hold.clock_in"
+      ],
+      "outputs": [
+        "sample_hold.out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "NOISE LEVEL",
+      "description": "White noise, mixed into the filter by NOISE LEVEL and available to the sample-and-hold.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO 1",
+      "panel_section": "VCO 1",
+      "description": "Four waveforms at once, each on its own level slider: sub-octave square, sawtooth, triangle and pulse. Coarse (0.2 Hz to 2 kHz on the panel) and fine tuning. Two modulation groups and switched pulse width modulation. Its 'out' node is the mix of its four level sliders.",
+      "properties": {
+        "waveforms": [
+          "sub_octave_square",
+          "sawtooth",
+          "triangle",
+          "pulse"
+        ],
+        "simultaneous_outputs": true,
+        "frequency_hz": {
+          "min": 1,
+          "max": 38500,
+          "note": "specifications: 1 Hz to 38.5 kHz in 6 overlapping ranges"
+        },
+        "frequency_hz_original": {
+          "keyboard_off": [
+            0.2,
+            24000
+          ],
+          "keyboard_on": [
+            0.2,
+            16000
+          ],
+          "coarse_octaves": 12
+        },
+        "chip": "CEM3340 type (CoolAudio V3340)"
+      },
+      "inputs": [
+        "vco1.pitch_in",
+        "vco1.fm1_in",
+        "vco1.fm2_in",
+        "vco1.pwm_in",
+        "vco1.sync_in"
+      ],
+      "outputs": [
+        "vco1.out"
+      ]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO 2",
+      "panel_section": "VCO 2",
+      "description": "Three waveforms at once on level sliders: sub-octave square, square and sawtooth. Fine tuning only; it always plays the lowest held note. Two modulation groups. Sync master for VCO1.",
+      "properties": {
+        "waveforms": [
+          "sub_octave_square",
+          "square",
+          "sawtooth"
+        ],
+        "simultaneous_outputs": true,
+        "tuning_range_octaves": 2.5,
+        "chip": "CEM3340 type (CoolAudio V3340)"
+      },
+      "inputs": [
+        "vco2.pitch_in",
+        "vco2.fm1_in",
+        "vco2.fm2_in"
+      ],
+      "outputs": [
+        "vco2.out",
+        "vco2.sync_out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "description": "4-pole 24 dB/octave low-pass filter that self-oscillates at full Q, silencing everything else. Inputs: VCO1 (switchable), VCO2, noise and the external audio input. Keyboard tracking, two modulation groups and CV inputs for cutoff and Q. The filter chip is a V2044, CoolAudio's SSM2044 clone, as on the SRM II.",
+      "properties": {
+        "slope_db_per_octave": 24,
+        "poles": 4,
+        "modes": [
+          "lowpass"
+        ],
+        "self_oscillates": true,
+        "cutoff_hz": {
+          "min": 5,
+          "max": 27000,
+          "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. OCR uncertain at the low end."
+        },
+        "max_q": 40,
+        "keyboard_tracking_v_per_oct": [
+          0,
+          1
+        ],
+        "chip": "V2044 (CoolAudio SSM2044 clone), 4-pole"
+      },
+      "inputs": [
+        "vcf.in_vco1",
+        "vcf.in_vco2",
+        "vcf.in_noise",
+        "vcf.in_ext",
+        "vcf.kbd_in",
+        "vcf.fm1_in",
+        "vcf.fm2_in",
+        "vcf.fc_cv_in",
+        "vcf.q_cv_in"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "adsr",
+      "type": "envelope",
+      "name": "ADSR",
+      "panel_section": "TRANSIENT GENERATORS",
+      "description": "Attack, decay, sustain, release. A modulation choice everywhere and a VCA source.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay",
+          "sustain",
+          "release"
+        ],
+        "output_v": {
+          "min": 0,
+          "max": 8.8
+        },
+        "attack_s": [
+          0.003,
+          6
+        ],
+        "decay_s": [
+          0.002,
+          7
+        ],
+        "sustain_pct": [
+          0,
+          100
+        ],
+        "release_s": [
+          0.002,
+          7
+        ],
+        "source_note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "inputs": [
+        "adsr.gate_in"
+      ],
+      "outputs": [
+        "adsr.out"
+      ]
+    },
+    {
+      "id": "ar",
+      "type": "envelope",
+      "name": "AR",
+      "panel_section": "TRANSIENT GENERATORS",
+      "description": "Attack and release only. A modulation choice everywhere and a VCA source.",
+      "properties": {
+        "stages": [
+          "attack",
+          "release"
+        ],
+        "output_v": {
+          "min": 0,
+          "max": 6.5
+        },
+        "attack_s": [
+          0.003,
+          7
+        ],
+        "release_s": [
+          0.002,
+          7
+        ],
+        "source_note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "inputs": [
+        "ar.gate_in"
+      ],
+      "outputs": [
+        "ar.out"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "description": "Output amplifier driven by the ADSR or AR, or bypassed for a constant level. VCA CV input.",
+      "inputs": [
+        "vca.in",
+        "vca.env_in",
+        "vca.cv_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ],
+      "properties": {
+        "chip": "V13700 OTA (in place of the original CA3080)"
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VCA",
+      "description": "Volume, 3.5 mm main out and phones on top, high and low level 1/4-inch outputs on the rear.",
+      "inputs": [
+        "output.in"
+      ],
+      "outputs": [
+        "output.main",
+        "output.phones",
+        "output.high",
+        "output.low"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "pitch.bend",
+      "module": "pitch",
+      "label": "PITCH BEND",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1,
+        "unit": "octaves"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Bends pitch up or down by an octave.",
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "octaves",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. Calibrated, with a click-stop dead band at centre."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "pitch.octave_shift",
+      "module": "pitch",
+      "label": "OCTAVE SHIFT",
+      "manual_ref": 2,
+      "kind": "enum",
+      "values": [
+        {
+          "value": 2,
+          "label": "+2"
+        },
+        {
+          "value": 0,
+          "label": "0"
+        },
+        {
+          "value": -2,
+          "label": "-2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Shifts pitch by up to 2 octaves."
+    },
+    {
+      "id": "pitch.glide",
+      "module": "pitch",
+      "label": "GLIDE",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Glide between MIDI notes. Implemented digitally in the MIDI-to-CV converter, so it has no effect on pitch arriving at the VCO CV inputs. Maximum about 1.5 s per octave on the Octave original; completes even if the key is released.",
+      "physical": {
+        "min": 0,
+        "max": 1.5,
+        "unit": "s per octave",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. Maximum about 1.5 s per octave. Glide completes even if the key is released."
+      },
+      "confidence": "inferred",
+      "note": "Digital, MIDI-only glide from the maffez circuit notes (the slider sends 0 to 3.3 V to the CPU) and owner reports on Mod Wiggler."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "LFO FREQ",
+      "manual_ref": 4,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.03,
+        "max": 30,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "LFO rate, which also sets the ADSR repeat rate and the sample-and-hold rate."
+    },
+    {
+      "id": "vco1.coarse",
+      "module": "vco1",
+      "label": "FREQUENCY (COARSE)",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.2,
+        "max": 24000,
+        "unit": "Hz",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. 0.2 Hz to 24 kHz with keyboard control off (OCR '241Khe'), 0.2 Hz to 16 kHz with it on; coarse span about 12 octaves. The Behringer panel marks 0.2 Hz to 2 kHz and its specifications say 1 Hz to 38.5 kHz."
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Approximate tuning of VCO1.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "vco1.fine",
+      "module": "vco1",
+      "label": "FREQUENCY (FINE)",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Exact tuning of VCO1."
+    },
+    {
+      "id": "pitch.keyboard_control",
+      "module": "pitch",
+      "label": "KEYBOARD CONTROL",
+      "manual_ref": 7,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly",
+          "label": "POLY",
+          "meaning": "VCO1 plays the highest note, duophonic"
+        },
+        {
+          "value": "off",
+          "label": "OFF",
+          "meaning": "VCO1 ignores the keyboard"
+        },
+        {
+          "value": "mono",
+          "label": "MONO",
+          "meaning": "VCO1 plays the lowest note, like VCO2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Which note VCO1 follows. VCO2 always plays the lowest note."
+    },
+    {
+      "id": "vco1.mod1_source",
+      "module": "vco1",
+      "label": "MODULATION SOURCE (LFO group)",
+      "manual_ref": 8,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine",
+          "label": "sine",
+          "meaning": "LFO sine, delayed"
+        },
+        {
+          "value": "square",
+          "label": "square",
+          "meaning": "LFO square"
+        },
+        {
+          "value": "sh",
+          "label": "S+H",
+          "meaning": "sample and hold"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LFO sine, LFO square or sample-and-hold, into the left depth knob.",
+      "note": "Positions read from the panel; the guide says only that the switches patch different waveforms in. The Octave SRM manual confirms the LFO outputs are sine and square; the original CAT used triangle and square."
+    },
+    {
+      "id": "vco1.mod1_depth",
+      "module": "vco1",
+      "label": "MODULATION DEPTH (LFO group)",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO-group source."
+    },
+    {
+      "id": "vco1.mod2_source",
+      "module": "vco1",
+      "label": "MODULATION SOURCE (envelope group)",
+      "manual_ref": 8,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "adsr",
+          "label": "ADSR"
+        },
+        {
+          "value": "ar",
+          "label": "AR"
+        },
+        {
+          "value": "vco2",
+          "label": "VCO2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "ADSR, AR or VCO2, into the right depth knob."
+    },
+    {
+      "id": "vco1.mod2_depth",
+      "module": "vco1",
+      "label": "MODULATION DEPTH (envelope group)",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the envelope-group source."
+    },
+    {
+      "id": "vco2.mod1_source",
+      "module": "vco2",
+      "label": "MODULATION SOURCE (LFO group)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine",
+          "label": "sine",
+          "meaning": "LFO sine, delayed"
+        },
+        {
+          "value": "square",
+          "label": "square",
+          "meaning": "LFO square"
+        },
+        {
+          "value": "sh",
+          "label": "S+H",
+          "meaning": "sample and hold"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LFO sine, LFO square or sample-and-hold, into the left depth knob.",
+      "note": "Positions read from the panel; the guide says only that the switches patch different waveforms in. The Octave SRM manual confirms the LFO outputs are sine and square; the original CAT used triangle and square."
+    },
+    {
+      "id": "vco2.mod1_depth",
+      "module": "vco2",
+      "label": "MODULATION DEPTH (LFO group)",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO-group source."
+    },
+    {
+      "id": "vco2.mod2_source",
+      "module": "vco2",
+      "label": "MODULATION SOURCE (envelope group)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "adsr",
+          "label": "ADSR"
+        },
+        {
+          "value": "ar",
+          "label": "AR"
+        },
+        {
+          "value": "vco1",
+          "label": "VCO1"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "ADSR, AR or VCO1, into the right depth knob."
+    },
+    {
+      "id": "vco2.mod2_depth",
+      "module": "vco2",
+      "label": "MODULATION DEPTH (envelope group)",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the envelope-group source."
+    },
+    {
+      "id": "vcf.mod1_source",
+      "module": "vcf",
+      "label": "MODULATION SOURCE (LFO group)",
+      "manual_ref": 24,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine",
+          "label": "sine",
+          "meaning": "LFO sine, delayed"
+        },
+        {
+          "value": "square",
+          "label": "square",
+          "meaning": "LFO square"
+        },
+        {
+          "value": "sh",
+          "label": "S+H",
+          "meaning": "sample and hold"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "LFO sine, LFO square or sample-and-hold, into the left depth knob.",
+      "note": "Positions read from the panel; the guide says only that the switches patch different waveforms in. The Octave SRM manual confirms the LFO outputs are sine and square; the original CAT used triangle and square."
+    },
+    {
+      "id": "vcf.mod1_depth",
+      "module": "vcf",
+      "label": "MODULATION DEPTH (LFO group)",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO-group source."
+    },
+    {
+      "id": "vcf.mod2_source",
+      "module": "vcf",
+      "label": "MODULATION SOURCE (envelope group)",
+      "manual_ref": 24,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "adsr",
+          "label": "ADSR"
+        },
+        {
+          "value": "ar",
+          "label": "AR"
+        },
+        {
+          "value": "vco1",
+          "label": "VCO1"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "ADSR, AR or VCO1, into the right depth knob."
+    },
+    {
+      "id": "vcf.mod2_depth",
+      "module": "vcf",
+      "label": "MODULATION DEPTH (envelope group)",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the envelope-group source."
+    },
+    {
+      "id": "vco1.pwm_source",
+      "module": "vco1",
+      "label": "PULSE WIDTH SOURCE",
+      "manual_ref": 10,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "adsr",
+          "label": "ADSR"
+        },
+        {
+          "value": "dc",
+          "label": "DC",
+          "meaning": "no modulation; PULSE WIDTH sets the width"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Source for VCO1 pulse width: LFO sine, ADSR, or DC (the knob sets a fixed width)."
+    },
+    {
+      "id": "vco1.pulse_width",
+      "module": "vco1",
+      "label": "PULSE WIDTH",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "With the switch at DC, sets a fixed width from square (fully counter-clockwise) to a narrow pulse (fully clockwise). Otherwise sets modulation depth; LFO sine PWM gives the classic chorus effect."
+    },
+    {
+      "id": "vco1.sub_level",
+      "module": "vco1",
+      "label": "SUB OCTAVE",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO1's sub octave in its mix."
+    },
+    {
+      "id": "vco1.saw_level",
+      "module": "vco1",
+      "label": "SAWTOOTH",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO1's sawtooth in its mix."
+    },
+    {
+      "id": "vco1.tri_level",
+      "module": "vco1",
+      "label": "TRIANGLE",
+      "manual_ref": 13,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO1's triangle in its mix."
+    },
+    {
+      "id": "vco1.pulse_level",
+      "module": "vco1",
+      "label": "PULSE",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO1's pulse in its mix."
+    },
+    {
+      "id": "vco2.fine",
+      "module": "vco2",
+      "label": "FINE TUNE",
+      "manual_ref": 15,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCO2 pitch.",
+      "physical": {
+        "min": -1.25,
+        "max": 1.25,
+        "unit": "octaves",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. VCO2 tuning range about 2.5 octaves in total."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "vco1.sync",
+      "module": "vco1",
+      "label": "SYNC",
+      "manual_ref": 16,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mode_a",
+          "label": "MODE A",
+          "meaning": "hard sync with VCO1 switched off for half of each VCO2 cycle: harsher and glitchier"
+        },
+        {
+          "value": "off",
+          "label": "OFF"
+        },
+        {
+          "value": "mode_b",
+          "label": "MODE B",
+          "meaning": "conventional hard sync, the original CAT's single mode"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Locks VCO1 to VCO2: VCO1 is forced to multiples of VCO2's frequency and VCO2 is unaffected; VCO1 tuned below VCO2 gives no output. MODE B is conventional hard sync. MODE A additionally gates VCO1 off for half of every VCO2 cycle, which is why owners describe it as glitchy. The second mode arrived with a later Octave revision.",
+      "note": "Mode descriptions from owner reports on Gearspace and a demonstration video they quote; Behringer has published nothing. One early video called A hard and B soft sync, which the later and more detailed reports contradict. Placed on VCO1 because VCO1 is the synced oscillator; the switch sits in the VCO2 section.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "vco2.sub_level",
+      "module": "vco2",
+      "label": "SUB OCTAVE",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO2's sub octave in its mix."
+    },
+    {
+      "id": "vco2.square_level",
+      "module": "vco2",
+      "label": "SQUARE WAVE",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO2's square wave in its mix."
+    },
+    {
+      "id": "vco2.saw_level",
+      "module": "vco2",
+      "label": "SAWTOOTH",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO2's sawtooth in its mix."
+    },
+    {
+      "id": "vcf.vco1_audio",
+      "module": "vcf",
+      "label": "VCO1 AUDIO",
+      "manual_ref": 22,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Off takes VCO1 out of the audio path entirely, leaving it free as a modulator."
+    },
+    {
+      "id": "vcf.keyboard_control",
+      "module": "vcf",
+      "label": "KEYBOARD CONTROL",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "OFF to MAX"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "How closely cutoff follows the keyboard.",
+      "physical": {
+        "min": 0,
+        "max": 1,
+        "unit": "V/octave",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. At MAX the cutoff tracks at 1 V/octave, parallel to the oscillators, so a self-oscillating filter plays in tune."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "vcf.fc",
+      "module": "vcf",
+      "label": "Fc",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Cutoff; fully up passes all treble.",
+      "physical": {
+        "min": 5,
+        "max": 27000,
+        "unit": "Hz",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. OCR reads '52 = 27KHz'; read as about 5 Hz to 27 kHz. The original CAT: about 20 Hz to 20 kHz."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "vcf.q",
+      "module": "vcf",
+      "label": "Q",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Resonance; fully up the filter oscillates and nothing else passes.",
+      "physical": {
+        "min": 0,
+        "max": 40,
+        "unit": "Q (approximate maximum usable)",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "adsr.attack",
+      "module": "adsr",
+      "label": "A",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR attack.",
+      "physical": {
+        "min": 0.003,
+        "max": 6,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. The original CAT: 2 ms to 5 s."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "adsr.decay",
+      "module": "adsr",
+      "label": "D",
+      "manual_ref": 29,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR decay.",
+      "physical": {
+        "min": 0.002,
+        "max": 7,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "adsr.sustain",
+      "module": "adsr",
+      "label": "S",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR sustain.",
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "% of peak",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "adsr.release",
+      "module": "adsr",
+      "label": "R",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR release.",
+      "physical": {
+        "min": 0.002,
+        "max": 7,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "ar.attack",
+      "module": "ar",
+      "label": "A (AR)",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "AR attack.",
+      "physical": {
+        "min": 0.003,
+        "max": 7,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. The original CAT: 2 ms to 7 s."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "ar.release",
+      "module": "ar",
+      "label": "R (AR)",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "AR release.",
+      "physical": {
+        "min": 0.002,
+        "max": 7,
+        "unit": "s",
+        "taper": "unknown",
+        "note": "Octave CAT SRM specification; assumed to carry over to the Behringer. The original CAT: 1 ms to 7 s."
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "gate_bus.repeat",
+      "module": "gate_bus",
+      "label": "ADSR REPEAT",
+      "manual_ref": 33,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "gated",
+          "label": "GATED",
+          "meaning": "repeats only while a key is held"
+        },
+        {
+          "value": "off",
+          "label": "OFF"
+        },
+        {
+          "value": "auto",
+          "label": "AUTO",
+          "meaning": "repeats continuously"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Retriggers the envelopes at the LFO rate."
+    },
+    {
+      "id": "sample_hold.source",
+      "module": "sample_hold",
+      "label": "SAMPLE + HOLD",
+      "manual_ref": 34,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "vco1",
+          "label": "VCO 1",
+          "meaning": "VCO1's mix"
+        },
+        {
+          "value": "noise",
+          "label": "NOISE",
+          "meaning": "random steps; the SRM sampled pink noise"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "What the sample-and-hold samples."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "LFO DELAY",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "s",
+        "note": "Panel scale and the SRM manual both give 0 to 5 s."
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Delayed vibrato: after each new note the LFO sine is silenced and fades up to full over this time. Trigger-sensitive, so every new note restarts it, and it applies at every sine position, including filter and PWM."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "VCA",
+      "manual_ref": 50,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "adsr",
+          "label": "ADSR"
+        },
+        {
+          "value": "ar",
+          "label": "AR"
+        },
+        {
+          "value": "bypass",
+          "label": "BYPASS",
+          "meaning": "constant level"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "What drives the VCA."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 51,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Final output volume."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "NOISE LEVEL",
+      "manual_ref": 52,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "White noise into the filter."
+    },
+    {
+      "id": "kbd.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CHANNEL",
+      "manual_ref": 57,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        },
+        {
+          "type": "sysex"
+        },
+        {
+          "type": "app",
+          "note": "SynthTool.exe"
+        }
+      ],
+      "function": "MIDI channel. Rear DIP switches, SysEx (for Eurorack use, where the switches are gone), or SynthTool."
+    },
+    {
+      "id": "kbd.poly_chain",
+      "module": "kbd",
+      "label": "Poly chain",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTool.exe"
+        }
+      ],
+      "function": "Chains CATs for more voices. Configured in SynthTool.exe."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 58,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "kbd.note_priority",
+      "module": "kbd",
+      "label": "Note priority (held note setting)",
+      "kind": "enum",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTool / SynthTRIBE"
+        }
+      ],
+      "values": [
+        {
+          "value": "low",
+          "label": "Low note",
+          "meaning": "default"
+        },
+        {
+          "value": "last",
+          "label": "Last note"
+        }
+      ],
+      "default": "low",
+      "function": "Note priority in duophonic (POLY) mode, set in Behringer's app. MONO stays low-note priority regardless.",
+      "confidence": "inferred",
+      "note": "From an owner report on Mod Wiggler and Behringer's 'Voice Priority selection' marketing line; the guide does not mention it."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.vco1_cv",
+      "label": "VCO1 CV",
+      "manual_ref": 42,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "pitch.cv1_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5
+      },
+      "function": "External CV for VCO1 and VCO2 frequency.",
+      "confidence": "inferred",
+      "note": "The jacks reach the oscillators through 100 kohm summing resistors (maffez circuit notes), so external CV adds to the MIDI pitch."
+    },
+    {
+      "id": "jack.gate_in",
+      "label": "GATE",
+      "manual_ref": 41,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "gate_bus.ext_in",
+      "combine": "unknown",
+      "electrical": {
+        "threshold_v": 2.1
+      },
+      "function": "External gate for the envelopes, for example from a sequencer. The guide ties it to the GATED repeat mode; retailers and the circuit notes describe it as a general envelope gate.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vco2_cv",
+      "label": "VCO2 CV",
+      "manual_ref": 43,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "pitch.cv2_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5
+      },
+      "function": "External CV for VCO2 frequency.",
+      "confidence": "inferred",
+      "note": "The jacks reach the oscillators through 100 kohm summing resistors (maffez circuit notes), so external CV adds to the MIDI pitch."
+    },
+    {
+      "id": "jack.vcf_fc",
+      "label": "VCF Fc",
+      "manual_ref": 44,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.fc_cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5
+      },
+      "function": "External CV for cutoff.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.vcf_q",
+      "label": "VCF Q",
+      "manual_ref": 45,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.q_cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5
+      },
+      "function": "External CV for resonance.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ext_audio",
+      "label": "EXT AUDIO",
+      "manual_ref": 46,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.in_ext",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 100000
+      },
+      "function": "Line-level external audio into the filter."
+    },
+    {
+      "id": "jack.vca_cv",
+      "label": "VCA CV",
+      "manual_ref": 47,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca.cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5
+      },
+      "function": "External CV for the VCA.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.kb_cv",
+      "label": "KB CV",
+      "manual_ref": 37,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "pitch.to_vco2",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 8
+      },
+      "function": "Keyboard pitch CV for external devices.",
+      "confidence": "inferred",
+      "note": "Which of the two notes it carries is not stated; modelled as the low note, which VCO2 always plays."
+    },
+    {
+      "id": "jack.gate_out",
+      "label": "GATE",
+      "manual_ref": 38,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "gate_bus.out",
+      "electrical": {
+        "low_v": 0,
+        "high_v": 12
+      },
+      "function": "Gate output."
+    },
+    {
+      "id": "jack.adsr_out",
+      "label": "ADSR",
+      "manual_ref": 39,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "adsr.out",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 8.8
+      },
+      "function": "ADSR output."
+    },
+    {
+      "id": "jack.ar_out",
+      "label": "AR",
+      "manual_ref": 40,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ar.out",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 6.5
+      },
+      "function": "AR output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 48,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_level_dbu": -10.4,
+        "impedance_ohm": 8
+      },
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.main_out",
+      "label": "MAIN OUT",
+      "manual_ref": 49,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.main",
+      "electrical": {
+        "max_level_dbu": 9.4
+      },
+      "function": "Main output on 3.5 mm; the only output when fitted in Eurorack."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 53,
+      "location": "top",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI in and out."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 54,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from a keyboard, sequencer or computer."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 55,
+      "location": "top",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Passes MIDI IN on, for poly chain or other gear."
+    },
+    {
+      "id": "jack.out_high",
+      "label": "MAIN OUT HIGH",
+      "manual_ref": 56,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.high",
+      "electrical": {
+        "max_level_dbu": 10,
+        "impedance_ohm": 1000
+      },
+      "function": "Line-level mono output."
+    },
+    {
+      "id": "jack.out_low",
+      "label": "MAIN OUT LOW",
+      "manual_ref": 56,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.low",
+      "electrical": {
+        "impedance_ohm": 750
+      },
+      "function": "Instrument-level mono output, 30 dB below HIGH, for guitar amplifiers."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "manual_ref": 59,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 1000
+      },
+      "function": "12 V DC, 1000 mA, from the supplied adaptor."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.low_note",
+      "to": "pitch.low_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.high_note",
+      "to": "pitch.high_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.bend",
+      "to": "pitch.bend_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.bend"
+    },
+    {
+      "id": "c04",
+      "from": "pitch.to_vco1_high",
+      "to": "vco1.pitch_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pitch.keyboard_control",
+        "equals": "poly"
+      },
+      "amount": "vco1.coarse"
+    },
+    {
+      "id": "c05",
+      "from": "pitch.to_vco1_low",
+      "to": "vco1.pitch_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pitch.keyboard_control",
+        "equals": "mono"
+      },
+      "amount": "vco1.coarse"
+    },
+    {
+      "id": "c06",
+      "from": "pitch.to_vco2",
+      "to": "vco2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco2.fine"
+    },
+    {
+      "id": "c07",
+      "from": "pitch.to_vco2",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.keyboard_control",
+      "note": "Which note drives filter tracking in duophonic mode is not stated; the low note is assumed.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c08",
+      "from": "vco2.sync_out",
+      "to": "vco1.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.sync",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c10",
+      "from": "kbd.gate",
+      "to": "gate_bus.midi_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "lfo.clock",
+      "to": "gate_bus.clock_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "gate_bus.repeat",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c12",
+      "from": "gate_bus.out",
+      "to": "adsr.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "gate_bus.out",
+      "to": "ar.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "lfo.clock",
+      "to": "sample_hold.clock_in",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "vco1.out",
+      "to": "sample_hold.in_vco1",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sample_hold.source",
+        "equals": "vco1"
+      }
+    },
+    {
+      "id": "c16",
+      "from": "noise.out",
+      "to": "sample_hold.in_noise",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sample_hold.source",
+        "equals": "noise"
+      }
+    },
+    {
+      "id": "c20",
+      "from": "lfo.sine",
+      "to": "vco1.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod1_source",
+        "equals": "sine"
+      },
+      "amount": "vco1.mod1_depth"
+    },
+    {
+      "id": "c21",
+      "from": "lfo.square",
+      "to": "vco1.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod1_source",
+        "equals": "square"
+      },
+      "amount": "vco1.mod1_depth"
+    },
+    {
+      "id": "c22",
+      "from": "sample_hold.out",
+      "to": "vco1.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod1_source",
+        "equals": "sh"
+      },
+      "amount": "vco1.mod1_depth"
+    },
+    {
+      "id": "c23",
+      "from": "adsr.out",
+      "to": "vco1.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod2_source",
+        "equals": "adsr"
+      },
+      "amount": "vco1.mod2_depth"
+    },
+    {
+      "id": "c24",
+      "from": "ar.out",
+      "to": "vco1.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod2_source",
+        "equals": "ar"
+      },
+      "amount": "vco1.mod2_depth"
+    },
+    {
+      "id": "c25",
+      "from": "vco2.out",
+      "to": "vco1.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.mod2_source",
+        "equals": "vco2"
+      },
+      "amount": "vco1.mod2_depth"
+    },
+    {
+      "id": "c26",
+      "from": "lfo.sine",
+      "to": "vco2.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod1_source",
+        "equals": "sine"
+      },
+      "amount": "vco2.mod1_depth"
+    },
+    {
+      "id": "c27",
+      "from": "lfo.square",
+      "to": "vco2.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod1_source",
+        "equals": "square"
+      },
+      "amount": "vco2.mod1_depth"
+    },
+    {
+      "id": "c28",
+      "from": "sample_hold.out",
+      "to": "vco2.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod1_source",
+        "equals": "sh"
+      },
+      "amount": "vco2.mod1_depth"
+    },
+    {
+      "id": "c29",
+      "from": "adsr.out",
+      "to": "vco2.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod2_source",
+        "equals": "adsr"
+      },
+      "amount": "vco2.mod2_depth"
+    },
+    {
+      "id": "c30",
+      "from": "ar.out",
+      "to": "vco2.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod2_source",
+        "equals": "ar"
+      },
+      "amount": "vco2.mod2_depth"
+    },
+    {
+      "id": "c31",
+      "from": "vco1.out",
+      "to": "vco2.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.mod2_source",
+        "equals": "vco1"
+      },
+      "amount": "vco2.mod2_depth"
+    },
+    {
+      "id": "c32",
+      "from": "lfo.sine",
+      "to": "vcf.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_source",
+        "equals": "sine"
+      },
+      "amount": "vcf.mod1_depth"
+    },
+    {
+      "id": "c33",
+      "from": "lfo.square",
+      "to": "vcf.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_source",
+        "equals": "square"
+      },
+      "amount": "vcf.mod1_depth"
+    },
+    {
+      "id": "c34",
+      "from": "sample_hold.out",
+      "to": "vcf.fm1_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_source",
+        "equals": "sh"
+      },
+      "amount": "vcf.mod1_depth"
+    },
+    {
+      "id": "c35",
+      "from": "adsr.out",
+      "to": "vcf.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod2_source",
+        "equals": "adsr"
+      },
+      "amount": "vcf.mod2_depth"
+    },
+    {
+      "id": "c36",
+      "from": "ar.out",
+      "to": "vcf.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod2_source",
+        "equals": "ar"
+      },
+      "amount": "vcf.mod2_depth"
+    },
+    {
+      "id": "c37",
+      "from": "vco1.out",
+      "to": "vcf.fm2_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod2_source",
+        "equals": "vco1"
+      },
+      "amount": "vcf.mod2_depth"
+    },
+    {
+      "id": "c40",
+      "from": "lfo.sine",
+      "to": "vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.pwm_source",
+        "equals": "sine"
+      },
+      "amount": "vco1.pulse_width"
+    },
+    {
+      "id": "c41",
+      "from": "adsr.out",
+      "to": "vco1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.pwm_source",
+        "equals": "adsr"
+      },
+      "amount": "vco1.pulse_width"
+    },
+    {
+      "id": "c50",
+      "from": "vco1.out",
+      "to": "vcf.in_vco1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.vco1_audio",
+        "equals": true
+      }
+    },
+    {
+      "id": "c51",
+      "from": "vco2.out",
+      "to": "vcf.in_vco2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c52",
+      "from": "noise.out",
+      "to": "vcf.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "noise.level"
+    },
+    {
+      "id": "c53",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c54",
+      "from": "adsr.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "adsr"
+      }
+    },
+    {
+      "id": "c55",
+      "from": "ar.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "ar"
+      }
+    },
+    {
+      "id": "c56",
+      "from": "vca.out",
+      "to": "output.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lfo.led",
+      "module": "lfo",
+      "label": "LFO",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 5,
+      "function": "Blinks at the LFO rate."
+    },
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "POWER",
+      "kind": "led",
+      "led_colour": "multi",
+      "manual_ref": 36,
+      "function": "Power, and the poly chain state: amber in normal mode, red in poly chain mode while not playing, green in poly chain mode while playing."
+    }
+  ],
+  "led_legend": {
+    "rule": "The POWER LED reports system mode by colour. The LFO LED is a plain rate blinker.",
+    "colours": [
+      {
+        "colour": "amber",
+        "meaning": "normal mode"
+      },
+      {
+        "colour": "red",
+        "meaning": "poly chain mode, not playing"
+      },
+      {
+        "colour": "green",
+        "meaning": "poly chain mode, playing"
+      }
+    ],
+    "confidence": "stated",
+    "note": "From the System Mode table on the poly chain page."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Duophonic assignment",
+      "applies_to": [
+        "kbd",
+        "pitch",
+        "vco1",
+        "vco2"
+      ],
+      "rule": "VCO2 always plays the lowest held note. KEYBOARD CONTROL on POLY sends VCO1 the highest held note; on MONO both oscillators share one note memory with low-note priority; on OFF VCO1 ignores the keyboard. In POLY the SRM keyboard has a two-note memory: with one key down both VCOs play it; with two keys down VCO1 takes the upper and VCO2 the lower; release the upper key first and the interval is held after both are released; release the lower first and VCO2 jumps to the upper, so both play the same note, which makes fast trills possible. Because each oscillator has its own analogue memory, a single note held for a long time in POLY slowly drifts into beating; MONO avoids this. The filter and VCA are shared, so this is paraphonic.",
+      "confidence": "inferred",
+      "note": "Two-note memory behaviour from the Octave CAT SRM manual; assumed to be reproduced by the Behringer's firmware."
+    },
+    {
+      "id": "b02",
+      "name": "Switch-selected modulation groups",
+      "applies_to": [
+        "vco1",
+        "vco2",
+        "vcf"
+      ],
+      "rule": "VCO1, VCO2 and the filter each have two three-way switches feeding two depth knobs. The left group picks LFO sine, LFO square or sample-and-hold; the right picks ADSR, AR or the other oscillator (VCO2 for VCO1, VCO1 for VCO2 and the filter). Audio-rate cross-modulation between the VCOs is therefore on the panel without patching."
+    },
+    {
+      "id": "b03",
+      "name": "Oscillator mixes",
+      "applies_to": [
+        "vco1",
+        "vco2"
+      ],
+      "rule": "Each VCO's waveforms are always running and each has a level slider; the oscillator's output is the sum. That sum is what reaches the filter, what the sample-and-hold samples in its VCO1 position, and what the other oscillator uses as a modulation source. Internal summing is recorded here rather than as connections."
+    },
+    {
+      "id": "b04",
+      "name": "VCO1 as a modulator",
+      "applies_to": [
+        "vco1",
+        "vcf"
+      ],
+      "rule": "VCO1 AUDIO off removes VCO1 from the filter while leaving it running, so with KEYBOARD CONTROL off it becomes a free audio-rate or sub-audio modulator for VCO2 and the filter."
+    },
+    {
+      "id": "b05",
+      "name": "Pulse width",
+      "applies_to": [
+        "vco1"
+      ],
+      "rule": "Only VCO1 has variable pulse width. Its switch picks LFO sine, ADSR or DC; at DC the PULSE WIDTH knob sets a fixed width, otherwise it sets modulation depth."
+    },
+    {
+      "id": "b06",
+      "name": "LFO does three jobs",
+      "applies_to": [
+        "lfo",
+        "sample_hold",
+        "gate_bus"
+      ],
+      "rule": "LFO FREQ sets the LFO, the sample-and-hold clock and the ADSR repeat rate together. LFO DELAY fades in the sine output only, after each key."
+    },
+    {
+      "id": "b07",
+      "name": "ADSR repeat",
+      "applies_to": [
+        "gate_bus",
+        "adsr",
+        "ar"
+      ],
+      "rule": "GATED retriggers the envelopes at the LFO rate while a key is held; AUTO retriggers them continuously, which with the VCA on ADSR gives a self-playing pulse. The GATE input supplies the gate for GATED mode."
+    },
+    {
+      "id": "b08",
+      "name": "Filter self-oscillation",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "At full Q the filter oscillates and no other sound passes."
+    },
+    {
+      "id": "b09",
+      "name": "Sync",
+      "applies_to": [
+        "vco1",
+        "vco2"
+      ],
+      "rule": "VCO1 is locked to VCO2 and forced to multiples of its frequency; VCO2 is unaffected. Each VCO1 waveform has its own sync timbre, so the level sliders shape the sync sound. MODE B is conventional hard sync; MODE A also gates VCO1 off for half of each VCO2 cycle, giving a rougher, gappier tone. If VCO1 is tuned below VCO2 while synced there is no VCO1 output. Owners find CAT sync less 'classic' than a Minimoog or Prophet sweep; that is the design, not a fault.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b10",
+      "name": "Sample and hold depends on the VCO1 mix",
+      "applies_to": [
+        "sample_hold",
+        "vco1"
+      ],
+      "rule": "In its VCO1 position the sample-and-hold samples VCO1's mixed output, so with all VCO1 level sliders down there is no S+H output. Raising one slider picks which waveform is sampled; mixing several makes stepped patterns from their sum.",
+      "note": "From the Octave manual."
+    },
+    {
+      "id": "b11",
+      "name": "Reference tuning",
+      "applies_to": [
+        "pitch",
+        "vco1",
+        "vco2"
+      ],
+      "rule": "With PITCH BEND and OCTAVE SHIFT at 0 and both VCO tuning controls at 12 o'clock, the second-octave A is about 440 Hz.",
+      "confidence": "inferred",
+      "note": "From the Octave manual."
+    },
+    {
+      "id": "b12",
+      "name": "Filter as an oscillator",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "At full Q the filter produces a low-distortion sine at the cutoff frequency. With KEYBOARD CONTROL at 1 V/octave it plays in tune from the keyboard. Intermediate keyboard settings give microtonal tracking, for example one octave of cutoff per two octaves of keyboard.",
+      "note": "From the Octave manual."
+    },
+    {
+      "id": "b13",
+      "name": "Audio mix as a four-note sequencer",
+      "applies_to": [
+        "vco1",
+        "sample_hold"
+      ],
+      "rule": "The Octave manual describes mixing VCO1's sub-octave square with its pulse at sub-audio rates and sampling the result to get a repeating four-step pattern, which is why the oscillator mix is also a control source.",
+      "note": "From the Octave manual; exact recipe on page 24, partly unreadable in the scan."
+    },
+    {
+      "id": "b14",
+      "name": "MIDI-only functions",
+      "applies_to": [
+        "pitch",
+        "lfo"
+      ],
+      "rule": "Glide is applied digitally to the MIDI note CV, so pitch arriving at the VCO CV inputs does not glide. Owners also report LFO DELAY having no effect under external CV and gate, consistent with it being restarted by MIDI note triggers.",
+      "confidence": "inferred",
+      "note": "Glide from the maffez circuit notes; LFO delay from a single owner report, less certain."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "cc123_all_notes_off",
+      "pitch_bend",
+      "sysex (MIDI channel)"
+    ],
+    "transmits": [
+      "MIDI THRU pass-through",
+      "USB MIDI"
+    ],
+    "channel": {
+      "range": [
+        1,
+        16
+      ],
+      "set_by": "rear DIP switches, SysEx, or SynthTool.exe"
+    },
+    "message_table": [
+      {
+        "status": "8n",
+        "description": "note off"
+      },
+      {
+        "status": "9n",
+        "description": "note on"
+      },
+      {
+        "status": "Bn 7B",
+        "description": "all notes off"
+      },
+      {
+        "status": "En",
+        "description": "pitch bend, 0 to 3FFF"
+      }
+    ],
+    "cc_map": null,
+    "nrpn": null,
+    "sysex": "used for MIDI channel; the tables the guide refers to are not in this document",
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows XP or higher, Mac OS X 10.6.8 or higher"
+    },
+    "app": "SynthTool.exe: poly chain and MIDI channel"
+  },
+  "specifications": {
+    "voices": "duophonic",
+    "oscillators": {
+      "count": 2,
+      "range_hz": {
+        "min": 1,
+        "max": 38500
+      },
+      "ranges": "6 overlapping",
+      "second_range_quoted_hz": {
+        "min": 8,
+        "max": 900,
+        "note": "a second range in the table without a label"
+      }
+    },
+    "lfo_hz": {
+      "min": 0.03,
+      "max": 30
+    },
+    "vcf": "1 x 4-pole low pass, 24 dB/octave",
+    "envelopes": [
+      "ADSR",
+      "AR"
+    ],
+    "control_inputs_v": {
+      "vco1_cv": [
+        -5,
+        5
+      ],
+      "vco2_cv": [
+        -5,
+        5
+      ],
+      "gate_threshold": 2.1,
+      "vcf_fc": [
+        -5,
+        5
+      ],
+      "vcf_q": [
+        0,
+        5
+      ],
+      "vca_cv": [
+        0,
+        5
+      ]
+    },
+    "control_outputs_v": {
+      "kb_cv": [
+        0,
+        8
+      ],
+      "gate": [
+        0,
+        12
+      ],
+      "adsr": [
+        0,
+        8.8
+      ],
+      "ar": [
+        0,
+        6.5
+      ]
+    },
+    "outputs": {
+      "high": "1/4-inch TS, max +10 dBu, 1 kohm",
+      "low": "1/4-inch TS, 30 dB below high, 750 ohm",
+      "main_3_5mm": "max +9.4 dBu",
+      "phones": "1/8-inch TRS, -10.4 dBu, 8 ohm"
+    },
+    "power": {
+      "adaptor": "12 V DC, 1000 mA",
+      "consumption_w_max": 6.2
+    },
+    "dimensions_mm": {
+      "h": 93,
+      "w": 374,
+      "d": 136
+    },
+    "eurorack_hp": 70,
+    "weight_kg": 1.6
+  },
+  "omitted_from_source": [
+    "safety and legal text in several languages",
+    "warranty and compliance declarations",
+    "Eurorack installation",
+    "non-English duplicates",
+    "the MIDI channel DIP switch table"
+  ],
+  "not_in_source": [
+    "which note drives KB CV and filter tracking in duophonic mode; neither manual nor any online source found says",
+    "what the unlabelled 8 Hz to 900 Hz range in the Behringer specifications refers to; not found online",
+    "official Behringer documentation of the two sync modes; the descriptions in this file are from owner reports",
+    "the SysEx tables the Behringer guide refers to",
+    "SRM II figures specifically: the envelope, filter and range values in this file are from the earlier CAT SRM"
+  ],
+  "source_inconsistencies": [
+    "Items 8, 17 and 24 describe the modulation switches only as patching 'different waveforms'; the positions (sine, square, S+H; ADSR, AR, VCO) are on the panel alone.",
+    "Item 16 describes SYNC as on/off; the panel switch has MODE A, OFF and MODE B.",
+    "The specifications quote two oscillator ranges, 1 Hz to 38.5 kHz and 8 Hz to 900 Hz, the second without a label; the coarse knob is marked 0.2 Hz to 2 kHz.",
+    "Item 57 refers to 'MIDI SysEx tables later in this manual'; there are none.",
+    "Item 50 expands AR as 'Attack=Release'.",
+    "The poly chain page says the POWER LED turns red in poly chain mode; its own table adds green while playing.",
+    "The Behringer panel marks VCO1 coarse as 0.2 Hz to 2 kHz, its specifications say 1 Hz to 38.5 kHz, and the Octave SRM gives 0.2 Hz to 24 kHz (16 kHz with keyboard on).",
+    "The original CAT's LFO was triangle and square; the SRM and the Behringer use sine and square.",
+    "The Octave SRM sample-and-hold sampled pink noise; the Behringer guide says the noise generator, which elsewhere is white.",
+    "The Octave manual's two specification sheets differ: ADSR attack 2 ms to 5 s (CAT) against 3 ms to 6 s (SRM), glide 2 s per octave against 1.5, filter 20 Hz to 20 kHz against about 5 Hz to 27 kHz.",
+    "Sources disagree on which Octave revisions had which parts: one Gearspace post gives the SRM an SSM2044 filter, a former Behringer tester on Mod Wiggler gives the SRM I an SSM2040. All agree the SRM II, which Behringer copied, used CEM3340 VCOs and an SSM2044 filter.",
+    "Early video demonstrations called sync MODE A hard and MODE B soft; later owner reports describe A as gated hard sync and B as normal hard sync."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Carried-over figures",
+      "detail": "Envelope times, filter range and Q, tracking scale, glide and bend now come from the Octave CAT SRM. They describe the original circuit; Behringer's reproduction is likely close but unconfirmed. They are also from the SRM, not the SRM II Behringer copied; the SRM II changed the VCOs to CEM3340s, which changes range and tracking behaviour."
+    },
+    {
+      "topic": "Tapers",
+      "detail": "End points are known for most controls now; the slider laws between them are not."
+    },
+    {
+      "topic": "Sync modes",
+      "detail": "MODE A (gated hard sync) and MODE B (hard sync) are now described from owner reports. The gating duty cycle and which VCO2 edge resets VCO1 are not documented."
+    },
+    {
+      "topic": "Two-note memory",
+      "detail": "Modelled as the SRM's behaviour. Whether the Behringer's digital note handling reproduces the slow drift and beating of the analogue memories is unknown."
+    },
+    {
+      "topic": "OCR",
+      "detail": "The Octave manual was read by OCR. The low end of the filter range and the VCO1 maximum are the least certain readings."
+    }
+  ]
+}

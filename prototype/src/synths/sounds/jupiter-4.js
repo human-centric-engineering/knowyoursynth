@@ -1,0 +1,291 @@
+// More sounds for the Roland Jupiter-4 library. Same Preset shape as the ones in ../jupiter-4.js (see CONTRACT.md → Preset).
+const ENV = (e, a, d, s, r) => ({ [`${e}.attack`]: a, [`${e}.decay`]: d, [`${e}.sustain`]: s, [`${e}.release`]: r });
+
+export default [
+  {
+    id: 'j4-pwm-pad', name: 'Slow PWM Pad', ref: 'In the style of late-70s Roland string pads', artist: 'Classic technique',
+    tags: ['pad', 'ambient', '70s'], level: 1,
+    blurb: 'A wide, slowly breathing pad that takes a second to swell in.',
+    how: 'A pulse wave whose width the LFO sweeps very slowly, so the chord seems to breathe. The sub-oscillator adds a soft floor, the filter keeps it dark, and long envelope times with the ensemble make it wide and soft.',
+    phrase: { bpm: 60, loop: true, steps: [[0, 48, 3.8], [0, 55, 3.8], [0, 62, 3.8], [0, 64, 3.8], [4, 45, 3.8], [4, 52, 3.8], [4, 60, 3.8], [4, 64, 3.8]] },
+    steps: [
+      { title: 'A slowly swept pulse with a sub', module: 'osc', why: 'The pulse width moving very slowly gives the pad its breathing.\n- WAVE FORM pulse, PW switch MOD, PW 7: the LFO sweeps the width deeply.\n- LFO RATE 3 (0.74 Hz): under one sweep a second.\n- SUB on: a soft square an octave down.\n- Listen for: a chord that slowly opens and closes in tone.',
+        set: { 'vco.waveform': 'pulse', 'vco.pwMode': 'mod', 'vco.pw': 7, 'lfo.rate': 3, 'vco.sub': true } },
+      { title: 'Dark and slow', module: 'filter', why: 'The filter keeps the pad behind everything else, and a slow filter envelope lifts it as each chord grows.\n- LPF CUTOFF 4.8 (470 Hz), ENV MOD 3: dark, opening a little as the chord swells.\n- Filter A 7 (575 ms), D 7, S 6, R 7.\n- Listen for: chords that get slightly brighter as they bloom.',
+        set: { 'vcf.cutoff': 4.8, 'vcf.envMod': 3, ...ENV('env_f', 7, 7, 6, 7) } },
+      { title: 'Swell and spread', module: 'amp', why: 'Long VCA times and the ensemble turn the chord into a pad.\n- VCA A 7.5 (840 ms), D 6, S 9, R 7.6 (2.4 s).\n- ENSEMBLE on: stereo width.\n- Listen for: each chord fading under the next.',
+        set: { ...ENV('env_a', 7.5, 6, 9, 7.6), 'ens.on': true } },
+    ],
+    context: {
+      'lfo.rate': 'In this sound: how fast the pad breathes.',
+      'vco.pw': 'In this sound: how deep the breathing is.',
+      'env_a.attack': 'In this sound: how slowly each chord arrives.',
+    },
+    tweaks: [
+      { id: 'vco.sub', try: 'Switch SUB off', hear: 'The pad loses its floor and floats higher.' },
+      { id: 'vcf.cutoff', try: 'Raise to 6.5', hear: 'A brighter, glassier pad.' },
+    ],
+  },
+  {
+    id: 'j4-voice', name: 'Synth Voice', ref: 'In the style of the Jupiter-4’s VOICE preset', artist: 'Classic technique',
+    tags: ['pad', 'synth-pop', '70s'], level: 2,
+    blurb: 'A soft, vowel-like choir tone with vibrato that arrives late.',
+    how: 'A square wave through a resonant filter set in the middle of the range gives a hollow “ooh”. The resonance picks out one band like a vowel. Delayed vibrato and the ensemble make it sound like many singers.',
+    phrase: { bpm: 72, loop: true, steps: [[0, 57, 1.9], [0, 64, 1.9], [2, 59, 1.9], [2, 65, 1.9], [4, 60, 3.8], [4, 67, 3.8]] },
+    steps: [
+      { title: 'A hollow square', module: 'osc', why: 'The square wave has only odd harmonics, which sounds hollow, close to a sung “oo”.\n- WAVE FORM square.\n- Listen for: a woody, clarinet-like tone.',
+        set: { 'vco.waveform': 'square' } },
+      { title: 'A vowel in the filter', module: 'filter', why: 'Resonance at a middle cutoff boosts one band of harmonics, which the ear hears as a vowel.\n- LPF CUTOFF 5.6 (800 Hz), RES 5.5: a strong peak in the middle.\n- KYBD FOLLOW 70: the vowel moves up a little with the notes.\n- Listen for: an “oo”-to-“ah” quality. Sweep the cutoff and the vowel changes.',
+        set: { 'vcf.cutoff': 5.6, 'vcf.res': 5.5, 'vcf.kybd': '70' } },
+      { title: 'Vibrato and many voices', module: 'lfo', why: 'Singers add vibrato after the note has started. The LFO delay does the same.\n- MOD 2.2, LFO RATE 5.8 (4.9 Hz), DELAY TIME 4.5 (2 s): vibrato fades in on held notes.\n- VCA A 6, R 6.5: soft start and end.\n- ENSEMBLE on: a choir rather than one voice.\n- Listen for: notes that begin plain and then start to sing.',
+        set: { 'vco.lfoMod': 2.2, 'lfo.rate': 5.8, 'lfo.delay': 4.5, ...ENV('env_a', 6, 5, 10, 6.5), 'ens.on': true } },
+    ],
+    context: {
+      'vcf.cutoff': 'In this sound: the vowel. Lower is “oo”, higher is “ah”.',
+      'vcf.res': 'In this sound: how vocal it sounds.',
+      'lfo.delay': 'In this sound: how long before the vibrato arrives.',
+    },
+    tweaks: [
+      { id: 'vcf.cutoff', try: 'Sweep slowly between 4.8 and 6.5', hear: 'The choir changes vowel.' },
+      { id: 'lfo.delay', try: 'Set to 0', hear: 'Vibrato from the very start, more like a theremin.' },
+    ],
+  },
+  {
+    id: 'j4-sax', name: 'Reedy Sax', ref: 'In the style of the Jupiter-4’s SAX preset', artist: 'Classic technique',
+    tags: ['wind', 'jazz', '70s'], level: 2,
+    blurb: 'A breathy, reedy solo line with a little growl at the front of each note.',
+    how: 'A wide pulse wave has the reedy edge of a saxophone. Noise mixed in adds breath, and the filter envelope opens the tone as each note is “blown”. UNISON 1 plays it as a single line with all four voices, and delayed vibrato finishes it.',
+    phrase: { bpm: 96, loop: true, steps: [[0, 62, 0.9], [1, 65, 0.4], [1.5, 67, 0.4], [2, 69, 1.4], [3.5, 67, 0.4], [4, 65, 0.9], [5, 62, 2.8]] },
+    steps: [
+      { title: 'A reedy pulse with breath', module: 'osc', why: 'A pulse at 40 % sounds reedy, and noise adds the breath.\n- WAVE FORM pulse, PW 3 (40 %): the second of the four steps.\n- NOISE on: a hiss under the tone.\n- UNISON 1: one note at a time, four voices thick.\n- Listen for: a nasal, slightly breathy line.',
+        set: { 'vco.waveform': 'pulse', 'vco.pw': 3, 'noise.on': true, 'kbd.assign': 'uni1' } },
+      { title: 'Blow each note open', module: 'filter', why: 'A sax gets brighter as the player blows harder. The filter envelope opens the tone at the start of each note and lets it settle.\n- LPF CUTOFF 4.8, ENV MOD 4, RES 2.\n- Filter A 3.5 (40 ms), D 5.5, S 5, R 4.\n- HPF CUTOFF 2.5 (140 Hz): removes the low hiss so the noise stays as breath.\n- Listen for: a soft “wah” at the start of every note.',
+        set: { 'vcf.cutoff': 4.8, 'vcf.envMod': 4, 'vcf.res': 2, ...ENV('env_f', 3.5, 5.5, 5, 4), 'hpf.cutoff': 2.5 } },
+      { title: 'Shape and vibrato', module: 'amp', why: 'The volume rises quickly and the vibrato comes later.\n- VCA A 2.5, D 5, S 9, R 4.\n- MOD 1.8, LFO RATE 5.6, DELAY TIME 3.5.\n- PORTAMENTO 2 with the switch ON: a short slide between notes, like a player bending into them.\n- Listen for: a line that slides slightly and sings on the long notes.',
+        set: { ...ENV('env_a', 2.5, 5, 9, 4), 'vco.lfoMod': 1.8, 'lfo.rate': 5.6, 'lfo.delay': 3.5, 'kbd.portamento': 2, 'kbd.portaOn': true } },
+    ],
+    context: {
+      'noise.on': 'In this sound: the breath. Off, it sounds more like an organ reed.',
+      'vcf.envMod': 'In this sound: how hard each note is blown.',
+      'kbd.portamento': 'In this sound: the slide between notes.',
+    },
+    tweaks: [
+      { id: 'vco.pw', try: 'Step to 6 (20 %)', hear: 'Thinner and more nasal, closer to a soprano sax.' },
+      { id: 'vcf.res', try: 'Raise to 4', hear: 'A honkier, more electric tone.' },
+    ],
+  },
+  {
+    id: 'j4-piano', name: 'Synth Piano', ref: 'In the style of the Jupiter-4’s PIANO preset', artist: 'Classic technique',
+    tags: ['keys', 'pop', '70s'], level: 1,
+    blurb: 'A bright, struck keyboard tone that dies away like a piano note.',
+    how: 'A sawtooth with the filter fully following the keys, so every note has the same brightness. Both envelopes have no sustain: the tone darkens and fades on its own like a struck string. The high-pass filter takes off some boom.',
+    phrase: { bpm: 88, loop: true, steps: [[0, 48, 1.8], [0, 55, 1.8], [0, 64, 1.8], [2, 47, 0.9], [2, 55, 0.9], [2, 62, 0.9], [3, 45, 0.9], [3, 52, 0.9], [3, 60, 0.9]] },
+    steps: [
+      { title: 'A filter that follows the keys', module: 'filter', why: 'On a real piano high notes are as bright as low ones. KYBD FOLLOW at 100 % makes the cutoff follow the keyboard all the way.\n- KYBD FOLLOW 100, LPF CUTOFF 5.4 (700 Hz at middle C), ENV MOD 4.5.\n- HPF CUTOFF 2.5: less boom on low notes.\n- Listen for: every note equally bright across the keyboard.',
+        set: { 'vcf.kybd': '100', 'vcf.cutoff': 5.4, 'vcf.envMod': 4.5, 'hpf.cutoff': 2.5 } },
+      { title: 'A struck note', module: 'env', why: 'A piano note is loudest and brightest at the strike and fades from there.\n- Filter A 0, D 6.5 (1.1 s), S 0, R 5.\n- VCA A 0, D 7.5 (2.3 s), S 0, R 5.5: the note dies away on its own, faster when let go.\n- ENSEMBLE on: a slight shimmer, like detuned strings.\n- Listen for: notes that ring and darken as they fade.',
+        set: { ...ENV('env_f', 0, 6.5, 0, 5), ...ENV('env_a', 0, 7.5, 0, 5.5), 'ens.on': true } },
+    ],
+    context: {
+      'vcf.kybd': 'In this sound: keeps high notes bright.',
+      'env_a.decay': 'In this sound: how long a held note rings.',
+    },
+    tweaks: [
+      { id: 'vcf.kybd', try: 'Set to 10', hear: 'High notes go dull and soft.' },
+      { id: 'env_f.decay', try: 'Lower to 5', hear: 'A duller, more electric-piano tone.' },
+    ],
+  },
+  {
+    id: 'j4-wind', name: 'Wind', ref: 'In the style of 70s synth sound effects', artist: 'Classic technique',
+    tags: ['fx', 'soundtrack', '70s'], level: 1,
+    blurb: 'Gusting wind made from noise and a slowly moving resonant filter.',
+    how: 'With the VCO off, the voice is pure noise. A resonant filter picks out a howl from it, and the LFO moves the cutoff slowly up and down, so the wind rises and falls.',
+    phrase: { bpm: 60, loop: true, steps: [[0, 60, 7.8]] },
+    steps: [
+      { title: 'Noise only', module: 'mixer', why: 'Wind is noise. With the VCO switched off, only the noise is left.\n- WAVE FORM OFF, NOISE on.\n- Listen for: a plain hiss.',
+        set: { 'vco.waveform': 'off', 'noise.on': true } },
+      { title: 'A howling filter', module: 'filter', why: 'Resonance picks out a narrow band of the noise, which sounds like wind whistling.\n- LPF CUTOFF 5.4, RES 7.5.\n- LFO MOD 6, LFO RATE 2.2 (0.23 Hz): the cutoff rises and falls every four seconds or so.\n- Listen for: the hiss turning into a gusting howl.',
+        set: { 'vcf.cutoff': 5.4, 'vcf.res': 7.5, 'vcf.lfoMod': 6, 'lfo.rate': 2.2 } },
+      { title: 'Slow in and out', module: 'amp', why: 'Long VCA times make the wind fade up and away.\n- VCA A 7.5, R 8 (3 s).\n- ENSEMBLE on: a wider gust.\n- Listen for: the wind swelling in and dying away slowly.',
+        set: { ...ENV('env_a', 7.5, 5, 10, 8), 'ens.on': true } },
+    ],
+    context: {
+      'vcf.res': 'In this sound: how much the wind howls rather than hisses.',
+      'lfo.rate': 'In this sound: how fast the gusts come.',
+    },
+    tweaks: [
+      { id: 'vcf.lfoMod', try: 'Raise to 8', hear: 'Bigger gusts that sweep higher.' },
+      { id: 'lfo.waveform', try: 'Choose the square', hear: 'The wind jumps between two pitches like a siren.' },
+    ],
+  },
+  {
+    id: 'j4-trill', name: 'Trill Lead', ref: 'In the style of late-70s synth leads', artist: 'Classic technique',
+    tags: ['lead', 'prog', '70s'], level: 2,
+    blurb: 'A singing lead whose pitch flips quickly between two notes when the wheel is pushed.',
+    how: 'UNISON 1 stacks the voices for a fat single line. The lever’s VCO switch is set to LFO with a square LFO, so pushing the mod wheel (standing in for the lever) brings in a fast trill between two pitches. Portamento slides between notes.',
+    phrase: { bpm: 100, loop: true, steps: [[0, 64, 0.9], [1, 67, 0.9], [2, 71, 1.9], [4, 69, 0.9], [5, 67, 2.8]] },
+    steps: [
+      { title: 'A fat single line', module: 'mode', why: 'UNISON 1 puts all four voices on one note, and portamento slides between notes.\n- UNISON 1.\n- PORTAMENTO 2.5, switch ON.\n- LPF CUTOFF 7, RES 2.5: bright with a little edge.\n- Listen for: a thick lead that glides.',
+        set: { 'kbd.assign': 'uni1', 'kbd.portamento': 2.5, 'kbd.portaOn': true, 'vcf.cutoff': 7, 'vcf.res': 2.5 } },
+      { title: 'A trill on the lever', module: 'mod', why: 'The lever can bring in the LFO on the VCO. A square LFO flips the pitch between two notes: a trill.\n- Lever VCO switch at LFO.\n- LFO WAVE FORM square, RATE 6.3 (6.4 Hz).\n- LFO MOD 4: how wide the trill gets at full push.\n- Push the mod wheel beside the keyboard: it stands in for the lever.\n- Listen for: no trill until you push the wheel, then a fast flutter.',
+        set: { 'bend.vco': 'lfo', 'lfo.waveform': 'square', 'lfo.rate': 6.3, 'bend.lfoMod': 4 } },
+    ],
+    context: {
+      'bend.vco': 'In this sound: lets the lever (the mod wheel here) bring in the trill.',
+      'bend.lfoMod': 'In this sound: how wide the trill is with the wheel pushed fully.',
+    },
+    tweaks: [
+      { id: 'lfo.waveform', try: 'Choose the sine', hear: 'A smooth vibrato instead of a trill.' },
+      { id: 'lfo.bend', try: 'Push it up while playing', hear: 'The trill speeds up; it is a live control.' },
+    ],
+  },
+  {
+    id: 'j4-poly-glide', name: 'Gliding Chords', ref: 'In the style of Jupiter-4 polyphonic portamento', artist: 'Classic technique',
+    tags: ['pad', 'synth-pop', '80s'], level: 2,
+    blurb: 'Chords whose notes slide into each other as you change them.',
+    how: 'Portamento works on every voice at once, so when a chord changes each voice slides from its old note to its new one. POLY 2 suits this on the hardware because a key tends to get the same voice back. A sawtooth and the ensemble keep it full.',
+    phrase: { bpm: 76, loop: true, steps: [[0, 57, 1.9], [0, 60, 1.9], [0, 64, 1.9], [2, 55, 1.9], [2, 59, 1.9], [2, 62, 1.9], [4, 53, 1.9], [4, 57, 1.9], [4, 60, 1.9], [6, 52, 1.9], [6, 55, 1.9], [6, 59, 1.9]] },
+    steps: [
+      { title: 'Portamento on every voice', module: 'glide', why: 'Each voice slides from the note it played last.\n- PORTAMENTO 4, switch ON: about a fifth of a second per octave.\n- KEY ASSIGNMENT POLY 2.\n- Listen for: chord changes that smear into each other.',
+        set: { 'kbd.portamento': 4, 'kbd.portaOn': true, 'kbd.assign': 'poly2' } },
+      { title: 'A soft, full chord', module: 'filter', why: 'A warm filter and a gentle envelope make the slides sound smooth.\n- LPF CUTOFF 5.6, RES 2.\n- VCA A 4, D 5, S 9, R 5.5.\n- ENSEMBLE on.\n- Listen for: a lush chord whose changes swoop.',
+        set: { 'vcf.cutoff': 5.6, 'vcf.res': 2, ...ENV('env_a', 4, 5, 9, 5.5), 'ens.on': true } },
+    ],
+    context: {
+      'kbd.portamento': 'In this sound: how long each slide takes.',
+      'kbd.assign': 'In this sound: POLY 2. Here it plays the same as POLY 1.',
+    },
+    tweaks: [
+      { id: 'kbd.portamento', try: 'Raise to 6', hear: 'Long, seasick slides between chords.' },
+      { id: 'kbd.portaOn', try: 'Switch OFF', hear: 'The chords change cleanly.' },
+    ],
+  },
+  {
+    id: 'j4-reverse', name: 'Reverse Swell', ref: 'In the style of 70s ambient keyboards', artist: 'Classic technique',
+    tags: ['pad', 'ambient', '70s'], level: 3,
+    blurb: 'Notes that start dark, close further, then open up as they fade.',
+    how: 'POLARITY turns the filter envelope upside down, so it closes the filter instead of opening it. The cutoff is set high, the inverted envelope pulls it down slowly as the note goes on, and it rises again during the release.',
+    phrase: { bpm: 64, loop: true, steps: [[0, 52, 3], [0, 59, 3], [0, 64, 3], [4, 50, 3], [4, 57, 3], [4, 62, 3]] },
+    steps: [
+      { title: 'Turn the envelope over', module: 'filter', why: 'With POLARITY down, the filter envelope closes the filter as it rises.\n- POLARITY inverted.\n- LPF CUTOFF 7.5 (3.1 kHz), RES 4, ENV MOD 6.\n- Listen for: notes that get duller the longer you hold them.',
+        set: { 'vcf.polarity': 'inverted', 'vcf.cutoff': 7.5, 'vcf.res': 4, 'vcf.envMod': 6 } },
+      { title: 'Slow envelopes', module: 'env', why: 'Slow times turn the dip into a long swell.\n- Filter A 7.5 (840 ms), D 6, S 7, R 7.\n- VCA A 5.5, D 5, S 10, R 7 (1.5 s).\n- ENSEMBLE on.\n- Listen for: the tone opening up again after you let go.',
+        set: { ...ENV('env_f', 7.5, 6, 7, 7), ...ENV('env_a', 5.5, 5, 10, 7), 'ens.on': true } },
+    ],
+    context: {
+      'vcf.polarity': 'In this sound: makes the envelope close the filter rather than open it.',
+      'env_f.attack': 'In this sound: how slowly the tone darkens.',
+    },
+    tweaks: [
+      { id: 'vcf.polarity', try: 'Switch back to normal', hear: 'An ordinary pad that brightens as it swells.' },
+      { id: 'vcf.res', try: 'Raise to 7', hear: 'The slow sweep sings.' },
+    ],
+  },
+  {
+    id: 'j4-tom', name: 'Synth Tom', ref: 'In the style of late-70s disco synth drums', artist: 'Classic technique',
+    tags: ['perc', 'disco', '70s'], level: 2,
+    blurb: 'A short, round drum hit with a ringing filter.',
+    how: 'The sub-oscillator alone is a soft square. The filter is nearly closed but resonant, and a very short filter envelope opens it for a moment, so each hit is a quick thump with a ring. The VCA envelope has no sustain, so every note is a short hit.',
+    phrase: { bpm: 112, loop: true, steps: [[0, 45, 0.2], [0.5, 45, 0.2], [1, 43, 0.2], [1.75, 43, 0.2], [2, 40, 0.2], [2.5, 40, 0.2], [3, 38, 0.2], [3.5, 36, 0.2]] },
+    steps: [
+      { title: 'Only the sub', module: 'osc', why: 'With the VCO off, the sub-oscillator’s soft square is the drum’s body.\n- WAVE FORM OFF, SUB on.\n- NOISE on: a little hiss for the stick.\n- Listen for: a dull, buzzing tone.',
+        set: { 'vco.waveform': 'off', 'vco.sub': true, 'noise.on': true } },
+      { title: 'A quick, ringing thump', module: 'filter', why: 'High resonance and a very fast filter envelope give the “boom” of a tom.\n- LPF CUTOFF 3.5, RES 7, ENV MOD 6.\n- Filter A 0, D 3 (100 ms), S 0, R 3.\n- VCA A 0, D 4.5 (280 ms), S 0, R 4.\n- Listen for: short hits that drop in pitch as the filter closes.',
+        set: { 'vcf.cutoff': 3.5, 'vcf.res': 7, 'vcf.envMod': 6, ...ENV('env_f', 0, 3, 0, 3), ...ENV('env_a', 0, 4.5, 0, 4) } },
+    ],
+    context: {
+      'vcf.res': 'In this sound: the ring of the drum.',
+      'env_a.decay': 'In this sound: the length of each hit.',
+    },
+    tweaks: [
+      { id: 'env_f.decay', try: 'Raise to 4.5', hear: 'A longer pitch drop, like a disco tom.' },
+      { id: 'noise.on', try: 'Switch NOISE off', hear: 'A purer, rounder hit.' },
+    ],
+  },
+  {
+    id: 'j4-bell', name: 'Audio-Rate Bell', ref: 'In the style of 70s synth bells', artist: 'Classic technique',
+    tags: ['keys', 'ambient', '70s'], level: 3,
+    blurb: 'A metallic, clangy bell made by running the LFO at audio rate.',
+    how: 'The Jupiter-4’s LFO reaches 80 Hz, fast enough to modulate the VCO at audio rate. That adds new, out-of-tune partials to the tone, which sound metallic. A long, sustainless VCA envelope makes it ring like a bell.',
+    phrase: { bpm: 80, loop: true, steps: [[0, 72, 1.4], [1.5, 76, 1.4], [3, 79, 0.9], [4, 74, 2.8]] },
+    steps: [
+      { title: 'LFO at audio rate', module: 'lfo', why: 'An LFO this fast no longer wobbles the pitch; it adds new frequencies to the tone.\n- LFO RATE 9.6 (63 Hz), WAVE FORM sine.\n- MOD 4.5: how much it bends the VCO. Higher is clangier.\n- WAVE FORM square: a plain tone to start from.\n- Listen for: a rough, metallic tone. Because the LFO runs at a fixed rate, low and high notes clang differently.',
+        set: { 'lfo.rate': 9.6, 'vco.lfoMod': 4.5, 'vco.waveform': 'square' } },
+      { title: 'A ringing strike', module: 'amp', why: 'Bells are struck and ring on.\n- VCA A 0, D 8 (3 s), S 0, R 7.\n- LPF CUTOFF 7, ENV MOD 3, filter D 6.5, S 0: brightest at the strike.\n- ENSEMBLE on.\n- Listen for: notes that ring and shimmer as they fade.',
+        set: { ...ENV('env_a', 0, 8, 0, 7), 'vcf.cutoff': 7, 'vcf.envMod': 3, ...ENV('env_f', 0, 6.5, 0, 6), 'ens.on': true } },
+    ],
+    context: {
+      'lfo.rate': 'In this sound: sets the clang. Small changes give quite different bells.',
+      'vco.lfoMod': 'In this sound: how metallic it is.',
+    },
+    tweaks: [
+      { id: 'lfo.rate', try: 'Move slowly between 9 and 10', hear: 'The bell’s colour changes from gong to glass.' },
+      { id: 'lfo.bend', try: 'Push it up while a note rings', hear: 'The clang shifts as the LFO speeds up.' },
+    ],
+  },
+  {
+    id: 'j4-random-arp', name: 'Random Sequence', ref: 'In the style of Tangerine Dream sequences', artist: 'Classic technique',
+    tags: ['seq', 'electronic', '70s'], level: 3,
+    blurb: 'A held chord played back at random, with a filter that jumps on every step.',
+    how: 'The arpeggio in RANDOM plays the held notes in no order, and the sample-and-hold, clocked by the same trigger generator, moves the filter to a new random setting on every step. HOLD keeps it going with your hands off the keys.',
+    phrase: { bpm: 100, loop: true, steps: [[0, 45, 7.8], [0, 52, 7.8], [0, 57, 7.8], [0, 60, 7.8], [0, 64, 7.8]] },
+    steps: [
+      { title: 'Random order, held', module: 'mode', why: 'RANDOM picks the next held note at random each step, and HOLD keeps the pattern running after you let go.\n- ARPEGGIO RND, HOLD on.\n- TRIG RATE 7 (7.7 steps a second).\n- Listen for: an endless, wandering line from one chord.',
+        set: { 'kbd.arpMode': 'random', 'kbd.hold': true, 'trig.rate': 7 } },
+      { title: 'A plucked, resonant step', module: 'filter', why: 'A short filter envelope plucks each step, and resonance makes it ring.\n- LPF CUTOFF 4.5, RES 6, ENV MOD 4.\n- Filter A 0, D 3.5, S 0.\n- VCA A 0, D 4.5, S 2, R 3.\n- Listen for: a clean, ringing pluck on every note.',
+        set: { 'vcf.cutoff': 4.5, 'vcf.res': 6, 'vcf.envMod': 4, ...ENV('env_f', 0, 3.5, 0, 3), ...ENV('env_a', 0, 4.5, 2, 3) } },
+      { title: 'Random colour on every step', module: 'mod', why: 'The sample-and-hold is clocked by the trigger generator, the same clock as the arpeggio, so each step gets its own random filter setting.\n- VCF MOD 3.5.\n- ENSEMBLE on.\n- Listen for: some notes bright, some dull, never the same twice.',
+        set: { 'trig.vcfMod': 3.5, 'ens.on': true } },
+    ],
+    context: {
+      'trig.rate': 'In this sound: the speed of both the notes and the filter jumps.',
+      'trig.vcfMod': 'In this sound: how much the brightness varies from step to step.',
+    },
+    tweaks: [
+      { id: 'kbd.arpMode', try: 'Choose UP', hear: 'An ordered run, still with random colour on each step.' },
+      { id: 'trig.vcfMod', try: 'Raise to 7', hear: 'Wild jumps from muffled to squealing.' },
+    ],
+  },
+  {
+    id: 'j4-solo-lead', name: 'Delayed-Vibrato Lead', ref: 'In the style of late-70s synth solos', artist: 'Classic technique',
+    tags: ['lead', 'rock', '70s'], level: 1,
+    blurb: 'A bright, singing lead line with vibrato that comes in on long notes.',
+    how: 'UNISON 1 stacks all four voices on one sawtooth note. The filter is bright with a little resonance, and the LFO delay holds the vibrato back until a note has been held for a moment, as a player would.',
+    phrase: { bpm: 110, loop: true, steps: [[0, 69, 0.45], [0.5, 72, 0.45], [1, 74, 0.9], [2, 76, 1.9], [4, 74, 0.45], [4.5, 72, 0.45], [5, 69, 2.8]] },
+    steps: [
+      { title: 'All voices on one note', module: 'mode', why: 'UNISON 1 makes the lead thick enough to cut through.\n- UNISON 1.\n- SUB on: extra weight.\n- LPF CUTOFF 7.2, RES 3, ENV MOD 3, filter D 5.5, S 6.\n- Listen for: a fat, bright lead with a slight bite on each note.',
+        set: { 'kbd.assign': 'uni1', 'vco.sub': true, 'vcf.cutoff': 7.2, 'vcf.res': 3, 'vcf.envMod': 3, ...ENV('env_f', 0, 5.5, 6, 4) } },
+      { title: 'Vibrato held back', module: 'lfo', why: 'DELAY TIME fades the LFO in after each new key, so fast runs stay clean and held notes sing.\n- MOD 2, LFO RATE 6 (5.5 Hz).\n- DELAY TIME 4 (1.6 s).\n- PORTAMENTO 1.5, switch ON.\n- Listen for: vibrato only on the long notes. Notes played legato do not restart the delay.',
+        set: { 'vco.lfoMod': 2, 'lfo.rate': 6, 'lfo.delay': 4, 'kbd.portamento': 1.5, 'kbd.portaOn': true } },
+    ],
+    context: {
+      'lfo.delay': 'In this sound: how long a note is held before it starts to sing.',
+      'vco.lfoMod': 'In this sound: how wide the vibrato is.',
+    },
+    tweaks: [
+      { id: 'lfo.delay', try: 'Lower to 2', hear: 'Vibrato arrives almost at once.' },
+      { id: 'vcf.res', try: 'Raise to 6', hear: 'A squelchier, more vocal lead.' },
+    ],
+  },
+  {
+    id: 'j4-organ', name: 'Combo Organ', ref: 'In the style of 60s combo organs', artist: 'Classic technique',
+    tags: ['keys', 'rock', '60s'], level: 1,
+    blurb: 'A buzzy, sustained organ with an octave below each note.',
+    how: 'A square wave and the sub-oscillator together are like two organ drawbars an octave apart. The envelopes switch the sound on and off with the keys, and a little vibrato and the ensemble give it the wobble of a combo organ.',
+    phrase: { bpm: 120, loop: true, steps: [[0, 60, 0.9], [0, 64, 0.9], [0, 67, 0.9], [1, 60, 0.4], [1, 65, 0.4], [1, 69, 0.4], [1.5, 60, 0.9], [1.5, 64, 0.9], [1.5, 67, 0.9], [2.5, 59, 1.4], [2.5, 62, 1.4], [2.5, 67, 1.4]] },
+    steps: [
+      { title: 'Square and sub', module: 'osc', why: 'The square and the sub-octave square make a simple organ tone.\n- WAVE FORM square, SUB on.\n- RANGE 4′: up an octave, so the sub sits at the played pitch.\n- Listen for: a hollow, buzzy organ.',
+        set: { 'vco.waveform': 'square', 'vco.sub': true, 'vco.range': '4' } },
+      { title: 'Organ on and off', module: 'amp', why: 'An organ sounds as long as the key is down and stops at once.\n- VCA A 0.5, D 5, S 10, R 2.\n- LPF CUTOFF 7, KYBD FOLLOW 100.\n- MOD 1, LFO RATE 6.5: a slight vibrato.\n- ENSEMBLE on.\n- Listen for: chords that start and stop with the keys.',
+        set: { ...ENV('env_a', 0.5, 5, 10, 2), 'vcf.cutoff': 7, 'vcf.kybd': '100', 'vco.lfoMod': 1, 'lfo.rate': 6.5, 'ens.on': true } },
+    ],
+    context: {
+      'vco.sub': 'In this sound: the lower drawbar.',
+      'vcf.cutoff': 'In this sound: how buzzy the organ is.',
+    },
+    tweaks: [
+      { id: 'vco.waveform', try: 'Choose the sawtooth', hear: 'A brighter, reedier organ.' },
+      { id: 'hpf.cutoff', try: 'Raise to 4', hear: 'A thin, transistor-radio organ.' },
+    ],
+  },
+];

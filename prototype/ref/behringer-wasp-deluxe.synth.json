@@ -1,0 +1,1770 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-wasp-deluxe",
+    "manufacturer": "Behringer",
+    "model": "WASP Deluxe",
+    "category": "monophonic hybrid synthesizer (digital oscillators, analogue filter and VCA), desktop / Eurorack (70 HP)",
+    "based_on": "EDP (Electronic Dream Plant) Wasp Deluxe, UK, late 1970s. The guide never names EDP; the layout, the digitally generated oscillators, the multimode filter and the repeat envelopes are the Wasp's.",
+    "sources": [
+      {
+        "id": "wasp",
+        "title": "WASP DELUXE Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_WASP-DELUXE_Manual.pdf",
+        "pages": 29,
+        "note": "37 numbered controls with one-line descriptions (pages 17 to 19), a getting-started chapter, a SysEx data format and command examples table, and a short specifications table. Two panel knobs and two panel jacks are not numbered."
+      },
+      {
+        "id": "panel",
+        "title": "WASP Deluxe front panel image",
+        "kind": "measurement",
+        "file": "behringer-wasp_deluxe.jpg",
+        "note": "Source for the two FILTER CONTROL knobs, the OSC1 and OSC2 output jacks, the REPEAT ends of the envelope knobs and the WIDTH and FT scales."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "signal_path_note": "digitally controlled oscillators feeding an analogue multimode filter and VCA",
+    "voices": 1,
+    "polyphony_mode": "monophonic; poly chain across units",
+    "poly_chain_max_units": 16,
+    "patch_memory": false,
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 26,
+      "switches": 1,
+      "jacks_3_5mm": 5
+    },
+    "summary": "Two oscillators, each off, sawtooth, square or ENH, pitched in foot ranges from 32' to 2', with a pulse width control on the upper oscillator and a relative PITCH control on the lower. A mixer blends the two oscillators, white noise and an external input, which with nothing patched carries the WASP's own output back in for feedback. One multimode filter (low-pass, band-pass, notch, high-pass) whose Q sets slope in the pass modes and width in the band modes. A control oscillator (LFO, 0.5 to 100 Hz, six shapes including noise and random) modulates oscillator pitch and, through a bipolar knob, the filter. Two envelopes: a VCA envelope with attack, decay and a sustain knob that turns into a repeat at its end stop, plus a HOLD switch; and a control envelope for the filter with attack, decay and a delay that also becomes a repeat, reaching the filter through its own bipolar knob."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI interface",
+      "panel_section": "MIDI",
+      "description": "MIDI note, gate and pitch bend. No keyboard on this model.",
+      "inputs": [],
+      "outputs": [
+        "kbd.note",
+        "kbd.gate",
+        "kbd.bend"
+      ]
+    },
+    {
+      "id": "pitch",
+      "type": "pitch_control",
+      "name": "Keyboard section",
+      "panel_section": "KEYBOARD",
+      "description": "Bend, tune and glide applied to the note pitch before both oscillators.",
+      "inputs": [
+        "pitch.note_in",
+        "pitch.bend_in"
+      ],
+      "outputs": [
+        "pitch.to_osc1",
+        "pitch.to_osc2"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Upper oscillator (OSC 1)",
+      "panel_section": "OSCILLATORS",
+      "description": "Digitally controlled oscillator: off, sawtooth, square or ENH, pitched in five foot ranges, with a pulse WIDTH control from 10% to 50%.",
+      "properties": {
+        "waveforms": [
+          "saw",
+          "square",
+          "enh"
+        ],
+        "ranges": [
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "digital": true
+      },
+      "inputs": [
+        "osc1.pitch_in",
+        "osc1.pm_in"
+      ],
+      "outputs": [
+        "osc1.out"
+      ]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Lower oscillator (OSC 2)",
+      "panel_section": "OSCILLATORS",
+      "description": "Digitally controlled oscillator: off, sawtooth, square or ENH, five foot ranges, and a PITCH control that sets its interval against OSC 1.",
+      "properties": {
+        "waveforms": [
+          "saw",
+          "square",
+          "enh"
+        ],
+        "ranges": [
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "digital": true
+      },
+      "inputs": [
+        "osc2.pitch_in",
+        "osc2.pm_in"
+      ],
+      "outputs": [
+        "osc2.out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "OSCILLATORS / MIX",
+      "description": "White noise, mixed by NOISE SIGNAL.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mix",
+      "panel_section": "OSCILLATORS / MIX",
+      "description": "Levels for OSC 1, OSC 2, EXT and NOISE, summed into the filter.",
+      "inputs": [
+        "mixer.in_osc1",
+        "mixer.in_osc2",
+        "mixer.in_ext",
+        "mixer.in_noise"
+      ],
+      "outputs": [
+        "mixer.out"
+      ]
+    },
+    {
+      "id": "ctrl_osc",
+      "type": "lfo",
+      "name": "Control oscillator",
+      "panel_section": "CONTROL OSC",
+      "description": "A modulation oscillator that makes no sound itself: sine, rising sawtooth, falling sawtooth, square, noise or random, 0.5 to 100 Hz. Drives oscillator pitch through PITCH MOD and the filter through its FILTER CONTROL knob.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.5,
+          "max": 100
+        },
+        "shapes": [
+          "sine",
+          "rising_saw",
+          "falling_saw",
+          "square",
+          "noise",
+          "random"
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "ctrl_osc.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "description": "Multimode filter: low-pass, band-pass, notch or high-pass. Q sets slope in low-pass and high-pass, and width in band-pass and notch. Cutoff modulated bipolarly by the control oscillator and the control envelope.",
+      "properties": {
+        "modes": [
+          "lowpass",
+          "bandpass",
+          "notch",
+          "highpass"
+        ]
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.osc_mod_in",
+        "vcf.env_mod_in"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "vca_env",
+      "type": "envelope",
+      "name": "VCA envelope",
+      "panel_section": "ENVELOPE GENERATORS / VCA ENV",
+      "description": "Attack, decay and sustain; decay also sets the fade after release. At its fully counter-clockwise end the sustain knob switches the envelope into repeat, cycling at the attack and decay times. HOLD freezes the envelope where it is.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay (also release)",
+          "sustain"
+        ],
+        "repeat": true
+      },
+      "inputs": [
+        "vca_env.gate_in"
+      ],
+      "outputs": [
+        "vca_env.out"
+      ]
+    },
+    {
+      "id": "ctrl_env",
+      "type": "envelope",
+      "name": "Control envelope",
+      "panel_section": "ENVELOPE GENERATORS / CONTROL ENV",
+      "description": "Attack and decay for the filter, with a delay of up to 1 s before the attack starts. The delay knob's other end is REPEAT.",
+      "properties": {
+        "stages": [
+          "delay",
+          "attack",
+          "decay"
+        ],
+        "delay_s": {
+          "min": 0,
+          "max": 1
+        },
+        "repeat": true
+      },
+      "inputs": [
+        "ctrl_env.gate_in"
+      ],
+      "outputs": [
+        "ctrl_env.out"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPE GENERATORS",
+      "description": "Output amplifier opened by the VCA envelope.",
+      "inputs": [
+        "vca.in",
+        "vca.env_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT",
+      "description": "Volume to the MAIN AUDIO and rear outputs; separate headphone level.",
+      "inputs": [
+        "output.in"
+      ],
+      "outputs": [
+        "output.main",
+        "output.phones",
+        "output.high",
+        "output.low"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "pitch.bend",
+      "module": "pitch",
+      "label": "BEND",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bends the keyboard pitch up (clockwise) or down."
+    },
+    {
+      "id": "pitch.tune",
+      "module": "pitch",
+      "label": "TUNE",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning of the keyboard pitch."
+    },
+    {
+      "id": "pitch.glide",
+      "module": "pitch",
+      "label": "GLIDE",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Glide rate between notes; clockwise is slower."
+    },
+    {
+      "id": "osc1.ft",
+      "module": "osc1",
+      "label": "FT (upper)",
+      "manual_ref": 4,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Foot range of the upper oscillator."
+    },
+    {
+      "id": "osc1.width",
+      "module": "osc1",
+      "label": "WIDTH %",
+      "manual_ref": 5,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 50,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 50,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width of the upper oscillator's square, 10% to 50%.",
+      "note": "The guide says 'the width of the oscillator's sound'. Whether it also affects OSC 2 or the ENH shape is not stated."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "WAVEFORM (upper)",
+      "manual_ref": 6,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off",
+          "label": "OFF",
+          "meaning": "oscillator silent"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square",
+          "label": "square"
+        },
+        {
+          "value": "enh",
+          "label": "ENH",
+          "meaning": "enhanced: adds punch, bite and clarity"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Upper oscillator waveform, or off."
+    },
+    {
+      "id": "osc2.ft",
+      "module": "osc2",
+      "label": "FT (lower)",
+      "manual_ref": 7,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Foot range of the lower oscillator."
+    },
+    {
+      "id": "osc2.pitch",
+      "module": "osc2",
+      "label": "PITCH",
+      "manual_ref": 8,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pitch of the lower oscillator against the upper, for intervals and detuning. Span not stated."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "WAVEFORM (lower)",
+      "manual_ref": 9,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off",
+          "label": "OFF",
+          "meaning": "oscillator silent"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square",
+          "label": "square"
+        },
+        {
+          "value": "enh",
+          "label": "ENH",
+          "meaning": "enhanced: adds punch, bite and clarity"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Lower oscillator waveform, or off."
+    },
+    {
+      "id": "mixer.osc1",
+      "module": "mixer",
+      "label": "MIX OSC 1",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the upper oscillator."
+    },
+    {
+      "id": "mixer.osc2",
+      "module": "mixer",
+      "label": "MIX OSC 2",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the lower oscillator."
+    },
+    {
+      "id": "mixer.ext",
+      "module": "mixer",
+      "label": "EXT",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the EXT audio input, or with nothing patched, of the WASP's own output fed back."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE SIGNAL",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "White noise level."
+    },
+    {
+      "id": "ctrl_osc.freq",
+      "module": "ctrl_osc",
+      "label": "FREQ",
+      "manual_ref": 13,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.5,
+        "max": 100,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Control oscillator speed."
+    },
+    {
+      "id": "ctrl_osc.pitch_mod",
+      "module": "ctrl_osc",
+      "label": "PITCH MOD",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of control oscillator modulation on oscillator pitch. The guide words it as varying the pitch difference between the oscillators."
+    },
+    {
+      "id": "ctrl_osc.waveform",
+      "module": "ctrl_osc",
+      "label": "WAVEFORM (control)",
+      "manual_ref": 15,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "rising_saw"
+        },
+        {
+          "value": "falling_saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "noise",
+          "label": "NOISE"
+        },
+        {
+          "value": "random",
+          "label": "RND"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Control oscillator shape."
+    },
+    {
+      "id": "vcf.freq",
+      "module": "vcf",
+      "label": "FREQ",
+      "manual_ref": 16,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff or centre frequency."
+    },
+    {
+      "id": "vcf.q",
+      "module": "vcf",
+      "label": "Q",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Width in band-pass and notch; slope in low-pass and high-pass."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "FILTER",
+      "manual_ref": 18,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lowpass",
+          "label": "LO"
+        },
+        {
+          "value": "bandpass",
+          "label": "BAND"
+        },
+        {
+          "value": "notch",
+          "label": "NOTCH"
+        },
+        {
+          "value": "highpass",
+          "label": "HI"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Filter response."
+    },
+    {
+      "id": "vcf.ctrl_osc_amount",
+      "module": "vcf",
+      "label": "FILTER CONTROL (osc)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar depth of the control oscillator on the filter: centre none, clockwise positive, counter-clockwise inverted. Unnumbered in the guide.",
+      "confidence": "inferred",
+      "note": "Read from the panel, where a bracket links this knob to the control oscillator."
+    },
+    {
+      "id": "vcf.ctrl_env_amount",
+      "module": "vcf",
+      "label": "FILTER CONTROL (env)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar depth of the control envelope on the filter: centre none, clockwise rising, counter-clockwise falling. Unnumbered in the guide.",
+      "confidence": "inferred",
+      "note": "Read from the panel, where a bracket links this knob to the control envelope."
+    },
+    {
+      "id": "vca_env.attack",
+      "module": "vca_env",
+      "label": "ATTACK",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Speed of note onset."
+    },
+    {
+      "id": "vca_env.decay",
+      "module": "vca_env",
+      "label": "DECAY",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay while the key is held, and fade after release."
+    },
+    {
+      "id": "vca_env.sustain",
+      "module": "vca_env",
+      "label": "SUSTAIN LEVEL / REPEAT",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "REPEAT to SUSTAIN LEVEL"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level. At fully counter-clockwise the note repeats, with ATTACK and DECAY setting the repeat speed."
+    },
+    {
+      "id": "vca_env.hold",
+      "module": "vca_env",
+      "label": "HOLD",
+      "manual_ref": 22,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Freezes the note indefinitely at whatever point the envelope has reached when switched."
+    },
+    {
+      "id": "ctrl_env.attack",
+      "module": "ctrl_env",
+      "label": "ATTACK (control)",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Speed of the filter envelope's onset."
+    },
+    {
+      "id": "ctrl_env.decay",
+      "module": "ctrl_env",
+      "label": "DECAY (control)",
+      "manual_ref": 24,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "How quickly the filter envelope falls."
+    },
+    {
+      "id": "ctrl_env.delay",
+      "module": "ctrl_env",
+      "label": "DELAY / REPEAT",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "REPEAT to DELAY"
+      },
+      "physical": {
+        "min": 0,
+        "max": 1,
+        "unit": "s",
+        "note": "delay end"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Delays the start of the filter envelope by up to 1 s. The panel labels the other end REPEAT, which by analogy with the VCA envelope makes it cycle.",
+      "confidence": "inferred",
+      "note": "The guide describes only the delay; the repeat end is read from the panel."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Final level at MAIN AUDIO and the rear outputs."
+    },
+    {
+      "id": "output.phones",
+      "module": "output",
+      "label": "PHONES",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level."
+    },
+    {
+      "id": "kbd.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CHANNEL",
+      "manual_ref": 35,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        },
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 00 <value> F7"
+        }
+      ],
+      "function": "MIDI channel, by rear DIP switches or SysEx; defaults to 1 in Eurorack."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 36,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "kbd.key_priority",
+      "module": "kbd",
+      "label": "Key priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "low",
+          "meaning": "inferred"
+        },
+        {
+          "value": 1,
+          "label": "high",
+          "meaning": "inferred"
+        },
+        {
+          "value": 2,
+          "label": "last",
+          "meaning": "stated"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 01 <value> F7"
+        }
+      ],
+      "function": "Note priority when several keys are held.",
+      "confidence": "inferred",
+      "note": "SysEx main parameter 0x01; ranges beyond the guide's single example are inferred."
+    },
+    {
+      "id": "kbd.multi_trigger",
+      "module": "kbd",
+      "label": "Multi trigger",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 02 <value> F7"
+        }
+      ],
+      "function": "Retrigger the envelopes on every new note, or only on detached notes.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x02."
+    },
+    {
+      "id": "kbd.bend_range",
+      "module": "kbd",
+      "label": "Pitch bend range",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 03 <value> F7"
+        }
+      ],
+      "function": "MIDI pitch bend range in semitones.",
+      "confidence": "inferred",
+      "note": "SysEx main parameter 0x03; ranges beyond the guide's single example are inferred."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "MIDI IN transpose",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 06 <value> F7"
+        }
+      ],
+      "function": "Transposes incoming notes; a table in the guide maps data values to semitones.",
+      "confidence": "inferred",
+      "note": "SysEx main parameter 0x06; ranges beyond the guide's single example are inferred."
+    },
+    {
+      "id": "kbd.zero_volt_note",
+      "module": "kbd",
+      "label": "Zero-volt note",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 07 <value> F7"
+        }
+      ],
+      "function": "The MIDI note treated as zero volts, for example C5 (72).",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x07."
+    },
+    {
+      "id": "kbd.poly_chain",
+      "module": "kbd",
+      "label": "Poly chain",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 08 <value> F7"
+        }
+      ],
+      "function": "Poly chain on or off. The guide recommends an undocumented 'A-440 method' instead.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x08."
+    },
+    {
+      "id": "kbd.device_id",
+      "module": "kbd",
+      "label": "Device ID",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 15
+      },
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 09 <value> F7"
+        }
+      ],
+      "function": "SysEx and poly chain device ID, 0 to 15. Set per unit when chaining by SysEx.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x09."
+    },
+    {
+      "id": "kbd.disable_channel_switches",
+      "module": "kbd",
+      "label": "Disable MIDI channel switches",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 0A <value> F7"
+        }
+      ],
+      "function": "Ignore the rear DIP switches so SysEx can set the channel.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x0A."
+    },
+    {
+      "id": "kbd.modulation_curve",
+      "module": "kbd",
+      "label": "Modulation curve",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 2
+      },
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 0B <value> F7"
+        }
+      ],
+      "function": "Response curve for modulation; 1 is Medium. Other values not listed.",
+      "confidence": "inferred",
+      "note": "SysEx main parameter 0x0B; ranges beyond the guide's single example are inferred."
+    },
+    {
+      "id": "kbd.bend_range_effective",
+      "module": "kbd",
+      "label": "Make pitch bend range effective",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 0C <value> F7"
+        }
+      ],
+      "function": "Applies the SysEx pitch bend range.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x0C."
+    },
+    {
+      "id": "kbd.poly_chain_style",
+      "module": "kbd",
+      "label": "Poly chain style",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "new"
+        },
+        {
+          "value": 1,
+          "label": "old"
+        }
+      ],
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 <dev> 0A 0D <value> F7"
+        }
+      ],
+      "function": "Old (firmware 1.0.5) or new (1.0.6) note distribution and retriggering.",
+      "confidence": "stated",
+      "note": "SysEx main parameter 0x0D."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.osc1_out",
+      "label": "OSC1",
+      "manual_ref": null,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "osc1.out",
+      "function": "Upper oscillator output. On the panel; not described in the guide.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.osc2_out",
+      "label": "OSC2",
+      "manual_ref": null,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "osc2.out",
+      "function": "Lower oscillator output. On the panel; not described in the guide.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ext",
+      "label": "EXT AUDIO",
+      "manual_ref": 31,
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.in_ext",
+      "combine": "replace",
+      "function": "Line-level audio into the mix via EXT. With nothing patched the main output is fed back here."
+    },
+    {
+      "id": "jack.main_audio",
+      "label": "MAIN AUDIO",
+      "manual_ref": 33,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.main",
+      "electrical": {
+        "max_level_dbu": 0
+      },
+      "function": "Main output on 3.5 mm; the only output when in Eurorack."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 27,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_level_dbu": -2,
+        "load_ohm": 32,
+        "impedance_ohm": 25
+      },
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 28,
+      "location": "top",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI in and out; also the route for SysEx."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 29,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from a keyboard, sequencer or computer."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 30,
+      "location": "top",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Passes MIDI IN on, for poly chain or other gear."
+    },
+    {
+      "id": "jack.out_high",
+      "label": "MAIN OUT HIGH",
+      "manual_ref": 34,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.high",
+      "electrical": {
+        "max_level_dbu": 0,
+        "impedance_ohm": 1300
+      },
+      "function": "Line-level mono output."
+    },
+    {
+      "id": "jack.out_low",
+      "label": "MAIN OUT LOW",
+      "manual_ref": 34,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.low",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Instrument-level mono output, 27 dB below HIGH."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "manual_ref": 37,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 1000
+      },
+      "function": "12 V DC, 1000 mA, from the supplied adaptor."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "pitch.note_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.bend",
+      "to": "pitch.bend_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.bend"
+    },
+    {
+      "id": "c03",
+      "from": "pitch.to_osc1",
+      "to": "osc1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "pitch.to_osc2",
+      "to": "osc2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.pitch"
+    },
+    {
+      "id": "c05",
+      "from": "ctrl_osc.out",
+      "to": "osc1.pm_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctrl_osc.pitch_mod",
+      "note": "The guide says PITCH MOD varies the pitch difference between the oscillators, which may mean it acts on one oscillator only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c06",
+      "from": "ctrl_osc.out",
+      "to": "osc2.pm_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctrl_osc.pitch_mod",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c10",
+      "from": "osc1.out",
+      "to": "mixer.in_osc1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.waveform",
+        "not_equals": "off"
+      },
+      "amount": "mixer.osc1"
+    },
+    {
+      "id": "c11",
+      "from": "osc2.out",
+      "to": "mixer.in_osc2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.waveform",
+        "not_equals": "off"
+      },
+      "amount": "mixer.osc2"
+    },
+    {
+      "id": "c12",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c13",
+      "from": "output.main",
+      "to": "mixer.in_ext",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.ext",
+      "amount": "mixer.ext",
+      "note": "With nothing in EXT AUDIO the main output is fed back into the mix, so EXT becomes a feedback control."
+    },
+    {
+      "id": "c14",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "ctrl_osc.out",
+      "to": "vcf.osc_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.ctrl_osc_amount"
+    },
+    {
+      "id": "c16",
+      "from": "ctrl_env.out",
+      "to": "vcf.env_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.ctrl_env_amount"
+    },
+    {
+      "id": "c17",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "kbd.gate",
+      "to": "vca_env.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "kbd.gate",
+      "to": "ctrl_env.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c20",
+      "from": "vca_env.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "vca.out",
+      "to": "output.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "POWER",
+      "kind": "led",
+      "led_colour": "green",
+      "manual_ref": 32,
+      "function": "Lit when the unit is on."
+    }
+  ],
+  "led_legend": {
+    "rule": "One LED, power only.",
+    "colours": [
+      {
+        "colour": "green",
+        "meaning": "power on"
+      }
+    ],
+    "confidence": "inferred",
+    "note": "Colour from the panel image; the guide says only that it lights."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Digital oscillators, analogue filter",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "vcf",
+        "vca"
+      ],
+      "rule": "The oscillators are digitally generated, as on the original Wasp, which gives the instrument its buzzy, aliased edge; the filter and VCA are analogue. The ENH waveform position adds bite and clarity beyond plain sawtooth or square."
+    },
+    {
+      "id": "b02",
+      "name": "Feedback through EXT",
+      "applies_to": [
+        "mixer",
+        "output"
+      ],
+      "rule": "With nothing patched into EXT AUDIO, the main output is normalled back into the mixer's EXT channel. Turning EXT up feeds the filtered, amplified signal back into the filter, from thickening to overdrive and self-oscillating howl."
+    },
+    {
+      "id": "b03",
+      "name": "Multimode filter and Q",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "One filter with four responses. Q means different things by mode: slope in low-pass and high-pass, width of the band or notch in band-pass and notch."
+    },
+    {
+      "id": "b04",
+      "name": "Bipolar filter control",
+      "applies_to": [
+        "vcf",
+        "ctrl_osc",
+        "ctrl_env"
+      ],
+      "rule": "The control oscillator and control envelope each reach the filter through a knob with zero at centre: clockwise adds, counter-clockwise inverts. Combining a rising envelope with a falling oscillator, or the reverse, is how the WASP gets its movement. The guide suggests these also affect the oscillators; the panel links them to the filter only."
+    },
+    {
+      "id": "b05",
+      "name": "Repeating envelopes",
+      "applies_to": [
+        "vca_env",
+        "ctrl_env"
+      ],
+      "rule": "Both envelopes have a knob whose end stop is REPEAT. On the VCA envelope, sustain at fully counter-clockwise makes the note retrigger continuously at the attack and decay times. The control envelope's DELAY knob has REPEAT at its other end, by the same logic cycling the filter envelope."
+    },
+    {
+      "id": "b06",
+      "name": "HOLD",
+      "applies_to": [
+        "vca_env"
+      ],
+      "rule": "HOLD freezes the VCA envelope at whatever level it has reached when switched, so a note can be caught mid-decay and held indefinitely."
+    },
+    {
+      "id": "b07",
+      "name": "Control oscillator shapes",
+      "applies_to": [
+        "ctrl_osc"
+      ],
+      "rule": "Six shapes: sine, rising and falling sawtooth, square, noise and random. At 100 Hz the control oscillator reaches low audio rates, so on pitch or the filter it gives rough FM-like tones as well as vibrato and sweeps."
+    },
+    {
+      "id": "b08",
+      "name": "SysEx configuration",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Channel, key priority, multi-trigger, bend range, transpose, the zero-volt note, poly chain on, device ID, modulation curve and poly chain style are set by SysEx on main parameter 0x0A, with the sub-parameter selecting the setting. There is no app mentioned. Firmware 1.0.6 changed the poly chain and retrigger behaviour; the old style can be restored."
+    },
+    {
+      "id": "b09",
+      "name": "Poly chain styles",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Old style (1.0.5): every unit plays note 1 until its own note number arrives. New style (1.0.6): a unit is silent until enough notes are held to reach it. Retriggering also changed: releasing the first of two overlapping notes no longer retriggers the second."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "cc123_all_notes_off",
+      "pitch_bend",
+      "timing_clock",
+      "start",
+      "continue",
+      "stop",
+      "sysex"
+    ],
+    "transmits": [
+      "MIDI THRU pass-through",
+      "USB MIDI"
+    ],
+    "channel": {
+      "range": [
+        1,
+        16
+      ],
+      "set_by": "rear DIP switches or SysEx; channel 1 when in Eurorack"
+    },
+    "sysex": {
+      "format": "F0 00 20 32 00 <device id or 7F> 0A <sub> <msb> <lsb> F7",
+      "manufacturer_id": "00 20 32 (Behringer)",
+      "note": "Device ID is the poly chain ID, not the MIDI channel. Sub-parameters are recorded on each kbd parameter."
+    },
+    "cc_map": null,
+    "nrpn": null,
+    "clock": "Timing clock, start, continue and stop are listed as received; what they drive is not stated",
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows XP or higher, Mac OS X 10.6.8 or higher"
+    }
+  },
+  "specifications": {
+    "voices": "monophonic",
+    "oscillators": "2 digitally controlled",
+    "lfo_hz": {
+      "min": 0.5,
+      "max": 100
+    },
+    "vcf": "1, switchable low, band, notch and high",
+    "envelopes": [
+      "VCA",
+      "VCF"
+    ],
+    "outputs": {
+      "high": "1/4-inch TS, max 0 dBu, 1.3 kohm",
+      "low": "1/4-inch TS, 27 dB below high, 1 kohm",
+      "main_audio": "3.5 mm TRS, max 0 dBu",
+      "phones": "3.5 mm TRS, -2 dBu into 32 ohm, 25 ohm"
+    },
+    "power": {
+      "adaptor": "12 V DC, 1000 mA",
+      "consumption_w_max": 2
+    },
+    "dimensions_mm": {
+      "h": 87,
+      "w": 374,
+      "d": 136
+    },
+    "eurorack_hp": 70,
+    "weight_kg": 1.6,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in several languages",
+    "warranty and compliance declarations",
+    "hook-up diagrams",
+    "non-English duplicates",
+    "Eurorack installation",
+    "the MIDI channel DIP switch table",
+    "the MIDI transpose value table"
+  ],
+  "not_in_source": [
+    "the two FILTER CONTROL knobs, which the numbered controls skip",
+    "the OSC1 and OSC2 output jacks, which are on the panel but not in the guide",
+    "the 'A-440 method' the guide recommends for turning on poly chain",
+    "envelope times, apart from the control envelope's 1 s delay",
+    "what the ENH waveform is electrically",
+    "whether WIDTH affects OSC 2 or the ENH shape",
+    "the span of the OSC 2 PITCH control",
+    "filter cutoff range and resonance behaviour",
+    "what MIDI clock drives; the transport messages are listed as received",
+    "the full ranges of the SysEx parameters; only one example value each is given"
+  ],
+  "source_inconsistencies": [
+    "Item 6 and 9 name the second and third waveform positions sawtooth and square; the panel symbols show a ramp and a square with a notch that may be a pulse.",
+    "The MIDI table lists both 8n and 9n as 'Note Off'; 9n is note on.",
+    "Item 30 says MIDI THRU would commonly feed 'another MODEL D synthesizer'; copied from the Model D guide.",
+    "Item 35 refers to 'the table on page 13'; the table is on page 17.",
+    "The getting-started chapter mentions a 'loudness decay switch'; the only switch is HOLD.",
+    "The getting-started chapter says FILTER CONTROL affects 'the oscillators and filter'; the panel links both knobs to the filter.",
+    "The SysEx examples show 'Nonte on' and 'Nonte off'."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Envelope times",
+      "detail": "None given apart from the control envelope delay of up to 1 s."
+    },
+    {
+      "topic": "Filter",
+      "detail": "The original Wasp filter is a distinctive CMOS-based design. No cutoff range, resonance behaviour or statement of how Q maps to slope is given."
+    },
+    {
+      "topic": "Digital oscillators",
+      "detail": "Waveform generation and aliasing character are not documented; the ENH shape is described only by its effect."
+    },
+    {
+      "topic": "Feedback",
+      "detail": "The normalled output-to-EXT loop is stated; its gain structure, and where in the output chain the feedback is taken, are not."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "No EDP Wasp documentation was supplied."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+// Lineage of the K-2: the Korg MS line. Shape: see CONTRACT.md → Lineage.
+export default {
+  title: 'From the Korg MS-20 to the Behringer K-2',
+  intro: 'Korg built the MS-20 in 1978 as a cheap, semi-modular synth for students and home players. It was never a flagship, and for years it was the instrument people bought because they could not afford a Moog. Two things kept it alive: two resonant filters in series instead of one, which let it make sounds no single-filter synth could, and a patch panel that invited you to take it apart. The Behringer K-2 is that instrument in a rack case, driven by MIDI.',
+  timeline: [
+    { year: '1975', name: 'Korg 700S and the Traveler', text: 'Korg’s early synths already put a high-pass and a low-pass filter side by side, under one pair of sliders called the Traveler. Squeezing the two together to leave a narrow band is a Korg idea long before the MS-20 carried it.' },
+    { year: '1978', name: 'Korg MS-20', tag: 'The original', text: 'A monophonic synth with two oscillators, two resonant filters in series and a patch panel of 3.5 mm sockets. Korg sold it against the Minimoog on price, and against everything else on the fact that you could rewire it. It also carried an external signal processor, so a guitar or a voice could play it.' },
+    { year: '1978', name: 'MS-10, MS-50 and the SQ-10', text: 'The MS-20 arrived with a family: the single-oscillator MS-10, the fully modular MS-50 with no keyboard at all, and the SQ-10 analogue sequencer that most MS-20 owners patched into the pitch inputs.' },
+    { year: '1979', name: 'The second filter circuit', text: 'Korg changed the filter part way through production. Early units use the Korg 35 chip; later ones use a design built from discrete parts. They behave differently at high resonance, and players have argued about which is better ever since. That argument is the FILTER 1 / FILTER 2 switch on this panel.' },
+    { year: '1983', name: 'Production ends', text: 'Korg stops making the MS-20 after roughly 28,000 units. Digital synths are arriving and analogue monosynths are out of fashion; second-hand prices fall to almost nothing.' },
+    { year: '1990s', name: 'Rediscovered by techno', text: 'Cheap, aggressive and easy to make scream, the MS-20 becomes a staple of electro, techno and industrial records. Prices climb from junk-shop to collector level over about a decade.' },
+    { year: '2013', name: 'Korg MS-20 mini and MS-20 kit', text: 'Korg reissues the instrument at 86 per cent size with MIDI and USB, then sells a full-size version as a kit you solder yourself, with both filter circuits switchable.' },
+    { year: '2019', name: 'Behringer K-2', tag: 'This synth', text: 'Behringer copies the MS-20 as a desktop and Eurorack unit, 80 HP wide, with no keyboard: MIDI or USB plays it, and several can be chained to share notes. The patch panel, both filters, the external signal processor and the two envelopes are all there.' },
+  ],
+  relatives: [
+    { name: 'Korg MS-10', years: '1978', text: 'The smaller sibling: one oscillator, one filter, the same patch-panel idea at half the size.' },
+    { name: 'Korg MS-50', years: '1978', text: 'The modular one, with no keyboard and far more patch points. It is what an MS-20 owner bought next.' },
+    { name: 'Korg MS-20 mini', years: '2013', text: 'Korg’s own reissue, smaller keys, same circuit. The honest rival to this Behringer, and the one with the name on it.' },
+    { name: 'Behringer K-2 Blue Marvin', years: '2021', text: 'The same instrument in a different case colour.' },
+    { name: 'ARP Odyssey', years: '1972', text: 'Not a relative but the rival Korg later bought the rights to and reissued: two oscillators, sharper and more aggressive, with no patch panel.' },
+  ],
+  note: 'Records are listed only where the instrument is well documented; several artists used an MS-20 alongside a lot of other gear, so the linked sounds are in that style rather than copies of a particular part.',
+};

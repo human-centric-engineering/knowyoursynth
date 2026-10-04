@@ -1,0 +1,4247 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "buchla-music-easel",
+    "manufacturer": "Buchla and Associates (Berkeley, California)",
+    "model": "Music Easel: Model 208 Stored Program Sound Source and Model 218 Touch Activated Voltage Source (original, 1973-74)",
+    "category": "portable analogue performance synthesizer: complex and modulation oscillators, dual lowpass gate, control voltage sources, touch keyboard, program cards",
+    "based_on": "Designed by Don Buchla; a consolidation of Buchla 200 series concepts in one case. Reissued from 2013 and again as the 208C/Easel Command.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Programming and Metaprogramming in the Electro-Organism: An Operating Directive for the Music Easel (Allen Strange, Buchla and Associates, 1974)",
+        "kind": "user_manual",
+        "file": "buchla_music_easel_owners_manual.pdf",
+        "pages": 34,
+        "note": "Tutorial rather than reference. Covers every control with numbered callouts, around 19 patch charts drawn as panel diagrams, and the program card in full (conductance table, field encodings, worked card realisations). No specification section."
+      },
+      {
+        "id": "modsynth",
+        "title": "Dave Brown, ModularSynthesis.com: Buchla 208 Stored Program Sound Source (service notes on a 1973-74 unit)",
+        "kind": "measurement",
+        "file": "https://modularsynthesis.com/buchla/208/buchla_208.htm",
+        "note": "Card-by-card layout, measured oscillator ranges, scope photos, and the early timbre circuit as cross-modulation of two tracking triangle oscillators."
+      },
+      {
+        "id": "buchlatech",
+        "title": "Buchla Tech blog, 'The Good Thing About Standards' (2008); Sound On Sound, 'Buchla 200e: Part 1' (2005)",
+        "kind": "other",
+        "file": "http://buchlatech.blogspot.com/2008/10/good-thing-about-standards-so-many-to.html",
+        "note": "Voltage standards of early 1970s 200 series modules: 0-15 V CVs, 15 V pulses, +4 dBu audio, separate connector types for each class."
+      },
+      {
+        "id": "buchla_guides",
+        "title": "Buchla USA user guides: 218e/208 card doubler, 200e, 218e v3; Easel Command product page",
+        "kind": "other",
+        "file": "https://buchla.com/guides/218e_FC_208CDblr_Guide_v2.0.pdf",
+        "note": "The 1.2 V/octave Buchla pitch standard; later 0-10 V CVs and 10 V/5 V pulses; 208C changes from the original."
+      },
+      {
+        "id": "synthdb",
+        "title": "Synth DB, Buchla Music Easel",
+        "kind": "other",
+        "file": "http://synth-db.com/synths/Buchla/Music%20Easel/Music%20Easel.php",
+        "note": "Program output 1 V rms, 2 W monitor output, battery pack of about three hours, original card supply, key count."
+      },
+      {
+        "id": "reviews",
+        "title": "Gearspace review of the 2013 reissue; Perfect Circuit and Buchla product pages",
+        "kind": "other",
+        "file": "https://gearspace.com/board/reviews/1087060-buchla-music-easel.html",
+        "note": "Vactrol lowpass gates, spring reverb, wavefolding timbre circuit; reissue details used only to separate later features."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "hybrid",
+    "synthesis_note": "West Coast: a complex oscillator with harmonic addition (timbre folding and waveshape mixing), FM and AM from a modulation oscillator, and vactrol lowpass gates in place of a separate filter and VCA. No subtractive filter as such.",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic; the modulation oscillator can sound as a second, independent voice through Gate 2",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "Hardwired program cards: resistors soldered on a plug-in board replicate switch positions, slider levels and control routings.",
+    "semi_modular": true,
+    "routing": "internal wiring set by switches, banana-cord patch field, and the program card",
+    "panel_counts": {
+      "sliders": 22,
+      "knobs": 12,
+      "switches": 25,
+      "touch_plates": 32,
+      "banana_jacks_208": 31,
+      "banana_jacks_218": 11
+    },
+    "summary": "Two units in one case. The 208 holds the sound sources and processors: a complex oscillator (sine mixed with spike, square or triangle, plus a timbre control that adds harmonics), a modulation oscillator that frequency or amplitude modulates it or ring modulates an external signal, a dual lowpass gate (each half a vactrol VCA, lowpass filter or both), a preamp with envelope detector, and an output section with reverb. Its control sources are a five-stage sequential voltage source, an attack-duration-decay envelope generator, a pulser (triggered ramp and trigger source), a four-output random voltage source and an inverter. Every voltage-controlled parameter has an offset slider and a processing slider for the patched voltage. The 218 is a capacitive touch keyboard giving key voltage, pressure, pulse, portamento and three preset voltages. Control voltages and pulses travel on stackable banana cords; audio stays internal apart from the preamp input and outputs. A plug-in program card, built from resistors, can replace or add to the front panel."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "manual_controller",
+      "name": "Touch Activated Voltage Source (Model 218)",
+      "panel_section": "MODEL 218",
+      "description": "Capacitive touch keyboard with no moving parts. 29 voltage keys give equal steps, held after release until another key is touched; a PRESSURE voltage follows how much finger surface is on any key; a PULSE marks each touch. A PORTAMENTO output glides linearly between key voltages at a rate set by SLOPE and a control input. Three preset plates, each with its own level knob, give a separate PRESET output, and the SHIFT selector can use them to transpose the key voltage. Every output appears on two paralleled banana jacks. Nothing reaches the 208 except by patch cord.",
+      "properties": {
+        "voltage_keys": 29,
+        "preset_plates": 3,
+        "key_voltage_steps": 29,
+        "outputs_per_function": 2
+      },
+      "inputs": [
+        "kbd.portamento_cv"
+      ],
+      "outputs": [
+        "kbd.key_voltage",
+        "kbd.pressure",
+        "kbd.pulse",
+        "kbd.portamento",
+        "kbd.preset"
+      ]
+    },
+    {
+      "id": "kbd_in",
+      "type": "external_input",
+      "name": "Signals from Keyboard (208)",
+      "panel_section": "SIGNALS FROM KEYBOARD",
+      "description": "Three banana inputs on the 208 (pulse, pressure, voltage) that bring the 218 into the sound source. VOLTAGE reaches the oscillators through their KEYBOARD switches, PULSE reaches every trigger-source selector set to 'keyboard', and PRESSURE is redistributed to the violet jacks on the patch field.",
+      "inputs": [
+        "kbd_in.pulse_in",
+        "kbd_in.pressure_in",
+        "kbd_in.voltage_in"
+      ],
+      "outputs": [
+        "kbd_in.pulse",
+        "kbd_in.pressure",
+        "kbd_in.voltage"
+      ]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequential Voltage Source",
+      "panel_section": "SEQUENTIAL VOLTAGE SOURCE",
+      "description": "Five stages, each with a preset output level, advanced one stage per trigger from the keyboard or the pulser (or not at all, holding the last stage). STAGES limits the cycle to three, four or five; the program card adds two. As each stage is reached it emits a pulse unless its PULSE SEQUENCE switch is down; those pulses can fire the pulser or envelope generator. Voltage on the blue jacks.",
+      "properties": {
+        "stages": 5,
+        "card_stages": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "inputs": [
+        "seq.trigger_in"
+      ],
+      "outputs": [
+        "seq.out",
+        "seq.pulse"
+      ]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope Generator",
+      "panel_section": "ENVELOPE GENERATOR",
+      "description": "Attack, duration and decay, each 2 ms to 10 s. In 'transient' mode the duration slider sets the hold; in 'sustained' mode the envelope holds for as long as the trigger lasts, then decays. Triggered by the keyboard, pulser or sequencer. Output on three orange jacks.",
+      "properties": {
+        "stages": [
+          "attack",
+          "duration",
+          "decay"
+        ],
+        "time_s": [
+          0.002,
+          10
+        ],
+        "slider_calibration_s": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "inputs": [
+        "env.trigger_in"
+      ],
+      "outputs": [
+        "env.out"
+      ]
+    },
+    {
+      "id": "pulser",
+      "type": "envelope",
+      "name": "Pulser",
+      "panel_section": "PULSER",
+      "description": "On each trigger generates a linearly falling ramp, available on the yellow jacks, and when the ramp reaches zero emits a trigger to every trigger-source selector set to 'pulser'. The ramp's length is the PERIOD, 2 ms to 10 s, voltage controlled (more voltage, shorter period). In 'self' mode its own end trigger restarts it, so it runs continuously once started.",
+      "properties": {
+        "period_s": [
+          0.002,
+          10
+        ],
+        "slider_calibration_s": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "inputs": [
+        "pulser.trigger_in",
+        "pulser.period_cv"
+      ],
+      "outputs": [
+        "pulser.ramp",
+        "pulser.pulse"
+      ]
+    },
+    {
+      "id": "rvs",
+      "type": "sample_hold",
+      "name": "Random Voltage Source",
+      "panel_section": "RANDOM VOLTAGE",
+      "description": "On each trigger from the keyboard or pulser (or the sequencer, from the card only), four new uncorrelated random voltages appear on the four white jacks and hold until the next trigger.",
+      "properties": {
+        "outputs": 4
+      },
+      "inputs": [
+        "rvs.trigger_in"
+      ],
+      "outputs": [
+        "rvs.out1",
+        "rvs.out2",
+        "rvs.out3",
+        "rvs.out4"
+      ]
+    },
+    {
+      "id": "mosc",
+      "type": "oscillator",
+      "name": "Modulation Oscillator",
+      "panel_section": "MODULATION OSCILLATOR",
+      "description": "Sawtooth, square or triangle, 0.16 to 50 Hz on the panel and much higher under voltage control. Its MODULATION switch decides what it does to the sound: FM of the complex oscillator, AM of the complex oscillator, or balanced (ring) modulation of the preamp signal, all at a depth set by INDEX (0 to 1.0). It can also sound in its own right through Gate 2, and a copy of its waveform leaves on the 'mod c.v. out' jack as a control voltage.",
+      "properties": {
+        "frequency_hz_panel": [
+          0.16,
+          50
+        ],
+        "frequency_hz_measured": [
+          0.13,
+          70
+        ],
+        "slider_calibration_hz": {
+          "0": 0.16,
+          "2": 0.5,
+          "4": 1.6,
+          "6": 5,
+          "8": 16,
+          "10": 50
+        },
+        "index_range": [
+          0,
+          1.0
+        ],
+        "waveshapes": [
+          "sawtooth",
+          "square",
+          "triangle"
+        ]
+      },
+      "inputs": [
+        "mosc.key_cv",
+        "mosc.index_cv",
+        "mosc.freq_cv"
+      ],
+      "outputs": [
+        "mosc.out",
+        "mosc.cv_out"
+      ]
+    },
+    {
+      "id": "balmod",
+      "type": "ring_modulator",
+      "name": "Balanced Modulator",
+      "panel_section": "MODULATION OSCILLATOR (internal)",
+      "description": "Internal multiplier, on its own card in the original, that the modulation oscillator uses for AM of the complex oscillator and for balanced modulation of the preamp signal. Index 1.0 gives full ring modulation: the carrier is suppressed and only sidebands remain.",
+      "properties": {
+        "source": "card 5 in Dave Brown's service notes"
+      },
+      "inputs": [
+        "balmod.carrier_in",
+        "balmod.mod_in"
+      ],
+      "outputs": [
+        "balmod.out"
+      ]
+    },
+    {
+      "id": "cosc",
+      "type": "oscillator",
+      "name": "Complex Oscillator",
+      "panel_section": "COMPLEX OSCILLATOR",
+      "description": "The main sound source. PITCH covers 55 to 1760 Hz (five octaves, calibrated in octaves and half octaves) with a fine tuning knob of half an octave. A WAVESHAPE knob mixes a sine with the waveform chosen on the WAVESHAPE selector: spike, square or triangle. TIMBRE adds and accentuates harmonics (the opposite of filtering) and acts only on the sine and triangle, so it does nothing with the knob fully at spike or square. A KEYBOARD switch connects the key voltage directly; the SIGN switch sets whether a patched pitch voltage raises or lowers the pitch. Always feeds Gate 1.",
+      "properties": {
+        "frequency_hz_panel": [
+          55,
+          1760
+        ],
+        "frequency_hz_measured": [
+          38,
+          3500
+        ],
+        "slider_calibration_hz": {
+          "0": 55,
+          "2": 110,
+          "4": 220,
+          "6": 440,
+          "8": 880,
+          "10": 1760
+        },
+        "fine_tune_octaves": 0.5,
+        "waveshapes": [
+          "sine",
+          "spike",
+          "square",
+          "triangle"
+        ],
+        "timbre_circuit": "early 208: a second triangle oscillator tracks the first and is cross-modulated by it as timbre rises (Dave Brown)"
+      },
+      "inputs": [
+        "cosc.key_cv",
+        "cosc.pitch_cv",
+        "cosc.timbre_cv",
+        "cosc.fm_in"
+      ],
+      "outputs": [
+        "cosc.out"
+      ]
+    },
+    {
+      "id": "inverter",
+      "type": "inverter",
+      "name": "Inverter",
+      "panel_section": "INVERTER",
+      "description": "Turns a control voltage upside down on the 0 to 10 scale: 10 becomes 0, 9 becomes 1, 6 becomes 4. Rising envelopes become falling ones.",
+      "inputs": [
+        "inverter.in"
+      ],
+      "outputs": [
+        "inverter.out"
+      ]
+    },
+    {
+      "id": "preamp",
+      "type": "preamp",
+      "name": "Preamp",
+      "panel_section": "PREAMP / ENVELOPE DETECTOR",
+      "description": "External signal in on a miniphone jack, with a three-position gain switch: lo for line sources (tape, tuners, other Easels), mid for instrument pickups, hi for contact and high-impedance microphones. Reaches Gate 2 when SIGNAL ROUTING is up, the balanced modulator in 'balanced external' mode, and always the envelope detector.",
+      "properties": {
+        "gain_positions": [
+          "lo",
+          "mid",
+          "hi"
+        ]
+      },
+      "inputs": [
+        "preamp.in"
+      ],
+      "outputs": [
+        "preamp.out"
+      ]
+    },
+    {
+      "id": "envdet",
+      "type": "envelope_follower",
+      "name": "Envelope Detector",
+      "panel_section": "PREAMP / ENVELOPE DETECTOR",
+      "description": "Produces a control voltage proportional to the amplitude of the preamp signal, on the 'c.v. out' jack.",
+      "inputs": [
+        "envdet.in"
+      ],
+      "outputs": [
+        "envdet.cv"
+      ]
+    },
+    {
+      "id": "gate1",
+      "type": "vca",
+      "name": "Lopass Gate 1",
+      "panel_section": "DUAL LOPASS GATE",
+      "description": "Vactrol lowpass gate fed by the complex oscillator (or, in AM, the balanced modulator). MODE SELECT makes it a voltage-controlled amplifier (no gain at 0, full at 10), a 12 dB/octave lowpass filter whose cut-off follows the LEVEL, or both at once ('combination'), where lowering the level dulls as it quietens. The lowpass element responds more slowly than the amplifier, which gives struck, resonant decays. Output to channel A of the output section.",
+      "properties": {
+        "modes": [
+          "voltage controlled amp",
+          "lowpass filter",
+          "combination"
+        ],
+        "lowpass_slope_db_per_octave": 12,
+        "element": "vactrol (lamp and photocell)"
+      },
+      "inputs": [
+        "gate1.in",
+        "gate1.level_cv"
+      ],
+      "outputs": [
+        "gate1.out"
+      ]
+    },
+    {
+      "id": "gate2",
+      "type": "vca",
+      "name": "Lopass Gate 2",
+      "panel_section": "DUAL LOPASS GATE",
+      "description": "Vactrol lowpass gate fed by the source chosen by SIGNAL ROUTING. MODE SELECT makes it a voltage-controlled amplifier (no gain at 0, full at 10), a 12 dB/octave lowpass filter whose cut-off follows the LEVEL, or both at once ('combination'), where lowering the level dulls as it quietens. The lowpass element responds more slowly than the amplifier, which gives struck, resonant decays. Output to channel B of the output section.",
+      "properties": {
+        "modes": [
+          "voltage controlled amp",
+          "lowpass filter",
+          "combination"
+        ],
+        "lowpass_slope_db_per_octave": 12,
+        "element": "vactrol (lamp and photocell)"
+      },
+      "inputs": [
+        "gate2.in",
+        "gate2.level_cv"
+      ],
+      "outputs": [
+        "gate2.out"
+      ]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverberation",
+      "panel_section": "OUTPUT SECTION",
+      "description": "Spring reverb on the mixed signal, returned at REVERBERATION LEVEL.",
+      "properties": {
+        "type": "spring",
+        "type_source": "reissue documentation; the 1974 manual does not say"
+      },
+      "inputs": [
+        "reverb.in"
+      ],
+      "outputs": [
+        "reverb.out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output Section",
+      "panel_section": "OUTPUT SECTION",
+      "description": "Mixes Gate 1 (channel A) and Gate 2 (channel B), adds reverb, and drives the program outputs at OUTPUT LEVEL (nominally 1 V) and the headset output at MONITOR LEVEL, independently. Not controlled by the program card.",
+      "properties": {
+        "program_output_v_rms": 1,
+        "monitor_output_w": 2
+      },
+      "inputs": [
+        "out.in_a",
+        "out.in_b",
+        "out.reverb_return"
+      ],
+      "outputs": [
+        "out.reverb_send",
+        "out.signal",
+        "out.phones"
+      ]
+    },
+    {
+      "id": "card",
+      "type": "modulation_bus",
+      "name": "Program Card interface",
+      "panel_section": "PROGRAM BOARD and CONTROL",
+      "description": "The slot, the CONTROL selector and the card buses. The OFFSET line is a fixed reference that card resistors turn into offset levels. Two buses are reached through front-panel jacks: the card's INV column leaves on the inverter's 'from prog' jack, and the inverter's and envelope detector's 'to prog' jacks feed the card's INV and ENV DET rows. Jumpers between these jacks put the inverter, envelope detector, modulation oscillator or a preset voltage onto the card.",
+      "inputs": [
+        "card.inv_column",
+        "card.inv_return",
+        "card.envdet_return"
+      ],
+      "outputs": [
+        "card.offset",
+        "card.inv_send",
+        "card.inv_row",
+        "card.envdet_row"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "card.selector",
+      "module": "card",
+      "label": "CONTROL",
+      "kind": "enum",
+      "manual_ref": 1,
+      "values": [
+        {
+          "value": "prog_board",
+          "label": "prog board"
+        },
+        {
+          "value": "front_panel",
+          "label": "front panel"
+        },
+        {
+          "value": "both",
+          "label": "both"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Chooses whether the instrument is defined by the program card, the front panel, or both added together."
+    },
+    {
+      "id": "seq.trigger_source",
+      "module": "seq",
+      "label": "TRIGGER SOURCE",
+      "kind": "enum",
+      "manual_ref": 56,
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "pulser"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What advances the sequencer. 'off' holds the current stage."
+    },
+    {
+      "id": "seq.stages",
+      "module": "seq",
+      "label": "STAGES",
+      "kind": "enum",
+      "manual_ref": 55,
+      "values": [
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Length of the cycle."
+    },
+    {
+      "id": "seq.pulse_1",
+      "module": "seq",
+      "label": "PULSE SEQUENCE 1",
+      "kind": "boolean",
+      "manual_ref": 57,
+      "values": [
+        {
+          "value": true,
+          "label": "up"
+        },
+        {
+          "value": false,
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: stage 1 sends a pulse when reached. Down: it stays silent, used to place rests."
+    },
+    {
+      "id": "seq.pulse_2",
+      "module": "seq",
+      "label": "PULSE SEQUENCE 2",
+      "kind": "boolean",
+      "manual_ref": 57,
+      "values": [
+        {
+          "value": true,
+          "label": "up"
+        },
+        {
+          "value": false,
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: stage 2 sends a pulse when reached. Down: it stays silent, used to place rests."
+    },
+    {
+      "id": "seq.pulse_3",
+      "module": "seq",
+      "label": "PULSE SEQUENCE 3",
+      "kind": "boolean",
+      "manual_ref": 57,
+      "values": [
+        {
+          "value": true,
+          "label": "up"
+        },
+        {
+          "value": false,
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: stage 3 sends a pulse when reached. Down: it stays silent, used to place rests."
+    },
+    {
+      "id": "seq.pulse_4",
+      "module": "seq",
+      "label": "PULSE SEQUENCE 4",
+      "kind": "boolean",
+      "manual_ref": 57,
+      "values": [
+        {
+          "value": true,
+          "label": "up"
+        },
+        {
+          "value": false,
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: stage 4 sends a pulse when reached. Down: it stays silent, used to place rests."
+    },
+    {
+      "id": "seq.pulse_5",
+      "module": "seq",
+      "label": "PULSE SEQUENCE 5",
+      "kind": "boolean",
+      "manual_ref": 57,
+      "values": [
+        {
+          "value": true,
+          "label": "up"
+        },
+        {
+          "value": false,
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: stage 5 sends a pulse when reached. Down: it stays silent, used to place rests."
+    },
+    {
+      "id": "seq.level_1",
+      "module": "seq",
+      "label": "OUTPUT VOLTAGE LEVEL 1",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Voltage of stage 1."
+    },
+    {
+      "id": "seq.level_2",
+      "module": "seq",
+      "label": "OUTPUT VOLTAGE LEVEL 2",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Voltage of stage 2."
+    },
+    {
+      "id": "seq.level_3",
+      "module": "seq",
+      "label": "OUTPUT VOLTAGE LEVEL 3",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Voltage of stage 3."
+    },
+    {
+      "id": "seq.level_4",
+      "module": "seq",
+      "label": "OUTPUT VOLTAGE LEVEL 4",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Voltage of stage 4."
+    },
+    {
+      "id": "seq.level_5",
+      "module": "seq",
+      "label": "OUTPUT VOLTAGE LEVEL 5",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Voltage of stage 5."
+    },
+    {
+      "id": "env.trigger_source",
+      "module": "env",
+      "label": "TRIGGER SOURCE",
+      "kind": "enum",
+      "manual_ref": 44,
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "pulser"
+        },
+        {
+          "value": "sequencer"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What fires the envelope."
+    },
+    {
+      "id": "env.mode",
+      "module": "env",
+      "label": "MODE SELECT",
+      "kind": "enum",
+      "manual_ref": 45,
+      "values": [
+        {
+          "value": "sustained"
+        },
+        {
+          "value": "transient"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sustained: holds while the trigger lasts. Transient: holds for the DURATION setting regardless. Off: does not respond."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "attack",
+      "kind": "continuous",
+      "manual_ref": 41,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s",
+        "taper": "exponential, reversed",
+        "calibration": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack time. Marked in seconds, reversed: the top of the slider is fastest."
+    },
+    {
+      "id": "env.duration",
+      "module": "env",
+      "label": "duration",
+      "kind": "continuous",
+      "manual_ref": 42,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s",
+        "taper": "exponential, reversed",
+        "calibration": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Duration time. Marked in seconds, reversed: the top of the slider is fastest."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "decay",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s",
+        "taper": "exponential, reversed",
+        "calibration": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Decay time. Marked in seconds, reversed: the top of the slider is fastest."
+    },
+    {
+      "id": "pulser.trigger",
+      "module": "pulser",
+      "label": "TRIGGER",
+      "kind": "enum",
+      "manual_ref": 50,
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "self"
+        },
+        {
+          "value": "sequencer"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What starts the ramp. 'self' restarts it from its own end trigger."
+    },
+    {
+      "id": "pulser.mode",
+      "module": "pulser",
+      "label": "MODE",
+      "kind": "enum",
+      "manual_ref": 49,
+      "values": [
+        {
+          "value": "triggered"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "one",
+          "meaning": "momentary"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Triggered: responds to the chosen trigger. Off: ignores triggers. One: spring-loaded, fires once by hand; needed to start 'self' mode."
+    },
+    {
+      "id": "pulser.period",
+      "module": "pulser",
+      "label": "PERIOD (offset)",
+      "kind": "continuous",
+      "manual_ref": 51,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s",
+        "taper": "exponential, reversed",
+        "calibration": {
+          "10": 0.002,
+          "8": 0.02,
+          "6": 0.2,
+          "4": 1,
+          "2": 3,
+          "0": 10
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Initial, and longest, period of the ramp."
+    },
+    {
+      "id": "pulser.period_processing",
+      "module": "pulser",
+      "label": "PERIOD (processing)",
+      "kind": "continuous",
+      "manual_ref": 52,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "How far a patched voltage can shorten the period."
+    },
+    {
+      "id": "mosc.keyboard",
+      "module": "mosc",
+      "label": "KEYBOARD",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "in"
+        },
+        {
+          "value": "out",
+          "label": "out (trim)"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Connects the key voltage directly to the modulation oscillator's frequency."
+    },
+    {
+      "id": "mosc.waveshape",
+      "module": "mosc",
+      "label": "WAVESHAPE",
+      "kind": "enum",
+      "manual_ref": 21,
+      "values": [
+        {
+          "value": "sawtooth",
+          "label": "upper"
+        },
+        {
+          "value": "square",
+          "label": "middle"
+        },
+        {
+          "value": "triangle",
+          "label": "lower"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform of the modulation oscillator and of its 'mod c.v. out'."
+    },
+    {
+      "id": "mosc.mode",
+      "module": "mosc",
+      "label": "MODULATION",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "balanced_external",
+          "meaning": "ring modulates the preamp signal"
+        },
+        {
+          "value": "am",
+          "label": "a.m. oscillator",
+          "meaning": "amplitude modulates the complex oscillator"
+        },
+        {
+          "value": "fm",
+          "label": "f.m. oscillator",
+          "meaning": "frequency modulates the complex oscillator"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What the modulation oscillator does to the sound."
+    },
+    {
+      "id": "mosc.fine_tune",
+      "module": "mosc",
+      "label": "fine tuning",
+      "kind": "continuous",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine frequency adjustment. Not affected by the program card."
+    },
+    {
+      "id": "mosc.index",
+      "module": "mosc",
+      "label": "INDEX (offset)",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 1.0,
+        "unit": "index",
+        "taper": "linear"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Modulation depth, 0 to 1.0 (panel level divided by 10). In AM, above about .5 the fundamental is suppressed; 1.0 is full ring modulation."
+    },
+    {
+      "id": "mosc.index_processing",
+      "module": "mosc",
+      "label": "INDEX (processing)",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to the INDEX input."
+    },
+    {
+      "id": "mosc.frequency",
+      "module": "mosc",
+      "label": "FREQUENCY (offset)",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.16,
+        "max": 50,
+        "unit": "Hz",
+        "taper": "exponential",
+        "calibration": {
+          "0": 0.16,
+          "2": 0.5,
+          "4": 1.6,
+          "6": 5,
+          "8": 16,
+          "10": 50
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Frequency of the modulation oscillator."
+    },
+    {
+      "id": "mosc.frequency_processing",
+      "module": "mosc",
+      "label": "FREQUENCY (processing)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to the FREQUENCY input."
+    },
+    {
+      "id": "cosc.keyboard",
+      "module": "cosc",
+      "label": "KEYBOARD",
+      "kind": "enum",
+      "manual_ref": 14,
+      "values": [
+        {
+          "value": "in"
+        },
+        {
+          "value": "out",
+          "label": "out (trim)"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Connects the key voltage directly to the complex oscillator's pitch: equal-tempered half steps over 2 1/3 octaves."
+    },
+    {
+      "id": "cosc.sign",
+      "module": "cosc",
+      "label": "sign",
+      "kind": "enum",
+      "manual_ref": 46,
+      "values": [
+        {
+          "value": "+"
+        },
+        {
+          "value": "-"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Polarity of a patched pitch voltage: '+' raises the pitch above the offset, '-' lowers it below."
+    },
+    {
+      "id": "cosc.fine_tune",
+      "module": "cosc",
+      "label": "fine tuning",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Half an octave of fine tuning. Not affected by the program card."
+    },
+    {
+      "id": "cosc.waveshape",
+      "module": "cosc",
+      "label": "waveshape (knob)",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Mix between a sine (fully anticlockwise) and the waveform on the selector (fully clockwise)."
+    },
+    {
+      "id": "cosc.waveshape_select",
+      "module": "cosc",
+      "label": "waveshape (selector)",
+      "kind": "enum",
+      "manual_ref": 18,
+      "values": [
+        {
+          "value": "spike",
+          "label": "upper"
+        },
+        {
+          "value": "square",
+          "label": "middle"
+        },
+        {
+          "value": "triangle",
+          "label": "lower"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform mixed with the sine."
+    },
+    {
+      "id": "cosc.pitch",
+      "module": "cosc",
+      "label": "PITCH (offset)",
+      "kind": "continuous",
+      "manual_ref": 15,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 55,
+        "max": 1760,
+        "unit": "Hz",
+        "taper": "exponential, 2 divisions per octave",
+        "calibration": {
+          "0": 55,
+          "2": 110,
+          "4": 220,
+          "6": 440,
+          "8": 880,
+          "10": 1760
+        }
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pitch, 55 to 1760 Hz, two divisions per octave."
+    },
+    {
+      "id": "cosc.pitch_processing",
+      "module": "cosc",
+      "label": "PITCH (processing)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to the PITCH input. About 1.0 divides a whole step into the 29 key voltages, about 3 an octave, about 7 the full 2 1/3 octaves."
+    },
+    {
+      "id": "cosc.timbre",
+      "module": "cosc",
+      "label": "TIMBRE (offset)",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Minimum amount of added harmonics. Acts on the sine and triangle only."
+    },
+    {
+      "id": "cosc.timbre_processing",
+      "module": "cosc",
+      "label": "TIMBRE (processing)",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to the TIMBRE input."
+    },
+    {
+      "id": "preamp.gain",
+      "module": "preamp",
+      "label": "gain",
+      "kind": "enum",
+      "manual_ref": 24,
+      "values": [
+        {
+          "value": "lo",
+          "meaning": "tape, tuners, other Easels"
+        },
+        {
+          "value": "mid",
+          "meaning": "instrument pickups"
+        },
+        {
+          "value": "hi",
+          "meaning": "contact and high-impedance microphones"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Preamp gain for the external source."
+    },
+    {
+      "id": "gate2.routing",
+      "module": "gate2",
+      "label": "SIGNAL ROUTING",
+      "kind": "enum",
+      "manual_ref": 12,
+      "values": [
+        {
+          "value": "preamp",
+          "label": "upper"
+        },
+        {
+          "value": "mod_osc",
+          "label": "centre"
+        },
+        {
+          "value": "series",
+          "label": "lower",
+          "meaning": "Gate 1's output, so the gates are in series"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What Gate 2 receives."
+    },
+    {
+      "id": "gate1.mode",
+      "module": "gate1",
+      "label": "MODE SELECT",
+      "kind": "enum",
+      "manual_ref": 4,
+      "values": [
+        {
+          "value": "lowpass"
+        },
+        {
+          "value": "combination"
+        },
+        {
+          "value": "vca",
+          "label": "voltage controlled amp"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Behaviour of Gate 1."
+    },
+    {
+      "id": "gate1.level",
+      "module": "gate1",
+      "label": "LEVEL (offset)",
+      "kind": "continuous",
+      "manual_ref": 13,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Initial gain, cut-off, or both, of Gate 1."
+    },
+    {
+      "id": "gate1.level_processing",
+      "module": "gate1",
+      "label": "LEVEL (processing)",
+      "kind": "continuous",
+      "manual_ref": 35,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to Gate 1's LEVEL input."
+    },
+    {
+      "id": "gate2.mode",
+      "module": "gate2",
+      "label": "MODE SELECT",
+      "kind": "enum",
+      "manual_ref": 4,
+      "values": [
+        {
+          "value": "lowpass"
+        },
+        {
+          "value": "combination"
+        },
+        {
+          "value": "vca",
+          "label": "voltage controlled amp"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Behaviour of Gate 2."
+    },
+    {
+      "id": "gate2.level",
+      "module": "gate2",
+      "label": "LEVEL (offset)",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Initial gain, cut-off, or both, of Gate 2."
+    },
+    {
+      "id": "gate2.level_processing",
+      "module": "gate2",
+      "label": "LEVEL (processing)",
+      "kind": "continuous",
+      "manual_ref": null,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates a voltage patched to Gate 2's LEVEL input."
+    },
+    {
+      "id": "rvs.trigger_source",
+      "module": "rvs",
+      "label": "TRIGGER SOURCE",
+      "kind": "enum",
+      "manual_ref": 58,
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "pulser"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What calls up new random voltages. 'off' holds the last ones."
+    },
+    {
+      "id": "out.mix_a",
+      "module": "out",
+      "label": "channel A",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gate 1's level in the mix."
+    },
+    {
+      "id": "out.mix_b",
+      "module": "out",
+      "label": "channel B",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gate 2's level in the mix."
+    },
+    {
+      "id": "out.reverb_level",
+      "module": "out",
+      "label": "REVERBERATION LEVEL",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of spring reverb added to the mix."
+    },
+    {
+      "id": "out.monitor_level",
+      "module": "out",
+      "label": "MONITOR LEVEL",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headset level, independent of OUTPUT LEVEL. Can drive a small speaker."
+    },
+    {
+      "id": "out.output_level",
+      "module": "out",
+      "label": "OUTPUT LEVEL",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level at the two signal outputs, nominally 1 V."
+    },
+    {
+      "id": "out.power",
+      "module": "out",
+      "label": "power",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mains",
+          "label": "up"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "battery",
+          "label": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch beside the keyboard: up for the mains cord, down for the 12 V power pack.",
+      "confidence": "inferred",
+      "note": "The manual gives up and down; a centre off position is assumed."
+    },
+    {
+      "id": "kbd.portamento",
+      "module": "kbd",
+      "label": "PORTAMENTO SLOPE",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum glide time between successive key voltages; a voltage at the portamento input speeds it up."
+    },
+    {
+      "id": "kbd.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "octave",
+          "meaning": "the three plates select the lowest, middle (+12 keys) or top (+24 keys) register"
+        },
+        {
+          "value": "none",
+          "meaning": "presets have no effect on the key voltage"
+        },
+        {
+          "value": "preset",
+          "meaning": "the selected preset level is added to the key voltage: any transposition from a microtone to a major ninth"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "How the preset plates act on the key voltage."
+    },
+    {
+      "id": "kbd.preset_1",
+      "module": "kbd",
+      "label": "PRESET VOLTAGE SOURCE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level produced when preset plate 1 is touched; full control voltage range."
+    },
+    {
+      "id": "kbd.preset_2",
+      "module": "kbd",
+      "label": "PRESET VOLTAGE SOURCE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level produced when preset plate 2 is touched; full control voltage range."
+    },
+    {
+      "id": "kbd.preset_3",
+      "module": "kbd",
+      "label": "PRESET VOLTAGE SOURCE 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level produced when preset plate 3 is touched; full control voltage range."
+    },
+    {
+      "id": "kbd.key",
+      "module": "kbd",
+      "label": "voltage keys",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 29
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "touch one of the 29 key plates",
+          "when": "any_time"
+        }
+      ],
+      "function": "Sets the key voltage to that key's step and sends a pulse; the voltage is held after release."
+    },
+    {
+      "id": "kbd.pressure_gesture",
+      "module": "kbd",
+      "label": "key pressure",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "vary finger pressure, in practice the area of finger on the plate, by rolling the finger",
+          "when": "any_time"
+        }
+      ],
+      "function": "Sets the PRESSURE voltage. Falls back as the finger lifts."
+    },
+    {
+      "id": "kbd.preset_select",
+      "module": "kbd",
+      "label": "preset plates",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "touch one of the three preset plates",
+          "when": "any_time"
+        }
+      ],
+      "function": "Selects which preset level appears at the PRESET outputs and, per SHIFT, how the key voltage is transposed."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.signal_out_1",
+      "label": "signal output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm miniphone",
+      "node": "out.signal",
+      "function": "Program output, nominally 1 V.",
+      "manual_ref": 11,
+      "confidence": "inferred",
+      "note": "Connector type not stated in the manual; miniphone as on the preamp input."
+    },
+    {
+      "id": "jack.signal_out_2",
+      "label": "signal output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm miniphone",
+      "node": "out.signal",
+      "function": "Second program output, same signal.",
+      "manual_ref": 11,
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.phones",
+      "label": "phones",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "unknown",
+      "node": "out.phones",
+      "function": "Headset output at MONITOR LEVEL; can drive a low-level speaker (2 W).",
+      "manual_ref": 9
+    },
+    {
+      "id": "jack.preamp_in",
+      "label": "signal in",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm miniphone",
+      "node": "preamp.in",
+      "function": "External signal into the preamp.",
+      "manual_ref": 23
+    },
+    {
+      "id": "jack.envdet_out",
+      "label": "c.v. out",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "envdet.cv",
+      "function": "Envelope detector output.",
+      "manual_ref": 59,
+      "stackable": true
+    },
+    {
+      "id": "jack.envdet_to_prog",
+      "label": "to prog",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "card.envdet_return",
+      "function": "Feeds the program card's ENV DET row. Jumper from 'c.v. out' to use the detector on the card, or patch any other voltage here.",
+      "combine": "replace",
+      "colour": "black"
+    },
+    {
+      "id": "jack.inverter_in",
+      "label": "in",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "inverter.in",
+      "function": "Inverter input.",
+      "manual_ref": 47,
+      "colour": "black"
+    },
+    {
+      "id": "jack.inverter_out",
+      "label": "out",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "inverter.out",
+      "function": "Inverted voltage.",
+      "manual_ref": 48,
+      "stackable": true
+    },
+    {
+      "id": "jack.from_prog",
+      "label": "from prog",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "card.inv_send",
+      "function": "The program card's INV column, so card voltages can be patched into the inverter.",
+      "stackable": true
+    },
+    {
+      "id": "jack.inv_to_prog",
+      "label": "to prog",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "card.inv_return",
+      "function": "Feeds the program card's INV row. Jumper from the inverter output, or patch any voltage here to put it on the card.",
+      "combine": "replace",
+      "colour": "black"
+    },
+    {
+      "id": "jack.mod_cv_out",
+      "label": "mod c.v. out",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "mosc.cv_out",
+      "function": "The modulation oscillator's waveform as a control voltage.",
+      "manual_ref": 53,
+      "stackable": true
+    },
+    {
+      "id": "jack.kbd_pulse_in",
+      "label": "pulse",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "4 mm banana",
+      "node": "kbd_in.pulse_in",
+      "function": "Signals from keyboard: pulse from the 218.",
+      "manual_ref": 40,
+      "colour": "black"
+    },
+    {
+      "id": "jack.kbd_pressure_in",
+      "label": "pressure",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd_in.pressure_in",
+      "function": "Signals from keyboard: pressure from the 218.",
+      "manual_ref": 38,
+      "colour": "black"
+    },
+    {
+      "id": "jack.kbd_voltage_in",
+      "label": "voltage",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd_in.voltage_in",
+      "function": "Signals from keyboard: voltage from the 218.",
+      "manual_ref": 27,
+      "colour": "black"
+    },
+    {
+      "id": "jack.period_in",
+      "label": "PERIOD input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "pulser.period_cv",
+      "function": "Control voltage input below the period sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": null,
+      "combine": "sum",
+      "amount_param": "pulser.period_processing",
+      "offset_param": "pulser.period",
+      "colour": "black"
+    },
+    {
+      "id": "jack.index_in",
+      "label": "INDEX input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "mosc.index_cv",
+      "function": "Control voltage input below the index sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": null,
+      "combine": "sum",
+      "amount_param": "mosc.index_processing",
+      "offset_param": "mosc.index",
+      "colour": "black"
+    },
+    {
+      "id": "jack.frequency_in",
+      "label": "FREQUENCY input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "mosc.freq_cv",
+      "function": "Control voltage input below the frequency sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": 29,
+      "combine": "sum",
+      "amount_param": "mosc.frequency_processing",
+      "offset_param": "mosc.frequency",
+      "colour": "black"
+    },
+    {
+      "id": "jack.pitch_in",
+      "label": "PITCH input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "cosc.pitch_cv",
+      "function": "Control voltage input below the pitch sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": 28,
+      "combine": "sum",
+      "amount_param": "cosc.pitch_processing",
+      "offset_param": "cosc.pitch",
+      "colour": "black",
+      "note": "The SIGN switch sets this input's polarity."
+    },
+    {
+      "id": "jack.timbre_in",
+      "label": "TIMBRE input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "cosc.timbre_cv",
+      "function": "Control voltage input below the timbre sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": 36,
+      "combine": "sum",
+      "amount_param": "cosc.timbre_processing",
+      "offset_param": "cosc.timbre",
+      "colour": "black"
+    },
+    {
+      "id": "jack.level1_in",
+      "label": "LEVEL1 input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "gate1.level_cv",
+      "function": "Control voltage input below the level1 sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": null,
+      "combine": "sum",
+      "amount_param": "gate1.level_processing",
+      "offset_param": "gate1.level",
+      "colour": "black"
+    },
+    {
+      "id": "jack.level2_in",
+      "label": "LEVEL2 input",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "gate2.level_cv",
+      "function": "Control voltage input below the level2 sliders; scaled by the processing slider and added to the offset.",
+      "manual_ref": null,
+      "combine": "sum",
+      "amount_param": "gate2.level_processing",
+      "offset_param": "gate2.level",
+      "colour": "black"
+    },
+    {
+      "id": "jack.random_1",
+      "label": "random voltage 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "rvs.out1",
+      "function": "Random voltage 1.",
+      "colour": "white",
+      "stackable": true
+    },
+    {
+      "id": "jack.random_2",
+      "label": "random voltage 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "rvs.out2",
+      "function": "Random voltage 2.",
+      "colour": "white",
+      "stackable": true
+    },
+    {
+      "id": "jack.random_3",
+      "label": "random voltage 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "rvs.out3",
+      "function": "Random voltage 3.",
+      "colour": "white",
+      "stackable": true
+    },
+    {
+      "id": "jack.random_4",
+      "label": "random voltage 4",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "rvs.out4",
+      "function": "Random voltage 4.",
+      "colour": "white",
+      "stackable": true
+    },
+    {
+      "id": "jack.envelope_1",
+      "label": "envelope 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "env.out",
+      "function": "Envelope generator output.",
+      "colour": "orange",
+      "stackable": true
+    },
+    {
+      "id": "jack.envelope_2",
+      "label": "envelope 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "env.out",
+      "function": "Envelope generator output.",
+      "colour": "orange",
+      "stackable": true
+    },
+    {
+      "id": "jack.envelope_3",
+      "label": "envelope 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "env.out",
+      "function": "Envelope generator output.",
+      "colour": "orange",
+      "stackable": true
+    },
+    {
+      "id": "jack.pulser_1",
+      "label": "pulser ramp 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "pulser.ramp",
+      "function": "Pulser ramp output.",
+      "colour": "yellow",
+      "confidence": "inferred",
+      "note": "The manual says yellow jacks without a count; three is inferred from the 16 small jacks on the patch field.",
+      "stackable": true
+    },
+    {
+      "id": "jack.pulser_2",
+      "label": "pulser ramp 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "pulser.ramp",
+      "function": "Pulser ramp output.",
+      "colour": "yellow",
+      "confidence": "inferred",
+      "note": "The manual says yellow jacks without a count; three is inferred from the 16 small jacks on the patch field.",
+      "stackable": true
+    },
+    {
+      "id": "jack.pulser_3",
+      "label": "pulser ramp 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "pulser.ramp",
+      "function": "Pulser ramp output.",
+      "colour": "yellow",
+      "confidence": "inferred",
+      "note": "The manual says yellow jacks without a count; three is inferred from the 16 small jacks on the patch field.",
+      "stackable": true
+    },
+    {
+      "id": "jack.sequencer_1",
+      "label": "sequencer 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "seq.out",
+      "function": "Sequential voltage source output.",
+      "colour": "blue",
+      "confidence": "inferred",
+      "note": "The manual says blue jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "jack.sequencer_2",
+      "label": "sequencer 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "seq.out",
+      "function": "Sequential voltage source output.",
+      "colour": "blue",
+      "confidence": "inferred",
+      "note": "The manual says blue jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "jack.sequencer_3",
+      "label": "sequencer 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "seq.out",
+      "function": "Sequential voltage source output.",
+      "colour": "blue",
+      "confidence": "inferred",
+      "note": "The manual says blue jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "jack.pressure_1",
+      "label": "pressure 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd_in.pressure",
+      "function": "Keyboard pressure, redistributed from the 'pressure' input.",
+      "colour": "violet",
+      "confidence": "inferred",
+      "note": "The manual says violet jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "jack.pressure_2",
+      "label": "pressure 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd_in.pressure",
+      "function": "Keyboard pressure, redistributed from the 'pressure' input.",
+      "colour": "violet",
+      "confidence": "inferred",
+      "note": "The manual says violet jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "jack.pressure_3",
+      "label": "pressure 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd_in.pressure",
+      "function": "Keyboard pressure, redistributed from the 'pressure' input.",
+      "colour": "violet",
+      "confidence": "inferred",
+      "note": "The manual says violet jacks without a count; three is inferred.",
+      "stackable": true
+    },
+    {
+      "id": "kbd.pulse_out_1",
+      "label": "PULSE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "4 mm banana",
+      "node": "kbd.pulse",
+      "function": "218 pulse output, one of a paralleled pair.",
+      "manual_ref": 39,
+      "stackable": true
+    },
+    {
+      "id": "kbd.pulse_out_2",
+      "label": "PULSE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "4 mm banana",
+      "node": "kbd.pulse",
+      "function": "218 pulse output, one of a paralleled pair.",
+      "manual_ref": 39,
+      "stackable": true
+    },
+    {
+      "id": "kbd.pressure_out_1",
+      "label": "PRESSURE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.pressure",
+      "function": "218 pressure output, one of a paralleled pair.",
+      "manual_ref": 37,
+      "stackable": true
+    },
+    {
+      "id": "kbd.pressure_out_2",
+      "label": "PRESSURE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.pressure",
+      "function": "218 pressure output, one of a paralleled pair.",
+      "manual_ref": 37,
+      "stackable": true
+    },
+    {
+      "id": "kbd.portamento_out_1",
+      "label": "PORTAMENTO output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.portamento",
+      "function": "218 portamento output, one of a paralleled pair.",
+      "manual_ref": 32,
+      "stackable": true
+    },
+    {
+      "id": "kbd.portamento_out_2",
+      "label": "PORTAMENTO output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.portamento",
+      "function": "218 portamento output, one of a paralleled pair.",
+      "manual_ref": 32,
+      "stackable": true
+    },
+    {
+      "id": "kbd.key_voltage_out_1",
+      "label": "KEY VOLTAGE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.key_voltage",
+      "function": "218 key voltage output, one of a paralleled pair.",
+      "manual_ref": 26,
+      "stackable": true
+    },
+    {
+      "id": "kbd.key_voltage_out_2",
+      "label": "KEY VOLTAGE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.key_voltage",
+      "function": "218 key voltage output, one of a paralleled pair.",
+      "manual_ref": 26,
+      "stackable": true
+    },
+    {
+      "id": "kbd.preset_out_1",
+      "label": "PRESET VOLTAGE SOURCE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.preset",
+      "function": "218 preset voltage source output, one of a paralleled pair.",
+      "manual_ref": null,
+      "stackable": true
+    },
+    {
+      "id": "kbd.preset_out_2",
+      "label": "PRESET VOLTAGE SOURCE output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.preset",
+      "function": "218 preset voltage source output, one of a paralleled pair.",
+      "manual_ref": null,
+      "stackable": true
+    },
+    {
+      "id": "kbd.portamento_in",
+      "label": "PORTAMENTO in",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "4 mm banana",
+      "node": "kbd.portamento_cv",
+      "function": "Control voltage that shortens the portamento time set by SLOPE.",
+      "manual_ref": 34,
+      "combine": "sum",
+      "colour": "black"
+    },
+    {
+      "id": "jack.mains",
+      "label": "line cord",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "mains cord",
+      "node": null,
+      "function": "115 V mains."
+    },
+    {
+      "id": "jack.power_pack",
+      "label": "12 V power pack",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "unknown",
+      "node": null,
+      "function": "Optional rechargeable 12 V pack, about three hours; observe polarity."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "cosc.out",
+      "to": "gate1.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "mosc.mode",
+            "not_equals": "am"
+          }
+        ]
+      },
+      "note": "Direct unless the modulation oscillator is in AM mode."
+    },
+    {
+      "id": "c02",
+      "from": "balmod.out",
+      "to": "gate1.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mosc.mode",
+        "equals": "am"
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "c03",
+      "from": "cosc.out",
+      "to": "balmod.carrier_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mosc.mode",
+        "equals": "am"
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "c04",
+      "from": "preamp.out",
+      "to": "balmod.carrier_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mosc.mode",
+        "equals": "balanced_external"
+      }
+    },
+    {
+      "id": "c05",
+      "from": "mosc.out",
+      "to": "balmod.mod_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mosc.mode",
+            "equals": "am"
+          },
+          {
+            "param": "mosc.mode",
+            "equals": "balanced_external"
+          }
+        ]
+      },
+      "amount": "mosc.index"
+    },
+    {
+      "id": "c06",
+      "from": "mosc.out",
+      "to": "cosc.fm_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mosc.mode",
+        "equals": "fm"
+      },
+      "amount": "mosc.index"
+    },
+    {
+      "id": "c07",
+      "from": "preamp.out",
+      "to": "gate2.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "gate2.routing",
+            "equals": "preamp"
+          },
+          {
+            "param": "mosc.mode",
+            "not_equals": "balanced_external"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c08",
+      "from": "balmod.out",
+      "to": "gate2.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "gate2.routing",
+            "equals": "preamp"
+          },
+          {
+            "param": "mosc.mode",
+            "equals": "balanced_external"
+          }
+        ]
+      },
+      "confidence": "inferred",
+      "note": "Where the ring-modulated preamp signal goes is not stated; taken as replacing the preamp feed to Gate 2."
+    },
+    {
+      "id": "c09",
+      "from": "mosc.out",
+      "to": "gate2.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "gate2.routing",
+        "equals": "mod_osc"
+      }
+    },
+    {
+      "id": "c10",
+      "from": "gate1.out",
+      "to": "gate2.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "gate2.routing",
+        "equals": "series"
+      },
+      "note": "Gate 1 still reaches channel A as well."
+    },
+    {
+      "id": "c11",
+      "from": "gate1.out",
+      "to": "out.in_a",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.mix_a"
+    },
+    {
+      "id": "c12",
+      "from": "gate2.out",
+      "to": "out.in_b",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.mix_b"
+    },
+    {
+      "id": "c13",
+      "from": "out.reverb_send",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "reverb.out",
+      "to": "out.reverb_return",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.reverb_level"
+    },
+    {
+      "id": "c15",
+      "from": "preamp.out",
+      "to": "envdet.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "kbd_in.voltage",
+      "to": "cosc.key_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "cosc.keyboard",
+            "equals": "in"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c17",
+      "from": "kbd_in.voltage",
+      "to": "mosc.key_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "mosc.keyboard",
+            "equals": "in"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c18",
+      "from": "kbd_in.pulse",
+      "to": "seq.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "seq.trigger_source",
+            "equals": "keyboard"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c19",
+      "from": "pulser.pulse",
+      "to": "seq.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "seq.trigger_source",
+            "equals": "pulser"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c20",
+      "from": "kbd_in.pulse",
+      "to": "env.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "env.trigger_source",
+            "equals": "keyboard"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c21",
+      "from": "pulser.pulse",
+      "to": "env.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "env.trigger_source",
+            "equals": "pulser"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c22",
+      "from": "seq.pulse",
+      "to": "env.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "env.trigger_source",
+            "equals": "sequencer"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c23",
+      "from": "kbd_in.pulse",
+      "to": "pulser.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "pulser.trigger",
+            "equals": "keyboard"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c24",
+      "from": "seq.pulse",
+      "to": "pulser.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "pulser.trigger",
+            "equals": "sequencer"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c25",
+      "from": "kbd_in.pulse",
+      "to": "rvs.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "rvs.trigger_source",
+            "equals": "keyboard"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c26",
+      "from": "pulser.pulse",
+      "to": "rvs.trigger_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "rvs.trigger_source",
+            "equals": "pulser"
+          },
+          {
+            "param": "card.selector",
+            "not_equals": "prog_board"
+          }
+        ]
+      }
+    }
+  ],
+  "program_card": {
+    "kind": "resistor_card",
+    "selector_param": "card.selector",
+    "rows": [
+      {
+        "id": "OFFSET",
+        "label": "OFFSET",
+        "node": "card.offset",
+        "note": "Fixed reference: a resistor from OFFSET to an input sets that parameter's offset."
+      },
+      {
+        "id": "INV",
+        "label": "INV",
+        "node": "card.inv_row",
+        "note": "Whatever is patched to the inverter's 'to prog' jack, normally the inverter output by jumper."
+      },
+      {
+        "id": "SEQ",
+        "label": "SEQ",
+        "node": "seq.out"
+      },
+      {
+        "id": "RAN",
+        "label": "RAN",
+        "node": "rvs.out1",
+        "note": "Two random voltages reach the card, identical to the two left-hand front-panel outputs; the card layout for the second is unclear in the scan.",
+        "confidence": "inferred"
+      },
+      {
+        "id": "KEY",
+        "label": "KEY",
+        "node": "kbd_in.voltage"
+      },
+      {
+        "id": "ENVDET",
+        "label": "ENV DET",
+        "node": "card.envdet_row",
+        "note": "Whatever is patched to the envelope detector's 'to prog' jack: the detector, the modulation oscillator's c.v. out, or a preset voltage."
+      },
+      {
+        "id": "ENVGEN",
+        "label": "ENV GEN",
+        "node": "env.out"
+      },
+      {
+        "id": "PULSER",
+        "label": "PULSER",
+        "node": "pulser.ramp"
+      },
+      {
+        "id": "PRES",
+        "label": "PRES.",
+        "node": "kbd_in.pressure"
+      }
+    ],
+    "columns": [
+      {
+        "id": "PERIOD",
+        "label": "PERIOD",
+        "node": "pulser.period_cv",
+        "offset_param": "pulser.period"
+      },
+      {
+        "id": "INDEX",
+        "label": "INDEX",
+        "node": "mosc.index_cv",
+        "offset_param": "mosc.index"
+      },
+      {
+        "id": "FREQ",
+        "label": "FREQ.",
+        "node": "mosc.freq_cv",
+        "offset_param": "mosc.frequency"
+      },
+      {
+        "id": "PITCH",
+        "label": "PITCH",
+        "node": "cosc.pitch_cv",
+        "offset_param": "cosc.pitch"
+      },
+      {
+        "id": "TIMBRE",
+        "label": "TIMBRE",
+        "node": "cosc.timbre_cv",
+        "offset_param": "cosc.timbre"
+      },
+      {
+        "id": "LEVEL1",
+        "label": "LEVEL 1",
+        "node": "gate1.level_cv",
+        "offset_param": "gate1.level"
+      },
+      {
+        "id": "LEVEL2",
+        "label": "LEVEL 2",
+        "node": "gate2.level_cv",
+        "offset_param": "gate2.level"
+      },
+      {
+        "id": "INV",
+        "label": "INV",
+        "node": "card.inv_column",
+        "note": "Leaves on the inverter's 'from prog' jack."
+      }
+    ],
+    "conductance_table": [
+      {
+        "level": 10,
+        "resistance_ohm": 120000,
+        "colour_code": "brown-red-yellow"
+      },
+      {
+        "level": 8,
+        "resistance_ohm": 150000,
+        "colour_code": "brown-green-yellow"
+      },
+      {
+        "level": 6,
+        "resistance_ohm": 200000,
+        "colour_code": "red-black-yellow"
+      },
+      {
+        "level": 4,
+        "resistance_ohm": 300000,
+        "colour_code": "orange-black-yellow"
+      },
+      {
+        "level": 3,
+        "resistance_ohm": 390000,
+        "colour_code": "orange-white-yellow"
+      },
+      {
+        "level": 2,
+        "resistance_ohm": 620000,
+        "colour_code": "blue-red-yellow"
+      },
+      {
+        "level": 1.5,
+        "resistance_ohm": 820000,
+        "colour_code": "grey-red-yellow"
+      },
+      {
+        "level": 1,
+        "resistance_ohm": 1200000,
+        "colour_code": "brown-red-green"
+      },
+      {
+        "level": 0.5,
+        "resistance_ohm": 2400000,
+        "colour_code": "red-yellow-green"
+      },
+      {
+        "level": 0.25,
+        "resistance_ohm": 4700000,
+        "colour_code": "yellow-violet-green"
+      }
+    ],
+    "fields": [
+      {
+        "id": "seq_level_1",
+        "label": "voltage level 1",
+        "section": "SEQUENCER",
+        "parameter": "seq.level_1",
+        "note": "Conductance equals the 0 to 10 level; 0 is no resistor."
+      },
+      {
+        "id": "seq_level_2",
+        "label": "voltage level 2",
+        "section": "SEQUENCER",
+        "parameter": "seq.level_2",
+        "note": "Conductance equals the 0 to 10 level; 0 is no resistor."
+      },
+      {
+        "id": "seq_level_3",
+        "label": "voltage level 3",
+        "section": "SEQUENCER",
+        "parameter": "seq.level_3",
+        "note": "Conductance equals the 0 to 10 level; 0 is no resistor."
+      },
+      {
+        "id": "seq_level_4",
+        "label": "voltage level 4",
+        "section": "SEQUENCER",
+        "parameter": "seq.level_4",
+        "note": "Conductance equals the 0 to 10 level; 0 is no resistor."
+      },
+      {
+        "id": "seq_level_5",
+        "label": "voltage level 5",
+        "section": "SEQUENCER",
+        "parameter": "seq.level_5",
+        "note": "Conductance equals the 0 to 10 level; 0 is no resistor."
+      },
+      {
+        "id": "seq_stages",
+        "label": "n.",
+        "section": "SEQUENCER",
+        "parameter": "seq.stages",
+        "encoding": [
+          {
+            "conductance": 10,
+            "value": 2
+          },
+          {
+            "conductance": 6,
+            "value": 3
+          },
+          {
+            "conductance": 3,
+            "value": 4
+          },
+          {
+            "conductance": 0,
+            "value": 5
+          }
+        ],
+        "note": "Two stages are card-only. A voltage fed through a resistor sets the stage count dynamically: more voltage, fewer stages."
+      },
+      {
+        "id": "seq_pulse_1",
+        "label": "pulse sequence 1",
+        "section": "SEQUENCER",
+        "parameter": "seq.pulse_1",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ]
+      },
+      {
+        "id": "seq_pulse_2",
+        "label": "pulse sequence 2",
+        "section": "SEQUENCER",
+        "parameter": "seq.pulse_2",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ]
+      },
+      {
+        "id": "seq_pulse_3",
+        "label": "pulse sequence 3",
+        "section": "SEQUENCER",
+        "parameter": "seq.pulse_3",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ]
+      },
+      {
+        "id": "seq_pulse_4",
+        "label": "pulse sequence 4",
+        "section": "SEQUENCER",
+        "parameter": "seq.pulse_4",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ]
+      },
+      {
+        "id": "seq_pulse_5",
+        "label": "pulse sequence 5",
+        "section": "SEQUENCER",
+        "parameter": "seq.pulse_5",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ]
+      },
+      {
+        "id": "seq_trig_k",
+        "label": "K trig",
+        "section": "SEQUENCER",
+        "parameter": "seq.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the keyboard; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "seq_trig_p",
+        "label": "P trig",
+        "section": "SEQUENCER",
+        "parameter": "seq.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the pulser; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "rvs_trig_k",
+        "label": "K trig",
+        "section": "RAND",
+        "parameter": "rvs.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the keyboard; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "rvs_trig_p",
+        "label": "P trig",
+        "section": "RAND",
+        "parameter": "rvs.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the pulser; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "rvs_trig_s",
+        "label": "S trig",
+        "section": "RAND",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "card_only": true,
+        "note": "Trigger from the sequencer's stage pulses. Not available from the front panel."
+      },
+      {
+        "id": "pulser_trig_k",
+        "label": "K trig",
+        "section": "PULSR",
+        "parameter": "pulser.trigger",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the keyboard; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "pulser_trig_p",
+        "label": "P trig",
+        "section": "PULSR",
+        "parameter": "pulser.trigger",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "note": "Trigger from the pulser; K and P may both be fitted, summing the sources."
+      },
+      {
+        "id": "pulser_trig_s",
+        "label": "S trig",
+        "section": "PULSR",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": true,
+            "meaning": "connected"
+          },
+          {
+            "conductance": 0,
+            "value": false,
+            "meaning": "open"
+          }
+        ],
+        "card_only": false,
+        "note": "Trigger from the sequencer's stage pulses."
+      },
+      {
+        "id": "env_trig_k",
+        "label": "K trig",
+        "section": "ENVELOPE",
+        "parameter": "env.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": "transient"
+          },
+          {
+            "conductance": 10,
+            "value": "sustained"
+          },
+          {
+            "conductance": 0,
+            "value": "off"
+          }
+        ],
+        "note": "Trigger from the keyboard; the resistor value also sets the envelope mode."
+      },
+      {
+        "id": "env_trig_p",
+        "label": "P trig",
+        "section": "ENVELOPE",
+        "parameter": "env.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": "transient"
+          },
+          {
+            "conductance": 10,
+            "value": "sustained"
+          },
+          {
+            "conductance": 0,
+            "value": "off"
+          }
+        ],
+        "note": "Trigger from the pulser; the resistor value also sets the envelope mode."
+      },
+      {
+        "id": "env_trig_s",
+        "label": "S trig",
+        "section": "ENVELOPE",
+        "parameter": "env.trigger_source",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": "transient"
+          },
+          {
+            "conductance": 10,
+            "value": "sustained"
+          },
+          {
+            "conductance": 0,
+            "value": "off"
+          }
+        ],
+        "note": "Trigger from the sequencer; the resistor value also sets the envelope mode."
+      },
+      {
+        "id": "env_attack",
+        "label": "attack",
+        "section": "ENVELOPE",
+        "parameter": "env.attack",
+        "note": "Conductance is the slider level read on the 0 to 10 scale: .002 s is 10, 1 s is 4, 10 s is 0."
+      },
+      {
+        "id": "env_duration",
+        "label": "duration",
+        "section": "ENVELOPE",
+        "parameter": "env.duration",
+        "note": "Conductance is the slider level read on the 0 to 10 scale: .002 s is 10, 1 s is 4, 10 s is 0."
+      },
+      {
+        "id": "env_decay",
+        "label": "decay",
+        "section": "ENVELOPE",
+        "parameter": "env.decay",
+        "note": "Conductance is the slider level read on the 0 to 10 scale: .002 s is 10, 1 s is 4, 10 s is 0."
+      },
+      {
+        "id": "mosc_key",
+        "label": "key",
+        "section": "MOD",
+        "parameter": "mosc.keyboard",
+        "encoding": [
+          {
+            "conductance": 6,
+            "value": "in"
+          },
+          {
+            "conductance": 0,
+            "value": "out"
+          }
+        ],
+        "confidence": "inferred",
+        "note": "The manual's figures for 'in' are hand-corrected between 3 and 6; see source_inconsistencies."
+      },
+      {
+        "id": "mosc_mode",
+        "label": "mod",
+        "section": "MOD",
+        "parameter": "mosc.mode",
+        "encoding": [
+          {
+            "conductance": 6,
+            "value": "balanced_external"
+          },
+          {
+            "conductance": 3,
+            "value": "am"
+          },
+          {
+            "conductance": 0,
+            "value": "fm"
+          }
+        ]
+      },
+      {
+        "id": "mosc_ws",
+        "label": "w.s.",
+        "section": "MOD",
+        "parameter": "mosc.waveshape",
+        "encoding": [
+          {
+            "conductance": 6,
+            "value": "sawtooth"
+          },
+          {
+            "conductance": 3,
+            "value": "square"
+          },
+          {
+            "conductance": 0,
+            "value": "triangle"
+          }
+        ]
+      },
+      {
+        "id": "cosc_key",
+        "label": "key",
+        "section": "CMPLX",
+        "parameter": "cosc.keyboard",
+        "encoding": [
+          {
+            "conductance": 3,
+            "value": "in"
+          },
+          {
+            "conductance": 0,
+            "value": "out"
+          }
+        ],
+        "note": "3 per the worked example (Figure 14); the summary text is hand-corrected between 3 and 6."
+      },
+      {
+        "id": "cosc_ws_pot",
+        "label": "w. (pot)",
+        "section": "CMPLX",
+        "parameter": "cosc.waveshape",
+        "note": "Waveshape knob position, 0 to 10."
+      },
+      {
+        "id": "cosc_ws_switch",
+        "label": "w. (switch)",
+        "section": "CMPLX",
+        "parameter": "cosc.waveshape_select",
+        "encoding": [
+          {
+            "conductance": 6,
+            "value": "spike"
+          },
+          {
+            "conductance": 3,
+            "value": "square"
+          },
+          {
+            "conductance": 0,
+            "value": "triangle"
+          }
+        ]
+      },
+      {
+        "id": "gate1_mode",
+        "label": "1 mode",
+        "section": "GATE",
+        "parameter": "gate1.mode",
+        "encoding": [
+          {
+            "conductance": 10,
+            "value": "lowpass"
+          },
+          {
+            "conductance": 3,
+            "value": "combination"
+          },
+          {
+            "conductance": 0,
+            "value": "vca"
+          }
+        ]
+      },
+      {
+        "id": "gate2_mode",
+        "label": "2 mode",
+        "section": "GATE",
+        "parameter": "gate2.mode",
+        "encoding": [
+          {
+            "conductance": 10,
+            "value": "lowpass"
+          },
+          {
+            "conductance": 3,
+            "value": "combination"
+          },
+          {
+            "conductance": 0,
+            "value": "vca"
+          }
+        ]
+      },
+      {
+        "id": "gate_routing",
+        "label": "s.r.",
+        "section": "GATE",
+        "parameter": "gate2.routing",
+        "encoding": [
+          {
+            "conductance": 6,
+            "value": "preamp"
+          },
+          {
+            "conductance": 3,
+            "value": "mod_osc"
+          },
+          {
+            "conductance": 0,
+            "value": "series"
+          }
+        ]
+      }
+    ],
+    "combine": "Resistors in parallel sum their conductances. A resistor between a row and a column is both the connection and its processing level, so one input can take several sources, each scaled differently, which the front panel cannot do. With CONTROL at 'both', card and front-panel values add: offsets and processing levels sum, card and panel triggers both act, and switch codes sum too.",
+    "saturation": "Inputs saturate above a total conductance of 10. Switch fields saturate above 6, so summed codes can select a mode in between: gate codes 3 (card) plus 3 (panel) give a combination mode the panel cannot reach.",
+    "not_programmable": [
+      "pulser.mode",
+      "cosc.fine_tune",
+      "mosc.fine_tune",
+      "out.mix_a",
+      "out.mix_b",
+      "out.reverb_level",
+      "out.monitor_level",
+      "out.output_level"
+    ],
+    "note": "Cards came blank with a supply of programming resistors; the manual describes bending, soldering and stacking them on copper strips. All slider calibrations line up across the panel so any setting can be read on the 0 to 10 scale."
+  },
+  "example_patches": [
+    {
+      "id": "pc2_basic",
+      "name": "Complex oscillator alone (Patch-chart 2)",
+      "source": "manual pp. 4-5",
+      "settings": {
+        "card.selector": "front_panel",
+        "cosc.keyboard": "out",
+        "gate2.routing": "series",
+        "gate1.mode": "vca",
+        "gate1.level": 8.5,
+        "out.reverb_level": 0,
+        "cosc.pitch": 3,
+        "cosc.timbre": 0,
+        "cosc.waveshape_select": "spike",
+        "cosc.waveshape": 0
+      },
+      "description": "A sine; turn the waveshape knob towards spike, square or triangle, then raise TIMBRE with the knob at sine.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc3_mod_osc",
+      "name": "Modulation oscillator heard through Gate 2 (Patch-chart 3)",
+      "source": "manual p. 5",
+      "settings": {
+        "gate2.routing": "mod_osc",
+        "out.mix_b": 10,
+        "gate2.level": 10,
+        "mosc.waveshape": "square",
+        "mosc.frequency": 0
+      },
+      "description": "Square wave clicks at 0.16 Hz that merge into a tone above about 16 Hz.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc4_fm_vibrato",
+      "name": "FM vibrato (Patch-chart 4)",
+      "source": "manual p. 8",
+      "settings": {
+        "mosc.mode": "fm",
+        "cosc.pitch": 6,
+        "mosc.index": 2,
+        "mosc.frequency": 4
+      },
+      "description": "Index .2 swings the 440 Hz complex oscillator about a semitone. Raising index and frequency gives sirens, then clangorous spectra.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "pc5_keyboard",
+      "name": "Keyboard to complex oscillator (Patch-chart 5)",
+      "source": "manual p. 10",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ]
+      ],
+      "settings": {
+        "cosc.keyboard": "in"
+      },
+      "description": "Equal-tempered half steps over 2 1/3 octaves; PITCH and fine tuning set the reference.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc6_preset_index",
+      "name": "Preset voltages set the modulation index (Patch-chart 6)",
+      "source": "manual p. 12",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "kbd.preset_out_1",
+          "jack.index_in"
+        ]
+      ],
+      "settings": {
+        "cosc.keyboard": "in",
+        "mosc.keyboard": "in",
+        "mosc.mode": "am",
+        "mosc.index_processing": 10
+      },
+      "description": "Both oscillators track the keys while the three preset plates switch instantly between modulation depths.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc7_portamento",
+      "name": "Portamento drives modulation frequency (Patch-chart 7)",
+      "source": "manual p. 13",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "kbd.preset_out_1",
+          "kbd.portamento_in"
+        ],
+        [
+          "kbd.portamento_out_1",
+          "jack.frequency_in"
+        ]
+      ],
+      "settings": {
+        "cosc.keyboard": "in",
+        "mosc.mode": "am",
+        "kbd.shift": "octave"
+      },
+      "description": "Higher registers glide the AM spectrum faster, because the presets also set the portamento rate.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "pc10_env_timbre",
+      "name": "Envelope on timbre (Patch-chart 10)",
+      "source": "manual pp. 16-17",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "kbd.pulse_out_1",
+          "jack.kbd_pulse_in"
+        ],
+        [
+          "jack.envelope_1",
+          "jack.timbre_in"
+        ]
+      ],
+      "settings": {
+        "cosc.keyboard": "in",
+        "env.trigger_source": "keyboard"
+      },
+      "description": "Each new note brings a transient surge of harmonics.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc13_pulser",
+      "name": "Pulser drives index and, inverted, modulation frequency (Patch-chart 13)",
+      "source": "manual p. 19",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "jack.pulser_1",
+          "jack.index_in"
+        ],
+        [
+          "jack.pulser_2",
+          "jack.inverter_in"
+        ],
+        [
+          "jack.inverter_out",
+          "jack.frequency_in"
+        ],
+        [
+          "kbd.pressure_out_1",
+          "jack.kbd_pressure_in"
+        ],
+        [
+          "jack.pressure_1",
+          "jack.period_in"
+        ],
+        [
+          "jack.envelope_1",
+          "jack.timbre_in"
+        ]
+      ],
+      "settings": {
+        "pulser.trigger": "self",
+        "pulser.period": 0,
+        "env.trigger_source": "pulser",
+        "mosc.index": 0,
+        "mosc.index_processing": 5
+      },
+      "description": "Every 10 seconds the index falls from .5 to 0 while the modulating frequency rises again; finger pressure shortens the cycle.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "pc16_random",
+      "name": "Random pitch, timbre and level (Patch-chart 16)",
+      "source": "manual p. 21",
+      "cords": [
+        [
+          "jack.random_1",
+          "jack.pitch_in"
+        ],
+        [
+          "jack.random_2",
+          "jack.timbre_in"
+        ],
+        [
+          "jack.random_3",
+          "jack.level1_in"
+        ]
+      ],
+      "settings": {
+        "pulser.trigger": "self",
+        "rvs.trigger_source": "pulser"
+      },
+      "description": "The self-running pulser calls up a new pitch, timbre and loudness on each cycle.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pc17_voice",
+      "name": "Voice controls loudness and timbre (envelope detector)",
+      "source": "manual pp. 21-22",
+      "cords": [
+        [
+          "jack.envdet_out",
+          "jack.level1_in"
+        ],
+        [
+          "jack.envdet_out",
+          "jack.timbre_in"
+        ]
+      ],
+      "settings": {
+        "gate2.routing": "preamp",
+        "gate1.level": 0,
+        "gate1.level_processing": 10,
+        "cosc.timbre": 0,
+        "cosc.timbre_processing": 8
+      },
+      "description": "A microphone in the preamp opens Gate 1 and brightens the complex oscillator; singing along makes it seem to follow the vowels. Uses a stacked banana plug.",
+      "confidence": "stated"
+    },
+    {
+      "id": "card_fig14",
+      "name": "Simple performance instrument on a card (Patch-chart 18, Figure 14)",
+      "source": "manual pp. 26-27",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "kbd.pulse_out_1",
+          "jack.kbd_pulse_in"
+        ]
+      ],
+      "card": {
+        "fields": {
+          "env_trig_k": 10,
+          "env_attack": 8,
+          "env_duration": 10,
+          "env_decay": 2,
+          "cosc_key": 3,
+          "cosc_ws_pot": 10,
+          "cosc_ws_switch": 0,
+          "gate1_mode": 3
+        },
+        "points": [
+          {
+            "row": "OFFSET",
+            "column": "TIMBRE",
+            "conductance": 6
+          },
+          {
+            "row": "ENVGEN",
+            "column": "LEVEL1",
+            "conductance": 8
+          }
+        ]
+      },
+      "settings": {
+        "card.selector": "prog_board"
+      },
+      "description": "Keyboard-played complex oscillator, triangle mix, through Gate 1 in combination mode, shaped by a sustained envelope. The pitch offset resistor's value is not given.",
+      "confidence": "stated"
+    },
+    {
+      "id": "card_fig15",
+      "name": "AM vibrato with pressure on frequency (Patch-chart 19, Figure 15)",
+      "source": "manual p. 28",
+      "cords": [
+        [
+          "kbd.key_voltage_out_1",
+          "jack.kbd_voltage_in"
+        ],
+        [
+          "kbd.pulse_out_1",
+          "jack.kbd_pulse_in"
+        ],
+        [
+          "kbd.pressure_out_1",
+          "jack.kbd_pressure_in"
+        ]
+      ],
+      "card": {
+        "fields": {
+          "mosc_key": 0,
+          "mosc_ws": 0
+        },
+        "points": [
+          {
+            "row": "OFFSET",
+            "column": "INDEX",
+            "conductance": 3
+          },
+          {
+            "row": "OFFSET",
+            "column": "FREQ",
+            "conductance": 6
+          },
+          {
+            "row": "PRES",
+            "column": "FREQ",
+            "conductance": 2
+          }
+        ]
+      },
+      "settings": {
+        "card.selector": "prog_board"
+      },
+      "description": "Adds to card_fig14: modulation oscillator in AM at 5 Hz and index .3, with key pressure raising the rate.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "card_fig16",
+      "name": "Simulated echo with changing timbre (Figure 16)",
+      "source": "manual p. 29",
+      "card": {
+        "fields": {
+          "seq_level_1": 10,
+          "seq_level_2": 8,
+          "seq_level_3": 5,
+          "seq_level_4": 3,
+          "seq_level_5": 0.5,
+          "seq_stages": 0,
+          "seq_trig_p": 3,
+          "pulser_trig_p": 3,
+          "gate_routing": 0
+        },
+        "points": [
+          {
+            "row": "SEQ",
+            "column": "TIMBRE",
+            "conductance": 8
+          },
+          {
+            "row": "OFFSET",
+            "column": "PERIOD",
+            "conductance": 4
+          },
+          {
+            "row": "PULSER",
+            "column": "LEVEL2",
+            "conductance": 10
+          }
+        ]
+      },
+      "settings": {
+        "card.selector": "prog_board",
+        "out.mix_a": 0
+      },
+      "description": "Gates in series; the self-running pulser (1 s) re-strikes Gate 2 and steps the sequencer, so each echo has a different timbre. Start with the pulser's 'one' position.",
+      "confidence": "stated"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "env.lamp",
+      "module": "env",
+      "label": "envelope lamp",
+      "kind": "lamp",
+      "function": "Inferred: a panel symbol beside MODE SELECT, presumably lit by the envelope."
+    },
+    {
+      "id": "pulser.lamp",
+      "module": "pulser",
+      "label": "pulser lamp",
+      "kind": "lamp",
+      "function": "Inferred: a panel symbol beside MODE, presumably lit by the ramp or pulse."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Offset plus processed control voltage",
+      "applies_to": [
+        "pulser",
+        "mosc",
+        "cosc",
+        "gate1",
+        "gate2"
+      ],
+      "rule": "Every voltage-controlled parameter has two sliders. The right-hand offset sets the starting value; the left-hand processing slider scales whatever is patched to the black input below them, and the result adds upward from the offset. Processing at 0 removes the input entirely. To let a patched voltage define the whole range, set the offset to 0 and processing to 10."
+    },
+    {
+      "id": "b02",
+      "name": "Three signal classes, separate connectors",
+      "applies_to": [
+        "kbd",
+        "kbd_in",
+        "seq",
+        "env",
+        "pulser",
+        "rvs",
+        "inverter",
+        "envdet",
+        "card"
+      ],
+      "rule": "Control voltages and pulses travel on banana cords; audio stays inside apart from the preamp input and the outputs, on miniphone jacks. Audio cannot be patched into a control input, except the modulation oscillator's 'mod c.v. out', which carries its waveform as a voltage. Banana plugs stack, so one output can feed several inputs."
+    },
+    {
+      "id": "b03",
+      "name": "Jack colours",
+      "applies_to": [
+        "kbd_in",
+        "seq",
+        "env",
+        "pulser",
+        "rvs",
+        "cosc",
+        "mosc",
+        "gate1",
+        "gate2"
+      ],
+      "rule": "Black jacks are control inputs. Outputs are coded by source: orange envelope, yellow pulser, blue sequencer, white random, violet pressure."
+    },
+    {
+      "id": "b04",
+      "name": "Lowpass gate modes",
+      "applies_to": [
+        "gate1",
+        "gate2"
+      ],
+      "rule": "VCA mode: LEVEL is gain. Lowpass mode: LEVEL is a 12 dB/octave cut-off; with a 220 Hz square about 3 leaves a near sine, lower goes silent. Combination: both together, so quieter is also duller. The filter element lags the amplifier, so very short envelopes in combination mode give resonant, drum-like strikes. Response follows the illumination of the vactrol lamp."
+    },
+    {
+      "id": "b05",
+      "name": "Gates in series, out of phase",
+      "applies_to": [
+        "gate1",
+        "gate2"
+      ],
+      "rule": "With SIGNAL ROUTING at 'series', Gate 1 feeds Gate 2 and also channel A. The gates are 180 degrees out of phase, so mixing both cancels: Gate 1 as amplifier and Gate 2 as lowpass leaves a highpass-like sound, and moving Gate 2 between about 4 and 8 gives phasing. With channel A down, both gates must open for any sound: double enveloping and echoes."
+    },
+    {
+      "id": "b06",
+      "name": "Harmonic addition",
+      "applies_to": [
+        "cosc"
+      ],
+      "rule": "The WAVESHAPE knob crossfades a sine with the selected spike, square or triangle; it never changes the oscillator itself. TIMBRE adds and accentuates harmonics, the opposite of filtering, and acts only on the sine and triangle components. In the early 208 a second triangle oscillator tracks the first and is cross-modulated by it as timbre rises."
+    },
+    {
+      "id": "b07",
+      "name": "Modulation modes",
+      "applies_to": [
+        "mosc",
+        "cosc",
+        "balmod"
+      ],
+      "rule": "FM: index sets the deviation around the centre pitch; .2 is about a semitone at 440 Hz, and near 1.0 the centre is lost. AM: tremolo at low rates, sidebands at audio rates; above about .5 the fundamental fades and 1.0 is complete ring modulation. Balanced external: the same on the preamp signal. The modulator's waveshape determines the sideband density. FM index can also come from the complex oscillator's PITCH processing when 'mod c.v. out' is patched to PITCH, giving AM and FM at once."
+    },
+    {
+      "id": "b08",
+      "name": "Envelope generator",
+      "applies_to": [
+        "env"
+      ],
+      "rule": "Attack, then hold, then decay. Transient: hold is DURATION, independent of trigger length. Sustained: hold lasts as long as the trigger. With all three at minimum the envelope is under 1/100 s. The trapezoid can be inverted by the inverter or, for pitch, by the SIGN switch."
+    },
+    {
+      "id": "b09",
+      "name": "Pulser and self-triggering",
+      "applies_to": [
+        "pulser"
+      ],
+      "rule": "Each trigger starts a falling ramp; the trigger out comes at the end. In 'self' mode the end trigger restarts the ramp, but it needs a first trigger: flick MODE to 'one' and back. 'one' still works under card control. More voltage at the PERIOD input shortens the period."
+    },
+    {
+      "id": "b10",
+      "name": "Sequencer",
+      "applies_to": [
+        "seq"
+      ],
+      "rule": "Advances one stage per trigger from keyboard or pulser; STAGES sets 3, 4 or 5, the card adds 2. Each stage sends a pulse unless its switch is down, to fire the envelope or pulser and so place rests. Patching the sequencer voltage into the self-running pulser's PERIOD makes rhythms, since each stage sets the next period. Tune each level using the keyboard as trigger source."
+    },
+    {
+      "id": "b11",
+      "name": "Key voltages",
+      "applies_to": [
+        "kbd",
+        "cosc",
+        "mosc"
+      ],
+      "rule": "29 equal steps, held until the next key. Through a KEYBOARD switch they give equal-tempered half steps; through a PITCH or FREQUENCY input the processing slider sets the interval, from tiny divisions of a whole step to 2 1/3 octaves, for other tunings. Both oscillators on the same voltage track at a fixed ratio, so modulation timbres stay similar across the keyboard."
+    },
+    {
+      "id": "b12",
+      "name": "Presets and shift",
+      "applies_to": [
+        "kbd"
+      ],
+      "rule": "Three preset plates give independent voltages at the PRESET outputs. SHIFT 'octave' makes them select registers 12 keys apart (an octave only when the oscillator is tuned to 12-note steps); 'preset' adds the touched preset's level to the key voltage, for any transposition up to a major ninth; 'none' leaves the key voltage alone."
+    },
+    {
+      "id": "b13",
+      "name": "Program card and front panel together",
+      "applies_to": [
+        "card"
+      ],
+      "rule": "CONTROL selects card, panel or both. In 'both', offsets, processing levels and switch codes add, and card and panel triggers both act. Card routings can feed one input from several sources with separate levels, keep inputs below a total of 10, and expose card-only features: a two-stage sequence, sequencer pulses triggering the random source, and a voltage-controlled stage count. The fine tuning knobs, the pulser 'one' position and the whole output section stay under manual control."
+    },
+    {
+      "id": "b14",
+      "name": "Inverter",
+      "applies_to": [
+        "inverter"
+      ],
+      "rule": "Output is 10 minus input on the 0 to 10 scale. Its card jacks can be borrowed: a third random voltage can reach the card through the inverter's 'to prog' jack, and a fourth through the envelope detector's."
+    },
+    {
+      "id": "b15",
+      "name": "Random voltages",
+      "applies_to": [
+        "rvs"
+      ],
+      "rule": "Four uncorrelated levels, renewed on each trigger and held between. Processing near 1 gives slight variation around the offset; higher processing gives wider jumps."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "None. External control is by banana control voltages and pulses and the preamp input."
+  },
+  "specifications": {
+    "complex_oscillator_hz": {
+      "panel": [
+        55,
+        1760
+      ],
+      "measured_fine_centred": [
+        38,
+        3500
+      ]
+    },
+    "modulation_oscillator_hz": {
+      "panel": [
+        0.16,
+        50
+      ],
+      "measured_fine_centred": [
+        0.13,
+        70
+      ]
+    },
+    "envelope_times_s": [
+      0.002,
+      10
+    ],
+    "pulser_period_s": [
+      0.002,
+      10
+    ],
+    "lowpass_gate": "vactrol; 12 dB/octave in lowpass mode",
+    "outputs": {
+      "program": "2 x nominally 1 V rms",
+      "monitor": "headset or low-level speaker, about 2 W"
+    },
+    "voltage_standards": {
+      "pitch": "1.2 V/octave Buchla standard (inferred for the original; manual gives no figure)",
+      "control_voltage_v": "0 to 15 on early 1970s 200 series modules; 0 to 10 later (Easel-specific value not documented)",
+      "pulse_v": "about 15 on early 200 series (Easel-specific value not documented)",
+      "audio": "+4 dBu on early 200 series; the manual gives a nominal 1 V program output"
+    },
+    "connectors": {
+      "control_and_pulse": "4 mm banana, stackable",
+      "audio": "miniphone (preamp input; outputs inferred)"
+    },
+    "keyboard": "capacitive touch plates: 29 voltage keys and 3 preset plates",
+    "power": {
+      "mains": "115 V",
+      "battery": "optional 12 V pack, about 3 hours"
+    },
+    "program_card_resistors": "10 values, 120 kohm (level 10) to 4.7 Mohm (level .25)"
+  },
+  "omitted_from_source": [
+    "the foreword, introduction and the 'Onward' note on the Easel Weasel newsletter",
+    "the step-by-step resistor bending, soldering and stacking instructions, beyond the summary in program_card.note",
+    "the score extracts showing 3, 4 and 5 stage rhythmic patterns from Patch-chart 14",
+    "patch charts 1, 8, 9, 11, 12, 14, 15 and Figure 17 to 21 card examples, whose slider positions are hard to read in the scan; their techniques are in behaviours"
+  ],
+  "not_in_source": [
+    "any electrical specification: control voltage range, pitch scaling, pulse levels, impedances; general Buchla figures are given in specifications, marked as not Easel-specific",
+    "which small jack on the patch field carries which colour; only white (4) and orange (3) are counted in the text",
+    "the connector type of the signal outputs and phones",
+    "where the balanced-modulated preamp signal goes in 'balanced external' mode",
+    "what the lamp symbols beside the envelope and pulser mode switches indicate",
+    "the reverb type; spring comes from reissue documentation",
+    "the curve of the timbre circuit and the lowpass gate's response times",
+    "the meaning of 'trim' on the oscillators' KEYBOARD 'out' position"
+  ],
+  "source_inconsistencies": [
+    "The complex oscillator's panel range is 55 to 1760 Hz; Dave Brown measured 38 to 3500 Hz with the fine tuning centred.",
+    "The modulation oscillator's panel range is 0.16 to 50 Hz; Dave Brown measured 0.13 to 70 Hz.",
+    "The program card text gives the oscillator 'key' fields as 3 or 6 with hand corrections for both oscillators; the Figure 14 worked example uses 3 for the complex oscillator.",
+    "The card summary says the complex oscillator's waveshape switch codes spike, square and sine as 6, 3 and 0; the panel and pages 4 to 5 call the third position triangle.",
+    "The card text codes AM as 3, but the Figure 15 example programs 'a.m. oscillator' with no resistor, which would be FM.",
+    "Patch-chart 4 describes the vibrato as 1 1/2 times a second and also as repeating every 1 1/2 seconds.",
+    "The manual says the Easel comes with 10 program cards; Synth DB says six blank cards.",
+    "The manual counts 29 voltage keys; Synth DB says 32 keys, consistent with 29 plus the 3 preset plates."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Version",
+      "detail": "Modelled on the original 1973-74 Easel. The 2013 reissue and the 208C/Easel Command differ: MIDI, an aux input, extra audio and banana connections, a green modulation oscillator section, trimmable 1 V/octave scaling, card-bus inputs that add to banana inputs, and the iProgram and later card interfaces. None of this is modelled."
+    },
+    {
+      "topic": "Vactrol response",
+      "detail": "The lowpass gates' character comes from the lamp and photocell's slow, level-dependent decay. The manual gives only the qualitative difference between the filter and amplifier elements."
+    },
+    {
+      "topic": "Timbre circuit",
+      "detail": "Known only as cross-modulated tracking triangle oscillators in the early 208. A model needs a measured transfer curve."
+    },
+    {
+      "topic": "Card electrical model",
+      "detail": "Conductance values are recorded as levels, not currents into a summing node; the saturation points (10 for inputs, 6 for switches) are as stated, not measured."
+    },
+    {
+      "topic": "Jack allocation",
+      "detail": "Counts for yellow, blue and violet jacks are inferred. A clear photograph of an original 208 panel would settle them."
+    }
+  ]
+}

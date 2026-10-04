@@ -1,0 +1,22 @@
+// Lineage of the Behringer WASP Deluxe: the EDP Wasp family from Oxford. Shape: see CONTRACT.md → Lineage.
+export default {
+  title: 'From the EDP Wasp to the Behringer WASP Deluxe',
+  intro: 'Electronic Dream Plant (EDP) was a small British company whose Wasp, designed by Chris Huggett, came out in 1978 for £199, far below the price of most synths then. It paired digitally made oscillators with an analogue filter to keep the cost down, and that mix of a hard, buzzy source and a warm filter is still its sound.',
+  timeline: [
+    { year: '1978', name: 'EDP Wasp', tag: 'The original', text: 'A small, battery-powered synth in a black and yellow case with a flat touch keyboard and a built-in speaker. It set the layout this panel keeps: two digital oscillators, a multimode filter, a control oscillator, and envelopes that can repeat.' },
+    { year: 'Around 1980', name: 'EDP Wasp Deluxe', text: 'A larger Wasp with a proper moving-key keyboard in place of the touch keyboard, and the same voice. Behringer’s model follows its layout and name.' },
+    { year: '1983', name: 'OSCar', text: 'Chris Huggett’s next synth, from his company OSC. It took the Wasp’s idea of digital oscillators with an analogue filter much further, and became far better known.' },
+    { year: '2020', name: 'Behringer WASP Deluxe', tag: 'This synth', text: 'The Wasp Deluxe voice in a desktop or Eurorack case with no keyboard, played over MIDI or USB. It adds outputs for each oscillator, an external audio input and a poly chain for several units.' },
+  ],
+  relatives: [
+    { name: 'EDP Gnat', years: 'Around 1980', text: 'A cheaper, cut-down Wasp with one oscillator.' },
+    { name: 'Novation Bass Station', years: '1993', text: 'Designed by Chris Huggett for Novation, where he went on to work on many instruments. Not a Wasp, but by the same designer.' },
+  ],
+  users: [
+    'Dave Greenfield (The Stranglers)', 'Jerry Casale (Devo)', 'Keith Levene (Public Image Ltd)', 'Nick Rhodes (Duran Duran)',
+    'Dave Stewart (Eurythmics)', 'Vince Clarke', '808 State', 'John Foxx (Ultravox)', 'Alan Wilder (Depeche Mode, Recoil)',
+    'Paul Hartnoll (Orbital)', 'Joe Mount (Metronomy)', 'Chris Carter (Throbbing Gristle)', 'Sonic Boom (Spacemen 3)',
+    'Bon Harris (Nitzer Ebb)', 'Chelsea Wolfe', 'William Orbit', 'Kevin Parker (Tame Impala)', 'Flux Pavilion', 'Add N to (X)', 'Whitehouse',
+  ],
+  note: 'Most of these credits come from equipment lists, liner notes and studio footage. They say a Wasp was used on the record but rarely which part it played, so each linked sound is in the general style of the record, not a copy of the part. Sources say "Wasp" without saying whether it was the original or the Deluxe. The best-known records credited to Chris Huggett’s designs were made on the OSCar, not the Wasp.',
+};

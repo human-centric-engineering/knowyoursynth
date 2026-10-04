@@ -1,0 +1,4188 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-poly-d",
+    "manufacturer": "Behringer",
+    "model": "Poly D",
+    "category": "4-voice paraphonic analogue synthesizer with 37-key keyboard, chorus, distortion, sequencer and arpeggiator",
+    "based_on": "Moog Minimoog Model D, extended to four oscillators assignable one per note. The guide never names Moog; the controller, oscillator bank, mixer, ladder filter and contour layout, the decay switch and the keyboard control switches are the Minimoog's.",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "POLY D Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Poly_D_Quick_Start.pdf",
+        "pages": 49,
+        "note": "57 numbered controls, 15 numbered sequencer controls, a getting-started chapter with voice assignment and arpeggiator modes, a sequencer chapter, a full SysEx command table and a specifications table with envelope times, ranges and jack voltages."
+      },
+      {
+        "id": "cal_osc",
+        "title": "User Support Bulletin: POLY D Oscillator Calibration",
+        "kind": "service_manual",
+        "file": "User_Support_Bulletin_POLY-D_Oscillator_Calibration.pdf",
+        "pages": 5,
+        "note": "Rear-panel trimpot procedure for oscillator range, scale and octave calibration; confirms the reference tuning notes."
+      },
+      {
+        "id": "cal_wheels",
+        "title": "User Support Bulletin: POLY D Wheels and Aftertouch Calibration",
+        "kind": "service_manual",
+        "file": "Poly_D_Calibration_Wheels_and_Aftertouch_Guides.pdf",
+        "pages": 10,
+        "note": "Hidden calibration mode entered at power-on; documents the power LED blinking red in that mode."
+      },
+      {
+        "id": "panel",
+        "title": "Poly D front panel photograph",
+        "kind": "measurement",
+        "file": "Poly_D.jpg",
+        "note": "Switch backlight colours and panel scales."
+      },
+      {
+        "id": "sonicstate",
+        "title": "Sonic State, 'Sonic LAB: Behringer Poly D' (25 November 2019), with Behringer's design Q&A",
+        "kind": "other",
+        "file": "https://sonicstate.com/news/2019/11/25/sonic-lab-behringer-poly-d-4-voice-analog-/",
+        "note": "Hands-on review plus Behringer's answers: the voice logic is adapted from the Korg Mono/Poly. Source for how UNISON divides oscillators."
+      },
+      {
+        "id": "mamosa",
+        "title": "Mamosa synth notes: Behringer Poly D",
+        "kind": "other",
+        "file": "http://www.mamosa.org/jenfi.home/english/behringerpolyd_EN.php",
+        "note": "Owner's walkthrough. Source for the RANGE LED meaning."
+      },
+      {
+        "id": "forums",
+        "title": "Gearspace Poly D threads and Sweetwater owner reviews",
+        "kind": "other",
+        "file": "https://gearspace.com/board/electronic-music-instruments-and-electronic-music-production/1288438-behringer-poly-d-warp-drive-108.html",
+        "note": "Owner reports on the effects chain and POLY mode behaviour."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "signal_path_note": "analogue voice; the chorus is a BBD (bucket brigade) circuit and the distortion analogue; digitally scanned keyboard and sequencer",
+    "voices": 4,
+    "polyphony_mode": "paraphonic: four oscillators assigned one per note in POLY, all four on one note in UNISON, or one note in MONO, sharing one filter and one pair of contours",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 30,
+      "switches": 28,
+      "wheels": 2,
+      "keys": 37
+    },
+    "summary": "A four-oscillator Minimoog. Each oscillator has six ranges from LO to 2' and six waveforms; oscillators 2 to 4 have a frequency offset of plus or minus 7 semitones, and oscillator 4 can be freed from the keyboard to act as a modulator. In POLY mode each new note takes the next oscillator, so four notes play through a single 24 dB/octave ladder filter (low-pass or high-pass) and a single loudness contour: paraphonic, not polyphonic. A mixer with on switches blends the four oscillators, pink or white noise and an external input. Modulation is the Minimoog's: a mix knob between OSC 4 or the filter envelope and noise (or an external source) or the LFO, scaled by the mod wheel and switched onto the oscillators and filter. Then distortion, a BBD stereo chorus, a 32-step sequencer with 64 pattern memories, and an eight-mode arpeggiator. Velocity and aftertouch keyboard with CV outputs."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "Keyboard and MIDI",
+      "panel_section": "KEYBOARD",
+      "description": "37 semi-weighted full-size keys with velocity and aftertouch, pitch and mod wheels, and MIDI in over DIN and USB. Transposes by an octave either way. Produces note, gate, trigger, velocity and aftertouch, all also available as CV.",
+      "inputs": [
+        "kbd.ext_trig_in"
+      ],
+      "outputs": [
+        "kbd.note",
+        "kbd.gate",
+        "kbd.trig",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.bend",
+        "kbd.mod_wheel"
+      ]
+    },
+    {
+      "id": "voices",
+      "type": "voice_allocator",
+      "name": "Voice assignment",
+      "panel_section": "CONTROLLERS",
+      "description": "Assigns notes to the four oscillators, using logic Behringer says it adapted from the Korg Mono/Poly. MONO: every oscillator that is switched on plays one note. UNISON: the oscillators are shared among the notes held, all four on one note, two each on two, one each on four. POLY: the first note takes OSC 1, the next OSC 2, up to four. Key priority and multi-trigger are SysEx settings. AUTO DAMP decides whether released chord notes keep sounding until the next note.",
+      "properties": {
+        "voice_count": 4,
+        "paraphonic": true
+      },
+      "inputs": [
+        "voices.note_in",
+        "voices.gate_in"
+      ],
+      "outputs": [
+        "voices.pitch1",
+        "voices.pitch2",
+        "voices.pitch3",
+        "voices.pitch4",
+        "voices.gate"
+      ]
+    },
+    {
+      "id": "pitch",
+      "type": "pitch_control",
+      "name": "Tune, glide and bend",
+      "panel_section": "CONTROLLERS",
+      "description": "Master tune, glide (switchable on the left of the keyboard), pitch wheel and the external OSCILLATOR CV, applied to the oscillators' pitch. OSC 4 is exempt from all of it when OSC 4 CONTROL is off.",
+      "inputs": [
+        "pitch.in1",
+        "pitch.in2",
+        "pitch.in3",
+        "pitch.in4",
+        "pitch.bend_in",
+        "pitch.cv_in"
+      ],
+      "outputs": [
+        "pitch.to_osc1",
+        "pitch.to_osc2",
+        "pitch.to_osc3",
+        "pitch.to_osc4"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR BANK",
+      "description": "Analogue VCO with six ranges (LO to 2') and six waveforms. The pitch reference; no frequency offset.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.1,
+          "max": 20000
+        },
+        "ranges": [
+          "LO",
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "waveforms": [
+          "triangle",
+          "tri_saw",
+          "saw",
+          "square",
+          "wide_pulse",
+          "narrow_pulse"
+        ]
+      },
+      "inputs": [
+        "osc1.pitch_in",
+        "osc1.mod_in"
+      ],
+      "outputs": [
+        "osc1.out"
+      ]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATOR BANK",
+      "description": "Analogue VCO with six ranges (LO to 2') and six waveforms. Frequency offset of plus or minus 7 semitones.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.1,
+          "max": 20000
+        },
+        "ranges": [
+          "LO",
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "waveforms": [
+          "triangle",
+          "tri_saw",
+          "saw",
+          "square",
+          "wide_pulse",
+          "narrow_pulse"
+        ]
+      },
+      "inputs": [
+        "osc2.pitch_in",
+        "osc2.mod_in"
+      ],
+      "outputs": [
+        "osc2.out"
+      ]
+    },
+    {
+      "id": "osc3",
+      "type": "oscillator",
+      "name": "Oscillator 3",
+      "panel_section": "OSCILLATOR BANK",
+      "description": "Analogue VCO with six ranges (LO to 2') and six waveforms. Frequency offset of plus or minus 7 semitones.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.1,
+          "max": 20000
+        },
+        "ranges": [
+          "LO",
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "waveforms": [
+          "triangle",
+          "tri_saw",
+          "saw",
+          "square",
+          "wide_pulse",
+          "narrow_pulse"
+        ]
+      },
+      "inputs": [
+        "osc3.pitch_in",
+        "osc3.mod_in"
+      ],
+      "outputs": [
+        "osc3.out"
+      ]
+    },
+    {
+      "id": "osc4",
+      "type": "oscillator",
+      "name": "Oscillator 4",
+      "panel_section": "OSCILLATOR BANK",
+      "description": "Analogue VCO with six ranges (LO to 2') and six waveforms. Frequency offset of plus or minus 7 semitones. Can be released from the keyboard and used as a modulation source, like the Minimoog's third oscillator.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.1,
+          "max": 20000
+        },
+        "ranges": [
+          "LO",
+          "32'",
+          "16'",
+          "8'",
+          "4'",
+          "2'"
+        ],
+        "waveforms": [
+          "triangle",
+          "reverse_saw",
+          "saw",
+          "square",
+          "wide_pulse",
+          "narrow_pulse"
+        ]
+      },
+      "inputs": [
+        "osc4.pitch_in",
+        "osc4.mod_in"
+      ],
+      "outputs": [
+        "osc4.out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "description": "Pink or white noise into the mixer, and the default modulation source.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "KEYBOARD",
+      "description": "Triangle or square, 0.05 to 200 Hz. A modulation source; also shown by a rate LED.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.05,
+          "max": 200
+        },
+        "shapes": [
+          "triangle",
+          "square"
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "lfo.out"
+      ]
+    },
+    {
+      "id": "mod_bus",
+      "type": "modulation_bus",
+      "name": "Modulation mix",
+      "panel_section": "CONTROLLERS",
+      "description": "The Minimoog modulation scheme. One switch picks OSC 4 or the filter envelope, another picks noise (or whatever is in MOD SOURCE) or the LFO. MODULATION MIX crossfades between the two, the mod wheel sets overall depth, and the OSCILLATOR MODULATION and FILTER MODULATION switches send the result to the oscillators and the filter.",
+      "inputs": [
+        "mod_bus.osc4_in",
+        "mod_bus.feg_in",
+        "mod_bus.noise_in",
+        "mod_bus.lfo_in",
+        "mod_bus.wheel_in"
+      ],
+      "outputs": [
+        "mod_bus.out"
+      ]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Volume and on switch for each of four oscillators, external input and noise. Overload LED on the external input.",
+      "inputs": [
+        "mixer.in1",
+        "mixer.in2",
+        "mixer.in3",
+        "mixer.in4",
+        "mixer.in_ext",
+        "mixer.in_noise"
+      ],
+      "outputs": [
+        "mixer.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "description": "24 dB/octave ladder filter, switchable low-pass or high-pass. Cutoff, emphasis (resonance) and amount of contour; keyboard tracking in thirds by two switches; modulation from the mix bus; external CV at 1 V/octave.",
+      "properties": {
+        "slope_db_per_octave": 24,
+        "modes": [
+          "lowpass",
+          "highpass"
+        ],
+        "topology": "transistor ladder"
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.env_in",
+        "vcf.kbd_in",
+        "vcf.mod_in",
+        "vcf.cv_in"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "filter_env",
+      "type": "envelope",
+      "name": "Filter contour",
+      "panel_section": "FILTER",
+      "description": "Attack, decay and sustain shaping the cutoff. Release follows decay when DECAY is on.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay",
+          "sustain"
+        ],
+        "attack_s": [
+          0.001,
+          10
+        ],
+        "decay_s": [
+          0.004,
+          35
+        ]
+      },
+      "inputs": [
+        "filter_env.gate_in"
+      ],
+      "outputs": [
+        "filter_env.out"
+      ]
+    },
+    {
+      "id": "loud_env",
+      "type": "envelope",
+      "name": "Loudness contour",
+      "panel_section": "LOUDNESS CONTOUR",
+      "description": "Attack, decay and sustain shaping the VCA. Release follows decay when DECAY is on, otherwise it is immediate.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay",
+          "sustain"
+        ],
+        "attack_s": [
+          0.001,
+          10
+        ],
+        "decay_s": [
+          0.004,
+          35
+        ]
+      },
+      "inputs": [
+        "loud_env.gate_in"
+      ],
+      "outputs": [
+        "loud_env.out"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "LOUDNESS CONTOUR",
+      "description": "Single amplifier for all four notes, opened by the loudness contour and the LOUDNESS CV input.",
+      "inputs": [
+        "vca.in",
+        "vca.env_in",
+        "vca.cv_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "distortion",
+      "type": "overdrive",
+      "name": "Distortion",
+      "panel_section": "DISTORTION",
+      "description": "Drive, tone and level, switchable in or out. Described by Wikipedia and owners as derived from the Boss DS-1 circuit, and by Sonic State as Neutron-style; unlike the Neutron, TONE has no effect without some drive.",
+      "inputs": [
+        "distortion.in"
+      ],
+      "outputs": [
+        "distortion.out"
+      ]
+    },
+    {
+      "id": "chorus",
+      "type": "chorus",
+      "name": "Chorus",
+      "panel_section": "CHORUS",
+      "description": "BBD stereo chorus with two modes, usable together, closely modelled on the Juno-60 chorus (an owner compared the two directly); the stereo spread is reportedly wider than the Juno's. Mono in, stereo out. The low -16 dBu main output level is attributed by owners to the chorus stage.",
+      "inputs": [
+        "chorus.in"
+      ],
+      "outputs": [
+        "chorus.left",
+        "chorus.right"
+      ]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer",
+      "panel_section": "SEQUENCER",
+      "description": "32-step note sequencer (four pages of eight), 64 patterns in 8 banks of 8. Per-step gate length, tie, rest, accent, glide and ratchet (1 to 4 repeats); swing per pattern. Keyboard recording or step editing. Runs on the internal tempo or external sync.",
+      "properties": {
+        "steps": 32,
+        "patterns": 64,
+        "banks": 8
+      },
+      "inputs": [
+        "seq.notes_in",
+        "seq.clock_in"
+      ],
+      "outputs": [
+        "seq.notes_out"
+      ]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "SEQUENCER",
+      "description": "Arpeggiates held notes in eight orders, with hold, at the sequencer tempo.",
+      "properties": {
+        "modes": 8
+      },
+      "inputs": [
+        "arp.notes_in",
+        "arp.clock_in"
+      ],
+      "outputs": [
+        "arp.notes_out"
+      ]
+    },
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Tempo and sync",
+      "panel_section": "SEQUENCER",
+      "description": "Internal tempo from TEMPO/GATE LENGTH, or external clock from DIN, USB or the SYNC IN jack. Clock rate and polarity for the jacks are SysEx settings. SYNC OUT carries the internal clock.",
+      "inputs": [
+        "clock.sync_in"
+      ],
+      "outputs": [
+        "clock.out"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT",
+      "description": "Master volume and headphone volume; stereo main outputs after the chorus.",
+      "inputs": [
+        "output.left_in",
+        "output.right_in"
+      ],
+      "outputs": [
+        "output.left",
+        "output.right",
+        "output.phones"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "kbd.mod_wheel",
+      "module": "kbd",
+      "label": "MOD WHEEL",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Modulation depth from off to maximum."
+    },
+    {
+      "id": "kbd.pitch_wheel",
+      "module": "kbd",
+      "label": "PITCH WHEEL",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Lowers or raises pitch; range set by SysEx, default one octave."
+    },
+    {
+      "id": "pitch.glide_on",
+      "module": "pitch",
+      "label": "GLIDE ON/OFF",
+      "manual_ref": 4,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit white"
+        }
+      ],
+      "function": "Turns glide on or off."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "LFO RATE",
+      "manual_ref": 5,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 200,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO frequency."
+    },
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "WAVE SHAPE",
+      "manual_ref": 6,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO wave shape."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSE",
+      "manual_ref": 7,
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1,
+          "label": "UP"
+        },
+        {
+          "value": 0,
+          "label": "NORM"
+        },
+        {
+          "value": -1,
+          "label": "DOWN"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Shifts the keyboard an octave up or down."
+    },
+    {
+      "id": "mod_bus.src_b",
+      "module": "mod_bus",
+      "label": "NOISE (MOD SRC) / LFO",
+      "manual_ref": 8,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "noise",
+          "label": "NOISE (MOD SRC)"
+        },
+        {
+          "value": "lfo",
+          "label": "LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Second modulation source: noise, or the MOD SOURCE jack when patched, or the LFO."
+    },
+    {
+      "id": "mod_bus.src_a",
+      "module": "mod_bus",
+      "label": "OSC4 / FILTER EG",
+      "manual_ref": 9,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "osc4",
+          "label": "OSC 4"
+        },
+        {
+          "value": "filter_eg",
+          "label": "FILTER EG"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "First modulation source: oscillator 4 or the filter contour."
+    },
+    {
+      "id": "mod_bus.mix",
+      "module": "mod_bus",
+      "label": "MODULATION MIX",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "OSC4/FILTER EG to NOISE/LFO"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Crossfade between the OSC4/FILTER EG source (counter-clockwise) and the NOISE/LFO source (clockwise)."
+    },
+    {
+      "id": "pitch.glide",
+      "module": "pitch",
+      "label": "GLIDE",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Glide time between notes."
+    },
+    {
+      "id": "voices.mode",
+      "module": "voices",
+      "label": "MODE",
+      "manual_ref": 12,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mono",
+          "label": "MONO",
+          "meaning": "all oscillators that are on play one note"
+        },
+        {
+          "value": "unison",
+          "label": "UNI",
+          "meaning": "oscillators shared among held notes: one note gets all four, two notes two each, four notes one each"
+        },
+        {
+          "value": "poly",
+          "label": "POLY",
+          "meaning": "one oscillator per note, up to four, in order"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit green"
+        }
+      ],
+      "function": "Voice assignment.",
+      "note": "UNI behaviour from Sonic State's review, where Behringer says the voice logic is adapted from the Korg Mono/Poly; the guide describes only POLY. How three notes are divided in UNI is not stated.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "voices.auto_damp",
+      "module": "voices",
+      "label": "AUTO DAMP",
+      "manual_ref": 13,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit green"
+        }
+      ],
+      "function": "Off: a released chord keeps sounding until all its notes are released or a new note is played. On: released notes are damped and only held notes continue."
+    },
+    {
+      "id": "pitch.tune",
+      "module": "pitch",
+      "label": "TUNE",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -2,
+        "max": 2,
+        "unit": "semitones"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tuning of all four oscillators, marked in semitones; OSC 4 exempt when OSC 4 CONTROL is off."
+    },
+    {
+      "id": "mod_bus.osc_mod",
+      "module": "mod_bus",
+      "label": "OSCILLATOR MODULATION",
+      "manual_ref": 15,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit white"
+        }
+      ],
+      "function": "Sends the modulation mix to the oscillators."
+    },
+    {
+      "id": "pitch.osc4_control",
+      "module": "pitch",
+      "label": "OSC 4 CONTROL",
+      "manual_ref": 16,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit white"
+        }
+      ],
+      "function": "On: OSC 4 follows the keyboard, pitch wheel and mod wheel. Off: it ignores all three."
+    },
+    {
+      "id": "osc1.range",
+      "module": "osc1",
+      "label": "RANGE (OSC 1)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lo",
+          "label": "LO",
+          "meaning": "sub-audio, for use as a modulator"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Range of oscillator 1."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "WAVEFORM (OSC 1)",
+      "manual_ref": 19,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "tri_saw",
+          "label": "triangle/sawtooth"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "wide_pulse"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform of oscillator 1."
+    },
+    {
+      "id": "mixer.vol1",
+      "module": "mixer",
+      "label": "VOLUME (OSC 1)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 1."
+    },
+    {
+      "id": "mixer.on1",
+      "module": "mixer",
+      "label": "ON (OSC 1)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Oscillator 1 into the mixer."
+    },
+    {
+      "id": "osc2.range",
+      "module": "osc2",
+      "label": "RANGE (OSC 2)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lo",
+          "label": "LO",
+          "meaning": "sub-audio, for use as a modulator"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Range of oscillator 2."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "OSCILLATOR-2 FREQUENCY",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7,
+        "unit": "semitones"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Offset of oscillator 2 against oscillator 1, marked in semitones."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "WAVEFORM (OSC 2)",
+      "manual_ref": 19,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "tri_saw",
+          "label": "triangle/sawtooth"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "wide_pulse"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform of oscillator 2."
+    },
+    {
+      "id": "mixer.vol2",
+      "module": "mixer",
+      "label": "VOLUME (OSC 2)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 2."
+    },
+    {
+      "id": "mixer.on2",
+      "module": "mixer",
+      "label": "ON (OSC 2)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Oscillator 2 into the mixer."
+    },
+    {
+      "id": "osc3.range",
+      "module": "osc3",
+      "label": "RANGE (OSC 3)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lo",
+          "label": "LO",
+          "meaning": "sub-audio, for use as a modulator"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Range of oscillator 3."
+    },
+    {
+      "id": "osc3.frequency",
+      "module": "osc3",
+      "label": "OSCILLATOR-3 FREQUENCY",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7,
+        "unit": "semitones"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Offset of oscillator 3 against oscillator 1, marked in semitones."
+    },
+    {
+      "id": "osc3.waveform",
+      "module": "osc3",
+      "label": "WAVEFORM (OSC 3)",
+      "manual_ref": 19,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "tri_saw",
+          "label": "triangle/sawtooth"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "wide_pulse"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform of oscillator 3."
+    },
+    {
+      "id": "mixer.vol3",
+      "module": "mixer",
+      "label": "VOLUME (OSC 3)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 3."
+    },
+    {
+      "id": "mixer.on3",
+      "module": "mixer",
+      "label": "ON (OSC 3)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Oscillator 3 into the mixer."
+    },
+    {
+      "id": "osc4.range",
+      "module": "osc4",
+      "label": "RANGE (OSC 4)",
+      "manual_ref": 17,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lo",
+          "label": "LO",
+          "meaning": "sub-audio, for use as a modulator"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Range of oscillator 4."
+    },
+    {
+      "id": "osc4.frequency",
+      "module": "osc4",
+      "label": "OSCILLATOR-4 FREQUENCY",
+      "manual_ref": 18,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7,
+        "unit": "semitones"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Offset of oscillator 4 against oscillator 1, marked in semitones."
+    },
+    {
+      "id": "osc4.waveform",
+      "module": "osc4",
+      "label": "WAVEFORM (OSC 4)",
+      "manual_ref": 19,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "reverse_saw",
+          "label": "reverse sawtooth"
+        },
+        {
+          "value": "saw",
+          "label": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "wide_pulse"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform of oscillator 4."
+    },
+    {
+      "id": "mixer.vol4",
+      "module": "mixer",
+      "label": "VOLUME (OSC 4)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of oscillator 4."
+    },
+    {
+      "id": "mixer.on4",
+      "module": "mixer",
+      "label": "ON (OSC 4)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Oscillator 4 into the mixer."
+    },
+    {
+      "id": "mixer.ext_on",
+      "module": "mixer",
+      "label": "ON (EXT IN)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "External input into the mixer."
+    },
+    {
+      "id": "mixer.noise_on",
+      "module": "mixer",
+      "label": "ON (NOISE)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Noise into the mixer."
+    },
+    {
+      "id": "mixer.noise_vol",
+      "module": "mixer",
+      "label": "NOISE VOLUME",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "noise.colour",
+      "module": "noise",
+      "label": "WHITE / PINK",
+      "manual_ref": 23,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "white"
+        },
+        {
+          "value": "pink"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Noise colour."
+    },
+    {
+      "id": "mixer.ext_vol",
+      "module": "mixer",
+      "label": "EXT IN VOLUME",
+      "manual_ref": 24,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "External input level. Turn down if the OVERLOAD LED lights."
+    },
+    {
+      "id": "loud_env.decay_switch",
+      "module": "loud_env",
+      "label": "DECAY",
+      "manual_ref": 26,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit white"
+        }
+      ],
+      "function": "On: after a note or external trigger is released, the sound decays over the DECAY TIME. Off: it stops immediately. As on the Minimoog, this governs release on both contours.",
+      "confidence": "inferred",
+      "note": "The guide describes it under the loudness contour; applying it to the filter contour too follows the Minimoog."
+    },
+    {
+      "id": "vcf.kbd_control",
+      "module": "vcf",
+      "label": "KEYBOARD CONTROL 1 / 2",
+      "manual_ref": 27,
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "both off",
+          "meaning": "none"
+        },
+        {
+          "value": 1,
+          "label": "1 on",
+          "meaning": "1/3 of maximum"
+        },
+        {
+          "value": 2,
+          "label": "2 on",
+          "meaning": "2/3 of maximum"
+        },
+        {
+          "value": 3,
+          "label": "both on",
+          "meaning": "maximum"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit teal"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff, by two switches."
+    },
+    {
+      "id": "mod_bus.filter_mod",
+      "module": "mod_bus",
+      "label": "FILTER MODULATION",
+      "manual_ref": 28,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit teal"
+        }
+      ],
+      "function": "Sends the modulation mix to the filter."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "FILTER MODE",
+      "manual_ref": 29,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lowpass",
+          "label": "LO"
+        },
+        {
+          "value": "highpass",
+          "label": "HI"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit teal"
+        }
+      ],
+      "function": "Low-pass or high-pass."
+    },
+    {
+      "id": "filter_env.attack",
+      "module": "filter_env",
+      "label": "ATTACK",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s",
+        "taper": "logarithmic (panel marked 200, 600 ms, 5, 10 s)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the filter contour."
+    },
+    {
+      "id": "filter_env.decay",
+      "module": "filter_env",
+      "label": "DECAY TIME",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.004,
+        "max": 35,
+        "unit": "s",
+        "taper": "logarithmic",
+        "note": "specifications say 4 ms to more than 35 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the filter contour, and release when DECAY is on."
+    },
+    {
+      "id": "filter_env.sustain",
+      "module": "filter_env",
+      "label": "SUSTAIN",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the filter contour."
+    },
+    {
+      "id": "loud_env.attack",
+      "module": "loud_env",
+      "label": "ATTACK",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s",
+        "taper": "logarithmic (panel marked 200, 600 ms, 5, 10 s)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the loudness contour."
+    },
+    {
+      "id": "loud_env.decay",
+      "module": "loud_env",
+      "label": "DECAY TIME",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.004,
+        "max": 35,
+        "unit": "s",
+        "taper": "logarithmic",
+        "note": "specifications say 4 ms to more than 35 s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the loudness contour, and release when DECAY is on."
+    },
+    {
+      "id": "loud_env.sustain",
+      "module": "loud_env",
+      "label": "SUSTAIN",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the loudness contour."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF FREQUENCY",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -4,
+        "max": 4,
+        "unit": "octaves (Minimoog marking)"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "vcf.emphasis",
+      "module": "vcf",
+      "label": "FILTER EMPHASIS",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonance at cutoff."
+    },
+    {
+      "id": "vcf.contour_amount",
+      "module": "vcf",
+      "label": "AMOUNT OF CONTOUR",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the filter contour on cutoff."
+    },
+    {
+      "id": "chorus.mode1",
+      "module": "chorus",
+      "label": "CHORUS I",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit yellow"
+        }
+      ],
+      "function": "Chorus mode I."
+    },
+    {
+      "id": "chorus.mode2",
+      "module": "chorus",
+      "label": "CHORUS II",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit yellow"
+        }
+      ],
+      "function": "Chorus mode II, deeper; both together deeper still."
+    },
+    {
+      "id": "chorus.on",
+      "module": "chorus",
+      "label": "ON (chorus)",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Chorus in or out."
+    },
+    {
+      "id": "distortion.drive",
+      "module": "distortion",
+      "label": "DIST",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of distortion."
+    },
+    {
+      "id": "distortion.tone",
+      "module": "distortion",
+      "label": "TONE",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Distortion tone."
+    },
+    {
+      "id": "distortion.level",
+      "module": "distortion",
+      "label": "LEVEL",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Distortion output level."
+    },
+    {
+      "id": "distortion.on",
+      "module": "distortion",
+      "label": "ON (distortion)",
+      "manual_ref": 34,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "backlit orange rocker"
+        }
+      ],
+      "function": "Distortion in or out."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 36,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall output level."
+    },
+    {
+      "id": "output.phones",
+      "module": "output",
+      "label": "VOLUME (HEADPHONE)",
+      "manual_ref": 37,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 39,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "kbd.aftertouch_trim",
+      "module": "kbd",
+      "label": "AFTER PRESSURE (trim)",
+      "manual_ref": 43,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Scales the AFTER PRESSURE CV output."
+    },
+    {
+      "id": "kbd.velocity_trim",
+      "module": "kbd",
+      "label": "VELOCITY (trim)",
+      "manual_ref": 48,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Scales the VELOCITY CV output."
+    },
+    {
+      "id": "seq.tempo",
+      "module": "clock",
+      "label": "TEMPO / GATE LENGTH",
+      "manual_ref": "S1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sequencer and arpeggiator tempo; gate length in step editing; swing with SHIFT."
+    },
+    {
+      "id": "seq.hold_rest",
+      "module": "seq",
+      "label": "HOLD / REST",
+      "manual_ref": "S2",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Holds the current step in playback; enters a rest in editing. SHIFT mutes."
+    },
+    {
+      "id": "seq.reset_accent",
+      "module": "seq",
+      "label": "RESET / ACCENT",
+      "manual_ref": "S3",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Returns to step 1 in playback; adds an accent in editing. SHIFT accents all steps."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARP (SET END)",
+      "manual_ref": "S4",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Starts the arpeggiator; with HOLD it latches. With SHIFT, sets the pattern end step."
+    },
+    {
+      "id": "seq.pattern",
+      "module": "seq",
+      "label": "PATTERN (BANK)",
+      "manual_ref": "S5",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Selects the pattern 1 to 8; with SHIFT, the bank 1 to 8."
+    },
+    {
+      "id": "seq.shift",
+      "module": "seq",
+      "label": "SHIFT",
+      "manual_ref": "S6",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Reaches secondary functions."
+    },
+    {
+      "id": "seq.page",
+      "module": "seq",
+      "label": "PAGE",
+      "manual_ref": "S7",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Pages 1 to 4 of eight steps."
+    },
+    {
+      "id": "seq.play",
+      "module": "seq",
+      "label": "PLAY / STOP",
+      "manual_ref": "S8",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Starts or stops playback; held with SHIFT, starts saving."
+    },
+    {
+      "id": "seq.rec",
+      "module": "seq",
+      "label": "REC",
+      "manual_ref": "S9",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Records a pattern from the keyboard."
+    },
+    {
+      "id": "seq.kybd_mode",
+      "module": "seq",
+      "label": "KYBD",
+      "manual_ref": "S11",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "SHIFT + KYBD: keyboard (record) mode. Steps down through options elsewhere."
+    },
+    {
+      "id": "seq.step_mode",
+      "module": "seq",
+      "label": "STEP",
+      "manual_ref": "S12",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "SHIFT + STEP: step-edit mode. Steps up through options elsewhere."
+    },
+    {
+      "id": "seq.steps",
+      "module": "seq",
+      "label": "STEP SWITCHES 1-8",
+      "manual_ref": "S13",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit red"
+        }
+      ],
+      "function": "Select steps, patterns and banks; show playback position."
+    },
+    {
+      "id": "seq.ratchet",
+      "module": "seq",
+      "label": "GLIDE KNOB (ratchet)",
+      "manual_ref": "S14",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "the GLIDE knob, with SHIFT"
+        }
+      ],
+      "function": "In step editing with SHIFT, splits the step into 1 to 4 ratchets."
+    },
+    {
+      "id": "seq.step_glide",
+      "module": "seq",
+      "label": "GLIDE SWITCH (step)",
+      "manual_ref": "S15",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "backlit white"
+        }
+      ],
+      "function": "Turns glide on for a step; not needed for ratchet."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "Arpeggiator order",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1,
+          "label": "UP 1"
+        },
+        {
+          "value": 2,
+          "label": "DOWN 1"
+        },
+        {
+          "value": 3,
+          "label": "DOWN and UP"
+        },
+        {
+          "value": 4,
+          "label": "RANDOM"
+        },
+        {
+          "value": 5,
+          "label": "UP (+1 OCT)"
+        },
+        {
+          "value": 6,
+          "label": "DOWN (+1 OCT)"
+        },
+        {
+          "value": 7,
+          "label": "UP (-1 OCT)"
+        },
+        {
+          "value": 8,
+          "label": "DOWN (-1 OCT)"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "<KYBD or STEP> while the arpeggiator is playing",
+          "when": "any_time"
+        }
+      ],
+      "function": "Changed with <KYBD and STEP> while the arpeggiator runs; shown on the LOCATION LEDs."
+    },
+    {
+      "id": "seq.swing",
+      "module": "seq",
+      "label": "SWING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + TEMPO/GATE LENGTH",
+          "when": "any_time"
+        }
+      ],
+      "function": "Centre none; down plays only off-beats; up plays only on-beats. Saved with the pattern."
+    },
+    {
+      "id": "seq.gate_length",
+      "module": "seq",
+      "label": "Gate length",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "TEMPO/GATE LENGTH during step editing",
+          "when": "any_time"
+        }
+      ],
+      "function": "Per step, 1 to 8; 8 ties to the next step."
+    },
+    {
+      "id": "kbd.device_id",
+      "module": "kbd",
+      "label": "Device ID",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 00 ... F7",
+          "note": "Packet 0x00."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "SysEx device ID, 0 to 127; 0 addresses any."
+    },
+    {
+      "id": "kbd.midi_channel",
+      "module": "kbd",
+      "label": "MIDI channel (TX and RX)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "default": 1,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 0E ... F7",
+          "note": "Packet 0x0E."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Separate transmit and receive channels, 0 (any) to 16. Also set in Synthtool."
+    },
+    {
+      "id": "kbd.midi_transpose",
+      "module": "kbd",
+      "label": "MIDI IN transpose",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 12,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 0F ... F7",
+          "note": "Packet 0x0F."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "0 to 24, where 12 is no transpose (-12 to +12)."
+    },
+    {
+      "id": "kbd.velocity",
+      "module": "kbd",
+      "label": "Velocity settings",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 10 ... F7",
+          "note": "Packet 0x10."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Fixed note-on and note-off velocity (0 = dynamic) and velocity curve (0 soft, 1 medium, 2 hard)."
+    },
+    {
+      "id": "kbd.bend_range",
+      "module": "kbd",
+      "label": "Pitch bend range",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 12,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 11 ... F7",
+          "note": "Packet 0x11."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "0 to 24 semitones; default 12 (one octave)."
+    },
+    {
+      "id": "voices.key_priority",
+      "module": "voices",
+      "label": "Key priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "low"
+        },
+        {
+          "value": 1,
+          "label": "high"
+        },
+        {
+          "value": 2,
+          "label": "last"
+        }
+      ],
+      "default": 2,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 12 ... F7",
+          "note": "Packet 0x12."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Note priority."
+    },
+    {
+      "id": "voices.multi_trigger",
+      "module": "voices",
+      "label": "Multi trigger",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": true,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 14 ... F7",
+          "note": "Packet 0x14."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Retrigger the contours on every new note."
+    },
+    {
+      "id": "mod_bus.curve",
+      "module": "mod_bus",
+      "label": "Modulation curve",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "soft"
+        },
+        {
+          "value": 1,
+          "label": "medium"
+        },
+        {
+          "value": 2,
+          "label": "hard"
+        }
+      ],
+      "default": 0,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 15 ... F7",
+          "note": "Packet 0x15."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Mod wheel sensitivity curve."
+    },
+    {
+      "id": "kbd.zero_cv_note",
+      "module": "kbd",
+      "label": "Note at zero CV",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 36,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 16 ... F7",
+          "note": "Packet 0x16."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "MIDI note giving 0 V at the PITCH CV output; default C2 (36)."
+    },
+    {
+      "id": "clock.midi_clock_out",
+      "module": "clock",
+      "label": "MIDI clock output",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 17 ... F7",
+          "note": "Packet 0x17."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where MIDI clock is sent."
+    },
+    {
+      "id": "clock.ext_polarity",
+      "module": "clock",
+      "label": "External clock polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "falling"
+        },
+        {
+          "value": 1,
+          "label": "rising"
+        }
+      ],
+      "default": 1,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 19 ... F7",
+          "note": "Packet 0x19."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "SYNC IN edge."
+    },
+    {
+      "id": "clock.sync_rate",
+      "module": "clock",
+      "label": "Sync clock rate",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "1 PPQ (printed '1 PPS')"
+        },
+        {
+          "value": 1,
+          "label": "2 PPQ"
+        },
+        {
+          "value": 2,
+          "label": "24 PPQ"
+        },
+        {
+          "value": 3,
+          "label": "48 PPQ"
+        }
+      ],
+      "default": 2,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 1A ... F7",
+          "note": "Packet 0x1A."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Pulses per quarter note on the sync jacks."
+    },
+    {
+      "id": "clock.source",
+      "module": "clock",
+      "label": "Sync clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "internal"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "TRIG (SYNC IN jack)"
+        }
+      ],
+      "default": 0,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 1B ... F7",
+          "note": "Packet 0x1B."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Clock source for the sequencer and arpeggiator."
+    },
+    {
+      "id": "mod_bus.wheel_range",
+      "module": "mod_bus",
+      "label": "Mod wheel range",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 4
+      },
+      "default": 2,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 20 ... F7",
+          "note": "Packet 0x20."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "0 to 4; default 2 (100%)."
+    },
+    {
+      "id": "kbd.out_modwheel",
+      "module": "kbd",
+      "label": "MIDI output: mod wheel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 21 ... F7",
+          "note": "Packet 0x21."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where mod wheel MIDI goes."
+    },
+    {
+      "id": "kbd.out_pitchwheel",
+      "module": "kbd",
+      "label": "MIDI output: pitch wheel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 22 ... F7",
+          "note": "Packet 0x22."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where pitch wheel MIDI goes."
+    },
+    {
+      "id": "kbd.out_keyboard",
+      "module": "kbd",
+      "label": "MIDI output: keyboard",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 23 ... F7",
+          "note": "Packet 0x23."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where keyboard notes go."
+    },
+    {
+      "id": "kbd.out_aftertouch",
+      "module": "kbd",
+      "label": "MIDI output: aftertouch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 24 ... F7",
+          "note": "Packet 0x24."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where aftertouch goes."
+    },
+    {
+      "id": "seq.midi_out",
+      "module": "seq",
+      "label": "MIDI output: sequencer",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 25 ... F7",
+          "note": "Packet 0x25."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where sequencer notes go."
+    },
+    {
+      "id": "arp.midi_out",
+      "module": "arp",
+      "label": "MIDI output: arpeggiator",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0,
+          "label": "off"
+        },
+        {
+          "value": 1,
+          "label": "DIN"
+        },
+        {
+          "value": 2,
+          "label": "USB"
+        },
+        {
+          "value": 3,
+          "label": "both"
+        }
+      ],
+      "default": 3,
+      "access": [
+        {
+          "type": "sysex",
+          "message": "F0 00 20 32 00 01 0C <DID> 26 ... F7",
+          "note": "Packet 0x26."
+        },
+        {
+          "type": "app",
+          "note": "Synthtool.exe"
+        }
+      ],
+      "function": "Where arpeggiator notes go."
+    },
+    {
+      "id": "kbd.calibration",
+      "module": "kbd",
+      "label": "Wheel and aftertouch calibration mode",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold KYBD + STEP at power on, then press step 3",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hidden service mode: hold KYBD + STEP while powering on, then press 3 while the LEDs run. Step switches 1 to 5 calibrate pitch wheel range and dead zone, mod wheel range, and aftertouch minimum and maximum. SHIFT + STEP saves; SHIFT + KYBD cancels."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 38,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_level_dbu": -4,
+        "impedance_ohm": 110
+      },
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "manual_ref": 40,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 1000
+      },
+      "function": "12 V DC, 1000 mA adaptor."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 41,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI in and out."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 42,
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "manual_ref": 42,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI out: keyboard, wheels, aftertouch, sequencer, arpeggiator and clock, each routable by SysEx."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 42,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Passes MIDI IN."
+    },
+    {
+      "id": "jack.aftertouch_out",
+      "label": "AFTER PRESSURE",
+      "manual_ref": 44,
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "6.35mm TS",
+      "node": "kbd.aftertouch",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5
+      },
+      "function": "Aftertouch CV, scaled by its trim."
+    },
+    {
+      "id": "jack.pitch_out",
+      "label": "PITCH",
+      "manual_ref": 45,
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "6.35mm TS",
+      "node": "kbd.note",
+      "electrical": {
+        "min_v": -3,
+        "max_v": 7,
+        "scaling": "1 V/octave"
+      },
+      "function": "Pitch CV; C2 is 0 V by default.",
+      "confidence": "inferred",
+      "note": "1 V/octave is inferred from the -3 to +7 V range spanning the keyboard; the guide states only the zero-volt note."
+    },
+    {
+      "id": "jack.vtrig_out",
+      "label": "V-TRIG",
+      "manual_ref": 46,
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": "kbd.trig",
+      "electrical": {
+        "level_v": 5
+      },
+      "function": "Trigger voltage when a note is played."
+    },
+    {
+      "id": "jack.velocity_out",
+      "label": "VELOCITY",
+      "manual_ref": 47,
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "6.35mm TS",
+      "node": "kbd.velocity",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5
+      },
+      "function": "Velocity CV, scaled by its trim."
+    },
+    {
+      "id": "jack.ext_in",
+      "label": "EXT SIGNAL IN",
+      "manual_ref": 49,
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "mixer.in_ext",
+      "electrical": {
+        "impedance_ohm": 1000000
+      },
+      "function": "External line-level audio into the mixer."
+    },
+    {
+      "id": "jack.sync_in",
+      "label": "SYNC IN",
+      "manual_ref": 50,
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "6.35mm TS",
+      "node": "clock.sync_in",
+      "electrical": {
+        "level_v": 5
+      },
+      "function": "External sync or clock; rate and polarity set by SysEx."
+    },
+    {
+      "id": "jack.sync_out",
+      "label": "SYNC OUT",
+      "manual_ref": 51,
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "6.35mm TS",
+      "node": "clock.out",
+      "electrical": {
+        "level_v": 5
+      },
+      "function": "Internal sync or clock."
+    },
+    {
+      "id": "jack.out_l",
+      "label": "MAIN OUTPUT L",
+      "manual_ref": 52,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS servo-balanced",
+      "node": "output.left",
+      "electrical": {
+        "max_level_dbu": -16,
+        "impedance_ohm": 100
+      },
+      "function": "Left main output."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "MAIN OUTPUT R",
+      "manual_ref": 52,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS servo-balanced",
+      "node": "output.right",
+      "electrical": {
+        "max_level_dbu": -16,
+        "impedance_ohm": 100
+      },
+      "function": "Right main output."
+    },
+    {
+      "id": "jack.ext_vtrig",
+      "label": "EXT V-TRIGGER INPUT",
+      "manual_ref": 53,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": "kbd.ext_trig_in",
+      "combine": "sum",
+      "electrical": {
+        "level_v": 5
+      },
+      "function": "External trigger for both contours.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.loudness_cv",
+      "label": "LOUDNESS",
+      "manual_ref": 54,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": "vca.cv_in",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5
+      },
+      "function": "External CV or expression pedal on the loudness contour."
+    },
+    {
+      "id": "jack.filter_cv",
+      "label": "FILTER",
+      "manual_ref": 55,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": "vcf.cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 5,
+        "scaling": "1 V/octave"
+      },
+      "function": "External CV or expression pedal on cutoff.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.osc_cv",
+      "label": "OSCILLATOR",
+      "manual_ref": 56,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": "pitch.cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5
+      },
+      "function": "External CV or expression pedal on all four oscillators' frequency.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.mod_source",
+      "label": "MOD SOURCE",
+      "manual_ref": 57,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TS",
+      "node": "mod_bus.noise_in",
+      "combine": "replace",
+      "function": "External modulation source; replaces noise in the modulation mix when patched."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "voices.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.note",
+      "to": "arp.notes_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c04",
+      "from": "arp.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c05",
+      "from": "kbd.note",
+      "to": "seq.notes_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq.rec",
+        "equals": true
+      }
+    },
+    {
+      "id": "c06",
+      "from": "seq.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq.play",
+        "equals": true
+      }
+    },
+    {
+      "id": "c07",
+      "from": "clock.out",
+      "to": "seq.clock_in",
+      "signal": "clock",
+      "kind": "fixed",
+      "amount": "seq.tempo"
+    },
+    {
+      "id": "c08",
+      "from": "clock.out",
+      "to": "arp.clock_in",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "voices.pitch1",
+      "to": "pitch.in1",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide",
+      "note": "Glide applies when GLIDE ON/OFF is on."
+    },
+    {
+      "id": "c21",
+      "from": "pitch.to_osc1",
+      "to": "osc1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.tune"
+    },
+    {
+      "id": "c31",
+      "from": "mod_bus.out",
+      "to": "osc1.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.osc_mod",
+        "equals": true
+      }
+    },
+    {
+      "id": "c41",
+      "from": "osc1.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.on1",
+        "equals": true
+      },
+      "amount": "mixer.vol1"
+    },
+    {
+      "id": "c12",
+      "from": "voices.pitch2",
+      "to": "pitch.in2",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide",
+      "note": "Glide applies when GLIDE ON/OFF is on."
+    },
+    {
+      "id": "c22",
+      "from": "pitch.to_osc2",
+      "to": "osc2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.frequency"
+    },
+    {
+      "id": "c32",
+      "from": "mod_bus.out",
+      "to": "osc2.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.osc_mod",
+        "equals": true
+      }
+    },
+    {
+      "id": "c42",
+      "from": "osc2.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.on2",
+        "equals": true
+      },
+      "amount": "mixer.vol2"
+    },
+    {
+      "id": "c13",
+      "from": "voices.pitch3",
+      "to": "pitch.in3",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide",
+      "note": "Glide applies when GLIDE ON/OFF is on."
+    },
+    {
+      "id": "c23",
+      "from": "pitch.to_osc3",
+      "to": "osc3.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc3.frequency"
+    },
+    {
+      "id": "c33",
+      "from": "mod_bus.out",
+      "to": "osc3.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.osc_mod",
+        "equals": true
+      }
+    },
+    {
+      "id": "c43",
+      "from": "osc3.out",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.on3",
+        "equals": true
+      },
+      "amount": "mixer.vol3"
+    },
+    {
+      "id": "c14",
+      "from": "voices.pitch4",
+      "to": "pitch.in4",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.glide",
+      "note": "Glide applies when GLIDE ON/OFF is on."
+    },
+    {
+      "id": "c24",
+      "from": "pitch.to_osc4",
+      "to": "osc4.pitch_in",
+      "signal": "cv",
+      "kind": "switched",
+      "amount": "osc4.frequency",
+      "enabled_when": {
+        "param": "pitch.osc4_control",
+        "equals": true
+      }
+    },
+    {
+      "id": "c34",
+      "from": "mod_bus.out",
+      "to": "osc4.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.osc_mod",
+        "equals": true
+      },
+      "note": "OSC 4 is also exempt from modulation when OSC 4 CONTROL is off."
+    },
+    {
+      "id": "c44",
+      "from": "osc4.out",
+      "to": "mixer.in4",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.on4",
+        "equals": true
+      },
+      "amount": "mixer.vol4"
+    },
+    {
+      "id": "c50",
+      "from": "kbd.bend",
+      "to": "pitch.bend_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "kbd.pitch_wheel"
+    },
+    {
+      "id": "c51",
+      "from": "osc4.out",
+      "to": "mod_bus.osc4_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.src_a",
+        "equals": "osc4"
+      }
+    },
+    {
+      "id": "c52",
+      "from": "filter_env.out",
+      "to": "mod_bus.feg_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.src_a",
+        "equals": "filter_eg"
+      }
+    },
+    {
+      "id": "c53",
+      "from": "noise.out",
+      "to": "mod_bus.noise_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.mod_source",
+      "note": "Noise is the default; used when the NOISE (MOD SRC)/LFO switch is at NOISE."
+    },
+    {
+      "id": "c54",
+      "from": "lfo.out",
+      "to": "mod_bus.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.src_b",
+        "equals": "lfo"
+      }
+    },
+    {
+      "id": "c55",
+      "from": "kbd.mod_wheel",
+      "to": "mod_bus.wheel_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "kbd.mod_wheel"
+    },
+    {
+      "id": "c60",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.noise_on",
+        "equals": true
+      },
+      "amount": "mixer.noise_vol"
+    },
+    {
+      "id": "c61",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c62",
+      "from": "filter_env.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.contour_amount"
+    },
+    {
+      "id": "c63",
+      "from": "pitch.to_osc1",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.kbd_control",
+        "not_equals": 0
+      },
+      "note": "Which note drives tracking in POLY mode is not stated; OSC 1's pitch is assumed.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c64",
+      "from": "mod_bus.out",
+      "to": "vcf.mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_bus.filter_mod",
+        "equals": true
+      }
+    },
+    {
+      "id": "c65",
+      "from": "voices.gate",
+      "to": "filter_env.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c66",
+      "from": "voices.gate",
+      "to": "loud_env.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c67",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c68",
+      "from": "loud_env.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c69",
+      "from": "vca.out",
+      "to": "distortion.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Distortion bypassed when off."
+    },
+    {
+      "id": "c70",
+      "from": "distortion.out",
+      "to": "chorus.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Distortion before chorus. The panel reads left to right that way and a Gearspace owner presumes the same; no source states it. Behringer calls the whole path, effects included, pure analogue.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c71",
+      "from": "chorus.left",
+      "to": "output.left_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    },
+    {
+      "id": "c72",
+      "from": "chorus.right",
+      "to": "output.right_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "mixer.overload_led",
+      "module": "mixer",
+      "label": "OVERLOAD",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 25,
+      "function": "Lights when the external input is overloading the mixer."
+    },
+    {
+      "id": "lfo.rate_led",
+      "module": "lfo",
+      "label": "LFO rate",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": null,
+      "function": "Blinks at the LFO rate."
+    },
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "POWER",
+      "kind": "led",
+      "led_colour": "multi",
+      "manual_ref": 39,
+      "function": "Lit when powered on (amber). Blinks red in the wheel and aftertouch calibration mode."
+    },
+    {
+      "id": "osc.range_leds",
+      "module": "voices",
+      "label": "Oscillator LEDs",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": null,
+      "function": "One red LED beside each oscillator's RANGE knob, showing that oscillator's activity, so in POLY or UNISON you can see which oscillators the current notes have taken. Meaning from an owner's walkthrough (mamosa.org); not documented by Behringer."
+    },
+    {
+      "id": "seq.location_leds",
+      "module": "seq",
+      "label": "LOCATION 1-8",
+      "kind": "led",
+      "led_colour": "multi",
+      "manual_ref": "S10",
+      "function": "Multi-coloured LEDs for pattern, bank, page, gate length, ratchet and step flags."
+    },
+    {
+      "id": "seq.step_leds",
+      "module": "seq",
+      "label": "STEP 1-8",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": "S13",
+      "function": "Active steps steady red, current step flashing."
+    }
+  ],
+  "led_legend": {
+    "rule": "Two colour systems. The sequencer's LOCATION LEDs use colour for what they are showing: green in keyboard mode and for pages, patterns and saving; yellow in step mode and for ratchet counts; red for gate length. In step editing, individual LOCATION LEDs flag step properties: 5 glide, 6 ratchet, 7 accent, 8 rest. Separately, the backlit panel switches are coloured by function group: orange for signal on/off (mixer sources, distortion, chorus), teal for the filter, white for pitch and modulation routing and the DECAY switch, green for voice mode, yellow for the chorus modes.",
+    "colours": [
+      {
+        "colour": "green",
+        "meaning": "LOCATION: keyboard mode, page, pattern, bank; switches: voice mode and auto damp"
+      },
+      {
+        "colour": "yellow",
+        "meaning": "LOCATION: step mode, ratchet count; switches: chorus I and II"
+      },
+      {
+        "colour": "red",
+        "meaning": "LOCATION: gate length; step LEDs and sequencer buttons; power LED in calibration mode"
+      },
+      {
+        "colour": "amber",
+        "meaning": "power on"
+      }
+    ],
+    "exceptions": [
+      "The backlit switch groupings (orange, teal, white) are read from the panel photograph and are not documented."
+    ],
+    "confidence": "stated",
+    "note": "LOCATION colours from the sequencer chapter; power LED red from the calibration bulletin; switch colours from the panel."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Paraphonic, not polyphonic",
+      "applies_to": [
+        "voices",
+        "vcf",
+        "vca",
+        "filter_env",
+        "loud_env"
+      ],
+      "rule": "In POLY mode each new note takes the next oscillator: one note plays OSC 1, two notes OSC 1 and 2, up to four. All four share one filter, one filter contour, one loudness contour and one VCA. The contours retrigger on new notes (multi-trigger is on by default), so chords play through a single envelope. The specifications call this '4 voices polyphonic'."
+    },
+    {
+      "id": "b02",
+      "name": "Auto damp",
+      "applies_to": [
+        "voices"
+      ],
+      "rule": "Off: releasing some notes of a chord leaves them all sounding until every note is released or a new one played. On: released notes stop and only held notes continue. This exists because the shared envelope cannot release notes individually."
+    },
+    {
+      "id": "b03",
+      "name": "Minimoog modulation bus",
+      "applies_to": [
+        "mod_bus",
+        "osc4",
+        "lfo",
+        "noise",
+        "filter_env"
+      ],
+      "rule": "Two switches pick a source each (OSC 4 or filter contour; noise/MOD SOURCE jack or LFO), MODULATION MIX crossfades them, the mod wheel sets depth, and two switches send the result to the oscillators and the filter. Setting OSC 4 to LO, freeing it with OSC 4 CONTROL off and selecting it here makes it a second LFO, as on the Minimoog."
+    },
+    {
+      "id": "b04",
+      "name": "Decay switch",
+      "applies_to": [
+        "loud_env",
+        "filter_env"
+      ],
+      "rule": "The contours are attack, decay, sustain. With DECAY on, release takes the DECAY TIME; off, release is instant. Minimoog behaviour, applying to both contours.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b05",
+      "name": "Keyboard tracking in thirds",
+      "applies_to": [
+        "vcf"
+      ],
+      "rule": "Two switches: neither for no tracking, 1 for a third of full, 2 for two thirds, both for full."
+    },
+    {
+      "id": "b06",
+      "name": "Effects chain",
+      "applies_to": [
+        "distortion",
+        "chorus",
+        "output"
+      ],
+      "rule": "After the VCA: distortion (drive, tone, level; DS-1 derived) then a BBD stereo chorus modelled on the Juno-60, with modes I, II or both. The chorus turns the mono voice into the stereo output. The order is inferred from the panel and one owner's presumption; Behringer has not documented it.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b07",
+      "name": "Sequencer",
+      "applies_to": [
+        "seq",
+        "clock"
+      ],
+      "rule": "Up to 32 steps in four pages of eight, 64 patterns in 8 banks. Per step: note, rest, gate length 1 to 8 (8 ties), accent, glide and ratchet 1 to 4. Per pattern: swing, from off-beats only through straight to on-beats only. Keyboard mode records; step mode edits but cannot save until switched back. Live, SHIFT with the same controls applies ratchet, swing, mute or accent to the whole pattern without saving."
+    },
+    {
+      "id": "b08",
+      "name": "Arpeggiator",
+      "applies_to": [
+        "arp"
+      ],
+      "rule": "Eight orders (up, down, down and up, random, and up or down with an octave added or removed), at the TEMPO rate, with HOLD to latch. Order is changed with <KYBD and STEP> while playing."
+    },
+    {
+      "id": "b09",
+      "name": "Clocking",
+      "applies_to": [
+        "clock",
+        "seq",
+        "arp"
+      ],
+      "rule": "Clock source is internal, DIN, USB or the SYNC IN jack, at 1, 2, 24 or 48 PPQ, rising or falling edge; all SysEx settings with defaults of internal, 24 PPQ, rising. MIDI clock is sent to DIN and USB by default."
+    },
+    {
+      "id": "b10",
+      "name": "Calibration",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "osc3",
+        "osc4",
+        "kbd"
+      ],
+      "rule": "Each oscillator has RANGE and SCALE trimpots on the rear panel, tuned at A5 and A2 against a tuner with the instrument warm for 30 minutes, plus an octave-range trimpot matched by ear at C6. The wheels and aftertouch have a firmware calibration mode reached at power-on."
+    },
+    {
+      "id": "b11",
+      "name": "POLY needs the oscillators switched on",
+      "applies_to": [
+        "voices",
+        "mixer"
+      ],
+      "rule": "Because POLY hands each note to a specific oscillator, a note assigned to an oscillator whose mixer switch is off is silent. For full four-note chords all four oscillators must be on; owners describe this as the most common surprise with the instrument.",
+      "confidence": "inferred",
+      "note": "From Sweetwater owner reviews; follows from the guide's description of POLY."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "velocity",
+      "channel_aftertouch",
+      "pitch_bend",
+      "mod_wheel",
+      "midi_clock",
+      "sysex"
+    ],
+    "transmits": [
+      "keyboard notes",
+      "aftertouch",
+      "pitch and mod wheels",
+      "sequencer and arpeggiator notes",
+      "midi_clock",
+      "each routable to DIN, USB, both or off by SysEx"
+    ],
+    "channel": {
+      "range": [
+        0,
+        16
+      ],
+      "set_by": "Synthtool.exe or SysEx; separate TX and RX channels; 0 is any"
+    },
+    "sysex": {
+      "format": "F0 00 20 32 00 01 0C <device id> <packet> <payload> F7",
+      "model_id": "00 01 0C",
+      "note": "Packets recorded on each SysEx-only parameter. Packet 0x7D restores factory settings."
+    },
+    "cc_map": null,
+    "nrpn": null,
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows XP or higher, Mac OS X 10.6.8 or higher"
+    },
+    "app": "Synthtool.exe"
+  },
+  "specifications": {
+    "voices": "4, mono / unison / poly (paraphonic)",
+    "oscillators": {
+      "count": 4,
+      "range_hz": [
+        0.1,
+        20000
+      ],
+      "ranges": 6
+    },
+    "lfo_hz": [
+      0.05,
+      200
+    ],
+    "vcf": "1 x low / high pass, 24 dB/octave",
+    "envelopes": {
+      "attack_s": [
+        0.001,
+        10
+      ],
+      "decay_s": [
+        0.004,
+        35
+      ]
+    },
+    "sequencer": {
+      "steps": 32,
+      "patterns": 64,
+      "banks": 8
+    },
+    "keyboard": "37 semi-weighted full-size keys with velocity and aftertouch",
+    "outputs": {
+      "main": "2 x 1/4-inch TRS servo-balanced, max -16 dBu, 100 ohm",
+      "phones": "1/4-inch TRS, -4 dBu, 110 ohm"
+    },
+    "cv_inputs_v": {
+      "loudness": [
+        0,
+        5
+      ],
+      "filter": [
+        0,
+        5
+      ],
+      "oscillator": [
+        -5,
+        5
+      ]
+    },
+    "cv_outputs_v": {
+      "aftertouch": [
+        0,
+        5
+      ],
+      "pitch": [
+        -3,
+        7
+      ],
+      "v_trigger": 5,
+      "velocity": [
+        0,
+        5
+      ]
+    },
+    "power": {
+      "adaptor": "12 V DC, 1000 mA",
+      "consumption_w_max": 10
+    },
+    "dimensions_mm": {
+      "h": 90,
+      "w": 648,
+      "d": 361
+    },
+    "weight_kg": 10.2,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in several languages",
+    "warranty and compliance declarations",
+    "hook-up diagrams",
+    "non-English duplicates",
+    "the patch sheet",
+    "the calibration bulletins' step-by-step screenshots"
+  ],
+  "not_in_source": [
+    "which oscillator's pitch drives filter keyboard tracking in POLY and UNISON; not found in the guide or online",
+    "a confirmed order of distortion and chorus; inferred from the panel layout only",
+    "how UNISON divides the oscillators among three held notes",
+    "whether the DECAY switch governs the filter contour as well as the loudness contour",
+    "the filter cutoff range in Hz and resonance behaviour, including self-oscillation",
+    "whether the CV inputs sum with the panel controls or replace them",
+    "the pulse widths of the wide and narrow pulse waveforms",
+    "a CC map; the guide covers SysEx only",
+    "the mod wheel range values 0 to 4 other than 2 (100%)"
+  ],
+  "source_inconsistencies": [
+    "The specifications describe '4 voices polyphonic'; the controls describe one filter, one pair of contours and one VCA, so the instrument is paraphonic.",
+    "The specifications list 'Amount of contour' under the loudness contour; the panel and controls have no such control there.",
+    "SysEx packet 0x1A lists '1 PPS', read as 1 PPQ alongside 2, 24 and 48 PPQ.",
+    "SysEx packet 0x0F gives the MIDI transpose default as [1], while its note says 12 is no transpose.",
+    "SysEx packet 0x19 prints 'RISSING'.",
+    "Item 14 says TUNE adjusts oscillators 1 to 4; the specifications give it as -2 to +2 and the getting-started chapter says the TUNE and OSC 2 to 4 FREQUENCY knobs are marked in semitones.",
+    "Item 25 says OVERLOAD warns about the EXT IN volume; the Spanish text says it shows the mixer overloading.",
+    "The sequencer control list numbers 1 to 15 restart the main numbering, and the item for SEQUENCER (35) points to pages 15 and 38, which are not where the sequencer chapter is.",
+    "The guide describes UNISON only by name; Wikipedia and Sonic State describe it as dividing the oscillators among held notes, while Sweetwater's support article says it triggers all oscillators that are on, which matches only the single-note case."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Filter",
+      "detail": "A Minimoog ladder with a Behringer-added high-pass mode. No cutoff range, resonance law or self-oscillation statement."
+    },
+    {
+      "topic": "Paraphonic envelope behaviour",
+      "detail": "How the shared contours respond to overlapping notes depends on multi-trigger and auto damp; the exact rules for legato chords are not documented."
+    },
+    {
+      "topic": "Oscillator tapers",
+      "detail": "Frequency offsets are marked in semitones; the knob law between the marks is not given."
+    },
+    {
+      "topic": "Effects",
+      "detail": "Distortion and chorus are described only by their controls. Retailers describe the distortion as modelled on a Boss DS-1; not in these sources."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "No Minimoog documentation was supplied; it would settle the filter, contour curves and oscillator behaviour."
+    }
+  ]
+}

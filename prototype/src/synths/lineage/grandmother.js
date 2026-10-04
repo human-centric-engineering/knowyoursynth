@@ -1,0 +1,18 @@
+// Lineage of the Moog Grandmother: Moog modular and Minimoog circuits in a small semi-modular. Shape: see CONTRACT.md → Lineage.
+export default {
+  title: 'From the Moog modular to the Grandmother',
+  intro: 'The Grandmother is Moog’s 2018 semi-modular with a keyboard. It rebuilds circuits from the modular systems and the Minimoog into a small instrument that plays with no cables, and puts the patch points on the panel beside the controls they belong to. Behringer’s Model 15 copies its layout.',
+  timeline: [
+    { year: '1964', name: 'Moog modular', text: 'Robert Moog’s voltage-controlled modules: oscillators, the ladder filter, envelopes and amplifiers joined by patch cords, with pitch set at one volt per octave. Every input on this panel still follows those rules.' },
+    { year: '1970', name: 'Minimoog Model D', text: 'The modular’s voice wired inside one portable case, with no cables needed: oscillators into a mixer, the ladder filter, envelopes and a keyboard with pitch and modulation wheels. The Grandmother keeps that signal path and the wheels.' },
+    { year: '2015', name: 'Moog Mother-32', text: 'A small semi-modular in a Eurorack-sized case: one oscillator, a ladder filter, a sequencer and a patch bay, playable with no cables and changed by patching. It set the pattern the Grandmother grew from.' },
+    { year: '2018', name: 'Moog Grandmother', tag: 'This synth', text: 'Two oscillators, a mixer with noise, the 24 dB ladder filter and a separate 6 dB high-pass, one ADSR, an LFO with depths brought in by the MOD wheel, an attenuator, a mult, a real spring reverb and an arpeggiator and sequencer, with 41 patch points on a colour-coded panel.' },
+    { year: '2019', name: 'Moog Matriarch', text: 'The Grandmother’s larger sibling: four oscillators that can play paraphonically, two filters and a stereo delay, on the same kind of colour-coded, patchable panel.' },
+  ],
+  relatives: [
+    { name: 'Behringer Model 15', years: '2022', text: 'Behringer’s copy of the Grandmother’s panel in a desktop or Eurorack case with no keyboard. It adds a sub-oscillator, pink noise and more patch points, and has a digital reverb in place of the spring.' },
+    { name: 'Behringer Model D', years: '2018', text: 'Behringer’s copy of the Minimoog. The same ladder filter family, but three oscillators, two envelopes and only a few patch points.' },
+    { name: 'Moog Mother-32', years: '2015', text: 'Moog’s small semi-modular, the Grandmother’s closest ancestor in idea: one oscillator, a ladder filter that also does high-pass, and a 32-step sequencer.' },
+  ],
+  note: 'The Grandmother is a recent instrument, and no record is well enough documented as made on one to list here.',
+};

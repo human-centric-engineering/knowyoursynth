@@ -1,0 +1,2182 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "behringer-model-15",
+    "manufacturer": "Behringer",
+    "model": "MODEL 15 Analog Semi-Modular Synthesizer",
+    "category": "monophonic semi-modular analogue synthesizer, desktop or Eurorack, with sequencer and arpeggiator",
+    "based_on": "Behringer cites the Moog Model 15 modular circuits; reviewers note the layout and feature set copy the Moog Grandmother (2018), itself built from Moog modular circuits.",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer MODEL 15 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_Model_15.pdf",
+        "pages": 43,
+        "note": "Multilingual; English controls (93 callouts), getting started, sequencer and specifications used. Patch sheets are blank."
+      },
+      {
+        "id": "retail",
+        "title": "B&H Photo, Synthtopia and Synth Anatomy product coverage",
+        "kind": "other",
+        "file": "https://www.synthtopia.com/content/2022/03/05/behringers-latest-synth-model-15-copies-the-moog-grandmother/",
+        "note": "Grandmother comparison, 25 in / 23 out patch bay, 24 dB ladder filter, spring reverb emulation."
+      },
+      {
+        "id": "grandmother",
+        "title": "Moog Grandmother Owner's Manual",
+        "kind": "user_manual",
+        "file": "Grandmother_Manual.pdf",
+        "note": "The instrument the Model 15 copies. Its documented normals, summing pitch inputs, S&H source and attenuator reference are applied here as inferred."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory; three sequencer slots of up to 256 steps each.",
+    "semi_modular": true,
+    "panel_counts": {
+      "patch_inputs": 25,
+      "patch_outputs": 23,
+      "patch_points": 48
+    },
+    "summary": "Two VCOs with four waveforms each, sync, PWM and a sub-oscillator, mixed with noise into a 24 dB ladder low-pass filter, with a separate 6 dB high-pass filter in the patch bay. One ADSR, a VCA that follows the envelope, the key release or stays open, an LFO reaching 1.3 kHz, sample and hold, an attenuverter, spring reverb emulation, and an arpeggiator and three-slot sequencer. Plays without patching; 48 jacks override or extend the internal routing."
+  },
+  "modules": [
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI to CV",
+      "panel_section": "MIDI",
+      "description": "Converts MIDI notes (DIN or USB) to note CV, gate and velocity, through the arpeggiator/sequencer when running.",
+      "inputs": [],
+      "outputs": [
+        "midi.note_cv",
+        "midi.gate",
+        "midi.velocity"
+      ]
+    },
+    {
+      "id": "arpseq",
+      "type": "sequencer",
+      "name": "Arpeggiator / sequencer",
+      "panel_section": "ARP/SEQ",
+      "description": "Arpeggiator over 1-3 octaves, or a step sequencer with three slots of up to 256 steps (notes, ties, rests, accents), transposed from the keyboard. Runs from its RATE, tap tempo or an external clock, and sends clock out.",
+      "properties": {
+        "slots": 3,
+        "max_steps": 256
+      },
+      "inputs": [
+        "arpseq.sync_in",
+        "arpseq.reset_in",
+        "arpseq.on_in"
+      ],
+      "outputs": [
+        "arpseq.clock_out"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR",
+      "description": "Triangle, sawtooth, square or narrow pulse at 32', 16', 8' or 4'.",
+      "inputs": [
+        "osc1.pitch_cv",
+        "osc1.pwm_cv"
+      ],
+      "outputs": [
+        "osc1.out"
+      ]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2 and sub",
+      "panel_section": "OSCILLATOR",
+      "description": "Triangle, sawtooth, square or narrow pulse at 16'-2', detunable ±7 semitones, with hard sync to Oscillator 1, linear FM input and a sub-oscillator output.",
+      "inputs": [
+        "osc2.pitch_cv",
+        "osc2.fm",
+        "osc2.pwm_cv",
+        "osc2.sync_in"
+      ],
+      "outputs": [
+        "osc2.out",
+        "osc2.sub"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "description": "White and pink noise.",
+      "inputs": [],
+      "outputs": [
+        "noise.white",
+        "noise.pink"
+      ]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Three channels: Oscillator 1, Oscillator 2, and sub/white noise.",
+      "inputs": [
+        "mixer.in1",
+        "mixer.in2",
+        "mixer.in3"
+      ],
+      "outputs": [
+        "mixer.out"
+      ]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "High-pass filter",
+      "panel_section": "UTILITIES",
+      "description": "6 dB/oct high-pass, active only when patched.",
+      "properties": {
+        "slope_db_per_oct": 6
+      },
+      "inputs": [
+        "hpf.in"
+      ],
+      "outputs": [
+        "hpf.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Ladder filter",
+      "panel_section": "FILTER",
+      "description": "24 dB/oct resonant ladder low-pass, 20 Hz-20 kHz, with key tracking and a bipolar envelope amount.",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [
+          20,
+          20000
+        ]
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.cutoff_cv",
+        "vcf.env_amt_cv",
+        "vcf.env_in",
+        "vcf.key_cv"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "ENVELOPE",
+      "description": "ADSR: attack 2 ms-16 s, decay 2 ms-40 s, sustain 0-8 V, release 2 ms-20 s, with normal and inverted outputs.",
+      "inputs": [
+        "env.trig"
+      ],
+      "outputs": [
+        "env.out",
+        "env.inv"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "OUTPUT",
+      "description": "Follows the envelope, opens only on key release ('KEYBOARD RELEASE'), or stays open (DRONE).",
+      "inputs": [
+        "vca.in",
+        "vca.cv",
+        "vca.env_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "description": "Sine, sawtooth, ramp or square, 0.07 Hz-1.3 kHz, with reset and rate inputs.",
+      "properties": {
+        "rate_hz": [
+          0.07,
+          1300
+        ]
+      },
+      "inputs": [
+        "lfo.trig",
+        "lfo.rate_cv"
+      ],
+      "outputs": [
+        "lfo.out"
+      ]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "UTILITIES",
+      "description": "Sample-and-hold output.",
+      "inputs": [
+        "snh.in",
+        "snh.clock"
+      ],
+      "outputs": [
+        "snh.out"
+      ]
+    },
+    {
+      "id": "att",
+      "type": "attenuator",
+      "name": "Attenuverter",
+      "panel_section": "UTILITIES",
+      "description": "Bipolar attenuator: centre is off, clockwise passes the input, anticlockwise passes it inverted.",
+      "inputs": [
+        "att.in"
+      ],
+      "outputs": [
+        "att.out"
+      ]
+    },
+    {
+      "id": "ref",
+      "type": "cv_source_selector",
+      "name": "Attenuator reference",
+      "panel_section": "UTILITIES",
+      "description": "Internal positive voltage normalled to the attenuator input, as on the Grandmother.",
+      "inputs": [],
+      "outputs": [
+        "ref.pos"
+      ]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverb",
+      "panel_section": "OUTPUT",
+      "description": "Spring reverb emulation with dry/wet MIX; has its own patch input and output.",
+      "inputs": [
+        "reverb.in"
+      ],
+      "outputs": [
+        "reverb.out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT",
+      "description": "Main volume to the 3.5 mm and 6.35 mm outputs; separate headphone volume.",
+      "inputs": [
+        "out.in"
+      ],
+      "outputs": [
+        "out.main",
+        "out.phones"
+      ]
+    },
+    {
+      "id": "mult1",
+      "type": "mult",
+      "name": "MULTI 1",
+      "panel_section": "PATCH BAY",
+      "description": "Passive multiple; the specifications count its three jacks as inputs.",
+      "inputs": [
+        "mult1.bus"
+      ],
+      "outputs": []
+    },
+    {
+      "id": "mult2",
+      "type": "mult",
+      "name": "MULTI 2",
+      "panel_section": "PATCH BAY",
+      "description": "Passive multiple; the specifications count its three jacks as outputs.",
+      "inputs": [],
+      "outputs": [
+        "mult2.bus"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "arpseq.rate",
+      "module": "arpseq",
+      "label": "RATE",
+      "kind": "continuous",
+      "manual_ref": 2,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "ARP/SEQ rate."
+    },
+    {
+      "id": "arpseq.mode",
+      "module": "arpseq",
+      "label": "MODE",
+      "kind": "enum",
+      "manual_ref": 3,
+      "values": [
+        {
+          "value": "arp"
+        },
+        {
+          "value": "seq"
+        },
+        {
+          "value": "rec"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Arpeggiator, sequencer playback or sequencer record."
+    },
+    {
+      "id": "arpseq.direction",
+      "module": "arpseq",
+      "label": "DIRECTION",
+      "kind": "enum",
+      "manual_ref": 4,
+      "values": [
+        {
+          "value": "ordr"
+        },
+        {
+          "value": "back_forth"
+        },
+        {
+          "value": "rndm"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "ORDR: order played or start to end. <</>>: forwards then back. RNDM: random."
+    },
+    {
+      "id": "arpseq.oct_seq",
+      "module": "arpseq",
+      "label": "OCT/SEQ",
+      "kind": "enum",
+      "manual_ref": 5,
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Arpeggio range in octaves, or the sequence slot to play or record."
+    },
+    {
+      "id": "arpseq.glide",
+      "module": "arpseq",
+      "label": "GLIDE",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Glide time between notes; minimum is off."
+    },
+    {
+      "id": "arpseq.play_tie",
+      "module": "arpseq",
+      "label": "PLAY/TIE",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts the ARP/SEQ; enters a tie in sequencer record."
+    },
+    {
+      "id": "arpseq.hold_rest",
+      "module": "arpseq",
+      "label": "HOLD/REST",
+      "kind": "boolean",
+      "manual_ref": 14,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keeps the ARP/SEQ playing; enters a rest in sequencer record."
+    },
+    {
+      "id": "arpseq.tap_accent",
+      "module": "arpseq",
+      "label": "TAP/ACCENT",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Three or more taps set the tempo (hold to exit); adds an accent step in sequencer record."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "physical": {
+        "min": 0.07,
+        "max": 1300,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO rate."
+    },
+    {
+      "id": "lfo.pitch_mod",
+      "module": "lfo",
+      "label": "PITCH MOD",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on both oscillators' pitch."
+    },
+    {
+      "id": "lfo.pw_mod",
+      "module": "lfo",
+      "label": "PULSE WIDTH",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on the square and narrow pulse widths of both oscillators."
+    },
+    {
+      "id": "lfo.filter_mod",
+      "module": "lfo",
+      "label": "FILTER MOD",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth on cutoff."
+    },
+    {
+      "id": "lfo.waveform",
+      "module": "lfo",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "manual_ref": 12,
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "LFO shape."
+    },
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OCTAVE 1",
+      "kind": "enum",
+      "manual_ref": 16,
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 1 footage."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OCTAVE 2",
+      "kind": "enum",
+      "manual_ref": 17,
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 2 footage."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "boolean",
+      "manual_ref": 18,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Hard-syncs Oscillator 2 to Oscillator 1."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Detunes Oscillator 2 from Oscillator 1, ±7 semitones."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "WAVEFORM OSC 1",
+      "kind": "enum",
+      "manual_ref": 20,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator 1 waveform."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "WAVEFORM OSC 2/SUB",
+      "kind": "enum",
+      "manual_ref": 21,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform for Oscillator 2 or the sub-oscillator.",
+      "note": "The guide says it selects the waveform 'for OSC 2 or the SUB Oscillator' without saying how the choice between them is made."
+    },
+    {
+      "id": "osc.fine_tune",
+      "module": "osc1",
+      "label": "FINE TUNE",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": -4,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall tuning, ±4 semitones."
+    },
+    {
+      "id": "mixer.level1",
+      "module": "mixer",
+      "label": "MIXER 1",
+      "kind": "continuous",
+      "manual_ref": 23,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of Oscillator 1."
+    },
+    {
+      "id": "mixer.level2",
+      "module": "mixer",
+      "label": "MIXER 2",
+      "kind": "continuous",
+      "manual_ref": 24,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of Oscillator 2."
+    },
+    {
+      "id": "mixer.level3",
+      "module": "mixer",
+      "label": "MIXER 3",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of sub/white noise."
+    },
+    {
+      "id": "hpf.cutoff",
+      "module": "hpf",
+      "label": "HI PASS FILTER",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "High-pass cutoff, when patched."
+    },
+    {
+      "id": "att.amount",
+      "module": "att",
+      "label": "ATTENUATOR",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre off; clockwise towards unity, anticlockwise towards unity inverted."
+    },
+    {
+      "id": "mod.amount",
+      "module": "lfo",
+      "label": "MODULATION",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall amount of LFO modulation reaching cutoff, pitch and pulse width."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "physical": {
+        "min": 20,
+        "max": 20000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff frequency."
+    },
+    {
+      "id": "vcf.key_tracking",
+      "module": "vcf",
+      "label": "KEY TRACKING",
+      "kind": "enum",
+      "manual_ref": 30,
+      "values": [
+        {
+          "value": "1:2",
+          "meaning": "half"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "1:1",
+          "meaning": "full"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis at cutoff."
+    },
+    {
+      "id": "vcf.env_amt",
+      "module": "vcf",
+      "label": "ENV AMT",
+      "kind": "continuous",
+      "manual_ref": 32,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar envelope depth on cutoff."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "ATTACK",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "physical": {
+        "min": 0.002,
+        "max": 16,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "physical": {
+        "min": 0.002,
+        "max": 40,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay."
+    },
+    {
+      "id": "env.sustain",
+      "module": "env",
+      "label": "SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 35,
+      "physical": {
+        "min": 0,
+        "max": 8,
+        "unit": "V"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope sustain."
+    },
+    {
+      "id": "env.release",
+      "module": "env",
+      "label": "RELEASE",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "physical": {
+        "min": 0.002,
+        "max": 20,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Main volume."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "VCA MODE",
+      "kind": "enum",
+      "manual_ref": 40,
+      "values": [
+        {
+          "value": "env"
+        },
+        {
+          "value": "release"
+        },
+        {
+          "value": "drone"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Envelope, keyboard release, or drone (always open)."
+    },
+    {
+      "id": "reverb.mix",
+      "module": "reverb",
+      "label": "REVERB MIX",
+      "kind": "continuous",
+      "manual_ref": 41,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Dry/wet balance."
+    },
+    {
+      "id": "out.phones_volume",
+      "module": "out",
+      "label": "PHONES VOLUME",
+      "kind": "continuous",
+      "manual_ref": 88,
+      "panel_scale": {
+        "min": 0,
+        "max": 100
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level."
+    },
+    {
+      "id": "midi.channel",
+      "module": "midi",
+      "label": "MIDI CHANNEL SELECT",
+      "kind": "integer",
+      "manual_ref": 89,
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Receive channel 1-16."
+    },
+    {
+      "id": "midi.out_thru",
+      "module": "midi",
+      "label": "OUT/THRU",
+      "kind": "enum",
+      "manual_ref": 90,
+      "values": [
+        {
+          "value": "out"
+        },
+        {
+          "value": "thru"
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe output parameters: MIDI (DIN), MIDI (USB) or both"
+        }
+      ],
+      "function": "Whether the MIDI DIN socket sends MIDI out or passes MIDI in through.",
+      "confidence": "inferred",
+      "note": "The guide does not say how OUT/THRU is chosen."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 92,
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Power switch."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.audio_in",
+      "label": "AUDIO INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in3",
+      "function": "External or internal audio; assumed to enter mixer channel 3.",
+      "manual_ref": 42,
+      "confidence": "speculative",
+      "note": "The guide only says 'used to input external or internal audio'."
+    },
+    {
+      "id": "jack.mix1",
+      "label": "MIX 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in1",
+      "function": "Mixer channel 1 input; replaces its internal source.",
+      "manual_ref": 43
+    },
+    {
+      "id": "jack.mix2",
+      "label": "MIX 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in2",
+      "function": "Mixer channel 2 input; replaces its internal source.",
+      "manual_ref": 44
+    },
+    {
+      "id": "jack.mix3",
+      "label": "MIX 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in3",
+      "function": "Mixer channel 3 input; replaces its internal source.",
+      "manual_ref": 45
+    },
+    {
+      "id": "jack.reverb_in",
+      "label": "REVERB INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "reverb.in",
+      "function": "Direct into the reverb.",
+      "manual_ref": 46
+    },
+    {
+      "id": "jack.filter_in",
+      "label": "FILTER INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.in",
+      "function": "Into the ladder filter; replaces the mixer feed.",
+      "manual_ref": 47
+    },
+    {
+      "id": "jack.hpf_in",
+      "label": "HI PASS",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "hpf.in",
+      "function": "Into the high-pass filter.",
+      "manual_ref": 48
+    },
+    {
+      "id": "jack.osc1_pwm",
+      "label": "OSC 1 PWM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc1.pwm_cv",
+      "function": "Pulse width of Oscillator 1's square or narrow pulse, 0 to +5 V.",
+      "manual_ref": 49
+    },
+    {
+      "id": "jack.env_amt",
+      "label": "ENV AMT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.env_amt_cv",
+      "function": "CV control of the envelope amount, -8 to +8 V.",
+      "manual_ref": 50
+    },
+    {
+      "id": "jack.cutoff",
+      "label": "CUTOFF",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.cutoff_cv",
+      "function": "Cutoff CV, -5 to +5 V.",
+      "manual_ref": 51,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.osc2_fm",
+      "label": "OSC 2 FM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.fm",
+      "function": "Linear FM of Oscillator 2.",
+      "manual_ref": 52
+    },
+    {
+      "id": "jack.osc1_cv",
+      "label": "OSC 1 CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc1.pitch_cv",
+      "function": "Pitch of Oscillator 1; summed with the keyboard CV.",
+      "manual_ref": 53,
+      "combine": "sum",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.osc2_cv",
+      "label": "OSC 2 CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc2.pitch_cv",
+      "function": "Pitch of Oscillator 2; summed with the keyboard CV.",
+      "manual_ref": 54,
+      "combine": "sum",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.env_trig",
+      "label": "ENV TRIG",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env.trig",
+      "function": "Envelope trigger, above 2.5 V; replaces the keyboard gate.",
+      "manual_ref": 55
+    },
+    {
+      "id": "jack.vca_in",
+      "label": "VCA INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca.in",
+      "function": "Audio into the VCA; disconnects the filter output.",
+      "manual_ref": 56
+    },
+    {
+      "id": "jack.vca_cv",
+      "label": "VCA CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca.cv",
+      "function": "Controls overall volume, 0 to +8 V in DRONE.",
+      "manual_ref": 57
+    },
+    {
+      "id": "jack.lfo_trig",
+      "label": "LFO TRIG",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "lfo.trig",
+      "function": "Restarts the LFO cycle.",
+      "manual_ref": 58
+    },
+    {
+      "id": "jack.lfo_rate",
+      "label": "LFO RATE",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.rate_cv",
+      "function": "LFO rate CV.",
+      "manual_ref": 59
+    },
+    {
+      "id": "jack.att_in",
+      "label": "ATT INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att.in",
+      "function": "Attenuverter input, -8 to +8 V; unpatched, it reads an internal positive reference.",
+      "manual_ref": 60
+    },
+    {
+      "id": "jack.arpseq_sync",
+      "label": "ARP/SEQ SYN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "arpseq.sync_in",
+      "function": "External clock for the ARP/SEQ, above 2.5 V.",
+      "manual_ref": 61,
+      "combine": "replace"
+    },
+    {
+      "id": "jack.arpseq_reset",
+      "label": "ARP/SEQ RES",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "arpseq.reset_in",
+      "function": "Resets the pattern to its start.",
+      "manual_ref": 62
+    },
+    {
+      "id": "jack.arpseq_on",
+      "label": "ARP/SEQ ON",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "arpseq.on_in",
+      "function": "Starts the ARP/SEQ: 0 V off, +5 V on.",
+      "manual_ref": 63
+    },
+    {
+      "id": "jack.multi1_1",
+      "label": "MULTI 1 (1)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 64
+    },
+    {
+      "id": "jack.multi1_2",
+      "label": "MULTI 1 (2)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 64
+    },
+    {
+      "id": "jack.multi1_3",
+      "label": "MULTI 1 (3)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 64
+    },
+    {
+      "id": "jack.audio_out",
+      "label": "AUDIO OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.main",
+      "function": "Main output, 3.5 mm.",
+      "manual_ref": 65
+    },
+    {
+      "id": "jack.vca_out",
+      "label": "VCA OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca.out",
+      "function": "VCA output.",
+      "manual_ref": 66
+    },
+    {
+      "id": "jack.mixer_out",
+      "label": "MIXER",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.out",
+      "function": "Mixer output.",
+      "manual_ref": 67
+    },
+    {
+      "id": "jack.hpf_out",
+      "label": "HI-PASS",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "hpf.out",
+      "function": "High-pass output.",
+      "manual_ref": 68
+    },
+    {
+      "id": "jack.filter_out",
+      "label": "FILTER",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.out",
+      "function": "Ladder filter output.",
+      "manual_ref": 69
+    },
+    {
+      "id": "jack.reverb_out",
+      "label": "REVERB",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "reverb.out",
+      "function": "Reverb output.",
+      "manual_ref": 70
+    },
+    {
+      "id": "jack.white",
+      "label": "W NOISE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "noise.white",
+      "function": "White noise, 10 Vpp.",
+      "manual_ref": 71
+    },
+    {
+      "id": "jack.pink",
+      "label": "P NOISE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "noise.pink",
+      "function": "Pink noise, 10 Vpp.",
+      "manual_ref": 72
+    },
+    {
+      "id": "jack.osc1_out",
+      "label": "OSC 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc1.out",
+      "function": "Oscillator 1, 5 Vpp.",
+      "manual_ref": 73
+    },
+    {
+      "id": "jack.sub_out",
+      "label": "SUB",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.sub",
+      "function": "Sub-oscillator, +4.6 dBu.",
+      "manual_ref": 74
+    },
+    {
+      "id": "jack.osc2_out",
+      "label": "OSC 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.out",
+      "function": "Oscillator 2, +4.0 dBu.",
+      "manual_ref": 75
+    },
+    {
+      "id": "jack.env_out",
+      "label": "ENV",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env.out",
+      "function": "Envelope, 10 Vpp.",
+      "manual_ref": 76
+    },
+    {
+      "id": "jack.snh_out",
+      "label": "S&H",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "snh.out",
+      "function": "Sample and hold, 10 Vpp.",
+      "manual_ref": 77
+    },
+    {
+      "id": "jack.env_inv",
+      "label": "ENV INV",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env.inv",
+      "function": "Inverted envelope, 12 Vpp.",
+      "manual_ref": 78
+    },
+    {
+      "id": "jack.att_out",
+      "label": "ATT OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att.out",
+      "function": "Attenuverter output.",
+      "manual_ref": 79
+    },
+    {
+      "id": "jack.lfo_out",
+      "label": "LFO",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.out",
+      "function": "LFO, 8 Vpp.",
+      "manual_ref": 80
+    },
+    {
+      "id": "jack.velocity",
+      "label": "VELOCITY",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "midi.velocity",
+      "function": "MIDI velocity as CV; carries sequencer accents. 0 to +5 V.",
+      "manual_ref": 81
+    },
+    {
+      "id": "jack.note_cv",
+      "label": "NOTE CV",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "midi.note_cv",
+      "function": "Note CV, -5 to +5 V.",
+      "manual_ref": 82
+    },
+    {
+      "id": "jack.gate",
+      "label": "GATE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "midi.gate",
+      "function": "Gate, 0 / +8 V.",
+      "manual_ref": 83
+    },
+    {
+      "id": "jack.sync_out",
+      "label": "SYNC",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "arpseq.clock_out",
+      "function": "Clock out to slave other gear, 0 to +5 V.",
+      "manual_ref": 84
+    },
+    {
+      "id": "jack.multi2_1",
+      "label": "MULTI 2 (1)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 85
+    },
+    {
+      "id": "jack.multi2_2",
+      "label": "MULTI 2 (2)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 85
+    },
+    {
+      "id": "jack.multi2_3",
+      "label": "MULTI 2 (3)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.bus",
+      "function": "Multiple: duplicate or combine signals.",
+      "manual_ref": 85
+    },
+    {
+      "id": "jack.audio_out_big",
+      "label": "AUDIO OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.main",
+      "function": "Main output, 6.35 mm TS, up to +5.8 dBu.",
+      "manual_ref": 86
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Headphones, 7.5 mW into 32 ohm.",
+      "manual_ref": 87
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in.",
+      "manual_ref": 38
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT/THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out or thru.",
+      "manual_ref": 90
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB 2.0 type B",
+      "node": null,
+      "function": "Class-compliant USB MIDI; SynthTribe; firmware.",
+      "manual_ref": 91
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC 1000 mA supply.",
+      "manual_ref": 93
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "midi.note_cv",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Fixed, not normalled: on the Grandmother, OSC PITCH IN adds to the keyboard CV."
+    },
+    {
+      "id": "c02",
+      "from": "midi.note_cv",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c03",
+      "from": "midi.note_cv",
+      "to": "vcf.key_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.key_tracking",
+        "not_equals": "off"
+      },
+      "note": "Full at 1:1, half at 1:2."
+    },
+    {
+      "id": "c04",
+      "from": "midi.gate",
+      "to": "env.trig",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.env_trig",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c05",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c06",
+      "from": "osc1.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix1",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c07",
+      "from": "osc2.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix2",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c08",
+      "from": "osc2.sub",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix3",
+      "confidence": "inferred",
+      "note": "Mixer 3 is labelled 'OSC 3/White Noise' in the controls and 'Sub / white noise' in the specifications."
+    },
+    {
+      "id": "c09",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.filter_in",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c10",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_in",
+      "confidence": "stated"
+    },
+    {
+      "id": "c11",
+      "from": "env.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amt"
+    },
+    {
+      "id": "c12",
+      "from": "env.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "not_equals": "drone"
+      }
+    },
+    {
+      "id": "c13",
+      "from": "vca.out",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.reverb_in",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c14",
+      "from": "reverb.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "reverb.mix",
+      "note": "Dry/wet mix of the VCA signal and reverb.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c15",
+      "from": "lfo.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pitch_mod * mod.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c16",
+      "from": "lfo.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pitch_mod * mod.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c17",
+      "from": "lfo.out",
+      "to": "osc1.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pw_mod * mod.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c18",
+      "from": "lfo.out",
+      "to": "osc2.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.pw_mod * mod.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c19",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "lfo.filter_mod * mod.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c20",
+      "from": "ref.pos",
+      "to": "att.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att_in",
+      "confidence": "inferred",
+      "note": "Unpatched, the attenuator becomes a DC source of up to ±8 V, as on the Grandmother."
+    },
+    {
+      "id": "c21",
+      "from": "noise.white",
+      "to": "snh.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "The Grandmother manual states the S&H samples noise; the Model 15 guide does not say, and has white and pink noise."
+    },
+    {
+      "id": "c22",
+      "from": "lfo.out",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Samples at each zero crossing of the LFO, per the Grandmother manual."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "arpseq.led",
+      "module": "arpseq",
+      "label": "ARP/SEQ LED",
+      "kind": "led",
+      "function": "Flashes at the ARP/SEQ tempo.",
+      "manual_ref": 1
+    },
+    {
+      "id": "lfo.led",
+      "module": "lfo",
+      "label": "LFO LED",
+      "kind": "led",
+      "function": "Flashes at the LFO rate.",
+      "manual_ref": 7
+    },
+    {
+      "id": "midi.led",
+      "module": "midi",
+      "label": "MIDI LED",
+      "kind": "led",
+      "function": "Lights on incoming MIDI.",
+      "manual_ref": 37
+    },
+    {
+      "id": "arpseq.tap_led",
+      "module": "arpseq",
+      "label": "TAP light",
+      "kind": "led",
+      "function": "Lit while tap tempo is on."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Default signal path",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "mixer",
+        "vcf",
+        "vca",
+        "reverb",
+        "out"
+      ],
+      "rule": "Without cables: keyboard CV to both oscillators and (by KEY TRACKING) the filter; gate to the envelope; oscillators and sub/noise through the mixer into the ladder filter, then the VCA, reverb and output. The high-pass filter, sample and hold and attenuverter are only in circuit when patched. Patching MIX 1-3, FILTER INPUT, VCA INPUT, REVERB INPUT or ENV TRIG replaces its normal; OSC 1/2 CV add to the keyboard pitch rather than replacing it. Unpatched, the attenuator outputs a DC voltage set by its knob.",
+      "confidence": "inferred",
+      "note": "Only the filter-to-VCA normal is stated in the Model 15 guide; the rest follows the Moog Grandmother owner's manual."
+    },
+    {
+      "id": "b02",
+      "name": "VCA modes",
+      "applies_to": [
+        "vca",
+        "env"
+      ],
+      "rule": "ENV: the VCA follows the envelope. RELEASE ('keyboard release'): the envelope's release shapes the note end. DRONE: the VCA stays open, and VCA CV sets the level."
+    },
+    {
+      "id": "b03",
+      "name": "LFO depths",
+      "applies_to": [
+        "lfo"
+      ],
+      "rule": "PITCH MOD, PULSE WIDTH and FILTER MOD set the maximum LFO depth for each destination; MODULATION sets how much of those depths is applied."
+    },
+    {
+      "id": "b04",
+      "name": "Arpeggiator",
+      "applies_to": [
+        "arpseq"
+      ],
+      "rule": "In ARP mode, held notes play in order played (ORDR), forwards then back (<</>>) or randomly (RNDM), over 1-3 octaves. HOLD keeps it running. Tempo from RATE, three or more TAPs, or ARP/SEQ SYN."
+    },
+    {
+      "id": "b05",
+      "name": "Sequencer",
+      "applies_to": [
+        "arpseq",
+        "midi"
+      ],
+      "rule": "Three slots of up to 256 steps. MODE to REC, choose the slot with OCT/SEQ, then play notes; REST adds a blank step, TIE joins a repeated note, overlapping notes play legato, ACCENT marks a step on the VELOCITY output. MODE back to SEQ ends recording. PLAY then a key starts it, and new keys transpose. Editing only works while playing (switch to REC during playback); pressing a key in REC while stopped erases the slot."
+    },
+    {
+      "id": "b06",
+      "name": "Accents",
+      "applies_to": [
+        "midi",
+        "vcf"
+      ],
+      "rule": "Accents leave on the VELOCITY jack; patch it to CUTOFF (or FILTER IN, per the controls text) to hear them."
+    },
+    {
+      "id": "b07",
+      "name": "Warm-up",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "vcf"
+      ],
+      "rule": "Allow 15 minutes or more, longer from cold."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "velocity",
+        "note": "to the VELOCITY jack"
+      }
+    ],
+    "transmits": [],
+    "channel_note": "Receive channel 1-16 by rear DIP switches; MIDI output routing (DIN, USB, both) in SynthTribe.",
+    "note": "The quick start guide lists no controller, clock or program messages."
+  },
+  "specifications": {
+    "voices": 1,
+    "oscillators": "2 + sub",
+    "lfo": 1,
+    "vcf": "1, 24 dB ladder",
+    "envelopes": "1 ADSR",
+    "noise": [
+      "white",
+      "pink"
+    ],
+    "lfo_rate_hz": [
+      0.07,
+      1300
+    ],
+    "osc2_detune_semitones": [
+      -7,
+      7
+    ],
+    "fine_tune_semitones": [
+      -4,
+      4
+    ],
+    "cutoff_hz": [
+      20,
+      20000
+    ],
+    "envelope": {
+      "attack_s": [
+        0.002,
+        16
+      ],
+      "decay_s": [
+        0.002,
+        40
+      ],
+      "sustain_v": [
+        0,
+        8
+      ],
+      "release_s": [
+        0.002,
+        20
+      ]
+    },
+    "sequencer": {
+      "slots": 3,
+      "steps": 256
+    },
+    "patch_points": {
+      "inputs": 25,
+      "outputs": 23
+    },
+    "outputs": {
+      "main": "1/4\" TS, max +5.8 dBu; 3.5 mm on the patch bay",
+      "phones": "1/4\" TRS, 7.5 mW into 32 ohm"
+    },
+    "connectivity": {
+      "midi": "2 x 5-pin DIN (in, out/thru)",
+      "usb": "USB 2.0 type B, class compliant"
+    },
+    "power": {
+      "adaptor": "12 V DC, 1000 mA",
+      "consumption_w": 10.5
+    },
+    "dimensions_mm": {
+      "l": 424.4,
+      "w": 135.6,
+      "h": 94.8
+    },
+    "weight_kg": 1.76
+  },
+  "omitted_from_source": [
+    "safety and warranty text",
+    "hook-up diagrams",
+    "non-English translations",
+    "blank patch sheets"
+  ],
+  "not_in_source": [
+    "the normalled signal path, apart from filter to VCA (taken from the Grandmother manual)",
+    "where AUDIO INPUT enters",
+    "the sample and hold's source and clock (taken from the Grandmother manual)",
+    "how the OSC 2/SUB waveform switch chooses between Oscillator 2 and the sub",
+    "the sub-oscillator's octave",
+    "how MULTI 1 and MULTI 2 relate",
+    "MIDI implementation beyond notes and velocity",
+    "Eurorack HP and current draw",
+    "poly chain (listed by some retailers, not in the guide)"
+  ],
+  "source_inconsistencies": [
+    "Mixer 3 is 'OSC 3/White Noise' in the controls but 'Sub / white noise' in the specifications; there is no Oscillator 3.",
+    "The controls text says to patch VELOCITY to FILTER IN to hear accents; the getting-started text suggests CUTOFF IN, which is the CV input.",
+    "The specifications list MULTI 1 as three inputs and MULTI 2 as three outputs; passive multiples have no direction."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Normals",
+      "detail": "Taken from the Moog Grandmother owner's manual. The Model 15 departs from the Grandmother in places (sub-oscillator, pink noise, reverb emulation), so a hands-on check would confirm them."
+    },
+    {
+      "topic": "Reverb",
+      "detail": "An emulation of a spring; its character is not documented."
+    },
+    {
+      "topic": "Sub-oscillator",
+      "detail": "Waveform selection and octave relationship unclear from the guide."
+    }
+  ]
+}

@@ -1,0 +1,4419 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-pro-800",
+    "manufacturer": "Behringer",
+    "model": "PRO-800",
+    "category": "8-voice analogue polyphonic synthesizer with program memory, desktop / Eurorack (80 HP)",
+    "based_on": "Sequential Circuits Prophet-600, extended from 6 to 8 voices, running a firmware descended from GliGli's open-source Prophet-600 remake (Behringer's launch material says it includes all the GliGli modifications). The guide names neither; large parts of its text are copied from the GliGli manual.",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "PRO-800 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_PRO-800_manual.pdf",
+        "pages": 62,
+        "note": "62 numbered controls (the English control list is typeset out of order and several numbers are unreadable), an additional parameters table, global settings and preset tables, keyboard modes, arpeggiator and sequencer procedures, a MIDI CC map and a specifications table."
+      },
+      {
+        "id": "panel",
+        "title": "PRO-800 front panel photograph",
+        "kind": "measurement",
+        "file": "Behringer_PRO-800.jpg",
+        "note": "Used to place the controls the numbered list garbles, and for LED colours."
+      },
+      {
+        "id": "gligli_manual",
+        "title": "GliGli's Sequential Circuits Prophet 600 Firmware Upgrade, Release 2.0 (user manual)",
+        "kind": "user_manual",
+        "file": "https://gligli.github.io/p600fw/p600/Prophet600FirmwareUpgrade_en_stable_2_0.pdf",
+        "note": "Manual for the open-source Prophet-600 CPU and firmware remake. Much of the PRO-800 guide's text (tune routine, keyboard modes, voice priority, LFO shape procedure, oscillator pot modes) is copied from it with the voice count changed from 6 to 8."
+      },
+      {
+        "id": "gligli_src",
+        "title": "gligli/p600fw source code (GitHub), version 2.1 RC3, last GliGli commit September 2015",
+        "kind": "circuit_analysis",
+        "file": "https://github.com/gligli/p600fw",
+        "note": "Envelope and LFO code read directly: envelopes are Electric Druid ENVGEN7-derived DDS generators updated at 2 kHz per voice; the LFO is exponential-rate DDS at 2 kHz. Stage times and LFO range below are computed from its lookup tables."
+      },
+      {
+        "id": "imogen_src",
+        "title": "image-et-son/p600fw (Imogen's continuation of GliGli, v2022)",
+        "kind": "circuit_analysis",
+        "file": "https://github.com/image-et-son/p600fw",
+        "note": "Adds a 'vintage' spread parameter that offsets pitch and envelope times per voice; the likely origin of the PRO-800's Voice Spread."
+      },
+      {
+        "id": "press",
+        "title": "Synth Anatomy launch coverage and Gearspace/KVR threads",
+        "kind": "other",
+        "file": "https://synthanatomy.com/2023/07/behringer-pro-800-analog-clone-of-the-sequential-pro-600-with-8-voices.html",
+        "note": "Behringer's launch text states the PRO-800 includes 'all GliGli modifications'; forum posts say GliGli was involved and that Behringer later made the envelopes snappier."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "signal_path_note": "Analogue audio path (two 3340 VCOs, 4-pole filter and VCA per voice). As on the Prophet-600, the envelopes, LFO and vibrato are generated in firmware and sent to the analogue voices as control voltages through a DAC; in the GliGli ancestor this is a 14-bit DAC refreshed at 2 kHz per voice.",
+    "voices": 8,
+    "polyphony_mode": "8-voice polyphonic, unison (all 8 on one note, or single-voice unison), or chord mode transposing a held chord",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 26,
+      "switches": 12,
+      "buttons": 23,
+      "encoder": 1
+    },
+    "summary": "Eight complete analogue voices, each with two 3340 oscillators (sawtooth, triangle and pulse switchable and mixable; OSC A syncable to OSC B), a noise level, a 24 dB/octave low-pass filter with half or full keyboard tracking, and filter and amplifier ADSR envelopes. Poly-Mod routes the filter envelope and OSC B per voice to OSC A frequency and the filter, which gives the Prophet-600's metallic FM and sync sweeps. One LFO (triangle or pulse on the panel, six shapes through the menu) modulates oscillator frequency, pulse width and the filter, with a separate vibrato. Every panel value is stored in 400 programs, and an additional parameters menu adds envelope curves, velocity and aftertouch depths, pitch bend routing, unison detune, voice spread and glide mode. Arpeggiator, two-bank 400-note real-time sequencer, external clock sync, and autotune of every oscillator and filter."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI input",
+      "panel_section": "MIDI",
+      "scope": "common",
+      "description": "Notes, velocity, aftertouch, pitch bend, mod wheel, breath and sustain arrive over MIDI (DIN or USB). No keyboard on this model.",
+      "inputs": [],
+      "outputs": [
+        "kbd.note",
+        "kbd.gate",
+        "kbd.velocity"
+      ]
+    },
+    {
+      "id": "voices",
+      "type": "voice_allocator",
+      "name": "Voice assignment and programs",
+      "panel_section": "PROGRAMMER / POLY-MOD",
+      "scope": "common",
+      "description": "Hands notes to the eight voices and holds the program memory. Polyphonic by default; UNISON TRACK switches to unison (all eight voices on one note), chord mode (a held chord transposed by each new note) or single-voice unison, depending on how many keys are held when it is pressed. Priority last, low or high. Also the 400 programs (4 banks of 100), manual and preset modes, autotune, voice select and voice kill.",
+      "properties": {
+        "voice_count": 8,
+        "programs": 400
+      },
+      "inputs": [
+        "voices.note_in",
+        "voices.gate_in"
+      ],
+      "outputs": [
+        "voices.pitch",
+        "voices.gate"
+      ]
+    },
+    {
+      "id": "glide",
+      "type": "pitch_control",
+      "name": "Glide",
+      "panel_section": "GLIDE",
+      "scope": "per_voice",
+      "description": "Portamento between notes, by time or by speed.",
+      "inputs": [
+        "glide.in"
+      ],
+      "outputs": [
+        "glide.out"
+      ]
+    },
+    {
+      "id": "osc_a",
+      "type": "oscillator",
+      "name": "Oscillator A",
+      "panel_section": "OSCILLATOR A",
+      "scope": "per_voice",
+      "description": "3340 VCO with sawtooth, triangle and pulse switches that can be combined, pulse width 1 to 99%, and level. Frequency over four octaves in octave, semitone or free steps. Hard-syncs to OSC B. The Poly-Mod destination.",
+      "properties": {
+        "chip": "3340",
+        "frequency_hz": {
+          "min": 32.7,
+          "max": 8372.02
+        },
+        "waveforms": [
+          "saw",
+          "triangle",
+          "pulse"
+        ],
+        "simultaneous_outputs": true
+      },
+      "inputs": [
+        "osc_a.pitch_in",
+        "osc_a.pm_in",
+        "osc_a.lfo_in",
+        "osc_a.pw_mod_in",
+        "osc_a.sync_in"
+      ],
+      "outputs": [
+        "osc_a.out"
+      ]
+    },
+    {
+      "id": "osc_b",
+      "type": "oscillator",
+      "name": "Oscillator B",
+      "panel_section": "OSCILLATOR B",
+      "scope": "per_voice",
+      "description": "3340 VCO like OSC A, with a FINE control up to a semitone for detuning. A Poly-Mod source and the sync master for OSC A.",
+      "properties": {
+        "chip": "3340",
+        "frequency_hz": {
+          "min": 32.7,
+          "max": 8372.02
+        },
+        "waveforms": [
+          "saw",
+          "triangle",
+          "pulse"
+        ],
+        "simultaneous_outputs": true
+      },
+      "inputs": [
+        "osc_b.pitch_in",
+        "osc_b.lfo_in",
+        "osc_b.pw_mod_in"
+      ],
+      "outputs": [
+        "osc_b.out",
+        "osc_b.sync_out"
+      ]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "NOISE",
+      "scope": "common",
+      "description": "Noise level into every voice's mixer. Shared by inference, as on the Prophet-600.",
+      "inputs": [],
+      "outputs": [
+        "noise.out"
+      ]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Voice mixer",
+      "panel_section": "OSCILLATOR A / B / NOISE",
+      "scope": "per_voice",
+      "description": "OSC A level, OSC B level and noise into the filter. Oscillator levels are clean to about 5 and drive the filter into distortion above.",
+      "inputs": [
+        "mixer.in_a",
+        "mixer.in_b",
+        "mixer.in_noise"
+      ],
+      "outputs": [
+        "mixer.out"
+      ]
+    },
+    {
+      "id": "polymod",
+      "type": "modulation_bus",
+      "name": "Poly-Mod",
+      "panel_section": "POLY-MOD",
+      "scope": "per_voice",
+      "description": "Per-voice modulation from the filter envelope (bipolar amount) and OSC B (unipolar amount), summed and sent to OSC A frequency, the filter, or both. Because each voice has its own, it stays in tune with the notes played: audio-rate FM from OSC B and envelope sync sweeps.",
+      "inputs": [
+        "polymod.env_in",
+        "polymod.oscb_in"
+      ],
+      "outputs": [
+        "polymod.out"
+      ]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "24 dB/octave (4-pole) low-pass with resonance, envelope amount, keyboard tracking off, half or full (full tracks a self-oscillating filter), Poly-Mod and LFO inputs, velocity and aftertouch depths, and the FILTER CV IN.",
+      "properties": {
+        "slope_db_per_octave": 24,
+        "poles": 4,
+        "modes": [
+          "lowpass"
+        ],
+        "self_oscillates": true
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.env_in",
+        "vcf.kbd_in",
+        "vcf.pm_in",
+        "vcf.lfo_in",
+        "vcf.cv_in",
+        "vcf.vel_in"
+      ],
+      "outputs": [
+        "vcf.out"
+      ]
+    },
+    {
+      "id": "env_filter",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "ADSR for the filter, also a Poly-Mod source. Curve selectable fast or slow, exponential or linear. Generated in firmware, not analogue circuitry.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay",
+          "sustain",
+          "release"
+        ],
+        "generator": "firmware DDS envelope (Electric Druid ENVGEN7 design) at 2 kHz, per voice",
+        "stage_time_s_fast": {
+          "at_25pct": 0.016,
+          "at_50pct": 0.22,
+          "at_75pct": 2.8,
+          "max": 37.4
+        },
+        "stage_time_s_slow": {
+          "at_25pct": 0.066,
+          "at_50pct": 0.86,
+          "at_75pct": 11.4,
+          "max": 175
+        },
+        "source_note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval."
+      },
+      "inputs": [
+        "env_filter.gate_in"
+      ],
+      "outputs": [
+        "env_filter.out"
+      ]
+    },
+    {
+      "id": "env_amp",
+      "type": "envelope",
+      "name": "Amplifier envelope",
+      "panel_section": "AMPLIFIER",
+      "scope": "per_voice",
+      "description": "ADSR for the VCA. Curve selectable fast or slow, exponential or linear. Generated in firmware, not analogue circuitry.",
+      "properties": {
+        "stages": [
+          "attack",
+          "decay",
+          "sustain",
+          "release"
+        ],
+        "generator": "firmware DDS envelope (Electric Druid ENVGEN7 design) at 2 kHz, per voice",
+        "stage_time_s_fast": {
+          "at_25pct": 0.016,
+          "at_50pct": 0.22,
+          "at_75pct": 2.8,
+          "max": 37.4
+        },
+        "stage_time_s_slow": {
+          "at_25pct": 0.066,
+          "at_50pct": 0.86,
+          "at_75pct": 11.4,
+          "max": 175
+        },
+        "source_note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval."
+      },
+      "inputs": [
+        "env_amp.gate_in"
+      ],
+      "outputs": [
+        "env_amp.out"
+      ]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "AMPLIFIER",
+      "scope": "per_voice",
+      "description": "Per-voice amplifier with velocity and aftertouch depths.",
+      "inputs": [
+        "vca.in",
+        "vca.env_in",
+        "vca.vel_in"
+      ],
+      "outputs": [
+        "vca.out"
+      ]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO-MOD",
+      "scope": "common",
+      "description": "One LFO for all voices, about 0.08 to 20 Hz with a fast or slow range. The panel switch picks triangle or pulse; the menu then picks triangle, sine or saw in the first position and square, random or noise in the second. INITIAL AMOUNT sets depth without the mod wheel. Destinations: frequency of both oscillators, pulse width of both, the filter. A menu setting limits the oscillator destinations to A, B or both. Optional modulation delay. Generated in firmware at 2 kHz; the vibrato runs at 500 Hz.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.08,
+          "max": 20
+        },
+        "shapes": [
+          "triangle",
+          "sine",
+          "saw",
+          "square",
+          "random",
+          "noise"
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "lfo.out"
+      ]
+    },
+    {
+      "id": "vibrato",
+      "type": "lfo",
+      "name": "Vibrato",
+      "panel_section": "LFO-MOD (menu)",
+      "scope": "common",
+      "description": "A second, menu-only modulator for pitch vibrato, with speed and amount. The mod wheel can be assigned to it instead of the LFO.",
+      "inputs": [],
+      "outputs": [
+        "vibrato.out"
+      ]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "PROGRAMMER",
+      "scope": "common",
+      "description": "Up, down, up-and-down or up-then-down, by key position, or played or random order. In the GliGli ancestor the up/down mode double-triggers the top and bottom notes, so N notes give an N/4 bar, and REC latches up to 128 notes, adding more while latched. REC or the footswitch latches.",
+      "inputs": [
+        "arp.notes_in",
+        "arp.clock_in"
+      ],
+      "outputs": [
+        "arp.notes_out"
+      ]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer",
+      "panel_section": "PROGRAMMER",
+      "scope": "common",
+      "description": "Two banks of real-time recorded note sequences sharing about 400 notes. Playback speed from 1/4 to 4 times real time, storable.",
+      "properties": {
+        "banks": 2,
+        "note_capacity": 400
+      },
+      "inputs": [
+        "seq.notes_in",
+        "seq.clock_in"
+      ],
+      "outputs": [
+        "seq.notes_out"
+      ]
+    },
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Clock",
+      "panel_section": "PROGRAMMER",
+      "scope": "common",
+      "description": "Tempo for the arpeggiator and sequencer: internal BPM, MIDI, USB or the SYNC IN jack, with subdivision and PPQN settings.",
+      "inputs": [
+        "clock.sync_in"
+      ],
+      "outputs": [
+        "clock.out"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT",
+      "scope": "common",
+      "description": "Voices summed, master volume, master tune; rear 1/4-inch output, top 1/8-inch output and phones.",
+      "inputs": [
+        "output.in"
+      ],
+      "outputs": [
+        "output.main",
+        "output.aux",
+        "output.phones"
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "voices.program_select",
+      "module": "voices",
+      "label": "PROGRAM SELECT 0-9",
+      "manual_ref": 2,
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "keypad"
+        }
+      ],
+      "function": "Selects programs 0 to 99 in the current bank; also selects menu items."
+    },
+    {
+      "id": "voices.preset_mode",
+      "module": "voices",
+      "label": "PRESET",
+      "manual_ref": 3,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Toggles between preset mode (sound from memory) and manual mode (sound from the panel). Held, opens the preset functions."
+    },
+    {
+      "id": "voices.perf",
+      "module": "voices",
+      "label": "PERF",
+      "manual_ref": 4,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "First press opens the additional parameters; second press is manual mode, display P800."
+    },
+    {
+      "id": "voices.settings",
+      "module": "voices",
+      "label": "SETTINGS",
+      "manual_ref": 5,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Opens the global settings menu."
+    },
+    {
+      "id": "voices.tune",
+      "module": "voices",
+      "label": "TUNE",
+      "manual_ref": 6,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Autotune of all oscillators and filters. Short press: full calibration. Long press: faster temperature correction. Output muted while tuning."
+    },
+    {
+      "id": "clock.source",
+      "module": "clock",
+      "label": "SYNC SOURCE",
+      "manual_ref": 7,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "sync_in",
+          "label": "Sync In"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Clock source."
+    },
+    {
+      "id": "clock.bpm",
+      "module": "clock",
+      "label": "SYNC CLOCK",
+      "manual_ref": 8,
+      "kind": "integer",
+      "range": {
+        "min": 20,
+        "max": 300
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "First press: BPM. Second: subdivision (1/4, 1/8 and so on). Third: input PPQN (24, 48, 96, 192).",
+      "confidence": "speculative",
+      "note": "BPM range not stated."
+    },
+    {
+      "id": "voices.rec",
+      "module": "voices",
+      "label": "REC",
+      "manual_ref": 9,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button",
+          "note": "red"
+        }
+      ],
+      "function": "Stores programs and sequences; with an ARP button, latches the arpeggiator."
+    },
+    {
+      "id": "seq.seq1",
+      "module": "seq",
+      "label": "SEQ 1",
+      "manual_ref": 10,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Selects sequence bank 1 for recording or playback."
+    },
+    {
+      "id": "seq.seq2",
+      "module": "seq",
+      "label": "SEQ 2",
+      "manual_ref": 11,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Selects sequence bank 2 for recording or playback."
+    },
+    {
+      "id": "arp.up_dn",
+      "module": "arp",
+      "label": "ARP UP-DN",
+      "manual_ref": 12,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_and_down"
+        },
+        {
+          "value": "up_then_down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 73
+        }
+      ],
+      "function": "Arpeggiator by key position. Hold and press keypad 1 to 4 for the direction."
+    },
+    {
+      "id": "arp.assign",
+      "module": "arp",
+      "label": "ARP ASSIGN",
+      "manual_ref": 13,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "played"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Arpeggiator by key order. Hold and press keypad 1 or 2."
+    },
+    {
+      "id": "voices.value",
+      "module": "voices",
+      "label": "VALUE",
+      "manual_ref": 14,
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Encoder for menu values, tempo and sequence speed.",
+      "note": "Range depends on the parameter being edited."
+    },
+    {
+      "id": "osc_a.frequency",
+      "module": "osc_a",
+      "label": "FREQUENCY (A)",
+      "manual_ref": 15,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 32.7,
+        "max": 8372.02,
+        "unit": "Hz across 4 ranges"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 8
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 80
+        }
+      ],
+      "function": "OSC A frequency over four octaves, stepped by octave, semitone or freely depending on the pot mode setting."
+    },
+    {
+      "id": "osc_a.saw",
+      "module": "osc_a",
+      "label": "SAWTOOTH (A)",
+      "manual_ref": 17,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 48
+        }
+      ],
+      "function": "OSC A sawtooth on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_a.tri",
+      "module": "osc_a",
+      "label": "TRIANGLE (A)",
+      "manual_ref": 18,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 49
+        }
+      ],
+      "function": "OSC A triangle on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_a.pulse",
+      "module": "osc_a",
+      "label": "PULSE (A)",
+      "manual_ref": 19,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 50
+        }
+      ],
+      "function": "OSC A pulse on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_a.pulse_width",
+      "module": "osc_a",
+      "label": "PULSE WIDTH (A)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 1,
+        "max": 99,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 10
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 82
+        }
+      ],
+      "function": "Pulse duty cycle, about 1 to 99%; 50% is roughly square."
+    },
+    {
+      "id": "mixer.level_a",
+      "module": "mixer",
+      "label": "LEVEL (A)",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 9
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 81
+        }
+      ],
+      "function": "OSC A level. Unity at about 5; from there to 10 it overdrives the mix VCA and the filter input (the GliGli 'mix overdrive', which on the Prophet-600 drives a Curtis 4-pole filter)."
+    },
+    {
+      "id": "osc_b.frequency",
+      "module": "osc_b",
+      "label": "FREQUENCY (B)",
+      "manual_ref": 15,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 32.7,
+        "max": 8372.02,
+        "unit": "Hz across 4 ranges"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 11
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 83
+        }
+      ],
+      "function": "OSC B frequency over four octaves, stepped by octave, semitone or freely depending on the pot mode setting."
+    },
+    {
+      "id": "osc_b.saw",
+      "module": "osc_b",
+      "label": "SAWTOOTH (B)",
+      "manual_ref": 17,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 51
+        }
+      ],
+      "function": "OSC B sawtooth on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_b.tri",
+      "module": "osc_b",
+      "label": "TRIANGLE (B)",
+      "manual_ref": 18,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 52
+        }
+      ],
+      "function": "OSC B triangle on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_b.pulse",
+      "module": "osc_b",
+      "label": "PULSE (B)",
+      "manual_ref": 19,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 53
+        }
+      ],
+      "function": "OSC B pulse on or off; shapes can be combined."
+    },
+    {
+      "id": "osc_b.pulse_width",
+      "module": "osc_b",
+      "label": "PULSE WIDTH (B)",
+      "manual_ref": 20,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 1,
+        "max": 99,
+        "unit": "% duty"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 13
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 85
+        }
+      ],
+      "function": "Pulse duty cycle, about 1 to 99%; 50% is roughly square."
+    },
+    {
+      "id": "mixer.level_b",
+      "module": "mixer",
+      "label": "LEVEL (B)",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 12
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 84
+        }
+      ],
+      "function": "OSC B level. Unity at about 5; from there to 10 it overdrives the mix VCA and the filter input (the GliGli 'mix overdrive', which on the Prophet-600 drives a Curtis 4-pole filter)."
+    },
+    {
+      "id": "osc_a.sync",
+      "module": "osc_a",
+      "label": "SYNC",
+      "manual_ref": 16,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 54
+        }
+      ],
+      "function": "Hard-syncs OSC A to OSC B."
+    },
+    {
+      "id": "osc_b.fine",
+      "module": "osc_b",
+      "label": "FINE",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "semitone"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 14
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 86
+        }
+      ],
+      "function": "Detunes OSC B flat or sharp of OSC A, up to about a semitone either way; zero at centre.",
+      "confidence": "inferred",
+      "note": "The guide says it 'raises' OSC B; the GliGli firmware made detune bipolar and the panel is marked -5 to +5."
+    },
+    {
+      "id": "polymod.fil_env",
+      "module": "polymod",
+      "label": "FIL ENV (source amount)",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 26
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 102
+        }
+      ],
+      "function": "Filter envelope amount into Poly-Mod; bipolar on the panel.",
+      "note": "Bipolar with zero at centre, so an inverted envelope can drive Poly-Mod (GliGli firmware feature)."
+    },
+    {
+      "id": "polymod.osc_b",
+      "module": "polymod",
+      "label": "OSC B (source amount)",
+      "manual_ref": 24,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 27
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 103
+        }
+      ],
+      "function": "OSC B amount into Poly-Mod."
+    },
+    {
+      "id": "polymod.to_freq_a",
+      "module": "polymod",
+      "label": "FREQ A (destination)",
+      "manual_ref": 25,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 55
+        }
+      ],
+      "function": "Poly-Mod to OSC A frequency."
+    },
+    {
+      "id": "polymod.to_filter",
+      "module": "polymod",
+      "label": "FILTER (destination)",
+      "manual_ref": 26,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 56
+        }
+      ],
+      "function": "Poly-Mod to filter cutoff."
+    },
+    {
+      "id": "voices.unison_track",
+      "module": "voices",
+      "label": "UNISON TRACK",
+      "manual_ref": 27,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 65
+        }
+      ],
+      "function": "No keys held: unison, all eight voices on one note. Chord held: chord mode, the chord transposed by each new note and saved with the preset. One key held: single-voice unison (monophonic)."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 37
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 113
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "lfo.frequency",
+      "module": "lfo",
+      "label": "FREQUENCY (LFO)",
+      "manual_ref": 29,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.08,
+        "max": 20,
+        "unit": "Hz",
+        "taper": "exponential (GliGli source)",
+        "note": "Controls text says about 0.25 to 20 Hz; specifications 0.08 to 20 Hz. The GliGli ancestor's LFO runs from about 0.017 Hz (one cycle in about a minute) to 62.5 Hz on an exponential curve, so Behringer has rescaled or limited it."
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 28
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 104
+        }
+      ],
+      "function": "LFO speed."
+    },
+    {
+      "id": "lfo.shape_switch",
+      "module": "lfo",
+      "label": "SHAPE",
+      "manual_ref": 30,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "tri_group",
+          "label": "triangle"
+        },
+        {
+          "value": "pulse_group",
+          "label": "pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 57
+        }
+      ],
+      "function": "Triangle-group or pulse-group; the menu picks the shape within the group."
+    },
+    {
+      "id": "lfo.initial_amount",
+      "module": "lfo",
+      "label": "INITIAL AMOUNT",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 29
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 105
+        }
+      ],
+      "function": "LFO depth independent of the mod wheel."
+    },
+    {
+      "id": "lfo.to_freq",
+      "module": "lfo",
+      "label": "FREQ A-B",
+      "manual_ref": 32,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 74
+        }
+      ],
+      "function": "LFO to both oscillators' frequency."
+    },
+    {
+      "id": "lfo.to_pw",
+      "module": "lfo",
+      "label": "PW A-B",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 76
+        }
+      ],
+      "function": "LFO to both oscillators' pulse width."
+    },
+    {
+      "id": "lfo.to_filter",
+      "module": "lfo",
+      "label": "FILTER",
+      "manual_ref": 34,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 75
+        }
+      ],
+      "function": "LFO to filter cutoff."
+    },
+    {
+      "id": "glide.amount",
+      "module": "glide",
+      "label": "GLIDE",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 30
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 106
+        }
+      ],
+      "function": "Portamento between notes."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "manual_ref": 36,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 15
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 87
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "manual_ref": 37,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 16
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 88
+        }
+      ],
+      "function": "Emphasis at cutoff; self-oscillates at high settings."
+    },
+    {
+      "id": "vcf.env_amount",
+      "module": "vcf",
+      "label": "ENVELOPE AMOUNT",
+      "manual_ref": 38,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 17
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 89
+        }
+      ],
+      "function": "Bipolar depth of the filter envelope on cutoff: zero at centre, positive clockwise, inverted counter-clockwise. The guide's '0 is no effect' refers to the centre position.",
+      "note": "The GliGli firmware made this control bipolar with zero at mid-travel; matches the PRO-800 panel's -5 to +5 marking.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "vcf.keyboard",
+      "module": "vcf",
+      "label": "KEYBOARD",
+      "manual_ref": 39,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half",
+          "label": "1/2"
+        },
+        {
+          "value": "full",
+          "label": "FULL",
+          "meaning": "self-oscillating filter tracks accurately"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 60
+        }
+      ],
+      "function": "Keyboard tracking of cutoff."
+    },
+    {
+      "id": "env_filter.attack",
+      "module": "env_filter",
+      "label": "ATTACK",
+      "manual_ref": 40,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 21
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 93
+        }
+      ],
+      "function": "Attack of the filter envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "env_filter.decay",
+      "module": "env_filter",
+      "label": "DECAY",
+      "manual_ref": 41,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 20
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 92
+        }
+      ],
+      "function": "Decay of the filter envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "env_filter.sustain",
+      "module": "env_filter",
+      "label": "SUSTAIN",
+      "manual_ref": 42,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 19
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 91
+        }
+      ],
+      "function": "Sustain of the filter envelope. No times given."
+    },
+    {
+      "id": "env_filter.release",
+      "module": "env_filter",
+      "label": "RELEASE",
+      "manual_ref": 43,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 18
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 90
+        }
+      ],
+      "function": "Release of the filter envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "env_amp.attack",
+      "module": "env_amp",
+      "label": "ATTACK",
+      "manual_ref": 44,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 25
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 97
+        }
+      ],
+      "function": "Attack of the amplifier envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "env_amp.decay",
+      "module": "env_amp",
+      "label": "DECAY",
+      "manual_ref": 45,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 24
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 96
+        }
+      ],
+      "function": "Decay of the amplifier envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "env_amp.sustain",
+      "module": "env_amp",
+      "label": "SUSTAIN",
+      "manual_ref": 46,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 23
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 95
+        }
+      ],
+      "function": "Sustain of the amplifier envelope. No times given."
+    },
+    {
+      "id": "env_amp.release",
+      "module": "env_amp",
+      "label": "RELEASE",
+      "manual_ref": 47,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 22
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 94
+        }
+      ],
+      "function": "Release of the amplifier envelope.",
+      "physical": {
+        "min": 0.0005,
+        "max": 37.4,
+        "unit": "s (fast mode)",
+        "taper": "exponential, about 3.6 times per eighth of travel",
+        "note": "Computed from the GliGli 2.1 source (Electric Druid phase lookup table, 2 kHz update, speed shift 1 for fast and 3 for slow). Behringer is reported to have made the envelopes snappier, so these describe the ancestor, not the PRO-800 exactly. The shortest settings are limited in practice by the 0.5 ms update interval. Slow mode is four times longer: to about 175 s."
+      },
+      "confidence": "speculative"
+    },
+    {
+      "id": "output.master_tune",
+      "module": "output",
+      "label": "MASTER TUNE",
+      "manual_ref": 48,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "semitone"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 3
+        }
+      ],
+      "function": "Overall tuning, plus or minus one semitone."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 50,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 7
+        }
+      ],
+      "function": "Master volume."
+    },
+    {
+      "id": "voices.midi_channel_dip",
+      "module": "voices",
+      "label": "MIDI CHANNEL SELECTION",
+      "manual_ref": 58,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "Rear DIP switches; used when the MIDI channel settings are set to Dipswitch."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER SWITCH",
+      "manual_ref": 61,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power on and off."
+    },
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "LFO Shape",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sine"
+        },
+        {
+          "value": "saw",
+          "meaning": "ramp up"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "noise"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Shape within the group chosen on the panel switch."
+    },
+    {
+      "id": "lfo.target",
+      "module": "lfo",
+      "label": "LFO Target",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ab"
+        },
+        {
+          "value": "a"
+        },
+        {
+          "value": "b"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 1, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 59
+        }
+      ],
+      "function": "Which oscillators the FREQ A-B and PW A-B switches reach."
+    },
+    {
+      "id": "lfo.speed_range",
+      "module": "lfo",
+      "label": "LFO Speed Range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fast"
+        },
+        {
+          "value": "slow"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 1, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 58
+        }
+      ],
+      "function": "Fast or slow LFO range."
+    },
+    {
+      "id": "vibrato.speed",
+      "module": "vibrato",
+      "label": "Vibrato Speed",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 2, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 34
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 110
+        }
+      ],
+      "function": "Vibrato rate."
+    },
+    {
+      "id": "vibrato.amount",
+      "module": "vibrato",
+      "label": "Vibrato Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 2, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 35
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 111
+        }
+      ],
+      "function": "Vibrato depth."
+    },
+    {
+      "id": "kbd.modwheel_amount",
+      "module": "kbd",
+      "label": "Mod Wheel Amount",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "min"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "full"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 3, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 67
+        }
+      ],
+      "function": "Mod wheel depth range."
+    },
+    {
+      "id": "kbd.modwheel_target",
+      "module": "kbd",
+      "label": "Mod Wheel Target",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "vibrato"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 3, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 70
+        }
+      ],
+      "function": "Mod wheel scales the LFO or the vibrato."
+    },
+    {
+      "id": "lfo.mod_delay",
+      "module": "lfo",
+      "label": "Modulation Delay",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 3, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 33
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 109
+        }
+      ],
+      "function": "Delay before modulation starts after a key."
+    },
+    {
+      "id": "env_amp.shape",
+      "module": "env_amp",
+      "label": "VCA Env Shape",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fast_exp"
+        },
+        {
+          "value": "fast_lin"
+        },
+        {
+          "value": "slow_exp"
+        },
+        {
+          "value": "slow_lin"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 4, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 63
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 72
+        }
+      ],
+      "function": "Amplifier envelope curve and speed. Fast and slow differ by a factor of four in time. Exponential uses a pure exponential decay curve; linear attack is a straight ramp and linear decay follows an SSM-style curve (GliGli source)."
+    },
+    {
+      "id": "env_filter.shape",
+      "module": "env_filter",
+      "label": "VCF Env Shape",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fast_exp"
+        },
+        {
+          "value": "fast_lin"
+        },
+        {
+          "value": "slow_exp"
+        },
+        {
+          "value": "slow_lin"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 4, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 61
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 62
+        }
+      ],
+      "function": "Filter envelope curve and speed. Fast and slow differ by a factor of four in time. Exponential uses a pure exponential decay curve; linear attack is a straight ramp and linear decay follows an SSM-style curve (GliGli source)."
+    },
+    {
+      "id": "kbd.bend_target",
+      "module": "kbd",
+      "label": "Pitchbend Target",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "vco"
+        },
+        {
+          "value": "vcf"
+        },
+        {
+          "value": "volume"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 5, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 66
+        }
+      ],
+      "function": "Where pitch bend goes."
+    },
+    {
+      "id": "kbd.bend_range",
+      "module": "kbd",
+      "label": "Pitchbend Range",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 5, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 42
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 117
+        }
+      ],
+      "function": "Bend range in semitones."
+    },
+    {
+      "id": "osc_a.pot_mode",
+      "module": "osc_a",
+      "label": "OscA Freq Pot Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "semitone"
+        },
+        {
+          "value": "octave"
+        }
+      ],
+      "default": "octave",
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 6, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 68
+        }
+      ],
+      "function": "How the OSC A FREQUENCY knob steps. Octave is the default."
+    },
+    {
+      "id": "osc_b.pot_mode",
+      "module": "osc_b",
+      "label": "OscB Freq Pot Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "semitone"
+        },
+        {
+          "value": "octave"
+        }
+      ],
+      "default": "octave",
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 6, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 69
+        }
+      ],
+      "function": "How the OSC B FREQUENCY knob steps."
+    },
+    {
+      "id": "vcf.kbd_ref_note",
+      "module": "vcf",
+      "label": "Keyboard Tracking Reference Note",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "C1"
+        },
+        {
+          "value": "C2"
+        },
+        {
+          "value": "C3"
+        },
+        {
+          "value": "C4"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 6, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 78
+        }
+      ],
+      "function": "Note about which filter tracking pivots."
+    },
+    {
+      "id": "vca.velocity",
+      "module": "vca",
+      "label": "VCA Velocity Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 7, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 31
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 107
+        }
+      ],
+      "function": "Velocity to level."
+    },
+    {
+      "id": "vcf.velocity",
+      "module": "vcf",
+      "label": "VCF Velocity Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 7, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 32
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 108
+        }
+      ],
+      "function": "Velocity to cutoff."
+    },
+    {
+      "id": "vca.aftertouch",
+      "module": "vca",
+      "label": "VCA Aftertouch Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 8, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 39
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 114
+        }
+      ],
+      "function": "Aftertouch to level."
+    },
+    {
+      "id": "vcf.aftertouch",
+      "module": "vcf",
+      "label": "VCF Aftertouch Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 8, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 40
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 115
+        }
+      ],
+      "function": "Aftertouch to cutoff."
+    },
+    {
+      "id": "lfo.aftertouch",
+      "module": "lfo",
+      "label": "LFO Aftertouch Amount",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 8, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 41
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 116
+        }
+      ],
+      "function": "Aftertouch to LFO depth."
+    },
+    {
+      "id": "voices.unison_detune",
+      "module": "voices",
+      "label": "Unison / Spread Detune",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 9, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 36
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 112
+        }
+      ],
+      "function": "Detune between stacked voices in unison, and the depth of the per-voice spread when Voice Spread is on."
+    },
+    {
+      "id": "voices.voice_spread",
+      "module": "voices",
+      "label": "Voice Spread",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 9, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 77
+        }
+      ],
+      "function": "Turns on per-voice 'vintage' variation, scaled by Unison / Spread Detune: each voice gets a fixed, alternating pitch offset and offsets to its attack, decay and release times (not sustain), imitating the voice-to-voice differences of an old analogue poly.",
+      "confidence": "speculative",
+      "note": "Behaviour of the equivalent 'vintage' spread in Imogen's continuation of the GliGli firmware; Behringer does not describe it."
+    },
+    {
+      "id": "glide.mode",
+      "module": "glide",
+      "label": "Glide Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "time"
+        },
+        {
+          "value": "speed"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "additional parameters: PERF, then keypad 0, VALUE to edit"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 79
+        }
+      ],
+      "function": "Glide at constant time or constant speed."
+    },
+    {
+      "id": "voices.midi_rx",
+      "module": "voices",
+      "label": "MIDI Rx Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1-16"
+        },
+        {
+          "value": "all"
+        },
+        {
+          "value": "dipswitch"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Receive channel."
+    },
+    {
+      "id": "voices.midi_tx",
+      "module": "voices",
+      "label": "MIDI Tx Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "thru"
+        },
+        {
+          "value": "1-16"
+        },
+        {
+          "value": "all"
+        },
+        {
+          "value": "dipswitch"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Transmit channel."
+    },
+    {
+      "id": "voices.midi_cc",
+      "module": "voices",
+      "label": "MIDI CC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "txrx"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "CC send and receive."
+    },
+    {
+      "id": "voices.midi_pc",
+      "module": "voices",
+      "label": "MIDI PC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "txrx"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Program change send and receive."
+    },
+    {
+      "id": "clock.sync_forward",
+      "module": "clock",
+      "label": "Sync In Forward",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Forwards the SYNC IN clock."
+    },
+    {
+      "id": "clock.sync_polarity",
+      "module": "clock",
+      "label": "Sync In Polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "rise"
+        },
+        {
+          "value": "fall"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "SYNC IN edge."
+    },
+    {
+      "id": "clock.sync_start_stop",
+      "module": "clock",
+      "label": "Sync In Start/Stop",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Whether SYNC IN starts and stops the sequencer and arpeggiator."
+    },
+    {
+      "id": "clock.sync_ppqn",
+      "module": "clock",
+      "label": "Sync In PPQN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1pps",
+          "label": "1 PPS"
+        },
+        {
+          "value": "2ppq"
+        },
+        {
+          "value": "4ppq"
+        },
+        {
+          "value": "24"
+        },
+        {
+          "value": "48"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "SYNC IN pulses per quarter note."
+    },
+    {
+      "id": "voices.local",
+      "module": "voices",
+      "label": "Local",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Local control."
+    },
+    {
+      "id": "voices.soft_thru",
+      "module": "voices",
+      "label": "Soft Thru",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 1, VALUE to edit"
+        }
+      ],
+      "function": "Software MIDI thru on MIDI OUT/THRU."
+    },
+    {
+      "id": "voices.transpose",
+      "module": "voices",
+      "label": "Transpose",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 2, VALUE to edit"
+        }
+      ],
+      "function": "Transpose; also set by holding PERF + SETTINGS and playing a note relative to C."
+    },
+    {
+      "id": "voices.preset_dump",
+      "module": "voices",
+      "label": "Preset Dump",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 3, VALUE to edit"
+        }
+      ],
+      "function": "SysEx dump of presets; second press confirms."
+    },
+    {
+      "id": "voices.voice_select",
+      "module": "voices",
+      "label": "Voice Select",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 4, VALUE to edit"
+        }
+      ],
+      "function": "Selects voice 1 to 8, for kill or retune."
+    },
+    {
+      "id": "voices.voice_kill",
+      "module": "voices",
+      "label": "Voice Kill",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "on"
+        },
+        {
+          "value": "kill"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 4, VALUE to edit"
+        }
+      ],
+      "function": "Disables the selected voice."
+    },
+    {
+      "id": "voices.retune_element",
+      "module": "voices",
+      "label": "Retune Element",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "osc_a"
+        },
+        {
+          "value": "osc_b"
+        },
+        {
+          "value": "vcf"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 5, VALUE to edit"
+        }
+      ],
+      "function": "What the retune acts on."
+    },
+    {
+      "id": "voices.retune_octave",
+      "module": "voices",
+      "label": "Octave",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "all"
+        },
+        {
+          "value": "0-7"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 5, VALUE to edit"
+        }
+      ],
+      "function": "Which octave to retune, or all."
+    },
+    {
+      "id": "voices.retune_encoder",
+      "module": "voices",
+      "label": "Retune Encoder",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 6, VALUE to edit"
+        }
+      ],
+      "function": "Starts manual retuning with the encoder; second press initiates."
+    },
+    {
+      "id": "voices.brightness",
+      "module": "voices",
+      "label": "Screen Brightness",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 7, VALUE to edit"
+        }
+      ],
+      "function": "Display brightness."
+    },
+    {
+      "id": "voices.display_time",
+      "module": "voices",
+      "label": "Display Parameter Time",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 7, VALUE to edit"
+        }
+      ],
+      "function": "How long a moved parameter's value stays on the display."
+    },
+    {
+      "id": "voices.name_display",
+      "module": "voices",
+      "label": "Preset Name Display",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 7, VALUE to edit"
+        }
+      ],
+      "function": "Show preset names."
+    },
+    {
+      "id": "voices.autotune_precision",
+      "module": "voices",
+      "label": "Autotune Precision",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0.5c"
+        },
+        {
+          "value": "1.0c"
+        },
+        {
+          "value": "1.5c"
+        },
+        {
+          "value": "2.0c"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 8, VALUE to edit"
+        }
+      ],
+      "function": "Target accuracy of autotune."
+    },
+    {
+      "id": "vcf.ext_mod_amount",
+      "module": "vcf",
+      "label": "External Filter Mod",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 9, VALUE to edit"
+        }
+      ],
+      "function": "Amount of the FILTER CV IN on cutoff."
+    },
+    {
+      "id": "voices.priority",
+      "module": "voices",
+      "label": "Voice Priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "last"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 9, VALUE to edit"
+        }
+      ],
+      "function": "Last (new notes always play, oldest stolen), low or high (legato in unison and chord modes)."
+    },
+    {
+      "id": "voices.factory_reset",
+      "module": "voices",
+      "label": "Factory Reset",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "global settings: SETTINGS, then keypad 0, VALUE to edit"
+        }
+      ],
+      "function": "Restores factory settings; second press confirms."
+    },
+    {
+      "id": "voices.bank",
+      "module": "voices",
+      "label": "Bank A-D",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "A"
+        },
+        {
+          "value": "B"
+        },
+        {
+          "value": "C"
+        },
+        {
+          "value": "D"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 1-4",
+          "when": "any_time"
+        }
+      ],
+      "function": "Selects bank A, B, C or D."
+    },
+    {
+      "id": "voices.preset_copy",
+      "module": "voices",
+      "label": "Preset Copy",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 5",
+          "when": "any_time"
+        }
+      ],
+      "function": "Copies the current preset."
+    },
+    {
+      "id": "voices.preset_paste",
+      "module": "voices",
+      "label": "Preset Paste",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 6",
+          "when": "any_time"
+        }
+      ],
+      "function": "Pastes to a new location; second press confirms."
+    },
+    {
+      "id": "voices.randomise",
+      "module": "voices",
+      "label": "Randomise Preset",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 7",
+          "when": "any_time"
+        }
+      ],
+      "function": "Randomises the current preset."
+    },
+    {
+      "id": "voices.bank_copy",
+      "module": "voices",
+      "label": "Bank Copy / Paste",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 8 / 9",
+          "when": "any_time"
+        }
+      ],
+      "function": "Copies a bank, then pastes it to another."
+    },
+    {
+      "id": "voices.basic_patch",
+      "module": "voices",
+      "label": "Reset to basic patch",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET + keypad 0",
+          "when": "any_time"
+        }
+      ],
+      "function": "Loads the basic patch."
+    },
+    {
+      "id": "voices.power_on",
+      "module": "voices",
+      "label": "Power-on functions",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "generic_preset"
+        },
+        {
+          "value": "factory_settings"
+        },
+        {
+          "value": "button_test"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold PRESET, SETTINGS or 0 while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold at power-up: PRESET loads a generic preset; SETTINGS resets settings to factory; 0 runs a button test."
+    },
+    {
+      "id": "voices.tune_last_note",
+      "module": "voices",
+      "label": "Tune last note",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold SETTINGS + TUNE",
+          "when": "any_time"
+        }
+      ],
+      "function": "Hold SETTINGS and press TUNE to fine-tune the last note played; saved with the preset."
+    },
+    {
+      "id": "seq.speed",
+      "module": "seq",
+      "label": "Sequence playback speed",
+      "kind": "continuous",
+      "range": {
+        "min": 0.25,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "VALUE, during playback"
+        }
+      ],
+      "function": "1/4 to 4 times real time; 1:1 is left of centre on the VALUE control. Press REC during playback to store the speed."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.sync_in",
+      "label": "SYNC IN",
+      "manual_ref": 51,
+      "location": "top",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5mm TS",
+      "node": "clock.sync_in",
+      "function": "External clock; PPQN and polarity in global settings."
+    },
+    {
+      "id": "jack.filter_cv",
+      "label": "FILTER CV IN",
+      "manual_ref": 52,
+      "location": "top",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.cv_in",
+      "combine": "sum",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 10
+      },
+      "function": "External CV on every voice's cutoff; amount in global settings.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 53,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_power_mw": 7.5,
+        "load_ohm": 32,
+        "impedance_ohm": 8
+      },
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.audio_out",
+      "label": "AUDIO OUT",
+      "manual_ref": 54,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.aux",
+      "electrical": {
+        "max_level_dbu": 20
+      },
+      "function": "1/8-inch audio output; the only output in Eurorack."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 55,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "manual_ref": 56,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS",
+      "node": "output.main",
+      "electrical": {
+        "max_level_dbu": 5
+      },
+      "function": "Main output to a mixer or interface."
+    },
+    {
+      "id": "jack.footswitch",
+      "label": "FOOTSWITCH",
+      "manual_ref": 57,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": null,
+      "function": "Sustain; also latches arpeggiator patterns, sets chord mode in unison, and ends sequence recording."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT/THRU",
+      "manual_ref": 59,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI out or soft thru.",
+      "note": "Number assigned by panel position; the guide's garbled list attaches 59 to MIDI IN."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB PORT",
+      "manual_ref": 60,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI and firmware updates via SynthTribe."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER INPUT",
+      "manual_ref": 62,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 1200
+      },
+      "function": "12 V DC, 1200 mA."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "voices.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.note",
+      "to": "arp.notes_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "arp.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.up_dn",
+        "not_equals": "off"
+      },
+      "note": "When either ARP button is active.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.note",
+      "to": "seq.notes_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "voices.rec",
+        "equals": true
+      }
+    },
+    {
+      "id": "c06",
+      "from": "seq.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "seq.seq1",
+            "equals": true
+          },
+          {
+            "param": "seq.seq2",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c07",
+      "from": "clock.out",
+      "to": "arp.clock_in",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "clock.out",
+      "to": "seq.clock_in",
+      "signal": "clock",
+      "kind": "fixed",
+      "amount": "seq.speed"
+    },
+    {
+      "id": "c10",
+      "from": "voices.pitch",
+      "to": "glide.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "glide.amount"
+    },
+    {
+      "id": "c11",
+      "from": "glide.out",
+      "to": "osc_a.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc_a.frequency"
+    },
+    {
+      "id": "c12",
+      "from": "glide.out",
+      "to": "osc_b.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc_b.frequency"
+    },
+    {
+      "id": "c13",
+      "from": "voices.gate",
+      "to": "env_filter.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "voices.gate",
+      "to": "env_amp.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "osc_b.sync_out",
+      "to": "osc_a.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc_a.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c20",
+      "from": "env_filter.out",
+      "to": "polymod.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "polymod.fil_env"
+    },
+    {
+      "id": "c21",
+      "from": "osc_b.out",
+      "to": "polymod.oscb_in",
+      "signal": "cv_or_audio",
+      "kind": "fixed",
+      "amount": "polymod.osc_b"
+    },
+    {
+      "id": "c22",
+      "from": "polymod.out",
+      "to": "osc_a.pm_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "polymod.to_freq_a",
+        "equals": true
+      }
+    },
+    {
+      "id": "c23",
+      "from": "polymod.out",
+      "to": "vcf.pm_in",
+      "signal": "cv_or_audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "polymod.to_filter",
+        "equals": true
+      }
+    },
+    {
+      "id": "c30",
+      "from": "lfo.out",
+      "to": "osc_a.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.to_freq",
+            "equals": true
+          },
+          {
+            "param": "lfo.target",
+            "not_equals": "b"
+          }
+        ]
+      },
+      "amount": "lfo.initial_amount"
+    },
+    {
+      "id": "c31",
+      "from": "lfo.out",
+      "to": "osc_b.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.to_freq",
+            "equals": true
+          },
+          {
+            "param": "lfo.target",
+            "not_equals": "a"
+          }
+        ]
+      },
+      "amount": "lfo.initial_amount"
+    },
+    {
+      "id": "c32",
+      "from": "lfo.out",
+      "to": "osc_a.pw_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.to_pw",
+            "equals": true
+          },
+          {
+            "param": "lfo.target",
+            "not_equals": "b"
+          }
+        ]
+      },
+      "amount": "lfo.initial_amount"
+    },
+    {
+      "id": "c33",
+      "from": "lfo.out",
+      "to": "osc_b.pw_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.to_pw",
+            "equals": true
+          },
+          {
+            "param": "lfo.target",
+            "not_equals": "a"
+          }
+        ]
+      },
+      "amount": "lfo.initial_amount"
+    },
+    {
+      "id": "c34",
+      "from": "lfo.out",
+      "to": "vcf.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo.to_filter",
+        "equals": true
+      },
+      "amount": "lfo.initial_amount"
+    },
+    {
+      "id": "c35",
+      "from": "vibrato.out",
+      "to": "osc_a.lfo_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vibrato.amount",
+      "note": "Vibrato reaches both oscillators' pitch; the mod wheel can scale it instead of the LFO."
+    },
+    {
+      "id": "c36",
+      "from": "vibrato.out",
+      "to": "osc_b.lfo_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vibrato.amount"
+    },
+    {
+      "id": "c40",
+      "from": "osc_a.out",
+      "to": "mixer.in_a",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.level_a"
+    },
+    {
+      "id": "c41",
+      "from": "osc_b.out",
+      "to": "mixer.in_b",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.level_b"
+    },
+    {
+      "id": "c42",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c43",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c44",
+      "from": "env_filter.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amount"
+    },
+    {
+      "id": "c45",
+      "from": "glide.out",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.keyboard",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c46",
+      "from": "kbd.velocity",
+      "to": "vcf.vel_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.velocity"
+    },
+    {
+      "id": "c47",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c48",
+      "from": "env_amp.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c49",
+      "from": "kbd.velocity",
+      "to": "vca.vel_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.velocity"
+    },
+    {
+      "id": "c50",
+      "from": "vca.out",
+      "to": "output.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume",
+      "note": "All eight voices sum here."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "voices.display",
+      "module": "voices",
+      "label": "PROGRAM DISPLAY",
+      "kind": "display",
+      "manual_ref": 1,
+      "function": "Four-digit red LED display: program number, P800 in manual mode, menu parameters, and A1 to A8, b1 to b8, F1 to F8 during autotune."
+    },
+    {
+      "id": "voices.preset_led",
+      "module": "voices",
+      "label": "PRESET",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 3,
+      "function": "Lit: sound from memory. Unlit: manual mode. Blinking: a parameter has been edited but not stored."
+    },
+    {
+      "id": "voices.tune_led",
+      "module": "voices",
+      "label": "TUNE",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 6,
+      "function": "Lit during autotune."
+    },
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "POWER",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 49,
+      "function": "Power on."
+    }
+  ],
+  "led_legend": {
+    "rule": "No colour code; all indicators are red. Meaning is carried by state instead: the PRESET LED is lit for a stored sound, off for manual mode and blinking for an unsaved edit; REC blinks while waiting for a store location.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "active; see each indicator for lit, off and blinking meanings"
+      }
+    ],
+    "confidence": "stated",
+    "note": "PRESET and REC states from the guide; colour from the panel photograph."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Eight true voices",
+      "applies_to": [
+        "voices",
+        "osc_a",
+        "osc_b",
+        "vcf",
+        "vca",
+        "env_filter",
+        "env_amp",
+        "polymod"
+      ],
+      "rule": "Every module marked per_voice exists eight times with shared settings and independent state. Unlike the Poly D, each voice has its own filter, VCA and envelopes, so this is true polyphony. LFO, vibrato and noise are shared."
+    },
+    {
+      "id": "b02",
+      "name": "Keyboard modes from one switch",
+      "applies_to": [
+        "voices"
+      ],
+      "rule": "UNISON TRACK does three things depending on what is held when it is pressed: nothing held gives unison (all eight voices on one note, detuned by the Unison/Spread Detune setting); one key held gives single-voice unison, a monophonic synth; a chord held gives chord mode, where that chord is transposed by every new note and saved with the preset. The sustain pedal can also set the chord while in unison."
+    },
+    {
+      "id": "b03",
+      "name": "Voice priority",
+      "applies_to": [
+        "voices"
+      ],
+      "rule": "Last: new notes always play and the oldest are stolen. Low or High: only the lowest or highest notes play, and in unison or chord modes these are legato."
+    },
+    {
+      "id": "b04",
+      "name": "Poly-Mod",
+      "applies_to": [
+        "polymod",
+        "osc_a",
+        "osc_b",
+        "vcf",
+        "env_filter"
+      ],
+      "rule": "Each voice's filter envelope (bipolar) and OSC B (unipolar) are summed and sent to OSC A frequency, the filter, or both. With OSC B at audio rate this is per-voice FM that stays in tune with each note; with SYNC on and the filter envelope into FREQ A it is the classic Prophet sync sweep."
+    },
+    {
+      "id": "b05",
+      "name": "Oscillator level drives the filter",
+      "applies_to": [
+        "mixer",
+        "vcf"
+      ],
+      "rule": "The oscillator LEVEL controls are clean up to about 5; above that the filter input is progressively overdriven."
+    },
+    {
+      "id": "b06",
+      "name": "LFO shapes in two groups",
+      "applies_to": [
+        "lfo"
+      ],
+      "rule": "The panel SHAPE switch picks a group and the menu picks the shape within it: triangle, sine or saw in the triangle position; square, random or noise in the pulse position. The LFO target setting restricts FREQ A-B and PW A-B to OSC A, OSC B or both."
+    },
+    {
+      "id": "b07",
+      "name": "Programs and manual mode",
+      "applies_to": [
+        "voices"
+      ],
+      "rule": "400 programs in banks A to D of 100. In preset mode the sound is the stored program and the PRESET LED blinks once anything is edited. Manual mode (PERF twice, display P800) makes the sound follow the panel. REC then two digits stores."
+    },
+    {
+      "id": "b08",
+      "name": "Autotune",
+      "applies_to": [
+        "voices",
+        "osc_a",
+        "osc_b",
+        "vcf"
+      ],
+      "rule": "At power-up and on TUNE, every oscillator and filter in all eight voices is calibrated (display A1 to A8, b1 to b8, F1 to F8), taking about 20 seconds with the output muted. A long press does a quicker temperature correction. Precision is set from 0.5 to 2 cents. Expect to retune in the first 30 minutes."
+    },
+    {
+      "id": "b09",
+      "name": "Sequencer",
+      "applies_to": [
+        "seq"
+      ],
+      "rule": "Real-time recording into two banks sharing about 400 notes; recording starts on the first key and ends with REC or the footswitch. If the limit is passed the earliest notes are lost, and recording into one bank steals notes from the other. Playback at 1/4 to 4 times, with 1:1 left of centre on VALUE; press REC during playback to store the speed."
+    },
+    {
+      "id": "b10",
+      "name": "Arpeggiator",
+      "applies_to": [
+        "arp"
+      ],
+      "rule": "ARP UP-DN arpeggiates by key position (up, down, up and down, up then down); ARP ASSIGN by played or random order. REC or the footswitch latches. Holding notes then pressing ARP UP-DN drones them without arpeggiation."
+    },
+    {
+      "id": "b12",
+      "name": "Performance controllers",
+      "applies_to": [
+        "kbd",
+        "lfo",
+        "vibrato",
+        "vcf",
+        "vca"
+      ],
+      "rule": "Aftertouch, pitch bend and the mod wheel act on parameters rather than as signals: aftertouch scales VCA level, cutoff and LFO depth by their menu amounts; pitch bend goes to pitch, cutoff or volume over 0 to 24 semitones; the mod wheel scales the LFO or the vibrato over one of four ranges. Recorded as parameters, not connections."
+    },
+    {
+      "id": "b11",
+      "name": "Envelope shapes",
+      "applies_to": [
+        "env_filter",
+        "env_amp"
+      ],
+      "rule": "Each envelope has a menu shape: fast or slow range, exponential or linear curve. No times are given for any setting."
+    },
+    {
+      "id": "b13",
+      "name": "Firmware-generated modulation",
+      "applies_to": [
+        "env_filter",
+        "env_amp",
+        "lfo",
+        "vibrato"
+      ],
+      "rule": "The audio path is analogue but the envelopes, LFO and vibrato are computed by the microcontroller and written to each voice as control voltages, as on the original Prophet-600. In the GliGli ancestor this happens 2,000 times a second per voice through a 14-bit DAC. This is why envelope curve and speed are menu choices, why Voice Spread can vary envelope times per voice, and why firmware updates have changed how the envelopes feel.",
+      "confidence": "inferred",
+      "note": "From the GliGli manual and source; Behringer does not describe its implementation."
+    },
+    {
+      "id": "b14",
+      "name": "Knob resolution",
+      "applies_to": [
+        "voices"
+      ],
+      "rule": "In the GliGli ancestor every knob is read at more than 8 bits for smooth changes, though values are displayed as 0 to 255. Scratchy pots are audible as wavering at this resolution, especially pulse width and cutoff with high resonance.",
+      "confidence": "inferred",
+      "note": "From the GliGli manual."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "velocity",
+      "aftertouch",
+      "pitch_bend",
+      "program_change",
+      "bank_select",
+      "cc",
+      "nrpn",
+      "midi_clock"
+    ],
+    "transmits": [
+      "cc and program change when enabled",
+      "soft thru",
+      "SysEx preset dump"
+    ],
+    "channel": {
+      "range": [
+        1,
+        16
+      ],
+      "set_by": "global settings (Rx and Tx separately), or the rear DIP switches when set to Dipswitch"
+    },
+    "cc_map": {
+      "0": "Bank select",
+      "1": "Mod wheel",
+      "2": "Breath",
+      "3": "Master tune",
+      "6": "NRPN data MSB",
+      "7": "Main volume",
+      "8": "FREQUENCY (A)",
+      "9": "LEVEL (A)",
+      "10": "PULSE WIDTH (A)",
+      "11": "FREQUENCY (B)",
+      "12": "LEVEL (B)",
+      "13": "PULSE WIDTH (B)",
+      "14": "FINE",
+      "15": "CUTOFF",
+      "16": "RESONANCE",
+      "17": "ENVELOPE AMOUNT",
+      "18": "RELEASE",
+      "19": "SUSTAIN",
+      "20": "DECAY",
+      "21": "ATTACK",
+      "22": "RELEASE",
+      "23": "SUSTAIN",
+      "24": "DECAY",
+      "25": "ATTACK",
+      "26": "FIL ENV (source amount)",
+      "27": "OSC B (source amount)",
+      "28": "FREQUENCY (LFO)",
+      "29": "INITIAL AMOUNT",
+      "30": "GLIDE",
+      "31": "VCA Velocity Amount",
+      "32": "VCF Velocity Amount",
+      "33": "Modulation Delay",
+      "34": "Vibrato Speed",
+      "35": "Vibrato Amount",
+      "36": "Unison / Spread Detune",
+      "37": "NOISE",
+      "38": "NRPN data LSB",
+      "39": "VCA Aftertouch Amount",
+      "40": "VCF Aftertouch Amount",
+      "41": "LFO Aftertouch Amount",
+      "42": "Pitchbend Range",
+      "48": "SAWTOOTH (A)",
+      "49": "TRIANGLE (A)",
+      "50": "PULSE (A)",
+      "51": "SAWTOOTH (B)",
+      "52": "TRIANGLE (B)",
+      "53": "PULSE (B)",
+      "54": "SYNC",
+      "55": "FREQ A (destination)",
+      "56": "FILTER (destination)",
+      "57": "SHAPE",
+      "58": "LFO Speed Range",
+      "59": "LFO Target",
+      "60": "KEYBOARD",
+      "61": "VCF Env Shape",
+      "62": "VCF Env Shape",
+      "63": "VCA Env Shape",
+      "64": "Sustain pedal",
+      "65": "UNISON TRACK",
+      "66": "Pitchbend Target",
+      "67": "Mod Wheel Amount",
+      "68": "OscA Freq Pot Mode",
+      "69": "OscB Freq Pot Mode",
+      "70": "Mod Wheel Target",
+      "72": "VCA Env Shape",
+      "73": "ARP UP-DN",
+      "74": "FREQ A-B",
+      "75": "FILTER",
+      "76": "PW A-B",
+      "77": "Voice Spread",
+      "78": "Keyboard Tracking Reference Note",
+      "79": "Glide Mode",
+      "80": "FREQUENCY (A) (fine)",
+      "81": "LEVEL (A) (fine)",
+      "82": "PULSE WIDTH (A) (fine)",
+      "83": "FREQUENCY (B) (fine)",
+      "84": "LEVEL (B) (fine)",
+      "85": "PULSE WIDTH (B) (fine)",
+      "86": "FINE (fine)",
+      "87": "CUTOFF (fine)",
+      "88": "RESONANCE (fine)",
+      "89": "ENVELOPE AMOUNT (fine)",
+      "90": "RELEASE (fine)",
+      "91": "SUSTAIN (fine)",
+      "92": "DECAY (fine)",
+      "93": "ATTACK (fine)",
+      "94": "RELEASE (fine)",
+      "95": "SUSTAIN (fine)",
+      "96": "NRPN data increment",
+      "97": "NRPN data decrement",
+      "98": "NRPN param LSB",
+      "99": "NRPN param MSB",
+      "102": "FIL ENV (source amount) (fine)",
+      "103": "OSC B (source amount) (fine)",
+      "104": "FREQUENCY (LFO) (fine)",
+      "105": "INITIAL AMOUNT (fine)",
+      "106": "GLIDE (fine)",
+      "107": "VCA Velocity Amount (fine)",
+      "108": "VCF Velocity Amount (fine)",
+      "109": "Modulation Delay (fine)",
+      "110": "Vibrato Speed (fine)",
+      "111": "Vibrato Amount (fine)",
+      "112": "Unison / Spread Detune (fine)",
+      "113": "NOISE (fine)",
+      "114": "VCA Aftertouch Amount (fine)",
+      "115": "VCF Aftertouch Amount (fine)",
+      "116": "LFO Aftertouch Amount (fine)",
+      "117": "Pitchbend Range (fine)",
+      "120": "All sounds off",
+      "123": "All notes off"
+    },
+    "cc_resolution": "Continuous parameters take a coarse CC (8 to 42) and a fine CC (80 to 117) for 14-bit resolution (0 to 16383), or coarse alone for 0 to 127. Stepped parameters (48 to 79) divide 0 to 127 into equal zones, one per choice; for example Unison is off for 0 to 63 and on for 64 to 127. From the GliGli MIDI implementation, which the PRO-800 follows with its own CC numbers.",
+    "nrpn": "Data entry, increment and decrement CCs listed; the NRPN parameter numbers are not given.",
+    "sysex": "Preset dump only; format not given.",
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows 7 or higher, Mac OS X 10.11.6 or higher"
+    },
+    "app": "SynthTribe for firmware updates",
+    "note": "The GliGli firmware receives CCs in preset mode only; whether the PRO-800 keeps that restriction is not stated. Behringer's CC numbers differ from GliGli's (for example OSC A frequency is 8 here, 16 in GliGli)."
+  },
+  "specifications": {
+    "voices": 8,
+    "oscillators": {
+      "count": 16,
+      "chip": "3340",
+      "range_hz": [
+        32.7,
+        8372.02
+      ],
+      "ranges": 4
+    },
+    "lfo_hz": [
+      0.08,
+      20
+    ],
+    "vcf": "4-pole low pass, 24 dB/octave, per voice",
+    "envelopes": [
+      "VCF",
+      "VCA"
+    ],
+    "programs": 400,
+    "sequencer_notes": 400,
+    "outputs": {
+      "main": "1/4-inch TS, +5 dBu",
+      "aux": "1/8-inch TS, +20 dBu",
+      "phones": "1/8-inch TRS, 7.5 mW at 32 ohm, 8 ohm"
+    },
+    "filter_cv_in_v": [
+      0,
+      10
+    ],
+    "sync_in": "3.5 mm TS, 1 PPS, 2, 24, 48 PPQ",
+    "power": {
+      "adaptor": "12 V DC, 1200 mA",
+      "consumption_w_max": 14.4
+    },
+    "dimensions_mm": {
+      "h": 96.6,
+      "w": 424.4,
+      "d": 135.6
+    },
+    "eurorack_hp": 80,
+    "weight_kg": 1.645,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in several languages",
+    "warranty and compliance declarations",
+    "hook-up diagrams",
+    "non-English duplicates",
+    "Eurorack installation",
+    "the MIDI channel DIP switch table"
+  ],
+  "not_in_source": [
+    "envelope times for the PRO-800 itself; the file now carries figures computed from the GliGli ancestor, which Behringer has since changed",
+    "filter cutoff range in Hz, resonance law and self-oscillation threshold",
+    "NRPN parameter numbers and the SysEx dump format",
+    "the internal BPM range and the SYNC CLOCK subdivision list",
+    "the vibrato rate range and the modulation delay time range",
+    "Behringer's own description of Voice Spread; the file's description comes from the Imogen firmware",
+    "whether noise is per voice or shared",
+    "the full number-to-control mapping; the English control list is typeset out of order and several items are assigned here by panel position"
+  ],
+  "source_inconsistencies": [
+    "The English control list is out of order and several numbers carry the wrong description (for example 22 and 23 share one line covering FINE and FIL ENV, and 59 is labelled MIDI IN on the rear while the panel's MIDI IN is on the top).",
+    "LFO range: 'about 0.25 to 20 Hz' in item 29, 0.08 to 20 Hz in the specifications.",
+    "The specifications list LFO shape as triangle or pulse; the menu offers six shapes.",
+    "SYNC CLOCK lists PPQN of 24, 48, 96 and 192; the global setting and the specifications list 1 PPS, 2, 4, 24 and 48.",
+    "ENVELOPE AMOUNT is marked -5 to +5 on the panel and 0 to 10 in the specifications; the guide says 0 is no effect.",
+    "CC 48 and 49 are both printed as 'OSC A Saw'; 49 is read as OSC A triangle. CCs 52 and 53 print 'OSB B'. CC 79's hex is printed 'AF' for 4F.",
+    "The LFO shape instructions tell you to 'Enter Pref mode' for the square group; read as PERF.",
+    "The button is labelled ARP UP-DN in the controls and ARP UP-ON in the specifications.",
+    "The guide's tune routine, keyboard modes and LFO instructions are copied from the GliGli manual; its 'Enter Pref mode' is a garbling of the GliGli instruction to light the 'to tape' button.",
+    "LFO range: the GliGli ancestor spans about 0.017 to 62.5 Hz; the PRO-800 guide gives 0.08 to 20 Hz.",
+    "Pitch bend range: GliGli offers a third, a fifth or an octave; the PRO-800 offers 0 to 24 semitones."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Envelope and filter behaviour",
+      "detail": "Envelope stage times are now estimated from the GliGli source (about 0.5 ms to 37 s fast, to 175 s slow, exponential taper), but Behringer has altered the envelopes since. Cutoff range and resonance law remain unknown; the Prophet-600 used a Curtis 4-pole filter."
+    },
+    {
+      "topic": "Per-voice variation",
+      "detail": "Voice Spread deliberately varies voices; inherent voice-to-voice tolerance after autotune is not documented."
+    },
+    {
+      "topic": "Poly-Mod depth",
+      "detail": "Poly-Mod amounts have no stated scaling in semitones or octaves at full travel."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "No Prophet-600 documentation was supplied."
+    },
+    {
+      "topic": "Firmware lineage",
+      "detail": "Confirmed by Behringer's launch text and by text copied into the guide. The open-source code gives exact envelope, LFO and MIDI behaviour for the ancestor; the menu items the GliGli 2.0 release lacks (keyboard tracking reference note, voice spread, glide mode, aftertouch amounts, 0 to 24 semitone bend) come from Imogen's later fork or from Behringer."
+    }
+  ]
+}
