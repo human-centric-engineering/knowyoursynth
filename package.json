@@ -1,7 +1,7 @@
 {
-  "name": "sunrise",
-  "version": "0.13.0",
-  "description": "A production-ready Next.js starter template designed for rapid application development with AI assistance.",
+  "name": "knowyoursynth",
+  "version": "0.1.0",
+  "description": "Know Your Synth — learn sound design on hardware synths, panel by panel. A companion to BeatBreaker, built on the Sunrise starter template.",
   "private": true,
   "engines": {
     "node": ">=24",
@@ -72,15 +72,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/human-centric-engineering/sunrise.git"
+    "url": "git+https://github.com/human-centric-engineering/knowyoursynth.git"
   },
   "keywords": [
     "nextjs",
     "typescript",
     "react",
-    "starter",
-    "template",
-    "boilerplate",
+    "synthesizer",
+    "sound-design",
+    "music",
+    "web-audio",
+    "midi",
     "prisma",
     "tailwind",
     "better-auth"
@@ -88,9 +90,9 @@
   "author": "Human-Centric Engineering",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/human-centric-engineering/sunrise/issues"
+    "url": "https://github.com/human-centric-engineering/knowyoursynth/issues"
   },
-  "homepage": "https://github.com/human-centric-engineering/sunrise#readme",
+  "homepage": "https://github.com/human-centric-engineering/knowyoursynth#readme",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
     "@aws-sdk/client-s3": "^3.1141.0",

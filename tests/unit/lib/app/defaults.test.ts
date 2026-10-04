@@ -410,11 +410,19 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     // by construction and would keep passing in a fork that had filled the real
     // file — turning the one row that tells a fork to pin its value into a row
     // that can never fail.
+    // FORK (Know Your Synth): upstream asserts these ship null, which is Sunrise's
+    // promise to a fork rather than a fork's promise to itself. Filling the seam
+    // is the point of forking, so the row is re-pointed at OUR values instead of
+    // deleted — it still fails if the brand changes by accident, which is what
+    // the guard was for. Expect this row to conflict on a Sunrise sync; keep
+    // ours.
     assert: async () => {
       const seam = await vi.importActual<typeof import('@/lib/app/brand')>('@/lib/app/brand');
-      expect(seam.appBrandName).toBeNull();
-      expect(seam.appBrandLegalName).toBeNull();
-      expect(seam.appBrandDescription).toBeNull();
+      expect(seam.appBrandName).toBe('Know Your Synth');
+      expect(seam.appBrandLegalName).toBe('Human-Centric Engineering');
+      expect(seam.appBrandDescription).toBe(
+        'Learn sound design on hardware synths: explore each panel, patch it, and hear what every control does.'
+      );
     },
   },
   {

@@ -18,17 +18,18 @@
  */
 
 /** Product name — page titles, header/footer brand, emails. `null` → "Sunrise". */
-export const appBrandName: string | null = null;
+export const appBrandName: string | null = 'Know Your Synth';
 
 /**
  * Copyright holder, where it differs from the product (e.g. product "ConQuest"
  * © "All Too Human Ltd"). `null` → the product name.
  */
-export const appBrandLegalName: string | null = null;
+export const appBrandLegalName: string | null = 'Human-Centric Engineering';
 
 /**
  * Root `<meta name="description">`, for any page that sets none of its own.
  * `null` → the product name — deliberately not a sentence, because a wrong
  * sentence is worse than a short one (#519).
  */
-export const appBrandDescription: string | null = null;
+export const appBrandDescription: string | null =
+  'Learn sound design on hardware synths: explore each panel, patch it, and hear what every control does.';
