@@ -67,7 +67,7 @@ describe('the scan itself', () => {
     const good = [
       `import { logger } from '@/lib/logging';`,
       `const has = Object.${p}.hasOwnProperty.call(a, 'b');`,
-      `import { prototypeData } from '@/lib/app/prototype-data';`,
+      `import { prototypeData } from '@/lib/synths/prototype-data';`,
       `// ported from ${p}/src/lib/patch.js`,
       `const ignores = ['${p}/**'];`,
     ];

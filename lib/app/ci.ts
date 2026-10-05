@@ -103,7 +103,18 @@ export interface AppCoverageExclusion {
  * ];
  * ```
  */
-export const appCoverageExclusions: AppCoverageExclusion[] = [];
+export const appCoverageExclusions: AppCoverageExclusion[] = [
+  {
+    // The directory, not one file: nothing under it is app code. It is the original artefact,
+    // kept as the reference the port copies from, already outside tsconfig, ESLint and Prettier,
+    // and deleted at launch (D13). Its own proof is `node prototype/check.mjs --compare`.
+    pattern: 'prototype/**',
+    reason:
+      'the reference artefact the app is ported from: untyped JS and standalone node CLIs ' +
+      '(check.mjs, build.mjs) that no test imports and the app never loads. It is outside ' +
+      'every other gate and is removed at launch (D13).',
+  },
+];
 
 /** One test that must run regardless of what the module graph says. */
 export interface AppAlwaysRunTest {
