@@ -66,8 +66,9 @@ const SR = 48000;
 // The databank: every id resolves and every linked sound exists. Checked once, by the process that starts the others.
 if (!process.env.KYS_CHECK_CHILD) for (const m of checkBank((id) => SYNTHS.find((d) => d.id === id)?.presets.map((p) => p.id) || null)) E(`bank: ${m}`);
 
-// Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 2,500 sounds of
-// 3 s each at roughly real time, which is two hours on one core. Each synth's report is printed whole, in catalogue order.
+// Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 1,100 sounds of
+// 3 s each, roughly half an hour on one core and about ten minutes on eight. Each synth's report is printed whole, in
+// catalogue order.
 if (!onlySynth) {
   const jobs = Math.max(1, Number(optValue('jobs')) || os.availableParallelism());
   const self = fileURLToPath(import.meta.url);

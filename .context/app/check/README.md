@@ -36,8 +36,9 @@ node check.mjs --write-baseline          # re-record every file (only when a sou
 `--seed=N` changes the seed, and a baseline recorded with another seed refuses to compare.
 `--jobs=N` caps the number of processes.
 
-A full run renders about 2,500 sounds. On one core that takes about two hours, so the check
-runs one process per synth, as many at a time as there are cores. It is not part of CI.
+A full run renders 1,086 sounds (at the time of recording). On one core that takes about half
+an hour, so the check runs one process per synth, as many at a time as there are cores: 621 s
+on eight. It is not part of CI.
 
 **Re-record only on purpose.** A baseline rewritten to make a port pass loses the only thing
 that would have shown that the port changed a sound.
