@@ -56,18 +56,11 @@ Use for: diagnostics, route inspection, runtime errors, browser automation, Next
 
 Use for external library docs: `resolve-library-id` → `query-docs`. Essential for current Next.js/Prisma/Tailwind patterns.
 
-> **The next section applies only when the `hce-hub` MCP server is configured
-> for this checkout.** Sunrise is open source: if you have forked it, or are
-> contributing without access to the HCE Hub, skip the whole section that
-> follows — including its "fix your MCP config" instruction. Nothing else in
-> this file depends on it; the development workflow without the Hub is
-> [`.context/workflow.md`](./.context/workflow.md).
-
 <!-- hce-hub:bootstrap — regenerate with the Hub's `get_project_bootstrap` tool and replace everything between these markers -->
 
 ## This project is coordinated through the HCE Hub
 
-**Sunrise** · slug `sunrise` · project id `cmtd5heg2001804ky8pgo6odx` · host platform: Sunrise (the platform)
+**Know Your Synth** · slug `know-your-synth` · project id `cmuu4wgxy000004l8du7guoow` · host platform: Sunrise (fork)
 
 The Hub is this project's **system of record** for planning and delivery.
 Claiming, planning, starting, completing and shipping are Hub tool calls over
@@ -92,11 +85,20 @@ is the current version; this repo deliberately does not restate it, because a
 copy is the thing that goes stale.
 
 - `hub://process/core` · HCE process — core. **Read its `read.judgement` section first.**
-- `hub://process/sunrise-platform` · HCE process — working in Sunrise.
+- `hub://process/sunrise-fork` · HCE process — building on Sunrise.
+- `hub://process/release` · HCE process — releases.
 
 Every rule is addressable by the id printed beside its heading (`fp1`,
 `flow.gates`, `read.judgement`). Cite them by id rather than re-explaining
 them.
+
+### Where work that belongs to no feature goes
+
+This project's standing features. What each one holds, and the test for
+choosing between them, is `model.standing` in the core process.
+
+- **Upstream** · §2 `f-upstream`
+- **Housekeeping** · §1 `f-housekeeping`
 
 ### The shape, if the Hub is unreachable
 
@@ -106,15 +108,15 @@ Five lines, duplicated here on purpose because they almost never change:
 2. **Reconcile** the plan against the actual tree before sizing anything.
 3. **Plan** it into tasks, each with a done-when provable _at merge_.
 4. **Build**, look at it yourself, then run the gates, and open the PR last.
-5. **Close out** the feature, recording decisions as you make them.
+5. **Close out** the feature — a decision is recorded when it stops moving: planning rulings at planning, task decisions at that task's merge, very few at ship.
 
 ### Gates
 
 In this order. Read **exit codes**, not piped output — a pipeline that swallows
 a failure reports success.
 
-1. `/pre-pr` — the platform's own checklist (`npm run validate` plus a scoped
-   test run and the anti-pattern scans), including the public-surface checks.
+1. `/pre-pr` — this repo's own checklist (`npm run validate` plus a scoped
+   test run and the anti-pattern scans).
 2. `/security-review`
 3. `/code-review`
 4. `npm run format`
