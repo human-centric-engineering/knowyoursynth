@@ -437,7 +437,10 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray coverage exclusion would switch the per-file 80% floor OFF for that path on every install, a stray always-run entry would make every scoped run load a test whose file the install may not even have, and a stray ownerless-surface exception would let a route read rows nobody owns without the policy being asked — the first silences a gate, the second breaks the gate that replaced it, the third exempts a file from the authorization seam',
     assert: () => {
       expect(appCoverageExclusions).toEqual([]);
-      expect(appAlwaysRunTests).toEqual([]);
+      // Know Your Synth fills this seam: pinned to its one entry, so a stray second still fails.
+      expect(appAlwaysRunTests.map((t) => t.path)).toEqual([
+        'tests/unit/prototype-boundary.test.ts',
+      ]);
       expect(appOwnerlessSurfaceExceptions).toEqual([]);
     },
   },

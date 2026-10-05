@@ -23,7 +23,9 @@ Learning app for sound design on hardware synths (Behringer Model D, Neutron, Pr
 
 Check the sound library (validates every sound and renders it through the DSP):
 
-    node check.mjs [synth] [idFilter]
+    node check.mjs [synth] [idFilter] [--compare | --write-baseline] [--seed=N] [--jobs=N]
+
+Rendering is seeded, so the same sound gives the same numbers every time. `--compare` checks them against the baseline in `../.context/app/check/` (see its README).
 
 Build (uses the toolchain installed at the repo root — esbuild, React 19, Tailwind 4):
 

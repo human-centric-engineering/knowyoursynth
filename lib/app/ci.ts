@@ -161,7 +161,15 @@ export interface AppAlwaysRunTest {
  * ];
  * ```
  */
-export const appAlwaysRunTests: AppAlwaysRunTest[] = [];
+export const appAlwaysRunTests: AppAlwaysRunTest[] = [
+  {
+    path: 'tests/unit/prototype-boundary.test.ts',
+    reason:
+      'globs every source file outside `prototype/` off disk and fails on any import that ' +
+      'reaches into it. The import it exists to catch is in some other file, so no import ' +
+      'chain from that file reaches this test.',
+  },
+];
 
 /**
  * One source file allowed to read `AiWorkflowExecution`, `AiConversation` or
