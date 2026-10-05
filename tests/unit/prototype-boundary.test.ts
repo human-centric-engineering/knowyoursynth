@@ -21,8 +21,7 @@ import { globSync } from 'tinyglobby';
 
 // A module specifier (static or dynamic import, re-export, require) naming a `prototype`
 // path segment: `@/prototype/...`, `../../prototype/src/...`, `prototype/check.mjs`.
-const SPECIFIER =
-  /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)(['"`])([^'"`]*)\1/g;
+const SPECIFIER = /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+|\brequire\s*\(\s*)(['"`])([^'"`]*)\1/g;
 const NAMES_PROTOTYPE = /(?:^|[/@])prototype(?:\/|$)/;
 
 interface Occurrence {

@@ -16,7 +16,7 @@ which sounds were selected.
 | `rms`    | loudness over the whole 3 s                                                                      |
 | `win`    | loudness of each 0.5 s window, which shows the envelope and the phrase                           |
 | `bright` | zero crossings as Hz at 0.05 s and at 1 s, a rough brightness                                    |
-| `bands`  | share of energy in nine octave bands (below 63 Hz up to above 8 kHz), in dB, over four frames   |
+| `bands`  | share of energy in nine octave bands (below 63 Hz up to above 8 kHz), in dB, over four frames    |
 | `hash`   | FNV-1a over the raw samples. It separates an exact match from one that only agrees when rounded. |
 
 `--compare` fails on any difference in the rounded fields. A different `hash` with equal
