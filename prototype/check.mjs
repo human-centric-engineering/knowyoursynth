@@ -164,6 +164,7 @@ const baselineFile = (id) => path.join(BASELINE_DIR, `${id}.json`);
 
 for (const def of SYNTHS) {
   if (onlySynth && def.id !== onlySynth) continue;
+  const errsBefore = errs;
   const cm = controlMap(def), jm = jackMap(def);
   for (const j of def.jacks) {
     if (j.signal && !SIGNALS.includes(j.signal)) E(`${def.id} jack ${j.id} bad signal ${j.signal}`);
@@ -296,7 +297,9 @@ for (const def of SYNTHS) {
     console.log(`${p.id.padEnd(24)} ${peak.toFixed(2)}  ${rms.toFixed(3)} ${wins}   ${String(zcr(buf, SR * 0.02, SR * 0.08)).padStart(5)} → ${String(zcr(buf, SR * 1.0, SR * 1.1)).padEnd(5)} Hz     ${(ms / 30).toFixed(1)}% ${flag}${note}`);
   }
   if (baseline && !onlyPreset) for (const id of Object.keys(baseline.sounds)) if (!prints[id]) E(`${def.id}/${id} is in the baseline but no longer in the library`);
-  if (WRITE) {
+  // A baseline is only as good as the run that wrote it: a skipped, silent or NaN sound would be recorded as correct.
+  if (WRITE && errs > errsBefore) console.log(`baseline NOT written for ${def.id}: fix the errors above first`);
+  else if (WRITE) {
     // Pretty-printed by the repo's own Prettier, so `npm run format` leaves the committed file alone.
     const prettier = require('prettier');
     const file = baselineFile(def.id);
