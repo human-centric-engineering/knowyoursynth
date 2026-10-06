@@ -142,6 +142,11 @@ export interface SynthDef {
   matrix?: PinMatrix;
   /** The same panel cut into modules and stacked like a modular case (the Jupiters). */
   modular?: ModularLayout;
+  /**
+   * The case a modular layout is drawn in. Never written in a definition: `modularDef()` (the layout library) sets
+   * it on the definition it returns, and the renderer draws the case in place of the long faceplate when it is there.
+   */
+  layout?: PanelLayout;
 }
 
 /** The second argument of `toEngine`. */
@@ -202,7 +207,24 @@ export interface ModularLayout {
   /** Printed on the blank panels that pad out short rows. */
   brand: string;
   /** Rows of modules, left to right. Each `cut` is `[x0, y0, x1, y1]` on the long panel, normally one printed section. */
-  rows: { cut: [number, number, number, number] }[][];
+  rows: { cut: [number, number, number, number]; name?: string }[][];
+}
+
+/** One module's faceplate in the case, in view units of the modular layout. */
+export interface ModulePlate extends ViewRect {
+  /** The module's `name` from the `modular` spec, when it has one. */
+  name?: string;
+}
+
+/** The case `modularDef()` builds from a `modular` spec: what the renderer draws behind the moved controls. */
+export interface PanelLayout {
+  kind: 'modular';
+  /** One faceplate per module. */
+  plates: ModulePlate[];
+  /** Blank panels padding out short rows. */
+  blanks: ViewRect[];
+  /** Printed on the blanks: the spec's `brand`, or the synth's name. */
+  brand: string;
 }
 
 // ─── Area ────────────────────────────────────────────────────────────────────
@@ -1221,8 +1243,8 @@ export interface EnvParams {
 }
 
 export interface VcaParams {
-  /** `'none'`: loudness only from `bias` and the `amp` destination. */
-  envSrc: EnvSignal | 'none';
+  /** `'none'`: loudness only from `bias` and the `amp` destination. The engine also takes `'env3'` (the third envelope). */
+  envSrc: EnvSignal | 'env3' | 'none';
   /** 0..1 constant open. */
   bias: number;
   /** Level after the VCA (default 1). */
