@@ -5,13 +5,16 @@ pure `toEngine()` function. The panel renderer, the sound engine, the cable expl
 sound map and the lessons know nothing synth-specific; everything they draw, play or say comes
 from the definition.
 
-| What                                                   | Where                                                     |
-| ------------------------------------------------------ | --------------------------------------------------------- |
-| The shapes (source of truth)                           | `lib/app/synths/contract.ts`                              |
-| The definitions                                        | `lib/app/synths/defs/<id>.ts` (ported from the prototype) |
-| Sound validator (unknown controls, ranges, bad cables) | `lib/app/synths/validate.ts`                              |
-| Reference implementation                               | `prototype/src/synths/model-d.js` → `defs/model-d.ts`     |
-| Prototype prose this replaces                          | `prototype/CONTRACT.md`                                   |
+| What                                                   | Where                                                   |
+| ------------------------------------------------------ | ------------------------------------------------------- |
+| The shapes (source of truth)                           | `lib/app/synths/contract.ts`                            |
+| The definitions                                        | `lib/app/synths/defs/<id>.ts` (ported in m1 and p1–p5)  |
+| Sound validator (unknown controls, ranges, bad cables) | `lib/app/synths/validate.ts`                            |
+| The sound engine, worklet and probe worker             | `lib/app/synths/audio/`, built to `public/worklets/`    |
+| Shared library (layout, explainers, sound map, tour)   | `lib/app/synths/lib/`                                   |
+| The check: every sound against the baseline            | `npm run check:synths` (`.context/app/check/README.md`) |
+| Reference implementation                               | `prototype/src/synths/model-d.js` → `defs/model-d.ts`   |
+| Prototype prose this replaces                          | `prototype/CONTRACT.md`                                 |
 
 This page is the guidance the types cannot carry. For the fields themselves, read
 `contract.ts`: every type and field is doc-commented. Where `CONTRACT.md` and the prototype
