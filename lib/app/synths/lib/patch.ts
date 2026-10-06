@@ -54,13 +54,20 @@ export function isShown(c: Control, values: ControlValues): boolean {
   return list.every((w) => ('in' in w ? w.in.includes(values[w.id]) : values[w.id] === w.eq));
 }
 
+// The lookups are null-prototype objects: their keys come from untrusted sounds (a saved sound, an AI reply), and
+// on a plain object an id like `constructor` or `toString` would find an inherited member instead of `undefined`.
+const byId = <T extends { id: string }>(list: readonly T[]): Record<string, T | undefined> =>
+  Object.assign(
+    Object.create(null) as Record<string, T | undefined>,
+    Object.fromEntries(list.map((x) => [x.id, x]))
+  );
 const controlMaps = new WeakMap<SynthDef, Record<string, Control | undefined>>();
 const jackMaps = new WeakMap<SynthDef, Record<string, Jack | undefined>>();
 
 export function controlMap(def: SynthDef): Record<string, Control | undefined> {
   let m = controlMaps.get(def);
   if (!m) {
-    m = Object.fromEntries(def.controls.map((c) => [c.id, c]));
+    m = byId(def.controls);
     controlMaps.set(def, m);
   }
   return m;
@@ -68,7 +75,7 @@ export function controlMap(def: SynthDef): Record<string, Control | undefined> {
 export function jackMap(def: SynthDef): Record<string, Jack | undefined> {
   let m = jackMaps.get(def);
   if (!m) {
-    m = Object.fromEntries(def.jacks.map((j) => [j.id, j]));
+    m = byId(def.jacks);
     jackMaps.set(def, m);
   }
   return m;

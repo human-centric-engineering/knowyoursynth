@@ -63,6 +63,20 @@ describe('validateSound', () => {
     });
   });
 
+  it('refuses ids that name inherited object members instead of throwing', () => {
+    // A plain-object lookup would find Object.prototype.constructor for these and crash on its missing kind.
+    const r = validateSound(def, {
+      values: { constructor: 1, toString: 'x' },
+      cables: [['constructor', 'hasOwnProperty']],
+    });
+
+    expect(r.ok).toBe(false);
+    expect(r.problems.map((p) => p.code)).toEqual(
+      expect.arrayContaining(['unknown-control', 'unknown-jack'])
+    );
+    expect(r.problems.filter((p) => p.code === 'unknown-control')).toHaveLength(2);
+  });
+
   it('defaults missing cables to none', () => {
     const r = validateSound(def, { values: {} });
 

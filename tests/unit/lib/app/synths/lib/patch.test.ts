@@ -275,6 +275,12 @@ describe('jackGain / cablesToEngine', () => {
 describe('sanitizeSet', () => {
   const def = makeMiniD();
 
+  it('drops ids that name inherited object members instead of throwing', () => {
+    expect(sanitizeSet(def, { constructor: 1, toString: 'on', 'filter.cutoff': 1 })).toEqual({
+      'filter.cutoff': 1,
+    });
+  });
+
   it('clamps and rounds numbers, coerces bools, matches options loosely, drops the rest', () => {
     const r = sanitizeSet(def, {
       'filter.cutoff': '9',
