@@ -613,7 +613,9 @@ describe('waveStory — dirt (degenerate effect params and switched off)', () =>
 
 describe('waveStory — movement (further branches)', () => {
   it('falls back to the raw key for an LFO shape the explainer has no word for', () => {
-    const def = withExtra((p) => ({ ...p, lfo: { ...p.lfo, mix: { weird: 1 } } }));
+    // A shape outside LfoMix's names, as a definition from outside the type system could send.
+    const weird: Record<string, number> = { weird: 1 };
+    const def = withExtra((p) => ({ ...p, lfo: { ...p.lfo, mix: weird } }));
     const story = waveStory(def, { ...def.init, 'mod.toOsc': true, 'mod.depth': 10 }, [], 0);
 
     expect(story.stages.find((s) => s.id === 'move')?.text).toContain('on weird');
