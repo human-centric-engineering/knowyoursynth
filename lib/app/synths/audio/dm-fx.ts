@@ -2400,20 +2400,20 @@ export function createFx(sr: number): {
       route.loop !== undefined &&
       (route.loop === i || (Array.isArray(route.loop) && route.loop.includes(i)));
     for (let i = 0; i < 4; i++) {
-      // (narrowed by hand: the test above is the one that rules out an empty slot)
-      const want =
-        list[i] && list[i].alg && FX_FACTORY[list[i].alg!]
-          ? (list[i] as Extract<FxSlot, { alg: string }>)
-          : null;
+      // (narrowed by hand: the test above is the one that rules out an empty slot). Own keys only: a patch's `alg`
+      // is data, and 'constructor' or 'toString' would otherwise find a function on Object.prototype.
+      const alg = list[i] && list[i].alg;
+      const make = alg && Object.hasOwn(FX_FACTORY, alg) ? FX_FACTORY[alg] : null;
+      const want = make ? (list[i] as Extract<FxSlot, { alg: string }>) : null;
       const s = slots[i];
-      if (!want) {
+      if (!want || !make) {
         s.alg = null;
         s.k = null;
         continue;
       }
       if (s.alg !== want.alg) {
         s.alg = want.alg;
-        s.k = FX_FACTORY[want.alg](sr);
+        s.k = make(sr);
         s.lv = want.level;
       }
       s.level = want.level;

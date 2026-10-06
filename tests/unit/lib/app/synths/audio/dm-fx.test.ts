@@ -564,6 +564,9 @@ describe('routing', () => {
       null,
       { mode: 'bypass' as const },
       { mode: 'insert' as const, slots: [{ alg: 'no-such', level: 1, p: {} }] },
+      // names Object.prototype answers to are not algorithms either
+      { mode: 'insert' as const, slots: [{ alg: 'constructor', level: 1, p: {} }] },
+      { mode: 'insert' as const, slots: [{ alg: 'toString', level: 1, p: {} }] },
     ]) {
       const a = run(fx);
       expect(same(a.l, a.input) && same(a.r, a.input)).toBe(true);
