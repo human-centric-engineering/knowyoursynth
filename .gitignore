@@ -216,3 +216,7 @@ public/uploads/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Sound engine AudioWorklet and probe Worker, bundled by scripts/build-audio-workers.ts
+# (predev / prebuild). Build products: the source is lib/app/synths/audio/.
+public/worklets/
