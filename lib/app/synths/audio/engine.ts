@@ -6,6 +6,7 @@ import {
 } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams } from '@/lib/app/synths/contract';
 import { createRack, type Rack } from '@/lib/app/synths/audio/fx';
+import { logger } from '@/lib/logging';
 
 // Transliterated from the prototype's `prototype/src/audio/engine.js` (D3). The one change: the prototype embedded the
 // worklet as a string and loaded it from a Blob URL; here it is a static file Next serves, built by
@@ -13,6 +14,12 @@ import { createRack, type Rack } from '@/lib/app/synths/audio/fx';
 
 /** Where the bundled AudioWorklet is served from (built by `scripts/build-audio-workers.ts`). */
 export const WORKLET_URL = '/worklets/kys-voice.js';
+
+/**
+ * How long the worklet may take to load before the engine falls back to a ScriptProcessor. The prototype allowed
+ * 3 s for a Blob URL, which loads at once; a static file is a network fetch of ~80 KB, so a slow link needs longer.
+ */
+export const WORKLET_TIMEOUT_MS = 10_000;
 
 /** Some Safari versions only have the prefixed constructor. */
 interface WebkitWindow extends Window {
@@ -72,7 +79,9 @@ export class Engine {
       try {
         await Promise.race([
           ctx.audioWorklet.addModule(WORKLET_URL),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('worklet timeout')), 3000)),
+          new Promise((_, rej) =>
+            setTimeout(() => rej(new Error('worklet timeout')), WORKLET_TIMEOUT_MS)
+          ),
         ]);
         const wn = new AudioWorkletNode(ctx, 'kys-voice', {
           numberOfInputs: 0,
@@ -82,7 +91,13 @@ export class Engine {
         wn.port.onmessage = (m: MessageEvent<SynthEvent>) => this.onEvent(m.data);
         node = wn;
         this.mode = 'worklet';
-      } catch {
+      } catch (err) {
+        // A host that blocks worklets lands here, and so does a missing bundle (`public/worklets/` is built by the
+        // predev/prebuild hooks): say which, since the fallback works either way and would otherwise hide it.
+        logger.warn('Synth worklet unavailable; using the main-thread fallback', {
+          url: WORKLET_URL,
+          error: err instanceof Error ? err.message : String(err),
+        });
         node = null;
       }
     }

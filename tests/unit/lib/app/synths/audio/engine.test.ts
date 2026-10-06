@@ -9,7 +9,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
 import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
-import { Engine, WORKLET_URL } from '@/lib/app/synths/audio/engine';
+import { Engine, WORKLET_TIMEOUT_MS, WORKLET_URL } from '@/lib/app/synths/audio/engine';
+import { logger } from '@/lib/logging';
 import { FakeContext, FakeNode } from '@/tests/unit/lib/app/synths/audio/fake-audio';
 import { monoParams } from '@/tests/unit/lib/app/synths/audio/render';
 
@@ -132,12 +133,21 @@ describe('Engine', () => {
     expect(Array.from(r)).toEqual(Array.from(l));
   });
 
-  it('gives up on a worklet that hangs after 3 s', async () => {
+  it('waits out a slow worklet fetch, then gives up and says why', async () => {
     vi.useFakeTimers();
+    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
     const { engine } = setup('hang');
-    const started = engine.start();
+    let settled = false;
+    const started = engine.start().finally(() => (settled = true));
+    // The prototype's 3 s, sized for a Blob URL, is no longer enough for a network fetch.
     await vi.advanceTimersByTimeAsync(3000);
+    expect(settled).toBe(false);
+    await vi.advanceTimersByTimeAsync(WORKLET_TIMEOUT_MS - 3000);
     await expect(started).resolves.toBe('script');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('worklet unavailable'),
+      expect.objectContaining({ url: WORKLET_URL, error: 'worklet timeout' })
+    );
   });
 
   it('uses the ScriptProcessor straight away where there is no AudioWorklet, and the prefixed constructor', async () => {

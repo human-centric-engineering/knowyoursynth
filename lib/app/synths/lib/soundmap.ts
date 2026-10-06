@@ -6,6 +6,7 @@
 // Transliterated from the prototype file `src/lib/soundmap.js` (decision D3). One change of mechanism: the prototype built its
 // probe Workers from source text embedded at build time (`__PROBE_SRC__`); the app serves the probe worker as a
 // static file, `PROBE_WORKER_URL` (from the audio module).
+import { logger } from '@/lib/logging';
 import { cablesToEngine, type CableLike } from '@/lib/app/synths/lib/patch';
 import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type {
@@ -16,6 +17,12 @@ import type {
   Preset,
   SynthDef,
 } from '@/lib/app/synths/contract';
+
+/**
+ * How long the probe workers may take to answer before the mapper stops using them. The prototype allowed 2.5 s for
+ * workers built from a Blob URL; these are a network fetch first (see `WORKLET_TIMEOUT_MS` in the engine).
+ */
+export const WORKER_TIMEOUT_MS = 10_000;
 
 /** Where the probe worker is served (built from `audio/probe-worker-entry`); re-exported for the panel. */
 export { PROBE_WORKER_URL };
@@ -643,6 +650,9 @@ export function createMapper(): Mapper {
   // Workers that never answer (or fail to load) are blocked by the host: stop using them for good.
   function fallBack(sess: Session) {
     if (sess.answered || sess.mode !== 'pool' || sess.id !== run) return;
+    logger.warn('Sound-map workers did not answer; probing on the main thread', {
+      url: PROBE_WORKER_URL,
+    });
     (workers || []).forEach((w) => w.terminate());
     workers = [];
     sess.mode = 'main';
@@ -674,7 +684,7 @@ export function createMapper(): Mapper {
       };
       w.postMessage({ type: 'start', run: sess.id, baseline: sess.baseline, notes: sess.notes });
     });
-    setTimeout(() => fallBack(sess), 2500);
+    setTimeout(() => fallBack(sess), WORKER_TIMEOUT_MS);
   }
 
   const phase = (

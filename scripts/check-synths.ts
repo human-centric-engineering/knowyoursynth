@@ -85,7 +85,7 @@ const isSynthDefList = (v: unknown): v is SynthDef[] =>
       typeof d.toEngine === 'function' &&
       Array.isArray(d.controls) &&
       Array.isArray(d.jacks) &&
-      Array.isArray(d.presets)
+      (d.presets === undefined || Array.isArray(d.presets))
   );
 
 const isBaseline = (v: unknown): v is Baseline =>

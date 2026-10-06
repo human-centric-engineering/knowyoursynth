@@ -21,10 +21,12 @@ import {
   PROBE_WORKER_URL,
   summarise,
   WHEEL,
+  WORKER_TIMEOUT_MS,
   type DoorJob,
   type ProbeResult,
 } from '@/lib/app/synths/lib/soundmap';
 import { makeMiniD, miniToEngine } from '@/tests/fixtures/synths/mini-d';
+import { logger } from '@/lib/logging';
 import type { ControlState } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValues, EngineContext } from '@/lib/app/synths/contract';
 import type {
@@ -442,6 +444,35 @@ describe('createMapper', () => {
     expect(onProgress).not.toHaveBeenCalled();
     expect(onDone).toHaveBeenCalledTimes(1);
     expect(onDone.mock.calls[0][0].state).toEqual({});
+  });
+
+  it('waits out slow-loading workers, then falls back to the main thread and says so', async () => {
+    vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+    class SilentWorker {
+      onmessage: ((e: { data: unknown }) => void) | null = null;
+      onerror: (() => void) | null = null;
+      terminate = vi.fn();
+      postMessage(): void {}
+    }
+    (globalThis as { Worker?: unknown }).Worker = SilentWorker;
+    vi.useFakeTimers();
+    const mapper = createMapper();
+    const def = makeMiniD();
+    const onDone = vi.fn();
+
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone);
+    // The prototype's 2.5 s, sized for Blob-URL workers, is no longer enough for a network fetch.
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(onDone).not.toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(WORKER_TIMEOUT_MS - 3000 + 4 * 40);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('did not answer'),
+      expect.objectContaining({ url: PROBE_WORKER_URL })
+    );
+    expect(onDone).toHaveBeenCalledTimes(1);
   });
 
   it('runs the Worker pool when a Worker constructor is available, falling back to it from the mocked main-thread probe', async () => {
