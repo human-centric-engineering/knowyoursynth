@@ -399,8 +399,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/reserved-tiers.ts',
     risk: 'a stray entry would switch OFF the guard that keeps a reserved tier empty — and it is upstream, where core is the only thing that could put a file there, that the guard is the promise rather than a formality',
-    // Know Your Synth fills this seam: pinned to its two tiers, so a stray third still fails.
-    assert: () => expect(occupiedTiers).toEqual(['.context/app', 'components/app']),
+    // Know Your Synth fills this seam: pinned to its one tier, so a stray second still fails.
+    assert: () => expect(occupiedTiers).toEqual(['.context/app']),
   },
   {
     seam: 'lib/app/brand.ts',
