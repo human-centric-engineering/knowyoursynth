@@ -8,8 +8,12 @@
     "npm": ">=11.11.0"
   },
   "scripts": {
+    "predev": "tsx scripts/build-audio-workers.ts",
     "dev": "node scripts/dev-server.mjs next-dev",
+    "prebuild": "tsx scripts/build-audio-workers.ts",
     "build": "next build",
+    "build:audio-workers": "tsx scripts/build-audio-workers.ts",
+    "check:synths": "tsx scripts/check-synths.ts",
     "start": "node scripts/dev-server.mjs next-start",
     "lint": "node scripts/run-capped.mjs eslint . --cache --cache-strategy content",
     "lint:ci": "node scripts/ci/chunked-lint.mjs --cache --cache-strategy content",
@@ -194,6 +198,7 @@
     "@vitest/ui": "^5.0.2",
     "autoprefixer": "^10.6.1",
     "dotenv": "^17.2.4",
+    "esbuild": "^0.28.1",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.6",
     "eslint-plugin-jsx-a11y": "6.10.2",
