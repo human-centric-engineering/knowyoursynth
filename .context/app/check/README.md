@@ -40,5 +40,22 @@ A full run renders 1,086 sounds (at the time of recording). On one core that tak
 an hour, so the check runs one process per synth, as many at a time as there are cores: 621 s
 on eight. It is not part of CI.
 
+## Checking the ported engine
+
+`npm run check:synths` is the same check run through the app's ported engine
+(`lib/app/synths/audio/`) and libraries, from the repo root:
+
+```bash
+npm run check:synths -- --compare              # every synth
+npm run check:synths -- model-d --compare      # one synth
+npm run check:synths -- model-d funk --compare # only sounds whose id contains "funk"
+```
+
+It reads these files and never writes them (there is no `--write-baseline`), and under
+`--compare` a different `hash` is an error, not a note: the port has to be exact. Until the
+definitions are ported (m1) it takes them from the prototype's source, bundled when it runs.
+It skips the limits (m2) and databank (b1) checks. A full `--compare` run: 1,086 sounds, every
+one identical, 260 s on eight processes.
+
 **Re-record only on purpose.** A baseline rewritten to make a port pass loses the only thing
 that would have shown that the port changed a sound.

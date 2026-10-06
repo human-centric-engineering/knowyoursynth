@@ -114,6 +114,23 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
       '(check.mjs, build.mjs) that no test imports and the app never loads. It is outside ' +
       'every other gate and is removed at launch (D13).',
   },
+  {
+    pattern: 'scripts/check-synths.ts',
+    reason:
+      'a standalone tsx CLI (`npm run check:synths`): it bundles the reference definitions with ' +
+      'esbuild, renders every sound through the engine for minutes, and spawns one child process ' +
+      'per synth. Nothing imports it, so vitest never executes it. Its proof is its own exit code ' +
+      'against `.context/app/check/`; the engine it drives is tested under ' +
+      '`tests/unit/lib/app/synths/audio/`.',
+  },
+  {
+    pattern: 'scripts/build-audio-workers.ts',
+    reason:
+      'a standalone tsx CLI run as `predev` / `prebuild`: one esbuild call per entry point, ' +
+      'writing `public/worklets/`. Nothing imports it, so vitest never executes it; a broken ' +
+      'bundle fails `npm run dev` and `npm run build` at once. The two entry points it bundles ' +
+      'are tested in `tests/unit/lib/app/synths/audio/worker-entries.test.ts`.',
+  },
 ];
 
 /** One test that must run regardless of what the module graph says. */
