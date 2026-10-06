@@ -56,11 +56,11 @@ export function isShown(c: Control, values: ControlValues): boolean {
 
 // The lookups are null-prototype objects: their keys come from untrusted sounds (a saved sound, an AI reply), and
 // on a plain object an id like `constructor` or `toString` would find an inherited member instead of `undefined`.
-const byId = <T extends { id: string }>(list: readonly T[]): Record<string, T | undefined> =>
-  Object.assign(
-    Object.create(null) as Record<string, T | undefined>,
-    Object.fromEntries(list.map((x) => [x.id, x]))
-  );
+const byId = <T extends { id: string }>(list: readonly T[]): Record<string, T | undefined> => {
+  const m = Object.create(null) as Record<string, T | undefined>;
+  for (const x of list) m[x.id] = x;
+  return m;
+};
 const controlMaps = new WeakMap<SynthDef, Record<string, Control | undefined>>();
 const jackMaps = new WeakMap<SynthDef, Record<string, Jack | undefined>>();
 

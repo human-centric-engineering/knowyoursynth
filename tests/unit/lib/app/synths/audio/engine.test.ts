@@ -133,6 +133,21 @@ describe('Engine', () => {
     expect(Array.from(r)).toEqual(Array.from(l));
   });
 
+  it('asks the context to run while the click still counts, before the worklet has loaded', async () => {
+    const { Ctx, engine } = setup('hang');
+    void engine.start();
+    // addModule never settles here, so the only resume() that can have run is the early one.
+    await Promise.resolve();
+    expect(Ctx.last!.state).toBe('running');
+  });
+
+  it('clears the load timeout once the worklet has loaded', async () => {
+    vi.useFakeTimers();
+    const { engine } = setup('ok');
+    await engine.start();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it('waits out a slow worklet fetch, then gives up and says why', async () => {
     vi.useFakeTimers();
     const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});

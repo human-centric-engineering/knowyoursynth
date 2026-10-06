@@ -587,6 +587,10 @@ export interface Mapper {
 
 export function createMapper(): Mapper {
   let workers: Worker[] | null = null; // null = not tried, [] = blocked
+  // When the pool was spawned: the wait for its first answer counts from here, once, not from each analysis, or a
+  // user who keeps changing the panel would restart it forever on a host that blocks workers silently.
+  let spawnedAt = 0;
+  let proven = false; // a worker has answered: the pool works, so the wait no longer applies
   let run = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let session: Session | null = null;
@@ -595,9 +599,14 @@ export function createMapper(): Mapper {
     if (workers) return workers;
     const pool: Worker[] = [];
     workers = pool;
+    spawnedAt = Date.now();
     try {
       for (let i = 0; i < POOL; i++) pool.push(new Worker(PROBE_WORKER_URL));
-    } catch {
+    } catch (err) {
+      logger.warn('Sound-map workers blocked; probing on the main thread', {
+        url: PROBE_WORKER_URL,
+        error: err instanceof Error ? err.message : String(err),
+      });
       pool.forEach((w) => w.terminate());
       workers = [];
     }
@@ -648,11 +657,14 @@ export function createMapper(): Mapper {
   }
 
   // Workers that never answer (or fail to load) are blocked by the host: stop using them for good.
-  function fallBack(sess: Session) {
+  function fallBack(sess: Session, error?: string) {
     if (sess.answered || sess.mode !== 'pool' || sess.id !== run) return;
-    logger.warn('Sound-map workers did not answer; probing on the main thread', {
-      url: PROBE_WORKER_URL,
-    });
+    logger.warn(
+      error
+        ? 'Sound-map workers failed to load; probing on the main thread'
+        : 'Sound-map workers did not answer; probing on the main thread',
+      { url: PROBE_WORKER_URL, ...(error ? { error } : {}) }
+    );
     (workers || []).forEach((w) => w.terminate());
     workers = [];
     sess.mode = 'main';
@@ -669,11 +681,12 @@ export function createMapper(): Mapper {
     }
     sess.mode = 'pool';
     pool.forEach((w) => {
-      w.onerror = () => fallBack(sess);
+      w.onerror = (e: ErrorEvent) => fallBack(sess, e.message || 'worker error');
       w.onmessage = (m: MessageEvent<unknown>) => {
         const data = m.data;
         if (!isWorkerMessage(data) || data.run !== sess.id || sess.id !== run) return;
         sess.answered = true;
+        proven = true;
         if (data.type === 'result') {
           const job = sess.inflight.get(w);
           sess.inflight.delete(w);
@@ -684,7 +697,8 @@ export function createMapper(): Mapper {
       };
       w.postMessage({ type: 'start', run: sess.id, baseline: sess.baseline, notes: sess.notes });
     });
-    setTimeout(() => fallBack(sess), WORKER_TIMEOUT_MS);
+    if (!proven)
+      setTimeout(() => fallBack(sess), Math.max(0, spawnedAt + WORKER_TIMEOUT_MS - Date.now()));
   }
 
   const phase = (

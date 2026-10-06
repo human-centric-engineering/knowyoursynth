@@ -591,7 +591,9 @@ describe('waveStory — amplitude source selection', () => {
 });
 
 describe('waveStory — dirt (degenerate effect params and switched off)', () => {
-  it('shows NaN figures when an active effect is missing its own detail fields', () => {
+  // The prototype prints "NaN" for a missing figure here (an inherited defect, Hub idea #1). This pins only that the
+  // stage still renders, so fixing the text doesn't fail a test.
+  it('still describes an active effect that is missing its own detail fields', () => {
     const def = withExtra((p) => ({
       ...p,
       od: { on: true, drive: undefined },
@@ -599,8 +601,8 @@ describe('waveStory — dirt (degenerate effect params and switched off)', () =>
     }));
     const text = waveStory(def, def.init, [], 0).stages.find((s) => s.id === 'dirt')?.text ?? '';
 
-    expect(text).toContain('drive at NaN%');
-    expect(text).toContain('NaN s, NaN% mix');
+    expect(text).toMatch(/drive at/);
+    expect(text).toMatch(/% mix/);
   });
 
   it('omits the echo sentence, and the whole dirt stage, once delay is switched off', () => {

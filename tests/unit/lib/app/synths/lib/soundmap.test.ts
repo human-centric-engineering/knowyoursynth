@@ -475,6 +475,66 @@ describe('createMapper', () => {
     expect(onDone).toHaveBeenCalledTimes(1);
   });
 
+  it('counts the wait from the pool spawning, so repeated analyses on a silent host still fall back', async () => {
+    vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+    class SilentWorker {
+      onmessage: ((e: { data: unknown }) => void) | null = null;
+      onerror: (() => void) | null = null;
+      terminate = vi.fn();
+      postMessage(): void {}
+    }
+    (globalThis as { Worker?: unknown }).Worker = SilentWorker;
+    vi.useFakeTimers();
+    const mapper = createMapper();
+    const def = makeMiniD();
+    const onDone = vi.fn();
+
+    // A user changing the panel every 4 s: each change starts a new analysis.
+    for (let t = 0; t < WORKER_TIMEOUT_MS; t += 4000) {
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone);
+      await vi.advanceTimersByTimeAsync(4000);
+    }
+    await vi.advanceTimersByTimeAsync(4 * 40);
+
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('did not answer'), expect.anything());
+    expect(onDone).toHaveBeenCalled();
+  });
+
+  it('logs a worker that fails to load with its error, and one the host refuses to construct', async () => {
+    vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+    class BrokenWorker {
+      onmessage: ((e: { data: unknown }) => void) | null = null;
+      onerror: ((e: { message: string }) => void) | null = null;
+      terminate = vi.fn();
+      postMessage(): void {
+        queueMicrotask(() => this.onerror?.({ message: 'Not found' }));
+      }
+    }
+    (globalThis as { Worker?: unknown }).Worker = BrokenWorker;
+    vi.useFakeTimers();
+    const def = makeMiniD();
+    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    await vi.advanceTimersByTimeAsync(0);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('failed to load'),
+      expect.objectContaining({ url: PROBE_WORKER_URL, error: 'Not found' })
+    );
+
+    warn.mockClear();
+    (globalThis as { Worker?: unknown }).Worker = class {
+      constructor() {
+        throw new Error('blocked by CSP');
+      }
+    };
+    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('blocked'),
+      expect.objectContaining({ error: 'blocked by CSP' })
+    );
+  });
+
   it('runs the Worker pool when a Worker constructor is available, falling back to it from the mocked main-thread probe', async () => {
     class FakeWorker {
       onmessage: ((e: { data: unknown }) => void) | null = null;

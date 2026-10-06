@@ -69,6 +69,9 @@ export class Engine {
     if (!AC) throw new Error('Web Audio is not available in this browser.');
     const ctx = new AC({ latencyHint: 'interactive' });
     this.ctx = ctx;
+    // Ask to run now, while the click that started us still counts as a user gesture: the worklet may take up to
+    // WORKLET_TIMEOUT_MS to load, and a resume() first called after that can be refused. Awaited again at the end.
+    if (ctx.state !== 'running') void ctx.resume().catch(() => {});
     this.analyser = ctx.createAnalyser();
     // 4096 samples ≈ 85 ms at 48 kHz: enough for eight cycles of a low bass note in the big scope view.
     this.analyser.fftSize = 4096;
@@ -77,12 +80,17 @@ export class Engine {
     let node: AudioWorkletNode | ScriptProcessorNode | null = null;
     if (ctx.audioWorklet && typeof AudioWorkletNode !== 'undefined') {
       try {
-        await Promise.race([
-          ctx.audioWorklet.addModule(WORKLET_URL),
-          new Promise((_, rej) =>
-            setTimeout(() => rej(new Error('worklet timeout')), WORKLET_TIMEOUT_MS)
-          ),
-        ]);
+        let timeout: ReturnType<typeof setTimeout> | undefined;
+        try {
+          await Promise.race([
+            ctx.audioWorklet.addModule(WORKLET_URL),
+            new Promise((_, rej) => {
+              timeout = setTimeout(() => rej(new Error('worklet timeout')), WORKLET_TIMEOUT_MS);
+            }),
+          ]);
+        } finally {
+          clearTimeout(timeout);
+        }
         const wn = new AudioWorkletNode(ctx, 'kys-voice', {
           numberOfInputs: 0,
           numberOfOutputs: 1,
