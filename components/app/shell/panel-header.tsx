@@ -17,7 +17,7 @@ export function PanelHeader() {
     <header className="border-b">
       <div className="flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center gap-6">
-          <Link href="/" className="kys-wordmark shrink-0 hover:opacity-80">
+          <Link href="/" className="kys-wordmark shrink-0 text-[0.95rem] hover:opacity-80">
             <BrandMark />
           </Link>
           <PublicNav />

@@ -4,6 +4,9 @@
  * `(panel)` layout. The colours are not here: they are the consumer surface's,
  * in `app/brand-theme.css`, so the frame, the dashboard and the auth pages
  * share one palette.
+ *
+ * Unlayered, so anything set here beats a Tailwind utility on the same element.
+ * Keep sizes and spacing to the utilities; this file sets only the faces.
  */
 
 .kys-frame {
@@ -12,6 +15,5 @@
 
 .kys-wordmark {
   font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
-  font-size: 0.95rem;
   letter-spacing: 0.04em;
 }
