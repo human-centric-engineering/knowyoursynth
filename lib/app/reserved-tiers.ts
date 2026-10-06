@@ -74,5 +74,6 @@
  * tier, not an empty reservation. Sunrise ships files there (this one included)
  * and the test has never asserted it empty.
  */
-// Know Your Synth keeps its own docs (planning, the synth check baseline) under .context/app.
-export const occupiedTiers: readonly string[] = ['.context/app'];
+// Know Your Synth keeps its own docs (planning, the synth check baseline) under .context/app, and its
+// synth UI (the panel renderer and the synth page's stores) under components/app.
+export const occupiedTiers: readonly string[] = ['.context/app', 'components/app'];
