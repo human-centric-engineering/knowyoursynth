@@ -2195,7 +2195,7 @@ export const Knob = memo(function Knob({
         fill="transparent"
         tabIndex={0}
         role="slider"
-        aria-label={(c.label || c.id).replace('\n', ' ')}
+        aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         aria-valuenow={c.kind === 'cont' ? num(value) : undefined}
         aria-valuetext={c.kind === 'enum' ? String(value) : undefined}
         className="kys-hit"
@@ -2637,7 +2637,7 @@ export const Switch = memo(function Switch({
         fill="transparent"
         tabIndex={0}
         role="button"
-        aria-label={(c.label || c.id).replace('\n', ' ')}
+        aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         className="kys-hit"
         style={{ cursor: 'pointer' }}
         {...hover}
@@ -2893,7 +2893,7 @@ export const Fader = memo(function Fader({
         fill="transparent"
         tabIndex={0}
         role="slider"
-        aria-label={(c.label || c.id).replace('\n', ' ')}
+        aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         aria-orientation={vert ? 'vertical' : 'horizontal'}
         aria-valuenow={value}
         aria-valuemin={c.min}
