@@ -8,7 +8,7 @@
 // It is deterministic: the renderer seeds Math.random, so the same panel gives the same samples every time. That is
 // what makes the before/after comparison exact, rather than two samples of a jittering analyser.
 //
-// Transliterated from `prototype/src/lib/predict.js` (decision D3).
+// Transliterated from the prototype file `src/lib/predict.js` (decision D3).
 import { PROBE_SR, renderNote, spectrumAt } from '@/lib/app/synths/audio/probe';
 import { cablesToEngine, type CableLike } from '@/lib/app/synths/lib/patch';
 import { detectPeriod, grab } from '@/lib/app/synths/lib/scope-read';

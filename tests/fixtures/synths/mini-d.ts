@@ -8,7 +8,7 @@
  * coordinates are tidy, and every control and jack sits inside exactly one area.
  *
  * `toEngine` is a real, pure mapping, so the explainer, the sound map and the wave story can run on it.
- * Hand-written, not generated from `prototype/` (which the app never imports).
+ * Hand-written, not generated: the app never imports the prototype.
  */
 import { expMap, fmtHz, fmtSemi, level10, pwl } from '@/lib/app/synths/lib/maps';
 import type {

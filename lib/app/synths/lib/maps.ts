@@ -1,6 +1,6 @@
 // Small mapping helpers shared by every SynthDef's toEngine().
 //
-// Transliterated from `prototype/src/lib/maps.js` (decision D3).
+// Transliterated from the prototype file `src/lib/maps.js` (decision D3).
 import type { Phrase, PhraseNote, UnusualNotes } from '@/lib/app/synths/contract';
 
 export const clamp = (x: number, a: number, b: number): number => (x < a ? a : x > b ? b : x);

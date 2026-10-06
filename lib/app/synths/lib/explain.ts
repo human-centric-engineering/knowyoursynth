@@ -3,7 +3,7 @@
 // Nothing here is synth-specific. It reads the Jack defs, the live EngineParams from `toEngine()` and the
 // engine's routing rules (see dsp-core `compile()` / `ev()`), so the text follows the panel as it is set.
 //
-// Transliterated from `prototype/src/lib/explain.js` (decision D3). Where the prototype read an optional engine
+// Transliterated from the prototype file `src/lib/explain.js` (decision D3). Where the prototype read an optional engine
 // parameter that a well-formed EngineParams may leave out (`ep.sh`, `ep.trap`, `osc.syncTo` …), the reads below say
 // what the prototype got from `undefined` (a comparison that fails, a fallback of nothing).
 import { BUILTIN_NORMALS } from '@/lib/app/synths/audio/dsp-core';

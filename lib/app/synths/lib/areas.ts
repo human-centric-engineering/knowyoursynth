@@ -1,6 +1,6 @@
 // Areas: the named regions of a faceplate (one or more rects each) that the Areas view and the search explain.
 //
-// Transliterated from `prototype/src/lib/areas.js` (decision D3). The prototype cached the area table on the
+// Transliterated from the prototype file `src/lib/areas.js` (decision D3). The prototype cached the area table on the
 // definition (`def._amap`); here it is a WeakMap keyed by the definition.
 import { cleanLabel, displayName } from '@/lib/app/synths/lib/patch';
 import { jackName } from '@/lib/app/synths/lib/explain';

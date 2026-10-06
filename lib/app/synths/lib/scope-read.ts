@@ -1,7 +1,7 @@
 // Reading an AnalyserNode: the pitch of what is playing, the stretch of it to draw, and its levels.
 // Pure, and away from the drawing so it can be checked on its own against a known waveform.
 //
-// Transliterated from `prototype/src/lib/scope-read.js` (decision D3).
+// Transliterated from the prototype file `src/lib/scope-read.js` (decision D3).
 
 /** A buffer of samples (an AnalyserNode's time-domain data, or a rendered note). */
 type Samples = ArrayLike<number>;

@@ -4,7 +4,7 @@
 // decor item and area moved to its module's place; the sound, the ids and the presets are untouched, so everything that
 // reads a SynthDef (search, sections, sound map, tour, cables) works on it as it does on the long panel.
 //
-// Transliterated from `prototype/src/lib/layout.js` (decision D3).
+// Transliterated from the prototype file `src/lib/layout.js` (decision D3).
 import type {
   Control,
   ControlOption,

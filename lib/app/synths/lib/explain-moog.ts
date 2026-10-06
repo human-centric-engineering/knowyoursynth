@@ -3,7 +3,7 @@
 // the text talks in volts: 1 V per octave on pitch and cutoff, 6 V to open a 902 fully, S-triggers and V-triggers.
 // Nothing in it is written per system: it reads the jack defs, the SynthDef's `signalNames`, and the live `moog` params.
 //
-// Transliterated from `prototype/src/lib/explain-moog.js` (decision D3). The optional slot lists of `MoogParams`
+// Transliterated from the prototype file `src/lib/explain-moog.js` (decision D3). The optional slot lists of `MoogParams`
 // (`att`, `mix`, `drv` …) are read with an empty fallback where the prototype read them unguarded: a system that
 // patches a module always sends its slot, so the fallback only stands in for what was a crash.
 import { jackGain, jackMap, type CableLike } from '@/lib/app/synths/lib/patch';

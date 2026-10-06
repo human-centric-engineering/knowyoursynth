@@ -2,7 +2,7 @@
 // panel that belongs to a control: the control itself plus the silkscreen nearest to it. A cell is everything in the
 // area that is closer to this control than to any other (a power diagram: bigger controls claim more room).
 //
-// Transliterated from `prototype/src/lib/cells.js` (decision D3). The prototype cached results on the definition
+// Transliterated from the prototype file `src/lib/cells.js` (decision D3). The prototype cached results on the definition
 // (`def._cells`); here the cache is a WeakMap keyed by the definition.
 import { isShown } from '@/lib/app/synths/lib/patch';
 import type {

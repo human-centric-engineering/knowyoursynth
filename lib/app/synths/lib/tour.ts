@@ -11,7 +11,7 @@
 //  * Stops are grouped by `module`, not one per area, so the 2600's three oscillators are read together
 //    instead of as three near-identical stops. It keeps even the biggest panel to about a dozen stops.
 //
-// Transliterated from `prototype/src/lib/tour.js` (decision D3). One change: the prototype read the unusual notes
+// Transliterated from the prototype file `src/lib/tour.js` (decision D3). One change: the prototype read the unusual notes
 // already attached to the controls, jacks and areas (by `annotate()` at load); in the app they come from the
 // catalogue, so `buildTour()` takes them as an argument. Without it, it reads the attached notes as before.
 import { areaMembers, areaOf } from '@/lib/app/synths/lib/areas';

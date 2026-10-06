@@ -5,7 +5,7 @@
  * a value into range, swap a cable that is the wrong way round, drop what they do not know) because they read AI
  * output that is better used half-right than not at all. This refuses instead: a sound that is stored, shared or
  * submitted through the API must already be right, and the person who wrote it needs to know what is wrong with it.
- * The rules are the ones `prototype/check.mjs` enforces on the library, so a sound that passes here would pass there.
+ * The rules are the ones the prototype checker (`check.mjs`) enforces on the library, so a sound that passes here would pass there.
  *
  * Two layers, in order:
  *  1. **Shape** (Zod): is it a sound at all — the right fields, of the right types. Nothing about the synth.

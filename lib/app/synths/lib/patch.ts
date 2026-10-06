@@ -1,6 +1,6 @@
 // Helpers that work on a SynthDef + values: formatting, building a preset's target state, validating AI output.
 //
-// Transliterated from `prototype/src/lib/patch.js` (decision D3). Two changes of mechanism, not of behaviour:
+// Transliterated from the prototype file `src/lib/patch.js` (decision D3). Two changes of mechanism, not of behaviour:
 // the prototype cached its lookup tables on the definition itself (`def._cmap`, `def._jmap`, `def._dupes`); here they
 // live in WeakMaps keyed by the definition, so a SynthDef stays the plain contract type. And the `sanitize*`
 // functions take `unknown` (they read AI output) and check its shape as they go. Their strict counterpart, which

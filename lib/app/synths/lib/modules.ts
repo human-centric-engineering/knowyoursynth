@@ -1,6 +1,6 @@
 // Colour coding for the parts of a synth voice. Used by lesson steps, chips and panel highlights.
 //
-// Transliterated from `prototype/src/lib/modules.js` (decision D3).
+// Transliterated from the prototype file `src/lib/modules.js` (decision D3).
 import type { SynthModule } from '@/lib/app/synths/contract';
 
 export interface ModuleInfo {

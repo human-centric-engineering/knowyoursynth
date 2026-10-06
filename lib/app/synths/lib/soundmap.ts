@@ -3,11 +3,11 @@
 // way, and the probe (audio/probe) renders the result through the real voice and compares it with the
 // sound as it stands.
 //
-// Transliterated from `prototype/src/lib/soundmap.js` (decision D3). One change of mechanism: the prototype built its
+// Transliterated from the prototype file `src/lib/soundmap.js` (decision D3). One change of mechanism: the prototype built its
 // probe Workers from source text embedded at build time (`__PROBE_SRC__`); the app serves the probe worker as a
-// static file, `PROBE_WORKER_URL`.
+// static file, `PROBE_WORKER_URL` (from the audio module).
 import { cablesToEngine, type CableLike } from '@/lib/app/synths/lib/patch';
-import { createProbe } from '@/lib/app/synths/audio/probe';
+import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type {
   Control,
   ControlValue,
@@ -17,8 +17,8 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 
-/** Where the probe worker is served (built from `audio/probe-worker-entry`). */
-export const PROBE_WORKER_URL = '/worklets/kys-probe.js';
+/** Where the probe worker is served (built from `audio/probe-worker-entry`); re-exported for the panel. */
+export { PROBE_WORKER_URL };
 
 export const NUDGE = 0.05; // a "slight adjustment": this fraction of a knob's travel, each way
 

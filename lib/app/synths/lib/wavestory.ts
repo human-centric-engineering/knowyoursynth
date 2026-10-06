@@ -6,7 +6,7 @@
 // EngineParams again, and see which parameters changed. A control whose every move leaves the parameters alone is
 // not part of this picture; a control whose every move only switches something on from nothing is not in it yet.
 //
-// Transliterated from `prototype/src/lib/wavestory.js` (decision D3).
+// Transliterated from the prototype file `src/lib/wavestory.js` (decision D3).
 import {
   cablesToEngine,
   cleanLabel,
