@@ -35,7 +35,9 @@ code disagreed, the types follow the code (see [Where the code won](#where-the-c
   With a `modular` layout this must still hold after the cut.
 - **Ids are stable.** Sounds, lessons, unusual notes and the databank refer to control and jack
   ids; renaming one orphans them. `annotate()` throws on an unusual note whose id matches
-  nothing; `validate.ts` drops settings and cables for ids it does not know.
+  nothing; `validate.ts` refuses a sound that names a control or jack the synth does not have
+  (`validateSound` / `validatePreset` return every problem with its path; the lenient
+  `sanitize*` helpers in `lib/patch.ts`, used on AI output, drop them instead).
 - **No per-synth data for the sound map.** "Dim unused parts" and "Show sensitive controls" are
   worked out from the definition alone.
 
