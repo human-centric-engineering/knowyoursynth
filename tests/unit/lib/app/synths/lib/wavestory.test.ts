@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import { noteAt, waveStory } from '@/lib/app/synths/lib/wavestory';
 import { expMap } from '@/lib/app/synths/lib/maps';
 import type {
+  Control,
   ControlValues,
   EngineContext,
   EngineParams,
@@ -304,5 +305,409 @@ describe('noteAt', () => {
     expect(noteAt(0)).toBeNull();
     expect(noteAt(10)).toBeNull();
     expect(noteAt(9000)).toBeNull();
+  });
+});
+
+describe('waveStory — morphing oscillator (EngineParams osc.morph, the Kobol WAVEFORM knob)', () => {
+  /** Oscillator 1 forced into morph mode at `m`; everything else stays at the default panel. */
+  const shapeAt = (m: number): string => {
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[0] = { ...osc[0], morph: m };
+      return { ...p, osc };
+    });
+    return waveStory(def, def.init, [], 0).stages.find((s) => s.id === 'shape')?.text ?? '';
+  };
+
+  it('reads every position of the morph knob as its own waveform, instead of the mix', () => {
+    expect(shapeAt(0.03)).toContain('oscillator 1 is a triangle wave');
+    expect(shapeAt(0.25)).toContain(
+      'oscillator 1 is a lopsided ramp, part way from triangle to sawtooth'
+    );
+    expect(shapeAt(0.5)).toContain('oscillator 1 is a sawtooth wave');
+    expect(shapeAt(0.6)).toContain('oscillator 1 is part way from sawtooth to square');
+    expect(shapeAt(0.67)).toContain('oscillator 1 is a square wave');
+    expect(shapeAt(0.9)).toContain('oscillator 1 is a narrowing pulse wave');
+  });
+});
+
+describe('waveStory — gated dead controls (module switched off)', () => {
+  it('excludes controls whose only effect lands on noise tone, overdrive, delay or reverb while each is off', () => {
+    const gateControls: Control[] = [
+      {
+        id: 'gate.noiseTone',
+        type: 'knob',
+        style: 'd-silver',
+        r: 25,
+        x: 0,
+        y: 0,
+        module: 'mixer',
+        kind: 'cont',
+        min: 0,
+        max: 10,
+        def: 5,
+        label: 'Noise Tone',
+        help: 'Test-only control: feeds noise.tone while the noise source is off.',
+      },
+      {
+        id: 'gate.odDrive',
+        type: 'knob',
+        style: 'd-silver',
+        r: 25,
+        x: 0,
+        y: 0,
+        module: 'fx',
+        kind: 'cont',
+        min: 0,
+        max: 10,
+        def: 5,
+        label: 'OD Drive',
+        help: 'Test-only control: feeds od.drive while the overdrive is off.',
+      },
+      {
+        id: 'gate.delayTime',
+        type: 'knob',
+        style: 'd-silver',
+        r: 25,
+        x: 0,
+        y: 0,
+        module: 'fx',
+        kind: 'cont',
+        min: 0,
+        max: 10,
+        def: 5,
+        label: 'Delay Time',
+        help: 'Test-only control: feeds delay.time while the echo is off.',
+      },
+      {
+        id: 'gate.revMix',
+        type: 'knob',
+        style: 'd-silver',
+        r: 25,
+        x: 0,
+        y: 0,
+        module: 'fx',
+        kind: 'cont',
+        min: 0,
+        max: 10,
+        def: 5,
+        label: 'Reverb Mix',
+        help: 'Test-only control: feeds rev.mix while the reverb is off.',
+      },
+    ];
+    const def = makeMiniD({
+      controls: [...makeMiniD().controls, ...gateControls],
+      toEngine: (v: ControlValues, _ctx: EngineContext) => ({
+        ...miniToEngine(v),
+        noise: { ...miniToEngine(v).noise, tone: Number(v['gate.noiseTone']) / 10 },
+        od: { on: false, drive: Number(v['gate.odDrive']) / 10 },
+        delay: { on: false, time: Number(v['gate.delayTime']) / 10, fb: 0, mix: 0 },
+        rev: { on: false, mix: Number(v['gate.revMix']) / 10 },
+      }),
+    });
+
+    const story = waveStory(def, def.init, [], 0);
+    const everyKey = story.stages.flatMap((s) => [...s.on, ...s.zero].map((e) => e.key));
+
+    expect(everyKey).not.toContain('gate.noiseTone');
+    expect(everyKey).not.toContain('gate.odDrive');
+    expect(everyKey).not.toContain('gate.delayTime');
+    expect(everyKey).not.toContain('gate.revMix');
+  });
+});
+
+describe('waveStory — nothing in the mixer', () => {
+  it('reports a flat line and drops every per-source stage once no oscillator and no noise reaches the mixer', () => {
+    const def = withExtra((p) => ({ ...p, ext: { level: 0 } }));
+    const story = waveStory(def, { ...def.init, 'mix.osc1': 0 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toBe(
+      'Nothing is reaching the mixer, so the trace is a flat line. Turn an oscillator or the noise up.'
+    );
+    expect(story.stages.find((s) => s.id === 'pitch')).toBeUndefined();
+    expect(story.stages.find((s) => s.id === 'mix')).toBeUndefined();
+  });
+
+  it('describes pure noise once every oscillator is muted but the noise source is not', () => {
+    const def = withExtra((p) => ({ ...p, ext: { level: 0 } }));
+    const story = waveStory(def, { ...def.init, 'mix.osc1': 0, 'mix.noise': 5 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toBe(
+      'White noise is mixed in as well: it has no repeating shape, so it shows as fuzz on the line.'
+    );
+  });
+});
+
+describe('waveStory — noise tone (the rest of the range)', () => {
+  it('describes pink noise once the tone control reads near the middle of its range', () => {
+    const def = withExtra((p) => ({ ...p, noise: { ...p.noise, tone: 0.5 } }));
+    const story = waveStory(def, { ...def.init, 'mix.noise': 5 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toContain(
+      'pink noise is mixed in as well'
+    );
+  });
+
+  it('describes white noise when the tone control itself (not the default) reads high', () => {
+    const def = withExtra((p) => ({ ...p, noise: { ...p.noise, tone: 0.9 } }));
+    const story = waveStory(def, { ...def.init, 'mix.noise': 5 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toContain(
+      'white noise is mixed in as well'
+    );
+  });
+});
+
+describe('waveStory — filter (morph knob parked at either end)', () => {
+  it('reads a morph filter parked low as low-pass', () => {
+    const def = withExtra((p) => ({ ...p, filter: { ...p.filter, mode: 'morph', morph: 0.1 } }));
+    const text = waveStory(def, def.init, [], 0).stages.find((s) => s.id === 'filter')?.text ?? '';
+
+    expect(text).toContain('low-pass');
+    expect(text).toContain('rounds the corners off');
+  });
+
+  it('reads a morph filter parked high as high-pass', () => {
+    const def = withExtra((p) => ({ ...p, filter: { ...p.filter, mode: 'morph', morph: 0.9 } }));
+    const text = waveStory(def, def.init, [], 0).stages.find((s) => s.id === 'filter')?.text ?? '';
+
+    expect(text).toContain('high-pass');
+    expect(text).toContain('throws away the slow part');
+  });
+
+  it('falls back to generic envelope names once the synth defines no signalNames', () => {
+    const def = makeMiniD({ signalNames: undefined });
+    const story = waveStory(def, { ...def.init, 'filter.contour': 5, 'env2.attack': 10 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'filter')?.text).toContain(
+      'Envelope 1 moves the cutoff'
+    );
+    expect(story.stages.find((s) => s.id === 'amp')?.text).toContain('Envelope 2 sets the height');
+  });
+});
+
+describe('waveStory — filter cutoff in kHz', () => {
+  it('formats a cutoff at the very top of the range in kHz with one decimal', () => {
+    const story = waveStory(makeMiniD(), { ...makeMiniD().init, 'filter.cutoff': 5 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'filter')?.text).toContain('20.0 kHz');
+  });
+
+  it('formats a mid-high cutoff in kHz with two decimals', () => {
+    const story = waveStory(makeMiniD(), { ...makeMiniD().init, 'filter.cutoff': 2 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'filter')?.text).toContain('2.52 kHz');
+  });
+});
+
+describe('waveStory — pulse width edge cases', () => {
+  it('describes an off-centre pulse as "a pulse", not a square, at its own percentage', () => {
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[0] = { ...osc[0], pw: 0.2 };
+      return { ...p, osc };
+    });
+    const story = waveStory(def, { ...def.init, 'osc1.wave': 'sq' }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toContain('oscillator 1 is a pulse');
+    expect(story.stages.find((s) => s.id === 'width')?.text).toContain('Oscillator 1 at 20%');
+  });
+
+  it('treats a missing pulse width as 50%, reading as a square', () => {
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[0] = { ...osc[0], pw: undefined };
+      return { ...p, osc };
+    });
+    const story = waveStory(def, { ...def.init, 'osc1.wave': 'sq' }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'shape')?.text).toContain('oscillator 1 is a square');
+    expect(story.stages.find((s) => s.id === 'width')?.text).toContain('Oscillator 1 at 50%');
+  });
+});
+
+describe('waveStory — pitch (further branches)', () => {
+  it('uses plural phrasing once more than one oscillator ignores the keyboard', () => {
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[0] = { ...osc[0], kbd: false };
+      osc[1] = { ...osc[1], kbd: false };
+      osc[2] = { ...osc[2], level: 0.5, kbd: true };
+      return { ...p, osc };
+    });
+    const story = waveStory(def, { ...def.init, 'mix.osc2': 5 }, [], 0);
+    const text = story.stages.find((s) => s.id === 'pitch')?.text ?? '';
+
+    expect(text).toContain('Oscillator 1 and oscillator 2 ignore the keyboard');
+    expect(text).toContain('those parts stays put');
+  });
+
+  it('reports a single-octave spread as "an octave", not "two octaves"', () => {
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[1] = { ...osc[1], semi: 12 };
+      return { ...p, osc };
+    });
+    const story = waveStory(def, { ...def.init, 'mix.osc2': 5 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'pitch')?.text).toContain(
+      'an octave, so the higher one puts a ripple'
+    );
+  });
+
+  it('reports the closest pair, skipping an update when a later pair is not actually closer', () => {
+    // Three oscillators at 0, 0.3 and 0.5 semitones: pair (osc1, osc3) at 0.5 is checked after the
+    // 0.3 beat is already found and is not closer, so the running minimum must not update to it —
+    // only the final (osc2, osc3) pair at 0.2 should win.
+    const def = withExtra((p) => {
+      const osc = [...p.osc];
+      osc[2] = { ...osc[2], level: 0.5, semi: 0.5 };
+      return { ...p, osc };
+    });
+    const story = waveStory(def, { ...def.init, 'mix.osc2': 5, 'osc2.detune': 0.3 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'pitch')?.text).toContain('20 cents apart');
+  });
+});
+
+describe('waveStory — amplitude source selection', () => {
+  it('names the filter contour when the amplifier follows envelope 1 instead of 2', () => {
+    const def = withExtra((p) => ({ ...p, vca: { envSrc: 'env1', bias: 0 } }));
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'amp')?.text).toContain(
+      'The filter contour sets the height of the trace'
+    );
+  });
+
+  it('skips the envelope sentence entirely when the amplifier follows no envelope ("none")', () => {
+    const def = withExtra((p) => ({ ...p, vca: { envSrc: 'none', bias: 0.2 } }));
+    const story = waveStory(def, def.init, [], 0);
+    const text = story.stages.find((s) => s.id === 'amp')?.text ?? '';
+
+    expect(text).toContain('The amplifier is held 20% open');
+    expect(text).not.toContain('sets the height of the trace');
+  });
+});
+
+describe('waveStory — dirt (degenerate effect params and switched off)', () => {
+  it('shows NaN figures when an active effect is missing its own detail fields', () => {
+    const def = withExtra((p) => ({
+      ...p,
+      od: { on: true, drive: undefined },
+      delay: { on: true, time: undefined, fb: 0, mix: undefined },
+    }));
+    const text = waveStory(def, def.init, [], 0).stages.find((s) => s.id === 'dirt')?.text ?? '';
+
+    expect(text).toContain('drive at NaN%');
+    expect(text).toContain('NaN s, NaN% mix');
+  });
+
+  it('omits the echo sentence, and the whole dirt stage, once delay is switched off', () => {
+    const def = withExtra((p) => ({ ...p, delay: { on: false, time: 0.3, fb: 0.3, mix: 0.4 } }));
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'dirt')).toBeUndefined();
+  });
+});
+
+describe('waveStory — movement (further branches)', () => {
+  it('falls back to the raw key for an LFO shape the explainer has no word for', () => {
+    const def = withExtra((p) => ({ ...p, lfo: { ...p.lfo, mix: { weird: 1 } } }));
+    const story = waveStory(def, { ...def.init, 'mod.toOsc': true, 'mod.depth': 10 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'move')?.text).toContain('on weird');
+  });
+
+  it('describes a running LFO with no shape mixed in at all', () => {
+    const def = withExtra((p) => ({ ...p, lfo: { ...p.lfo, mix: {} } }));
+    const story = waveStory(def, { ...def.init, 'mod.toOsc': true, 'mod.depth': 10 }, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'move')?.text).toContain(
+      'running at 3.16 Hz. At that rate'
+    );
+  });
+
+  it('names more than one moved destination with plural phrasing', () => {
+    const def = makeMiniD();
+    const values = { ...def.init, 'mod.toOsc': true, 'mod.depth': 10 };
+    const story = waveStory(def, values, [{ from: 'lfo.tri', to: 'cutoff.in' }], 0);
+
+    expect(story.stages.find((s) => s.id === 'move')?.text).toContain(
+      'Pitch and the filter cutoff are being moved'
+    );
+  });
+
+  it('probes the mod wheel from the high side once it reads past the midpoint', () => {
+    const story = waveStory(makeMiniD(), makeMiniD().init, [], 0.8);
+
+    expect(story.stages.find((s) => s.id === 'move')?.text).toContain('The mod wheel is up at 80%');
+  });
+});
+
+describe('waveStory — cable attribution (further branches)', () => {
+  it('excludes a cable patched into a decoy jack with no real destination', () => {
+    const def = makeMiniD();
+    const story = waveStory(def, def.init, [{ from: 'lfo.tri', to: 'dead.in' }], 0);
+    const everyKey = story.stages.flatMap((s) => [...s.on, ...s.zero].map((e) => e.key));
+
+    expect(everyKey).not.toContain('lfo.tri>dead.in');
+  });
+});
+
+describe('waveStory — tolerates a synth def missing optional EngineParams fields', () => {
+  it('treats a synth that omits routes entirely the same as one with no routings', () => {
+    const def = withExtra((p) => {
+      const { routes, ...rest } = p;
+      void routes;
+      return rest;
+    });
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'move')?.text).toBe(
+      'Nothing is modulating the voice, so the trace stands still for as long as the note is held.'
+    );
+  });
+
+  it('treats a missing filter as "no filter to describe" and a null cutoff', () => {
+    // filter is a required EngineParams field; a synth def that still omits it is malformed, but
+    // wavestory must degrade rather than throw — this cast simulates that malformed input.
+    const def = withExtra((p) => {
+      const { filter, ...rest } = p;
+      void filter;
+      return rest as unknown as EngineParams;
+    });
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.cutoff).toBeNull();
+    expect(story.stages.find((s) => s.id === 'filter')).toBeUndefined();
+  });
+
+  it('treats a missing volume as "nothing to report" rather than 0%', () => {
+    const def = withExtra((p) => {
+      const { volume, ...rest } = p;
+      void volume;
+      return rest as unknown as EngineParams;
+    });
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.stages.find((s) => s.id === 'level')).toBeUndefined();
+  });
+});
+
+describe('waveStory — error path (non-Error throw)', () => {
+  it('stringifies a thrown non-Error value when toEngine fails', () => {
+    const def = makeMiniD({
+      toEngine: () => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error -- deliberately non-Error, to test the fallback
+        throw 'bad patch string';
+      },
+    });
+
+    const story = waveStory(def, def.init, [], 0);
+
+    expect(story.error).toBe('bad patch string');
+    expect(story.stages).toEqual([]);
+    expect(story.cutoff).toBeNull();
   });
 });
