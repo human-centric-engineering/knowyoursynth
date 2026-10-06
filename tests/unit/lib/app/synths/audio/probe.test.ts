@@ -174,14 +174,18 @@ describe('createProbe', () => {
     expect(probe.measure({ ...job, far: [darker] })).toEqual({ key: 'a|b', live: false });
   });
 
-  it('forgets cached baselines once it holds more than 64', () => {
+  // A cached base is answered from the cache whatever `base` the job carries, so asking for key b0 with a loud
+  // base tells cached (the quiet render: differs from loud, live) from re-rendered (loud vs loud, not live).
+  // 66 short renders: slow under a loaded machine, hence the explicit timeout.
+  it('forgets cached baselines once it holds more than 64', { timeout: 120_000 }, () => {
     const probe = createProbe(baseline, NOTES);
     const quiet = monoParams({ volume: 0 });
-    for (let i = 0; i < 66; i++)
+    const asLoud = { key: 'again', base: baseline, baseKey: 'b0', far: [baseline] };
+    probe.measure({ key: 'k0', base: quiet, baseKey: 'b0', far: [quiet] });
+    expect(probe.measure(asLoud).live).toBe(true); // still cached: the quiet render answered
+    for (let i = 1; i < 66; i++)
       probe.measure({ key: `k${i}`, base: quiet, baseKey: `b${i}`, far: [quiet] });
-    expect(probe.measure({ key: 'again', base: quiet, baseKey: 'b0', far: [quiet] }).live).toBe(
-      false
-    );
+    expect(probe.measure(asLoud).live).toBe(false); // evicted: b0 re-rendered from the loud base
   });
 });
 
