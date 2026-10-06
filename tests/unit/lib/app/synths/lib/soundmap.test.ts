@@ -501,6 +501,35 @@ describe('createMapper', () => {
     expect(onDone).toHaveBeenCalled();
   });
 
+  it('takes an answer for a cancelled run as proof the pool works, and keeps it past the deadline', async () => {
+    vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+    // Workers that take 5 s to load, then answer every start, for whichever run it was.
+    class SlowWorker {
+      onmessage: ((e: { data: unknown }) => void) | null = null;
+      onerror: (() => void) | null = null;
+      terminate = vi.fn();
+      postMessage(msg: { type: string; run: number }): void {
+        if (msg.type === 'start')
+          setTimeout(() => this.onmessage?.({ data: { type: 'ready', run: msg.run } }), 5000);
+      }
+    }
+    (globalThis as { Worker?: unknown }).Worker = SlowWorker;
+    vi.useFakeTimers();
+    const mapper = createMapper();
+    const def = makeMiniD();
+
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    await vi.advanceTimersByTimeAsync(1000);
+    mapper.cancel(); // the 5 s answer arrives for a run nobody is waiting on
+    await vi.advanceTimersByTimeAsync(WORKER_TIMEOUT_MS * 6);
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(warn).not.toHaveBeenCalled();
+    mapper.dispose();
+  });
+
   it('logs a worker that fails to load with its error, and one the host refuses to construct', async () => {
     vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
     const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
@@ -518,7 +547,7 @@ describe('createMapper', () => {
     createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
     await vi.advanceTimersByTimeAsync(0);
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('failed to load'),
+      expect.stringContaining('failed'),
       expect.objectContaining({ url: PROBE_WORKER_URL, error: 'Not found' })
     );
 

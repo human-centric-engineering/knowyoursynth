@@ -134,6 +134,7 @@ describe('Engine', () => {
   });
 
   it('asks the context to run while the click still counts, before the worklet has loaded', async () => {
+    vi.useFakeTimers(); // the hanging load's timeout must not outlive the test
     const { Ctx, engine } = setup('hang');
     void engine.start();
     // addModule never settles here, so the only resume() that can have run is the early one.

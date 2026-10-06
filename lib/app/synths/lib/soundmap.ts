@@ -587,10 +587,11 @@ export interface Mapper {
 
 export function createMapper(): Mapper {
   let workers: Worker[] | null = null; // null = not tried, [] = blocked
-  // When the pool was spawned: the wait for its first answer counts from here, once, not from each analysis, or a
-  // user who keeps changing the panel would restart it forever on a host that blocks workers silently.
-  let spawnedAt = 0;
-  let proven = false; // a worker has answered: the pool works, so the wait no longer applies
+  // One wait per pool, started when it spawns and cleared by the first message from any worker, for any run. Not one
+  // per analysis: a user who keeps changing the panel would restart that forever on a host that blocks workers
+  // silently, and an answer for a superseded run still proves the pool works.
+  let poolTimer: ReturnType<typeof setTimeout> | undefined;
+  let proven = false;
   let run = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let session: Session | null = null;
@@ -599,7 +600,7 @@ export function createMapper(): Mapper {
     if (workers) return workers;
     const pool: Worker[] = [];
     workers = pool;
-    spawnedAt = Date.now();
+    proven = false;
     try {
       for (let i = 0; i < POOL; i++) pool.push(new Worker(PROBE_WORKER_URL));
     } catch (err) {
@@ -610,6 +611,7 @@ export function createMapper(): Mapper {
       pool.forEach((w) => w.terminate());
       workers = [];
     }
+    if (workers.length) poolTimer = setTimeout(silentPool, WORKER_TIMEOUT_MS);
     return workers;
   };
 
@@ -659,14 +661,32 @@ export function createMapper(): Mapper {
   // Workers that never answer (or fail to load) are blocked by the host: stop using them for good.
   function fallBack(sess: Session, error?: string) {
     if (sess.answered || sess.mode !== 'pool' || sess.id !== run) return;
-    logger.warn(
-      error
-        ? 'Sound-map workers failed to load; probing on the main thread'
-        : 'Sound-map workers did not answer; probing on the main thread',
-      { url: PROBE_WORKER_URL, ...(error ? { error } : {}) }
-    );
+    logger.warn('Sound-map workers failed; probing on the main thread', {
+      url: PROBE_WORKER_URL,
+      error,
+    });
+    dropPool();
+    sess.mode = 'main';
+    sess.queue.unshift(...sess.inflight.values());
+    sess.inflight.clear();
+    pump(sess);
+  }
+
+  function dropPool() {
+    clearTimeout(poolTimer);
     (workers || []).forEach((w) => w.terminate());
     workers = [];
+  }
+
+  // The pool's wait ran out with no worker answering: blocked by the host. Move whatever session is waiting on it.
+  function silentPool() {
+    if (proven || !workers?.length) return;
+    logger.warn('Sound-map workers did not answer; probing on the main thread', {
+      url: PROBE_WORKER_URL,
+    });
+    dropPool();
+    const sess = session;
+    if (!sess || sess.mode !== 'pool' || sess.id !== run) return;
     sess.mode = 'main';
     sess.queue.unshift(...sess.inflight.values());
     sess.inflight.clear();
@@ -684,9 +704,13 @@ export function createMapper(): Mapper {
       w.onerror = (e: ErrorEvent) => fallBack(sess, e.message || 'worker error');
       w.onmessage = (m: MessageEvent<unknown>) => {
         const data = m.data;
-        if (!isWorkerMessage(data) || data.run !== sess.id || sess.id !== run) return;
+        if (!isWorkerMessage(data)) return;
+        if (!proven) {
+          proven = true;
+          clearTimeout(poolTimer);
+        }
+        if (data.run !== sess.id || sess.id !== run) return;
         sess.answered = true;
-        proven = true;
         if (data.type === 'result') {
           const job = sess.inflight.get(w);
           sess.inflight.delete(w);
@@ -697,8 +721,6 @@ export function createMapper(): Mapper {
       };
       w.postMessage({ type: 'start', run: sess.id, baseline: sess.baseline, notes: sess.notes });
     });
-    if (!proven)
-      setTimeout(() => fallBack(sess), Math.max(0, spawnedAt + WORKER_TIMEOUT_MS - Date.now()));
   }
 
   const phase = (
@@ -804,6 +826,7 @@ export function createMapper(): Mapper {
     cancel: close,
     dispose() {
       close();
+      clearTimeout(poolTimer);
       (workers || []).forEach((w) => w.terminate());
       workers = null;
     },

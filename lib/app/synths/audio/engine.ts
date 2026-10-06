@@ -71,7 +71,8 @@ export class Engine {
     this.ctx = ctx;
     // Ask to run now, while the click that started us still counts as a user gesture: the worklet may take up to
     // WORKLET_TIMEOUT_MS to load, and a resume() first called after that can be refused. Awaited again at the end.
-    if (ctx.state !== 'running') void ctx.resume().catch(() => {});
+    // Promise.resolve: an old prefixed webkitAudioContext may return nothing from resume().
+    if (ctx.state !== 'running') void Promise.resolve(ctx.resume()).catch(() => {});
     this.analyser = ctx.createAnalyser();
     // 4096 samples ≈ 85 ms at 48 kHz: enough for eight cycles of a low bass note in the big scope view.
     this.analyser.fftSize = 4096;
