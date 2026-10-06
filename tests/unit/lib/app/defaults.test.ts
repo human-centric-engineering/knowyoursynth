@@ -221,14 +221,24 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/protected-nav.ts',
     risk: 'a stray non-null list would silently REPLACE the authenticated nav',
-    assert: () => expect(protectedNavItems).toBeNull(),
+    // Know Your Synth fills this seam: pinned to its four links, so a stray change still fails.
+    assert: () =>
+      expect(
+        protectedNavItems?.map(({ href, label, adminOnly }) => ({ href, label, adminOnly }))
+      ).toEqual([
+        { href: '/dashboard', label: 'My synths', adminOnly: undefined },
+        { href: '/profile', label: 'Profile', adminOnly: undefined },
+        { href: '/settings', label: 'Settings', adminOnly: undefined },
+        { href: '/admin', label: 'Admin', adminOnly: true },
+      ]),
   },
   {
     seam: 'lib/app/auth-landing.ts',
     risk: 'a stray value would send every install somewhere else after login',
     assert: () => {
       expect(appAuthLandingRoute).toBeNull();
-      expect(appAuthLandingLabel).toBeNull();
+      // Know Your Synth fills the label only: the landing stays /dashboard, called My synths.
+      expect(appAuthLandingLabel).toBe('My synths');
     },
   },
   {

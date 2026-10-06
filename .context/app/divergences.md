@@ -32,7 +32,8 @@ the same PR**, and each row names what deletes it.
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers` and `check:synths`
-    scripts, and `esbuild` as a devDependency.
+    scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
+    dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
   - `README.md`: rewritten as Know Your Synth's.
@@ -41,10 +42,12 @@ the same PR**, and each row names what deletes it.
   - This is an application fork, and `APP_VERSION` comes from `package.json` (VERSIONING.md).
   - `predev` and `prebuild` bundle the AudioWorklet and the probe worker into `public/worklets/`
     (decision on f-engine t-2/t-3), and `esbuild` is the bundler they use.
+  - The `@fontsource/*` packages self-host the prototype's faces under their real family names,
+    which the ported panel names literally (`app/(panel)/layout.tsx`).
   - Port 3024 lets the app run beside the other HCE checkouts (3010–3022, listed in the file).
 - **On conflict:**
   - `package.json`: keep ours for name, version, description, keywords and URLs. Take the union
-    of the script blocks and of `devDependencies`.
+    of the script blocks, `dependencies` and `devDependencies`.
   - `package-lock.json`: keep ours for the root version lines and take upstream's dependency
     changes, then run `npm install --package-lock-only` and `npm run fix:lockfile-libc`. Local
     npm strips every `libc` field.
@@ -52,6 +55,20 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** app-specific, never going upstream.
 - **Delete when:** never. This is the fork's permanent identity. The `predev`/`prebuild` lines go
   only if the worklet and worker stop being built bundles.
+
+### The authenticated nav test, pinned to our nav
+
+- **Files:** `tests/unit/components/layouts/protected-nav.test.tsx`
+- **Change:** the default-links case looks for **My synths** rather than **Dashboard** at
+  `/dashboard`. That's one line, with a `FORK` comment.
+- **Why:** `lib/app/protected-nav.ts` is filled. The case renders whatever the seam exports, and
+  the test's own FORK NOTE says to pin the fork's list rather than delete the case, which also
+  covers `adminOnly` and prefix matching.
+- **On conflict:** take theirs, and re-apply the one-line pin to whichever case asserts the
+  default dashboard link.
+- **Upstream:** the FORK NOTE points at sunrise#636, the sweep that would make the file
+  seam-independent.
+- **Delete when:** #636 lands, or the nav goes back to `null`.
 
 ### Prototype exclusions in tool config
 
@@ -112,19 +129,22 @@ files outside the reserved namespaces with:
 Today they are:
 
 - `prototype/**`, which goes at f-launch x5;
+- `app/(panel)/**`, the synth page's route group;
 - `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
 - `tests/fixtures/synths/**`;
 - `tests/unit/prototype-boundary.test.ts`;
-- the tests for fork-owned code, under `tests/unit/lib/app/synths/**` and
-  `tests/unit/components/app/**`.
+- the tests for fork-owned code, under `tests/unit/lib/app/synths/**`,
+  `tests/unit/components/app/**` and `tests/unit/app/panel/**`.
 
 Before a sync, intersect that list with `git diff --diff-filter=A --name-only <base> <target>`.
 
 ## Excluded: filled seams
 
-- `lib/app/brand.ts`, `lib/app/ci.ts` and `lib/app/reserved-tiers.ts`: fork-owned scaffolds,
-  filled.
+- `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`
+  and `lib/app/auth-landing.ts` (the label only): fork-owned scaffolds, filled.
+- `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
+  (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
-  `ci`, `reserved-tiers`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

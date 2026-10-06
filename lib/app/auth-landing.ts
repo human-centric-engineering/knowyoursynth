@@ -43,4 +43,5 @@ export const appAuthLandingRoute: string | null = null;
  *
  * `null` = platform default (`Dashboard`).
  */
-export const appAuthLandingLabel: string | null = null;
+// Know Your Synth: the landing stays /dashboard, which the app calls My synths.
+export const appAuthLandingLabel: string | null = 'My synths';

@@ -1,0 +1,17 @@
+/* The synth page's frame: its type.
+ *
+ * The faces are the prototype's (`src/styles.css`), self-hosted by the
+ * `(panel)` layout. The colours are not here: they are the consumer surface's,
+ * in `app/brand-theme.css`, so the frame, the dashboard and the auth pages
+ * share one palette.
+ */
+
+.kys-frame {
+  font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.kys-wordmark {
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
