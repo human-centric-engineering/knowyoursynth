@@ -263,7 +263,13 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
       expect(getAppSubjectSources()).toEqual([]);
-      expect(getAppExcludedSubjectSources()).toEqual([]);
+      // Know Your Synth declares its catalogue tables as excluded: they hold no personal data.
+      expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
+        'Synth',
+        'SynthSound',
+        'SynthLineage',
+        'SynthNote',
+      ]);
     },
   },
   {

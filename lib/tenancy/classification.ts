@@ -72,6 +72,11 @@ export const GLOBAL_CONFIG_MODELS = [
   'McpExposedResource',
   'McpServerConfig',
   'AiOrchestrationSettings',
+  // Know Your Synth: the catalogue (divergence row in .context/app/divergences.md).
+  'Synth',
+  'SynthSound',
+  'SynthLineage',
+  'SynthNote',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];

@@ -10,3 +10,137 @@
 //
 // See CUSTOMIZATION.md §5 for the FK/onDelete rules a model with a `userId`
 // must follow (GDPR erasure depends on them).
+
+// ─── Catalogue (f-model-d, plan §9) ─────────────────────────────────────────
+//
+// Product content every org shares: on GLOBAL_CONFIG_MODELS in
+// lib/tenancy/classification.ts (divergence row in .context/app/divergences.md).
+// No row has a user foreign key, so none is on the export manifest.
+//
+// Seeded from prisma/seeds/app-knowyoursynth/data/ by `001-catalogue.ts`. After
+// the first seed the tables are the source of truth (D2, D13): a row whose
+// `editedAt` is set has been changed by an admin, and the seed never writes it
+// again. The seed never deletes a row either.
+
+/// A synth in the catalogue. The id is its definition's key in the registry
+/// (`lib/app/synths/defs/`); the descriptive columns copy the definition so a
+/// list needs no definition loaded.
+model Synth {
+  id                String    @id // e.g. "model-d"
+  name              String
+  maker             String
+  year              Int
+  heritage          String
+  summary           String    @db.Text
+  /// The definition's version when the seed last wrote this row.
+  definitionVersion Int
+  /// Shown in the public catalogue.
+  listed            Boolean   @default(true)
+  /// Position in the catalogue, lowest first.
+  order             Int
+  /// Set when an admin changes the row; the seed then leaves it alone.
+  editedAt          DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  sounds  SynthSound[]
+  lineage SynthLineage?
+  notes   SynthNote[]
+
+  @@index([listed, order])
+  @@map("synth")
+}
+
+/// A library sound, built step by step on top of the synth's init patch
+/// (`Preset` in lib/app/synths/contract.ts). Validated against its definition
+/// version by lib/app/synths/validate.ts on write and on read.
+model SynthSound {
+  id                String    @id @default(cuid())
+  synthId           String
+  /// The sound's id within its synth, e.g. "stacked-night-bass".
+  slug              String
+  /// The definition version the sound was made on.
+  definitionVersion Int
+  name              String
+  /// `In the style of <artist> — "<work>"`.
+  ref               String
+  artist            String
+  /// First tag is the category.
+  tags              String[]
+  /// 1 beginner · 2 intermediate · 3 advanced.
+  level             Int
+  blurb             String    @db.Text
+  how               String    @db.Text
+  /// `Phrase`: the riff that shows the sound off.
+  phrase            Json
+  /// `PresetStep[]`: the lesson, and the panel values and cables it sets.
+  steps             Json
+  /// Control id → what that control does in this sound.
+  context           Json
+  /// `PresetTweak[]`.
+  tweaks            Json
+  /// Position in the synth's library, lowest first.
+  order             Int
+  editedAt          DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  synth Synth @relation(fields: [synthId], references: [id], onDelete: Cascade)
+
+  @@unique([synthId, slug])
+  @@index([synthId, order])
+  @@map("synth_sound")
+}
+
+/// A synth's history section (`Lineage` in the contract, less "Heard on",
+/// which comes from the databank).
+model SynthLineage {
+  synthId   String    @id
+  title     String
+  intro     String    @db.Text
+  /// `LineageEntry[]`.
+  timeline  Json
+  /// `LineageRelative[]`.
+  relatives Json
+  users     String[]
+  note      String?   @db.Text
+  editedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  synth Synth @relation(fields: [synthId], references: [id], onDelete: Cascade)
+
+  @@map("synth_lineage")
+}
+
+enum SynthNoteKind {
+  /// "Unusual on…": how this synth names or does a thing differently. `target` is a control, jack or area id.
+  UNUSUAL
+  /// The opening sentence of a synth's "What is not modelled" list.
+  LIMIT_INTRO
+  /// One "What is not modelled" entry, with a title. No synth: true of every panel.
+  LIMIT
+}
+
+/// A short note about a synth, or (with no synth) about every panel.
+model SynthNote {
+  id        String        @id @default(cuid())
+  /// Stable natural key the seed matches on, e.g. "model-d/unusual/mod.mix".
+  key       String        @unique
+  kind      SynthNoteKind
+  /// Null for a limit shared by every panel.
+  synthId   String?
+  /// The control, jack or area an UNUSUAL note is about.
+  target    String?
+  title     String?
+  text      String        @db.Text
+  order     Int
+  editedAt  DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  synth Synth? @relation(fields: [synthId], references: [id], onDelete: Cascade)
+
+  @@index([synthId, kind, order])
+  @@map("synth_note")
+}

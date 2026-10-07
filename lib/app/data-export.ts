@@ -49,6 +49,8 @@
  * Full guide: .context/privacy/data-export.md · CUSTOMIZATION.md §4
  */
 
+import { registerAppSubjectSources } from '@/lib/privacy/subject-source-registry';
+
 /** Identity of the subject being exported. */
 export interface AppSubjectQuery {
   /** Id of the data subject. */
@@ -102,8 +104,16 @@ export type AppSubjectData = Record<string, unknown>;
  * `rows.length ? rows : undefined` is the shape to avoid.
  */
 export function initAppSubjectSources(): void {
-  // No app subject sources by default.
+  registerAppSubjectSources({
+    tier: 'app',
+    excluded: CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
+  });
 }
+
+/** The catalogue (`f-model-d`): product content every user sees alike, with no column about a person. */
+export const CATALOGUE_MODELS = ['Synth', 'SynthSound', 'SynthLineage', 'SynthNote'] as const;
+const CATALOGUE_REASON =
+  'Catalogue content written by the seed and by admins, the same for every user; it holds no column about a person.';
 
 /**
  * Collect this app's data about one subject. Ships empty — vanilla Sunrise has
