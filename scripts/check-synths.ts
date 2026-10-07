@@ -7,11 +7,15 @@
  * - **The ported engine** — `createSynth`, `SIGNALS`, `DESTS` from `lib/app/synths/audio/dsp-core.ts` — and the
  *   ported libraries: `presetState`, `cablesToEngine`, `controlMap`, `jackMap` (`lib/app/synths/lib/patch.ts`),
  *   `explainCable` (`…/lib/explain.ts`) and `modularDef` (`…/lib/layout.ts`).
- * - **The prototype's definitions, as a dev-time reference.** The synth definitions and their sounds are not ported
- *   yet (that is m1), so this script bundles `prototype/src/synths/index.js` with esbuild when it runs, exactly as
+ * - **The ported definitions** from the registry, `lib/app/synths/defs/`. A synth not ported yet runs on the
+ *   prototype's definition: this script bundles `prototype/src/synths/index.js` with esbuild when it runs, exactly as
  *   `check.mjs` does, and loads the bundle from a temporary file. That is a build of a file path, not an import
  *   specifier; D13 (nothing in the app imports `prototype/`) is about the live app, and this is a dev-only checker.
- *   **m1 switches this to `lib/app/synths/defs/`.**
+ * - **The prototype's sounds and lineage**, from the same bundle, on every synth. A ported definition holds no content
+ *   (D13), so until the sounds come from the seed data (m2) they are lent to it from the prototype's definition.
+ * - **Parity with the prototype.** A ported definition must equal the prototype's as data: geometry, ids, help text,
+ *   areas, decor, init (`definitionDrift`). The baseline only hears what a sound plays, and this catches a
+ *   transliteration slip no sound would.
  *
  * Left out of the transliteration, and why:
  * - The "What is not modelled" (limits) check: `limitsFor` is not ported yet (m2).
@@ -45,6 +49,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Preset, SynthDef } from '@/lib/app/synths/contract';
+import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import {
@@ -91,7 +96,7 @@ const isSynthDefList = (v: unknown): v is SynthDef[] =>
 const isBaseline = (v: unknown): v is Baseline =>
   isRecord(v) && typeof v.seed === 'number' && isRecord(v.sounds);
 
-/** The prototype's definitions (with their sounds), bundled from source for this run. m1 replaces this. */
+/** The prototype's definitions (with their sounds), bundled from source for this run. */
 async function loadPrototypeSynths(): Promise<SynthDef[]> {
   const outDir = join(tmpdir(), 'kys-check-synths');
   mkdirSync(outDir, { recursive: true });
@@ -117,8 +122,72 @@ async function loadPrototypeSynths(): Promise<SynthDef[]> {
   }
 }
 
+/**
+ * The first place a ported definition differs from the prototype's, as data, or `null` when they match. Functions
+ * compare by presence only (the baseline renders `toEngine`; the explainer runs `hear` and `check`). What the port
+ * changes on purpose is left out: the content it no longer carries (presets, lineage, unusual notes), its `version`,
+ * and the `brand` tags.
+ */
+function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
+  const OMIT = new Set(['presets', 'lineage', 'unusual', 'version', 'brand']);
+  const plain = (def: SynthDef): unknown =>
+    JSON.parse(
+      JSON.stringify(def, (k, v: unknown) =>
+        OMIT.has(k) ? undefined : typeof v === 'function' ? '[function]' : v
+      )
+    );
+  const diff = (a: unknown, b: unknown, path: string): string | null => {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return `${path}: ${a.length} items, the prototype has ${b.length}`;
+      for (let i = 0; i < a.length; i++) {
+        const d = diff(a[i], b[i], `${path}[${i}]`);
+        if (d) return d;
+      }
+      return null;
+    }
+    if (isRecord(a) && isRecord(b)) {
+      for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+        const d = diff(a[k], b[k], path ? `${path}.${k}` : k);
+        if (d) return d;
+      }
+      return null;
+    }
+    return a === b ? null : `${path}: ${JSON.stringify(a)}, the prototype has ${JSON.stringify(b)}`;
+  };
+  return diff(plain(ported), plain(prototype), '');
+}
+
+/**
+ * The definitions to check: each ported one in place of the prototype's, carrying the prototype's sounds and lineage.
+ * `orphans` are registered ids with no prototype definition (a mistyped id, or a synth the prototype never had):
+ * nothing below would check them, so the run refuses to start rather than pass them by.
+ */
+function withPorted(prototypes: SynthDef[]): {
+  synths: SynthDef[];
+  drift: Map<string, string>;
+  orphans: string[];
+} {
+  const protoIds = new Set(prototypes.map((p) => p.id));
+  const orphans = SYNTH_DEFS.map((d) => d.id).filter((id) => !protoIds.has(id));
+  const drift = new Map<string, string>();
+  const synths = prototypes.map((proto) => {
+    const ported = getSynthDef(proto.id);
+    if (!ported) return proto;
+    const d = definitionDrift(ported, proto);
+    if (d) drift.set(proto.id, d);
+    return { ...ported, presets: proto.presets, lineage: proto.lineage };
+  });
+  return { synths, drift, orphans };
+}
+
 async function main(): Promise<void> {
-  const SYNTHS = await loadPrototypeSynths();
+  const { synths: SYNTHS, drift, orphans } = withPorted(await loadPrototypeSynths());
+  if (orphans.length) {
+    console.log(
+      `ERR registered with no prototype definition to check against: ${orphans.join(', ')}`
+    );
+    process.exit(1);
+  }
 
   const args = process.argv.slice(2);
   const flags = args.filter((a) => a.startsWith('--'));
@@ -328,6 +397,8 @@ async function main(): Promise<void> {
 
   for (const def of SYNTHS) {
     if (onlySynth && def.id !== onlySynth) continue;
+    const d = drift.get(def.id);
+    if (d) E(`${def.id} definition differs from the prototype's at ${d}`);
     const cm = controlMap(def),
       jm = jackMap(def);
     for (const j of def.jacks) {

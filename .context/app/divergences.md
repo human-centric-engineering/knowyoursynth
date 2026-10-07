@@ -107,7 +107,7 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `VERSIONING.md`
 - **Change:** adds a `lib/app/synths/` bullet to the `lib/app/` Covered list: the contract, the
-  engine and the validator.
+  engine, the validator and the definition registry.
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
