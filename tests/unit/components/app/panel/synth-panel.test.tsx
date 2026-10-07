@@ -241,7 +241,8 @@ describe('neutralDef', () => {
     expect(neutralDef(portedModelD).layout).toBeUndefined();
     const cased = modularDef({
       ...portedModelD,
-      modular: { rows: [[{ cut: [0, 0, 2000, 716] }]] },
+      // An empty brand falls back to the synth's name.
+      modular: { brand: '', rows: [[{ cut: [0, 0, 2000, 716] }]] },
     });
     expect(cased.layout?.brand).toBe('Model D');
     expect(neutralDef(cased).layout?.brand).toBe('');
