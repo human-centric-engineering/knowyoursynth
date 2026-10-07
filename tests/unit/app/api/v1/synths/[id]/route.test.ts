@@ -95,6 +95,15 @@ describe('GET /api/v1/synths/:id', () => {
     expect(prisma.synthNote.findMany).not.toHaveBeenCalled();
   });
 
+  it('is a 404 without a database read for an id no synth could have', async () => {
+    for (const id of ['../etc', 'Model-D', 'a'.repeat(65), '']) {
+      const response = await call(id);
+      expect(response.status).toBe(404);
+      assertErrorResponse(await parseJsonResponse(response), 'NOT_FOUND');
+    }
+    expect(prisma.synth.findFirst).not.toHaveBeenCalled();
+  });
+
   it('answers 304 with no body when the client already has this synth', async () => {
     const etag = (await call('model-d')).headers.get('ETag') ?? '';
     const again = await call('model-d', { 'If-None-Match': etag });

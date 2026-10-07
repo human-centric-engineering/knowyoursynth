@@ -96,7 +96,10 @@ await write('notes/shared.json', { limits: SHARED.map(pair) });
 
 const listingFile = path.join(out, 'synths.json');
 const listing = fs.existsSync(listingFile) ? JSON.parse(fs.readFileSync(listingFile, 'utf8')).synths : [];
-const merged = [...listing.filter((s) => s.id !== id), { id, order, listed: true }].sort((a, b) => a.order - b.order);
+// A synth already in the listing keeps its place and its listed flag: re-exporting its content must not undo a
+// deliberate reorder or unlisting. A new synth takes its place in the prototype's picker.
+const listed = listing.find((s) => s.id === id) ?? { id, order, listed: true };
+const merged = [...listing.filter((s) => s.id !== id), listed].sort((a, b) => a.order - b.order);
 await write('synths.json', { synths: merged });
 
 console.log(`${id}: ${def.presets.length} sounds, ${lineage.timeline.length} lineage entries, ${Object.keys(unusual).length} unusual notes, ${limits.items.length} limits (+${SHARED.length} shared)`);

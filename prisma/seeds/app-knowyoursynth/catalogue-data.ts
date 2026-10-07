@@ -9,6 +9,7 @@ import { readdirSync, readFileSync } from 'fs';
 import { dirname, join, relative } from 'path';
 import { fileURLToPath } from 'url';
 import type { z } from 'zod';
+import { isRecord } from '@/lib/utils';
 import {
   LineageFileSchema,
   NotesFileSchema,
@@ -18,13 +19,17 @@ import {
   type CatalogueSeedData,
 } from '@/lib/app/catalogue/data';
 
-const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
-
 /** The data folder. */
 export const CATALOGUE_DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), 'data');
 
 function readJson<S extends z.ZodType>(dir: string, rel: string, schema: S): z.infer<S> {
-  const parsed = schema.safeParse(JSON.parse(readFileSync(join(dir, rel), 'utf8')));
+  let json: unknown;
+  try {
+    json = JSON.parse(readFileSync(join(dir, rel), 'utf8'));
+  } catch (error) {
+    throw new Error(`${rel}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  const parsed = schema.safeParse(json);
   if (!parsed.success) throw new Error(`${rel}: ${parsed.error.message}`);
   return parsed.data;
 }

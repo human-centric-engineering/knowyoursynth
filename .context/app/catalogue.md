@@ -35,7 +35,9 @@ The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
   the synth has. One problem anywhere and it throws with the whole list.
 - **A re-run writes nothing.** JSON columns are compared by value, because `jsonb` does not keep
   key order.
-- **A row with `editedAt` set is an admin's**, and the seed never writes it again.
+- **A row with `editedAt` set is an admin's**, and the seed never writes it again. No admin page
+  exists yet (`f-catalogue`), so until one does, **an edit made by hand (Prisma Studio, SQL) must
+  set `editedAt` too**, or the next seed run that finds the row different will put it back.
 - **It never deletes.** Retiring a sound is an admin's act.
 
 The seed re-runs when its hash changes, and the hash takes in the data files, the loader, the

@@ -8,6 +8,8 @@
  * module's.
  */
 import { z } from 'zod';
+import { slugify } from '@/lib/utils';
+import type { SynthDef } from '@/lib/app/synths/contract';
 
 const text = z.string().trim().min(1);
 
@@ -82,13 +84,14 @@ export const noteKey = {
   unusual: (synth: string, target: string): string => `${synth}/unusual/${target}`,
   limitIntro: (synth: string): string => `${synth}/limit-intro`,
   limit: (synth: string | null, title: string): string =>
-    `${synth ?? 'shared'}/limit/${slug(title)}`,
+    `${synth ?? 'shared'}/limit/${slugify(title)}`,
 };
 
-function slug(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+/** What an "Unusual on…" note may be about: a control, jack or area the synth has. */
+export function noteTargets(def: SynthDef): Set<string> {
+  return new Set([
+    ...def.controls.map((c) => c.id),
+    ...def.jacks.map((j) => j.id),
+    ...def.areas.map((a) => a.id),
+  ]);
 }

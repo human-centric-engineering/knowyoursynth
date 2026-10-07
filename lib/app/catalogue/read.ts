@@ -15,7 +15,12 @@ import { logger } from '@/lib/logging';
 import type { Lineage, Preset } from '@/lib/app/synths/contract';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
-import { LimitSchema, LineageEntrySchema, LineageRelativeSchema } from '@/lib/app/catalogue/data';
+import {
+  LimitSchema,
+  LineageEntrySchema,
+  LineageRelativeSchema,
+  noteTargets,
+} from '@/lib/app/catalogue/data';
 
 /** A synth as the catalogue lists it. */
 export interface CatalogueSynth {
@@ -178,11 +183,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
 
   // An unusual note is checked against the definition as a sound is: one on something the synth no longer has is
   // left out rather than attached to nothing.
-  const targets = new Set([
-    ...def.controls.map((c) => c.id),
-    ...def.jacks.map((j) => j.id),
-    ...def.areas.map((a) => a.id),
-  ]);
+  const targets = noteTargets(def);
   const notes: SynthDetail['notes'] = {
     unusual: {},
     limits: { intro: null, items: [], shared: [] },

@@ -94,6 +94,12 @@ describe('loadCatalogueData', () => {
     expect(() => loadCatalogueData(dir)).toThrow(/^synths\.json: [\s\S]*order/);
   });
 
+  it('names the file when it is not JSON at all', () => {
+    const dir = folder({ 'notes/shared.json': { limits: [{ title: 'T', text: 'X' }] } });
+    writeFileSync(join(dir, 'synths.json'), '{ "synths": [], }');
+    expect(() => loadCatalogueData(dir)).toThrow(/^synths\.json: /);
+  });
+
   it('refuses a per-synth file whose name is not its synth', () => {
     const dir = folder({
       'synths.json': { synths: [] },

@@ -20,7 +20,7 @@ import type { Prisma, SynthNoteKind } from '@prisma/client';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
-import { noteKey, type CatalogueSeedData } from '@/lib/app/catalogue/data';
+import { noteKey, noteTargets, type CatalogueSeedData } from '@/lib/app/catalogue/data';
 
 /** The data does not fit the definitions. Nothing was written. */
 export class CatalogueDataError extends Error {
@@ -224,11 +224,7 @@ export function planCatalogue(
     const name = `notes/${file.synth}.json`;
     const def = defFor(name, file.synth);
     if (!def) continue;
-    const targets = new Set([
-      ...def.controls.map((c) => c.id),
-      ...def.jacks.map((j) => j.id),
-      ...def.areas.map((a) => a.id),
-    ]);
+    const targets = noteTargets(def);
     file.unusual.forEach(({ target, text }, order) => {
       if (!targets.has(target))
         problems.push(`${name} has an unusual note on ${target}, which ${def.id} does not have`);
