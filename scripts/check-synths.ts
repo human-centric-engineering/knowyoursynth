@@ -49,7 +49,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Preset, SynthDef } from '@/lib/app/synths/contract';
-import { getSynthDef } from '@/lib/app/synths/defs';
+import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import {
@@ -157,8 +157,18 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
   return diff(plain(ported), plain(prototype), '');
 }
 
-/** The definitions to check: each ported one in place of the prototype's, carrying the prototype's sounds and lineage. */
-function withPorted(prototypes: SynthDef[]): { synths: SynthDef[]; drift: Map<string, string> } {
+/**
+ * The definitions to check: each ported one in place of the prototype's, carrying the prototype's sounds and lineage.
+ * `orphans` are registered ids with no prototype definition (a mistyped id, or a synth the prototype never had):
+ * nothing below would check them, so the run refuses to start rather than pass them by.
+ */
+function withPorted(prototypes: SynthDef[]): {
+  synths: SynthDef[];
+  drift: Map<string, string>;
+  orphans: string[];
+} {
+  const protoIds = new Set(prototypes.map((p) => p.id));
+  const orphans = SYNTH_DEFS.map((d) => d.id).filter((id) => !protoIds.has(id));
   const drift = new Map<string, string>();
   const synths = prototypes.map((proto) => {
     const ported = getSynthDef(proto.id);
@@ -167,11 +177,17 @@ function withPorted(prototypes: SynthDef[]): { synths: SynthDef[]; drift: Map<st
     if (d) drift.set(proto.id, d);
     return { ...ported, presets: proto.presets, lineage: proto.lineage };
   });
-  return { synths, drift };
+  return { synths, drift, orphans };
 }
 
 async function main(): Promise<void> {
-  const { synths: SYNTHS, drift } = withPorted(await loadPrototypeSynths());
+  const { synths: SYNTHS, drift, orphans } = withPorted(await loadPrototypeSynths());
+  if (orphans.length) {
+    console.log(
+      `ERR registered with no prototype definition to check against: ${orphans.join(', ')}`
+    );
+    process.exit(1);
+  }
 
   const args = process.argv.slice(2);
   const flags = args.filter((a) => a.startsWith('--'));
