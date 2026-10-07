@@ -22,7 +22,7 @@ import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/stora
 import { getSynthDef } from '@/lib/app/synths/defs';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 
-const { router, engine } = vi.hoisted(() => ({
+const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
   engine: {
     send: vi.fn(),
@@ -33,12 +33,19 @@ const { router, engine } = vi.hoisted(() => ({
     running: false,
     ctx: null as object | null,
   },
+  /** The page's engine listener, so a test can fire engine events. */
+  events: { fn: null as ((e: { type: string }) => void) | null },
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
 vi.mock('@/components/app/synth/engine', () => ({
   getEngine: () => engine,
-  listen: () => () => undefined,
+  listen: (f: (e: { type: string }) => void) => {
+    events.fn = f;
+    return () => {
+      if (events.fn === f) events.fn = null;
+    };
+  },
 }));
 
 const def = getSynthDef('model-d');
@@ -184,6 +191,7 @@ beforeEach(() => {
   engine.suspend.mockReset().mockResolvedValue(undefined);
   engine.running = false;
   engine.ctx = null;
+  events.fn = null;
   router.push.mockReset();
   router.replace.mockReset();
 });
@@ -888,5 +896,283 @@ describe('SynthPage regions', () => {
     expect(within(stage).getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
     expect(within(stage).getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+  });
+});
+
+// ── edge behaviours ─────────────────────────────────────────────────────────
+
+describe('SynthPage riff and engine events', () => {
+  const fire = (e: { type: string }) => act(() => events.fn?.(e));
+
+  it('goes back to "Play riff" when the engine says the phrase ended', async () => {
+    page();
+    await act(async () => {
+      fireEvent.click(button('Play riff'));
+    });
+    expect(button('Stop riff')).toBeTruthy();
+
+    fire({ type: 'phraseEnd' });
+
+    expect(button('Play riff')).toBeTruthy();
+  });
+
+  it('keeps playing through any other engine event', async () => {
+    page();
+    await act(async () => {
+      fireEvent.click(button('Play riff'));
+    });
+    fire({ type: 'meter' });
+    expect(button('Stop riff')).toBeTruthy();
+  });
+
+  it('plays the riff again when "Restore sound" is pressed while it plays', async () => {
+    page();
+    await act(async () => {
+      fireEvent.click(button('Play riff'));
+    });
+    fireEvent.click(button('A-440'));
+    engine.send.mockClear();
+
+    await act(async () => {
+      fireEvent.click(button('Restore sound'));
+    });
+
+    expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
+  });
+
+  it('does not start a riff when "Restore sound" is pressed while none plays', () => {
+    page();
+    fireEvent.click(button('A-440'));
+    engine.send.mockClear();
+    fireEvent.click(button('Restore sound'));
+    expect(engine.send.mock.calls.some((c) => (c[0] as { type: string }).type === 'phrase')).toBe(
+      false
+    );
+  });
+});
+
+describe('SynthPage engine errors', () => {
+  const failing = () => {
+    const real = def.toEngine;
+    const state = { fail: undefined as unknown };
+    vi.spyOn(def, 'toEngine').mockImplementation((v, c) => {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error -- the page must cope with a non-Error thrown
+      if (state.fail !== undefined) throw state.fail;
+      return real(v, c);
+    });
+    return state;
+  };
+
+  it('shows the error text in an alert when toEngine throws, and clears it on the next good send', () => {
+    const state = failing();
+    state.fail = new Error('cutoff out of range');
+    page();
+
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toBe(
+      'This panel setting could not be turned into sound: cutoff out of range'
+    );
+
+    state.fail = undefined;
+    fireEvent.click(button('A-440'));
+
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('shows a thrown non-Error as text', () => {
+    const state = failing();
+    state.fail = 'plain string';
+    page();
+    expect(screen.getByRole('alert').textContent).toContain(': plain string');
+  });
+
+  it('sends nothing to the engine for the failing patch', () => {
+    const state = failing();
+    state.fail = new Error('boom');
+    page();
+    expect(paramsSent()).toHaveLength(0);
+  });
+});
+
+describe('SynthPage sounds', () => {
+  const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
+
+  it('with no sounds it opens on a blank patch with nothing to restore or play', () => {
+    page({ detail: { ...detail, sounds: [] } });
+    expect(loadedName()).toBe('Blank patch');
+    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Play riff' })).toBeNull();
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
+  });
+
+  it('with no sounds the fresh session has no sound id, a moved control counts against the init, and there is still nothing to restore', () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    page({ detail: { ...detail, sounds: [] } });
+    fireEvent.click(button('A-440'));
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    expect(readStored(SESSION_KEY)).toMatchObject({ presetId: null, step: null });
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+  });
+
+  it('falls back to the first sound when the stored sound is not in the list', () => {
+    storeSession({ presetId: 'gone', step: null, values: {}, cables: [] });
+    page();
+    expect(loadedName()).toBe('Fat bass');
+    // The first sound is the target: the stored cutoff (init 1) is off its -2.
+    expect(screen.getByText(/moved/)).toBeTruthy();
+
+    fireEvent.click(button('Restore sound'));
+
+    expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
+      '-2'
+    );
+    expect(screen.queryByText(/moved/)).toBeNull();
+  });
+
+  it("puts a control back to the first sound's value when the stored sound is unknown", () => {
+    storeSession({ presetId: 'gone', step: null, values: { 'filter.cutoff': 3 }, cables: [] });
+    page();
+    act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
+
+    fireEvent.click(button('Put it back'));
+
+    expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
+      '-2'
+    );
+  });
+});
+
+describe('SynthPage patch edge cases', () => {
+  const focusLfoCable = () =>
+    act(() =>
+      focusStore.set({
+        kind: 'cable',
+        id: 'j.lfoTri>j.cutCv',
+        from: 'j.lfoTri',
+        to: 'j.cutCv',
+        x: 0,
+        y: 0,
+        tip: false,
+      })
+    );
+
+  it('does not duplicate a cable plugged in twice in one go', () => {
+    page();
+    focusLfoCable();
+    const plug = button('Plug it in');
+
+    act(() => {
+      plug.click();
+      plug.click();
+    });
+
+    expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
+  });
+
+  it('ignores a control set to the value it already has', () => {
+    storeSession({
+      presetId: 'fat-bass',
+      step: null,
+      values: { 'filter.cutoff': -2, 'mix.osc1': 10 },
+      cables: [],
+    });
+    page();
+    const sent = paramsSent().length;
+    const knob = screen.getAllByRole('slider', { name: 'VOLUME' })[0];
+
+    fireEvent.keyDown(knob, { key: 'ArrowUp' }); // already at 10
+
+    expect(paramsSent()).toHaveLength(sent);
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+
+    fireEvent.keyDown(knob, { key: 'ArrowDown' });
+    expect(paramsSent()).toHaveLength(sent + 1);
+  });
+
+  describe('dragging a plug', () => {
+    const at = (id: string) => {
+      const j = def.jacks.find((x) => x.id === id);
+      if (!j) throw new Error(`no jack ${id}`);
+      return { clientX: j.x, clientY: j.y };
+    };
+    const plugs = () => document.querySelectorAll<SVGGElement>('g[style*="grab"]');
+    const drag = (plug: SVGGElement, from: string, to: string) => {
+      fireEvent.pointerDown(plug, { ...at(from), pointerId: 1 });
+      fireEvent.pointerMove(plug, at(to));
+      fireEvent.pointerUp(plug, at(to));
+    };
+
+    it('moves one end of a cable to another jack', () => {
+      storeSession({
+        presetId: 'fat-bass',
+        step: null,
+        values: {},
+        cables: [['j.lfoTri', 'j.cutCv']],
+      });
+      page();
+
+      drag(plugs()[0], 'j.lfoTri', 'j.mix');
+
+      expect(screen.getByRole('button', { name: 'Unplug MIX → CUT CV' })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: 'Unplug LFO (triangle) → CUT CV' })).toBeNull();
+      expect(paramsSent().at(-1)?.p?.cables).toHaveLength(1);
+    });
+
+    it('ignores a move that would duplicate another cable', () => {
+      storeSession({
+        presetId: 'fat-bass',
+        step: null,
+        values: {},
+        cables: [
+          ['j.lfoTri', 'j.cutCv'],
+          ['j.lfoSq', 'j.cutCv'],
+        ],
+      });
+      page();
+      expect(plugs()).toHaveLength(4);
+
+      drag(plugs()[2], 'j.lfoSq', 'j.lfoTri'); // the second cable's source onto the first's
+
+      expect(screen.getByRole('button', { name: 'Unplug LFO (square) → CUT CV' })).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Unplug LFO (triangle) → CUT CV' })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: 'Cables in this patch · 2' })).toBeTruthy();
+    });
+  });
+
+  it('sends no noteOff for a key that was never pressed, or for a key with no note', () => {
+    page();
+    fireEvent.keyUp(window, { key: 'a' });
+    fireEvent.keyDown(window, { key: 'q' });
+    fireEvent.keyUp(window, { key: 'q' });
+    const sentNotes = engine.send.mock.calls.filter((c) =>
+      ['noteOn', 'noteOff'].includes((c[0] as { type: string }).type)
+    );
+    expect(sentNotes).toEqual([]);
+  });
+
+  it('Explain sections clears an area focus but keeps a control focus', () => {
+    page();
+    const control = { kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false } as const;
+    act(() => focusStore.set(control));
+
+    fireEvent.click(button('Explain sections'));
+    expect(focusStore.get()).toEqual(control);
+
+    act(() => focusStore.set({ kind: 'area', id: 'filter', x: 0, y: 0, tip: true }));
+    fireEvent.click(button('Explain sections'));
+    expect(focusStore.get()).toBeNull();
+  });
+
+  it('leaves the URL alone for a stored view that is the default', () => {
+    window.localStorage.setItem('kys.view', JSON.stringify({ outline: false, long: false }));
+    const replace = vi.spyOn(window.history, 'replaceState');
+    page();
+    expect(replace).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Outline' }).getAttribute('aria-pressed')).toBe(
+      'false'
+    );
   });
 });
