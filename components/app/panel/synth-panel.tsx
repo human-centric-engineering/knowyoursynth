@@ -84,6 +84,19 @@ export function neutralTheme(theme: Theme): Theme {
   };
 }
 
+/**
+ * The definition as the neutral design draws it: the neutral theme, no `brand` decor, and no maker or model name on
+ * the modular case's plates. Every consumer of the faceplate's look (decor, heat glow, case) reads this, not `def`.
+ */
+export function neutralDef(def: SynthDef): SynthDef {
+  return {
+    ...def,
+    theme: neutralTheme(def.theme),
+    decor: def.decor.filter((d) => !d.brand),
+    layout: def.layout && { ...def.layout, brand: '' },
+  };
+}
+
 export interface SynthPanelProps {
   /**
    * The synth. Its views: the long faceplate as defined, or (with `layout`, from `modularDef()`) the modular case.
@@ -181,15 +194,9 @@ export function SynthPanel({
   const [pending, setPending] = useState<string | null>(null); // jack id waiting for its partner
   const [mouse, setMouse] = useState<CablePoint | null>(null);
   const { view } = def;
-  const neutral = design === 'neutral';
-  const theme = useMemo(
-    () => (neutral ? neutralTheme(def.theme) : def.theme),
-    [neutral, def.theme]
-  );
-  const decor = useMemo(
-    () => (neutral ? def.decor.filter((d) => !d.brand) : def.decor),
-    [neutral, def.decor]
-  );
+  // What the faceplate looks like; `def` stays the source for geometry, jacks and cables.
+  const shown = useMemo(() => (design === 'neutral' ? neutralDef(def) : def), [design, def]);
+  const { theme, decor } = shown;
   const cheekW = theme.cheeks && theme.cheeks !== 'none' ? theme.cheekW || 40 : 0;
   const scale = view.w / 2000;
 
@@ -395,8 +402,8 @@ export function SynthPanel({
     >
       <PanelDefs />
       <g id="kysPanelAll">
-        {def.layout ? (
-          <ModularCase layout={def.layout} view={view} ctx={ctx} />
+        {shown.layout ? (
+          <ModularCase layout={shown.layout} view={view} ctx={ctx} />
         ) : outline ? (
           <g>
             <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill={PAPER} />
@@ -483,7 +490,7 @@ export function SynthPanel({
         )}
         <StaticDecor decor={decor} ctx={ctx} />
         <Leds decor={decor} ctx={ctx} values={values} />
-        {heatOn && !areasOn && <HeatLayer def={def} values={values} outline={outline} />}
+        {heatOn && !areasOn && <HeatLayer def={shown} values={values} outline={outline} />}
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;
           const value = values[c.id];
@@ -526,7 +533,7 @@ export function SynthPanel({
         {dimOn && !areasOn && (
           <DimLayer def={def} cables={cables} values={values} outline={outline} />
         )}
-        {heatOn && !areasOn && <HeatRanks def={def} values={values} outline={outline} />}
+        {heatOn && !areasOn && <HeatRanks def={shown} values={values} outline={outline} />}
         {def.matrix && (
           <Matrix
             def={def}

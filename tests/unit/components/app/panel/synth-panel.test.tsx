@@ -16,7 +16,13 @@
 
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { NEUTRAL_PANEL, SynthPanel, neutralTheme } from '@/components/app/panel/synth-panel';
+import { readFileSync } from 'node:fs';
+import {
+  NEUTRAL_PANEL,
+  SynthPanel,
+  neutralDef,
+  neutralTheme,
+} from '@/components/app/panel/synth-panel';
 import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import {
   MAP_OFF,
@@ -194,6 +200,63 @@ describe('design prop (D11)', () => {
     const neutral = html({ outline: true, design: 'neutral' });
     expect(html({ outline: true })).toContain('behringer');
     expect(neutral).not.toContain('behringer');
+    expect(neutral).toBe(
+      html({ def: unbranded, values: unbranded.init, outline: true, design: 'neutral' })
+    );
+  });
+
+  it('neutral prints no maker or model name on the modular case', () => {
+    const def = modularDef({
+      ...branded,
+      modular: {
+        brand: 'MODEL D CASE',
+        rows: [[{ cut: [0, 0, 1000, 716] }], [{ cut: [1000, 0, 2000, 716] }]],
+      },
+    });
+    for (const outline of [false, true]) {
+      const faithful = html({ def, outline });
+      const neutral = html({ def, outline, design: 'neutral' });
+      // Only the hardware view prints the brand; the outline case is bare plates either way.
+      if (!outline) expect(faithful).toContain('MODEL D CASE');
+      expect(neutral).not.toContain('MODEL D CASE');
+      expect(neutral).not.toContain('behringer');
+    }
+  });
+
+  it("neutral picks the heat glow for the neutral faceplate, not the synth's own", () => {
+    // A red faceplate takes the amber-to-white ramp; the neutral faceplate is not red, so it takes yellow-to-red.
+    const red: SynthDef = { ...branded, theme: { ...branded.theme, panel: '#c0281e' } };
+    const knob = red.controls.find((c) => c.type === 'knob')?.id ?? '';
+    mapStore.set({ ...MAP_OFF, heat: { [knob]: 1 }, ranked: [knob] });
+    const faithful = html({ def: red, values: red.init, heatOn: true });
+    const neutral = html({ def: red, values: red.init, heatOn: true, design: 'neutral' });
+    expect(faithful).toContain('rgb(255 255 255)');
+    expect(neutral).not.toContain('rgb(255 255 255)');
+    expect(neutral).toContain('rgb(255 56 40)');
+  });
+});
+
+describe('neutralDef', () => {
+  it('blanks the case brand and keeps a definition without a layout layout-free', () => {
+    expect(neutralDef(portedModelD).layout).toBeUndefined();
+    const cased = modularDef({
+      ...portedModelD,
+      modular: { rows: [[{ cut: [0, 0, 2000, 716] }]] },
+    });
+    expect(cased.layout?.brand).toBe('Model D');
+    expect(neutralDef(cased).layout?.brand).toBe('');
+  });
+});
+
+describe('NEUTRAL_PANEL', () => {
+  it('matches the dark consumer palette in app/brand-theme.css', () => {
+    const css = readFileSync('app/brand-theme.css', 'utf8');
+    const dark = css.slice(css.search(/^\[data-surface='consumer'\]\.dark \{/m));
+    const role = (name: string) =>
+      new RegExp(`--kys-${name}:\\s*(#[0-9a-f]{6})`, 'i').exec(dark)?.[1];
+    expect({ panel: role('raised'), panel2: role('surface'), ink: role('text') }).toEqual(
+      NEUTRAL_PANEL
+    );
   });
 });
 
