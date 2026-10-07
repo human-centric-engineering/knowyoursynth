@@ -9,7 +9,9 @@ the faces, and the nav seams. f-app-frame (§4) in [`planning/app-plan.md`](./pl
 app/(panel)/
 ├── layout.tsx            the faces, the frame, maintenance mode
 ├── error.tsx             inside the frame, so the header stays
-└── synths/[id]/page.tsx  placeholder until the synth page lands (m3)
+└── synths/
+    ├── page.tsx          reopens the last synth opened (see synth-page.md)
+    └── [id]/page.tsx     the synth page (synth-page.md)
 ```
 
 A group of its own because a synth panel is a full-window instrument. `(public)` and
