@@ -25,7 +25,7 @@ interface PolicyDocument extends Document {
 
 function frameBlocksMidi(): boolean {
   if (typeof document === 'undefined') return false;
-  const doc = document as PolicyDocument;
+  const doc: PolicyDocument = document;
   const fp = doc.permissionsPolicy || doc.featurePolicy;
   try {
     return !!fp && typeof fp.allowsFeature === 'function' && !fp.allowsFeature('midi');

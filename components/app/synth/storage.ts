@@ -39,7 +39,9 @@ export const sessionKey = (synthId: string): string => `kys.session.${synthId}`;
 export function readStored(key: string): unknown {
   try {
     const raw = window.localStorage.getItem(key);
-    return raw === null ? null : (JSON.parse(raw) as unknown);
+    if (raw === null) return null;
+    const value: unknown = JSON.parse(raw);
+    return value;
   } catch {
     return null;
   }
