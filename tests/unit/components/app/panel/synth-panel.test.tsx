@@ -151,8 +151,8 @@ describe('design prop (D11)', () => {
   });
 
   it('faithful is the default, and draws the brand marks', () => {
-    expect(html({ design: 'faithful' })).toBe(html({}));
     const withBrand = html({ design: 'faithful' });
+    expect(withBrand).toBe(html({}));
     expect(withBrand).toContain('behringer');
     expect(withBrand).not.toBe(html({ def: unbranded, values: unbranded.init }));
   });
@@ -175,8 +175,10 @@ describe('design prop (D11)', () => {
   });
 
   it("neutral draws the neutral colours, lettering and metal cheeks; faithful keeps the synth's own", () => {
+    // Lettered in `helv`, so the neutral `din` lettering is a change the test can see.
+    const helv: SynthDef = { ...branded, theme: { ...branded.theme, font: 'helv' } };
     const neutral = render(
-      <SynthPanel {...props({ def: branded, values: branded.init, design: 'neutral' })} />
+      <SynthPanel {...props({ def: helv, values: helv.init, design: 'neutral' })} />
     ).container;
     const face = (c: HTMLElement) =>
       [...c.querySelectorAll('#kysFace stop')].map((st) => st.getAttribute('stop-color'));
@@ -190,10 +192,14 @@ describe('design prop (D11)', () => {
     expect(labels[0].getAttribute('style')).toContain('Barlow Semi Condensed');
 
     const faithful = render(
-      <SynthPanel {...props({ def: branded, values: branded.init, design: 'faithful' })} />
+      <SynthPanel {...props({ def: helv, values: helv.init, design: 'faithful' })} />
     ).container;
-    expect(face(faithful)).toEqual([branded.theme.panel, branded.theme.panel2]);
+    expect(face(faithful)).toEqual([helv.theme.panel, helv.theme.panel2]);
     expect(faithful.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
+    const faithfulLabel = [...faithful.querySelectorAll('text')].find(
+      (t) => t.getAttribute('fill') === helv.theme.ink
+    );
+    expect(faithfulLabel?.getAttribute('style')).toContain('Archivo Narrow');
   });
 
   it('neutral leaves out the brand marks on the outline view too', () => {
