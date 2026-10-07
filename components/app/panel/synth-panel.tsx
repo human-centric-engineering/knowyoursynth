@@ -4,7 +4,7 @@
  * The faceplate renderer.
  *
  * Transliterated from the prototype file `prototype/src/panel/SynthPanel.jsx` (decision D3): same state, same handlers, same drawing
- * order. Added here: typed props, and the `design` prop (D11), which has no effect yet.
+ * order. Added here: typed props, and the `design` prop (D11).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -52,16 +52,37 @@ import {
   useStore,
 } from '@/components/app/synth/stores';
 import type { CableFocus } from '@/components/app/synth/stores';
-import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable, SynthDef, Theme } from '@/lib/app/synths/contract';
 
 /** Which end of a cable: the output plug (`from`) or the input plug (`to`). */
 export type CableEnd = 'from' | 'to';
 
 /**
- * How the panel is styled (D11). `faithful` draws the hardware as it looks; `neutral` will draw every synth in one
- * house style. It has no effect yet: both draw the faithful panel.
+ * How the panel is styled (D11). `faithful` draws the hardware as it looks. `neutral` draws the same layout, controls
+ * and jacks in one house style for every synth, and leaves out every `brand` decor item (logos, wordmarks, badges).
  */
 export type PanelDesign = 'faithful' | 'neutral';
+
+/**
+ * The neutral design's faceplate colours: the consumer palette's dark roles (`--kys-raised`, `--kys-surface`,
+ * `--kys-text` under `[data-surface='consumer'].dark` in `app/brand-theme.css`). Copied as values, not `var()`,
+ * because SVG presentation attributes do not reliably resolve custom properties. Change them with the palette.
+ */
+export const NEUTRAL_PANEL = { panel: '#222630', panel2: '#191c23', ink: '#ece9e2' } as const;
+
+/**
+ * A synth's theme in the neutral design: neutral colours, the panel's own `din` lettering and metal cheeks in place
+ * of wood. The structural flags (label plates, knob rings, jack and button styles) stay, so the panel reads the same.
+ */
+export function neutralTheme(theme: Theme): Theme {
+  return {
+    ...theme,
+    ...NEUTRAL_PANEL,
+    font: 'din',
+    weight: 500,
+    cheeks: theme.cheeks === 'none' ? 'none' : 'metal',
+  };
+}
 
 export interface SynthPanelProps {
   /**
@@ -85,7 +106,7 @@ export interface SynthPanelProps {
   onRemoveCable: (i: number) => void;
   /** Moves one end of cable `i` to another jack. Without it the plugs cannot be dragged. */
   onMoveCable?: (i: number, end: CableEnd, jackId: string) => void;
-  /** D11. Default `faithful`; no effect yet. */
+  /** D11. Default `faithful`. */
   design?: PanelDesign;
 }
 
@@ -145,6 +166,7 @@ export function SynthPanel({
   onConnect,
   onRemoveCable,
   onMoveCable,
+  design = 'faithful',
 }: SynthPanelProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragRef = useRef<PlugDrag | null>(null); // the plug being dragged: { i, end, x0, y0, moved, snap }
@@ -158,7 +180,16 @@ export function SynthPanel({
   } | null>(null); // { i, end, x, y, snap } while a plug is off its jack
   const [pending, setPending] = useState<string | null>(null); // jack id waiting for its partner
   const [mouse, setMouse] = useState<CablePoint | null>(null);
-  const { view, theme } = def;
+  const { view } = def;
+  const neutral = design === 'neutral';
+  const theme = useMemo(
+    () => (neutral ? neutralTheme(def.theme) : def.theme),
+    [neutral, def.theme]
+  );
+  const decor = useMemo(
+    () => (neutral ? def.decor.filter((d) => !d.brand) : def.decor),
+    [neutral, def.decor]
+  );
   const cheekW = theme.cheeks && theme.cheeks !== 'none' ? theme.cheekW || 40 : 0;
   const scale = view.w / 2000;
 
@@ -450,8 +481,8 @@ export function SynthPanel({
               ))}
           </g>
         )}
-        <StaticDecor decor={def.decor} ctx={ctx} />
-        <Leds decor={def.decor} ctx={ctx} values={values} />
+        <StaticDecor decor={decor} ctx={ctx} />
+        <Leds decor={decor} ctx={ctx} values={values} />
         {heatOn && !areasOn && <HeatLayer def={def} values={values} outline={outline} />}
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;

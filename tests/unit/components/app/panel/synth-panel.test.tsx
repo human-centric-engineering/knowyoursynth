@@ -5,7 +5,8 @@
  *
  * - Model D's panel in the hardware and outline views (snapshots), and the
  *   modular case a `layout` puts in place of the long faceplate.
- * - `design` (D11) has no effect yet.
+ * - `design` (D11): the neutral design leaves out Model D's brand marks and
+ *   draws the neutral theme; faithful and the default draw the panel as before.
  * - Patching: press an output then an input to connect, the explanation is
  *   focused, Escape and a second press cancel, a cable press removes it.
  * - Dragging a plug onto another jack moves the cable.
@@ -15,7 +16,7 @@
 
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { SynthPanel } from '@/components/app/panel/synth-panel';
+import { NEUTRAL_PANEL, SynthPanel, neutralTheme } from '@/components/app/panel/synth-panel';
 import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import {
   MAP_OFF,
@@ -27,6 +28,7 @@ import {
 } from '@/components/app/synth/stores';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { modelD } from '@/tests/fixtures/synths/model-d';
+import portedModelD from '@/lib/app/synths/defs/model-d';
 import type { PatchCable, SynthDef } from '@/lib/app/synths/contract';
 
 /** Screen = view units, so a pointer position is a panel position. */
@@ -131,20 +133,97 @@ describe('Model D panel views', () => {
 });
 
 describe('design prop (D11)', () => {
-  it('has no effect yet: faithful, neutral and the default render the same markup', () => {
-    const plain = render(<SynthPanel {...props()} />).container.innerHTML;
-    const faithful = render(<SynthPanel {...props({ design: 'faithful' })} />).container.innerHTML;
-    const neutral = render(<SynthPanel {...props({ design: 'neutral' })} />).container.innerHTML;
-    expect(faithful).toBe(plain);
-    expect(neutral).toBe(faithful);
+  // The ported definition carries the `brand` tags; the render fixture is the untagged prototype snapshot.
+  const branded = portedModelD;
+  const unbranded: SynthDef = { ...branded, decor: branded.decor.filter((d) => !d.brand) };
+  const html = (over: Partial<SynthPanelProps>) =>
+    render(<SynthPanel {...props({ def: branded, values: branded.init, ...over })} />).container
+      .innerHTML;
+
+  it('Model D has brand marks to leave out', () => {
+    expect(branded.decor.filter((d) => d.brand).length).toBeGreaterThan(0);
   });
 
-  it('has no effect on the outline view either', () => {
-    const faithful = render(<SynthPanel {...props({ outline: true, design: 'faithful' })} />)
-      .container.innerHTML;
-    const neutral = render(<SynthPanel {...props({ outline: true, design: 'neutral' })} />)
-      .container.innerHTML;
-    expect(neutral).toBe(faithful);
+  it('faithful is the default, and draws the brand marks', () => {
+    expect(html({ design: 'faithful' })).toBe(html({}));
+    const withBrand = html({ design: 'faithful' });
+    expect(withBrand).toContain('behringer');
+    expect(withBrand).not.toBe(html({ def: unbranded, values: unbranded.init }));
+  });
+
+  it('neutral draws none of the brand marks, and nothing else is missing', () => {
+    const neutral = html({ design: 'neutral' });
+    expect(neutral).not.toContain('behringer');
+    // The same as the panel with its brand items removed: every other item is still drawn.
+    expect(neutral).toBe(html({ def: unbranded, values: unbranded.init, design: 'neutral' }));
+  });
+
+  it('neutral keeps every control and jack', () => {
+    const { container } = render(
+      <SynthPanel {...props({ def: branded, values: branded.init, design: 'neutral' })} />
+    );
+    expect(screen.getAllByRole('slider')).toHaveLength(
+      branded.controls.filter((c) => c.type === 'knob').length
+    );
+    expect(container.querySelectorAll('[aria-label$=" jack"]')).toHaveLength(branded.jacks.length);
+  });
+
+  it("neutral draws the neutral colours, lettering and metal cheeks; faithful keeps the synth's own", () => {
+    const neutral = render(
+      <SynthPanel {...props({ def: branded, values: branded.init, design: 'neutral' })} />
+    ).container;
+    const face = (c: HTMLElement) =>
+      [...c.querySelectorAll('#kysFace stop')].map((st) => st.getAttribute('stop-color'));
+    expect(face(neutral)).toEqual([NEUTRAL_PANEL.panel, NEUTRAL_PANEL.panel2]);
+    expect(neutral.querySelector('rect[fill="url(#kysWood)"]')).toBeNull();
+    expect(neutral.querySelectorAll('rect[fill="url(#kysMetal)"]')).toHaveLength(2);
+    const labels = [...neutral.querySelectorAll('text')].filter(
+      (t) => t.getAttribute('fill') === NEUTRAL_PANEL.ink
+    );
+    expect(labels.length).toBeGreaterThan(0);
+    expect(labels[0].getAttribute('style')).toContain('Barlow Semi Condensed');
+
+    const faithful = render(
+      <SynthPanel {...props({ def: branded, values: branded.init, design: 'faithful' })} />
+    ).container;
+    expect(face(faithful)).toEqual([branded.theme.panel, branded.theme.panel2]);
+    expect(faithful.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
+  });
+
+  it('neutral leaves out the brand marks on the outline view too', () => {
+    const neutral = html({ outline: true, design: 'neutral' });
+    expect(html({ outline: true })).toContain('behringer');
+    expect(neutral).not.toContain('behringer');
+  });
+});
+
+describe('neutralTheme', () => {
+  it('replaces colours, lettering and cheeks, and keeps the structural flags', () => {
+    const t = neutralTheme({
+      panel: '#123456',
+      panel2: '#000000',
+      ink: '#ff0000',
+      font: 'helv',
+      cheeks: 'wood',
+      cheekW: 52,
+      tabs: true,
+      knobRing: 'dots',
+      jack: 'black',
+    });
+    expect(t).toEqual({
+      ...NEUTRAL_PANEL,
+      font: 'din',
+      weight: 500,
+      cheeks: 'metal',
+      cheekW: 52,
+      tabs: true,
+      knobRing: 'dots',
+      jack: 'black',
+    });
+  });
+
+  it('adds no cheeks to a synth that has none', () => {
+    expect(neutralTheme({ ...portedModelD.theme, cheeks: 'none' }).cheeks).toBe('none');
   });
 });
 
