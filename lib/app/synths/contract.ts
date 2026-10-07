@@ -96,6 +96,12 @@ export interface ViewRect {
 export interface SynthDef {
   /** URL-safe id, e.g. `model-d`. */
   id: string;
+  /**
+   * The definition version. Every stored sound records the version it was made on and is
+   * validated against it. Raise it when a control or jack id is renamed or removed, and ship a
+   * mapping from the old ids. Every app definition has one; the prototype's do not.
+   */
+  version?: number;
   name: string;
   maker: string;
   year: number;
@@ -644,6 +650,11 @@ export type Jack = InputJack | OutputJack;
 export interface DecorCommon {
   /** Faceplate artwork printed in the hardware view only, left out of the outline view. */
   hw?: boolean;
+  /**
+   * A maker's mark: a logo, a wordmark or a model badge. The neutral design (D11) leaves every
+   * `brand` item out, so tag each one, and nothing else.
+   */
+  brand?: boolean;
 }
 
 /**
