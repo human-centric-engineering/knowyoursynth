@@ -27,7 +27,18 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · lib/protected-nav/types.ts
  */
+import { LayoutDashboard, Settings, Shield, User } from 'lucide-react';
+
 import type { ProtectedNavItem } from '@/lib/protected-nav/types';
 
 /** Authenticated header nav. `null` = platform default; a non-null array replaces it. */
-export const protectedNavItems: ProtectedNavItem[] | null = null;
+// Know Your Synth: Sunrise's four links, with the dashboard called what it is here
+// (plan §4, route map). Retyped rather than spread, because spreading pins the
+// default anyway and only the first label changes. Links to /synths, /bank and
+// /explore join when those routes exist; a link to a 404 is worse than none.
+export const protectedNavItems: ProtectedNavItem[] | null = [
+  { href: '/dashboard', label: 'My synths', icon: LayoutDashboard },
+  { href: '/profile', label: 'Profile', icon: User },
+  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },
+];

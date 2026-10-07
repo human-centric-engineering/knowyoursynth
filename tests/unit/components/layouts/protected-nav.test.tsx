@@ -65,7 +65,8 @@ describe('ProtectedNav', () => {
     const { ProtectedNav } = await import('@/components/layouts/protected-nav');
     render(React.createElement(ProtectedNav));
 
-    expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard');
+    // FORK (Know Your Synth): pinned to our list per the FORK NOTE above; /dashboard is "My synths".
+    expect(screen.getByRole('link', { name: /my synths/i })).toHaveAttribute('href', '/dashboard');
     expect(screen.getByRole('link', { name: /profile/i })).toHaveAttribute('href', '/profile');
     expect(screen.getByRole('link', { name: /settings/i })).toHaveAttribute('href', '/settings');
   });

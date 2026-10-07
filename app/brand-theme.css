@@ -56,3 +56,83 @@
  * See .context/ui/surface-theming.md for all six design constraints.
  * --------------------------------------------------------------------------
  */
+
+/* ==========================================================================
+ * Know Your Synth — the consumer surface
+ * ==========================================================================
+ * The prototype's palette (`prototype/src/styles.css`): studio-at-night in dark,
+ * cool drafting paper in light, one amber accent. It dresses the whole consumer
+ * surface: the synth frame, the marketing pages, the dashboard, the auth pages,
+ * and every body-portaled overlay (dialogs, dropdowns, toasts, the cookie
+ * banner). Those mount outside any route-group subtree and inherit from
+ * `<html data-surface>`, which is why the palette lives here and not in a
+ * layout.
+ *
+ * `/admin` keeps the Sunrise defaults, untouched by this file, so upstream
+ * palette changes flow straight through to it.
+ *
+ * Unlayered on purpose (constraint 6). Dark mode is the COMPOUND form
+ * (constraint 4), because `.dark` and `data-surface` sit on the same element,
+ * `<html>`.
+ *
+ * Two sets of names:
+ * - `--color-*` are Sunrise's (shadcn) tokens, mapped from the prototype's roles:
+ *   ground → background, surface → card and popover, raised → the quiet fills,
+ *   line → borders, accent → primary, warn → destructive.
+ * - `--kys-*` are the prototype's own roles, kept whole for the synth page's
+ *   components (m3), which were written against them. One palette, two vocabularies:
+ *   change a colour in both blocks or neither.
+ */
+
+[data-surface='consumer'] {
+  --kys-ground: #e8ebef;
+  --kys-desk: #cfd5dd;
+  --kys-surface: #f4f6f8;
+  --kys-raised: #ffffff;
+  --kys-line: #b3bcc8;
+  --kys-text: #161b25;
+  --kys-muted: #535d6f;
+  --kys-faint: #7f8999;
+  --kys-accent: #b85f06;
+  --kys-accent-ink: #ffffff;
+  --kys-good: #2f8a1d;
+  --kys-warn: #c2451f;
+
+  --color-background: var(--kys-ground);
+  --color-foreground: var(--kys-text);
+  --color-card: var(--kys-surface);
+  --color-card-foreground: var(--kys-text);
+  --color-popover: var(--kys-surface);
+  --color-popover-foreground: var(--kys-text);
+  --color-border: var(--kys-line);
+  --color-input: var(--kys-line);
+
+  --color-primary: var(--kys-accent);
+  --color-primary-foreground: var(--kys-accent-ink);
+  --color-ring: var(--kys-accent);
+
+  --color-secondary: var(--kys-raised);
+  --color-secondary-foreground: var(--kys-text);
+  --color-muted: var(--kys-raised);
+  --color-muted-foreground: var(--kys-muted);
+  --color-accent: var(--kys-raised);
+  --color-accent-foreground: var(--kys-text);
+
+  --color-destructive: var(--kys-warn);
+  --color-destructive-foreground: var(--kys-accent-ink);
+}
+
+[data-surface='consumer'].dark {
+  --kys-ground: #111318;
+  --kys-desk: #0a0b0e;
+  --kys-surface: #191c23;
+  --kys-raised: #222630;
+  --kys-line: #2f3542;
+  --kys-text: #ece9e2;
+  --kys-muted: #979eac;
+  --kys-faint: #667083;
+  --kys-accent: #f6a63a;
+  --kys-accent-ink: #1b1204;
+  --kys-good: #7ed267;
+  --kys-warn: #ff7d54;
+}
