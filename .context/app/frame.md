@@ -57,6 +57,11 @@ It holds the prototype's palette twice over:
 
 Change a colour in the `--kys-*` block; the `--color-*` mapping follows it.
 
+**One copy is not a variable.** The neutral panel design (D11) paints the faceplate in the dark
+`--kys-raised`, `--kys-surface` and `--kys-text`, copied as hex into `NEUTRAL_PANEL` in
+`components/app/panel/synth-panel.tsx`, because SVG presentation attributes do not reliably
+resolve `var()`. Change those three roles and you change `NEUTRAL_PANEL` too.
+
 **Light and dark** are Sunrise's `.dark` class and its toggle, replacing the prototype's
 `kys.theme`. Sunrise saves the first preference it sees and stops following the device
 (sunrise#756). Lelañea's divergence ledger, row 2, is the worked fix, if the app wants it before
