@@ -23,25 +23,24 @@
 // again. The seed never deletes a row either.
 
 /// A synth in the catalogue. The id is its definition's key in the registry
-/// (`lib/app/synths/defs/`); the descriptive columns copy the definition so a
-/// list needs no definition loaded.
+/// (`lib/app/synths/defs/`); the descriptive columns start as the definition's
+/// and are the admin's after that. The definition's version is not copied
+/// here: the registry is the only place it lives.
 model Synth {
-  id                String    @id // e.g. "model-d"
-  name              String
-  maker             String
-  year              Int
-  heritage          String
-  summary           String    @db.Text
-  /// The definition's version when the seed last wrote this row.
-  definitionVersion Int
+  id        String    @id // e.g. "model-d"
+  name      String
+  maker     String
+  year      Int
+  heritage  String
+  summary   String    @db.Text
   /// Shown in the public catalogue.
-  listed            Boolean   @default(true)
+  listed    Boolean   @default(true)
   /// Position in the catalogue, lowest first.
-  order             Int
+  order     Int
   /// Set when an admin changes the row; the seed then leaves it alone.
-  editedAt          DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  editedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   sounds  SynthSound[]
   lineage SynthLineage?

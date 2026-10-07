@@ -9,7 +9,6 @@ CREATE TABLE "synth" (
     "year" INTEGER NOT NULL,
     "heritage" TEXT NOT NULL,
     "summary" TEXT NOT NULL,
-    "definitionVersion" INTEGER NOT NULL,
     "listed" BOOLEAN NOT NULL DEFAULT true,
     "order" INTEGER NOT NULL,
     "editedAt" TIMESTAMP(3),
