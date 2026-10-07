@@ -55,6 +55,9 @@ baseline check covers exactly what the seed writes.
 Both are public, inherit the section rate limit, and carry an ETag. They read through
 `lib/app/catalogue/read.ts`, which validates every sound again on the way out: a row an edit
 broke, or one made on a definition version the registry no longer has, is logged and left out.
+An unusual note on a control, jack or area the synth no longer has is left out the same way. The
+list's `soundCount` counts stored rows, so it can be higher than what the detail serves while
+such an error stands.
 
 ## Don't
 

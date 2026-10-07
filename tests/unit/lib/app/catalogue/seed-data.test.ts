@@ -94,6 +94,24 @@ describe('loadCatalogueData', () => {
     expect(() => loadCatalogueData(dir)).toThrow(/^synths\.json: [\s\S]*order/);
   });
 
+  it('refuses a per-synth file whose name is not its synth', () => {
+    const dir = folder({
+      'synths.json': { synths: [] },
+      'sounds/neutron.json': { synth: 'model-d', version: 1, sounds: [] },
+      'lineage/.keep.json': {
+        synth: '.keep',
+        title: 'T',
+        intro: 'I',
+        timeline: [{ year: '1', name: 'N', text: 'X' }],
+        relatives: [],
+      },
+      'notes/shared.json': { limits: [{ title: 'T', text: 'X' }] },
+    });
+    expect(() => loadCatalogueData(dir)).toThrow(
+      'sounds/neutron.json: is for model-d, so it should be sounds/model-d.json'
+    );
+  });
+
   it('reads every per-synth file but shared.json as a synth’s', () => {
     const dir = folder({
       'synths.json': { synths: [] },
@@ -128,6 +146,8 @@ describe('the seed unit', () => {
       'lib/app/catalogue/seed.ts',
       'lib/app/synths/defs/model-d.ts',
       'lib/app/synths/validate.ts',
+      'lib/app/synths/contract.ts',
+      'lib/app/synths/lib/patch.ts',
     ])
       expect(normalised).toContain(resolve(process.cwd(), expected));
   });

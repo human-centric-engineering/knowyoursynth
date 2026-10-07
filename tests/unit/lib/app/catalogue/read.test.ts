@@ -120,9 +120,9 @@ describe('getSynthDetail', () => {
     expect(prisma.synthNote.findMany).not.toHaveBeenCalled();
   });
 
-  it('is null for a listed synth the registry cannot play', async () => {
-    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored({ id: 'neutron' }) as never);
+  it('is null for a synth the registry cannot play, without reading the database', async () => {
     expect(await getSynthDetail('neutron')).toBeNull();
+    expect(prisma.synth.findFirst).not.toHaveBeenCalled();
   });
 
   it('validates sounds on read: one its definition rejects, or on another version, is logged and left out', async () => {
@@ -145,6 +145,23 @@ describe('getSynthDetail', () => {
       expect.stringContaining('definition version'),
       expect.objectContaining({ sound: oldVersion.slug, version: 2, current: 1 })
     );
+  });
+
+  it('leaves out an unusual note on something the synth no longer has, and says so', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    vi.mocked(prisma.synthNote.findMany).mockResolvedValue([
+      ...notes,
+      { kind: 'UNUSUAL', synthId: 'model-d', target: 'osc9.wave', title: null, text: 'Gone.' },
+    ] as never);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(Object.keys(detail?.notes.unusual ?? {})).toHaveLength(38);
+    expect(detail?.notes.unusual).not.toHaveProperty('osc9.wave');
+    expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('unusual note'), {
+      synthId: 'model-d',
+      target: 'osc9.wave',
+    });
   });
 
   it('serves no lineage when the stored one is malformed, and none when there is none', async () => {

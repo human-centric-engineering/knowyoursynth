@@ -140,7 +140,16 @@ export function planCatalogue(
       order: entry.order,
     });
   }
+  // Each synth has at most one file of each kind: a second would plan the same rows twice and fail on a unique key
+  // part way through writing, which is the half-written state this check exists to prevent.
+  const seen = new Set<string>();
   const defFor = (file: string, synth: string) => {
+    const kind = file.slice(0, file.indexOf('/'));
+    if (seen.has(`${kind}/${synth}`)) {
+      problems.push(`more than one ${kind} file is for ${synth} (${file} is a second)`);
+      return undefined;
+    }
+    seen.add(`${kind}/${synth}`);
     const def = defs.get(synth);
     if (!def) problems.push(`${file} is for ${synth}, which synths.json does not list`);
     return def;
@@ -167,6 +176,9 @@ export function planCatalogue(
         return;
       }
       const sound = result.value;
+      // `ai` marks a sound the tutor designed, which is a user's sound, not the library's; the table has no column for it.
+      if (sound.ai)
+        problems.push(`${name} sound ${sound.id} is marked ai, which a library sound cannot be`);
       if (slugs.has(sound.id)) problems.push(`${name} has two sounds with the id ${sound.id}`);
       slugs.add(sound.id);
       rows.sounds.push({

@@ -18,6 +18,8 @@ import {
   type CatalogueSeedData,
 } from '@/lib/app/catalogue/data';
 
+const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
+
 /** The data folder. */
 export const CATALOGUE_DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), 'data');
 
@@ -32,7 +34,15 @@ function perSynth<S extends z.ZodType>(dir: string, sub: string, schema: S): z.i
   return readdirSync(join(dir, sub))
     .filter((f) => f.endsWith('.json') && f !== 'shared.json')
     .sort()
-    .map((f) => readJson(dir, `${sub}/${f}`, schema));
+    .map((f) => {
+      const file = readJson(dir, `${sub}/${f}`, schema);
+      // A file is named for its synth, so a copied or renamed file cannot seed one synth's content under another.
+      if (isRecord(file) && file.synth !== f.slice(0, -'.json'.length))
+        throw new Error(
+          `${sub}/${f}: is for ${String(file.synth)}, so it should be ${sub}/${String(file.synth)}.json`
+        );
+      return file;
+    });
 }
 
 /** Read and shape-check every data file. Fit against the definitions is the seed's check (`planCatalogue`). */

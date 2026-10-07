@@ -252,6 +252,23 @@ describe('planCatalogue', () => {
     );
   });
 
+  it('refuses a second file of one kind for a synth, which would otherwise fail part way through writing', () => {
+    const data = sample();
+    data.lineage.push(structuredClone(data.lineage[0]));
+    data.notes.push(structuredClone(data.notes[0]));
+    expect(() => planCatalogue(data)).toThrow(
+      /more than one lineage file is for model-d[\s\S]*more than one notes file is for model-d/
+    );
+  });
+
+  it('refuses a library sound marked as designed by the tutor', () => {
+    const data = sample();
+    data.sounds[0].sounds[0].ai = true;
+    expect(() => planCatalogue(data)).toThrow(
+      `sound ${String(data.sounds[0].sounds[0].id)} is marked ai, which a library sound cannot be`
+    );
+  });
+
   it('takes a synth’s descriptive columns from its definition', () => {
     const def = getSynthDef('model-d');
     const rows = planCatalogue(sample());
