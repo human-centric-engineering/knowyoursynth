@@ -46,8 +46,21 @@ code disagreed, the types follow the code (see [Where the code won](#where-the-c
 
 ## Authoring a definition
 
-Follow `model-d`: small local helpers (`knob()`, `text()`, `jack()`) push into `controls`,
-`decor` and `jacks`; `init` is built from each control's `def`; `toEngine()` comes last.
+Follow `defs/model-d.ts`: small local helpers (`knob()`, `text()`, `jackIn()`, `jackOut()`)
+push into `controls`, `decor` and `jacks`; `init` is built from each control's `def`;
+`toEngine()` comes last. Register the definition in `defs/index.ts` (`SYNTH_DEFS`); the app
+looks a synth up with `getSynthDef(id)`.
+
+- **The instrument only.** A definition holds no sounds, lineage, unusual notes or limits:
+  those are content, kept in the catalogue tables (D13). `registry.test.ts` refuses them on any
+  registered definition and in any module under `defs/`.
+- **A `version`**, a whole number from 1. Every stored sound records the version it was made on.
+  Raise it when a control or jack id is renamed or removed, and ship a mapping from the old ids.
+- **Panel values are `number | string | boolean`.** Read a continuous control as a number with a
+  local `num(v, id)`, and narrow an enum to the engine's type explicitly
+  (`v['filter.mode'] === 'hp' ? 'hp' : 'lp'`). For the values a valid sound holds, the result
+  must be the prototype's: the check renders every sound against the baseline, and compares the
+  definition with the prototype's as data.
 
 - **Coordinates** are view units: the pixel space of the cropped panel photo. `view.h` is the
   faceplate height only; cheeks sit inside `view.w`. Angles are degrees, 0 = 12 o'clock,
@@ -118,6 +131,11 @@ Silkscreen and hardware that is not a control: `Decor` is a union on `t` (`frame
 colour, and the outline view draws it in ink. `hw: true` prints an item in the hardware view
 only. `rect` and `path` fills may use the renderer's print patterns (`url(#kysPatMesh)` and
 friends, listed on `DecorFill`). `led` lights by `litWhen` (see `LitWhen`).
+
+**Tag every maker's mark `brand: true`**: logos, wordmarks, model badges. The neutral design
+(D11) leaves `brand` items out, so an untagged logo shows on a panel that must not carry it.
+`registry.test.ts` fails on any `logo` without the tag; a wordmark drawn as `text` has to be
+tagged by hand.
 
 ## `toEngine()` and `EngineParams`
 
