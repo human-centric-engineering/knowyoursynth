@@ -106,16 +106,17 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds a `lib/app/synths/` bullet to the `lib/app/` Covered list: the contract, the
-  engine, the validator and the definition registry.
+- **Change:** adds two bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+  the engine, the validator and the definition registry) and `lib/app/catalogue/` (seeding the
+  catalogue and reading it for the API).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our bullet in the `lib/app/` list, in alphabetical
-  order.
+- **On conflict:** take theirs and re-insert our two bullets in the `lib/app/` list, in
+  alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth code lives in `lib/app/`, or when the guard reads fork
+- **Delete when:** none while synth or catalogue code lives in `lib/app/`, or when the guard reads fork
   scaffolds from a fork-owned file.
 
 ### The catalogue tables on the global-config list
