@@ -127,7 +127,7 @@ covered by the version contract.
   - `lib/app/tenant-resolver.ts` → `registerAppTenantResolver()` — the proxy's tenant resolver (primitive: `registerTenantResolver()` in `lib/tenancy/resolver.ts`; Web-standard only)
   - `lib/app/reserved-tiers.ts` → `occupiedTiers` — which reserved namespace tiers this fork occupies
   - `lib/app/surface.ts` → `classifySurface()` / `DEFAULT_SURFACE` — per-surface theming classifier
-  - `lib/app/synths/` → `SynthDef` / `EngineParams` (`contract.ts`), `createSynth()` (`audio/`), `validateSound()` (`validate.ts`) — Know Your Synth's synth contract, sound engine and shared library
+  - `lib/app/synths/` → `SynthDef` / `EngineParams` (`contract.ts`), `createSynth()` (`audio/`), `validateSound()` (`validate.ts`), `getSynthDef()` / `SYNTH_DEFS` (`defs/`) — Know Your Synth's synth contract, sound engine, shared library and definition registry
   - `lib/app/user-created.ts` → `initAppUserCreatedHooks()` — post-signup hook registry
 
   Outside `lib/app/` — **hand-maintained, so check it against the tree rather
