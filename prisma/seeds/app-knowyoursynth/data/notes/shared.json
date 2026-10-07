@@ -1,0 +1,24 @@
+{
+  "limits": [
+    {
+      "title": "A sound-alike, not a circuit model",
+      "text": "Every panel drives one shared digital voice. Ranges, curves and routings follow each synth’s published specification, so the controls behave as they do on the hardware — but component tolerances, tuning drift and the exact distortion of each individual circuit are approximated, not reproduced."
+    },
+    {
+      "title": "Chords only where the hardware plays them",
+      "text": "The mono synths play one note at a time, like the hardware. Where one can play two notes — the 2600’s DUO keyboard, the Neutron’s PARA switch — that mode is modelled. The DeepMind 12D plays chords on twelve voices, the UB-Xa D on sixteen, the PRO-800 and the Jupiter-8 on eight, the Jupiter-6 on six and the Jupiter-4 on four, each a full copy of the voice. The 2-XM plays two notes on its two modules, each set up separately. The Poly D plays up to four, one per oscillator, through its one filter, as the hardware does."
+    },
+    {
+      "title": "No sound from outside",
+      "text": "External audio inputs work, but the only thing you can feed them is the synth’s own output, patched round with a cable. There is no microphone or line input."
+    },
+    {
+      "title": "Hardware fittings are printed, not wired",
+      "text": "MIDI sockets, power switches and the hardware’s own keyboard and wheels are drawn on the panel for reference. The keyboard strip under the panel plays the synth instead, and the mod wheel beside it is the one that works."
+    },
+    {
+      "title": "MIDI needs its own page",
+      "text": "A MIDI keyboard works in Chrome or Edge when this page is open on its own. Claude’s artifact viewer does not pass MIDI permission through, so the Connect MIDI button cannot succeed inside it."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+/**
+ * Read the catalogue's seed data from `./data/` (plan §2).
+ *
+ * One of the only two readers of these files: the seed unit `001-catalogue.ts` and `scripts/check-synths.ts`. The live
+ * app reads the tables (D13), and `tests/unit/lib/app/catalogue/seed-data-boundary.test.ts` fails on any other reader.
+ * Not a seed unit itself: its name has no `NNN-` prefix, so the runner does not pick it up.
+ */
+import { readdirSync, readFileSync } from 'fs';
+import { dirname, join, relative } from 'path';
+import { fileURLToPath } from 'url';
+import type { z } from 'zod';
+import { isRecord } from '@/lib/utils';
+import {
+  LineageFileSchema,
+  NotesFileSchema,
+  SharedNotesFileSchema,
+  SoundsFileSchema,
+  SynthListingFileSchema,
+  type CatalogueSeedData,
+} from '@/lib/app/catalogue/data';
+
+/** The data folder. */
+export const CATALOGUE_DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), 'data');
+
+function readJson<S extends z.ZodType>(dir: string, rel: string, schema: S): z.infer<S> {
+  let json: unknown;
+  try {
+    json = JSON.parse(readFileSync(join(dir, rel), 'utf8'));
+  } catch (error) {
+    throw new Error(`${rel}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  const parsed = schema.safeParse(json);
+  if (!parsed.success) throw new Error(`${rel}: ${parsed.error.message}`);
+  return parsed.data;
+}
+
+/** Every per-synth file in a subfolder, in name order. */
+function perSynth<S extends z.ZodType>(dir: string, sub: string, schema: S): z.infer<S>[] {
+  return readdirSync(join(dir, sub))
+    .filter((f) => f.endsWith('.json') && f !== 'shared.json')
+    .sort()
+    .map((f) => {
+      const file = readJson(dir, `${sub}/${f}`, schema);
+      // A file is named for its synth, so a copied or renamed file cannot seed one synth's content under another.
+      if (isRecord(file) && file.synth !== f.slice(0, -'.json'.length))
+        throw new Error(
+          `${sub}/${f}: is for ${String(file.synth)}, so it should be ${sub}/${String(file.synth)}.json`
+        );
+      return file;
+    });
+}
+
+/** Read and shape-check every data file. Fit against the definitions is the seed's check (`planCatalogue`). */
+export function loadCatalogueData(dir = CATALOGUE_DATA_DIR): CatalogueSeedData {
+  return {
+    listing: readJson(dir, 'synths.json', SynthListingFileSchema),
+    sounds: perSynth(dir, 'sounds', SoundsFileSchema),
+    lineage: perSynth(dir, 'lineage', LineageFileSchema),
+    notes: perSynth(dir, 'notes', NotesFileSchema),
+    shared: readJson(dir, 'notes/shared.json', SharedNotesFileSchema),
+  };
+}
+
+/** Every data file, relative to `dir`, for the seed unit's `hashInputs`. */
+export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
+  const walk = (folder: string): string[] =>
+    readdirSync(folder, { withFileTypes: true })
+      .flatMap((e) => (e.isDirectory() ? walk(join(folder, e.name)) : [join(folder, e.name)]))
+      .filter((f) => f.endsWith('.json'));
+  return walk(dir)
+    .map((f) => relative(dir, f))
+    .sort();
+}

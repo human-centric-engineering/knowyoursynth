@@ -1,0 +1,81 @@
+{
+  "synth": "model-d",
+  "title": "From the Moog modular to the Model D",
+  "intro": "The Model D is a copy of the Minimoog, and the Minimoog was a Moog modular with the cables taken away. Almost everything on this panel — one volt per octave, the ladder filter, the attack-decay-sustain contour, the pitch and mod wheels — was worked out by Robert Moog and his colleagues between 1964 and 1970, and most synthesizers since have copied some part of it.",
+  "timeline": [
+    {
+      "year": "1964",
+      "name": "Moog modular prototype",
+      "text": "Robert Moog and the composer Herbert Deutsch build voltage-controlled oscillator and amplifier modules and show them at the Audio Engineering Society convention. The idea that matters: every part of the sound is set by a voltage, so one module can play another. Pitch follows a fixed rule of one volt per octave, which is why the jacks on this panel still say 1V/OCT."
+    },
+    {
+      "year": "1965",
+      "name": "The ADSR envelope",
+      "text": "Composer Vladimir Ussachevsky asks Moog for a module that shapes a note in four stages: attack, decay, sustain, release. The Minimoog later simplified it to three knobs, with one DECAY knob and a switch doing the work of release. That is the arrangement you see on the Model D."
+    },
+    {
+      "year": "1966",
+      "name": "The ladder filter",
+      "text": "Moog files a patent for a low-pass filter built from a \"ladder\" of transistor pairs (granted in 1969). It cuts at 24 dB per octave, loses some bass as resonance rises and distorts gently when driven hard. It is the single most imitated circuit in synthesis and it is the filter on this panel."
+    },
+    {
+      "year": "1968",
+      "name": "Switched-On Bach",
+      "text": "Wendy Carlos records Bach on a Moog modular, one line at a time, and it becomes one of the best-selling classical records ever made. Studios and rock bands start ordering modular systems, which are large, expensive and need re-patching for every sound."
+    },
+    {
+      "year": "1970",
+      "name": "Minimoog Model D",
+      "tag": "The original",
+      "text": "Moog engineer Bill Hemsath assembles a small, pre-wired synth from spare modular parts. After prototypes A, B and C the company releases the Model D: three oscillators, a mixer, the ladder filter and two contours in a fixed path, with no patch cables at all. It adds the pitch-bend and modulation wheels. It is the first synthesizer sold in music shops and the first a keyboard player could take on stage and play like an instrument. About 12,000 were made before production ended in 1981."
+    },
+    {
+      "year": "1975–81",
+      "name": "The cheaper Moogs",
+      "text": "Moog builds smaller instruments on the same ideas: the Taurus bass pedals (1975), Micromoog, Multimoog, Prodigy (1979), Rogue and the Source (1981), which replaced knobs with memories and a single data wheel."
+    },
+    {
+      "year": "2002",
+      "name": "Minimoog Voyager",
+      "text": "Bob Moog gets his company name back and designs an updated Minimoog with patch memories, a touch surface and MIDI. It is his last major instrument; he died in 2005."
+    },
+    {
+      "year": "2016",
+      "name": "Moog reissues the Model D",
+      "text": "Moog Music builds the original circuit again in small numbers, adding a dedicated LFO, a few patch points and the feedback path that players used to make with a cable from the headphone socket to the external input."
+    },
+    {
+      "year": "2018",
+      "name": "Behringer Model D",
+      "tag": "This synth",
+      "text": "Behringer copies the 1970 signal path in a desktop box that also fits a Eurorack case. It keeps the three oscillators, the mixer that overdrives the filter and the ladder filter, and adds a separate LFO, a high-pass filter mode, the built-in feedback loop on the EXT channel and a row of patch jacks along the top."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog modular (901 oscillators, 904A filter)",
+      "years": "1964–",
+      "text": "The parent. A Minimoog is roughly three 901-style oscillators, a 904A filter and two 911 envelopes wired together permanently."
+    },
+    {
+      "name": "Moog Taurus",
+      "years": "1975",
+      "text": "Foot pedals with a Moog oscillator pair and ladder filter, tuned for bass. The source of a great deal of 70s prog low end."
+    },
+    {
+      "name": "Moog Prodigy and Source",
+      "years": "1979, 1981",
+      "text": "Two-oscillator Moogs with the same filter. Brighter and thinner than a Minimoog, and much cheaper."
+    },
+    {
+      "name": "Minimoog Voyager",
+      "years": "2002",
+      "text": "The same architecture with modern control. Three oscillators, ladder filter (two of them, in stereo), wheels."
+    },
+    {
+      "name": "ARP Odyssey",
+      "years": "1972",
+      "text": "Not a relative but the rival: two oscillators, sliders instead of knobs, duophonic, with sync and sample-and-hold the Minimoog lacked. Early ARP filters copied the ladder closely enough that Moog objected, and ARP redesigned them."
+    }
+  ]
+}

@@ -106,17 +106,46 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds a `lib/app/synths/` bullet to the `lib/app/` Covered list: the contract, the
-  engine, the validator and the definition registry.
+- **Change:** adds two bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+  the engine, the validator and the definition registry) and `lib/app/catalogue/` (seeding the
+  catalogue and reading it for the API).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our bullet in the `lib/app/` list, in alphabetical
-  order.
+- **On conflict:** take theirs and re-insert our two bullets in the `lib/app/` list, in
+  alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth code lives in `lib/app/`, or when the guard reads fork
+- **Delete when:** none while synth or catalogue code lives in `lib/app/`, or when the guard reads fork
   scaffolds from a fork-owned file.
+
+### The reserved-tier test, pinned to our app models
+
+- **Files:** `tests/unit/reserved-fork-tiers.test.ts`
+- **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's five
+  declarations (four models and an enum) instead of none, under a `FORK` comment.
+- **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
+  own header says a fork with app models pins that row rather than deleting it, so a stray extra
+  declaration still fails.
+- **On conflict:** take theirs, and re-apply the pin to whichever case asserts `app.prisma` is
+  empty. Add each new app model to the list as it lands.
+- **Upstream:** working as designed upstream; nothing to raise.
+- **Delete when:** never, while the fork has app models, unless upstream makes the case read a
+  fork-owned declaration.
+
+### The catalogue tables on the global-config list
+
+- **Files:** `lib/tenancy/classification.ts`
+- **Change:** `Synth`, `SynthSound`, `SynthLineage` and `SynthNote` are appended to
+  `GLOBAL_CONFIG_MODELS`, under a one-line comment.
+- **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
+  one of the two lists, and the lists have no fork seam. The catalogue is product content every
+  org shares, so it is global config (owner ruling on `f-model-d`, 2026-10-07). The databank
+  tables (`f-databank`) will join the same lines.
+- **On conflict:** take theirs, and re-append our four names (and the comment) to the end of
+  `GLOBAL_CONFIG_MODELS`.
+- **Upstream:** sunrise#964 asks for a fork seam for classification.
+- **Delete when:** sunrise#964 lands. Move the four names into the new seam's scaffold.
 
 ## New files in platform directories
 
@@ -131,6 +160,8 @@ Today they are:
 - `prototype/**`, which goes at f-launch x5;
 - `app/(panel)/**`, the synth page's route group;
 - `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
+- `prisma/migrations/*_catalogue/` and the fork's later migrations;
+- `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
 - `tests/fixtures/synths/**`;
 - `tests/unit/prototype-boundary.test.ts`;
 - the tests for fork-owned code, under `tests/unit/lib/app/synths/**`,
@@ -140,11 +171,12 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 
 ## Excluded: filled seams
 
-- `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`
-  and `lib/app/auth-landing.ts` (the label only): fork-owned scaffolds, filled.
+- `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
+  `lib/app/auth-landing.ts` (the label only) and `lib/app/data-export.ts` (the catalogue tables,
+  excluded): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
-  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

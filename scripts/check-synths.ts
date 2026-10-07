@@ -11,14 +11,17 @@
  *   prototype's definition: this script bundles `prototype/src/synths/index.js` with esbuild when it runs, exactly as
  *   `check.mjs` does, and loads the bundle from a temporary file. That is a build of a file path, not an import
  *   specifier; D13 (nothing in the app imports `prototype/`) is about the live app, and this is a dev-only checker.
- * - **The prototype's sounds and lineage**, from the same bundle, on every synth. A ported definition holds no content
- *   (D13), so until the sounds come from the seed data (m2) they are lent to it from the prototype's definition.
+ * - **The sounds and lineage.** A ported synth's come from the seed data the catalogue is seeded from
+ *   (`prisma/seeds/app-knowyoursynth/data/`), each sound passed through `validatePreset` on the way in, so the check
+ *   plays what the app will serve. Its "Heard on" list still comes from the prototype bundle, because the databank
+ *   that fills it is not ported yet (b1). A synth not ported yet keeps the prototype's own sounds and lineage.
  * - **Parity with the prototype.** A ported definition must equal the prototype's as data: geometry, ids, help text,
  *   areas, decor, init (`definitionDrift`). The baseline only hears what a sound plays, and this catches a
  *   transliteration slip no sound would.
  *
  * Left out of the transliteration, and why:
- * - The "What is not modelled" (limits) check: `limitsFor` is not ported yet (m2).
+ * - The "What is not modelled" check only asks that a ported synth's seed data has an entry. The prototype's
+ *   `limitsFor` check ran on every synth, and the unported ones still have theirs in `prototype/src/lib/limits.js`.
  * - The databank check (`checkBank`): the databank is not ported yet (b1).
  * - `--write-baseline`: the baseline in `.context/app/check/` is the prototype's own rendering. The ported engine has
  *   to reproduce it, not overwrite it, so this script only reads it. Re-record it with the prototype's own checker
@@ -48,8 +51,11 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
-import type { EngineParams, Preset, SynthDef } from '@/lib/app/synths/contract';
+import type { EngineParams, Lineage, Preset, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { validatePreset } from '@/lib/app/synths/validate';
+import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
+import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import {
@@ -158,30 +164,68 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
 }
 
 /**
- * The definitions to check: each ported one in place of the prototype's, carrying the prototype's sounds and lineage.
- * `orphans` are registered ids with no prototype definition (a mistyped id, or a synth the prototype never had):
- * nothing below would check them, so the run refuses to start rather than pass them by.
+ * The definitions to check: each ported one in place of the prototype's, carrying its sounds and lineage from the seed
+ * data. `orphans` are registered ids with no prototype definition (a mistyped id, or a synth the prototype never had):
+ * nothing below would check them, so the run refuses to start rather than pass them by. `content` lists what is wrong
+ * with a ported synth's seed data, per synth.
  */
-function withPorted(prototypes: SynthDef[]): {
+function withPorted(
+  prototypes: SynthDef[],
+  data: CatalogueSeedData
+): {
   synths: SynthDef[];
   drift: Map<string, string>;
   orphans: string[];
+  content: Map<string, string[]>;
 } {
   const protoIds = new Set(prototypes.map((p) => p.id));
   const orphans = SYNTH_DEFS.map((d) => d.id).filter((id) => !protoIds.has(id));
   const drift = new Map<string, string>();
+  const content = new Map<string, string[]>();
   const synths = prototypes.map((proto) => {
     const ported = getSynthDef(proto.id);
     if (!ported) return proto;
     const d = definitionDrift(ported, proto);
     if (d) drift.set(proto.id, d);
-    return { ...ported, presets: proto.presets, lineage: proto.lineage };
+    const problems: string[] = [];
+    const sounds = data.sounds.find((f) => f.synth === ported.id);
+    const lineage = data.lineage.find((f) => f.synth === ported.id);
+    if (!sounds)
+      problems.push('has no sounds in the seed data (run prototype/tools/export-content.mjs)');
+    else if (sounds.version !== ported.version)
+      problems.push(
+        `seed data sounds are on version ${sounds.version}, the definition is at ${ported.version}`
+      );
+    if (!lineage) problems.push('has no lineage in the seed data');
+    if (!data.notes.some((f) => f.synth === ported.id))
+      problems.push('has no notes (unusual, limits) in the seed data');
+    const presets: Preset[] = [];
+    for (const input of sounds?.sounds ?? []) {
+      const r = validatePreset(ported, input);
+      if (r.ok) presets.push(r.value);
+      else
+        problems.push(
+          ...r.problems.map((p) => `seed sound ${String(input.id)} ${p.path}: ${p.message}`)
+        );
+    }
+    if (problems.length) content.set(ported.id, problems);
+    let history: Lineage | undefined;
+    if (lineage) {
+      const { synth: _synth, ...rest } = lineage;
+      history = { ...rest, heard: proto.lineage?.heard };
+    }
+    return { ...ported, presets, lineage: history };
   });
-  return { synths, drift, orphans };
+  return { synths, drift, orphans, content };
 }
 
 async function main(): Promise<void> {
-  const { synths: SYNTHS, drift, orphans } = withPorted(await loadPrototypeSynths());
+  const {
+    synths: SYNTHS,
+    drift,
+    orphans,
+    content,
+  } = withPorted(await loadPrototypeSynths(), loadCatalogueData());
   if (orphans.length) {
     console.log(
       `ERR registered with no prototype definition to check against: ${orphans.join(', ')}`
@@ -483,7 +527,7 @@ async function main(): Promise<void> {
       if (baseline && baseline.seed !== SEED)
         E(`${def.id} baseline was recorded with --seed=${baseline.seed}, this run used ${SEED}`);
     }
-    // (The limits check — every synth has an entry in limits — waits for m2; see the header.)
+    for (const problem of content.get(def.id) ?? []) E(`${def.id} ${problem}`);
     const presets = def.presets || [];
     if (!def.lineage) E(`${def.id} has no lineage`);
     else

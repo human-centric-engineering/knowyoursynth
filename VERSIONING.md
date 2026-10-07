@@ -102,6 +102,7 @@ covered by the version contract.
   - `lib/app/bootstrap.ts` → `initApp()` — the app boot hook, awaited by `instrumentation.ts`
   - `lib/app/brand.ts` → `appBrandName` / `appBrandLegalName` / `appBrandDescription` — brand overrides
   - `lib/app/capabilities.ts` → `initAppCapabilities()` — capability registry (`registerAppCapability()`)
+  - `lib/app/catalogue/` → `planCatalogue()` / `seedCatalogue()` (`seed.ts`), `listSynths()` / `getSynthDetail()` (`read.ts`), the seed-data shapes (`data.ts`) — Know Your Synth's catalogue: seeding it and reading it for the API
   - `lib/app/ci.ts` → `appCoverageExclusions` / `appAlwaysRunTests` / `appOwnerlessSurfaceExceptions` — the fork's own coverage exclusions, whole-tree always-run tests, and files allowed to read an ownerless-capable model outside the access helpers
   - `lib/app/context-contributors.ts` → `initAppContextContributors()` — chat context contributors (primitive: `registerContextContributor()` in `lib/orchestration/chat/context-builder.ts`)
   - `lib/app/csp.ts` → `appFrameSrc` — extra CSP `frame-src` origins
