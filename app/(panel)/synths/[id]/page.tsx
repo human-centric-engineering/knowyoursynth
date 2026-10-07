@@ -1,37 +1,65 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { z } from 'zod';
+
+import '@/components/app/synth/synth.css';
+
+import { SynthPage } from '@/components/app/synth/synth-page';
+import { parseApiResponse, serverFetch } from '@/lib/api/server-fetch';
+import type { CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import { getSynthDef } from '@/lib/app/synths/defs';
+import { logger } from '@/lib/logging';
 
 /**
- * One synth: placeholder.
+ * One synth: play it, patch it and read about it (plan §4 "The synth page").
  *
- * Holds the route and the frame until the synth page lands (`f-model-d`, m3),
- * which replaces this file with the real page: the provider, the synth bar, the
- * stage and the panels below it (plan §4 "The synth page"). It says what it is
- * rather than imitating the page it stands in for.
+ * The instrument is compiled in (the definition registry); everything said about it comes from the API (D13). A synth
+ * the registry does not have is a 404 before any fetch. One the API does not serve (not listed) is a 404 too.
  *
- * The id is shape-checked only. Which ids are real comes from the definition
- * registry, which arrives with Model D.
+ * The page component is keyed by synth, so moving to another synth starts its panel afresh rather than carrying the
+ * last one's state across.
  */
 
-const SYNTH_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-type Props = { params: Promise<{ id: string }> };
+const viewParam = z.string().max(32).optional().catch(undefined);
+
+async function fetchData<T>(path: string): Promise<T | null> {
+  const res = await serverFetch(path);
+  if (res.status === 404) return null;
+  const body = await parseApiResponse<T>(res);
+  if (!body.success) {
+    logger.error('synth page: API read failed', { path, code: body.error.code });
+    throw new Error(`Could not read ${path}`);
+  }
+  return body.data;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  return { title: SYNTH_ID.test(id) ? id : 'Synth' };
+  const def = getSynthDef(id);
+  return { title: def ? def.name : 'Synth' };
 }
 
-export default async function SynthPage({ params }: Props) {
+export default async function SynthRoute({ params, searchParams }: Props) {
   const { id } = await params;
-  if (!SYNTH_ID.test(id)) notFound();
+  if (!getSynthDef(id)) notFound();
+
+  const [detail, synths] = await Promise.all([
+    fetchData<SynthDetail>(`/api/v1/synths/${encodeURIComponent(id)}`),
+    fetchData<CatalogueSynth[]>('/api/v1/synths'),
+  ]);
+  if (!detail) notFound();
 
   return (
-    <section className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-      <h1 className="kys-wordmark text-2xl">{id}</h1>
-      <p className="text-muted-foreground max-w-md">
-        This synth&rsquo;s panel isn&rsquo;t in the app yet.
-      </p>
-    </section>
+    <SynthPage
+      key={id}
+      detail={detail}
+      synths={synths ?? []}
+      viewParam={viewParam.parse((await searchParams).view) ?? null}
+    />
   );
 }
