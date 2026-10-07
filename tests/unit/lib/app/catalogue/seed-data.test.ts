@@ -3,7 +3,7 @@
  * seed unit that read it.
  *
  * The counts are the prototype's own: plan §3's synth table records 99 sounds for Model D, and the lineage, notes and
- * limits are counted from `prototype/src/synths/{lineage,unusual}/model-d.js` and `src/lib/limits.js`. An export that
+ * limits are counted in the prototype's Model D lineage and unusual files and in its `src/lib/limits.js`. An export that
  * dropped or doubled anything fails here.
  */
 import { describe, it, expect, vi } from 'vitest';

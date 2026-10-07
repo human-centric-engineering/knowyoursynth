@@ -211,11 +211,19 @@ describe('reserved fork tiers', () => {
       .split('\n')
       .filter((line) => /^\s*(model|enum|type|view)\s+\w+/.test(line));
 
+    // FORK (Know Your Synth): pinned to the catalogue's declarations rather than deleted, as this
+    // file's header asks, so a stray extra declaration still fails. Ledger: .context/app/divergences.md.
     expect(
       declarations,
       'prisma/schema/app.prisma is fork-reserved and ships empty; platform ' +
         'app-domain models belong in prisma/schema/platform.prisma.'
-    ).toEqual([]);
+    ).toEqual([
+      'model Synth {',
+      'model SynthSound {',
+      'model SynthLineage {',
+      'enum SynthNoteKind {',
+      'model SynthNote {',
+    ]);
   });
 
   it('the reservation is documented in both places a fork would look', () => {

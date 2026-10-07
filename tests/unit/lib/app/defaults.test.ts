@@ -459,9 +459,10 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'scripts/check-synths.ts',
         'scripts/build-audio-workers.ts',
       ]);
-      // Know Your Synth fills this seam: pinned to its one entry, so a stray second still fails.
+      // Know Your Synth fills this seam: pinned to its entries, so a stray extra one still fails.
       expect(appAlwaysRunTests.map((t) => t.path)).toEqual([
         'tests/unit/prototype-boundary.test.ts',
+        'tests/unit/lib/app/catalogue/seed-data-boundary.test.ts',
       ]);
       expect(appOwnerlessSurfaceExceptions).toEqual([]);
     },

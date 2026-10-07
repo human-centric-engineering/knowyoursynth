@@ -119,6 +119,20 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** none while synth or catalogue code lives in `lib/app/`, or when the guard reads fork
   scaffolds from a fork-owned file.
 
+### The reserved-tier test, pinned to our app models
+
+- **Files:** `tests/unit/reserved-fork-tiers.test.ts`
+- **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's five
+  declarations (four models and an enum) instead of none, under a `FORK` comment.
+- **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
+  own header says a fork with app models pins that row rather than deleting it, so a stray extra
+  declaration still fails.
+- **On conflict:** take theirs, and re-apply the pin to whichever case asserts `app.prisma` is
+  empty. Add each new app model to the list as it lands.
+- **Upstream:** working as designed upstream; nothing to raise.
+- **Delete when:** never, while the fork has app models, unless upstream makes the case read a
+  fork-owned declaration.
+
 ### The catalogue tables on the global-config list
 
 - **Files:** `lib/tenancy/classification.ts`
