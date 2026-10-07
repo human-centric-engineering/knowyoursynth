@@ -1,9 +1,10 @@
 /**
  * The definition registry: every synth the app can play, by id (D1).
  *
- * Ported from `prototype/src/synths/index.js`, which was also the catalogue. Here it holds the
- * instrument only. Which synths are listed, and in what order, is the `Synth` table's job (m2),
- * and a synth's "Heard on" list comes from the databank (`f-databank`), not from this file.
+ * Ported from the prototype file `src/synths/index.js`, which was also the catalogue. Here it
+ * holds the instrument only. Which synths are listed, and in what order, is the `Synth` table's
+ * job (m2), and a synth's "Heard on" list comes from the databank (`f-databank`), not from this
+ * file.
  *
  * A synth joins by adding its module under `defs/` and one line below (`.context/app/synths.md`).
  */

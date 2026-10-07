@@ -2,8 +2,8 @@
  * Behringer Model D: the definition (D1). Coordinates are in the pixel space of the 2000×780
  * panel photo.
  *
- * Transliterated from `prototype/src/synths/model-d.js` (D3), and the pattern every other synth
- * follows (`.context/app/synths.md`). What changed on the way:
+ * Transliterated from the prototype file `src/synths/model-d.js` (D3), and the pattern every
+ * other synth follows (`.context/app/synths.md`). What changed on the way:
  *
  * - **No content.** The prototype kept its sounds (`presets`), its lineage and its "Unusual on…"
  *   notes on the definition. They are content, so they live in the catalogue tables (D13), and the
