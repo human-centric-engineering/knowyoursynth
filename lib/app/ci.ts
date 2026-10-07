@@ -197,6 +197,13 @@ export const appAlwaysRunTests: AppAlwaysRunTest[] = [
       'reaches into it. The import it exists to catch is in some other file, so no import ' +
       'chain from that file reaches this test.',
   },
+  {
+    path: 'tests/unit/lib/app/catalogue/seed-data-boundary.test.ts',
+    reason:
+      'globs every source file off disk and fails on any reader of the catalogue seed data ' +
+      'outside the seed folder and the synth check. The reader it exists to catch is in some ' +
+      'other file, so no import chain from that file reaches this test.',
+  },
 ];
 
 /**

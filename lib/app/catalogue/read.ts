@@ -73,8 +73,17 @@ function toCatalogueSynth(row: SynthRow): CatalogueSynth | null {
     logger.warn('catalogue: listed synth has no definition, not served', { synthId: row.id });
     return null;
   }
-  const { _count, ...rest } = row;
-  return { ...rest, definitionVersion: def.version, soundCount: _count.sounds };
+  const { id, name, maker, year, heritage, summary } = row;
+  return {
+    id,
+    name,
+    maker,
+    year,
+    heritage,
+    summary,
+    definitionVersion: def.version,
+    soundCount: row._count.sounds,
+  };
 }
 
 /** Every listed synth the app can play, in catalogue order. */
