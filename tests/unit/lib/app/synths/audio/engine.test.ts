@@ -178,6 +178,24 @@ describe('Engine', () => {
     await expect(engine.start()).rejects.toThrow('Web Audio is not available');
   });
 
+  it('forgets a failed start, and what was queued for it, so a retry boots afresh', async () => {
+    vi.stubGlobal('window', {});
+    const engine = new Engine(() => {});
+    const first = engine.start();
+    engine.send({ type: 'noteOn', n: 60 }); // queued behind the start
+    await expect(first).rejects.toThrow('Web Audio is not available');
+    expect(engine.starting).toBeNull();
+    expect(engine.pending).toEqual([]);
+
+    engine.send({ type: 'noteOn', n: 62 }); // nothing is starting: dropped, not queued forever
+    expect(engine.pending).toEqual([]);
+
+    // The cause goes away (here: Web Audio appears) and the next press retries rather than replaying the failure.
+    setup('ok');
+    await expect(engine.resume()).resolves.toBe('worklet');
+    expect(engine.running).toBe(true);
+  });
+
   it('suspends with a panic and resumes, starting first if it never started', async () => {
     const { Ctx, engine } = setup('ok');
     await expect(engine.resume()).resolves.toBe('worklet');
@@ -197,5 +215,51 @@ describe('Engine', () => {
     await engine.suspend();
     engine.send({ type: 'noteOn', n: 60 });
     expect(engine.lastParams).toBeNull();
+    expect(engine.pending).toEqual([]);
+  });
+
+  it('plays what was sent while the voice loaded, in order, once it is up', async () => {
+    // The first key press is what starts the audio, so its note arrives before the worklet has loaded.
+    const { engine } = setup('ok');
+    const starting = engine.start();
+    engine.send({ type: 'noteOn', n: 60, v: 0.85 });
+    engine.send({ type: 'noteOff', n: 60 });
+    engine.send({ type: 'phrase', phrase: null });
+    await starting;
+
+    const sent = FakeWorkletNode.made[0].port.sent;
+    expect(sent.slice(-3)).toEqual([
+      { type: 'noteOn', n: 60, v: 0.85 },
+      { type: 'noteOff', n: 60 },
+      { type: 'phrase', phrase: null },
+    ]);
+    expect(engine.pending).toEqual([]);
+  });
+
+  it('replays the last tempo when it starts, like the params', async () => {
+    const { engine } = setup('ok');
+    engine.send({ type: 'tempo', bpm: 120 }); // before any start: nothing to play it on
+    engine.send({ type: 'tempo', bpm: 132 });
+    await engine.start();
+    const sent = FakeWorkletNode.made[0].port.sent;
+    expect(sent.filter((m) => (m as { type: string }).type === 'tempo')).toEqual([
+      { type: 'tempo', bpm: 132 },
+    ]);
+  });
+
+  it('waits for a start under way when asked to resume, rather than reporting the sound on early', async () => {
+    const { engine } = setup('hang');
+    vi.useFakeTimers();
+    const starting = engine.start();
+    let resumed = false;
+    const resume = engine.resume().then(() => {
+      resumed = true;
+    });
+    await vi.advanceTimersByTimeAsync(WORKLET_TIMEOUT_MS - 1);
+    expect(resumed).toBe(false); // the worklet is still loading: the context exists, the voice does not
+    await vi.advanceTimersByTimeAsync(1);
+    await Promise.all([starting, resume]);
+    expect(resumed).toBe(true);
+    expect(engine.running).toBe(true);
   });
 });

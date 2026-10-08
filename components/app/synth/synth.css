@@ -1,0 +1,92 @@
+/* The instrument: the synth page's own classes.
+ *
+ * From the prototype's `src/styles.css` (plan §3). Its colour tokens are not
+ * here: they are the consumer palette's `--kys-*` roles in `app/brand-theme.css`,
+ * which components read as `bg-(--kys-surface)` and the like. Sunrise's own
+ * `muted` and `accent` are different colours, so the prototype's utility names
+ * are not reused.
+ *
+ * Scoped to `.kys-synth`, the page's root, except the classes the faceplate
+ * draws with, which body-portaled pieces of the page never use.
+ */
+
+.kys-synth {
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.kys-synth button {
+  cursor: pointer;
+}
+.kys-synth :focus-visible {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 2px;
+}
+svg .kys-hit:focus {
+  outline: none;
+}
+svg .kys-hit:focus-visible {
+  stroke: var(--kys-accent);
+  stroke-width: 3;
+}
+
+.kys-display {
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+}
+.kys-label {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.kys-stage {
+  background:
+    radial-gradient(
+      120% 90% at 50% 0%,
+      color-mix(in oklab, var(--kys-accent) 9%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      var(--kys-desk),
+      color-mix(in oklab, var(--kys-desk) 70%, var(--kys-ground))
+    );
+}
+.kys-synth-shadow {
+  filter: drop-shadow(0 28px 34px rgb(0 0 0 / 0.5)) drop-shadow(0 4px 6px rgb(0 0 0 / 0.4));
+}
+.kys-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--kys-line) transparent;
+}
+
+@keyframes kys-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.kys-pulse {
+  animation: kys-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes kys-fade {
+  from {
+    opacity: 0;
+  }
+}
+.kys-fade {
+  animation: kys-fade 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kys-pulse,
+  .kys-fade {
+    animation: none;
+  }
+}
