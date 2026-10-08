@@ -15,6 +15,12 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/storage.ts`       | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`        | `?view=` and the prototype's hash links                                   |
 | `components/app/synth/with-notes.ts`    | Puts the API's "Unusual on…" notes back on the definition                 |
+| `components/app/synth/library.tsx`      | The sound library: search, categories, the loaded sound                   |
+| `components/app/synth/lesson.tsx`       | The lesson: how it works, build it step by step, make it yours            |
+| `components/app/synth/tour.tsx`         | The orientation tour, docked under the panel                              |
+| `components/app/synth/lineage.tsx`      | The lineage dialog (History)                                              |
+| `components/app/synth/limits.tsx`       | The "What is not modelled" dialog                                         |
+| `components/app/synth/use-dialog.ts`    | Opens and closes a native `<dialog>` from an `open` prop                  |
 | `components/app/synth/*.tsx` (the rest) | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
 
 ## Rules that are not obvious from the code
@@ -35,6 +41,12 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **Unusual notes are rows** (D13). `withNotes` attaches them to the definition, because the
   inspector, the search index and the tour read `unusual` from controls, jacks and areas.
 - **The panel draws the neutral design** (D11). A per-synth choice is `f-panel-designs`.
+- **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
+  _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
+  sound leaves the walkthrough. The step is kept with the session.
+- **The lesson, the tour and the search only point.** They light controls through
+  `highlightStore` and `findStore` and open them in the inspector through `focusStore`. Nothing
+  but the page changes the panel.
 
 ## The URL
 
@@ -62,6 +74,10 @@ Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 
 ## Not here yet
 
-Each arrives with the surface it opens, so no button opens nothing (`B31`): the library, the
-lesson, the tour, lineage and "What is not modelled" (t-14); the sound map, harmonics and scope
-(t-15); the tutor (`f-tutor`); the databank (`f-databank`).
+Each arrives with the surface it opens, so no button opens nothing (`B31`):
+
+- the sound map, harmonics and scope (t-15). The tour's last stop gains its lines on "Dim unused
+  parts" and "Show sensitive controls" then;
+- the tutor (`f-tutor`), and with it the library's "ask the tutor" hint;
+- the databank (`f-databank`): the lineage's "Heard on" records and their artist links. Until
+  then that tab shows only for a lineage that names its players.
