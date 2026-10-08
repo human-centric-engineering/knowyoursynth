@@ -405,6 +405,38 @@ describe('SynthPage patch', () => {
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
+  it('offers no "Put it back" during a lesson step, as the panel and the card do not', () => {
+    storeSession({ presetId: 'fat-bass', step: 0, values: { 'filter.cutoff': 5 }, cables: [] });
+    page();
+    act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
+    expect(screen.getByText(UNUSUAL)).toBeTruthy(); // the inspector is showing the control
+    expect(screen.queryByRole('button', { name: 'Put it back' })).toBeNull();
+  });
+
+  it('keeps an unsaved move when the route re-renders with an equal synth', () => {
+    // Something is stored, so a second read of storage would have a panel to put back.
+    storeSession({
+      presetId: 'fat-bass',
+      step: null,
+      values: { 'filter.cutoff': -2, 'mix.osc1': 9 }, // the sound as it is: nothing moved
+      cables: [],
+    });
+    const { rerender } = page();
+    fireEvent.click(button('A-440'));
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+
+    // A refresh hands a new detail object, so a new definition with notes: the panel must not be re-read from
+    // storage, which does not have the move yet.
+    rerender(
+      <SynthPage
+        detail={{ ...detail, notes: { ...detail.notes, unusual: { ...detail.notes.unusual } } }}
+        synths={[MODEL_D_SYNTH, OTHER_SYNTH]}
+        viewParam={null}
+      />
+    );
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+  });
+
   it('shows the inspector note the catalogue attached to a control', () => {
     page();
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
@@ -624,17 +656,23 @@ describe('SynthPage navigation', () => {
     expect(router.push).not.toHaveBeenCalled();
   });
 
-  it('follows a prototype hash link, and does not store the synth it is leaving', () => {
+  it('takes the view from a hash link to this synth, in place: a navigation would keep the old view', () => {
+    const replace = vi.spyOn(window.history, 'replaceState');
     window.location.hash = '#model-d/outline';
     page();
-    expect(router.replace).toHaveBeenCalledExactlyOnceWith('/synths/model-d?view=outline');
-    expect(readStored('kys.synth')).toBeNull();
+    expect(router.replace).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Outline' }).getAttribute('aria-pressed')).toBe(
+      'true'
+    );
+    expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d?view=outline');
+    expect(readStored('kys.synth')).toBe('model-d');
   });
 
-  it('follows a hash link to another listed synth', () => {
+  it('follows a hash link to another listed synth, and does not store the synth it is leaving', () => {
     window.location.hash = '#ob-x';
     page();
     expect(router.replace).toHaveBeenCalledExactlyOnceWith('/synths/ob-x');
+    expect(readStored('kys.synth')).toBeNull();
   });
 
   it('leaves a hash that is not a listed synth alone', () => {
@@ -738,6 +776,25 @@ describe('SynthPage computer keyboard', () => {
 
     fireEvent.click(button('Hold')); // switching hold off lets the held note go
     expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 50 });
+  });
+
+  it('releases the note a key started, even after the octave moved while it was held', () => {
+    page();
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.keyDown(window, { key: 'x' });
+    fireEvent.keyUp(window, { key: 'a' });
+    expect(notes()).toEqual([
+      { type: 'noteOn', n: 48, v: 0.85 },
+      { type: 'noteOff', n: 48 },
+    ]);
+  });
+
+  it('releases a note that was already sounding when Hold went on', () => {
+    page();
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.click(button('Hold'));
+    fireEvent.keyUp(window, { key: 'a' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 48 });
   });
 
   it('starts the audio on the first note, since a browser only allows it after a gesture', async () => {

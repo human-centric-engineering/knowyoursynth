@@ -39,7 +39,7 @@ import { getEngine, listen } from '@/components/app/synth/engine';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
-import { DEFAULT_VIEW, hashRoute, parseView, synthHref } from '@/components/app/synth/routes';
+import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import { Search } from '@/components/app/synth/search';
 import {
@@ -153,13 +153,19 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   );
 
   // On arrival: follow a prototype hash link, remember this synth, and restore the last view if the URL has none.
+  // A hash link to this same synth only sets the view: a navigation to the same page keeps this component, and with
+  // it the view it started with.
   useEffect(() => {
-    const target = hashRoute(window.location.hash, (id) => synths.some((s) => s.id === id));
-    if (target) {
-      router.replace(target);
+    const hash = hashTarget(window.location.hash, (id) => synths.some((s) => s.id === id));
+    if (hash && hash.id !== synthId) {
+      router.replace(synthHref(hash.id, hash.view));
       return;
     }
     writeStored(STORAGE_KEYS.synth, synthId);
+    if (hash) {
+      setView(hash.view);
+      return;
+    }
     if (urlView) return;
     const stored = PanelViewSchema.safeParse(readStored(STORAGE_KEYS.view));
     if (stored.success && (stored.data.outline || stored.data.long)) setView(stored.data);
@@ -250,9 +256,10 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     },
     [engine, ensureAudio, hold]
   );
+  // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
     (n: number) => {
-      if (!hold) engine?.send({ type: 'noteOff', n });
+      if (!hold || !heldRef.current.has(n)) engine?.send({ type: 'noteOff', n });
     },
     [engine, hold]
   );
@@ -304,9 +311,11 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     [engine, ensureAudio]
   );
 
-  // computer keyboard
+  // computer keyboard. Each key remembers the note it started, so a key held across an octave change (or a Hold
+  // toggle, which re-registers these listeners) still stops the note it is sounding.
+  const downKeysRef = useRef(new Map<string, number>());
   useEffect(() => {
-    const downKeys = new Set<string>();
+    const downKeys = downKeysRef.current;
     const typing = (e: KeyboardEvent) =>
       e.target instanceof HTMLElement &&
       (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable);
@@ -315,15 +324,18 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       const k = e.key.toLowerCase();
       const semi = QWERTY[k];
       if (semi !== undefined && !downKeys.has(k)) {
-        downKeys.add(k);
-        noteOn(48 + octave * 12 + semi);
+        const n = 48 + octave * 12 + semi;
+        downKeys.set(k, n);
+        noteOn(n);
       } else if (k === 'z') setOctave((o) => Math.max(OCTAVE_MIN, o - 1));
       else if (k === 'x') setOctave((o) => Math.min(OCTAVE_MAX, o + 1));
     };
     const ku = (e: KeyboardEvent) => {
       const k = e.key.toLowerCase();
-      const semi = QWERTY[k];
-      if (downKeys.delete(k) && semi !== undefined) noteOff(48 + octave * 12 + semi);
+      const n = downKeys.get(k);
+      if (n === undefined) return;
+      downKeys.delete(k);
+      noteOff(n);
     };
     window.addEventListener('keydown', kd);
     window.addEventListener('keyup', ku);
@@ -634,7 +646,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           <Inspector
             def={def}
             values={sess.values}
-            target={target}
+            target={sess.step == null ? target : null}
             preset={preset ?? null}
             cables={sess.cables}
             onChange={onChange}

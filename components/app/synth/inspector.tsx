@@ -433,8 +433,8 @@ function CableList({
 export interface InspectorProps {
   def: SynthDef;
   values: ControlValues;
-  /** The loaded sound's values: "Put it back" returns a control to these. */
-  target: ControlValues;
+  /** The loaded sound's values: "Put it back" returns a control to these. `null` during a lesson step. */
+  target: ControlValues | null;
   preset: PresetContext;
   cables: PatchCable[];
   /** `null` puts the control back where the sound had it. */
@@ -585,7 +585,7 @@ export function Inspector({
   }
   const mod = c ? moduleOf(c.module) : PATCH;
   const ctxLine = c && preset && preset.context ? preset.context[c.id] : null;
-  const differs = c && target[c.id] !== values[c.id];
+  const differs = c && target && target[c.id] !== values[c.id];
   return (
     <>
       <section aria-live="polite" className={sectionClass}>

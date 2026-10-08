@@ -6,6 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  hashTarget,
   DEFAULT_VIEW,
   hashRoute,
   parseView,
@@ -63,6 +64,27 @@ describe('synthHref', () => {
 
   it('encodes the id so it cannot break out of the path', () => {
     expect(synthHref('a/b?c')).toBe('/synths/a%2Fb%3Fc');
+  });
+});
+
+describe('hashTarget', () => {
+  const isSynth = (id: string) => id === 'model-d';
+
+  it('names the synth and the view the hash asks for', () => {
+    expect(hashTarget('#model-d/long/outline', isSynth)).toEqual({
+      id: 'model-d',
+      view: { outline: true, long: true },
+    });
+    expect(hashTarget('#model-d', isSynth)).toEqual({
+      id: 'model-d',
+      view: { outline: false, long: false },
+    });
+  });
+
+  it('is null for the databank, an unknown synth and an empty hash', () => {
+    expect(hashTarget('#bank/artists/x', () => true)).toBeNull();
+    expect(hashTarget('#jupiter-8', isSynth)).toBeNull();
+    expect(hashTarget('', isSynth)).toBeNull();
   });
 });
 

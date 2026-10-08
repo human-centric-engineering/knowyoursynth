@@ -134,11 +134,17 @@ export function useStoredSession(
   const restored = useRef(false);
   const key = sessionKey(def.id);
 
+  // Once per synth, not per definition object: a server re-render hands a new (equal) definition, and re-reading
+  // storage then would put back a panel the write delay had not yet saved.
+  const defRef = useRef(def);
   useEffect(() => {
-    const stored = parseSession(def, readStored(key));
+    defRef.current = def;
+  });
+  useEffect(() => {
+    const stored = parseSession(defRef.current, readStored(key));
     restored.current = true;
     if (stored) setSession(stored);
-  }, [def, key]);
+  }, [key]);
 
   useEffect(() => {
     if (!restored.current) return undefined;

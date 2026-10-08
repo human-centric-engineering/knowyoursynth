@@ -167,6 +167,37 @@ describe('useMidi', () => {
     });
   });
 
+  describe('releasing what the keyboard holds', () => {
+    async function holding() {
+      const h = handlers();
+      const hook = renderHook(() => useMidi(h));
+      await act(async () => {
+        await hook.result.current.connect();
+      });
+      send(input, 0x90, 60, 100);
+      send(input, 0x90, 64, 100);
+      send(input, 0x80, 64, 0); // let go of one
+      h.noteOff.mockClear();
+      return { h, hook };
+    }
+
+    it('Stop MIDI releases the notes still held, whose key-ups will never arrive', async () => {
+      const { h, hook } = await holding();
+      act(() => hook.result.current.disconnect());
+      expect(h.noteOff.mock.calls).toEqual([[60]]);
+    });
+
+    it('unmounting releases them too, and drops the device-change listener', async () => {
+      const { h, hook } = await holding();
+      expect(access.onstatechange).not.toBeNull();
+      hook.unmount();
+      expect(h.noteOff.mock.calls).toEqual([[60]]);
+      expect(input.onmidimessage).toBeNull();
+      // Left attached, the next plug-in would re-bind the unmounted page's handlers.
+      expect(access.onstatechange).toBeNull();
+    });
+  });
+
   it('is blocked on refusal, with the error, and forgets', async () => {
     setNav(vi.fn().mockRejectedValue(new Error('Permission denied')));
     const h = handlers();

@@ -64,12 +64,31 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     handlers.current = { noteOn, noteOff, onWheel };
   });
 
+  // Notes the keyboard holds down: stopping MIDI (or leaving the page) releases them, since their key-ups never arrive.
+  const held = useRef(new Set<number>());
   const onMessage = useCallback((e: MIDIMessageEvent) => {
     const [st = 0, d1 = 0, d2 = 0] = e.data ?? [];
     const type = st & 0xf0;
-    if (type === 0x90 && d2 > 0) handlers.current.noteOn(d1, d2 / 127);
-    else if (type === 0x80 || (type === 0x90 && d2 === 0)) handlers.current.noteOff(d1);
-    else if (type === 0xb0 && d1 === 1) handlers.current.onWheel(d2 / 127);
+    if (type === 0x90 && d2 > 0) {
+      held.current.add(d1);
+      handlers.current.noteOn(d1, d2 / 127);
+    } else if (type === 0x80 || (type === 0x90 && d2 === 0)) {
+      held.current.delete(d1);
+      handlers.current.noteOff(d1);
+    } else if (type === 0xb0 && d1 === 1) handlers.current.onWheel(d2 / 127);
+  }, []);
+
+  /** Detach from every input and from device changes, and release whatever the keyboard was holding. */
+  const detach = useCallback(() => {
+    const a = access.current;
+    if (a) {
+      a.inputs.forEach((input) => {
+        input.onmidimessage = null;
+      });
+      a.onstatechange = null;
+    }
+    held.current.forEach((n) => handlers.current.noteOff(n));
+    held.current.clear();
   }, []);
 
   const bind = useCallback(() => {
@@ -112,33 +131,20 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   }, [bind, remember]);
 
   const disconnect = useCallback(() => {
-    const a = access.current;
-    if (a) {
-      a.inputs.forEach((input) => {
-        input.onmidimessage = null;
-      });
-      a.onstatechange = null;
-    }
+    detach();
     access.current = null;
     setDevices([]);
     setStatus('off');
     remember(false);
-  }, [remember]);
+  }, [detach, remember]);
 
   useEffect(() => {
     if (frameBlocksMidi()) setStatus('frame');
     else if (load()) void connect();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on mount, as the prototype
-  useEffect(
-    () => () => {
-      const a = access.current;
-      if (a)
-        a.inputs.forEach((input) => {
-          input.onmidimessage = null;
-        });
-    },
-    []
-  );
+  // On unmount, including the device-change listener: left attached, it would re-bind this page's handlers to
+  // every input the next time a keyboard is plugged in.
+  useEffect(() => detach, [detach]);
 
   return { status, devices, error, connect, disconnect };
 }

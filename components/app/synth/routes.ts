@@ -34,11 +34,20 @@ export function synthHref(id: string, view: PanelView = DEFAULT_VIEW): string {
 }
 
 /**
- * A prototype hash route → the app URL it now lives at, or `null` when the hash is not one (or names a synth the app
+ * A prototype hash route → the synth and view it names, or `null` when the hash is not one (or names a synth the app
  * cannot play). `isSynth` says which ids are real.
  */
-export function hashRoute(hash: string, isSynth: (id: string) => boolean): string | null {
+export function hashTarget(
+  hash: string,
+  isSynth: (id: string) => boolean
+): { id: string; view: PanelView } | null {
   const [id = '', ...rest] = hash.replace(/^#/, '').split('/');
   if (!id || id === 'bank' || !isSynth(id)) return null;
-  return synthHref(id, { outline: rest.includes('outline'), long: rest.includes('long') });
+  return { id, view: { outline: rest.includes('outline'), long: rest.includes('long') } };
+}
+
+/** A prototype hash route → the app URL it now lives at, or `null` (see {@link hashTarget}). */
+export function hashRoute(hash: string, isSynth: (id: string) => boolean): string | null {
+  const t = hashTarget(hash, isSynth);
+  return t && synthHref(t.id, t.view);
 }
