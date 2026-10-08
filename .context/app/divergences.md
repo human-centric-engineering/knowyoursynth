@@ -5,9 +5,9 @@ otherwise rediscover these as conflicts, or clobber them. The rule is `sunrise.d
 the Hub's `hub://process/sunrise-fork`: **an edit to a platform-owned file gets a row here in
 the same PR**, and each row names what deletes it.
 
-- **Base:** Sunrise `main` at `0e685744` (`v0.13.0-29-g0e685744`). `lib/sunrise-version.ts`
-  reads `0.13.0`. The fork was cut from `main`, not from a tag, so the base is that commit. The
-  next sync target is the next Sunrise tag. After a sync, move the base to the commit merged.
+- **Base:** Sunrise `v0.14.0` (`13c6d292`). `lib/sunrise-version.ts` reads `0.14.0`. The fork
+  was cut from `main` at `0e685744` (`v0.13.0-29`) and took `v0.14.0` in t-16. The next sync
+  target is the next Sunrise tag. After a sync, move the base to the commit merged.
 - **Not rows:**
   - new files (but see "New files in platform directories" below);
   - anything under the fork-owned namespaces (`lib/app/**`, `components/app/**`,
@@ -17,7 +17,7 @@ the same PR**, and each row names what deletes it.
   Those are listed under "Excluded".
 
 - **Re-derive the list (modified and deleted files) with:**
-  `git diff --diff-filter=MD --name-only 0e685744 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
+  `git diff --diff-filter=MD --name-only 13c6d292 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
 - **Row fields:** files · change · why · on conflict · upstream status · **delete when**.
 - **At a sync:** read the rows before you merge, not after. Read the release's changelog against
   the "Delete when" lines, and delete every row the release discharges. For each conflict in a
@@ -153,7 +153,7 @@ These aren't rows. A new file can't conflict until Sunrise adds a file at the sa
 is an add/add conflict, and the modified-files list above never shows one. List the fork's new
 files outside the reserved namespaces with:
 
-`git diff --diff-filter=A --name-only 0e685744 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma'`
+`git diff --diff-filter=A --name-only 13c6d292 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma'`
 
 Today they are:
 
