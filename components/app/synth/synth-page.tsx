@@ -10,9 +10,8 @@
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
  * - The panel uses the neutral design (D11). Choosing a design per synth is `f-panel-designs`.
  *
- * What is not here yet, so that no button opens nothing (`B31`): the library and the lesson (t-14), the tour, lineage
- * and "What is not modelled" (t-14), the sound map and the harmonics and scope (t-15), the tutor (`f-tutor`) and the
- * databank (`f-databank`). The theme switch is Sunrise's, in the header.
+ * What is not here yet, so that no button opens nothing (`B31`): the sound map and the harmonics and scope (t-15), the
+ * tutor (`f-tutor`) and the databank (`f-databank`). The theme switch is Sunrise's, in the header.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -39,6 +38,10 @@ import { getEngine, listen } from '@/components/app/synth/engine';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
+import { Lesson } from '@/components/app/synth/lesson';
+import { Library } from '@/components/app/synth/library';
+import { Limits } from '@/components/app/synth/limits';
+import { Lineage } from '@/components/app/synth/lineage';
 import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import { Search } from '@/components/app/synth/search';
@@ -59,6 +62,7 @@ import {
   pendingStore,
 } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
+import { Tour } from '@/components/app/synth/tour';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';
 
@@ -189,6 +193,9 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   const [engineError, setEngineError] = useState('');
   const [zoom, setZoom] = useState(0); // magnifier: 0 = off, else the enlargement
   const [areasOn, setAreasOn] = useState(false);
+  const [tourOn, setTourOn] = useState(false);
+  const [lineageOpen, setLineageOpen] = useState(false);
+  const [limitsOpen, setLimitsOpen] = useState(false);
   const [tipsOn, setTipsOn] = useStoredPref(STORAGE_KEYS.tips, BoolSchema, true);
   const [fx, setFx] = useStoredPref<RackFx>(STORAGE_KEYS.fx, FxSchema, FX_FALLBACK);
 
@@ -412,6 +419,13 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     patch(() => ({ presetId: id, step: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
   };
+  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound.
+  const setStep = (k: number | null) =>
+    patch((s) => {
+      const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
+      return { ...s, step: k, ...presetState(synthDef, from, k) };
+    });
+  const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
     if (id === synthId) return;
     router.push(synthHref(id, view));
@@ -431,6 +445,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     } else void ensureAudio();
   };
 
+  const linkBtn = 'kys-label text-(--kys-accent) underline-offset-2 hover:underline';
   const smallBtn =
     'rounded-md border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-(--kys-muted) hover:text-(--kys-text)';
 
@@ -463,9 +478,19 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       >
         <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <div className="min-w-0">
-            <h1 className="kys-label text-(--kys-faint)">
-              {detail.synth.maker} {detail.synth.name} · {detail.synth.heritage}
-            </h1>
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <h1 className="kys-label text-(--kys-faint)">
+                {detail.synth.maker} {detail.synth.name} · {detail.synth.heritage}
+              </h1>
+              {detail.lineage && (
+                <button type="button" onClick={() => setLineageOpen(true)} className={linkBtn}>
+                  History ›
+                </button>
+              )}
+              <button type="button" onClick={() => setLimitsOpen(true)} className={linkBtn}>
+                What is not modelled ›
+              </button>
+            </div>
             <p className="truncate text-[15px]">
               <span className="text-(--kys-muted)">Loaded: </span>
               <span className="font-semibold">{preset ? preset.name : 'Blank patch'}</span>
@@ -530,12 +555,25 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           <Search def={def} />
           <div className="flex flex-wrap items-center gap-1.5 text-sm sm:gap-2">
             <PanelSwitch
+              label="Orientation tour"
+              short="Tour"
+              tone="start"
+              on={tourOn}
+              title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
+              onClick={() => {
+                setTourOn(!tourOn);
+                setAreasOn(false);
+                findStore.set(null);
+              }}
+            />
+            <PanelSwitch
               label="Explain sections"
               short="Sections"
               on={areasOn}
               title="Colour in every named part of the panel, and explain what it does when you point at it."
               onClick={() => {
                 setAreasOn(!areasOn);
+                setTourOn(false);
                 findStore.set(null);
                 focusStore.set((f) => (f && f.kind === 'area' ? null : f));
               }}
@@ -650,8 +688,14 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
         </div>
       </section>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="flex flex-col gap-4">
+      <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+        <Library presets={sounds} currentId={preset?.id ?? null} onSelect={selectPreset} />
+        {preset ? (
+          <Lesson def={def} preset={preset} step={sess.step} onStep={setStep} />
+        ) : (
+          <p className="text-sm text-(--kys-muted)">This synth has no sounds yet.</p>
+        )}
+        <aside className="flex flex-col gap-4 lg:col-span-2 xl:col-span-1">
           <Inspector
             def={def}
             values={sess.values}
@@ -662,12 +706,44 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
             onConnect={onConnect}
             onUnplug={onUnplug}
           />
-        </div>
-        <section className="rounded-xl border border-(--kys-line) p-4 text-sm text-(--kys-muted)">
-          <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>
-          <p>{detail.synth.summary}</p>
-        </section>
+          <section className="rounded-xl border border-(--kys-line) p-4 text-sm text-(--kys-muted)">
+            <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>
+            <p>{detail.synth.summary}</p>
+            {detail.lineage && (
+              <button
+                type="button"
+                onClick={() => setLineageOpen(true)}
+                className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
+              >
+                Where it comes from: the {detail.synth.name}’s lineage
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setLimitsOpen(true)}
+              className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
+            >
+              What this app does not model on the {detail.synth.name}
+            </button>
+          </section>
+        </aside>
       </div>
+
+      {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
+      {detail.lineage && (
+        <Lineage
+          synth={detail.synth}
+          lineage={detail.lineage}
+          open={lineageOpen}
+          onClose={() => setLineageOpen(false)}
+        />
+      )}
+      <Limits
+        synth={detail.synth}
+        limits={detail.notes.limits}
+        open={limitsOpen}
+        onClose={() => setLimitsOpen(false)}
+      />
 
       <Tooltip
         enabled={tipsOn}

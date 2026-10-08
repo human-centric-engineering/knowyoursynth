@@ -176,6 +176,8 @@ function page(over: Partial<SynthPageProps> = {}) {
 const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
+const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const paramsSent = () =>
   engine.send.mock.calls
     .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
@@ -223,7 +225,7 @@ describe('SynthPage layout', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
-    expect(screen.getByText('Fat bass')).toBeTruthy();
+    expect(loadedName()).toBe('Fat bass');
     expect(screen.getByText('Loaded:')).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
@@ -448,7 +450,7 @@ describe('SynthPage patch', () => {
     fireEvent.click(button('Blank patch'));
 
     expect(screen.queryByRole('button', { name: 'Unplug all' })).toBeNull();
-    expect(screen.getByText('Wobble lead')).toBeTruthy();
+    expect(loadedName()).toBe('Wobble lead');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       String(def.init['filter.cutoff'])
     );
@@ -913,7 +915,7 @@ describe('SynthPage session', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
-    expect(screen.getByText('Wobble lead')).toBeTruthy();
+    expect(loadedName()).toBe('Wobble lead');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
     expect(screen.getByText('1 control moved')).toBeTruthy(); // mix.osc1 is 3, the sound leaves it at 8
   });
@@ -921,7 +923,7 @@ describe('SynthPage session', () => {
   it('starts from the first sound when the stored session is not usable', () => {
     window.localStorage.setItem(SESSION_KEY, '{"presetId": 7}');
     page();
-    expect(screen.getByText('Fat bass')).toBeTruthy();
+    expect(loadedName()).toBe('Fat bass');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
