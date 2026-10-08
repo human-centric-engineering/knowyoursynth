@@ -145,7 +145,7 @@ Validation schemas for every request body / query live in `lib/validations/orche
 **Schedule constraints:** Maximum 10 schedules per workflow. Workflow must be active (`isActive: true`) to create schedules. Create, update, and delete operations are audit-logged via `logAdminAction`. Create/update accept an optional `scope` (a flat string→string map stamped onto fired runs; `null` on update clears it via `Prisma.DbNull`) — see [Scheduling — Static scope carrier](../orchestration/scheduling.md#static-scope-carrier). The `POST /triggers` + `PATCH /triggers/:id` inbound-trigger routes accept the same `scope` field.
 
 | `/executions` | GET | List workflow executions (paginated) | 5.1 |
-| `/conversations/export` | POST | Export conversations as JSON | 5.1 |
+| `/conversations/export` | GET | Export conversations as JSON or CSV (`?format=csv`; default JSON) | 5.1 |
 | `/conversations/:id/messages` | GET | List messages for a conversation | 5.1 |
 | `/conversations/search` | GET | Full-text search across conversations | 5.1 |
 | `/knowledge/patterns` | GET | List all design patterns | 3.3 |
@@ -240,7 +240,7 @@ Returns the full audit array. Malformed rows are logged server-side and skipped 
 
 ### `POST /agents/:id/instructions-revert`
 
-Body: `{ index: number }` — revert to a previous history entry. The current value is pushed onto history before the overwrite, so the revert itself is also recoverable.
+Body: `{ index: number }` — revert to a previous history entry. The current value is pushed onto history before the overwrite, so the revert itself is also recoverable. The revert also adds an agent version, as any change to versioned config does.
 
 ### `POST /agents/:id/clone`
 
@@ -252,7 +252,7 @@ Optional body: `{ name?: string, slug?: string }`. Defaults: name = `"{source.na
 
 Bulk agent operations. Body: `{ action: 'activate' | 'deactivate' | 'delete', agentIds: string[] }`. System agents (`isSystem = true`) are excluded from all mutations. Delete is a soft delete (sets `isActive = false`).
 
-Response: `{ action, requested, affected }` — `affected` may be less than `requested` when system agents are filtered out.
+Response: `{ action, requested, affected }` — `affected` may be less than `requested` when system agents are filtered out. `isActive` is versioned, so each agent the action changes gets a new agent version in the same transaction; a concurrent edit that takes a version number returns a retryable `409`.
 
 ### `GET /agents/compare`
 
@@ -562,10 +562,11 @@ Guards: execution must be `failed`, `stepId` must reference a failed step in the
 Re-run a previously-executed workflow against either its current published version or a caller-specified version, carrying the original execution's `inputData` and `budgetLimitUsd` forward. The new execution row carries `parentExecutionId` pointing at the original, which the admin detail view renders as a "Re-run of execution X" breadcrumb.
 
 ```jsonc
-// Request — both fields optional
+// Request — every field optional
 {
   "versionId": "<workflow-version-cuid>", // defaults to publishedVersionId
   "budgetLimitUsd": 5.0, // defaults to original's budget
+  "resendReply": true, // let a re-run of a COMPLETED run reply to the person again (t-770)
 }
 
 // Response: SSE stream of ExecutionEvent
@@ -577,6 +578,8 @@ The response is an SSE stream — clients capture the new `executionId` from the
 Guards: execution must belong to `session.user.id` (cross-user returns 404 to avoid existence leaks). `versionId`, when provided, must belong to the original workflow — cross-workflow pins return 400 with a typed `ValidationError`. `prepareWorkflowExecution` then runs structural + semantic validation on the chosen version's snapshot before the engine starts.
 
 Side effects: every capability dispatch, notification, and external call in the workflow re-fires. The admin UI dialog (`<RerunExecutionDialog>`) surfaces this explicitly in the confirmation body.
+
+**Replying to the person who wrote in** (t-770). An execution an inbound message started carries `replyConversationId`, the only conversation `send_message_to_channel` lets it send to. A re-run gets it only when the request sets `resendReply: true` (the dialog's "Send the reply to the person again" checkbox, offered unticked for any such run) and the original has finished (completed, failed or cancelled). Without it the re-run texts nobody, whatever the original's outcome: a run can send and then fail, or complete without sending, and Sunrise records only that a provider accepted a message, not that it arrived. A run still in flight would reply itself when it resumes, so its re-run never gets it.
 
 ### `GET /approvals/history`
 

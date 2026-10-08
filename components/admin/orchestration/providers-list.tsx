@@ -43,6 +43,7 @@ import {
   AlertTriangle,
   Cpu,
   MoreHorizontal,
+  Eye,
   Pencil,
   Plus,
   Power,
@@ -77,6 +78,7 @@ import {
   type ProviderModelInfo,
 } from '@/components/admin/orchestration/provider-models-panel';
 import { ProviderDetectionsBanner } from '@/components/admin/orchestration/provider-detections-banner';
+import { useSharedSettingsReadOnly } from '@/components/admin/shared-settings-access';
 import {
   ProviderTestButton,
   type ProviderTestResult,
@@ -177,6 +179,7 @@ interface ModelCountState {
 
 export function ProvidersList({ initialProviders, hasAnyEnvKey = true }: ProvidersListProps) {
   const router = useRouter();
+  const readOnly = useSharedSettingsReadOnly();
   const [providers, setProviders] = useState<ProviderRow[]>(initialProviders);
 
   // The server component (`app/admin/orchestration/providers/page.tsx`)
@@ -578,7 +581,7 @@ export function ProvidersList({ initialProviders, hasAnyEnvKey = true }: Provide
         <p className="text-muted-foreground text-sm">
           {providers.length} provider{providers.length === 1 ? '' : 's'} configured
         </p>
-        {hasAnyEnvKey && (
+        {hasAnyEnvKey && !readOnly && (
           <Button asChild>
             <Link href="/admin/orchestration/providers/new">
               <Plus className="mr-2 h-4 w-4" />
@@ -610,11 +613,13 @@ export function ProvidersList({ initialProviders, hasAnyEnvKey = true }: Provide
       {providers.length === 0 ? (
         <div className="rounded-md border border-dashed py-12 text-center">
           <p className="text-muted-foreground text-sm">
-            {hasAnyEnvKey
-              ? 'No providers configured yet.'
-              : 'No providers configured. Add an LLM API key to your .env and restart the server to get started.'}
+            {readOnly
+              ? 'No providers configured yet. Providers are shared by every organisation and are set up from the install organisation.'
+              : hasAnyEnvKey
+                ? 'No providers configured yet.'
+                : 'No providers configured. Add an LLM API key to your .env and restart the server to get started.'}
           </p>
-          {hasAnyEnvKey && (
+          {hasAnyEnvKey && !readOnly && (
             <Button asChild className="mt-4">
               <Link href="/admin/orchestration/providers/new">
                 <Plus className="mr-2 h-4 w-4" />
@@ -683,10 +688,18 @@ export function ProvidersList({ initialProviders, hasAnyEnvKey = true }: Provide
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link href={`/admin/orchestration/providers/${p.id}`}>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
+                          {readOnly ? (
+                            <>
+                              <Eye className="mr-2 h-4 w-4" /> View
+                            </>
+                          ) : (
+                            <>
+                              <Pencil className="mr-2 h-4 w-4" /> Edit
+                            </>
+                          )}
                         </Link>
                       </DropdownMenuItem>
-                      {!p.isActive && (
+                      {!p.isActive && !readOnly && (
                         <DropdownMenuItem onSelect={() => void handleReactivate(p.id)}>
                           <Power className="mr-2 h-4 w-4" /> Reactivate
                         </DropdownMenuItem>
@@ -694,21 +707,23 @@ export function ProvidersList({ initialProviders, hasAnyEnvKey = true }: Provide
                       <DropdownMenuItem onSelect={() => setModelsDialogFor(p)}>
                         <Cpu className="mr-2 h-4 w-4" /> View models
                       </DropdownMenuItem>
-                      {p.isActive && (
+                      {p.isActive && !readOnly && (
                         <DropdownMenuItem
                           onSelect={() => setDeleteTarget({ id: p.id, name: p.name, slug: p.slug })}
                         >
                           <PowerOff className="mr-2 h-4 w-4" /> Deactivate
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onSelect={() =>
-                          setPermanentTarget({ id: p.id, name: p.name, slug: p.slug })
-                        }
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete permanently
-                      </DropdownMenuItem>
+                      {!readOnly && (
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onSelect={() =>
+                            setPermanentTarget({ id: p.id, name: p.name, slug: p.slug })
+                          }
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete permanently
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>

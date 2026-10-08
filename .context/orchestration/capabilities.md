@@ -281,14 +281,15 @@ adding the column to the guard, not by review, which is the argument for
 extending that roster the moment a foreign key appears rather than after the
 first incident on it.
 
-**The reach is narrower than that sounds, and saying so matters.** No embed turn
-reaches `logCost` today: `AiConversation.userId` is a foreign key to `user` as
-well, nothing mints a `User` row for a visitor, and so an embed visitor's first
-message already fails at conversation-create ([#705](https://github.com/human-centric-engineering/sunrise/issues/705)).
-The guard is correct and forward-looking, not currently load-bearing — its value
-is that the cost-row loss cannot appear the moment #705 is fixed. `isEmbedUserId` (`lib/embed/auth.ts`) is the predicate,
-and it sits next to the mint so the prefix has one definition; the chat handler
-reduces a visitor to `null` through its own `attributableUserId`.
+**It became load-bearing with [#705](https://github.com/human-centric-engineering/sunrise/issues/705)
+(t-765).** Until then no embed turn reached `logCost`: the conversation-create
+wrote the visitor id into `AiConversation.userId`, a foreign key to `user` too,
+and the first message failed there. A visitor's conversation is now owned
+through `embedVisitorId` with no `userId`, so every embed turn logs cost, and
+this guard is what keeps those rows. `isEmbedUserId` (`lib/embed/auth.ts`) is the predicate,
+and it sits next to the mint so the prefix has one definition; `userIdForUserRef`
+beside it reduces a visitor to `null`, and the chat handler uses it for every
+cost row.
 
 That guard reads `logCost` call sites, and **a value can also reach a foreign key
 one hop away**, through a function that accepts an attribution and forwards it.
@@ -663,6 +664,8 @@ Returns `{ memories: [{ key, value, updatedAt }] }`. When `key` is omitted, retu
 
 Stores or updates a memory for the current user+agent pair. Uses `prisma.aiUserMemory.upsert` with compound unique `(userId, agentId, key)`.
 
+Both memory capabilities refuse a run with no user (`no_user_context`) and an anonymous embed widget visitor (`anonymous_visitor`, #705 t-765): `AiUserMemory.userId` is a foreign key to `User`, and a visitor is not one.
+
 ```json
 {
   "name": "write_user_memory",
@@ -723,6 +726,8 @@ Per-agent binding `customConfig`:
 - `allowedWorkflowSlugs: string[]` — required, min 1. The LLM may only invoke workflows on this list. Fail-closed if the binding is missing or malformed.
 - `defaultBudgetUsd?: number` — optional. Caller-side override on the child execution's per-execution cap, equivalent to passing `budgetLimitUsd` to the engine directly.
 
+**Who the child execution belongs to.** The calling user, as `AiWorkflowExecution.userId`. An anonymous embed widget visitor is not a `User`, so for a visitor the child runs **unowned** (`userId` null), as a scheduled or inbound run does (#705, t-765). Steps that need a user, such as `judge_call`, refuse an unowned run by their own rule.
+
 **Per-execution cap resolution.** When the agent invokes a workflow, the engine receives a `budgetLimitUsd` resolved by `resolveMaxCostPerExecution` (in `lib/orchestration/llm/cost-caps.ts`) using this fall-back chain:
 
 1. `customConfig.defaultBudgetUsd` (caller override on this binding)
@@ -738,6 +743,18 @@ Result `data` is a discriminated union on `status`:
 - `'pending_approval'` — `{ executionId, stepId, prompt, expiresAt, approveToken, rejectToken }`. Tokens are raw HMAC strings; the chat surface (admin or embed) constructs the channel-specific URL at POST time.
 
 Workflow failure surfaces as a capability error (`code: 'workflow_failed'`) so the LLM treats it as a tool failure rather than a sad-path success. See [Streaming Chat — In-chat approvals](./chat.md#in-chat-approvals) for the full event sequence.
+
+### `send_message_to_channel`
+
+Replies to a person on the channel they contacted you on (SMS, WhatsApp), through the outbound adapter for the conversation's recorded provider. Takes `conversationId` and `message` (plus an optional WhatsApp `template`); the binding's `customConfig` carries the provider credentials by env-var name. Setup, guards (STOP opt-out, WhatsApp 24-hour window, length cap, throttle, idempotency) and the worked example are in the [SMS / WhatsApp inbound-reply recipe](./recipes/sms-whatsapp-inbound-reply.md); adding a provider is in [outbound-adapters.md](./outbound-adapters.md).
+
+**It sends only within the conversation being handled** (t-770). The `conversationId` argument is chosen by whoever drives the call, so an unrestricted one would let a steered model, or a run's starter, message anyone who ever wrote to the operator's number:
+
+- a workflow step, fixed (`tool_call`) or AI-driven (`agent_call`, the orchestrator), only to the run's `AiWorkflowExecution.replyConversationId`. The inbound route sets it to the conversation the inbound message resolved to and the rerun route copies it (`ExecuteOptions.replyConversationId`) only when the admin sets `resendReply` on a finished original; nothing else does. A fixed step is not trusted on its own: its args can come from a prior step's model output, or from the run's input, which a model calling `run_workflow` chooses;
+- an interactive chat only to its own conversation, which is never a channel thread;
+- an MCP client or an anonymous embed widget visitor, never.
+
+Anything else is refused with `conversation_not_permitted` (an embed visitor with `anonymous_visitor`) and logged, before the conversation is read. Sending to another thread on purpose (outreach, reminders) is not supported yet.
 
 ### `upload_to_storage`
 

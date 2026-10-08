@@ -49,6 +49,7 @@ import {
 import { track, trackStream } from '@/lib/orchestration/llm/in-flight-counter';
 import { OpenAiCompatibleProvider } from '@/lib/orchestration/llm/openai-compatible';
 import { forgetProviderRow } from '@/lib/orchestration/llm/org-provider-policy';
+import { hydrateFromDb as hydrateModelRegistryFromDb } from '@/lib/orchestration/llm/model-registry-db-hydrate';
 import {
   ProviderError,
   type LlmProvider,
@@ -219,6 +220,12 @@ export async function getProvider(
 
 /** `getProvider` for any call origin, including an unrecorded fallback. */
 async function acquireProvider(slugOrName: string, context: CallOrigin): Promise<LlmProvider> {
+  // Every LLM call resolves its provider here before its cost is computed, so
+  // the registry must hold the matrix's models by now — otherwise a model only
+  // the matrix knows is costed at $0 in a module graph that never hydrated
+  // (#813). Throttled and soft-failing: one SELECT a minute at most once it has
+  // landed, one per 10 s while it then fails.
+  await hydrateModelRegistryFromDb();
   let row = instanceCache.get(slugOrName);
   if (!isFresh(row)) {
     const config =

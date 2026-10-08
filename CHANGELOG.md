@@ -16,8 +16,108 @@ release process.
 
 ## [Unreleased]
 
+## [0.14.0] — 2026-10-08
+
+> **Alpha release.** Twentieth tagged Sunrise release. **MINOR bump**. It
+> carries two multi-tenancy features, platform-owned system agents (§116) and
+> per-org provider policy (§120), plus the install-org rules for shared
+> settings (§107 t-751–t-753) and a security batch on logging, exports and
+> outbound messages. Measured against `v0.13.0`: 50 PRs merged, no direct
+> commits, 25 issues closed; the suite is 1,261 files and 25,968 tests.
+>
+> **`TENANCY_MODE=single` stays the default.** Entries that apply only at
+> `multi` say so. §120 shipped without its check against a deployed `multi`
+> install (an owner ruling); its behaviour is proved by its tests only.
+>
+> ## What a fork has to do
+>
+> **Six migrations.** None rewrites rows, but two take locks that scale with
+> table size, so apply them off-peak on a large install:
+> `chunk_key_per_org` builds a unique index on `ai_knowledge_chunk` (not
+> `CONCURRENTLY`), and `conversation_owner_exclusive` validates a CHECK
+> constraint by scanning `ai_conversation`. All six:
+> `20260929180000_chunk_key_per_org`, `20260930120000_retire_builtin_template_rows`,
+> `20261001100000_provider_jurisdiction`, `20261006120000_embed_visitor_conversations`,
+> `20261006130000_conversation_owner_exclusive` and
+> `20261006140000_execution_reply_conversation`. **Check each deployed database
+> before applying `retire_builtin_template_rows`.** It switches off the twelve
+> seeded `tpl-*` workflow rows, so a schedule wired to one is skipped and a run
+> waiting on approval fails when approved. The entry under **Changed** gives a
+> query that lists what is wired to each.
+>
+> **Before you deploy: clone any system agent whose prompt you customised.**
+> Where the maintenance tick is scheduled, its `platformAgents` task reconciles
+> each org within 15 minutes of the new code running; the first `db:seed` does
+> too, whichever comes first. Both write each platform agent's behavioural
+> fields back to Sunrise's definition, and the admin API now refuses those
+> edits (the §116 entries under **Changed**).
+> Provider, model, budgets, rate limit and retention stay yours. The
+> agent-only seed units and the built-in template seeds are removed (see
+> **Removed**), so a fork that edited one will see a modify/delete conflict.
+> Carry an agent edit into a replacement registered from
+> `lib/app/platform-agents.ts`. A template seed edit has nothing to carry over.
+>
+> **Already at `TENANCY_MODE=multi` with customer orgs?** From the moment the
+> new code is live, every org but the install org is refused all AI calls
+> (`provider_not_permitted`) until it is granted providers. The route that
+> grants them, `PUT /api/v1/admin/orgs/[id]/providers`, arrives with the same
+> deploy, so script the grants as an immediate post-deploy step. Erasure
+> hooks and `collectAppSubjectData()` now run as the system scope at `multi`,
+> so `requireOrgId()` throws inside them and a row they create needs an
+> explicit `orgId`. Backup import runs from the install org only, until §109
+> t-738.
+>
+> **Changes a build will not catch:**
+>
+> - **Sentry 11** collects request bodies, headers, cookies and gen-AI inputs
+>   by default. A fork with Sentry on should set `dataCollection`, and add the
+>   `scrubSentrySpan` / `scrubSentryEvent` hooks (both in **Security**).
+> - **dotenv 18's `-r dotenv/config` preload ignores `dotenv_config_path=`.**
+>   Set `DOTENV_CONFIG_PATH` instead.
+> - **Logs.** `url` is gone from the request log context, `endpoint` collapses
+>   ids and tokens to `[param]`, and a dozen log keys are renamed. Dashboards
+>   and alerts on the old keys need updating.
+> - **Behaviour.**
+>   - A `judge_call` with a `threshold` now fails the step when the judge
+>     returns no score, finds its criterion not applicable, or scores outside
+>     0–1. A custom judge scoring 1–10 or 0–100, or a gate on
+>     `eval-judge-context-precision`, fails on every run.
+>   - A `tool_call` step now interpolates its `args`.
+>   - Workflows can no longer send outreach on a conversation they were not
+>     handling: pass `replyConversationId` only for a genuine reply.
+>   - Recorded costs change: they use the model's real rates, and unpriced
+>     turns are flagged.
+>   - Reverts, imports and bulk agent actions now add agent versions, and
+>     those routes return a retryable `409` on a version clash.
+> - **Embed visitors.** Hook and webhook payloads for an embed visitor carry
+>   `userId: null` plus `embedVisitorId`. Check `isEmbedUserId` before writing
+>   a caller id into a `User` foreign key.
+> - **Knowledge embedding.** A keyless remote embedding row now fails with
+>   `missing_api_key`: mark a self-hosted one Local. The bare
+>   `OPENAI_API_KEY` embedding fallback is removed.
+>
+> **Dependency alerts accepted for this release:**
+>
+> - `deepmerge-ts` (high), under the Prisma CLI.
+> - `postcss-selector-parser` (moderate), under `@tailwindcss/typography`.
+>   Both have a fix only in a new major version under their parents.
+> - `katex` (low), under mermaid.
+> - `sprintf-js` (moderate), under `mammoth` → `argparse`. No patched
+>   release exists, and only mammoth's command-line tool uses argparse, which
+>   Sunrise never runs.
+> - `braces` / `micromatch` / `fast-glob` (high), under
+>   `@next/eslint-plugin-next`. Lint-only. With `eslint-config-next` and the
+>   plugin itself, this chain accounts for 5 of the 8 highs `npm audit`
+>   reports.
+
 ### Added
 
+- **`ComputedCost.unpriced`, `ModelInfo.pricingUnknown` and
+  `isMatrixOwnedFigure(id, field)`** (#813, t-769). `calculateCost` returns
+  `unpriced: true` when no rate was available, so a caller can tell "not
+  priced" from "free"; `pricingUnknown` marks a registry entry that only a
+  null-cost Model Matrix row supplied; `isMatrixOwnedFigure` says whether a
+  registry figure follows its matrix row. See **Fixed**.
 - **Platform agents: Sunrise's own agents, defined in code, with one instance
   per org** (multi-tenancy §116 t-724). The sixteen agents seeds used to write
   once, as the install org's rows, are now definitions in
@@ -202,8 +302,120 @@ release process.
     `tests/unit/lib/tenancy/cross-org-count-sites.test.ts` confines it to
     `lib/orchestration/admin/global-config-usage.ts`.
 
+- **Shared-settings pages are read-only outside the install org, at `multi`**
+  (§107 t-753). They say so before a write is refused (t-751): a notice with
+  a button that switches the session to the install org, and create, edit,
+  delete and toggle actions hidden or disabled. This covers providers, the
+  model matrix, capabilities, agent profiles, knowledge tags, the MCP pages,
+  feature flags, orchestration settings and its backup import, the setup
+  wizard and the provider-detection banner. The admin layout reads
+  `getSharedSettingsAccess(session)` (new,
+  `lib/tenancy/shared-settings-access.ts`) once per request and provides it;
+  the switch is offered only to a member of the install org. From the new
+  `components/admin/shared-settings-access.tsx`: components ask
+  `useSharedSettingsReadOnly()` (and `useIsInstallOrg()` for install-only
+  actions), pages render `<SharedSettingsReadOnlyNotice />`, a server page
+  wraps its create link in `<SharedSettingsEditOnly>`, and a disabled save
+  gets `<SharedSettingsSaveHint />`. Outside the provider the components
+  are editable as before, but `useIsInstallOrg()` answers `false`, so the
+  install-only model audit is hidden until a provider says otherwise. `sessionActingOrgId()` (new, `lib/tenancy/entry.ts`) is
+  the one derivation of a cookie session's org that this and
+  `GET /api/v1/orgs` share. Nothing changes at `single`. **Forks:** an admin
+  component of yours that writes one of the `GLOBAL_CONFIG_MODELS` should ask
+  the hook too; the server refuses the write either way.
+
 ### Changed
 
+- **Reverting an agent's instructions, importing an agent over it, restoring a
+  backup over it, and bulk activate / deactivate / delete now each add an agent
+  version** (t-779). `POST /admin/orchestration/agents/:id/instructions-revert`,
+  `POST /admin/orchestration/agents/import`, `POST /admin/orchestration/backup/import`
+  and `POST /admin/orchestration/agents/bulk` used to change an agent's
+  versioned config without one, so its newest version no longer matched what
+  it ran. Version history now shows each such change as a new vN, summarised by
+  the fields it changed; an agent created by an import gets a v1, and an agent
+  with no history keeps its prior config as v1 first. A write that leaves an
+  agent matching its newest version adds none. These routes, like PATCH, now
+  return a retryable `409` when a concurrent edit takes the version number. The
+  version-history diff also stops reporting an object field as changed when only
+  its key order differs. The workflow `chat_turn` step reads an agent and its
+  newest version in one snapshot, so an edit committed mid-read cannot pin a
+  turn to a version it did not run.
+- **The Model Matrix no longer overrides the price or context window of a
+  model the registry already knows** (#813, t-769). A positive figure from the
+  static map or OpenRouter now wins over the row's blended rate and context
+  bucket, at runtime and in `GET /admin/orchestration/models`. An operator who
+  relied on editing the matrix to re-price a known model must now do it
+  elsewhere; a model only the matrix knows is still priced from its row.
+- **Log keys renamed so word-based redaction leaves them readable** (#951).
+  The logger now redacts any key containing a sensitive word (see Security),
+  which would also hide non-secret keys such as `tokenId` or `hasApiKey`, as
+  their snake_case forms already were. Sunrise's own such keys are renamed;
+  dashboards or alerts reading the old keys should switch:
+  - `missingEnv` (a list of unset variable names) replaces the `has*`
+    booleans in the email, S3 and WhatsApp configuration warnings;
+  - `deliveryStatus` / `messageId` replace `emailStatus` / `emailId` in the
+    invitation and contact routes; `deliveryEnabled` replaces `emailEnabled`;
+    `verificationRequired` replaces `requireEmailVerification`;
+  - `grantedKey` replaces `tokenKey` (storage token mismatch); `recordId`
+    replaces `tokenId` (embed and invite token refusals, embed-token admin
+    routes); `keyId` replaces `apiKeyId` (unscoped MCP knowledge search);
+    `usage` replaces `tokenUsage` (evaluation completed).
+  - The sensitive-field lists drop their `_` spellings (`api_key`,
+    `first_name`, …): one letters-only spelling now covers every form.
+- **A `tool_call` step interpolates its `args`** (t-770). Every string in an
+  authored `args` object now resolves `{{input.…}}`, `{{<stepId>.output}}`,
+  `{{trigger.…}}` and the rest, as every other step type's config already did;
+  objects and arrays are walked, with the same walker the admin trace viewer
+  uses. As in every step type, an interpolated value is a string: a reference
+  to a number or an object arrives as its text, so pass structured args with
+  `argsFrom`. Args taken from `argsFrom` or the `inputData` fallback are data
+  and are passed through unchanged. **For a fork:** a
+  `tool_call` whose `args` held literal `{{…}}` text meant to reach the
+  capability verbatim now gets it interpolated (a missing reference becomes
+  the empty string).
+- **A `judge_call` step with a `threshold` now fails when the judge does not
+  properly score** (§77 t-747). It used to report `passed: true` whenever the
+  judge returned no score — a vendor error, no provider, the org's provider
+  policy refusing it (common at `multi` since §120), a reply that was not
+  `{score, reasoning}` JSON, or a platform judge finding its criterion not
+  applicable (for example faithfulness and citation judges on an answer with no
+  `[N]` markers, correctness, recall and answer-similarity judges with no
+  expected output, the brand-voice judge with no voice) — and compared an
+  out-of-range score as if it were valid. So a quality gate let through
+  anything the judge did not properly score. The step now throws, with the
+  judge's `errorCode`, `judge_not_applicable` or `judge_score_out_of_range`, and
+  its `errorStrategy` decides: the default `fail` fails the run, `retry`
+  retries unless the cause cannot change, `fallback` routes to the author's
+  step. **An existing workflow whose judge sometimes fails, or gates on a
+  criterion that does not always apply, will now fail where it used to pass
+  unjudged; so will a gate on `eval-judge-context-precision`, which this step
+  passes no citations, and one on a custom judge that scores outside 0–1
+  (1–10, 0–100), on every run.** Without a threshold, nothing changes.
+- **`@sentry/nextjs` 11, mermaid 12 and dotenv 18** (t-758). Core calls Sentry
+  only through `lib/errors/sentry.ts`, whose calls are unchanged, and ships no
+  `Sentry.init`. **A fork that configures Sentry:** v11 collects request and
+  response bodies, headers, cookies, query and database parameters and gen-AI
+  inputs and outputs by default, and Sunrise's agents carry personal data
+  through all of them; set `dataCollection` as
+  [`sentry-setup.md`](./.context/monitoring/sentry-setup.md) shows, and import
+  `withSentryConfig` from `@sentry/nextjs/config`. Mermaid 12 lays diagrams out
+  with ELK and a new default look. dotenv 18 adds a CLI and an opt-in fast
+  parser, and `config({ path })` is unchanged, but **its `-r dotenv/config`
+  preload no longer reads `dotenv_config_path=` from the command line**: it
+  loads `.env` and ignores the argument. Set `DOTENV_CONFIG_PATH=.env.local`
+  in the environment instead (`scripts/diagnose-eval-run.ts` and
+  `verify-eval-run.ts` now say so).
+- **At `multi`, a fork's erasure hooks and subject-export collector run as the
+  system scope** (§107 t-748). `registerErasureCleanupHook`'s
+  `cleanupExternal` and `scrubInTransaction`, and `collectAppSubjectData()`
+  (`lib/app/data-export.ts`), used to run in whatever org the caller had
+  entered: the session's active org, or none from an admin API key, where a
+  tenant-owned query threw. A person's rows can sit in several orgs, so they now
+  run as `runAsSystem`. Filter every query on the subject you are handed, since
+  an unfiltered one reaches every org's rows. There is no org to ask for:
+  `requireOrgId()` throws, and a tenant-owned row a hook creates is not stamped,
+  so write its `orgId` explicitly. At `single` nothing changes.
 - **The browser-tab icons moved from `public/` to `app/favicon.ico` and
   `app/icon.svg`** (#640). Next links both from `<head>` itself, so the SVG
   (vector, and the only kind that can follow `prefers-color-scheme`) is now
@@ -265,7 +477,9 @@ release process.
 
 - **Admin edits to a system agent's platform-owned fields no longer
   survive** (§116 t-724). This is the upgrade to look at. On the first
-  `db:seed` after merging, and on every reconcile after that, each
+  reconcile after deploying (the maintenance tick runs one within 15 minutes,
+  and so does the first `db:seed`, whichever comes first), and on every
+  reconcile after that, each
   platform agent's name, description, instructions, temperature, max tokens,
   knowledge settings, visibility, persona, guardrails and brand voice are
   written back to the definition's. So are its capability bindings (stray ones removed, disabled ones re-enabled), except `mcp-system`'s, which stay the org's so strict-mode grants survive, and its knowledge-tag grants
@@ -363,7 +577,12 @@ release process.
     (SELECT count(*) FROM ai_agent_capability c
        WHERE c."customConfig" -> 'allowedWorkflowSlugs' ? w.slug) AS run_workflow_bindings
   FROM ai_workflow w
-  WHERE w.slug LIKE 'tpl-%' AND w.slug <> 'tpl-provider-model-audit'
+  WHERE w."isTemplate" AND NOT w."isSystem"
+    AND w.slug IN ('tpl-customer-support', 'tpl-content-pipeline',
+      'tpl-saas-backend', 'tpl-research-agent', 'tpl-conversational-learning',
+      'tpl-data-pipeline', 'tpl-outreach-safety', 'tpl-code-review',
+      'tpl-autonomous-research', 'tpl-cited-knowledge-advisor',
+      'tpl-scheduled-source-monitor', 'tpl-inbound-conversation-handler')
   ORDER BY w.slug;
   ```
 
@@ -490,6 +709,85 @@ release process.
 
 ### Fixed
 
+- **Recorded AI costs use the model's real rates, and a turn nobody could
+  price is marked as such** (#813, t-769). **Recorded costs change.** Three
+  defects, one fix each:
+  - Once the Model Matrix had been loaded into the model registry, a matrix
+    row's single blended rate replaced the registry's separate input and output
+    rates (gpt-4o-mini cost its 0.375 blend on both sides), and its coarse
+    context bucket (`high` → 200,000) replaced the model's real window, which
+    the chat handler uses as its history budget. `registerModels()` now keeps a
+    positive registry figure and lets a row fill only a zero. A model only the
+    matrix knows keeps its own row's figures, and an edit to that row,
+    clearing included, takes effect on the next hydrate. See **Changed** for what this
+    takes away from operators.
+  - A model only the matrix knows (a dated snapshot id such as
+    `gpt-4o-mini-2024-07-18`, a discovered model) was costed at \$0 on the chat
+    path and in the evaluation worker: neither ever loaded the matrix into the
+    registry. `getProvider`, `resolveAgentProviderAndModel`, `runLlmCall`,
+    keyword enrichment, the cleanup page's context window and the retroactive
+    execution review now do: one query a minute (every 10 s while it fails,
+    once one has landed). An OpenRouter refresh no longer
+    drops the matrix's models until the next hydrate.
+  - A turn with no price (a model the registry still does not know, or a
+    matrix row whose cost is null) was stored at \$0 exactly like a free one,
+    and a null-cost row did not even log the "unknown model" warning.
+    `logCost` now stamps `metadata.pricing = 'unknown'` on the `AiCostLog`
+    row (not on a local turn). An explicit cost of 0 is still a free model.
+- **The SMS / WhatsApp inbound-reply template sends its reply** (t-770). Its
+  `send_reply` step is a `tool_call`, and `tool_call` was the one step type
+  that did not interpolate its config, so `{{trigger.conversationId}}` and
+  `{{respond_to_inbound.output}}` reached `send_message_to_channel` as literal
+  text and every reply failed with `conversation_not_found`. See **Changed**.
+- **An embed widget visitor's first message now starts a conversation**
+  (#705, t-765). It failed before any reply on every install: the handler
+  wrote the anonymous `embed_<hash>` visitor id into `AiConversation.userId`,
+  a foreign key to `User`. A visitor is deliberately not a `User` (owner
+  ruling), so they stay out of the user lists and every user's export and
+  erasure. A visitor's conversation now has no `userId`; the new nullable
+  **`AiConversation.embedVisitorId`** column (migration
+  `20261006120000_embed_visitor_conversations`) owns it, and continuing a
+  conversation matches on it. A CHECK constraint,
+  `ai_conversation_owner_exclusive` (migration
+  `20261006130000_conversation_owner_exclusive`, drift probe A9), keeps a row
+  from carrying both. The per-user conversation cap does not apply to a
+  visitor (owner ruling): a visitor cannot archive conversations and shares an
+  identity behind a NAT. Every built-in tool that would write the visitor id
+  into a user key now decides explicitly: `read_user_memory`,
+  `write_user_memory`, `add_provider_models` and `send_message_to_channel`
+  refuse a visitor with `anonymous_visitor`, and `run_workflow` runs the
+  sub-workflow unowned, as a scheduled run does (the document-cleanup tools
+  already refuse an embed conversation before writing anything). An embed
+  turn's cost rows are now written, unattributed. The `conversation.started`,
+  `message.created` and `capability.refused_not_advertised` hook events and the
+  `conversation_escalated` webhook name a visitor as `embedVisitorId`, with
+  `userId: null`; the `budget_exceeded` webhook names them as `embedVisitorId`
+  with no `actorUserId`; and the guard-events seam's `GuardEventContext` gains
+  an optional **`embedVisitorId`**, set for a visitor (whose `userId` there is
+  still the visitor id). Engagement analytics count each visitor as their own
+  participant. When the server no longer recognises a conversation as the
+  visitor's (their IP changed), the widget starts afresh as New chat does and
+  hands back the message and attachments they just sent. The widget also could not send a message from a
+  partner site at all: `proxy.ts`'s CSRF origin check refused every
+  cross-origin POST. The embed routes and the embed approval routes, which
+  authenticate with a token rather than a cookie and check their own origin
+  allowlist, are now exempt (`CROSS_ORIGIN_TOKEN_ROUTES`). **For a fork:** a
+  feature that writes a caller's id into a `User` foreign key must check
+  `isEmbedUserId` (`lib/embed/auth.ts`) first, and decide what a visitor gets.
+- **At `multi`, a person's data export holds their rows from every org**
+  (§107 t-748). `exportUserData()` read inside whatever org the caller had
+  entered, so the self-service and admin exports returned only the session's
+  active org's conversations, memories and executions, and an admin API key's
+  export threw. At `multi` it now reads, one source at a time, as the audited
+  system scope. A fork's hook and collector change with it; see **Changed**.
+- **An evaluation run where every case errored is now `failed`, not `completed`**
+  (#801). A run with no scored result (no provider configured, a provider
+  outage) used to look the same as a clean one, so a fork polling run `status`
+  for `completed` read an empty evaluation as a result. It now ends `failed`
+  with `summary.note = 'all_cases_failed'`, `summary.casesFailed` and
+  `summary.dominantErrorCode`; a run where only some cases failed stays
+  `completed`. The experiment compare page no longer reports a failed or
+  cancelled variant run as still queued.
 - **At `multi`, the models matrix, a provider's model list and the
   capabilities pages no longer call a shared model or capability unused while
   another org uses it** (§107 t-752). They counted only the entered org, so
@@ -598,6 +896,188 @@ release process.
   note:** a PR whose changed files only cleared 80% on average now fails
   `/pre-pr`, which is what the gate always claimed to do. The failure names the
   file.
+
+### Security
+
+- **The Prisma CLI's `mysql2` is forced to `^3.23.1`** (t-781), for
+  GHSA-3f6p-5ww8-9rcr (high) and GHSA-rgwj-5xj2-c3m3 (medium). `prisma` 7.10 pins
+  `mysql2` to exactly 3.15.3 and only uses it to connect to a MySQL server, which
+  a Postgres install never does. The fix is a scoped `overrides` entry
+  (`prisma` → `mysql2`) in `package.json`, with its removal condition in
+  `overrideReasons`; a fork's own `mysql2` dependency is not affected. A fork
+  that keeps its own `overrides` should merge the entry rather than drop it.
+- **Client error reports and Sentry events no longer carry the page URL's
+  query string, fragment or credential-shaped path segments** (#952). The
+  global client error handler (`lib/errors/handler.ts`) sent
+  `window.location.href` as `extra.url`; it now sends the collapsed pathname
+  as **`extra.path`** (update any Sentry saved search or alert on `extra.url`),
+  and scrubs URLs in its context and in the error it reports.
+  `lib/errors/sentry.ts` registers a new `scrubSentryEvent` on Sentry's
+  global scope (client: `initErrorTracking()`; Node server: `instrumentation.ts`),
+  so error and transaction events, their breadcrumbs and stack frames are
+  scrubbed from then on without a fork change. **Forks with Sentry on should add
+  `beforeSendSpan: scrubSentrySpan`** to each `Sentry.init` (spans are
+  streamed past event processors in `@sentry/nextjs` 11), and
+  `beforeSend: scrubSentryEvent` to `instrumentation-client.ts` (the client
+  registration runs after hydration, so load-time errors would miss it) and
+  `sentry.edge.config.ts`. New helpers
+  `scrubUrl()`, `scrubUrlsInText()`, `scrubUrlsDeep()` and
+  `scrubUrlsInError()` live in `lib/logging/redact-path.ts`. See
+  [`sentry-setup.md`](./.context/monitoring/sentry-setup.md#page-urls).
+- **The `api-key` and `embed-token` rate-limit key strategies key on a
+  verified credential** (#701). Both built the bucket from the header value
+  as presented, so a caller could open a new bucket per request and the cap
+  never engaged. The middleware now looks the presented key or token up
+  (`lib/security/rate-limit-credentials.ts`, cached 60s per verified
+  credential) and keys on the stored row's id; a value that names no live
+  credential gets the IP bucket. Lookups of unverified values are capped by a
+  separate per-IP lookup budget (30/min). The proxy now parses
+  `Authorization` exactly as the routes do (case-sensitive `Bearer `). A
+  fork rule using either strategy (via `registerRateLimitRule()`) gets the
+  same behaviour, and the identifier segment changes from the raw value to
+  `key:sk:<id>` / `key:mcp:<id>` / `embed:<id>:<ip>`. The embed chat
+  stream's per-flow `embedChatLimiter` now runs after the token is resolved
+  and keys on the visitor id derived from the token row, not the raw header.
+  `API_KEY_PREFIX` (`lib/auth/api-keys.ts`) and `MCP_API_KEY_PREFIX`
+  (`lib/orchestration/mcp/auth.ts`) are exported.
+
+- **`send_message_to_channel` sends only within the conversation being
+  handled** (t-770). It sent on whatever `conversationId` its caller passed, so
+  a model steered by the person chatting, by an inbound message or by content
+  an MCP client was reading, or the starter of a workflow run (a model calling
+  `run_workflow` included), could have the operator's number message anyone
+  who had ever written to it, given that conversation's id. Now a workflow
+  step, fixed (`tool_call`) or AI-driven (`agent_call`, the orchestrator),
+  sends only on its run's new **`AiWorkflowExecution.replyConversationId`**
+  (migration `20261006140000_execution_reply_conversation`, `onDelete:
+  SetNull`), which the inbound route sets and the rerun route copies through
+  the new `ExecuteOptions.replyConversationId` only when the admin asks, with
+  the new `resendReply` (the re-run dialog's "Send the reply to the person
+  again" checkbox), and only for a finished original, so a re-run never texts
+  a real person on its own; an interactive chat only on
+  its own conversation; an MCP client never. Anything else is refused with
+  `conversation_not_permitted`, and logged, before the conversation is read.
+  **For an operator:** a workflow that texted a thread other than the one it
+  replies on (reminders, outreach), or an MCP client that sent outbound
+  messages, now gets that refusal; deliberate outreach is not supported yet.
+  **For a fork:** pass `replyConversationId` to `engine.execute()` only for a
+  conversation the run is genuinely replying on, never one from a request or a
+  model; it is what authorises the run to message that conversation.
+- **Route log lines no longer carry a credential or an email from the
+  request URL** (#685). The logger redacts by key name only, and the request
+  context bound to every line a route logs held the URL verbatim, so a token
+  in a path (`/api/v1/x/<token>`), or a token or searched-for email in a query
+  string, reached stdout and the admin log buffer whatever the route's own
+  log fields said.
+  - **Breaking: `url` is removed** from what `getRequestContext()`,
+    `getFullContext()` and `getRouteLogger()` bind. A fork that read or
+    parsed `context.url` in its logs should use `endpoint` and `method`, and
+    log any query parameter it needs explicitly.
+  - `endpoint` (`getEndpointPath()`) now collapses id- and credential-shaped
+    path segments to `[param]`: UUIDs, cuids, email addresses, JWTs, and 20+
+    character hex, base64 or percent-encoded tokens; readable slugs stay
+    (`collapseDynamicSegments()` / `loggablePath()` in
+    `lib/logging/redact-path.ts`). Dashboards grouping on a resolved
+    `endpoint` will see the collapsed form.
+  - New: `getRouteLogger(request, { endpoint })` pins a route pattern,
+    logged verbatim, for a dynamic segment the heuristic cannot recognise (a
+    short token, a dotted or one-case secret).
+    `DELETE /api/v1/admin/invitations/[email]` uses it.
+  - The other server-side lines that logged a request path collapse it the same way:
+    the proxy's `http_access` line (`LOG_HTTP_ACCESS=true`), which covers page
+    routes such as a `/s/<token>` share link; the auth guards' `path` on
+    their refusal and ownership lines; the auth catch-all's `authPath`
+    (better-auth's `/reset-password/<token>`); and the rate-limit
+    middleware's unknown-tier warning.
+
+- **Outbound webhook and document URLs are no longer logged verbatim**
+  (#953). Hook and webhook-subscription deliveries, the escalation webhook,
+  the webhook create and test routes, the notification step and
+  knowledge-base URL fetches logged the target URL as configured, so a
+  credential carried in it (a Slack or Discord webhook path, a signed URL's
+  query, userinfo) reached stdout and the admin log buffer. They now log
+  `loggableUrl()` (new in `lib/logging/redact-path.ts`): origin plus the
+  collapsed path, with userinfo, query and fragment dropped, and
+  `[non-http-url]` for any other scheme. `describeFetchFailure()`
+  (`lib/errors/fetch-error.ts`) now reduces any URL quoted in the error it
+  describes, so a delivery's `error` field and stored `lastError` no longer
+  carry one either, and a knowledge-base fetch error reaches the route's error
+  log reduced. The outbound HTTP client's `HTTP request: sending` line
+  collapses its `path`, and its `host_not_allowed` error, which reaches the
+  model, carries the reduced URL. A path secret the
+  `collapseDynamicSegments()` heuristic does not recognise (under 20
+  characters, or containing `:`) is still kept.
+  **Not covered:** the execution trace still shows a step's configured URL,
+  in its `input` and in a `send_notification` step's `output.url`, as the
+  workflow definition does; `output.url` keeps the working URL because later
+  steps and resumed runs read it.
+
+- **The logger redacts camelCase and kebab-case keys** (#951). Key matching
+  lower-cased a key before looking for word boundaries, which erased the
+  camelCase boundary, so `userPassword`, `accessToken`, `clientSecret`,
+  `userEmail` and similar keys were written in the clear while `password` and
+  `user_email` were redacted. Keys are now split into words at every
+  non-letter and at camelCase and acronym boundaries, and a pattern matches a
+  run of consecutive words; every key redacted before is still redacted.
+  Production log fields that change from clear text to `[REDACTED]` /
+  `[PII REDACTED]`:
+  - the sign-up hook's `userEmail`, the OAuth invitation-mismatch line's
+    `invitationEmail` and `oauthEmail`, and the invitation-delete route's
+    `deletedByEmail`;
+  - `sendEmail`'s recipients, now logged as `recipientEmail` instead of `to`
+    on every send line, so invitation, contact and welcome mail no longer log
+    the address in production;
+  - `clientIP` on the inbound signature-failure and verification-handshake
+    lines and the webhook-trigger execution line (IP is in the PII list; set
+    `LOG_SANITIZE_PII=false` to keep it);
+  - PostHog's debug `apiKeyPrefix`, and `apiKeyEnvVar` in the May 2026
+    provider migration scripts' skip warnings.
+
+- **`csvEscape` quotes a lone CR, so free text can no longer start a CSV
+  record of its own** (#768). It quoted on comma, quote and LF only; a CR after
+  the first character was emitted bare, a spreadsheet read it as a record break,
+  and the text after it opened a new cell past the leading-trigger prefix. Both
+  admin exports that use it are fixed for every free-text column:
+  `/conversations/export` (message content, conversation title) and
+  `/approvals/history` (notes, reason, workflow name, step label, approver
+  name). A fork that wrapped `csvEscape` to quote CR can drop the wrapper.
+
+- **A data export no longer hands the subject another person's contact-form
+  messages** (#766). `exportUserData()` matched `ContactSubmission` with
+  `mode: 'insensitive'`, which Prisma compiles to an unescaped `ILIKE`, so `_`
+  or `%` in the subject's address matched other people's rows. It now matches
+  exactly on the address trimmed and lower-cased, which is how the contact route
+  stores it. A fork that copied the old `collectAppSubjectData()` example from
+  `.context/privacy/data-export.md` into `lib/app/data-export.ts`, or used the
+  same match anywhere else keyed by email, should change it the same way.
+
+- **Erasing an account now deletes the contact-form messages sent from its
+  address, and both erasure and export attribute those messages only to a
+  verified address** (t-767). `ContactSubmission` has no FK to `User`, so the
+  erasure cascade never reached it: `eraseUser()` reported success and left the
+  person's name, address and messages behind, while the export already treated
+  those rows as theirs. They are now deleted inside the erasure transaction,
+  matched exactly on the account's stored address, trimmed and lower-cased,
+  through `contactSubmissionsOf()`, the matcher the export also uses. The
+  contact form proves nothing about who typed an address, so an account whose
+  `emailVerified` is false now matches none of them: its erasure leaves them,
+  and **its export no longer includes them** (it previously did, so with email
+  verification off an account opened under someone else's address received
+  their enquiries). Where verification is required (the production default)
+  this affects only sign-ups that never verified; when one leaves messages
+  behind, erasure logs a warning with the count so an operator can handle them
+  by hand. A fork with its own table keyed by email needs the same step in an
+  erasure hook's `scrubInTransaction`, and the same verified-only
+  rule if a public form fills it; `.context/privacy/data-erasure.md` shows how.
+
+- **The email-preview server's copy of Next is no longer in the `next/og`
+  remote-code-execution range** (t-758). `@react-email/ui` (dev-only) pins
+  `next` 16.3.3; a scoped `overrides` entry makes it use the app's own `next`,
+  with its removal condition in `overrideReasons`. engine.io, undici,
+  brace-expansion and fast-uri move to fixed versions in range. The highs
+  `npm audit` still reports are pre-existing: Prisma 7.10's CLI pins
+  `deepmerge-ts`, and `braces` (lint-only) has no fixed release. Prisma's
+  `mysql2` pin is overridden by t-781, above.
 
 ## [0.13.0] — 2026-09-24
 
@@ -7469,7 +7949,8 @@ Sunrise safe to fork and to merge upstream releases into.
 
 ---
 
-[Unreleased]: https://github.com/human-centric-engineering/sunrise/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/human-centric-engineering/sunrise/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.12.1...v0.13.0
 [0.12.1]: https://github.com/human-centric-engineering/sunrise/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/human-centric-engineering/sunrise/compare/v0.11.2...v0.12.0

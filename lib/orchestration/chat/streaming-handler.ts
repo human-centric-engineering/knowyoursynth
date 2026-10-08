@@ -80,6 +80,10 @@ import {
 } from '@/lib/orchestration/chat/guard-floor';
 import { emitGuardEvent, type GuardEventContext } from '@/lib/orchestration/chat/guard-events';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
+import {
+  LATEST_AGENT_VERSION_ID_INCLUDE,
+  readAgentConsistently,
+} from '@/lib/orchestration/agents/agent-versioning';
 import { buildMessagesAndBreakdown } from '@/lib/orchestration/chat/message-builder';
 import { estimateTokens } from '@/lib/orchestration/chat/token-estimator';
 import {
@@ -90,7 +94,7 @@ import { getUserFacingError } from '@/lib/orchestration/chat/error-messages';
 import { queueMessageEmbedding } from '@/lib/orchestration/chat/message-embedder';
 import { emitHookEvent } from '@/lib/orchestration/hooks/registry';
 import { summarizeMessages, isPlaceholderSummary } from '@/lib/orchestration/chat/summarizer';
-import { isEmbedUserId } from '@/lib/embed/auth';
+import { isEmbedUserId, userIdForUserRef } from '@/lib/embed/auth';
 import { hintScope } from '@/lib/orchestration/scope';
 import {
   GEN_AI_OPERATION_NAME,
@@ -286,7 +290,11 @@ export class ChatError extends Error {
  * eagerly includes the profile so the system-prompt resolver doesn't
  * incur a second round-trip per turn.
  */
-type AgentWithProfile = AiAgent & { profile: AiAgentProfile | null };
+type AgentWithProfile = AiAgent & {
+  profile: AiAgentProfile | null;
+  /** Latest `AiAgentVersion` only — the pin stamped on assistant messages. */
+  versions: Array<{ id: string }>;
+};
 
 interface PersistMessageParams {
   conversationId: string;
@@ -307,25 +315,25 @@ interface PersistMessageParams {
 }
 
 /**
- * The caller's id, but only when it is a real `User` row.
+ * Who owns a conversation, as the columns that say so (#705, t-765).
  *
- * This handler serves three routes and two of them pass `session.user.id`; the
- * embed route passes a synthetic `embed_<hash>` visitor id, which is not a
- * `User` and must never reach a foreign key to one. `AiCostLog.userId` is such
- * a key, and `logCost` swallows write failures — so the visitor id would be
- * rejected and the cost row silently discarded. Conversation and memory
- * scoping still use `request.userId` itself; only FK attribution goes here.
+ * A real user owns theirs through `AiConversation.userId`, a FK to `User`. An
+ * embed visitor is not a `User` (owner ruling, 2026-10-06: visitors stay out of
+ * the user lists, and out of every user's export and erasure), so a visitor's
+ * conversation carries no `userId` and `embedVisitorId` holds the visitor id
+ * instead. Writing the visitor id into `userId` is what made a visitor's first
+ * message fail at conversation-create.
  *
- * Note what this does NOT currently prevent: no embed turn reaches `logCost`
- * at all, because `AiConversation.userId` is a FK to `user` too and nothing
- * mints a `User` for a visitor, so the first message dies at
- * conversation-create (#705). This is a guard against the failure that appears
- * when #705 is fixed — not one that is firing today. Kept deliberately rather
- * than deferred: the two fixes land separately, and this is the half nobody
- * would think to add while fixing the other.
+ * The same fragment serves as the create data and as the ownership filter on
+ * load, so a visitor reaches only conversations created under their own id.
+ * (The per-user cap does not apply to a visitor.) Hook events name their
+ * caller with it too, so a subscriber that reads `userId` as a `User` never
+ * gets a visitor id, and sees the visitor as the conversation row does.
  */
-function attributableUserId(userId: string): string | null {
-  return isEmbedUserId(userId) ? null : userId;
+function conversationOwner(
+  userId: string
+): { userId: string } | { userId: null; embedVisitorId: string } {
+  return isEmbedUserId(userId) ? { userId: null, embedVisitorId: userId } : { userId };
 }
 
 interface WriteEvaluationLogParams {
@@ -413,6 +421,11 @@ export class StreamingChatHandler {
         : logger;
     let conversationId: string | null = null;
     let resolvedProviderSlug: string | null = null;
+    // The latest AiAgentVersion at turn start, stamped on the turn's user and
+    // assistant messages so a transcript can be traced to the agent config that
+    // produced it (#811). Undefined for an agent with no version history.
+    // Lives out here so the error marker, which runs outside the try, sees it.
+    let agentVersionId: string | undefined;
     // The breaker key for the credential in use (§120 t-744): the slug for the
     // shared credential, slug + identity for a per-org one.
     let resolvedBreakerKey: string | null = null;
@@ -421,6 +434,7 @@ export class StreamingChatHandler {
       registerBuiltInCapabilities();
 
       const agent = await this.loadAgent(request.agentSlug);
+      agentVersionId = agent.versions[0]?.id;
       // Resolve provider + model once. Empty agent.provider/agent.model fall
       // back to the active provider with a key set + the system default-model
       // map; explicit values pass through unchanged.
@@ -468,13 +482,18 @@ export class StreamingChatHandler {
         // path doesn't block the SSE `error` event we yielded above. The
         // webhook dispatcher creates the delivery row inside this call,
         // so ordering against subsequent failures is fine.
+        //
+        // An embed visitor is not a `User` (#705, t-765): the payload names
+        // them as `embedVisitorId` and carries no `actorUserId`, the field a
+        // receiver would look up as one, and no name lookup is made for them.
         void (async () => {
-          const actorUserName = await resolveUserDisplayName(request.userId);
+          const actorUserId = userIdForUserRef(request.userId);
+          const actorUserName = await resolveUserDisplayName(actorUserId);
           await dispatchWebhookEvent('budget_exceeded', {
             agentId: agent.id,
             agentSlug: agent.slug,
             agentName: agent.name,
-            actorUserId: request.userId,
+            ...(actorUserId ? { actorUserId } : { embedVisitorId: request.userId }),
             actorUserName,
             conversationId,
             usedUsd: budget.spent,
@@ -695,6 +714,7 @@ export class StreamingChatHandler {
             conversationId: conversation.id,
             role: 'user',
             content: turnText,
+            agentVersionId,
             // Fork-owned marker (#475), stored under a namespaced key so it can
             // never collide with a platform metadata field.
             ...(request.messageMetadata ? { metadata: { app: request.messageMetadata } } : {}),
@@ -711,7 +731,7 @@ export class StreamingChatHandler {
         void logCost({
           agentId: agent.id,
           conversationId: conversation.id,
-          userId: attributableUserId(request.userId),
+          userId: userIdForUserRef(request.userId),
           model: resolvedModel,
           provider: resolvedBinding.providerSlug,
           inputTokens: 0,
@@ -753,7 +773,7 @@ export class StreamingChatHandler {
           messageId: userMessage.id,
           agentSlug: request.agentSlug,
           agentId: agent.id,
-          userId: request.userId,
+          ...conversationOwner(request.userId),
           role: 'user',
         });
       }
@@ -778,6 +798,7 @@ export class StreamingChatHandler {
         contextId: request.contextId,
         agentId: agent.id,
         userId: request.userId,
+        ...(isEmbedUserId(request.userId) ? { embedVisitorId: request.userId } : {}),
         conversationId: conversation.id,
       };
 
@@ -968,7 +989,7 @@ export class StreamingChatHandler {
               // The summary is spend this user's turn caused, so it is
               // attributed to them like the turn itself — see #654 for what
               // happens when this boundary drops a cost row's real keys.
-              userId: attributableUserId(request.userId),
+              userId: userIdForUserRef(request.userId),
             }
           );
           conversationSummary = summarizeResult.summary;
@@ -1062,13 +1083,17 @@ export class StreamingChatHandler {
               userId: request.userId,
             })
           : Promise.resolve(null),
-        // Per-user-per-agent memories for context injection
-        prisma.aiUserMemory.findMany({
-          where: { userId: request.userId, agentId: agent.id },
-          orderBy: { updatedAt: 'desc' },
-          take: 50,
-          select: { key: true, value: true },
-        }),
+        // Per-user-per-agent memories for context injection. An embed visitor
+        // has none (the `user-memory` capability refuses them), so the read
+        // is skipped rather than sent to find nothing.
+        isEmbedUserId(request.userId)
+          ? Promise.resolve([])
+          : prisma.aiUserMemory.findMany({
+              where: { userId: request.userId, agentId: agent.id },
+              orderBy: { updatedAt: 'desc' },
+              take: 50,
+              select: { key: true, value: true },
+            }),
         getCapabilityDefinitions(agent.id),
       ]);
 
@@ -1201,6 +1226,12 @@ export class StreamingChatHandler {
       // retries one (the first may also be in the fallback list).
       const triedSlugs = new Set<string>([usedSlug]);
       let currentProvider = provider;
+      // A provider slug is the stable identifier of a configured LLM provider
+      // (e.g. 'anthropic', 'openai'). This is the slug of the provider actually
+      // serving the turn: it starts as the one `getProviderWithFallbacks`
+      // returned and moves to the fallback's slug on mid-stream failover.
+      // Persisted messages record this, not `resolvedBinding.providerSlug`
+      // (the primary), so the transcript matches the cost log (#810).
       let currentProviderSlug = usedSlug;
       // The breaker of the provider that is serving the turn — after a
       // mid-stream failover, the fallback's, not the one first resolved. Its
@@ -1424,7 +1455,7 @@ export class StreamingChatHandler {
                   void logCost({
                     agentId: agent.id,
                     conversationId: conversation.id,
-                    userId: attributableUserId(request.userId),
+                    userId: userIdForUserRef(request.userId),
                     model: resolvedModel,
                     provider: resolvedProviderSlug ?? resolvedBinding.providerSlug,
                     inputTokens: errUsage.inputTokens,
@@ -1815,8 +1846,9 @@ export class StreamingChatHandler {
             conversationId: conversation.id,
             role: 'assistant',
             content: assistantText,
+            agentVersionId,
             modelId: resolvedModel,
-            providerSlug: resolvedBinding.providerSlug,
+            providerSlug: currentProviderSlug,
             ...(assistantWorkflowExecutionId
               ? { workflowExecutionId: assistantWorkflowExecutionId }
               : {}),
@@ -1835,14 +1867,14 @@ export class StreamingChatHandler {
             // Same turn, same payer: without this the turn's chat row is
             // attributed and its embedding row is not, and the subject's
             // export shows one but not the other.
-            userId: attributableUserId(request.userId),
+            userId: userIdForUserRef(request.userId),
           });
           emitHookEvent('message.created', {
             conversationId: conversation.id,
             messageId: assistantMsg.id,
             agentSlug: request.agentSlug,
             agentId: agent.id,
-            userId: request.userId,
+            ...conversationOwner(request.userId),
             role: 'assistant',
           });
 
@@ -1890,7 +1922,7 @@ export class StreamingChatHandler {
             void logCost({
               agentId: agent.id,
               conversationId: conversation.id,
-              userId: attributableUserId(request.userId),
+              userId: userIdForUserRef(request.userId),
               model: resolvedModel,
               provider: resolvedProviderSlug ?? resolvedBinding.providerSlug,
               inputTokens: u.inputTokens,
@@ -1985,7 +2017,7 @@ export class StreamingChatHandler {
           void logCost({
             agentId: agent.id,
             conversationId: conversation.id,
-            userId: attributableUserId(request.userId),
+            userId: userIdForUserRef(request.userId),
             model: resolvedModel,
             provider: resolvedProviderSlug ?? resolvedBinding.providerSlug,
             inputTokens: turnUsage.inputTokens,
@@ -2033,6 +2065,7 @@ export class StreamingChatHandler {
             conversationId: conversation.id,
             role: 'assistant',
             content: assistantText,
+            agentVersionId,
             modelId: resolvedModel,
             providerSlug: resolvedProviderSlug ?? resolvedBinding.providerSlug,
             metadata: {
@@ -2157,7 +2190,7 @@ export class StreamingChatHandler {
                 conversationId: conversation.id,
                 agentId: agent.id,
                 agentSlug: agent.slug,
-                userId: request.userId,
+                ...conversationOwner(request.userId),
                 toolName: tc.name,
                 advertised: [...advertisedToolNames],
               });
@@ -2312,8 +2345,9 @@ export class StreamingChatHandler {
               conversationId: conversation.id,
               role: 'assistant',
               content: '',
+              agentVersionId,
               modelId: resolvedModel,
-              providerSlug: resolvedBinding.providerSlug,
+              providerSlug: currentProviderSlug,
               metadata: { pendingApproval },
             });
             yield { type: 'approval_required', pendingApproval };
@@ -2367,7 +2401,7 @@ export class StreamingChatHandler {
                 conversationId: conversation.id,
                 agentId: agent.id,
                 agentSlug: agent.slug,
-                userId: request.userId,
+                ...conversationOwner(request.userId),
                 toolName: tc.name,
                 advertised: [...advertisedToolNames],
               });
@@ -2606,8 +2640,9 @@ export class StreamingChatHandler {
                 conversationId: conversation.id,
                 role: 'assistant',
                 content: '',
+                agentVersionId,
                 modelId: resolvedModel,
-                providerSlug: resolvedBinding.providerSlug,
+                providerSlug: currentProviderSlug,
                 metadata: { pendingApproval: pa },
               });
               yield { type: 'approval_required', pendingApproval: pa };
@@ -2671,6 +2706,7 @@ export class StreamingChatHandler {
             conversationId,
             role: 'assistant',
             content: '[An error occurred and the response could not be completed.]',
+            agentVersionId,
             // Pin provider only — `resolvedModel` lives inside the try
             // and isn't reliably in scope here. modelId stays null on
             // error markers; the audit trail reads that as "model in
@@ -2760,10 +2796,14 @@ export class StreamingChatHandler {
     // names the org's platform instance only. An org's own agent that took
     // the slug before it was reserved (§116 t-725) is refused as not found
     // rather than run in the platform agent's place.
-    const agent = await prisma.aiAgent.findFirst({
-      where: { slug, isActive: true, ...platformSlugWhere(slug) },
-      include: { profile: true },
-    });
+    // One snapshot for the row and its newest version, so the pin names the
+    // config this turn runs even if an edit commits mid-read (t-779).
+    const agent = await readAgentConsistently(prisma, (tx) =>
+      tx.aiAgent.findFirst({
+        where: { slug, isActive: true, ...platformSlugWhere(slug) },
+        include: { profile: true, versions: LATEST_AGENT_VERSION_ID_INCLUDE },
+      })
+    );
     if (!agent) {
       throw new ChatError('agent_not_found', `Active agent '${slug}' not found`);
     }
@@ -2779,7 +2819,7 @@ export class StreamingChatHandler {
       const existing = await prisma.aiConversation.findFirst({
         where: {
           id: request.conversationId,
-          userId: request.userId,
+          ...conversationOwner(request.userId),
           agentId: agent.id,
           isActive: true,
         },
@@ -2793,7 +2833,14 @@ export class StreamingChatHandler {
     // Enforce per-user conversation cap before creating a new one.
     // Note: this is a soft cap — concurrent requests may race past the count
     // check, which is acceptable for a usage limit (not a security boundary).
-    if (maxConversationsPerUser !== null) {
+    //
+    // Not for an embed visitor (#705, t-765; owner ruling, 2026-10-06). A
+    // user who reaches the cap can archive conversations to get back under
+    // it; a visitor cannot, every page load opens a new conversation, and
+    // everyone behind one NAT is the same visitor, so the cap would lock a
+    // whole office out until retention cleared the rows. The widget stays
+    // bounded by the per-token-and-IP rate limit and the agent's budget.
+    if (maxConversationsPerUser !== null && !isEmbedUserId(request.userId)) {
       const count = await prisma.aiConversation.count({
         where: { userId: request.userId, agentId: agent.id, isActive: true },
       });
@@ -2806,7 +2853,7 @@ export class StreamingChatHandler {
     }
 
     const data: Prisma.AiConversationUncheckedCreateInput = {
-      userId: request.userId,
+      ...conversationOwner(request.userId),
       agentId: agent.id,
       // Title from whichever text this turn carries. An opening turn has no user
       // message, so the opener stands in — a conversation titled from the agent's
@@ -2822,7 +2869,7 @@ export class StreamingChatHandler {
       conversationId: conversation.id,
       agentId: agent.id,
       agentSlug: agent.slug,
-      userId: request.userId,
+      ...conversationOwner(request.userId),
     });
     return conversation;
   }

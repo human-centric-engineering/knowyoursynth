@@ -16,6 +16,7 @@ import { ChevronDown, ChevronRight, Loader2, Pencil, Trash2 } from 'lucide-react
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useSharedSettingsReadOnly } from '@/components/admin/shared-settings-access';
 import {
   Dialog,
   DialogContent,
@@ -126,6 +127,9 @@ interface TagUsage {
 
 export function KnowledgeTagsTable({ initialTags }: KnowledgeTagsTableProps): React.ReactElement {
   const router = useRouter();
+  const readOnly = useSharedSettingsReadOnly();
+  // The action column is dropped when read-only; spanning rows follow it.
+  const columnCount = 6 + (readOnly ? 0 : 1);
   const [tags, setTags] = useState<KnowledgeTagListItem[]>(initialTags);
   const [dialog, setDialog] = useState<DialogState>({ kind: 'closed' });
   const [busy, setBusy] = useState(false);
@@ -192,10 +196,12 @@ export function KnowledgeTagsTable({ initialTags }: KnowledgeTagsTableProps): Re
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2">
-        <BulkDeleteUnusedButton tags={tags} onRefresh={() => void refresh()} />
-        <Button onClick={() => setDialog({ kind: 'create' })}>New tag</Button>
-      </div>
+      {!readOnly && (
+        <div className="flex items-center justify-between gap-2">
+          <BulkDeleteUnusedButton tags={tags} onRefresh={() => void refresh()} />
+          <Button onClick={() => setDialog({ kind: 'create' })}>New tag</Button>
+        </div>
+      )}
 
       <div className="rounded-md border">
         <Table>
@@ -207,15 +213,19 @@ export function KnowledgeTagsTable({ initialTags }: KnowledgeTagsTableProps): Re
               <TableHead className="text-right">Documents</TableHead>
               <TableHead className="text-right">Agents</TableHead>
               <TableHead>Updated</TableHead>
-              <TableHead />
+              {!readOnly && <TableHead />}
             </TableRow>
           </TableHeader>
           <TableBody>
             {tags.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-muted-foreground py-12 text-center text-sm">
-                  No tags yet. Create one above, or run the backfill script to lift legacy
-                  knowledge-category strings into tags.
+                <TableCell
+                  colSpan={columnCount}
+                  className="text-muted-foreground py-12 text-center text-sm"
+                >
+                  {readOnly
+                    ? 'No tags yet. Tags are shared by every organisation and are created from the install organisation.'
+                    : 'No tags yet. Create one above, or run the backfill script to lift legacy knowledge-category strings into tags.'}
                 </TableCell>
               </TableRow>
             ) : (
@@ -254,37 +264,39 @@ export function KnowledgeTagsTable({ initialTags }: KnowledgeTagsTableProps): Re
                       <TableCell className="text-muted-foreground text-xs">
                         <ClientDate date={tag.updatedAt} />
                       </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDialog({ kind: 'edit', tag });
-                            }}
-                            aria-label={`Edit ${tag.name}`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDialog({ kind: 'delete', tag, phase: 'initial' });
-                            }}
-                            aria-label={`Delete ${tag.name}`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                      {!readOnly && (
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDialog({ kind: 'edit', tag });
+                              }}
+                              aria-label={`Edit ${tag.name}`}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDialog({ kind: 'delete', tag, phase: 'initial' });
+                              }}
+                              aria-label={`Delete ${tag.name}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                     {expanded ? (
                       <TableRow className="bg-muted/30 hover:bg-muted/30">
                         <TableCell />
-                        <TableCell colSpan={6} className="py-3">
+                        <TableCell colSpan={columnCount - 1} className="py-3">
                           <TagUsagePanel
                             loading={isLoadingUsage}
                             error={usageError && expandedId === tag.id ? usageError : null}

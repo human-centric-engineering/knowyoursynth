@@ -122,6 +122,43 @@ CREATE POLICY "org_isolation" ON "ai_agent"
   feature flags, the built-in patterns tag) are excepted by path, each with
   its reason, and only while every write in them still only adds.
 
+  **The admin pages say so first** (§107 t-753). The admin layout asks
+  `getSharedSettingsAccess(session)`
+  ([`lib/tenancy/shared-settings-access.ts`](../../lib/tenancy/shared-settings-access.ts))
+  once per request, with the session it has already read: `readOnly` is
+  `multi` and an org other than the install org, derived from the request the
+  way `GET /api/v1/orgs` derives it (`sessionActingOrgId`: the resolver
+  header, else the session's choice). It provides the answer through
+  [`components/admin/shared-settings-access.tsx`](../../components/admin/shared-settings-access.tsx),
+  and that provider is the only source on a page: no page reads the helper
+  itself, so one page cannot mix two answers.
+  - A component that offers a shared-settings write asks
+    `useSharedSettingsReadOnly()`: it hides its create, delete and toggle
+    actions, disables its save and puts `<SharedSettingsSaveHint />` beside
+    it. The fields stay editable, because a disabled `<fieldset>` would also
+    disable the tabs, the ⓘ help and Cancel. A table drops an action column
+    that would be left empty.
+  - A server page wraps its own create link in `<SharedSettingsEditOnly>`.
+    `useIsInstallOrg()` answers install-org-only actions (the model audit).
+  - A shared-settings page renders `<SharedSettingsReadOnlyNotice />`. It
+    offers a button that switches the session to the install org, but only
+    when that could work (`canSwitch`): when the resolver header chose the
+    org, a switch would not move the request, so it says to use the install
+    org's address; when the user is not a member of the install org (one
+    membership read, only when read-only), it says to ask an install-org
+    admin. A failed read offers the button and leaves the answer to the
+    switch route, so it cannot take the admin tree down.
+
+  The page-side answer is unverified: a page that guessed wrong would only
+  show or hide a button whose request the guard answers either way. It can
+  also be stale: App Router keeps a layout across client navigation, so after
+  a switch made in another tab, this tab's pages keep the old answer until a
+  reload (the notice's own switch reloads the page). The server refuses the write
+  regardless. The knowledge base's document pages are the org's own, so they
+  show no notice and gate only their two shared-settings actions: the
+  patterns seed button, and creating a new tag inline (on upload and in a
+  document's tag picker). Applying an existing tag stays the org's.
+
 The text is defined once, in
 [`lib/tenancy/isolation.ts`](../../lib/tenancy/isolation.ts)
 (`orgIsolationPolicySql`), and the migration carries it verbatim —
