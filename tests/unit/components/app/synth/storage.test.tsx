@@ -331,6 +331,53 @@ describe('useStoredSession', () => {
     });
   });
 
+  it('writes a change still inside the delay when the page goes, so a last move is kept', () => {
+    vi.useFakeTimers();
+    const { result, unmount } = renderHook(() => useStoredSession(def, fresh));
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    setItem.mockClear();
+
+    act(() => result.current[1]((s) => ({ ...s, step: 7 })));
+    unmount();
+
+    const writes = writesTo(sessionKey(def.id));
+    expect(writes).toHaveLength(1);
+    expect(JSON.parse(String(writes[0]?.[1]))).toMatchObject({ step: 7 });
+  });
+
+  it('writes it when the tab is hidden for good (pagehide), and not twice', () => {
+    vi.useFakeTimers();
+    const { result } = renderHook(() => useStoredSession(def, fresh));
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    setItem.mockClear();
+
+    act(() => result.current[1]((s) => ({ ...s, step: 2 })));
+    window.dispatchEvent(new Event('pagehide'));
+    expect(writesTo(sessionKey(def.id))).toHaveLength(1);
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    // The delayed write still lands, with the same session; nothing is lost and nothing stale is written.
+    expect(JSON.parse(window.localStorage.getItem(sessionKey(def.id)) ?? 'null')).toMatchObject({
+      step: 2,
+    });
+  });
+
+  it('writes nothing on unmount when everything is already saved', () => {
+    vi.useFakeTimers();
+    const { unmount } = renderHook(() => useStoredSession(def, fresh));
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    setItem.mockClear();
+    unmount();
+    expect(writesTo(sessionKey(def.id))).toHaveLength(0);
+  });
+
   it('writes a burst of changes once, with the last one', () => {
     vi.useFakeTimers();
     const { result } = renderHook(() => useStoredSession(def, fresh));

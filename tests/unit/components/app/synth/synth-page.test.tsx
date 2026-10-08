@@ -288,25 +288,15 @@ describe('SynthPage engine', () => {
     await act(async () => {
       fireEvent.click(button('Turn sound on'));
     });
-    expect(engine.start).toHaveBeenCalledTimes(1);
-    expect(engine.resume).not.toHaveBeenCalled();
+    // `resume` starts the engine the first time (Engine.resume); the page does not choose.
+    expect(engine.resume).toHaveBeenCalledTimes(1);
     const on = button('Sound on');
     expect(on.getAttribute('aria-pressed')).toBe('true');
     expect(meterStore.get().power).toBe(true);
   });
 
-  it('resumes rather than starts when the engine already has a context', async () => {
-    engine.ctx = {};
-    page();
-    await act(async () => {
-      fireEvent.click(button('Turn sound on'));
-    });
-    expect(engine.resume).toHaveBeenCalledTimes(1);
-    expect(engine.start).not.toHaveBeenCalled();
-  });
-
   it('reads "Sound unavailable" when the audio cannot start', async () => {
-    engine.start.mockRejectedValue(new Error('no audio'));
+    engine.resume.mockRejectedValue(new Error('no audio'));
     page();
     await act(async () => {
       fireEvent.click(button('Turn sound on'));
@@ -340,7 +330,7 @@ describe('SynthPage engine', () => {
     await act(async () => {
       fireEvent.click(button('Play riff'));
     });
-    expect(engine.start).toHaveBeenCalledTimes(1);
+    expect(engine.resume).toHaveBeenCalledTimes(1);
     expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
 
     fireEvent.click(button('Stop riff'));
@@ -789,6 +779,20 @@ describe('SynthPage computer keyboard', () => {
     ]);
   });
 
+  it('lets every held key go when the window loses focus, since their key-ups go elsewhere', () => {
+    page();
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.keyDown(window, { key: 'd' });
+    fireEvent(window, new Event('blur'));
+    expect(notes().slice(-2)).toEqual([
+      { type: 'noteOff', n: 48 },
+      { type: 'noteOff', n: 52 },
+    ]);
+    // And the keys play again on return, rather than being stuck as "down".
+    fireEvent.keyDown(window, { key: 'a' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOn', n: 48, v: 0.85 });
+  });
+
   it('releases a note that was already sounding when Hold went on', () => {
     page();
     fireEvent.keyDown(window, { key: 'a' });
@@ -802,7 +806,7 @@ describe('SynthPage computer keyboard', () => {
     await act(async () => {
       fireEvent.keyDown(window, { key: 'a' });
     });
-    expect(engine.start).toHaveBeenCalledTimes(1);
+    expect(engine.resume).toHaveBeenCalledTimes(1);
   });
 
   it('sends the mod wheel to the engine with the next parameters', () => {

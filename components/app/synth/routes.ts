@@ -14,11 +14,15 @@ export interface PanelView {
 
 export const DEFAULT_VIEW: PanelView = { outline: false, long: false };
 
-/** `?view=outline`, `?view=long` or `?view=long,outline` → the view. Unknown words are ignored. */
+/**
+ * `?view=outline`, `?view=long` or `?view=long,outline` → the view. Unknown words are ignored, and a param with none
+ * that are known is `null`, as if absent: it says nothing, so it must not override the last view chosen.
+ */
 export function parseView(param: string | null | undefined): PanelView | null {
   if (!param) return null;
   const words = param.split(',');
-  return { outline: words.includes('outline'), long: words.includes('long') };
+  const view = { outline: words.includes('outline'), long: words.includes('long') };
+  return view.outline || view.long ? view : null;
 }
 
 /** The view → its `view` query value, or `null` for the default view (no query at all). */

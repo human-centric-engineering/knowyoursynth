@@ -40,6 +40,10 @@ export class Engine {
   local: Synth | null;
   analyser: AnalyserNode | null;
   lastParams: EngineParams | null;
+  /** The riff tempo last sent: like the params, it is the engine's state, so it is replayed when the voice starts. */
+  lastTempo: number | null;
+  /** Notes and riff commands sent while the voice is starting, played in order once it is up. */
+  pending: SynthMessage[];
   lastFx: unknown;
   rack: Rack | null;
   mode: EngineMode;
@@ -52,6 +56,8 @@ export class Engine {
     this.local = null;
     this.analyser = null;
     this.lastParams = null;
+    this.lastTempo = null;
+    this.pending = [];
     this.lastFx = null;
     this.rack = null;
     this.mode = 'off';
@@ -129,6 +135,11 @@ export class Engine {
     this.analyser.connect(this.rack.input);
     this.rack.output.connect(ctx.destination);
     if (this.lastParams) this.send({ type: 'params', p: this.lastParams });
+    if (this.lastTempo) this.send({ type: 'tempo', bpm: this.lastTempo });
+    // What was played while the voice loaded (the first key press is what starts it): played now, in order.
+    const pending = this.pending;
+    this.pending = [];
+    pending.forEach((m) => this.send(m));
     if (ctx.state !== 'running') await ctx.resume();
     return this.mode;
   }
@@ -142,8 +153,9 @@ export class Engine {
     if (this.ctx) await this.ctx.suspend();
   }
 
+  /** Running again after `suspend`. Before the voice exists, this is `start` (and waits for a start under way). */
   async resume(): Promise<EngineMode> {
-    if (!this.ctx) return this.start();
+    if (!this.ctx || !this.node) return this.start();
     await this.ctx.resume();
     return this.mode;
   }
@@ -156,7 +168,13 @@ export class Engine {
 
   send(msg: SynthMessage): void {
     if (msg.type === 'params') this.lastParams = msg.p;
-    if (!this.node) return;
+    if (msg.type === 'tempo') this.lastTempo = msg.bpm;
+    if (!this.node) {
+      // While starting, keep what was played. Params and tempo are replayed from `last*` anyway; with no start under
+      // way, a note has nothing to play on and is dropped, as before.
+      if (this.starting && msg.type !== 'params' && msg.type !== 'tempo') this.pending.push(msg);
+      return;
+    }
     if (this.local) this.local.handle(msg);
     else if ('port' in this.node) this.node.port.postMessage(msg);
   }

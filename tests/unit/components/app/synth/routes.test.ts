@@ -24,10 +24,14 @@ describe('parseView', () => {
     ['long', { outline: false, long: true }],
     ['long,outline', { outline: true, long: true }],
     ['outline,long', { outline: true, long: true }],
-    ['sideways', { outline: false, long: false }],
     ['outline,sideways', { outline: true, long: false }],
   ])('reads %s', (param, view) => {
     expect(parseView(param)).toEqual(view);
+  });
+
+  it('is null for a param with no word it knows, so the last view chosen still applies', () => {
+    expect(parseView('sideways')).toBeNull();
+    expect(parseView(',')).toBeNull();
   });
 });
 

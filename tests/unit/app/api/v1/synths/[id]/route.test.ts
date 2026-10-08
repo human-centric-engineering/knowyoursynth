@@ -8,6 +8,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { z } from 'zod';
 import { GET } from '@/app/api/v1/synths/[id]/route';
+import { getSynthDetail } from '@/lib/app/catalogue/read';
 import { planCatalogue } from '@/lib/app/catalogue/seed';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import {
@@ -86,6 +87,15 @@ describe('GET /api/v1/synths/:id', () => {
     expect(detail.sounds).toHaveLength(99);
     expect(detail.sounds[0]).toEqual({ ...data.sounds[0].sounds[0], version: 1 });
     expect(response.headers.get('ETag')).toMatch(/^W\/".+"$/);
+  });
+
+  it('serves exactly what the read layer returns, which is what the synth page renders', async () => {
+    // The web page reads `getSynthDetail` in-process and API clients (a native app) read this route: the two must
+    // never differ, beyond the JSON round trip.
+    const direct = await getSynthDetail('model-d');
+    const body = await parseJsonResponse(await call('model-d'));
+    expect(direct).not.toBeNull();
+    expect(body).toEqual({ success: true, data: JSON.parse(JSON.stringify(direct)) });
   });
 
   it('is a 404 in the standard envelope for an id no listed synth has', async () => {

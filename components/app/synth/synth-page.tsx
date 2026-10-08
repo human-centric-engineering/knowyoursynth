@@ -219,7 +219,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     if (engine.running) return true;
     setAudio('starting');
     try {
-      await (engine.ctx ? engine.resume() : engine.start());
+      await engine.resume();
       setAudio('on');
       meterStore.set((m) => ({ ...m, power: true }));
       return true;
@@ -337,11 +337,18 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       downKeys.delete(k);
       noteOff(n);
     };
+    // A key let go while the window is not focused sends its key-up elsewhere: leaving the window lets every key go.
+    const blur = () => {
+      downKeys.forEach((n) => noteOff(n));
+      downKeys.clear();
+    };
     window.addEventListener('keydown', kd);
     window.addEventListener('keyup', ku);
+    window.addEventListener('blur', blur);
     return () => {
       window.removeEventListener('keydown', kd);
       window.removeEventListener('keyup', ku);
+      window.removeEventListener('blur', blur);
     };
   }, [noteOn, noteOff, octave]);
 

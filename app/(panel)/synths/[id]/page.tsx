@@ -5,19 +5,22 @@ import { z } from 'zod';
 import '@/components/app/synth/synth.css';
 
 import { SynthPage } from '@/components/app/synth/synth-page';
-import { parseApiResponse, serverFetch } from '@/lib/api/server-fetch';
-import type { CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { logger } from '@/lib/logging';
 
 /**
  * One synth: play it, patch it and read about it (plan §4 "The synth page").
  *
- * The instrument is compiled in (the definition registry); everything said about it comes from the API (D13). A synth
- * the registry does not have is a 404 before any fetch. One the API does not serve (not listed) is a 404 too.
+ * The instrument is compiled in (the definition registry). Everything said about it comes from the catalogue tables
+ * (D13), read through `lib/app/catalogue/read.ts`: the same functions `GET /api/v1/synths` and `/api/v1/synths/[id]`
+ * serve, so this page and every API client (the browser, a native app) see the same data, checked the same way.
  *
- * The page component is keyed by synth, so moving to another synth starts its panel afresh rather than carrying the
- * last one's state across.
+ * In-process rather than through `serverFetch`: a server render calling its own API forwards no visitor IP, so every
+ * signed-out visitor would share one rate-limit bucket, and the round trip buys nothing (journal, `f-model-d`).
+ *
+ * A synth the registry does not have is a 404 before any read; one the catalogue does not serve (not listed) is a
+ * 404 too. The page component is keyed by synth, so moving to another synth starts its panel afresh rather than
+ * carrying the last one's state across.
  */
 
 type Props = {
@@ -26,17 +29,6 @@ type Props = {
 };
 
 const viewParam = z.string().max(32).optional().catch(undefined);
-
-async function fetchData<T>(path: string): Promise<T | null> {
-  const res = await serverFetch(path);
-  if (res.status === 404) return null;
-  const body = await parseApiResponse<T>(res);
-  if (!body.success) {
-    logger.error('synth page: API read failed', { path, code: body.error.code });
-    throw new Error(`Could not read ${path}`);
-  }
-  return body.data;
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -48,17 +40,14 @@ export default async function SynthRoute({ params, searchParams }: Props) {
   const { id } = await params;
   if (!getSynthDef(id)) notFound();
 
-  const [detail, synths] = await Promise.all([
-    fetchData<SynthDetail>(`/api/v1/synths/${encodeURIComponent(id)}`),
-    fetchData<CatalogueSynth[]>('/api/v1/synths'),
-  ]);
+  const [detail, synths] = await Promise.all([getSynthDetail(id), listSynths()]);
   if (!detail) notFound();
 
   return (
     <SynthPage
       key={id}
       detail={detail}
-      synths={synths ?? []}
+      synths={synths}
       viewParam={viewParam.parse((await searchParams).view) ?? null}
     />
   );

@@ -54,8 +54,16 @@ baseline check covers exactly what the seed writes.
 - `GET /api/v1/synths/:id`: one synth with its sounds, lineage and notes. A 404 for an id that is
   not a listed synth the registry can play.
 
-Both are public, inherit the section rate limit, and carry an ETag. They read through
-`lib/app/catalogue/read.ts`, which validates every sound again on the way out: a row an edit
+Both are public, inherit the section rate limit, and carry an ETag.
+
+**One read layer, two doors.** The routes are thin wrappers over `lib/app/catalogue/read.ts`.
+The app's own server pages call the same functions in-process; everything else (the browser,
+a native app, any other client) uses the routes. Parity tests in the route tests pin each
+response to exactly what the read function returns, so the two cannot drift. Do not add
+`serverFetch` to these routes from a server page: it forwards no visitor IP, so every signed-out
+visitor would share one rate-limit bucket.
+
+The read layer, `lib/app/catalogue/read.ts`, which validates every sound again on the way out: a row an edit
 broke, or one made on a definition version the registry no longer has, is logged and left out.
 An unusual note on a control, jack or area the synth no longer has is left out the same way. The
 list's `soundCount` counts stored rows, so it can be higher than what the detail serves while

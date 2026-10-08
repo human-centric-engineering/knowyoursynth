@@ -198,6 +198,26 @@ describe('useMidi', () => {
     });
   });
 
+  it('attaches nothing when the browser answers after the page has gone', async () => {
+    let grant: (a: unknown) => void = () => undefined;
+    setNav(vi.fn(() => new Promise((resolve) => (grant = resolve))));
+    const h = handlers();
+    const hook = renderHook(() => useMidi(h));
+    let ok: Promise<boolean> = Promise.resolve(true);
+    act(() => {
+      ok = hook.result.current.connect();
+    });
+    hook.unmount();
+    await act(async () => {
+      grant(access);
+      await ok;
+    });
+    await expect(ok).resolves.toBe(false);
+    expect(input.onmidimessage).toBeNull();
+    expect(access.onstatechange).toBeNull();
+    expect(h.remember).not.toHaveBeenCalledWith(true);
+  });
+
   it('is blocked on refusal, with the error, and forgets', async () => {
     setNav(vi.fn().mockRejectedValue(new Error('Permission denied')));
     const h = handlers();

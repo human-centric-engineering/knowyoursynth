@@ -7,6 +7,7 @@
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GET } from '@/app/api/v1/synths/route';
+import { listSynths } from '@/lib/app/catalogue/read';
 import { planCatalogue } from '@/lib/app/catalogue/seed';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import {
@@ -61,6 +62,13 @@ describe('GET /api/v1/synths', () => {
       ],
     });
     expect(response.headers.get('ETag')).toMatch(/^W\/".+"$/);
+  });
+
+  it('serves exactly what the read layer returns, which is what the synth pages render', async () => {
+    const direct = await listSynths();
+    const body = await parseJsonResponse(await GET(createMockRequest({ url })));
+    expect(direct).toHaveLength(1);
+    expect(body).toEqual({ success: true, data: JSON.parse(JSON.stringify(direct)) });
   });
 
   it('answers 304 with no body when the client already has this list', async () => {

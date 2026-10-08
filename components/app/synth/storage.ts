@@ -8,7 +8,7 @@
  * is `f-my-sounds`.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
@@ -146,12 +146,29 @@ export function useStoredSession(
     if (stored) setSession(stored);
   }, [key]);
 
+  // `unsaved`: the session the delay has not written yet. Leaving the page (or the tab) writes it at once, so a move
+  // made just before going is not lost.
+  const unsaved = useRef<Session | null>(null);
   useEffect(() => {
     if (!restored.current) return undefined;
-    const t = setTimeout(() => writeStored(key, storedSession(session)), SESSION_WRITE_DELAY_MS);
+    unsaved.current = session;
+    const t = setTimeout(() => {
+      writeStored(key, storedSession(session));
+      unsaved.current = null;
+    }, SESSION_WRITE_DELAY_MS);
     return () => clearTimeout(t);
   }, [key, session]);
+  useEffect(() => {
+    const flush = () => {
+      if (unsaved.current) writeStored(key, storedSession(unsaved.current));
+      unsaved.current = null;
+    };
+    window.addEventListener('pagehide', flush);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      flush();
+    };
+  }, [key]);
 
-  const update = useCallback((fn: (s: Session) => Session) => setSession(fn), []);
-  return [session, update];
+  return [session, setSession];
 }

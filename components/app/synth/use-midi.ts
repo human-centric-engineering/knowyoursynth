@@ -59,6 +59,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   const [devices, setDevices] = useState<string[]>([]);
   const [error, setError] = useState('');
   const access = useRef<MIDIAccess | null>(null);
+  const mounted = useRef(false);
   const handlers = useRef({ noteOn, noteOff, onWheel });
   useEffect(() => {
     handlers.current = { noteOn, noteOff, onWheel };
@@ -115,6 +116,8 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     setStatus('asking');
     try {
       const a = await navigator.requestMIDIAccess({ sysex: false });
+      // The page may have gone while the browser asked: its handlers must not be attached to the inputs.
+      if (!mounted.current) return false;
       access.current = a;
       a.onstatechange = bind;
       bind();
@@ -123,6 +126,7 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       remember(true);
       return true;
     } catch (err) {
+      if (!mounted.current) return false;
       setStatus('blocked');
       setError(err instanceof Error ? err.message : String(err));
       remember(false);
@@ -144,7 +148,13 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on mount, as the prototype
   // On unmount, including the device-change listener: left attached, it would re-bind this page's handlers to
   // every input the next time a keyboard is plugged in.
-  useEffect(() => detach, [detach]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      detach();
+    };
+  }, [detach]);
 
   return { status, devices, error, connect, disconnect };
 }
