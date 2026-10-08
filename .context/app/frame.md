@@ -11,7 +11,6 @@ app/(panel)/
 ├── error.tsx             inside the frame, so the header stays
 └── synths/
     ├── page.tsx          reopens the last synth opened (see synth-page.md)
-    ├── loading.tsx       the skeleton while a synth is read
     └── [id]/page.tsx     the synth page (synth-page.md)
 ```
 

@@ -9,7 +9,6 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | --------------------------------------- | ------------------------------------------------------------------------- |
 | `app/(panel)/synths/[id]/page.tsx`      | The route: 404s an id the registry lacks, reads the API, renders the page |
 | `app/(panel)/synths/page.tsx`           | `/synths`: reopens the last synth opened, or the first listed             |
-| `app/(panel)/synths/loading.tsx`        | A skeleton while a synth is read, including when the picker moves         |
 | `components/app/synth/synth-page.tsx`   | Holds the page state (`App.jsx`'s) and lays out the regions               |
 | `components/app/synth/synth.css`        | The instrument's classes: `kys-label`, `kys-stage`, `kys-pulse`, …        |
 | `components/app/synth/engine.ts`        | One audio engine for the visit                                            |

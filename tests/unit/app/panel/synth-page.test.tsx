@@ -5,6 +5,8 @@
  * @see app/(panel)/synths/[id]/page.tsx
  */
 
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { isValidElement } from 'react';
 import type { ReactElement } from 'react';
@@ -102,6 +104,17 @@ describe('/synths/[id]', () => {
     vi.mocked(getSynthDetail).mockRejectedValue(new Error('db down'));
     await expect(SynthRoute(props('model-d'))).rejects.toThrow('db down');
   });
+});
+
+describe('the synth routes have no loading boundary', () => {
+  // A loading.tsx wraps the page in Suspense, so Next streams the response (status 200) before the page's notFound()
+  // runs: an unknown synth would become a soft 404. Checked by `curl -w %{http_code}` on /synths/nope.
+  it.each(['app/(panel)/synths/loading.tsx', 'app/(panel)/synths/[id]/loading.tsx'])(
+    '%s does not exist',
+    (file) => {
+      expect(existsSync(join(process.cwd(), file))).toBe(false);
+    }
+  );
 });
 
 describe('generateMetadata', () => {
