@@ -289,7 +289,16 @@ const REQUEST_FAULT_CODES = new Set(['truncated_no_output', PROVIDER_NOT_PERMITT
  * failure that re-running, re-routing or failing over cannot fix.
  */
 export function isRequestFault(err: unknown): err is ProviderError {
-  return err instanceof ProviderError && REQUEST_FAULT_CODES.has(err.code);
+  return err instanceof ProviderError && isRequestFaultCode(err.code);
+}
+
+/**
+ * {@link isRequestFault} for a caller that has only the code: one that read
+ * the failure off a chat stream's `error` event, where the `ProviderError`
+ * itself does not survive (the `judge_call` step, §77 t-747).
+ */
+export function isRequestFaultCode(code: string): boolean {
+  return REQUEST_FAULT_CODES.has(code);
 }
 
 /**
@@ -449,14 +458,14 @@ export async function fetchWithTimeout(
     // and `toProviderError` takes `err.message || fallback`, so the bare form
     // is what a caller ends up logging. Describe it first.
     //
-    // The substitution only happens when there IS a cause to add, which means a
-    // network-layer failure, which carries no `.status` — so nothing is lost
-    // from `extractStatus`, and an HTTP error passes through untouched.
+    // The description also reduces any URL the message quotes (#953), so it
+    // differs from `err.message` when there is a cause to add OR a URL to
+    // reduce. Either way this is a rejection from `fetch()` itself, which
+    // carries no `.status`, so nothing is lost from `extractStatus`. The
+    // original is not kept as `cause`: its message is the unreduced one.
     const described = describeFetchFailure(err);
     throw toProviderError(
-      err instanceof Error && described !== err.message
-        ? Object.assign(new Error(described), { cause: err })
-        : err,
+      err instanceof Error && described !== err.message ? new Error(described) : err,
       'fetch failed'
     );
   } finally {

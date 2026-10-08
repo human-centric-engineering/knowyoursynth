@@ -44,6 +44,7 @@ import { cn } from '@/lib/utils';
 import { FieldHelp } from '@/components/ui/field-help';
 import { AuditModelsDialog } from '@/components/admin/orchestration/audit-models-dialog';
 import { DiscoverModelsDialog } from '@/components/admin/orchestration/discover-models-dialog';
+import { useSharedSettingsReadOnly } from '@/components/admin/shared-settings-access';
 import { apiClient, APIClientError } from '@/lib/api/client';
 import { API } from '@/lib/api/endpoints';
 import { Input } from '@/components/ui/input';
@@ -315,6 +316,9 @@ export function ProviderModelsMatrix({
   canAuditModels = false,
 }: ProviderModelsMatrixProps): React.ReactElement {
   const router = useRouter();
+  const readOnly = useSharedSettingsReadOnly();
+  // The action column is dropped when read-only; spanning rows follow it.
+  const columnCount = 11 + (readOnly ? 0 : 1);
   const [providerFilter, setProviderFilter] = useState<string>('all');
   // Master "narrow to configured providers" toggle. When true, every
   // row from a provider with no AiProviderConfig (or one that's
@@ -709,10 +713,12 @@ export function ProviderModelsMatrix({
               </FieldHelp>
             </>
           )}
-          <Button onClick={() => setDiscoverOpen(true)}>
-            <Sparkles className="mr-2 h-4 w-4" />
-            Discover models
-          </Button>
+          {!readOnly && (
+            <Button onClick={() => setDiscoverOpen(true)}>
+              <Sparkles className="mr-2 h-4 w-4" />
+              Discover models
+            </Button>
+          )}
         </div>
       </div>
 
@@ -796,13 +802,13 @@ export function ProviderModelsMatrix({
                   </FieldHelp>
                 </span>
               </TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              {!readOnly && <TableHead className="text-right">Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={12} className="text-muted-foreground py-8 text-center">
+                <TableCell colSpan={columnCount} className="text-muted-foreground py-8 text-center">
                   No models match the current filters
                 </TableCell>
               </TableRow>
@@ -961,42 +967,46 @@ export function ProviderModelsMatrix({
                       );
                     })()}
                   </TableCell>
-                  <TableCell className="text-right">
-                    {agentsInEveryOrg(model) > 0 ? (
-                      <Tip
-                        label={`Cannot delete — ${agentCount(agentsInEveryOrg(model))} still ${
-                          agentsInEveryOrg(model) === 1 ? 'uses' : 'use'
-                        } this model${
-                          (model.otherOrgAgentCount ?? 0) > 0 ? ', counting every organisation' : ''
-                        }.`}
-                      >
-                        <span className="inline-flex">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0 opacity-50"
-                            disabled
-                            aria-label={`Delete ${model.name} disabled — model is in use`}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </span>
-                      </Tip>
-                    ) : (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-destructive h-7 w-7 p-0"
-                        onClick={() => setDeleteTarget(model)}
-                        aria-label={`Delete ${model.name}`}
-                        title={`Delete ${model.name}`}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    )}
-                  </TableCell>
+                  {!readOnly && (
+                    <TableCell className="text-right">
+                      {agentsInEveryOrg(model) > 0 ? (
+                        <Tip
+                          label={`Cannot delete — ${agentCount(agentsInEveryOrg(model))} still ${
+                            agentsInEveryOrg(model) === 1 ? 'uses' : 'use'
+                          } this model${
+                            (model.otherOrgAgentCount ?? 0) > 0
+                              ? ', counting every organisation'
+                              : ''
+                          }.`}
+                        >
+                          <span className="inline-flex">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 opacity-50"
+                              disabled
+                              aria-label={`Delete ${model.name} disabled — model is in use`}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </span>
+                        </Tip>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground hover:text-destructive h-7 w-7 p-0"
+                          onClick={() => setDeleteTarget(model)}
+                          aria-label={`Delete ${model.name}`}
+                          title={`Delete ${model.name}`}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             )}

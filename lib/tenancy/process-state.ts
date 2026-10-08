@@ -231,6 +231,14 @@ export const PROCESS_STATE: readonly ProcessStateDeclaration[] = [
     why: "Key ids are unique across orgs so one map is correct, but filling it is not automatic — the refresh runs under runAsSystem because it inherited the refreshing org before §108 t-712 and silently dropped every other org's override for five minutes.",
   },
   {
+    file: 'lib/security/rate-limit-credentials.ts',
+    holders: ['verified', 'inFlight', 'lookupBudget'],
+    posture: 'row-keyed',
+    keyedBy:
+      'a SHA-256 digest of the presented credential, mapping to the stored key or token id (the lookup budget: client IP)',
+    why: "Answers only which credential row a presented value names, for the rate-limit bucket (#701); a value and the row id it maps to are unique across orgs, and scopes and the access decision stay with the route's own resolver. The shared 1000-entry cap is a noisy-neighbour question: an evicted entry costs one more lookup, not a wrong bucket. A revoked key keeps its own bucket until its entry's next re-check (under a minute), or for at most 2x the TTL while the database is failing (the route still refuses the key either way). `inFlight` holds a lookup only until it settles, under the same digest; `lookupBudget` counts cold lookups per client IP, which every org behind that IP shares by decision, like the IP request buckets.",
+  },
+  {
     file: 'lib/orchestration/mcp/singletons.ts',
     holders: ['rateLimiter'],
     posture: 'row-keyed',
@@ -321,15 +329,15 @@ export const PROCESS_STATE: readonly ProcessStateDeclaration[] = [
   // ───────────────────────────────────────────────────────────────────────
   {
     file: 'lib/orchestration/llm/model-registry-db-hydrate.ts',
-    holders: ['dbHydratedAt', 'inflight'],
+    holders: ['dbHydratedAt', 'dbFailedAt', 'inflight'],
     posture: 'global-config',
-    why: 'Hydrates the model registry from AiProviderModel, a global-config model, and holds only the freshness stamp and the in-flight promise that de-duplicates concurrent hydrations.',
+    why: 'Hydrates the model registry from AiProviderModel, a global-config model, and holds only the freshness and failure stamps and the in-flight promise that de-duplicates concurrent hydrations.',
   },
   {
     file: 'lib/orchestration/llm/model-registry.ts',
-    holders: ['state', 'inflightRefresh'],
+    holders: ['state', 'dbSourced', 'lastRegistered', 'inflightRefresh'],
     posture: 'global-config',
-    why: 'The AiProviderModel catalogue with its fallback map, refreshed behind one in-flight promise; no row in it belongs to an org.',
+    why: 'The AiProviderModel catalogue with its fallback map, refreshed behind one in-flight promise; no row in it belongs to an org. `dbSourced` records which of its figures a hydrate wrote, so the catalogue and its provenance move together, and `lastRegistered` holds the rows last hydrated so an OpenRouter rebuild re-applies them.',
   },
   {
     file: 'lib/orchestration/llm/provider-manager.ts',
