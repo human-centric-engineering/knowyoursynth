@@ -178,6 +178,24 @@ describe('Engine', () => {
     await expect(engine.start()).rejects.toThrow('Web Audio is not available');
   });
 
+  it('forgets a failed start, and what was queued for it, so a retry boots afresh', async () => {
+    vi.stubGlobal('window', {});
+    const engine = new Engine(() => {});
+    const first = engine.start();
+    engine.send({ type: 'noteOn', n: 60 }); // queued behind the start
+    await expect(first).rejects.toThrow('Web Audio is not available');
+    expect(engine.starting).toBeNull();
+    expect(engine.pending).toEqual([]);
+
+    engine.send({ type: 'noteOn', n: 62 }); // nothing is starting: dropped, not queued forever
+    expect(engine.pending).toEqual([]);
+
+    // The cause goes away (here: Web Audio appears) and the next press retries rather than replaying the failure.
+    setup('ok');
+    await expect(engine.resume()).resolves.toBe('worklet');
+    expect(engine.running).toBe(true);
+  });
+
   it('suspends with a panic and resumes, starting first if it never started', async () => {
     const { Ctx, engine } = setup('ok');
     await expect(engine.resume()).resolves.toBe('worklet');

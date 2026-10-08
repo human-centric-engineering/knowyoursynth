@@ -27,7 +27,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
-import type { ControlValue, Phrase } from '@/lib/app/synths/contract';
+import type { ControlValue, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import {
   HelpButton,
@@ -97,7 +97,7 @@ const FxSchema = z.unknown().transform(normalizeFx);
 const FX_FALLBACK = normalizeFx(null);
 
 /** A panel with the synth's first sound loaded and no lesson step: how a synth opens the first time. */
-function freshSession(def: AppSynthDef, preset: CatalogueSound | undefined): Session {
+function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Session {
   return { presetId: preset?.id ?? null, step: null, ...presetState(def, preset) };
 }
 
@@ -177,7 +177,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     [synthDef, view.long]
   );
 
-  const [sess, patch] = useStoredSession(synthDef, () => freshSession(baseDef, sounds[0]));
+  const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]));
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
   const target = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
 
@@ -316,6 +316,9 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   const downKeysRef = useRef(new Map<string, number>());
   useEffect(() => {
     const downKeys = downKeysRef.current;
+    // Held keys are tracked by the physical key: its character can change between press and release (Shift turns
+    // `;` into `:`), and a release that did not match would leave the note sounding.
+    const physical = (e: KeyboardEvent) => e.code || e.key.toLowerCase();
     const typing = (e: KeyboardEvent) =>
       e.target instanceof HTMLElement &&
       (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable);
@@ -323,18 +326,17 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       if (typing(e) || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
       const k = e.key.toLowerCase();
       const semi = QWERTY[k];
-      if (semi !== undefined && !downKeys.has(k)) {
+      if (semi !== undefined && !downKeys.has(physical(e))) {
         const n = 48 + octave * 12 + semi;
-        downKeys.set(k, n);
+        downKeys.set(physical(e), n);
         noteOn(n);
       } else if (k === 'z') setOctave((o) => Math.max(OCTAVE_MIN, o - 1));
       else if (k === 'x') setOctave((o) => Math.min(OCTAVE_MAX, o + 1));
     };
     const ku = (e: KeyboardEvent) => {
-      const k = e.key.toLowerCase();
-      const n = downKeys.get(k);
+      const n = downKeys.get(physical(e));
       if (n === undefined) return;
-      downKeys.delete(k);
+      downKeys.delete(physical(e));
       noteOff(n);
     };
     // A key let go while the window is not focused sends its key-up elsewhere: leaving the window lets every key go.

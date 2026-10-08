@@ -66,7 +66,15 @@ export class Engine {
 
   start(): Promise<EngineMode> {
     if (this.starting) return this.starting;
-    this.starting = this.boot();
+    // A failed start is forgotten, with what was queued for it: the next start (a retry) boots afresh, and nothing
+    // queues behind a voice that will never come.
+    this.starting = this.boot().catch((err: unknown) => {
+      this.starting = null;
+      this.pending = [];
+      this.ctx = null;
+      this.node = null;
+      throw err;
+    });
     return this.starting;
   }
 

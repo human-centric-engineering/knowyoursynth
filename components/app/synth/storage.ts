@@ -8,7 +8,7 @@
  * is `f-my-sounds`.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
@@ -131,7 +131,6 @@ export function useStoredSession(
   fresh: () => Session
 ): [Session, (fn: (s: Session) => Session) => void] {
   const [session, setSession] = useState<Session>(fresh);
-  const restored = useRef(false);
   const key = sessionKey(def.id);
 
   // Once per synth, not per definition object: a server re-render hands a new (equal) definition, and re-reading
@@ -142,26 +141,36 @@ export function useStoredSession(
   });
   useEffect(() => {
     const stored = parseSession(defRef.current, readStored(key));
-    restored.current = true;
     if (stored) setSession(stored);
   }, [key]);
 
-  // `unsaved`: the session the delay has not written yet. Leaving the page (or the tab) writes it at once, so a move
-  // made just before going is not lost.
-  const unsaved = useRef<Session | null>(null);
+  // Only a change the visitor made is written. The fresh panel and the restored one are not: writing either back
+  // would race the restore, and React's development remount (or any unmount before the restore re-renders) would
+  // then save the fresh panel over the stored one.
+  const dirty = useRef(false);
+  const latest = useRef(session);
   useEffect(() => {
-    if (!restored.current) return undefined;
-    unsaved.current = session;
+    latest.current = session;
+  });
+  const update = useCallback((fn: (s: Session) => Session) => {
+    dirty.current = true;
+    setSession(fn);
+  }, []);
+
+  useEffect(() => {
+    if (!dirty.current) return undefined;
     const t = setTimeout(() => {
       writeStored(key, storedSession(session));
-      unsaved.current = null;
+      dirty.current = false;
     }, SESSION_WRITE_DELAY_MS);
     return () => clearTimeout(t);
   }, [key, session]);
+  // Leaving the page (or the tab) writes a change the delay has not saved yet, so a move made just before going is
+  // not lost.
   useEffect(() => {
     const flush = () => {
-      if (unsaved.current) writeStored(key, storedSession(unsaved.current));
-      unsaved.current = null;
+      if (dirty.current) writeStored(key, storedSession(latest.current));
+      dirty.current = false;
     };
     window.addEventListener('pagehide', flush);
     return () => {
@@ -170,5 +179,5 @@ export function useStoredSession(
     };
   }, [key]);
 
-  return [session, setSession];
+  return [session, update];
 }

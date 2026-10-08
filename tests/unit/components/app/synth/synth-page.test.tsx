@@ -779,6 +779,16 @@ describe('SynthPage computer keyboard', () => {
     ]);
   });
 
+  it('releases a key whose character changed before it was let go (Shift turns ; into :)', () => {
+    page();
+    fireEvent.keyDown(window, { key: ';', code: 'Semicolon' });
+    fireEvent.keyUp(window, { key: ':', code: 'Semicolon', shiftKey: true });
+    expect(notes()).toEqual([
+      { type: 'noteOn', n: 64, v: 0.85 },
+      { type: 'noteOff', n: 64 },
+    ]);
+  });
+
   it('lets every held key go when the window loses focus, since their key-ups go elsewhere', () => {
     page();
     fireEvent.keyDown(window, { key: 'a' });

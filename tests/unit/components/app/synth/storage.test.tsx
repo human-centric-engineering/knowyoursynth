@@ -7,6 +7,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { StrictMode } from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { z } from 'zod';
 import {
@@ -300,6 +301,20 @@ describe('useStoredSession', () => {
       values: { ...def.init, 'ctl.tune': 2 },
       cables: [{ from: 'j.lfoTri', to: 'j.oscCv', color: CABLE_COLORS[0] }],
     });
+  });
+
+  it("keeps the stored panel through React's development remount, writing nothing back", () => {
+    // StrictMode mounts, unmounts and mounts again: an unmount before the restore has re-rendered must not save the
+    // fresh panel over the stored one.
+    const stored = { presetId: 'bass', step: null, values: { 'ctl.tune': 2 }, cables: [] };
+    window.localStorage.setItem(sessionKey(def.id), JSON.stringify(stored));
+    setItem.mockClear();
+
+    const { result } = renderHook(() => useStoredSession(def, fresh), { wrapper: StrictMode });
+
+    expect(result.current[0]).toMatchObject({ presetId: 'bass', values: { 'ctl.tune': 2 } });
+    expect(writesTo(sessionKey(def.id))).toHaveLength(0);
+    expect(JSON.parse(window.localStorage.getItem(sessionKey(def.id)) ?? 'null')).toEqual(stored);
   });
 
   it('stays fresh when the stored session is unusable', () => {
