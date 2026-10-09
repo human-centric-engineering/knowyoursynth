@@ -176,6 +176,8 @@ function page(over: Partial<SynthPageProps> = {}) {
 const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
+const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const paramsSent = () =>
   engine.send.mock.calls
     .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
@@ -223,7 +225,7 @@ describe('SynthPage layout', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
-    expect(screen.getByText('Fat bass')).toBeTruthy();
+    expect(loadedName()).toBe('Fat bass');
     expect(screen.getByText('Loaded:')).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
@@ -403,6 +405,15 @@ describe('SynthPage patch', () => {
     expect(screen.queryByRole('button', { name: 'Put it back' })).toBeNull();
   });
 
+  it('reads a stored step past the end of its sound as the finished sound', () => {
+    expect(FAT_BASS.steps).toHaveLength(1);
+    storeSession({ presetId: 'fat-bass', step: 3, values: {}, cables: [] });
+    page();
+    expect(loadedName()).toBe('Fat bass');
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(screen.getByRole('tab', { name: /Build it/ }).textContent).toContain('1 steps');
+  });
+
   it('keeps an unsaved move when the route re-renders with an equal synth', () => {
     // Something is stored, so a second read of storage would have a panel to put back.
     storeSession({
@@ -448,7 +459,7 @@ describe('SynthPage patch', () => {
     fireEvent.click(button('Blank patch'));
 
     expect(screen.queryByRole('button', { name: 'Unplug all' })).toBeNull();
-    expect(screen.getByText('Wobble lead')).toBeTruthy();
+    expect(loadedName()).toBe('Wobble lead');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       String(def.init['filter.cutoff'])
     );
@@ -733,6 +744,22 @@ describe('SynthPage computer keyboard', () => {
     expect(screen.queryByText('-1')).toBeNull();
   });
 
+  it('ignores keys pressed inside a modal dialog over the page', () => {
+    page();
+    const dialog = document.createElement('dialog');
+    const inside = document.createElement('button');
+    dialog.appendChild(inside);
+    document.body.appendChild(dialog);
+    try {
+      fireEvent.keyDown(inside, { key: 'a' });
+      fireEvent.keyDown(inside, { key: 'z' });
+      expect(notes()).toEqual([]);
+      expect(screen.queryByText('-1')).toBeNull();
+    } finally {
+      dialog.remove();
+    }
+  });
+
   it('ignores keys pressed with a modifier', () => {
     page();
     fireEvent.keyDown(window, { key: 'a', ctrlKey: true });
@@ -913,7 +940,7 @@ describe('SynthPage session', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
-    expect(screen.getByText('Wobble lead')).toBeTruthy();
+    expect(loadedName()).toBe('Wobble lead');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
     expect(screen.getByText('1 control moved')).toBeTruthy(); // mix.osc1 is 3, the sound leaves it at 8
   });
@@ -921,7 +948,7 @@ describe('SynthPage session', () => {
   it('starts from the first sound when the stored session is not usable', () => {
     window.localStorage.setItem(SESSION_KEY, '{"presetId": 7}');
     page();
-    expect(screen.getByText('Fat bass')).toBeTruthy();
+    expect(loadedName()).toBe('Fat bass');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 

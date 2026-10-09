@@ -10,6 +10,7 @@ at [`../substrate.md`](../substrate.md).
 | [`catalogue.md`](./catalogue.md)                 | The catalogue: its four tables, exporting a synth's content, the seed's rules, and the public API that reads it.             |
 | [`frame.md`](./frame.md)                         | The app frame: the `(panel)` route group, the faces and why not `next/font`, the consumer palette, the nav seams.            |
 | [`synth-page.md`](./synth-page.md)               | The synth page: where its pieces are, the URL and hash links, what a signed-out browser keeps, and what is still to come.    |
+| [`synth-port.md`](./synth-port.md)               | Porting a synth: definition, brand tags, export, seed, check, page. The recipe Model D went through, for the other 24.       |
 | [`check/README.md`](./check/README.md)           | The synth check baseline: one fingerprint per sound, per synth (`check/<id>.json`), and how `npm run check:synths` compares. |
 | [`divergences.md`](./divergences.md)             | The divergence ledger: every edit carried to a Sunrise-owned file, why, what to do on conflict, and what deletes it.         |
 | [`planning/app-plan.md`](./planning/app-plan.md) | The plan for porting the prototype into this app: decisions D1–D13, the file-by-file porting map, phases and features.       |
