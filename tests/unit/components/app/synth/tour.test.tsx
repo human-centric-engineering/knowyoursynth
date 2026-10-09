@@ -152,6 +152,72 @@ describe('Tour', () => {
     expect(within(dialog()).getByText('Explain sections')).toBeTruthy();
   });
 
+  it('rings a naming note’s controls on hover, and finds the first on the panel on click', () => {
+    setup();
+    const i = stopIndex('naming');
+    goTo(i);
+    const stop = stops[i];
+    if (stop.kind !== 'naming') throw new Error('not the naming stop');
+    const n = stop.notes[0];
+    const link = within(dialog()).getByTitle(`Find ${n.names[0]} on the panel`);
+    fireEvent.pointerEnter(link);
+    expect(highlightStore.get()).toEqual(n.ids);
+    fireEvent.pointerLeave(link);
+    expect(highlightStore.get()).toEqual([]);
+    fireEvent.click(link);
+    expect(findStore.get()).toEqual({ kind: n.kind, id: n.id });
+    expect(focusStore.get()).toMatchObject({ kind: n.kind, id: n.id });
+  });
+
+  it('rings a control or socket on hover from its chip, and finds a socket on click', () => {
+    setup();
+    const i = stops.findIndex((s) => s.kind === 'module' && s.controls.length && s.jacks.length);
+    goTo(i);
+    const stop = stops[i];
+    if (stop.kind !== 'module') throw new Error('not a module stop');
+    const chips = within(dialog()).getByText(/What is in here/).parentElement;
+    if (!chips) throw new Error('no chips');
+    const buttons = within(chips).getAllByRole('button');
+    const control = buttons[0];
+    const jack = buttons[stop.controls.length];
+    fireEvent.pointerEnter(control);
+    expect(highlightStore.get()).toEqual([stop.controls[0].id]);
+    fireEvent.pointerLeave(control);
+    expect(highlightStore.get()).toEqual([]);
+    fireEvent.pointerEnter(jack);
+    expect(highlightStore.get()).toEqual([stop.jacks[0].id]);
+    fireEvent.pointerLeave(jack);
+    expect(highlightStore.get()).toEqual([]);
+    fireEvent.click(jack);
+    expect(findStore.get()).toEqual({ kind: 'jack', id: stop.jacks[0].id });
+    expect(focusStore.get()).toMatchObject({ kind: 'jack', id: stop.jacks[0].id });
+  });
+
+  it('lights one area of a section with several from its name', () => {
+    setup();
+    const i = stops.findIndex((s) => s.kind === 'module' && s.areas.length > 1);
+    goTo(i);
+    const stop = stops[i];
+    if (stop.kind !== 'module') throw new Error('not a module stop');
+    const a = stop.areas[1];
+    fireEvent.click(within(dialog()).getByRole('button', { name: a.label }));
+    expect(findStore.get()).toEqual({ kind: 'area', id: a.id });
+  });
+
+  it('ignores keys typed into a text field', () => {
+    const { onClose } = setup();
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    try {
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(input, { key: 'Escape' });
+      expect(title()).toBe(stops[0].title);
+      expect(onClose).not.toHaveBeenCalled();
+    } finally {
+      input.remove();
+    }
+  });
+
   it('clears the spotlight and highlight when it closes', () => {
     const { unmount } = setup();
     goTo(stopIndex('module'));

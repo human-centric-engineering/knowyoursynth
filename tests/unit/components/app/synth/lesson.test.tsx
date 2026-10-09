@@ -185,6 +185,124 @@ describe('Lesson walkthrough', () => {
   });
 });
 
+describe('Lesson pointing at the panel', () => {
+  it('rings a value chip’s control on hover and focus, back to the step on leave, and opens it on click', () => {
+    setup(1);
+    const base = stepIds(sound.steps[1]);
+    const [id] = Object.keys(sound.steps[1].set ?? {});
+    const c = controlMap(def)[id];
+    if (!c) throw new Error(`no control ${id}`);
+    const chip = within(visibleStep()).getByText(displayName(def, c)).closest('button');
+    if (!chip) throw new Error('no chip');
+    fireEvent.pointerEnter(chip);
+    expect(highlightStore.get()).toEqual([id]);
+    fireEvent.pointerLeave(chip);
+    expect(highlightStore.get()).toEqual(base);
+    fireEvent.focus(chip);
+    expect(highlightStore.get()).toEqual([id]);
+    fireEvent.blur(chip);
+    expect(highlightStore.get()).toEqual(base);
+    fireEvent.click(chip);
+    expect(focusStore.get()).toMatchObject({ kind: 'control', id });
+  });
+
+  it('rings both ends of a cable on hover and focus, back to the step on leave', () => {
+    const at = sound.steps.findIndex((s) => s.cables?.length);
+    setup(at);
+    const base = stepIds(sound.steps[at]);
+    const pair = sound.steps[at].cables?.[0];
+    if (!pair) throw new Error('no cable');
+    const chip = within(visibleStep()).getAllByTitle('Explain this cable in the inspector')[0];
+    fireEvent.pointerEnter(chip);
+    expect(highlightStore.get()).toEqual(pair);
+    fireEvent.pointerLeave(chip);
+    expect(highlightStore.get()).toEqual(base);
+    fireEvent.focus(chip);
+    expect(highlightStore.get()).toEqual(pair);
+    fireEvent.blur(chip);
+    expect(highlightStore.get()).toEqual(base);
+  });
+
+  it('lights a step card’s controls on hover while browsing, but not during a walkthrough', () => {
+    const { onStep, unmount } = setup(null);
+    fireEvent.click(tab(/Build it/));
+    const card = visibleStep().firstElementChild;
+    if (!card) throw new Error('no card');
+    fireEvent.pointerEnter(card);
+    expect(highlightStore.get()).toEqual(stepIds(sound.steps[0]));
+    fireEvent.pointerLeave(card);
+    expect(highlightStore.get()).toEqual([]);
+    fireEvent.click(within(visibleStep()).getByTitle('Set the panel to this step'));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+    unmount();
+
+    setup(1);
+    const walkingCard = visibleStep().firstElementChild;
+    if (!walkingCard) throw new Error('no card');
+    fireEvent.pointerEnter(walkingCard);
+    fireEvent.pointerLeave(walkingCard);
+    expect(highlightStore.get()).toEqual(stepIds(sound.steps[1]));
+  });
+
+  it('rings a tweak’s control on hover, and clears it on leave', () => {
+    setup();
+    fireEvent.click(tab(/Make it yours/));
+    const t = sound.tweaks[0];
+    const item = within(panel()).getByText(t.try).closest('li');
+    if (!item) throw new Error('no tweak');
+    fireEvent.pointerEnter(item);
+    expect(highlightStore.get()).toEqual([t.id]);
+    fireEvent.pointerLeave(item);
+    expect(highlightStore.get()).toEqual([]);
+  });
+});
+
+describe('Lesson moving between steps and tabs', () => {
+  it('goes back a step from the step bar’s arrow', () => {
+    setup(null);
+    fireEvent.click(tab(/Build it/));
+    fireEvent.click(screen.getByRole('button', { name: 'Next step' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Previous step' }));
+    expect(within(visibleStep()).getByText(sound.steps[0].title)).toBeTruthy();
+  });
+
+  it('opens Make it yours from the overview, and starts from a blank patch on Build it', () => {
+    const { onStep } = setup();
+    fireEvent.click(screen.getByRole('button', { name: 'Ways to make it yours' }));
+    expect(tab(/Make it yours/).getAttribute('aria-selected')).toBe('true');
+    fireEvent.click(tab(/Build it/));
+    fireEvent.click(screen.getByRole('button', { name: 'Start from a blank patch' }));
+    expect(onStep).toHaveBeenLastCalledWith(0);
+  });
+
+  it('ignores keys on the tabs that do not move between them', () => {
+    setup();
+    fireEvent.keyDown(tab(/How it works/), { key: 'a' });
+    expect(tab(/How it works/).getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('makes the step a swipe comes to rest on current, and moves the walkthrough to it', () => {
+    vi.useFakeTimers();
+    try {
+      const { onStep } = setup(0);
+      // The track holding the step cards, not the numbered step bar above it.
+      const track = visibleStep().parentElement;
+      if (!track) throw new Error('no track');
+      Object.defineProperty(track, 'clientWidth', { configurable: true, value: 300 });
+      Object.defineProperty(track, 'scrollLeft', { configurable: true, value: 600 });
+      fireEvent.scroll(track);
+      expect(onStep).not.toHaveBeenCalled();
+      act(() => {
+        vi.advanceTimersByTime(140);
+      });
+      expect(onStep).toHaveBeenLastCalledWith(2);
+      expect(within(visibleStep()).getByText(sound.steps[2].title)).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
 describe('Lesson tweaks', () => {
   it('lists each tweak and focuses its control in the inspector', () => {
     setup();

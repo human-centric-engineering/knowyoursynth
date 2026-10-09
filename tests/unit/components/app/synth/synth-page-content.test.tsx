@@ -126,7 +126,8 @@ describe('the library on the page', () => {
       expect(screen.getByRole('heading', { level: 2, name: p.name })).toBeTruthy();
       expect(lastParams()).toEqual(expectedParams(p));
     }
-  });
+    // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.
+  }, 90_000);
 });
 
 describe('the lesson on the page', () => {
