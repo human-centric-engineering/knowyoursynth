@@ -103,6 +103,7 @@ describe('Lineage', () => {
     // A click inside the content does not close it.
     fireEvent.click(within(dialog).getByText(lineage.intro));
     expect(dialog.open).toBe(true);
+    fireEvent.pointerDown(dialog);
     fireEvent.click(dialog);
     expect(dialog.open).toBe(false);
     expect(onClose).toHaveBeenCalledTimes(2);

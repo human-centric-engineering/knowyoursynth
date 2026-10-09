@@ -86,6 +86,7 @@ describe('Limits', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(dialog.open).toBe(false);
     dialog.showModal();
+    fireEvent.pointerDown(dialog);
     fireEvent.click(dialog);
     expect(dialog.open).toBe(false);
     expect(onClose).toHaveBeenCalledTimes(2);

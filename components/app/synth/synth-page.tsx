@@ -183,6 +183,9 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
 
   const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]));
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
+  // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
+  // sound, then.
+  const step = preset && sess.step != null && sess.step < preset.steps.length ? sess.step : null;
   const target = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
 
   const [audio, setAudio] = useState<AudioState>('off');
@@ -329,8 +332,11 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     const typing = (e: KeyboardEvent) =>
       e.target instanceof HTMLElement &&
       (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable);
+    // A modal dialog (lineage, limits) leaves the panel behind it inert, so its keys do not play.
+    const inModal = (e: KeyboardEvent) =>
+      e.target instanceof Element && !!e.target.closest('dialog');
     const kd = (e: KeyboardEvent) => {
-      if (typing(e) || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+      if (typing(e) || inModal(e) || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
       const k = e.key.toLowerCase();
       const semi = QWERTY[k];
       if (semi !== undefined && !downKeys.has(physical(e))) {
@@ -432,7 +438,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   };
 
   const changed = def.controls.filter(
-    (c) => sess.step == null && sess.values[c.id] !== target[c.id]
+    (c) => step == null && sess.values[c.id] !== target[c.id]
   ).length;
   const toggleAudio = async () => {
     if (!engine) return;
@@ -494,9 +500,9 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
             <p className="truncate text-[15px]">
               <span className="text-(--kys-muted)">Loaded: </span>
               <span className="font-semibold">{preset ? preset.name : 'Blank patch'}</span>
-              {preset && sess.step != null && (
+              {preset && step != null && (
                 <span className="ml-2 rounded bg-(--kys-accent) px-1.5 py-0.5 font-mono text-xs text-(--kys-accent-ink)">
-                  step {sess.step + 1} of {preset.steps.length}
+                  step {step + 1} of {preset.steps.length}
                 </span>
               )}
               {changed > 0 && (
@@ -631,7 +637,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
             <SynthPanel
               def={def}
               values={sess.values}
-              target={sess.step == null ? target : null}
+              target={step == null ? target : null}
               cables={sess.cables}
               outline={view.outline}
               zoom={zoom}
@@ -691,7 +697,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
         <Library presets={sounds} currentId={preset?.id ?? null} onSelect={selectPreset} />
         {preset ? (
-          <Lesson def={def} preset={preset} step={sess.step} onStep={setStep} />
+          <Lesson def={def} preset={preset} step={step} onStep={setStep} />
         ) : (
           <p className="text-sm text-(--kys-muted)">This synth has no sounds yet.</p>
         )}
@@ -699,7 +705,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           <Inspector
             def={def}
             values={sess.values}
-            target={sess.step == null ? target : null}
+            target={step == null ? target : null}
             preset={preset ?? null}
             cables={sess.cables}
             onChange={onChange}
@@ -749,7 +755,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
         enabled={tipsOn}
         def={def}
         values={sess.values}
-        target={sess.step == null ? target : null}
+        target={step == null ? target : null}
         preset={preset ?? null}
         cables={sess.cables}
       />

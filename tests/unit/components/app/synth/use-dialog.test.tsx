@@ -42,13 +42,24 @@ describe('useDialog', () => {
   it('closes from inside, and on a click on the backdrop but not on its content', () => {
     const { container } = render(<Harness open />);
     const d = dialog(container);
+    fireEvent.pointerDown(screen.getByText('Inside'));
     fireEvent.click(screen.getByText('Inside'));
     expect(d.open).toBe(true);
+    fireEvent.pointerDown(d);
     fireEvent.click(d);
     expect(d.open).toBe(false);
     d.showModal();
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(d.open).toBe(false);
+  });
+
+  it('stays open when a press inside is dragged out past the edge', () => {
+    const { container } = render(<Harness open />);
+    const d = dialog(container);
+    // A text selection dragged out of the content: the press is inside, the click lands on the dialog element.
+    fireEvent.pointerDown(screen.getByText('Inside'));
+    fireEvent.click(d);
+    expect(d.open).toBe(true);
   });
 
   it('does nothing while no dialog is attached', () => {

@@ -218,6 +218,28 @@ describe('Tour', () => {
     }
   });
 
+  it('leaves Escape to a modal dialog over the page, and arrows something else already handled', () => {
+    const { onClose } = setup();
+    const modal = document.createElement('dialog');
+    const inside = document.createElement('button');
+    modal.appendChild(inside);
+    document.body.appendChild(modal);
+    try {
+      fireEvent.keyDown(inside, { key: 'Escape' });
+      fireEvent.keyDown(inside, { key: 'ArrowRight' });
+      expect(onClose).not.toHaveBeenCalled();
+      expect(title()).toBe(stops[0].title);
+    } finally {
+      modal.remove();
+    }
+    const handled = new KeyboardEvent('keydown', { key: 'ArrowRight', cancelable: true });
+    handled.preventDefault();
+    act(() => {
+      window.dispatchEvent(handled);
+    });
+    expect(title()).toBe(stops[0].title);
+  });
+
   it('clears the spotlight and highlight when it closes', () => {
     const { unmount } = setup();
     goTo(stopIndex('module'));

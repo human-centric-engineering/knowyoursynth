@@ -238,10 +238,12 @@ export function Tour({ def, notes, onClose }: TourProps) {
   );
 
   // Arrow keys move between stops; Escape leaves. The note keys (A W S E D…) are untouched, so the synth can still be
-  // played while the tour is open.
+  // played while the tour is open. A key something else already handled (the lesson's tabs), or one meant for a modal
+  // dialog over the page (Escape closing the lineage), is not the tour's.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target;
+      if (e.defaultPrevented || (t instanceof Element && t.closest('dialog'))) return;
       if (
         t instanceof HTMLElement &&
         (['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName) || t.isContentEditable)

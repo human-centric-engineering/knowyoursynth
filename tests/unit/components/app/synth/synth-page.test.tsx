@@ -405,6 +405,15 @@ describe('SynthPage patch', () => {
     expect(screen.queryByRole('button', { name: 'Put it back' })).toBeNull();
   });
 
+  it('reads a stored step past the end of its sound as the finished sound', () => {
+    expect(FAT_BASS.steps).toHaveLength(1);
+    storeSession({ presetId: 'fat-bass', step: 3, values: {}, cables: [] });
+    page();
+    expect(loadedName()).toBe('Fat bass');
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(screen.getByRole('tab', { name: /Build it/ }).textContent).toContain('1 steps');
+  });
+
   it('keeps an unsaved move when the route re-renders with an equal synth', () => {
     // Something is stored, so a second read of storage would have a panel to put back.
     storeSession({
@@ -733,6 +742,22 @@ describe('SynthPage computer keyboard', () => {
     fireEvent.keyDown(input, { key: 'z' });
     expect(notes()).toEqual([]);
     expect(screen.queryByText('-1')).toBeNull();
+  });
+
+  it('ignores keys pressed inside a modal dialog over the page', () => {
+    page();
+    const dialog = document.createElement('dialog');
+    const inside = document.createElement('button');
+    dialog.appendChild(inside);
+    document.body.appendChild(dialog);
+    try {
+      fireEvent.keyDown(inside, { key: 'a' });
+      fireEvent.keyDown(inside, { key: 'z' });
+      expect(notes()).toEqual([]);
+      expect(screen.queryByText('-1')).toBeNull();
+    } finally {
+      dialog.remove();
+    }
   });
 
   it('ignores keys pressed with a modifier', () => {
