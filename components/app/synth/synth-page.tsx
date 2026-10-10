@@ -14,15 +14,15 @@
  * (`f-databank`). The theme switch is Sunrise's, in the header.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import { normalizeFx } from '@/lib/app/synths/audio/fx';
 import type { RackFx } from '@/lib/app/synths/audio/fx';
-import { getSynthDef } from '@/lib/app/synths/defs';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
+import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
@@ -137,11 +137,14 @@ export interface SynthPageProps {
 }
 
 /**
- * The synth's definition is looked up here, not passed in: it holds functions, so it cannot cross from the server
- * page.
+ * The synth's definition is loaded here, not passed in: it holds functions, so it cannot cross from the server
+ * page. It is loaded alone (`defs/load.ts`), so the page's bundle carries no definition. Until it arrives the page
+ * suspends: the server render waits for it, and a move to another synth keeps the last one showing meanwhile.
  */
 export function SynthPage(props: SynthPageProps) {
-  const baseDef = getSynthDef(props.detail.synth.id);
+  const id = props.detail.synth.id;
+  const loading = loadSynthDef(id);
+  const baseDef = loadedSynthDef(id) ?? (loading ? use(loading) : null);
   return baseDef ? <Synth baseDef={baseDef} {...props} /> : null;
 }
 

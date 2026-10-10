@@ -6,7 +6,11 @@
  * job (m2), and a synth's "Heard on" list comes from the databank (`f-databank`), not from this
  * file.
  *
- * A synth joins by adding its module under `defs/` and one line below (`.context/app/synths.md`).
+ * Every definition at once, for server code: the read layer, the seed and `check:synths`. The synth page loads only
+ * the one it shows, through `defs/load.ts`; it must not import this file, which would bundle them all.
+ *
+ * A synth joins by adding its module under `defs/`, one line below and one line in `defs/load.ts`
+ * (`.context/app/synths.md`).
  */
 import type { SynthDef } from '@/lib/app/synths/contract';
 import modelD from '@/lib/app/synths/defs/model-d';

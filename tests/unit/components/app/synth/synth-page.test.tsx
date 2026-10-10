@@ -20,6 +20,7 @@ import {
 } from '@/components/app/synth/stores';
 import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 
 const { router, engine, events } = vi.hoisted(() => ({
@@ -53,7 +54,9 @@ if (!def) throw new Error('model-d is not registered');
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
-beforeAll(() => {
+beforeAll(async () => {
+  // The page loads its definition on its own (`defs/load.ts`). Loaded here, it renders without suspending.
+  await loadSynthDef('model-d');
   // happy-dom has no SVG geometry or pointer capture; the panel only needs the identity.
   Object.assign(SVGElement.prototype, {
     getScreenCTM: () => ({ ...IDENTITY, inverse: () => IDENTITY }),

@@ -16,6 +16,7 @@ import { MAP_OFF, findStore, focusStore, mapStore } from '@/components/app/synth
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type { ProbeJob, ProbeResult } from '@/lib/app/synths/audio/probe';
 import { controlMap, displayName, presetState } from '@/lib/app/synths/lib/patch';
@@ -68,6 +69,8 @@ const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 let detail: SynthDetail;
 
 beforeAll(async () => {
+  // The page loads its definition on its own (`defs/load.ts`). Loaded here, it renders without suspending.
+  await loadSynthDef('model-d');
   Object.assign(SVGElement.prototype, {
     getScreenCTM: () => ({ ...IDENTITY, inverse: () => IDENTITY }),
     setPointerCapture: () => undefined,

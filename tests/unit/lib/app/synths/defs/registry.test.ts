@@ -3,6 +3,7 @@
  * tags the neutral design depends on (D11).
  *
  * @see lib/app/synths/defs/index.ts
+ * @see lib/app/synths/defs/load.ts
  * @see lib/app/synths/defs/model-d.ts
  */
 import { readdirSync, readFileSync } from 'node:fs';
@@ -10,6 +11,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Decor } from '@/lib/app/synths/contract';
 import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { LOADABLE_SYNTH_IDS, loadedSynthDef, loadSynthDef } from '@/lib/app/synths/defs/load';
 
 const DEFS_DIR = path.join(process.cwd(), 'lib/app/synths/defs');
 
@@ -60,6 +62,29 @@ describe('definition registry', () => {
       expect(Object.keys(def.init).sort(), def.id).toEqual(def.controls.map((c) => c.id).sort());
       for (const c of def.controls) expect(def.init[c.id], `${def.id} ${c.id}`).toBe(c.def);
     }
+  });
+});
+
+describe('per-synth loader', () => {
+  it('has a loader for every registered definition, and none for anything else', () => {
+    expect([...LOADABLE_SYNTH_IDS].sort()).toEqual(SYNTH_DEFS.map((d) => d.id).sort());
+  });
+
+  it('loads the same definition the registry holds', async () => {
+    for (const def of SYNTH_DEFS) await expect(loadSynthDef(def.id), def.id).resolves.toBe(def);
+  });
+
+  it('returns one promise per id, and has the definition at hand once it has loaded', async () => {
+    const first = loadSynthDef('model-d');
+    expect(loadSynthDef('model-d')).toBe(first);
+    await first;
+    expect(loadedSynthDef('model-d')).toBe(getSynthDef('model-d'));
+  });
+
+  it('has no loader for an id no synth has, inherited names included', () => {
+    expect(loadSynthDef('minimoog')).toBeNull();
+    expect(loadSynthDef('constructor')).toBeNull();
+    expect(loadedSynthDef('minimoog')).toBeUndefined();
   });
 });
 
