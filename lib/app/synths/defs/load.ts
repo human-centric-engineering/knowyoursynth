@@ -32,6 +32,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'model-15': () => import('@/lib/app/synths/defs/model-15'),
   grandmother: () => import('@/lib/app/synths/defs/grandmother'),
   cat: () => import('@/lib/app/synths/defs/cat'),
+  '2-xm': () => import('@/lib/app/synths/defs/2-xm'),
 };
 
 /** Every id a loader exists for. */
