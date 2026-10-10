@@ -38,6 +38,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'ub-xa-d': () => import('@/lib/app/synths/defs/ub-xa-d'),
   'jupiter-4': () => import('@/lib/app/synths/defs/jupiter-4'),
   'jupiter-6': () => import('@/lib/app/synths/defs/jupiter-6'),
+  'jupiter-8': () => import('@/lib/app/synths/defs/jupiter-8'),
 };
 
 /** Every id a loader exists for. */
