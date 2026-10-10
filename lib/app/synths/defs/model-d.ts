@@ -37,6 +37,7 @@ import type {
   SynthDef,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import {
   clamp,
   type CurvePoint,
@@ -48,8 +49,6 @@ import {
   pwl,
 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control or jack keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = OmitEach<KnobControl, 'id' | 'type' | 'x' | 'y' | 'r' | 'style'>;
 type RockerRest = OmitEach<
   RockerControl,
@@ -57,9 +56,6 @@ type RockerRest = OmitEach<
 > &
   Partial<Pick<RockerControl, 'module'>>;
 type JackRest<J extends Jack> = Omit<J, 'id' | 'x' | 'y' | 'r' | 'label' | 'labelPos' | 'dir'>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // Contour time scale as printed on the panel: 10 M-SEC · 200 · 600 · 1 SEC · 5 · 10
 const ENV_PTS: CurvePoint[] = [

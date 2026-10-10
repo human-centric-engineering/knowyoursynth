@@ -224,145 +224,2345 @@
     ]
   },
   "engine": {
-    "init": "143169e2",
-    "lfo.rate=0": "9c1fb7b6",
-    "lfo.rate=2.5": "7aebcbbc",
-    "lfo.rate=7.5": "95544b2a",
-    "lfo.rate=10": "6773aa62",
-    "lfo.volume=2.5": "fcae7ace",
-    "lfo.volume=5": "ad26f9dc",
-    "lfo.volume=7.5": "d6ea319b",
-    "lfo.volume=10": "49ac0d88",
-    "lfo.shape=\"sq\"": "008c758b",
-    "noise.colour=\"pink\"": "a3f857bd",
-    "vp.in1=0": "bdeefc9c",
-    "vp.in1=0.5": "66dd2545",
-    "vp.in1=1.5": "f98b88f3",
-    "vp.in1=2": "607204c8",
-    "vp.out=0": "bdeefc9c",
-    "vp.out=0.5": "66dd2545",
-    "vp.out=1.5": "f98b88f3",
-    "vp.out=2": "607204c8",
-    "pitch.tune=-5": "e69b6a36",
-    "pitch.tune=-2.5": "301c094e",
-    "pitch.tune=2.5": "768be1fd",
-    "pitch.tune=5": "ee6a5f6f",
-    "mod.vco1Off=true": "4772f99d",
-    "vco2.sync=true": "1f0528d4",
-    "mod.pwm=\"both\"": "16aec7a3",
-    "mod.pwm=\"ads\"": "16aec7a3",
-    "vco1.freq=0": "42d94daf",
-    "vco1.freq=2.5": "599bb726",
-    "vco1.freq=7.5": "1deeaa4d",
-    "vco1.freq=10": "712f0a04",
-    "vco1.wave=0": "6f1de15b",
-    "vco1.wave=2.5": "d5f474c2",
-    "vco1.wave=7.5": "bca5e1eb",
-    "vco1.wave=10": "b3f528d0",
-    "vca1.level=0": "5c43d7b3",
-    "vca1.level=2.5": "39475041",
-    "vca1.level=5": "2319bf7e",
-    "vca1.level=7.5": "c5d16833",
-    "vca1.level=10": "c7d363b1",
-    "vco2.freq=0": "d4d91877",
-    "vco2.freq=2.5": "d50567e2",
-    "vco2.freq=7.5": "648c8009",
-    "vco2.freq=10": "a7d352ec",
-    "vco2.wave=0": "f68d29cb",
-    "vco2.wave=2.5": "09a250aa",
-    "vco2.wave=7.5": "a5ea64df",
-    "vco2.wave=10": "89bf6b0c",
-    "vca2.level=2.5": "ea25b528",
-    "vca2.level=5": "81ef0bc7",
-    "vca2.level=7.5": "b1ebc3a2",
-    "vca2.level=10": "15620c0e",
-    "vco2.beat=-5": "b6ef96c6",
-    "vco2.beat=-2.5": "5435e70e",
-    "vco2.beat=2.5": "45696001",
-    "vco2.beat=5": "8f0b8f6b",
-    "vcf.freq=0": "1de0fdf1",
-    "vcf.freq=2.5": "22e6e2ad",
-    "vcf.freq=5": "b2d2b6be",
-    "vcf.freq=7.5": "3ac78a34",
-    "vcf.freq=10": "e2d1aac7",
-    "vcf.res=2.5": "6e97b462",
-    "vcf.res=5": "1d40162a",
-    "vcf.res=7.5": "0643100c",
-    "vcf.res=10": "e468e3a0",
-    "vcf.kbd=0": "f94a7df5",
-    "vcf.kbd=0.5": "1dcb2218",
-    "vcf.kbd=1.5": "753e4f0f",
-    "vcf.kbd=2": "87b52e8f",
-    "vcf.env=-5": "904f5620",
-    "vcf.env=-2.5": "dd15bd15",
-    "vcf.env=2.5": "673e84ce",
-    "vcf.env=5": "ff613e6b",
-    "ads1.attack=3.25": "1df45544",
-    "ads1.attack=5.5": "a7e4b316",
-    "ads1.attack=7.75": "238af12b",
-    "ads1.attack=10": "e25c7faa",
-    "ads1.decay=1": "80faea9a",
-    "ads1.decay=3.25": "55b78988",
-    "ads1.decay=5.5": "b3080b2e",
-    "ads1.decay=7.75": "1505e82e",
-    "ads1.decay=10": "972817b8",
-    "ads1.sustain=0": "3f22f329",
-    "ads1.sustain=2.5": "1a2d9758",
-    "ads1.sustain=5": "5023e5c0",
-    "ads1.sustain=7.5": "ee3e0925",
-    "ads2.attack=3.25": "a490ff6a",
-    "ads2.attack=5.5": "169303be",
-    "ads2.attack=7.75": "54def3d3",
-    "ads2.attack=10": "19350ecc",
-    "ads2.decay=1": "76a3eea2",
-    "ads2.decay=3.25": "941e2398",
-    "ads2.decay=5.5": "59a26d6e",
-    "ads2.decay=7.75": "2c3cb672",
-    "ads2.decay=10": "c6b72200",
-    "ads2.sustain=0": "7a05d555",
-    "ads2.sustain=2.5": "793ea950",
-    "ads2.sustain=7.5": "be8f73b7",
-    "ads2.sustain=10": "010433ec",
-    "ads1.decayOff=true": "d1e03516",
-    "out.volume=0": "64e35f3f",
-    "out.volume=2.5": "1e755b38",
-    "out.volume=5": "f65ff1a0",
-    "out.volume=7.5": "8e4271fa",
-    "out.volume=10": "68e5a422",
-    "wheel=1": "143169e2",
-    "patched:j.lfoRate": "143169e2",
-    "patched:j.lfoOut1": "143169e2",
-    "patched:j.lfoOut2": "143169e2",
-    "patched:j.vcoModIn": "143169e2",
-    "patched:j.vco1Freq": "143169e2",
-    "patched:j.vco1Wave": "143169e2",
-    "patched:j.vco1Vol": "143169e2",
-    "patched:j.vco1Out": "143169e2",
-    "patched:j.vcfFreq": "143169e2",
-    "patched:j.res": "143169e2",
-    "patched:j.gateIn": "143169e2",
-    "patched:j.ads1Attack": "143169e2",
-    "patched:j.ads1Decay": "143169e2",
-    "patched:j.ads1Sustain": "143169e2",
-    "patched:j.ads1Out": "143169e2",
-    "patched:j.vpIn1": "143169e2",
-    "patched:j.vpIn2": "143169e2",
-    "patched:j.vpOut": "143169e2",
-    "patched:j.vpRev": "143169e2",
-    "patched:j.noise": "143169e2",
-    "patched:j.vco2Freq": "143169e2",
-    "patched:j.vco2Wave": "143169e2",
-    "patched:j.vco2Vol": "143169e2",
-    "patched:j.vco2Out": "143169e2",
-    "patched:j.vcfIn": "143169e2",
-    "patched:j.cvIn": "143169e2",
-    "patched:j.adsCtrl": "143169e2",
-    "patched:j.ads2Out": "143169e2",
-    "patched:j.ads2Attack": "143169e2",
-    "patched:j.ads2Decay": "143169e2",
-    "patched:j.ads2Sustain": "143169e2",
-    "patched:j.audioOut": "143169e2",
-    "patched:j.phones": "143169e2"
+    "init": {
+      "att": [0, 1],
+      "delay": { "on": false },
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      },
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      },
+      "ext": { "level": 1 },
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 1 },
+      "noise": { "color": "white", "level": 0 },
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 2]
+      },
+      "od": { "on": false },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ],
+      "paraphonic": false,
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" }
+      ],
+      "sh": { "glide": 0, "rate": 5 },
+      "slew": { "time": 0.1 },
+      "trig": { "drone": false, "repeat": false, "retrig": false, "src": ["gate", "gate"] },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env1" },
+      "volume": 0.5453391388693143
+    },
+    "lfo.rate=0": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.01 } },
+    "lfo.rate=2.5": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 } },
+    "lfo.rate=7.5": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 10 } },
+    "lfo.rate=10": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 100 } },
+    "lfo.volume=2.5": {
+      "att": [0.0625, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "lfo.volume=5": {
+      "att": [0.25, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "lfo.volume=7.5": {
+      "att": [0.5625, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "lfo.volume=10": {
+      "att": [1, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "lfo.shape=\"sq\"": { "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 1 } },
+    "noise.colour=\"pink\"": { "noise": { "color": "pink", "level": 0 } },
+    "vp.in1=0": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 0]
+      }
+    },
+    "vp.in1=0.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 1]
+      }
+    },
+    "vp.in1=1.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 3]
+      }
+    },
+    "vp.in1=2": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 4]
+      }
+    },
+    "vp.out=0": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 0]
+      }
+    },
+    "vp.out=0.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 1]
+      }
+    },
+    "vp.out=1.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 3]
+      }
+    },
+    "vp.out=2": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 4]
+      }
+    },
+    "pitch.tune=-5": { "tune": -0.5 },
+    "pitch.tune=-2.5": { "tune": -0.25 },
+    "pitch.tune=2.5": { "tune": 0.25 },
+    "pitch.tune=5": { "tune": 0.5 },
+    "mod.vco1Off=true": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "mult" }] },
+    "vco2.sync=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "mod.pwm=\"both\"": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "env2" },
+        { "amt": 0.25, "dst": "pw2", "src": "env2" }
+      ]
+    },
+    "mod.pwm=\"ads\"": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "env2" },
+        { "amt": 0.25, "dst": "pw2", "src": "env2" }
+      ]
+    },
+    "vco1.freq=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -60,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -30,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 30,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 60,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.25,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.75,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 1,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca1.level=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca1.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.09375,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca1.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.26516504294495535,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca1.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.48713928962874675,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca1.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.75,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -60,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -30,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 30,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 60,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "morph": 0, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco2.wave=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.25,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.75,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "morph": 1, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vca2.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.09375,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca2.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.26516504294495535,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca2.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.48713928962874675,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vca2.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.75,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.beat=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.beat=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.beat=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.beat=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vcf.freq=0": {
+      "filter": {
+        "cutoff": 16,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.freq=2.5": {
+      "filter": {
+        "cutoff": 89.97461203045586,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.freq=5": {
+      "filter": {
+        "cutoff": 505.9644256269407,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.freq=7.5": {
+      "filter": {
+        "cutoff": 2845.2470560622764,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.freq=10": {
+      "filter": {
+        "cutoff": 16000,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.275,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.55,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.8250000000000001,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=10": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=0": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=0.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=1.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=2": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 2,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.env=-5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": -7,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.env=-2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": -3.5,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.env=2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 3.5,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.env=5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 7,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "ads1.attack=3.25": {
+      "env1": {
+        "a": 0.014677992676220698,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "ads1.attack=5.5": {
+      "env1": { "a": 0.1, "d": 0.06528521141127847, "r": 0.06528521141127847, "s": 1 }
+    },
+    "ads1.attack=7.75": {
+      "env1": {
+        "a": 0.6812920690579611,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "ads1.attack=10": {
+      "env1": {
+        "a": 4.6415888336127775,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "ads1.decay=1": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.0021544346900318847,
+        "r": 0.0021544346900318847,
+        "s": 1
+      }
+    },
+    "ads1.decay=3.25": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.014677992676220698,
+        "r": 0.014677992676220698,
+        "s": 1
+      }
+    },
+    "ads1.decay=5.5": { "env1": { "a": 0.0021544346900318847, "d": 0.1, "r": 0.1, "s": 1 } },
+    "ads1.decay=7.75": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.6812920690579611,
+        "r": 0.6812920690579611,
+        "s": 1
+      }
+    },
+    "ads1.decay=10": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 4.6415888336127775,
+        "r": 4.6415888336127775,
+        "s": 1
+      }
+    },
+    "ads1.sustain=0": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0
+      }
+    },
+    "ads1.sustain=2.5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.25
+      }
+    },
+    "ads1.sustain=5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "ads1.sustain=7.5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.75
+      }
+    },
+    "ads2.attack=3.25": {
+      "env2": {
+        "a": 0.014677992676220698,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "ads2.attack=5.5": {
+      "env2": { "a": 0.1, "d": 0.06528521141127847, "r": 0.06528521141127847, "s": 0.5 }
+    },
+    "ads2.attack=7.75": {
+      "env2": {
+        "a": 0.6812920690579611,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "ads2.attack=10": {
+      "env2": {
+        "a": 4.6415888336127775,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "ads2.decay=1": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.0021544346900318847,
+        "r": 0.0021544346900318847,
+        "s": 0.5
+      }
+    },
+    "ads2.decay=3.25": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.014677992676220698,
+        "r": 0.014677992676220698,
+        "s": 0.5
+      }
+    },
+    "ads2.decay=5.5": { "env2": { "a": 0.0021544346900318847, "d": 0.1, "r": 0.1, "s": 0.5 } },
+    "ads2.decay=7.75": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.6812920690579611,
+        "r": 0.6812920690579611,
+        "s": 0.5
+      }
+    },
+    "ads2.decay=10": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 4.6415888336127775,
+        "r": 4.6415888336127775,
+        "s": 0.5
+      }
+    },
+    "ads2.sustain=0": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0
+      }
+    },
+    "ads2.sustain=2.5": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.25
+      }
+    },
+    "ads2.sustain=7.5": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.75
+      }
+    },
+    "ads2.sustain=10": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "ads1.decayOff=true": {
+      "env1": { "a": 0.0021544346900318847, "d": 0.003, "r": 0.003, "s": 1 }
+    },
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.09473228540689989 },
+    "out.volume=5": { "volume": 0.3077861033362291 },
+    "out.volume=7.5": { "volume": 0.61320282613276 },
+    "out.volume=10": { "volume": 1 },
+    "wheel=1": {},
+    "patched:j.lfoRate": {},
+    "patched:j.lfoOut1": {},
+    "patched:j.lfoOut2": {},
+    "patched:j.vcoModIn": {},
+    "patched:j.vco1Freq": {},
+    "patched:j.vco1Wave": {},
+    "patched:j.vco1Vol": {},
+    "patched:j.vco1Out": {},
+    "patched:j.vcfFreq": {},
+    "patched:j.res": {},
+    "patched:j.gateIn": {},
+    "patched:j.ads1Attack": {},
+    "patched:j.ads1Decay": {},
+    "patched:j.ads1Sustain": {},
+    "patched:j.ads1Out": {},
+    "patched:j.vpIn1": {},
+    "patched:j.vpIn2": {},
+    "patched:j.vpOut": {},
+    "patched:j.vpRev": {},
+    "patched:j.noise": {},
+    "patched:j.vco2Freq": {},
+    "patched:j.vco2Wave": {},
+    "patched:j.vco2Vol": {},
+    "patched:j.vco2Out": {},
+    "patched:j.vcfIn": {},
+    "patched:j.cvIn": {},
+    "patched:j.adsCtrl": {},
+    "patched:j.ads2Out": {},
+    "patched:j.ads2Attack": {},
+    "patched:j.ads2Decay": {},
+    "patched:j.ads2Sustain": {},
+    "patched:j.audioOut": {},
+    "patched:j.phones": {},
+    "patched:*": {},
+    "patched:* lfo.rate=0": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.01 } },
+    "patched:* lfo.rate=2.5": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 } },
+    "patched:* lfo.rate=7.5": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 10 } },
+    "patched:* lfo.rate=10": { "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 100 } },
+    "patched:* lfo.volume=2.5": {
+      "att": [0.0625, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "patched:* lfo.volume=5": {
+      "att": [0.25, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "patched:* lfo.volume=7.5": {
+      "att": [0.5625, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "patched:* lfo.volume=10": {
+      "att": [1, 1],
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "att1" },
+        { "amt": 0.25, "dst": "pw2", "src": "att1" }
+      ]
+    },
+    "patched:* lfo.shape=\"sq\"": { "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 1 } },
+    "patched:* noise.colour=\"pink\"": { "noise": { "color": "pink", "level": 0 } },
+    "patched:* vp.in1=0": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 0]
+      }
+    },
+    "patched:* vp.in1=0.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 1]
+      }
+    },
+    "patched:* vp.in1=1.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 3]
+      }
+    },
+    "patched:* vp.in1=2": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 4]
+      }
+    },
+    "patched:* vp.out=0": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 0]
+      }
+    },
+    "patched:* vp.out=0.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 1]
+      }
+    },
+    "patched:* vp.out=1.5": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 3]
+      }
+    },
+    "patched:* vp.out=2": {
+      "normals": {
+        "att1In": "lfo",
+        "gateIn": "gate",
+        "invertIn": "sum1",
+        "multIn": "att1",
+        "sum1A": ["one", 4]
+      }
+    },
+    "patched:* pitch.tune=-5": { "tune": -0.5 },
+    "patched:* pitch.tune=-2.5": { "tune": -0.25 },
+    "patched:* pitch.tune=2.5": { "tune": 0.25 },
+    "patched:* pitch.tune=5": { "tune": 0.5 },
+    "patched:* mod.vco1Off=true": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "mult" }] },
+    "patched:* vco2.sync=true": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* mod.pwm=\"both\"": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "env2" },
+        { "amt": 0.25, "dst": "pw2", "src": "env2" }
+      ]
+    },
+    "patched:* mod.pwm=\"ads\"": {
+      "routes": [
+        { "amt": 12, "dst": "pitch1", "src": "mult" },
+        { "amt": 12, "dst": "pitch2", "src": "mult" },
+        { "amt": 0.25, "dst": "pw1", "src": "env2" },
+        { "amt": 0.25, "dst": "pw2", "src": "env2" }
+      ]
+    },
+    "patched:* vco1.freq=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -60,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -30,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 30,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 60,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.25,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.75,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 1,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vca1.level=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vca1.level=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.09375,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vca1.level=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.26516504294495535,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vca1.level=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.48713928962874675,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vca1.level=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.75,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -60,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -30,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 30,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 60,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "morph": 0, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco2.wave=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.25,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.75,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "morph": 1, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vca2.level=2.5": {},
+    "patched:* vca2.level=5": {},
+    "patched:* vca2.level=7.5": {},
+    "patched:* vca2.level=10": {},
+    "patched:* vco2.beat=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.beat=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": -0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.beat=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.beat=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5366563145999497,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "morph": 0.5,
+          "pw": 0.5,
+          "semi": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vcf.freq=0": {
+      "filter": {
+        "cutoff": 16,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.freq=2.5": {
+      "filter": {
+        "cutoff": 89.97461203045586,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.freq=5": {
+      "filter": {
+        "cutoff": 505.9644256269407,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.freq=7.5": {
+      "filter": {
+        "cutoff": 2845.2470560622764,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.freq=10": {
+      "filter": {
+        "cutoff": 16000,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.275,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.55,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0.8250000000000001,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=10": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=0": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=0.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=1.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 1.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=2": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 2,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.env=-5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": -7,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.env=-2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": -3.5,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.env=2.5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 3.5,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.env=5": {
+      "filter": {
+        "cutoff": 2014.280658870667,
+        "envAmt": 7,
+        "envSrc": "env2",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* ads1.attack=3.25": {
+      "env1": {
+        "a": 0.014677992676220698,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "patched:* ads1.attack=5.5": {
+      "env1": { "a": 0.1, "d": 0.06528521141127847, "r": 0.06528521141127847, "s": 1 }
+    },
+    "patched:* ads1.attack=7.75": {
+      "env1": {
+        "a": 0.6812920690579611,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "patched:* ads1.attack=10": {
+      "env1": {
+        "a": 4.6415888336127775,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "patched:* ads1.decay=1": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.0021544346900318847,
+        "r": 0.0021544346900318847,
+        "s": 1
+      }
+    },
+    "patched:* ads1.decay=3.25": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.014677992676220698,
+        "r": 0.014677992676220698,
+        "s": 1
+      }
+    },
+    "patched:* ads1.decay=5.5": {
+      "env1": { "a": 0.0021544346900318847, "d": 0.1, "r": 0.1, "s": 1 }
+    },
+    "patched:* ads1.decay=7.75": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.6812920690579611,
+        "r": 0.6812920690579611,
+        "s": 1
+      }
+    },
+    "patched:* ads1.decay=10": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 4.6415888336127775,
+        "r": 4.6415888336127775,
+        "s": 1
+      }
+    },
+    "patched:* ads1.sustain=0": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0
+      }
+    },
+    "patched:* ads1.sustain=2.5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.25
+      }
+    },
+    "patched:* ads1.sustain=5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "patched:* ads1.sustain=7.5": {
+      "env1": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.75
+      }
+    },
+    "patched:* ads2.attack=3.25": {
+      "env2": {
+        "a": 0.014677992676220698,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.attack=5.5": {
+      "env2": { "a": 0.1, "d": 0.06528521141127847, "r": 0.06528521141127847, "s": 0.5 }
+    },
+    "patched:* ads2.attack=7.75": {
+      "env2": {
+        "a": 0.6812920690579611,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.attack=10": {
+      "env2": {
+        "a": 4.6415888336127775,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.decay=1": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.0021544346900318847,
+        "r": 0.0021544346900318847,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.decay=3.25": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.014677992676220698,
+        "r": 0.014677992676220698,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.decay=5.5": {
+      "env2": { "a": 0.0021544346900318847, "d": 0.1, "r": 0.1, "s": 0.5 }
+    },
+    "patched:* ads2.decay=7.75": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.6812920690579611,
+        "r": 0.6812920690579611,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.decay=10": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 4.6415888336127775,
+        "r": 4.6415888336127775,
+        "s": 0.5
+      }
+    },
+    "patched:* ads2.sustain=0": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0
+      }
+    },
+    "patched:* ads2.sustain=2.5": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.25
+      }
+    },
+    "patched:* ads2.sustain=7.5": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 0.75
+      }
+    },
+    "patched:* ads2.sustain=10": {
+      "env2": {
+        "a": 0.0021544346900318847,
+        "d": 0.06528521141127847,
+        "r": 0.06528521141127847,
+        "s": 1
+      }
+    },
+    "patched:* ads1.decayOff=true": {
+      "env1": { "a": 0.0021544346900318847, "d": 0.003, "r": 0.003, "s": 1 }
+    },
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.volume=5": { "volume": 0.3077861033362291 },
+    "patched:* out.volume=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.volume=10": { "volume": 1 }
   },
   "checks": {},
   "depths": {
@@ -377,13 +2577,7 @@
       "vp.out=1.5": 1.5,
       "vp.out=2": 2
     },
-    "j.vpIn2": {
-      "init": 2,
-      "vp.out=0": 0,
-      "vp.out=0.5": 1,
-      "vp.out=1.5": 3,
-      "vp.out=2": 4
-    }
+    "j.vpIn2": { "init": 2, "vp.out=0": 0, "vp.out=0.5": 1, "vp.out=1.5": 3, "vp.out=2": 4 }
   },
   "hears": {
     "j.vcoModIn": {

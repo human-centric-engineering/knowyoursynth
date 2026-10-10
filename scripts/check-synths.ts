@@ -43,12 +43,11 @@
  * Printing goes through `console`, not `logger` — see the `scripts/**` override in `eslint.config.mjs`.
  */
 
-import { build } from 'esbuild';
 import { spawn } from 'node:child_process';
-import { mkdirSync, readFileSync, rmSync } from 'node:fs';
-import { availableParallelism, tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
+import { availableParallelism } from 'node:os';
 import { join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Lineage, Preset, SynthDef } from '@/lib/app/synths/contract';
@@ -56,6 +55,7 @@ import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import {
@@ -67,7 +67,6 @@ import {
 } from '@/lib/app/synths/lib/patch';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const PROTOTYPE_SRC = join(ROOT, 'prototype', 'src');
 
 /** One baseline fingerprint (see `.context/app/check/README.md`). */
 interface Fingerprint {
@@ -87,46 +86,8 @@ interface Baseline {
   sounds: Record<string, Fingerprint>;
 }
 
-const isSynthDefList = (v: unknown): v is SynthDef[] =>
-  Array.isArray(v) &&
-  v.every(
-    (d) =>
-      isRecord(d) &&
-      typeof d.id === 'string' &&
-      typeof d.toEngine === 'function' &&
-      Array.isArray(d.controls) &&
-      Array.isArray(d.jacks) &&
-      (d.presets === undefined || Array.isArray(d.presets))
-  );
-
 const isBaseline = (v: unknown): v is Baseline =>
   isRecord(v) && typeof v.seed === 'number' && isRecord(v.sounds);
-
-/** The prototype's definitions (with their sounds), bundled from source for this run. */
-async function loadPrototypeSynths(): Promise<SynthDef[]> {
-  const outDir = join(tmpdir(), 'kys-check-synths');
-  mkdirSync(outDir, { recursive: true });
-  const outFile = join(outDir, `synths.${process.pid}.out.mjs`);
-  await build({
-    entryPoints: [join(PROTOTYPE_SRC, 'synths', 'index.js')],
-    bundle: true,
-    format: 'esm',
-    platform: 'node',
-    outfile: outFile,
-    alias: { '@': PROTOTYPE_SRC },
-    loader: { '.js': 'jsx' },
-    logLevel: 'warning',
-  });
-  try {
-    const mod: unknown = await import(`${pathToFileURL(outFile).href}?t=${Date.now()}`);
-    const synths = isRecord(mod) ? mod.SYNTHS : undefined;
-    if (!isSynthDefList(synths))
-      throw new Error('prototype/src/synths/index.js did not export a SYNTHS list of definitions');
-    return synths;
-  } finally {
-    rmSync(outFile, { force: true });
-  }
-}
 
 /**
  * The first place a ported definition differs from the prototype's, as data, or `null` when they match. Functions

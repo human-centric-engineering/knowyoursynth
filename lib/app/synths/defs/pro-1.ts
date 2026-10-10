@@ -24,10 +24,9 @@ import type {
   SynthModule,
   TextDecor,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = OmitEach<
   KnobControl,
   'id' | 'type' | 'x' | 'y' | 'r' | 'style' | 'labelPos' | 'labelSize'
@@ -37,9 +36,6 @@ type SlideRest = OmitEach<
   'id' | 'type' | 'orient' | 'x' | 'y' | 'w' | 'h' | 'labelPos'
 >;
 type JackRest<J extends Jack> = Omit<J, 'id' | 'x' | 'y' | 'r' | 'label' | 'labelPos' | 'dir'>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 const S10: KnobScale = { nums: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ticks: 11, size: 11 };
 // FREQUENCY and MASTER TUNE are printed 5 … 0 … 5

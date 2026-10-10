@@ -37,6 +37,7 @@ import type {
   ViewRect,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { num } from '@/lib/app/synths/lib/def-kit';
 import { expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
 type KnobRest = Omit<ControlCommon, 'id' | 'x' | 'y'> &
@@ -48,9 +49,6 @@ type KnobRest = Omit<ControlCommon, 'id' | 'x' | 'y'> &
   };
 type RotaryRest = Pick<ControlCommon, 'name' | 'module' | 'help'>;
 type JackRest<J extends Jack> = Omit<J, 'id' | 'x' | 'y' | 'r' | 'labelPos' | 'dir'>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // ── Ranges and tapers ─────────────────────────────────────────────────────
 // The guide gives the control oscillator range (0.5 to 100 Hz) and the control envelope's delay (up to 1 s). Everything

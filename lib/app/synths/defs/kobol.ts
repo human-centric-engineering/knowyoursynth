@@ -35,10 +35,9 @@ import type {
   ViewRect,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = Omit<ControlCommon, 'id' | 'x' | 'y'> &
   Pick<KnobControl, 'scale'> & {
     min?: number;
@@ -51,9 +50,6 @@ type SlideRest = OmitEach<
   'id' | 'type' | 'x' | 'y' | 'w' | 'h' | 'orient' | 'labelPos'
 >;
 type JackRest<J extends Jack> = Omit<J, 'id' | 'x' | 'y' | 'r' | 'label' | 'labelPos' | 'dir'>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // ── Ranges and tapers ─────────────────────────────────────────────────────
 // The envelope knobs print a time ring as well as 1–10: 10 ms at nine o'clock, .1 (s) at twelve, 1 (s) at three. That is

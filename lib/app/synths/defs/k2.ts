@@ -27,6 +27,7 @@ import type {
   SynthModule,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import {
   clamp,
   type CurvePoint,
@@ -38,16 +39,11 @@ import {
   pwl,
 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control or jack keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = OmitEach<KnobControl, 'id' | 'type' | 'x' | 'y' | 'r' | 'style'>;
 type JackRest<J extends Jack> = Omit<
   J,
   'id' | 'x' | 'y' | 'r' | 'label' | 'labelPos' | 'labelSize' | 'dir'
 >;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // ── Scales ────────────────────────────────────────────────────────────────
 const S10: KnobScale = { nums: [0, 2, 4, 6, 8, 10], ticks: 11, size: 12 };

@@ -24,10 +24,9 @@ import type {
   SynthDef,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = Omit<ControlCommon, 'id' | 'x' | 'y'> & {
   def: number;
   min?: number;
@@ -40,9 +39,6 @@ type ButtonRest = OmitEach<
   'id' | 'type' | 'x' | 'y' | 'w' | 'h' | 'labelPos' | 'labelSize'
 > &
   Partial<Pick<ButtonControl, 'labelPos' | 'labelSize'>>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 const OSC_SHAPES: WaveShape[] = ['tmod', 'pulse', 'saw', 'tri', 'sine'];
 const OSC_SHAPE_NAMES = ['tone mod', 'pulse', 'saw', 'triangle', 'sine'];

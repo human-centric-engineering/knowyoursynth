@@ -28,10 +28,9 @@ import type {
   TextDecor,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type FaderRest = Omit<
   FaderControl,
   'id' | 'type' | 'orient' | 'x' | 'y' | 'len' | 'led' | 'kind' | 'min' | 'max' | 'def'
@@ -41,9 +40,6 @@ type SlideRest = OmitEach<SlideControl, 'id' | 'type' | 'orient' | 'x' | 'y' | '
 type JinRest = Partial<Pick<InputJack, 'name' | 'check' | 'hear' | 'add'>>;
 type JoutRest = Partial<Pick<OutputJack, 'name' | 'check'>>;
 type Hear = (v: ControlValues, x: JackHearContext) => string;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // ── Scales ────────────────────────────────────────────────────────────────
 // The frequency sliders are marked in decades (10 · 100 · 1k · 10k), 2.7 slider units apart.

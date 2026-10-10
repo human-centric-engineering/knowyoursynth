@@ -46,10 +46,9 @@ import type {
   WaveDecor,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated jack keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = Omit<ControlCommon, 'id' | 'x' | 'y'> &
   Partial<Pick<KnobControl, 'r' | 'scale'>> & {
     min?: number;
@@ -61,9 +60,6 @@ type SwitchRest = Pick<ControlCommon, 'name' | 'module' | 'help'>;
 type JackRest = OmitEach<Jack, 'id' | 'x' | 'y' | 'r' | 'labelPos'>;
 type TextRest = Partial<Pick<TextDecor, 'fill' | 'weight'>>;
 type BoxRest = Partial<Pick<RectDecor, 'fill' | 'r' | 'hw' | 'stroke' | 'sw'>>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 // ── Ranges and tapers ─────────────────────────────────────────────────────
 // The manual gives the LFO range (0.07 Hz–1.3 kHz), the cutoff range (the panel prints 20 Hz–20 kHz), OSC 2's ±7

@@ -302,138 +302,1832 @@
     ]
   },
   "engine": {
-    "init": "30ac65e0",
-    "pitch.bend=-5": "50ce7668",
-    "pitch.bend=-2.5": "a091d93b",
-    "pitch.bend=2.5": "58cee1de",
-    "pitch.bend=5": "238a46bb",
-    "pitch.tune=-5": "649bb166",
-    "pitch.tune=-2.5": "6f6a07bc",
-    "pitch.tune=2.5": "3e032ab9",
-    "pitch.tune=5": "10c26d33",
-    "pitch.glide=2.5": "46d1580f",
-    "pitch.glide=5": "4b78b71e",
-    "pitch.glide=7.5": "7897b2ca",
-    "pitch.glide=10": "2f914527",
-    "osc1.ft=\"32\"": "a839e65f",
-    "osc1.ft=\"16\"": "f29900c4",
-    "osc1.ft=\"4\"": "46352865",
-    "osc1.ft=\"2\"": "8ebd58e6",
-    "osc1.width=10": "97b9cddc",
-    "osc1.width=20": "629b0ef5",
-    "osc1.width=30": "4f96872a",
-    "osc1.width=40": "2dae6f93",
-    "osc1.wave=\"off\"": "c382bec8",
-    "osc1.wave=\"square\"": "1bac6f54",
-    "osc1.wave=\"enh\"": "b8493fa2",
-    "osc2.ft=\"32\"": "93b751bf",
-    "osc2.ft=\"16\"": "62bebaa0",
-    "osc2.ft=\"4\"": "45ee6887",
-    "osc2.ft=\"2\"": "e0fb8cb4",
-    "osc2.pitch=0": "62bebaa0",
-    "osc2.pitch=2.5": "0a2b2cdf",
-    "osc2.pitch=7.5": "e416332a",
-    "osc2.pitch=10": "45ee6887",
-    "osc2.wave=\"saw\"": "412bf049",
-    "osc2.wave=\"square\"": "09f81cc5",
-    "osc2.wave=\"enh\"": "3176c257",
-    "mix.osc1=0": "a45886af",
-    "mix.osc1=2.5": "2f809784",
-    "mix.osc1=5": "c2078434",
-    "mix.osc1=7.5": "6167f902",
-    "mix.osc1=10": "090201a2",
-    "mix.osc2=2.5": "30ac65e0",
-    "mix.osc2=5": "30ac65e0",
-    "mix.osc2=7.5": "30ac65e0",
-    "mix.osc2=10": "30ac65e0",
-    "mix.ext=2.5": "22a51ed5",
-    "mix.ext=5": "3ade8077",
-    "mix.ext=7.5": "1af67a08",
-    "mix.ext=10": "d4de4ccf",
-    "mix.noise=2.5": "6c5c2ac5",
-    "mix.noise=5": "eac58a2e",
-    "mix.noise=7.5": "78dc1c1d",
-    "mix.noise=10": "8858d8fc",
-    "ctrl.freq=0": "2b463146",
-    "ctrl.freq=2.5": "ab70a1ae",
-    "ctrl.freq=7.5": "5ad1812e",
-    "ctrl.freq=10": "59477596",
-    "ctrl.pitchMod=2.5": "a4a81193",
-    "ctrl.pitchMod=5": "c05ad383",
-    "ctrl.pitchMod=7.5": "b09a1ae6",
-    "ctrl.pitchMod=10": "f01b354d",
-    "ctrl.wave=\"up\"": "a4842bc2",
-    "ctrl.wave=\"down\"": "1a9f7c6a",
-    "ctrl.wave=\"square\"": "b69f33dd",
-    "ctrl.wave=\"noise\"": "30ac65e0",
-    "ctrl.wave=\"rnd\"": "30ac65e0",
-    "vcf.freq=0": "f0a86ad4",
-    "vcf.freq=2.5": "6a5ed6b3",
-    "vcf.freq=5": "af371331",
-    "vcf.freq=7.5": "1bd1a9b0",
-    "vcf.freq=10": "f87ed404",
-    "vcf.q=0": "1563972c",
-    "vcf.q=2.5": "e91ba5a3",
-    "vcf.q=5": "fa75dd53",
-    "vcf.q=7.5": "f220c58d",
-    "vcf.q=10": "4cff8b56",
-    "vcf.mode=\"band\"": "1afdadfe",
-    "vcf.mode=\"notch\"": "48a473b3",
-    "vcf.mode=\"hi\"": "0f5aa61c",
-    "vcf.oscAmt=-5": "6674eb32",
-    "vcf.oscAmt=-2.5": "22eb4369",
-    "vcf.oscAmt=2.5": "390548a4",
-    "vcf.oscAmt=5": "738c8975",
-    "vcf.envAmt=-5": "18761c03",
-    "vcf.envAmt=-2.5": "939a6122",
-    "vcf.envAmt=0": "407915bb",
-    "vcf.envAmt=2.5": "2c9ec3f9",
-    "vcf.envAmt=5": "eaa71b96",
-    "vca.attack=2.5": "7c8892ef",
-    "vca.attack=5": "2828584f",
-    "vca.attack=7.5": "824a4aff",
-    "vca.attack=10": "defaaba4",
-    "vca.decay=0": "01493b78",
-    "vca.decay=2.5": "91dc6f86",
-    "vca.decay=5": "0270d2c8",
-    "vca.decay=7.5": "e2d0a67e",
-    "vca.decay=10": "a2447d7c",
-    "vca.sustain=0": "7aed8582",
-    "vca.sustain=2.5": "3d76b2cb",
-    "vca.sustain=5": "c9f36b5d",
-    "vca.sustain=7.5": "19e05da0",
-    "vca.sustain=10": "7be65364",
-    "vca.hold=true": "c419e92f",
-    "cenv.attack=2.5": "cc06915f",
-    "cenv.attack=5": "efefc5af",
-    "cenv.attack=7.5": "c38a8289",
-    "cenv.attack=10": "4fb245c8",
-    "cenv.decay=0": "89a24eea",
-    "cenv.decay=2.5": "ed2d1ee6",
-    "cenv.decay=5": "5be8548c",
-    "cenv.decay=7.5": "bce56d92",
-    "cenv.decay=10": "4e079fce",
-    "cenv.delay=0": "d8f81065",
-    "cenv.delay=2.5": "8b52e964",
-    "cenv.delay=5": "24fd64f6",
-    "cenv.delay=7.5": "0f54eb27",
-    "cenv.delay=10": "f7fe20dd",
-    "out.volume=0": "9e3ded85",
-    "out.volume=2.5": "0ed9490e",
-    "out.volume=5": "5f04b8ae",
-    "out.volume=7.5": "5cdf7c10",
-    "out.volume=10": "9a41b8d0",
-    "out.phones=0": "30ac65e0",
-    "out.phones=2.5": "30ac65e0",
-    "out.phones=5": "30ac65e0",
-    "out.phones=7.5": "30ac65e0",
-    "out.phones=10": "30ac65e0",
-    "wheel=1": "30ac65e0",
-    "patched:j.osc1": "30ac65e0",
-    "patched:j.osc2": "30ac65e0",
-    "patched:j.ext": "30ac65e0",
-    "patched:j.main": "30ac65e0",
-    "patched:j.phones": "30ac65e0"
+    "init": {
+      "att": [1, 1],
+      "delay": { "on": false },
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      },
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 7.0710678118654755 },
+      "noise": { "color": "white", "level": 0 },
+      "normals": { "extIn": "out" },
+      "od": { "on": false },
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ],
+      "routes": [],
+      "sh": { "clock": "lfo", "glide": 0, "rate": 7.0710678118654755 },
+      "slew": { "time": 0.1 },
+      "trig": { "drone": false, "repeat": false, "retrig": false },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env1" },
+      "volume": 0.5453391388693143
+    },
+    "pitch.bend=-5": { "tune": -12 },
+    "pitch.bend=-2.5": { "tune": -6 },
+    "pitch.bend=2.5": { "tune": 6 },
+    "pitch.bend=5": { "tune": 12 },
+    "pitch.tune=-5": { "tune": -1 },
+    "pitch.tune=-2.5": { "tune": -0.5 },
+    "pitch.tune=2.5": { "tune": 0.5 },
+    "pitch.tune=5": { "tune": 1 },
+    "pitch.glide=2.5": { "glide": { "legato": false, "time": 0.04161791450287817 } },
+    "pitch.glide=5": { "glide": { "legato": false, "time": 0.17320508075688776 } },
+    "pitch.glide=7.5": { "glide": { "legato": false, "time": 0.7208434242404264 } },
+    "pitch.glide=10": { "glide": { "legato": false, "time": 3 } },
+    "osc1.ft=\"32\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.ft=\"16\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.ft=\"4\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.ft=\"2\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.width=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.1,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.width=20": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.2,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.width=30": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.3,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.width=40": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.4,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.wave=\"off\"": {
+      "osc": [
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.wave=\"square\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc1.wave=\"enh\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.42, "saw": 0.5 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc2.ft=\"32\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -24, "syncTo": -1 }
+      ]
+    },
+    "osc2.ft=\"16\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -12, "syncTo": -1 }
+      ]
+    },
+    "osc2.ft=\"4\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 12, "syncTo": -1 }
+      ]
+    },
+    "osc2.ft=\"2\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 24, "syncTo": -1 }
+      ]
+    },
+    "osc2.pitch=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -12, "syncTo": -1 }
+      ]
+    },
+    "osc2.pitch=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -6, "syncTo": -1 }
+      ]
+    },
+    "osc2.pitch=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 6, "syncTo": -1 }
+      ]
+    },
+    "osc2.pitch=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 12, "syncTo": -1 }
+      ]
+    },
+    "osc2.wave=\"saw\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc2.wave=\"square\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": { "pulse": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc2.wave=\"enh\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 0.42, "saw": 0.5 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc1=0": {
+      "osc": [
+        { "kbd": true, "level": 0, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "mix.osc1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.09473228540689989,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "mix.osc1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.3077861033362291,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "mix.osc1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.61320282613276,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "mix.osc1=10": {
+      "osc": [
+        { "kbd": true, "level": 1, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "mix.osc2=2.5": {},
+    "mix.osc2=5": {},
+    "mix.osc2=7.5": {},
+    "mix.osc2=10": {},
+    "mix.ext=2.5": { "ext": { "level": 0.11367874248827986 } },
+    "mix.ext=5": { "ext": { "level": 0.36934332400347486 } },
+    "mix.ext=7.5": { "ext": { "level": 0.735843391359312 } },
+    "mix.ext=10": { "ext": { "level": 1.2 } },
+    "mix.noise=2.5": { "noise": { "color": "white", "level": 0.05683937124413993 } },
+    "mix.noise=5": { "noise": { "color": "white", "level": 0.18467166200173743 } },
+    "mix.noise=7.5": { "noise": { "color": "white", "level": 0.367921695679656 } },
+    "mix.noise=10": { "noise": { "color": "white", "level": 0.6 } },
+    "ctrl.freq=0": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 0.5 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 0.5 }
+    },
+    "ctrl.freq=2.5": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 1.8803015465431967 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 1.8803015465431967 }
+    },
+    "ctrl.freq=7.5": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 26.591479484724942 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 26.591479484724942 }
+    },
+    "ctrl.freq=10": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 100 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 100 }
+    },
+    "ctrl.pitchMod=2.5": { "routes": [{ "amt": 1.5, "dst": "pitchAll", "src": "lfo" }] },
+    "ctrl.pitchMod=5": { "routes": [{ "amt": 6, "dst": "pitchAll", "src": "lfo" }] },
+    "ctrl.pitchMod=7.5": { "routes": [{ "amt": 13.5, "dst": "pitchAll", "src": "lfo" }] },
+    "ctrl.pitchMod=10": { "routes": [{ "amt": 24, "dst": "pitchAll", "src": "lfo" }] },
+    "ctrl.wave=\"up\"": {
+      "lfo": { "keySync": false, "mix": { "saw": 1 }, "rate": 7.0710678118654755 }
+    },
+    "ctrl.wave=\"down\"": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 1 }, "rate": 7.0710678118654755 }
+    },
+    "ctrl.wave=\"square\"": {
+      "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 7.0710678118654755 }
+    },
+    "ctrl.wave=\"noise\"": {},
+    "ctrl.wave=\"rnd\"": {},
+    "vcf.freq=0": {
+      "filter": {
+        "cutoff": 25,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.freq=2.5": {
+      "filter": {
+        "cutoff": 125.74334296829355,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.freq=5": {
+      "filter": {
+        "cutoff": 632.4555320336759,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.freq=7.5": {
+      "filter": {
+        "cutoff": 3181.0829150682025,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.freq=10": {
+      "filter": {
+        "cutoff": 16000,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.q=0": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "vcf.q=2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.2575,
+        "type": "svf"
+      }
+    },
+    "vcf.q=5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.515,
+        "type": "svf"
+      }
+    },
+    "vcf.q=7.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.7725,
+        "type": "svf"
+      }
+    },
+    "vcf.q=10": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 1.03,
+        "type": "svf"
+      }
+    },
+    "vcf.mode=\"band\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "bp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.mode=\"notch\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "morph",
+        "morph": 0.5,
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.mode=\"hi\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "hp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.oscAmt=-5": { "routes": [{ "amt": -4, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.oscAmt=-2.5": {
+      "routes": [{ "amt": -1.5157165665103982, "dst": "cutoff", "src": "lfo" }]
+    },
+    "vcf.oscAmt=2.5": { "routes": [{ "amt": 1.5157165665103982, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.oscAmt=5": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.envAmt=-5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": -7,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.envAmt=-2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": -2.6525039913931967,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.envAmt=0": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.envAmt=2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 2.6525039913931967,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vcf.envAmt=5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 7,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "vca.attack=2.5": {
+      "env1": {
+        "a": 0.01337480609952844,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.attack=5": {
+      "env1": {
+        "a": 0.08944271909999159,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.attack=7.5": {
+      "env1": {
+        "a": 0.5981395124884882,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.attack=10": {
+      "env1": {
+        "a": 4,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.decay=0": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.01,
+        "freeze": false,
+        "loop": false,
+        "r": 0.01,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.decay=2.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.053182958969449884,
+        "freeze": false,
+        "loop": false,
+        "r": 0.053182958969449884,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.decay=5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.282842712474619,
+        "freeze": false,
+        "loop": false,
+        "r": 0.282842712474619,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.decay=7.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 1.5042412372345575,
+        "freeze": false,
+        "loop": false,
+        "r": 1.5042412372345575,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.decay=10": {
+      "env1": {
+        "a": 0.002,
+        "d": 8,
+        "freeze": false,
+        "loop": false,
+        "r": 8,
+        "s": 0.7894736842105263
+      }
+    },
+    "vca.sustain=0": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": true,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "vca.sustain=2.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.21052631578947367
+      }
+    },
+    "vca.sustain=5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.47368421052631576
+      }
+    },
+    "vca.sustain=7.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7368421052631579
+      }
+    },
+    "vca.sustain=10": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 1
+      }
+    },
+    "vca.hold=true": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": true,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "cenv.attack=2.5": {
+      "env2": {
+        "a": 0.01337480609952844,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.attack=5": {
+      "env2": {
+        "a": 0.08944271909999159,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.attack=7.5": {
+      "env2": {
+        "a": 0.5981395124884882,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.attack=10": {
+      "env2": {
+        "a": 4,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.decay=0": {
+      "env2": { "a": 0.002, "d": 0.01, "dly": 0, "loop": false, "r": 0.01, "s": 0 }
+    },
+    "cenv.decay=2.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.053182958969449884,
+        "dly": 0,
+        "loop": false,
+        "r": 0.053182958969449884,
+        "s": 0
+      }
+    },
+    "cenv.decay=5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.282842712474619,
+        "dly": 0,
+        "loop": false,
+        "r": 0.282842712474619,
+        "s": 0
+      }
+    },
+    "cenv.decay=7.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 1.5042412372345575,
+        "dly": 0,
+        "loop": false,
+        "r": 1.5042412372345575,
+        "s": 0
+      }
+    },
+    "cenv.decay=10": { "env2": { "a": 0.002, "d": 8, "dly": 0, "loop": false, "r": 8, "s": 0 } },
+    "cenv.delay=0": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": true,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.delay=2.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.21052631578947367,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.delay=5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.47368421052631576,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.delay=7.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.7368421052631579,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "cenv.delay=10": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 1,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.09473228540689989 },
+    "out.volume=5": { "volume": 0.3077861033362291 },
+    "out.volume=7.5": { "volume": 0.61320282613276 },
+    "out.volume=10": { "volume": 1 },
+    "out.phones=0": {},
+    "out.phones=2.5": {},
+    "out.phones=5": {},
+    "out.phones=7.5": {},
+    "out.phones=10": {},
+    "wheel=1": {},
+    "patched:j.osc1": {},
+    "patched:j.osc2": {},
+    "patched:j.ext": {},
+    "patched:j.main": {},
+    "patched:j.phones": {},
+    "patched:*": {},
+    "patched:* pitch.bend=-5": { "tune": -12 },
+    "patched:* pitch.bend=-2.5": { "tune": -6 },
+    "patched:* pitch.bend=2.5": { "tune": 6 },
+    "patched:* pitch.bend=5": { "tune": 12 },
+    "patched:* pitch.tune=-5": { "tune": -1 },
+    "patched:* pitch.tune=-2.5": { "tune": -0.5 },
+    "patched:* pitch.tune=2.5": { "tune": 0.5 },
+    "patched:* pitch.tune=5": { "tune": 1 },
+    "patched:* pitch.glide=2.5": { "glide": { "legato": false, "time": 0.04161791450287817 } },
+    "patched:* pitch.glide=5": { "glide": { "legato": false, "time": 0.17320508075688776 } },
+    "patched:* pitch.glide=7.5": { "glide": { "legato": false, "time": 0.7208434242404264 } },
+    "patched:* pitch.glide=10": { "glide": { "legato": false, "time": 3 } },
+    "patched:* osc1.ft=\"32\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": -24,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.ft=\"16\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.ft=\"4\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.ft=\"2\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.width=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.1,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.width=20": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.2,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.width=30": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.3,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.width=40": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.4,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.wave=\"off\"": {
+      "osc": [
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.wave=\"square\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc1.wave=\"enh\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "pulse": 0.42, "saw": 0.5 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.ft=\"32\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -24, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.ft=\"16\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -12, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.ft=\"4\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 12, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.ft=\"2\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 24, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.pitch=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -12, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.pitch=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": -6, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.pitch=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 6, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.pitch=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 12, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.wave=\"saw\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.wave=\"square\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": { "pulse": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.wave=\"enh\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.6843101439943604,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 0.42, "saw": 0.5 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc1=0": {
+      "osc": [
+        { "kbd": true, "level": 0, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* mix.osc1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.09473228540689989,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* mix.osc1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.3077861033362291,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* mix.osc1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.61320282613276,
+          "mix": { "saw": 0.6 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* mix.osc1=10": {
+      "osc": [
+        { "kbd": true, "level": 1, "mix": { "saw": 0.6 }, "pw": 0.5, "semi": 0, "syncTo": -1 },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* mix.osc2=2.5": {},
+    "patched:* mix.osc2=5": {},
+    "patched:* mix.osc2=7.5": {},
+    "patched:* mix.osc2=10": {},
+    "patched:* mix.ext=2.5": { "ext": { "level": 0.11367874248827986 } },
+    "patched:* mix.ext=5": { "ext": { "level": 0.36934332400347486 } },
+    "patched:* mix.ext=7.5": { "ext": { "level": 0.735843391359312 } },
+    "patched:* mix.ext=10": { "ext": { "level": 1.2 } },
+    "patched:* mix.noise=2.5": { "noise": { "color": "white", "level": 0.05683937124413993 } },
+    "patched:* mix.noise=5": { "noise": { "color": "white", "level": 0.18467166200173743 } },
+    "patched:* mix.noise=7.5": { "noise": { "color": "white", "level": 0.367921695679656 } },
+    "patched:* mix.noise=10": { "noise": { "color": "white", "level": 0.6 } },
+    "patched:* ctrl.freq=0": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 0.5 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 0.5 }
+    },
+    "patched:* ctrl.freq=2.5": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 1.8803015465431967 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 1.8803015465431967 }
+    },
+    "patched:* ctrl.freq=7.5": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 26.591479484724942 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 26.591479484724942 }
+    },
+    "patched:* ctrl.freq=10": {
+      "lfo": { "keySync": false, "mix": { "sine": 1 }, "rate": 100 },
+      "sh": { "clock": "lfo", "glide": 0, "rate": 100 }
+    },
+    "patched:* ctrl.pitchMod=2.5": { "routes": [{ "amt": 1.5, "dst": "pitchAll", "src": "lfo" }] },
+    "patched:* ctrl.pitchMod=5": { "routes": [{ "amt": 6, "dst": "pitchAll", "src": "lfo" }] },
+    "patched:* ctrl.pitchMod=7.5": { "routes": [{ "amt": 13.5, "dst": "pitchAll", "src": "lfo" }] },
+    "patched:* ctrl.pitchMod=10": { "routes": [{ "amt": 24, "dst": "pitchAll", "src": "lfo" }] },
+    "patched:* ctrl.wave=\"up\"": {
+      "lfo": { "keySync": false, "mix": { "saw": 1 }, "rate": 7.0710678118654755 }
+    },
+    "patched:* ctrl.wave=\"down\"": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 1 }, "rate": 7.0710678118654755 }
+    },
+    "patched:* ctrl.wave=\"square\"": {
+      "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 7.0710678118654755 }
+    },
+    "patched:* ctrl.wave=\"noise\"": {},
+    "patched:* ctrl.wave=\"rnd\"": {},
+    "patched:* vcf.freq=0": {
+      "filter": {
+        "cutoff": 25,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.freq=2.5": {
+      "filter": {
+        "cutoff": 125.74334296829355,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.freq=5": {
+      "filter": {
+        "cutoff": 632.4555320336759,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.freq=7.5": {
+      "filter": {
+        "cutoff": 3181.0829150682025,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.freq=10": {
+      "filter": {
+        "cutoff": 16000,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.q=0": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.q=2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.2575,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.q=5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.515,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.q=7.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.7725,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.q=10": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 1.03,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.mode=\"band\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "bp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.mode=\"notch\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "morph",
+        "morph": 0.5,
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.mode=\"hi\"": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 1.297381786191565,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "hp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.oscAmt=-5": { "routes": [{ "amt": -4, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.oscAmt=-2.5": {
+      "routes": [{ "amt": -1.5157165665103982, "dst": "cutoff", "src": "lfo" }]
+    },
+    "patched:* vcf.oscAmt=2.5": {
+      "routes": [{ "amt": 1.5157165665103982, "dst": "cutoff", "src": "lfo" }]
+    },
+    "patched:* vcf.oscAmt=5": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.envAmt=-5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": -7,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.envAmt=-2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": -2.6525039913931967,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.envAmt=0": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.envAmt=2.5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 2.6525039913931967,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vcf.envAmt=5": {
+      "filter": {
+        "cutoff": 1206.8352673090324,
+        "envAmt": 7,
+        "envSrc": "env2",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0.20600000000000002,
+        "type": "svf"
+      }
+    },
+    "patched:* vca.attack=2.5": {
+      "env1": {
+        "a": 0.01337480609952844,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.attack=5": {
+      "env1": {
+        "a": 0.08944271909999159,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.attack=7.5": {
+      "env1": {
+        "a": 0.5981395124884882,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.attack=10": {
+      "env1": {
+        "a": 4,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.decay=0": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.01,
+        "freeze": false,
+        "loop": false,
+        "r": 0.01,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.decay=2.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.053182958969449884,
+        "freeze": false,
+        "loop": false,
+        "r": 0.053182958969449884,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.decay=5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.282842712474619,
+        "freeze": false,
+        "loop": false,
+        "r": 0.282842712474619,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.decay=7.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 1.5042412372345575,
+        "freeze": false,
+        "loop": false,
+        "r": 1.5042412372345575,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.decay=10": {
+      "env1": {
+        "a": 0.002,
+        "d": 8,
+        "freeze": false,
+        "loop": false,
+        "r": 8,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* vca.sustain=0": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": true,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* vca.sustain=2.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.21052631578947367
+      }
+    },
+    "patched:* vca.sustain=5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.47368421052631576
+      }
+    },
+    "patched:* vca.sustain=7.5": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7368421052631579
+      }
+    },
+    "patched:* vca.sustain=10": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": false,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 1
+      }
+    },
+    "patched:* vca.hold=true": {
+      "env1": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "freeze": true,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0.7894736842105263
+      }
+    },
+    "patched:* cenv.attack=2.5": {
+      "env2": {
+        "a": 0.01337480609952844,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.attack=5": {
+      "env2": {
+        "a": 0.08944271909999159,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.attack=7.5": {
+      "env2": {
+        "a": 0.5981395124884882,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.attack=10": {
+      "env2": {
+        "a": 4,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.decay=0": {
+      "env2": { "a": 0.002, "d": 0.01, "dly": 0, "loop": false, "r": 0.01, "s": 0 }
+    },
+    "patched:* cenv.decay=2.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.053182958969449884,
+        "dly": 0,
+        "loop": false,
+        "r": 0.053182958969449884,
+        "s": 0
+      }
+    },
+    "patched:* cenv.decay=5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.282842712474619,
+        "dly": 0,
+        "loop": false,
+        "r": 0.282842712474619,
+        "s": 0
+      }
+    },
+    "patched:* cenv.decay=7.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 1.5042412372345575,
+        "dly": 0,
+        "loop": false,
+        "r": 1.5042412372345575,
+        "s": 0
+      }
+    },
+    "patched:* cenv.decay=10": {
+      "env2": { "a": 0.002, "d": 8, "dly": 0, "loop": false, "r": 8, "s": 0 }
+    },
+    "patched:* cenv.delay=0": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0,
+        "loop": true,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.delay=2.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.21052631578947367,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.delay=5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.47368421052631576,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.delay=7.5": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 0.7368421052631579,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* cenv.delay=10": {
+      "env2": {
+        "a": 0.002,
+        "d": 0.14495593273553914,
+        "dly": 1,
+        "loop": false,
+        "r": 0.14495593273553914,
+        "s": 0
+      }
+    },
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.volume=5": { "volume": 0.3077861033362291 },
+    "patched:* out.volume=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.volume=10": { "volume": 1 },
+    "patched:* out.phones=0": {},
+    "patched:* out.phones=2.5": {},
+    "patched:* out.phones=5": {},
+    "patched:* out.phones=7.5": {},
+    "patched:* out.phones=10": {}
   },
   "checks": {
     "j.ext": {

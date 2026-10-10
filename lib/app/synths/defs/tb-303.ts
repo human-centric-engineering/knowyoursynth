@@ -21,18 +21,14 @@ import type {
   TextDecor,
   ViewRect,
 } from '@/lib/app/synths/contract';
+import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { expMap, fmtHz, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
-/** `Omit` over each member of a union, so a discriminated control or jack keeps its variants. */
-type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type KnobRest = OmitEach<KnobControl, 'id' | 'type' | 'x' | 'y' | 'r' | 'style' | 'labelPos'>;
 type ButtonRest = Pick<ButtonControl, 'label' | 'name' | 'help'> &
   Partial<Pick<ButtonControl, 'cap' | 'ui' | 'module'>>;
 type JackRest = OmitEach<Jack, 'id' | 'x' | 'y' | 'r' | 'label' | 'labelPos'>;
 type TextRest = Partial<Pick<TextDecor, 'anchor' | 'fill' | 'weight' | 'spacing' | 'brand'>>;
-
-/** A panel value as a number. A continuous control always holds one. */
-const num = (v: ControlValues, id: string): number => Number(v[id]);
 
 const K = 2.8;
 const X = (x: number): number => Math.round((x - 122) * K);

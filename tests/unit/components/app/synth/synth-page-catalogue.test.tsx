@@ -14,12 +14,11 @@ import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
-import type { CatalogueSound, SynthDetail } from '@/lib/app/catalogue/read';
+import type { SynthDetail } from '@/lib/app/catalogue/read';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
-import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
-import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
-import { synthRows } from '@/tests/helpers/synth-detail';
+import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
+import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -42,7 +41,13 @@ vi.mock('@/lib/db/client', () => ({
 }));
 
 /** Every synth the catalogue lists: each one must open. */
-const LISTED = loadCatalogueData().listing.synths.map((s) => s.id);
+const LISTED = catalogueData().listing.synths.map((s) => s.id);
+
+/**
+ * Listed synths whose panel prints no maker's marks. Every other definition must tag its marks `brand`, so a port that
+ * forgot to tag them fails here; a synth with no marks is named here rather than given a tag it has no mark for.
+ */
+const UNBRANDED = new Set<string>([]);
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -70,28 +75,6 @@ const soundRows = () =>
   within(library())
     .getAllByRole('button')
     .filter((b) => b.querySelector('.font-semibold'));
-/** The parameters last sent to the engine: what the panel sounds like now. */
-const lastParams = () => {
-  const sent = engine.send.mock.calls
-    .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
-    .filter((m) => m.type === 'params');
-  return sent[sent.length - 1]?.p;
-};
-/** What the engine should be sent for a sound, as the page builds it. */
-const expectedParams = (def: AppSynthDef, p: CatalogueSound) => {
-  const { values, cables } = presetState(def, p);
-  const patched = Object.fromEntries(
-    cables.flatMap((c) => [
-      [c.to, true],
-      [c.from, true],
-    ])
-  );
-  const want = def.toEngine(values, { wheel: 0, patched });
-  want.cables = cablesToEngine(def, cables, values);
-  want.wheel = 0;
-  return want;
-};
-
 it('lists more than Model D, so the cases below are not one synth', () => {
   expect(LISTED.length).toBeGreaterThan(1);
 });
@@ -130,7 +113,9 @@ describe.each(LISTED)('the %s page', (id) => {
   it('draws the neutral panel without the maker’s marks it tags', () => {
     page();
     const marks = def.decor.filter((d) => d.brand);
-    expect(marks.length, 'brand marks are tagged').toBeGreaterThan(0);
+    expect(marks.length > 0, 'brand marks are tagged, or the synth is UNBRANDED').toBe(
+      !UNBRANDED.has(id)
+    );
     // The panel's own SVG (the picker above it draws an icon first), read as whole lines of lettering: a mark such
     // as the TB-303's "R" is also a letter of RESONANCE.
     const panel = screen.getByRole('group', { name: `${def.maker} ${def.name} front panel` });
@@ -165,13 +150,13 @@ describe.each(LISTED)('the %s page', (id) => {
 
   it('plays the first sound on opening, and the last when it is picked', () => {
     page();
-    expect(lastParams()).toEqual(expectedParams(def, detail.sounds[0]));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, detail.sounds[0]));
     const last = detail.sounds[detail.sounds.length - 1];
     const row = soundRows().find(
       (b) => b.querySelector('.font-semibold')?.textContent === last.name
     );
     if (!row) throw new Error(`${last.name} is not in the library`);
     fireEvent.click(row);
-    expect(lastParams()).toEqual(expectedParams(def, last));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, last));
   });
 });

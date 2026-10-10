@@ -10,8 +10,16 @@
 import { planCatalogue } from '@/lib/app/catalogue/seed';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 
+let data: ReturnType<typeof loadCatalogueData> | undefined;
+let planned: ReturnType<typeof planCatalogue> | undefined;
+
+/** The seed data, read and validated once per test module. */
+export const catalogueData = () => (data ??= loadCatalogueData());
+
 export function synthRows(id: string) {
-  const rows = planCatalogue(loadCatalogueData());
+  // Planned once per test module: reading and validating every synth's sounds is the slow part, and it is the same
+  // for every id.
+  const rows = (planned ??= planCatalogue(catalogueData()));
   const synth = rows.synths.find((s) => s.id === id);
   const lineage = rows.lineage.find((l) => l.synthId === id);
   if (!synth || !lineage) throw new Error(`the seed data has no ${id}`);

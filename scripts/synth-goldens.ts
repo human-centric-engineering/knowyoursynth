@@ -8,6 +8,9 @@
  * engine mapping on every sound in the library; this covers the parts it compares only by presence (the functions on
  * controls and jacks) and the panel settings no sound uses.
  *
+ * Everything recorded is plain JSON (`toJson`), so a recording and a file compare exactly, `NaN` included, and a
+ * mismatch shows the parameter and value that differ.
+ *
  * Pure: it calls the definition's functions and nothing else, so the test needs no prototype.
  */
 import type {
@@ -17,35 +20,75 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 
-/** One synth's recording. Keys are `init`, `<controlId>=<value>`, `wheel=1` or `patched:<jackId>`. */
+/** Plain JSON: what a golden file holds, so a recording and a file compare exactly. */
+export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
+
+/** An engine row's value for a parameter the row leaves out that its base sets. */
+export const ABSENT = '(absent)';
+
+/**
+ * One synth's recording. Setting keys are `init`, `<controlId>=<value>`, `wheel=1`, `patched:<jackId>` (that jack
+ * alone patched, panel at init), `patched:*` (every jack patched, panel at init) and `patched:* <controlId>=<value>`
+ * (every jack patched, that control moved).
+ */
 export interface SynthGoldens {
   id: string;
   /** Control → its readout at eleven evenly spaced points from `min` to `max`. */
   readouts: Record<string, string[]>;
-  /** Setting → hash of `toEngine`'s parameters (keys sorted, so only values count). */
-  engine: Record<string, string>;
+  /**
+   * Setting → `toEngine`'s parameters. `init` holds them all; every other row holds only the parameters that differ
+   * from its base (`patched:*` for the rows with every jack patched, `init` for the rest), `ABSENT` for one it drops,
+   * and `{}` when nothing differs. A setting where `toEngine` threw holds what it threw.
+   */
+  engine: Record<string, Json>;
   /** Jack → its `check` at `init`, and at every setting where that differs. */
   checks: Record<string, Record<string, string | null>>;
-  /** Jack → its function `amt` or `gain` at `init`, and at every setting where that differs (`null` if it threw). */
-  depths: Record<string, Record<string, number | null>>;
+  /**
+   * Jack → its function `amt` or `gain` at `init`, and at every setting where that differs: a number, `"NaN"` or
+   * `"±Infinity"` (JSON holds neither), or `null` if it threw or returned something else.
+   */
+  depths: Record<string, Record<string, number | string | null>>;
   /** Jack → its `hear` for each source in `HEAR_SOURCES` at `init`, and at every setting where that differs. */
   hears: Record<string, Record<string, string | null>>;
 }
 
-/** JSON with every object's keys sorted: two values that differ only in key order serialise the same. */
-export function canonicalJson(value: unknown): string {
-  return JSON.stringify(value, (_key, v: unknown) =>
-    v !== null && typeof v === 'object' && !Array.isArray(v)
-      ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
-      : v
-  );
+/**
+ * `value` as plain JSON with every object's keys sorted. What `JSON.stringify` would lose is kept: `NaN` and
+ * `±Infinity` become the strings `"NaN"` and `"Infinity"`/`"-Infinity"` rather than `null`, and `-0` is `0`.
+ * Functions and `undefined` are dropped from objects and are `null` in arrays, as in JSON.
+ */
+export function toJson(value: unknown): Json {
+  if (value === null || typeof value === 'boolean' || typeof value === 'string') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value + 0 : String(value);
+  if (Array.isArray(value)) return value.map((v) => toJson(v));
+  if (typeof value === 'object') {
+    const out: { [key: string]: Json } = {};
+    for (const key of Object.keys(value).sort()) {
+      const v: unknown = Reflect.get(value, key);
+      if (v !== undefined && typeof v !== 'function') out[key] = toJson(v);
+    }
+    return out;
+  }
+  return null;
 }
 
-/** FNV-1a, 32 bits, as 8 hex digits: the hash `check:synths` uses for samples. */
-export function fnv(text: string): string {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193);
-  return (h >>> 0).toString(16).padStart(8, '0');
+/** JSON with every object's keys sorted: two values that differ only in key order serialise the same. */
+export function canonicalJson(value: unknown): string {
+  return JSON.stringify(toJson(value));
+}
+
+const isJsonObject = (v: Json): v is { [key: string]: Json } =>
+  v !== null && typeof v === 'object' && !Array.isArray(v);
+
+/** The parameters of `row` that differ from `base`'s, `ABSENT` for one it drops; a row that threw stays whole. */
+function engineDiff(base: Json, row: Json): Json {
+  if (!isJsonObject(base) || !isJsonObject(row)) return row;
+  const out: { [key: string]: Json } = {};
+  for (const key of [...new Set([...Object.keys(base), ...Object.keys(row)])].sort()) {
+    if (!(key in row)) out[key] = ABSENT;
+    else if (canonicalJson(row[key]) !== canonicalJson(base[key])) out[key] = row[key];
+  }
+  return out;
 }
 
 /** The sources a `hear` sentence is asked about: each kind of signal it branches on, and the two keyboard roots. */
@@ -88,12 +131,17 @@ function hearContext(source: Pick<JackHearContext, 'src' | 'kind' | 'root'>): Ja
   };
 }
 
+/** What a function threw, as a recording holds it. */
+function threw(error: unknown): string {
+  return `throws: ${error instanceof Error ? error.message : String(error)}`;
+}
+
 /** A function's result, or what it threw: a recording never stops part way. */
 function attempt<T>(run: () => T): T | string {
   try {
     return run();
   } catch (error) {
-    return `throws: ${error instanceof Error ? error.message : String(error)}`;
+    return threw(error);
   }
 }
 
@@ -129,20 +177,24 @@ export function recordGoldens(def: SynthDef): SynthGoldens {
     readouts[c.id] = spread(c.min, c.max, 11).map((v) => String(attempt(() => fmt(v))));
   }
 
-  const engine: SynthGoldens['engine'] = {};
-  const play = (
-    key: string,
-    values: ControlValues,
-    wheel: number,
-    patched: Record<string, boolean>
-  ): void => {
-    engine[key] = fnv(
-      String(attempt(() => canonicalJson(def.toEngine(values, { wheel, patched }))))
-    );
+  const play = (values: ControlValues, wheel: number, patched: Record<string, boolean>): Json => {
+    try {
+      return toJson(def.toEngine(values, { wheel, patched }));
+    } catch (error) {
+      return threw(error);
+    }
   };
-  for (const [key, values] of grid) play(key, values, 0, {});
-  play('wheel=1', def.init, 1, {});
-  for (const j of def.jacks) play(`patched:${j.id}`, def.init, 0, { [j.id]: true });
+  const base = play(def.init, 0, {});
+  const allPatched = Object.fromEntries(def.jacks.map((j) => [j.id, true]));
+  const baseAll = play(def.init, 0, allPatched);
+  const engine: SynthGoldens['engine'] = { init: base };
+  for (const [key, values] of grid.slice(1)) engine[key] = engineDiff(base, play(values, 0, {}));
+  engine['wheel=1'] = engineDiff(base, play(def.init, 1, {}));
+  for (const j of def.jacks)
+    engine[`patched:${j.id}`] = engineDiff(base, play(def.init, 0, { [j.id]: true }));
+  engine['patched:*'] = engineDiff(base, baseAll);
+  for (const [key, values] of grid.slice(1))
+    engine[`patched:* ${key}`] = engineDiff(baseAll, play(values, 0, allPatched));
 
   /** A value at `init`, and at every setting where it differs from that. */
   const track = <T>(read: (values: ControlValues) => T): Record<string, T> => {
@@ -163,9 +215,9 @@ export function recordGoldens(def: SynthDef): SynthGoldens {
     if (check) checks[j.id] = track((v) => attempt(() => check(v)));
     const depth = j.dir === 'in' ? j.amt : j.gain;
     if (typeof depth === 'function') {
-      depths[j.id] = track((v) => {
+      depths[j.id] = track((v): number | string | null => {
         const n = attempt(() => depth(v));
-        return typeof n === 'number' ? n : null;
+        return typeof n !== 'number' ? null : Number.isFinite(n) ? n + 0 : String(n);
       });
     }
     const hear = j.dir === 'in' ? j.hear : null;
