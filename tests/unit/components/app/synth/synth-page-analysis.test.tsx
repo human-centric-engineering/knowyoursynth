@@ -268,7 +268,6 @@ describe('the sound map', () => {
     expect(mapStore.get().status).toBe('off');
     expect(screen.queryByText(/Working out what is in this sound/)).toBeNull();
     expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
-    error.mockRestore();
   });
 
   it('stops the running analysis as soon as the panel changes, so nothing it says lands in the 300 ms wait', async () => {

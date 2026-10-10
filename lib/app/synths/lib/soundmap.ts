@@ -634,6 +634,10 @@ export function createMapper(): Mapper {
     sess.onResult = undefined;
     sess.ticking = false;
     if (fail) fail(err);
+    else
+      logger.error('Sound-map probe failed with no analysis waiting on it', {
+        error: err instanceof Error ? err.message : String(err),
+      });
   };
 
   /** Hand out jobs until the queue is empty. Jobs the phase calls stale (the question is already answered) are dropped unrendered. */
@@ -723,10 +727,17 @@ export function createMapper(): Mapper {
     pool.forEach((w) => {
       w.onerror = (e: ErrorEvent) => {
         const error = e.message || 'worker error';
-        // Before the pool has answered, an error means it cannot load here: probe on the main thread instead. After,
-        // it is a job that threw inside the worker, which will send no result for it: the phase has failed.
-        if (!sess.answered) return fallBack(sess, error);
-        if (sess.id !== run || !sess.inflight.has(w)) return;
+        // Until the pool has ever answered, an error means it cannot load here: probe on the main thread instead.
+        // After, it is a job that threw inside the worker, which will send no result for it: the phase has failed.
+        if (!proven) return fallBack(sess, error);
+        if (sess.id !== run || !sess.inflight.has(w)) {
+          // A worker failing to start, or a job of a run that is over: nothing is waiting on it, but say so.
+          logger.warn('Sound-map worker error outside a running job', {
+            url: PROBE_WORKER_URL,
+            error,
+          });
+          return;
+        }
         sess.idle.push(w);
         failPhase(sess, new Error(error));
       };

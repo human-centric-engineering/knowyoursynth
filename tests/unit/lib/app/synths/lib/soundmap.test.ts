@@ -27,7 +27,7 @@ import {
 } from '@/lib/app/synths/lib/soundmap';
 import { makeMiniD, miniToEngine } from '@/tests/fixtures/synths/mini-d';
 import { logger } from '@/lib/logging';
-import type { ControlState } from '@/lib/app/synths/lib/soundmap';
+import type { ControlState, Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValues, EngineContext } from '@/lib/app/synths/contract';
 import type {
   ProbeJob as RealProbeJob,
@@ -610,12 +610,16 @@ describe('createMapper', () => {
   describe('when an analysis throws part-way', () => {
     const unhandled: unknown[] = [];
     const onUnhandled = (reason: unknown) => unhandled.push(reason);
+    // Disposed even when an assertion fails part-way, so a real pool timer cannot leak into the next test.
+    const mappers: Mapper[] = [];
+    const made = (m: Mapper) => (mappers.push(m), m);
     beforeEach(() => {
       unhandled.length = 0;
       process.on('unhandledRejection', onUnhandled);
     });
     afterEach(() => {
       process.off('unhandledRejection', onUnhandled);
+      mappers.splice(0).forEach((m) => m.dispose());
     });
 
     it('ends a main-thread analysis with onError, logged, and never onDone', async () => {
@@ -627,7 +631,7 @@ describe('createMapper', () => {
       vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure: throwing });
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
       vi.useFakeTimers();
-      const mapper = createMapper();
+      const mapper = made(createMapper());
       const def = makeMiniD();
       const onDone = vi.fn();
       const onError = vi.fn();
@@ -646,7 +650,6 @@ describe('createMapper', () => {
       expect(n).toBe(3);
       await Promise.resolve();
       expect(unhandled).toEqual([]);
-      error.mockRestore();
     });
 
     it('ends a pooled analysis with onError when handling a worker reply throws', async () => {
@@ -662,7 +665,7 @@ describe('createMapper', () => {
       }
       (globalThis as { Worker?: unknown }).Worker = ReplyingWorker;
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
-      const mapper = createMapper();
+      const mapper = made(createMapper());
       const def = makeMiniD();
       const onDone = vi.fn();
       const onError = vi.fn();
@@ -682,8 +685,6 @@ describe('createMapper', () => {
         expect.objectContaining({ error: 'progress handler broke' })
       );
       expect(unhandled).toEqual([]);
-      mapper.dispose();
-      error.mockRestore();
     });
 
     it('ends a pooled analysis with onError when a job throws inside the worker', async () => {
@@ -707,7 +708,7 @@ describe('createMapper', () => {
       (globalThis as { Worker?: unknown }).Worker = ThrowingWorker;
       const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
-      const mapper = createMapper();
+      const mapper = made(createMapper());
       const def = makeMiniD();
       const onDone = vi.fn();
       const onError = vi.fn();
@@ -725,16 +726,59 @@ describe('createMapper', () => {
       // Not mistaken for a pool that cannot load: it answered, so it is not dropped for the main thread.
       expect(warn).not.toHaveBeenCalled();
       expect(unhandled).toEqual([]);
-      mapper.dispose();
-      warn.mockRestore();
-      error.mockRestore();
+    });
+
+    it('keeps a pool that has answered before when one worker errors as a later analysis starts', async () => {
+      let starts = 0;
+      let built = 0;
+      class StartThrowingWorker {
+        constructor() {
+          built++;
+        }
+        onmessage: ((e: { data: unknown }) => void) | null = null;
+        onerror: ((e: { message: string }) => void) | null = null;
+        terminate = vi.fn();
+        postMessage(msg: { type: string; run: number; job?: RealProbeJob }): void {
+          if (msg.type === 'start') {
+            // The second analysis's first start fails in the worker (createProbe threw), before any reply.
+            if (++starts === built + 1) this.onerror?.({ message: 'createProbe blew up' });
+            else this.onmessage?.({ data: { type: 'ready', run: msg.run } });
+          } else if (msg.type === 'job' && msg.job)
+            this.onmessage?.({ data: { type: 'result', run: msg.run, result: measure(msg.job) } });
+        }
+      }
+      (globalThis as { Worker?: unknown }).Worker = StartThrowingWorker;
+      const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(built).toBeGreaterThan(1); // more than one worker, so the rest can carry on
+      const onDone = vi.fn();
+      const onError = vi.fn();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onDone).toHaveBeenCalledTimes(1);
+      expect(onError).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(
+        'Sound-map worker error outside a running job',
+        expect.objectContaining({ error: 'createProbe blew up' })
+      );
+      // Not dropped for the main thread: the pool is known to work.
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('probing on the main thread'),
+        expect.anything()
+      );
     });
 
     it('does not report a throw from the caller’s own onDone as a failed analysis', async () => {
       vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
       vi.useFakeTimers();
-      const mapper = createMapper();
+      const mapper = made(createMapper());
       const def = makeMiniD();
       const onError = vi.fn();
       const onDone = vi.fn(() => {
@@ -750,7 +794,6 @@ describe('createMapper', () => {
       // The caller's bug is left loud, as an unhandled rejection, rather than swallowed.
       await Promise.resolve();
       expect(unhandled).toEqual([new Error('caller broke')]);
-      error.mockRestore();
     });
 
     it('answers an explanation that throws with no ways in, and logs it', async () => {
@@ -762,7 +805,7 @@ describe('createMapper', () => {
       vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure: throwing });
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
       vi.useFakeTimers();
-      const mapper = createMapper();
+      const mapper = made(createMapper());
       const def = makeMiniD();
       const onDone = vi.fn();
       mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, vi.fn());
@@ -780,7 +823,6 @@ describe('createMapper', () => {
         expect.objectContaining({ control: 'mod.depth', error: 'door render blew up' })
       );
       expect(unhandled).toEqual([]);
-      error.mockRestore();
     });
   });
 });
