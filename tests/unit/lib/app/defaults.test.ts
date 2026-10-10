@@ -463,6 +463,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       expect(appAlwaysRunTests.map((t) => t.path)).toEqual([
         'tests/unit/prototype-boundary.test.ts',
         'tests/unit/lib/app/catalogue/seed-data-boundary.test.ts',
+        'tests/unit/lib/app/synths/defs/load-chunks.test.ts',
       ]);
       expect(appOwnerlessSurfaceExceptions).toEqual([]);
     },
