@@ -29,6 +29,7 @@ import xm2 from '@/lib/app/synths/defs/2-xm';
 import polyD from '@/lib/app/synths/defs/poly-d';
 import pro800 from '@/lib/app/synths/defs/pro-800';
 import ubXaD from '@/lib/app/synths/defs/ub-xa-d';
+import jupiter4 from '@/lib/app/synths/defs/jupiter-4';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -51,6 +52,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   polyD,
   pro800,
   ubXaD,
+  jupiter4,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
