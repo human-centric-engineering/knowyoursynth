@@ -48,8 +48,18 @@ code disagreed, the types follow the code (see [Where the code won](#where-the-c
 
 Follow `defs/model-d.ts`: small local helpers (`knob()`, `text()`, `jackIn()`, `jackOut()`)
 push into `controls`, `decor` and `jacks`; `init` is built from each control's `def`;
-`toEngine()` comes last. Register the definition in `defs/index.ts` (`SYNTH_DEFS`); the app
-looks a synth up with `getSynthDef(id)`.
+`toEngine()` comes last. Then register it twice, one line each:
+
+- **`defs/index.ts` (`SYNTH_DEFS`)**, every definition at once, for server code: the read
+  layer, the seed and `check:synths` look a synth up with `getSynthDef(id)`.
+- **`defs/load.ts` (`LOADERS`)**, as `'<id>': () => import('@/lib/app/synths/defs/<id>')`. The
+  synth page is a client component and loads only the definition it shows, with
+  `loadSynthDef(id)`. Each literal `import()` becomes its own chunk, so the page's bundle carries
+  no definition, however many are registered. A client component must not import
+  `defs/index.ts`: that bundles all of them.
+
+`registry.test.ts` fails when the two lists disagree, and `load-chunks.test.ts` fails when a
+definition reaches the page's up-front bundle.
 
 - **The instrument only.** A definition holds no sounds, lineage, unusual notes or limits:
   those are content, kept in the catalogue tables (D13). `registry.test.ts` refuses them on any
