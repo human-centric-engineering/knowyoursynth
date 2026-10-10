@@ -1,0 +1,2608 @@
+{
+  "id": "k2",
+  "readouts": {
+    "vco2.pitch": [
+      "-12 st",
+      "-9.6 st",
+      "-7.2 st",
+      "-4.8 st",
+      "-2.4 st",
+      "0 st",
+      "+2.4 st",
+      "+4.8 st",
+      "+7.2 st",
+      "+9.6 st",
+      "+12 st"
+    ],
+    "tune.master": [
+      "-2.5 st",
+      "-2 st",
+      "-1.5 st",
+      "-1 st",
+      "-0.5 st",
+      "0 st",
+      "+0.5 st",
+      "+1 st",
+      "+1.5 st",
+      "+2 st",
+      "+2.5 st"
+    ],
+    "hpf.cutoff": [
+      "12 Hz",
+      "24 Hz",
+      "48 Hz",
+      "95 Hz",
+      "190 Hz",
+      "379 Hz",
+      "757 Hz",
+      "1.5 kHz",
+      "3.0 kHz",
+      "6.0 kHz",
+      "12 kHz"
+    ],
+    "lpf.cutoff": [
+      "20 Hz",
+      "39 Hz",
+      "78 Hz",
+      "154 Hz",
+      "304 Hz",
+      "600 Hz",
+      "1.2 kHz",
+      "2.3 kHz",
+      "4.6 kHz",
+      "9.1 kHz",
+      "18 kHz"
+    ],
+    "mg.wave": [
+      "reverse saw",
+      "reverse saw",
+      "reverse saw → triangle",
+      "reverse saw → triangle",
+      "reverse saw → triangle",
+      "triangle",
+      "triangle → saw",
+      "triangle → saw",
+      "triangle → saw",
+      "saw",
+      "saw"
+    ],
+    "mg.freq": [
+      "0.10 Hz",
+      "0.17 Hz",
+      "0.29 Hz",
+      "0.50 Hz",
+      "0.86 Hz",
+      "1.48 Hz",
+      "2.54 Hz",
+      "4.36 Hz",
+      "7.48 Hz",
+      "13 Hz",
+      "22 Hz"
+    ],
+    "eg1.delay": [
+      "none",
+      "19 ms",
+      "35 ms",
+      "66 ms",
+      "120 ms",
+      "230 ms",
+      "440 ms",
+      "830 ms",
+      "1.6 s",
+      "2.9 s",
+      "5.5 s"
+    ],
+    "eg1.attack": [
+      "3 ms",
+      "7 ms",
+      "17 ms",
+      "39 ms",
+      "93 ms",
+      "220 ms",
+      "520 ms",
+      "1.2 s",
+      "2.9 s",
+      "6.8 s",
+      "16 s"
+    ],
+    "eg1.release": [
+      "30 ms",
+      "56 ms",
+      "110 ms",
+      "200 ms",
+      "370 ms",
+      "690 ms",
+      "1.3 s",
+      "2.4 s",
+      "4.6 s",
+      "8.5 s",
+      "16 s"
+    ],
+    "eg2.hold": [
+      "none",
+      "21 ms",
+      "43 ms",
+      "88 ms",
+      "180 ms",
+      "370 ms",
+      "770 ms",
+      "1.6 s",
+      "3.3 s",
+      "6.8 s",
+      "14 s"
+    ],
+    "eg2.attack": [
+      "5 ms",
+      "11 ms",
+      "24 ms",
+      "50 ms",
+      "100 ms",
+      "220 ms",
+      "460 ms",
+      "970 ms",
+      "2.0 s",
+      "4.3 s",
+      "9.0 s"
+    ],
+    "eg2.decay": [
+      "1 ms",
+      "10 ms",
+      "24 ms",
+      "60 ms",
+      "130 ms",
+      "300 ms",
+      "690 ms",
+      "1.6 s",
+      "3.4 s",
+      "7.1 s",
+      "15 s"
+    ],
+    "eg2.release": [
+      "40 ms",
+      "74 ms",
+      "140 ms",
+      "250 ms",
+      "460 ms",
+      "850 ms",
+      "1.6 s",
+      "2.9 s",
+      "5.3 s",
+      "9.8 s",
+      "18 s"
+    ]
+  },
+  "engine": {
+    "init": {
+      "att": [1, 1],
+      "delay": { "on": false },
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 },
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      },
+      "envf": { "sens": 1.6 },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 },
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 0.8649063234943276 },
+      "noise": { "color": "white", "gain": 1, "level": 0, "tone": 0.9 },
+      "normals": {
+        "att1CV": "one",
+        "envfIn": "preamp",
+        "gateIn": "gate",
+        "ringA": "o1saw",
+        "ringB": "o2saw"
+      },
+      "od": { "on": false },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ],
+      "oscOuts": true,
+      "paraphonic": false,
+      "preamp": { "gain": 1.8467166200173746 },
+      "ring": { "ac": true },
+      "routes": [],
+      "sh": { "glide": 0, "rate": 6 },
+      "slew": { "time": 0.1 },
+      "trig": { "drone": false, "repeat": false, "retrig": false, "src": ["gate", "gate"] },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env2" },
+      "volume": 0.5998730527562458
+    },
+    "vco1.wave=\"tri\"": {
+      "normals": {
+        "att1CV": "one",
+        "envfIn": "preamp",
+        "gateIn": "gate",
+        "ringA": "o1tri",
+        "ringB": "o2saw"
+      },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "tri": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=\"pulse\"": {
+      "normals": {
+        "att1CV": "one",
+        "envfIn": "preamp",
+        "gateIn": "gate",
+        "ringA": "o1pulse",
+        "ringB": "o2saw"
+      },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "pulse": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=\"noise\"": {
+      "noise": { "color": "white", "gain": 1, "level": 0.4362713110954515, "tone": 0.9 },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.pw=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.pw=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.395,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.pw=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.185,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.pw=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.08000000000000002,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.scale=\"32\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -24,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.scale=\"16\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -12,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.scale=\"4\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 12,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "porta.time=2.5": { "glide": { "legato": false, "time": 0.3125 } },
+    "porta.time=5": { "glide": { "legato": false, "time": 1.25 } },
+    "porta.time=7.5": { "glide": { "legato": false, "time": 2.8125 } },
+    "porta.time=10": { "glide": { "legato": false, "time": 5 } },
+    "vco2.wave=\"sq\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=\"npulse\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.12,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=\"ring\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "vco2.pitch=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.pitch=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -6,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.pitch=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 6,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.pitch=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.scale=\"16\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.scale=\"4\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.scale=\"2\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        }
+      ]
+    },
+    "tune.master=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -2.5,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -2.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "tune.master=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -1.25,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -1.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "tune.master=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 1.25,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 1.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "tune.master=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 2.5,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 2.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.0852590568662099,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.2770074930026062,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5518825435194841,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.9,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.0852590568662099,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.2770074930026062,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5518825435194841,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.9,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "fmod.mg=2.5": { "routes": [{ "amt": 0.75, "dst": "pitchAll", "src": "lfo" }] },
+    "fmod.mg=5": { "routes": [{ "amt": 3, "dst": "pitchAll", "src": "lfo" }] },
+    "fmod.mg=7.5": { "routes": [{ "amt": 6.75, "dst": "pitchAll", "src": "lfo" }] },
+    "fmod.mg=10": { "routes": [{ "amt": 12, "dst": "pitchAll", "src": "lfo" }] },
+    "fmod.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitchAll", "src": "env1" }] },
+    "fmod.eg1=5": { "routes": [{ "amt": 6, "dst": "pitchAll", "src": "env1" }] },
+    "fmod.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitchAll", "src": "env1" }] },
+    "fmod.eg1=10": { "routes": [{ "amt": 24, "dst": "pitchAll", "src": "env1" }] },
+    "hpf.cutoff=2.5": {
+      "hpf": { "cutoff": 67.48095902284189, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "hpf.cutoff=5": {
+      "hpf": { "cutoff": 379.4733192202055, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "hpf.cutoff=7.5": {
+      "hpf": { "cutoff": 2133.935292046707, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "hpf.cutoff=10": {
+      "hpf": { "cutoff": 12000, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "hpf.peak=2.5": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.27 }
+    },
+    "hpf.peak=5": { "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.54 } },
+    "hpf.peak=7.5": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.81 }
+    },
+    "hpf.peak=10": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 1.08 }
+    },
+    "hpmod.mg=2.5": { "routes": [{ "amt": 0.375, "dst": "cutoffHp", "src": "lfo" }] },
+    "hpmod.mg=5": { "routes": [{ "amt": 1.5, "dst": "cutoffHp", "src": "lfo" }] },
+    "hpmod.mg=7.5": { "routes": [{ "amt": 3.375, "dst": "cutoffHp", "src": "lfo" }] },
+    "hpmod.mg=10": { "routes": [{ "amt": 6, "dst": "cutoffHp", "src": "lfo" }] },
+    "hpmod.eg2=2.5": { "routes": [{ "amt": 0.4375, "dst": "cutoffHp", "src": "env2" }] },
+    "hpmod.eg2=5": { "routes": [{ "amt": 1.75, "dst": "cutoffHp", "src": "env2" }] },
+    "hpmod.eg2=7.5": { "routes": [{ "amt": 3.9375, "dst": "cutoffHp", "src": "env2" }] },
+    "hpmod.eg2=10": { "routes": [{ "amt": 7, "dst": "cutoffHp", "src": "env2" }] },
+    "lpf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 109.54451150103323,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpf.cutoff=5": {
+      "filter": {
+        "cutoff": 600,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3286.335345030997,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpf.cutoff=10": {
+      "filter": {
+        "cutoff": 18000,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpf.peak=2.5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.27,
+        "type": "ladder"
+      }
+    },
+    "lpf.peak=5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.54,
+        "type": "ladder"
+      }
+    },
+    "lpf.peak=7.5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.81,
+        "type": "ladder"
+      }
+    },
+    "lpf.peak=10": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.08,
+        "type": "ladder"
+      }
+    },
+    "lpf.type=\"2\"": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 1.3,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "lpmod.mg=2.5": { "routes": [{ "amt": 0.375, "dst": "cutoff", "src": "lfo" }] },
+    "lpmod.mg=5": { "routes": [{ "amt": 1.5, "dst": "cutoff", "src": "lfo" }] },
+    "lpmod.mg=7.5": { "routes": [{ "amt": 3.375, "dst": "cutoff", "src": "lfo" }] },
+    "lpmod.mg=10": { "routes": [{ "amt": 6, "dst": "cutoff", "src": "lfo" }] },
+    "lpmod.eg2=2.5": { "routes": [{ "amt": 0.5, "dst": "cutoff", "src": "env2" }] },
+    "lpmod.eg2=5": { "routes": [{ "amt": 2, "dst": "cutoff", "src": "env2" }] },
+    "lpmod.eg2=7.5": { "routes": [{ "amt": 4.5, "dst": "cutoff", "src": "env2" }] },
+    "lpmod.eg2=10": { "routes": [{ "amt": 8, "dst": "cutoff", "src": "env2" }] },
+    "mg.wave=0": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 1, "tri": 0 }, "rate": 0.8649063234943276 }
+    },
+    "mg.wave=2.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0.5, "tri": 0.5 }, "rate": 0.8649063234943276 }
+    },
+    "mg.wave=7.5": {
+      "lfo": { "keySync": false, "mix": { "saw": 0.5, "tri": 0.5 }, "rate": 0.8649063234943276 }
+    },
+    "mg.wave=10": {
+      "lfo": { "keySync": false, "mix": { "saw": 1, "tri": 0 }, "rate": 0.8649063234943276 }
+    },
+    "mg.freq=0": { "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 0.1 } },
+    "mg.freq=2.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 0.38512851068430815 }
+    },
+    "mg.freq=5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 1.4832396974191326 }
+    },
+    "mg.freq=7.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 5.712378956548744 }
+    },
+    "mg.freq=10": { "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 22 } },
+    "eg1.delay=2.5": {
+      "env1": {
+        "a": 0.003,
+        "d": 0.01,
+        "dly": 0.04842734640584506,
+        "r": 0.19734261242415563,
+        "s": 1
+      }
+    },
+    "eg1.delay=5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0.2345207879911715, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.delay=7.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 1.135721943942021, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.delay=10": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 5.5, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.attack=2.5": {
+      "env1": { "a": 0.025637220383774043, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.attack=5": {
+      "env1": { "a": 0.21908902300206645, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.attack=7.5": {
+      "env1": { "a": 1.8722778554565727, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "eg1.attack=10": { "env1": { "a": 16, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 } },
+    "eg1.release=0": { "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.03, "s": 1 } },
+    "eg1.release=2.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.14416868484808526, "s": 1 }
+    },
+    "eg1.release=5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.6928203230275509, "s": 1 }
+    },
+    "eg1.release=7.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 3.329433160230254, "s": 1 }
+    },
+    "eg1.release=10": { "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 16, "s": 1 } },
+    "eg2.hold=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0.06116908849062524,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.hold=5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0.37416573867739417,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.hold=7.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 2.288737717931768,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.hold=10": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 14,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.attack=2.5": {
+      "env2": {
+        "a": 0.03450292762929872,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.attack=5": {
+      "env2": {
+        "a": 0.220454076850486,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.attack=7.5": {
+      "env2": {
+        "a": 1.4085761220659587,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.attack=10": {
+      "env2": { "a": 9, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "eg2.decay=0": {
+      "env2": { "a": 0.0054, "d": 0.0005, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "eg2.decay=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.03833658625477635,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "eg2.decay=5": {
+      "env2": { "a": 0.0054, "d": 0.3, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "eg2.decay=7.5": {
+      "env2": { "a": 0.0054, "d": 2.3233529774726858, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "eg2.decay=10": {
+      "env2": { "a": 0.0054, "d": 15, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "eg2.sustain=0": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0 }
+    },
+    "eg2.sustain=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.25
+      }
+    },
+    "eg2.sustain=5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0.5 }
+    },
+    "eg2.sustain=7.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.75
+      }
+    },
+    "eg2.sustain=10": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 1 }
+    },
+    "eg2.release=0": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.04, "s": 0.8 }
+    },
+    "eg2.release=2.5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.1842311740638763, "s": 0.8 }
+    },
+    "eg2.release=5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.8485281374238571, "s": 0.8 }
+    },
+    "eg2.release=7.5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 3.9081333745957836, "s": 0.8 }
+    },
+    "eg2.release=10": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 18, "s": 0.8 }
+    },
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.10420551394758988 },
+    "out.volume=5": { "volume": 0.338564713669852 },
+    "out.volume=7.5": { "volume": 0.674523108746036 },
+    "out.volume=10": { "volume": 1.1 },
+    "trig.sw=true": {},
+    "esp.level=0": { "preamp": { "gain": 0 } },
+    "esp.level=2.5": { "preamp": { "gain": 0.5683937124413994 } },
+    "esp.level=7.5": { "preamp": { "gain": 3.67921695679656 } },
+    "esp.level=10": { "preamp": { "gain": 6 } },
+    "esp.lowCut=0": {},
+    "esp.lowCut=2.5": {},
+    "esp.lowCut=5": {},
+    "esp.lowCut=7.5": {},
+    "esp.lowCut=10": {},
+    "esp.highCut=0": {},
+    "esp.highCut=2.5": {},
+    "esp.highCut=5": {},
+    "esp.highCut=7.5": {},
+    "esp.highCut=10": {},
+    "esp.cvAdjust=0": {},
+    "esp.cvAdjust=2.5": {},
+    "esp.cvAdjust=7.5": {},
+    "esp.cvAdjust=10": {},
+    "esp.threshold=0": {},
+    "esp.threshold=2.5": {},
+    "esp.threshold=7.5": {},
+    "esp.threshold=10": {},
+    "wheel=1": { "routes": [{ "amt": 12, "dst": "pitchAll", "src": "lfo" }] },
+    "patched:j.total": {},
+    "patched:j.freq": {},
+    "patched:j.extIn": {},
+    "patched:j.cutoffHp": {},
+    "patched:j.cutoffLp": {},
+    "patched:j.initialGain": {},
+    "patched:j.signalOut": {},
+    "patched:j.phones": {},
+    "patched:j.mgTri": {},
+    "patched:j.mgPulse": {},
+    "patched:j.eg1Out": {},
+    "patched:j.eg1Rev": {},
+    "patched:j.kbdCv": {},
+    "patched:j.vco12Cv": {},
+    "patched:j.vco2Cv": {},
+    "patched:j.shClock": {},
+    "patched:j.eg1Trig": {},
+    "patched:j.vcaCtrl": {},
+    "patched:j.eg2Rev": {},
+    "patched:j.trigIn": {},
+    "patched:j.trigOut": {},
+    "patched:j.shIn": {},
+    "patched:j.shOut": {},
+    "patched:j.vcaIn": {},
+    "patched:j.vcaOut": {},
+    "patched:j.noisePink": {},
+    "patched:j.noiseWhite": {},
+    "patched:j.trigSwOut": {},
+    "patched:j.espIn": {},
+    "patched:j.espOutPre": {},
+    "patched:j.espOutPost": {},
+    "patched:j.espFvOut": {},
+    "patched:j.espEnvOut": {},
+    "patched:j.espTrigOut": {},
+    "patched:*": {},
+    "patched:* vco1.wave=\"tri\"": {
+      "normals": {
+        "att1CV": "one",
+        "envfIn": "preamp",
+        "gateIn": "gate",
+        "ringA": "o1tri",
+        "ringB": "o2saw"
+      },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "tri": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=\"pulse\"": {
+      "normals": {
+        "att1CV": "one",
+        "envfIn": "preamp",
+        "gateIn": "gate",
+        "ringA": "o1pulse",
+        "ringB": "o2saw"
+      },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "pulse": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=\"noise\"": {
+      "noise": { "color": "white", "gain": 1, "level": 0.4362713110954515, "tone": 0.9 },
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": {},
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.pw=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.pw=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.395,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.pw=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.185,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.pw=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.08000000000000002,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.scale=\"32\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -24,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.scale=\"16\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -12,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.scale=\"4\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 12,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* porta.time=2.5": { "glide": { "legato": false, "time": 0.3125 } },
+    "patched:* porta.time=5": { "glide": { "legato": false, "time": 1.25 } },
+    "patched:* porta.time=7.5": { "glide": { "legato": false, "time": 2.8125 } },
+    "patched:* porta.time=10": { "glide": { "legato": false, "time": 5 } },
+    "patched:* vco2.wave=\"sq\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=\"npulse\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.12,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=\"ring\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        { "fixedNote": 60, "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* vco2.pitch=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.pitch=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -6,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.pitch=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 6,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.pitch=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.scale=\"16\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.scale=\"4\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.scale=\"2\"": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* tune.master=-5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -2.5,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -2.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* tune.master=-2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": -1.25,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": -1.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* tune.master=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 1.25,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 1.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* tune.master=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 2.5,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 2.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=0": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.0852590568662099,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.2770074930026062,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5518825435194841,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.9,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=2.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.0852590568662099,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.2770074930026062,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=7.5": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.5518825435194841,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=10": {
+      "osc": [
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.4908052249823829,
+          "mix": { "rsaw": 1 },
+          "pw": 0.29000000000000004,
+          "semi": 0,
+          "syncTo": -1
+        },
+        {
+          "fixedNote": 60,
+          "kbd": true,
+          "level": 0.9,
+          "mix": { "rsaw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* fmod.mg=2.5": { "routes": [{ "amt": 0.75, "dst": "pitchAll", "src": "mult" }] },
+    "patched:* fmod.mg=5": { "routes": [{ "amt": 3, "dst": "pitchAll", "src": "mult" }] },
+    "patched:* fmod.mg=7.5": { "routes": [{ "amt": 6.75, "dst": "pitchAll", "src": "mult" }] },
+    "patched:* fmod.mg=10": { "routes": [{ "amt": 12, "dst": "pitchAll", "src": "mult" }] },
+    "patched:* fmod.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitchAll", "src": "sum1" }] },
+    "patched:* fmod.eg1=5": { "routes": [{ "amt": 6, "dst": "pitchAll", "src": "sum1" }] },
+    "patched:* fmod.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitchAll", "src": "sum1" }] },
+    "patched:* fmod.eg1=10": { "routes": [{ "amt": 24, "dst": "pitchAll", "src": "sum1" }] },
+    "patched:* hpf.cutoff=2.5": {
+      "hpf": { "cutoff": 67.48095902284189, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "patched:* hpf.cutoff=5": {
+      "hpf": { "cutoff": 379.4733192202055, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "patched:* hpf.cutoff=7.5": {
+      "hpf": { "cutoff": 2133.935292046707, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "patched:* hpf.cutoff=10": {
+      "hpf": { "cutoff": 12000, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0 }
+    },
+    "patched:* hpf.peak=2.5": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.27 }
+    },
+    "patched:* hpf.peak=5": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.54 }
+    },
+    "patched:* hpf.peak=7.5": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 0.81 }
+    },
+    "patched:* hpf.peak=10": {
+      "hpf": { "cutoff": 12, "envAmt": 0, "envSrc": "env2", "kbd": 0, "res": 1.08 }
+    },
+    "patched:* hpmod.mg=2.5": { "routes": [{ "amt": 0.375, "dst": "cutoffHp", "src": "mult" }] },
+    "patched:* hpmod.mg=5": { "routes": [{ "amt": 1.5, "dst": "cutoffHp", "src": "mult" }] },
+    "patched:* hpmod.mg=7.5": { "routes": [{ "amt": 3.375, "dst": "cutoffHp", "src": "mult" }] },
+    "patched:* hpmod.mg=10": { "routes": [{ "amt": 6, "dst": "cutoffHp", "src": "mult" }] },
+    "patched:* hpmod.eg2=2.5": { "routes": [{ "amt": 0.4375, "dst": "cutoffHp", "src": "sum2" }] },
+    "patched:* hpmod.eg2=5": { "routes": [{ "amt": 1.75, "dst": "cutoffHp", "src": "sum2" }] },
+    "patched:* hpmod.eg2=7.5": { "routes": [{ "amt": 3.9375, "dst": "cutoffHp", "src": "sum2" }] },
+    "patched:* hpmod.eg2=10": { "routes": [{ "amt": 7, "dst": "cutoffHp", "src": "sum2" }] },
+    "patched:* lpf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 109.54451150103323,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.cutoff=5": {
+      "filter": {
+        "cutoff": 600,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3286.335345030997,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.cutoff=10": {
+      "filter": {
+        "cutoff": 18000,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.peak=2.5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.27,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.peak=5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.54,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.peak=7.5": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.81,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.peak=10": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 0.85,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.08,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpf.type=\"2\"": {
+      "filter": {
+        "cutoff": 2338.8359045497127,
+        "drive": 1.3,
+        "envAmt": 0,
+        "envSrc": "env2",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* lpmod.mg=2.5": { "routes": [{ "amt": 0.375, "dst": "cutoff", "src": "mult" }] },
+    "patched:* lpmod.mg=5": { "routes": [{ "amt": 1.5, "dst": "cutoff", "src": "mult" }] },
+    "patched:* lpmod.mg=7.5": { "routes": [{ "amt": 3.375, "dst": "cutoff", "src": "mult" }] },
+    "patched:* lpmod.mg=10": { "routes": [{ "amt": 6, "dst": "cutoff", "src": "mult" }] },
+    "patched:* lpmod.eg2=2.5": { "routes": [{ "amt": 0.5, "dst": "cutoff", "src": "att1" }] },
+    "patched:* lpmod.eg2=5": { "routes": [{ "amt": 2, "dst": "cutoff", "src": "att1" }] },
+    "patched:* lpmod.eg2=7.5": { "routes": [{ "amt": 4.5, "dst": "cutoff", "src": "att1" }] },
+    "patched:* lpmod.eg2=10": { "routes": [{ "amt": 8, "dst": "cutoff", "src": "att1" }] },
+    "patched:* mg.wave=0": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 1, "tri": 0 }, "rate": 0.8649063234943276 }
+    },
+    "patched:* mg.wave=2.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0.5, "tri": 0.5 }, "rate": 0.8649063234943276 }
+    },
+    "patched:* mg.wave=7.5": {
+      "lfo": { "keySync": false, "mix": { "saw": 0.5, "tri": 0.5 }, "rate": 0.8649063234943276 }
+    },
+    "patched:* mg.wave=10": {
+      "lfo": { "keySync": false, "mix": { "saw": 1, "tri": 0 }, "rate": 0.8649063234943276 }
+    },
+    "patched:* mg.freq=0": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 0.1 }
+    },
+    "patched:* mg.freq=2.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 0.38512851068430815 }
+    },
+    "patched:* mg.freq=5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 1.4832396974191326 }
+    },
+    "patched:* mg.freq=7.5": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 5.712378956548744 }
+    },
+    "patched:* mg.freq=10": {
+      "lfo": { "keySync": false, "mix": { "rsaw": 0, "tri": 1 }, "rate": 22 }
+    },
+    "patched:* eg1.delay=2.5": {
+      "env1": {
+        "a": 0.003,
+        "d": 0.01,
+        "dly": 0.04842734640584506,
+        "r": 0.19734261242415563,
+        "s": 1
+      }
+    },
+    "patched:* eg1.delay=5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0.2345207879911715, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.delay=7.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 1.135721943942021, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.delay=10": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 5.5, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.attack=2.5": {
+      "env1": { "a": 0.025637220383774043, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.attack=5": {
+      "env1": { "a": 0.21908902300206645, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.attack=7.5": {
+      "env1": { "a": 1.8722778554565727, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.attack=10": {
+      "env1": { "a": 16, "d": 0.01, "dly": 0, "r": 0.19734261242415563, "s": 1 }
+    },
+    "patched:* eg1.release=0": { "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.03, "s": 1 } },
+    "patched:* eg1.release=2.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.14416868484808526, "s": 1 }
+    },
+    "patched:* eg1.release=5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 0.6928203230275509, "s": 1 }
+    },
+    "patched:* eg1.release=7.5": {
+      "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 3.329433160230254, "s": 1 }
+    },
+    "patched:* eg1.release=10": { "env1": { "a": 0.003, "d": 0.01, "dly": 0, "r": 16, "s": 1 } },
+    "patched:* eg2.hold=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0.06116908849062524,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.hold=5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0.37416573867739417,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.hold=7.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 2.288737717931768,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.hold=10": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 14,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.attack=2.5": {
+      "env2": {
+        "a": 0.03450292762929872,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.attack=5": {
+      "env2": {
+        "a": 0.220454076850486,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.attack=7.5": {
+      "env2": {
+        "a": 1.4085761220659587,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.attack=10": {
+      "env2": { "a": 9, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "patched:* eg2.decay=0": {
+      "env2": { "a": 0.0054, "d": 0.0005, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "patched:* eg2.decay=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.03833658625477635,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.8
+      }
+    },
+    "patched:* eg2.decay=5": {
+      "env2": { "a": 0.0054, "d": 0.3, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "patched:* eg2.decay=7.5": {
+      "env2": { "a": 0.0054, "d": 2.3233529774726858, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "patched:* eg2.decay=10": {
+      "env2": { "a": 0.0054, "d": 15, "hold": 0, "r": 0.2500482074175627, "s": 0.8 }
+    },
+    "patched:* eg2.sustain=0": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0 }
+    },
+    "patched:* eg2.sustain=2.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.25
+      }
+    },
+    "patched:* eg2.sustain=5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 0.5 }
+    },
+    "patched:* eg2.sustain=7.5": {
+      "env2": {
+        "a": 0.0054,
+        "d": 0.1341640786499874,
+        "hold": 0,
+        "r": 0.2500482074175627,
+        "s": 0.75
+      }
+    },
+    "patched:* eg2.sustain=10": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.2500482074175627, "s": 1 }
+    },
+    "patched:* eg2.release=0": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.04, "s": 0.8 }
+    },
+    "patched:* eg2.release=2.5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.1842311740638763, "s": 0.8 }
+    },
+    "patched:* eg2.release=5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 0.8485281374238571, "s": 0.8 }
+    },
+    "patched:* eg2.release=7.5": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 3.9081333745957836, "s": 0.8 }
+    },
+    "patched:* eg2.release=10": {
+      "env2": { "a": 0.0054, "d": 0.1341640786499874, "hold": 0, "r": 18, "s": 0.8 }
+    },
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.10420551394758988 },
+    "patched:* out.volume=5": { "volume": 0.338564713669852 },
+    "patched:* out.volume=7.5": { "volume": 0.674523108746036 },
+    "patched:* out.volume=10": { "volume": 1.1 },
+    "patched:* trig.sw=true": {},
+    "patched:* esp.level=0": { "preamp": { "gain": 0 } },
+    "patched:* esp.level=2.5": { "preamp": { "gain": 0.5683937124413994 } },
+    "patched:* esp.level=7.5": { "preamp": { "gain": 3.67921695679656 } },
+    "patched:* esp.level=10": { "preamp": { "gain": 6 } },
+    "patched:* esp.lowCut=0": {},
+    "patched:* esp.lowCut=2.5": {},
+    "patched:* esp.lowCut=5": {},
+    "patched:* esp.lowCut=7.5": {},
+    "patched:* esp.lowCut=10": {},
+    "patched:* esp.highCut=0": {},
+    "patched:* esp.highCut=2.5": {},
+    "patched:* esp.highCut=5": {},
+    "patched:* esp.highCut=7.5": {},
+    "patched:* esp.highCut=10": {},
+    "patched:* esp.cvAdjust=0": {},
+    "patched:* esp.cvAdjust=2.5": {},
+    "patched:* esp.cvAdjust=7.5": {},
+    "patched:* esp.cvAdjust=10": {},
+    "patched:* esp.threshold=0": {},
+    "patched:* esp.threshold=2.5": {},
+    "patched:* esp.threshold=7.5": {},
+    "patched:* esp.threshold=10": {}
+  },
+  "checks": {
+    "j.total": {
+      "init": "Every MG/T.EXT knob is at 0, so nothing reaches the oscillators or the filters. Turn one of them up.",
+      "fmod.mg=2.5": null,
+      "fmod.mg=5": null,
+      "fmod.mg=7.5": null,
+      "fmod.mg=10": null,
+      "hpmod.mg=2.5": null,
+      "hpmod.mg=5": null,
+      "hpmod.mg=7.5": null,
+      "hpmod.mg=10": null,
+      "lpmod.mg=2.5": null,
+      "lpmod.mg=5": null,
+      "lpmod.mg=7.5": null,
+      "lpmod.mg=10": null
+    },
+    "j.freq": {
+      "init": "The EG1/EXT frequency knob is at 0. Turn it up to hear this cable.",
+      "fmod.eg1=2.5": null,
+      "fmod.eg1=5": null,
+      "fmod.eg1=7.5": null,
+      "fmod.eg1=10": null
+    },
+    "j.cutoffHp": {
+      "init": "The high-pass EG2/EXT knob is at 0. Turn it up to hear this cable.",
+      "hpmod.eg2=2.5": null,
+      "hpmod.eg2=5": null,
+      "hpmod.eg2=7.5": null,
+      "hpmod.eg2=10": null
+    },
+    "j.cutoffLp": {
+      "init": "The low-pass EG2/EXT knob is at 0. Turn it up to hear this cable.",
+      "lpmod.eg2=2.5": null,
+      "lpmod.eg2=5": null,
+      "lpmod.eg2=7.5": null,
+      "lpmod.eg2=10": null
+    }
+  },
+  "depths": {},
+  "hears": {
+    "j.total": {
+      "lfo@init": "The LFO takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "audio@init": "Oscillator 1 takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "noise@init": "The noise generator takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "fast@init": "The fast LFO takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "env@init": "The envelope takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "kbd@init": "The keyboard pitch takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob.",
+      "kbd2@init": "The upper voice takes the place of the modulation generator in all four MG/T.EXT knobs at once — pitch, high-pass cutoff and low-pass cutoff. How much of it reaches each one is still set by that section’s own MG/T.EXT knob."
+    },
+    "j.freq": {
+      "lfo@init": "The LFO takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "audio@init": "Oscillator 1 takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "noise@init": "The noise generator takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "fast@init": "The fast LFO takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "env@init": "The envelope takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "kbd@init": "The keyboard pitch takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far.",
+      "kbd2@init": "The upper voice takes the place of envelope 1 at the EG1/EXT knob under the VCO mixer, so it moves the pitch of both oscillators. The EG1/EXT knob sets how far."
+    },
+    "j.cutoffHp": {
+      "lfo@init": "The LFO takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "audio@init": "Oscillator 1 takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "noise@init": "The noise generator takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "fast@init": "The fast LFO takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "env@init": "The envelope takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "kbd@init": "The keyboard pitch takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far.",
+      "kbd2@init": "The upper voice takes the place of envelope 2 at the high-pass EG2/EXT knob, so it sweeps the high-pass cutoff. That knob sets how far."
+    },
+    "j.cutoffLp": {
+      "lfo@init": "The LFO takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "audio@init": "Oscillator 1 takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "noise@init": "The noise generator takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "fast@init": "The fast LFO takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "env@init": "The envelope takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "kbd@init": "The keyboard pitch takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far.",
+      "kbd2@init": "The upper voice takes the place of envelope 2 at the low-pass EG2/EXT knob, so it sweeps the low-pass cutoff. That knob sets how far."
+    }
+  }
+}

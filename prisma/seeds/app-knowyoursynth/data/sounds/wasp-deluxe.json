@@ -1,0 +1,2157 @@
+{
+  "synth": "wasp-deluxe",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "wasp-buzz-bass",
+      "name": "Buzz Bass",
+      "ref": "The Wasp’s own character: digital sawtooths through a low-pass filter",
+      "artist": "Classic technique",
+      "tags": ["bass", "buzzy", "late-70s"],
+      "level": 1,
+      "blurb": "A raw, buzzy bass with a quick filter snap on every note.",
+      "how": "Both oscillators on sawtooth, the lower one an octave down, so there is plenty of edge for the filter to cut. The filter sits low and the control envelope, through the right FILTER CONTROL knob, opens it briefly at the start of each note. The VCA envelope holds full level while the key is down.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.2],
+          [1, 48, 0.4],
+          [1.5, 39, 0.4],
+          [2, 41, 0.4],
+          [2.5, 36, 0.2],
+          [3, 43, 0.4],
+          [3.5, 46, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, an octave apart",
+          "module": "osc",
+          "why": "Both oscillators go on sawtooth, one an octave under the other. The lower one gives the bass its weight and the upper one its buzz, so there is plenty of raw edge for the filter to cut later.\n- OSC 1 sawtooth, FT 8: FT is footage, the octave in organ feet. 8 plays at the pitch of the keys. The WASP’s oscillators are digital, so the saw has a hard, buzzy edge.\n- OSC 2 sawtooth, FT 16, PITCH 5: 16 is an octave lower, and PITCH at 5 (the centre) keeps it exactly in tune with OSC 1. This is the low end.\n- Mix OSC 1 7, OSC 2 8: the lower saw slightly louder so the weight leads. Turn OSC 1 down to hear how dull the bass gets without the upper buzz.\n- Listen for: a bright, raw buzz with a solid bottom. It is harsh on its own; the filter tames it next.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "8",
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 5,
+            "mix.osc1": 7,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "A low filter",
+          "module": "filter",
+          "why": "The filter now takes most of the brightness away, so between notes the bass is a dull, round thud. The next step opens it on each note.\n- Filter mode LO: low-pass. It keeps the lows and cuts the highs, the usual choice for bass.\n- FREQ 3 (about 174 Hz): the cutoff, low enough that most of the buzz is gone and you mainly hear the body. Turn it up and the saws come back; down and the notes turn to a muffled thump.\n- Q 4 (40 %): Q is the WASP’s name for resonance, a boost right at the cutoff. A moderate amount gives the snap to come a slight edge.\n- Listen for: a much darker, woollier bass. There is still a small push on each note from the control envelope’s starting setting.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3, "vcf.q": 4 }
+        },
+        {
+          "title": "Snap it open",
+          "module": "env",
+          "why": "The control envelope is the WASP’s filter envelope: it pushes the cutoff up on each note and lets it fall back. Set short and deep, it gives every note a quick bright snap.\n- Control env ATTACK 0 (2 ms): the filter opens at once, so the snap lands right on the beat.\n- Control env DECAY 3.2 (85 ms): how fast it closes again. Shorter is a tight click; longer turns it into a slow wah.\n- DELAY / REPEAT 0.5 (no delay): the envelope starts the moment the key goes down.\n- FILTER CONTROL (right) +3.2 (+3.7 oct): how far the envelope lifts the cutoff. 0 is at the top; anticlockwise would make each note dip darker instead.\n- Listen for: a hard “dow” on the front of every note. Sweep DECAY between 2 and 5 while the riff plays.",
+          "set": { "cenv.attack": 0, "cenv.decay": 3.2, "cenv.delay": 0.5, "vcf.envAmt": 3.2 }
+        },
+        {
+          "title": "Full level while held",
+          "module": "amp",
+          "why": "The VCA envelope shapes loudness. VCA stands for voltage-controlled amplifier: the part that turns each note on and off. For a bass you want notes that start hard and stop cleanly.\n- VCA ATTACK 0 (2 ms): full level straight away, so the loudness lines up with the filter snap.\n- SUSTAIN LEVEL 10 (100 %): held notes stay at full weight instead of fading.\n- VCA DECAY 2.5 (53 ms): the WASP has no release knob, so DECAY also sets the fade after you let go. Short means each note stops almost as soon as the key comes up.\n- Listen for: tight gaps between the notes of the riff. Raise DECAY to 5 and the notes blur into each other.",
+          "set": { "vca.attack": 0, "vca.decay": 2.5, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.envAmt": "In this sound: the size of the snap. Anticlockwise from 0 turns it into a dull dip.",
+        "cenv.decay": "In this sound: the length of the snap, from a click to a slow wah.",
+        "vcf.q": "In this sound: a little edge on the snap. Turn it up for a squelch.",
+        "osc2.ft": "In this sound: the lower octave that gives the bass its weight."
+      },
+      "tweaks": [
+        {
+          "id": "cenv.decay",
+          "try": "Move between 2 and 5",
+          "hear": "From a tight click to a rubbery wah."
+        },
+        { "id": "vcf.q", "try": "Raise to 8", "hear": "Each note squelches." },
+        { "id": "osc1.wave", "try": "Switch to ENH", "hear": "A fuller, more biting top." }
+      ]
+    },
+    {
+      "id": "wasp-feedback-lead",
+      "name": "Feedback Lead",
+      "ref": "The EXT knob as a feedback control",
+      "artist": "Classic technique",
+      "tags": ["lead", "feedback", "dirty"],
+      "level": 2,
+      "blurb": "A lead that growls and overdrives because the WASP is fed its own output.",
+      "how": "With nothing plugged into EXT AUDIO, the EXT knob feeds the WASP’s output back into its own mixer. Turned part way up, the filter is driven harder by its own signal: the sound thickens and distorts. A high Q makes the loop ring and scream on some notes.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.4],
+          [1.5, 69, 1.4],
+          [3, 71, 0.4],
+          [3.5, 69, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square lead",
+          "module": "osc",
+          "why": "A single square wave gives a hollow, reedy lead with a clear pitch. The second oscillator is switched off so there is room for the feedback that comes next.\n- OSC 1 square, WIDTH 35 %: a square at 50 % is hollow; narrowing it to 35 % makes it thinner and more nasal, a reedy edge that cuts through a mix.\n- OSC 2 off: the waveform switch has an OFF position, so the lower oscillator makes no sound whatever its mix level.\n- Mix OSC 1 7 (70 %): a little below the start of 8, leaving headroom for the fed-back signal.\n- Listen for: a plain, clean square lead. Remember how it sounds before the next step.",
+          "set": { "osc1.wave": "square", "osc1.width": 35, "osc2.wave": "off", "mix.osc1": 7 }
+        },
+        {
+          "title": "Feed the output back",
+          "module": "mixer",
+          "why": "This is the WASP’s trick. With nothing plugged into EXT AUDIO (the external audio input), the EXT knob feeds the synth’s own output back into its mixer, so the filter is driven by its own signal.\n- Mix EXT 6.5 (65 %): well into overdrive. Below about 4 it only thickens; above about 7 it starts to howl.\n- Listen for: the lead going thick, gritty and slightly unstable. Hold a note and sweep EXT from 3 to 8 to hear clean, then dirty, then a scream.",
+          "set": { "mix.ext": 6.5 }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "A resonant low-pass filter gives the feedback something to ring against, so the lead growls rather than just distorting.\n- Filter mode LO: low-pass, keeping the body and trimming the top.\n- FREQ 5.5 (about 870 Hz): about half open, so the square still sounds bright.\n- Q 6.5 (65 %): Q is resonance, a boost at the cutoff. The feedback excites it, which is where the growl and the ringing on some notes come from.\n- FILTER CONTROL (right) +1.5 (+1.3 oct): a gentle push from the control envelope, the filter’s own envelope, at the start of each note, fading over the control env DECAY of 5 (280 ms).\n- Listen for: some notes ringing harder than others as they line up with the resonance.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 5.5,
+            "vcf.q": 6.5,
+            "vcf.envAmt": 1.5,
+            "cenv.decay": 5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "Vibrato from the control oscillator, the WASP’s LFO (low-frequency oscillator): a slow wave that moves something else rather than making sound.\n- Control osc waveform sine: a smooth, even wobble, the natural shape for vibrato.\n- Control osc FREQ 3.9 (about 4 Hz): the speed of the vibrato. Faster sounds nervous; slower sounds like a wobble.\n- PITCH MOD 1.2 (+0.3 st): a panel knob, separate from the mod wheel. It sets how far the pitch moves, a small amount here.\n- Listen for: long notes gaining a gentle waver. Turn PITCH MOD to 0 to hear the lead go static.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 3.9, "ctrl.pitchMod": 1.2 }
+        }
+      ],
+      "context": {
+        "mix.ext": "In this sound: the amount of feedback. Below 4 it is clean; above 7 it howls.",
+        "vcf.q": "In this sound: how much the feedback loop rings.",
+        "ctrl.pitchMod": "In this sound: the depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "mix.ext",
+          "try": "Sweep from 3 to 8 while holding a note",
+          "hear": "Clean, then thick, then a screaming howl."
+        },
+        { "id": "vcf.mode", "try": "Switch to BAND", "hear": "A nasal, honking growl." },
+        {
+          "id": "vcf.freq",
+          "try": "Move slowly between 4 and 7",
+          "hear": "The feedback changes pitch and character."
+        }
+      ]
+    },
+    {
+      "id": "wasp-repeat-pulse",
+      "name": "Repeat Pulse",
+      "ref": "The VCA envelope’s REPEAT position",
+      "artist": "Classic technique",
+      "tags": ["seq", "rhythm", "repeat"],
+      "level": 1,
+      "blurb": "Hold one key and it pulses by itself, like a note played over and over.",
+      "how": "SUSTAIN LEVEL turned fully anticlockwise, to REPEAT, makes the VCA envelope start again each time it finishes decaying. ATTACK and DECAY together set the speed of the pulses. The control envelope is on REPEAT too, so each pulse also has a filter pluck.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8],
+          [4, 51, 1.8],
+          [6, 46, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright source",
+          "module": "osc",
+          "why": "Two bright waveforms a fifth apart give a full, buzzy chord from one key, strong enough for the pulsing to cut through.\n- OSC 1 ENH: ENH is the sawtooth and square together, fuller and more biting than either alone.\n- OSC 2 sawtooth, PITCH 7.9 (+7 st): PITCH tunes OSC 2 against OSC 1. Seven semitones up is a fifth, so each key plays a power chord.\n- Mix OSC 1 7, OSC 2 6: the root a little louder than the fifth, so the pitch you play stays clear.\n- Listen for: a thick, bright two-note sound. Turn PITCH back to 5 to hear it fall to a single note.",
+          "set": {
+            "osc1.wave": "enh",
+            "osc2.wave": "saw",
+            "osc2.pitch": 7.9,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Loudness on REPEAT",
+          "module": "amp",
+          "why": "SUSTAIN LEVEL has a REPEAT position at its far end. There the VCA envelope, the one shaping loudness (VCA is voltage-controlled amplifier), restarts every time it finishes, so a held key pulses by itself.\n- SUSTAIN LEVEL 0 (REPEAT): fully anticlockwise. The envelope rises over ATTACK, falls over DECAY, then starts again.\n- VCA ATTACK 0 (2 ms): each pulse starts with a hard hit.\n- VCA DECAY 3 (74 ms): short, so the pulses come quickly. ATTACK and DECAY together set the pulse rate: longer DECAY, slower pulses.\n- Listen for: hold one key and it plays itself like a fast repeated note. Move DECAY between 2 and 5 to change the speed.",
+          "set": { "vca.sustain": 0, "vca.attack": 0, "vca.decay": 3 }
+        },
+        {
+          "title": "A pluck on each pulse",
+          "module": "env",
+          "why": "The control envelope, the second envelope that moves the filter, goes on REPEAT too, so each pulse also gets a filter pluck instead of just a volume blip.\n- Control env on REPEAT, DECAY 3 (74 ms): DELAY / REPEAT fully anticlockwise and ATTACK 0, the same timing as the VCA envelope, so the pluck and the pulse line up.\n- FILTER CONTROL (right) +3 (+3.4 oct): how far each cycle lifts the cutoff. 0 is at the top of the knob.\n- FREQ 3.5 (about 240 Hz), Q 5 (50 %): a low cutoff so each pulse closes to dark, and a fair amount of resonance (Q) for a slight squelch on the pluck.\n- Listen for: each pulse going “bip” rather than just on and off. Set control env DECAY to 5 and the two envelopes drift apart into a shifting pattern.",
+          "set": {
+            "cenv.delay": 0,
+            "cenv.attack": 0,
+            "cenv.decay": 3,
+            "vcf.envAmt": 3,
+            "vcf.freq": 3.5,
+            "vcf.q": 5
+          }
+        }
+      ],
+      "context": {
+        "vca.sustain": "In this sound: at REPEAT. Turn it clockwise and the note just sustains.",
+        "vca.decay": "In this sound: the speed of the pulses. Longer decay, slower pulses.",
+        "cenv.delay": "In this sound: at REPEAT, so the filter plucks on every pulse."
+      },
+      "tweaks": [
+        {
+          "id": "vca.decay",
+          "try": "Move between 2 and 5",
+          "hear": "The pulses speed up and slow down."
+        },
+        {
+          "id": "cenv.decay",
+          "try": "Set to 5",
+          "hear": "The filter cycles at a different speed from the loudness, so the pattern shifts."
+        },
+        { "id": "vca.attack", "try": "Raise to 4", "hear": "Soft swells instead of hits." }
+      ]
+    },
+    {
+      "id": "wasp-random-bleeps",
+      "name": "Random Bleeps",
+      "ref": "In the style of late-70s sci-fi computer sounds",
+      "artist": "Classic technique",
+      "tags": ["fx", "sci-fi", "random"],
+      "level": 2,
+      "blurb": "A held note turns into a stream of random, resonant blips.",
+      "how": "The control oscillator on RND picks a new random value each cycle, and the left FILTER CONTROL knob sends it to the filter, so the tone jumps at random. A high Q makes each step ring. The VCA envelope on REPEAT turns the held note into separate blips.",
+      "phrase": { "bpm": 90, "loop": true, "steps": [[0, 60, 7.8]] },
+      "steps": [
+        {
+          "title": "A bright source",
+          "module": "osc",
+          "why": "One sawtooth is all this needs: it is full of harmonics, which gives the resonant filter plenty to pick out. The random tones in the next step come from the filter, not the oscillator.\n- OSC 1 sawtooth: the brightest, buzziest waveform. On the WASP it is digital, with a hard edge.\n- OSC 2 off: a single oscillator keeps the pitch plain so the filter jumps stand out.\n- Mix OSC 1 8 (80 %): the full starting level.",
+          "set": { "osc1.wave": "saw", "osc2.wave": "off", "mix.osc1": 8 }
+        },
+        {
+          "title": "Random steps on the filter",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) on RND, random, picks a new level each cycle. Sent to the filter, it makes the tone jump to a new random colour each time.\n- Control osc waveform RND: a sample and hold built into the LFO. Each cycle it jumps to a new random level and stays there.\n- Control osc FREQ 4.2 (about 4.6 Hz): how often a new value is picked, here several times a second.\n- FILTER CONTROL (left) +3.5 (+2.4 oct): how far the random steps move the filter. More spreads the tones further apart.\n- FREQ 5.2 (about 720 Hz), Q 8 (80 %): the filter sits in the middle and Q (resonance) is high, so each step rings with its own whistle.\n- FILTER CONTROL (right) 0: the control envelope is taken off the filter so only the random steps move it.\n- Listen for: a held note turning into a string of random, computer-like tones. Lower Q to 3 and they become dull ticks.",
+          "set": {
+            "ctrl.wave": "rnd",
+            "ctrl.freq": 4.2,
+            "vcf.oscAmt": 3.5,
+            "vcf.freq": 5.2,
+            "vcf.q": 8,
+            "vcf.envAmt": 0
+          }
+        },
+        {
+          "title": "Chop it into blips",
+          "module": "amp",
+          "why": "SUSTAIN LEVEL on REPEAT chops the held note into separate blips, so the random tones sound like individual beeps.\n- SUSTAIN LEVEL 0 (REPEAT): the VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) loops for as long as the key is held.\n- VCA ATTACK 0 (2 ms), DECAY 2.6 (57 ms): each blip starts hard and dies quickly. Longer DECAY gives slower, longer blips.\n- Listen for: the blips and the filter steps running at different speeds, so the pattern never quite repeats.",
+          "set": { "vca.sustain": 0, "vca.attack": 0, "vca.decay": 2.6 }
+        }
+      ],
+      "context": {
+        "vcf.oscAmt": "In this sound: how far apart the random tones are.",
+        "ctrl.freq": "In this sound: how often a new random tone is picked.",
+        "vcf.q": "In this sound: makes each tone whistle. Lower it for dull ticks."
+      },
+      "tweaks": [
+        { "id": "ctrl.pitchMod", "try": "Raise to 3", "hear": "The pitch jumps at random too." },
+        {
+          "id": "ctrl.wave",
+          "try": "Switch to NOISE",
+          "hear": "A fast, rough gargle instead of steps."
+        },
+        { "id": "vcf.mode", "try": "Switch to BAND", "hear": "Thinner, more electronic blips." }
+      ]
+    },
+    {
+      "id": "wasp-notch-pad",
+      "name": "Notch Drift",
+      "ref": "The NOTCH filter swept slowly",
+      "artist": "Classic technique",
+      "tags": ["pad", "phaser", "slow"],
+      "level": 2,
+      "blurb": "A slow, hollow, phasing drone from a notch swept by the control oscillator.",
+      "how": "NOTCH cuts a band out of the sound instead of keeping one. The control oscillator, slow and on sine, moves that notch up and down through two slightly detuned sawtooths, which gives a hollow, phaser-like movement. A slow attack and long decay make it a pad.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8],
+          [4, 45, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Two sawtooths at the same octave, a hair apart, beat slowly against each other. That gives the pad its width and gives the notch filter a thick sound to cut into.\n- OSC 1 and OSC 2 sawtooth, OSC 2 FT 8: both at the pitch of the keys. FT is footage, the octave in organ feet.\n- OSC 2 PITCH 5.1 (+0.1 st): just off the centre. Too small to hear as out of tune, enough to make the two slowly beat.\n- Mix OSC 1 and OSC 2 at 7: equal levels, so the beating is as deep as it can be.\n- Listen for: a slow, even swirl on a held note. Set PITCH back to 5 and it goes still.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 5.05,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "A notch",
+          "module": "filter",
+          "why": "NOTCH mode cuts a band out of the sound and keeps everything else. It gives a hollow, phasey tone, and it is rare on a small mono synth.\n- Filter mode NOTCH: the opposite of BAND. The lows and highs pass; a slice in the middle is removed.\n- FREQ 5.5 (about 870 Hz): where the notch sits, in the middle of the sound.\n- Q 5.5 (55 %): Q is resonance. In NOTCH it sets how narrow the cut is, making it deeper and more obvious.\n- FILTER CONTROL (right) 0: no envelope on the filter, so the notch stays put on each note.\n- Listen for: the sawtooths sounding slightly hollow, with a hole in the middle. It is subtle until the notch moves.",
+          "set": { "vcf.mode": "notch", "vcf.freq": 5.5, "vcf.q": 5.5, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Sweep it slowly",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) now moves the notch slowly up and down, which is what makes it sound like a phaser.\n- Control osc waveform sine: a smooth wave, so the notch glides rather than jumps.\n- Control osc FREQ 0.4 (about 0.6 Hz): near its slowest, roughly one sweep every couple of seconds.\n- FILTER CONTROL (left) +3.5 (+2.4 oct): how far the notch travels. More gives a wider, more dramatic sweep.\n- Listen for: a hollow “whoosh” moving up and down inside the held note. Switch the mode to LO and it becomes a plain wah.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 0.4, "vcf.oscAmt": 3.5 }
+        },
+        {
+          "title": "A slow swell",
+          "module": "amp",
+          "why": "A slow attack and long fade turn the drone into a pad that swells in and lingers.\n- VCA ATTACK 6 (190 ms): VCA is voltage-controlled amplifier, the loudness stage. Each note fades in instead of starting hard.\n- SUSTAIN LEVEL 10 (100 %): held notes stay at full level.\n- VCA DECAY 7 (1.1 s): with no release knob, DECAY also sets the fade after you let go, here about a second.\n- Listen for: notes blooming in and ringing on after the key comes up, with the notch still moving through the tail.",
+          "set": { "vca.attack": 6, "vca.decay": 7, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.mode": "In this sound: NOTCH. On LO the movement becomes a plain wah.",
+        "vcf.oscAmt": "In this sound: how far the notch travels.",
+        "osc2.pitch": "In this sound: the slow beating between the oscillators."
+      },
+      "tweaks": [
+        { "id": "vcf.q", "try": "Raise to 8", "hear": "A narrower notch with a ringing edge." },
+        { "id": "ctrl.freq", "try": "Raise to 2", "hear": "A faster, swirling phaser." },
+        { "id": "vcf.mode", "try": "Switch to BAND", "hear": "A vocal, wah-like sweep instead." }
+      ]
+    },
+    {
+      "id": "wasp-delayed-sweep",
+      "name": "Late Sweep",
+      "ref": "The control envelope’s DELAY",
+      "artist": "Classic technique",
+      "tags": ["lead", "brass", "delay"],
+      "level": 3,
+      "blurb": "A brassy note whose filter opens a moment after it starts.",
+      "how": "The DELAY end of the control envelope’s third knob holds the envelope back after the key goes down, so the note starts dark and then opens. With a slow attack on the control envelope the brightness swells in like a brass player leaning into a note.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.8],
+          [2, 63, 1.8],
+          [4, 67, 3.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths an octave apart",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart give a full, brassy starting sound, with a low octave for body and plenty of edge for the filter to work on.\n- OSC 1 sawtooth at 8, OSC 2 sawtooth at 16: FT (footage) is the octave in organ feet, and 16 is an octave below 8.\n- OSC 2 PITCH 5 (0 st): the centre, exactly in tune.\n- Mix OSC 1 7, OSC 2 6: the upper saw leads and the lower one adds body.\n- Listen for: a bright, buzzy stack.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 5.02,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Start dark",
+          "module": "filter",
+          "why": "The filter closes down so every note starts dark. The delayed sweep in the next step needs a dark starting point to be heard.\n- Filter mode LO: low-pass, which keeps the lows and cuts the highs.\n- FREQ 3 (about 174 Hz): low, so most of the buzz is gone.\n- Q 3 (30 %): Q is resonance. A little adds some colour without squelch.\n- Listen for: a muffled, soft tone.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3, "vcf.q": 3 }
+        },
+        {
+          "title": "Open late",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, is held back after the key goes down, then slowly opens the filter. The note starts dark and brightens, like a brass player leaning into it.\n- DELAY / REPEAT 5 (470 ms): the wait before the envelope starts, about half a second. The knob goes up to a second.\n- Control env ATTACK 5 (89 ms): how quickly the brightness rises once the delay is over. Longer makes the swell softer.\n- Control env DECAY 7 (1.1 s): how slowly it closes again. The envelope has no sustain, so it falls back even while the key is held.\n- FILTER CONTROL (right) +3.5 (+4.2 oct): how bright the peak gets.\n- Listen for: hold a long note. Nothing for half a second, then it opens up. Turn DELAY back to 0.5 to hear the swell arrive at once.",
+          "set": { "cenv.delay": 5, "cenv.attack": 5, "cenv.decay": 7, "vcf.envAmt": 3.5 }
+        },
+        {
+          "title": "Held loudness",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) holds the note at full level so you hear the whole filter move.\n- VCA ATTACK 2 (9 ms): a small softening of the start, so notes don’t click.\n- SUSTAIN LEVEL 10 (100 %): full level for as long as the key is held.\n- VCA DECAY 4 (140 ms): also the fade after release, fairly short.\n- Listen for: short notes can end before the delay runs out and stay dark; only the longer ones open up.",
+          "set": { "vca.attack": 2, "vca.decay": 4, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "cenv.delay": "In this sound: how long the note waits before it brightens.",
+        "cenv.attack": "In this sound: how slowly the brightness swells in.",
+        "vcf.envAmt": "In this sound: how bright it gets."
+      },
+      "tweaks": [
+        {
+          "id": "cenv.delay",
+          "try": "Turn to 0.5 (no delay)",
+          "hear": "The swell starts with the note."
+        },
+        {
+          "id": "vcf.envAmt",
+          "try": "Turn anticlockwise to −3 and raise FREQ to 7",
+          "hear": "The note starts bright and darkens late instead."
+        },
+        { "id": "ctrl.pitchMod", "try": "Raise to 1", "hear": "A vibrato on top." }
+      ]
+    },
+    {
+      "id": "wasp-acid-squelch",
+      "name": "Squelch Bass",
+      "ref": "In the style of late-80s acid house bass lines",
+      "artist": "Classic technique",
+      "tags": ["bass", "acid", "resonant"],
+      "level": 2,
+      "blurb": "A single sawtooth with a high Q, so every note squelches.",
+      "how": "One sawtooth through the low-pass filter with Q near the top. A short control envelope opens the filter on each note; with so much resonance the opening is heard as a vocal squelch. Glide makes some notes slide into the next.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 48, 0.4],
+          [1, 36, 0.2],
+          [1.5, 51, 0.6],
+          [2, 39, 0.4],
+          [2.5, 36, 0.2],
+          [3, 43, 0.7],
+          [3.5, 48, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One sawtooth",
+          "module": "osc",
+          "why": "One sawtooth an octave down is the classic acid bass source: plenty of harmonics for a resonant filter to squelch, and nothing else in the way.\n- OSC 1 sawtooth, FT 16: FT is footage, the octave in organ feet. 16 is an octave below the keys, bass range.\n- OSC 2 off: a single oscillator keeps it thin and focused.\n- Mix OSC 1 8 (80 %): the full starting level.",
+          "set": { "osc1.wave": "saw", "osc1.ft": "16", "osc2.wave": "off", "mix.osc1": 8 }
+        },
+        {
+          "title": "Resonant low-pass",
+          "module": "filter",
+          "why": "A low cutoff with the resonance turned well up. On its own it sounds dark with a ring; the envelope in the next step is what makes it squelch.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 3.2 (about 200 Hz): low, so between notes the bass is dark.\n- Q 8.2 (82 %): Q is resonance, a boost at the cutoff. This high, any movement of the filter sounds vocal. Below about 6 it is just a bass.\n- Listen for: a nasal ring on each note, from the small envelope push already on the filter.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3.2, "vcf.q": 8.2 }
+        },
+        {
+          "title": "A short sweep",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, sweeps the cutoff up on each note. With so much resonance, the sweep is heard as a squelch.\n- Control env ATTACK 0 (2 ms): the sweep starts at once.\n- Control env DECAY 3.6 (110 ms): short, so each squelch is quick.\n- DELAY / REPEAT 0.5 (no delay): the envelope starts with the key.\n- FILTER CONTROL (right) +3 (+3.4 oct): how far each note opens. 0 is at the top of the knob.\n- Listen for: a “yow” on every note. Turn FREQ slowly while the riff plays, as acid players do.",
+          "set": { "cenv.attack": 0, "cenv.decay": 3.6, "cenv.delay": 0.5, "vcf.envAmt": 3 }
+        },
+        {
+          "title": "Slides and full level",
+          "module": "glide",
+          "why": "A little glide makes overlapping notes slide into each other, and the VCA holds them at full level.\n- GLIDE 2.5 (42 ms): a short slide between notes. More and the notes arrive late.\n- VCA ATTACK 0, SUSTAIN LEVEL 10: VCA is voltage-controlled amplifier, the loudness stage. Instant start and full level while held.\n- VCA DECAY 2.5 (53 ms): also the fade after release, short so notes stop cleanly.\n- Listen for: short pitch swoops wherever one note runs into the next.",
+          "set": { "pitch.glide": 2.5, "vca.attack": 0, "vca.decay": 2.5, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.q": "In this sound: the squelch. Below 6 it is just a bass.",
+        "vcf.freq": "In this sound: turn it while the riff plays, as acid players do.",
+        "pitch.glide": "In this sound: the slides between overlapping notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Sweep from 2 to 6 while the riff plays",
+          "hear": "The line opens from a murmur to a scream."
+        },
+        { "id": "cenv.decay", "try": "Raise to 5", "hear": "Longer, wetter squelches." },
+        { "id": "mix.ext", "try": "Raise to 4", "hear": "The feedback adds grit." }
+      ]
+    },
+    {
+      "id": "wasp-hollow-reed",
+      "name": "Hollow Reed",
+      "ref": "A narrow pulse through the band-pass filter",
+      "artist": "Classic technique",
+      "tags": ["wind", "reed", "band-pass"],
+      "level": 1,
+      "blurb": "A nasal, reedy tone like a small woodwind.",
+      "how": "The upper oscillator’s square turned down to a narrow pulse is already nasal; the BAND filter keeps only a band of it, which sounds like the body of a reed instrument. A gentle attack and a slow vibrato finish it.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 74, 0.9],
+          [2, 76, 1.8],
+          [4, 79, 0.9],
+          [5, 76, 0.9],
+          [6, 74, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "The upper oscillator’s square is narrowed down to a thin pulse. That is already nasal and reedy before the filter touches it.\n- OSC 1 square, WIDTH 20 %: at 50 % a square is hollow like a clarinet; narrowed to 20 % it is thinner and more nasal.\n- OSC 2 off: one oscillator, as a woodwind plays one note.\n- Mix OSC 1 8 (80 %): the full starting level.\n- Listen for: a thin, buzzy pulse. Sweep WIDTH between 20 and 50 to hear it change from nasal to hollow.",
+          "set": { "osc1.wave": "square", "osc1.width": 20, "osc2.wave": "off", "mix.osc1": 8 }
+        },
+        {
+          "title": "Band-pass",
+          "module": "filter",
+          "why": "The BAND filter keeps only a band of frequencies and cuts the rest, which sounds like the body of a small reed instrument.\n- Filter mode BAND: band-pass. Both the low end and the top are cut, leaving a nasal middle.\n- FREQ 6.2 (about 1.4 kHz): the centre of the band. Lower is darker and bigger; higher, smaller and brighter.\n- Q 3 (30 %): Q is resonance. In BAND it also narrows the band. A little keeps it natural.\n- FILTER CONTROL (right) 0: no envelope on the filter, so the tone is steady like a blown note.\n- Listen for: the tone going boxy and woody.",
+          "set": { "vcf.mode": "band", "vcf.freq": 6.2, "vcf.q": 3, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Breath and vibrato",
+          "module": "amp",
+          "why": "A gentle attack lets each note speak, and a light vibrato from the control oscillator (the WASP’s LFO, low-frequency oscillator) makes it sound played.\n- VCA ATTACK 3 (20 ms), DECAY 3 (74 ms): VCA is voltage-controlled amplifier, the loudness stage. A softened start, full level while held (SUSTAIN LEVEL 10), a short fade after release.\n- Control osc sine, FREQ 3.7 (about 3.5 Hz): a smooth, gentle vibrato speed.\n- PITCH MOD 0.9 (+0.2 st): a panel knob, separate from the mod wheel. Only a touch, so it sounds like breath, not a siren.\n- Listen for: a slight waver on long notes. Turn PITCH MOD to 0 and the reed goes static.",
+          "set": {
+            "vca.attack": 3,
+            "vca.decay": 3,
+            "vca.sustain": 10,
+            "ctrl.wave": "sine",
+            "ctrl.freq": 3.7,
+            "ctrl.pitchMod": 0.9
+          }
+        }
+      ],
+      "context": {
+        "osc1.width": "In this sound: the reediness. At 50 % it is a hollow clarinet; lower is more nasal.",
+        "vcf.freq": "In this sound: the size of the instrument. Lower is darker and bigger."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.width",
+          "try": "Move between 12 and 50",
+          "hear": "From an oboe-like buzz to a clarinet."
+        },
+        { "id": "mix.noise", "try": "Raise to 2", "hear": "A breathy edge." }
+      ]
+    },
+    {
+      "id": "wasp-growl-fm",
+      "name": "Growl",
+      "ref": "The control oscillator at audio rate",
+      "artist": "Classic technique",
+      "tags": ["lead", "growl", "fm"],
+      "level": 3,
+      "blurb": "A snarling, metallic lead from the control oscillator running fast on the pitch.",
+      "how": "At the top of its range the control oscillator runs at 100 Hz, fast enough that PITCH MOD no longer sounds like vibrato: it adds rough, clangorous side tones to the oscillators. A square on the control oscillator gives a harsh, two-note growl; a sine, a smoother metallic one.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.9],
+          [1, 58, 0.9],
+          [2, 60, 1.8],
+          [4, 63, 0.9],
+          [5, 62, 0.9],
+          [6, 58, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plain sawtooth",
+          "module": "osc",
+          "why": "A plain sawtooth is the raw material. The growl in the next step comes from the control oscillator, so this stays simple.\n- OSC 1 sawtooth: bright and buzzy, with a hard digital edge on the WASP.\n- OSC 2 off: one oscillator so the effect of the fast modulation is clear.\n- Mix OSC 1 8 (80 %): the full starting level.",
+          "set": { "osc1.wave": "saw", "osc2.wave": "off", "mix.osc1": 8 }
+        },
+        {
+          "title": "Control oscillator at audio rate",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) is turned right up to audio speed. At that rate PITCH MOD stops sounding like vibrato and adds rough, metallic side tones.\n- Control osc FREQ 9.3 (about 69 Hz): fast enough to be heard as tone rather than wobble. Turn it down and it becomes a very fast vibrato.\n- Control osc waveform sine: a smooth metallic growl. A square gives a harsher, two-note snarl.\n- PITCH MOD 3.2 (+2.5 st): how hard the control oscillator pushes the pitch. Past about 5 the note is lost in the clang.\n- Listen for: the tone turning snarling and bell-like. Sweep PITCH MOD from 0 up to hear it change.",
+          "set": { "ctrl.freq": 9.3, "ctrl.wave": "sine", "ctrl.pitchMod": 3.2 }
+        },
+        {
+          "title": "Tame it with the filter",
+          "module": "filter",
+          "why": "A half-open low-pass filter takes the harshest top off the growl and gives each note a small push.\n- Filter mode LO: low-pass, cutting the highs.\n- FREQ 5.5 (about 870 Hz), Q 3 (30 %): about half open, with a little resonance (Q).\n- FILTER CONTROL (right) +1.8 (+1.7 oct): a moderate sweep from the control envelope, the filter’s own envelope, on each note, closing over the control env DECAY of 5 (280 ms).\n- Listen for: the growl becoming less fizzy and sitting better, with a slight brightening at the start of each note.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 5.5,
+            "vcf.q": 3,
+            "vcf.envAmt": 1.8,
+            "cenv.decay": 5
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) holds each note at full level so the growl carries through.\n- VCA ATTACK 0.5 (3 ms): almost instant.\n- SUSTAIN LEVEL 10 (100 %): full level for as long as the key is held.\n- VCA DECAY 3 (74 ms): also the fade after release, short and clean.\n- Listen for: the growl lasting the full length of each held note.",
+          "set": { "vca.attack": 0.5, "vca.decay": 3, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "ctrl.pitchMod": "In this sound: the amount of snarl. Past 5 the pitch is lost in the clang.",
+        "ctrl.freq": "In this sound: fast enough to be heard as tone. Turn it down and it becomes a very fast vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "ctrl.wave",
+          "try": "Switch to square",
+          "hear": "A harsh, buzzing two-note growl."
+        },
+        {
+          "id": "ctrl.freq",
+          "try": "Lower slowly to 6",
+          "hear": "The growl turns into a flutter, then a vibrato."
+        },
+        { "id": "vcf.oscAmt", "try": "Turn to +3", "hear": "The filter growls at the same rate." }
+      ]
+    },
+    {
+      "id": "wasp-surf",
+      "name": "Surf",
+      "ref": "Noise through a slowly swept filter",
+      "artist": "Classic technique",
+      "tags": ["fx", "noise", "ambient"],
+      "level": 1,
+      "blurb": "Waves breaking on a beach, from white noise alone.",
+      "how": "Only the noise goes into the filter. The control oscillator, slow and on sine, sweeps the filter up and down through the noise, which sounds like waves washing in and out. A slow attack and a long decay soften each wave.",
+      "phrase": { "bpm": 60, "loop": true, "steps": [[0, 60, 7.8]] },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "Both oscillators are switched off and only white noise goes into the filter. Noise has no pitch, which is why the result sounds like wind or surf rather than a note.\n- OSC 1 and OSC 2 off: the waveform switches’ OFF position silences them.\n- NOISE SIGNAL 8 (80 %): white noise, an even hiss across all frequencies.\n- Listen for: plain hiss when you hold a key.",
+          "set": { "osc1.wave": "off", "osc2.wave": "off", "mix.noise": 8 }
+        },
+        {
+          "title": "A slow sweep",
+          "module": "filter",
+          "why": "A low-pass filter swept slowly by the control oscillator (the WASP’s LFO, low-frequency oscillator) makes the hiss rise and fall like waves.\n- Filter mode LO, FREQ 4 (about 330 Hz): low-pass with a low cutoff, so the noise becomes a dull rumble at rest.\n- Q 2.5 (25 %): Q is resonance. A little gives the sweep some shape.\n- FILTER CONTROL (right) 0: the control envelope is taken off the filter.\n- Control osc sine, FREQ 0.2 (about 0.56 Hz): nearly its slowest, one wave every couple of seconds.\n- FILTER CONTROL (left) +4.2 (+3.1 oct): how far the sweep opens the filter, so how big the waves are.\n- Listen for: the hiss washing in bright and out dark.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 4,
+            "vcf.q": 2.5,
+            "vcf.envAmt": 0,
+            "ctrl.wave": "sine",
+            "ctrl.freq": 0.2,
+            "vcf.oscAmt": 4.2
+          }
+        },
+        {
+          "title": "Soft edges",
+          "module": "amp",
+          "why": "A slow attack and long fade soften the start and end of each held key.\n- VCA ATTACK 6.5 (280 ms): VCA is voltage-controlled amplifier, the loudness stage. The noise fades in instead of starting hard.\n- SUSTAIN LEVEL 10 (100 %): full level while the key is held.\n- VCA DECAY 7 (1.1 s): also the fade after you let go.\n- Listen for: the surf rising gently when you press a key and ebbing away after you let go.",
+          "set": { "vca.attack": 6.5, "vca.decay": 7, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "ctrl.freq": "In this sound: how often a wave breaks.",
+        "vcf.oscAmt": "In this sound: how big the waves are."
+      },
+      "tweaks": [
+        { "id": "vcf.mode", "try": "Switch to BAND", "hear": "Wind whistling instead of surf." },
+        { "id": "vcf.q", "try": "Raise to 7", "hear": "A whistling wind." }
+      ]
+    },
+    {
+      "id": "wasp-fifths-lead",
+      "name": "Fifths",
+      "ref": "The lower oscillator a fifth up",
+      "artist": "Classic technique",
+      "tags": ["lead", "intervals", "80s"],
+      "level": 1,
+      "blurb": "A bright lead that plays every note as a fifth.",
+      "how": "OSC 2’s PITCH knob sets its interval against OSC 1. Set seven semitones up, every note sounds as a power chord of two notes. Both oscillators on sawtooth through a half-open filter.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1, 63, 0.4],
+          [1.5, 65, 0.9],
+          [2.5, 63, 0.4],
+          [3, 58, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths a fifth apart",
+          "module": "osc",
+          "why": "Two sawtooths a fifth apart turn every key into a two-note power chord. It is a big, bright lead from a single finger.\n- OSC 1 and OSC 2 sawtooth, OSC 2 FT 8: both at the pitch of the keys. FT is footage, the octave in organ feet.\n- OSC 2 PITCH 7.9 (+7 st): PITCH tunes OSC 2 against OSC 1, and seven semitones up is a fifth. 5 is unison; about 7.1 is a fourth.\n- Mix OSC 1 7, OSC 2 6: the root a little louder, so the note you play stays on top.\n- Listen for: a full, open two-note sound. Sweep PITCH slowly from 5 to 8 to hear it beat, then lock into the fifth.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 7.92,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A bright filter",
+          "module": "filter",
+          "why": "The filter is left fairly open so the lead stays bright, with a small push at the start of each note for definition.\n- Filter mode LO: low-pass, keeping the lows and trimming the highs.\n- FREQ 6.2 (about 1.4 kHz), Q 3 (30 %): fairly open, with a little resonance (Q) for colour.\n- FILTER CONTROL (right) +1.5 (+1.3 oct): a small sweep from the control envelope, the filter’s own envelope.\n- Control env DECAY 4.5 (200 ms): how long that push lasts before the filter settles.\n- Listen for: a slight brightening on the front of each note, then a steady tone.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 6.2,
+            "vcf.q": 3,
+            "vcf.envAmt": 1.5,
+            "cenv.decay": 4.5
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) holds the chord at full level for as long as the key is down.\n- VCA ATTACK 0.5 (3 ms): almost instant, with no click.\n- SUSTAIN LEVEL 10 (100 %): full level while held.\n- VCA DECAY 3.5 (100 ms): also the fade after release, short so the phrases stay clean.\n- Listen for: long notes holding steady with no dip after the start.",
+          "set": { "vca.attack": 0.5, "vca.decay": 3.5, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "In this sound: the interval. 5 is unison; about 7.9 is a fifth up, 7.1 a fourth up."
+      },
+      "tweaks": [
+        { "id": "osc2.pitch", "try": "Set to 7.08", "hear": "A fourth instead of a fifth." },
+        {
+          "id": "osc2.ft",
+          "try": "Switch to 16",
+          "hear": "The fifth drops an octave below: a fourth underneath."
+        }
+      ]
+    },
+    {
+      "id": "wasp-ramp-sequence",
+      "name": "Ramp Arp",
+      "ref": "A sawtooth control oscillator on the pitch",
+      "artist": "Classic technique",
+      "tags": ["seq", "arp", "sci-fi"],
+      "level": 2,
+      "blurb": "A held note that rises in a repeating swoop, like a fast arpeggio.",
+      "how": "The control oscillator on its rising sawtooth sweeps the pitch up and then drops back, over and over. With the VCA envelope on REPEAT at a similar speed, each sweep becomes a separate, bubbling note.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8],
+          [4, 53, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "A single square wave is the source: hollow and clear, so the pitch sweeps that follow are easy to follow by ear.\n- OSC 1 square, WIDTH 45 %: just under the full 50 %, still hollow, with a hint of thinness.\n- OSC 2 off: one oscillator keeps the swoops clean.\n- Mix OSC 1 8 (80 %): the full starting level.",
+          "set": { "osc1.wave": "square", "osc1.width": 45, "osc2.wave": "off", "mix.osc1": 8 }
+        },
+        {
+          "title": "Rising ramps on the pitch",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) on its rising sawtooth sweeps the pitch up and snaps back, over and over. It sounds like a fast, swooping arpeggio.\n- Control osc waveform rising sawtooth: climbs steadily then drops. The falling one swoops down instead.\n- Control osc FREQ 3.1 (about 2.6 Hz): a little over two swoops a second.\n- PITCH MOD 5 (+6 st): a panel knob, separate from the mod wheel. Each swoop climbs half an octave. More climbs further.\n- Listen for: a held note rising and dropping in a loop, like a siren in steps.",
+          "set": { "ctrl.wave": "up", "ctrl.freq": 3.1, "ctrl.pitchMod": 5 }
+        },
+        {
+          "title": "Chop it",
+          "module": "amp",
+          "why": "SUSTAIN LEVEL on REPEAT chops the swooping note into separate pulses, so it bubbles instead of sliding.\n- SUSTAIN LEVEL 0 (REPEAT): fully anticlockwise, the VCA envelope (VCA is voltage-controlled amplifier) loops while the key is held.\n- VCA ATTACK 0 (2 ms), DECAY 3.2 (85 ms): a hard start and a quick fall, so the pulses are short and fast.\n- Listen for: several short pulses on each climb, each one a little higher than the last.",
+          "set": { "vca.sustain": 0, "vca.attack": 0, "vca.decay": 3.2 }
+        },
+        {
+          "title": "A plucky filter",
+          "module": "filter",
+          "why": "The filter is pulled down and the control envelope, the filter’s own envelope, goes on REPEAT too, so every pulse gets a small pluck.\n- FREQ 4.5 (about 460 Hz), Q 5 (50 %): a darker resting tone, with some resonance (Q) so the pluck has a slight squelch.\n- Control env REPEAT, DECAY 3.2 (85 ms): the envelope loops at the same speed as the loudness.\n- FILTER CONTROL (right) +2.5 (+2.7 oct): how far each pluck opens the filter.\n- Listen for: each blip gaining a “pew” at its start. Set FILTER CONTROL to 0 to hear it go flat.",
+          "set": {
+            "vcf.freq": 4.5,
+            "vcf.q": 5,
+            "cenv.delay": 0,
+            "cenv.decay": 3.2,
+            "vcf.envAmt": 2.5
+          }
+        }
+      ],
+      "context": {
+        "ctrl.wave": "In this sound: rising sawtooth. The falling one swoops down instead.",
+        "ctrl.pitchMod": "In this sound: how far each swoop climbs."
+      },
+      "tweaks": [
+        {
+          "id": "ctrl.wave",
+          "try": "Switch to falling sawtooth",
+          "hear": "Swoops downwards, like a laser."
+        },
+        { "id": "ctrl.wave", "try": "Switch to square", "hear": "A trill between two notes." }
+      ]
+    },
+    {
+      "id": "wasp-thin-sync-hi",
+      "name": "High-Pass Pluck",
+      "ref": "The HI filter for thin, bright sounds",
+      "artist": "Classic technique",
+      "tags": ["pluck", "high-pass", "bright"],
+      "level": 2,
+      "blurb": "A thin, glassy pluck with the bass cut away.",
+      "how": "HI mode removes everything below the filter frequency, so the sound is only its bright upper part. The control envelope turned anticlockwise makes the cut dip down on each note and rise again, letting a little body through at the start before it thins out.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.4],
+          [0.5, 79, 0.4],
+          [1, 76, 0.4],
+          [1.5, 84, 0.4],
+          [2, 72, 0.4],
+          [2.5, 79, 0.4],
+          [3, 77, 0.4],
+          [3.5, 74, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "ENH on both",
+          "module": "osc",
+          "why": "Both oscillators on ENH, with OSC 2 an octave up, give a dense, bright source with lots of upper harmonics for a high-pass filter to keep.\n- OSC 1 and OSC 2 ENH: ENH is the sawtooth and square together, fuller and more biting than either alone.\n- OSC 2 FT 4: FT is footage, the octave in organ feet. 4 is an octave above the keys.\n- Mix OSC 1 9, OSC 2 6: OSC 1 leads at the pitch you play; the octave above adds sparkle.\n- Listen for: a loud, fizzy, bright tone.",
+          "set": {
+            "osc1.wave": "enh",
+            "osc2.wave": "enh",
+            "osc2.ft": "4",
+            "mix.osc1": 9,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "High-pass",
+          "module": "filter",
+          "why": "HI mode is a high-pass filter: it removes everything below the frequency and keeps the top, so the sound is thin and glassy.\n- Filter mode HI: the reverse of LO. The low end goes; the bright part stays.\n- FREQ 5.6 (about 930 Hz): fairly high, so most of the body is cut.\n- Q 3.5 (35 %): Q is resonance. A touch adds a slight edge at the cutoff.\n- Listen for: the tone losing its weight and turning small and bright. Switch to LO to compare.",
+          "set": { "vcf.mode": "hi", "vcf.freq": 5.6, "vcf.q": 3.5 }
+        },
+        {
+          "title": "A dip on each note",
+          "module": "env",
+          "why": "The right FILTER CONTROL knob turned anticlockwise makes the control envelope push the filter down instead of up. In HI mode that lets some body through at the start of each note, then thins it out.\n- FILTER CONTROL (right) −3 (−3.4 oct): 0 is at the top of the knob, and anticlockwise turns the envelope upside down, so each note dips the cutoff.\n- Control env ATTACK 0, DECAY 3.5 (100 ms): the dip happens at once and the cutoff comes back up over a tenth of a second.\n- DELAY / REPEAT 0.5 (no delay): the envelope starts with the key.\n- Listen for: a fuller “thock” at the start of each note that thins to a glassy tone.",
+          "set": { "vcf.envAmt": -3, "cenv.attack": 0, "cenv.decay": 3.5, "cenv.delay": 0.5 }
+        },
+        {
+          "title": "Plucked",
+          "module": "amp",
+          "why": "No sustain and a short decay turn it into a pluck: each note dies away even while the key is held.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant start.\n- SUSTAIN LEVEL 0.5 (0 %): just above REPEAT, so a held note falls to silence instead of looping.\n- VCA DECAY 3.8 (130 ms): the length of each pluck.\n- Listen for: short, glassy plucks. Raise DECAY for a longer ring.",
+          "set": { "vca.attack": 0, "vca.decay": 3.8, "vca.sustain": 0.5 }
+        }
+      ],
+      "context": {
+        "vcf.envAmt": "In this sound: anticlockwise, so each note starts fuller and thins out.",
+        "vcf.mode": "In this sound: HI. Switch to LO and the same settings sound dull and muffled."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.envAmt",
+          "try": "Turn to +3",
+          "hear": "The note starts thin and gets thinner still."
+        },
+        { "id": "vcf.freq", "try": "Lower to 4", "hear": "More body comes back." }
+      ]
+    },
+    {
+      "id": "wasp-hold-drone",
+      "name": "Frozen Drone",
+      "ref": "HOLD used to keep a note sounding",
+      "artist": "Classic technique",
+      "tags": ["drone", "hold", "ambient"],
+      "level": 3,
+      "blurb": "A slowly moving drone that keeps sounding after the key is let go.",
+      "how": "HOLD freezes the VCA envelope where it is. Here it is flipped on once the note has swelled in, so the note stays at that level with no key held. The control envelope on REPEAT with a long attack and decay keeps the filter slowly breathing underneath.",
+      "phrase": { "bpm": 60, "loop": false, "steps": [[0, 43, 1.5]] },
+      "steps": [
+        {
+          "title": "Two low sawtooths",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart, one very slightly off, give a thick, low drone with slow movement in it.\n- OSC 1 and OSC 2 sawtooth, OSC 2 FT 16: FT is footage, the octave in organ feet. 16 is an octave below the keys.\n- OSC 2 PITCH 5 (+0.1 st): a touch off the centre, so the two slowly beat.\n- Mix OSC 1 and OSC 2 at 7: an even blend.\n- Listen for: a buzzy, slowly swirling low note.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 5.04,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "A breathing filter",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, on REPEAT with long times makes the filter rise and fall by itself every second or two, like breathing.\n- Filter mode LO, FREQ 3.5 (about 240 Hz): low-pass with a low cutoff, so the drone is dark between breaths.\n- Q 5 (50 %): Q is resonance. A fair amount makes each breath sound vocal.\n- Control env DELAY / REPEAT 0 (REPEAT): the envelope loops for as long as the note sounds.\n- Control env ATTACK 7, DECAY 7: a slow rise (410 ms) and a slower fall (1.1 s).\n- FILTER CONTROL (right) +3 (+3.4 oct): how far each breath opens.\n- Listen for: hold a key and the tone slowly opening and closing on its own.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 3.5,
+            "vcf.q": 5,
+            "cenv.delay": 0,
+            "cenv.attack": 7,
+            "cenv.decay": 7,
+            "vcf.envAmt": 3
+          }
+        },
+        {
+          "title": "Swell, then HOLD",
+          "module": "amp",
+          "why": "HOLD freezes the loudness wherever it is when flipped. Swell a note in, flip HOLD up and let go of the key: the note keeps sounding. Flip HOLD down to let it fade.\n- VCA ATTACK 4 (42 ms): VCA is voltage-controlled amplifier, the loudness stage. A short swell.\n- SUSTAIN LEVEL 10 (100 %): the note reaches full level and stays there, so HOLD catches it at full volume.\n- VCA DECAY 7 (1.1 s): also the fade after you let go or flip HOLD back down.\n- Listen for: the drone carrying on at a steady level with no key held, until HOLD goes back down.",
+          "set": { "vca.attack": 4, "vca.decay": 7, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vca.hold": "In this sound: flip it up while a note is sounding to keep it going.",
+        "cenv.attack": "In this sound: how slowly the filter opens on each breath."
+      },
+      "tweaks": [
+        {
+          "id": "vca.hold",
+          "try": "Flip up while the note is sounding, then let go of the key",
+          "hear": "The note keeps going at the level it had reached."
+        },
+        { "id": "mix.ext", "try": "Raise to 5", "hear": "Feedback thickens the drone." }
+      ]
+    },
+    {
+      "id": "wasp-dream-riff",
+      "name": "Minor Riff",
+      "ref": "In the style of early-80s synth-pop riffs — Eurythmics, \"Sweet Dreams (Are Made of This)\"",
+      "artist": "Eurythmics",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A buzzy, driving minor-key riff that jumps between octaves.",
+      "how": "Two sawtooths, the lower one an octave down and a touch out of tune, give a thick, buzzy bass with some movement in it. The filter is half closed and the control envelope opens it a little on each note, so the riff has a firm start to every step without sounding squelchy. The VCA holds full level so the notes join up.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.45],
+          [0.5, 57, 0.45],
+          [1, 48, 0.45],
+          [1.5, 45, 0.45],
+          [2, 53, 0.45],
+          [2.5, 52, 0.45],
+          [3, 48, 0.45],
+          [3.5, 45, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, an octave apart",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart, one a hair out of tune, give a thick, buzzy bass with some movement in it, the sound this kind of synth-pop riff sits on.\n- OSC 1 sawtooth at 8, OSC 2 sawtooth at 16: FT is footage, the octave in organ feet. 16 is an octave below 8, for weight.\n- OSC 2 PITCH 5 (+0.1 st): just off the centre. At exactly 5 the sound is flatter and thinner.\n- Mix OSC 1 and OSC 2 at 7: an even blend of buzz and body.\n- Listen for: the slow beating between the two on a held note.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "8",
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 5.04,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "Half closed",
+          "module": "filter",
+          "why": "A half-closed filter keeps the buzz but takes the harshness off, so the riff sits in the mix without shouting.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 4.6 (about 490 Hz): in the middle. Above about 6 it gets bright and brash.\n- Q 3 (30 %): Q is resonance. A little adds colour without a squelch.\n- Listen for: a warm, buzzy tone, still clearly a sawtooth.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 4.6, "vcf.q": 3 }
+        },
+        {
+          "title": "A firm start to each note",
+          "module": "env",
+          "why": "A short control envelope, the filter’s own envelope, opens the filter a little on each note. That gives every step of the riff a firm start without sounding squelchy.\n- Control env ATTACK 0, DECAY 3.4 (97 ms): an instant push that closes within a tenth of a second.\n- DELAY / REPEAT 0.5 (no delay): the envelope starts with the key.\n- FILTER CONTROL (right) +1.8 (+1.7 oct): only a little clockwise, so the push is small. More would start to squelch.\n- Listen for: each note of the riff starting with a slight bite.",
+          "set": { "cenv.attack": 0, "cenv.decay": 3.4, "cenv.delay": 0.5, "vcf.envAmt": 1.8 }
+        },
+        {
+          "title": "Full level while held",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) keeps every note at full level and stops it cleanly, so the riff is even and driving.\n- VCA ATTACK 0 (2 ms): no fade-in.\n- SUSTAIN LEVEL 10 (100 %): full level while held.\n- VCA DECAY 2.6 (57 ms): also the fade after release, short so the octave jumps stay crisp.\n- Listen for: an even riff with clean gaps. Raise DECAY and the notes start to smear.",
+          "set": { "vca.attack": 0, "vca.decay": 2.6, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "In this sound: the slight detune that makes the bass move. At exactly 5 it is flatter and thinner.",
+        "vcf.freq": "In this sound: how buzzy the riff is. Above 6 it gets bright and brash.",
+        "vcf.envAmt": "In this sound: the small push at the start of each note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Raise slowly to 6.5 while the riff plays",
+          "hear": "The riff comes forward and gets brighter."
+        },
+        { "id": "osc1.wave", "try": "Switch to square", "hear": "A hollower, rounder riff." },
+        { "id": "vcf.q", "try": "Raise to 6", "hear": "A slight wah on each note." }
+      ]
+    },
+    {
+      "id": "wasp-pop-wobble",
+      "name": "Wonky Pop Line",
+      "ref": "In the style of Metronomy, \"Holiday\"",
+      "artist": "Metronomy",
+      "tags": ["lead", "indie", "wobble"],
+      "level": 2,
+      "blurb": "A small, reedy lead that wobbles slightly out of tune and slides between notes.",
+      "how": "A narrow pulse gives a thin, reedy line. The control oscillator on sine, slower than a normal vibrato and a little deeper, makes the pitch sway so the line sounds cheap and a bit seasick on purpose. A touch of GLIDE smears the jumps between notes.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.4],
+          [0.5, 67, 0.4],
+          [1, 70, 0.9],
+          [2, 72, 0.4],
+          [2.5, 70, 0.4],
+          [3, 65, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "A narrow pulse gives a small, thin, reedy line: cheap-sounding on purpose, which suits this kind of wonky pop lead.\n- OSC 1 square, WIDTH 30 %: narrower than the hollow 50 %, so it is thinner and more nasal. At 50 % it is rounder.\n- OSC 1 FT 8: FT is footage, the octave in organ feet. 8 plays at the pitch of the keys.\n- OSC 2 off, Mix OSC 1 8: one oscillator at the full starting level.\n- Listen for: a thin, buzzy lead.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.width": 30,
+            "osc1.ft": "8",
+            "osc2.wave": "off",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "A soft filter",
+          "module": "filter",
+          "why": "A soft low-pass filter rounds off the top, and a small envelope push gives each note a slight lift.\n- Filter mode LO, FREQ 5.6 (about 930 Hz): low-pass, a little above the middle.\n- Q 3 (30 %): Q is resonance. Just a little.\n- FILTER CONTROL (right) +1.5 (+1.3 oct): a small push from the control envelope, the filter’s own envelope.\n- Control env ATTACK 0, DECAY 3.5 (100 ms): the push is instant and brief.\n- Listen for: a softer line with a little brightness at the start of each note.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 5.6,
+            "vcf.q": 3,
+            "vcf.envAmt": 1.5,
+            "cenv.attack": 0,
+            "cenv.decay": 3.5
+          }
+        },
+        {
+          "title": "A slow wobble",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) sways the pitch slower and deeper than a normal vibrato, so the line sounds slightly seasick.\n- Control osc waveform sine: a smooth sway.\n- Control osc FREQ 3 (about 2.5 Hz): slower than a singer’s vibrato. Faster turns it into an ordinary vibrato.\n- PITCH MOD 1.5 (+0.5 st): a panel knob, separate from the mod wheel. About half a semitone, enough to sound out of tune.\n- Listen for: long notes swaying flat and sharp.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 3, "ctrl.pitchMod": 1.5 }
+        },
+        {
+          "title": "Slides and held notes",
+          "module": "glide",
+          "why": "A small glide smears the jumps between notes, and the VCA holds them at full level.\n- GLIDE 2 (31 ms): a short slide into each new note.\n- VCA ATTACK 0.5 (3 ms), SUSTAIN LEVEL 10: VCA is voltage-controlled amplifier, the loudness stage. Nearly instant, full level while held.\n- VCA DECAY 3 (74 ms): also the fade after release, short.\n- Listen for: the line sliding slightly into each note. Set GLIDE to 0 to hear it step cleanly.",
+          "set": { "pitch.glide": 2, "vca.attack": 0.5, "vca.decay": 3, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "ctrl.freq": "In this sound: the speed of the wobble. Faster turns it into an ordinary vibrato.",
+        "ctrl.pitchMod": "In this sound: how far out of tune the line sways.",
+        "osc1.width": "In this sound: the reedy, thin tone. At 50 % it is rounder.",
+        "pitch.glide": "In this sound: the smear between notes."
+      },
+      "tweaks": [
+        {
+          "id": "ctrl.pitchMod",
+          "try": "Lower to 0",
+          "hear": "A clean, steady line: the wobble was most of the character."
+        },
+        {
+          "id": "ctrl.wave",
+          "try": "Switch to RND",
+          "hear": "The pitch jumps about at random instead of swaying."
+        },
+        { "id": "pitch.glide", "try": "Raise to 4", "hear": "Lazy, sliding notes." }
+      ]
+    },
+    {
+      "id": "wasp-rave-stab",
+      "name": "Rave Stab",
+      "ref": "In the style of Orbital, Wonky",
+      "artist": "Orbital",
+      "tags": ["pluck", "rave", "stab"],
+      "level": 2,
+      "blurb": "A short, bright two-note stab with a resonant snap.",
+      "how": "Both oscillators on sawtooth, the lower one tuned a fifth up, so every key plays a two-note chord. A resonant low-pass filter snapped open by a short control envelope, and no sustain, make each hit short and punchy: the hard edge of the Wasp’s digital oscillators suits it.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.25],
+          [0.75, 57, 0.25],
+          [1.5, 60, 0.25],
+          [2.5, 57, 0.25],
+          [3, 55, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooths a fifth apart",
+          "module": "osc",
+          "why": "Two sawtooths a fifth apart make every key a two-note chord, the basis of a rave stab. The WASP’s hard digital edge suits it.\n- OSC 1 and OSC 2 sawtooth, both FT 8: FT is footage, the octave in organ feet. Both at the pitch of the keys.\n- OSC 2 PITCH 7.9 (+7 st): PITCH tunes OSC 2 against OSC 1. Seven semitones up is a fifth.\n- Mix OSC 1 and OSC 2 at 7: an even chord.\n- Listen for: a bright, open, buzzy chord from one key.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "8",
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 7.92,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "A resonant low-pass filter set below the middle gives the stab a ringing edge once the envelope snaps it open.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 4.8 (about 560 Hz): below the middle, so the resting tone is fairly dark.\n- Q 5.5 (55 %): Q is resonance. Well up, so the snap in the next step rings.\n- Listen for: a darker chord with a slight nasal ring.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 4.8, "vcf.q": 5.5 }
+        },
+        {
+          "title": "Snap it",
+          "module": "env",
+          "why": "A fast control envelope, the filter’s own envelope, throws the filter wide open on each hit and closes it quickly.\n- Control env ATTACK 0, DECAY 3.3 (91 ms): instant and short, a snap rather than a wah.\n- DELAY / REPEAT 0.5 (no delay): the envelope starts with the key.\n- FILTER CONTROL (right) +3.5 (+4.2 oct): well clockwise, so each hit gets very bright before it closes.\n- Listen for: a sharp, resonant “zap” on every hit.",
+          "set": { "cenv.attack": 0, "cenv.decay": 3.3, "cenv.delay": 0.5, "vcf.envAmt": 3.5 }
+        },
+        {
+          "title": "Short hits",
+          "module": "amp",
+          "why": "No sustain and a short decay make each note a stab, however long the key is held.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant start for punch.\n- SUSTAIN LEVEL 0.5 (0 %): at the bottom, just above REPEAT, so notes die away even while held.\n- VCA DECAY 4.2 (170 ms): the length of each stab.\n- Listen for: short, punchy hits. Hold a key down and it still stops.",
+          "set": { "vca.attack": 0, "vca.decay": 4.2, "vca.sustain": 0.5 }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "In this sound: the fifth that makes each note a chord.",
+        "vcf.envAmt": "In this sound: the snap at the start of each hit.",
+        "vca.sustain": "In this sound: at the bottom (just above REPEAT), so notes die away even while held."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Sweep from 3 to 6 while the riff plays",
+          "hear": "The stabs open from dull thuds to bright hits."
+        },
+        {
+          "id": "osc2.pitch",
+          "try": "Set to 7.08",
+          "hear": "A fourth instead of a fifth: a darker chord."
+        },
+        { "id": "mix.ext", "try": "Raise to 4", "hear": "Feedback roughens the stabs." }
+      ]
+    },
+    {
+      "id": "wasp-cold-machine",
+      "name": "Machine Bass",
+      "ref": "In the style of John Foxx, Metamatic",
+      "artist": "John Foxx",
+      "tags": ["bass", "minimal", "late-70s"],
+      "level": 1,
+      "blurb": "A stiff, dry bass that plays even, clipped notes like a machine.",
+      "how": "ENH on the upper oscillator and a square on the lower, both low down and a touch apart, give a hard, dense buzz. The filter is closed down and barely moves, and the VCA has no sustain and a short decay, so every note is the same short, dry length. That sameness is the point: it sounds played by a machine, not by hand.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.35],
+          [0.5, 40, 0.35],
+          [1, 40, 0.35],
+          [1.5, 43, 0.35],
+          [2, 40, 0.35],
+          [2.5, 40, 0.35],
+          [3, 38, 0.35],
+          [3.5, 40, 0.35]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A dense, low buzz",
+          "module": "osc",
+          "why": "ENH on the upper oscillator and a square on the lower, both an octave down and a touch apart, give a hard, dense buzz for a stiff machine bass.\n- OSC 1 ENH, FT 16: ENH is the sawtooth and square together, a harder buzz than either alone. FT is footage; 16 is an octave below the keys.\n- OSC 2 square, FT 16, PITCH 5.1 (+0.1 st): hollow and in the same octave, just off the centre so it thickens.\n- Mix OSC 1 8, OSC 2 7: the ENH leads.\n- Listen for: a thick, hard, slowly beating buzz.",
+          "set": {
+            "osc1.wave": "enh",
+            "osc1.ft": "16",
+            "osc2.wave": "square",
+            "osc2.ft": "16",
+            "osc2.pitch": 5.06,
+            "mix.osc1": 8,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "A closed filter",
+          "module": "filter",
+          "why": "The filter is closed down with only a small envelope, so the tone hardly changes from note to note. That sameness is part of the machine feel.\n- Filter mode LO, FREQ 4.6 (about 490 Hz): low-pass, kept low so the bass stays dark and dry.\n- Q 2.5 (25 %): Q is resonance, barely any here.\n- Control env ATTACK 0, DECAY 2.8 (65 ms): the control envelope, the filter’s own envelope, is very short.\n- FILTER CONTROL (right) +1.2 (+0.9 oct): only a small push on each note.\n- Listen for: a dark, steady tone with a tiny tick at the front.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 4.6,
+            "vcf.q": 2.5,
+            "cenv.attack": 0,
+            "cenv.decay": 2.8,
+            "vcf.envAmt": 1.2
+          }
+        },
+        {
+          "title": "Clipped notes",
+          "module": "amp",
+          "why": "No attack, no sustain and a short decay make every note the same short, dry length, as if played by a machine rather than a hand.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant start.\n- SUSTAIN LEVEL 0.5 (0 %): just above REPEAT, so each note dies away even if held.\n- VCA DECAY 3.3 (91 ms): the length of every note. Longer and the line starts to sound played by hand.\n- Listen for: clipped, identical notes.",
+          "set": { "vca.attack": 0, "vca.decay": 3.3, "vca.sustain": 0.5 }
+        }
+      ],
+      "context": {
+        "osc1.wave": "In this sound: ENH, the sawtooth and square together, for a harder buzz than either alone.",
+        "vca.decay": "In this sound: the length of every note. Longer and the line starts to sound played by hand.",
+        "vcf.freq": "In this sound: kept low so the bass stays dark and dry."
+      },
+      "tweaks": [
+        {
+          "id": "vca.decay",
+          "try": "Raise to 4",
+          "hear": "Longer, rounder notes that run into each other."
+        },
+        { "id": "vcf.q", "try": "Raise to 6", "hear": "A hard, metallic edge on each note." },
+        { "id": "osc2.ft", "try": "Switch to 32", "hear": "A deeper, heavier bass." }
+      ]
+    },
+    {
+      "id": "wasp-slow-bloom",
+      "name": "Slow Bloom",
+      "ref": "A slow pad from two detuned sawtooths",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "warm"],
+      "level": 1,
+      "blurb": "A soft pad that fades in dark and slowly brightens.",
+      "how": "Two sawtooths a hair apart in pitch beat slowly against each other, which makes one oscillator pair sound wide and moving. The VCA envelope fades each note in over more than a second, and the control envelope, just as slow, opens the filter behind it, so the brightness arrives after the loudness. A very slow sine on the filter keeps the held note from standing still.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [4, 53, 3.8],
+          [8, 60, 3.8],
+          [12, 55, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, slightly apart",
+          "module": "osc",
+          "why": "Two sawtooths at the same octave, a hair apart, beat slowly against each other. That makes one pair of oscillators sound wide and moving, the basis of the pad.\n- OSC 1 and OSC 2 sawtooth, both FT 8: FT is footage, the octave in organ feet. Both at the pitch of the keys.\n- OSC 2 PITCH 5.1 (+0.1 st): just off the centre. Further from 5 it beats faster.\n- Mix OSC 1 and OSC 2 at 7: equal, so the beating is deep.\n- Listen for: a slow swirl on a held note.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "8",
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 5.05,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "A dark filter",
+          "module": "filter",
+          "why": "The filter is closed down so the pad starts dark. The next steps bring the brightness in slowly.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 3.5 (about 240 Hz): low, so the saws are muffled.\n- Q 3 (30 %): Q is resonance. A little, for a soft edge.\n- Listen for: a dark, round tone.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3.5, "vcf.q": 3 }
+        },
+        {
+          "title": "Brighten slowly",
+          "module": "env",
+          "why": "A very slow control envelope, the filter’s own envelope, opens the filter over more than a second, so the brightness arrives gradually.\n- Control env ATTACK 8.5 (1.3 s): how slowly the brightness comes in.\n- Control env DECAY 9 (4.1 s): a slow close. The envelope has no sustain, so it falls back even while the key is held.\n- DELAY / REPEAT 0.5 (no delay): it starts with the key.\n- FILTER CONTROL (right) +2.5 (+2.7 oct): how bright it gets at the peak.\n- Listen for: hold a note and it slowly brightens, then slowly darkens again.",
+          "set": { "cenv.attack": 8.5, "cenv.decay": 9, "cenv.delay": 0.5, "vcf.envAmt": 2.5 }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) fades each note in and lets it ring on long after the key is let go.\n- VCA ATTACK 8.5 (1.3 s): a long fade-in, the same time as the filter’s rise.\n- SUSTAIN LEVEL 10 (100 %): full level while held.\n- VCA DECAY 9 (4.1 s): also the fade after release, several seconds.\n- Listen for: notes blooming in rather than starting, and overlapping as they fade.",
+          "set": { "vca.attack": 8.5, "vca.decay": 9, "vca.sustain": 10 }
+        },
+        {
+          "title": "Keep it moving",
+          "module": "lfo",
+          "why": "A very slow sine from the control oscillator (the WASP’s LFO, low-frequency oscillator) drifts the filter a little, so held notes never stand still.\n- Control osc waveform sine: smooth, no steps.\n- Control osc FREQ 0 (0.5 Hz): its slowest, one cycle every two seconds.\n- FILTER CONTROL (left) +1 (+0.4 oct): only a small amount of drift.\n- Listen for: a gentle, slow rise and fall in brightness on long notes.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 0, "vcf.oscAmt": 1 }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "In this sound: the slow beating that makes the pad sound wide. Further from 5 it beats faster.",
+        "vca.attack": "In this sound: how slowly each note fades in.",
+        "cenv.attack": "In this sound: how slowly the brightness arrives.",
+        "vcf.oscAmt": "In this sound: a slow drift in brightness while the note is held."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.ft",
+          "try": "Switch to 16",
+          "hear": "A deeper pad with an octave underneath."
+        },
+        { "id": "vcf.envAmt", "try": "Raise to 4", "hear": "The bloom opens much brighter." },
+        {
+          "id": "vca.attack",
+          "try": "Lower to 4",
+          "hear": "The notes start at once: an organ rather than a pad."
+        }
+      ]
+    },
+    {
+      "id": "wasp-glass-bell",
+      "name": "Glass Bell",
+      "ref": "Two squares an octave and a fifth apart, through the band-pass filter",
+      "artist": "Classic technique",
+      "tags": ["keys", "bell", "ambient"],
+      "level": 2,
+      "blurb": "A clear, ringing bell tone that dies away slowly.",
+      "how": "OSC 2 is set an octave and a fifth above OSC 1, the kind of upper partial a struck bell has. The BAND filter keeps the bright middle of the two squares and drops their low body, so it sounds light and glassy. The VCA starts at once and falls away over several seconds with no sustain, like a struck note, and a faint fast vibrato adds shimmer.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1.5, 79, 1],
+          [3, 76, 2],
+          [5, 84, 1],
+          [6, 74, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "An octave and a fifth",
+          "module": "osc",
+          "why": "OSC 2 is set an octave and a fifth above OSC 1, the kind of upper partial a struck bell has. Two squares keep it clear and hollow.\n- OSC 1 square, WIDTH 50 %, FT 4: a full hollow square an octave above the keys. FT is footage, the octave in organ feet.\n- OSC 2 square, FT 2, PITCH 7.9 (+7 st): another octave up, then a fifth on top, so it sits an octave and a fifth above OSC 1.\n- Mix OSC 1 7, OSC 2 4: the upper partial quieter, as in a real bell.\n- Listen for: a bright, slightly clangy two-note tone. Set PITCH to 5 and it turns into a plain organ.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.width": 50,
+            "osc1.ft": "4",
+            "osc2.wave": "square",
+            "osc2.ft": "2",
+            "osc2.pitch": 7.92,
+            "mix.osc1": 7,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "Band-pass",
+          "module": "filter",
+          "why": "The BAND filter keeps the bright middle and drops the low body, so the tone sounds light and glassy.\n- Filter mode BAND: band-pass, cutting both the lows and the extreme highs.\n- FREQ 7 (about 2.3 kHz): high, centred on the ringing part of the sound.\n- Q 4 (40 %): Q is resonance. In BAND it narrows the band.\n- FILTER CONTROL (right) 0: no envelope on the filter, so each strike keeps the same colour.\n- Listen for: the tone going thin and glassy.",
+          "set": { "vcf.mode": "band", "vcf.freq": 7, "vcf.q": 4, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Struck, then ringing",
+          "module": "amp",
+          "why": "No attack, no sustain and a long decay make every note a strike that rings away.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant strike.\n- SUSTAIN LEVEL 0.5 (0 %): just above REPEAT, so the note fades even while held.\n- VCA DECAY 9 (4.1 s): how long each strike rings.\n- Listen for: long, fading tails that overlap when you play quickly.",
+          "set": { "vca.attack": 0, "vca.decay": 9, "vca.sustain": 0.5 }
+        },
+        {
+          "title": "Shimmer",
+          "module": "lfo",
+          "why": "A faint, fast vibrato from the control oscillator (the WASP’s LFO, low-frequency oscillator) adds shimmer to the ring.\n- Control osc waveform sine: a smooth wobble.\n- Control osc FREQ 4 (about 4.2 Hz): a medium-fast waver.\n- PITCH MOD 0.6 (+0.1 st): a panel knob, separate from the mod wheel. The smallest amount, heard as shimmer rather than vibrato.\n- Listen for: the tail of each note shimmering slightly. Turn PITCH MOD to 0 to hear it go still.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 4, "ctrl.pitchMod": 0.6 }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "In this sound: the fifth that makes the tone a bell rather than an organ.",
+        "vca.decay": "In this sound: how long each strike rings.",
+        "vcf.mode": "In this sound: BAND, which takes away the low body so it sounds like glass."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Nudge to 7.97",
+          "hear": "The two partials beat slowly: a slightly out-of-tune, older bell."
+        },
+        {
+          "id": "vcf.mode",
+          "try": "Switch to LO",
+          "hear": "A rounder, warmer electric-piano tone."
+        },
+        { "id": "vca.decay", "try": "Lower to 7", "hear": "A short, bright chime." }
+      ]
+    },
+    {
+      "id": "wasp-music-box",
+      "name": "Music Box",
+      "ref": "A narrow pulse played high with a short fade",
+      "artist": "Classic technique",
+      "tags": ["pluck", "music box", "delicate"],
+      "level": 1,
+      "blurb": "A small, delicate plucked tone high up, like a music box.",
+      "how": "A narrow pulse at 4 feet sits an octave above the keys and sounds thin and tinkling. A mostly open low-pass filter takes off only the harshest top, and the VCA has no sustain, so each note is a small pluck that fades over about a second.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.45],
+          [0.5, 76, 0.45],
+          [1, 79, 0.45],
+          [1.5, 84, 0.9],
+          [2.5, 83, 0.45],
+          [3, 79, 0.45],
+          [3.5, 76, 0.45],
+          [4, 77, 0.9],
+          [5, 74, 0.45],
+          [5.5, 71, 0.45],
+          [6, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse, up an octave",
+          "module": "osc",
+          "why": "A narrow pulse played an octave up sounds thin and tinkling, like the metal teeth of a music box.\n- OSC 1 square, FT 4: FT is footage, the octave in organ feet. 4 is an octave above the keys.\n- OSC 1 WIDTH 25 %: a narrow pulse, thinner and more tinkling than the hollow 50 %. At 50 % it sounds more like a toy glockenspiel.\n- OSC 2 off, Mix OSC 1 7: one oscillator, a little below full level.\n- Listen for: a small, bright, slightly nasal tone high up.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "4",
+            "osc1.width": 25,
+            "osc2.wave": "off",
+            "mix.osc1": 7
+          }
+        },
+        {
+          "title": "Soften the top",
+          "module": "filter",
+          "why": "A mostly open low-pass filter takes only the harshest top off, with a small push on each note to give it a light pluck.\n- Filter mode LO, FREQ 7.2 (about 2.6 kHz): low-pass, well open, so it only softens the very top.\n- Q 2 (20 %): Q is resonance. Little of it, so there is no ring.\n- FILTER CONTROL (right) +1 (+0.7 oct): a small push from the control envelope, the filter’s own envelope.\n- Control env ATTACK 0, DECAY 5 (280 ms): the push is instant and fades over about a quarter of a second.\n- Listen for: a slightly brighter start to each note, then a softer tail.",
+          "set": {
+            "vcf.mode": "lo",
+            "vcf.freq": 7.2,
+            "vcf.q": 2,
+            "vcf.envAmt": 1,
+            "cenv.attack": 0,
+            "cenv.decay": 5
+          }
+        },
+        {
+          "title": "Plucked",
+          "module": "amp",
+          "why": "No attack, no sustain and a decay of about a second make each note a small pluck that fades, however long the key is held.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant start, like a struck tooth.\n- SUSTAIN LEVEL 0.5 (0 %): just above REPEAT, so held notes still fade.\n- VCA DECAY 7.3 (1.3 s): how long each note rings.\n- Listen for: notes fading away over about a second and overlapping slightly in a quick tune.",
+          "set": { "vca.attack": 0, "vca.decay": 7.3, "vca.sustain": 0.5 }
+        }
+      ],
+      "context": {
+        "osc1.width": "In this sound: the thin, tinkling tone. At 50 % it is hollower, like a toy glockenspiel.",
+        "vca.decay": "In this sound: how long each note rings."
+      },
+      "tweaks": [
+        { "id": "osc1.ft", "try": "Switch to 2", "hear": "Tiny and high, like a very small box." },
+        { "id": "osc1.width", "try": "Turn to 50", "hear": "A rounder, hollow tone." },
+        {
+          "id": "ctrl.pitchMod",
+          "try": "Raise to 0.8 with FREQ at 5",
+          "hear": "A slight wobble, like an old, worn mechanism."
+        }
+      ]
+    },
+    {
+      "id": "wasp-ocean-swell",
+      "name": "Ocean Swell",
+      "ref": "The VCA envelope on REPEAT, slowed right down",
+      "artist": "Classic technique",
+      "tags": ["drone", "ambient", "repeat"],
+      "level": 2,
+      "blurb": "Hold one key and waves of soft noise and a low hum rise and fall by themselves.",
+      "how": "With SUSTAIN LEVEL on REPEAT and long ATTACK and DECAY times, the VCA envelope becomes a slow swell that rises and falls again and again while the key is held. Noise and a quiet, low sawtooth go through a low-pass filter that the control envelope, also on REPEAT but at a slightly different speed, opens on each wave, so no two waves are quite alike.",
+      "phrase": { "bpm": 60, "loop": false, "steps": [[0, 43, 14]] },
+      "steps": [
+        {
+          "title": "Noise and a low hum",
+          "module": "mixer",
+          "why": "Loud white noise with a quiet, low sawtooth underneath. The noise is the surf; the sawtooth gives it a faint pitch, a hum under the waves.\n- OSC 1 sawtooth, FT 16: FT is footage, the octave in organ feet. 16 is an octave below the keys.\n- Mix OSC 1 4 (40 %): quiet, so it stays underneath the noise.\n- OSC 2 off: only one oscillator.\n- NOISE SIGNAL 9.5 (95 %): white noise, an even hiss, nearly full.\n- Listen for: a loud hiss with a low note just audible inside it.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "16",
+            "osc2.wave": "off",
+            "mix.osc1": 4,
+            "mix.noise": 9.5
+          }
+        },
+        {
+          "title": "A soft filter",
+          "module": "filter",
+          "why": "A soft low-pass filter takes the hiss down to a dull roar.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 4.2 (about 380 Hz): below the middle, so the noise is dark.\n- Q 3.5 (35 %): Q is resonance. A little gives the filter some shape when it moves later.\n- Listen for: the hiss turning into a softer rumble.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 4.2, "vcf.q": 3.5 }
+        },
+        {
+          "title": "Waves of loudness",
+          "module": "amp",
+          "why": "SUSTAIN LEVEL on REPEAT with long times makes the loudness rise and fall by itself for as long as the key is held: waves.\n- SUSTAIN LEVEL 0 (REPEAT): fully anticlockwise, the VCA envelope (VCA is voltage-controlled amplifier) starts again each time it finishes falling.\n- VCA ATTACK 9 (1.9 s): how long each wave takes to rise.\n- VCA DECAY 9.2 (4.7 s): how long each wave takes to fall, so each one lasts several seconds.\n- Listen for: hold one key and the sound swells and ebbs with no further playing.",
+          "set": { "vca.sustain": 0, "vca.attack": 9, "vca.decay": 9.2 }
+        },
+        {
+          "title": "Waves of brightness",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, goes on REPEAT too, a little faster than the loudness. The brightness and the loudness drift in and out of step, so no two waves are quite alike.\n- Control env DELAY / REPEAT 0 (REPEAT): the envelope loops while the key is held.\n- Control env ATTACK 8.7, DECAY 9: 1.5 s and 4.1 s, slightly shorter than the VCA’s 1.9 s and 4.7 s.\n- FILTER CONTROL (right) +3 (+3.4 oct): how far each wave opens the filter.\n- Listen for: some waves peaking bright and loud together, others brightening before they get loud.",
+          "set": { "cenv.delay": 0, "cenv.attack": 8.7, "cenv.decay": 9, "vcf.envAmt": 3 }
+        }
+      ],
+      "context": {
+        "vca.sustain": "In this sound: on REPEAT, so the held note swells and fades by itself.",
+        "vca.decay": "In this sound: the length of each wave’s fall.",
+        "cenv.attack": "In this sound: slightly different from the VCA ATTACK, so the brightness and loudness drift apart.",
+        "mix.noise": "In this sound: the surf. The sawtooth underneath gives it a pitch."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Switch to BAND and raise Q to 6",
+          "hear": "The waves whistle, like wind over the water."
+        },
+        { "id": "mix.osc1", "try": "Raise to 7", "hear": "A louder, tuned drone under the surf." },
+        { "id": "vca.attack", "try": "Lower to 7", "hear": "Shorter, choppier waves." }
+      ]
+    },
+    {
+      "id": "wasp-night-flute",
+      "name": "Night Flute",
+      "ref": "A hollow square with breath and vibrato",
+      "artist": "Classic technique",
+      "tags": ["wind", "flute", "ambient"],
+      "level": 1,
+      "blurb": "A soft, breathy flute that slides gently between notes.",
+      "how": "A square at 50 % width has the hollow sound of a flute. A little noise in the mix gives it breath, a low-pass filter keeps it soft, and a short attack lets each note speak rather than click. A gentle sine vibrato and some GLIDE make the line sound played by a person.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.8],
+          [2, 70, 0.9],
+          [3, 72, 2.8],
+          [6, 70, 0.9],
+          [7, 65, 2.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hollow square",
+          "module": "osc",
+          "why": "A square at 50 % width has the hollow sound of a flute. One oscillator is enough, as a flute plays one note.\n- OSC 1 square, FT 8: FT is footage, the octave in organ feet. 8 plays at the pitch of the keys.\n- OSC 1 WIDTH 50 %: an even square, the hollowest setting. Narrower would get reedier.\n- OSC 2 off, Mix OSC 1 7: one oscillator, a little below full level.\n- Listen for: a hollow, woody tone.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "8",
+            "osc1.width": 50,
+            "osc2.wave": "off",
+            "mix.osc1": 7
+          }
+        },
+        {
+          "title": "Breath",
+          "module": "mixer",
+          "why": "A little white noise in the mix gives the flute its breath.\n- NOISE SIGNAL 1.5 (15 %): just enough to hear a soft hiss on the note. Too much and it sounds like wind.\n- Listen for: the air around each note. Turn NOISE SIGNAL to 0 to hear how plain it sounds without it.",
+          "set": { "mix.noise": 1.5 }
+        },
+        {
+          "title": "Soft",
+          "module": "filter",
+          "why": "The filter keeps the flute soft and steady, with no envelope movement on it.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 5.2 (about 720 Hz): just above the middle, so the square loses its buzzy top and the breath is softened.\n- Q 1.5 (15 %): Q is resonance. Very little, for a plain tone.\n- FILTER CONTROL (right) 0: no control envelope on the filter, so notes don’t brighten on the attack.\n- Listen for: a rounder, softer tone.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 5.2, "vcf.q": 1.5, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Blown notes",
+          "module": "amp",
+          "why": "A gentle attack lets each note speak softly instead of clicking in, and a long fade lets it hang after you let go.\n- VCA ATTACK 5.5 (130 ms): VCA is voltage-controlled amplifier, the loudness stage. A soft start, like a breath into the flute.\n- SUSTAIN LEVEL 9 (89 %): held notes settle just below full level.\n- VCA DECAY 7 (1.1 s): also the fade after release, about a second.\n- Listen for: notes easing in and trailing off.",
+          "set": { "vca.attack": 5.5, "vca.decay": 7, "vca.sustain": 9 }
+        },
+        {
+          "title": "Vibrato and slides",
+          "module": "glide",
+          "why": "A gentle vibrato from the control oscillator (the WASP’s LFO, low-frequency oscillator) and some glide make the line sound played by a person.\n- Control osc sine, FREQ 4.3 (about 4.9 Hz): a smooth, natural vibrato speed.\n- PITCH MOD 0.8 (+0.2 st): a panel knob, separate from the mod wheel. Keep it small.\n- GLIDE 3 (55 ms): a gentle slide between notes.\n- Listen for: a slight waver on long notes and small slides between them.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 4.3, "ctrl.pitchMod": 0.8, "pitch.glide": 3 }
+        }
+      ],
+      "context": {
+        "mix.noise": "In this sound: the breath. Too much and it sounds like wind.",
+        "vca.attack": "In this sound: lets each note speak softly instead of clicking in.",
+        "ctrl.pitchMod": "In this sound: the vibrato. Keep it small.",
+        "pitch.glide": "In this sound: the gentle slides between notes."
+      },
+      "tweaks": [
+        { "id": "osc1.ft", "try": "Switch to 16", "hear": "A lower, breathier alto flute." },
+        { "id": "mix.noise", "try": "Raise to 3.5", "hear": "A shakuhachi-like, airy tone." },
+        { "id": "pitch.glide", "try": "Lower to 0", "hear": "Clean steps between notes." }
+      ]
+    },
+    {
+      "id": "wasp-distant-choir",
+      "name": "Distant Choir",
+      "ref": "Band-pass filter slowly moved by the control oscillator",
+      "artist": "Classic technique",
+      "tags": ["pad", "choir", "ambient"],
+      "level": 2,
+      "blurb": "A soft, vocal pad whose “aah” slowly changes shape.",
+      "how": "Voices sound like voices partly because of the band of frequencies the mouth lets through. The BAND filter with some Q picks out a band like that from two detuned sawtooths, and a very slow sine on the filter moves it, so the vowel drifts. A slow attack and a touch of noise put it at a distance.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8],
+          [4, 64, 3.8],
+          [8, 59, 3.8],
+          [12, 57, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Two sawtooths a hair apart and a touch of noise are the raw voice. The detune makes it sound like more than one singer.\n- OSC 1 and OSC 2 sawtooth, both FT 8: FT is footage, the octave in organ feet. Both at the pitch of the keys.\n- OSC 2 PITCH 5 (−0.1 st): just below the centre, so the two slowly beat.\n- Mix OSC 1 and OSC 2 at 7: an even blend.\n- NOISE SIGNAL 1 (10 %): a faint breathiness.\n- Listen for: a buzzy, slowly swirling tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "8",
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 4.95,
+            "mix.osc1": 7,
+            "mix.osc2": 7,
+            "mix.noise": 1
+          }
+        },
+        {
+          "title": "A vowel",
+          "module": "filter",
+          "why": "Voices sound like voices partly because of the band the mouth lets through. The BAND filter with some Q picks out a band like that, a vowel.\n- Filter mode BAND: band-pass, keeping only a band and cutting the lows and highs.\n- FREQ 5.3 (about 770 Hz): where the vowel sits. Lower sounds like “ooh”, higher like “eeh”.\n- Q 5 (50 %): Q is resonance, which in BAND narrows the band. It makes it more vocal; too high and it whistles.\n- FILTER CONTROL (right) 0: no envelope, so the vowel holds steady.\n- Listen for: the buzz turning into an “aah”.",
+          "set": { "vcf.mode": "band", "vcf.freq": 5.3, "vcf.q": 5, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Let the vowel drift",
+          "module": "lfo",
+          "why": "A very slow sine from the control oscillator (the WASP’s LFO, low-frequency oscillator) moves the filter, so the vowel slowly changes shape.\n- Control osc waveform sine: a smooth drift.\n- Control osc FREQ 0.8 (about 0.8 Hz): slow, a little under one cycle a second.\n- FILTER CONTROL (left) +1.5 (+0.7 oct): how far the vowel drifts.\n- Listen for: the “aah” slowly moving towards “ooh” and back on a held note.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 0.8, "vcf.oscAmt": 1.5 }
+        },
+        {
+          "title": "Slow in, slow out",
+          "module": "amp",
+          "why": "A slow attack and long fade put the choir at a distance, as if it were coming from the back of a hall.\n- VCA ATTACK 8 (870 ms): VCA is voltage-controlled amplifier, the loudness stage. Nearly a second to fade in.\n- SUSTAIN LEVEL 9 (89 %): held notes stay nearly full.\n- VCA DECAY 8.7 (3.4 s): also the fade after release, several seconds.\n- Listen for: voices rising gently and dying away long after you let go.",
+          "set": { "vca.attack": 8, "vca.decay": 8.7, "vca.sustain": 9 }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: the vowel. Lower is “ooh”, higher is “eeh”.",
+        "vcf.q": "In this sound: how vocal it sounds. Too high and it whistles.",
+        "vcf.oscAmt": "In this sound: how far the vowel drifts."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move slowly between 4 and 6.5",
+          "hear": "The vowel changes from “ooh” to “aah” to “eeh”."
+        },
+        {
+          "id": "ctrl.freq",
+          "try": "Raise to 3",
+          "hear": "The vowel changes faster, like a slowly spoken word."
+        },
+        { "id": "osc2.ft", "try": "Switch to 16", "hear": "Lower voices join in." }
+      ]
+    },
+    {
+      "id": "wasp-wind-chimes",
+      "name": "Wind Chimes",
+      "ref": "RND on the pitch, with the VCA envelope on REPEAT",
+      "artist": "Classic technique",
+      "tags": ["fx", "chimes", "ambient"],
+      "level": 3,
+      "blurb": "Hold one key and soft, high notes ring out at random, like chimes in the wind.",
+      "how": "The control oscillator’s RND shape picks a new random value on each cycle, and on PITCH MOD that becomes a new random note. The VCA envelope on REPEAT turns the held key into a string of soft strikes. The two run at different speeds, so the notes and the strikes never fall into a pattern. The BAND filter and a high oscillator keep every strike light.",
+      "phrase": { "bpm": 60, "loop": false, "steps": [[0, 72, 12]] },
+      "steps": [
+        {
+          "title": "A high square",
+          "module": "osc",
+          "why": "A high square is the chime. On its own it is a plain, clear tone.\n- OSC 1 square, FT 4: FT is footage, the octave in organ feet. 4 is an octave above the keys.\n- OSC 1 WIDTH 50 %: a full, hollow square.\n- OSC 2 off, Mix OSC 1 10 (100 %): one oscillator at full level, because the narrow filter band in the next step lets less through.\n- Listen for: a bright, hollow high note.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "4",
+            "osc1.width": 50,
+            "osc2.wave": "off",
+            "mix.osc1": 10
+          }
+        },
+        {
+          "title": "Light and glassy",
+          "module": "filter",
+          "why": "The BAND filter set high makes each strike light and glassy.\n- Filter mode BAND: band-pass, cutting the lows and the extreme highs.\n- FREQ 7.3 (about 2.8 kHz): high, centred on the bright part of the sound.\n- Q 4 (40 %): Q is resonance; in BAND it narrows the band.\n- FILTER CONTROL (right) 0: no envelope, so every strike has the same colour.\n- Listen for: a thin, glassy tone.",
+          "set": { "vcf.mode": "band", "vcf.freq": 7.3, "vcf.q": 4, "vcf.envAmt": 0 }
+        },
+        {
+          "title": "Random notes",
+          "module": "lfo",
+          "why": "The control oscillator (the WASP’s LFO, low-frequency oscillator) on RND, random, picks a new level each cycle. On PITCH MOD that becomes a new random note.\n- Control osc waveform RND: a sample and hold built into the LFO. A new random level each cycle. On sine the pitch would slide instead.\n- Control osc FREQ 2.8 (about 2.2 Hz): a new note roughly twice a second.\n- PITCH MOD 6 (+8.6 st): a panel knob, separate from the mod wheel. The notes spread up to about eight and a half semitones.\n- Listen for: a held key jumping between random pitches.",
+          "set": { "ctrl.wave": "rnd", "ctrl.freq": 2.8, "ctrl.pitchMod": 6 }
+        },
+        {
+          "title": "Soft strikes, again and again",
+          "module": "amp",
+          "why": "SUSTAIN LEVEL on REPEAT turns the held key into a string of soft strikes. They run at a different speed from the random notes, so the pattern never settles.\n- SUSTAIN LEVEL 0 (REPEAT): the VCA envelope (VCA is voltage-controlled amplifier) loops while the key is held.\n- VCA ATTACK 3 (20 ms): a soft edge on each strike.\n- VCA DECAY 6.2 (630 ms): how long each chime rings, and so how often they sound.\n- Listen for: chimes that sometimes change pitch mid-ring and sometimes repeat a note.",
+          "set": { "vca.sustain": 0, "vca.attack": 3, "vca.decay": 6.2 }
+        }
+      ],
+      "context": {
+        "ctrl.wave": "In this sound: RND, a new random note on each cycle. On sine the pitch slides instead.",
+        "ctrl.pitchMod": "In this sound: how widely the chimes are spread.",
+        "vca.sustain": "In this sound: on REPEAT, so a held key keeps striking.",
+        "vca.decay": "In this sound: how long each chime rings, and so how often they sound."
+      },
+      "tweaks": [
+        {
+          "id": "ctrl.freq",
+          "try": "Lower to 1",
+          "hear": "Fewer notes change: the same chime rings several times."
+        },
+        { "id": "ctrl.pitchMod", "try": "Lower to 4", "hear": "The chimes stay close together." },
+        {
+          "id": "vca.decay",
+          "try": "Raise to 7.5",
+          "hear": "Slower, longer rings: a gentle breeze."
+        }
+      ]
+    },
+    {
+      "id": "wasp-filter-house-bass",
+      "name": "Rubber Filter Bass",
+      "ref": "In the style of Daft Punk — \"Revolution 909\"",
+      "artist": "Daft Punk",
+      "tags": ["bass", "filter house", "90s"],
+      "level": 2,
+      "blurb": "A round, rubbery bass that wahs on every note while the filter slowly opens and closes across the bar.",
+      "how": "A square and a slightly detuned sawtooth in the same low octave give a hollow, round body. The low-pass filter has a fair amount of Q, but not enough to scream, and a slower control envelope than an acid bass, so each note bends into a soft “wow” rather than a sharp squelch. A very slow sine from the control oscillator moves the filter up and down underneath, the long sweep that filter house is built on, and a little EXT feedback fattens it.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.7],
+          [0.75, 38, 0.25],
+          [1.25, 50, 0.25],
+          [1.5, 41, 0.45],
+          [2, 43, 0.7],
+          [2.75, 41, 0.25],
+          [3, 38, 0.45],
+          [3.5, 45, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square and a sawtooth",
+          "module": "osc",
+          "why": "A square and a slightly detuned sawtooth in the same low octave give a round, hollow body with some bite on top for the filter to work on.\n- OSC 1 square, FT 16, WIDTH 50 %: FT is footage, the octave in organ feet; 16 is an octave below the keys. The even square keeps the bass round.\n- OSC 2 sawtooth, FT 16, PITCH 5 (+0.1 st): same octave, just off the centre, so it slowly beats against the square.\n- Mix OSC 1 7, OSC 2 5: the square leads; the saw adds bite. On sawtooth for OSC 1 it gets brighter, closer to an acid bass.\n- Listen for: a warm, hollow bass with slight movement.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "16",
+            "osc1.width": 50,
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 5.04,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A little feedback",
+          "module": "mixer",
+          "why": "With nothing plugged into EXT AUDIO (the external audio input), the EXT knob feeds the WASP’s own output back into its mixer.\n- Mix EXT 2 (20 %): at this level the feedback only thickens and slightly roughens the bass. Above about 4 it starts to distort.\n- Listen for: a slightly fatter, grittier tone. Turn EXT to 0 to hear it thin out.",
+          "set": { "mix.ext": 2 }
+        },
+        {
+          "title": "A low, resonant filter",
+          "module": "filter",
+          "why": "A low cutoff with a fair amount of resonance, enough for a rubbery bump but not a scream.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 3 (about 174 Hz): low, so between notes the bass is dark.\n- Q 6 (60 %): Q is resonance. It gives each note a rubbery bump; above 8 it becomes an acid squelch.\n- Listen for: a dark, round bass with a slight ring.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3, "vcf.q": 6 }
+        },
+        {
+          "title": "A slower wah on each note",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, is slower than an acid bass, so each note bends into a soft “wow” rather than a sharp squelch.\n- Control env ATTACK 1.5 (6 ms): a slight rise at the start of the wah, which rounds it off.\n- Control env DECAY 4.6 (220 ms): long enough to hear it rise and fall. This is the length of the wah.\n- DELAY / REPEAT 0.5 (no delay): starts with the key.\n- FILTER CONTROL (right) +2.6 (+2.8 oct): how far each note opens the filter.\n- Listen for: a rubbery “wow” on every note, not a click.",
+          "set": { "cenv.attack": 1.5, "cenv.decay": 4.6, "cenv.delay": 0.5, "vcf.envAmt": 2.6 }
+        },
+        {
+          "title": "The slow filter sweep",
+          "module": "lfo",
+          "why": "A very slow sine from the control oscillator (the WASP’s LFO, low-frequency oscillator) moves the filter up and down under the notes, the long sweep filter house is built on.\n- Control osc sine, FREQ 0.3 (about 0.6 Hz): near its slowest, roughly one rise and fall every couple of seconds.\n- PITCH MOD 0: the control oscillator stays off the pitch, so the bass stays in tune.\n- FILTER CONTROL (left) +1.6 (+0.8 oct): how far the slow sweep moves the filter.\n- Listen for: the whole line slowly brightening and darkening across the bar. Turn FREQ by hand for a bigger build.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 0.3, "ctrl.pitchMod": 0, "vcf.oscAmt": 1.6 }
+        },
+        {
+          "title": "Held notes with a small slide",
+          "module": "amp",
+          "why": "The VCA envelope (VCA is voltage-controlled amplifier, the loudness stage) holds each note at full level and stops it cleanly, and a touch of glide slurs the octave jumps.\n- VCA ATTACK 0 (2 ms), SUSTAIN LEVEL 10: an instant start and full level while held.\n- VCA DECAY 2.6 (57 ms): also the fade after release, short for a tight groove.\n- GLIDE 1.2 (20 ms): a very short slide into overlapping notes.\n- Listen for: tight notes with a slight slur on the octave jumps.",
+          "set": { "vca.attack": 0, "vca.decay": 2.6, "vca.sustain": 10, "pitch.glide": 1.2 }
+        }
+      ],
+      "context": {
+        "osc1.wave": "In this sound: square, for the round, hollow body. On sawtooth it becomes brighter and closer to an acid bass.",
+        "mix.ext": "In this sound: feedback that thickens the bass. Above 4 it starts to distort.",
+        "vcf.q": "In this sound: the rubbery bump on each note. Above 8 it turns into an acid squelch.",
+        "vcf.freq": "In this sound: where the slow sweep sits. Turn it by hand over a few bars for a filter-house build.",
+        "cenv.attack": "In this sound: a slight rise at the start of the wah, which rounds it off.",
+        "cenv.decay": "In this sound: the length of the wah on each note.",
+        "vcf.envAmt": "In this sound: how far each note opens the filter.",
+        "ctrl.freq": "In this sound: the speed of the slow sweep, about one rise and fall every two seconds.",
+        "vcf.oscAmt": "In this sound: how far the slow sweep moves the filter.",
+        "pitch.glide": "In this sound: a short slur into overlapping notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Raise slowly from 2 to 5 over several bars",
+          "hear": "The bass comes out of the mud and gets brighter, as in a filter-house build."
+        },
+        {
+          "id": "cenv.decay",
+          "try": "Lower to 3.3",
+          "hear": "Shorter, tighter wahs: closer to an acid squelch."
+        },
+        {
+          "id": "vcf.oscAmt",
+          "try": "Turn back to 0",
+          "hear": "The slow sweep stops and every bar sounds the same."
+        }
+      ]
+    },
+    {
+      "id": "wasp-boing-hits",
+      "name": "Boing and Thud Hits",
+      "ref": "In the style of Kraftwerk — \"Boing Boom Tschak\"",
+      "artist": "Kraftwerk",
+      "tags": ["perc", "electro", "resonant"],
+      "level": 3,
+      "blurb": "Short synthesised hits from one patch: low keys give a thud, higher keys a ringing “boing” with a noisy edge.",
+      "how": "The drum sound comes almost entirely from the filter. With Q near the top it rings at its own pitch, and the control envelope throws it up high and lets it fall back, so each hit is a tone that drops: the “boing”. A little low square gives the ring a body to push on, and a pinch of noise gives the start of each hit a hiss. The VCA has no sustain, so every note is a hit however long the key is held, and FILTER tracks the keyboard, so low keys make deep thuds and high keys brighter, noisier hits.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.3],
+          [1, 67, 0.3],
+          [1.5, 36, 0.3],
+          [2, 36, 0.3],
+          [2.75, 55, 0.2],
+          [3, 67, 0.3],
+          [3.5, 79, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A low square and some noise",
+          "module": "osc",
+          "why": "A very low square and a pinch of noise are the raw material for a drum sound. On their own they are only a quiet buzz and a hiss; the filter does the real work.\n- OSC 1 square, FT 32, WIDTH 50 %: FT is footage, the octave in organ feet. 32 is the lowest, two octaves below the keys, so it adds weight rather than a clear note.\n- OSC 2 off, Mix OSC 1 6, Mix OSC 2 0: one oscillator, a little down. More gives a fuller thud but less drum-like.\n- NOISE SIGNAL 4 (40 %): white noise for the hiss at the start of each hit.\n- Listen for: a low buzz with hiss on top.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "32",
+            "osc1.width": 50,
+            "osc2.wave": "off",
+            "mix.osc1": 6,
+            "mix.osc2": 0,
+            "mix.noise": 4
+          }
+        },
+        {
+          "title": "A filter that rings",
+          "module": "filter",
+          "why": "With Q near the top the filter rings at its own pitch. That ring is what will become the pitched drum.\n- Filter mode LO: low-pass.\n- FREQ 2.4 (about 120 Hz): low. This is where the ring falls back to; higher makes every hit higher and brighter.\n- Q 9 (90 %): Q is resonance. At 9 it is just short of whistling on its own. Below about 7 the hits become clicks.\n- Listen for: a pitched ring on top of the buzz.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 2.4, "vcf.q": 9 }
+        },
+        {
+          "title": "Throw it up and let it fall",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, throws the ringing filter up high and lets it fall back. Each hit becomes a tone that drops: the “boing”.\n- Control env ATTACK 0 (2 ms): the leap is instant.\n- Control env DECAY 3.8 (130 ms): how long the fall takes. Longer is a slower, sillier boing.\n- DELAY / REPEAT 0.5 (no delay): starts with the key.\n- FILTER CONTROL (right) +4 (+5.1 oct): far clockwise, so the ring leaps five octaves. Less gives a thud.\n- Listen for: a falling “boing” on each note. The filter tracks the keyboard, so low keys thud and high keys ring brighter.",
+          "set": { "cenv.attack": 0, "cenv.decay": 3.8, "cenv.delay": 0.5, "vcf.envAmt": 4 }
+        },
+        {
+          "title": "Hits, not notes",
+          "module": "amp",
+          "why": "No sustain and a short decay make every key a single hit, however long it is held.\n- VCA ATTACK 0 (2 ms): VCA is voltage-controlled amplifier, the loudness stage. An instant start for punch.\n- SUSTAIN LEVEL 0.5 (0 %): just above REPEAT, so a held note dies away.\n- VCA DECAY 4.2 (170 ms): the length of each hit.\n- Listen for: short, clean drum hits. Try low keys for a thud and higher keys for a noisier boing.",
+          "set": { "vca.attack": 0, "vca.decay": 4.2, "vca.sustain": 0.5 }
+        }
+      ],
+      "context": {
+        "mix.osc1": "In this sound: the body under the ring. Turn it up and the thud gets fuller but less drum-like.",
+        "osc1.ft": "In this sound: 32, the lowest footage, so the square adds weight rather than a note.",
+        "mix.noise": "In this sound: the hiss at the start of each hit. Raise it for more of a “tschak”.",
+        "vcf.q": "In this sound: the ring that turns a filter sweep into a pitched hit. Below 7 it is just a click.",
+        "vcf.freq": "In this sound: where the ring falls back to. Higher makes every hit higher and brighter.",
+        "vcf.envAmt": "In this sound: how far the ring leaps. Less gives a thud, more a long “boing”.",
+        "cenv.decay": "In this sound: how long the fall takes. Longer is a slower, sillier boing.",
+        "vca.decay": "In this sound: the length of each hit.",
+        "vca.sustain": "In this sound: at the bottom (just above REPEAT), so notes die away even while held."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.envAmt",
+          "try": "Lower to 2",
+          "hear": "The boing shrinks to a short, deep thud: a kick drum."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Raise to 8",
+          "hear": "More hiss on every hit, so the higher keys become a noisy “tschak”."
+        },
+        {
+          "id": "cenv.decay",
+          "try": "Raise to 5",
+          "hear": "A slower, longer fall: a cartoon “boing”."
+        }
+      ]
+    },
+    {
+      "id": "wasp-sliding-funk-bass",
+      "name": "Sliding Funk Bass",
+      "ref": "In the style of Talking Heads — \"Slippery People\" (Stop Making Sense)",
+      "artist": "Bernie Worrell",
+      "tags": ["bass", "funk", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A rubbery, squelchy bass that slides up and down between notes, for a loose funk groove.",
+      "how": "A sawtooth and a square an octave below it give a bass with both bite and weight. The low-pass filter has plenty of Q and the control envelope opens it on each note with a slight rise, so every note says “wow” rather than clicking. GLIDE is set so each note slides quickly from the last one: the octave jumps in the riff become swoops. A little EXT feedback roughens it.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.45],
+          [0.5, 40, 0.2],
+          [0.75, 52, 0.4],
+          [1.25, 50, 0.2],
+          [1.5, 47, 0.45],
+          [2, 45, 0.2],
+          [2.5, 43, 0.45],
+          [3, 40, 0.3],
+          [3.5, 45, 0.2],
+          [3.75, 47, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth over a square",
+          "module": "osc",
+          "why": "A sawtooth with a square an octave below it gives a bass with both bite and weight.\n- OSC 1 sawtooth, FT 16: FT is footage, the octave in organ feet. 16 is an octave below the keys. The saw gives the filter something to squelch.\n- OSC 2 square, FT 32, PITCH 5: 32 is another octave down, exactly in tune (5 is the centre). This is the weight underneath.\n- Mix OSC 1 8, OSC 2 5: the saw leads; the square fills the low end.\n- Listen for: a buzzy bass with a deep, round floor.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.ft": "16",
+            "osc2.wave": "square",
+            "osc2.ft": "32",
+            "osc2.pitch": 5,
+            "mix.osc1": 8,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A little feedback",
+          "module": "mixer",
+          "why": "With nothing plugged into EXT AUDIO (the external audio input), the EXT knob feeds the WASP’s own output back into the mixer.\n- Mix EXT 1.5 (15 %): a little grit on the edge of the bass. Above about 4 it starts to distort.\n- Listen for: a slightly rougher tone. Turn EXT to 0 to compare.",
+          "set": { "mix.ext": 1.5 }
+        },
+        {
+          "title": "A resonant low-pass",
+          "module": "filter",
+          "why": "A low cutoff with plenty of resonance. Held on its own the note is dark with a nasal ring; the envelope next turns that into a squelch.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 3 (about 174 Hz): how dark each note settles. Raise it for a brighter, more forward line.\n- Q 7 (70 %): Q is resonance. Below about 4 it is a plain, round bass.\n- Listen for: a dark note with a nasal ring.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 3, "vcf.q": 7 }
+        },
+        {
+          "title": "A “wow” on each note",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, opens the filter on each note with a slight rise, so every note says “wow” rather than clicking.\n- Control env ATTACK 1 (4 ms): a short rise you can just hear. That rise is what makes it rubbery.\n- Control env DECAY 4 (140 ms): how long each wah lasts.\n- DELAY / REPEAT 0.5 (no delay): starts with the key.\n- FILTER CONTROL (right) +3 (+3.4 oct): how far each note opens the filter.\n- Listen for: a squelchy “wow” on each note.",
+          "set": { "cenv.attack": 1, "cenv.decay": 4, "cenv.delay": 0.5, "vcf.envAmt": 3 }
+        },
+        {
+          "title": "Slides between notes",
+          "module": "glide",
+          "why": "Glide makes each note slide quickly from the last one, so the octave jumps in the riff become swoops.\n- GLIDE 4 (98 ms): about a tenth of a second. Short notes still land in time. At 0 the riff steps cleanly; above 6 the notes arrive late.\n- VCA ATTACK 0, SUSTAIN LEVEL 10: VCA is voltage-controlled amplifier, the loudness stage. Instant, and full level while held.\n- VCA DECAY 2.5 (53 ms): also the fade after release, short for a tight groove.\n- Listen for: every jump in the riff swooping up or down into place.",
+          "set": { "pitch.glide": 4, "vca.attack": 0, "vca.decay": 2.5, "vca.sustain": 10 }
+        }
+      ],
+      "context": {
+        "osc2.ft": "In this sound: 32, an octave under the sawtooth, for weight.",
+        "mix.ext": "In this sound: a little grit. Above 4 the bass starts to distort.",
+        "vcf.q": "In this sound: the squelch. Below 4 it is a plain, round bass.",
+        "vcf.freq": "In this sound: how dark each note settles. Raise it for a brighter, more forward line.",
+        "cenv.attack": "In this sound: the slight rise at the start of each wah.",
+        "cenv.decay": "In this sound: how long each wah lasts.",
+        "vcf.envAmt": "In this sound: how far each note opens the filter.",
+        "pitch.glide": "In this sound: the slides. At 0 the riff steps cleanly; above 6 the notes arrive late."
+      },
+      "tweaks": [
+        {
+          "id": "pitch.glide",
+          "try": "Raise to 6",
+          "hear": "Long, lazy swoops between every note."
+        },
+        {
+          "id": "vcf.q",
+          "try": "Raise to 9",
+          "hear": "A wetter, more vocal squelch on each note."
+        },
+        {
+          "id": "cenv.attack",
+          "try": "Lower to 0",
+          "hear": "A harder, clickier start: less rubber, more snap."
+        }
+      ]
+    },
+    {
+      "id": "wasp-warbling-lurch-bass",
+      "name": "Warbling Lurch Bass",
+      "ref": "In the style of Brian Eno — \"The Fat Lady of Limbourg\" (Taking Tiger Mountain (By Strategy))",
+      "artist": "Brian Eno",
+      "tags": ["bass", "art rock", "treated", "70s"],
+      "level": 2,
+      "blurb": "A slow, murky, lurching bass line with an unsteady pitch, as if played from a stretched tape.",
+      "how": "A narrow square and a slightly flat sawtooth go through the BAND filter, which cuts away the deep bass and the top and leaves a honking, boxed-in middle. EXT feedback pushes the filter into overdrive, so the tone is dirty and thick. A slow sine from the control oscillator bends the pitch a little up and down, so the line sounds warped and seasick, and a slow control envelope makes each note lean in.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 38, 1.4],
+          [1.5, 41, 0.9],
+          [2.5, 40, 1.4],
+          [4, 36, 1.9],
+          [6, 39, 0.9],
+          [7, 38, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow square and a flat sawtooth",
+          "module": "osc",
+          "why": "A narrow square and a slightly flat sawtooth beat against each other, so the notes are never quite steady.\n- OSC 1 square, FT 16, WIDTH 30 %: FT is footage, the octave in organ feet; 16 is an octave below the keys. A 30 % pulse is narrow and nasal. At 50 % it is rounder.\n- OSC 2 sawtooth, FT 16, PITCH 4.9 (−0.2 st): just flat of the centre, so the two slowly beat.\n- Mix OSC 1 and OSC 2 at 8: both loud, a thick blend.\n- Listen for: a buzzy, slightly sour bass that wobbles in tone.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "16",
+            "osc1.width": 30,
+            "osc2.wave": "saw",
+            "osc2.ft": "16",
+            "osc2.pitch": 4.93,
+            "mix.osc1": 8,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "Drive it with its own output",
+          "module": "mixer",
+          "why": "With nothing plugged into EXT AUDIO (the external audio input), EXT feeds the WASP’s own output back in and overdrives the filter. A pinch of noise adds grime.\n- Mix EXT 4.5 (45 %): into overdrive. Below about 3 it is clean; above about 6 it starts to howl.\n- NOISE SIGNAL 0.8 (8 %): a faint hiss under the notes.\n- Listen for: the tone thickening and breaking up.",
+          "set": { "mix.ext": 4.5, "mix.noise": 0.8 }
+        },
+        {
+          "title": "A boxed-in middle",
+          "module": "filter",
+          "why": "The BAND filter cuts away the deep bass and the top and leaves a honking, boxed-in middle.\n- Filter mode BAND: band-pass, keeping only a band. LO would be fuller and more like an ordinary bass.\n- FREQ 4.2 (about 380 Hz): where the honk sits.\n- Q 5.5 (55 %): Q is resonance; in BAND it narrows the band and makes the honk more nasal.\n- Listen for: a murky, boxed-in tone.",
+          "set": { "vcf.mode": "band", "vcf.freq": 4.2, "vcf.q": 5.5 }
+        },
+        {
+          "title": "Warped pitch",
+          "module": "lfo",
+          "why": "A slow sine from the control oscillator (the WASP’s LFO, low-frequency oscillator) bends the pitch a little up and down, like a tape running unevenly.\n- Control osc sine, FREQ 1.5 (about 1.1 Hz): about once a second.\n- PITCH MOD 1.3 (+0.4 st): a panel knob, separate from the mod wheel. Keep it small, or it becomes a siren.\n- FILTER CONTROL (left) 0: the control oscillator stays off the filter; only the pitch warps.\n- Listen for: the pitch sagging and recovering on held notes.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 1.5, "ctrl.pitchMod": 1.3, "vcf.oscAmt": 0 }
+        },
+        {
+          "title": "Notes that lean in",
+          "module": "env",
+          "why": "The filter opens a moment after each note starts, so the notes lean in, and a little glide smears the steps.\n- Control env ATTACK 4, DECAY 5.5: the control envelope, the filter’s own envelope, rises over 42 ms, a little late, and falls over 400 ms.\n- FILTER CONTROL (right) +1.8 (+1.7 oct): a moderate opening, with DELAY / REPEAT at 0.5 (no delay).\n- VCA ATTACK 2, DECAY 5, SUSTAIN 8: VCA is voltage-controlled amplifier, the loudness stage. A 9 ms start, held notes at 79 %, and a fade of about a quarter of a second (280 ms) after release.\n- GLIDE 2.5 (42 ms): a slight smear between notes.\n- Listen for: each note swelling slightly after it starts.",
+          "set": {
+            "cenv.attack": 4,
+            "cenv.decay": 5.5,
+            "cenv.delay": 0.5,
+            "vcf.envAmt": 1.8,
+            "vca.attack": 2,
+            "vca.decay": 5,
+            "vca.sustain": 8,
+            "pitch.glide": 2.5
+          }
+        }
+      ],
+      "context": {
+        "osc1.width": "In this sound: a narrow, nasal square. At 50 % it is rounder and less strange.",
+        "osc2.pitch": "In this sound: just flat of the centre, so the two oscillators beat slowly.",
+        "mix.ext": "In this sound: the overdrive. Below 3 it is clean; above 6 it starts to howl.",
+        "vcf.mode": "In this sound: BAND, which gives the boxed-in honk. LO is fuller and more like an ordinary bass.",
+        "vcf.freq": "In this sound: where the honk sits.",
+        "ctrl.pitchMod": "In this sound: how far the pitch warps. Keep it small, or it becomes a siren.",
+        "ctrl.freq": "In this sound: the speed of the warp, about once a second.",
+        "cenv.attack": "In this sound: makes each note open a moment late, so it leans in.",
+        "pitch.glide": "In this sound: a slight smear between notes."
+      },
+      "tweaks": [
+        {
+          "id": "ctrl.wave",
+          "try": "Switch to NOISE",
+          "hear": "The slow warp becomes a rough, shaky edge."
+        },
+        {
+          "id": "mix.ext",
+          "try": "Raise to 6.5",
+          "hear": "The overdrive turns into a growl, and some notes start to howl."
+        },
+        {
+          "id": "vcf.mode",
+          "try": "Switch to NOTCH",
+          "hear": "A hollow, phasey version of the line."
+        }
+      ]
+    },
+    {
+      "id": "wasp-steel-swell",
+      "name": "Steel Swell",
+      "ref": "In the style of Daniel Lanois — \"Aquatic\" (Flesh and Machine)",
+      "artist": "Daniel Lanois",
+      "tags": ["lead", "ambient", "pedal steel"],
+      "level": 2,
+      "blurb": "Slow, bending swells, like a pedal steel played with a volume pedal, with a gentle wavering underneath.",
+      "how": "A pedal steel player fades each note in with a volume pedal and bends the strings into pitch. Here a slow VCA attack does the fade-in and a long GLIDE does the bend, so each note swells up and slides from the one before. The filter brightens late on each note through the control envelope’s DELAY, and a slow sine moves both the filter and the pitch a little, so the held notes waver as if seen through water.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.9],
+          [1, 64, 2.8],
+          [4, 69, 1.8],
+          [6, 71, 0.9],
+          [7, 69, 2.8],
+          [10, 64, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft, full tone",
+          "module": "osc",
+          "why": "A soft, full tone from a square and a quieter sawtooth, with a little feedback for warmth. It is the string the swells and bends will be played on.\n- OSC 1 square, FT 8, WIDTH 40 %: FT is footage, the octave in organ feet; 8 is the pitch of the keys. 40 % is slightly narrower than hollow.\n- OSC 2 sawtooth, FT 8, PITCH 5 (+0.1 st): a little sharp of the centre, so it slowly beats.\n- Mix OSC 1 8, OSC 2 5: the square leads, the saw adds some edge.\n- Mix EXT 2 (20 %): with nothing plugged into EXT AUDIO, this feeds the WASP’s own output back in. A little warms and thickens it.\n- Listen for: a full, slightly moving tone.",
+          "set": {
+            "osc1.wave": "square",
+            "osc1.ft": "8",
+            "osc1.width": 40,
+            "osc2.wave": "saw",
+            "osc2.ft": "8",
+            "osc2.pitch": 5.03,
+            "mix.osc1": 8,
+            "mix.osc2": 5,
+            "mix.ext": 2
+          }
+        },
+        {
+          "title": "A mellow filter",
+          "module": "filter",
+          "why": "A mellow low-pass filter takes the edge off the sawtooth.\n- Filter mode LO: low-pass, keeping the lows and cutting the highs.\n- FREQ 4.8 (about 560 Hz): just below the middle, so the tone is soft.\n- Q 2.5 (25 %): Q is resonance. Only a little.\n- Listen for: a warmer, rounder tone.",
+          "set": { "vcf.mode": "lo", "vcf.freq": 4.8, "vcf.q": 2.5 }
+        },
+        {
+          "title": "Swell in, fade out",
+          "module": "amp",
+          "why": "A pedal steel player fades each note in with a volume pedal. A slow VCA attack does the same job.\n- VCA ATTACK 7.5 (600 ms): VCA is voltage-controlled amplifier, the loudness stage. Each note swells in over more than half a second. Lower it and notes start at once, like an organ.\n- SUSTAIN LEVEL 10 (100 %): full level while held.\n- VCA DECAY 8 (2.1 s): also the fade after release, so notes ring on.\n- Listen for: notes swelling in rather than starting.",
+          "set": { "vca.attack": 7.5, "vca.decay": 8, "vca.sustain": 10 }
+        },
+        {
+          "title": "Bend into each note",
+          "module": "glide",
+          "why": "A pedal steel bends strings into pitch. A long glide does the same, so each note slides up or down from the one before.\n- GLIDE 6 (310 ms): about a third of a second. The longer it is, the more it sounds like a steel. The short first note is the note you bend up from.\n- Listen for: each new note sliding into place as it swells.",
+          "set": { "pitch.glide": 6 }
+        },
+        {
+          "title": "Brighten late",
+          "module": "env",
+          "why": "The control envelope, the filter’s own envelope, is delayed, so each note opens up only after it has started to swell.\n- DELAY / REPEAT 4 (370 ms): the wait before the envelope starts.\n- Control env ATTACK 6, DECAY 7.5: a slow rise (190 ms) and a long fall (1.5 s).\n- FILTER CONTROL (right) +1.5 (+1.3 oct): how much brighter each note gets once the delay is over.\n- Listen for: long notes brightening a moment after they arrive.",
+          "set": { "cenv.delay": 4, "cenv.attack": 6, "cenv.decay": 7.5, "vcf.envAmt": 1.5 }
+        },
+        {
+          "title": "A slow waver",
+          "module": "lfo",
+          "why": "A slow sine from the control oscillator (the WASP’s LFO, low-frequency oscillator) moves both the pitch and the filter a little, so held notes waver as if seen through water.\n- Control osc sine, FREQ 3.5 (about 3.2 Hz): a slow, gentle waver.\n- PITCH MOD 0.7 (+0.1 st): a panel knob, separate from the mod wheel. The waver in pitch; keep it small.\n- FILTER CONTROL (left) +0.8 (+0.3 oct): the waver in tone.\n- Listen for: held notes wavering in pitch and brightness together.",
+          "set": { "ctrl.wave": "sine", "ctrl.freq": 3.5, "ctrl.pitchMod": 0.7, "vcf.oscAmt": 0.8 }
+        }
+      ],
+      "context": {
+        "vca.attack": "In this sound: the volume-pedal swell. Lower it and notes start at once, like an organ.",
+        "vca.decay": "In this sound: how long each note rings on after you let go.",
+        "pitch.glide": "In this sound: the bend into each note. The longer it is, the more it sounds like a steel.",
+        "cenv.delay": "In this sound: how long each note waits before it brightens.",
+        "vcf.envAmt": "In this sound: how much brighter each note gets once the delay is over.",
+        "ctrl.pitchMod": "In this sound: the waver in pitch. Keep it small.",
+        "vcf.oscAmt": "In this sound: the waver in tone.",
+        "mix.ext": "In this sound: a little feedback for warmth."
+      },
+      "tweaks": [
+        {
+          "id": "pitch.glide",
+          "try": "Raise to 7.5",
+          "hear": "Slow, wide bends: every note slides a long way into place."
+        },
+        { "id": "ctrl.freq", "try": "Lower to 1.5", "hear": "A slower waver." },
+        {
+          "id": "vcf.mode",
+          "try": "Switch to NOTCH",
+          "hear": "A hollow, phasing tone that swirls as the filter moves."
+        }
+      ]
+    }
+  ]
+}

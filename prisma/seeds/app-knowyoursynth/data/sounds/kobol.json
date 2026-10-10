@@ -1,0 +1,3138 @@
+{
+  "synth": "kobol",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "kobol-brass",
+      "name": "Morphing Brass",
+      "ref": "In the style of late-70s French synth pop",
+      "artist": "Classic technique",
+      "tags": ["brass", "lead", "70s"],
+      "level": 1,
+      "blurb": "A warm brass lead that blooms open at the start of each note.",
+      "how": "Two oscillators set between sawtooth and ramp give the buzzy harmonics brass needs, with VCO 2 beating slightly against VCO 1. The filter sits fairly low and ADS 2 opens it with a slowish attack, which copies the way a brass player’s tone brightens as they blow harder.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.5],
+          [1.5, 67, 0.5],
+          [2, 65, 1],
+          [3, 63, 0.9],
+          [4, 60, 2.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two buzzy oscillators",
+          "module": "osc",
+          "why": "The two VCOs (voltage-controlled oscillators, the parts that make the raw tone) are set up like two brass players. On the Kobol one WAVEFORM knob per oscillator turns the shape smoothly from triangle to pulse, in place of a switch.\n- WAVEFORM 4.6 on both: just short of the sawtooth point at 5, still on the ramp side. Plenty of buzzy harmonics for brass, a little softer than a full saw. Turn towards 0 for a softer horn.\n- VOLUME 7 and 6.5: there is no mixer. Each VCO has its own VCA (voltage-controlled amplifier), and these knobs set how much of each reaches the filter.\n- VCO 2 BEAT 1.2 (+12 cents): fine-tunes VCO 2 against VCO 1, so the two drift in and out of phase.\n- Listen for: a slow beating on a held note, like two players not quite together. Set BEAT back to 0 and it becomes one flat, static tone.",
+          "set": {
+            "vco1.wave": 4.6,
+            "vco2.wave": 4.6,
+            "vca1.level": 7,
+            "vca2.level": 6.5,
+            "vco2.beat": 1.2
+          }
+        },
+        {
+          "title": "A darker filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is a 24 dB low-pass: it keeps the lows and cuts the highs steeply. Setting it low gives a mellow resting tone for the envelope to open in the next step.\n- VCF FREQ 4.3 (312 Hz): the cutoff, well down from the starting 2 kHz. Most of the buzz is gone and the note sounds muffled and round. Left is darker, right brighter.\n- RESONANCE 2: a small boost at the cutoff point. It adds a slight nasal edge; much higher and it turns vocal and squelchy.\n- KEYB CTRL 1 (100 %): keyboard control, how far the cutoff follows the notes. At 1 it follows exactly, so high and low notes have the same brightness.\n- Listen for: a dull, closed tone. Sweep VCF FREQ up to 7 and back to hear how much brass is waiting behind it.",
+          "set": { "vcf.freq": 4.3, "vcf.res": 2, "vcf.kbd": 1 }
+        },
+        {
+          "title": "Let ADS 2 open it",
+          "module": "env",
+          "why": "ADS 2 is the filter envelope: an ADS (attack, decay, sustain) shape that runs each time you play. Here it opens the filter at the start of each note, the way a brass player’s tone brightens as they blow harder.\n- ADS CONTROL 2.4 (+3.4 oct): how far ADS 2 sweeps the cutoff. On the Kobol it is off at the centre; right of centre opens the filter, left closes it. Here the peak is over three octaves above 312 Hz.\n- ATTACK 4.6 (46 ms): a slowish rise, so the tone swells open just after the note starts. At 1 it becomes a stab.\n- DECAY 6.2 (180 ms): how quickly it falls back from the peak.\n- SUSTAIN 5: it settles half way, so held notes stay partly bright.\n- Listen for: the “bwah” bloom at the start of each note. Sweep ATTACK from 1 to 7 to go from a bright stab to a slow swell.",
+          "set": { "vcf.env": 2.4, "ads2.attack": 4.6, "ads2.decay": 6.2, "ads2.sustain": 5 }
+        },
+        {
+          "title": "Soft start, long ring",
+          "module": "amp",
+          "why": "ADS 1 is the loudness envelope, which drives the output VCA (voltage-controlled amplifier). It shapes how each note starts and ends.\n- ATTACK 3.2 (14 ms): a short fade-in that takes the click off the front without making the note late.\n- DECAY 6 (150 ms): with SUSTAIN at full it does nothing while the key is held. The Kobol has no release knob, so DECAY is also the release: notes fade over about 150 ms after you let go.\n- SUSTAIN 10: held notes stay at full level and keep singing.\n- Listen for: a soft edge at the start of each note and a short tail at the end, so phrases join up rather than chopping off.",
+          "set": { "ads1.attack": 3.2, "ads1.decay": 6, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "ads2.attack": "In this sound: this is the bloom. At 1 the sound becomes a stab; turned up, each note swells more slowly.",
+        "vcf.env": "In this sound: how bright the peak of each note gets.",
+        "vco2.beat": "In this sound: the slow beating between the two oscillators that makes it sound like a section.",
+        "vco1.wave": "In this sound: just short of sawtooth. Turn it towards the triangle end for a softer horn.",
+        "vcf.freq": "In this sound: the darkest the note gets between swells."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.attack",
+          "try": "Sweep from 1 to 7",
+          "hear": "From a bright stab to a slow swell."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 6.7",
+          "hear": "VCO 2 becomes a square, and the brass turns hollow and reedy."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 5",
+          "hear": "A nasal, muted-trumpet edge on each swell."
+        }
+      ]
+    },
+    {
+      "id": "kobol-pwm-strings",
+      "name": "PWM Ensemble",
+      "ref": "In the style of late-70s French space music",
+      "artist": "Classic technique",
+      "tags": ["strings", "pad", "70s"],
+      "level": 2,
+      "blurb": "A slow, shimmering string sound made from two pulse waves.",
+      "how": "At the far end of the WAVEFORM knob the pulse width is moved by the PWM source. With the switch on LFO, a slow LFO makes the two pulse waves thin and thicken, which sounds like several instruments drifting against each other. VCO 1 MOD OFF keeps VCO 1 steady so the LFO’s vibrato only reaches VCO 2.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [4, 60, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two pulse waves",
+          "module": "osc",
+          "why": "Both oscillators go to the far end of their WAVEFORM knobs, where the tone is a narrow pulse. That is the only place the pulse width can be moved, and moving it is what makes this string sound.\n- WAVEFORM 10 on VCO 1 and 2: the Kobol’s VCOs (voltage-controlled oscillators) turn smoothly from triangle to pulse. At 10 the pulse width is handed to the PWM source switch.\n- VOLUME 7 and 7: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer. Equal levels, so neither leads.\n- VCO 2 BEAT 0.6 (+6 cents): tunes VCO 2 very slightly sharp, so the two drift against each other.\n- Listen for: a thin, nasal, buzzy tone with slow beating. Nothing moves the pulse width yet.",
+          "set": {
+            "vco1.wave": 10,
+            "vco2.wave": 10,
+            "vca1.level": 7,
+            "vca2.level": 7,
+            "vco2.beat": 0.6
+          }
+        },
+        {
+          "title": "A slow LFO on the pulse width",
+          "module": "mod",
+          "why": "PWM (pulse-width modulation) means changing how wide the pulse is while it plays. A slowly changing width makes the tone thin and thicken, which sounds like several players drifting against each other.\n- PWM source LFO: the switch picks what moves the pulse width. On LFO it is the LFO (low-frequency oscillator, a slow wave that moves other controls).\n- LFO WAVEFORM triangle: a smooth rise and fall, so the width sweeps rather than jumps.\n- LFO RATE 4.2 (0.48 Hz): about one sweep every two seconds. Slower drifts more gently.\n- LFO VOLUME 5 (50 %): the depth of the shimmer. It also sets the LFO’s vibrato on the VCOs’ pitch, so keep it modest.\n- Listen for: a held chord swirling and thickening, with a pitch waver on top. Push VOLUME much past 5 and it starts to sound seasick.",
+          "set": { "mod.pwm": "lfo", "lfo.shape": "tri", "lfo.rate": 4.2, "lfo.volume": 5 }
+        },
+        {
+          "title": "Only VCO 2 wobbles in pitch",
+          "module": "mod",
+          "why": "The Kobol wires the LFO to the pitch of both VCOs. This switch takes VCO 1 out of that, so one voice stays in tune while the other wavers around it.\n- VCO 1 MOD OFF on: VCO 1 ignores the pitch modulation and only VCO 2 moves. The pulse-width shimmer on both is unaffected.\n- Listen for: the chord steadying. The pitch waver now sits against an in-tune VCO 1, so it reads as ensemble drift rather than vibrato. Flick the switch back and forth on a held chord to compare.",
+          "set": { "mod.vco1Off": true }
+        },
+        {
+          "title": "Soft filter, slow swell",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) trims the fizz off the top, and ADS 1, the loudness envelope, gives each chord a bowed swell. ADS stands for attack, decay, sustain; there is no release knob.\n- VCF FREQ 5.8 (879 Hz) and RESONANCE 1: the cutoff comes down from 2 kHz, taking the scratchy top off the pulses, with a touch of edge from the resonance.\n- ADS CONTROL 0 (off): the filter envelope does nothing, so all the movement comes from the PWM.\n- ATTACK 6.5 (230 ms): a slow bow into each chord.\n- DECAY 7.6 (600 ms) and SUSTAIN 9: held chords stay near full level. DECAY is also the release, so chords fade over about half a second when you let go.\n- Listen for: chords that swell in and fade out rather than start and stop. Turn ATTACK to 1 to hear the bow disappear.",
+          "set": {
+            "vcf.freq": 5.8,
+            "vcf.res": 1,
+            "vcf.env": 0,
+            "ads1.attack": 6.5,
+            "ads1.decay": 7.6,
+            "ads1.sustain": 9
+          }
+        }
+      ],
+      "context": {
+        "lfo.volume": "In this sound: the depth of the shimmer. It also moves VCO 2’s pitch, so too much sounds seasick.",
+        "lfo.rate": "In this sound: how fast the ensemble drifts. Slower is lusher.",
+        "mod.vco1Off": "In this sound: keeps VCO 1 steady, so there is always an in-tune voice under the movement.",
+        "vco1.wave": "In this sound: fully clockwise, where the pulse width follows the PWM switch.",
+        "ads1.attack": "In this sound: the slow bow into each note."
+      },
+      "tweaks": [
+        {
+          "id": "mod.pwm",
+          "try": "Switch to Both",
+          "hear": "ADS 2 adds a sweep of pulse width at the start of each note as well."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Back off to 8",
+          "hear": "The PWM fades out and the tone becomes a plain, reedy pulse."
+        },
+        {
+          "id": "mod.vco1Off",
+          "try": "Switch back to Vco 1 Mod",
+          "hear": "Both oscillators wobble together: a vibrato rather than a chorus."
+        }
+      ]
+    },
+    {
+      "id": "kobol-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of The Cars — “Let’s Go”",
+      "artist": "Greg Hawkes",
+      "tags": ["lead", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead whose tone sweeps down on every note.",
+      "how": "With SYNCHRO on, VCO 2 restarts each time VCO 1 does, so its pitch changes the tone rather than the note. ADS 2 OUT patched to VCO 2 FREQ sweeps that pitch on each note, and VCO 1 VOLUME at 0 means you only hear the synced oscillator.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.4],
+          [1.5, 69, 0.9],
+          [2.5, 67, 0.4],
+          [3, 64, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync VCO 2 to VCO 1",
+          "module": "osc",
+          "why": "Hard sync ties VCO 2 to VCO 1, so VCO 2’s tuning changes its tone rather than its note. The VCOs (voltage-controlled oscillators) are the parts that make the raw tone.\n- SYNCHRO on: VCO 2 restarts its wave every time VCO 1 starts a cycle, so the note you hear is VCO 1’s pitch.\n- VCO 2 FREQUENCY 6.4 (+16.8 st): an octave and a bit above VCO 1. Synced, that gives a hollow, vocal buzz; higher is thinner.\n- WAVEFORM 5 on both: sawtooth, bright and buzzy.\n- VCO 1 VOLUME 0, VCO 2 VOLUME 8: each VCO has its own VCA (voltage-controlled amplifier). Only the synced VCO 2 reaches the filter; VCO 1 still runs as the timekeeper.\n- Listen for: sweep VCO 2 FREQUENCY slowly on a held note. The pitch stays put while the tone tears and changes vowel.",
+          "set": {
+            "vco2.sync": true,
+            "vco1.wave": 5,
+            "vco2.wave": 5,
+            "vco2.freq": 6.4,
+            "vca1.level": 0,
+            "vca2.level": 8
+          }
+        },
+        {
+          "title": "Sweep VCO 2 with ADS 2",
+          "module": "env",
+          "why": "ADS 2 is an ADS (attack, decay, sustain) envelope, normally used on the filter. A cable sends it to VCO 2’s pitch instead, so every note starts with the sync pushed hard and then settles.\n- Cable ADS 2 OUT → VCO 2 FREQ: carries the envelope voltage into VCO 2’s pitch input. Because of the sync you hear a sweep in tone, not a pitch bend.\n- ATTACK 1 (2 ms): the push is there at once.\n- DECAY 5.8 (130 ms): how long the tearing sweep takes to settle.\n- SUSTAIN 1.5: settles a little above the knob setting, so held notes keep some extra bite.\n- Listen for: a “yeow” on every note, tearing at the front, then settling. Turn SYNCHRO off and the same cable just bends VCO 2’s pitch.",
+          "set": { "ads2.attack": 1, "ads2.decay": 5.8, "ads2.sustain": 1.5 },
+          "cables": [["j.ads2Out", "j.vco2Freq"]]
+        },
+        {
+          "title": "Open filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is left mostly open. The sync sweep already moves the tone, so the filter only has to stay out of the way.\n- VCF FREQ 8.2 (4.6 kHz): high, so the tearing top end of the sync comes through. Lower it and the lead loses its snarl.\n- RESONANCE 1: a hint of peak, barely audible this open.\n- ADS CONTROL 0 (off): the Kobol’s filter envelope amount is off at the centre, so ADS 2 only works on VCO 2 here.\n- Listen for: a brighter, harder lead than before. Pull VCF FREQ down to 5 to hear how much of the sweep lives in the top end.",
+          "set": { "vcf.freq": 8.2, "vcf.res": 1, "vcf.env": 0 }
+        },
+        {
+          "title": "Organ-style loudness",
+          "module": "amp",
+          "why": "ADS 1 is the loudness envelope, feeding the output VCA. An organ-style shape keeps a lead crisp.\n- ATTACK 1 (2 ms): full level at once, so the sync sweep lands on the start of the note.\n- DECAY 4 (28 ms): with SUSTAIN at full it only matters on release, because on the Kobol DECAY is also the release. Notes stop about 30 ms after you let go.\n- SUSTAIN 10: held notes stay at full level.\n- Listen for: notes that start and stop cleanly, so fast phrases stay separate.",
+          "set": { "ads1.attack": 1, "ads1.decay": 4, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: sets the resting tone of the sync. Higher gives a thinner, more vocal buzz.",
+        "ads2.decay": "In this sound: how long the tearing sweep takes to settle.",
+        "vco2.sync": "In this sound: without sync the envelope would bend VCO 2’s pitch instead of its tone.",
+        "vca1.level": "In this sound: at 0 so only the synced VCO 2 is heard. Bring it up for a steadier fundamental underneath."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Move between 5.5 and 8",
+          "hear": "The resting tone changes from a hollow buzz to a thin whine."
+        },
+        {
+          "id": "vca1.level",
+          "try": "Raise to 5",
+          "hear": "VCO 1 adds a solid note under the sweep."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 6.7 (square)",
+          "hear": "A hollower, rounder sync sound."
+        }
+      ]
+    },
+    {
+      "id": "kobol-bass",
+      "name": "Round Filter Bass",
+      "ref": "In the style of 80s synth-pop bass",
+      "artist": "Classic technique",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A punchy, rounded bass with a quick filter snap on each note.",
+      "how": "Two sawtooths an octave apart feed a low filter. ADS 2 flicks the cutoff open and shut on every note and a little resonance makes the flick more vocal. Short envelopes keep the notes tight.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.2],
+          [1, 43, 0.4],
+          [1.5, 36, 0.2],
+          [2, 39, 0.4],
+          [2.5, 41, 0.2],
+          [3, 43, 0.4],
+          [3.5, 34, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooths an octave apart",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators) are stacked an octave apart. The lower one gives weight, the upper one definition.\n- VCO 1 FREQUENCY 4 (−12 st): the Kobol has no octave switch; each step of this knob is about an octave, so 4 is an octave below the note played.\n- VCO 2 FREQUENCY 5 (0 st): at the note played.\n- WAVEFORM 5 on both: sawtooth, full of harmonics for the filter to shape.\n- VOLUME 8 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer. The low one leads.\n- VCO 2 BEAT 0.8 (+8 cents): tunes VCO 2 slightly sharp for slow movement.\n- Listen for: a thick, buzzy low note with gentle beating. Turn VCO 1 VOLUME to 0 to hear how much weight it adds.",
+          "set": {
+            "vco1.freq": 4,
+            "vco2.freq": 5,
+            "vco1.wave": 5,
+            "vco2.wave": 5,
+            "vca1.level": 8,
+            "vca2.level": 6,
+            "vco2.beat": 0.8
+          }
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is a 24 dB low-pass, cutting the highs steeply. Closing it right down leaves only the body of the bass between notes.\n- VCF FREQ 3.2 (146 Hz): a dull thump with almost no buzz left. The next step flicks it open on each note.\n- RESONANCE 4: a boost at the cutoff that gives the flick a vocal edge. Past 6 the bass starts to thin out.\n- KEYB CTRL 1 (100 %): keyboard control. The cutoff follows the notes exactly, so the tone stays even up and down the line.\n- Listen for: a round, muffled bass with a slight hollow ring. Sweep VCF FREQ up to hear the saws come back.",
+          "set": { "vcf.freq": 3.2, "vcf.res": 4, "vcf.kbd": 1 }
+        },
+        {
+          "title": "A quick flick from ADS 2",
+          "module": "env",
+          "why": "ADS 2, the filter envelope (attack, decay, sustain), opens the cutoff for a moment on each note. This is the snap at the front of the bass.\n- ADS CONTROL 3.4 (+4.8 oct): well right of centre, so the envelope throws the cutoff nearly five octaves up. Lower gives a smoother bass, higher a quack.\n- ATTACK 1 (2 ms): the flick opens instantly, on the beat.\n- DECAY 4.4 (39 ms): very short, so it snaps shut again. It also sets how long the filter takes to close after each note.\n- SUSTAIN 1.5: settles just above the resting cutoff, so held notes go back to dark.\n- Listen for: a quick “bow” at the start of each note. Sweep DECAY while the line plays to hear the snap tighten and loosen.",
+          "set": { "vcf.env": 3.4, "ads2.attack": 1, "ads2.decay": 4.4, "ads2.sustain": 1.5 }
+        },
+        {
+          "title": "Tight loudness",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope, drives the output VCA (voltage-controlled amplifier). For bass, notes should hit at once and stay separate.\n- ATTACK 1 (2 ms): full level straight away, lined up with the filter flick.\n- DECAY 4.6 (46 ms) and SUSTAIN 8: a quick dip from the peak to a slightly lower held level, which adds a little punch. DECAY is also the release, so notes stop about 50 ms after you let go.\n- Listen for: clean gaps between notes. Turn DECAY up to 7 and the notes smear into each other.",
+          "set": { "ads1.attack": 1, "ads1.decay": 4.6, "ads1.sustain": 8 }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: how dark the bass is between flicks.",
+        "vcf.env": "In this sound: the size of the flick. Lower for a smoother bass, higher for a quack.",
+        "ads2.decay": "In this sound: the length of the flick. It also sets how long the filter takes to close after each note.",
+        "vcf.res": "In this sound: the vocal edge. Past 6 the bass thins out."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Move between 3.5 and 6",
+          "hear": "From a tight click to a slow, lazy sweep."
+        },
+        {
+          "id": "vcf.env",
+          "try": "Turn left to −3",
+          "hear": "The envelope now closes the filter: each note starts dull and brightens as it fades."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 6.7",
+          "hear": "A hollow square under the saw, rounder and woodier."
+        }
+      ]
+    },
+    {
+      "id": "kobol-wave-sweep",
+      "name": "Waveform Sweep",
+      "ref": "The Kobol’s own trick: a filter-like sweep with the filter wide open",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "modular"],
+      "level": 2,
+      "blurb": "A slowly moving tone that changes shape by itself, with no filter sweep.",
+      "how": "LFO OUT 2 patched into VCO 1 WAVEFORM moves VCO 1’s shape back and forth, from soft triangle to bright pulse. The filter is left open, so the movement you hear is the waveform itself. VCO 2 sits steady underneath.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8],
+          [4, 55, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO 1 in the middle of its travel",
+          "module": "osc",
+          "why": "The Kobol’s WAVEFORM knob turns each VCO (voltage-controlled oscillator) smoothly from triangle to pulse. Parking VCO 1 in the middle leaves room for a cable to sweep it both ways.\n- VCO 1 WAVEFORM 5: sawtooth, the centre of the sweep. Move it later and the sweep leans towards triangle or pulse.\n- VCO 2 WAVEFORM 1: just past triangle into the ramp, soft and steady underneath.\n- VCO 2 FREQUENCY 4 (−12 st): an octave below, for body.\n- VOLUME 7 and 5: each VCO has its own VCA (voltage-controlled amplifier). VCO 1 leads, since it is the one that will move.\n- VCO 2 BEAT 0.3 (+3 cents): a very slow beat between the two.\n- Listen for: a plain saw over a soft low tone. Nothing moves yet.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 1,
+            "vca1.level": 7,
+            "vca2.level": 5,
+            "vco2.freq": 4,
+            "vco2.beat": 0.3
+          }
+        },
+        {
+          "title": "Patch the LFO to its waveform",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is a slow wave used to move other controls. A cable sends it to VCO 1’s WAVEFORM input, so the shape itself sweeps back and forth.\n- Cable LFO OUT 2 → VCO 1 WAVEFORM: OUT 2 is the LFO at full level, enough to swing VCO 1 from soft triangle to bright pulse and back.\n- LFO RATE 3.6 (0.28 Hz): about one sweep every three and a half seconds.\n- LFO WAVEFORM triangle: a smooth, even sweep with no jumps.\n- LFO VOLUME 0: this knob sets the vibrato on the VCOs. At 0 there is none, and LFO OUT 2 does not depend on it.\n- Listen for: a held note going from soft and hollow to bright and nasal and back, like a slow filter sweep with no filter moving.",
+          "set": { "lfo.rate": 3.6, "lfo.shape": "tri", "lfo.volume": 0 },
+          "cables": [["j.lfoOut2", "j.vco1Wave"]]
+        },
+        {
+          "title": "Open filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is opened wide so the waveform movement is heard as it is, not smoothed over.\n- VCF FREQ 8.5 (5.7 kHz): high, so the bright pulse end of the sweep comes through in full.\n- RESONANCE 0: no peak; a resonant filter would add a colour of its own.\n- ADS CONTROL 0 (off): no filter envelope.\n- Listen for: a brighter peak to each sweep. Lower VCF FREQ to 5 and the movement gets subtler, because the filter cuts the very harmonics that are changing.",
+          "set": { "vcf.freq": 8.5, "vcf.res": 0, "vcf.env": 0 }
+        },
+        {
+          "title": "Slow swell",
+          "module": "amp",
+          "why": "ADS 1 is the loudness envelope (attack, decay, sustain) that drives the output VCA. A gentle attack and full sustain turn the moving tone into a pad.\n- ATTACK 5.5 (100 ms): a soft fade-in with no click.\n- DECAY 7 (360 ms): also the release on the Kobol, so notes fade out over about a third of a second.\n- SUSTAIN 10: full level while held, so the sweep can run for as long as the key is down.\n- Listen for: hold a chord for several seconds and let the sweep cycle through.",
+          "set": { "ads1.attack": 5.5, "ads1.decay": 7, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how fast the shape sweeps.",
+        "vco1.wave": "In this sound: the centre of the sweep. Move it and the sweep leans towards triangle or pulse.",
+        "lfo.volume": "In this sound: left at 0 so there is no vibrato; LFO OUT 2 does not depend on it.",
+        "vca2.level": "In this sound: the steady triangle underneath, an octave down."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.shape",
+          "try": "Switch to square",
+          "hear": "The tone jumps between two shapes instead of sweeping."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 7.5",
+          "hear": "The sweep spends more time in the pulse range and gets thinner and brighter."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Lower to 5",
+          "hear": "The filter tames the bright end of the sweep."
+        }
+      ]
+    },
+    {
+      "id": "kobol-crossfade",
+      "name": "Crossfade Pluck",
+      "ref": "Using the VCO VCAs to shape each oscillator separately",
+      "artist": "Classic technique",
+      "tags": ["pluck", "modular", "keys"],
+      "level": 3,
+      "blurb": "Each note starts as a bright buzz and fades into a soft, round tone.",
+      "how": "VCO 1’s VOLUME is at 0 and ADS 2 OUT is patched to its VOLUME input, so VCO 1 only sounds at the start of each note. VCO 2 is a steady triangle. The mix moves from one to the other on every note: something a single mixer knob cannot do.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1, 64, 0.9],
+          [2, 67, 0.9],
+          [3, 72, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Bright VCO 1, soft VCO 2",
+          "module": "osc",
+          "why": "Two very different VCOs (voltage-controlled oscillators): a bright one that will only be heard at the start of each note, and a soft one that carries the body.\n- VCO 1 WAVEFORM 8.5: a pulse, bright and nasal.\n- VCO 2 WAVEFORM 0: a triangle, soft and round.\n- VCO 2 FREQUENCY 6 (+12 st): an octave up.\n- VCO 1 VOLUME 0, VCO 2 VOLUME 7: each VCO has its own VCA (voltage-controlled amplifier) instead of a mixer. VCO 1’s is shut; the next step opens it with a cable.\n- Listen for: only a soft, flute-like triangle. VCO 1 is running but silent.",
+          "set": {
+            "vco1.wave": 8.5,
+            "vco2.wave": 0,
+            "vco2.freq": 6,
+            "vca1.level": 0,
+            "vca2.level": 7
+          }
+        },
+        {
+          "title": "ADS 2 opens VCO 1’s VCA",
+          "module": "env",
+          "why": "ADS 2, an ADS (attack, decay, sustain) envelope, is patched to VCO 1’s VCA, so VCO 1 gets a short loudness shape of its own. The mix moves from bright to soft on every note, which a mixer knob cannot do.\n- Cable ADS 2 OUT → VCO 1 VOLUME: the envelope voltage opens VCO 1’s VCA on top of its VOLUME knob at 0.\n- ATTACK 1 (2 ms): VCO 1 is in at once.\n- DECAY 5.2 (77 ms): how long the bright buzz lasts before the triangle takes over.\n- SUSTAIN 0: VCO 1 goes fully quiet while the key is held.\n- ADS CONTROL 0 (off): ADS 2 leaves the filter alone.\n- Listen for: a bright tick on each note that melts into the soft triangle. Turn DECAY up and the buzz lingers.",
+          "set": { "ads2.attack": 1, "ads2.decay": 5.2, "ads2.sustain": 0, "vcf.env": 0 },
+          "cables": [["j.ads2Out", "j.vco1Vol"]]
+        },
+        {
+          "title": "Filter fairly open",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) only softens the very top, since the crossfade already does the shaping.\n- VCF FREQ 7 (2.0 kHz): fairly open, the same as where it started. Most of the pulse’s buzz gets through.\n- RESONANCE 1: a slight edge at the cutoff.\n- Listen for: little change from the last step. Lower VCF FREQ to 5 and the bright attack goes duller; raise it and it gets glassier.",
+          "set": { "vcf.freq": 7, "vcf.res": 1 }
+        },
+        {
+          "title": "A plucked loudness shape",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, turns the note into a pluck.\n- ATTACK 1 (2 ms): instant, so the bright buzz hits right on the note start.\n- DECAY 6.2 (180 ms): the level falls quickly from its peak. DECAY is also the release, so notes fade over about 180 ms once you let go.\n- SUSTAIN 4: held notes keep some level, carried by the soft triangle.\n- Listen for: a plucked start that settles into a quieter, round tone. Play fast and every note is a bright pluck; hold one and the triangle rings on.",
+          "set": { "ads1.attack": 1, "ads1.decay": 6.2, "ads1.sustain": 4 }
+        }
+      ],
+      "context": {
+        "vca1.level": "In this sound: at 0, so VCO 1 is only heard while ADS 2 opens its VCA.",
+        "ads2.decay": "In this sound: how long the bright buzz lasts before the triangle takes over.",
+        "vco1.wave": "In this sound: the bright attack. Towards 5 it becomes a sawtooth chiff.",
+        "vco2.wave": "In this sound: the soft body of the note."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Raise to 7",
+          "hear": "The bright start lasts longer and turns into a slow crossfade."
+        },
+        {
+          "id": "vca1.level",
+          "try": "Raise to 3",
+          "hear": "Some of VCO 1 stays under the whole note."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Turn to 6.58",
+          "hear": "VCO 2 a fifth above: a bell-like, organ-stop colour."
+        }
+      ]
+    },
+    {
+      "id": "kobol-self-osc",
+      "name": "Singing Filter",
+      "ref": "The self-oscillating filter played as an oscillator",
+      "artist": "Classic technique",
+      "tags": ["lead", "fx", "modular"],
+      "level": 2,
+      "blurb": "A pure whistling tone from the filter alone, with no oscillators.",
+      "how": "With RESONANCE at 10 the filter rings on its own as a sine wave. Both VCO VOLUMEs are at 0, so the filter is the only sound source. KEYB CTRL at 1 makes its pitch follow the keyboard, and the LFO’s vibrato is added through VCF FREQUENCY.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.8],
+          [2, 76, 0.9],
+          [3, 79, 0.9],
+          [4, 77, 1.8],
+          [6, 74, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Silence the VCOs",
+          "module": "mixer",
+          "why": "This sound uses no oscillators at all. Both VCO (voltage-controlled oscillator) levels go to 0, so the filter will become the only sound source.\n- VCO 1 VOLUME 0 and VCO 2 VOLUME 0: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer. At 0 nothing reaches the filter.\n- Listen for: silence. That is expected; the next step makes the filter sing.",
+          "set": { "vca1.level": 0, "vca2.level": 0 }
+        },
+        {
+          "title": "Resonance to OSC",
+          "module": "filter",
+          "why": "With resonance at maximum the VCF (voltage-controlled filter) rings on its own as a sine wave, and you can play it from the keyboard.\n- RESONANCE 10: the OSC mark. The peak at the cutoff grows until the filter whistles by itself. Below about 9.5 it stops ringing and there is silence.\n- VCF FREQ 5.8 (879 Hz): sets the pitch, and so the octave, of the whistle.\n- KEYB CTRL 1 (100 %): keyboard control. At 1 the cutoff follows the keys exactly, so the whistle plays in tune; other settings stretch or squash the scale.\n- ADS CONTROL 0 (off): no filter envelope, so the pitch does not swoop.\n- Listen for: a pure, whistling sine tone. Play a scale to hear it track.",
+          "set": { "vcf.res": 10, "vcf.kbd": 1, "vcf.freq": 5.8, "vcf.env": 0 }
+        },
+        {
+          "title": "Vibrato on the filter",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) adds vibrato. Its built-in route only reaches the VCOs, which are silent, so a cable takes it to the filter’s cutoff instead.\n- Cable LFO OUT 1 → VCF FREQUENCY: OUT 1 is the scaled LFO, so LFO VOLUME sets the vibrato depth.\n- LFO RATE 6.9 (5.75 Hz): a natural vibrato speed.\n- LFO VOLUME 1.2 (12 %): a small depth. Much higher and it turns into a siren.\n- LFO WAVEFORM triangle: a smooth wobble.\n- VCO 1 MOD OFF off: left as it is; with the VCOs silent it makes no difference.\n- Listen for: a singing, slightly wavering whistle. Pull the cable out and it goes still.",
+          "set": { "lfo.rate": 6.9, "lfo.volume": 1.2, "lfo.shape": "tri", "mod.vco1Off": false },
+          "cables": [["j.lfoOut1", "j.vcfFreq"]]
+        },
+        {
+          "title": "Smooth loudness",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope (attack, decay, sustain) for the output VCA, shapes the whistle into a sung line.\n- ATTACK 2.8 (10 ms): a slight fade-in that takes the click off.\n- DECAY 6.5 (230 ms): also the release, so each note tails off over about a quarter of a second.\n- SUSTAIN 10: full level while held.\n- Listen for: smooth note starts and short tails that join a slow melody together.",
+          "set": { "ads1.attack": 2.8, "ads1.decay": 6.5, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: at 10 the filter is the oscillator. Below about 9.5 it stops ringing and there is silence.",
+        "vcf.freq": "In this sound: sets which octave the whistle plays in.",
+        "vcf.kbd": "In this sound: at 1 the whistle follows the keyboard in tune. Other settings stretch or squash the scale.",
+        "lfo.volume": "In this sound: the vibrato depth through LFO OUT 1."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.kbd",
+          "try": "Set to 2",
+          "hear": "Every key now moves the whistle two semitones: the scale is stretched to double width."
+        },
+        {
+          "id": "vca1.level",
+          "try": "Raise to 2 with VCO 1 as a triangle",
+          "hear": "A little oscillator under the whistle, which the filter colours."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Move to 7",
+          "hear": "The whistle jumps into a higher register."
+        }
+      ]
+    },
+    {
+      "id": "kobol-acid",
+      "name": "Squelch Line",
+      "ref": "In the style of late-80s acid house",
+      "artist": "Classic technique",
+      "tags": ["bass", "acid", "80s"],
+      "level": 2,
+      "blurb": "A rubbery, squelching bass line with the resonance turned well up.",
+      "how": "One sawtooth through the 24 dB filter with high resonance. ADS 2 flicks the cutoff open on every note and closes it quickly, and the resonant peak sings as it moves. DECAY OFF keeps the notes short and separate.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.2],
+          [0.25, 48, 0.2],
+          [0.5, 36, 0.2],
+          [0.75, 39, 0.2],
+          [1, 36, 0.2],
+          [1.5, 43, 0.2],
+          [1.75, 36, 0.2],
+          [2, 46, 0.2],
+          [2.5, 36, 0.2],
+          [2.75, 48, 0.2],
+          [3, 41, 0.2],
+          [3.5, 39, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One sawtooth",
+          "module": "osc",
+          "why": "One VCO (voltage-controlled oscillator) is all an acid line needs. A single sawtooth gives the filter plenty to squelch.\n- VCO 1 FREQUENCY 4 (−12 st): an octave down. There is no octave switch; each step of this knob is about an octave.\n- VCO 1 WAVEFORM 5: sawtooth, bright and buzzy.\n- VCO 1 VOLUME 8: its level into the filter through its own VCA (voltage-controlled amplifier).\n- VCO 2 VOLUME 0: off, so no detuning blurs the line.\n- Listen for: a raw, buzzy low saw.",
+          "set": { "vco1.freq": 4, "vco1.wave": 5, "vca1.level": 8, "vca2.level": 0 }
+        },
+        {
+          "title": "Low cutoff, high resonance",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is a 24 dB low-pass. Low cutoff and high resonance are the core of the squelch.\n- VCF FREQ 3 (127 Hz): nearly closed; only the bottom of the saw gets through.\n- RESONANCE 7.6: a strong peak at the cutoff, which is what squelches when it moves. Past about 9 the filter starts whistling on its own.\n- KEYB CTRL 0.6 (60 %): keyboard control. The cutoff partly follows the notes, so higher notes open a bit but not fully.\n- Listen for: a dark, hollow note with a ringing edge. Sweep VCF FREQ by hand to hear the squelch before the envelope does it for you.",
+          "set": { "vcf.freq": 3, "vcf.res": 7.6, "vcf.kbd": 0.6 }
+        },
+        {
+          "title": "A fast envelope on the filter",
+          "module": "env",
+          "why": "ADS 2, the filter envelope (attack, decay, sustain), kicks the resonant peak up on each note and drops it straight back.\n- ADS CONTROL 3 (+4.2 oct): right of centre opens the filter, here by just over four octaves at the peak.\n- ATTACK 1 (2 ms): immediate.\n- DECAY 4.6 (46 ms): short, so each note is a quick “yow”.\n- SUSTAIN 0: the filter falls all the way back to 127 Hz while held.\n- Listen for: the “yow” on every note. Ride DECAY by hand while the line plays: longer makes each note wetter and more open.",
+          "set": { "vcf.env": 3, "ads2.attack": 1, "ads2.decay": 4.6, "ads2.sustain": 0 }
+        },
+        {
+          "title": "Short notes",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA (voltage-controlled amplifier), keeps the notes short and separate.\n- ATTACK 1 (2 ms): instant.\n- SUSTAIN 9 and DECAY 5 (65 ms): SUSTAIN holds notes near full level. DECAY is set but bypassed while DECAY OFF is on, and comes back if you switch that off.\n- DECAY OFF on: the Kobol’s version of a release switch. It sets ADS 1’s decay and release to zero, so notes stop dead on release.\n- Listen for: completely clean gaps between notes. Switch DECAY OFF off and they ring on over the DECAY time.",
+          "set": { "ads1.attack": 1, "ads1.decay": 5, "ads1.sustain": 9, "ads1.decayOff": true }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the squelch. Past about 9 the filter starts whistling on its own.",
+        "vcf.env": "In this sound: how far each note’s squelch reaches.",
+        "ads2.decay": "In this sound: the length of the “yow”. Ride this by hand while the line plays.",
+        "ads1.decayOff": "In this sound: notes stop dead on release. Switch it off and they ring over the DECAY time."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Sweep from 3.5 to 6 while it plays",
+          "hear": "The classic acid build, from clicks to long wah sweeps."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Sweep between 2 and 5",
+          "hear": "The whole line opens and closes."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 6.7",
+          "hear": "A square wave: hollower and a little softer."
+        }
+      ]
+    },
+    {
+      "id": "kobol-flute",
+      "name": "Breathy Flute",
+      "ref": "A flute from a triangle wave and noise",
+      "artist": "Classic technique",
+      "tags": ["wind", "lead", "acoustic"],
+      "level": 2,
+      "blurb": "A soft, breathy flute with a gentle vibrato.",
+      "how": "A triangle is close to a flute’s pure tone. The breath is the noise generator, patched from NOISE OUT into VCF AUDIO IN and filtered with the note. A slow attack and a small vibrato from the LFO finish it.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.4],
+          [1.5, 74, 0.4],
+          [2, 76, 1.8],
+          [4, 79, 0.9],
+          [5, 77, 0.9],
+          [6, 74, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle",
+          "module": "osc",
+          "why": "A triangle wave is close to a flute’s pure tone: few harmonics, soft and round. VCO stands for voltage-controlled oscillator, the part that makes the raw tone.\n- VCO 1 WAVEFORM 0: fully left, a triangle. The Kobol’s WAVEFORM knob turns smoothly from triangle through sawtooth to pulse.\n- VCO 1 VOLUME 8: its level into the filter through its own VCA (voltage-controlled amplifier); there is no mixer.\n- VCO 2 VOLUME 0: off, as a flute is one clean voice.\n- Listen for: a plain, hollow tone, closer to a whistle than a flute. The breath comes next.",
+          "set": { "vco1.wave": 0, "vca1.level": 8, "vca2.level": 0 }
+        },
+        {
+          "title": "Add breath",
+          "module": "osc",
+          "why": "Breath is what separates a flute from a whistle. The Kobol’s noise generator has no level knob and is not wired into the sound, so a cable brings it in.\n- Cable NOISE OUT → VCF AUDIO IN: feeds the noise into the filter alongside the VCOs, so it is filtered with the note.\n- Noise colour pink: less top end than white, softer and airier. White sounds more like hiss.\n- Listen for: a layer of air under the tone. Switch between pink and white to hear breath turn into steam.",
+          "set": { "noise.colour": "pink" },
+          "cables": [["j.noise", "j.vcfIn"]]
+        },
+        {
+          "title": "Filter just above the note",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits just above the note, softening the noise so it stays under the tone. ADS 2, the filter envelope (attack, decay, sustain), adds a little extra breath at the start of each note.\n- VCF FREQ 5.6 (766 Hz) and RESONANCE 1.5: lower lets less breath through and the tone gets softer; higher lets more hiss in.\n- KEYB CTRL 1 (100 %): the cutoff follows the notes, so the breath stays even across the range.\n- ADS CONTROL 0.8 (+1.1 oct): right of centre, a small opening on each note.\n- ADS 2 ATTACK 3, DECAY 5.5, SUSTAIN 7: a 12 ms rise and a 100 ms fall. A quick puff that settles most of the way back.\n- Listen for: a small chiff of breath at the start of each note, then a steadier tone.",
+          "set": {
+            "vcf.freq": 5.6,
+            "vcf.res": 1.5,
+            "vcf.kbd": 1,
+            "vcf.env": 0.8,
+            "ads2.attack": 3,
+            "ads2.decay": 5.5,
+            "ads2.sustain": 7
+          }
+        },
+        {
+          "title": "Blown attack and vibrato",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, gives the blown start, and the LFO (low-frequency oscillator) adds the player’s vibrato.\n- ADS 1 ATTACK 4 (28 ms): a slightly slow start, like breath getting the note going.\n- DECAY 5.8 (130 ms) and SUSTAIN 9: near-full level while held. DECAY is also the release, so notes end with a short tail.\n- LFO RATE 6.8 (5.25 Hz), triangle: a smooth vibrato at a natural speed.\n- LFO VOLUME 1 (10 %): the Kobol wires the LFO to both VCOs’ pitch, and this knob is the depth. Keep it small.\n- Listen for: a soft onset and a gentle waver on held notes. Turn LFO VOLUME to 3 and it goes wobbly.",
+          "set": {
+            "ads1.attack": 4,
+            "ads1.decay": 5.8,
+            "ads1.sustain": 9,
+            "lfo.rate": 6.8,
+            "lfo.volume": 1,
+            "lfo.shape": "tri"
+          }
+        }
+      ],
+      "context": {
+        "noise.colour": "In this sound: pink sounds like breath; white sounds more like hiss.",
+        "vcf.freq": "In this sound: how much of the breath comes through. Lower is softer.",
+        "lfo.volume": "In this sound: the vibrato depth. Keep it small.",
+        "ads1.attack": "In this sound: how slowly each note is blown in."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 7",
+          "hear": "More breath and a brighter, airier tone."
+        },
+        { "id": "vco1.wave", "try": "Turn to 2", "hear": "A reedier tone, closer to a recorder." },
+        { "id": "lfo.volume", "try": "Set to 0", "hear": "A straight, still tone." }
+      ]
+    },
+    {
+      "id": "kobol-sub-bass",
+      "name": "Deep Sub Bass",
+      "ref": "A clean low bass for modern productions",
+      "artist": "Classic technique",
+      "tags": ["bass", "electronic", "10s"],
+      "level": 1,
+      "blurb": "A deep, smooth bass that is felt more than heard.",
+      "how": "Two triangles, one an octave below the other, through a filter set low. Triangles have few harmonics, so the tone stays round. Full sustain holds the weight for as long as the key is down.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 33, 1.4],
+          [1.5, 33, 0.4],
+          [2, 36, 1.4],
+          [3.5, 31, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles an octave apart",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators) an octave apart, both close to triangle. Triangles have few harmonics, so the bass stays round and is felt as much as heard.\n- FREQUENCY 4 and 5 (−12 st, 0 st): no octave switch here; each knob step is about an octave. VCO 1 is the sub, VCO 2 the note played.\n- VCO 1 WAVEFORM 0.6, VCO 2 WAVEFORM 1.2: just off triangle, VCO 2 a little into the ramp, for a hint of edge.\n- VOLUME 8 and 5: each VCO has its own VCA (voltage-controlled amplifier). The quieter upper octave helps the bass show up on small speakers.\n- Listen for: a deep, smooth tone. Turn VCO 2 VOLUME to 0 on laptop speakers and the bass nearly vanishes.",
+          "set": {
+            "vco1.freq": 4,
+            "vco2.freq": 5,
+            "vco1.wave": 0.6,
+            "vco2.wave": 1.2,
+            "vca1.level": 8,
+            "vca2.level": 5
+          }
+        },
+        {
+          "title": "Filter low",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is set low to keep the tone round and take off any fizz from the ramp.\n- VCF FREQ 4.4 (334 Hz): just enough to keep the round top of the tone. Raise it and the bass gets more present and gritty.\n- RESONANCE 0: no peak, so there is no ring or boom at the cutoff.\n- ADS CONTROL 0 (off): no filter envelope, so every note has the same tone from start to finish.\n- KEYB CTRL 1 (100 %): the cutoff follows the notes, so high notes are not duller than low ones.\n- Listen for: a clean, even low end with no bite.",
+          "set": { "vcf.freq": 4.4, "vcf.res": 0, "vcf.env": 0, "vcf.kbd": 1 }
+        },
+        {
+          "title": "Held notes",
+          "module": "amp",
+          "why": "ADS 1 is the loudness envelope (attack, decay, sustain) for the output VCA. For a sub bass it should be simply on or off.\n- ATTACK 1 (2 ms): instant, so the weight lands on the beat.\n- DECAY 4.8 (55 ms): with SUSTAIN at full it only acts as the release, as there is no release knob. Notes stop about 50 ms after you let go.\n- SUSTAIN 10: full weight for as long as the key is down.\n- Listen for: held notes that stay solid and stop cleanly, leaving room for the kick.",
+          "set": { "ads1.attack": 1, "ads1.decay": 4.8, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vca2.level": "In this sound: the upper octave, which helps the bass show up on small speakers.",
+        "vco2.wave": "In this sound: a little way towards the ramp, for a touch of definition.",
+        "vcf.freq": "In this sound: keeps it round. Raise it and the bass gets more present."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 5",
+          "hear": "A growlier bass with a sawtooth on top."
+        },
+        { "id": "vcf.freq", "try": "Raise to 6", "hear": "The bass comes forward in the mix." }
+      ]
+    },
+    {
+      "id": "kobol-trill",
+      "name": "Square LFO Trill",
+      "ref": "A trill played by the LFO",
+      "artist": "Classic technique",
+      "tags": ["fx", "lead", "modular"],
+      "level": 1,
+      "blurb": "Each held note trills between two pitches on its own.",
+      "how": "The square LFO jumps between two values, so with it on the VCOs’ pitch every held note alternates between two notes. LFO VOLUME sets the interval between them, and RATE the speed of the trill.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.8],
+          [2, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright tone",
+          "module": "osc",
+          "why": "A bright, buzzy source so the two pitches of the trill are easy to tell apart. The VCOs (voltage-controlled oscillators) make the raw tone.\n- WAVEFORM 3.5 on both: ramp, between triangle and sawtooth. Bright but not harsh.\n- VOLUME 7 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- VCO 2 BEAT 0.8 (+8 cents): VCO 2 slightly sharp, for a little thickness.\n- Listen for: a steady, slightly beating tone. The trill comes next.",
+          "set": {
+            "vco1.wave": 3.5,
+            "vco2.wave": 3.5,
+            "vca1.level": 7,
+            "vca2.level": 6,
+            "vco2.beat": 0.8
+          }
+        },
+        {
+          "title": "Square LFO on pitch",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is wired to both VCOs’ pitch. With a square wave it jumps between two values instead of sliding, so every held note flips between two pitches.\n- LFO WAVEFORM square: jumps, for a trill. Triangle would give a siren-like wobble.\n- LFO RATE 6.2 (3.02 Hz): about three flips a second, the speed of the trill.\n- LFO VOLUME 3 (30 %): the depth, which here sets the interval between the two notes, around a semitone or two. Small moves make a big difference.\n- Listen for: hold one note and hear it alternate. Nudge VOLUME between 2.5 and 3.5 to hear the interval widen and narrow.",
+          "set": { "lfo.shape": "sq", "lfo.rate": 6.2, "lfo.volume": 3 }
+        },
+        {
+          "title": "Open filter, held notes",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is left open and the loudness held, so nothing gets in the way of the trill.\n- VCF FREQ 7.2 (2.3 kHz), RESONANCE 1: fairly open, so both pitches stay bright and clear.\n- ADS CONTROL 0 (off): no filter envelope, so the tone does not change during the note.\n- ADS 1 ATTACK 1, DECAY 5, SUSTAIN 10: ADS 1 is the loudness envelope (attack, decay, sustain). A 2 ms start, full level while held, and DECAY working as a 65 ms release.\n- Listen for: an even trill for as long as you hold the key. The LFO runs freely, so a new note can start on either pitch.",
+          "set": {
+            "vcf.freq": 7.2,
+            "vcf.res": 1,
+            "vcf.env": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 5,
+            "ads1.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "lfo.volume": "In this sound: the interval of the trill. Small changes make a big difference.",
+        "lfo.rate": "In this sound: the speed of the trill.",
+        "lfo.shape": "In this sound: square makes a trill; triangle would make a siren-like wobble."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.volume",
+          "try": "Raise to 5",
+          "hear": "The trill widens towards a leap of several notes."
+        },
+        {
+          "id": "mod.vco1Off",
+          "try": "Switch to Off",
+          "hear": "Only VCO 2 trills, against a steady VCO 1: a two-note chord that flickers."
+        }
+      ]
+    },
+    {
+      "id": "kobol-sequencer",
+      "name": "Sequencer Blips",
+      "ref": "In the style of Tangerine Dream’s 70s sequences",
+      "artist": "Tangerine Dream",
+      "tags": ["seq", "electronic", "70s"],
+      "level": 2,
+      "blurb": "Short, bright blips for fast repeating patterns.",
+      "how": "Both envelopes have no sustain, so each note is a short blip whatever its length. The filter sits low with some resonance, and ADS 2 pings it open on every note. VCO 2 a fifth up gives the blips a hollow, organ-like colour.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.2],
+          [0.25, 57, 0.2],
+          [0.5, 52, 0.2],
+          [0.75, 57, 0.2],
+          [1, 45, 0.2],
+          [1.25, 55, 0.2],
+          [1.5, 52, 0.2],
+          [1.75, 55, 0.2],
+          [2, 43, 0.2],
+          [2.25, 55, 0.2],
+          [2.5, 50, 0.2],
+          [2.75, 55, 0.2],
+          [3, 43, 0.2],
+          [3.25, 52, 0.2],
+          [3.5, 50, 0.2],
+          [3.75, 52, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Saw with a fifth above",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators) a fifth apart give each blip a hollow, organ-like colour.\n- VCO 1 WAVEFORM 5: sawtooth, the bright main tone.\n- VCO 2 WAVEFORM 6.7: a square, hollow and woody.\n- VCO 2 FREQUENCY 5.6 (+7 st): seven semitones up, a fifth. There is no octave switch, so small moves of this knob are big intervals. Try 6 for an octave instead.\n- VOLUME 7.5 and 4.5: each VCO has its own VCA (voltage-controlled amplifier). The fifth stays quieter so it colours the note rather than competing.\n- Listen for: an open, organ-like interval on every key.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 6.7,
+            "vco2.freq": 5.58,
+            "vca1.level": 7.5,
+            "vca2.level": 4.5
+          }
+        },
+        {
+          "title": "Resonant, low filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits low with plenty of resonance, ready for the envelope to ping it.\n- VCF FREQ 3.8 (221 Hz): dark between notes.\n- RESONANCE 5.5: a strong peak at the cutoff. When the envelope sweeps it, it gives each blip a tick.\n- KEYB CTRL 1 (100 %): keyboard control. The cutoff follows the notes, so the pattern stays even in brightness.\n- Listen for: a dull, slightly ringing tone for now.",
+          "set": { "vcf.freq": 3.8, "vcf.res": 5.5, "vcf.kbd": 1 }
+        },
+        {
+          "title": "Blip envelopes",
+          "module": "env",
+          "why": "Both ADS (attack, decay, sustain) envelopes lose their sustain, so each note is a short blip however long the key is held. ADS 2 moves the filter; ADS 1 the loudness.\n- ADS CONTROL 2.8 (+3.9 oct): ADS 2 pings the cutoff nearly four octaves up on each note.\n- ADS 2 ATTACK 1, DECAY 4.4, SUSTAIN 0: a 2 ms rise and a 39 ms fall. A very short, bright flick. Turn DECAY slowly while a pattern plays to change the brightness of every blip.\n- ADS 1 ATTACK 1, DECAY 5, SUSTAIN 0: a 2 ms rise and a 65 ms fall. Each note lasts only as long as its decay. Keep it shorter than the gap between notes so they stay separate.\n- Listen for: short, bright blips with a resonant tick at the front, whatever the note length.",
+          "set": {
+            "vcf.env": 2.8,
+            "ads2.attack": 1,
+            "ads2.decay": 4.4,
+            "ads2.sustain": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 5,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "ads2.decay": "In this sound: the brightness of each blip. Turn it slowly while the pattern plays.",
+        "ads1.decay": "In this sound: the length of each note. Shorter than the gap between notes keeps them separate.",
+        "vco2.freq": "In this sound: a fifth up. Try 6 for an octave instead.",
+        "vcf.res": "In this sound: the tick at the front of each note."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Sweep from 3.5 to 6",
+          "hear": "The pattern opens from muted ticks to bright, ringing notes."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Slowly raise to 6",
+          "hear": "The same build from the filter rather than the envelope."
+        }
+      ]
+    },
+    {
+      "id": "kobol-voice-mod",
+      "name": "Envelope-Shaped Pulse",
+      "ref": "Pulse-width modulation from the filter envelope",
+      "artist": "Classic technique",
+      "tags": ["keys", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "An electric-piano-like tone whose pulse width sweeps as each note starts.",
+      "how": "With the PWM switch on ADS, the filter envelope moves the pulse width as well as the cutoff. Each note starts thin and nasal and relaxes as ADS 2 falls, which sounds like a struck, then settling, tone.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [0, 64, 0.9],
+          [1, 62, 0.9],
+          [2, 67, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse waves",
+          "module": "osc",
+          "why": "Both VCOs (voltage-controlled oscillators) go to the pulse end of their WAVEFORM knobs, the only place where the pulse width can be moved.\n- WAVEFORM 10 on both: a narrow pulse, with its width handed to the PWM source switch.\n- VCO 2 FREQUENCY 6 (+12 st): an octave up.\n- VOLUME 7 and 4: each VCO has its own VCA (voltage-controlled amplifier). The upper octave is quieter, for sparkle.\n- Listen for: a thin, reedy tone with a quiet octave on top.",
+          "set": {
+            "vco1.wave": 10,
+            "vco2.wave": 10,
+            "vco2.freq": 6,
+            "vca1.level": 7,
+            "vca2.level": 4
+          }
+        },
+        {
+          "title": "ADS 2 on the pulse width",
+          "module": "mod",
+          "why": "PWM (pulse-width modulation) changes the width of the pulse while it plays. The switch chooses what does the moving; here it is the filter envelope rather than the LFO.\n- PWM source ADS: ADS 2, the filter envelope, now moves the pulse width of both VCOs on every note.\n- LFO VOLUME 0: the LFO (low-frequency oscillator) is kept out, so there is no vibrato and no LFO shimmer.\n- Listen for: a quick change of tone at the very start of each note. ADS 2 is still on its short starting shape; the next step sets it.",
+          "set": { "mod.pwm": "ads", "lfo.volume": 0 }
+        },
+        {
+          "title": "A struck envelope",
+          "module": "env",
+          "why": "ADS 2, an ADS (attack, decay, sustain) envelope, now shapes both the pulse width and the filter, like a struck note that starts nasal and settles.\n- ADS 2 ATTACK 1, DECAY 6, SUSTAIN 2: a 2 ms rise and a 150 ms fall. A fast strike, then the width relaxes over about 150 ms to a low held level.\n- ADS CONTROL 1.5 (+2.1 oct): the same envelope opens the filter about two octaves on the strike, and closes it again as it falls.\n- VCF FREQ 5.5 (715 Hz), RESONANCE 1: the VCF (voltage-controlled filter) rests fairly low, taking the edge off the thin pulse.\n- Listen for: each note starts thin and nasal and relaxes into a rounder tone. Flip the PWM switch to LFO and the sweep is gone.",
+          "set": {
+            "ads2.attack": 1,
+            "ads2.decay": 6,
+            "ads2.sustain": 2,
+            "vcf.env": 1.5,
+            "vcf.freq": 5.5,
+            "vcf.res": 1
+          }
+        },
+        {
+          "title": "Piano-like loudness",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA (voltage-controlled amplifier), makes each note fall away while held, like a struck string.\n- ATTACK 1 (2 ms): instant, for a hammer-like start.\n- DECAY 7 (360 ms), SUSTAIN 3: the level drops over about a third of a second to a low held level. DECAY is also the release.\n- Listen for: an electric-piano shape: bright strike, quick fall, quiet tail. Raise SUSTAIN to 8 and it turns into more of an organ.",
+          "set": { "ads1.attack": 1, "ads1.decay": 7, "ads1.sustain": 3 }
+        }
+      ],
+      "context": {
+        "mod.pwm": "In this sound: ADS sends the filter envelope to the pulse width. On LFO the sweep would become a steady shimmer.",
+        "ads2.decay": "In this sound: how long the pulse width takes to settle after each note starts.",
+        "vco1.wave": "In this sound: at 10, where the PWM switch is heard."
+      },
+      "tweaks": [
+        {
+          "id": "mod.pwm",
+          "try": "Switch to Both and raise LFO VOLUME to 3",
+          "hear": "A shimmer on top of the envelope sweep, with a little vibrato."
+        },
+        {
+          "id": "ads2.decay",
+          "try": "Raise to 8",
+          "hear": "A slow, wah-like sweep through every note."
+        }
+      ]
+    },
+    {
+      "id": "kobol-drone",
+      "name": "Voltage Drone",
+      "ref": "Using the voltage processor to hold the envelope open",
+      "artist": "Classic technique",
+      "tags": ["drone", "ambient", "modular"],
+      "level": 3,
+      "blurb": "A drone that sounds with no key held, while the LFO slowly moves its tone.",
+      "how": "The voltage processor, with nothing in IN 1, puts out a steady voltage. Patched into GATE IN it holds both envelopes open, so the Kobol drones. LFO OUT 2 into VCO 2 WAVEFORM moves one oscillator’s shape slowly under a steady VCO 1.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 7.8],
+          [8, 36, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A steady gate from the voltage processor",
+          "module": "env",
+          "why": "The voltage processor is a small utility that adds and scales control voltages. With nothing in its IN 1 it puts out a steady voltage, and patched into GATE IN that holds both envelopes open, so the Kobol sounds with no key held.\n- Cable voltage processor OUT → GATE IN: GATE IN fires both envelopes from outside; a steady high voltage keeps them open.\n- IN 1 GAIN 1, OUT GAIN 1: unpatched, IN 1 carries +10 V. At these settings OUT passes it on in full, high enough to hold the gate.\n- Listen for: a constant tone with no key down. Turn OUT GAIN to 0 and the gate goes low, so the drone fades out over ADS 1’s DECAY.",
+          "set": { "vp.in1": 1, "vp.out": 1 },
+          "cables": [["j.vpOut", "j.gateIn"]]
+        },
+        {
+          "title": "Two low oscillators",
+          "module": "osc",
+          "why": "Two low VCOs (voltage-controlled oscillators) a fifth apart make the body of the drone.\n- VCO 1 FREQUENCY 4 (−12 st), WAVEFORM 5: a sawtooth an octave down.\n- VCO 2 FREQUENCY 4.6 (−5 st), WAVEFORM 5: another sawtooth, seven semitones above VCO 1: a fifth.\n- VOLUME 7 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- VCO 2 BEAT 0.4 (+4 cents): a slow beat between the two.\n- Listen for: a deep, open, buzzing fifth that never stops.",
+          "set": {
+            "vco1.freq": 4,
+            "vco1.wave": 5,
+            "vco2.freq": 4.58,
+            "vco2.wave": 5,
+            "vca1.level": 7,
+            "vca2.level": 6,
+            "vco2.beat": 0.4
+          }
+        },
+        {
+          "title": "Move VCO 2’s shape",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is patched into VCO 2’s WAVEFORM input, so VCO 2 slowly changes shape under a steady VCO 1.\n- Cable LFO OUT 2 → VCO 2 WAVEFORM: OUT 2 is the LFO at full level, sweeping VCO 2 along its triangle-to-pulse path.\n- LFO RATE 2.2 (0.08 Hz): very slow, about twelve seconds a cycle.\n- LFO VOLUME 0: this knob is the vibrato depth on both VCOs. At 0 there is none, and LFO OUT 2 does not depend on it.\n- Listen for: the upper voice slowly turning soft and hollow, then bright and nasal, over many seconds.",
+          "set": { "lfo.rate": 2.2, "lfo.volume": 0 },
+          "cables": [["j.lfoOut2", "j.vco2Wave"]]
+        },
+        {
+          "title": "Dark and resonant",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) goes low with resonance, so the shape change is heard as a slow sweep. ADS 1, the loudness envelope, gets a soft start.\n- VCF FREQ 4.6 (384 Hz): dark, cutting most of the buzz.\n- RESONANCE 5: a clear peak at the cutoff. It picks out harmonics as VCO 2 changes shape, so the movement sounds like a slow filter sweep.\n- ADS CONTROL 0 (off): no filter envelope.\n- ADS 1 ATTACK 5 (65 ms), SUSTAIN 10: a soft fade-in when the gate opens, then full level for as long as the voltage processor holds it.\n- Listen for: a dark, slowly moving drone with a ringing edge that rises and falls.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 5,
+            "vcf.env": 0,
+            "ads1.attack": 5,
+            "ads1.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "vp.out": "In this sound: turn it to 0 and the gate goes low, so the drone fades out over ADS 1’s DECAY.",
+        "lfo.rate": "In this sound: how slowly VCO 2 changes shape.",
+        "vcf.res": "In this sound: makes the shape change sound like a slow filter sweep.",
+        "vco2.freq": "In this sound: a fifth above VCO 1."
+      },
+      "tweaks": [
+        {
+          "id": "vp.out",
+          "try": "Turn to 0 and back",
+          "hear": "The drone fades out and swells back in: a manual gate."
+        },
+        { "id": "vcf.res", "try": "Raise to 8", "hear": "The slow movement starts to whistle." }
+      ]
+    },
+    {
+      "id": "kobol-zap",
+      "name": "Laser Zap",
+      "ref": "A classic synth sound effect",
+      "artist": "Classic technique",
+      "tags": ["fx", "electronic", "retro"],
+      "level": 1,
+      "blurb": "A falling “pew” on every note.",
+      "how": "ADS 2 OUT patched into CV IN 1V/OCT pushes the pitch of both VCOs up at the start of each note, and the pitch falls as ADS 2 decays. The filter follows the pitch through KEYB CTRL, so the zap stays bright all the way down.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.3],
+          [1, 67, 0.3],
+          [1.5, 60, 0.3],
+          [2.5, 72, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright square",
+          "module": "osc",
+          "why": "A square wave is bright and hollow, good raw material for a laser effect. VCO stands for voltage-controlled oscillator, the part that makes the raw tone.\n- VCO 1 WAVEFORM 6.7: square, on the Kobol’s smooth triangle-to-pulse knob.\n- VCO 1 VOLUME 8: its level into the filter through its own VCA (voltage-controlled amplifier).\n- VCO 2 VOLUME 0: off.\n- Listen for: a plain, hollow square tone.",
+          "set": { "vco1.wave": 6.7, "vca1.level": 8, "vca2.level": 0 }
+        },
+        {
+          "title": "ADS 2 bends the pitch",
+          "module": "env",
+          "why": "ADS 2, an ADS (attack, decay, sustain) envelope, is patched to the main pitch input, so it throws both VCOs’ pitch up at the start of each note and lets it fall.\n- Cable ADS 2 OUT → CV IN 1V/OCT: CV means control voltage. This input moves the pitch of both VCOs and the filter tracking, one volt per octave.\n- ATTACK 1 (2 ms): the pitch jumps up at once.\n- DECAY 4.8 (55 ms): how long the swoop down takes. Short is a zap; long is a falling bomb.\n- SUSTAIN 0: the pitch falls all the way back to the note played.\n- ADS CONTROL 0 (off): ADS 2 is used for pitch only, not the filter.\n- Listen for: a “pew” on every note. Turn DECAY up to 8 and it stretches into a long fall.",
+          "set": { "ads2.attack": 1, "ads2.decay": 4.8, "ads2.sustain": 0, "vcf.env": 0 },
+          "cables": [["j.ads2Out", "j.cvIn"]]
+        },
+        {
+          "title": "Short, bright notes",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) is part open and follows the swoop, and ADS 1 makes each zap short.\n- VCF FREQ 6.5 (1.4 kHz), RESONANCE 3: a fairly bright filter with a slight ring.\n- KEYB CTRL 1 (100 %): keyboard control. CV IN also drives the filter tracking, so the cutoff follows the swooping pitch and the zap stays bright all the way down.\n- ADS 1 ATTACK 1, DECAY 6.2, SUSTAIN 0: a 2 ms rise and a 180 ms fall. ADS 1 is the loudness envelope. Each note fades out over about 180 ms, even if held.\n- Listen for: short, bright zaps. Turn KEYB CTRL to 0 and the tail goes dull as the pitch drops.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.res": 3,
+            "vcf.kbd": 1,
+            "ads1.attack": 1,
+            "ads1.decay": 6.2,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "ads2.decay": "In this sound: how long the swoop takes. Short is a zap; long is a falling bomb.",
+        "vcf.kbd": "In this sound: the cutoff follows the swooping pitch, so the zap stays bright."
+      },
+      "tweaks": [
+        { "id": "ads2.decay", "try": "Raise to 7", "hear": "A long, falling whistle." },
+        { "id": "vcf.res", "try": "Raise to 7", "hear": "A sharper, more metallic zap." }
+      ]
+    },
+    {
+      "id": "kobol-fifths",
+      "name": "Fifths Lead",
+      "ref": "In the style of 70s prog-rock leads",
+      "artist": "Classic technique",
+      "tags": ["lead", "prog", "70s"],
+      "level": 1,
+      "blurb": "A big lead with a fifth built into every note.",
+      "how": "VCO 2 tuned a fifth above VCO 1 plays a parallel interval under every note. Two sawtooths through a part-open filter with a moderate envelope make it bold and brassy.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.9],
+          [1, 60, 0.4],
+          [1.5, 62, 0.9],
+          [2.5, 64, 0.4],
+          [3, 62, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fifth above",
+          "module": "osc",
+          "why": "VCO 2 is tuned a fifth above VCO 1, so every note plays a parallel interval. The VCOs are the voltage-controlled oscillators that make the raw tone.\n- WAVEFORM 5 on both: sawtooth, bold and buzzy.\n- VCO 2 FREQUENCY 5.6 (+7 st): seven semitones up. The knob has no octave switch and each step is about an octave, so tune it by ear until the beating stops. 5.42 would be a fourth, 6 an octave.\n- VOLUME 8 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer. The fifth sits under the root, so the melody note stays clear.\n- Listen for: a thick, open, organ-like tone. Beating means the fifth is slightly out.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 5,
+            "vco2.freq": 5.58,
+            "vca1.level": 8,
+            "vca2.level": 6
+          }
+        },
+        {
+          "title": "A bold filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits part way up, and ADS 2, the filter envelope (attack, decay, sustain), adds a bite to each note.\n- VCF FREQ 5.2 (581 Hz), RESONANCE 2.5: a warm resting tone with a slight edge.\n- ADS CONTROL 1.8 (+2.5 oct): the bite, about two and a half octaves of opening at the peak.\n- ADS 2 ATTACK 1, DECAY 5.6: a 2 ms rise and a 110 ms fall. The opening is instant and falls back in about a tenth of a second.\n- ADS 2 SUSTAIN 4: settles under half way, so held notes keep some brightness.\n- Listen for: a brassy bite at the start of each note. Turn ADS CONTROL to 0 and the lead goes flat and dull.",
+          "set": {
+            "vcf.freq": 5.2,
+            "vcf.res": 2.5,
+            "vcf.env": 1.8,
+            "ads2.attack": 1,
+            "ads2.decay": 5.6,
+            "ads2.sustain": 4
+          }
+        },
+        {
+          "title": "Held notes",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, holds notes at full level so long notes sing.\n- ATTACK 1.5 (3 ms): all but instant, with just enough fade to take off any click.\n- DECAY 5.5 (100 ms): with SUSTAIN at full it only works as the release, so notes stop about a tenth of a second after you let go.\n- SUSTAIN 10: full level while held.\n- Listen for: long notes that stay full. Play a slow melody and hear the fifths move in parallel.",
+          "set": { "ads1.attack": 1.5, "ads1.decay": 5.5, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: a fifth up. 5.42 would be a fourth; 6 an octave.",
+        "vcf.env": "In this sound: the bite at the start of each note."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Set to 6",
+          "hear": "An octave instead of a fifth: less dramatic, more solid."
+        },
+        {
+          "id": "vco2.sync",
+          "try": "Switch on",
+          "hear": "VCO 2 locks to VCO 1 and the fifth becomes a harsh, fixed tone colour."
+        }
+      ]
+    },
+    {
+      "id": "kobol-perc",
+      "name": "Noise Snare",
+      "ref": "Synth percussion from noise",
+      "artist": "Classic technique",
+      "tags": ["perc", "electronic", "drums"],
+      "level": 2,
+      "blurb": "A short, snappy snare built from noise and a triangle.",
+      "how": "NOISE OUT into VCF AUDIO IN gives the rattle, and a triangle from VCO 1 gives the body. Both envelopes are very short with no sustain, so each note is a crack.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.1],
+          [3, 60, 0.1],
+          [3.5, 60, 0.1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise into the filter",
+          "module": "osc",
+          "why": "The rattle of a snare comes from noise. The Kobol’s noise generator is not wired into the sound and has no level knob, so a cable brings it into the filter.\n- Cable NOISE OUT → VCF AUDIO IN: feeds the noise into the VCF (voltage-controlled filter) alongside the oscillators.\n- Noise colour white: bright and snappy. Pink would be softer.\n- Listen for: a steady hiss while a key is held, on top of the starting sawtooth from VCO 1.",
+          "set": { "noise.colour": "white" },
+          "cables": [["j.noise", "j.vcfIn"]]
+        },
+        {
+          "title": "A triangle for the body",
+          "module": "osc",
+          "why": "A triangle under the noise gives the drum its body, the tuned thud under a snare’s rattle. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 0: a triangle, soft and round, on the Kobol’s smooth triangle-to-pulse knob.\n- VCO 1 VOLUME 5: fairly quiet through its own VCA (voltage-controlled amplifier), so the noise leads. Higher gives a more tuned, tom-like drum.\n- VCO 2 VOLUME 0: off.\n- Listen for: a soft tone beneath the hiss in place of the buzzy saw.",
+          "set": { "vco1.wave": 0, "vca1.level": 5, "vca2.level": 0 }
+        },
+        {
+          "title": "Short envelopes",
+          "module": "amp",
+          "why": "Both ADS (attack, decay, sustain) envelopes are made very short with no sustain, so each note becomes a crack. ADS 1 sets the loudness; ADS 2 flicks the filter.\n- ADS 1 ATTACK 1, DECAY 5.4, SUSTAIN 0: a 2 ms rise and a 92 ms fall. The length of the crack, under a tenth of a second.\n- ADS 2 ATTACK 1, DECAY 4.6, SUSTAIN 0: a 2 ms rise and a 46 ms fall. A quicker flick than the loudness, so the very front is brightest.\n- ADS CONTROL 2 (+2.8 oct): how far that flick opens the filter.\n- VCF FREQ 7 (2.0 kHz), RESONANCE 1.5: fairly open, so the rattle stays bright.\n- Listen for: a short, snappy hit with no tail. Lengthen ADS 1 DECAY for a looser, ringing snare.",
+          "set": {
+            "ads1.attack": 1,
+            "ads1.decay": 5.4,
+            "ads1.sustain": 0,
+            "ads2.attack": 1,
+            "ads2.decay": 4.6,
+            "ads2.sustain": 0,
+            "vcf.env": 2,
+            "vcf.freq": 7,
+            "vcf.res": 1.5
+          }
+        }
+      ],
+      "context": {
+        "ads1.decay": "In this sound: the length of the crack.",
+        "vca1.level": "In this sound: the tone under the noise. Higher gives a more tuned tom-like drum.",
+        "noise.colour": "In this sound: white is snappy; pink is softer."
+      },
+      "tweaks": [
+        { "id": "ads1.decay", "try": "Raise to 6.5", "hear": "A longer, splashier hit." },
+        {
+          "id": "vca1.level",
+          "try": "Raise to 8 and play low notes",
+          "hear": "A tom-tom with a clear pitch."
+        }
+      ]
+    },
+    {
+      "id": "kobol-inverse-filter",
+      "name": "Reverse Swell",
+      "ref": "Using the bipolar ADS CONTROL",
+      "artist": "Classic technique",
+      "tags": ["pad", "fx", "modular"],
+      "level": 2,
+      "blurb": "Each note starts dark and brightens as it fades.",
+      "how": "ADS CONTROL turned left of centre makes ADS 2 close the filter instead of opening it. The filter rests open and each new note ducks it, then it opens again as ADS 2 falls. It sounds like a note played backwards.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.8],
+          [2, 58, 1.8],
+          [4, 62, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths",
+          "module": "osc",
+          "why": "A full, bright source, so the filter has something to reveal as it opens. The VCOs (voltage-controlled oscillators) make the raw tone.\n- WAVEFORM 5 on both: sawtooth, rich in harmonics.\n- VOLUME 7 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- VCO 2 BEAT 1 (+10 cents): VCO 2 slightly sharp, so the two beat and thicken.\n- Listen for: a bright, buzzy, slightly chorused tone.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 5,
+            "vca1.level": 7,
+            "vca2.level": 6,
+            "vco2.beat": 1
+          }
+        },
+        {
+          "title": "Open filter, negative envelope",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) rests open and the envelope amount is turned the other way, so each note pulls the cutoff down instead of up.\n- VCF FREQ 8 (4.0 kHz): high, so the resting point is bright.\n- RESONANCE 3: a small peak that makes the movement easier to hear.\n- ADS CONTROL −3 (−4.2 oct): on the Kobol this knob is off at the centre. Left of centre ADS 2 closes the filter, here by about four octaves at the peak. Right of centre would give a normal sweep.\n- Listen for: each note now starts duller. ADS 2 is still on its short starting shape, so the effect is quick.",
+          "set": { "vcf.freq": 8, "vcf.res": 3, "vcf.env": -3 }
+        },
+        {
+          "title": "A slow ADS 2",
+          "module": "env",
+          "why": "ADS 2, the filter envelope (attack, decay, sustain), is slowed down so the brightness comes back gradually.\n- ATTACK 1 (2 ms): the filter snaps shut at the start of the note.\n- DECAY 7.5 (550 ms): it opens again over about half a second. Longer makes the brightness return more slowly.\n- SUSTAIN 2: it settles at a fifth of the sweep, so held notes end up close to the bright resting cutoff.\n- Listen for: a note that starts muffled and brightens as it goes, like a sound played backwards.",
+          "set": { "ads2.attack": 1, "ads2.decay": 7.5, "ads2.sustain": 2 }
+        },
+        {
+          "title": "Sustained loudness",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, holds the note so you can hear the filter open.\n- ATTACK 2 (5 ms): a quick start with no click.\n- DECAY 7 (360 ms): also the release, so notes fade over about a third of a second when you let go.\n- SUSTAIN 10: full level while held, keeping the note there while the brightness returns.\n- Listen for: hold a chord and hear it bloom from dark to bright. Short notes stay dark.",
+          "set": { "ads1.attack": 2, "ads1.decay": 7, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: left of centre, so ADS 2 closes the filter. Turn it right of centre for a normal sweep.",
+        "ads2.decay": "In this sound: how slowly the brightness returns."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Turn to +3",
+          "hear": "A normal filter sweep: bright at the start, darker as it fades."
+        },
+        {
+          "id": "ads2.attack",
+          "try": "Raise to 5",
+          "hear": "The filter closes gradually, then opens: a slow dip in each note."
+        }
+      ]
+    },
+    {
+      "id": "kobol-ring",
+      "name": "Metallic Clang",
+      "ref": "Audio-rate modulation of VCO 1 by VCO 2",
+      "artist": "Classic technique",
+      "tags": ["fx", "modular", "bell"],
+      "level": 3,
+      "blurb": "A clangy, bell-like tone from one oscillator shaking another’s pitch.",
+      "how": "VCO 2 OUT patched into VCO 1 FREQ moves VCO 1’s pitch at audio rate: frequency modulation. That adds new, inharmonic overtones, heard as a metallic clang. Taking VCO 2 out at its OUT jack also removes it from the filter, so only the modulated VCO 1 is heard.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.8],
+          [2, 67, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO 2 as a modulator",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators), both triangles. VCO 2 will shake VCO 1’s pitch; VCO 1 is the one you will hear.\n- WAVEFORM 0 on both: triangles, so the new overtones come from the modulation rather than the waveforms.\n- VCO 2 FREQUENCY 6.3 (+15.6 st): not a whole number of octaves, so the overtones it creates will not be in harmony. Whole octaves sound tuned; in between sounds like metal.\n- VOLUME 8 on VCO 1, 5 on VCO 2: each VCO has its own VCA (voltage-controlled amplifier). For now both are heard as a plain interval.\n- Listen for: two soft tones at an odd interval.",
+          "set": {
+            "vco2.wave": 0,
+            "vco2.freq": 6.3,
+            "vca2.level": 5,
+            "vco1.wave": 0,
+            "vca1.level": 8
+          }
+        },
+        {
+          "title": "Patch it into VCO 1’s pitch",
+          "module": "mod",
+          "why": "FM (frequency modulation) means one oscillator moving another’s pitch at audio rate. That adds new, inharmonic overtones, heard as a metallic clang.\n- Cable VCO 2 OUT → VCO 1 FREQ: carries VCO 2’s audio into VCO 1’s pitch input. On the Kobol a cable in VCO 2 OUT also takes VCO 2 out of the filter’s input, so only the modulated VCO 1 is heard.\n- Listen for: the plain interval turning into a clangy, bell-like tone. Sweep VCO 2 FREQUENCY slowly to hear the clang change colour; at 6 or 7 it sounds tuned.",
+          "cables": [["j.vco2Out", "j.vco1Freq"]]
+        },
+        {
+          "title": "A bell envelope",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) is left fairly open, and ADS 1, the loudness envelope (attack, decay, sustain), is shaped like a struck bell.\n- VCF FREQ 7.5 (2.8 kHz), RESONANCE 0: open enough for the metallic overtones to come through, with no added peak.\n- ADS CONTROL 0 (off): no filter envelope.\n- ADS 1 ATTACK 1 (2 ms): instant, like a strike.\n- ADS 1 DECAY 8 (840 ms), SUSTAIN 0: a long fade to silence even while held. DECAY is also the release.\n- Listen for: a struck clang that rings away over nearly a second.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.res": 0,
+            "vcf.env": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 8,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the ratio between the two VCOs sets the clang. Whole octaves sound tuned; in between sounds like metal.",
+        "vco1.wave": "In this sound: a triangle, so the overtones come from the modulation rather than the waveform."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Move slowly between 5.5 and 7",
+          "hear": "The clang changes colour from bell to gong to harsh metal."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 5",
+          "hear": "A sawtooth modulator: a rougher, more buzzy clang."
+        }
+      ]
+    },
+    {
+      "id": "kobol-wind",
+      "name": "Wind Howl",
+      "ref": "Filtered noise as weather",
+      "artist": "Classic technique",
+      "tags": ["fx", "ambient", "noise"],
+      "level": 1,
+      "blurb": "No oscillators: resonant filtered noise that rises and falls like wind.",
+      "how": "NOISE OUT into VCF AUDIO IN with both VCOs off. High resonance makes the filter pick a band out of the noise, heard as a whistling pitch. LFO OUT 1 into VCF FREQUENCY moves it slowly up and down.",
+      "phrase": { "bpm": 40, "loop": true, "steps": [[0, 60, 7.8]] },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "osc",
+          "why": "No oscillators here: both VCO (voltage-controlled oscillator) levels go to 0 and pink noise becomes the only source. The Kobol’s noise has no level knob and is not wired in, so a cable brings it to the filter.\n- VCO 1 VOLUME 0, VCO 2 VOLUME 0: each VCO has its own VCA (voltage-controlled amplifier); at 0 both are silent.\n- Noise colour pink: less top end than white, like weather. White sounds more like steam.\n- Cable NOISE OUT → VCF AUDIO IN: sends the noise into the filter.\n- Listen for: a soft rush of noise while a key is held.",
+          "set": { "vca1.level": 0, "vca2.level": 0, "noise.colour": "pink" },
+          "cables": [["j.noise", "j.vcfIn"]]
+        },
+        {
+          "title": "A whistling filter",
+          "module": "filter",
+          "why": "High resonance makes the VCF (voltage-controlled filter) pick a narrow band out of the noise, heard as a whistling pitch.\n- VCF FREQ 5.8 (879 Hz): the centre of the whistle.\n- RESONANCE 8: a strong peak. Lower for surf, higher for a howling gale.\n- ADS CONTROL 0 (off): no filter envelope.\n- KEYB CTRL 0 (0 %): keyboard control off, so the wind whistles at the same pitch whichever key you play.\n- Listen for: the rush turning into a hollow, whistling tone.",
+          "set": { "vcf.freq": 5.8, "vcf.res": 8, "vcf.env": 0, "vcf.kbd": 0 }
+        },
+        {
+          "title": "A slow sweep",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is patched to the cutoff, so the whistle rises and falls slowly like gusts.\n- Cable LFO OUT 1 → VCF FREQUENCY: OUT 1 is the scaled LFO, so LFO VOLUME sets how far the wind rises and falls.\n- LFO RATE 2.4 (0.09 Hz): very slow, about eleven seconds a cycle.\n- LFO VOLUME 7 (70 %): a wide sweep. It also sends vibrato to the VCOs, but they are silent, so VCO 1 MOD OFF does not matter here.\n- LFO WAVEFORM triangle: smooth rises and falls.\n- Listen for: hold a key for twenty seconds and hear the whistle climb and fall.",
+          "set": { "lfo.rate": 2.4, "lfo.volume": 7, "lfo.shape": "tri" },
+          "cables": [["j.lfoOut1", "j.vcfFreq"]]
+        },
+        {
+          "title": "Gusts",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope (attack, decay, sustain) for the output VCA, makes each gust fade in and out.\n- ATTACK 7 (360 ms): a slow fade-in.\n- DECAY 8 (840 ms): also the release, so the wind dies away over nearly a second when you let go.\n- SUSTAIN 10: full level while held.\n- Listen for: gusts that rise with each key and fade after it. Play long notes with gaps between them for a stormy night.",
+          "set": { "ads1.attack": 7, "ads1.decay": 8, "ads1.sustain": 10 }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: how whistly the wind is. Lower for surf, higher for a howling gale.",
+        "lfo.volume": "In this sound: how far the wind rises and falls.",
+        "noise.colour": "In this sound: pink sounds like weather; white like steam."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.res",
+          "try": "Lower to 3",
+          "hear": "The whistle goes and you are left with distant surf."
+        },
+        { "id": "lfo.rate", "try": "Raise to 4", "hear": "A more restless, gusty wind." }
+      ]
+    },
+    {
+      "id": "kobol-tine-piano",
+      "name": "Tine Electric Piano",
+      "ref": "In the style of a 1970s Rhodes electric piano",
+      "artist": "Classic technique",
+      "tags": ["keys", "soul", "70s"],
+      "level": 2,
+      "blurb": "A soft, bell-edged electric piano: a round body with a bright ding at the start of each note.",
+      "how": "A Rhodes note is a soft, almost pure tone with a short metallic ding on top. Here VCO 1 is the body, a triangle, and VCO 2 two octaves up is the ding. VCO 2’s VOLUME is at 0 and ADS 2 OUT is patched to its VOLUME input, so VCO 2 is only heard for a moment when each note starts. A mixer knob could not do that: it takes the Kobol’s VCA per oscillator.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.9],
+          [2, 71, 1.4],
+          [3.5, 69, 0.4],
+          [4, 67, 1.9],
+          [6, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle for the body",
+          "module": "osc",
+          "why": "VCO 1 is the body of the note: a soft, almost pure tone, like the round sound of a struck tine. VCO stands for voltage-controlled oscillator, the part that makes the raw tone.\n- VCO 1 WAVEFORM 0.4: almost fully left, a triangle, with only a few soft overtones.\n- VCO 1 VOLUME 7.5: its level into the filter through its own VCA (voltage-controlled amplifier). The Kobol has no mixer; each VCO has a VCA.\n- VCO 2 VOLUME 0: VCO 2 is kept silent for now.\n- Listen for: a mellow, flute-like tone: the body without the ding.",
+          "set": { "vco1.wave": 0.4, "vca1.level": 7.5, "vca2.level": 0 }
+        },
+        {
+          "title": "VCO 2 two octaves up",
+          "module": "osc",
+          "why": "VCO 2 is set up as the ding, two octaves above the body. It stays silent until the next step opens its VCA on each note.\n- VCO 2 FREQUENCY 7 (+24 st): each knob step is about an octave, so 7 is two octaves above VCO 1. Try 6.58 (an octave and a fifth) for a glassier ding.\n- VCO 2 WAVEFORM 3: towards the ramp, for a little edge. Towards triangle is softer, towards sawtooth harder.\n- Listen for: no change yet, as VCO 2’s VOLUME is still 0.",
+          "set": { "vco2.freq": 7, "vco2.wave": 3 }
+        },
+        {
+          "title": "ADS 2 strikes the tine",
+          "module": "env",
+          "why": "ADS 2, an ADS (attack, decay, sustain) envelope, is patched to VCO 2’s VCA, so VCO 2 sounds only for a moment as each note starts. A mixer knob could not do that; it takes the Kobol’s VCA per oscillator.\n- Cable ADS 2 OUT → VCO 2 VOLUME: the envelope opens VCO 2’s VCA on top of its knob at 0.\n- ATTACK 1, DECAY 6.5, SUSTAIN 0: a 2 ms rise and a 230 ms fall. A fast strike, gone in about a quarter of a second. Longer DECAY turns the tine into a bell.\n- ADS CONTROL 0.6 (+0.8 oct): the same envelope also lifts the filter a little on each strike.\n- Listen for: a bright ding on top of every note, then just the round body.",
+          "set": { "ads2.attack": 1, "ads2.decay": 6.5, "ads2.sustain": 0, "vcf.env": 0.6 },
+          "cables": [["j.ads2Out", "j.vco2Vol"]]
+        },
+        {
+          "title": "A piano-like fade",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) is set to let the ding through, and ADS 1, the loudness envelope, makes every note fade by itself like a struck key.\n- VCF FREQ 6.6 (1.5 kHz), RESONANCE 0: open enough for the ding. Lower it for a darker, felt-hammer piano.\n- KEYB CTRL 1 (100 %): keyboard control; the cutoff follows the notes so high keys are not dulled.\n- ADS 1 ATTACK 1 (2 ms): an instant strike.\n- ADS 1 DECAY 9 (2.0 s), SUSTAIN 0: the note fades over about two seconds even if held. DECAY is also the release, so it rings on after you let go.\n- Listen for: a Rhodes-like shape: a ding, a round body and a long fade.",
+          "set": {
+            "vcf.freq": 6.6,
+            "vcf.res": 0,
+            "vcf.kbd": 1,
+            "ads1.attack": 1,
+            "ads1.decay": 9,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "ads2.decay": "In this sound: how long the ding lasts. Longer and it turns from a tine into a bell.",
+        "vco2.freq": "In this sound: two octaves above the body. Try 6.58 (an octave and a fifth) for a glassier ding.",
+        "vco2.wave": "In this sound: the colour of the ding. Towards triangle it is softer, towards sawtooth harder.",
+        "vca2.level": "In this sound: at 0, so VCO 2 only sounds while ADS 2 opens its VCA.",
+        "ads1.decay": "In this sound: how long each note rings. It is also the release, so it rings on after you let go.",
+        "vcf.freq": "In this sound: high enough for the ding to come through. Lower it for a darker, felt-hammer piano."
+      },
+      "tweaks": [
+        {
+          "id": "vca2.level",
+          "try": "Raise to 2",
+          "hear": "A little of the upper tone stays under the whole note: a brighter, more bell-like piano."
+        },
+        {
+          "id": "ads2.decay",
+          "try": "Move between 5 and 7.5",
+          "hear": "From a short click to a long, chiming ding."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 2.5",
+          "hear": "The body gains a reedy edge, closer to a hard-played Rhodes."
+        }
+      ]
+    },
+    {
+      "id": "kobol-reed-piano",
+      "name": "Reed Piano",
+      "ref": "In the style of a 1970s Wurlitzer electric piano",
+      "artist": "Classic technique",
+      "tags": ["keys", "soul", "70s"],
+      "level": 2,
+      "blurb": "A warm electric piano that barks a little at the start of each note and settles into a pure tone.",
+      "how": "ADS 2 OUT is patched into VCO 1 WAVEFORM, so the envelope moves the shape of the wave rather than the filter. Each note starts part way between sawtooth and square, which gives the reedy bark of a Wurlitzer, and slides back to a soft triangle as ADS 2 falls. This is the Kobol’s own trick: most synths would need a filter envelope to do this, and it would not sound the same.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.9],
+          [1, 60, 0.4],
+          [1.5, 64, 0.9],
+          [2.5, 62, 0.4],
+          [3, 60, 0.9],
+          [4, 57, 1.9],
+          [6, 55, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Start from a triangle",
+          "module": "osc",
+          "why": "VCO 1, the voltage-controlled oscillator, is set to the soft shape each note will settle into.\n- VCO 1 WAVEFORM 1: just past the triangle, into the ramp. The Kobol’s WAVEFORM knob turns smoothly from triangle to pulse, and every position in between is usable. Turn it up and every note keeps more of its bark.\n- VCO 1 VOLUME 8: its level into the filter through its own VCA (voltage-controlled amplifier).\n- Listen for: a soft, nearly pure tone that holds steady like an organ for now.",
+          "set": { "vco1.wave": 1, "vca1.level": 8 }
+        },
+        {
+          "title": "ADS 2 moves the waveform",
+          "module": "env",
+          "why": "The Kobol’s own trick: ADS 2, an ADS (attack, decay, sustain) envelope, is patched to VCO 1’s WAVEFORM input, so it moves the shape of the wave rather than the filter.\n- Cable ADS 2 OUT → VCO 1 WAVEFORM: at its peak ADS 2 pushes the shape about five steps up the knob, into the buzzy region between sawtooth and square.\n- ATTACK 1 (2 ms): the bark is there at once.\n- DECAY 7 (360 ms): the shape slides back towards the triangle over about a third of a second. Longer keeps the bark for longer.\n- SUSTAIN 1: a little of the bark stays while the key is held.\n- ADS CONTROL 0 (off): ADS 2 leaves the filter alone.\n- Listen for: a reedy bark at the start of each note that relaxes into a pure tone.",
+          "set": { "ads2.attack": 1, "ads2.decay": 7, "ads2.sustain": 1, "vcf.env": 0 },
+          "cables": [["j.ads2Out", "j.vco1Wave"]]
+        },
+        {
+          "title": "A quiet octave above",
+          "module": "osc",
+          "why": "A quiet VCO 2 an octave up adds the upper shimmer a reed piano has.\n- VCO 2 FREQUENCY 6 (+12 st): an octave above VCO 1.\n- VCO 2 WAVEFORM 0: a triangle, clean and soft.\n- VCO 2 VOLUME 3: well below VCO 1, through its own VCA (voltage-controlled amplifier). At 0 the piano is plainer and woodier.\n- Listen for: a faint shine above each note. Turn VCO 2 VOLUME down and back up to hear what it adds.",
+          "set": { "vco2.freq": 6, "vco2.wave": 0, "vca2.level": 3 }
+        },
+        {
+          "title": "Open filter, falling notes",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) only trims the fizz, since the waveform does the shaping. ADS 1, the loudness envelope, lets each note sink while it is held.\n- VCF FREQ 6.8 (1.8 kHz), RESONANCE 1: fairly open, taking off only the harshest top of the bark.\n- KEYB CTRL 1 (100 %): keyboard control; the cutoff follows the notes so the tone is even across the keys.\n- ADS 1 ATTACK 1 (2 ms): an instant strike.\n- ADS 1 DECAY 8.6 (1.4 s), SUSTAIN 1.5: the note falls over more than a second to a quiet hum, as on a real reed piano. DECAY is also the release.\n- Listen for: bark, fall, then a quiet tail on held chords.",
+          "set": {
+            "vcf.freq": 6.8,
+            "vcf.res": 1,
+            "vcf.kbd": 1,
+            "ads1.attack": 1,
+            "ads1.decay": 8.6,
+            "ads1.sustain": 1.5
+          }
+        }
+      ],
+      "context": {
+        "vco1.wave": "In this sound: the resting shape. Turn it up and every note keeps more of the bark.",
+        "ads2.decay": "In this sound: how long the bark lasts before the tone turns pure.",
+        "ads2.sustain": "In this sound: a little of the bark stays while the key is held.",
+        "vca2.level": "In this sound: the octave shimmer. At 0 the piano is plainer and woodier.",
+        "ads1.sustain": "In this sound: low, so held notes sink to a quiet hum, as on a real reed piano."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Raise to 8",
+          "hear": "Each note sweeps slowly from buzz to pure: more like a wah than a piano."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 0",
+          "hear": "The notes settle to a pure triangle, very soft and flute-like."
+        },
+        {
+          "id": "ads2.sustain",
+          "try": "Raise to 4",
+          "hear": "Held notes keep a nasal edge: closer to a reed organ."
+        }
+      ]
+    },
+    {
+      "id": "kobol-vibes",
+      "name": "Vibraphone with Motor",
+      "ref": "In the style of a jazz vibraphone with its tremolo motor on",
+      "artist": "Classic technique",
+      "tags": ["keys", "jazz", "modular"],
+      "level": 3,
+      "blurb": "A soft mallet tone that rings for a long time, with the slow pulsing of a vibraphone’s motor.",
+      "how": "Two triangles two octaves apart copy the two strongest tones of a vibraphone bar. The pulsing is the LFO on VCO 1’s VCA, through LFO OUT 1 into VCO 1 VOLUME. LFO VOLUME sets its depth, but it also sends vibrato to both VCOs, so a cable into VCO MOD IN switches that off: here it comes from the voltage processor turned to 0, which carries nothing at all.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 65, 1.9],
+          [2, 69, 0.9],
+          [3, 72, 0.9],
+          [4, 76, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles, two octaves apart",
+          "module": "osc",
+          "why": "Two triangles two octaves apart copy the two strongest tones of a vibraphone bar. VCO stands for voltage-controlled oscillator.\n- WAVEFORM 0 on both: triangles, soft and pure like a struck metal bar.\n- VCO 2 FREQUENCY 7 (+24 st): two octaves up; each knob step is about an octave.\n- VOLUME 6 and 2.5: each VCO has its own VCA (voltage-controlled amplifier). VCO 2 is much quieter: a bar sounds its note and, softly, the note two octaves above.\n- Listen for: a pure tone with a faint, bright shine on top.",
+          "set": {
+            "vco1.wave": 0,
+            "vca1.level": 6,
+            "vco2.freq": 7,
+            "vco2.wave": 0,
+            "vca2.level": 2.5
+          }
+        },
+        {
+          "title": "A long ring",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) keeps the tone soft, and ADS 1, the loudness envelope (attack, decay, sustain), makes each note ring and fade by itself.\n- VCF FREQ 6.5 (1.4 kHz), RESONANCE 0: gentle, with no peak.\n- KEYB CTRL 1 (100 %), ADS CONTROL 0 (off): the cutoff follows the notes, and there is no filter envelope.\n- ADS 1 ATTACK 1 (2 ms): a mallet strike.\n- ADS 1 DECAY 9.3 (2.6 s), SUSTAIN 0: each note rings for two or three seconds and fades, held or not. DECAY is also the release.\n- Listen for: a long, even ring after each note.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.res": 0,
+            "vcf.kbd": 1,
+            "vcf.env": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 9.3,
+            "ads1.sustain": 0
+          }
+        },
+        {
+          "title": "Switch the vibrato off with a cable",
+          "module": "mod",
+          "why": "The Kobol wires its LFO (low-frequency oscillator) to both VCOs’ pitch, and a vibraphone motor needs the LFO without vibrato. Any cable in VCO MOD IN takes the LFO’s place, so a cable carrying nothing switches the vibrato off.\n- Cable voltage processor OUT → VCO MOD IN: the voltage processor adds and scales control voltages. Its OUT now feeds the pitch modulation in place of the LFO.\n- OUT GAIN 0: scales the voltage processor’s output to nothing, so it carries no voltage at all. That is what keeps the pitch still.\n- Listen for: no change yet. Without this cable, the LFO in the next step would also wobble the pitch.",
+          "set": { "vp.out": 0 },
+          "cables": [["j.vpOut", "j.vcoModIn"]]
+        },
+        {
+          "title": "The motor: the LFO on VCO 1’s VCA",
+          "module": "lfo",
+          "why": "A vibraphone’s motor pulses the level, so the LFO goes to VCO 1’s VCA. This is tremolo, a wobble in volume rather than pitch.\n- Cable LFO OUT 1 → VCO 1 VOLUME: OUT 1 is the LFO scaled by LFO VOLUME. It swings VCO 1’s VCA above and below its knob setting of 6.\n- LFO WAVEFORM triangle: a smooth swell up and down.\n- LFO RATE 6.4 (3.63 Hz): the motor speed, about three and a half pulses a second. Real vibraphones run from a slow sway to a fast flutter.\n- LFO VOLUME 6 (60 %): the depth of the pulsing. With VCO MOD IN patched it adds no vibrato.\n- Listen for: a steady pulsing on the ringing note, while the high partial on VCO 2 stays still.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 6.4, "lfo.volume": 6 },
+          "cables": [["j.lfoOut1", "j.vco1Vol"]]
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: the speed of the motor. Real vibraphones run from a slow sway to a fast flutter.",
+        "lfo.volume": "In this sound: the depth of the pulsing. With VCO MOD IN patched it no longer adds vibrato.",
+        "vp.out": "In this sound: at 0 the voltage processor carries nothing, which is what keeps the pitch still.",
+        "vca1.level": "In this sound: the middle of the pulsing. The LFO swings the VCA above and below it.",
+        "vca2.level": "In this sound: the high partial, which the motor does not touch.",
+        "ads1.decay": "In this sound: how long each bar rings."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Move between 5.5 and 7",
+          "hear": "From a slow, lazy sway to a fast shimmer."
+        },
+        {
+          "id": "lfo.volume",
+          "try": "Set to 0",
+          "hear": "The motor stops: a plain, still vibraphone, the way it is often played."
+        },
+        {
+          "id": "vp.out",
+          "try": "Raise to 0.2",
+          "hear": "The voltage processor now sends a fixed voltage to the pitch: every note goes sharp. Back to 0 to put it in tune."
+        }
+      ]
+    },
+    {
+      "id": "kobol-harp",
+      "name": "Glass Harp",
+      "ref": "A soft plucked harp for arpeggios",
+      "artist": "Classic technique",
+      "tags": ["pluck", "ambient", "acoustic"],
+      "level": 1,
+      "blurb": "A clear, gently plucked string that rings out and softens as it fades.",
+      "how": "A triangle with a quiet octave above it gives a clear, round tone. ADS 2 opens the filter at the start of each note and lets it close slowly, so the pluck is bright for a moment and mellows as it rings, the way a real string loses its upper tones first. ADS 1 has no sustain, so every note fades by itself.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.45],
+          [0.5, 59, 0.45],
+          [1, 62, 0.45],
+          [1.5, 67, 0.45],
+          [2, 71, 0.45],
+          [2.5, 74, 0.9],
+          [4, 72, 0.45],
+          [4.5, 67, 0.45],
+          [5, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle and a quiet octave",
+          "module": "osc",
+          "why": "A triangle with a quiet octave above gives a clear, round tone. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 0.8: just past the triangle into the ramp, round with a touch of edge.\n- VCO 1 VOLUME 8: its level into the filter through its own VCA (voltage-controlled amplifier).\n- VCO 2 FREQUENCY 6 (+12 st), WAVEFORM 0: a triangle an octave up.\n- VCO 2 VOLUME 3: much quieter. This octave is what makes it sound like a harp rather than a plain tone.\n- Listen for: a soft tone with a clear, faint shine above it.",
+          "set": {
+            "vco1.wave": 0.8,
+            "vca1.level": 8,
+            "vco2.freq": 6,
+            "vco2.wave": 0,
+            "vca2.level": 3
+          }
+        },
+        {
+          "title": "A filter that closes as the string rings",
+          "module": "filter",
+          "why": "ADS 2, the filter envelope (attack, decay, sustain), opens the VCF (voltage-controlled filter) at the start of each note and lets it close slowly, the way a string loses its upper tones first.\n- VCF FREQ 4.8 (441 Hz), RESONANCE 1: the filter rests fairly low.\n- KEYB CTRL 1 (100 %): keyboard control; high notes stay as bright as low ones.\n- ADS CONTROL 2.2 (+3.1 oct): right of centre, so each pluck opens the filter about three octaves. Lower gives a nylon-string softness, higher a metallic pick.\n- ADS 2 ATTACK 1, DECAY 7.8, SUSTAIN 0: a 2 ms rise and a 710 ms fall. Bright at once, dulling over most of a second.\n- Listen for: each note starting bright and mellowing as it rings.",
+          "set": {
+            "vcf.freq": 4.8,
+            "vcf.res": 1,
+            "vcf.kbd": 1,
+            "vcf.env": 2.2,
+            "ads2.attack": 1,
+            "ads2.decay": 7.8,
+            "ads2.sustain": 0
+          }
+        },
+        {
+          "title": "A long, plucked fade",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, turns each note into a pluck that rings out.\n- ATTACK 1 (2 ms): an instant pluck.\n- DECAY 9.2 (2.3 s), SUSTAIN 0: each string rings for over two seconds and fades, held or not. DECAY is also the release, so it rings on after you let go.\n- Listen for: arpeggios where each note keeps ringing under the next.",
+          "set": { "ads1.attack": 1, "ads1.decay": 9.2, "ads1.sustain": 0 }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: how bright the pluck is. Lower gives a nylon-string softness; higher a metallic pick.",
+        "ads2.decay": "In this sound: how quickly the brightness fades from each note.",
+        "ads1.decay": "In this sound: how long each string rings.",
+        "vca2.level": "In this sound: the octave that makes it sound like a harp rather than a plain tone."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Raise to 3.5",
+          "hear": "A brighter, harder pluck, closer to a harpsichord."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 4",
+          "hear": "A ramp: the string sounds more like steel than gut."
+        },
+        {
+          "id": "ads1.decay",
+          "try": "Lower to 7.5",
+          "hear": "Short, dry plucks, like a pizzicato string."
+        }
+      ]
+    },
+    {
+      "id": "kobol-music-box",
+      "name": "Music Box",
+      "ref": "A wind-up music box",
+      "artist": "Classic technique",
+      "tags": ["keys", "ambient", "retro"],
+      "level": 1,
+      "blurb": "A high, tinkling tone that dies away quickly, like a music box’s steel comb.",
+      "how": "VCO 1 an octave up as a triangle gives the clean tone of a plucked steel tooth, and a faint VCO 2 an octave and a fifth above that adds the glassy overtone. Short ADS 1 decay with no sustain makes each note a tiny ping.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45],
+          [0.5, 64, 0.45],
+          [1, 67, 0.45],
+          [1.5, 72, 0.9],
+          [2.5, 71, 0.45],
+          [3, 67, 0.45],
+          [3.5, 64, 0.45],
+          [4, 65, 0.45],
+          [4.5, 69, 0.45],
+          [5, 72, 1.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A high triangle",
+          "module": "osc",
+          "why": "VCO 1 plays an octave up as a triangle, the clean tone of a plucked steel tooth. VCO stands for voltage-controlled oscillator.\n- VCO 1 FREQUENCY 6 (+12 st): an octave above the note played; each knob step is about an octave.\n- VCO 1 WAVEFORM 0: fully left, a pure triangle.\n- VCO 1 VOLUME 8: its level through its own VCA (voltage-controlled amplifier).\n- Listen for: a high, pure tone, like a whistle.",
+          "set": { "vco1.freq": 6, "vco1.wave": 0, "vca1.level": 8 }
+        },
+        {
+          "title": "A faint overtone",
+          "module": "osc",
+          "why": "A faint VCO 2 adds the glassy overtone of a steel comb. Keep it quiet: it should colour the note, not be heard as a second one.\n- VCO 2 FREQUENCY 7.6 (+31 st): an octave and a fifth above VCO 1. 7 (two octaves above the note played) sounds sweeter; 7.3 sounds out of tune, like an old box.\n- VCO 2 WAVEFORM 0: a triangle.\n- VCO 2 VOLUME 2.2: low, through its own VCA. Higher makes the ping glassier.\n- Listen for: a faint, bright shimmer on top of each note.",
+          "set": { "vco2.freq": 7.58, "vco2.wave": 0, "vca2.level": 2.2 }
+        },
+        {
+          "title": "A short ping",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) is left open and ADS 1, the loudness envelope (attack, decay, sustain), makes each note a tiny ping.\n- VCF FREQ 7.5 (2.8 kHz), RESONANCE 0: open, with no peak. KEYB CTRL at 1 (100 %) keeps it even across the keys.\n- ADS 1 ATTACK 1 (2 ms): an instant pluck.\n- ADS 1 DECAY 8.2 (1000 ms), SUSTAIN 0: each tooth rings for about a second and dies away, held or not.\n- Listen for: short, tinkling pings. Play a slow tune high on the keyboard.",
+          "set": {
+            "vcf.freq": 7.5,
+            "vcf.res": 0,
+            "vcf.kbd": 1,
+            "ads1.attack": 1,
+            "ads1.decay": 8.2,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the overtone. 7 (two octaves up) sounds sweeter; 7.3 sounds out of tune, like an old box.",
+        "vca2.level": "In this sound: how glassy the ping is.",
+        "ads1.decay": "In this sound: how long each tooth rings."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Turn to 7.3",
+          "hear": "The overtone goes out of tune with the note: a worn, slightly eerie music box."
+        },
+        {
+          "id": "ads1.decay",
+          "try": "Raise to 9",
+          "hear": "Longer rings that overlap into a shimmer."
+        }
+      ]
+    },
+    {
+      "id": "kobol-fm-bell",
+      "name": "Glass Bell",
+      "ref": "Frequency modulation with the voltage processor as the depth knob",
+      "artist": "Classic technique",
+      "tags": ["keys", "ambient", "modular"],
+      "level": 3,
+      "blurb": "A clear bell with a shimmer of out-of-tune overtones, fading slowly.",
+      "how": "VCO 2 OUT goes into the voltage processor and from there to VCO 1 FREQ, so VCO 2 shakes VCO 1’s pitch at audio rate. That is frequency modulation, and it adds overtones that are not in tune with the note, which is what makes a bell a bell. VCO 2 OUT on its own would modulate at a fixed depth; through the voltage processor, IN 1 GAIN becomes a depth knob. ADS 2 closes the filter as each note rings, so the shimmer fades before the tone does.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.9],
+          [2, 67, 1.9],
+          [4, 69, 1.9],
+          [6, 64, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle to be modulated",
+          "module": "osc",
+          "why": "VCO 1 is the voice you will hear. Its overtones will come from the modulation, not from its waveform. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 0: fully left, a pure triangle.\n- VCO 1 VOLUME 8: its level through its own VCA (voltage-controlled amplifier).\n- Listen for: a plain, soft tone.",
+          "set": { "vco1.wave": 0, "vca1.level": 8 }
+        },
+        {
+          "title": "VCO 2 as the modulator",
+          "module": "osc",
+          "why": "VCO 2 becomes the modulator. FM (frequency modulation) means one oscillator shaking another’s pitch at audio rate. It adds overtones that are out of tune with the note, which is what makes a bell a bell.\n- VCO 2 WAVEFORM 0: a triangle.\n- VCO 2 FREQUENCY 6.4 (+16.8 st): between one and two octaves up, not a whole number of octaves, so the new overtones will be out of tune. Whole octaves (6 or 7) sound tuned and organ-like.\n- Cable VCO 2 OUT → IN 1: into the voltage processor, a utility that adds and scales voltages. A cable in VCO 2 OUT also takes VCO 2 out of the filter, so only VCO 1 is heard.\n- Listen for: still only VCO 1. VCO 2 does not reach its pitch until the next cable.",
+          "set": { "vco2.wave": 0, "vco2.freq": 6.4 },
+          "cables": [["j.vco2Out", "j.vpIn1"]]
+        },
+        {
+          "title": "The voltage processor sets the depth",
+          "module": "util",
+          "why": "The voltage processor’s OUT goes to VCO 1’s pitch, so its IN 1 GAIN knob becomes the depth of the FM. VCO 2 OUT patched straight in would modulate at a fixed depth.\n- Cable voltage processor OUT → VCO 1 FREQ: carries VCO 2’s audio, scaled, into VCO 1’s pitch input.\n- IN 1 GAIN 0.8: how hard VCO 2 shakes VCO 1. Around 0.8 is a clear bell; low is a soft chime, high a clanging gong.\n- OUT GAIN 1: passes the result on unchanged.\n- Listen for: the plain tone turning into a bell-like clang, a little sharp. Sweep IN 1 GAIN up from 0 to hear it grow.",
+          "set": { "vp.in1": 0.8, "vp.out": 1 },
+          "cables": [["j.vpOut", "j.vco1Freq"]]
+        },
+        {
+          "title": "Put it back in tune",
+          "module": "osc",
+          "why": "Deep pitch modulation pulls the note sharp, by nearly a semitone here. Turning VCO 1 down a hair puts the bell back in tune with the keys.\n- VCO 1 FREQUENCY 4.9 (−0.8 st): just below the centre, cancelling the sharpening. Each knob step is about an octave, so this is a tiny move.\n- Listen for: the bell now in tune with the keys. After any change to IN 1 GAIN, check the tuning again: more depth pulls it further sharp.",
+          "set": { "vco1.freq": 4.93 }
+        },
+        {
+          "title": "A bell’s fade",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) and both ADS (attack, decay, sustain) envelopes turn the tone into a struck bell. ADS 2 closes the filter as the note rings, so the shimmer fades before the tone does.\n- VCF FREQ 5.5 (715 Hz), RESONANCE 0: a fairly low resting cutoff with no peak. KEYB CTRL at 1 (100 %) makes it follow the keys.\n- ADS CONTROL 2.5 (+3.5 oct): how bright the strike is.\n- ADS 2 ATTACK 1, DECAY 8.4, SUSTAIN 0: a 2 ms rise and a 1.2 s fall. Bright on the strike, closing over a second or so.\n- ADS 1 ATTACK 1, DECAY 9.6, SUSTAIN 0: a 2 ms rise and a 3.3 s fall. ADS 1 is the loudness; the bell rings for about three seconds.\n- Listen for: a bright, clangy strike that mellows into a pure tone as it fades.",
+          "set": {
+            "vcf.freq": 5.5,
+            "vcf.res": 0,
+            "vcf.kbd": 1,
+            "vcf.env": 2.5,
+            "ads2.attack": 1,
+            "ads2.decay": 8.4,
+            "ads2.sustain": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 9.6,
+            "ads1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "vp.in1": "In this sound: the depth of the modulation. Low is a soft chime, high a clanging gong. More depth also pulls the pitch sharp, so retune VCO 1 FREQUENCY after moving it.",
+        "vco1.freq": "In this sound: just below the centre, to cancel the sharpening that the modulation causes.",
+        "vco2.freq": "In this sound: the ratio between the two VCOs, which sets the colour of the bell. Whole octaves (6 or 7) sound tuned and organ-like; in between sounds like metal.",
+        "vcf.env": "In this sound: how bright the strike is.",
+        "ads2.decay": "In this sound: how long the shimmer lasts before only the tone is left.",
+        "ads1.decay": "In this sound: how long the bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "vp.in1",
+          "try": "Move between 0.3 and 1.2",
+          "hear": "From a soft glass chime to a heavy, clanging bell, going sharper as it gets deeper."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Set to 7",
+          "hear": "Two octaves exactly: the overtones fall in tune and the bell turns into an electric piano."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 5",
+          "hear": "A sawtooth modulator: many more overtones, harsh and gong-like."
+        }
+      ]
+    },
+    {
+      "id": "kobol-marimba",
+      "name": "Wooden Marimba",
+      "ref": "A soft mallet on a wooden bar",
+      "artist": "Classic technique",
+      "tags": ["pluck", "world", "acoustic"],
+      "level": 2,
+      "blurb": "A short, hollow, woody knock with a clear pitch.",
+      "how": "The filter’s resonance is tuned to follow the keys, and ADS 2 flicks it open for a moment, which gives each note a round knock. A triangle with a faint copy two octaves up copies a marimba bar’s tuning. ADS 1 is short with no sustain, so notes die quickly, as wood does.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45],
+          [0.5, 67, 0.45],
+          [1, 64, 0.45],
+          [1.5, 67, 0.45],
+          [2, 72, 0.9],
+          [3, 69, 0.45],
+          [3.5, 67, 0.45],
+          [4, 65, 0.45],
+          [4.5, 64, 0.45],
+          [5, 62, 0.45],
+          [5.5, 60, 1.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Triangle and a faint double octave",
+          "module": "osc",
+          "why": "A triangle with a faint copy two octaves up copies the way a marimba bar is tuned. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 0, VOLUME 8: a soft, round triangle through its own VCA (voltage-controlled amplifier).\n- VCO 2 FREQUENCY 7 (+24 st), WAVEFORM 0: another triangle, two octaves up.\n- VCO 2 VOLUME 1.5: very quiet; a hint of brightness, not a separate note.\n- Listen for: a pure tone with a faint high overtone.",
+          "set": {
+            "vco1.wave": 0,
+            "vca1.level": 8,
+            "vco2.freq": 7,
+            "vco2.wave": 0,
+            "vca2.level": 1.5
+          }
+        },
+        {
+          "title": "A resonant knock",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) gets resonance and full key tracking, and ADS 2, the filter envelope (attack, decay, sustain), flicks it open for a moment: the mallet.\n- VCF FREQ 4.6 (384 Hz): a low, dark resting tone.\n- RESONANCE 5.5: a ringing peak that gives the hollow knock. More makes it sound like a tuned log drum.\n- KEYB CTRL 1 (100 %): keyboard control; the resonant peak follows the keys, so the knock stays in tune.\n- ADS CONTROL 2.6 (+3.6 oct): how far each strike opens the filter.\n- ADS 2 ATTACK 1, DECAY 5.6, SUSTAIN 0: a 2 ms rise and a 110 ms fall. Open for about a tenth of a second. Shorter sounds like a softer mallet.\n- Listen for: a round, woody knock at the front of each note.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 5.5,
+            "vcf.kbd": 1,
+            "vcf.env": 2.6,
+            "ads2.attack": 1,
+            "ads2.decay": 5.6,
+            "ads2.sustain": 0
+          }
+        },
+        {
+          "title": "A short, wooden decay",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, makes notes die quickly, as wood does.\n- ATTACK 1 (2 ms): instant.\n- DECAY 7.2 (430 ms), SUSTAIN 0: each note is gone in under half a second. Longer turns wood into metal.\n- Listen for: short, hollow notes that stay clear in fast runs.",
+          "set": { "ads1.attack": 1, "ads1.decay": 7.2, "ads1.sustain": 0 }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the hollow knock. More makes it sound like a tuned log drum.",
+        "ads2.decay": "In this sound: how hard the mallet is. Shorter is softer.",
+        "ads1.decay": "In this sound: the length of each note. Longer turns wood into metal."
+      },
+      "tweaks": [
+        {
+          "id": "ads1.decay",
+          "try": "Raise to 8.5",
+          "hear": "Longer notes: closer to a vibraphone than a marimba."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 8",
+          "hear": "A ringing, liquid knock, like a slit drum."
+        }
+      ]
+    },
+    {
+      "id": "kobol-upright-bass",
+      "name": "Round Upright Bass",
+      "ref": "In the style of a jazz double bass",
+      "artist": "Classic technique",
+      "tags": ["bass", "jazz", "acoustic"],
+      "level": 1,
+      "blurb": "A warm, plucked bass with a soft thump and a long, mellow fade.",
+      "how": "VCO 1 an octave down, set between triangle and ramp, is round but still clear. A small filter flick from ADS 2 gives the thump of a finger on the string, and ADS 1 has no sustain, so every note fades naturally.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.9],
+          [1, 40, 0.9],
+          [2, 43, 0.9],
+          [3, 45, 0.9],
+          [4, 46, 0.9],
+          [5, 45, 0.9],
+          [6, 43, 0.9],
+          [7, 40, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One round oscillator",
+          "module": "osc",
+          "why": "One VCO (voltage-controlled oscillator), an octave down and between triangle and ramp: round, but clear enough to hear each note.\n- VCO 1 FREQUENCY 4 (−12 st): an octave down. There is no octave switch; each knob step is about an octave.\n- VCO 1 WAVEFORM 1.8: a little way from triangle towards the ramp. Towards 0 it is almost a sine; towards 4 it growls.\n- VCO 1 VOLUME 8: its level through its own VCA (voltage-controlled amplifier).\n- VCO 2 VOLUME 0: off.\n- Listen for: a warm, woody low tone.",
+          "set": { "vco1.freq": 4, "vco1.wave": 1.8, "vca1.level": 8, "vca2.level": 0 }
+        },
+        {
+          "title": "A soft thump",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits low, and ADS 2, the filter envelope (attack, decay, sustain), opens it a little on each note: the thump of a finger on the string.\n- VCF FREQ 4.2 (291 Hz), RESONANCE 1.5: dark, with a hint of peak.\n- KEYB CTRL 1 (100 %): keyboard control; the cutoff follows the notes.\n- ADS CONTROL 1.6 (+2.2 oct): the size of the thump.\n- ADS 2 ATTACK 1, DECAY 6.6, SUSTAIN 0.5: a 2 ms rise and a 260 ms fall. Opens instantly and closes over about a quarter of a second, nearly back to where it started.\n- Listen for: a soft thump at the start of each note, then a rounder tone.",
+          "set": {
+            "vcf.freq": 4.2,
+            "vcf.res": 1.5,
+            "vcf.kbd": 1,
+            "vcf.env": 1.6,
+            "ads2.attack": 1,
+            "ads2.decay": 6.6,
+            "ads2.sustain": 0.5
+          }
+        },
+        {
+          "title": "A plucked fade",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, makes each note a pluck that fades naturally.\n- ATTACK 1 (2 ms): instant.\n- DECAY 8.2 (1000 ms), SUSTAIN 0: each note fades over about a second, even if held. DECAY is also the release.\n- Listen for: a walking line where each note fades before the next. Turn DECAY down for a muted, palm-damped bass.",
+          "set": { "ads1.attack": 1, "ads1.decay": 8.2, "ads1.sustain": 0 }
+        }
+      ],
+      "context": {
+        "vco1.wave": "In this sound: how woody the bass is. Towards 0 it is almost a sine; towards 4 it growls.",
+        "vcf.env": "In this sound: the thump of the pluck.",
+        "ads1.decay": "In this sound: how long each note rings."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 4",
+          "hear": "A brighter bass with more bite, closer to a fretless electric."
+        },
+        {
+          "id": "ads1.decay",
+          "try": "Lower to 7",
+          "hear": "Short, muted notes, like a bass played with the palm resting on the strings."
+        }
+      ]
+    },
+    {
+      "id": "kobol-floating-arp",
+      "name": "Floating Arpeggio",
+      "ref": "In the style of 1970s ambient electronic arpeggios",
+      "artist": "Classic technique",
+      "tags": ["seq", "ambient", "70s"],
+      "level": 1,
+      "blurb": "A soft, rounded pluck whose long tail blurs a slow arpeggio into a haze.",
+      "how": "A square wave with a triangle an octave above goes through a low, slightly resonant filter that ADS 2 opens on each note. The loudness has no sustain but a long decay, which also sets the release, so every note keeps ringing after the next one starts. Try the effects rack’s delay and reverb with it.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.45],
+          [0.5, 64, 0.45],
+          [1, 69, 0.45],
+          [1.5, 71, 0.45],
+          [2, 72, 0.45],
+          [2.5, 71, 0.45],
+          [3, 69, 0.45],
+          [3.5, 64, 0.45],
+          [4, 53, 0.45],
+          [4.5, 60, 0.45],
+          [5, 65, 0.45],
+          [5.5, 67, 0.45],
+          [6, 69, 0.45],
+          [6.5, 67, 0.45],
+          [7, 65, 0.45],
+          [7.5, 60, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square and a soft octave",
+          "module": "osc",
+          "why": "A square wave with a triangle an octave above: hollow and soft together. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 6.7: square, hollow and woody.\n- VCO 1 VOLUME 6.5: its level through its own VCA (voltage-controlled amplifier).\n- VCO 2 FREQUENCY 6 (+12 st), WAVEFORM 0: a triangle an octave up.\n- VCO 2 VOLUME 4: quieter, for a glassy top.\n- Listen for: a hollow tone with a soft shine above it.",
+          "set": {
+            "vco1.wave": 6.7,
+            "vca1.level": 6.5,
+            "vco2.freq": 6,
+            "vco2.wave": 0,
+            "vca2.level": 4
+          }
+        },
+        {
+          "title": "A rounded pluck",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits low, and ADS 2, the filter envelope (attack, decay, sustain), opens it on each note and lets it close: a rounded pluck.\n- VCF FREQ 4.4 (334 Hz), RESONANCE 3: the dark tail once the pluck has closed, with a slight ring.\n- KEYB CTRL 1 (100 %): keyboard control; the arpeggio stays even across the keys.\n- ADS CONTROL 2 (+2.8 oct): how bright each pluck is.\n- ADS 2 ATTACK 1, DECAY 7.2, SUSTAIN 0: a 2 ms rise and a 430 ms fall. Bright at once, closing over about half a second.\n- Listen for: a soft pluck on each note that darkens as it goes.",
+          "set": {
+            "vcf.freq": 4.4,
+            "vcf.res": 3,
+            "vcf.kbd": 1,
+            "vcf.env": 2,
+            "ads2.attack": 1,
+            "ads2.decay": 7.2,
+            "ads2.sustain": 0
+          }
+        },
+        {
+          "title": "Long tails",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, has no sustain but a long decay. On the Kobol DECAY is also the release, so notes keep ringing after you let go and blur into each other.\n- ATTACK 1 (2 ms): instant.\n- DECAY 8.8 (1.7 s), SUSTAIN 0: each note fades over about a second and a half.\n- Listen for: a slow arpeggio melting into a haze. Try the effects rack’s delay and reverb with it.",
+          "set": { "ads1.attack": 1, "ads1.decay": 8.8, "ads1.sustain": 0 }
+        }
+      ],
+      "context": {
+        "ads1.decay": "In this sound: how much the notes blur together.",
+        "vcf.env": "In this sound: how bright each pluck is.",
+        "vcf.freq": "In this sound: the darkness of the tail once the pluck has closed.",
+        "vca2.level": "In this sound: the upper octave that gives the pluck its glassy top."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Raise slowly from 4.4 to 6.5",
+          "hear": "The haze opens into bright, bell-like notes."
+        },
+        { "id": "vcf.res", "try": "Raise to 6", "hear": "Each pluck gets a liquid, bubbling ring." }
+      ]
+    },
+    {
+      "id": "kobol-flute-organ",
+      "name": "Flute Organ",
+      "ref": "In the style of a soft chapel organ",
+      "artist": "Classic technique",
+      "tags": ["keys", "ambient", "classical"],
+      "level": 1,
+      "blurb": "A gentle organ tone with a slow, living shimmer from one oscillator drifting against the other.",
+      "how": "A triangle and a quiet square an octave up are like two soft organ stops. DECAY OFF makes the notes start and stop like an organ’s. The shimmer comes from VCO 1 MOD OFF: the LFO wobbles VCO 2 alone, so it drifts very slightly against a steady VCO 1.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.9],
+          [2, 64, 0.9],
+          [3, 62, 0.9],
+          [4, 67, 1.9],
+          [6, 65, 0.9],
+          [7, 64, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two soft stops",
+          "module": "osc",
+          "why": "A triangle and a quiet square an octave up act like two soft organ stops. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 0, VOLUME 7.5: a triangle, the soft main stop, through its own VCA (voltage-controlled amplifier).\n- VCO 2 FREQUENCY 6 (+12 st), WAVEFORM 6.7: a square an octave up, hollow and reedy.\n- VCO 2 VOLUME 3.5: the upper stop, quieter. Higher is brighter and reedier.\n- Listen for: a soft, hollow, organ-like tone.",
+          "set": {
+            "vco1.wave": 0,
+            "vca1.level": 7.5,
+            "vco2.freq": 6,
+            "vco2.wave": 6.7,
+            "vca2.level": 3.5
+          }
+        },
+        {
+          "title": "Organ on and off",
+          "module": "amp",
+          "why": "Organs start and stop at once. The VCF (voltage-controlled filter) stays gentle, and ADS 1, the loudness envelope (attack, decay, sustain), is set up like a switch.\n- VCF FREQ 6.5 (1.4 kHz), RESONANCE 0: a soft filter with no peak. KEYB CTRL at 1 (100 %) makes it follow the keys, and ADS CONTROL at 0 (off) means no filter envelope.\n- ADS 1 ATTACK 2.5 (8 ms): nearly instant, just enough to avoid a click.\n- ADS 1 SUSTAIN 10: full level while held.\n- DECAY OFF on: sets decay and release to zero, so notes stop as soon as you let go.\n- Listen for: the organ’s clean stop. Switch DECAY OFF off and set DECAY to 8 for a church-like ring after each chord.",
+          "set": {
+            "vcf.freq": 6.5,
+            "vcf.res": 0,
+            "vcf.kbd": 1,
+            "vcf.env": 0,
+            "ads1.attack": 2.5,
+            "ads1.sustain": 10,
+            "ads1.decayOff": true
+          }
+        },
+        {
+          "title": "A shimmer on VCO 2 only",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) is wired to both VCOs’ pitch. VCO 1 MOD OFF leaves VCO 1 out, so only VCO 2 moves and the two stops drift very slightly against each other.\n- VCO 1 MOD OFF on: VCO 1 stays steady, so the LFO makes a shimmer instead of a vibrato.\n- LFO triangle, RATE 6 (2.51 Hz): a smooth, slow waver.\n- LFO VOLUME 1 (10 %): how far VCO 2 drifts. Keep it low; above 2 the organ sounds out of tune.\n- Listen for: a gentle beating in held chords. Switch VCO 1 MOD OFF off and it becomes a plain vibrato.",
+          "set": { "mod.vco1Off": true, "lfo.shape": "tri", "lfo.rate": 6, "lfo.volume": 1 }
+        }
+      ],
+      "context": {
+        "mod.vco1Off": "In this sound: keeps VCO 1 steady, so the LFO makes a shimmer instead of a vibrato.",
+        "lfo.volume": "In this sound: how far VCO 2 drifts. Keep it low; above 2 the organ sounds out of tune.",
+        "ads1.decayOff": "In this sound: the organ’s clean stop. Switch it off and set DECAY to 8 for a church-like ring after each chord.",
+        "vca2.level": "In this sound: the upper stop. Higher is brighter and reedier."
+      },
+      "tweaks": [
+        {
+          "id": "ads1.decayOff",
+          "try": "Switch off, with ADS 1 DECAY at 8",
+          "hear": "Each note rings on after release, as if in a large hall."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Set to 6.58",
+          "hear": "The upper stop a fifth higher: an old, hollow organ colour."
+        }
+      ]
+    },
+    {
+      "id": "kobol-mirror-pad",
+      "name": "Mirrored Morph Pad",
+      "ref": "The voltage processor as a splitter and inverter",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "modular"],
+      "level": 3,
+      "blurb": "A slow pad in which one oscillator brightens while the other softens, back and forth.",
+      "how": "The LFO goes into the voltage processor. Its OUT carries the LFO as it is, to VCO 1 WAVEFORM; REV OUT carries it upside down, to VCO 2 WAVEFORM. So as VCO 1 turns from triangle towards pulse, VCO 2 turns the other way, and the pad keeps changing colour without ever getting much louder or brighter overall. Only a synth whose waveform can be swept by a voltage can do this.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8],
+          [4, 53, 3.8],
+          [8, 48, 3.8],
+          [12, 45, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators, an octave apart",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators) are parked in the middle of their WAVEFORM travel, so a voltage can later swing them either way.\n- WAVEFORM 4.5 on both: a little before sawtooth. The Kobol’s WAVEFORM knob turns smoothly from triangle to pulse, so from here each can move towards either end.\n- VCO 2 FREQUENCY 4 (−12 st): an octave down, for body.\n- VCO 2 BEAT 0.4 (+4 cents): a slow beat against VCO 1.\n- VOLUME 7 and 6.5: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- Listen for: a warm, buzzy octave tone that does not move yet.",
+          "set": {
+            "vco1.wave": 4.5,
+            "vco2.wave": 4.5,
+            "vco2.freq": 4,
+            "vco2.beat": 0.4,
+            "vca1.level": 7,
+            "vca2.level": 6.5
+          }
+        },
+        {
+          "title": "The LFO into the voltage processor",
+          "module": "util",
+          "why": "The voltage processor adds and scales control voltages. Here it carries the LFO (low-frequency oscillator) and sets its depth, ready to send it two ways.\n- Cable LFO OUT 2 → IN 2: OUT 2 is the LFO at full level, into the voltage processor’s second input.\n- IN 1 GAIN 0: IN 1 carries +10 V when nothing is plugged in. At 0 it adds nothing, so the sweep stays centred.\n- OUT GAIN 0.4: the depth of both sweeps at once, as it scales OUT and REV OUT together.\n- LFO triangle, RATE 2.8 (0.13 Hz): a smooth cycle of about eight seconds.\n- LFO VOLUME 0: no vibrato on the VCOs.\n- Listen for: no change yet; nothing takes the voltage processor’s output.",
+          "set": {
+            "vp.in1": 0,
+            "vp.out": 0.4,
+            "lfo.shape": "tri",
+            "lfo.rate": 2.8,
+            "lfo.volume": 0
+          },
+          "cables": [["j.lfoOut2", "j.vpIn2"]]
+        },
+        {
+          "title": "One shape up, the other down",
+          "module": "osc",
+          "why": "OUT carries the LFO as it is; REV OUT carries it upside down. Patched to the two WAVEFORM inputs, one oscillator brightens while the other softens.\n- Cable OUT → VCO 1 WAVEFORM: the voltage processor’s output. VCO 1 swings towards pulse and back towards triangle with the LFO.\n- Cable REV OUT → VCO 2 WAVEFORM: VCO 2 gets the same movement reversed, so it always goes the other way.\n- Listen for: a pad that keeps changing colour without getting much brighter or louder overall. Pull one cable to hear a plain one-way sweep instead.",
+          "cables": [
+            ["j.vpOut", "j.vco1Wave"],
+            ["j.vpRev", "j.vco2Wave"]
+          ]
+        },
+        {
+          "title": "Soft filter, slow swell",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) trims the bright end of the sweep, and ADS 1, the loudness envelope (attack, decay, sustain), makes each chord swell in and fade.\n- VCF FREQ 6 (1.0 kHz), RESONANCE 1.5: takes the harsh top off the pulse end, with a slight edge.\n- KEYB CTRL 1 (100 %), ADS CONTROL 0 (off): the cutoff follows the keys, with no filter envelope.\n- ADS 1 ATTACK 8 (840 ms): a slow swell into each chord.\n- DECAY 9 (2.0 s), SUSTAIN 10: full level while held, and a two-second fade after release, since DECAY is also the release.\n- Listen for: chords that swell in, drift for as long as you hold them, then fade.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.res": 1.5,
+            "vcf.kbd": 1,
+            "vcf.env": 0,
+            "ads1.attack": 8,
+            "ads1.decay": 9,
+            "ads1.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "vp.out": "In this sound: the depth of both sweeps at once, because it scales OUT and REV OUT together.",
+        "vp.in1": "In this sound: at 0. Turn it up and the built-in +10 V pushes VCO 1 brighter and VCO 2 softer, off centre.",
+        "lfo.rate": "In this sound: how slowly the two oscillators trade places.",
+        "vco1.wave": "In this sound: the centre of VCO 1’s sweep.",
+        "vco2.wave": "In this sound: the centre of VCO 2’s sweep, which runs the opposite way.",
+        "ads1.attack": "In this sound: the slow swell into each chord."
+      },
+      "tweaks": [
+        {
+          "id": "vp.out",
+          "try": "Raise to 0.8",
+          "hear": "Both sweeps go right to the ends: triangle against narrow pulse."
+        },
+        {
+          "id": "vp.in1",
+          "try": "Raise to 0.3",
+          "hear": "The balance tips: VCO 1 stays brighter than VCO 2 throughout."
+        },
+        {
+          "id": "lfo.shape",
+          "try": "Switch to square",
+          "hear": "The two oscillators swap shapes in jumps, like two organ stops being pulled in turn."
+        }
+      ]
+    },
+    {
+      "id": "kobol-slow-bloom",
+      "name": "Slow Bloom",
+      "ref": "An envelope on one oscillator’s VCA",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "modular"],
+      "level": 2,
+      "blurb": "Each note starts as a pure, soft tone and slowly blooms into a rich, bright chord tone.",
+      "how": "VCO 1 is a steady triangle. VCO 2, a sawtooth an octave up, has its VOLUME at 0 and ADS 2 OUT patched to its VOLUME input, with a slow attack. So each note starts as the plain triangle and VCO 2 fades in over two seconds or so, while the same envelope opens the filter a little. It is a crossfade from one oscillator to the other, played by an envelope.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 57, 5.8],
+          [6, 52, 5.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure triangle",
+          "module": "osc",
+          "why": "VCO 1 (a voltage-controlled oscillator, the part that makes the raw tone) is the plain start of every note.\n- VCO 1 WAVEFORM 0: fully left, a pure triangle.\n- VCO 1 VOLUME 7: its level into the filter through its own VCA (voltage-controlled amplifier).\n- Listen for: a soft, flute-like tone.",
+          "set": { "vco1.wave": 0, "vca1.level": 7 }
+        },
+        {
+          "title": "A sawtooth waiting in VCO 2",
+          "module": "osc",
+          "why": "VCO 2 is set up as the bloom: a brighter voice waiting at 0, to be faded in by an envelope.\n- VCO 2 FREQUENCY 6 (+12 st): an octave up.\n- VCO 2 WAVEFORM 5: sawtooth, bright and full. Try the pulse end for a reedier bloom.\n- VCO 2 BEAT 0.3 (+3 cents): a touch sharp, for slow movement against VCO 1.\n- VCO 2 VOLUME 0: silent until ADS 2 opens its VCA.\n- Listen for: no change yet.",
+          "set": { "vco2.freq": 6, "vco2.wave": 5, "vco2.beat": 0.3, "vca2.level": 0 }
+        },
+        {
+          "title": "ADS 2 fades VCO 2 in",
+          "module": "env",
+          "why": "ADS 2, an ADS (attack, decay, sustain) envelope, is patched to VCO 2’s VCA with a slow attack: a crossfade from one oscillator to the other, played by an envelope.\n- Cable ADS 2 OUT → VCO 2 VOLUME: the envelope opens VCO 2’s VCA on top of its knob at 0.\n- ATTACK 9.2 (2.3 s): VCO 2 fades in over about two seconds. At 1 the saw is there from the start.\n- DECAY 9.5 (3.0 s), SUSTAIN 7: after the peak it eases back to 70 %, so most of the sawtooth stays.\n- ADS CONTROL 1 (+1.4 oct): the same envelope opens the filter a little, so the bloom brightens as well as thickens.\n- Listen for: hold a note for three seconds: a pure tone slowly grows into a rich, buzzy one.",
+          "set": { "ads2.attack": 9.2, "ads2.decay": 9.5, "ads2.sustain": 7, "vcf.env": 1 },
+          "cables": [["j.ads2Out", "j.vco2Vol"]]
+        },
+        {
+          "title": "Soft filter, gentle loudness",
+          "module": "amp",
+          "why": "The VCF (voltage-controlled filter) sits low, and ADS 1, the loudness envelope, gives a soft start and a long release.\n- VCF FREQ 5.5 (715 Hz), RESONANCE 1: fairly dark, so the sawtooth comes in warm rather than harsh.\n- KEYB CTRL 1 (100 %): keyboard control; the cutoff follows the notes.\n- ADS 1 ATTACK 6.5 (230 ms): a soft fade-in.\n- ADS 1 DECAY 9 (2.0 s), SUSTAIN 10: full level while held, then a two-second release.\n- Listen for: short notes stay soft and pure; only held notes bloom.",
+          "set": {
+            "vcf.freq": 5.5,
+            "vcf.res": 1,
+            "vcf.kbd": 1,
+            "ads1.attack": 6.5,
+            "ads1.decay": 9,
+            "ads1.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "ads2.attack": "In this sound: how long the bloom takes. At 1 the saw is there from the start.",
+        "ads2.sustain": "In this sound: how much of the sawtooth stays once the bloom is complete.",
+        "vca2.level": "In this sound: at 0, so VCO 2 is only heard as ADS 2 opens its VCA.",
+        "vco2.wave": "In this sound: what the note blooms into. Try the pulse end for a reedier bloom.",
+        "vcf.env": "In this sound: lets the filter open as VCO 2 comes in, so the bloom brightens as well as thickens."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.attack",
+          "try": "Raise to 10",
+          "hear": "An even slower bloom, over about four seconds."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Set to 5.58",
+          "hear": "VCO 2 blooms in a fifth above instead of an octave: an open, choral sound."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Turn to 10",
+          "hear": "The note blooms into a thin, bright pulse."
+        }
+      ]
+    },
+    {
+      "id": "kobol-cello",
+      "name": "Solo Cello",
+      "ref": "In the style of a slow solo cello line",
+      "artist": "Classic technique",
+      "tags": ["strings", "classical", "soundtrack"],
+      "level": 2,
+      "blurb": "A warm, bowed string with a soft start and a gentle vibrato.",
+      "how": "A sawtooth gives the rich, buzzing tone of a bowed string, and a triangle an octave below gives it weight. ADS 2 opens the filter a little as each note is bowed in, and ADS 1’s slow attack stops the notes from starting with a click. A small, slow LFO on both VCOs is the player’s vibrato.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.9],
+          [2, 50, 0.9],
+          [3, 52, 0.9],
+          [4, 55, 2.9],
+          [7, 53, 0.9],
+          [8, 52, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sawtooth with a triangle below",
+          "module": "osc",
+          "why": "A sawtooth gives the rich, buzzing tone of a bowed string, and a triangle an octave below gives it weight. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 4.6: just short of sawtooth, bright and buzzy.\n- VCO 1 VOLUME 7.5: its level through its own VCA (voltage-controlled amplifier).\n- VCO 2 FREQUENCY 4 (−12 st), WAVEFORM 0.5: close to a triangle, an octave down.\n- VCO 2 VOLUME 5: the body under the bowed tone.\n- Listen for: a buzzy tone with a round low end beneath it.",
+          "set": {
+            "vco1.wave": 4.6,
+            "vca1.level": 7.5,
+            "vco2.freq": 4,
+            "vco2.wave": 0.5,
+            "vca2.level": 5
+          }
+        },
+        {
+          "title": "A bowed filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits fairly low, and ADS 2, the filter envelope (attack, decay, sustain), opens it a little as the bow bites.\n- VCF FREQ 4.6 (384 Hz), RESONANCE 2: the warmth of the tone. Higher is closer to a viola or violin.\n- KEYB CTRL 0.8 (80 %): keyboard control; the cutoff mostly follows the notes, so high notes are slightly mellower.\n- ADS CONTROL 1.2 (+1.7 oct): a modest opening on each note.\n- ADS 2 ATTACK 6.8 (300 ms): a slowish rise, like the bow biting.\n- ADS 2 DECAY 8 (840 ms), SUSTAIN 6: settles most of the way back, so held notes keep some edge.\n- Listen for: each note brightening slightly just after it starts.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 2,
+            "vcf.kbd": 0.8,
+            "vcf.env": 1.2,
+            "ads2.attack": 6.8,
+            "ads2.decay": 8,
+            "ads2.sustain": 6
+          }
+        },
+        {
+          "title": "A slow bow",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, gives a slow bow into each note.\n- ATTACK 6.6 (260 ms): about a quarter of a second, so notes start without a click. Longer gives a softer entry.\n- DECAY 8.4 (1.2 s), SUSTAIN 9: near-full level while held, and a medium release after, as DECAY is also the release.\n- Listen for: notes that ease in and hang on slightly after you let go, joining a slow line.",
+          "set": { "ads1.attack": 6.6, "ads1.decay": 8.4, "ads1.sustain": 9 }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is wired to both VCOs’ pitch, and LFO VOLUME is the vibrato depth. A small, even vibrato is the player’s hand.\n- LFO WAVEFORM triangle: a smooth waver.\n- LFO RATE 6.6 (4.37 Hz): about four wavers a second.\n- LFO VOLUME 1.2 (12 %): small. Above 2 it sounds more like a theremin than a cello.\n- Listen for: a gentle vibrato on held notes. Set VOLUME to 0 to hear how static it is without.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 6.6, "lfo.volume": 1.2 }
+        }
+      ],
+      "context": {
+        "lfo.volume": "In this sound: the width of the vibrato. Above 2 it sounds more like a theremin than a cello.",
+        "lfo.rate": "In this sound: the speed of the vibrato.",
+        "ads1.attack": "In this sound: the bow starting the string. Longer gives a softer, slower entry.",
+        "vcf.freq": "In this sound: the warmth of the tone. Higher is closer to a viola or violin.",
+        "vca2.level": "In this sound: the body under the bowed tone."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 6 and play higher",
+          "hear": "A brighter, thinner violin."
+        },
+        { "id": "ads1.attack", "try": "Raise to 8", "hear": "Slow, swelling bow strokes." },
+        {
+          "id": "vco1.wave",
+          "try": "Turn to 9",
+          "hear": "A pulse: a nasal, oboe-like tone instead of a string."
+        }
+      ]
+    },
+    {
+      "id": "kobol-horn",
+      "name": "Distant Horn",
+      "ref": "In the style of a French horn in a film score",
+      "artist": "Classic technique",
+      "tags": ["brass", "soundtrack", "classical"],
+      "level": 2,
+      "blurb": "A soft, round horn that swells into each note, as if heard from across a valley.",
+      "how": "Two ramps, between triangle and sawtooth, give a mellower tone than the sawtooths of a synth brass. The filter sits low and ADS 2 opens it slowly, so each note warms up after it starts. A soft attack on ADS 1 and a little vibrato make it breathe.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.9],
+          [2, 60, 0.9],
+          [3, 62, 0.9],
+          [4, 64, 2.9],
+          [7, 62, 0.9],
+          [8, 60, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two mellow ramps",
+          "module": "osc",
+          "why": "Two ramps, between triangle and sawtooth, give a mellower tone than the sawtooths of a synth brass. VCO stands for voltage-controlled oscillator.\n- WAVEFORM 3.4 on both: past triangle, well short of sawtooth. Towards 5 it turns into a brassier trumpet.\n- VOLUME 7 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- VCO 2 BEAT 0.6 (+6 cents): slightly off, as two players are never quite together.\n- Listen for: a soft, rounded buzz with slow beating.",
+          "set": {
+            "vco1.wave": 3.4,
+            "vco2.wave": 3.4,
+            "vca1.level": 7,
+            "vca2.level": 6,
+            "vco2.beat": 0.6
+          }
+        },
+        {
+          "title": "A dark, slowly opening filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits low and ADS 2, the filter envelope (attack, decay, sustain), opens it slowly, so each note warms up after it starts.\n- VCF FREQ 3.8 (221 Hz), RESONANCE 1: dark, which gives the sense of distance. Lower sounds further away.\n- KEYB CTRL 1 (100 %): keyboard control; the cutoff follows the notes.\n- ADS CONTROL 1.8 (+2.5 oct): how much each note brightens.\n- ADS 2 ATTACK 6.8 (300 ms): the slow warm-up.\n- ADS 2 DECAY 8 (840 ms), SUSTAIN 5: settles half way back, so held notes stay partly open.\n- Listen for: a muffled start that swells brighter over about a third of a second.",
+          "set": {
+            "vcf.freq": 3.8,
+            "vcf.res": 1,
+            "vcf.kbd": 1,
+            "vcf.env": 1.8,
+            "ads2.attack": 6.8,
+            "ads2.decay": 8,
+            "ads2.sustain": 5
+          }
+        },
+        {
+          "title": "A soft breath in",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope, gives a soft breath into each note, and the LFO (low-frequency oscillator) adds a slight vibrato.\n- ADS 1 ATTACK 6.4 (220 ms): about a fifth of a second of fade-in.\n- ADS 1 DECAY 8 (840 ms), SUSTAIN 10: full level while held and a soft release, as DECAY is also the release.\n- LFO triangle, RATE 6.3 (3.31 Hz): a slow, smooth waver.\n- LFO VOLUME 0.8 (8 %): just enough vibrato to sound played. The LFO is wired to both VCOs’ pitch.\n- Listen for: notes that swell in and sound distant and alive.",
+          "set": {
+            "ads1.attack": 6.4,
+            "ads1.decay": 8,
+            "ads1.sustain": 10,
+            "lfo.shape": "tri",
+            "lfo.rate": 6.3,
+            "lfo.volume": 0.8
+          }
+        }
+      ],
+      "context": {
+        "vco1.wave": "In this sound: the mellow ramp. Towards 5 it turns into a brassier trumpet.",
+        "ads2.attack": "In this sound: how slowly the horn warms up on each note.",
+        "vcf.freq": "In this sound: the distance. Lower sounds further away.",
+        "vcf.env": "In this sound: how much each note brightens as it is played."
+      },
+      "tweaks": [
+        { "id": "vcf.freq", "try": "Raise to 5", "hear": "The horn comes nearer and brighter." },
+        {
+          "id": "vco1.wave",
+          "try": "Turn both WAVEFORM knobs to 5",
+          "hear": "Full sawtooths: a trombone or synth-brass tone."
+        }
+      ]
+    },
+    {
+      "id": "kobol-voice",
+      "name": "Lonely Voice",
+      "ref": "A wordless singing voice from one resonant filter",
+      "artist": "Classic technique",
+      "tags": ["lead", "ambient", "soundtrack"],
+      "level": 3,
+      "blurb": "A breathy, vowel-like voice singing a slow melody.",
+      "how": "A voice’s vowel comes from resonances that stay put while the pitch changes. Here the filter has plenty of resonance and follows the keys only a little, so its peak stays in roughly the same place: a fixed vowel. The breath is the noise generator, which has no level knob of its own, so it goes through the voltage processor and OUT GAIN sets how much reaches the filter. A slow attack and a small vibrato make it sing.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.9],
+          [2, 67, 0.9],
+          [3, 69, 0.9],
+          [4, 71, 2.9],
+          [7, 69, 0.9],
+          [8, 67, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth",
+          "module": "osc",
+          "why": "A sawtooth has every harmonic, which gives the resonant filter plenty to pick a vowel from. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 4.8: almost a sawtooth.\n- VCO 1 VOLUME 7: its level through its own VCA (voltage-controlled amplifier).\n- VCO 2 VOLUME 0: off.\n- Listen for: a plain, buzzy tone.",
+          "set": { "vco1.wave": 4.8, "vca1.level": 7, "vca2.level": 0 }
+        },
+        {
+          "title": "A fixed, resonant vowel",
+          "module": "filter",
+          "why": "A voice’s vowel comes from resonances that stay put while the pitch changes. Here the VCF (voltage-controlled filter) has plenty of resonance and follows the keys only a little: a fixed vowel.\n- VCF FREQ 5.3 (622 Hz): the vowel. Lower sounds like “oo”, higher like “ah” and then “ee”.\n- RESONANCE 6.5: a strong peak that makes the tone vocal. Too high and it starts to whistle.\n- KEYB CTRL 0.3 (30 %): keyboard control, low, so the peak barely moves from note to note.\n- ADS CONTROL 0 (off): no filter envelope, so the vowel is steady.\n- Listen for: a nasal, vowel-like tone. Sweep VCF FREQ slowly to hear the vowel change.",
+          "set": { "vcf.freq": 5.3, "vcf.res": 6.5, "vcf.kbd": 0.3, "vcf.env": 0 }
+        },
+        {
+          "title": "Breath through the voltage processor",
+          "module": "util",
+          "why": "The noise generator has no level knob and is not wired in, so it goes through the voltage processor, a utility that adds and scales voltages. OUT GAIN then acts as a volume knob for the breath.\n- NOISE OUT → IN 2, OUT → VCF AUDIO IN: two cables; the noise passes through the voltage processor into the filter, alongside VCO 1.\n- Noise colour white: bright, then filtered down by the vowel.\n- IN 1 GAIN 0: stops IN 1’s built-in +10 V adding a steady voltage, which would only give a thump at each note.\n- OUT GAIN 0.15: low, so the noise is a breath under the tone rather than a hiss over it.\n- Listen for: a breathy edge on the voice. Raise OUT GAIN to hear it turn into a whisper.",
+          "set": { "noise.colour": "white", "vp.in1": 0, "vp.out": 0.15 },
+          "cables": [
+            ["j.noise", "j.vpIn2"],
+            ["j.vpOut", "j.vcfIn"]
+          ]
+        },
+        {
+          "title": "Breathe and sing",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope (attack, decay, sustain), gives a slow breath in, and the LFO (low-frequency oscillator) is the singer’s vibrato.\n- ADS 1 ATTACK 7 (360 ms): a slow start, like a singer easing in.\n- ADS 1 DECAY 8.5 (1.3 s), SUSTAIN 10: full level while held, then a long release.\n- LFO triangle, RATE 6.7 (4.79 Hz): a natural vibrato speed.\n- LFO VOLUME 1.4 (14 %): the vibrato depth on the VCO’s pitch.\n- Listen for: a slow melody that sounds sung. Leave gaps between phrases, as a singer would breathe.",
+          "set": {
+            "ads1.attack": 7,
+            "ads1.decay": 8.5,
+            "ads1.sustain": 10,
+            "lfo.shape": "tri",
+            "lfo.rate": 6.7,
+            "lfo.volume": 1.4
+          }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: the vowel. Lower sounds like “oo”, higher like “ah” and then “ee”.",
+        "vcf.res": "In this sound: how vocal the tone is. Too high and it starts to whistle.",
+        "vcf.kbd": "In this sound: low, so the vowel stays still while the melody moves.",
+        "vp.out": "In this sound: the level of the breath. The voltage processor is working as a volume knob for the noise.",
+        "vp.in1": "In this sound: at 0. Turned up, it adds a steady voltage to the filter’s audio input, which does nothing you can hear except a thump at each note.",
+        "lfo.volume": "In this sound: the singer’s vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move slowly between 4.5 and 6",
+          "hear": "The voice changes vowel as you turn."
+        },
+        { "id": "vp.out", "try": "Raise to 0.5", "hear": "A breathier, whispered voice." },
+        {
+          "id": "vcf.kbd",
+          "try": "Set to 1",
+          "hear": "The vowel follows the notes and the voice turns into a plain synth lead."
+        }
+      ]
+    },
+    {
+      "id": "kobol-aero-arp",
+      "name": "Bright Racing Arpeggio",
+      "ref": "In the style of Daft Punk — \"Aerodynamic\"",
+      "artist": "Daft Punk",
+      "tags": ["seq", "house", "00s"],
+      "level": 2,
+      "blurb": "A fast, bright arpeggio that tumbles down each chord, with a sharp, glassy edge on the front of every note.",
+      "how": "VCO 1 is between ramp and sawtooth, with VCO 2 an octave up as a quieter square for sparkle. The filter is left fairly open and follows the keys, so high notes stay as bright as low ones. The Kobol’s own trick does the rest: ADS 2 OUT is patched into VCO 1 WAVEFORM, so each note starts as a thin, bright pulse and morphs back towards the sawtooth as the envelope falls. That gives every note a crisp pick without a sharper filter.",
+      "phrase": {
+        "bpm": 123,
+        "loop": true,
+        "steps": [
+          [0, 81, 0.2],
+          [0.25, 76, 0.2],
+          [0.5, 72, 0.2],
+          [0.75, 69, 0.2],
+          [1, 81, 0.2],
+          [1.25, 76, 0.2],
+          [1.5, 72, 0.2],
+          [1.75, 69, 0.2],
+          [2, 81, 0.2],
+          [2.25, 77, 0.2],
+          [2.5, 72, 0.2],
+          [2.75, 69, 0.2],
+          [3, 81, 0.2],
+          [3.25, 77, 0.2],
+          [3.5, 72, 0.2],
+          [3.75, 69, 0.2],
+          [4, 79, 0.2],
+          [4.25, 74, 0.2],
+          [4.5, 71, 0.2],
+          [4.75, 67, 0.2],
+          [5, 79, 0.2],
+          [5.25, 74, 0.2],
+          [5.5, 71, 0.2],
+          [5.75, 67, 0.2],
+          [6, 80, 0.2],
+          [6.25, 76, 0.2],
+          [6.5, 71, 0.2],
+          [6.75, 68, 0.2],
+          [7, 80, 0.2],
+          [7.25, 76, 0.2],
+          [7.5, 71, 0.2],
+          [7.75, 68, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a square an octave up",
+          "module": "osc",
+          "why": "VCO 1 is the main tone and VCO 2 a quieter square an octave up for sparkle. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 4: on the ramp, just before the sawtooth. Nearer 0 the notes will settle softer.\n- VCO 2 WAVEFORM 6.7: a square, hollow and bright.\n- VCO 2 FREQUENCY 6 (+12 st): an octave up.\n- VOLUME 7.5 and 4.5: each VCO has its own VCA (voltage-controlled amplifier). Too much VCO 2 and it takes over the pitch.\n- Listen for: a bright, buzzy tone with a sparkle on top.",
+          "set": {
+            "vco1.wave": 4,
+            "vco2.wave": 6.7,
+            "vco2.freq": 6,
+            "vca1.level": 7.5,
+            "vca2.level": 4.5
+          }
+        },
+        {
+          "title": "A bright, tracking filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is left fairly open and follows the keys, so high notes stay as bright as low ones.\n- VCF FREQ 6.8 (1.8 kHz), RESONANCE 2: fairly open, with a slight edge.\n- KEYB CTRL 1 (100 %): keyboard control; the brightness stays even across the arpeggio.\n- ADS CONTROL 1.5 (+2.1 oct): ADS 2, the filter envelope, adds a flick on each note.\n- Listen for: a small flick at the start of each note, from ADS 2’s starting shape.",
+          "set": { "vcf.freq": 6.8, "vcf.res": 2, "vcf.kbd": 1, "vcf.env": 1.5 }
+        },
+        {
+          "title": "A quick envelope",
+          "module": "env",
+          "why": "ADS 2 is an ADS (attack, decay, sustain) envelope. Made short, it is the shape of the pick on each note, and in the next step it drives the waveform as well as the filter.\n- ATTACK 1 (2 ms): immediate.\n- DECAY 4.5 (43 ms): very short; how long the bright pick lasts.\n- SUSTAIN 0: gone completely while the key is held.\n- Listen for: a tight, bright click on each note in place of the softer flick.",
+          "set": { "ads2.attack": 1, "ads2.decay": 4.5, "ads2.sustain": 0 }
+        },
+        {
+          "title": "Patch the envelope to the waveform",
+          "module": "osc",
+          "why": "The Kobol’s own trick: ADS 2 is patched to VCO 1’s WAVEFORM input, so each note starts further along the knob’s path, at the thin pulse end, and slides back to where the knob is set.\n- Cable ADS 2 OUT → VCO 1 WAVEFORM: the envelope pushes the shape towards pulse on each note; the knob at 4 is where it settles.\n- Listen for: a crisp, glassy edge on the front of every note, a pick without a sharper filter. Pull the cable out and back in to compare.",
+          "set": {},
+          "cables": [["j.ads2Out", "j.vco1Wave"]]
+        },
+        {
+          "title": "Short, even notes",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, keeps fast notes separate.\n- ATTACK 1 (2 ms): instant.\n- DECAY 4.8 (55 ms), SUSTAIN 6: a quick dip to a held level of 60 %, which adds punch. DECAY is also the release, so notes stop about 50 ms after you let go.\n- Listen for: a tight, even arpeggio at speed. Raise DECAY and the notes start to run together.",
+          "set": { "ads1.attack": 1, "ads1.decay": 4.8, "ads1.sustain": 6 }
+        }
+      ],
+      "context": {
+        "vco1.wave": "In this sound: where each note settles after its bright start. Nearer 0 the notes settle softer.",
+        "ads2.decay": "In this sound: how long the bright pick lasts, on the waveform and the filter together.",
+        "vcf.kbd": "In this sound: at 1 the high notes of the arpeggio stay as bright as the low ones.",
+        "vcf.freq": "In this sound: fairly open, so most of the brightness comes through.",
+        "vca2.level": "In this sound: the octave-up sparkle. Too high and it takes over the pitch.",
+        "ads1.decay": "In this sound: the length of each note, and its release."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.decay",
+          "try": "Move between 3.5 and 6",
+          "hear": "From short, clicky picks to notes that shimmer as they change shape."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Lower to 5",
+          "hear": "The arpeggio moves behind the mix, softer and rounder."
+        },
+        {
+          "id": "vca2.level",
+          "try": "Set to 0",
+          "hear": "Only VCO 1 is left: warmer, with less sparkle on top."
+        }
+      ]
+    },
+    {
+      "id": "kobol-metro-pulse",
+      "name": "Slowly Opening Pulse",
+      "ref": "In the style of Kraftwerk — \"Metropolis\"",
+      "artist": "Kraftwerk",
+      "tags": ["seq", "synth-pop", "70s"],
+      "level": 3,
+      "blurb": "A dark, steady pulse of short bass notes whose filter opens and closes very slowly over many bars.",
+      "how": "Two oscillators, a sawtooth and a square an octave below, go through the 24 dB filter set low with some resonance. Short envelopes with no sustain turn each note into a firm pulse. The slow opening comes from the LFO, but not straight in: LFO OUT 2 goes through the voltage processor, whose OUT GAIN sets how far it moves the filter, and from there into VCF FREQUENCY. LFO VOLUME stays at 0, so the notes do not wobble in pitch.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.3],
+          [0.5, 38, 0.3],
+          [1, 38, 0.3],
+          [1.5, 50, 0.3],
+          [2, 38, 0.3],
+          [2.5, 38, 0.3],
+          [3, 41, 0.3],
+          [3.5, 43, 0.3],
+          [4, 38, 0.3],
+          [4.5, 38, 0.3],
+          [5, 38, 0.3],
+          [5.5, 50, 0.3],
+          [6, 36, 0.3],
+          [6.5, 36, 0.3],
+          [7, 41, 0.3],
+          [7.5, 45, 0.3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth over a square",
+          "module": "osc",
+          "why": "A sawtooth over a square an octave below gives a dark, solid pulse. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 5: sawtooth, bright and buzzy.\n- VCO 2 WAVEFORM 6.7, FREQUENCY 4 (−12 st): a square an octave below, for weight.\n- VCO 2 BEAT 0.4 (+4 cents): a very slight beat against VCO 1.\n- VOLUME 7 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- Listen for: a thick, hollow, buzzy low tone.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 6.7,
+            "vco2.freq": 4,
+            "vco2.beat": 0.4,
+            "vca1.level": 7,
+            "vca2.level": 6
+          }
+        },
+        {
+          "title": "A dark, resonant filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) goes low with resonance, and a little envelope gives each note a push.\n- VCF FREQ 5.2 (581 Hz): the middle of the slow sweep to come.\n- RESONANCE 5: a ringing edge that will grow as the filter opens.\n- KEYB CTRL 0.5 (50 %): keyboard control at half, so higher notes open a little.\n- ADS CONTROL 1.5 (+2.1 oct): ADS 2, the filter envelope, gives each note a soft push.\n- Listen for: a darker, resonant tone.",
+          "set": { "vcf.freq": 5.2, "vcf.res": 5, "vcf.kbd": 0.5, "vcf.env": 1.5 }
+        },
+        {
+          "title": "Short pulses",
+          "module": "env",
+          "why": "Both ADS (attack, decay, sustain) envelopes get no attack, a short decay and no sustain, so each note is a pulse of the same length.\n- ADS 2 ATTACK 1, DECAY 4.6, SUSTAIN 0: a 2 ms rise and a 46 ms fall. A quick filter push at the front of every note.\n- ADS 1 ATTACK 1, DECAY 6, SUSTAIN 0: a 2 ms rise and a 150 ms fall. ADS 1 is the loudness. Each note lasts about 150 ms, however long the key is held.\n- Listen for: firm, even pulses. Change ADS 1 DECAY to make them shorter or longer.",
+          "set": {
+            "ads2.attack": 1,
+            "ads2.decay": 4.6,
+            "ads2.sustain": 0,
+            "ads1.attack": 1,
+            "ads1.decay": 6,
+            "ads1.sustain": 0
+          }
+        },
+        {
+          "title": "A very slow LFO, kept off the pitch",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is set very slow, ready to open the filter over many bars, and kept off the pitch.\n- LFO WAVEFORM triangle: a smooth rise and fall.\n- LFO RATE 2.2 (0.08 Hz): about twelve seconds per cycle. Lower is slower.\n- LFO VOLUME 0: the LFO reaches both VCOs’ pitch through this knob; at 0 the notes do not wobble. LFO OUT 2 still carries it at full level.\n- Listen for: no change yet; the LFO is not patched anywhere.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 2.2, "lfo.volume": 0 }
+        },
+        {
+          "title": "Through the voltage processor to the filter",
+          "module": "util",
+          "why": "The voltage processor, a utility that adds and scales voltages, sits between the LFO and the filter, so its OUT GAIN sets how far the LFO moves the cutoff.\n- LFO OUT 2 → IN 2, OUT → VCF FREQUENCY: two cables; the full-level LFO goes through the voltage processor to the cutoff.\n- IN 1 GAIN 0: removes the fixed +10 V that IN 1 carries when unpatched, so only the LFO reaches the filter.\n- OUT GAIN 0.25: the depth of the sweep. At 0 the pulse stays dark.\n- Listen for: over several bars the pulse brightens and its resonant edge grows, then it sinks back.",
+          "set": { "vp.in1": 0, "vp.out": 0.25 },
+          "cables": [
+            ["j.lfoOut2", "j.vpIn2"],
+            ["j.vpOut", "j.vcfFreq"]
+          ]
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how long one full opening and closing takes. Lower is slower.",
+        "lfo.volume": "In this sound: at 0, so the LFO does not bend the pitch. LFO OUT 2 does not depend on it.",
+        "vp.out": "In this sound: how far the LFO moves the filter. At 0 the pulse stays dark.",
+        "vp.in1": "In this sound: at 0, so only the LFO reaches the filter, with no fixed offset added.",
+        "vcf.freq": "In this sound: the middle of the slow sweep.",
+        "vcf.res": "In this sound: the ringing edge that grows as the filter opens.",
+        "ads1.decay": "In this sound: the length of each pulse.",
+        "vco2.freq": "In this sound: an octave below VCO 1, for weight."
+      },
+      "tweaks": [
+        {
+          "id": "vp.out",
+          "try": "Raise to 0.5",
+          "hear": "The sweep goes much further, from a dull thud to a bright buzz."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 4",
+          "hear": "The filter now breathes every bar or two instead of over a long stretch."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 7",
+          "hear": "A whistling edge follows the sweep up and down."
+        }
+      ]
+    },
+    {
+      "id": "kobol-rubber-scoop-bass",
+      "name": "Rubber Scoop Bass",
+      "ref": "In the style of Parliament — \"Rumpofsteelskin\" (Motor Booty Affair)",
+      "artist": "Bernie Worrell",
+      "tags": ["bass", "funk", "70s"],
+      "level": 3,
+      "blurb": "A bouncy, squelching funk bass where every note scoops up into pitch from just below.",
+      "how": "A sawtooth over a square an octave down goes through a resonant filter that ADS 2 flicks open on every note. The same envelope, turned upside down by the voltage processor, is patched into VCO MOD IN, so each note starts a few semitones flat and springs up to pitch as the envelope falls. The scoop and the squelch move together, which gives the rubbery bounce of a funk synth bass. The Kobol has no glide, so this is how it slides.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.75, 40, 0.2],
+          [1, 52, 0.3],
+          [1.5, 50, 0.2],
+          [1.75, 47, 0.2],
+          [2.5, 40, 0.4],
+          [3, 43, 0.2],
+          [3.25, 45, 0.4],
+          [3.75, 47, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth over a square",
+          "module": "osc",
+          "why": "A sawtooth over a square an octave down gives the bass bite and weight. VCO stands for voltage-controlled oscillator.\n- VCO 1 WAVEFORM 5: sawtooth at the note played, the bright top.\n- VCO 2 WAVEFORM 6.7, FREQUENCY 4 (−12 st): a square an octave below, for the bottom end.\n- VOLUME 8 and 6: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- Listen for: a thick, buzzy bass tone.",
+          "set": {
+            "vco1.wave": 5,
+            "vco2.wave": 6.7,
+            "vco2.freq": 4,
+            "vca1.level": 8,
+            "vca2.level": 6
+          }
+        },
+        {
+          "title": "A resonant, closed filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) is closed with a strong resonant peak for the envelope to push around.\n- VCF FREQ 3.4 (168 Hz): dark between notes.\n- RESONANCE 6: a wet, vocal peak. Above 8 it starts to whistle.\n- KEYB CTRL 0.7 (70 %): keyboard control; higher notes open somewhat, but not fully.\n- Listen for: a muffled bass with a hollow ring.",
+          "set": { "vcf.freq": 3.4, "vcf.res": 6, "vcf.kbd": 0.7 }
+        },
+        {
+          "title": "A quick squelch from ADS 2",
+          "module": "env",
+          "why": "ADS 2, the filter envelope (attack, decay, sustain), flicks the resonant peak open on every note.\n- ADS CONTROL 2.8 (+3.9 oct): well right of centre; how wide each squelch opens.\n- ATTACK 1 (2 ms): immediate.\n- DECAY 5.2 (77 ms): short, so it closes quickly. Longer turns the squelch into a slow wah.\n- SUSTAIN 0: back to dark while held.\n- Listen for: a wet “bwow” on every note.",
+          "set": { "vcf.env": 2.8, "ads2.attack": 1, "ads2.decay": 5.2, "ads2.sustain": 0 }
+        },
+        {
+          "title": "Turn the envelope upside down",
+          "module": "util",
+          "why": "The voltage processor adds and scales voltages, and its REV OUT puts the result out upside down. Fed with ADS 2, it gives a falling copy of the envelope for the scoop.\n- Cable ADS 2 OUT → IN 2: the envelope into the voltage processor.\n- IN 1 GAIN 0: removes the fixed +10 V that IN 1 carries when unpatched, so REV OUT carries only the envelope. Turned up, it would push every note flat.\n- OUT GAIN 0.15: the depth of the scoop, kept small.\n- Listen for: no change yet; REV OUT is not patched.",
+          "set": { "vp.in1": 0, "vp.out": 0.15 },
+          "cables": [["j.ads2Out", "j.vpIn2"]]
+        },
+        {
+          "title": "Scoop the pitch",
+          "module": "mod",
+          "why": "VCO MOD IN takes the LFO’s place on the pitch of both VCOs. Fed the upside-down envelope, it starts each note flat and lets it spring up to pitch. The Kobol has no glide, so this is how it slides.\n- Cable REV OUT → VCO MOD IN: each note starts about three and a half semitones flat and rises as ADS 2 falls, in step with the squelch.\n- Listen for: the bounce at the front of every note. Set OUT GAIN to 0 and the notes start dead on pitch; a longer ADS 2 DECAY turns the bounce into a slow slide.",
+          "set": {},
+          "cables": [["j.vpRev", "j.vcoModIn"]]
+        },
+        {
+          "title": "Tight, funky notes",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope for the output VCA, keeps the funk tight.\n- ATTACK 1 (2 ms): instant, so the scoop lands on the beat.\n- DECAY 4.8 (55 ms), SUSTAIN 9: near-full level while held. DECAY is also the release: the length of each note’s tail once the key is up.\n- Listen for: clean rests between notes, so the line stays in the pocket.",
+          "set": { "ads1.attack": 1, "ads1.decay": 4.8, "ads1.sustain": 9 }
+        }
+      ],
+      "context": {
+        "vp.out": "In this sound: how deep the scoop is. At 0.15 about three and a half semitones; at 0 the notes start dead on pitch.",
+        "vp.in1": "In this sound: at 0. Turned up, it adds a fixed voltage that pushes every note flat.",
+        "ads2.decay": "In this sound: how long the scoop and the squelch last. Longer turns the bounce into a slow slide.",
+        "vcf.env": "In this sound: how wide each squelch opens.",
+        "vcf.res": "In this sound: the wet, vocal edge. Above 8 it starts to whistle.",
+        "vco2.freq": "In this sound: an octave below VCO 1, for the bottom end.",
+        "ads1.decay": "In this sound: the length of each note’s tail once the key is released."
+      },
+      "tweaks": [
+        {
+          "id": "vp.out",
+          "try": "Raise to 0.4",
+          "hear": "Each note swoops up from nearly an octave below: more cartoon than bass."
+        },
+        {
+          "id": "ads2.decay",
+          "try": "Move between 4.5 and 6.5",
+          "hear": "From a tight flick to a long, rubbery rise on every note."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 5",
+          "hear": "A brighter, buzzier bass that cuts through more."
+        }
+      ]
+    },
+    {
+      "id": "kobol-dark-drift-pad",
+      "name": "Dark Drifting Pad",
+      "ref": "In the style of Brian Eno — \"Zawinul/Lava\" (Another Green World)",
+      "artist": "Brian Eno",
+      "tags": ["pad", "ambient", "70s"],
+      "level": 2,
+      "blurb": "A slow, dark, slightly murky tone whose lower half keeps changing shape on its own.",
+      "how": "VCO 1 is a soft triangle at the note played. VCO 2, an octave below, gets a very slow LFO patched into its WAVEFORM input, so over about ten seconds it turns from triangle to square and back. The filter is low with a little resonance, so the change is heard as a slow thickening and thinning rather than a sweep. Slow attacks and long releases let the notes blur into each other.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [4, 60, 1.9],
+          [6, 55, 1.9],
+          [8, 53, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft triangle on top",
+          "module": "osc",
+          "why": "VCO 1, the voltage-controlled oscillator on top, is a soft, steady tone at the note played.\n- VCO 1 WAVEFORM 1: near the triangle end, just into the ramp.\n- VCO 1 VOLUME 7: its level through its own VCA (voltage-controlled amplifier).\n- Listen for: a soft, round tone.",
+          "set": { "vco1.wave": 1, "vca1.level": 7 }
+        },
+        {
+          "title": "VCO 2 an octave below",
+          "module": "osc",
+          "why": "VCO 2 goes an octave below and a little brighter. This is the half that will change shape.\n- VCO 2 FREQUENCY 4 (−12 st): an octave down.\n- VCO 2 WAVEFORM 3.5: between ramp and sawtooth, the middle of its drift. Nearer 0 it spends more time soft; nearer 7 more time hollow.\n- VCO 2 BEAT 0.5 (+5 cents): beats slightly against VCO 1.\n- VCO 2 VOLUME 6: through its own VCA; the Kobol has no mixer.\n- Listen for: a fuller tone with a slow beat.",
+          "set": { "vco2.freq": 4, "vco2.wave": 3.5, "vco2.beat": 0.5, "vca2.level": 6 }
+        },
+        {
+          "title": "A very slow LFO on its shape",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is patched to VCO 2’s WAVEFORM input, so VCO 2 slowly turns from triangle towards square and back.\n- Cable LFO OUT 2 → VCO 2 WAVEFORM: OUT 2 is the LFO at full level.\n- LFO triangle, RATE 2.5 (0.10 Hz): about ten seconds per cycle.\n- LFO VOLUME 0: this knob is the vibrato depth; at 0 nothing wobbles in pitch. LFO OUT 2 does not depend on it.\n- Listen for: hold a note for twenty seconds and hear the lower half thicken and thin.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 2.5, "lfo.volume": 0 },
+          "cables": [["j.lfoOut2", "j.vco2Wave"]]
+        },
+        {
+          "title": "A dark filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) goes low with some resonance, and ADS 2, the filter envelope (attack, decay, sustain), opens it a little as each note swells in.\n- VCF FREQ 4.6 (384 Hz), RESONANCE 3: dark and slightly murky, so VCO 2’s change is heard as thickening and thinning rather than a sweep.\n- KEYB CTRL 0.8 (80 %): keyboard control; the cutoff mostly follows the notes.\n- ADS CONTROL 1 (+1.4 oct): a small opening on each note.\n- ADS 2 ATTACK 7.5, DECAY 9, SUSTAIN 6: a 550 ms rise and a 2.0 s fall. A slow rise, then an easy settle.\n- Listen for: each note opening gently over half a second.",
+          "set": {
+            "vcf.freq": 4.6,
+            "vcf.res": 3,
+            "vcf.kbd": 0.8,
+            "vcf.env": 1,
+            "ads2.attack": 7.5,
+            "ads2.decay": 9,
+            "ads2.sustain": 6
+          }
+        },
+        {
+          "title": "Slow in, slow out",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope, is slow in and slow out, so notes blur into each other.\n- ATTACK 7.4 (510 ms): half a second of fade-in.\n- DECAY 9.4 (2.8 s), SUSTAIN 9: near-full level while held. DECAY is also the release, so each note hangs on for nearly three seconds after you let go.\n- Listen for: chords that fade under the next one, while the lower half keeps changing shape.",
+          "set": { "ads1.attack": 7.4, "ads1.decay": 9.4, "ads1.sustain": 9 }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how long one full change of VCO 2’s shape takes. At 2.5 about ten seconds.",
+        "lfo.volume": "In this sound: at 0, so the LFO only moves the waveform. LFO OUT 2 is always at full level.",
+        "vco2.wave": "In this sound: the middle of VCO 2’s drift. Nearer 0 it spends more time soft; nearer 7 more time hollow.",
+        "vcf.freq": "In this sound: how murky the whole tone is.",
+        "ads1.attack": "In this sound: the slow fade into each note.",
+        "ads1.decay": "In this sound: how long each note hangs on after release."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Raise to 4",
+          "hear": "The lower voice churns every second or two instead of drifting."
+        },
+        {
+          "id": "vcf.freq",
+          "try": "Raise to 6",
+          "hear": "The shape changes in VCO 2 become much easier to hear."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A hollow ring appears as VCO 2 moves through its shapes."
+        }
+      ]
+    },
+    {
+      "id": "kobol-steel-bender",
+      "name": "Steel Bender Swell",
+      "ref": "In the style of Daniel Lanois — \"Sioux Lookout\" (Flesh and Machine)",
+      "artist": "Daniel Lanois",
+      "tags": ["lead", "ambient", "10s"],
+      "level": 3,
+      "blurb": "A pedal-steel style swell: two voices fade in together, then the upper one bends up a whole tone while the lower one holds.",
+      "how": "On a pedal steel a pedal raises one string while the others ring on. Here VCO 1 holds the note and VCO 2 sits a fifth above it. ADS 2, with a one-second attack, goes through the voltage processor into VCO 2 FREQ, so VCO 2 bends from the fifth up to the sixth as the note swells in. ADS 1’s slow attack stands in for the volume pedal, and a small, slow vibrato from the LFO is the steel bar moving on the strings.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8],
+          [4, 57, 3.8],
+          [8, 55, 5.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two soft voices a fifth apart",
+          "module": "osc",
+          "why": "Two VCOs (voltage-controlled oscillators) a fifth apart are the two strings: VCO 1 holds the note and VCO 2 will bend.\n- WAVEFORM 2.5 on both: between triangle and ramp, round and singing.\n- VCO 2 FREQUENCY 5.6 (+7 st): a fifth above VCO 1. Tune it by ear; each knob step is about an octave.\n- VOLUME 7 and 5.5: each VCO has its own VCA (voltage-controlled amplifier) in place of a mixer.\n- Listen for: an open, gentle fifth on every key.",
+          "set": {
+            "vco1.wave": 2.5,
+            "vco2.wave": 2.5,
+            "vco2.freq": 5.58,
+            "vca1.level": 7,
+            "vca2.level": 5.5
+          }
+        },
+        {
+          "title": "A warm filter",
+          "module": "filter",
+          "why": "The VCF (voltage-controlled filter) sits in the middle, warm and following the keys. ADS 2 is kept off the filter, so it is free for the bend.\n- VCF FREQ 5.6 (766 Hz), RESONANCE 2: warm, with a slight edge.\n- KEYB CTRL 1 (100 %): keyboard control; the tone is even across the keys.\n- ADS CONTROL 0 (off): no filter envelope.\n- Listen for: a softer, warmer fifth.",
+          "set": { "vcf.freq": 5.6, "vcf.res": 2, "vcf.kbd": 1, "vcf.env": 0 }
+        },
+        {
+          "title": "A slow envelope for the pedal",
+          "module": "env",
+          "why": "ADS 2 is an ADS (attack, decay, sustain) envelope. Here it is the pedal: a slow push down, then held.\n- ATTACK 8.2 (1000 ms): rises over about a second. Lower makes the bend snap up at the start of the note.\n- DECAY 9 (2.0 s): with SUSTAIN full it only acts on release, setting how slowly the pedal comes back up.\n- SUSTAIN 10: holds at full, so the bend stays for as long as the key is down.\n- Listen for: no change yet; ADS 2 is not patched anywhere.",
+          "set": { "ads2.attack": 8.2, "ads2.decay": 9, "ads2.sustain": 10 }
+        },
+        {
+          "title": "Bend VCO 2 with it",
+          "module": "util",
+          "why": "The voltage processor, a utility that adds and scales voltages, turns ADS 2 into a bend of the right size for VCO 2.\n- ADS 2 OUT → IN 2, OUT → VCO 2 FREQ: two cables; the envelope goes through the voltage processor to VCO 2’s pitch only.\n- IN 1 GAIN 0: removes the fixed +10 V that IN 1 carries when unpatched, which would put VCO 2 out of tune.\n- OUT GAIN 0.083: makes the full envelope worth two semitones, a whole tone, from the fifth up to the sixth. 0.042 would be a semitone.\n- Listen for: the upper voice rising while the lower one stays put.",
+          "set": { "vp.in1": 0, "vp.out": 0.083 },
+          "cables": [
+            ["j.ads2Out", "j.vpIn2"],
+            ["j.vpOut", "j.vco2Freq"]
+          ]
+        },
+        {
+          "title": "The volume pedal",
+          "module": "amp",
+          "why": "ADS 1, the loudness envelope, stands in for the volume pedal: each note swells in with no pick and dies away slowly.\n- ATTACK 7.8 (710 ms): a slow swell. Longer is slower.\n- DECAY 9.4 (2.8 s), SUSTAIN 10: full level while held, then a long fade, as DECAY is also the release.\n- Listen for: notes that fade in while the bend happens, like a pedal-steel player easing up the volume.",
+          "set": { "ads1.attack": 7.8, "ads1.decay": 9.4, "ads1.sustain": 10 }
+        },
+        {
+          "title": "Bar vibrato",
+          "module": "lfo",
+          "why": "The LFO (low-frequency oscillator) is wired to both VCOs’ pitch. A small, slow vibrato is the steel bar moving on the strings.\n- LFO WAVEFORM triangle: a smooth waver.\n- LFO RATE 6.2 (3.02 Hz): about three wavers a second.\n- LFO VOLUME 0.7 (7 %): small. Above 1.5 it sounds seasick.\n- Listen for: a slight waver on both voices while the bend holds.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 6.2, "lfo.volume": 0.7 }
+        }
+      ],
+      "context": {
+        "vp.out": "In this sound: the size of the bend. 0.083 is a whole tone, fifth to sixth; 0.042 a semitone.",
+        "vp.in1": "In this sound: at 0. Turned up, it adds a fixed voltage that puts VCO 2 out of tune.",
+        "ads2.attack": "In this sound: how slowly the pedal is pushed. Lower makes the bend snap up at the start of the note.",
+        "ads2.sustain": "In this sound: at 10, so the bend holds for as long as the key is down.",
+        "vco2.freq": "In this sound: a fifth above VCO 1 before the bend. Set it to 5.42 and the bend goes from the fourth to the fifth.",
+        "ads1.attack": "In this sound: the volume pedal. Longer gives a slower swell.",
+        "lfo.volume": "In this sound: the bar vibrato. Above 1.5 it sounds seasick."
+      },
+      "tweaks": [
+        {
+          "id": "ads2.attack",
+          "try": "Lower to 6",
+          "hear": "The bend happens in a fraction of a second, like a quick pedal push."
+        },
+        {
+          "id": "vp.out",
+          "try": "Lower to 0.042",
+          "hear": "A semitone bend: the upper voice rises to a tense, bluesy interval."
+        },
+        {
+          "id": "ads1.attack",
+          "try": "Raise to 9",
+          "hear": "A much slower swell that fades in well after the bend has started."
+        }
+      ]
+    }
+  ]
+}

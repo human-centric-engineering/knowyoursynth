@@ -21,6 +21,16 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 /** One literal `import()` per definition: a path the bundler cannot see is a path it cannot split. */
 const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'model-d': () => import('@/lib/app/synths/defs/model-d'),
+  neutron: () => import('@/lib/app/synths/defs/neutron'),
+  'pro-1': () => import('@/lib/app/synths/defs/pro-1'),
+  k2: () => import('@/lib/app/synths/defs/k2'),
+  b2600: () => import('@/lib/app/synths/defs/b2600'),
+  kobol: () => import('@/lib/app/synths/defs/kobol'),
+  'wasp-deluxe': () => import('@/lib/app/synths/defs/wasp-deluxe'),
+  'tb-303': () => import('@/lib/app/synths/defs/tb-303'),
+  'td-3': () => import('@/lib/app/synths/defs/td-3'),
+  'model-15': () => import('@/lib/app/synths/defs/model-15'),
+  grandmother: () => import('@/lib/app/synths/defs/grandmother'),
 };
 
 /** Every id a loader exists for. */

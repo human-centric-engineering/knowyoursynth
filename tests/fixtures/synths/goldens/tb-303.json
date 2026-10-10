@@ -1,0 +1,775 @@
+{
+  "id": "tb-303",
+  "readouts": {
+    "osc.tuning": [
+      "-500 cents",
+      "-400 cents",
+      "-300 cents",
+      "-200 cents",
+      "-100 cents",
+      "0 cents",
+      "+100 cents",
+      "+200 cents",
+      "+300 cents",
+      "+400 cents",
+      "+500 cents"
+    ],
+    "filter.cutoff": [
+      "160 Hz",
+      "227 Hz",
+      "321 Hz",
+      "455 Hz",
+      "644 Hz",
+      "912 Hz",
+      "1.3 kHz",
+      "1.8 kHz",
+      "2.6 kHz",
+      "3.7 kHz",
+      "5.2 kHz"
+    ],
+    "env.decay": [
+      "200 ms",
+      "250 ms",
+      "320 ms",
+      "400 ms",
+      "500 ms",
+      "630 ms",
+      "800 ms",
+      "1.0 s",
+      "1.3 s",
+      "1.6 s",
+      "2.0 s"
+    ],
+    "seq.tempo": [
+      "40 BPM",
+      "66 BPM",
+      "92 BPM",
+      "118 BPM",
+      "144 BPM",
+      "170 BPM",
+      "196 BPM",
+      "222 BPM",
+      "248 BPM",
+      "274 BPM",
+      "300 BPM"
+    ]
+  },
+  "engine": {
+    "init": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.69,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "att": [1, 1],
+      "delay": { "on": false },
+      "env1": { "a": 0.003, "d": 0.502377286301916, "r": 0.502377286301916, "s": 0 },
+      "env2": { "a": 0.003, "d": 3.5, "r": 0.012, "s": 0 },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      },
+      "glide": { "legato": true, "time": 0.07 },
+      "lfo": { "keySync": false, "mix": {}, "rate": 1 },
+      "noise": { "color": "white", "level": 0 },
+      "normals": {},
+      "od": { "on": false },
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ],
+      "paraphonic": false,
+      "routes": [],
+      "sh": { "glide": 0, "rate": 5 },
+      "slew": { "time": 0.1 },
+      "trig": { "drone": false, "repeat": false, "retrig": false },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env2" },
+      "volume": 0.5453391388693143
+    },
+    "osc.wave=\"sq\"": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "osc.tuning=-5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": -5, "syncTo": -1 }
+      ]
+    },
+    "osc.tuning=-2.5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": -2.5, "syncTo": -1 }
+      ]
+    },
+    "osc.tuning=2.5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": 2.5, "syncTo": -1 }
+      ]
+    },
+    "osc.tuning=5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": 5, "syncTo": -1 }
+      ]
+    },
+    "filter.cutoff=0": {
+      "filter": {
+        "cutoff": 124.66633274567997,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.cutoff=2.5": {
+      "filter": {
+        "cutoff": 297.6596895482701,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.cutoff=7.5": {
+      "filter": {
+        "cutoff": 1696.9213153278815,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.cutoff=10": {
+      "filter": {
+        "cutoff": 4051.655814234599,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.res=0": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.3,
+        "decay": 0.2,
+        "fall": 0.06,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "filter.res=2.5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.625,
+        "decay": 0.2,
+        "fall": 0.1475,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.2425,
+        "type": "ladder"
+      }
+    },
+    "filter.res=5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.95,
+        "decay": 0.2,
+        "fall": 0.235,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.485,
+        "type": "ladder"
+      }
+    },
+    "filter.res=7.5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 1.2750000000000001,
+        "decay": 0.2,
+        "fall": 0.32249999999999995,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.7275,
+        "type": "ladder"
+      }
+    },
+    "filter.res=10": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 1.6,
+        "decay": 0.2,
+        "fall": 0.41,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.97,
+        "type": "ladder"
+      }
+    },
+    "filter.envMod=0": {
+      "filter": {
+        "cutoff": 912.1403400793104,
+        "envAmt": 0.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.envMod=2.5": {
+      "filter": {
+        "cutoff": 780.422737696295,
+        "envAmt": 1.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.envMod=5": {
+      "filter": {
+        "cutoff": 667.7258123025483,
+        "envAmt": 2.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.envMod=7.5": {
+      "filter": {
+        "cutoff": 571.3028835259353,
+        "envAmt": 3.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "filter.envMod=10": {
+      "filter": {
+        "cutoff": 488.8039053029172,
+        "envAmt": 4.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "env.decay=0": { "env1": { "a": 0.003, "d": 0.2, "r": 0.2, "s": 0 } },
+    "env.decay=2.5": {
+      "env1": { "a": 0.003, "d": 0.3556558820077846, "r": 0.3556558820077846, "s": 0 }
+    },
+    "env.decay=5": {
+      "env1": { "a": 0.003, "d": 0.632455532033676, "r": 0.632455532033676, "s": 0 }
+    },
+    "env.decay=7.5": {
+      "env1": { "a": 0.003, "d": 1.1246826503806984, "r": 1.1246826503806984, "s": 0 }
+    },
+    "env.decay=10": { "env1": { "a": 0.003, "d": 2, "r": 2, "s": 0 } },
+    "amp.accent=0": {
+      "acid": {
+        "amp": 0,
+        "cut": 0,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "amp.accent=2.5": {
+      "acid": {
+        "amp": 0.225,
+        "cut": 0.345,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "amp.accent=7.5": {
+      "acid": {
+        "amp": 0.675,
+        "cut": 1.035,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "amp.accent=10": {
+      "acid": {
+        "amp": 0.9,
+        "cut": 1.38,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "seq.tempo=40": {},
+    "seq.tempo=105": {},
+    "seq.tempo=170": {},
+    "seq.tempo=235": {},
+    "seq.tempo=300": {},
+    "seq.track=\"t2\"": {},
+    "seq.track=\"t3\"": {},
+    "seq.track=\"t4\"": {},
+    "seq.track=\"t5\"": {},
+    "seq.track=\"t6\"": {},
+    "seq.track=\"t7\"": {},
+    "seq.mode=\"track_write\"": {},
+    "seq.mode=\"track_play\"": {},
+    "seq.mode=\"pattern_write\"": {},
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.09473228540689989 },
+    "out.volume=5": { "volume": 0.3077861033362291 },
+    "out.volume=7.5": { "volume": 0.61320282613276 },
+    "out.volume=10": { "volume": 1 },
+    "seq.clear=true": {},
+    "seq.run=true": {},
+    "seq.pitch=true": {},
+    "seq.function=true": {},
+    "seq.keyC=true": {},
+    "seq.keyCs=true": {},
+    "seq.keyD=true": {},
+    "seq.keyDs=true": {},
+    "seq.keyE=true": {},
+    "seq.keyF=true": {},
+    "seq.keyFs=true": {},
+    "seq.keyG=true": {},
+    "seq.keyGs=true": {},
+    "seq.keyA=true": {},
+    "seq.keyAs=true": {},
+    "seq.keyB=true": {},
+    "seq.keyC2=true": {},
+    "seq.time=true": {},
+    "seq.down=true": {},
+    "seq.up=true": {},
+    "seq.accent=true": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.69,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": true,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "seq.slide=true": { "glide": { "legato": false, "time": 0.07 } },
+    "seq.back=true": {},
+    "seq.write=true": {},
+    "wheel=1": {},
+    "patched:j.mixIn": {},
+    "patched:j.sync": {},
+    "patched:j.cv": {},
+    "patched:j.gate": {},
+    "patched:j.phones": {},
+    "patched:j.output": {},
+    "patched:*": {},
+    "patched:* osc.wave=\"sq\"": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "pulse": 1 }, "pw": 0.5, "semi": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc.tuning=-5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": -5, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc.tuning=-2.5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": -2.5, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc.tuning=2.5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": 2.5, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc.tuning=5": {
+      "osc": [
+        { "kbd": true, "level": 0.8, "mix": { "saw": 1 }, "pw": 0.5, "semi": 5, "syncTo": -1 }
+      ]
+    },
+    "patched:* filter.cutoff=0": {
+      "filter": {
+        "cutoff": 124.66633274567997,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.cutoff=2.5": {
+      "filter": {
+        "cutoff": 297.6596895482701,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.cutoff=7.5": {
+      "filter": {
+        "cutoff": 1696.9213153278815,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.cutoff=10": {
+      "filter": {
+        "cutoff": 4051.655814234599,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.res=0": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.3,
+        "decay": 0.2,
+        "fall": 0.06,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.res=2.5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.625,
+        "decay": 0.2,
+        "fall": 0.1475,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.2425,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.res=5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.95,
+        "decay": 0.2,
+        "fall": 0.235,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.485,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.res=7.5": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 1.2750000000000001,
+        "decay": 0.2,
+        "fall": 0.32249999999999995,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.7275,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.res=10": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 1.6,
+        "decay": 0.2,
+        "fall": 0.41,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      },
+      "filter": {
+        "cutoff": 710.7074446692812,
+        "envAmt": 2.1,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.97,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.envMod=0": {
+      "filter": {
+        "cutoff": 912.1403400793104,
+        "envAmt": 0.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.envMod=2.5": {
+      "filter": {
+        "cutoff": 780.422737696295,
+        "envAmt": 1.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.envMod=5": {
+      "filter": {
+        "cutoff": 667.7258123025483,
+        "envAmt": 2.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.envMod=7.5": {
+      "filter": {
+        "cutoff": 571.3028835259353,
+        "envAmt": 3.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* filter.envMod=10": {
+      "filter": {
+        "cutoff": 488.8039053029172,
+        "envAmt": 4.5,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.291,
+        "type": "ladder"
+      }
+    },
+    "patched:* env.decay=0": { "env1": { "a": 0.003, "d": 0.2, "r": 0.2, "s": 0 } },
+    "patched:* env.decay=2.5": {
+      "env1": { "a": 0.003, "d": 0.3556558820077846, "r": 0.3556558820077846, "s": 0 }
+    },
+    "patched:* env.decay=5": {
+      "env1": { "a": 0.003, "d": 0.632455532033676, "r": 0.632455532033676, "s": 0 }
+    },
+    "patched:* env.decay=7.5": {
+      "env1": { "a": 0.003, "d": 1.1246826503806984, "r": 1.1246826503806984, "s": 0 }
+    },
+    "patched:* env.decay=10": { "env1": { "a": 0.003, "d": 2, "r": 2, "s": 0 } },
+    "patched:* amp.accent=0": {
+      "acid": {
+        "amp": 0,
+        "cut": 0,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "patched:* amp.accent=2.5": {
+      "acid": {
+        "amp": 0.225,
+        "cut": 0.345,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "patched:* amp.accent=7.5": {
+      "acid": {
+        "amp": 0.675,
+        "cut": 1.035,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "patched:* amp.accent=10": {
+      "acid": {
+        "amp": 0.9,
+        "cut": 1.38,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": false,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "patched:* seq.tempo=40": {},
+    "patched:* seq.tempo=105": {},
+    "patched:* seq.tempo=170": {},
+    "patched:* seq.tempo=235": {},
+    "patched:* seq.tempo=300": {},
+    "patched:* seq.track=\"t2\"": {},
+    "patched:* seq.track=\"t3\"": {},
+    "patched:* seq.track=\"t4\"": {},
+    "patched:* seq.track=\"t5\"": {},
+    "patched:* seq.track=\"t6\"": {},
+    "patched:* seq.track=\"t7\"": {},
+    "patched:* seq.mode=\"track_write\"": {},
+    "patched:* seq.mode=\"track_play\"": {},
+    "patched:* seq.mode=\"pattern_write\"": {},
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.volume=5": { "volume": 0.3077861033362291 },
+    "patched:* out.volume=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.volume=10": { "volume": 1 },
+    "patched:* seq.clear=true": {},
+    "patched:* seq.run=true": {},
+    "patched:* seq.pitch=true": {},
+    "patched:* seq.function=true": {},
+    "patched:* seq.keyC=true": {},
+    "patched:* seq.keyCs=true": {},
+    "patched:* seq.keyD=true": {},
+    "patched:* seq.keyDs=true": {},
+    "patched:* seq.keyE=true": {},
+    "patched:* seq.keyF=true": {},
+    "patched:* seq.keyFs=true": {},
+    "patched:* seq.keyG=true": {},
+    "patched:* seq.keyGs=true": {},
+    "patched:* seq.keyA=true": {},
+    "patched:* seq.keyAs=true": {},
+    "patched:* seq.keyB=true": {},
+    "patched:* seq.keyC2=true": {},
+    "patched:* seq.time=true": {},
+    "patched:* seq.down=true": {},
+    "patched:* seq.up=true": {},
+    "patched:* seq.accent=true": {
+      "acid": {
+        "amp": 0.45,
+        "cut": 0.69,
+        "decay": 0.2,
+        "fall": 0.16499999999999998,
+        "force": true,
+        "rise": 0.012,
+        "thresh": 0.9
+      }
+    },
+    "patched:* seq.slide=true": { "glide": { "legato": false, "time": 0.07 } },
+    "patched:* seq.back=true": {},
+    "patched:* seq.write=true": {}
+  },
+  "checks": {},
+  "depths": {},
+  "hears": {}
+}

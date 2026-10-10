@@ -1,0 +1,86 @@
+{
+  "synth": "grandmother",
+  "unusual": [
+    {
+      "target": "lfo.pitch",
+      "text": "There is no LFO depth knob that works on its own: PITCH AMT, CUTOFF AMT and PULSE WIDTH AMT set the most the LFO can do, and the MOD wheel brings it in. With the wheel down they do nothing."
+    },
+    {
+      "target": "osc2.oct",
+      "text": "The two oscillators have different footage ranges: Oscillator 1 runs 32’ to 4’, Oscillator 2 16’ to 2’. Most synths give both the same range."
+    },
+    {
+      "target": "osc2.freq",
+      "text": "With SYNC on, the knob’s range widens to sweep the synced tone. The manual does not give the new range; here it is three times the ±7 semitones."
+    },
+    {
+      "target": "vca.mode",
+      "text": "A three-way VCA switch. ENV and DRONE are common; KB RLS is Moog’s variant of a keyboard gate: full level while the key is held and the envelope’s release when it is let go, so the one envelope can shape the filter alone."
+    },
+    {
+      "target": "mix.osc1",
+      "text": "The mixer is DC coupled and overdrives past about 1 o’clock, gently at first and harder further round. Moog intends the high settings to be used for a thicker tone, not avoided."
+    },
+    {
+      "target": "lfo.rate",
+      "text": "The LFO reaches 1.3 kHz, well into audio, so it can work as a third oscillator for clangy modulation of the pitch or filter. Most LFOs stop at a few tens of hertz."
+    },
+    {
+      "target": "att.amount",
+      "text": "With nothing patched into its INPUT the attenuator reads an internal positive voltage, so it doubles as a manual control voltage, positive or negative."
+    },
+    {
+      "target": "j.sh_out",
+      "text": "The sample and hold has no input or clock jack: it reads the noise generator at each zero crossing of the LFO, so LFO RATE sets how often it steps, and SYNC IN steps it too."
+    },
+    {
+      "target": "j.env_neg",
+      "text": "Most semi-modulars need a separate inverter to turn an envelope upside down. Here it has its own output."
+    },
+    {
+      "target": "j.osc1_pitch",
+      "text": "Pitch inputs add to the keyboard rather than replacing it, so the oscillators still play the keys with a cable in."
+    },
+    {
+      "target": "j.vel_out",
+      "text": "The keyboard senses how hard each key is played, but nothing inside uses it. It only reaches the sound through this jack, or over MIDI."
+    },
+    {
+      "target": "j.rev_in",
+      "text": "The spring tank has its own input, so it can be fed another signal, or another instrument, while the dry sound stays the VCA’s."
+    },
+    {
+      "target": "hpf",
+      "text": "The high-pass filter is a separate module, out of the sound until patched. Most synths that have one put it in series with the low-pass filter."
+    },
+    {
+      "target": "reverb",
+      "text": "The reverb is a real 6-inch spring tank in the case, not a digital effect. Like any spring it rattles if the case is knocked."
+    },
+    {
+      "target": "lhc",
+      "text": "The buttons have two names: PLAY, HOLD and TAP while playing, TIE, REST and ACCENT while recording a sequence. The names in brackets above them, ◀ KB, SHIFT and KB ▶, are a third set: hold the middle one to move the keyboard by octaves with the other two."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: both oscillators with their octaves and waveforms, sync and Oscillator 2’s FREQUENCY, the mixer with white noise and its overdrive past 1 o’clock, the ladder filter with KBD TRACK and the bipolar ENVELOPE AMT, the ADSR, all three VCA modes, the LFO with its three depths brought in by the mod wheel, the spring reverb, and the arpeggiator. On the panel, the separate HIGH PASS filter, the attenuator with its internal voltage, the sample and hold, the mult, and every audio, pitch, cutoff, VCA, LFO and envelope jack work.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The manual gives the LFO range (0.07 Hz to 1.3 kHz), the cutoff range, OSC 2’s ±7 semitones and the arpeggiator’s 20 to 280 BPM, and this app uses them. The envelope times, the depths of PITCH AMT, CUTOFF AMT, PULSE WIDTH AMT and ENVELOPE AMT, FREQUENCY’s wider range with SYNC on, the resonance law, the amount of overdrive, the glide time, the HIGH PASS range and the spring’s sound are this app’s choices."
+      },
+      {
+        "title": "The sequencer",
+        "text": "Only the arpeggiator is modelled: PLAY, HOLD, RATE, DIRECTION and OCT. The three 256-step sequences, recording with REST, TIE and ACCENT, tap tempo and the accent envelope on KB VEL OUT are not; in SEQ and REC the keys play as they are pressed. TAP does nothing here, and SHIFT’s octave and fine-rate functions are left out (use the octave buttons by the keyboard strip)."
+      },
+      {
+        "title": "Jacks that do nothing here",
+        "text": "ENV AMT IN (voltage control of the envelope amount) can be patched but has no effect. VCA AMT IN adds to the envelope in ENV and KB RLS, where the hardware scales the envelope by it. In the app the top-left MULT jack is the input and the other three are copies."
+      },
+      {
+        "title": "The keyboard and the rear panel",
+        "text": "The keys, the left-hand controller’s wheels and the octave transpose are drawn for reference; the keyboard strip under the panel and its mod wheel play the synth. Pitch bend, glide type, note priority and the other global settings are not modelled. The rear panel (FINE TUNE, INSTRUMENT IN, CLOCK IN and OUT, ON / OFF, RESET, EURORACK OUT, REVERB OUT, MIDI and USB) is not drawn."
+      }
+    ]
+  }
+}

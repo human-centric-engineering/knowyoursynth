@@ -2,13 +2,13 @@
  * The catalogue read layer: what the public API serves from the tables.
  *
  * The database is mocked (B9). Its rows are the ones the seed would write, built from the committed seed data by
- * `planCatalogue`, so the read is tested against the real shape and the real Model D content.
+ * `planCatalogue` (`synthRows()`), so the read is tested against the real shape and the real Model D content.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { planCatalogue } from '@/lib/app/catalogue/seed';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { synthRows } from '@/tests/helpers/synth-detail';
 
 vi.mock('@/lib/db/client', () => ({
   prisma: {
@@ -21,21 +21,20 @@ vi.mock('@/lib/logging', () => ({
 }));
 
 const { prisma } = await import('@/lib/db/client');
-const rows = planCatalogue(loadCatalogueData());
-const synthRow = { ...rows.synths[0], _count: { sounds: rows.sounds.length } };
+// Model D's rows, as the seed would write them (the other synths' rows are not part of these cases).
+const { stored: modelD, noteRows: notes } = synthRows('model-d');
+const { sounds: storedSounds, lineage: storedLineage, ...synthRow } = modelD;
 const stored = (overrides: Record<string, unknown> = {}) => ({
   ...synthRow,
-  sounds: rows.sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s })),
-  lineage: { ...rows.lineage[0], editedAt: null },
+  sounds: storedSounds,
+  lineage: storedLineage,
   ...overrides,
 });
-const notes = rows.notes.map(({ kind, synthId, target, title, text }) => ({
-  kind,
-  synthId,
-  target,
-  title,
-  text,
-}));
+const firstModelDSound = () => {
+  const file = loadCatalogueData().sounds.find((f) => f.synth === 'model-d');
+  if (!file) throw new Error('fixture: the seed data has Model D');
+  return file.sounds[0];
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -71,14 +70,14 @@ describe('listSynths', () => {
   it('leaves out a listed synth the registry cannot play, and says so', async () => {
     vi.mocked(prisma.synth.findMany).mockResolvedValue([
       synthRow,
-      { ...synthRow, id: 'neutron', name: 'Neutron' },
+      { ...synthRow, id: 'no-such-synth', name: 'No Such Synth' },
     ] as never);
 
     const list = await listSynths();
 
     expect(list.map((s) => s.id)).toEqual(['model-d']);
     expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('no definition'), {
-      synthId: 'neutron',
+      synthId: 'no-such-synth',
     });
   });
 });
@@ -94,7 +93,7 @@ describe('getSynthDetail', () => {
     );
     expect(detail?.synth).toMatchObject({ id: 'model-d', definitionVersion: 1, soundCount: 99 });
     expect(detail?.sounds).toHaveLength(99);
-    const first = loadCatalogueData().sounds[0].sounds[0];
+    const first = firstModelDSound();
     expect(detail?.sounds[0]).toMatchObject({ id: first.id, name: first.name, version: 1 });
     expect(detail?.lineage?.title).toBe('From the Moog modular to the Model D');
     expect(detail?.lineage?.timeline).toHaveLength(9);
@@ -121,7 +120,7 @@ describe('getSynthDetail', () => {
   });
 
   it('is null for a synth the registry cannot play, without reading the database', async () => {
-    expect(await getSynthDetail('neutron')).toBeNull();
+    expect(await getSynthDetail('no-such-synth')).toBeNull();
     expect(prisma.synth.findFirst).not.toHaveBeenCalled();
   });
 
@@ -166,7 +165,7 @@ describe('getSynthDetail', () => {
 
   it('serves no lineage when the stored one is malformed, and none when there is none', async () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValueOnce(
-      stored({ lineage: { ...rows.lineage[0], timeline: [{ year: 1970 }] } }) as never
+      stored({ lineage: { ...storedLineage, timeline: [{ year: 1970 }] } }) as never
     );
     expect((await getSynthDetail('model-d'))?.lineage).toBeNull();
     expect(logger.error).toHaveBeenCalledWith(
@@ -181,7 +180,7 @@ describe('getSynthDetail', () => {
   it('keeps a lineage’s players and caveat when it has them', async () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(
       stored({
-        lineage: { ...rows.lineage[0], users: ['Jan Hammer'], note: 'Not a full list.' },
+        lineage: { ...storedLineage, users: ['Jan Hammer'], note: 'Not a full list.' },
       }) as never
     );
     const detail = await getSynthDetail('model-d');

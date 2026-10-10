@@ -1,5 +1,5 @@
 // Export one synth's content from the prototype to the app's seed data (D13, plan §2).
-//   node prototype/tools/export-content.mjs <synth-id> --def-version=N
+//   node prototype/tools/export-content.mjs <synth-id> --def-version=N [--file=<name>]
 //
 // Writes, under prisma/seeds/app-knowyoursynth/data/:
 //   sounds/<id>.json    the library: the definition's own presets, then sounds/<id>.js, in the prototype's order
@@ -13,6 +13,9 @@
 //
 // --def-version is the app definition's `version` (lib/app/synths/defs/<id>.ts). Every sound records the version it
 // was made on, and the seed refuses a sound whose version has no definition.
+//
+// --file is the name of the synth's files under src/synths/ when it is not its id: the Pro-1's id is `pro-1` and its
+// files are `pro1.js`.
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
@@ -31,20 +34,22 @@ const args = process.argv.slice(2);
 const id = args.find((a) => !a.startsWith('--'));
 const versionArg = args.find((a) => a.startsWith('--def-version='));
 const version = versionArg ? Number(versionArg.slice('--def-version='.length)) : NaN;
+const fileArg = args.find((a) => a.startsWith('--file='));
+const file = fileArg ? fileArg.slice('--file='.length) : id;
 if (!id || !Number.isInteger(version) || version < 1) {
-  console.error('usage: node prototype/tools/export-content.mjs <synth-id> --def-version=N');
+  console.error('usage: node prototype/tools/export-content.mjs <synth-id> --def-version=N [--file=<name>]');
   process.exit(1);
 }
-if (!fs.existsSync(path.join(src, 'synths', 'unusual', `${id}.js`))) {
+if (!fs.existsSync(path.join(src, 'synths', 'unusual', `${file}.js`))) {
   // The Moog 900 systems build their notes from shared files (p4); this script does not expand those yet.
-  console.error(`no src/synths/unusual/${id}.js: this synth's notes are not in the one-file shape this script exports`);
+  console.error(`no src/synths/unusual/${file}.js: this synth's notes are not in the one-file shape this script exports`);
   process.exit(1);
 }
 
 const entry = `
 export { SYNTHS } from '@/synths/index.js';
 export { SHARED, limitsFor } from '@/lib/limits.js';
-export { default as unusual } from '@/synths/unusual/${id}.js';
+export { default as unusual } from '@/synths/unusual/${file}.js';
 `;
 const outFile = path.join(os.tmpdir(), `kys-export.${process.pid}.out.mjs`);
 await esbuild.build({
@@ -71,7 +76,7 @@ if (!limits) {
   process.exit(1);
 }
 
-// Formatted as the repo's Prettier would, so a re-export of unchanged content is no diff and \`npm run validate\` passes.
+// Formatted as the repo's Prettier would, so a re-export of unchanged content is no diff and `npm run validate` passes.
 const write = async (rel, data) => {
   const file = path.join(out, rel);
   fs.mkdirSync(path.dirname(file), { recursive: true });

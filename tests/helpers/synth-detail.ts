@@ -1,0 +1,40 @@
+/**
+ * A synth's catalogue rows as the seed would write them, shaped as the database returns them to the read layer.
+ *
+ * A test mocks `@/lib/db/client` with `synth.findFirst` and `synthNote.findMany`, resolves them with these, and calls
+ * `getSynthDetail(id)`. What comes back is the synth's real content in the shape the API serves and the synth page
+ * receives: every sound, the lineage and the notes. Reading the seed data here is allowed: tests are outside the
+ * seed-data boundary (`tests/unit/lib/app/catalogue/seed-data-boundary.test.ts`).
+ */
+
+import { planCatalogue } from '@/lib/app/catalogue/seed';
+import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+
+let data: ReturnType<typeof loadCatalogueData> | undefined;
+let planned: ReturnType<typeof planCatalogue> | undefined;
+
+/** The seed data, read and validated once per test module. */
+export const catalogueData = () => (data ??= loadCatalogueData());
+
+export function synthRows(id: string) {
+  // Planned once per test module: reading and validating every synth's sounds is the slow part, and it is the same
+  // for every id.
+  const rows = (planned ??= planCatalogue(catalogueData()));
+  const synth = rows.synths.find((s) => s.id === id);
+  const lineage = rows.lineage.find((l) => l.synthId === id);
+  if (!synth || !lineage) throw new Error(`the seed data has no ${id}`);
+  const sounds = rows.sounds.filter((s) => s.synthId === id);
+  return {
+    /** What `prisma.synth.findFirst` returns for the synth. */
+    stored: {
+      ...synth,
+      _count: { sounds: sounds.length },
+      sounds: sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s })),
+      lineage: { ...lineage, editedAt: null },
+    },
+    /** What `prisma.synthNote.findMany` returns for the synth: its own notes and the shared limits. */
+    noteRows: rows.notes
+      .filter((n) => n.synthId === id || n.synthId === null)
+      .map(({ kind, synthId, target, title, text }) => ({ kind, synthId, target, title, text })),
+  };
+}

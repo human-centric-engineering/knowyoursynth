@@ -1,0 +1,90 @@
+{
+  "synth": "kobol",
+  "unusual": [
+    {
+      "target": "vco1.wave",
+      "text": "Most synths pick a waveform with a switch. Here one knob turns the shape smoothly from triangle through ramp and sawtooth to square and a narrowing pulse, and every position in between is usable. It also has its own CV input, so the shape can be swept like a filter."
+    },
+    {
+      "target": "vco2.wave",
+      "text": "Most synths pick a waveform with a switch. Here one knob turns the shape smoothly from triangle through ramp and sawtooth to square and a narrowing pulse, and every position in between is usable. It also has its own CV input, so the shape can be swept like a filter."
+    },
+    {
+      "target": "vca1.level",
+      "text": "There is no mixer. Each VCO goes through its own VCA, and this VOLUME knob sets it. Because each VCA has a CV input, an envelope or the LFO can move the balance of the two oscillators, which most mixers cannot do."
+    },
+    {
+      "target": "vca2.level",
+      "text": "There is no mixer. Each VCO goes through its own VCA, and this VOLUME knob sets it. Because each VCA has a CV input, an envelope or the LFO can move the balance of the two oscillators, which most mixers cannot do."
+    },
+    {
+      "target": "ads1.decay",
+      "text": "The envelopes are ADS: DECAY sets both the decay and the release, so a note that decays slowly also dies away slowly after you let go."
+    },
+    {
+      "target": "ads2.decay",
+      "text": "The envelopes are ADS: DECAY sets both the decay and the release, so a note that decays slowly also dies away slowly after you let go."
+    },
+    {
+      "target": "vco1.freq",
+      "text": "There is no octave switch. FREQUENCY sweeps about ten octaves, from 10 Hz to 10 kHz, so octaves and intervals are set by ear."
+    },
+    {
+      "target": "vcf.env",
+      "text": "The filter envelope amount is bipolar and off at the centre: left of centre ADS 2 closes the filter instead of opening it. On most synths this knob starts at 0 on the left."
+    },
+    {
+      "target": "vcf.kbd",
+      "text": "Keyboard tracking goes up to 200 % (printed 2V/OC), so the cutoff can move twice as far as the notes. The panel also prints STEP LENGTH here, which the guide does not explain."
+    },
+    {
+      "target": "lfo.volume",
+      "text": "The LFO is wired to the pitch of both VCOs, and this knob is the vibrato depth. There is no mod wheel: vibrato is either set here or patched in."
+    },
+    {
+      "target": "mod.pwm",
+      "text": "The pulse width is only moved at the far end of each WAVEFORM knob. With WAVEFORM anywhere else, this switch makes no difference."
+    },
+    {
+      "target": "ads1.decayOff",
+      "text": "The Kobol’s version of a release on/off switch: on, notes stop dead instead of fading over the DECAY time."
+    },
+    {
+      "target": "j.vco2Out",
+      "text": "Unlike VCO 1 OUT, this jack is an insert: plugging in takes VCO 2 out of the filter’s input. To hear VCO 2 through the filter as well, patch it back in at VCF AUDIO IN."
+    },
+    {
+      "target": "j.vcoModIn",
+      "text": "A cable here replaces the LFO as the pitch modulation, rather than adding to it. Even a cable carrying nothing switches the LFO’s vibrato off."
+    },
+    {
+      "target": "j.vpIn1",
+      "text": "With nothing plugged in, this input carries a steady +10 V, so the voltage processor is a manual control voltage out of the box."
+    },
+    {
+      "target": "noise",
+      "text": "The noise generator is not wired into the sound and has no level knob. It is only heard through a cable from NOISE OUT."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: both VCOs with their morphing WAVEFORM knobs, sync and BEAT, the VCA on each VCO, the 24 dB filter with keyboard tracking to 200 % and the bipolar ADS CONTROL, both ADS envelopes with DECAY OFF, the LFO with its normal to the VCOs’ pitch, the PWM source switch, noise and the voltage processor. The patch points work, including the VCO 2 OUT insert and the CV inputs to each VCO’s waveform and level.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The Quick Start Guide gives no envelope times, and the envelope times here are read from the time ring printed round the knobs (about 2 ms to 4.6 s). The panel prints the VCO, filter and LFO ranges, and this app uses them. The waveform morph law, the depths of the LFO and pulse-width modulation, the resonance law and the scaling of the CV inputs are this app’s choices."
+      },
+      {
+        "title": "Envelope and envelope-depth CV inputs",
+        "text": "The ATTACK, DECAY and SUSTAIN inputs of both envelopes and ADS CTRL are not modelled. A cable can be drawn to them but does nothing. The knobs themselves work."
+      },
+      {
+        "title": "VCO 2 OUT return",
+        "text": "On the hardware VCO 2 OUT is a stereo insert: a Y-cable sends VCO 2 out on the tip and returns it on the ring. Here a cable takes VCO 2 out of the filter’s input, as a mono plug does; patch it back in at VCF AUDIO IN to return it."
+      },
+      {
+        "title": "Gate polarity, poly chain and MIDI",
+        "text": "The SynthTRIBE settings (gate polarity, poly chaining), the MIDI channel switches, MIDI IN and the power LED are drawn for reference or not modelled. The specifications also list a sample-and-hold LFO shape that the panel does not have; it is not modelled."
+      }
+    ]
+  }
+}

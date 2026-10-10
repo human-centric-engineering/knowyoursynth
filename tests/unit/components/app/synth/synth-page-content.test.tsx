@@ -17,8 +17,8 @@ import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound, SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
-import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
+import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -90,28 +90,6 @@ const library = () => {
   if (!section) throw new Error('no library');
   return section;
 };
-/** The parameters last sent to the engine: what the panel sounds like now. */
-const lastParams = () => {
-  const sent = engine.send.mock.calls
-    .map((c) => c[0] as { type: string; p?: Record<string, unknown> })
-    .filter((m) => m.type === 'params');
-  return sent[sent.length - 1]?.p;
-};
-/** What the engine should be sent for a sound as far as `upto`, as the page builds it. */
-const expectedParams = (p: CatalogueSound, upto?: number) => {
-  const { values, cables } = presetState(def, p, upto);
-  const patched = Object.fromEntries(
-    cables.flatMap((c) => [
-      [c.to, true],
-      [c.from, true],
-    ])
-  );
-  const want = def.toEngine(values, { wheel: 0, patched });
-  want.cables = cablesToEngine(def, cables, values);
-  want.wheel = 0;
-  return want;
-};
-
 describe('the library on the page', () => {
   it('opens every one of Model D’s 99 sounds onto the panel', () => {
     page();
@@ -127,7 +105,7 @@ describe('the library on the page', () => {
       expect(loadedName()).toBe(p.name);
       expect(row.getAttribute('aria-current')).toBe('true');
       expect(screen.getByRole('heading', { level: 2, name: p.name })).toBeTruthy();
-      expect(lastParams()).toEqual(expectedParams(p));
+      expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
     // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.
   }, 90_000);
@@ -153,19 +131,19 @@ describe('the lesson on the page', () => {
     open(p);
     fireEvent.click(button('Build it step by step'));
     expect(screen.getByText(`step 1 of ${p.steps.length}`)).toBeTruthy();
-    expect(lastParams()).toEqual(expectedParams(p, 0));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
     expect(highlightStore.get().length).toBeGreaterThan(0);
 
     const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
     if (!next) throw new Error('no Next step');
     fireEvent.click(next);
     expect(screen.getByText(`step 2 of ${p.steps.length}`)).toBeTruthy();
-    expect(lastParams()).toEqual(expectedParams(p, 1));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
 
     fireEvent.click(button(`Step ${p.steps.length}: ${p.steps[p.steps.length - 1].title}`));
     fireEvent.click(button('Finish'));
     expect(screen.queryByText(/^step \d+ of/)).toBeNull();
-    expect(lastParams()).toEqual(expectedParams(p));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
   });
 
   it('leaves the walkthrough when another sound is picked', () => {
@@ -177,7 +155,7 @@ describe('the lesson on the page', () => {
     if (!other) throw new Error('only one sound');
     open(other);
     expect(screen.queryByText(/^step \d+ of/)).toBeNull();
-    expect(lastParams()).toEqual(expectedParams(other));
+    expect(lastParams(engine.send)).toEqual(expectedParams(def, other));
   });
 });
 

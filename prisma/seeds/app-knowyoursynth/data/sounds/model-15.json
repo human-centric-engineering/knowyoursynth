@@ -1,0 +1,864 @@
+{
+  "synth": "model-15",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "m15-ladder-bass",
+      "name": "Ladder Bass",
+      "ref": "The Moog bass: two sawtooths through a closing ladder filter",
+      "artist": "Classic technique",
+      "tags": ["bass", "moog", "classic"],
+      "level": 1,
+      "blurb": "A round, punchy bass with a quick filter snap on every note.",
+      "how": "Two sawtooths, one an octave under the other, give the bass both weight and edge. The ladder filter sits low and the envelope, through ENV AMT, opens it briefly at the start of each note. A short decay to a low sustain makes every note bite and then settle.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.2],
+          [1, 48, 0.4],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 41, 0.4],
+          [3, 43, 0.4],
+          [3.5, 46, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, an octave apart",
+          "module": "osc",
+          "why": "Both oscillators on sawtooth, the brightest wave, with Oscillator 2 an octave below Oscillator 1. The low one gives the bass its weight, the upper one its edge.\n- Oscillator 1 OCTAVE 8’, WAVEFORM sawtooth: 8’ plays at the pitch of the keys.\n- Oscillator 2 OCTAVE 16’, WAVEFORM sawtooth: 16’ is an octave lower.\n- FREQUENCY +0.1: a hair sharp of exact, so the two beat very slowly and the bass sounds thicker.\n- Mixer 1 at 7 and 2 at 8: the low saw a little louder so the weight leads.\n- Listen for: a bright, buzzy, full sound. The filter tames it next.",
+          "set": {
+            "osc1.oct": "8",
+            "osc1.wave": "saw",
+            "osc2.oct": "16",
+            "osc2.wave": "saw",
+            "osc2.freq": 0.1,
+            "mix.1": 7,
+            "mix.2": 8
+          }
+        },
+        {
+          "title": "A low ladder filter",
+          "module": "filter",
+          "why": "The 24 dB ladder filter takes most of the brightness away, leaving a round, dark body. The next step opens it on each note.\n- CUTOFF 3.5 (about 220 Hz): low, so the buzz is gone and you hear the body.\n- RESONANCE 3 (30 %): a little ring at the cutoff, which will give the snap an edge.\n- KEY TRACKING 1:2: the cutoff follows the keys half as far as the pitch, so the high notes of the riff stay bright enough.\n- Listen for: a much darker, rounder bass.",
+          "set": { "vcf.cutoff": 3.5, "vcf.res": 3, "vcf.kbd": "half" }
+        },
+        {
+          "title": "Snap it open",
+          "module": "env",
+          "why": "The envelope opens the filter at the start of each note and lets it close again. Short and deep, that is the classic Moog bass pluck.\n- ENV AMT +3 (+3.4 octaves): how far the envelope lifts the cutoff. Anticlockwise would make each note dip darker instead.\n- ATTACK 0 (2 ms): the snap lands right on the beat.\n- DECAY 3.5 (64 ms): how fast it closes again. Shorter is a click; longer turns it into a wah.\n- SUSTAIN 2 (20 %): held notes settle low, both in brightness and, with VCA MODE on ENV, in level.\n- RELEASE 2 (13 ms): notes stop as soon as the key comes up.\n- Listen for: a firm “dow” on every note. Sweep DECAY between 3 and 5 while the riff plays.",
+          "set": {
+            "vcf.env": 3,
+            "env.attack": 0,
+            "env.decay": 3.5,
+            "env.sustain": 2,
+            "env.release": 2
+          }
+        },
+        {
+          "title": "Dry it up",
+          "module": "fx",
+          "why": "A bass is usually best dry: reverb smears the low end.\n- Reverb MIX 0: no reverb at all.\n- Listen for: tight, clean gaps between the notes.",
+          "set": { "rev.mix": 0 }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: the size of the snap on each note.",
+        "env.decay": "In this sound: the length of the snap, from a click to a wah.",
+        "vcf.cutoff": "In this sound: how dark the bass is between snaps.",
+        "osc2.oct": "In this sound: the lower octave that gives the bass its weight."
+      },
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Move between 3 and 5",
+          "hear": "From a tight click to a rubbery wah."
+        },
+        { "id": "vcf.res", "try": "Raise to 7", "hear": "Each note squelches." },
+        {
+          "id": "osc2.wave",
+          "try": "Switch to sawtooth under the SUB bracket and raise mixer 3 to 5",
+          "hear": "A square an octave below Oscillator 2 adds a deep floor."
+        }
+      ]
+    },
+    {
+      "id": "m15-sync-sweep",
+      "name": "Sync Sweep",
+      "ref": "Hard sync with the envelope patched to Oscillator 2",
+      "artist": "Classic technique",
+      "tags": ["lead", "sync", "patched"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead whose tone sweeps down on every note.",
+      "how": "SYNC locks Oscillator 2 to Oscillator 1, so moving Oscillator 2’s pitch changes its tone instead. A cable from ENV to OSC 2 CV sweeps it on every note, which is the sound of a classic sync lead. The filter is left open so the sweep is heard in full.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [1, 63, 0.4],
+          [1.5, 67, 1.4],
+          [3, 70, 0.4],
+          [3.5, 67, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Synced Oscillator 2 on its own",
+          "module": "osc",
+          "why": "With SYNC on, Oscillator 2 restarts its cycle every time Oscillator 1 does. Its pitch is now Oscillator 1’s, and tuning it higher changes its tone instead.\n- SYNC on: the yellow button.\n- Mixer 1 at 0, mixer 2 at 8: only the synced oscillator is heard. Oscillator 1 still runs, setting the pitch.\n- Oscillator 2 OCTAVE 4’, WAVEFORM sawtooth: two octaves above the master gives a bright, nasal tone.\n- FREQUENCY +4: further up still. Turn it slowly and the tone moves through vowel-like peaks while the pitch stays put.\n- Listen for: a hard, nasal lead. Move FREQUENCY and the tone shifts but the note does not.",
+          "set": {
+            "osc2.sync": true,
+            "mix.1": 0,
+            "mix.2": 8,
+            "osc2.oct": "4",
+            "osc2.wave": "saw",
+            "osc2.freq": 4
+          }
+        },
+        {
+          "title": "Patch the envelope to Oscillator 2",
+          "module": "mod",
+          "why": "A cable from ENV to OSC 2 CV adds the envelope to Oscillator 2’s pitch, so its tone sweeps on every note. Because Oscillator 2 is synced, you hear a tearing sweep, not a pitch bend.\n- Cable ENV → OSC 2 CV: the envelope output into Oscillator 2’s pitch input. It adds to the keys rather than replacing them.\n- DECAY 5.5 (about 0.5 s), SUSTAIN 3: the sweep falls over half a second and settles part way.\n- Listen for: each note starting with a bright tear that falls away. Shorter DECAY makes it a bark.",
+          "set": { "env.decay": 5.5, "env.sustain": 3 },
+          "cables": [["j.env_out", "j.osc2_cv"]]
+        },
+        {
+          "title": "Filter open, loudness held",
+          "module": "amp",
+          "why": "The filter opens wide so the sweep is heard in full, and the VCA holds the note at full level while the key is down.\n- CUTOFF 7.5 (about 3.6 kHz), ENV AMT 0: the filter stays open and does not move.\n- VCA MODE RELEASE: full level while the key is held, fading over RELEASE after. The envelope only does the sweep, not the loudness.\n- RELEASE 4 (80 ms): a short fade so notes do not click.\n- Listen for: every note at full level while the tone sweeps inside it.",
+          "set": { "vcf.cutoff": 7.5, "vcf.env": 0, "vca.mode": "release", "env.release": 4 }
+        },
+        {
+          "title": "Glide and a little room",
+          "module": "glide",
+          "why": "A short glide joins the notes, and a touch of reverb puts the lead in a space.\n- GLIDE 3 (55 ms): each note slides quickly into the next.\n- Reverb MIX 2.5: a short spring tail.\n- Listen for: a smooth, singing line.",
+          "set": { "glide": 3, "rev.mix": 2.5 }
+        }
+      ],
+      "context": {
+        "osc2.freq": "In this sound: the starting tone of the sweep. Higher is harsher.",
+        "env.decay": "In this sound: how long the sync sweep lasts.",
+        "osc2.sync": "In this sound: what turns the pitch sweep into a tone sweep. Switch it off to hear a plain bend."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.sync",
+          "try": "Switch off",
+          "hear": "The sweep becomes a pitch dive, and the notes go out of tune."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Sweep from −7 to +7 while holding a note",
+          "hear": "The tone moves through vowel-like peaks while the pitch stays still."
+        },
+        {
+          "id": "mix.1",
+          "try": "Raise to 5",
+          "hear": "Oscillator 1 underneath gives the lead a steadier body."
+        }
+      ]
+    },
+    {
+      "id": "m15-arp-pluck",
+      "name": "Spring Arpeggio",
+      "ref": "The arpeggiator with a plucked tone and spring reverb",
+      "artist": "Classic technique",
+      "tags": ["seq", "arp", "reverb"],
+      "level": 1,
+      "blurb": "A held chord turns into a running line of plucked notes in a spring reverb.",
+      "how": "PLAY starts the arpeggiator, which plays the held keys one after another at RATE. A pluck comes from the envelope: a short decay to no sustain, so every arpeggio note is a quick ping, opened by ENV AMT. The spring reverb gives the line its splashy space.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 7.8],
+          [0, 55, 7.8],
+          [0, 60, 7.8],
+          [0, 63, 7.8],
+          [8, 44, 7.8],
+          [8, 51, 7.8],
+          [8, 56, 7.8],
+          [8, 60, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pluck",
+          "module": "env",
+          "why": "With no sustain, every note is a quick ping that dies away by itself, which suits fast arpeggios.\n- Oscillator 1 sawtooth at 8’ and Oscillator 2 square at 8’, FREQUENCY +0.08: two shapes at the same pitch, a hair apart, for a fuller tone.\n- Mixer 1 at 6, mixer 2 at 5.\n- ATTACK 0, DECAY 4.5 (about 170 ms), SUSTAIN 0, RELEASE 4 (80 ms): a fast pluck.\n- CUTOFF 4 (about 320 Hz), ENV AMT +3.5 (+4.3 octaves), RESONANCE 4: the envelope snaps the filter open and shut with each note.\n- Listen for: short, bright pings on each key.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.oct": "8",
+            "osc2.wave": "sq",
+            "osc2.oct": "8",
+            "osc2.freq": 0.08,
+            "mix.1": 6,
+            "mix.2": 5,
+            "env.attack": 0,
+            "env.decay": 4.5,
+            "env.sustain": 0,
+            "env.release": 4,
+            "vcf.cutoff": 4,
+            "vcf.env": 3.5,
+            "vcf.res": 4
+          }
+        },
+        {
+          "title": "Start the arpeggiator",
+          "module": "mode",
+          "why": "The arpeggiator plays the keys you hold one after another, at RATE, as sixteenth notes.\n- MODE ARP, PLAY on: the blue PLAY button starts it.\n- RATE 5 (98 BPM): the speed of the line.\n- DIRECTION ◀◀/▶▶: up through the held notes, then back down.\n- OCT / SEQ 2: the line climbs through two octaves before it turns round.\n- Listen for: the held chord broken into a running line. Try DIRECTION RNDM for a shuffled one.",
+          "set": {
+            "arp.mode": "arp",
+            "arp.play": true,
+            "arp.rate": 5,
+            "arp.dir": "bf",
+            "arp.oct": "2"
+          }
+        },
+        {
+          "title": "Spring reverb",
+          "module": "fx",
+          "why": "The reverb is an emulation of a spring, with a bright, splashy tail.\n- Reverb MIX 4.5: about half wet, so each ping leaves a tail that overlaps the next.\n- Listen for: the line sitting in a metallic, roomy space. At 8 the notes drown in it.",
+          "set": { "rev.mix": 4.5 }
+        }
+      ],
+      "context": {
+        "arp.rate": "In this sound: the speed of the line.",
+        "env.decay": "In this sound: the length of each ping.",
+        "rev.mix": "In this sound: how much the pings overlap in the reverb."
+      },
+      "tweaks": [
+        { "id": "arp.dir", "try": "Switch to RNDM", "hear": "The notes come in a random order." },
+        { "id": "arp.oct", "try": "Set to 3", "hear": "A longer line that climbs higher." },
+        { "id": "vcf.res", "try": "Raise to 7", "hear": "Each ping rings with a squelch." }
+      ]
+    },
+    {
+      "id": "m15-sh-bleeps",
+      "name": "Random Bleeps",
+      "ref": "The sample and hold patched to the filter",
+      "artist": "Classic technique",
+      "tags": ["fx", "random", "patched"],
+      "level": 2,
+      "blurb": "A held note turns into a stream of random, ringing filter steps.",
+      "how": "The sample and hold reads the noise once per LFO cycle and holds that level until the next, so it puts out a new random step at the LFO’s speed. A cable from S&H to CUTOFF moves the filter to a new place on each step, and high resonance makes every step ring.",
+      "phrase": { "bpm": 90, "loop": true, "steps": [[0, 48, 7.8]] },
+      "steps": [
+        {
+          "title": "A bright source and a ringing filter",
+          "module": "filter",
+          "why": "A sawtooth gives the filter plenty to work on, and high resonance makes the filter ring wherever its cutoff lands.\n- Oscillator 1 sawtooth, mixer 1 at 7.\n- CUTOFF 4.5 (about 450 Hz): the middle of the range, so random steps can go either way.\n- RESONANCE 7.5: strong, so each new cutoff whistles.\n- ENV AMT 0: the envelope leaves the filter alone; only the cable will move it.\n- Listen for: a held, resonant tone, ready to move.",
+          "set": { "osc1.wave": "saw", "mix.1": 7, "vcf.cutoff": 4.5, "vcf.res": 7.5, "vcf.env": 0 }
+        },
+        {
+          "title": "Random steps into the cutoff",
+          "module": "mod",
+          "why": "The sample and hold puts out a new random level every time the LFO goes round. Patched into CUTOFF, it moves the filter to a new random place on each step.\n- Cable S&H → CUTOFF: the S&H output into the filter’s cutoff input, which adds to the CUTOFF knob.\n- LFO RATE 4.5 (about 6 Hz): how often a new step comes.\n- Listen for: a held note turning into a string of random, computer-like tones.",
+          "set": { "lfo.rate": 4.5 },
+          "cables": [["j.sh_out", "j.cutoff"]]
+        },
+        {
+          "title": "Held loudness and a long tail",
+          "module": "amp",
+          "why": "The note stays at full level while held, and the spring reverb catches the steps.\n- SUSTAIN 10, RELEASE 5 (0.2 s): full level while held, a short fade after.\n- Reverb MIX 4: the steps ring on in the spring.\n- Listen for: the bleeps carrying on into the reverb after you let go.",
+          "set": { "env.sustain": 10, "env.release": 5, "rev.mix": 4 }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how often a new random step comes.",
+        "vcf.res": "In this sound: makes each step whistle. Lower it for dull ticks.",
+        "vcf.cutoff": "In this sound: the centre the random steps move round."
+      },
+      "tweaks": [
+        { "id": "lfo.rate", "try": "Lower to 3", "hear": "Slow, deliberate steps." },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 9",
+          "hear": "The steps become pure whistles: the filter is playing the notes."
+        },
+        {
+          "id": "vcf.kbd",
+          "try": "Set to 1:1 and play up the keyboard",
+          "hear": "The random pattern moves with the notes."
+        }
+      ]
+    },
+    {
+      "id": "m15-pwm-drone",
+      "name": "Pulse Drone",
+      "ref": "VCA MODE ON with slow pulse-width modulation",
+      "artist": "Classic technique",
+      "tags": ["drone", "pwm", "ambient"],
+      "level": 1,
+      "blurb": "A slowly churning drone that plays with no key held.",
+      "how": "VCA MODE ON holds the amplifier open, so the synth sounds with nothing played. Two square waves, a fifth apart, have their pulse width moved slowly by the LFO, which gives the churning, chorus-like movement. The spring reverb spreads it out.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 36, 7.8],
+          [8, 34, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two squares, a fifth apart",
+          "module": "osc",
+          "why": "Two square waves a fifth apart give a hollow, organ-like drone.\n- Oscillator 1 OCTAVE 16’, WAVEFORM square.\n- Oscillator 2 OCTAVE 8’, WAVEFORM square, FREQUENCY +7: seven semitones up, a fifth, an octave higher.\n- Mixer 1 and 2 at 6: an even blend.\n- Listen for: a hollow, reedy chord from one key.",
+          "set": {
+            "osc1.oct": "16",
+            "osc1.wave": "sq",
+            "osc2.oct": "8",
+            "osc2.wave": "sq",
+            "osc2.freq": 7,
+            "mix.1": 6,
+            "mix.2": 6
+          }
+        },
+        {
+          "title": "Move the pulse width",
+          "module": "lfo",
+          "why": "The LFO now moves the pulse width of both squares slowly back and forth. The tone churns and thickens, which is pulse-width modulation (PWM).\n- LFO RATE 2 (about 0.5 Hz), WAVEFORM sine: a slow, smooth sweep.\n- PULSE WIDTH 7: how far the LFO can move the width.\n- MODULATION 7: the master depth. At 0 the LFO does nothing at all, whatever the coloured knobs say.\n- Listen for: a slow, swirling movement inside the drone.",
+          "set": { "lfo.rate": 2, "lfo.wave": "sine", "lfo.pw": 7, "mod.amount": 7 }
+        },
+        {
+          "title": "Open the VCA for good",
+          "module": "amp",
+          "why": "VCA MODE ON leaves the amplifier open, so the drone sounds without a key held. Playing a key only sets the pitch.\n- VCA MODE ON.\n- CUTOFF 5 (about 630 Hz), RESONANCE 3, ENV AMT 0: a warm, steady filter that the envelope does not move.\n- Reverb MIX 5: the spring spreads the drone out.\n- Listen for: the drone carrying on between notes. Press a key to change its pitch.",
+          "set": { "vca.mode": "on", "vcf.cutoff": 5, "vcf.res": 3, "vcf.env": 0, "rev.mix": 5 }
+        }
+      ],
+      "context": {
+        "vca.mode": "In this sound: ON, which is why it never stops. Set ENV and the notes start and end with the keys.",
+        "lfo.pw": "In this sound: how much the pulse width churns.",
+        "mod.amount": "In this sound: the master depth for the churning. At 0 the drone goes still."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.filter",
+          "try": "Raise to 3",
+          "hear": "The brightness rises and falls with the churning."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep slowly from 3 to 7",
+          "hear": "The drone opens up and darkens again."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set to +5",
+          "hear": "A fourth instead of a fifth: a different, more open chord."
+        }
+      ]
+    },
+    {
+      "id": "m15-glide-lead",
+      "name": "Glide Lead",
+      "ref": "In the style of a 70s Moog solo lead",
+      "artist": "Classic technique",
+      "tags": ["lead", "moog", "vibrato"],
+      "level": 1,
+      "blurb": "A warm, singing lead that slides between notes with a gentle vibrato.",
+      "how": "Two sawtooths a hair apart give a full, slightly moving tone. The ladder filter is half open, with a small push from the envelope at the start of each note. GLIDE slides between notes, and the LFO adds vibrato through PITCH MOD, with MODULATION as its master depth.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9],
+          [1, 70, 0.4],
+          [1.5, 72, 1.4],
+          [3, 75, 0.4],
+          [3.5, 72, 0.4],
+          [4, 70, 1.8],
+          [6, 67, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, slightly apart",
+          "module": "osc",
+          "why": "Two sawtooths at the same octave, a little out of tune with each other, beat slowly. That gives the lead its width and movement.\n- Oscillator 1 and 2 sawtooth, both OCTAVE 8’.\n- FREQUENCY +0.12: Oscillator 2 a fraction sharp. Too little to sound out of tune, enough to beat.\n- Mixer 1 and 2 at 7.\n- Listen for: a full, gently swirling tone on a held note.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.oct": "8",
+            "osc2.wave": "saw",
+            "osc2.oct": "8",
+            "osc2.freq": 0.12,
+            "mix.1": 7,
+            "mix.2": 7
+          }
+        },
+        {
+          "title": "A half-open filter with a push",
+          "module": "filter",
+          "why": "The filter rounds off the top of the sawtooths, and the envelope opens it a little at the start of each note so the notes speak.\n- CUTOFF 5.5 (about 890 Hz), RESONANCE 2.5.\n- ENV AMT +2.5 (+2.7 octaves).\n- ATTACK 0, DECAY 5 (about 280 ms), SUSTAIN 6, RELEASE 4 (80 ms): a quick push that settles to a held tone.\n- KEY TRACKING 1:2: higher notes stay bright enough.\n- Listen for: each note starting a little brighter, then settling.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.res": 2.5,
+            "vcf.env": 2.5,
+            "env.attack": 0,
+            "env.decay": 5,
+            "env.sustain": 6,
+            "env.release": 4,
+            "vcf.kbd": "half"
+          }
+        },
+        {
+          "title": "Glide and vibrato",
+          "module": "lfo",
+          "why": "GLIDE makes each note slide from the last, and the LFO adds a gentle vibrato.\n- GLIDE 4 (about 100 ms): a quick slide, the classic lead portamento.\n- LFO RATE 4.2 (about 4 Hz), WAVEFORM sine: a natural vibrato speed and shape.\n- PITCH MOD 2: how far the LFO can move the pitch.\n- MODULATION 4: the master depth. Together they give about a third of a semitone.\n- Reverb MIX 3: a short spring tail.\n- Listen for: notes sliding into each other and a slight waver on the long ones.",
+          "set": {
+            "glide": 4,
+            "lfo.rate": 4.2,
+            "lfo.wave": "sine",
+            "lfo.pitch": 2,
+            "mod.amount": 4,
+            "rev.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "glide": "In this sound: how long each note takes to slide into the next.",
+        "mod.amount": "In this sound: the depth of the vibrato. At 0 the lead goes still.",
+        "osc2.freq": "In this sound: the slow beating between the oscillators."
+      },
+      "tweaks": [
+        { "id": "mod.amount", "try": "Raise to 7", "hear": "A wide, theatrical vibrato." },
+        { "id": "glide", "try": "Raise to 6", "hear": "Long, swooping slides." },
+        { "id": "vcf.res", "try": "Raise to 6", "hear": "A more vocal, nasal lead." }
+      ]
+    },
+    {
+      "id": "m15-sub-bass",
+      "name": "Sub Bass",
+      "ref": "The sub-oscillator under a square bass",
+      "artist": "Classic technique",
+      "tags": ["bass", "sub", "deep"],
+      "level": 1,
+      "blurb": "A deep, round bass with a square an octave below holding up the floor.",
+      "how": "OSC 2’s waveform switch, turned into its SUB positions, puts the sub-oscillator on mixer channel 3: a square an octave below Oscillator 2. With a sawtooth on top and the filter kept low, the sub gives the bass a weight you feel more than hear.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 31, 0.9],
+          [1, 31, 0.4],
+          [1.5, 34, 0.4],
+          [2, 36, 0.9],
+          [3, 38, 0.4],
+          [3.5, 34, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a square",
+          "module": "osc",
+          "why": "A sawtooth gives the bass its edge and a square under it its body.\n- Oscillator 1 OCTAVE 16’, WAVEFORM sawtooth, mixer 1 at 5.\n- Oscillator 2 OCTAVE 16’, WAVEFORM square under the SUB bracket, mixer 2 at 4: the square, with the sub-oscillator switched on.\n- Listen for: a full, buzzy bass. The sub is not in yet: mixer 3 is still at 0.",
+          "set": {
+            "osc1.oct": "16",
+            "osc1.wave": "saw",
+            "mix.1": 5,
+            "osc2.oct": "16",
+            "osc2.wave": "sq+sub",
+            "mix.2": 4
+          }
+        },
+        {
+          "title": "Bring in the sub",
+          "module": "mixer",
+          "why": "Mixer channel 3 now carries the sub-oscillator instead of white noise, because OSC 2’s switch is under its SUB bracket.\n- Mixer 3 at 7: a square an octave below Oscillator 2, so 32’ here.\n- Listen for: the bass getting much deeper and heavier. On small speakers you may hear it more as weight than as a note. Turn OSC 2’s switch back to the plain square and channel 3 turns to hiss.",
+          "set": { "mix.3": 7 }
+        },
+        {
+          "title": "Keep the filter low",
+          "module": "filter",
+          "why": "A low cutoff with a short push from the envelope keeps the bass round, with just enough attack to be heard.\n- CUTOFF 3 (about 160 Hz), RESONANCE 1.\n- ENV AMT +2.5 (+2.7 octaves), ATTACK 0, DECAY 4.5 (about 170 ms), SUSTAIN 4, RELEASE 2.\n- Reverb MIX 0: a bass stays dry.\n- Listen for: a short thump at the start of each note, then a deep, steady tone.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.res": 1,
+            "vcf.env": 2.5,
+            "env.attack": 0,
+            "env.decay": 4.5,
+            "env.sustain": 4,
+            "env.release": 2,
+            "rev.mix": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.3": "In this sound: the level of the sub-oscillator, the deepest part of the bass.",
+        "osc2.wave": "In this sound: under the SUB bracket, which is what puts the sub on channel 3.",
+        "vcf.cutoff": "In this sound: kept low so the bass stays round."
+      },
+      "tweaks": [
+        {
+          "id": "mix.3",
+          "try": "Turn down to 0 and back up",
+          "hear": "How much of the weight the sub carries."
+        },
+        { "id": "vcf.env", "try": "Raise to 4", "hear": "A harder, brighter attack on each note." },
+        {
+          "id": "osc1.wave",
+          "try": "Switch to narrow pulse",
+          "hear": "A thinner, more nasal top over the same deep floor."
+        }
+      ]
+    },
+    {
+      "id": "m15-filter-whistle",
+      "name": "Filter Whistle",
+      "ref": "The self-oscillating ladder filter played as an oscillator",
+      "artist": "Classic technique",
+      "tags": ["lead", "filter", "sine"],
+      "level": 2,
+      "blurb": "A pure, whistling tone with no oscillators at all: the filter ringing on its own.",
+      "how": "With RESONANCE at full, the ladder filter rings at its cutoff even with nothing coming in, so it makes a near-sine tone of its own. KEY TRACKING 1:1 moves the cutoff with the keys so it plays in tune, and the LFO through FILTER MOD gives it a vibrato.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.8],
+          [2, 76, 0.9],
+          [3, 79, 0.9],
+          [4, 77, 1.8],
+          [6, 74, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Silence the mixer",
+          "module": "mixer",
+          "why": "All three mixer channels down, so nothing reaches the filter. The sound will come from the filter itself.\n- Mixer 1, 2 and 3 at 0.\n- Listen for: nothing yet.",
+          "set": { "mix.1": 0, "mix.2": 0, "mix.3": 0 }
+        },
+        {
+          "title": "Make the filter ring",
+          "module": "filter",
+          "why": "At full resonance the ladder filter feeds back on itself and rings at its cutoff: a pure, whistling tone.\n- RESONANCE 10: full. The filter now makes a sound with no input.\n- KEY TRACKING 1:1: the cutoff moves with the keys, one octave per octave, so the whistle plays the notes.\n- CUTOFF 3.7 (about 260 Hz, middle C): sets where the whistle sits; here it is close to in tune with the keys.\n- ENV AMT 0: the envelope leaves the pitch alone.\n- Listen for: a clean, flute-like tone following the keys.",
+          "set": { "vcf.res": 10, "vcf.kbd": "full", "vcf.cutoff": 3.7, "vcf.env": 0 }
+        },
+        {
+          "title": "Shape it and add vibrato",
+          "module": "lfo",
+          "why": "A soft start, a slide and a slight vibrato make the whistle sing. The vibrato goes through the filter, because that is what is making the pitch.\n- ATTACK 3 (30 ms), SUSTAIN 10, RELEASE 5 (0.2 s): a soft start and a short tail.\n- GLIDE 3: the whistle slides between notes.\n- LFO RATE 4.5 (about 6 Hz), FILTER MOD 0.5, MODULATION 3: a slight wobble of the cutoff, heard as vibrato.\n- Reverb MIX 4.\n- Listen for: a theremin-like line.",
+          "set": {
+            "env.attack": 3,
+            "env.sustain": 10,
+            "env.release": 5,
+            "glide": 3,
+            "lfo.rate": 4.5,
+            "lfo.filter": 0.5,
+            "mod.amount": 3,
+            "rev.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: at full, which is what makes the filter whistle. Below about 9 it goes quiet.",
+        "vcf.cutoff": "In this sound: the tuning of the whistle.",
+        "vcf.kbd": "In this sound: 1:1, so the whistle plays the keys in tune."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.kbd",
+          "try": "Set to 1:2",
+          "hear": "The whistle moves half as far: a squashed scale."
+        },
+        {
+          "id": "mix.1",
+          "try": "Raise to 2",
+          "hear": "Oscillator 1 under the whistle, coloured by the ringing filter."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn slowly",
+          "hear": "The whole line moves up or down in pitch."
+        }
+      ]
+    },
+    {
+      "id": "m15-fm-bell",
+      "name": "Cross-Mod Bell",
+      "ref": "Oscillator 1 patched into OSC 2 FM",
+      "artist": "Classic technique",
+      "tags": ["keys", "fm", "patched"],
+      "level": 3,
+      "blurb": "A metallic, bell-like tone that rings and fades.",
+      "how": "A cable from OSC 1 to OSC 2 FM makes Oscillator 1 bend Oscillator 2’s pitch hundreds of times a second. The ear hears that as new, clashing overtones rather than a wobble: a bell or gong. A plucked envelope with no sustain lets each note ring out.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.5],
+          [1, 79, 0.5],
+          [2, 76, 0.5],
+          [3, 84, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Oscillator 2 alone",
+          "module": "osc",
+          "why": "Only Oscillator 2 is heard; Oscillator 1 will be used as the modulator, out of the mix.\n- Mixer 1 at 0, mixer 2 at 8.\n- Oscillator 2 WAVEFORM triangle, OCTAVE 8’: a soft tone for the modulation to roughen.\n- Oscillator 1 WAVEFORM triangle, OCTAVE 4’: still running, an octave up, though not in the mix.\n- Listen for: a soft, plain tone.",
+          "set": {
+            "mix.1": 0,
+            "mix.2": 8,
+            "osc2.wave": "tri",
+            "osc2.oct": "8",
+            "osc1.wave": "tri",
+            "osc1.oct": "4"
+          }
+        },
+        {
+          "title": "Patch Oscillator 1 into OSC 2 FM",
+          "module": "mod",
+          "why": "A cable from OSC 1 to OSC 2 FM. Oscillator 1 now moves Oscillator 2’s pitch at audio speed, which creates new overtones.\n- Cable OSC 1 → OSC 2 FM.\n- FREQUENCY +3: Oscillator 2 is no longer a simple ratio of Oscillator 1, so the new overtones clash like a bell rather than blending like an organ.\n- Listen for: a metallic, clangy tone. Move FREQUENCY and it changes from bell to gong to glass.",
+          "set": { "osc2.freq": 3 },
+          "cables": [["j.osc1_out", "j.osc2_fm"]]
+        },
+        {
+          "title": "Let it ring",
+          "module": "env",
+          "why": "A bell has a hard strike and a long fade with no sustain.\n- ATTACK 0, DECAY 6 (about 0.75 s), SUSTAIN 0, RELEASE 6 (0.5 s).\n- CUTOFF 7.5 (about 3.6 kHz), ENV AMT +1.5: the filter mostly open, a little brighter at the strike.\n- Reverb MIX 4: the spring gives the bell a room.\n- Listen for: each note struck and fading away, metallic in the tail.",
+          "set": {
+            "env.attack": 0,
+            "env.decay": 6,
+            "env.sustain": 0,
+            "env.release": 6,
+            "vcf.cutoff": 7.5,
+            "vcf.env": 1.5,
+            "rev.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "In this sound: the ratio between the oscillators, which decides how clangy the bell is.",
+        "osc1.oct": "In this sound: the modulator’s range. Lower is rougher, higher is glassier.",
+        "env.decay": "In this sound: how long each strike rings."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "Try 0, +3 and +5.5",
+          "hear": "At 0 an organ-like tone; off the simple ratios, bells and gongs."
+        },
+        { "id": "osc1.wave", "try": "Switch to sawtooth", "hear": "A harsher, noisier clang." },
+        {
+          "id": "osc1.oct",
+          "try": "Set to 16’",
+          "hear": "A growling, rough modulation instead of a bell."
+        }
+      ]
+    },
+    {
+      "id": "m15-wind",
+      "name": "Wind",
+      "ref": "White noise through a resonant filter swept by the LFO",
+      "artist": "Classic technique",
+      "tags": ["fx", "noise", "ambient"],
+      "level": 1,
+      "blurb": "Gusts of wind rising and falling.",
+      "how": "White noise on mixer channel 3 goes through the ladder filter with a fair amount of resonance, which gives the hiss a whistling centre. A slow LFO sweeps the cutoff up and down, so the wind rises and falls on its own.",
+      "phrase": { "bpm": 60, "loop": true, "steps": [[0, 48, 7.8]] },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "Mixer channel 3 carries white noise while OSC 2’s waveform switch is on one of its four plain positions.\n- Mixer 1 and 2 at 0: no oscillators.\n- Mixer 3 at 9: noise, loud.\n- Listen for: a plain hiss.",
+          "set": { "mix.1": 0, "mix.2": 0, "mix.3": 9, "osc2.wave": "saw" }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Resonance makes the filter boost a band of the noise, so it whistles like wind.\n- CUTOFF 4.5 (about 450 Hz), RESONANCE 7.\n- ENV AMT 0: the envelope leaves the filter alone.\n- Listen for: a hollow, whistling hiss.",
+          "set": { "vcf.cutoff": 4.5, "vcf.res": 7, "vcf.env": 0 }
+        },
+        {
+          "title": "Slow gusts",
+          "module": "lfo",
+          "why": "A slow LFO sweeps the cutoff up and down: the gusts.\n- LFO RATE 1.5 (about one cycle every 3 seconds), WAVEFORM sine.\n- FILTER MOD 6, MODULATION 8: wide sweeps.\n- ATTACK 6 (about 0.45 s), SUSTAIN 10, RELEASE 7 (about 1.3 s): the wind fades in and out with the key.\n- Reverb MIX 5.\n- Listen for: wind rising and falling on its own while the key is held.",
+          "set": {
+            "lfo.rate": 1.5,
+            "lfo.wave": "sine",
+            "lfo.filter": 6,
+            "mod.amount": 8,
+            "env.attack": 6,
+            "env.sustain": 10,
+            "env.release": 7,
+            "rev.mix": 5
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: the whistle in the wind.",
+        "lfo.rate": "In this sound: how often the gusts come.",
+        "lfo.filter": "In this sound: how far each gust sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.wave",
+          "try": "Switch to square",
+          "hear": "Wind that jumps between two pitches, like a siren."
+        },
+        { "id": "vcf.res", "try": "Raise to 9", "hear": "A howling, tonal wind." },
+        { "id": "lfo.rate", "try": "Raise to 3", "hear": "Faster, choppier gusts." }
+      ]
+    },
+    {
+      "id": "m15-inverted-swell",
+      "name": "Opening Swell",
+      "ref": "ENV INV patched into CUTOFF",
+      "artist": "Classic technique",
+      "tags": ["pad", "patched", "swell"],
+      "level": 2,
+      "blurb": "Each note starts muffled and slowly opens up.",
+      "how": "The ENV INV output is the envelope upside down. Patched into CUTOFF, it pulls the filter down at the start of each note and lets it rise as the envelope decays, so the note brightens over a second or so. VCA MODE RELEASE keeps the loudness steady while that happens.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.8],
+          [2, 60, 1.8],
+          [4, 64, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths",
+          "module": "osc",
+          "why": "Two sawtooths, slightly apart, give the filter plenty of brightness to reveal.\n- Oscillator 1 and 2 sawtooth, OCTAVE 8’, FREQUENCY +0.1.\n- Mixer 1 and 2 at 6.\n- Listen for: a bright, full tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.oct": "8",
+            "osc2.wave": "saw",
+            "osc2.oct": "8",
+            "osc2.freq": 0.1,
+            "mix.1": 6,
+            "mix.2": 6
+          }
+        },
+        {
+          "title": "The envelope, upside down, into CUTOFF",
+          "module": "mod",
+          "why": "ENV INV falls when the envelope rises. Patched into CUTOFF, it closes the filter at the start of each note and lets it open as the envelope dies away.\n- Cable ENV INV → CUTOFF.\n- CUTOFF 7 (about 2.5 kHz): where the filter ends up once the envelope has gone.\n- ENV AMT 0: the envelope’s own path to the filter is off, so only the cable moves it.\n- ATTACK 0, DECAY 6.5 (about 1.2 s), SUSTAIN 0: a fast drop, then a slow opening.\n- Listen for: each note starting dark and brightening.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.env": 0,
+            "env.attack": 0,
+            "env.decay": 6.5,
+            "env.sustain": 0
+          },
+          "cables": [["j.env_inv", "j.cutoff"]]
+        },
+        {
+          "title": "Steady loudness",
+          "module": "amp",
+          "why": "With VCA MODE on ENV, the same envelope would also fade the note out as it opens. RELEASE mode holds full level while the key is down instead.\n- VCA MODE RELEASE, RELEASE 5 (0.2 s).\n- Reverb MIX 3.5.\n- Listen for: steady notes that open up, like a slow wah in reverse.",
+          "set": { "vca.mode": "release", "env.release": 5, "rev.mix": 3.5 }
+        }
+      ],
+      "context": {
+        "env.decay": "In this sound: how long each note takes to open up.",
+        "vca.mode": "In this sound: RELEASE, so loudness stays steady while the filter opens. On ENV the notes fade as they brighten.",
+        "vcf.cutoff": "In this sound: how bright each note ends up."
+      },
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Set to 4",
+          "hear": "A quick “wow” on each note instead of a slow opening."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 6",
+          "hear": "A vocal, sweeping resonance as it opens."
+        },
+        {
+          "id": "vca.mode",
+          "try": "Switch to ENV",
+          "hear": "Each note fades away as it brightens."
+        }
+      ]
+    },
+    {
+      "id": "m15-thin-pluck",
+      "name": "Thin Pluck",
+      "ref": "The HI PASS filter patched after the VCA",
+      "artist": "Classic technique",
+      "tags": ["pluck", "patched", "high-pass"],
+      "level": 3,
+      "blurb": "A light, glassy pluck with the low end filtered away.",
+      "how": "The separate high-pass filter is out of the sound until patched. A cable from VCA output to HI PASS input and another from HI PASS output to REVERB input put it between the VCA and the reverb, so it trims the low end off the pluck before the spring.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.2],
+          [0.5, 79, 0.2],
+          [1, 76, 0.2],
+          [1.5, 84, 0.2],
+          [2, 72, 0.2],
+          [2.5, 79, 0.2],
+          [3, 77, 0.2],
+          [3.5, 74, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plucked tone",
+          "module": "env",
+          "why": "A sawtooth and a square, with a short envelope and no sustain, give a quick pluck.\n- Oscillator 1 sawtooth and Oscillator 2 square at 8’, mixer 1 at 8, mixer 2 at 7: loud, because the high-pass filter will take a lot away.\n- ATTACK 0, DECAY 4 (about 100 ms), SUSTAIN 0, RELEASE 3.\n- CUTOFF 5 (about 630 Hz), ENV AMT +3 (+3.4 octaves), RESONANCE 3.\n- Listen for: short, bright plucks with a full low end.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc1.oct": "8",
+            "osc2.wave": "sq",
+            "osc2.oct": "8",
+            "mix.1": 8,
+            "mix.2": 7,
+            "env.attack": 0,
+            "env.decay": 4,
+            "env.sustain": 0,
+            "env.release": 3,
+            "vcf.cutoff": 5,
+            "vcf.env": 3,
+            "vcf.res": 3
+          }
+        },
+        {
+          "title": "Patch the high-pass filter in",
+          "module": "util",
+          "why": "Two cables put the HI PASS filter between the VCA and the reverb.\n- Cable VCA → HI PASS (input): the VCA’s output into the high-pass filter.\n- Cable HI PASS (output) → REVERB (input): the filtered pluck into the reverb, in place of the plain VCA output.\n- HI PASS FILTER 5 (about 400 Hz): the low end is cut away.\n- Listen for: the pluck losing its body and turning light and glassy. Turn HI PASS FILTER to 0 and the body comes back.",
+          "set": { "hpf.cutoff": 5 },
+          "cables": [
+            ["j.vca_out", "j.hp_in"],
+            ["j.hp_out", "j.rev_in"]
+          ]
+        },
+        {
+          "title": "Into the spring",
+          "module": "fx",
+          "why": "The reverb now gets only the thin, filtered pluck, so its tail is bright and clean rather than boomy.\n- Reverb MIX 5.\n- VOLUME 9: a little more level to make up for what the high-pass filter removed.\n- Listen for: a light, sparkling line with a splashy tail.",
+          "set": { "rev.mix": 5, "out.volume": 9 }
+        }
+      ],
+      "context": {
+        "hpf.cutoff": "In this sound: how much of the low end is cut away.",
+        "rev.mix": "In this sound: how much spring the thin pluck gets.",
+        "env.decay": "In this sound: the length of each pluck."
+      },
+      "tweaks": [
+        {
+          "id": "hpf.cutoff",
+          "try": "Sweep from 2 to 8",
+          "hear": "From a full pluck to a tiny, tinny click."
+        },
+        { "id": "vcf.res", "try": "Raise to 7", "hear": "A ringing, wet pluck." },
+        { "id": "osc1.oct", "try": "Set to 4’", "hear": "A higher, more delicate line." }
+      ]
+    }
+  ]
+}

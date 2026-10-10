@@ -1,0 +1,86 @@
+{
+  "synth": "model-15",
+  "unusual": [
+    {
+      "target": "osc2.wave",
+      "text": "The switch has eight positions. The four round the right, under a dashed SUB bracket, repeat the four shapes and bring in the sub-oscillator. The guide does not say how; here they hand mixer channel 3 to the sub in place of the white noise."
+    },
+    {
+      "target": "mix.3",
+      "text": "Behringer’s own guide calls this channel both ‘OSC 3 / White Noise’ and ‘sub / white noise’; there is no third oscillator. The panel prints ‘3 / W NOISE’."
+    },
+    {
+      "target": "osc2.oct",
+      "text": "The two oscillators have different footage ranges: Oscillator 1 runs 32’ to 4’, Oscillator 2 16’ to 2’. Most synths give both the same range."
+    },
+    {
+      "target": "vca.mode",
+      "text": "A three-way VCA switch. ENV and ON (a drone) are common; RELEASE is not. The guide calls it ‘keyboard release’ without explaining it. Here it gives full level while the key is held and the envelope’s release when it is let go, so the one envelope can shape the filter alone."
+    },
+    {
+      "target": "mod.amount",
+      "text": "The LFO has a separate depth for each destination plus this master depth, as on the Moog Grandmother. On most synths each depth knob works on its own; here nothing moves until MODULATION is turned up."
+    },
+    {
+      "target": "lfo.rate",
+      "text": "The LFO reaches 1.3 kHz, well into audio, so it can work as a third oscillator for clangy modulation of the pitch or filter. Most LFOs stop at a few tens of hertz."
+    },
+    {
+      "target": "att.amount",
+      "text": "With nothing patched into ATT INPUT the attenuator reads an internal positive voltage, so it doubles as a manual control voltage, positive or negative, as on the Grandmother."
+    },
+    {
+      "target": "j.sh_out",
+      "text": "The sample and hold has no clock or input jack on the panel: it reads the noise once on each LFO cycle, so LFO RATE sets how often it steps."
+    },
+    {
+      "target": "j.env_inv",
+      "text": "Most semi-modulars need a separate inverter to turn an envelope upside down. Here it has its own output."
+    },
+    {
+      "target": "j.osc1_cv",
+      "text": "Pitch inputs add to the keyboard rather than replacing it, so the oscillators still play the keys with a cable in."
+    },
+    {
+      "target": "j.vca_in",
+      "text": "The filter reaches the VCA through this jack’s switch. It is the one normal the Model 15 guide states; the others here follow the Grandmother."
+    },
+    {
+      "target": "j.rev_out",
+      "text": "The reverb sits after the VCA with its own input and output in the patch bay, so it can be used on another signal or another instrument."
+    },
+    {
+      "target": "hpf",
+      "text": "The high-pass filter is a separate module, out of the sound until patched. Most synths that have one put it in series with the low-pass filter."
+    },
+    {
+      "target": "arp",
+      "text": "The arpeggiator and sequencer share one set of switches, and the buttons have two names: PLAY, HOLD and TAP while playing, TIE, REST and ACCENT while recording a sequence."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: both oscillators with their octaves and waveforms, sync and Oscillator 2’s FREQUENCY, the sub-oscillator, the mixer with white noise, the ladder filter with KEY TRACKING and the bipolar ENV AMT, the ADSR, all three VCA modes, the LFO with its three depths and MODULATION, the spring reverb, and the arpeggiator. In the patch bay, the separate HI PASS filter, the attenuator with its internal voltage, the sample and hold, both multiples, and every audio, pitch, cutoff, VCA, LFO and envelope jack work.",
+    "items": [
+      {
+        "title": "Where the guide is unclear",
+        "text": "The Quick Start Guide states only that the filter feeds the VCA; the other normals (the oscillators into the mixer, the gate into the envelope, the VCA into the reverb, the sample and hold reading noise on each LFO cycle) follow the Moog Grandmother the Model 15 copies. The guide also does not say how OSC 2’s waveform switch chooses the sub-oscillator, what VCA MODE RELEASE does, or where AUDIO input enters. Here the positions under the SUB bracket put the sub-oscillator on mixer channel 3 in place of the noise, RELEASE gives full level while a key is held with the envelope’s release on the end, and AUDIO input takes mixer channel 3’s place."
+      },
+      {
+        "title": "Ranges are estimates",
+        "text": "The guide gives the LFO range (0.07 Hz to 1.3 kHz), the cutoff range, the envelope times, OSC 2’s ±7 semitones and FINE TUNE’s ±4, and this app uses them. The depths of PITCH MOD, PULSE WIDTH, FILTER MOD and ENV AMT, the resonance law, the glide time, the HI PASS range, the arpeggiator’s tempo range and the reverb’s sound are this app’s choices."
+      },
+      {
+        "title": "The sequencer",
+        "text": "Only the arpeggiator is modelled: PLAY, HOLD, RATE, DIRECTION and OCT. The three 256-step sequences, recording with REST, TIE and ACCENT, and tap tempo are not; in SEQ and REC the keys play as they are pressed. TAP does nothing here."
+      },
+      {
+        "title": "Jacks that do nothing here",
+        "text": "ENV AMT (voltage control of the envelope amount), ARP/SEQ SYN, ARP/SEQ RES, ARP/SEQ ON and the SYNC clock output can be patched but have no effect. White and pink noise come from one generator, so they move together. In the app the first jack of each MULTI group is its input and the other two are copies."
+      },
+      {
+        "title": "Printed parts",
+        "text": "MIDI IN, the rear-panel sockets, the PHONES level and the MIDI channel switches are not modelled. Play from the on-screen keyboard or a MIDI keyboard connected through the header."
+      }
+    ]
+  }
+}

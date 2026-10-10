@@ -1,0 +1,52 @@
+{
+  "synth": "kobol",
+  "title": "From the RSF Kobol to the Kobol Expander",
+  "intro": "RSF was the French company of the brothers Ruben and Serge Fernandez. Their Kobol, often called the French Minimoog, was a compact keyboard synth with two VCOs whose waveforms turned smoothly from one shape to the next. Few were made, and it later gathered a cult following. The Expander put the same voice in a module to be played from another keyboard or a sequencer, and that is the instrument Behringer’s Kobol Expander follows.",
+  "timeline": [
+    {
+      "year": "1978",
+      "name": "RSF Kobol",
+      "text": "RSF’s first compact keyboard synth: two VCOs with continuously variable waveforms, a 24 dB low-pass filter and two envelopes. Fewer than 200 were made."
+    },
+    {
+      "year": "1979",
+      "name": "RSF Kobol Expander",
+      "tag": "The original",
+      "text": "The Kobol voice without a keyboard, in a module. The Behringer panel follows its layout: the printed block diagram, the VCA after each VCO and a CV input beside almost every knob."
+    },
+    {
+      "year": "c. 1979",
+      "name": "Kobol Expander 2 and the Kobol system",
+      "text": "RSF added an Expander 2 with extra modules (ring modulator, sample and hold, envelope followers, another VCA and LFO), a programmer, the KM8 mixer and an eight-voice CV and gate keyboard, so several units could be built into a larger system."
+    },
+    {
+      "year": "1981–82",
+      "name": "PolyKobol",
+      "text": "After the brothers parted company Ruben Fernandez tried to turn the Kobol into a polyphonic synth. The first PolyKobol did not work; after RSF was rescued from bankruptcy, the PolyKobol II became a bi-timbral analogue polysynth."
+    },
+    {
+      "year": "2023",
+      "name": "Behringer Kobol Expander",
+      "tag": "This synth",
+      "text": "Behringer’s recreation of the Expander as a desktop or Eurorack module, with MIDI and USB in place of the original’s CV-only playing. Several can be chained for polyphony through the SynthTRIBE app."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Minimoog Model D",
+      "years": "1970",
+      "text": "The synth the Kobol is usually compared to. Both are compact two-to-three-oscillator voices with a 24 dB low-pass filter; the Kobol swaps the Minimoog’s waveform switches for continuous WAVEFORM knobs and its mixer for a VCA per oscillator."
+    },
+    {
+      "name": "Behringer Model D",
+      "years": "2018",
+      "text": "Behringer’s version of the Minimoog, in this app as well. Compare the two to hear what switched waveforms and a mixer do differently from morphing waveforms and VCAs."
+    },
+    {
+      "name": "XILS-lab PolyKB",
+      "years": "2010s",
+      "text": "A software instrument modelled on RSF’s later PolyKobol II polysynth."
+    }
+  ],
+  "note": "Only a few hundred RSF Kobol instruments were made, and few records are documented. Vince Clarke owned one and spoke of it in 1984, but named no record it was used on, so he is not listed."
+}

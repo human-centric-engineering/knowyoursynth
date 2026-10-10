@@ -2,9 +2,7 @@
  * The committed seed data, as exported from the prototype (`prototype/tools/export-content.mjs`), and the loader and
  * seed unit that read it.
  *
- * The counts are the prototype's own: plan §3's synth table records 99 sounds for Model D, and the lineage, notes and
- * limits are counted in the prototype's Model D lineage and unusual files and in its `src/lib/limits.js`. An export that
- * dropped or doubled anything fails here.
+ * The counts are the prototype's own (`EXPORTED` below). An export that dropped or doubled anything fails here.
  */
 import { describe, it, expect, vi } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
@@ -26,51 +24,104 @@ vi.mock('@/lib/app/catalogue/seed', async (importOriginal) => ({
 
 const data = loadCatalogueData();
 
-describe('the exported Model D content', () => {
-  it('has every file the export writes', () => {
-    expect(catalogueDataFiles()).toEqual([
-      'lineage/model-d.json',
-      'notes/model-d.json',
-      'notes/shared.json',
-      'sounds/model-d.json',
-      'synths.json',
+/**
+ * Each exported synth's counts, as the prototype has them. Sounds are plan §3's synth table; lineage, unusual notes
+ * and limits are counted in the prototype's lineage and unusual files for the synth and in its `src/lib/limits.js`.
+ */
+const EXPORTED: {
+  id: string;
+  sounds: number;
+  timeline: number;
+  relatives: number;
+  unusual: number;
+  limits: number;
+}[] = [
+  { id: 'model-d', sounds: 99, timeline: 9, relatives: 5, unusual: 38, limits: 2 },
+  { id: 'neutron', sounds: 103, timeline: 11, relatives: 5, unusual: 42, limits: 3 },
+  { id: 'pro-1', sounds: 98, timeline: 7, relatives: 5, unusual: 33, limits: 4 },
+  { id: 'k2', sounds: 93, timeline: 8, relatives: 5, unusual: 30, limits: 5 },
+  { id: 'b2600', sounds: 93, timeline: 7, relatives: 5, unusual: 45, limits: 4 },
+  { id: 'kobol', sounds: 40, timeline: 5, relatives: 3, unusual: 16, limits: 4 },
+  { id: 'wasp-deluxe', sounds: 30, timeline: 4, relatives: 2, unusual: 17, limits: 5 },
+  { id: 'tb-303', sounds: 20, timeline: 5, relatives: 3, unusual: 9, limits: 4 },
+  { id: 'td-3', sounds: 20, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
+  { id: 'model-15', sounds: 12, timeline: 5, relatives: 4, unusual: 14, limits: 5 },
+  { id: 'grandmother', sounds: 8, timeline: 5, relatives: 3, unusual: 15, limits: 4 },
+];
+
+describe('the exported content', () => {
+  it('has every file the export writes, and nothing for a synth not exported', () => {
+    const ids = EXPORTED.map((e) => e.id).sort();
+    expect(catalogueDataFiles()).toEqual(
+      [
+        ...ids.map((id) => `lineage/${id}.json`),
+        ...[...ids, 'shared'].sort().map((id) => `notes/${id}.json`),
+        ...ids.map((id) => `sounds/${id}.json`),
+        'synths.json',
+      ].sort()
+    );
+  });
+
+  it('lists each synth at its place in the prototype’s picker', () => {
+    expect(data.listing.synths).toEqual([
+      { id: 'model-d', order: 0, listed: true },
+      { id: 'neutron', order: 1, listed: true },
+      { id: 'pro-1', order: 2, listed: true },
+      { id: 'k2', order: 3, listed: true },
+      { id: 'b2600', order: 4, listed: true },
+      { id: 'kobol', order: 8, listed: true },
+      { id: 'wasp-deluxe', order: 10, listed: true },
+      { id: 'tb-303', order: 15, listed: true },
+      { id: 'td-3', order: 16, listed: true },
+      { id: 'model-15', order: 23, listed: true },
+      { id: 'grandmother', order: 24, listed: true },
     ]);
   });
 
-  it('matches the prototype’s counts: 99 sounds, 9 lineage entries, 38 unusual notes, 2 + 5 limits', () => {
-    const sounds = data.sounds.find((f) => f.synth === 'model-d');
-    const lineage = data.lineage.find((f) => f.synth === 'model-d');
-    const notes = data.notes.find((f) => f.synth === 'model-d');
-    expect(sounds?.sounds).toHaveLength(99);
-    expect(new Set(sounds?.sounds.map((s) => s.id)).size).toBe(99);
-    expect(lineage?.timeline).toHaveLength(9);
-    expect(lineage?.relatives).toHaveLength(5);
-    expect(notes?.unusual).toHaveLength(38);
-    expect(notes?.limits.items).toHaveLength(2);
+  it('has the 5 limits true of every panel', () => {
     expect(data.shared.limits).toHaveLength(5);
-    expect(data.listing.synths).toEqual([{ id: 'model-d', order: 0, listed: true }]);
   });
 
-  it('records the definition version the sounds were made on, and leaves "Heard on" to the databank', () => {
-    expect(data.sounds[0].version).toBe(getSynthDef('model-d')?.version);
-    expect(data.lineage[0]).not.toHaveProperty('heard');
-  });
+  describe.each(EXPORTED)('$id', (want) => {
+    const sounds = data.sounds.find((f) => f.synth === want.id);
+    const lineage = data.lineage.find((f) => f.synth === want.id);
+    const notes = data.notes.find((f) => f.synth === want.id);
 
-  it('passes the validator, sound by sound, for its definition version', () => {
-    const def = getSynthDef('model-d');
-    if (!def) throw new Error('model-d is registered');
-    const failures = data.sounds[0].sounds.flatMap((s) => {
-      const r = validatePreset(def, s);
-      return r.ok ? [] : [`${String(s.id)}: ${r.problems.map((p) => p.message).join('; ')}`];
+    it('matches the prototype’s counts of sounds, lineage entries, unusual notes and limits', () => {
+      expect(sounds?.sounds).toHaveLength(want.sounds);
+      expect(new Set(sounds?.sounds.map((s) => s.id)).size).toBe(want.sounds);
+      expect(lineage?.timeline).toHaveLength(want.timeline);
+      expect(lineage?.relatives).toHaveLength(want.relatives);
+      expect(notes?.unusual).toHaveLength(want.unusual);
+      expect(notes?.limits.items).toHaveLength(want.limits);
     });
-    expect(failures).toEqual([]);
+
+    it('records the definition version the sounds were made on, and leaves "Heard on" to the databank', () => {
+      const version = getSynthDef(want.id)?.version;
+      expect(version, `${want.id} is registered with a version`).toBeDefined();
+      expect(sounds?.version).toBe(version);
+      expect(lineage).not.toHaveProperty('heard');
+    });
+
+    it('passes the validator, sound by sound, for its definition version', () => {
+      const def = getSynthDef(want.id);
+      if (!def) throw new Error(`${want.id} is registered`);
+      const failures = (sounds?.sounds ?? []).flatMap((s) => {
+        const r = validatePreset(def, s);
+        return r.ok ? [] : [`${String(s.id)}: ${r.problems.map((p) => p.message).join('; ')}`];
+      });
+      expect(failures).toEqual([]);
+    });
   });
 
-  it('plans into rows with nothing refused', () => {
+  it('plans into rows with nothing refused: every sound, and each synth’s notes, limits intro and limits', () => {
     const rows = planCatalogue(data);
-    expect(rows.sounds).toHaveLength(99);
-    expect(rows.notes).toHaveLength(46);
-    expect(new Set(rows.notes.map((n) => n.key)).size).toBe(46);
+    const sum = (f: (e: (typeof EXPORTED)[number]) => number) =>
+      EXPORTED.reduce((n, e) => n + f(e), 0);
+    expect(rows.sounds).toHaveLength(sum((e) => e.sounds));
+    const notes = sum((e) => e.unusual + 1 + e.limits) + 5;
+    expect(rows.notes).toHaveLength(notes);
+    expect(new Set(rows.notes.map((n) => n.key)).size).toBe(notes);
   });
 });
 

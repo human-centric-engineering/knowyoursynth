@@ -1,0 +1,98 @@
+{
+  "synth": "wasp-deluxe",
+  "unusual": [
+    {
+      "target": "mix.ext",
+      "text": "With nothing patched into EXT AUDIO, this channel carries the WASP’s own output back into its mixer. So EXT is a feedback control as well as an input level, something most synths only get with a patch cable."
+    },
+    {
+      "target": "osc1.wave",
+      "text": "The oscillators are made digitally, as on the original Wasp, which gives them a hard, buzzy edge; the filter and VCA are analogue. Each oscillator has an OFF position on its waveform switch as well as a level knob in the mixer."
+    },
+    {
+      "target": "osc1.ft",
+      "text": "Octaves are marked in organ feet (32 to 2), as on many older synths: halving the number raises the pitch an octave."
+    },
+    {
+      "target": "osc1.width",
+      "text": "Only the upper oscillator has a WIDTH control. The guide does not say whether it also affects the lower oscillator or the ENH shape; here it acts on the upper oscillator’s square and ENH."
+    },
+    {
+      "target": "osc2.pitch",
+      "text": "Only the lower oscillator has a PITCH knob. It tunes that oscillator against the upper one, so the upper oscillator is the fixed reference."
+    },
+    {
+      "target": "ctrl.freq",
+      "text": "Wasp calls its LFO the control oscillator. It reaches 100 Hz, well into audio rates, so it can roughen and growl as well as wobble."
+    },
+    {
+      "target": "ctrl.wave",
+      "text": "Six shapes, including a rising and a falling sawtooth, NOISE and RND. RND is a sample and hold built into the LFO: a new random level each cycle."
+    },
+    {
+      "target": "ctrl.pitchMod",
+      "text": "There is one pitch modulation depth for both oscillators. The guide describes it as varying the pitch difference between them; here it moves both together."
+    },
+    {
+      "target": "vcf.mode",
+      "text": "One filter with four responses, including NOTCH, which is rare on a small mono synth. The original Wasp filter was built from CMOS logic chips rather than a transistor ladder or a filter chip."
+    },
+    {
+      "target": "vcf.q",
+      "text": "The panel calls resonance ‘Q’. The guide says it sets the slope in LO and HI and the width of the band in BAND and NOTCH."
+    },
+    {
+      "target": "vcf.oscAmt",
+      "text": "Both FILTER CONTROL knobs have 0 at the top: turned anticlockwise they turn their source upside down. Most synths only have a positive LFO or envelope amount. These two knobs are not numbered in the guide."
+    },
+    {
+      "target": "vcf.envAmt",
+      "text": "The envelope depth is bipolar: anticlockwise, each note makes the filter dip instead of open. Most synths need an inverted envelope setting for that."
+    },
+    {
+      "target": "vca.sustain",
+      "text": "The sustain knob’s far end, REPEAT, makes the envelope loop: rise over ATTACK, fall over DECAY, and start again while the key is held. Most synths need an LFO to retrigger an envelope."
+    },
+    {
+      "target": "vca.decay",
+      "text": "There is no separate release: DECAY sets both the fall to the sustain level and the fade after the key is let go."
+    },
+    {
+      "target": "vca.hold",
+      "text": "HOLD freezes the loudness envelope wherever it is when flipped, part way through a decay for example, until it is flipped back. It is not a sustain pedal or a latch for the key."
+    },
+    {
+      "target": "cenv.delay",
+      "text": "The control envelope can wait up to a second before it starts, which few synths offer on a filter envelope. The same knob’s far end is REPEAT, which cycles the envelope instead."
+    },
+    {
+      "target": "cenv",
+      "text": "The filter’s envelope has no sustain: it rises and falls on each note, even while the key is held. It reaches the filter only through the right-hand FILTER CONTROL knob."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: both oscillators with their footages, waveforms (including OFF and ENH) and the upper one’s WIDTH, the mixer with noise and the EXT feedback of the output when nothing is patched, the multimode filter (LO, BAND, NOTCH, HI) with both bipolar FILTER CONTROL knobs, the control oscillator’s six shapes and PITCH MOD, the VCA envelope with REPEAT and HOLD, and the control envelope with its DELAY and REPEAT. OSC1, OSC2, EXT AUDIO, MAIN AUDIO and PHONES can be patched.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The Quick Start Guide gives only the control oscillator range (0.5 to 100 Hz) and the control envelope’s delay (up to 1 s), and this app uses them. The envelope times, filter range, resonance law, the spans of BEND, TUNE and OSC 2 PITCH, the PITCH MOD and FILTER CONTROL depths, and the filter’s keyboard tracking (half here) are this app’s choices."
+      },
+      {
+        "title": "ENH and the digital oscillators",
+        "text": "The guide says only that ENH adds punch, bite and clarity. Here it is the sawtooth and the pulse played together. The aliased edge of the Wasp’s digital oscillators is not reproduced: the oscillators here are clean."
+      },
+      {
+        "title": "The filter",
+        "text": "The Wasp’s CMOS filter is modelled with this app’s state-variable filter. Q works as resonance in every mode; the guide’s description of it as the slope in LO and HI is not modelled separately."
+      },
+      {
+        "title": "Where the REPEAT zones start",
+        "text": "SUSTAIN LEVEL and the control envelope’s DELAY switch to REPEAT in the last twentieth of their travel, anticlockwise. Where the hardware changes over is not documented."
+      },
+      {
+        "title": "PHONES and printed parts",
+        "text": "The PHONES knob does nothing here: use VOLUME. MIDI IN, MIDI THRU, USB, the power lamp, the MIDI channel switches, poly chain and the SysEx settings (key priority, multi-trigger, bend range) are drawn for reference or not modelled. Notes retrigger the envelopes only when played detached."
+      }
+    ]
+  }
+}
