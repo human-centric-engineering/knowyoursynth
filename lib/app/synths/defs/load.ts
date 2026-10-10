@@ -31,6 +31,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'td-3': () => import('@/lib/app/synths/defs/td-3'),
   'model-15': () => import('@/lib/app/synths/defs/model-15'),
   grandmother: () => import('@/lib/app/synths/defs/grandmother'),
+  cat: () => import('@/lib/app/synths/defs/cat'),
 };
 
 /** Every id a loader exists for. */
