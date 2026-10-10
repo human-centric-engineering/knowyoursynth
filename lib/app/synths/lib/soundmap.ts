@@ -555,6 +555,7 @@ interface Session {
   onResult?: OnResult;
   stale?: (job: ProbeJob) => boolean;
   resolve?: (() => void) | null;
+  reject?: ((err: unknown) => void) | null;
   tail?: Promise<void>;
 }
 
@@ -578,7 +579,8 @@ export interface Mapper {
     wheel: number,
     notes: [number, number],
     onProgress: (fraction: number) => void,
-    onDone: (map: SoundMap) => void
+    onDone: (map: SoundMap) => void,
+    onError: (err: unknown) => void
   ): void;
   explain(controlId: string, onDone: (id: string, combos: DoorCombo[]) => void): void;
   cancel(): void;
@@ -617,8 +619,18 @@ export function createMapper(): Mapper {
 
   const endPhase = (sess: Session) => {
     const done = sess.resolve;
-    sess.resolve = null;
+    sess.resolve = sess.reject = null;
     if (done) done();
+  };
+
+  // Something threw while a phase was running (a measurement, a reply handler, a progress callback): the phase ends
+  // there, as a rejection, rather than waiting forever for jobs nobody is still handing out.
+  const failPhase = (sess: Session, err: unknown) => {
+    const fail = sess.reject;
+    sess.resolve = sess.reject = null;
+    sess.queue = [];
+    sess.ticking = false;
+    if (fail) fail(err);
   };
 
   /** Hand out jobs until the queue is empty. Jobs the phase calls stale (the question is already answered) are dropped unrendered. */
@@ -645,9 +657,14 @@ export function createMapper(): Mapper {
       sess.ticking = true;
       const tick = () => {
         if (sess.id !== run) return;
-        if (!sess.probe) sess.probe = createProbe(sess.baseline, sess.notes);
-        const job = next();
-        if (job && sess.onResult) sess.onResult(sess.probe.measure(job), job);
+        try {
+          if (!sess.probe) sess.probe = createProbe(sess.baseline, sess.notes);
+          const job = next();
+          if (job && sess.onResult) sess.onResult(sess.probe.measure(job), job);
+        } catch (err) {
+          failPhase(sess, err);
+          return;
+        }
         if (sess.queue.length) timer = setTimeout(tick, 4);
         else {
           sess.ticking = false;
@@ -711,13 +728,17 @@ export function createMapper(): Mapper {
         }
         if (data.run !== sess.id || sess.id !== run) return;
         sess.answered = true;
-        if (data.type === 'result') {
-          const job = sess.inflight.get(w);
-          sess.inflight.delete(w);
-          if (sess.onResult && job && isProbeResult(data.result)) sess.onResult(data.result, job);
+        try {
+          if (data.type === 'result') {
+            const job = sess.inflight.get(w);
+            sess.inflight.delete(w);
+            if (sess.onResult && job && isProbeResult(data.result)) sess.onResult(data.result, job);
+          }
+          sess.idle.push(w);
+          pump(sess);
+        } catch (err) {
+          failPhase(sess, err);
         }
-        sess.idle.push(w);
-        pump(sess);
       };
       w.postMessage({ type: 'start', run: sess.id, baseline: sess.baseline, notes: sess.notes });
     });
@@ -729,12 +750,12 @@ export function createMapper(): Mapper {
     onResult: OnResult,
     stale?: (job: ProbeJob) => boolean
   ) =>
-    new Promise<void>((resolve) => {
+    new Promise<void>((resolve, reject) => {
       if (sess.id !== run || !jobs.length) {
         resolve();
         return;
       }
-      Object.assign(sess, { queue: jobs.slice(), onResult, stale, resolve });
+      Object.assign(sess, { queue: jobs.slice(), onResult, stale, resolve, reject });
       pump(sess);
     });
 
@@ -746,8 +767,11 @@ export function createMapper(): Mapper {
   };
 
   return {
-    /** Analyse one panel state. Calling it again (or `cancel`) drops whatever is still running. */
-    analyse(def, values, cables, wheel, notes, onProgress, onDone) {
+    /**
+     * Analyse one panel state. Calling it again (or `cancel`) drops whatever is still running. A throw part-way
+     * through is logged and ends the analysis with `onError` instead of `onDone`.
+     */
+    analyse(def, values, cables, wheel, notes, onProgress, onDone, onError) {
       close();
       const id = run;
       const { baseline, jobs, inert } = buildJobs(def, values, cables, wheel);
@@ -771,12 +795,22 @@ export function createMapper(): Mapper {
       sess.tail = phase(sess, jobs, (r) => {
         results.push(r);
         onProgress(results.length / jobs.length);
-      }).then(() => {
-        if (id !== run) return;
-        const map = summarise(def, jobs, results, inert);
-        sess.state = map.state;
-        onDone(map);
-      });
+      })
+        .then(() => {
+          if (id !== run) return;
+          const map = summarise(def, jobs, results, inert);
+          sess.state = map.state;
+          onDone(map);
+        })
+        .catch((err: unknown) => {
+          if (id !== run) return;
+          logger.error('Sound-map analysis failed', {
+            synth: def.id,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          close(); // replies still in flight belong to a run that is over
+          onError(err);
+        });
     },
     /**
      * Why is this control dead? → onDone(id, [combo, …]): up to two ways in, each a list of doors ({ id, v } or
@@ -819,8 +853,13 @@ export function createMapper(): Mapper {
                 .map((f) => f.combo)
             );
         })
-        .catch(() => {
-          if (sess.id === run) onDone(controlId, []);
+        .catch((err: unknown) => {
+          if (sess.id !== run) return;
+          logger.error('Sound-map explanation failed', {
+            control: controlId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          onDone(controlId, []);
         });
     },
     cancel: close,

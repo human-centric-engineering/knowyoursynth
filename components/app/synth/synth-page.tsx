@@ -349,7 +349,10 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
               m.key === soundKey
                 ? { status: 'ready', progress: 1, key: soundKey, why: {}, ...res }
                 : m
-            )
+            ),
+          // The analysis threw part-way (the mapper has logged it): leave "Working out…" rather than hang there. The
+          // next change to the sound tries again.
+          () => mapStore.set((m) => (m.key === soundKey ? MAP_OFF : m))
         );
       } catch {
         mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that

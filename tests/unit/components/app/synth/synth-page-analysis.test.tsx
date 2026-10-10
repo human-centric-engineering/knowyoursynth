@@ -21,6 +21,7 @@ import { createProbe, PROBE_WORKER_URL } from '@/lib/app/synths/audio/probe';
 import type { ProbeJob, ProbeResult } from '@/lib/app/synths/audio/probe';
 import { controlMap, displayName, presetState } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
+import { logger } from '@/lib/logging';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -246,6 +247,28 @@ describe('the sound map', () => {
     await settle(300);
     await release();
     expect(mapStore.get()).toMatchObject({ status: 'ready', key: replaced });
+  });
+
+  it('leaves "Working out…" when the analysis fails part-way, rather than hanging there', async () => {
+    vi.stubGlobal('Worker', undefined);
+    const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+    let n = 0;
+    vi.mocked(createProbe).mockReturnValue({
+      rms: 0.1,
+      measure: (job) => {
+        if (++n === 5) throw new Error('render blew up');
+        return measure(job);
+      },
+    });
+    page();
+    fireEvent.click(button('Dim unused parts'));
+    expect(screen.getByText(/Working out what is in this sound/)).toBeTruthy();
+    await settle(400 + 40 * 400);
+    expect(n).toBe(5);
+    expect(mapStore.get().status).toBe('off');
+    expect(screen.queryByText(/Working out what is in this sound/)).toBeNull();
+    expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
+    error.mockRestore();
   });
 
   it('works the map out again for another sound, and clears it when both switches go off', async () => {
