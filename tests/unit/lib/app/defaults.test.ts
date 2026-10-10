@@ -459,6 +459,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'scripts/check-synths.ts',
         'scripts/build-audio-workers.ts',
         'scripts/record-synth-goldens.ts',
+        'scripts/prototype-synths.ts',
       ]);
       // Know Your Synth fills this seam: pinned to its entries, so a stray extra one still fails.
       expect(appAlwaysRunTests.map((t) => t.path)).toEqual([
