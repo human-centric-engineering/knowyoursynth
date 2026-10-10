@@ -10,7 +10,7 @@
  * @see scripts/synth-goldens.ts
  */
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
 import type { SynthDef } from '@/lib/app/synths/contract';
@@ -72,6 +72,15 @@ describe.each(SYNTH_DEFS.map((d) => d.id))('%s', (id) => {
     expect(got.hears).toEqual(want.hears);
     expect(got.engine).toEqual(want.engine);
   });
+});
+
+it('has a goldens file for registered synths only, so none sits in the tree uncompared', () => {
+  const files = readdirSync(DIR)
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => f.slice(0, -'.json'.length))
+    .sort();
+  expect(files.length).toBeGreaterThan(0);
+  expect(files).toEqual(SYNTH_DEFS.map((d) => d.id).sort());
 });
 
 describe('the recording', () => {

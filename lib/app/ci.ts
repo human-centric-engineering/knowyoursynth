@@ -142,8 +142,8 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
   {
     pattern: 'scripts/prototype-synths.ts',
     reason:
-      'the esbuild bundle-and-load of the reference definitions shared by the two CLIs above, and ' +
-      'imported by nothing else, so vitest never executes it. It is pure I/O with one shape check; ' +
+      'the esbuild bundle-and-load of the reference definitions shared by `scripts/check-synths.ts` ' +
+      'and `scripts/record-synth-goldens.ts`, and imported by nothing else, so vitest never executes it. It is pure I/O with one shape check; ' +
       'a broken bundle fails `npm run check:synths` and the goldens recorder at once.',
   },
 ];

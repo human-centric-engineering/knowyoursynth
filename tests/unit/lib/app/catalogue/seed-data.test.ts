@@ -97,7 +97,9 @@ describe('the exported content', () => {
     });
 
     it('records the definition version the sounds were made on, and leaves "Heard on" to the databank', () => {
-      expect(sounds?.version).toBe(getSynthDef(want.id)?.version);
+      const version = getSynthDef(want.id)?.version;
+      expect(version, `${want.id} is registered with a version`).toBeDefined();
+      expect(sounds?.version).toBe(version);
       expect(lineage).not.toHaveProperty('heard');
     });
 

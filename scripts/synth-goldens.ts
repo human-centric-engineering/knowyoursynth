@@ -162,7 +162,7 @@ export function settings(def: SynthDef): [key: string, values: ControlValues][] 
   for (const c of def.controls) {
     if (c.kind === 'cont') spread(c.min, c.max, 5).forEach((v) => add(c.id, v));
     else if (c.kind === 'enum') c.options.forEach((o) => add(c.id, o.v));
-    else add(c.id, !c.def);
+    else add(c.id, !def.init[c.id]);
   }
   return out;
 }
