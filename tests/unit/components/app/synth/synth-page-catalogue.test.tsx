@@ -15,8 +15,10 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
+import { modularDef } from '@/lib/app/synths/lib/layout';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
 
@@ -42,6 +44,9 @@ vi.mock('@/lib/db/client', () => ({
 
 /** Every synth the catalogue lists: each one must open. */
 const LISTED = catalogueData().listing.synths.map((s) => s.id);
+
+/** Listed synths with a modular layout: they open as modules, and switch to the long faceplate and back. */
+const MODULAR = LISTED.filter((id) => getSynthDef(id)?.modular);
 
 /**
  * Listed synths whose panel prints no maker's marks. Every other definition must tag its marks `brand`, so a port that
@@ -159,4 +164,51 @@ describe.each(LISTED)('the %s page', (id) => {
     fireEvent.click(row);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, last));
   });
+});
+
+describe.each(MODULAR)('the %s page’s panel layout', (id) => {
+  let def: AppSynthDef;
+  let detail: SynthDetail;
+
+  beforeAll(async () => {
+    const loading = loadSynthDef(id);
+    if (!loading) throw new Error(`${id} is listed but has no definition to load`);
+    def = await loading;
+    const { prisma } = await import('@/lib/db/client');
+    const { stored, noteRows } = synthRows(id);
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored as never);
+    vi.mocked(prisma.synthNote.findMany).mockResolvedValue(noteRows as never);
+    const d = await getSynthDetail(id);
+    if (!d) throw new Error(`no ${id} detail`);
+    detail = d;
+  });
+
+  it('opens as modules, switches to the long faceplate, and back', () => {
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    const viewBox = (v: { w: number; h: number }) => `0 0 ${v.w} ${v.h}`;
+    const modules = viewBox(modularDef(def).view);
+    const long = viewBox(def.view);
+    expect(modules).not.toBe(long);
+    const panel = () => screen.getByRole('group', { name: `${def.maker} ${def.name} front panel` });
+    const layout = within(screen.getByRole('group', { name: 'Panel layout' }));
+    const pressed = (name: string) =>
+      layout.getByRole('button', { name }).getAttribute('aria-pressed');
+
+    expect(panel().getAttribute('viewBox')).toBe(modules);
+    expect(pressed('Modular')).toBe('true');
+
+    fireEvent.click(layout.getByRole('button', { name: 'Long' }));
+    expect(panel().getAttribute('viewBox')).toBe(long);
+    expect(pressed('Long')).toBe('true');
+    expect(window.location.search).toBe('?view=long');
+
+    fireEvent.click(layout.getByRole('button', { name: 'Modular' }));
+    expect(panel().getAttribute('viewBox')).toBe(modules);
+    expect(pressed('Modular')).toBe('true');
+    expect(window.location.search).toBe('');
+  });
+});
+
+it('switches the layout on every Jupiter, the synths that have one', () => {
+  expect(MODULAR).toEqual(expect.arrayContaining(['jupiter-4', 'jupiter-6', 'jupiter-8']));
 });
