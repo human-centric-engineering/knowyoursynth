@@ -539,6 +539,14 @@ jobs:
     services:
       postgres:
         image: pgvector/pgvector:pg15
+        # FORK: pull as a Docker Hub user, not anonymously — the shared
+        # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
+        # expression because GitHub rejects the workflow if `username` or
+        # `password` is an empty string, which is what an absent secret gives
+        # (forks, Dependabot), and so does a `null` here. With either secret absent
+        # this is an empty mapping: no username, so the runner skips the
+        # login and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || fromJSON('{}') }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -587,6 +595,14 @@ jobs:
     services:
       postgres:
         image: pgvector/pgvector:pg15
+        # FORK: pull as a Docker Hub user, not anonymously — the shared
+        # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
+        # expression because GitHub rejects the workflow if `username` or
+        # `password` is an empty string, which is what an absent secret gives
+        # (forks, Dependabot), and so does a `null` here. With either secret absent
+        # this is an empty mapping: no username, so the runner skips the
+        # login and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || fromJSON('{}') }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -696,9 +712,21 @@ jobs:
       # comes from the checkout directory, and `up --no-build` would look for a
       # tag nothing built.
       COMPOSE_PROJECT_NAME: sunrise
+      # Read by the Docker Hub login step's `if:` (secrets can't be).
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+
+      # FORK: log in before anything pulls node:24-alpine, pgvector or nginx,
+      # for the same rate-limit reason as the smoke jobs' `credentials:`
+      # (t-17). Skipped when the secrets are absent, so the pulls stay anonymous.
+      - name: Log in to Docker Hub
+        if: env.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
