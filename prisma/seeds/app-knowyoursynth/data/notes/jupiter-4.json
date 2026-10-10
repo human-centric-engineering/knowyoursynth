@@ -1,0 +1,90 @@
+{
+  "synth": "jupiter-4",
+  "unusual": [
+    {
+      "target": "vco.waveform",
+      "text": "Each voice has only one VCO. Thickness comes from the sub-oscillator, the unison modes and the ensemble rather than from a second oscillator."
+    },
+    {
+      "target": "vco.pw",
+      "text": "At MAN the slider does not move smoothly: it steps through four fixed widths, 50, 40, 20 and 10 %. Most synths have a continuous pulse-width knob."
+    },
+    {
+      "target": "vco.sub",
+      "text": "A switch, not a level: the sub-octave square is either in at a fixed level or out."
+    },
+    {
+      "target": "noise.on",
+      "text": "Noise is a switch with no level control, unlike most mixers."
+    },
+    {
+      "target": "hpf.cutoff",
+      "text": "A separate high-pass filter in front of the low-pass one, as on the later Juno-60. Few synths of its time had one."
+    },
+    {
+      "target": "vcf.kybd",
+      "text": "Keyboard follow has four fixed steps (10, 40, 70 and 100 %) on a rotary switch, not a continuous knob."
+    },
+    {
+      "target": "kbd.tuning",
+      "text": "The centre of the TUNING knob is A = 442 Hz on the hardware, not the usual 440 Hz."
+    },
+    {
+      "target": "modifier",
+      "text": "The MODIFIER section is never stored with a sound: it acts live on whatever is playing, memories included. The manual asks you to reset it after use."
+    },
+    {
+      "target": "lfo.bend",
+      "text": "LFO BEND bends the LFO rate stored in a sound up or down by hand, a performance control most synths do not have."
+    },
+    {
+      "target": "trig.rate",
+      "text": "One clock drives both the arpeggio and the filter sample-and-hold, so the random filter steps land in time with the arpeggio notes."
+    },
+    {
+      "target": "lever",
+      "text": "One lever does pitch bend and modulation: each of VCO, VCF and VCA is switched to BEND, OFF or LFO, so the same push can bend one destination and bring in the LFO on another."
+    },
+    {
+      "target": "kbd.assign",
+      "text": "Voice assignment is chosen on a rotary switch with two unison and two poly modes, set by the microprocessor. In POLY 1 voices rotate in turn; in POLY 2 a key reuses its own voice, which suits portamento."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled on four voices: the VCO with its waveforms, range and stepped or modulated pulse width, the sub-oscillator and noise switches, the high-pass filter, the resonant low-pass filter with keyboard follow and envelope polarity, both ADSRs, the VCA level, the LFO with its delay and live rate bend, the trigger generator with the arpeggio and the filter sample-and-hold, the key-assignment modes, portamento, transpose and the ensemble. The panel is laid out after Roland’s 2022 JUPITER-4 PLUG-OUT software, with the original instrument’s controls on it; the PLUG-OUT’s additions (CONDITION, the effects, velocity, CIRCUIT MOD, tempo sync and the rest) are left off.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The manual gives the LFO range (0.1 to 80 Hz), the envelope times, the HPF range (40 Hz to 5 kHz), the LFO delay (up to 10 s), the trigger generator’s top rate (25 Hz) and the portamento time, and this app uses them. The low-pass cutoff range, the filter slopes, the depth of each modulation route and the trigger generator’s lowest rate are not documented and are this app’s estimates. The HPF is a gentle 6 dB filter here."
+      },
+      {
+        "title": "UNISON 2 and the POLY modes",
+        "text": "UNISON 1 stacks all four voices on one key, as on the hardware. UNISON 2 shares the voices out by how many keys are held (one key four voices, two keys two each, more keys one each); here it is always two voices per key. POLY 1 rotates the voices and POLY 2 gives a key its own voice back; both play as ordinary polyphony here."
+      },
+      {
+        "title": "The lever is the mod wheel",
+        "text": "The BEND/MODULATION lever is drawn for reference. The mod wheel beside the app’s keyboard stands in for it pushed to one side: destinations switched to BEND move by up to BEND SENS (an octave on the VCO, two on the filter, +12 dB on the VCA), and destinations switched to LFO get the LFO up to LFO MOD. The lever’s other direction is not modelled."
+      },
+      {
+        "title": "External clock",
+        "text": "Nothing can be plugged into EXT CLOCK IN here. With ARPEGGIO at EXT the arpeggio does not run and the keys play as chords; with VCF at EXT the filter sample-and-hold stands still."
+      },
+      {
+        "title": "Arpeggio range and HOLD",
+        "text": "The arpeggio plays the held notes over one octave; the hardware’s note order (the order keys were played in UP and DOWN) and its reach of up to four octaves above the first note are not modelled. HOLD latches the arpeggio; without the arpeggio it does nothing here, where on the hardware it holds notes at their sustain level."
+      },
+      {
+        "title": "Memory and presets",
+        "text": "COMPU-MEMORY 1 to 8, the ten PRE-SET buttons, MANUAL, MEMORY WRITE and PROTECTION are printed only. Sounds are kept in this app’s library instead."
+      },
+      {
+        "title": "Rear panel",
+        "text": "The mono and stereo outputs, OUTPUT LEVEL, the headphone level, the DAMPER, VCF and EXP pedal inputs and EXT CLOCK IN are not drawn or modelled."
+      },
+      {
+        "title": "Voice card revisions",
+        "text": "Early Jupiter-4s use a BA662-based filter and later ones an IR3109; they sound different. The filter here is the app’s 24 dB ladder."
+      }
+    ]
+  }
+}

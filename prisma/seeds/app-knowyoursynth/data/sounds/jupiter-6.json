@@ -1,0 +1,1259 @@
+{
+  "synth": "jupiter-6",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "jp6-brass",
+      "name": "Poly Brass",
+      "ref": "In the style of early-80s synth-pop brass stabs",
+      "artist": "Classic technique",
+      "tags": ["brass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Bright, thick chord stabs with a brassy push at the front of every note.",
+      "how": "Two sawtooth VCOs, one tuned a few cents sharp, make every note of the chord thick before the filter does anything. The 24 dB low-pass filter rests part closed and ENV-1 flicks it open and back on each chord, which gives the brassy push. ENV-2 keeps the chord at full level while the keys are down.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45],
+          [0, 64, 0.45],
+          [0, 67, 0.45],
+          [0.5, 60, 0.4],
+          [0.5, 64, 0.4],
+          [0.5, 67, 0.4],
+          [1.5, 62, 0.45],
+          [1.5, 65, 0.45],
+          [1.5, 69, 0.45],
+          [2, 62, 1.6],
+          [2, 65, 1.6],
+          [2, 69, 1.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, a little apart",
+          "module": "osc",
+          "why": "Brass starts with sawtooth waves, the brightest and buzziest shape, on both VCOs (the oscillators, the parts that make the raw tone).\n- VCO-2 SAWTOOTH lit: VCO-2 now plays a sawtooth too. VCO-1’s sawtooth is already lit.\n- MIX 5: the middle of the mixer knob, where both VCOs go into the filter at full level.\n- VCO-2 TUNE +0.8 (+8 cents): VCO-2 a little sharp, so each pair of oscillators beats slowly and every note sounds wider.\n- VOLUME 6: a chord of sawtooths is loud, so the master level comes down a little.\n- Listen for: hold a chord and hear a slow swirl. Turn TUNE back to 0 and the chord goes still and thinner.",
+          "set": { "vco2.saw": true, "mix.balance": 5, "vco2.tune": 0.8, "out.volume": 6 }
+        },
+        {
+          "title": "Close the filter part way",
+          "module": "filter",
+          "why": "The VCF (the filter) rests darker than the raw sawtooths, so the envelope in the next step has somewhere to open to.\n- FREQ 4.5 (306 Hz): the cutoff of the low-pass filter, which keeps the lows and cuts the highs. Lower is more muffled, higher brighter.\n- RES 1.5 (15 %): a slight lift at the cutoff for edge, nowhere near a whistle.\n- KYBD 5 (60 %): the cutoff follows the keys part of the way, so the top notes of a chord do not go dull.\n- Listen for: a warm, muted chord. LPF is lit, so this is the 24 dB low-pass mode.",
+          "set": { "vcf.freq": 4.5, "vcf.res": 1.5, "vcf.kybd": 5 }
+        },
+        {
+          "title": "ENV-1 pushes the filter open",
+          "module": "env",
+          "why": "ENV-1 is an ADSR envelope (attack, decay, sustain, release): a shape that runs on every note. Sent to the filter it lifts the cutoff at the start of each chord and lets it settle, which is the brassy push.\n- VCF ENV 5 (50 %): how far the envelope opens the filter. The ENV-1 button beside it is lit, so ENV-1 is the one used.\n- ENV-1 A 2 (20 ms): quick but not instant, so the brightness pushes in like a breath.\n- ENV-1 D 5 (324 ms), S 3.5 (35 %): the push lasts about a third of a second, then the chord settles a little brighter than the resting filter.\n- ENV-1 R 4 (150 ms): the filter closes quickly when you let go.\n- Listen for: a “baah” on every stab. Pull VCF ENV to 0 and the chords lose their bite.",
+          "set": {
+            "vcf.env": 5,
+            "env1.attack": 2,
+            "env1.decay": 5,
+            "env1.sustain": 3.5,
+            "env1.release": 4
+          }
+        },
+        {
+          "title": "Shape the loudness",
+          "module": "amp",
+          "why": "ENV-2 shapes the volume of every note. Stabs want full level while the keys are down and a clean stop when they come up.\n- ENV-2 A 1.5 (11 ms): near-instant, so the chord lands on the beat.\n- ENV-2 S 9 (90 %): held chords stay almost at full level.\n- ENV-2 R 4 (150 ms): a short tail, so the stabs stay apart.\n- Listen for: the gaps between stabs. Raise ENV-2 R to 6 and the stabs smear together.",
+          "set": { "env2.attack": 1.5, "env2.decay": 5, "env2.sustain": 9, "env2.release": 4 }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: how much bite each stab has. Lower for a softer horn section, higher for a snarl.",
+        "env1.decay": "In this sound: how long the brassy push lasts.",
+        "vco2.tune": "In this sound: the slight detune that thickens each note.",
+        "vcf.freq": "In this sound: how dark the chord is between pushes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Move between 2 and 8 while the riff plays",
+          "hear": "From a mellow horn pad to a snarling stab."
+        },
+        {
+          "id": "env1.attack",
+          "try": "Raise to 4",
+          "hear": "The push swells in more slowly, like a breathy horn."
+        }
+      ]
+    },
+    {
+      "id": "jp6-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of early-80s string-machine pads",
+      "artist": "Classic technique",
+      "tags": ["strings", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Soft string chords that shimmer while they hold and swell in slowly.",
+      "how": "Both VCOs play pulse waves whose width LFO-1 sweeps back and forth: pulse-width modulation, the shimmer of string machines. A slow ENV-2 attack and a long release make each chord swell in and fade out.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [0, 60, 3.8],
+          [0, 64, 3.8],
+          [0, 69, 3.8],
+          [4, 53, 3.8],
+          [4, 57, 3.8],
+          [4, 60, 3.8],
+          [4, 65, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse waves on both VCOs",
+          "module": "osc",
+          "why": "Pulse waves are hollower and softer than sawtooths, a better start for strings.\n- VCO-1 SAWTOOTH off, PULSE lit: VCO-1 now plays only its pulse wave.\n- VCO-2 PULSE lit, MIX 5: VCO-2 plays a pulse too, and both go into the filter at full level.\n- VCO-2 TUNE −1 (−10 cents): VCO-2 a little flat, so chords beat gently.\n- PW 2 (40 %): just off square. One fader sets the width of both VCOs’ pulse waves.\n- VOLUME 6: a chord of pulses is loud.\n- Listen for: a reedy, hollow chord, still static.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.pulse": true,
+            "vco2.pulse": true,
+            "mix.balance": 5,
+            "vco2.tune": -1,
+            "pwm.pw": 2,
+            "out.volume": 6
+          }
+        },
+        {
+          "title": "Sweep the widths with LFO-1",
+          "module": "mod",
+          "why": "PWM (pulse-width modulation) is the shimmer. LFO-1 (a slow wave that moves other controls) sweeps both pulse widths, which sounds like many players slightly out of step.\n- PWM 5 (50 %): how far the width is swept. The LFO button beside it is lit, so LFO-1 does the sweeping.\n- LFO-1 RATE 4 (0.91 Hz): a little under one sweep a second. Slower drifts; faster warbles.\n- Listen for: the chord now moves and shimmers. Pull PWM to 0 to hear it go still.",
+          "set": { "pwm.depth": 5, "lfo.rate": 4 }
+        },
+        {
+          "title": "Soften the top",
+          "module": "filter",
+          "why": "The filter takes the fizz off the pulses so the chord sounds warm.\n- FREQ 6.5 (1.4 kHz): the cutoff of the low-pass filter. Lower is more muffled, higher brighter and thinner.\n- KYBD 6 (72 %): the cutoff follows the keys, so high voicings keep their air.\n- Listen for: a smoother, darker chord with the shimmer still there.",
+          "set": { "vcf.freq": 6.5, "vcf.kybd": 6 }
+        },
+        {
+          "title": "Swell in, fade out",
+          "module": "amp",
+          "why": "ENV-2 (the loudness envelope, an ADSR) makes each chord swell in and fade like a string section.\n- ENV-2 A 6.5 (900 ms): each chord takes nearly a second to reach full level.\n- ENV-2 S 10 (100 %): held chords stay at full level.\n- ENV-2 R 6.5 (1.0 s): chords fade over about a second after you let go, so one chord overlaps the next.\n- Listen for: smooth changes between chords. Set ENV-2 A to 0 and the chords start like an organ.",
+          "set": { "env2.attack": 6.5, "env2.decay": 5, "env2.sustain": 10, "env2.release": 6.5 }
+        }
+      ],
+      "context": {
+        "pwm.depth": "In this sound: how deep the shimmer is.",
+        "lfo.rate": "In this sound: how fast the shimmer moves.",
+        "env2.attack": "In this sound: how slowly each chord swells in."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Move between 3 and 5.5",
+          "hear": "From a slow sway to a nervous flutter."
+        },
+        {
+          "id": "pwm.pw",
+          "try": "Raise to 5",
+          "hear": "Thinner, more nasal strings, with a deeper-sounding sweep."
+        }
+      ]
+    },
+    {
+      "id": "jp6-xmod-bell",
+      "name": "Cross-Mod Bell",
+      "ref": "In the style of 80s digital-sounding bells, made on an analogue synth",
+      "artist": "Classic technique",
+      "tags": ["keys", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A glassy, metallic bell that rings out and fades, with a clang at the start of each note.",
+      "how": "VCO-2 is tuned to an odd interval above VCO-1 and used only to shake VCO-1’s pitch at audio rate: cross modulation, the same idea as FM. That adds harmonics that do not fit a normal note, which the ear hears as a bell. ENV-1 opens the cross mod wider at the start of each note, so the attack clangs and the tail is purer.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 76, 0.9],
+          [2, 79, 0.9],
+          [3, 84, 1.8],
+          [5, 79, 0.9],
+          [6, 76, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure tone to modulate",
+          "module": "osc",
+          "why": "A triangle wave on VCO-1 is the carrier: plain and soft, so every extra harmonic you hear later comes from the cross mod.\n- VCO-1 SAWTOOTH off, TRIANGLE lit: VCO-1 plays a triangle, close to a pure tone.\n- MIX 0: fully left, so only VCO-1 goes into the filter. VCO-2 is still running; it just is not heard directly.\n- VCO-2 TRIANGLE lit: VCO-2 needs a wave to modulate with, even though it is not in the mix.\n- Listen for: a soft, flute-like note, nothing like a bell yet.",
+          "set": { "vco1.saw": false, "vco1.tri": true, "mix.balance": 0, "vco2.tri": true }
+        },
+        {
+          "title": "Tune VCO-2 to an odd interval",
+          "module": "osc",
+          "why": "For a bell, VCO-2 sits at an interval that is not a simple octave or fifth, so the new harmonics clash a little, as a real bell’s do.\n- VCO-2 RANGE +22 st: nearly two octaves up (it steps in half steps). Whole octaves give a hollow, organ-like tone; odd steps give bells and gongs.\n- CROSS MOD MANUAL 4 (40 %): how hard VCO-2 shakes VCO-1’s pitch all the time. This alone gives a dull metallic edge.\n- Listen for: the triangle turns hard and clangy. Step VCO-2 RANGE up and down one notch at a time and hear the bell change colour.",
+          "set": { "vco2.range": 58, "vco1.xmod": 4 }
+        },
+        {
+          "title": "ENV-1 opens the cross mod",
+          "module": "env",
+          "why": "CROSS MOD ENV-1 lets ENV-1 add more cross mod over each note. With a quick decay the clang is strongest as the note is struck and fades as it rings, as a struck bell does.\n- CROSS MOD ENV-1 5 (50 %): how much ENV-1 adds on top of the manual amount.\n- ENV-1 A 0, D 6 (700 ms), S 0: full at once, then gone in under a second.\n- ENV-1 R 5 (320 ms): any of it left fades quickly after you let go.\n- Listen for: a bright strike that mellows. Pull CROSS MOD ENV-1 to 0 and every moment of the note sounds the same.",
+          "set": {
+            "vco1.xmodEnv": 5,
+            "env1.attack": 0,
+            "env1.decay": 6,
+            "env1.sustain": 0,
+            "env1.release": 5
+          }
+        },
+        {
+          "title": "A ringing loudness",
+          "module": "amp",
+          "why": "A bell is struck once and dies away on its own, so ENV-2 (the loudness envelope) has no sustain and a long decay.\n- ENV-2 A 0 (2 ms): struck at once.\n- ENV-2 D 7.5 (2.3 s), S 0: the note rings for a couple of seconds whether or not you hold the key.\n- ENV-2 R 6.5 (1.0 s): letting go early still leaves a short ring.\n- FREQ 7.5 (3 kHz): the filter takes the harshest top off the clang.\n- KEY FOLLOW 5 (60 %) on ENV-2: higher notes ring shorter, as small bells do.\n- Listen for: notes that ring and overlap like chimes.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 7.5,
+            "env2.sustain": 0,
+            "env2.release": 6.5,
+            "vcf.freq": 7.5,
+            "env2.kf": 5
+          }
+        }
+      ],
+      "context": {
+        "vco2.range": "In this sound: the interval of the modulator, which sets the colour of the bell. Odd steps are bell-like; octaves are hollow.",
+        "vco1.xmod": "In this sound: the metallic edge that stays all through the note.",
+        "vco1.xmodEnv": "In this sound: the extra clang at the strike.",
+        "env2.decay": "In this sound: how long the bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.range",
+          "try": "Step it between +19 and +24",
+          "hear": "Each step is a different bell: gong, chime, glass."
+        },
+        {
+          "id": "vco1.xmod",
+          "try": "Raise to 7",
+          "hear": "Harsher and more clangy, like struck metal."
+        }
+      ]
+    },
+    {
+      "id": "jp6-sync-lead",
+      "name": "Sync Lead",
+      "ref": "In the style of new-wave sync leads",
+      "artist": "Classic technique",
+      "tags": ["lead", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing mono lead whose tone sweeps down at the start of every note.",
+      "how": "SYNC 1→2 makes VCO-2 restart with every cycle of VCO-1, so VCO-2’s pitch changes its tone rather than its note. VCO MOD sends ENV-1 to VCO-2’s pitch alone, so each note starts with VCO-2 high and sweeps down: the tearing sound. SOLO and portamento make it a sliding mono lead.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 67, 0.45],
+          [1, 69, 0.9],
+          [2, 72, 0.45],
+          [2.5, 71, 0.45],
+          [3, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO-2 alone, synced",
+          "module": "osc",
+          "why": "Only VCO-2 is heard, locked to VCO-1. VCO-1 still runs and sets the note, but it is not in the mix.\n- SYNC 1→2 lit: VCO-2 restarts whenever VCO-1 starts a cycle.\n- MIX 10: fully right, VCO-2 alone.\n- VCO-2 SAWTOOTH lit, RANGE +7 st: with sync on, RANGE is a tone control. Higher snarls more.\n- Listen for: a hard, nasal saw. Turn VCO-2 RANGE slowly and the tone changes while the note stays put.",
+          "set": { "vco.sync12": true, "mix.balance": 10, "vco2.saw": true, "vco2.range": 43 }
+        },
+        {
+          "title": "Sweep VCO-2 with ENV-1",
+          "module": "mod",
+          "why": "VCO MOD sends ENV-1 to the pitch of the VCOs lit beside it. Only VCO-2 is lit here, so only the synced oscillator moves, and its sweep is heard as a sweep of tone.\n- VCO MOD VCO-1 off, VCO-2 lit: VCO-1 keeps the note steady.\n- VCO MOD ENV-1 4 (+9.6 st at the peak): how far ENV-1 throws VCO-2 up.\n- ENV-1 A 0, D 6 (700 ms), S 1.5 (15 %), R 4: the sweep starts at its top the instant you play and falls over about two thirds of a second.\n- Listen for: a tearing “neow” at the front of every note.",
+          "set": {
+            "vcomod.vco1": false,
+            "vcomod.env": 4,
+            "env1.attack": 0,
+            "env1.decay": 6,
+            "env1.sustain": 1.5,
+            "env1.release": 4
+          }
+        },
+        {
+          "title": "Take the fizz off",
+          "module": "filter",
+          "why": "Synced sawtooths are very bright. The filter tames them a little.\n- FREQ 7.5 (3 kHz): the cutoff, brought down from fully open.\n- RES 1.5 (15 %): a slight edge at the cutoff.\n- KYBD 6 (72 %): high notes keep their brightness.\n- Listen for: the same tear, smoother on top.",
+          "set": { "vcf.freq": 7.5, "vcf.res": 1.5, "vcf.kybd": 6 }
+        },
+        {
+          "title": "One note at a time, sliding",
+          "module": "mode",
+          "why": "A lead plays one line, and a slide between notes sounds like a bent guitar string.\n- SOLO lit: one note at a time; the last key wins.\n- PORTAMENTO lit, TIME 2.5 (0.10 s an octave): each note slides from the last.\n- Listen for: overlapping notes slide into each other and the sweep starts again on each.",
+          "set": { "voice.solo": true, "glide.porta": true, "glide.time": 2.5 }
+        }
+      ],
+      "context": {
+        "vco2.range": "In this sound: where the sweep settles. Up for a harder tone.",
+        "vcomod.env": "In this sound: the depth of the sweep.",
+        "env1.decay": "In this sound: how long the sweep takes.",
+        "vco.sync12": "In this sound: what turns VCO-2’s pitch sweep into a sweep of tone."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Set between 4 and 7",
+          "hear": "A snappy zap at 4, a slow vowel-like dive at 7."
+        },
+        {
+          "id": "vco2.range",
+          "try": "Turn it slowly while holding a note",
+          "hear": "The classic sync sweep by hand."
+        }
+      ]
+    },
+    {
+      "id": "jp6-unison-bass",
+      "name": "Solo Unison Bass",
+      "ref": "In the style of 80s synth-pop bass lines",
+      "artist": "Classic technique",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A huge, punchy bass with all six voices stacked on each note.",
+      "how": "SOLO together with UNISON stacks all six voices on one key, each detuned a little by UNISON DETUNE, so every note is a wall of oscillators. A sawtooth and a square an octave down give it weight, and a short filter envelope gives each note a round thump.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.4],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 39, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack all six voices",
+          "module": "mode",
+          "why": "SOLO plays one note at a time; with UNISON lit as well (SOLO UNISON) all six voices play that one note.\n- SOLO lit, UNISON lit: the two buttons together.\n- UNISON DETUNE 2.5 (±13 cents): how far apart the stacked voices are tuned. More is wider and more chorused; at 0 they lock together.\n- VOLUME 6: six voices on one note are loud.\n- Listen for: a thick, churning saw on every note. Switch SOLO off and the stack shrinks to two voices a key.",
+          "set": {
+            "voice.solo": true,
+            "voice.assign": "unison",
+            "voice.detune": 2.5,
+            "out.volume": 6
+          }
+        },
+        {
+          "title": "A sawtooth over a square, low down",
+          "module": "osc",
+          "why": "Each voice gets a sawtooth for bite and a square for body, an octave down.\n- VCO-1 RANGE 16’: an octave down.\n- VCO-2 PULSE lit, RANGE 16’: VCO-2 plays a square (PW is at 0) at the same octave.\n- MIX 5: both at full level.\n- Listen for: a heavier, woodier low end under the saw.",
+          "set": { "vco1.range": 12, "vco2.pulse": true, "vco2.range": 24, "mix.balance": 5 }
+        },
+        {
+          "title": "A round thump from the filter",
+          "module": "filter",
+          "why": "The filter rests dark and ENV-1 opens it briefly at the start of each note.\n- FREQ 3.5 (143 Hz), RES 3 (30 %): dark at rest, with a little honk at the cutoff.\n- VCF ENV 5.5: how far ENV-1 opens it on each note.\n- ENV-1 A 0, D 4 (150 ms), S 1, R 3.5: open at once, shut again in about a seventh of a second.\n- Listen for: a “dum” on every note.",
+          "set": {
+            "vcf.freq": 3.5,
+            "vcf.res": 3,
+            "vcf.env": 5.5,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 1,
+            "env1.release": 3.5
+          }
+        },
+        {
+          "title": "Tight loudness",
+          "module": "amp",
+          "why": "A driving bass wants notes that hit at once and stop clean.\n- ENV-2 A 0, D 5, S 9 (90 %): full at once, holding nearly full.\n- ENV-2 R 3 (67 ms): notes stop almost as you let go.\n- Listen for: clean gaps in the eighth-note line.",
+          "set": { "env2.attack": 0, "env2.decay": 5, "env2.sustain": 9, "env2.release": 3 }
+        }
+      ],
+      "context": {
+        "voice.detune": "In this sound: how wide the stack is. More is fatter but wobblier.",
+        "vcf.freq": "In this sound: how much growl comes through between thumps.",
+        "env1.decay": "In this sound: the length of the thump."
+      },
+      "tweaks": [
+        {
+          "id": "voice.detune",
+          "try": "Move between 1 and 6",
+          "hear": "From a tight, solid bass to a wide, seasick one."
+        },
+        { "id": "vcf.res", "try": "Raise to 6", "hear": "Each note gets a rubbery squelch." }
+      ]
+    },
+    {
+      "id": "jp6-arp",
+      "name": "Arpeggio Pluck",
+      "ref": "In the style of 80s synth-pop arpeggios",
+      "artist": "Classic technique",
+      "tags": ["seq", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A held chord turned into a running pattern of short, plucked notes over two octaves.",
+      "how": "The arpeggio plays the held chord one note at a time, upwards over two octaves. Each note is short, and ENV-1 snaps the resonant filter open on every one, which gives the pluck.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [0, 64, 3.9],
+          [4, 53, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Start the arpeggio",
+          "module": "mode",
+          "why": "UP starts the arpeggio: hold a chord and its notes play one at a time from the bottom up.\n- UP lit.\n- RATE 5.5 (5.9 notes a second): a quick, even run.\n- RANGE 2: press until the 2 lamp lights, so the pattern climbs two octaves before it starts again.\n- Listen for: the pattern is there, but still a plain saw.",
+          "set": { "arp.up": true, "arp.rate": 5.5, "arp.range": 2 }
+        },
+        {
+          "title": "A hollow pulse",
+          "module": "osc",
+          "why": "A pulse wave gives a hollow, woody tone that suits plucks.\n- VCO-1 SAWTOOTH off, PULSE lit, PW 2 (40 %): just off square.\n- Listen for: a softer, rounder pattern.",
+          "set": { "vco1.saw": false, "vco1.pulse": true, "pwm.pw": 2 }
+        },
+        {
+          "title": "Pluck the filter",
+          "module": "filter",
+          "why": "The filter rests dark and resonant, and ENV-1 snaps it open on every note.\n- FREQ 3.5 (143 Hz), RES 4 (40 %): dark, with a ring at the cutoff.\n- VCF ENV 5.5: how far ENV-1 opens it.\n- ENV-1 A 0, D 4 (150 ms), S 0, R 4: a snap that closes again within a sixth of a second.\n- ENV-2 S 6 (60 %): the notes hold a little lower than full.\n- Listen for: a “pew” on every note. More RES makes it squelchier.",
+          "set": {
+            "vcf.freq": 3.5,
+            "vcf.res": 4,
+            "vcf.env": 5.5,
+            "env1.attack": 0,
+            "env1.decay": 4,
+            "env1.sustain": 0,
+            "env1.release": 4,
+            "env2.sustain": 6
+          }
+        }
+      ],
+      "context": {
+        "arp.rate": "In this sound: the speed of the run.",
+        "arp.range": "In this sound: how many octaves the pattern climbs.",
+        "vcf.res": "In this sound: the ring on each pluck."
+      },
+      "tweaks": [
+        {
+          "id": "arp.range",
+          "try": "Step it to 4",
+          "hear": "The pattern climbs four octaves before starting again."
+        },
+        {
+          "id": "arp.down",
+          "try": "Light DOWN as well",
+          "hear": "The pattern goes up and then back down."
+        }
+      ]
+    },
+    {
+      "id": "jp6-hpf-glass",
+      "name": "High-Pass Glass Pad",
+      "ref": "In the style of airy 80s soundtrack pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "soundtrack", "80s"],
+      "level": 2,
+      "blurb": "A thin, glassy pad with no low end, that drifts slowly brighter and darker.",
+      "how": "The VCF is switched to high-pass, so it removes the lows and keeps the highs: the opposite of the usual filter. With some resonance at the cutoff the pad sounds glassy and airy. LFO-1 moves the cutoff very slowly so the chord keeps changing colour.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 64, 3.8],
+          [0, 67, 3.8],
+          [0, 71, 3.8],
+          [0, 76, 3.8],
+          [4, 62, 3.8],
+          [4, 65, 3.8],
+          [4, 69, 3.8],
+          [4, 74, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths an octave apart",
+          "module": "osc",
+          "why": "Bright sawtooths give the high-pass filter plenty of top to keep.\n- VCO-2 SAWTOOTH lit, RANGE 4’ (+12 st): VCO-2 an octave above VCO-1.\n- VCO-2 TUNE +1.2 (+12 cents): a little sharp, for slow beating.\n- MIX 5: both at full level. VOLUME 6.\n- Listen for: a bright, buzzy chord with a shimmer on top.",
+          "set": {
+            "vco2.saw": true,
+            "vco2.range": 48,
+            "vco2.tune": 1.2,
+            "mix.balance": 5,
+            "out.volume": 6
+          }
+        },
+        {
+          "title": "Switch the filter to high-pass",
+          "module": "filter",
+          "why": "With HPF lit and LPF off, the filter keeps everything above the cutoff and cuts what is below it.\n- HPF lit, LPF off: 24 dB high-pass.\n- FREQ 5.5 (654 Hz): everything below this is thinned away, so the chord loses its body.\n- RES 4 (40 %): a peak right at the cutoff that makes it sound glassy.\n- KYBD 10 (120 %): the cutoff rises with the keys, so every note keeps the same thinness.\n- Listen for: a chord with no low end, airy and bright. Light LPF as well and it becomes band-pass.",
+          "set": {
+            "vcf.hpf": true,
+            "vcf.lpf": false,
+            "vcf.freq": 5.5,
+            "vcf.res": 4,
+            "vcf.kybd": 10
+          }
+        },
+        {
+          "title": "A very slow drift",
+          "module": "lfo",
+          "why": "LFO-1 moves the cutoff up and down very slowly, so the colour of the pad keeps changing.\n- VCF LFO 3 (30 %): how far LFO-1 moves the cutoff.\n- LFO-1 RATE 2.5 (0.28 Hz): one sweep about every three and a half seconds.\n- Listen for: the chord getting thinner and fuller on its own.",
+          "set": { "vcf.lfo": 3, "lfo.rate": 2.5 }
+        },
+        {
+          "title": "Slow in, slow out",
+          "module": "amp",
+          "why": "ENV-2 makes the pad fade in and out.\n- ENV-2 A 6 (600 ms), S 10, R 7 (1.5 s).\n- Listen for: chords that rise and overlap.",
+          "set": { "env2.attack": 6, "env2.decay": 6, "env2.sustain": 10, "env2.release": 7 }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: in high-pass, how much body is taken away. Up is thinner.",
+        "vcf.res": "In this sound: the glassy peak at the cutoff.",
+        "vcf.hpf": "In this sound: makes the filter keep the highs instead of the lows."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.freq",
+          "try": "Move between 3 and 7",
+          "hear": "From a full pad to a whisper of fizz."
+        },
+        { "id": "vcf.lpf", "try": "Light LPF as well", "hear": "Band-pass: a nasal, vocal pad." }
+      ]
+    },
+    {
+      "id": "jp6-bpf-vowel",
+      "name": "Band-Pass Vowel",
+      "ref": "In the style of talking-filter synth pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A nasal, vocal pad whose “aah” slowly turns into “ooh” and back.",
+      "how": "With both MODE buttons lit the filter is band-pass: it keeps only a band around the cutoff, which sounds like a vowel. High resonance makes the vowel stronger, and LFO-1 slides the band up and down so the vowel changes.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.8],
+          [0, 59, 3.8],
+          [0, 64, 3.8],
+          [4, 50, 3.8],
+          [4, 57, 3.8],
+          [4, 62, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a pulse",
+          "module": "osc",
+          "why": "Rich waves give the band-pass filter something to pick out.\n- VCO-2 PULSE lit, MIX 5, VCO-2 TUNE −0.8 (−8 cents).\n- PW 3 (36 %).\n- Listen for: a buzzy chord.",
+          "set": { "vco2.pulse": true, "mix.balance": 5, "vco2.tune": -0.8, "pwm.pw": 3 }
+        },
+        {
+          "title": "Band-pass with resonance",
+          "module": "filter",
+          "why": "HPF and LPF lit together make the filter band-pass: lows and highs are cut and a band in the middle remains, like the formant of a voice.\n- HPF and LPF lit.\n- FREQ 5.5 (654 Hz): where the band sits. Lower is “ooh”, higher “eeh”.\n- RES 6 (60 %): a strong peak, so the vowel is clear.\n- Listen for: a nasal, talking chord.",
+          "set": { "vcf.hpf": true, "vcf.freq": 5.5, "vcf.res": 6 }
+        },
+        {
+          "title": "Move the vowel",
+          "module": "lfo",
+          "why": "LFO-1 slides the band up and down, so the vowel changes.\n- VCF LFO 4 (40 %), LFO-1 RATE 3 (0.42 Hz).\n- LFO-1 DELAY 5 (0.6 s): each new chord starts still, then the movement fades in.\n- ENV-2 A 4.5 (180 ms), R 6 (700 ms): a soft start and a fading tail.\n- Listen for: “aah-ooh-aah” across each held chord.",
+          "set": {
+            "vcf.lfo": 4,
+            "lfo.rate": 3,
+            "lfo.delay": 5,
+            "env2.attack": 4.5,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 6
+          }
+        }
+      ],
+      "context": {
+        "vcf.freq": "In this sound: which vowel you hear.",
+        "vcf.res": "In this sound: how strongly the vowel speaks.",
+        "lfo.delay": "In this sound: how long each chord holds still before the vowel moves."
+      },
+      "tweaks": [
+        { "id": "vcf.res", "try": "Raise to 8", "hear": "A whistling, very vocal band." },
+        { "id": "lfo.rate", "try": "Raise to 5", "hear": "The vowel babbles twice a second." }
+      ]
+    },
+    {
+      "id": "jp6-ep",
+      "name": "Key-Follow Electric Piano",
+      "ref": "In the style of early-80s synth electric pianos",
+      "artist": "Classic technique",
+      "tags": ["keys", "pop", "80s"],
+      "level": 2,
+      "blurb": "A soft, bell-edged electric piano whose high notes die away sooner than the low ones.",
+      "how": "Two triangles an octave apart give a mellow tone, and ENV-1 opens the filter briefly for a soft “tine” at the start. Both envelopes decay to silence, and KEY FOLLOW makes them shorter on high notes and longer on low ones, as on a real piano.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.8],
+          [0, 60, 1.8],
+          [0, 64, 1.8],
+          [0, 67, 1.8],
+          [2, 72, 0.4],
+          [2.5, 76, 0.4],
+          [3, 79, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles",
+          "module": "osc",
+          "why": "Triangle waves are soft and round, the body of an electric piano.\n- VCO-1 SAWTOOTH off, TRIANGLE lit.\n- VCO-2 TRIANGLE lit, RANGE 4’ (+12 st): an octave up for the bright tine.\n- MIX 3.5: VCO-2 at 70 %, under VCO-1.\n- Listen for: a pure, flute-like organ tone.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.tri": true,
+            "vco2.tri": true,
+            "vco2.range": 48,
+            "mix.balance": 3.5
+          }
+        },
+        {
+          "title": "A short bright tine",
+          "module": "filter",
+          "why": "ENV-1 opens the filter briefly at the start of each note for a soft strike.\n- FREQ 6 (956 Hz), VCF ENV 3.\n- ENV-1 A 0, D 6 (700 ms), S 0, R 5.\n- ENV-1 KEY FOLLOW 6 (72 %): the tine is shorter on high notes.\n- Listen for: a little brightness at the start of each note.",
+          "set": {
+            "vcf.freq": 6,
+            "vcf.env": 3,
+            "env1.attack": 0,
+            "env1.decay": 6,
+            "env1.sustain": 0,
+            "env1.release": 5,
+            "env1.kf": 6
+          }
+        },
+        {
+          "title": "A piano-like decay",
+          "module": "amp",
+          "why": "A piano note fades even if you hold the key, and low notes ring longer than high ones.\n- ENV-2 A 0, D 8 (3.4 s), S 0, R 5.5 (480 ms).\n- ENV-2 KEY FOLLOW 7 (84 %): high notes decay much sooner than low ones. At 0 every note would ring for the same time.\n- Listen for: the low chord rings while the high notes die quickly.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 8,
+            "env2.sustain": 0,
+            "env2.release": 5.5,
+            "env2.kf": 7
+          }
+        }
+      ],
+      "context": {
+        "env2.kf": "In this sound: how much shorter the high notes are than the low ones.",
+        "env2.decay": "In this sound: how long a middle note rings.",
+        "vcf.env": "In this sound: the tine at the start of each note."
+      },
+      "tweaks": [
+        {
+          "id": "env2.kf",
+          "try": "Set to 0, then 10",
+          "hear": "All notes ring alike at 0; high notes become plinks at 10."
+        },
+        { "id": "vcf.env", "try": "Raise to 6", "hear": "A harder, brighter strike." }
+      ]
+    },
+    {
+      "id": "jp6-reverse-swell",
+      "name": "Inverted Swell",
+      "ref": "In the style of 80s ambient pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "80s"],
+      "level": 3,
+      "blurb": "Chords that start bright, close as they hold, and open again as you let go.",
+      "how": "ENV-1’s POLARITY is turned upside down, so as the envelope rises the filter closes instead of opening. The chord starts bright, darkens over a second or so, and brightens again in the release, which sounds like a tape played backwards.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.6],
+          [0, 60, 3.6],
+          [0, 64, 3.6],
+          [4, 55, 3.6],
+          [4, 59, 3.6],
+          [4, 62, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "A wide, bright chord to work with.\n- VCO-2 SAWTOOTH lit, MIX 5, VCO-2 TUNE −1 (−10 cents). VOLUME 6.\n- Listen for: a bright, wide chord.",
+          "set": { "vco2.saw": true, "mix.balance": 5, "vco2.tune": -1, "out.volume": 6 }
+        },
+        {
+          "title": "Turn ENV-1 upside down",
+          "module": "env",
+          "why": "POLARITY inverted makes ENV-1 work backwards: it now pushes the filter down while it rises.\n- POLARITY: the lower button (inverted).\n- FREQ 8 (4.4 kHz): open to start with.\n- VCF ENV 4: how far the inverted envelope closes the filter.\n- Listen for: every chord now darkens right away.",
+          "set": { "env1.polarity": "inverted", "vcf.freq": 8, "vcf.env": 4 }
+        },
+        {
+          "title": "Slow envelopes",
+          "module": "env",
+          "why": "Slow envelopes stretch the dip into a long swell.\n- ENV-1 A 7 (1.3 s), D 8, S 6, R 7 (1.5 s): the filter closes over more than a second and opens again over the release.\n- ENV-2 A 4 (120 ms), S 10, R 7.\n- Listen for: a chord that fades darker as it holds, then blooms bright as you let go.",
+          "set": {
+            "env1.attack": 7,
+            "env1.decay": 8,
+            "env1.sustain": 6,
+            "env1.release": 7,
+            "env2.attack": 4,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {
+        "env1.polarity": "In this sound: why the filter closes as the note holds.",
+        "env1.attack": "In this sound: how long the darkening takes.",
+        "vcf.env": "In this sound: how dark the chord gets."
+      },
+      "tweaks": [
+        {
+          "id": "env1.polarity",
+          "try": "Switch back to normal",
+          "hear": "An ordinary slow filter swell, dark to bright."
+        },
+        { "id": "env1.release", "try": "Raise to 8.5", "hear": "A longer bloom after you let go." }
+      ]
+    },
+    {
+      "id": "jp6-low-siren",
+      "name": "Cross-Mod Siren",
+      "ref": "In the style of 80s sci-fi sound effects",
+      "artist": "Classic technique",
+      "tags": ["fx", "soundtrack", "80s"],
+      "level": 3,
+      "blurb": "A warbling, alarm-like tone with a metallic rasp that grows over each note.",
+      "how": "VCO-2 is turned down into LOW, where it stops following the keys and runs at a few cycles a second. Used as the cross-mod source it becomes a second LFO that wobbles VCO-1’s pitch. ENV-1 then adds more and more cross mod as the note goes on.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.5],
+          [4, 55, 3.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "VCO-2 into LOW",
+          "module": "osc",
+          "why": "At LOW, VCO-2 is a slow modulator that ignores the keyboard.\n- VCO-2 RANGE LOW 7.4 Hz: five steps from the left end.\n- VCO-2 TRIANGLE lit, MIX 0: VCO-2 is not heard directly, only used for cross mod.\n- Listen for: no change yet, just VCO-1’s saw.",
+          "set": { "vco2.range": 5, "vco2.tri": true, "mix.balance": 0 }
+        },
+        {
+          "title": "Cross mod as a siren",
+          "module": "osc",
+          "why": "CROSS MOD lets VCO-2 move VCO-1’s pitch. At a few cycles a second that is a wide warble.\n- CROSS MOD MANUAL 6 (60 %): about an octave of swing.\n- Listen for: a two-tone siren.",
+          "set": { "vco1.xmod": 6 }
+        },
+        {
+          "title": "Let ENV-1 widen it",
+          "module": "env",
+          "why": "CROSS MOD ENV-1 adds more as ENV-1 rises, so the siren starts gentle and grows wild.\n- CROSS MOD ENV-1 8 (80 %).\n- ENV-1 A 7.5 (2 s), D 8, S 10, R 5.\n- ENV-2 R 6 (700 ms).\n- FREQ 7 (2 kHz), RES 3 (30 %).\n- Listen for: the warble widening over two seconds.",
+          "set": {
+            "vco1.xmodEnv": 8,
+            "env1.attack": 7.5,
+            "env1.decay": 8,
+            "env1.sustain": 10,
+            "env1.release": 5,
+            "env2.release": 6,
+            "vcf.freq": 7,
+            "vcf.res": 3
+          }
+        }
+      ],
+      "context": {
+        "vco2.range": "In this sound: the speed of the siren. Step it right for faster, until it reaches audio and turns to rasp.",
+        "vco1.xmod": "In this sound: how wide the siren swings."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.range",
+          "try": "Step it from 2 to 11",
+          "hear": "From a slow wail to a fast, growling buzz."
+        },
+        { "id": "vco1.xmodEnv", "try": "Set to 0", "hear": "A steady siren that does not grow." }
+      ]
+    },
+    {
+      "id": "jp6-noise-snare",
+      "name": "Noise Snare",
+      "ref": "In the style of early drum-machine snares",
+      "artist": "Classic technique",
+      "tags": ["perc", "electro", "80s"],
+      "level": 2,
+      "blurb": "A short snare hit: a pitched thump with a burst of noise on top.",
+      "how": "VCO-1’s triangle is the drum’s body, given a quick pitch drop by ENV-1, and VCO-2’s NOISE is the snare rattle. ENV-2 has no sustain, so every hit is short however long the key is held.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.25],
+          [1, 50, 0.25],
+          [1.75, 50, 0.2],
+          [2.5, 50, 0.25],
+          [3, 50, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A body and a rattle",
+          "module": "osc",
+          "why": "A drum is a short tone plus noise.\n- VCO-1 SAWTOOTH off, TRIANGLE lit: the body.\n- VCO-2 NOISE lit, MIX 6.5: noise at full level, VCO-1 at 70 %.\n- Listen for: a tone with hiss on top.",
+          "set": { "vco1.saw": false, "vco1.tri": true, "vco2.noise": true, "mix.balance": 6.5 }
+        },
+        {
+          "title": "A pitch drop on the body",
+          "module": "mod",
+          "why": "Real drums drop in pitch as they are hit.\n- VCO MOD VCO-2 off, ENV-1 3 (+5.4 st at the peak): only VCO-1 is moved.\n- ENV-1 A 0, D 3 (67 ms), S 0, R 3.\n- Listen for: a “dmm” instead of a steady tone.",
+          "set": {
+            "vcomod.vco2": false,
+            "vcomod.env": 3,
+            "env1.attack": 0,
+            "env1.decay": 3,
+            "env1.sustain": 0,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Short hits",
+          "module": "amp",
+          "why": "No sustain makes every hit short.\n- ENV-2 A 0, D 4 (150 ms), S 0, R 3.5.\n- FREQ 7.5 (3 kHz), RES 2: takes the harshest top off the noise.\n- ENV-2 LEVEL 10 and VOLUME 9: a short hit needs more level to sit with other sounds.\n- Listen for: a snappy snare.",
+          "set": {
+            "env2.attack": 0,
+            "env2.decay": 4,
+            "env2.sustain": 0,
+            "env2.release": 3.5,
+            "vcf.freq": 7.5,
+            "vcf.res": 2,
+            "vca.level": 10,
+            "out.volume": 9
+          }
+        }
+      ],
+      "context": {
+        "env2.decay": "In this sound: the length of each hit.",
+        "mix.balance": "In this sound: the balance of body and rattle."
+      },
+      "tweaks": [
+        {
+          "id": "mix.balance",
+          "try": "Move between 5 and 9",
+          "hear": "More tom at 5, nearly all rattle at 9."
+        },
+        { "id": "env2.decay", "try": "Raise to 5", "hear": "A longer, roomier snare." }
+      ]
+    },
+    {
+      "id": "jp6-clav",
+      "name": "Funky Clav",
+      "ref": "In the style of 80s synth-funk clavinet parts",
+      "artist": "Classic technique",
+      "tags": ["pluck", "funk", "80s"],
+      "level": 1,
+      "blurb": "A short, nasal, plucked keyboard sound for funky chords.",
+      "how": "A narrow pulse wave sounds thin and nasal, like a clavinet string. ENV-1 snaps the filter open and shut on every note, and ENV-2 has no sustain, so each note is a short pluck.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [0, 64, 0.2],
+          [0.5, 60, 0.2],
+          [0.5, 64, 0.2],
+          [0.75, 62, 0.2],
+          [0.75, 65, 0.2],
+          [1.5, 60, 0.2],
+          [1.5, 64, 0.2],
+          [2.25, 67, 0.2],
+          [2.5, 64, 0.2],
+          [3, 62, 0.2],
+          [3, 65, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "A narrow pulse is thin and nasal.\n- VCO-1 SAWTOOTH off, PULSE lit, PW 6 (21 %).\n- Listen for: a reedy buzz.",
+          "set": { "vco1.saw": false, "vco1.pulse": true, "pwm.pw": 6 }
+        },
+        {
+          "title": "Snap the filter",
+          "module": "filter",
+          "why": "The pluck comes from the filter.\n- FREQ 4 (209 Hz), RES 3, VCF ENV 6, KYBD 7.\n- ENV-1 A 0, D 3.5 (100 ms), S 0, R 3.\n- Listen for: a “tik” on every note.",
+          "set": {
+            "vcf.freq": 4,
+            "vcf.res": 3,
+            "vcf.env": 6,
+            "vcf.kybd": 7,
+            "env1.attack": 0,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env1.release": 3
+          }
+        },
+        {
+          "title": "Short notes",
+          "module": "amp",
+          "why": "ENV-2 A 0, D 4.5 (220 ms), S 0, R 3: notes die away quickly however long they are held.\n- Listen for: tight, choppy chords.",
+          "set": { "env2.attack": 0, "env2.decay": 4.5, "env2.sustain": 0, "env2.release": 3 }
+        }
+      ],
+      "context": {
+        "pwm.pw": "In this sound: how nasal the string is.",
+        "env1.decay": "In this sound: how long the snap lasts."
+      },
+      "tweaks": [
+        {
+          "id": "pwm.pw",
+          "try": "Move between 3 and 8",
+          "hear": "From woody to very thin and buzzy."
+        },
+        { "id": "vcf.res", "try": "Raise to 6", "hear": "A rubbery, wah-like quack." }
+      ]
+    },
+    {
+      "id": "jp6-organ",
+      "name": "Square Organ",
+      "ref": "In the style of combo organs",
+      "artist": "Classic technique",
+      "tags": ["keys", "pop", "60s"],
+      "level": 1,
+      "blurb": "A bright, steady organ with a gentle tremolo.",
+      "how": "Organs are steady tones made of a few pitches. Here VCO-1 mixes a triangle and a square, VCO-2 adds a square an octave up, the envelopes switch the sound on and off like a key, and LFO-1 adds tremolo through the VCA.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [0, 64, 0.9],
+          [0, 67, 0.9],
+          [1, 62, 0.9],
+          [1, 65, 0.9],
+          [1, 69, 0.9],
+          [2, 64, 1.8],
+          [2, 67, 1.8],
+          [2, 71, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Combine the waves",
+          "module": "osc",
+          "why": "The waveform buttons can be combined, like organ drawbars.\n- VCO-1 SAWTOOTH off, TRIANGLE and SQUARE lit.\n- VCO-2 PULSE lit, RANGE 4’ (+12 st): with PW at 0 the pulse is a square, an octave up.\n- MIX 5. VOLUME 6.\n- Listen for: a hollow, reedy organ.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.tri": true,
+            "vco1.square": true,
+            "vco2.pulse": true,
+            "vco2.range": 48,
+            "mix.balance": 5,
+            "out.volume": 6
+          }
+        },
+        {
+          "title": "On-off like an organ key",
+          "module": "amp",
+          "why": "ENV-2 A 0.5, S 10, R 2.5 (45 ms): full at once and gone as you let go.\n- FREQ 7 (2 kHz): a little softer on top.\n- Listen for: notes that start and stop cleanly.",
+          "set": {
+            "env2.attack": 0.5,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 2.5,
+            "vcf.freq": 7
+          }
+        },
+        {
+          "title": "Tremolo",
+          "module": "amp",
+          "why": "VCA LFO lets LFO-1 move the volume.\n- VCA LFO 2.5, LFO-1 RATE 6 (4.4 Hz).\n- Listen for: a gentle pulsing.",
+          "set": { "vca.lfo": 2.5, "lfo.rate": 6 }
+        }
+      ],
+      "context": {
+        "vca.lfo": "In this sound: how deep the tremolo is.",
+        "lfo.rate": "In this sound: how fast the tremolo pulses."
+      },
+      "tweaks": [
+        { "id": "vco1.square", "try": "Switch it off", "hear": "A softer, flute-like organ." },
+        { "id": "vca.lfo", "try": "Raise to 6", "hear": "A choppy, throbbing tremolo." }
+      ]
+    },
+    {
+      "id": "jp6-vibrato-lead",
+      "name": "Hand Vibrato Lead",
+      "ref": "In the style of 80s synth solos",
+      "artist": "Classic technique",
+      "tags": ["lead", "rock", "80s"],
+      "level": 1,
+      "blurb": "A singing mono lead with a vibrato that swells in on each note.",
+      "how": "Two detuned sawtooths make a full lead tone. LFO-2, brought in with the LFO MOD button on the plate beside the keys, adds a vibrato that rises in after each note starts, the way a player adds vibrato by hand.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.4],
+          [1.5, 72, 0.45],
+          [2, 74, 1.9],
+          [4, 76, 0.9],
+          [5, 74, 0.9],
+          [6, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A full lead tone",
+          "module": "osc",
+          "why": "Two sawtooths, slightly apart, played one note at a time.\n- VCO-2 SAWTOOTH lit, MIX 5, VCO-2 TUNE +1 (+10 cents).\n- SOLO lit: one note at a time.\n- FREQ 6.5 (1.4 kHz), RES 2, KYBD 6.\n- Listen for: a warm, thick lead.",
+          "set": {
+            "vco2.saw": true,
+            "mix.balance": 5,
+            "vco2.tune": 1,
+            "voice.solo": true,
+            "vcf.freq": 6.5,
+            "vcf.res": 2,
+            "vcf.kybd": 6
+          }
+        },
+        {
+          "title": "Bring in LFO-2",
+          "module": "mod",
+          "why": "LFO MOD switches on LFO-2, a sine kept for playing vibrato.\n- LFO MOD lit.\n- LFO-2 VCO 4 (±19 cents), RATE 5.5 (3.5 Hz).\n- RISE 6 (0.3 s): the vibrato waits and then swells in on each new note.\n- Listen for: long notes start straight and begin to sing.",
+          "set": { "lfo2.on": true, "lfo2.vco": 4, "lfo2.rate": 5.5, "lfo2.rise": 6 }
+        },
+        {
+          "title": "A slide between notes",
+          "module": "glide",
+          "why": "PORTAMENTO lit, TIME 2 (0.06 s an octave): a quick slide.\n- ENV-2 A 1.5, S 10, R 4.5.\n- Listen for: a smooth, vocal line.",
+          "set": {
+            "glide.porta": true,
+            "glide.time": 2,
+            "env2.attack": 1.5,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 4.5
+          }
+        }
+      ],
+      "context": {
+        "lfo2.vco": "In this sound: how wide the vibrato is.",
+        "lfo2.rise": "In this sound: how long each note stays straight before the vibrato comes in.",
+        "lfo2.on": "In this sound: switches the vibrato on."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.rise",
+          "try": "Move between 0 and 10",
+          "hear": "Instant vibrato at 0, a slow swell at 10."
+        },
+        { "id": "lfo2.vcf", "try": "Raise to 3", "hear": "The filter wobbles too: a growl." }
+      ]
+    },
+    {
+      "id": "jp6-poly-glide",
+      "name": "Poly Glide Pad",
+      "ref": "In the style of 80s film-score pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "soundtrack", "80s"],
+      "level": 2,
+      "blurb": "Warm chords whose notes slide into each other as the chords change.",
+      "how": "Portamento works on every voice at once, so when one chord moves to the next each voice slides from its old note to its new one. Soft saws, a closed filter and slow envelopes make it a pad.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.9],
+          [0, 59, 1.9],
+          [0, 62, 1.9],
+          [2, 57, 1.9],
+          [2, 60, 1.9],
+          [2, 64, 1.9],
+          [4, 53, 1.9],
+          [4, 57, 1.9],
+          [4, 60, 1.9],
+          [6, 55, 1.9],
+          [6, 59, 1.9],
+          [6, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Soft sawtooths",
+          "module": "osc",
+          "why": "VCO-2 SAWTOOTH lit, MIX 5, VCO-2 TUNE −0.6.\n- FREQ 5 (447 Hz), KYBD 6.\n- VOLUME 6.\n- Listen for: a warm, dark chord.",
+          "set": {
+            "vco2.saw": true,
+            "mix.balance": 5,
+            "vco2.tune": -0.6,
+            "vcf.freq": 5,
+            "vcf.kybd": 6,
+            "out.volume": 6
+          }
+        },
+        {
+          "title": "Polyphonic portamento",
+          "module": "glide",
+          "why": "Every voice slides from its last note.\n- PORTAMENTO lit, TIME 4 (0.26 s an octave).\n- POLY-2 lit: on the hardware POLY-2 keeps a key on the same voice, which suits glide.\n- Listen for: chords that bend into each other.",
+          "set": { "glide.porta": true, "glide.time": 4, "voice.assign": "poly2" }
+        },
+        {
+          "title": "Pad envelopes",
+          "module": "amp",
+          "why": "ENV-2 A 4 (120 ms), S 10, R 6 (700 ms).\n- Listen for: smooth, legato changes.",
+          "set": { "env2.attack": 4, "env2.decay": 5, "env2.sustain": 10, "env2.release": 6 }
+        }
+      ],
+      "context": {
+        "glide.time": "In this sound: how long each slide takes.",
+        "glide.porta": "In this sound: switches the slides on."
+      },
+      "tweaks": [
+        { "id": "glide.time", "try": "Raise to 7", "hear": "Slow, woozy slides." },
+        {
+          "id": "voice.detune",
+          "try": "Light UNISON and set DETUNE to 4",
+          "hear": "Fewer notes, each doubled and wider."
+        }
+      ]
+    },
+    {
+      "id": "jp6-flute",
+      "name": "Breathy Flute",
+      "ref": "In the style of synth flute lines",
+      "artist": "Classic technique",
+      "tags": ["wind", "pop", "80s"],
+      "level": 1,
+      "blurb": "A soft triangle flute with breath noise and a delayed vibrato.",
+      "how": "A triangle is close to a flute’s pure tone. VCO-2’s noise adds breath, a gentle attack lets each note blow in, and LFO-1’s DELAY makes the vibrato wait until the note has settled.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.9],
+          [1, 74, 0.45],
+          [1.5, 76, 1.4],
+          [3, 79, 0.9],
+          [4, 76, 1.9],
+          [6, 74, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Triangle and breath",
+          "module": "osc",
+          "why": "VCO-1 SAWTOOTH off, TRIANGLE lit.\n- VCO-2 NOISE lit, MIX 3: noise at 60 %, under the tone.\n- FREQ 6 (956 Hz), RES 1: the filter softens the noise.\n- Listen for: a breathy whistle.",
+          "set": {
+            "vco1.saw": false,
+            "vco1.tri": true,
+            "vco2.noise": true,
+            "mix.balance": 3,
+            "vcf.freq": 6,
+            "vcf.res": 1
+          }
+        },
+        {
+          "title": "Blow in",
+          "module": "amp",
+          "why": "ENV-2 A 3.5 (77 ms), S 9, R 4: each note blows in rather than clicking on.\n- Listen for: soft starts.",
+          "set": { "env2.attack": 3.5, "env2.decay": 5, "env2.sustain": 9, "env2.release": 4 }
+        },
+        {
+          "title": "Delayed vibrato",
+          "module": "lfo",
+          "why": "VCO MOD LFO 1 (±0.4 st): a light vibrato on both VCOs.\n- LFO-1 RATE 6.2 (5.1 Hz).\n- LFO-1 DELAY 6 (0.9 s): the vibrato waits nearly a second after each new note.\n- Listen for: long notes start straight, then waver.",
+          "set": { "vcomod.lfo": 1, "lfo.rate": 6.2, "lfo.delay": 6 }
+        }
+      ],
+      "context": {
+        "lfo.delay": "In this sound: how long each note stays straight.",
+        "mix.balance": "In this sound: how breathy the flute is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.balance",
+          "try": "Move between 1 and 5",
+          "hear": "From a pure whistle to a very breathy pan pipe."
+        },
+        { "id": "vcomod.lfo", "try": "Raise to 2", "hear": "A wide, wobbly vibrato." }
+      ]
+    },
+    {
+      "id": "jp6-random-drone",
+      "name": "Random-Step Drone",
+      "ref": "In the style of 70s and 80s electronic drones",
+      "artist": "Classic technique",
+      "tags": ["drone", "ambient", "80s"],
+      "level": 3,
+      "blurb": "A low, held drone whose resonant filter jumps to a new random setting every beat.",
+      "how": "LFO-1 set to RANDOM steps to a new random value each cycle; sent to a resonant filter it picks a new colour on every step, a sample-and-hold sound. The drone itself is two low, detuned VCOs.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 36, 7.8],
+          [0, 43, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A low drone",
+          "module": "osc",
+          "why": "VCO-2 SAWTOOTH lit, MIX 5, VCO-2 TUNE +1.5 (+15 cents).\n- VCO-1 and VCO-2 RANGE 16’.\n- Listen for: a slow beating drone.",
+          "set": {
+            "vco2.saw": true,
+            "mix.balance": 5,
+            "vco2.tune": 1.5,
+            "vco1.range": 12,
+            "vco2.range": 24
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "FREQ 4.5 (306 Hz), RES 7 (70 %): a strong, singing peak.\n- Listen for: a whistle riding on the drone.",
+          "set": { "vcf.freq": 4.5, "vcf.res": 7 }
+        },
+        {
+          "title": "Random steps",
+          "module": "lfo",
+          "why": "LFO-1 RANDOM picks a new value each cycle.\n- WAVEFORM RANDOM, RATE 5.5 (3 steps a second).\n- VCF LFO 5: how far each step can move the cutoff.\n- ENV-2 A 5, S 10, R 7.\n- Listen for: the whistle jumping about.",
+          "set": {
+            "lfo.wave": "rnd",
+            "lfo.rate": 5.5,
+            "vcf.lfo": 5,
+            "env2.attack": 5,
+            "env2.decay": 5,
+            "env2.sustain": 10,
+            "env2.release": 7
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how often the filter jumps.",
+        "vcf.res": "In this sound: how much each jump sings."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Move between 3 and 8",
+          "hear": "Lazy jumps to a fast bubbling."
+        },
+        {
+          "id": "lfo.wave",
+          "try": "Choose the triangle",
+          "hear": "A smooth sweep instead of steps."
+        }
+      ]
+    }
+  ]
+}

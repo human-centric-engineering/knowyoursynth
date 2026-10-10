@@ -1,0 +1,114 @@
+{
+  "synth": "pro-800",
+  "unusual": [
+    {
+      "target": "pmod",
+      "text": "Poly-Mod is the Prophet’s own name for modulation inside each voice. A normal LFO or mod matrix moves every voice the same way; here each voice’s own filter envelope and OSC B move that voice’s OSC A, so frequency modulation and sync sweeps stay in tune across a chord."
+    },
+    {
+      "target": "pmod.env",
+      "text": "Zero is in the middle, so the envelope can be turned upside down. On the original Prophet-600 this knob only went one way; the bipolar knob comes from the GliGli firmware the PRO-800’s is based on."
+    },
+    {
+      "target": "vcf.env",
+      "text": "Zero is in the middle: right opens the filter as the envelope rises, left closes it. Many synths have a one-way envelope amount knob and a separate invert switch."
+    },
+    {
+      "target": "osc1.sync",
+      "text": "OSC A is the one that is synced, to OSC B. Many synths sync the second oscillator to the first, so the roles here are the other way round."
+    },
+    {
+      "target": "osc1.saw",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc1.tri",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc1.pulse",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc2.saw",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc2.tri",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc2.pulse",
+      "text": "Most synths have one waveform selector per oscillator. Here each wave has its own on/off switch, so two or all three can play at once, and with all three off the oscillator is silent."
+    },
+    {
+      "target": "osc1.freq",
+      "text": "This knob steps in whole octaves, not smoothly: it is a range switch, not a tuning knob. A menu setting can make it step in semitones or turn freely instead."
+    },
+    {
+      "target": "osc2.freq",
+      "text": "This knob steps in whole octaves, not smoothly: it is a range switch, not a tuning knob. A menu setting can make it step in semitones or turn freely instead."
+    },
+    {
+      "target": "osc1.level",
+      "text": "The mixer levels double as drive. Past about 5 they push the filter input harder, so turning an oscillator up adds grit as well as volume."
+    },
+    {
+      "target": "osc2.level",
+      "text": "The mixer levels double as drive. Past about 5 they push the filter input harder, so turning an oscillator up adds grit as well as volume."
+    },
+    {
+      "target": "lfo.amount",
+      "text": "INITIAL AMOUNT is Sequential’s name for the LFO depth you get without touching the mod wheel. The wheel adds to it, rather than being the only way to bring the LFO in."
+    },
+    {
+      "target": "lfo.shape",
+      "text": "The switch picks a group rather than a shape: triangle or pulse. A menu setting then picks the shape within the group, which is what the small glyphs above and below it show: triangle, sine or sawtooth, and square, random or noise."
+    },
+    {
+      "target": "voice.unison",
+      "text": "One switch does three jobs on the hardware, depending on what you hold when you switch it on: nothing gives unison on all eight voices, one key gives a single-voice mono synth, and a chord gives chord memory, which plays that chord from each key."
+    },
+    {
+      "target": "vcf.kbd",
+      "text": "Sequential calls filter key tracking KEYBOARD. FULL makes a self-oscillating filter play in tune, so it can be used as a third, sine-like oscillator."
+    },
+    {
+      "target": "fenv",
+      "text": "The envelopes are worked out by the synth’s processor and sent to the analogue voices as control voltages, as on the Prophet-600. That is why the menu can choose each envelope’s curve (exponential or linear) and a fast or slow range."
+    },
+    {
+      "target": "aenv",
+      "text": "The envelopes are worked out by the synth’s processor and sent to the analogue voices as control voltages, as on the Prophet-600. That is why the menu can choose each envelope’s curve (exponential or linear) and a fast or slow range."
+    },
+    {
+      "target": "program",
+      "text": "The knobs are read by the processor rather than wired straight into the circuit, as on the Prophet-600. In preset mode moving a knob changes the stored sound; to make the sound follow the panel exactly, the hardware has a manual mode (the display shows P800)."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled on eight voices: both oscillators with their three waveform switches, pulse width, levels, OSC B FINE and OSC A sync, noise, the 24 dB filter with its bipolar ENVELOPE AMOUNT and three-way KEYBOARD tracking, both ADSR envelopes, Poly-Mod from the filter envelope and OSC B to OSC A’s pitch and the filter, the LFO with its three destinations and the mod wheel, glide, UNISON TRACK (as unison) and the arpeggiator buttons. FILTER CV IN can be patched.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The guide gives the LFO range (0.08 to 20 Hz), and this app uses it. The envelope times come from the GliGli firmware the PRO-800’s is based on (half a millisecond to about 37 seconds); Behringer is reported to have made them snappier since. The cutoff range, resonance law, glide times, the Poly-Mod and LFO depths and the amount of drive above 5 on the LEVEL knobs are this app’s choices."
+      },
+      {
+        "title": "The menus",
+        "text": "Everything behind PERF and SETTINGS keeps its factory setting: the oscillators step in octaves, the LFO plays a plain triangle or square (not sine, sawtooth, random or noise) and reaches both oscillators, envelopes use the fast exponential curve, and there is no vibrato, modulation delay, velocity, aftertouch, pitch bend, voice spread or glide-mode setting. The mod wheel adds to the LFO depth."
+      },
+      {
+        "title": "UNISON TRACK",
+        "text": "Here it is always unison: all eight voices on the newest key, slightly detuned. The hardware’s chord memory (switched on with a chord held) and single-voice mode (with one key held) are not modelled, and neither is the note-priority setting."
+      },
+      {
+        "title": "The programmer",
+        "text": "The keypad, display, PRESET, PERF, SETTINGS, TUNE, SYNC SOURCE, SYNC CLOCK, REC, SEQ 1, SEQ 2 and VALUE are printed but do nothing: sounds are kept in this app’s library. The arpeggiator runs at 120 BPM and cannot be latched; ARP UP-DN plays up and down, and ARP ASSIGN in the order the keys were pressed. The sequencer is not modelled."
+      },
+      {
+        "title": "Sockets",
+        "text": "SYNC IN, MIDI IN and the rear-panel sockets are drawn for reference or not modelled. FILTER CV IN works, with a fixed depth of five octaves at full scale; on the hardware the depth is a global setting."
+      }
+    ]
+  }
+}

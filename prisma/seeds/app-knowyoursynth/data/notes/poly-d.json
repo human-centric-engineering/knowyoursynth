@@ -1,0 +1,143 @@
+{
+  "synth": "poly-d",
+  "unusual": [
+    {
+      "target": "voice.mode",
+      "text": "This is paraphonic, not polyphonic. A polyphonic synth gives each note its own filter and envelopes; here four notes share one filter and one pair of contours, so every note of a chord opens and closes together, and a new key restarts the contours for the notes already held."
+    },
+    {
+      "target": "voice.damp",
+      "text": "This switch exists because the notes share one envelope, which cannot release them one at a time. On a fully polyphonic synth each note simply fades on its own when you let go."
+    },
+    {
+      "target": "voices",
+      "text": "The voice logic is adapted from the Korg Mono/Poly (Behringer says so), not the Minimoog, which plays one note. In POLY each new key takes the next oscillator in turn, so even a single-note line steps round all four."
+    },
+    {
+      "target": "mod.mix",
+      "text": "Most synths give each modulation source its own amount knob. Here two sources share one crossfader, and there is no depth knob at all: the mod wheel sets how much modulation you hear, as on the 1970 Minimoog."
+    },
+    {
+      "target": "mod.srcA",
+      "text": "OSC 4 here is the Minimoog’s third oscillator: the Poly D has four, and the last one doubles as a modulation source."
+    },
+    {
+      "target": "mod.srcB",
+      "text": "NOISE is the Minimoog’s original second source. On the hardware a cable in the rear MOD SOURCE jack takes its place."
+    },
+    {
+      "target": "osc4.kbd",
+      "text": "Most synths only have keyboard tracking on the filter. Here it is on an oscillator: switched off, Oscillator 4 ignores the keys and becomes a fixed drone or a slow modulator."
+    },
+    {
+      "target": "osc1.range",
+      "text": "Feet come from pipe organs: a pipe half as long sounds an octave higher, so 8’ is an octave above 16’. Other synths show the same thing as an octave number. LO is the unusual setting: it takes an audio oscillator down to LFO speeds."
+    },
+    {
+      "target": "osc2.range",
+      "text": "Feet come from pipe organs: a pipe half as long sounds an octave higher, so 8’ is an octave above 16’. Other synths show the same thing as an octave number. LO is the unusual setting: it takes an audio oscillator down to LFO speeds."
+    },
+    {
+      "target": "osc3.range",
+      "text": "Feet come from pipe organs: a pipe half as long sounds an octave higher, so 8’ is an octave above 16’. Other synths show the same thing as an octave number. LO is the unusual setting: it takes an audio oscillator down to LFO speeds."
+    },
+    {
+      "target": "osc4.range",
+      "text": "Feet come from pipe organs: a pipe half as long sounds an octave higher, so 8’ is an octave above 16’. Other synths show the same thing as an octave number. LO is the unusual setting: it takes an audio oscillator down to LFO speeds."
+    },
+    {
+      "target": "osc1.wave",
+      "text": "The second position, a triangle blended with a sawtooth, is a Moog speciality. There is no pulse-width knob: you choose one of three fixed widths, so pulse-width modulation is not available."
+    },
+    {
+      "target": "osc4.wave",
+      "text": "Oscillator 4 swaps the triangle-sawtooth for a reverse sawtooth, a ramp that falls instead of rising, for when it is used as a modulator."
+    },
+    {
+      "target": "osc2.freq",
+      "text": "Oscillator 1 has no tuning knob of its own. It is the reference and the others are tuned against it, in marked semitones, far enough for a musical interval."
+    },
+    {
+      "target": "mix.osc1On",
+      "text": "On most chord-playing synths every voice is a complete copy of the synth. Here each note is one of these four oscillators, so this switch can silence one note in four when you play chords in POLY."
+    },
+    {
+      "target": "mix.osc2On",
+      "text": "On most chord-playing synths every voice is a complete copy of the synth. Here each note is one of these four oscillators, so this switch can silence one note in four when you play chords in POLY."
+    },
+    {
+      "target": "mix.osc3On",
+      "text": "On most chord-playing synths every voice is a complete copy of the synth. Here each note is one of these four oscillators, so this switch can silence one note in four when you play chords in POLY."
+    },
+    {
+      "target": "mix.osc4On",
+      "text": "On most chord-playing synths every voice is a complete copy of the synth. Here each note is one of these four oscillators, so this switch can silence one note in four when you play chords in POLY."
+    },
+    {
+      "target": "filter.mode",
+      "text": "The Minimoog filter is low-pass only. The HI position (high-pass) is Behringer’s addition."
+    },
+    {
+      "target": "filter.kbd1",
+      "text": "Most synths have one key-tracking knob. The Minimoog layout has two switches worth one third and two thirds, which add up to four settings: none, a third, two thirds and full."
+    },
+    {
+      "target": "filter.kbd2",
+      "text": "Most synths have one key-tracking knob. The Minimoog layout has two switches worth one third and two thirds, which add up to four settings: none, a third, two thirds and full."
+    },
+    { "target": "filter.emphasis", "text": "EMPHASIS is Moog’s word for resonance." },
+    {
+      "target": "filter.contour",
+      "text": "Contour is Moog’s word for envelope. This is the envelope amount, usually called ENV AMOUNT or ENV DEPTH."
+    },
+    {
+      "target": "env.decay",
+      "text": "The Minimoog has one of these switches per contour; the Poly D has one for both."
+    },
+    {
+      "target": "fenv.decay",
+      "text": "There is no release knob. DECAY is the usual decay and, with the DECAY switch on, also the release, so the two cannot be set separately."
+    },
+    {
+      "target": "aenv.decay",
+      "text": "There is no release knob. DECAY is the usual decay and, with the DECAY switch on, also the release, so the two cannot be set separately."
+    },
+    {
+      "target": "glide.on",
+      "text": "Glide has its on/off switch beside the keys and its time knob on the main panel, so a player can switch it in mid-phrase with the left hand, as on a Minimoog."
+    },
+    {
+      "target": "fx.chorusOn",
+      "text": "The chorus is modelled on the one in the Roland Juno-60, with the same two buttons that can be pressed together. A Minimoog has no effects at all."
+    },
+    {
+      "target": "arp.order",
+      "text": "On the hardware there is no order switch: KYBD and STEP step through the eight orders while the arpeggiator runs, and the LOCATION lamps show which one is chosen."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: four oscillators with their ranges and waveforms, the MONO, UNI and POLY modes with AUTO DAMP, the mixer with noise and the external input (fed from the synth’s own output), the ladder filter with its high-pass mode, both contours with the DECAY switch, the Minimoog modulation bus, the distortion, the stereo chorus and the arpeggiator.",
+    "items": [
+      {
+        "title": "How notes are shared out",
+        "text": "The guide describes POLY only briefly. Here each new key takes the next oscillator in turn, as on the Korg Mono/Poly the voice logic comes from; UNI deals the held keys round the oscillators (three keys get two, one and one). With OSC 4 CONTROL off, Oscillator 4 is left out of the sharing. Filter keyboard tracking follows the note on Oscillator 1."
+      },
+      {
+        "title": "Ranges are estimates",
+        "text": "The guide gives the LFO range (0.05 to 200 Hz) and the contour times, and this app uses them. The filter range, resonance law, glide times, the tempo range, the depth of the mod wheel and the distortion and chorus settings are this app’s choices; the chorus follows the Juno-60 it is modelled on."
+      },
+      {
+        "title": "The sequencer",
+        "text": "Only the arpeggiator is modelled: ARP, HOLD, TEMPO and the choice of order (STEP here; KYBD and STEP on the hardware). The eight orders are this app’s reading of the guide’s short list. The 32-step sequencer, its patterns and banks, and the RESET, PATTERN, SHIFT, PAGE, PLAY/STOP, REC, KYBD and step buttons are printed but do nothing. SWING and gate length are not modelled."
+      },
+      {
+        "title": "Chorus with neither button lit",
+        "text": "With the chorus switched on but neither I nor II lit, the sound passes through unchanged here. What the hardware does then is not documented."
+      },
+      {
+        "title": "The rear panel and printed parts",
+        "text": "The rear jacks (external input, CV inputs for the oscillators, filter and loudness, MOD SOURCE, the CV outputs and sync), velocity, aftertouch and the SysEx settings (key priority, multi-trigger, bend range) are not modelled; multi-trigger is always on. The PHONES knob does nothing: use VOLUME. The wheels on the left-hand panel are drawn for reference: the mod wheel beside the keyboard below is the one that works."
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "synth": "jupiter-8",
+  "unusual": [
+    {
+      "target": "vco1.xmod",
+      "text": "Roland calls frequency modulation CROSS MOD. It only goes one way, VCO-2 into VCO-1, so VCO-2 is the modulator and its RANGE sets the colour of the result."
+    },
+    {
+      "target": "vco2.sync",
+      "text": "Here VCO-2 is synced to VCO-1, as on most synths, but the switch sits on VCO-2’s side of the panel and is labelled only SYNC."
+    },
+    {
+      "target": "vco2.lowFreq",
+      "text": "A switch that turns the second oscillator into a sub-audio modulator is unusual on a polysynth: with it VCO-2 acts as a second LFO, reaching VCO-1 through CROSS MOD."
+    },
+    {
+      "target": "vco2.range",
+      "text": "VCO-2’s RANGE steps in semitones over four octaves, while VCO-1’s steps in octaves. Most synths give both the same kind of range control."
+    },
+    {
+      "target": "vco2.wave",
+      "text": "The noise source is one of VCO-2’s waveforms rather than a separate mixer channel, so choosing noise takes VCO-2’s tone away."
+    },
+    {
+      "target": "mix.balance",
+      "text": "One knob balances the two oscillators instead of a level control for each. At the centre both are at full level."
+    },
+    {
+      "target": "hpf.cutoff",
+      "text": "The high-pass filter has no resonance and no modulation: it is a tone control for thinning the sound, set once per patch."
+    },
+    {
+      "target": "env1.polarity",
+      "text": "One switch inverts ENV-1 for every destination at once (filter, pitch and pulse width), rather than a separate amount or invert per destination."
+    },
+    {
+      "target": "env1.kf",
+      "text": "KEY FOLLOW here is not filter tracking: it changes the envelope’s times with the note, so high notes have shorter attacks, decays and releases. Few synths of its time could do this."
+    },
+    {
+      "target": "env2.kf",
+      "text": "KEY FOLLOW here is not filter tracking: it changes the envelope’s times with the note, so high notes have shorter attacks, decays and releases. Few synths of its time could do this."
+    },
+    {
+      "target": "vca.lfo",
+      "text": "Tremolo depth is a four-position switch (0 to 3), not a continuous slider."
+    },
+    {
+      "target": "vcf.envSel",
+      "text": "Either envelope can drive the filter. ENV-2, which shapes the volume, is the choice when the brightness should follow the loudness exactly."
+    },
+    {
+      "target": "arp.mode",
+      "text": "There is no separate on/off switch for the arpeggio: pressing a MODE button starts it, and pressing the lit one again stops it."
+    },
+    {
+      "target": "plfo.on",
+      "text": "A second LFO kept for performance vibrato, brought in with a button beside the keys. It has its own RISE TIME, so vibrato can bloom on held notes without touching the patch."
+    },
+    {
+      "target": "keymode",
+      "text": "KEY MODE splits the eight voices between two patches. In DUAL every key plays both, which halves the polyphony to four."
+    }
+  ],
+  "limits": {
+    "intro": "One patch is modelled on all eight voices: both VCOs with cross mod, sync and LOW FREQ, the source mix, the 6 dB high-pass filter, the 12/24 dB low-pass filter, both envelopes with key follow and ENV-1 polarity, the LFO with delay, the VCA with its tremolo steps, the performance LFO, portamento, the four assign modes and the arpeggiator.",
+    "items": [
+      {
+        "title": "Two patches at once",
+        "text": "The Jupiter-8 holds an upper and a lower patch and plays them whole, split or layered (DUAL, four voices each). This app plays one patch, so KEY MODE, PANEL MODE and BALANCE do not change the sound. The two HOLD buttons both latch the arpeggio, and portamento’s UPPER ONLY glides the one patch."
+      },
+      {
+        "title": "Ranges are estimates",
+        "text": "The specification list gives the envelope times (1 ms to 5 s attack, 1 ms to 10 s decay and release), the LFO range (0.05 to 40 Hz) and delay (up to 4 s), the filter’s 120 % key follow and the arpeggio’s 1 to 20 Hz, and this app uses them. The slider curves between those ends, the filter range, the depths of the pitch, cross mod and filter modulation, the high-pass range, the key follow strength, VCO-2’s LOW FREQ range and the performance LFO’s rate (about 6 Hz) are this app’s estimates."
+      },
+      {
+        "title": "Assign modes",
+        "text": "SOLO plays one voice. UNISON stacks all eight voices on the newest key with a fixed small spread. POLY 1 and POLY 2 both play chords here; on the hardware they differ in how voices are reused (POLY 2 keeps only the latest notes’ releases, which suits portamento)."
+      },
+      {
+        "title": "Bender",
+        "text": "The bender lever is drawn for reference. The mod wheel beside the keyboard stands in for it pushed to the right: it bends VCO-1 and VCO-2 (by their BEND switches) up to an octave, and opens the filter when VCF BEND is on. Bending down is not possible here."
+      },
+      {
+        "title": "Hold and the arpeggio clock",
+        "text": "HOLD latches the arpeggio; holding notes without the arpeggio is not modelled. Arpeggio EXT waits for a clock at a rear socket, which this app does not have, so the arpeggio stops."
+      },
+      {
+        "title": "Patch memory and printed parts",
+        "text": "The patch number and patch preset buttons, MANUAL, WRITE and MEMORY PROTECT, the display, the tape memory, TUNE (auto-tune) and the rear-panel sockets (outputs, pedals, arpeggio clock, highest-note CV and gate, DCB) are printed or not modelled. Sounds are kept in this app’s library."
+      }
+    ]
+  }
+}
