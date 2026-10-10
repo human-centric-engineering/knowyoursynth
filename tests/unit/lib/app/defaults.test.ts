@@ -458,12 +458,14 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'prototype/**',
         'scripts/check-synths.ts',
         'scripts/build-audio-workers.ts',
+        'scripts/record-synth-goldens.ts',
       ]);
       // Know Your Synth fills this seam: pinned to its entries, so a stray extra one still fails.
       expect(appAlwaysRunTests.map((t) => t.path)).toEqual([
         'tests/unit/prototype-boundary.test.ts',
         'tests/unit/lib/app/catalogue/seed-data-boundary.test.ts',
         'tests/unit/lib/app/synths/defs/load-chunks.test.ts',
+        'tests/unit/lib/app/synths/defs/goldens.test.ts',
       ]);
       expect(appOwnerlessSurfaceExceptions).toEqual([]);
     },

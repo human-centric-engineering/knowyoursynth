@@ -80,6 +80,20 @@ catalogue (`npm run check:synths -- --compare`): every earlier synth must still 
 
 **Never re-record a baseline to make a port pass** ([`check/README.md`](./check/README.md)).
 
+The check compares the functions on controls and jacks only by presence. Record what they do from the prototype,
+once, and commit the file:
+
+```bash
+npx tsx scripts/record-synth-goldens.ts <id>
+```
+
+It writes `tests/fixtures/synths/goldens/<id>.json`: every readout, jack check, jack depth and "what you will hear"
+sentence, and the engine parameters, over a grid of panel settings (each control moved on its own, the mod wheel up,
+each jack patched). `tests/unit/lib/app/synths/defs/goldens.test.ts` records the same from the ported definition and
+fails on any difference, and fails for a registered synth with no goldens. It is also what holds the definition over
+the per-file coverage gate. The same rule applies: a mismatch is a port that differs from the prototype, never a
+reason to re-record.
+
 ## 6. Page
 
 Nothing on the page is per synth. Once the definition is registered and its `Synth` row is

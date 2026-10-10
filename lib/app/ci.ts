@@ -131,6 +131,14 @@ export const appCoverageExclusions: AppCoverageExclusion[] = [
       'bundle fails `npm run dev` and `npm run build` at once. The two entry points it bundles ' +
       'are tested in `tests/unit/lib/app/synths/audio/worker-entries.test.ts`.',
   },
+  {
+    pattern: 'scripts/record-synth-goldens.ts',
+    reason:
+      'a standalone tsx CLI run by hand once per port: it bundles the reference definitions with ' +
+      'esbuild and writes `tests/fixtures/synths/goldens/`. Nothing imports it, so vitest never ' +
+      'executes it. What it records is `scripts/synth-goldens.ts`, which stays gated and is tested ' +
+      'by `tests/unit/lib/app/synths/defs/goldens.test.ts`.',
+  },
 ];
 
 /** One test that must run regardless of what the module graph says. */
@@ -211,6 +219,13 @@ export const appAlwaysRunTests: AppAlwaysRunTest[] = [
       'reaches the page’s up-front chunks. It imports neither the page nor anything the page ' +
       'imports, so a change that adds a static import of `defs/index.ts` (the regression it ' +
       'exists for) would not select it.',
+  },
+  {
+    path: 'tests/unit/lib/app/synths/defs/goldens.test.ts',
+    reason:
+      'compares every ported definition with the goldens in `tests/fixtures/synths/goldens/`, ' +
+      'read off disk. Nothing imports a golden file, so a change to one (the edit that would ' +
+      'paper over a port that differs from the prototype) would not select this test.',
   },
 ];
 
