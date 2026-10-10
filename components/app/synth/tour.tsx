@@ -139,8 +139,6 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
     );
   }
 
-  // The prototype's outro also points at "Dim unused parts" and "Show sensitive controls". Those are the sound map's
-  // switches, so their lines come back with it (t-15) rather than pointing at nothing (`B31`).
   if (stop.kind === 'outro') {
     return (
       <>
@@ -149,6 +147,15 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
           <li>
             <span className="text-(--kys-text)">Explain sections</span> puts this same tour on the
             panel itself: point at any coloured region to read what it does.
+          </li>
+          <li>
+            <span className="text-(--kys-text)">Dim unused parts</span> darkens everything that is
+            doing nothing in the sound you have loaded, which is the fastest way to see a patch as a
+            picture.
+          </li>
+          <li>
+            <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the
+            knobs that change this sound most, so you know which one to reach for first.
           </li>
           <li>
             The search box finds a control by what it does, so{' '}

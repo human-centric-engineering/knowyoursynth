@@ -3,12 +3,12 @@
 /**
  * The on-screen keyboard: three octaves and a top C, the mod wheel, octave shift and hold.
  *
- * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3). Not yet here: the mod wheel's
- * "Push up" cue, which comes from the sound map (`useWheelWanted`) and arrives with it (t-15).
+ * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3).
  */
 
 import { useEffect, useRef } from 'react';
 import type { PointerEvent } from 'react';
+import { useWheelWanted } from '@/components/app/synth/sound-map';
 import { notesStore, useStore } from '@/components/app/synth/stores';
 
 const WHITE = [0, 2, 4, 5, 7, 9, 11];
@@ -44,6 +44,7 @@ export const OCTAVE_MAX = 2;
 
 function ModWheel({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const wanted = useWheelWanted(); // the sound map says: pushing this up would bring in the dark control being pointed at
   const set = (e: PointerEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const r = ref.current.getBoundingClientRect();
@@ -59,7 +60,7 @@ function ModWheel({ value, onChange }: { value: number; onChange: (v: number) =>
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
-        className="relative h-24 w-9 touch-none overflow-hidden rounded-md border border-(--kys-line) bg-(--kys-desk)"
+        className={`relative h-24 w-9 touch-none overflow-hidden rounded-md border bg-(--kys-desk) ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
           set(e);
@@ -81,7 +82,9 @@ function ModWheel({ value, onChange }: { value: number; onChange: (v: number) =>
           style={{ top: `${(1 - value) * 84 + 8}%` }}
         />
       </div>
-      <span className="kys-label text-(--kys-faint)">Mod</span>
+      <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
+        {wanted ? 'Push up' : 'Mod'}
+      </span>
     </div>
   );
 }

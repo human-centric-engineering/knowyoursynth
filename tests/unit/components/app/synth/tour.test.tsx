@@ -145,11 +145,11 @@ describe('Tour', () => {
     expect(onClose).toHaveBeenCalledTimes(3);
   });
 
-  it('does not point at the sound map’s switches, which are not on the page yet', () => {
+  it('ends by pointing at the panel switches: sections and the sound map’s two', () => {
     setup();
     goTo(stops.length - 1);
-    expect(dialog().textContent).not.toMatch(/Dim unused parts|Show sensitive controls/);
-    expect(within(dialog()).getByText('Explain sections')).toBeTruthy();
+    for (const name of ['Explain sections', 'Dim unused parts', 'Show sensitive controls'])
+      expect(within(dialog()).getByText(name)).toBeTruthy();
   });
 
   it('rings a naming note’s controls on hover, and finds the first on the panel on click', () => {

@@ -30,6 +30,12 @@ export const STORAGE_KEYS = {
   fxOpen: 'kys.fxOpen',
   /** MIDI reconnects on the next visit. */
   midi: 'kys.midi',
+  /** The sound map's "Dim unused parts". */
+  dim: 'kys.dim',
+  /** The sound map's "Show sensitive controls". */
+  heat: 'kys.heat',
+  /** The harmonics strip under the panel. */
+  harm: 'kys.harm',
 } as const;
 
 /** One synth's panel, as it was left. */

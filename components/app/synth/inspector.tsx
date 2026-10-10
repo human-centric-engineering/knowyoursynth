@@ -7,7 +7,6 @@
  *
  * Transliterated from the prototype file `prototype/src/ui/Inspector.jsx` (decision D3). The unusual notes are read
  * from the definition as there, but the page attaches them from the API (`withNotes`), not the definition module.
- * Not yet here: the sound map's note on a control (`MapNote`), which arrives with the sound map (t-15).
  */
 
 import { useEffect, useMemo } from 'react';
@@ -27,6 +26,7 @@ import type {
   Preset,
   SynthDef,
 } from '@/lib/app/synths/contract';
+import { MapNote } from '@/components/app/synth/sound-map';
 import { findStore, focusStore, pendingStore, useStore } from '@/components/app/synth/stores';
 import type { CableFocus, Focus } from '@/components/app/synth/stores';
 
@@ -298,6 +298,14 @@ export function Tooltip({ enabled = true, def, values, target, preset, cables }:
       </div>
       <p className="mt-1.5 leading-snug text-(--kys-text)/90">{item.help}</p>
       <Unusual def={def} text={item.unusual} />
+      {c && (
+        <MapNote
+          def={def}
+          c={c}
+          values={values}
+          className="mt-2 border-t border-(--kys-line) pt-2"
+        />
+      )}
       {ctxLine && (
         <p className="mt-2 border-t border-(--kys-line) pt-2 leading-snug">
           <span className="font-semibold text-(--kys-accent)">In this sound: </span>
@@ -601,6 +609,7 @@ export function Inspector({
         </p>
         <p className="mt-2 text-[14.5px] leading-relaxed">{item.help}</p>
         <Unusual def={def} text={item.unusual} full />
+        {c && <MapNote def={def} c={c} values={values} link className="mt-3 text-[14.5px]" />}
         {ctxLine && (
           <p className="mt-3 rounded-lg bg-(--kys-ground) p-3 text-[14.5px] leading-relaxed">
             <span className="font-semibold text-(--kys-accent)">In this sound: </span>

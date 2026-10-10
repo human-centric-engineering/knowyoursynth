@@ -212,7 +212,7 @@ describe('the synth bar’s tour, lineage and limits', () => {
   });
 
   it('opens the lineage with the API’s lineage, from History › and from About', () => {
-    const { container } = page();
+    page();
     const lineageTitle = detail.lineage?.title ?? '';
     const dialog = screen
       .getByRole('heading', { name: lineageTitle, hidden: true })
@@ -225,7 +225,8 @@ describe('the synth bar’s tour, lineage and limits', () => {
     expect(dialog.open).toBe(false);
     fireEvent.click(button('Where it comes from: the Model D’s lineage'));
     expect(dialog.open).toBe(true);
-    expect(container.querySelectorAll('dialog')).toHaveLength(2);
+    // The same dialog both times, not a second copy of it.
+    expect(screen.getAllByRole('heading', { name: lineageTitle, hidden: true })).toHaveLength(1);
   });
 
   it('opens "What is not modelled" with the API’s limits, from the bar and from About', () => {
