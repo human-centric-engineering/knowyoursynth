@@ -325,8 +325,11 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       return undefined;
     }
     const mapper = (mapperRef.current ??= createMapper());
-    // A map of another sound says nothing about this one, so it goes at once. After a knob move the old map stays up
-    // until the new one is ready.
+    // Whatever is still being worked out is for a panel state that has gone: stop it now, not when the next analysis
+    // starts after the 300 ms wait, or its answer (or its failure) lands on the store meanwhile. A map of another
+    // sound says nothing about this one, so it goes at once. After a knob move the old map stays up until the new
+    // one is ready.
+    mapper.cancel();
     mapStore.set((m) =>
       m.key === soundKey
         ? { ...m, status: 'working' }
@@ -340,8 +343,6 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           sess.cables,
           wheel,
           probeNotes(preset),
-          // An analysis started for another sound can still be running in the gap before this one replaces it: its
-          // progress and its answer are for a sound no longer loaded, so they are dropped.
           (progress) =>
             mapStore.set((m) => (m.state || m.key !== soundKey ? m : { ...m, progress })),
           (res) =>
@@ -349,7 +350,10 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
               m.key === soundKey
                 ? { status: 'ready', progress: 1, key: soundKey, why: {}, ...res }
                 : m
-            )
+            ),
+          // The analysis threw part-way (the mapper has logged it): leave "Working out…" rather than hang there. The
+          // next change to the sound tries again.
+          () => mapStore.set((m) => (m.key === soundKey ? MAP_OFF : m))
         );
       } catch {
         mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that

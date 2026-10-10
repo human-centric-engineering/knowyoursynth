@@ -52,8 +52,9 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **The sound map works from the definition, not the drawn layout**, so it answers the same
   whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
   back to the main thread where a host blocks workers. A new map starts 300 ms after the panel
-  goes still; until then the old one stays up, marked "Updating…". The panel's dim, glow and
-  ring layers read it from `mapStore`.
+  goes still; until then the old one stays up, marked "Updating…". An analysis that throws is
+  logged and the map goes off rather than staying on "Working out…"; the next change to the
+  sound tries again. The panel's dim, glow and ring layers read it from `mapStore`.
 - **The scope reads the synth's own output**, before the effects rack. The harmonics strip shows
   the live sound while a key is down or the riff plays, and otherwise a note rendered offline
   through the model (`predict`). The big view's "What is making this shape" is `waveStory`, run

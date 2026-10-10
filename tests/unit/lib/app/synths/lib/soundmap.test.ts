@@ -10,7 +10,7 @@
  *
  * @see lib/app/synths/lib/soundmap.ts
  */
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildJobs,
   createMapper,
@@ -27,7 +27,7 @@ import {
 } from '@/lib/app/synths/lib/soundmap';
 import { makeMiniD, miniToEngine } from '@/tests/fixtures/synths/mini-d';
 import { logger } from '@/lib/logging';
-import type { ControlState } from '@/lib/app/synths/lib/soundmap';
+import type { ControlState, Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValues, EngineContext } from '@/lib/app/synths/contract';
 import type {
   ProbeJob as RealProbeJob,
@@ -315,7 +315,7 @@ describe('createMapper', () => {
     const onProgress = vi.fn();
     const onDone = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone);
+    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone, vi.fn());
     await vi.advanceTimersByTimeAsync(4 * 40);
 
     expect(onDone).toHaveBeenCalledTimes(1);
@@ -343,7 +343,8 @@ describe('createMapper', () => {
       0,
       [48, 55],
       () => {},
-      () => {}
+      () => {},
+      vi.fn()
     );
     await vi.advanceTimersByTimeAsync(4 * 40);
 
@@ -369,7 +370,8 @@ describe('createMapper', () => {
       0,
       [48, 55],
       () => {},
-      () => {}
+      () => {},
+      vi.fn()
     );
     await vi.advanceTimersByTimeAsync(4 * 40);
 
@@ -394,9 +396,9 @@ describe('createMapper', () => {
     const onDoneFirst = vi.fn();
     const onDoneSecond = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDoneFirst);
+    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDoneFirst, vi.fn());
     await vi.advanceTimersByTimeAsync(4); // let one tick of the first run fire
-    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDoneSecond);
+    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDoneSecond, vi.fn());
     await vi.advanceTimersByTimeAsync(4 * 60);
 
     expect(onDoneFirst).not.toHaveBeenCalled();
@@ -410,7 +412,7 @@ describe('createMapper', () => {
     const def = makeMiniD();
     const onDone = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDone);
+    mapper.analyse(def, def.init, [], 0, [48, 55], () => {}, onDone, vi.fn());
     await vi.advanceTimersByTimeAsync(4);
     mapper.cancel();
     await vi.advanceTimersByTimeAsync(4 * 60);
@@ -438,7 +440,7 @@ describe('createMapper', () => {
     const onProgress = vi.fn();
     const onDone = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone);
+    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone, vi.fn());
     await vi.advanceTimersByTimeAsync(4 * 5);
 
     expect(onProgress).not.toHaveBeenCalled();
@@ -461,7 +463,7 @@ describe('createMapper', () => {
     const def = makeMiniD();
     const onDone = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone);
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, vi.fn());
     // The prototype's 2.5 s, sized for Blob-URL workers, is no longer enough for a network fetch.
     await vi.advanceTimersByTimeAsync(3000);
     expect(onDone).not.toHaveBeenCalled();
@@ -492,7 +494,7 @@ describe('createMapper', () => {
 
     // A user changing the panel every 4 s: each change starts a new analysis.
     for (let t = 0; t < WORKER_TIMEOUT_MS; t += 4000) {
-      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone);
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, vi.fn());
       await vi.advanceTimersByTimeAsync(4000);
     }
     await vi.advanceTimersByTimeAsync(4 * 40);
@@ -519,11 +521,11 @@ describe('createMapper', () => {
     const mapper = createMapper();
     const def = makeMiniD();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
     await vi.advanceTimersByTimeAsync(1000);
     mapper.cancel(); // the 5 s answer arrives for a run nobody is waiting on
     await vi.advanceTimersByTimeAsync(WORKER_TIMEOUT_MS * 6);
-    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
     await vi.advanceTimersByTimeAsync(100);
 
     expect(warn).not.toHaveBeenCalled();
@@ -544,7 +546,7 @@ describe('createMapper', () => {
     (globalThis as { Worker?: unknown }).Worker = BrokenWorker;
     vi.useFakeTimers();
     const def = makeMiniD();
-    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
     await vi.advanceTimersByTimeAsync(0);
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('failed'),
@@ -557,7 +559,7 @@ describe('createMapper', () => {
         throw new Error('blocked by CSP');
       }
     };
-    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn());
+    createMapper().analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('blocked'),
       expect.objectContaining({ error: 'blocked by CSP' })
@@ -592,7 +594,7 @@ describe('createMapper', () => {
     const onDone = vi.fn();
     const onProgress = vi.fn();
 
-    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone);
+    mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone, vi.fn());
     // the whole pool exchange above is synchronous Worker↔mapper messaging; only the final phase→analyse
     // continuation is a microtask away.
     await Promise.resolve();
@@ -603,5 +605,224 @@ describe('createMapper', () => {
     const map = onDone.mock.calls[0][0];
     expect(map.state['mod.depth']).toBe('dead');
     expect(map.state['filter.cutoff']).toBe('on');
+  });
+
+  describe('when an analysis throws part-way', () => {
+    const unhandled: unknown[] = [];
+    const onUnhandled = (reason: unknown) => unhandled.push(reason);
+    // Disposed even when an assertion fails part-way, so a real pool timer cannot leak into the next test.
+    const mappers: Mapper[] = [];
+    const made = (m: Mapper) => (mappers.push(m), m);
+    beforeEach(() => {
+      unhandled.length = 0;
+      process.on('unhandledRejection', onUnhandled);
+    });
+    afterEach(() => {
+      process.off('unhandledRejection', onUnhandled);
+      mappers.splice(0).forEach((m) => m.dispose());
+    });
+
+    it('ends a main-thread analysis with onError, logged, and never onDone', async () => {
+      let n = 0;
+      const throwing = (job: RealProbeJob): RealProbeResult => {
+        if (++n === 3) throw new Error('render blew up');
+        return measure(job);
+      };
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure: throwing });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      const onDone = vi.fn();
+      const onError = vi.fn();
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await vi.advanceTimersByTimeAsync(4 * 40);
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onError.mock.calls[0][0]).toEqual(new Error('render blew up'));
+      expect(onDone).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(
+        'Sound-map analysis failed',
+        expect.objectContaining({ synth: def.id, error: 'render blew up' })
+      );
+      // It stopped there: no more jobs were measured after the throw.
+      expect(n).toBe(3);
+      await Promise.resolve();
+      expect(unhandled).toEqual([]);
+    });
+
+    it('ends a pooled analysis with onError when handling a worker reply throws', async () => {
+      class ReplyingWorker {
+        onmessage: ((e: { data: unknown }) => void) | null = null;
+        onerror: (() => void) | null = null;
+        terminate = vi.fn();
+        postMessage(msg: { type: string; run: number; job?: RealProbeJob }): void {
+          if (msg.type === 'start') this.onmessage?.({ data: { type: 'ready', run: msg.run } });
+          else if (msg.type === 'job' && msg.job)
+            this.onmessage?.({ data: { type: 'result', run: msg.run, result: measure(msg.job) } });
+        }
+      }
+      (globalThis as { Worker?: unknown }).Worker = ReplyingWorker;
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      const onDone = vi.fn();
+      const onError = vi.fn();
+      const onProgress = vi.fn(() => {
+        throw new Error('progress handler broke');
+      });
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], onProgress, onDone, onError);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onProgress).toHaveBeenCalledTimes(1);
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onDone).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(
+        'Sound-map analysis failed',
+        expect.objectContaining({ error: 'progress handler broke' })
+      );
+      expect(unhandled).toEqual([]);
+    });
+
+    it('ends a pooled analysis with onError when a job throws inside the worker', async () => {
+      // A throw in the worker's measure sends no result; the Worker fires `error` instead.
+      let n = 0;
+      class ThrowingWorker {
+        onmessage: ((e: { data: unknown }) => void) | null = null;
+        onerror: ((e: { message: string }) => void) | null = null;
+        terminate = vi.fn();
+        postMessage(msg: { type: string; run: number; job?: RealProbeJob }): void {
+          if (msg.type === 'start') this.onmessage?.({ data: { type: 'ready', run: msg.run } });
+          else if (msg.type === 'job' && msg.job) {
+            if (++n === 3) this.onerror?.({ message: 'measure blew up' });
+            else
+              this.onmessage?.({
+                data: { type: 'result', run: msg.run, result: measure(msg.job) },
+              });
+          }
+        }
+      }
+      (globalThis as { Worker?: unknown }).Worker = ThrowingWorker;
+      const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      const onDone = vi.fn();
+      const onError = vi.fn();
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onDone).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(
+        'Sound-map analysis failed',
+        expect.objectContaining({ error: 'measure blew up' })
+      );
+      // Not mistaken for a pool that cannot load: it answered, so it is not dropped for the main thread.
+      expect(warn).not.toHaveBeenCalled();
+      expect(unhandled).toEqual([]);
+    });
+
+    it('keeps a pool that has answered before when one worker errors as a later analysis starts', async () => {
+      let starts = 0;
+      let built = 0;
+      class StartThrowingWorker {
+        constructor() {
+          built++;
+        }
+        onmessage: ((e: { data: unknown }) => void) | null = null;
+        onerror: ((e: { message: string }) => void) | null = null;
+        terminate = vi.fn();
+        postMessage(msg: { type: string; run: number; job?: RealProbeJob }): void {
+          if (msg.type === 'start') {
+            // The second analysis's first start fails in the worker (createProbe threw), before any reply.
+            if (++starts === built + 1) this.onerror?.({ message: 'createProbe blew up' });
+            else this.onmessage?.({ data: { type: 'ready', run: msg.run } });
+          } else if (msg.type === 'job' && msg.job)
+            this.onmessage?.({ data: { type: 'result', run: msg.run, result: measure(msg.job) } });
+        }
+      }
+      (globalThis as { Worker?: unknown }).Worker = StartThrowingWorker;
+      const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(built).toBeGreaterThan(1); // more than one worker, so the rest can carry on
+      const onDone = vi.fn();
+      const onError = vi.fn();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onDone).toHaveBeenCalledTimes(1);
+      expect(onError).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(
+        'Sound-map worker error outside a running job',
+        expect.objectContaining({ error: 'createProbe blew up' })
+      );
+      // Not dropped for the main thread: the pool is known to work.
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('probing on the main thread'),
+        expect.anything()
+      );
+    });
+
+    it('does not report a throw from the caller’s own onDone as a failed analysis', async () => {
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      const onError = vi.fn();
+      const onDone = vi.fn(() => {
+        throw new Error('caller broke');
+      });
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await vi.advanceTimersByTimeAsync(4 * 40);
+
+      expect(onDone).toHaveBeenCalledTimes(1);
+      expect(onError).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      // The caller's bug is left loud, as an unhandled rejection, rather than swallowed.
+      await Promise.resolve();
+      expect(unhandled).toEqual([new Error('caller broke')]);
+    });
+
+    it('answers an explanation that throws with no ways in, and logs it', async () => {
+      let explaining = false;
+      const throwing = (job: RealProbeJob): RealProbeResult => {
+        if (explaining) throw new Error('door render blew up');
+        return measure(job);
+      };
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure: throwing });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      const onDone = vi.fn();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, vi.fn());
+      await vi.advanceTimersByTimeAsync(4 * 40);
+      expect(onDone).toHaveBeenCalledTimes(1);
+
+      explaining = true;
+      const onExplain = vi.fn();
+      mapper.explain('mod.depth', onExplain);
+      await vi.advanceTimersByTimeAsync(4 * 60);
+
+      expect(onExplain).toHaveBeenCalledWith('mod.depth', []);
+      expect(error).toHaveBeenCalledWith(
+        'Sound-map explanation failed',
+        expect.objectContaining({ control: 'mod.depth', error: 'door render blew up' })
+      );
+      expect(unhandled).toEqual([]);
+    });
   });
 });
