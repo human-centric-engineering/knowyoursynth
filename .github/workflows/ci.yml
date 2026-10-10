@@ -543,9 +543,10 @@ jobs:
         # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
         # expression because GitHub rejects the workflow if `username` or
         # `password` is an empty string, which is what an absent secret gives
-        # (forks, Dependabot). With either secret absent this is null, there
-        # are no credentials, and the pull is anonymous as before.
-        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || null }}
+        # (forks, Dependabot), and so does a `null` here. With either secret absent
+        # this is an empty mapping: no username, so the runner skips the
+        # login and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || fromJSON('{}') }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -598,9 +599,10 @@ jobs:
         # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
         # expression because GitHub rejects the workflow if `username` or
         # `password` is an empty string, which is what an absent secret gives
-        # (forks, Dependabot). With either secret absent this is null, there
-        # are no credentials, and the pull is anonymous as before.
-        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || null }}
+        # (forks, Dependabot), and so does a `null` here. With either secret absent
+        # this is an empty mapping: no username, so the runner skips the
+        # login and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || fromJSON('{}') }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres

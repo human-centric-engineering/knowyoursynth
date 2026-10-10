@@ -152,8 +152,9 @@ the same PR**, and each row names what deletes it.
 - **Files:** `.github/workflows/ci.yml`
 - **Change:**
   - The `postgres` service in `smoke` and `smoke-multi` gains a `credentials:` expression built
-    from `secrets.DOCKERHUB_USERNAME` / `secrets.DOCKERHUB_TOKEN`. It is null when either is
-    empty, because GitHub rejects the workflow if `username` or `password` is an empty string.
+    from `secrets.DOCKERHUB_USERNAME` / `secrets.DOCKERHUB_TOKEN`. It is an empty mapping when either is
+    empty, because GitHub rejects the workflow if `username` or `password` is an empty string
+    (and turns `null` into one).
   - The `docker` job gains `DOCKERHUB_USERNAME` in its job `env`, and a `docker/login-action`
     step before Buildx, gated on that variable being non-empty.
   - Each change carries a `FORK` comment.
