@@ -686,6 +686,50 @@ describe('createMapper', () => {
       error.mockRestore();
     });
 
+    it('ends a pooled analysis with onError when a job throws inside the worker', async () => {
+      // A throw in the worker's measure sends no result; the Worker fires `error` instead.
+      let n = 0;
+      class ThrowingWorker {
+        onmessage: ((e: { data: unknown }) => void) | null = null;
+        onerror: ((e: { message: string }) => void) | null = null;
+        terminate = vi.fn();
+        postMessage(msg: { type: string; run: number; job?: RealProbeJob }): void {
+          if (msg.type === 'start') this.onmessage?.({ data: { type: 'ready', run: msg.run } });
+          else if (msg.type === 'job' && msg.job) {
+            if (++n === 3) this.onerror?.({ message: 'measure blew up' });
+            else
+              this.onmessage?.({
+                data: { type: 'result', run: msg.run, result: measure(msg.job) },
+              });
+          }
+        }
+      }
+      (globalThis as { Worker?: unknown }).Worker = ThrowingWorker;
+      const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      const mapper = createMapper();
+      const def = makeMiniD();
+      const onDone = vi.fn();
+      const onError = vi.fn();
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onDone).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(
+        'Sound-map analysis failed',
+        expect.objectContaining({ error: 'measure blew up' })
+      );
+      // Not mistaken for a pool that cannot load: it answered, so it is not dropped for the main thread.
+      expect(warn).not.toHaveBeenCalled();
+      expect(unhandled).toEqual([]);
+      mapper.dispose();
+      warn.mockRestore();
+      error.mockRestore();
+    });
+
     it('does not report a throw from the caller’s own onDone as a failed analysis', async () => {
       vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
       const error = vi.spyOn(logger, 'error').mockImplementation(() => {});

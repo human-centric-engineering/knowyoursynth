@@ -308,7 +308,6 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   // ── sound map: which controls are in the sound, and which it is most sensitive to ──
   // It works from `synthDef`, not the drawn layout, so it gives the same answers whichever layout is showing.
   const mapperRef = useRef<Mapper | null>(null);
-  const mapGenRef = useRef(0); // which run of the effect below is current
   useEffect(
     () => () => {
       mapperRef.current?.dispose();
@@ -326,9 +325,11 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       return undefined;
     }
     const mapper = (mapperRef.current ??= createMapper());
-    const gen = ++mapGenRef.current;
-    // A map of another sound says nothing about this one, so it goes at once. After a knob move the old map stays up
-    // until the new one is ready.
+    // Whatever is still being worked out is for a panel state that has gone: stop it now, not when the next analysis
+    // starts after the 300 ms wait, or its answer (or its failure) lands on the store meanwhile. A map of another
+    // sound says nothing about this one, so it goes at once. After a knob move the old map stays up until the new
+    // one is ready.
+    mapper.cancel();
     mapStore.set((m) =>
       m.key === soundKey
         ? { ...m, status: 'working' }
@@ -342,8 +343,6 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           sess.cables,
           wheel,
           probeNotes(preset),
-          // An analysis started for another sound can still be running in the gap before this one replaces it: its
-          // progress and its answer are for a sound no longer loaded, so they are dropped.
           (progress) =>
             mapStore.set((m) => (m.state || m.key !== soundKey ? m : { ...m, progress })),
           (res) =>
@@ -353,11 +352,8 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
                 : m
             ),
           // The analysis threw part-way (the mapper has logged it): leave "Working out…" rather than hang there. The
-          // next change to the sound tries again. A newer run of this effect owns the store once it has started, even
-          // while its own analysis is still waiting out the 300 ms: an older run's failure must not undo it.
-          () => {
-            if (gen === mapGenRef.current) mapStore.set((m) => (m.key === soundKey ? MAP_OFF : m));
-          }
+          // next change to the sound tries again.
+          () => mapStore.set((m) => (m.key === soundKey ? MAP_OFF : m))
         );
       } catch {
         mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that

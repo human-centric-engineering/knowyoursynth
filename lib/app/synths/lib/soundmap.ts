@@ -721,7 +721,15 @@ export function createMapper(): Mapper {
     }
     sess.mode = 'pool';
     pool.forEach((w) => {
-      w.onerror = (e: ErrorEvent) => fallBack(sess, e.message || 'worker error');
+      w.onerror = (e: ErrorEvent) => {
+        const error = e.message || 'worker error';
+        // Before the pool has answered, an error means it cannot load here: probe on the main thread instead. After,
+        // it is a job that threw inside the worker, which will send no result for it: the phase has failed.
+        if (!sess.answered) return fallBack(sess, error);
+        if (sess.id !== run || !sess.inflight.has(w)) return;
+        sess.idle.push(w);
+        failPhase(sess, new Error(error));
+      };
       w.onmessage = (m: MessageEvent<unknown>) => {
         const data = m.data;
         if (!isWorkerMessage(data)) return;

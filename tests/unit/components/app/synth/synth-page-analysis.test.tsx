@@ -240,7 +240,7 @@ describe('the sound map', () => {
     fireEvent.click(within(library).getByText(other.name));
     const replaced = mapStore.get().key;
     expect(replaced).toContain(other.id);
-    // The first analysis finishes inside the new sound's 300 ms wait, before the new one has started.
+    // The first analysis's answers arrive inside the new sound's 300 ms wait, after it was cancelled.
     await release();
     expect(mapStore.get().key).toBe(replaced);
     expect(mapStore.get().state).toBeNull();
@@ -271,17 +271,13 @@ describe('the sound map', () => {
     error.mockRestore();
   });
 
-  it('keeps the newer analysis when an older one for the same sound fails in its 300 ms wait', async () => {
+  it('stops the running analysis as soon as the panel changes, so nothing it says lands in the 300 ms wait', async () => {
     vi.stubGlobal('Worker', undefined);
-    const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
-    let failOnce = false;
+    let n = 0;
     vi.mocked(createProbe).mockReturnValue({
       rms: 0.1,
       measure: (job) => {
-        if (failOnce) {
-          failOnce = false;
-          throw new Error('render blew up');
-        }
+        n++;
         return measure(job);
       },
     });
@@ -289,15 +285,16 @@ describe('the sound map', () => {
     fireEvent.click(button('Dim unused parts'));
     await settle(300 + 8); // the first analysis is under way on the main thread
     const key = mapStore.get().key;
-    // Same sound, new panel state: a new analysis is queued behind the 300 ms wait. The old one fails inside it.
+    const measured = n;
+    expect(measured).toBeGreaterThan(0);
+    // Same sound, new panel state: the old analysis stops at once; the new one waits 300 ms.
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
-    failOnce = true;
-    await settle(100);
-    expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
-    expect(mapStore.get()).toMatchObject({ status: 'working', key });
-    await settle(300 + 40 * 400);
+    await settle(250);
+    expect(n).toBe(measured);
+    expect(mapStore.get()).toMatchObject({ status: 'working', key, state: null });
+    await settle(50 + 40 * 400);
+    expect(n).toBeGreaterThan(measured);
     expect(mapStore.get()).toMatchObject({ status: 'ready', key });
-    error.mockRestore();
   });
 
   it('works the map out again for another sound, and clears it when both switches go off', async () => {
