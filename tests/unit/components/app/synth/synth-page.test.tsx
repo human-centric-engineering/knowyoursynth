@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
+import { Suspense } from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import type { SynthPageProps } from '@/components/app/synth/synth-page';
@@ -221,6 +222,30 @@ describe('SynthPage layout', () => {
       detail: { ...detail, synth: { ...MODEL_D_SYNTH, id: 'not-a-synth' } },
     });
     expect(container.firstChild).toBeNull();
+  });
+
+  it('waits for a definition that has not loaded yet, then shows the synth', async () => {
+    // Every other test here has the definition loaded already. A fresh module graph has not, as on a first visit,
+    // so the page has to suspend on the load (`use()`) rather than find it at hand.
+    vi.resetModules();
+    const fresh = await import('@/components/app/synth/synth-page');
+    const { loadedSynthDef: freshLoaded } = await import('@/lib/app/synths/defs/load');
+    expect(freshLoaded('model-d')).toBeUndefined();
+
+    // A component that suspends is only retried inside an awaited act().
+    await act(async () => {
+      render(
+        <Suspense fallback={<p>Waiting for the panel</p>}>
+          <fresh.SynthPage detail={detail} synths={[MODEL_D_SYNTH, OTHER_SYNTH]} viewParam={null} />
+        </Suspense>
+      );
+    });
+
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+      'Behringer Model D · Modelled on the 1970 Minimoog Model D'
+    );
+    expect(screen.queryByText('Waiting for the panel')).toBeNull();
+    expect(freshLoaded('model-d')).toBeDefined();
   });
 
   it('shows the synth heading, the loaded sound and the About summary', () => {

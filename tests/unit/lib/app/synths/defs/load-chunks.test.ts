@@ -44,12 +44,13 @@ const withStub: Plugin = {
     }));
     b.onLoad({ filter: /defs[/\\]load\.ts$/ }, () => {
       const src = readFileSync(LOAD, 'utf8');
-      const anchor = 'const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {';
-      if (!src.includes(anchor)) throw new Error('load.ts: loader table not found');
+      // The table's opening, whatever its type annotation says.
+      const anchor = /const LOADERS\b[^\n]*=\s*\{/;
+      if (!anchor.test(src)) throw new Error('load.ts: loader table not found');
       return {
         contents: src.replace(
           anchor,
-          `${anchor}\n  '${STUB_ID}': () => import('@/lib/app/synths/defs/${STUB_ID}'),`
+          (open) => `${open}\n  '${STUB_ID}': () => import('@/lib/app/synths/defs/${STUB_ID}'),`
         ),
         loader: 'ts',
       };

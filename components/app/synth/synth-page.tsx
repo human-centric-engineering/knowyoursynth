@@ -139,7 +139,9 @@ export interface SynthPageProps {
 /**
  * The synth's definition is loaded here, not passed in: it holds functions, so it cannot cross from the server
  * page. It is loaded alone (`defs/load.ts`), so the page's bundle carries no definition. Until it arrives the page
- * suspends: the server render waits for it, and a move to another synth keeps the last one showing meanwhile.
+ * suspends: the server render waits for it, and a move to another synth keeps the last one showing meanwhile. That
+ * last part holds while no loading boundary sits between the route and this component: a `loading.tsx` above it
+ * would show its fallback over the panel during each load instead.
  */
 export function SynthPage(props: SynthPageProps) {
   const id = props.detail.synth.id;

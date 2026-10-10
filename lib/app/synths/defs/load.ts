@@ -9,6 +9,12 @@
  * Server code (the read layer, the seed, `check:synths`) keeps using `defs/index.ts`, which holds every definition
  * at once. A synth joins both: one line in `SYNTH_DEFS` there and one line in `LOADERS` here. `registry.test.ts`
  * fails when the two disagree, and `load-chunks.test.ts` fails when a definition reaches the page's own bundle.
+ *
+ * The cost: a raw `import()` gets no preload hint in the server's HTML, so on a first visit the definition is
+ * requested only once the page's own code has run, and the panel the server drew is not interactive until it
+ * arrives. One extra round trip for one definition, against every definition in every page's bundle. Revisit if a
+ * large definition (the DeepMind) makes that wait noticeable: preloading the chunk for the id the server rendered is
+ * the fix.
  */
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 
