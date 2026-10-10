@@ -75,11 +75,24 @@ const writes = (db: FakeDb) =>
   );
 
 const real = loadCatalogueData();
+/** Model D's sounds file in the real data (the files load in id order, so it is not the first). */
+const realModelDSounds = (() => {
+  const file = real.sounds.find((f) => f.synth === 'model-d');
+  if (!file) throw new Error('fixture: the seed data has Model D');
+  return file;
+})();
 
-/** Model D with its first three sounds: small, and every part of it real. */
+/**
+ * Model D alone, with its first three sounds: small, and every part of it real. The other synths' files are left out,
+ * so every count below is Model D's.
+ */
 function sample(): CatalogueSeedData {
   const data = structuredClone(real);
-  data.sounds = data.sounds.map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
+  const isModelD = (f: { synth: string }) => f.synth === 'model-d';
+  data.listing.synths = data.listing.synths.filter((s) => s.id === 'model-d');
+  data.sounds = data.sounds.filter(isModelD).map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
+  data.lineage = data.lineage.filter(isModelD);
+  data.notes = data.notes.filter(isModelD);
   return data;
 }
 
@@ -99,9 +112,9 @@ describe('seedCatalogue', () => {
     expect(report.notes.created).toBe(46);
     const synth = db.synth.rows.get('model-d');
     expect(synth).toMatchObject({ name: 'Model D', maker: 'Behringer', listed: true, order: 0 });
-    const first = db.synthSound.rows.get(`model-d/${String(real.sounds[0].sounds[0].id)}`);
+    const first = db.synthSound.rows.get(`model-d/${String(realModelDSounds.sounds[0].id)}`);
     expect(first).toMatchObject({ definitionVersion: 1, order: 0 });
-    expect(sameValue(first?.steps, real.sounds[0].sounds[0].steps)).toBe(true);
+    expect(sameValue(first?.steps, realModelDSounds.sounds[0].steps)).toBe(true);
   });
 
   it('writes nothing on a re-run, though jsonb hands the JSON back in another key order', async () => {
@@ -135,7 +148,7 @@ describe('seedCatalogue', () => {
 
   it('never writes a row an admin has edited, even when the data differs', async () => {
     await seedCatalogue(asClient(db), sample());
-    const slug = String(real.sounds[0].sounds[0].id);
+    const slug = String(realModelDSounds.sounds[0].id);
     const edited = db.synthSound.rows.get(`model-d/${slug}`);
     db.synthSound.rows.set(`model-d/${slug}`, {
       ...edited,
@@ -223,7 +236,7 @@ describe('planCatalogue', () => {
 
   it('refuses a listed synth with no definition, and files for a synth not listed', () => {
     const data = sample();
-    data.listing.synths.push({ id: 'neutron', order: 1, listed: true });
+    data.listing.synths.push({ id: 'no-such-synth', order: 1, listed: true });
     data.listing.synths = data.listing.synths.filter((s) => s.id !== 'model-d');
 
     try {
@@ -234,7 +247,7 @@ describe('planCatalogue', () => {
       const { problems } = error as CatalogueDataError;
       expect(problems).toEqual(
         expect.arrayContaining([
-          'synths.json lists neutron, which has no definition in lib/app/synths/defs',
+          'synths.json lists no-such-synth, which has no definition in lib/app/synths/defs',
           'sounds/model-d.json is for model-d, which synths.json does not list',
           'lineage/model-d.json is for model-d, which synths.json does not list',
           'notes/model-d.json is for model-d, which synths.json does not list',

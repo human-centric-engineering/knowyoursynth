@@ -9,8 +9,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { z } from 'zod';
 import { GET } from '@/app/api/v1/synths/[id]/route';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
-import { planCatalogue } from '@/lib/app/catalogue/seed';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { modelDRows } from '@/tests/helpers/model-d-detail';
 import {
   assertErrorResponse,
   assertSuccessResponse,
@@ -27,20 +27,12 @@ vi.mock('@/lib/db/client', () => ({
 
 const { prisma } = await import('@/lib/db/client');
 const data = loadCatalogueData();
-const rows = planCatalogue(data);
-const stored = {
-  ...rows.synths[0],
-  _count: { sounds: rows.sounds.length },
-  sounds: rows.sounds.map((s, i) => ({ id: `row-${i}`, editedAt: null, ...s })),
-  lineage: { ...rows.lineage[0], editedAt: null },
+const { stored, noteRows } = modelDRows();
+const firstModelDSound = () => {
+  const file = data.sounds.find((f) => f.synth === 'model-d');
+  if (!file) throw new Error('fixture: the seed data has Model D');
+  return file.sounds[0];
 };
-const noteRows = rows.notes.map(({ kind, synthId, target, title, text }) => ({
-  kind,
-  synthId,
-  target,
-  title,
-  text,
-}));
 
 /** The envelope, loosely: the assertions below say what is in it. */
 const DetailBody = z.object({
@@ -85,7 +77,7 @@ describe('GET /api/v1/synths/:id', () => {
     });
     // A sound comes back exactly as the seed data holds it, plus the version it was made on.
     expect(detail.sounds).toHaveLength(99);
-    expect(detail.sounds[0]).toEqual({ ...data.sounds[0].sounds[0], version: 1 });
+    expect(detail.sounds[0]).toEqual({ ...firstModelDSound(), version: 1 });
     expect(response.headers.get('ETag')).toMatch(/^W\/".+"$/);
   });
 

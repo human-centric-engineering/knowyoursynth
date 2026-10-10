@@ -23,6 +23,12 @@ vi.mock('@/lib/db/client', () => ({
 
 const { prisma } = await import('@/lib/db/client');
 const { synths, sounds } = planCatalogue(loadCatalogueData());
+/** Model D's row: the case below lists one synth. */
+const modelD = () => {
+  const synth = synths.find((x) => x.id === 'model-d');
+  if (!synth) throw new Error('fixture: the seed data has Model D');
+  return synth;
+};
 const row = (({ id, name, maker, year, heritage, summary }) => ({
   id,
   name,
@@ -30,8 +36,8 @@ const row = (({ id, name, maker, year, heritage, summary }) => ({
   year,
   heritage,
   summary,
-  _count: { sounds: sounds.length },
-}))(synths[0]);
+  _count: { sounds: sounds.filter((s) => s.synthId === 'model-d').length },
+}))(modelD());
 const url = 'http://localhost:3000/api/v1/synths';
 
 beforeEach(() => {
