@@ -540,12 +540,12 @@ jobs:
       postgres:
         image: pgvector/pgvector:pg15
         # FORK: pull as a Docker Hub user, not anonymously — the shared
-        # runners' IPs hit the unauthenticated pull limit (t-17). With the
-        # secrets absent (forks, Dependabot) both values are empty and the
-        # runner skips the login, so the pull is anonymous as before.
-        credentials:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
+        # expression because GitHub rejects the workflow if `username` or
+        # `password` is an empty string, which is what an absent secret gives
+        # (forks, Dependabot). With either secret absent this is null, there
+        # are no credentials, and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || null }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -595,12 +595,12 @@ jobs:
       postgres:
         image: pgvector/pgvector:pg15
         # FORK: pull as a Docker Hub user, not anonymously — the shared
-        # runners' IPs hit the unauthenticated pull limit (t-17). With the
-        # secrets absent (forks, Dependabot) both values are empty and the
-        # runner skips the login, so the pull is anonymous as before.
-        credentials:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        # runners' IPs hit the unauthenticated pull limit (t-17). Built as one
+        # expression because GitHub rejects the workflow if `username` or
+        # `password` is an empty string, which is what an absent secret gives
+        # (forks, Dependabot). With either secret absent this is null, there
+        # are no credentials, and the pull is anonymous as before.
+        credentials: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN && fromJSON(format('{{"username":"{0}","password":"{1}"}}', secrets.DOCKERHUB_USERNAME, secrets.DOCKERHUB_TOKEN)) || null }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres

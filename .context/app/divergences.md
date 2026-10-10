@@ -151,16 +151,17 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `.github/workflows/ci.yml`
 - **Change:**
-  - The `postgres` service in `smoke` and `smoke-multi` gains a `credentials:` block that reads
-    `secrets.DOCKERHUB_USERNAME` / `secrets.DOCKERHUB_TOKEN`.
+  - The `postgres` service in `smoke` and `smoke-multi` gains a `credentials:` expression built
+    from `secrets.DOCKERHUB_USERNAME` / `secrets.DOCKERHUB_TOKEN`. It is null when either is
+    empty, because GitHub rejects the workflow if `username` or `password` is an empty string.
   - The `docker` job gains `DOCKERHUB_USERNAME` in its job `env`, and a `docker/login-action`
     step before Buildx, gated on that variable being non-empty.
   - Each change carries a `FORK` comment.
 - **Why:** GitHub's shared runners hit Docker Hub's anonymous pull limit. On 2026-10-09 #23's
-  smoke jobs failed twice before running a test (t-17). With the secrets absent, the runner skips
-  the service-container login and the login step is skipped, so pulls stay anonymous as before.
-- **On conflict:** take theirs, then re-add the two `credentials:` blocks, the job env line and
-  the login step.
+  smoke jobs failed twice before running a test (t-17). With the secrets absent (forks, Dependabot),
+  there are no credentials and the login step is skipped, so pulls stay anonymous as before.
+- **On conflict:** take theirs, then re-add the two `credentials:` expressions, the job env line
+  and the login step.
 - **Upstream:** asked as sunrise#976.
 - **Delete when:** sunrise#976 lands with an equivalent that reads the same secret names (or we
   rename ours to match).
