@@ -27,6 +27,7 @@ import grandmother from '@/lib/app/synths/defs/grandmother';
 import cat from '@/lib/app/synths/defs/cat';
 import xm2 from '@/lib/app/synths/defs/2-xm';
 import polyD from '@/lib/app/synths/defs/poly-d';
+import pro800 from '@/lib/app/synths/defs/pro-800';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -47,6 +48,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   cat,
   xm2,
   polyD,
+  pro800,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
