@@ -204,6 +204,14 @@ export const appAlwaysRunTests: AppAlwaysRunTest[] = [
       'outside the seed folder and the synth check. The reader it exists to catch is in some ' +
       'other file, so no import chain from that file reaches this test.',
   },
+  {
+    path: 'tests/unit/lib/app/synths/defs/load-chunks.test.ts',
+    reason:
+      'bundles `components/app/synth/synth-page.tsx` with esbuild to prove no synth definition ' +
+      'reaches the page’s up-front chunks. It imports neither the page nor anything the page ' +
+      'imports, so a change that adds a static import of `defs/index.ts` (the regression it ' +
+      'exists for) would not select it.',
+  },
 ];
 
 /**

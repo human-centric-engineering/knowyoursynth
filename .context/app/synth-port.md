@@ -11,8 +11,9 @@ reviewing them once per engine is the point.
 ## 1. Definition
 
 Transliterate `prototype/src/synths/<id>.js` to `lib/app/synths/defs/<id>.ts`, typed `SynthDef`,
-following `defs/model-d.ts` (D3: transliterate, don't rewrite). Add it to `SYNTH_DEFS` in
-`defs/index.ts`.
+following `defs/model-d.ts` (D3: transliterate, don't rewrite). Register it twice: in
+`SYNTH_DEFS` in `defs/index.ts` (the server's registry), and as a line in `LOADERS` in
+`defs/load.ts` (the page's per-synth loader). `registry.test.ts` fails if one is missing.
 
 - Give it `version: 1`. Its sounds will record that version.
 - **The instrument only.** Leave out the inline presets, the lineage, the unusual notes and the

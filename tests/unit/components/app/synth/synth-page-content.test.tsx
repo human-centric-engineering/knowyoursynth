@@ -16,6 +16,7 @@ import { findStore, focusStore, highlightStore } from '@/components/app/synth/st
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { CatalogueSound, SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 
@@ -47,6 +48,8 @@ const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 let detail: SynthDetail;
 
 beforeAll(async () => {
+  // The page loads its definition on its own (`defs/load.ts`). Loaded here, it renders without suspending.
+  await loadSynthDef('model-d');
   // happy-dom has no SVG geometry or pointer capture; the panel only needs the identity.
   Object.assign(SVGElement.prototype, {
     getScreenCTM: () => ({ ...IDENTITY, inverse: () => IDENTITY }),

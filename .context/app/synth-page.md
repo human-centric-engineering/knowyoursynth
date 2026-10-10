@@ -32,7 +32,10 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   API routes serve, so the page and every API client see the same data (a parity test pins it).
   Not `serverFetch`: a server render calling its own API forwards no visitor IP, so every
   signed-out visitor would share one rate-limit bucket. The definition holds functions, so it
-  cannot cross from the server page: the page component looks it up by id.
+  cannot cross from the server page: the page component loads it by id with `loadSynthDef()`
+  (`defs/load.ts`), which fetches that one definition's chunk, and suspends until it arrives.
+  The page must not import `defs/index.ts`, which carries every definition
+  (`load-chunks.test.ts`).
 - **The page component is keyed by synth.** Another synth starts afresh rather than inheriting
   the last one's panel. The engine is the exception: it lives in `engine.ts`, outside React,
   so the sound stays on across synths. Leaving a page sends `panic`.
