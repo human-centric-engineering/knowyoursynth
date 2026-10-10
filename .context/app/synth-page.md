@@ -21,6 +21,8 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/lineage.tsx`      | The lineage dialog (History)                                              |
 | `components/app/synth/limits.tsx`       | The "What is not modelled" dialog                                         |
 | `components/app/synth/use-dialog.ts`    | Opens and closes a native `<dialog>` from an `open` prop                  |
+| `components/app/synth/scope.tsx`        | The scope strip, the harmonics strip and the big scope view               |
+| `components/app/synth/sound-map.tsx`    | The sound map's legend, its "why is it dark?" line and its card note      |
 | `components/app/synth/*.tsx` (the rest) | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
 
 ## Rules that are not obvious from the code
@@ -44,6 +46,17 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
   _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
   sound leaves the walkthrough. The step is kept with the session.
+- **The sound map works from the definition, not the drawn layout**, so it answers the same
+  whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
+  back to the main thread where a host blocks workers. A new map starts 300 ms after the panel
+  goes still; until then the old one stays up, marked "Updating…". The panel's dim, glow and
+  ring layers read it from `mapStore`.
+- **The scope reads the synth's own output**, before the effects rack. The harmonics strip shows
+  the live sound while a key is down or the riff plays, and otherwise a note rendered offline
+  through the model (`predict`). The big view's "What is making this shape" is `waveStory`, run
+  only while the view is open.
+- **The big view's keys play.** Other dialogs leave the panel inert, so the page ignores computer
+  keys inside a `<dialog>`, except one marked `data-plays`.
 - **The lesson, the tour and the search only point.** They light controls through
   `highlightStore` and `findStore` and open them in the inspector through `focusStore`. Nothing
   but the page changes the panel.
@@ -69,6 +82,8 @@ Keys are the prototype's. Every value is checked when read; a bad one falls back
 | `kys.tips`             | Info cards on                                                                                                                                   |
 | `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                     |
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                |
+| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                |
+| `kys.harm`             | The harmonics strip under the panel                                                                                                             |
 
 Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 
@@ -76,8 +91,6 @@ Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 
 Each arrives with the surface it opens, so no button opens nothing (`B31`):
 
-- the sound map, harmonics and scope (t-15). The tour's last stop gains its lines on "Dim unused
-  parts" and "Show sensitive controls" then;
 - the tutor (`f-tutor`), and with it the library's "ask the tutor" hint;
 - the databank (`f-databank`): the lineage's "Heard on" records and their artist links. Until
   then that tab shows only for a lineage that names its players.

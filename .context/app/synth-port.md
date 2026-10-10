@@ -91,6 +91,8 @@ Open it and look:
 - every library sound loads, and a lesson steps through;
 - the tour's naming stop shows the synth's unusual notes;
 - History and "What is not modelled" open with the synth's own text;
+- with "Dim unused parts" on, the map arrives and the dark controls are ones the sound really
+  does not use; the big scope view's "What is making this shape" reads sensibly for the synth;
 - a synth with a `modular` layout switches between Modular and Long. No ported synth had one
   before the Jupiters, so that switch has never been seen working (journal, `f-model-d`).
 
