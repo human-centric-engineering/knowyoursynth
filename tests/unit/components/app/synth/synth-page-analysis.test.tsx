@@ -143,6 +143,23 @@ class FakeWorker {
   }
 }
 
+/** A probe worker that holds its answers until told to send them, so a run can be overtaken mid-flight. */
+const held: (() => void)[] = [];
+class HoldingWorker extends FakeWorker {
+  postMessage(msg: { type: string; run: number; job?: ProbeJob }) {
+    held.push(() => super.postMessage(msg));
+  }
+}
+/** Send every held answer, and the answers those prompt, until the workers go quiet. */
+async function release() {
+  for (let i = 0; i < 1000 && held.length; i++) {
+    held.splice(0).forEach((f) => f());
+    await act(async () => {
+      await Promise.resolve();
+    });
+  }
+}
+
 describe('the panel switches', () => {
   it('remembers Dim unused parts, Show sensitive controls and Show harmonics in browser storage', () => {
     vi.stubGlobal('Worker', undefined);
@@ -205,6 +222,27 @@ describe('the sound map', () => {
     expect(
       screen.getAllByText(/Does nothing at the moment: wherever you set it/).length
     ).toBeGreaterThan(0);
+  });
+
+  it('drops the map of a sound that was replaced while it was still being worked out', async () => {
+    held.length = 0;
+    vi.stubGlobal('Worker', HoldingWorker);
+    page();
+    fireEvent.click(button('Dim unused parts'));
+    await settle(300); // the first sound's analysis is under way, its answers held
+    const other = detail.sounds[1];
+    const library = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
+    if (!library) throw new Error('no library');
+    fireEvent.click(within(library).getByText(other.name));
+    const replaced = mapStore.get().key;
+    expect(replaced).toContain(other.id);
+    // The first analysis finishes inside the new sound's 300 ms wait, before the new one has started.
+    await release();
+    expect(mapStore.get().key).toBe(replaced);
+    expect(mapStore.get().state).toBeNull();
+    await settle(300);
+    await release();
+    expect(mapStore.get()).toMatchObject({ status: 'ready', key: replaced });
   });
 
   it('works the map out again for another sound, and clears it when both switches go off', async () => {

@@ -109,6 +109,15 @@ describe('MapLegend', () => {
     expect(screen.getByText('Bright:')).toBeTruthy();
   });
 
+  it('does not say a door is ringed on the panel when the only way in is the mod wheel', () => {
+    act(() => mapStore.set(ready({ why: { [GLIDE]: [[{ id: WHEEL }]] } })));
+    render(legend());
+    pointAt(GLIDE);
+    const line = screen.getByText(`${name(GLIDE)} is dark.`).parentElement;
+    expect(line?.textContent).toContain('push the mod wheel up.');
+    expect(line?.textContent).not.toContain('ringed');
+  });
+
   it('says what would bring the dark control being pointed at into the sound', () => {
     const ways: Door[][] = [[{ id: CUTOFF, v: 10 }], [{ id: WHEEL }]];
     act(() => mapStore.set(ready({ why: { [GLIDE]: ways } })));

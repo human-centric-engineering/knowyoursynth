@@ -162,6 +162,8 @@ describe('Scope (the strip beside the keyboard)', () => {
     expect(ys(ACCENT).length).toBeGreaterThan(0);
     expect(new Set(ys(ACCENT))).toEqual(new Set([H / 2]));
     expect(measure.get().freq).toBe(0);
+    // Drawn once, then nothing animates until the sound comes on.
+    expect(frames).toHaveLength(0);
   });
 
   it('holds the shape from before a panel move behind the new one, labelled before and now', () => {
@@ -323,6 +325,16 @@ describe('ScopeDialog (the big view)', () => {
     expect(screen.getByText(/Sound is off, so there is nothing to draw/)).toBeTruthy();
     const readings = within(screen.getByRole('group', { name: 'Readings' }));
     expect(readings.getByText('Pitch').nextElementSibling?.textContent).toBe('—');
+  });
+
+  it('blanks every reading once the sound goes off, rather than keeping the last note’s', () => {
+    const { rerender } = render(<ScopeDialog {...props()} />);
+    step(8);
+    const readings = () => within(screen.getByRole('group', { name: 'Readings' }));
+    expect(readings().getByText('-6.0 dB')).toBeTruthy();
+    rerender(<ScopeDialog {...props({ running: false })} />);
+    for (const label of ['Pitch', 'One cycle', 'On screen', 'Peak', 'Brightness'])
+      expect(readings().getByText(label).nextElementSibling?.textContent).toBe('—');
   });
 
   it('tells Model D’s wave story down the signal chain, with the filter’s cutoff and what moves it', async () => {

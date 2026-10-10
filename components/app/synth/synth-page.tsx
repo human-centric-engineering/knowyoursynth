@@ -335,8 +335,16 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           sess.cables,
           wheel,
           probeNotes(preset),
-          (progress) => mapStore.set((m) => (m.state ? m : { ...m, progress })),
-          (res) => mapStore.set({ status: 'ready', progress: 1, key: soundKey, why: {}, ...res })
+          // An analysis started for another sound can still be running in the gap before this one replaces it: its
+          // progress and its answer are for a sound no longer loaded, so they are dropped.
+          (progress) =>
+            mapStore.set((m) => (m.state || m.key !== soundKey ? m : { ...m, progress })),
+          (res) =>
+            mapStore.set((m) =>
+              m.key === soundKey
+                ? { status: 'ready', progress: 1, key: soundKey, why: {}, ...res }
+                : m
+            )
         );
       } catch {
         mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that

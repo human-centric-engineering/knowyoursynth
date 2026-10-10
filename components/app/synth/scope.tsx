@@ -219,7 +219,6 @@ function TraceCanvas({
     let hint = 0; // when the panel last moved with nothing sounding, so there was nothing to compare
 
     const draw = () => {
-      raf = requestAnimationFrame(draw);
       const [w, h, dpr] = fit(cv);
       const o = optsRef.current;
       const c = colors.current;
@@ -237,8 +236,11 @@ function TraceCanvas({
         g.lineTo(w, h / 2);
         g.stroke();
         g.globalAlpha = 1;
+        // Nothing to animate until the sound comes on, which restarts this effect. (A resize meanwhile leaves the
+        // flat line drawn at the old size until then; it is a line through the middle either way.)
         return;
       }
+      raf = requestAnimationFrame(draw);
       if (!buf || buf.wave.length !== an.fftSize) buf = buffers(an);
       const sr = sampleRate(source);
 
@@ -991,7 +993,8 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
  */
 function Readouts({ measureStore, running }: { measureStore: Store<Measure>; running: boolean }) {
   const m = useStore(measureStore);
-  const note = noteAt(m.freq);
+  // The last readings stay in the store when the sound goes off; none of them describe the flat line then.
+  const note = running ? noteAt(m.freq) : null;
   return (
     <div
       role="group"
@@ -1015,11 +1018,15 @@ function Readouts({ measureStore, running }: { measureStore: Store<Measure>; run
       />
       <Stat
         label="One cycle"
-        value={m.freq ? `${(1000 / m.freq).toFixed(m.freq > 200 ? 2 : 1)} ms` : '—'}
+        value={running && m.freq ? `${(1000 / m.freq).toFixed(m.freq > 200 ? 2 : 1)} ms` : '—'}
       />
-      <Stat label="On screen" value={m.ms ? `${m.ms.toFixed(1)} ms` : '—'} />
-      <Stat label="Peak" value={dB(m.peak)} sub={m.peak >= 0.995 ? 'clipping' : ''} />
-      <Stat label="Brightness" value={m.centroid ? khz(m.centroid) : '—'} />
+      <Stat label="On screen" value={running && m.ms ? `${m.ms.toFixed(1)} ms` : '—'} />
+      <Stat
+        label="Peak"
+        value={running ? dB(m.peak) : '—'}
+        sub={running && m.peak >= 0.995 ? 'clipping' : ''}
+      />
+      <Stat label="Brightness" value={running && m.centroid ? khz(m.centroid) : '—'} />
     </div>
   );
 }

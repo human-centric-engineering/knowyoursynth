@@ -177,7 +177,9 @@ function WhyLine({ def, values }: { def: SynthDef; values: ControlValues }) {
     <p className="basis-full leading-snug" role="status">
       <span className="font-semibold text-(--kys-text)">{displayName(def, c)} is dark.</span>
       <Why def={def} ways={focus.ways} values={values} link />
-      {focus.ways && focus.ways.length > 0 && ' They are ringed on the panel.'}
+      {/* The mod wheel is not on the panel: it pulses on the keyboard instead, and gets no ring. */}
+      {focus.ways?.some((combo) => combo.some((d) => d.id !== WHEEL)) &&
+        ' They are ringed on the panel.'}
     </p>
   );
 }
