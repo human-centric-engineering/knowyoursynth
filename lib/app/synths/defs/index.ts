@@ -30,6 +30,7 @@ import polyD from '@/lib/app/synths/defs/poly-d';
 import pro800 from '@/lib/app/synths/defs/pro-800';
 import ubXaD from '@/lib/app/synths/defs/ub-xa-d';
 import jupiter4 from '@/lib/app/synths/defs/jupiter-4';
+import jupiter6 from '@/lib/app/synths/defs/jupiter-6';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -53,6 +54,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   pro800,
   ubXaD,
   jupiter4,
+  jupiter6,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
