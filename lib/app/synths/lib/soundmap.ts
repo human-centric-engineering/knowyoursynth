@@ -624,11 +624,14 @@ export function createMapper(): Mapper {
   };
 
   // Something threw while a phase was running (a measurement, a reply handler, a progress callback): the phase ends
-  // there, as a rejection, rather than waiting forever for jobs nobody is still handing out.
+  // there, as a rejection, rather than waiting forever for jobs nobody is still handing out. Replies still in flight
+  // are for the failed phase: they come back to `idle` but are not counted toward the next one.
   const failPhase = (sess: Session, err: unknown) => {
     const fail = sess.reject;
     sess.resolve = sess.reject = null;
     sess.queue = [];
+    sess.inflight.clear();
+    sess.onResult = undefined;
     sess.ticking = false;
     if (fail) fail(err);
   };
@@ -728,13 +731,11 @@ export function createMapper(): Mapper {
         }
         if (data.run !== sess.id || sess.id !== run) return;
         sess.answered = true;
+        const job = data.type === 'result' ? sess.inflight.get(w) : undefined;
+        sess.inflight.delete(w);
+        sess.idle.push(w);
         try {
-          if (data.type === 'result') {
-            const job = sess.inflight.get(w);
-            sess.inflight.delete(w);
-            if (sess.onResult && job && isProbeResult(data.result)) sess.onResult(data.result, job);
-          }
-          sess.idle.push(w);
+          if (sess.onResult && job && isProbeResult(data.result)) sess.onResult(data.result, job);
           pump(sess);
         } catch (err) {
           failPhase(sess, err);
@@ -796,21 +797,24 @@ export function createMapper(): Mapper {
         results.push(r);
         onProgress(results.length / jobs.length);
       })
-        .then(() => {
-          if (id !== run) return;
-          const map = summarise(def, jobs, results, inert);
-          sess.state = map.state;
-          onDone(map);
-        })
-        .catch((err: unknown) => {
-          if (id !== run) return;
-          logger.error('Sound-map analysis failed', {
-            synth: def.id,
-            error: err instanceof Error ? err.message : String(err),
-          });
-          close(); // replies still in flight belong to a run that is over
-          onError(err);
-        });
+        .then(() => (id === run ? summarise(def, jobs, results, inert) : null))
+        // Two-armed, so a throw from the caller's own onDone is not reported as a failed analysis.
+        .then(
+          (map) => {
+            if (!map || id !== run) return;
+            sess.state = map.state;
+            onDone(map);
+          },
+          (err: unknown) => {
+            if (id !== run) return;
+            logger.error('Sound-map analysis failed', {
+              synth: def.id,
+              error: err instanceof Error ? err.message : String(err),
+            });
+            close(); // replies still in flight belong to a run that is over
+            onError(err);
+          }
+        );
     },
     /**
      * Why is this control dead? → onDone(id, [combo, …]): up to two ways in, each a list of doors ({ id, v } or

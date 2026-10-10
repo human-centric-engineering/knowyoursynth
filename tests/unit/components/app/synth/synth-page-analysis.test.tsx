@@ -271,6 +271,35 @@ describe('the sound map', () => {
     error.mockRestore();
   });
 
+  it('keeps the newer analysis when an older one for the same sound fails in its 300 ms wait', async () => {
+    vi.stubGlobal('Worker', undefined);
+    const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+    let failOnce = false;
+    vi.mocked(createProbe).mockReturnValue({
+      rms: 0.1,
+      measure: (job) => {
+        if (failOnce) {
+          failOnce = false;
+          throw new Error('render blew up');
+        }
+        return measure(job);
+      },
+    });
+    page();
+    fireEvent.click(button('Dim unused parts'));
+    await settle(300 + 8); // the first analysis is under way on the main thread
+    const key = mapStore.get().key;
+    // Same sound, new panel state: a new analysis is queued behind the 300 ms wait. The old one fails inside it.
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
+    failOnce = true;
+    await settle(100);
+    expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
+    expect(mapStore.get()).toMatchObject({ status: 'working', key });
+    await settle(300 + 40 * 400);
+    expect(mapStore.get()).toMatchObject({ status: 'ready', key });
+    error.mockRestore();
+  });
+
   it('works the map out again for another sound, and clears it when both switches go off', async () => {
     vi.stubGlobal('Worker', FakeWorker);
     page();

@@ -686,6 +686,29 @@ describe('createMapper', () => {
       error.mockRestore();
     });
 
+    it('does not report a throw from the caller’s own onDone as a failed analysis', async () => {
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = createMapper();
+      const def = makeMiniD();
+      const onError = vi.fn();
+      const onDone = vi.fn(() => {
+        throw new Error('caller broke');
+      });
+
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), onDone, onError);
+      await vi.advanceTimersByTimeAsync(4 * 40);
+
+      expect(onDone).toHaveBeenCalledTimes(1);
+      expect(onError).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      // The caller's bug is left loud, as an unhandled rejection, rather than swallowed.
+      await Promise.resolve();
+      expect(unhandled).toEqual([new Error('caller broke')]);
+      error.mockRestore();
+    });
+
     it('answers an explanation that throws with no ways in, and logs it', async () => {
       let explaining = false;
       const throwing = (job: RealProbeJob): RealProbeResult => {
