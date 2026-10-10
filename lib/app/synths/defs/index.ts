@@ -26,6 +26,7 @@ import model15 from '@/lib/app/synths/defs/model-15';
 import grandmother from '@/lib/app/synths/defs/grandmother';
 import cat from '@/lib/app/synths/defs/cat';
 import xm2 from '@/lib/app/synths/defs/2-xm';
+import polyD from '@/lib/app/synths/defs/poly-d';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -45,6 +46,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   grandmother,
   cat,
   xm2,
+  polyD,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
