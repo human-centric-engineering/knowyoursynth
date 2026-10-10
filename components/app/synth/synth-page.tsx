@@ -10,8 +10,8 @@
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
  * - The panel uses the neutral design (D11). Choosing a design per synth is `f-panel-designs`.
  *
- * What is not here yet, so that no button opens nothing (`B31`): the sound map and the harmonics and scope (t-15), the
- * tutor (`f-tutor`) and the databank (`f-databank`). The theme switch is Sunrise's, in the header.
+ * What is not here yet, so that no button opens nothing (`B31`): the tutor (`f-tutor`) and the databank
+ * (`f-databank`). The theme switch is Sunrise's, in the header.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,6 +26,10 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
+import { predict } from '@/lib/app/synths/lib/predict';
+import type { Prediction } from '@/lib/app/synths/lib/predict';
+import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
+import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import {
@@ -44,7 +48,14 @@ import { Limits } from '@/components/app/synth/limits';
 import { Lineage } from '@/components/app/synth/lineage';
 import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
+import {
+  HarmonicsStrip,
+  Scope,
+  ScopeDialog,
+  createMeasureStore,
+} from '@/components/app/synth/scope';
 import { Search } from '@/components/app/synth/search';
+import { MapLegend, WhyAsker } from '@/components/app/synth/sound-map';
 import {
   PanelViewSchema,
   STORAGE_KEYS,
@@ -55,8 +66,10 @@ import {
 } from '@/components/app/synth/storage';
 import type { Session } from '@/components/app/synth/storage';
 import {
+  MAP_OFF,
   findStore,
   focusStore,
+  mapStore,
   meterStore,
   notesStore,
   pendingStore,
@@ -199,7 +212,11 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   const [tourOn, setTourOn] = useState(false);
   const [lineageOpen, setLineageOpen] = useState(false);
   const [limitsOpen, setLimitsOpen] = useState(false);
+  const [scopeOpen, setScopeOpen] = useState(false);
   const [tipsOn, setTipsOn] = useStoredPref(STORAGE_KEYS.tips, BoolSchema, true);
+  const [dimOn, setDimOn] = useStoredPref(STORAGE_KEYS.dim, BoolSchema, false);
+  const [heatOn, setHeatOn] = useStoredPref(STORAGE_KEYS.heat, BoolSchema, false);
+  const [harmOn, setHarmOn] = useStoredPref(STORAGE_KEYS.harm, BoolSchema, false);
   const [fx, setFx] = useStoredPref<RackFx>(STORAGE_KEYS.fx, FxSchema, FX_FALLBACK);
 
   // ── audio ──
@@ -251,6 +268,82 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
       setEngineError(err instanceof Error ? err.message : String(err));
     }
   }, [synthDef, sess.values, sess.cables, wheel, engine]);
+
+  // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
+  // up with a knob being dragged. waveStory's attribution is hundreds of calls and stays in the dialog.
+  const cutoffNow = useMemo(() => {
+    if (!harmOn) return null;
+    try {
+      return synthDef.toEngine(sess.values, { wheel, patched: patchedJacks(sess.cables) }).filter
+        .cutoff;
+    } catch {
+      return null; // the panel already reports the error
+    }
+  }, [harmOn, synthDef, sess.values, sess.cables, wheel]);
+  // A fresh identity whenever the panel moves, so the scope can hold the shape from just before the move.
+  const traceKey = useMemo(
+    () => ({ values: sess.values, cables: sess.cables, wheel }),
+    [sess.values, sess.cables, wheel]
+  );
+  // Filled by the small scope strip's measuring pass, read by the harmonics strip to number the harmonics.
+  const [measureStore] = useState(createMeasureStore);
+
+  // The predicted wave and harmonics: one note rendered through the synth model offline, so the graphs show this
+  // patch whether or not anything is playing. About 10 ms — too much for every frame of a knob drag, so it waits
+  // for a short gap in the moving. That reads as live without the drag itself stuttering.
+  const [pred, setPred] = useState<Prediction | null>(null);
+  useEffect(() => {
+    const t = setTimeout(
+      () => setPred(harmOn ? predict(synthDef, sess.values, sess.cables, wheel) : null),
+      harmOn ? 60 : 0
+    );
+    return () => clearTimeout(t);
+  }, [harmOn, synthDef, sess.values, sess.cables, wheel]);
+
+  // ── sound map: which controls are in the sound, and which it is most sensitive to ──
+  // It works from `synthDef`, not the drawn layout, so it gives the same answers whichever layout is showing.
+  const mapperRef = useRef<Mapper | null>(null);
+  useEffect(
+    () => () => {
+      mapperRef.current?.dispose();
+      mapperRef.current = null;
+      mapStore.set(MAP_OFF);
+    },
+    []
+  );
+  const mapOn = dimOn || heatOn;
+  const soundKey = `${synthId}/${preset?.id ?? ''}/${step}`;
+  useEffect(() => {
+    if (!mapOn) {
+      mapperRef.current?.cancel();
+      mapStore.set(MAP_OFF);
+      return undefined;
+    }
+    const mapper = (mapperRef.current ??= createMapper());
+    // A map of another sound says nothing about this one, so it goes at once. After a knob move the old map stays up
+    // until the new one is ready.
+    mapStore.set((m) =>
+      m.key === soundKey
+        ? { ...m, status: 'working' }
+        : { ...MAP_OFF, status: 'working', key: soundKey }
+    );
+    const t = setTimeout(() => {
+      try {
+        mapper.analyse(
+          synthDef,
+          sess.values,
+          sess.cables,
+          wheel,
+          probeNotes(preset),
+          (progress) => mapStore.set((m) => (m.state ? m : { ...m, progress })),
+          (res) => mapStore.set({ status: 'ready', progress: 1, key: soundKey, why: {}, ...res })
+        );
+      } catch {
+        mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that
+      }
+    }, 300);
+    return () => clearTimeout(t);
+  }, [mapOn, synthDef, sess.values, sess.cables, wheel, preset, soundKey]);
 
   const heldRef = useRef(new Set<number>());
   const noteOn = useCallback(
@@ -332,9 +425,10 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
     const typing = (e: KeyboardEvent) =>
       e.target instanceof HTMLElement &&
       (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable);
-    // A modal dialog (lineage, limits) leaves the panel behind it inert, so its keys do not play.
+    // A modal dialog (lineage, limits) leaves the panel behind it inert, so its keys do not play. The scope's big view
+    // has a keyboard of its own and says its keys play (`data-plays`).
     const inModal = (e: KeyboardEvent) =>
-      e.target instanceof Element && !!e.target.closest('dialog');
+      e.target instanceof Element && !!e.target.closest('dialog:not([data-plays])');
     const kd = (e: KeyboardEvent) => {
       if (typing(e) || inModal(e) || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
       const k = e.key.toLowerCase();
@@ -585,6 +679,27 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
               }}
             />
             <PanelSwitch
+              label="Dim unused parts"
+              short="Dim unused"
+              on={dimOn}
+              title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
+              onClick={() => setDimOn(!dimOn)}
+            />
+            <PanelSwitch
+              label="Show sensitive controls"
+              short="Sensitive"
+              on={heatOn}
+              title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+              onClick={() => setHeatOn(!heatOn)}
+            />
+            <PanelSwitch
+              label="Show harmonics"
+              short="Harmonics"
+              on={harmOn}
+              title="Show the wave and the harmonics of this patch under the panel, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
+              onClick={() => setHarmOn(!harmOn)}
+            />
+            <PanelSwitch
               label={`Info cards: ${tipsOn ? 'on' : 'off'}`}
               short={`Cards: ${tipsOn ? 'on' : 'off'}`}
               tone="quiet"
@@ -642,6 +757,8 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
               outline={view.outline}
               zoom={zoom}
               areasOn={areasOn}
+              dimOn={dimOn}
+              heatOn={heatOn}
               onChange={onChange}
               onConnect={onConnect}
               onRemoveCable={onRemoveCable}
@@ -650,6 +767,16 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
             />
           </div>
         </div>
+        {!areasOn && (
+          <MapLegend
+            def={def}
+            values={sess.values}
+            dimOn={dimOn}
+            heatOn={heatOn}
+            outline={view.outline}
+          />
+        )}
+        {mapOn && <WhyAsker mapperRef={mapperRef} />}
         {areasOn && (
           <p className="mt-1 text-xs text-(--kys-accent)">
             Explain sections is on: point at (or tap) a coloured section to read what it does. Knobs
@@ -662,9 +789,21 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
           </p>
         )}
 
+        {harmOn && (
+          <HarmonicsStrip
+            cutoff={cutoffNow}
+            pred={pred}
+            source={engine}
+            running={audio === 'on'}
+            playing={playing}
+            measureStore={measureStore}
+            onExpand={() => setScopeOpen(true)}
+          />
+        )}
+
         <FxRack fx={fx} onChange={setFx} />
 
-        <div className="mt-4 grid gap-3 lg:grid-cols-[1fr_auto]">
+        <div className="mt-4 grid gap-3 lg:grid-cols-[1fr_300px]">
           <Keyboard
             octave={octave}
             onOctave={setOctave}
@@ -675,18 +814,29 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
             noteOn={noteOn}
             noteOff={noteOff}
           />
-          {preset && (
-            <button
-              type="button"
-              onClick={() => (playing ? stopRiff() : void playRiff(preset.phrase))}
-              className={`flex w-[104px] shrink-0 flex-col items-center justify-center gap-1 rounded-md border text-sm font-semibold ${playing ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-text) hover:border-(--kys-muted)'}`}
-            >
-              <span aria-hidden="true" className="text-xl leading-none">
-                {playing ? '■' : '▶'}
-              </span>
-              {playing ? 'Stop riff' : 'Play riff'}
-            </button>
-          )}
+          <div className="flex gap-3">
+            {preset && (
+              <button
+                type="button"
+                onClick={() => (playing ? stopRiff() : void playRiff(preset.phrase))}
+                className={`flex w-[104px] shrink-0 flex-col items-center justify-center gap-1 rounded-md border text-sm font-semibold ${playing ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-text) hover:border-(--kys-muted)'}`}
+              >
+                <span aria-hidden="true" className="text-xl leading-none">
+                  {playing ? '■' : '▶'}
+                </span>
+                {playing ? 'Stop riff' : 'Play riff'}
+              </button>
+            )}
+            <div className="h-28 min-w-0 flex-1">
+              <Scope
+                source={engine}
+                running={audio === 'on'}
+                measureStore={measureStore}
+                changeKey={traceKey}
+                onExpand={() => setScopeOpen(true)}
+              />
+            </div>
+          </div>
         </div>
         <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
           <MidiStatus midi={midi} onConnect={connectMidi} />
@@ -749,6 +899,28 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
         limits={detail.notes.limits}
         open={limitsOpen}
         onClose={() => setLimitsOpen(false)}
+      />
+      <ScopeDialog
+        open={scopeOpen}
+        onClose={() => setScopeOpen(false)}
+        source={engine}
+        running={audio === 'on'}
+        def={def}
+        values={sess.values}
+        cables={sess.cables}
+        phrase={preset?.phrase ?? null}
+        playing={playing}
+        onPlay={(ph) => void playRiff(ph)}
+        onStop={stopRiff}
+        wheel={wheel}
+        onWheel={setWheel}
+        octave={octave}
+        onOctave={setOctave}
+        hold={hold}
+        onHold={setHoldMode}
+        noteOn={noteOn}
+        noteOff={noteOff}
+        changeKey={traceKey}
       />
 
       <Tooltip

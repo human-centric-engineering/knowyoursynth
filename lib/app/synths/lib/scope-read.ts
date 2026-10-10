@@ -151,9 +151,9 @@ export function readLevels(
 
 /** The buffers one AnalyserNode is read into. */
 export interface ScopeBuffers {
-  wave: Float32Array;
-  spec: Uint8Array;
-  dec: Float32Array;
+  wave: Float32Array<ArrayBuffer>;
+  spec: Uint8Array<ArrayBuffer>;
+  dec: Float32Array<ArrayBuffer>;
 }
 
 export const buffers = (an: Pick<AnalyserNode, 'fftSize' | 'frequencyBinCount'>): ScopeBuffers => ({
