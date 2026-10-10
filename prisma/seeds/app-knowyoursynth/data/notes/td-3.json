@@ -1,0 +1,62 @@
+{
+  "synth": "td-3",
+  "unusual": [
+    {
+      "target": "amp.accent",
+      "text": "Accent is not velocity: it is an on/off mark on each step of a pattern, and this knob sets how strong every accented step is. Accented notes also ignore DECAY and close the filter quickly."
+    },
+    {
+      "target": "filter.res",
+      "text": "RESONANCE also sets how far accented notes push the filter, so the \"wow\" of an acid line comes from RESONANCE and ACCENT together. On most synths resonance only affects the filter peak."
+    },
+    {
+      "target": "filter.envMod",
+      "text": "Printed ENVELOPE, but it is an envelope amount, not an envelope: on the TB-303 the same knob is ENV MOD. Turning it up also lowers the filter’s resting point a little."
+    },
+    {
+      "target": "env.decay",
+      "text": "This is the only envelope knob. The attack is fixed and almost instant, and the volume envelope has no control at all: note length comes from the timing written into the pattern."
+    },
+    {
+      "target": "seq.slide",
+      "text": "Slide is a mark on a step, not a glide-time knob. The glide time is fixed and short, and a slid note does not restart the envelopes. Other synths call this legato portamento."
+    },
+    {
+      "target": "osc.tune",
+      "text": "TUNE covers about an octave either way, much wider than the TB-303’s TUNING, which moves about five semitones."
+    },
+    {
+      "target": "dist.drive",
+      "text": "The TB-303 has no distortion; acid players ran it into guitar pedals. The TD-3 builds one in after the VCA, and its drive knob is printed DISTORTION, the same as the section name."
+    },
+    {
+      "target": "j.filterIn",
+      "text": "FILTER IN lets outside audio through the 303-style filter, envelope and accent. On a TB-303 that needed a modification."
+    },
+    {
+      "target": "timemode",
+      "text": "Patterns are written in two passes: all the pitches first in PITCH MODE, then the timing of every step in TIME MODE. Most step sequencers enter pitch and timing together, one step at a time."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: the sawtooth or square oscillator, the resonant filter with CUTOFF, RESONANCE and ENVELOPE, the decay envelope, the fixed volume envelope, accent (short decay, accent sweep and louder notes), slide, and the distortion after the VCA. The riffs carry accents and slides per step, and TEMPO sets their speed. FILTER IN, CV OUT, GATE OUT and PHONES can be patched.",
+    "items": [
+      {
+        "title": "No pattern memory",
+        "text": "The sequencer is drawn and every button explains itself, but there are no patterns, tracks or modes to write: PITCH MODE, TIME MODE, the keys, FUNCTION, CLEAR, START/STOP, BACK, WRITE/NEXT, MODE and TRACK change nothing, nor do the clock and MIDI settings behind them. Each sound plays its own riff instead, and the on-screen keyboard or a MIDI keyboard plays the voice directly."
+      },
+      {
+        "title": "ACCENT and SLIDE play live",
+        "text": "On the TD-3 these buttons write marks into steps. Here, lit, they accent or slide every note you play. Notes from a MIDI keyboard are also accented when played hard (velocity above about 115), and overlapping notes slide. How the TD-3 itself treats MIDI velocity and overlapping notes is not documented in its guide."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The filter is the app’s 24 dB ladder rather than the diode ladder of the 303 design. The envelope times, slide time, accent sweep and cutoff range come from analyses of the original TB-303 and are assumed to carry over. The distortion circuit is not documented: here it is the app’s generic overdrive with DISTORTION, TONE and LEVEL. The TEMPO range is taken from the TB-303."
+      },
+      {
+        "title": "Not modelled",
+        "text": "SYNC IN, MIDI and USB settings, poly chain, and the power lamp’s colours."
+      }
+    ]
+  }
+}

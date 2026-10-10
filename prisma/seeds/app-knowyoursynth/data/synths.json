@@ -1,1 +1,15 @@
-{ "synths": [{ "id": "model-d", "order": 0, "listed": true }] }
+{
+  "synths": [
+    { "id": "model-d", "order": 0, "listed": true },
+    { "id": "neutron", "order": 1, "listed": true },
+    { "id": "pro-1", "order": 2, "listed": true },
+    { "id": "k2", "order": 3, "listed": true },
+    { "id": "b2600", "order": 4, "listed": true },
+    { "id": "kobol", "order": 8, "listed": true },
+    { "id": "wasp-deluxe", "order": 10, "listed": true },
+    { "id": "tb-303", "order": 15, "listed": true },
+    { "id": "td-3", "order": 16, "listed": true },
+    { "id": "model-15", "order": 23, "listed": true },
+    { "id": "grandmother", "order": 24, "listed": true }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "synth": "b2600",
+  "title": "From the ARP 2500 to the Behringer 2600",
+  "intro": "ARP was Moog’s great American rival. Its 2600 was designed to teach synthesis: every module is printed on the panel with its connections drawn in, and every connection can be broken with a cable. The Behringer copies the late black-and-orange version, with both of ARP’s filters and the controls of ARP’s later duophonic keyboard built in.",
+  "timeline": [
+    {
+      "year": "1970",
+      "name": "ARP 2500",
+      "text": "Alan R. Pearlman’s new company releases a large modular synthesizer. Instead of patch cables it connects modules with sliding matrix switches. It is big, expensive and aimed at studios and universities, and it gives ARP the oscillator and filter designs the 2600 is built from."
+    },
+    {
+      "year": "1971",
+      "name": "ARP 2600",
+      "tag": "The original",
+      "text": "A modular in a portable case, with the most useful connections made inside so it plays without any cables, and a jack on every connection so you can change them. The first units have a blue-grey case and are nicknamed \"Blue Marvin\"; the grey \"Grey Meanie\" follows. It is marketed to schools as much as to musicians."
+    },
+    {
+      "year": "mid-1970s",
+      "name": "The 4072 filter",
+      "text": "ARP’s first filter, the 4012, was close to Moog’s patented ladder design. ARP replaced it with its own 4072 circuit. Both are four-pole low-pass filters, and players still argue about which sounds better, which is why the MODE switch on this panel offers both."
+    },
+    {
+      "year": "mid-1970s",
+      "name": "Black and orange, and the 3620 keyboard",
+      "text": "The 2600 gets the black panel with orange printing that this Behringer copies, and a new keyboard, the 3620, with duophonic playing, repeat, portamento and an LFO with delayed vibrato. On the Behringer those keyboard controls are built into the lower left of the panel and driven by MIDI."
+    },
+    {
+      "year": "1981",
+      "name": "ARP closes",
+      "text": "ARP spends heavily on a guitar synthesizer that does not sell, and the company goes bankrupt. Estimates put 2600 production at around 3,000 units."
+    },
+    {
+      "year": "2020",
+      "name": "Korg ARP 2600 FS",
+      "text": "Korg, working with ARP co-founder David Friend, builds a limited full-size reissue, followed by the smaller 2600 M."
+    },
+    {
+      "year": "2020",
+      "name": "Behringer 2600",
+      "tag": "This synth",
+      "text": "Behringer copies the black-and-orange 2600 as a rack and Eurorack unit, with both filters, a digital spring reverb, the 3620 keyboard controls and MIDI. Later editions copy the Blue Marvin and Grey Meanie panels; the Blue Marvin has a real spring tank."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "ARP 2500",
+      "years": "1970",
+      "text": "The large modular the 2600 came from, connected with matrix switches rather than cables."
+    },
+    {
+      "name": "ARP Odyssey",
+      "years": "1972",
+      "text": "A smaller, cable-free ARP with two oscillators, sync, ring modulator and sample-and-hold: much of the 2600 fixed into one path, with sliders for everything."
+    },
+    {
+      "name": "ARP Axxe",
+      "years": "1975",
+      "text": "ARP’s one-oscillator entry model, with the same slider-and-switch panel style."
+    },
+    {
+      "name": "Korg ARP 2600 M",
+      "years": "2021",
+      "text": "Korg’s smaller, cheaper reissue of the 2600, without the keyboard."
+    },
+    {
+      "name": "Minimoog Model D",
+      "years": "1970",
+      "text": "Not a relative but the rival: fixed wiring, knobs instead of sliders, and a player’s instrument where the 2600 was a teaching one. The Model D is also in this app."
+    }
+  ],
+  "note": "The records listed are ones where the ARP 2600 is well documented. The sounds they link to are only in that style."
+}

@@ -1,0 +1,59 @@
+{
+  "synth": "tb-303",
+  "unusual": [
+    {
+      "target": "amp.accent",
+      "text": "Accent is not velocity: it is an on/off mark on each step of a pattern, and this knob sets how strong every accented step is. Accented notes also ignore DECAY and close the filter quickly."
+    },
+    {
+      "target": "filter.res",
+      "text": "RESONANCE also sets how far accented notes push the filter, so the \"wow\" of an acid line comes from RESONANCE and ACCENT together. On most synths resonance only affects the filter peak."
+    },
+    {
+      "target": "filter.envMod",
+      "text": "Turning ENV MOD up also lowers the filter’s resting point a little, so the knob changes where the sweep starts as well as how big it is."
+    },
+    {
+      "target": "env.decay",
+      "text": "This is the only envelope knob. The attack is fixed and almost instant, and the volume envelope has no control at all: note length comes from the timing written into the pattern."
+    },
+    {
+      "target": "seq.slide",
+      "text": "Slide is a mark on a step, not a glide-time knob. The glide time is fixed and short, and a slid note does not restart the envelopes. Other synths call this legato portamento."
+    },
+    {
+      "target": "osc.wave",
+      "text": "The waveform switch is on the back edge, next to SYNC IN, not on the front panel."
+    },
+    {
+      "target": "out.volume",
+      "text": "VOLUME is also the power switch: the first click of the knob turns the TB-303 on."
+    },
+    {
+      "target": "j.sync",
+      "text": "This is Roland’s DIN sync from before MIDI existed: it carries tempo, start and stop from Roland drum machines such as the TR-606."
+    },
+    {
+      "target": "timemode",
+      "text": "Patterns are written in two passes: all the pitches first in PITCH MODE, then the timing of every step in TIME MODE. Most step sequencers enter pitch and timing together, one step at a time."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: the sawtooth or square oscillator, the resonant filter with CUT OFF FREQ, RESONANCE and ENV MOD, the decay envelope, the fixed volume envelope, accent (short decay, accent sweep and louder notes) and slide. The riffs carry accents and slides per step, and TEMPO sets their speed. MIX IN, CV, GATE, HEADPHONE and OUTPUT can be patched.",
+    "items": [
+      {
+        "title": "No pattern memory",
+        "text": "The sequencer is drawn and every button explains itself, but there are no patterns, tracks or modes to write: PITCH MODE, TIME MODE, the keys, FUNCTION, CLEAR, RUN/STOP, BACK, WRITE/NEXT, MODE and TRACK change nothing. Each sound plays its own riff instead, and the on-screen keyboard or a MIDI keyboard plays the voice directly."
+      },
+      {
+        "title": "ACCENT and SLIDE play live",
+        "text": "On the TB-303 these buttons write marks into steps. Here, lit, they accent or slide every note you play. Notes from a MIDI keyboard are also accented when played hard (velocity above about 115), and overlapping notes slide."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The filter is the app’s 24 dB ladder rather than the 303’s diode ladder, which is nearer 18 dB per octave. The envelope times (DECAY 0.2 to 2 s, a volume envelope of about 3.5 s, a 0.2 s accent decay), the slide time, the accent sweep’s timing and the cutoff range come from circuit analyses and are this app’s choices. The square wave is a plain square; the original’s shifts with pitch."
+      },
+      { "title": "Not modelled", "text": "SYNC IN (DIN sync), battery power and the battery lamp." }
+    ]
+  }
+}
