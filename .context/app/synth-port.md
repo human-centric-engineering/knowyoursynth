@@ -47,8 +47,11 @@ It writes the synth's sounds, lineage, unusual notes and "What is not modelled" 
 order. Commit the output. Run it once, in the port task. After the first seed the tables are the
 source of truth (D2), so a content fix is an edit to the table, not a re-export.
 
-The Moog 900 systems build their notes, lineage and cables from shared files, which the script
-does not expand yet: that expansion is part of p4.
+The Moog 900 systems build their notes, lineage and cables from shared files under
+`src/synths/moog900/`. The export expands them: each system's notes are the shared ones its
+modules have (the prototype's own `forRack()`) plus its own file's, and the shared cables and
+lineage are already spread into the sounds and lineage the definition carries. Their module
+builders are code, under `defs/moog900/`.
 
 `tests/unit/lib/app/catalogue/seed-data.test.ts` pins what is in the data folder; extend it to
 the new synth's counts.
