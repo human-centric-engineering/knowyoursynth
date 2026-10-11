@@ -1,0 +1,98 @@
+{
+  "synth": "deepmind-12d",
+  "unusual": [
+    {
+      "target": "osc1.pwm",
+      "text": "With PWM SRC set to anything but MANUAL, this fader stops setting the width and sets how far the source moves it. There is then no separate width control."
+    },
+    {
+      "target": "osc2.toneMod",
+      "text": "TONE MOD is not pulse-width modulation. It cuts a gap into the start of each half of OSC 2’s square, so the wave stays symmetrical and changes colour in a different way from OSC 1’s PWM."
+    },
+    {
+      "target": "osc2.level",
+      "text": "OSC 1 has no level fader. The balance is set by bringing OSC 2 and NOISE up against a fixed OSC 1; to hear OSC 2 alone, switch OSC 1’s two waveform buttons off."
+    },
+    {
+      "target": "osc1.pitchMod",
+      "text": "The pitch modulation source is chosen in a menu, not on the panel, and by default this fader moves OSC 2 as well as OSC 1."
+    },
+    {
+      "target": "vcf.lfo",
+      "text": "The filter’s LFO fader uses LFO 2 by default, not LFO 1, so vibrato and filter wobble can run at different speeds without any menu work."
+    },
+    {
+      "target": "hpf.freq",
+      "text": "The high-pass filter acts on the mix of all twelve voices, not on each voice, as on a Roland Juno. BOOST sits in the same place in the signal path."
+    },
+    {
+      "target": "env.select",
+      "text": "One set of A, D, S and R faders serves three envelopes. These buttons choose which envelope the faders move; the other two keep their settings, even though the faders no longer show them."
+    },
+    {
+      "target": "env.curves",
+      "text": "Most synths have fixed envelope curves. Here every stage has a shape of its own, set with the same four faders once CURVES is on."
+    },
+    {
+      "target": "voice.detune",
+      "text": "On most polysynths unison is a single switch. Here it is a POLYPHONY setting in the POLY EDIT menu, with a choice of how many voices to stack."
+    },
+    {
+      "target": "arp.gate",
+      "text": "GATE TIME at zero plays no notes at all: the arpeggiator runs silently."
+    },
+    {
+      "target": "display",
+      "text": "Much of the DeepMind is set from the display rather than from dedicated controls. Each section’s amber EDIT button opens its own menu, and the FX button a whole effects processor with four slots."
+    },
+    {
+      "target": "fx.routing",
+      "text": "Most synths with effects have a fixed chain (chorus, then delay, then reverb). Here the four slots can be wired ten ways, including two that feed an effect’s output back through the others: an octave pitch shifter in the loop of a reverb gives the \"shimmer\" sound."
+    },
+    {
+      "target": "fx.mode",
+      "text": "Most synth effects are inserts only. SEND mode works like an aux send on a mixing desk: the dry synth goes straight out and the effects are added alongside, fully wet."
+    }
+  ],
+  "limits": {
+    "intro": "All twelve voices are modelled: both oscillators with PWM, tone modulation and sync, noise, the 2- and 4-pole filter, three envelopes with their curves, both LFOs with delay, the common high-pass filter and BOOST, unison and mono stacking, portamento and the arpeggiator. The FX button opens the four-slot effects engine, with all 35 algorithms, every parameter and all ten routings. The display shows the menu rows that matter most for sound design.",
+    "items": [
+      {
+        "title": "The effects are approximations",
+        "text": "The DeepMind’s effects are digital algorithms licensed from TC Electronic, Klark Teknik and Midas, and the manual only lists their parameters, each named after a classic unit (Lexicon 480L, EMT 250, Fairchild 670, Leslie…). Here each is this app’s own version, built to respond to the same parameters in the same way. They are close in character, not copies: a real HallRev or FairComp will sound different in detail."
+      },
+      {
+        "title": "Effects details not in the manual",
+        "text": "Slot LEVEL is off at 0 and unchanged at 8 here; the manual does not print its range. How two effects side by side are mixed is not described: here they are averaged in INSERT mode and added in SEND mode. The feedback routings M-9 and M-10 are read from their names and diagrams. The MultiBandDist cabinet tones are estimates. The table for DecimDelay lost its first row, taken here to be MIX."
+      },
+      {
+        "title": "Effects not modelled",
+        "text": "Tempo-synced delay and LFO times, the effects parameters as modulation-matrix destinations, and the per-slot MIX the FX menu also has (each algorithm’s own MIX does the same job here)."
+      },
+      {
+        "title": "The modulation matrix",
+        "text": "The MOD button and the eight-slot matrix are not modelled. The fixed routings the panel and the OSC EDIT and VCF EDIT menus offer all work."
+      },
+      {
+        "title": "Envelope and LFO times are estimates",
+        "text": "The manual gives no envelope times at all and only the end points of the other faders. The times and curves here are chosen to behave sensibly, not measured from a unit."
+      },
+      {
+        "title": "CHORD, POLY CHORD and the control sequencer",
+        "text": "Printed on the panel but not modelled. The arpeggiator works, with five of its orders and up to four octaves."
+      },
+      {
+        "title": "Menus not shown",
+        "text": "Velocity and aftertouch depths, pan spread, VCA mode, envelope trigger modes, LFO phase and clock sync, note priority, parameter drift and every GLOBAL setting stay at their defaults. The sustain curve (a slope on the S stage) is not modelled."
+      },
+      {
+        "title": "Display navigation",
+        "text": "The −/NO, +/YES and BANK buttons, the encoder and the DATA ENTRY fader are printed but do nothing: click a value on the screen instead. Sounds are kept in this app’s library, not in programs, so PROG, COMPARE and WRITE only change the screen."
+      },
+      {
+        "title": "Mono voices",
+        "text": "The voices are mixed to one channel, so pan spread is not reproduced. The effects engine is stereo, so anything after it (chorus, ping-pong delay, reverb, the rotary speaker) is heard in stereo."
+      }
+    ]
+  }
+}

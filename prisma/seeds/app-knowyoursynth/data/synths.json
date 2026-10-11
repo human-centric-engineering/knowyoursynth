@@ -5,6 +5,7 @@
     { "id": "pro-1", "order": 2, "listed": true },
     { "id": "k2", "order": 3, "listed": true },
     { "id": "b2600", "order": 4, "listed": true },
+    { "id": "deepmind-12d", "order": 5, "listed": true },
     { "id": "ub-xa-d", "order": 6, "listed": true },
     { "id": "2-xm", "order": 7, "listed": true },
     { "id": "kobol", "order": 8, "listed": true },
