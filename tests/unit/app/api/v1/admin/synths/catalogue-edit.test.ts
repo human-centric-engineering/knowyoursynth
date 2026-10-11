@@ -195,7 +195,14 @@ async function json(res: Response) {
 const problems = async (res: Response) => (await json(res)).error?.details?.errors ?? [];
 const auditCalls = () =>
   mockLogAdminAction.mock.calls.map(
-    ([e]) => e as { action: string; entityType: string; entityId: string; changes: Row }
+    ([e]) =>
+      e as {
+        action: string;
+        entityType: string;
+        entityId: string;
+        entityName: string;
+        changes: Row;
+      }
   );
 
 beforeEach(async () => {
@@ -633,6 +640,40 @@ describe('notes', () => {
     expect(shared).toMatchObject({ title: 'New title', text: 'New text.' });
     expect(shared.editedAt).toBeInstanceOf(Date);
     expect(Object.keys(auditCalls()[0].changes).sort()).toEqual(['text', 'title']);
+  });
+
+  it('names a synth’s note in the audit by its target, or by its kind when it has none', async () => {
+    const unusual = db.synthNote.rows.find((n) => n.kind === 'UNUSUAL')!;
+    const intro = db.synthNote.rows.find((n) => n.kind === 'LIMIT_INTRO')!;
+
+    for (const note of [unusual, intro]) {
+      const noteId = String(note.id);
+      const res = await patchNote(
+        request('PATCH', `synth-notes/${noteId}`, { text: 'Changed.' }),
+        ctx({ noteId })
+      );
+      expect(res.status).toBe(200);
+    }
+
+    expect(auditCalls().map((c) => c.entityName)).toEqual([
+      `model-d: ${String(unusual.target)}`,
+      'model-d: limit_intro',
+    ]);
+  });
+
+  it('writes and audits nothing when a note edit changes nothing', async () => {
+    const note = db.synthNote.rows.find((n) => n.kind === 'UNUSUAL')!;
+    const noteId = String(note.id);
+
+    const res = await patchNote(
+      request('PATCH', `synth-notes/${noteId}`, { text: note.text }),
+      ctx({ noteId })
+    );
+
+    expect(res.status).toBe(200);
+    expect(writes()).toBe(0);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+    expect(note.editedAt).toBeNull();
   });
 
   it('refuses a title on a note that is not a limit', async () => {
