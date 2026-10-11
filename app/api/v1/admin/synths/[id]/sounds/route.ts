@@ -12,25 +12,32 @@ import { successResponse } from '@/lib/api/responses';
 import { validateQueryParams, validateRequestBody } from '@/lib/api/validation';
 import { getRouteLogger } from '@/lib/api/context';
 import { createSound, SoundCreateSchema, SynthIdSchema } from '@/lib/app/catalogue/edit';
-import { auditCatalogue, CATALOGUE_WRITE } from '@/lib/app/catalogue/admin-route';
+import { auditCatalogue, CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 const ParamsSchema = z.object({ id: SynthIdSchema });
 
-export const POST = withAdminAuth<{ id: string }>(async (request, session, { params }) => {
-  const log = await getRouteLogger(request);
-  const { id } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
-  const body = await validateRequestBody(request, SoundCreateSchema);
+export const POST = withAdminAuth<{ id: string }>(
+  async (request, session, { params }) => {
+    const log = await getRouteLogger(request);
+    const { id } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
+    const body = await validateRequestBody(request, SoundCreateSchema);
 
-  const sound = await createSound(id, body);
-  auditCatalogue(request, session.user.id, {
-    action: 'synth_sound.create',
-    entityType: 'synth_sound',
-    entityId: `${id}/${sound.id}`,
-    entityName: sound.name,
-    before: null,
-    after: sound,
-  });
+    const sound = await createSound(id, body);
+    auditCatalogue(request, session.user.id, {
+      action: 'synth_sound.create',
+      entityType: 'synth_sound',
+      entityId: `${id}/${sound.id}`,
+      entityName: sound.name,
+      before: null,
+      after: sound,
+    });
 
-  log.info('Sound added by admin', { synthId: id, sound: sound.id, actorUserId: session.user.id });
-  return successResponse(sound, undefined, { status: 201 });
-}, CATALOGUE_WRITE);
+    log.info('Sound added by admin', {
+      synthId: id,
+      sound: sound.id,
+      actorUserId: session.user.id,
+    });
+    return successResponse(sound, undefined, { status: 201 });
+  },
+  { ...CATALOGUE_READ, writesSharedSettings: true }
+);

@@ -1,8 +1,9 @@
 /**
  * What every catalogue admin route shares (`f-catalogue-admin`): its ownership decision and how it audits a change.
  *
- * The catalogue is product configuration every org reads (GLOBAL_CONFIG_MODELS), so a write is `writesSharedSettings`:
- * at `multi`, only the install org's admins make it.
+ * The catalogue is product configuration every org reads (GLOBAL_CONFIG_MODELS), so a write route passes
+ * `{ ...CATALOGUE_READ, writesSharedSettings: true }`: at `multi`, only the install org's admins make it. The flag is
+ * written at each call site because `scripts/ci/shared-settings-writes.ts` reads it there.
  */
 import type { NextRequest } from 'next/server';
 import { computeChanges, logAdminAction } from '@/lib/orchestration/audit/admin-audit-logger';
@@ -16,8 +17,6 @@ export const CATALOGUE_READ = {
       'The catalogue is product configuration shared by every org (GLOBAL_CONFIG_MODELS); no row belongs to a user, and the guard already limits this to admins.',
   },
 } as const;
-
-export const CATALOGUE_WRITE = { ...CATALOGUE_READ, writesSharedSettings: true } as const;
 
 export type CatalogueEntity = 'synth' | 'synth_sound' | 'synth_lineage' | 'synth_note';
 

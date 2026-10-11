@@ -11,25 +11,28 @@ import { successResponse } from '@/lib/api/responses';
 import { validateQueryParams, validateRequestBody } from '@/lib/api/validation';
 import { getRouteLogger } from '@/lib/api/context';
 import { editNote, NoteEditSchema } from '@/lib/app/catalogue/edit';
-import { auditCatalogue, CATALOGUE_WRITE } from '@/lib/app/catalogue/admin-route';
+import { auditCatalogue, CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 const ParamsSchema = z.object({ noteId: z.string().regex(/^[a-z0-9]{1,64}$/) });
 
-export const PATCH = withAdminAuth<{ noteId: string }>(async (request, session, { params }) => {
-  const log = await getRouteLogger(request);
-  const { noteId } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
-  const body = await validateRequestBody(request, NoteEditSchema);
+export const PATCH = withAdminAuth<{ noteId: string }>(
+  async (request, session, { params }) => {
+    const log = await getRouteLogger(request);
+    const { noteId } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
+    const body = await validateRequestBody(request, NoteEditSchema);
 
-  const { before, after, synthId } = await editNote(noteId, body);
-  const changed = auditCatalogue(request, session.user.id, {
-    action: 'synth_note.update',
-    entityType: 'synth_note',
-    entityId: noteId,
-    entityName: `${synthId ?? 'every panel'}: ${after.title ?? after.target ?? after.kind.toLowerCase()}`,
-    before: { ...before },
-    after: { ...after },
-  });
+    const { before, after, synthId } = await editNote(noteId, body);
+    const changed = auditCatalogue(request, session.user.id, {
+      action: 'synth_note.update',
+      entityType: 'synth_note',
+      entityId: noteId,
+      entityName: `${synthId ?? 'every panel'}: ${after.title ?? after.target ?? after.kind.toLowerCase()}`,
+      before: { ...before },
+      after: { ...after },
+    });
 
-  log.info('Note changed by admin', { noteId, synthId, changed, actorUserId: session.user.id });
-  return successResponse(after);
-}, CATALOGUE_WRITE);
+    log.info('Note changed by admin', { noteId, synthId, changed, actorUserId: session.user.id });
+    return successResponse(after);
+  },
+  { ...CATALOGUE_READ, writesSharedSettings: true }
+);

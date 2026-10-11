@@ -17,7 +17,7 @@ import {
   SoundSlugSchema,
   SynthIdSchema,
 } from '@/lib/app/catalogue/edit';
-import { auditCatalogue, CATALOGUE_WRITE } from '@/lib/app/catalogue/admin-route';
+import { auditCatalogue, CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 const ParamsSchema = z.object({ id: SynthIdSchema, slug: SoundSlugSchema });
 
@@ -45,5 +45,5 @@ export const PATCH = withAdminAuth<{ id: string; slug: string }>(
     });
     return successResponse(after);
   },
-  CATALOGUE_WRITE
+  { ...CATALOGUE_READ, writesSharedSettings: true }
 );
