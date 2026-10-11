@@ -38,6 +38,8 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   '2-xm': () => import('@/lib/app/synths/defs/2-xm'),
   'poly-d': () => import('@/lib/app/synths/defs/poly-d'),
   'pro-800': () => import('@/lib/app/synths/defs/pro-800'),
+  'ems-vcs3': () => import('@/lib/app/synths/defs/ems-vcs3'),
+  'buchla-easel': () => import('@/lib/app/synths/defs/buchla-easel'),
   'ub-xa-d': () => import('@/lib/app/synths/defs/ub-xa-d'),
   'jupiter-4': () => import('@/lib/app/synths/defs/jupiter-4'),
   'jupiter-6': () => import('@/lib/app/synths/defs/jupiter-6'),

@@ -1,0 +1,110 @@
+{
+  "synth": "ems-vcs3",
+  "unusual": [
+    {
+      "target": "matrix",
+      "text": "There are no patch cables and nothing is wired inside: every connection is a pin in this 16 × 16 board, joining an output row to an input column. Each pin is a resistor, so pins in one column add together, the way a mixer would."
+    },
+    {
+      "target": "dests",
+      "text": "Columns I to P are control inputs, each lettered like the knob it adds to (column N adds to the filter FREQUENCY marked N). Most synths call these CV inputs and give each its own socket."
+    },
+    {
+      "target": "osc1.freq",
+      "text": "The pitch dials are slow-motion dials, numbered 0 to 10 for writing a setting down, not in octaves or hertz. Each division is an octave and a half, so small moves make large changes."
+    },
+    {
+      "target": "osc3.freq",
+      "text": "Oscillator 3 is the VCS3’s LFO. It is a full oscillator built about 20 times slower than the other two, so it can also be heard at the top of its range."
+    },
+    {
+      "target": "osc2.shape",
+      "text": "One SHAPE knob changes both outputs: as the square narrows into a pulse, the triangle leans into a ramp. Most synths set pulse width on its own."
+    },
+    {
+      "target": "osc3.shape",
+      "text": "One SHAPE knob changes both outputs: as the square narrows into a pulse, the triangle leans into a ramp. Most synths set pulse width on its own."
+    },
+    {
+      "target": "c.osc1",
+      "text": "The oscillators rise in pitch as their control voltage falls, the opposite of most synths. A falling voltage also raises the filter frequency here (an assumption: the manual does not say)."
+    },
+    {
+      "target": "c.osc2",
+      "text": "The oscillators rise in pitch as their control voltage falls, the opposite of most synths. A falling voltage also raises the filter frequency here (an assumption: the manual does not say)."
+    },
+    {
+      "target": "c.osc3",
+      "text": "The oscillators rise in pitch as their control voltage falls, the opposite of most synths. A falling voltage also raises the filter frequency here (an assumption: the manual does not say)."
+    },
+    {
+      "target": "r.in1",
+      "text": "Controls are not 1 V per octave. Oscillators 1 and 2 move an octave for about 0.32 V through a pin, Oscillator 3 for 0.26 V and the filter for 0.2 V, so one keyboard voltage cannot keep all of them in tune at once."
+    },
+    {
+      "target": "vcf.response",
+      "text": "RESPONSE is EMS’s word for resonance, and the panel calls the whole section FILTER/OSCILLATOR because past about 6 it is a sine oscillator, the purest tone in the instrument."
+    },
+    {
+      "target": "env.off",
+      "text": "The envelope repeats on its own unless OFF is turned past about 6. Most synth envelopes wait for a key; on the VCS3 waiting is the special case, which is why it is so often heard as a rhythmic pulse."
+    },
+    {
+      "target": "env.on",
+      "text": "ON is a hold time at the top of the envelope, like the hold stage some later envelopes have. There is no sustain level: the envelope always falls back to zero."
+    },
+    {
+      "target": "r.trap",
+      "text": "The trapezoid goes negative while the envelope is up and positive while it rests. On an output level it works as an upside-down envelope; on a frequency column, where falling voltages raise the pitch, it works the usual way round."
+    },
+    {
+      "target": "env.sigLevel",
+      "text": "The envelope shaper has its own amplifier: pin a signal into column D and it comes out shaped on row 12. On most synths the envelope only controls a separate VCA."
+    },
+    {
+      "target": "out1.level",
+      "text": "The output LEVEL knob is a control voltage for a VCA, not a volume pot, so the sound only comes in past half way. Pinning a voltage into column O or P adds to it, and can open the channel so far it cannot be shut."
+    },
+    {
+      "target": "out2.level",
+      "text": "The output LEVEL knob is a control voltage for a VCA, not a volume pot, so the sound only comes in past half way. Pinning a voltage into column O or P adds to it, and can open the channel so far it cannot be shut."
+    },
+    {
+      "target": "c.ringB",
+      "text": "Both ring modulator inputs block steady voltages, so a slow signal only gets through while it is changing. The manual uses this for “bowing”: the joystick on one input sounds only while the stick moves."
+    },
+    {
+      "target": "joystick",
+      "text": "Few synths of the time had a joystick. Its two axes are plain voltages on rows 15 and 16, so it can move anything the matrix reaches, not just pitch."
+    }
+  ],
+  "limits": {
+    "intro": "The Mk 1 matrix is modelled pin for pin: all three oscillators with their SHAPE controls, noise with COLOUR, the ring modulator, the filter/oscillator, the repeating envelope shaper with its trapezoid and its own amplifier, the spring reverb with voltage-controlled MIX, the joystick, and both output amplifiers with their voltage-controlled levels, tone controls and pan, in stereo.",
+    "items": [
+      {
+        "title": "The keyboard is an assumption",
+        "text": "A VCS3 has no keyboard. Here the keyboard strip plays the part of an EMS DK1 plugged into the KEYBOARD socket: its pitch voltage arrives on row 8 through INPUT LEVEL CHANNEL 1, scaled so that 5 gives one semitone per key on Oscillators 1 and 2, and each key also triggers the envelope shaper. Input channel 2 (row 9) has nothing plugged into it."
+      },
+      {
+        "title": "Pins are ideal",
+        "text": "Every pin is a standard white pin with exactly the same value, and adding pins does not load the others. On the hardware the matrix is unbuffered, so each extra pin changes the strength of the others slightly, and pin tolerances make two oscillators track differently. The coloured pins (red precision, green attenuating) are not offered."
+      },
+      {
+        "title": "Voltage scaling and polarity",
+        "text": "Control sensitivities come from the manual (0.32, 0.26 and 0.2 V per octave, 0.4 V per doubling of decay, ±2 V for reverb MIX). The manual does not say which way the filter moves; here it follows the oscillators, rising as its voltage falls. How far a voltage moves the output LEVEL is this app’s choice."
+      },
+      {
+        "title": "Circuits are approximated",
+        "text": "The filter is the app’s 24 dB ladder rather than the Mk 1’s 18 dB diode ladder, and its self-oscillation is lifted to match the VCS3’s level. The envelope stages are straight lines. The shape of the Oscillator 1 SHAPE distortion, the pulse widths at each SHAPE setting, the noise colour slopes and the output filter slopes are not documented and are this app’s choices. There is no drift, no noise warm-up, and no reverb boing from knocks or speaker feedback."
+      },
+      {
+        "title": "Panel parts that do nothing here",
+        "text": "The meter and its switch, column A and the SCOPE socket are drawn for reference: the needle does not move. The speaker switches have no effect, because the app plays the panned L and R signal outputs. The rear sockets (microphone and high-level inputs, CONTROL OUTPUTS, headphones) are not modelled."
+      },
+      {
+        "title": "The ATTACK button latches",
+        "text": "On the hardware it is a momentary button that holds the envelope while pressed. Here a click holds it down and a second click lets it go."
+      }
+    ]
+  }
+}

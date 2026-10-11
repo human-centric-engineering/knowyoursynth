@@ -518,7 +518,7 @@ bknob('kbd.porta', 1100, 'red', {
 });
 bjack('j.portaIn', 1243, 1110, 'black', { label: 'input', name: 'PORTAMENTO input', dir: 'in', dest: 'portaIn', amt: 1, add: true,
   help: 'A voltage here shortens the portamento: the more voltage, the quicker the glide.',
-  hear: (v, x) => `${x.src} sets how fast the pitch glides between keys: the more voltage, the quicker the slide.${v['kbd.porta'] <= 0.05 ? ' PORTAMENTO SLOPE is at 0, so there is no glide to shorten. Turn it up.' : ''}` });
+  hear: (v, x) => `${x.src} sets how fast the pitch glides between keys: the more voltage, the quicker the slide.${portaS(v['kbd.porta']) === 0 ? ' PORTAMENTO SLOPE is at 0, so there is no glide to shorten. Turn it up.' : ''}` });
 btext(1243, 1160, 'input', 18);
 btext(1100, 1203, 'PORTAMENTO  SLOPE', 19, { weight: 600 });
 bknob('kbd.arpRate', 1400, 'red', {

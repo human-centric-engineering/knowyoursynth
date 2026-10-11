@@ -28,6 +28,8 @@ import cat from '@/lib/app/synths/defs/cat';
 import xm2 from '@/lib/app/synths/defs/2-xm';
 import polyD from '@/lib/app/synths/defs/poly-d';
 import pro800 from '@/lib/app/synths/defs/pro-800';
+import emsVcs3 from '@/lib/app/synths/defs/ems-vcs3';
+import buchlaEasel from '@/lib/app/synths/defs/buchla-easel';
 import ubXaD from '@/lib/app/synths/defs/ub-xa-d';
 import jupiter4 from '@/lib/app/synths/defs/jupiter-4';
 import jupiter6 from '@/lib/app/synths/defs/jupiter-6';
@@ -57,6 +59,8 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   xm2,
   polyD,
   pro800,
+  emsVcs3,
+  buchlaEasel,
   ubXaD,
   jupiter4,
   jupiter6,

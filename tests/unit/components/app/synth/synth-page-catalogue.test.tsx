@@ -10,7 +10,7 @@
  * @see lib/app/synths/defs/load.ts
  */
 
-import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeAll, beforeEach } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
@@ -53,7 +53,7 @@ const MODULAR = LISTED.filter((id) => getSynthDef(id)?.modular);
  * Listed synths whose panel prints no maker's marks. Every other definition must tag its marks `brand`, so a port that
  * forgot to tag them fails here; a synth with no marks is named here rather than given a tag it has no mark for.
  */
-const UNBRANDED = new Set<string>([]);
+const UNBRANDED = new Set<string>(['ems-vcs3']);
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -65,6 +65,12 @@ beforeAll(() => {
     releasePointerCapture: () => undefined,
   });
 });
+
+// Yield a macrotask after each test, so V8 can free the page it drew. happy-dom holds its nodes through WeakRefs, and
+// V8 keeps a WeakRef's target alive until the microtask queue drains — which, as the runner chains tests on promises,
+// it otherwise never does in this file. Without it every page drawn stays live: ~4 GB over 25 synths, past the heap of
+// a CI worker.
+afterEach(() => new Promise<void>((r) => setTimeout(r)));
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -137,8 +143,9 @@ describe.each(LISTED)('the %s page', (id) => {
     expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
       detail.sounds.map((s) => s.name)
     );
+    // A pin matrix's jacks are its row and column legends.
     const jacks = container.querySelectorAll(
-      '[aria-label$=" input jack"], [aria-label$=" output jack"]'
+      '[aria-label$=" input jack"], [aria-label$=" output jack"], [aria-label$=" matrix row"], [aria-label$=" matrix column"]'
     );
     expect(jacks).toHaveLength(def.jacks.length);
     expect(def.controls.length).toBeGreaterThan(0);
@@ -235,4 +242,28 @@ describe.each(MODULAR)('the %s page’s panel layout', (id) => {
 
 it('switches the layout on every Jupiter, the synths that have one', () => {
   expect(MODULAR).toEqual(expect.arrayContaining(['jupiter-4', 'jupiter-6', 'jupiter-8']));
+});
+
+describe('the VCS3 page’s pin matrix', () => {
+  it('puts a pin in a hole, and the engine hears the new route', async () => {
+    const { def, detail } = await loadPage('ems-vcs3');
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    const m = def.matrix;
+    if (!m) throw new Error('the VCS3 has no matrix');
+    // Row 7 (noise) into column G (the reverb's input): a hole the opening sound leaves empty.
+    const [row, col] = [m.rows.indexOf('r.noise'), m.cols.indexOf('c.rev')];
+    expect([row, col]).toEqual([6, 6]);
+    const route = expect.objectContaining({ src: 'noise', dst: 'revIn' });
+    const before = lastParams(engine.send)?.cables;
+    expect(before).not.toContainEqual(route);
+
+    // The panel's CTM is the identity, so a client point is a point on the faceplate.
+    fireEvent.click(screen.getByRole('grid'), {
+      clientX: m.x + col * m.pitch,
+      clientY: m.y + row * m.pitch,
+    });
+
+    const after = lastParams(engine.send)?.cables;
+    expect(after).toEqual([...(Array.isArray(before) ? before : []), route]);
+  });
 });

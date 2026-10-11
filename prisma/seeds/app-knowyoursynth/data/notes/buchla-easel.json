@@ -1,0 +1,98 @@
+{
+  "synth": "buchla-easel",
+  "unusual": [
+    {
+      "target": "lpg",
+      "text": "There is no separate filter and VCA: a lowpass gate is both, controlled by one LEVEL. Its light-dependent resistor (a vactrol) is quick to open and slow to close, which is what gives Easel notes their natural, plucked fall."
+    },
+    {
+      "target": "lpg1.mode",
+      "text": "Combination is the classic lowpass-gate setting: quieter is also duller, as with a plucked string. Most synths need a filter envelope and an amplifier envelope to do this."
+    },
+    {
+      "target": "cosc.timbre",
+      "text": "TIMBRE adds harmonics by folding the wave back on itself, the opposite of a filter, which takes them away. It is the Easel’s brightness control."
+    },
+    {
+      "target": "lpg1.levelCv",
+      "text": "Every voltage-controlled setting has two sliders: the offset (the setting with nothing patched) and this processing slider, which scales whatever is patched into the black jack below. Most synths call the second one a CV amount or attenuator."
+    },
+    {
+      "target": "cosc.pitchCv",
+      "text": "This processing slider is the scaling of the PITCH input. There is no fixed volt-per-octave: you set the interval yourself, so the same sequence can play semitones, octaves or microtones."
+    },
+    {
+      "target": "env.sustain",
+      "text": "Not a sustain level: on the Easel the middle slider is a time, how long the envelope holds at the top in transient mode. The envelope always rises to full."
+    },
+    {
+      "target": "env.attack",
+      "text": "The time sliders are printed in seconds and run upside down: the top is the fastest (2 ms) and the bottom the slowest (10 seconds)."
+    },
+    {
+      "target": "pulser",
+      "text": "The pulser does the job of an LFO and a clock, but it is a one-shot ramp: each trigger starts a falling ramp, and its end sends a pulse. Set to self, it restarts itself."
+    },
+    {
+      "target": "mosc",
+      "text": "The modulation oscillator is a second oscillator rather than an LFO: in its high range it does audio-rate FM, AM and ring modulation, and it can be heard on its own through Gate 2."
+    },
+    {
+      "target": "mosc.index",
+      "text": "Modulation depth is called the index, as in FM theory: .2 is a gentle vibrato, 1.0 full modulation."
+    },
+    {
+      "target": "cosc.kbd",
+      "text": "The oscillators only follow the keyboard through these switches. The lowest key plays the PITCH slider’s note, and keys count up from there."
+    },
+    {
+      "target": "cosc.sign",
+      "text": "Polarity flips the PITCH input, so a rising voltage can lower the pitch. Most synths would need an inverter for this."
+    },
+    {
+      "target": "j.env1",
+      "text": "Jacks are coded by colour: orange envelope, yellow pulser, blue sequencer, white random, violet pressure, black for inputs. Banana plugs stack, so one output can feed several inputs at once."
+    },
+    {
+      "target": "kbdin",
+      "text": "Controls travel on banana jacks and audio on mini jacks, and the two are kept apart: a control voltage cannot be patched into an audio input by mistake."
+    },
+    {
+      "target": "presets",
+      "text": "The touch keyboard has no moving parts. Its preset plates are a second, small keyboard of four voltages you set yourself, often used to switch a setting or transpose at a touch."
+    },
+    {
+      "target": "lpg.src",
+      "text": "At series, Gate 1 feeds Gate 2 and both are heard. The gates turn their signals upside down, so mixing both channels partly cancels: an Easel trick for thin, phased sounds."
+    }
+  ],
+  "limits": {
+    "intro": "The 208C and the strip above the 218e keyboard are modelled from the panel: the complex oscillator with waveshape mixing and TIMBRE, the modulation oscillator with FM, AM and balanced modulation, both lowpass gates in their three modes and in series, the pulser, the five-stage sequencer with its pulse switches, the four random voltages, the envelope in sustained, transient and self modes with its time inputs, the inverter, the preamp with its noise and envelope detector, spring reverberation, and the 218e’s pitch, pulse, pressure, portamento, arpeggiator and four preset plates.",
+    "items": [
+      {
+        "title": "Built from a photo and the 1974 manual",
+        "text": "The 208C and 218e are later versions of the Easel than its manual describes. Controls are modelled from what the panel prints, using the original manual where the two agree. The ranges printed on this panel (33 Hz to 3 kHz for PITCH, 0.4 to 33 Hz and 33 Hz to 3 kHz for the modulation oscillator, 2 ms to 10 s for times) are used. The depths of the processing sliders, the envelope time inputs and the portamento input, the timbre folding curve, the spike wave and the vactrol response times are this app’s choices."
+      },
+      {
+        "title": "The keyboard is wired in",
+        "text": "Inside the case the 218e’s pulse, pressure and pitch are taken to reach the 208C’s KEYBOARD INPUTS without cords, so the keys play the oscillators whose KEYBOARD switches are on. A cord into any of those three jacks replaces that connection. Pressure comes from how hard a key is struck, held while it is down; there is no pressure from a resting finger."
+      },
+      {
+        "title": "Program cards and remote control",
+        "text": "There is no program card or program interface: the CONTROL switch, from card, to card1, to card2 and the program socket do nothing. The Easel is always played from the front panel."
+      },
+      {
+        "title": "Jacks that are not modelled",
+        "text": "w.s., m.o.freq or seq s., phones, the arpeggiator’s two inputs, the preset pulse jack and the two unlabelled jacks beside vel. are drawn but carry nothing: the panel does not say clearly enough what they do. MONITOR LEVEL has no effect, because the app plays the master outputs."
+      },
+      {
+        "title": "The 218e’s touch keyboard",
+        "text": "The touch keys and the arpeggio plate are not drawn: the app’s keyboard plays the 218e. The arpeggiator steps through the keys you hold at its RATE; it does not sync to anything, and the reset button, trn, rem en and pm do nothing. With ADD TO PITCH at octaves the four preset plates choose registers 0 to 3 octaves up."
+      },
+      {
+        "title": "Pulser modes",
+        "text": "The 208C prints sustnd, trans and off-ext for the pulser. Here sustained repeats the pulser while a key is held, transient gives one ramp per trigger, and off-ext stops it. There is no external clock input."
+      }
+    ]
+  }
+}
