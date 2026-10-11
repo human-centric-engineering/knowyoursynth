@@ -15,6 +15,7 @@ import { logger } from '@/lib/logging';
 import type { Lineage, Preset } from '@/lib/app/synths/contract';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
+import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import {
   LimitSchema,
   LineageEntrySchema,
@@ -30,6 +31,8 @@ export interface CatalogueSynth {
   year: number;
   heritage: string;
   summary: string;
+  /** Which design the panel draws (D11): `faithful` shows the maker's marks, `neutral` leaves them out. */
+  design: SynthDesign;
   /** The definition's current version; a sound saved now records it. */
   definitionVersion: number;
   /**
@@ -64,6 +67,7 @@ const synthColumns = {
   year: true,
   heritage: true,
   summary: true,
+  design: true,
   _count: { select: { sounds: true } },
 } satisfies Prisma.SynthSelect;
 
@@ -78,6 +82,7 @@ function toCatalogueSynth(row: SynthRow, def: AppSynthDef): CatalogueSynth {
     year,
     heritage,
     summary,
+    design: designFromDb(row.design),
     definitionVersion: def.version,
     soundCount: row._count.sounds,
   };

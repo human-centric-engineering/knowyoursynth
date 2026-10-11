@@ -42,12 +42,29 @@ model Synth {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+  /// Which design the panel draws (D11). The seed never writes these columns, and changing them does not set
+  /// `editedAt`: they are not the descriptive content the seed reconciles.
+  design             PanelDesign @default(NEUTRAL)
+  /// The maker's approval to show their marks: who gave it (the vendor-side person, not a user of this app), when, and
+  /// a note or a reference to the correspondence. Required before `design` is FAITHFUL; kept when it goes back to
+  /// NEUTRAL. The admin who recorded it is in the audit log.
+  designApprovedBy   String?
+  designApprovedAt   DateTime?
+  designApprovalNote String?     @db.Text
+
   sounds  SynthSound[]
   lineage SynthLineage?
   notes   SynthNote[]
 
   @@index([listed, order])
   @@map("synth")
+}
+
+enum PanelDesign {
+  /// The synth's own panel without the maker's logos, wordmarks and badges. The default.
+  NEUTRAL
+  /// The panel as the hardware looks, maker's marks included. Needs a recorded approval.
+  FAITHFUL
 }
 
 /// A library sound, built step by step on top of the synth's init patch
