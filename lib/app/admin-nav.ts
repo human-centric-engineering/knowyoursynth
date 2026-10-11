@@ -11,8 +11,25 @@
  * client-safe — registrar + icon imports only, no server code — and use a
  * `title` distinct from the core sections.
  *
+ * Know Your Synth fills it with one "Synths" section, for the pages that look after the catalogue. Designs is the first
+ * (`f-panel-designs`); the catalogue editor (`f-catalogue-admin`) joins the same section rather than adding its own.
+ *
  * Full guide + example: CUSTOMIZATION.md §4 · lib/admin-nav/registry.ts
  */
+import { Palette } from 'lucide-react';
+
+import { registerNavSection } from '@/lib/admin-nav/registry';
+
 export function initAppNav(): void {
-  // No app nav sections by default.
+  registerNavSection({
+    title: 'Synths',
+    items: [
+      {
+        href: '/admin/synths',
+        label: 'Designs',
+        icon: Palette,
+        description: "Each synth's panel design, and the maker's approval to show their marks",
+      },
+    ],
+  });
 }
