@@ -13,6 +13,8 @@
     { "id": "wasp-deluxe", "order": 10, "listed": true },
     { "id": "poly-d", "order": 11, "listed": true },
     { "id": "pro-800", "order": 12, "listed": true },
+    { "id": "ems-vcs3", "order": 13, "listed": true },
+    { "id": "buchla-easel", "order": 14, "listed": true },
     { "id": "tb-303", "order": 15, "listed": true },
     { "id": "td-3", "order": 16, "listed": true },
     { "id": "jupiter-4", "order": 17, "listed": true },
