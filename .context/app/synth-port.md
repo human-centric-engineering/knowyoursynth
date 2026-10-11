@@ -113,7 +113,9 @@ Open it and look:
 - a synth with a `modular` layout switches between Modular and Long, and both draw every control.
 
 `tests/unit/components/app/synth/synth-page-catalogue.test.tsx` opens every synth the catalogue
-lists, so a port gets its render test by being listed: the page shows every sound and jack, plays
-the first and last sound as the definition says, and draws the neutral panel without the marks
-tagged `brand`. A synth with a `modular` layout is also opened as modules, switched to Long and
-back. `tests/helpers/synth-detail.ts` builds any synth's detail through the real read layer.
+lists, so a port gets its render test by being listed: the page shows every sound, draws every
+control the first sound shows and every jack, plays the first and last sound as the definition
+says, and draws the neutral panel without the marks tagged `brand`. A synth with a `modular`
+layout is also opened as modules, switched to Long and back, with every control drawn in each.
+The test finds a control by its accessible name, not where it sits, so overlapping or misplaced
+controls still need the look above. `tests/helpers/synth-detail.ts` builds any synth's detail through the real read layer.
