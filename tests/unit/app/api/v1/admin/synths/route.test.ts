@@ -294,6 +294,18 @@ describe('PATCH /api/v1/admin/synths/[id]/design', () => {
     expect(mockPrisma.synth.findUnique).not.toHaveBeenCalled();
   });
 
+  it("at multi, refuses an admin acting in another org: the catalogue is every org's", async () => {
+    mockEnv.TENANCY_MODE = 'multi';
+    const other = session('ADMIN');
+    mockGetSession.mockResolvedValue({
+      ...other,
+      session: { ...other.session, activeOrgId: 'cmorg000000000000000other' },
+    });
+    const res = await patch({ design: 'neutral' });
+    expect(res.status).toBe(403);
+    expect(mockPrisma.synth.update).not.toHaveBeenCalled();
+  });
+
   it('is admin only', async () => {
     mockGetSession.mockResolvedValue(session('USER'));
     expect((await patch({ design: 'neutral' })).status).toBe(403);

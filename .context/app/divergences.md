@@ -122,8 +122,8 @@ the same PR**, and each row names what deletes it.
 ### The reserved-tier test, pinned to our app models
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
-- **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's five
-  declarations (four models and an enum) instead of none, under a `FORK` comment.
+- **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
+  declarations (four models and two enums) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.

@@ -27,38 +27,42 @@ const CATALOGUE_ADMIN = {
 /** A synth id as the registry writes them (`model-d`, `2-xm`). */
 const ParamsSchema = z.object({ id: z.string().regex(/^[a-z0-9-]{1,64}$/) });
 
-export const PATCH = withAdminAuth<{ id: string }>(async (request, session, { params }) => {
-  const log = await getRouteLogger(request);
-  const { id } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
-  const body = await validateRequestBody(request, SynthDesignInputSchema);
+export const PATCH = withAdminAuth<{ id: string }>(
+  async (request, session, { params }) => {
+    const log = await getRouteLogger(request);
+    const { id } = validateQueryParams(new URLSearchParams(await params), ParamsSchema);
+    const body = await validateRequestBody(request, SynthDesignInputSchema);
 
-  const result = await setSynthDesign(id, body);
-  if (!result) throw new NotFoundError('Synth not found');
-  const { before, after } = result;
+    const result = await setSynthDesign(id, body);
+    if (!result) throw new NotFoundError('Synth not found');
+    const { before, after } = result;
 
-  const changes = computeChanges(
-    { design: before.design, approval: before.approval },
-    { design: after.design, approval: after.approval }
-  );
-  if (changes) {
-    logAdminAction({
-      userId: session.user.id,
-      action: 'synth.design.update',
-      entityType: 'synth',
-      entityId: id,
-      entityName: `${after.maker} ${after.name}`,
-      changes,
-      clientIp: getClientIP(request),
+    const changes = computeChanges(
+      { design: before.design, approval: before.approval },
+      { design: after.design, approval: after.approval }
+    );
+    if (changes) {
+      logAdminAction({
+        userId: session.user.id,
+        action: 'synth.design.update',
+        entityType: 'synth',
+        entityId: id,
+        entityName: `${after.maker} ${after.name}`,
+        changes,
+        clientIp: getClientIP(request),
+      });
+    }
+
+    log.info('Synth design changed by admin', {
+      synthId: id,
+      from: before.design,
+      to: after.design,
+      changed: changes !== null,
+      actorUserId: session.user.id,
     });
-  }
 
-  log.info('Synth design changed by admin', {
-    synthId: id,
-    from: before.design,
-    to: after.design,
-    changed: changes !== null,
-    actorUserId: session.user.id,
-  });
-
-  return successResponse(after);
-}, CATALOGUE_ADMIN);
+    return successResponse(after);
+    // A `Synth` row is read by every org, so at `multi` only the install org's admins change it.
+  },
+  { ...CATALOGUE_ADMIN, writesSharedSettings: true }
+);
