@@ -42,15 +42,9 @@ if (!id || !Number.isInteger(version) || version < 1) {
   process.exit(1);
 }
 if (!fs.existsSync(path.join(src, 'synths', 'unusual', `${file}.js`))) {
-  console.error(`no src/synths/unusual/${file}.js`);
+  console.error(`no src/synths/unusual/${file}.js (if the synth's files are not named after its id, pass --file=<name>)`);
   process.exit(1);
 }
-// The Moog 900 systems keep most of their notes in src/synths/moog900/unusual.js, written once per module type, and
-// their own file holds only extras. `forRack()` is how the prototype picks the shared notes a system's modules have,
-// so the export calls it too, and each system's rows hold every note it shows. Their cables (moog900/cables.js) and
-// lineage (moog900/lineage.js) are already spread into the sounds and the lineage the definition carries.
-const sharedNotes = fs.readFileSync(path.join(src, 'synths', `${file}.js`), 'utf8').includes('@/synths/moog900/unusual.js');
-
 const entry = `
 export { SYNTHS } from '@/synths/index.js';
 export { SHARED, limitsFor } from '@/lib/limits.js';
@@ -76,8 +70,25 @@ if (order < 0) {
   process.exit(1);
 }
 const def = SYNTHS[order];
+// The Moog 900 systems keep most of their notes in src/synths/moog900/unusual.js, written once per module type, and
+// their own file holds only extras. `forRack()` is how the prototype picks the shared notes a system's modules have,
+// so the export calls it too, and each system's rows hold every note it shows. Their cables (moog900/cables.js) and
+// lineage (moog900/lineage.js) are already spread into the sounds and the lineage the definition carries.
+// The prototype's annotate() has already put each note on its control, jack or area, so those are what the export
+// must match: a system shows notes its own file lacks, and nothing its own file has may go missing.
+const items = [...def.controls, ...def.jacks, ...(def.areas ?? [])];
+const shown = new Set(items.filter((x) => x.unusual).map((x) => x.id));
+const sharedNotes = [...shown].some((target) => !(target in mod.unusual));
 // forRack() reads only the controls, jacks and areas, which the definition carries.
 const unusual = sharedNotes ? forRack(def, mod.unusual) : mod.unusual;
+const exported = Object.keys(unusual);
+const missing = [...shown].filter((target) => !(target in unusual));
+// forRack() drops a note whose id the rack lacks, so a mistyped id in the system's own file would vanish without this.
+const unknown = [...new Set([...exported, ...Object.keys(mod.unusual)])].filter((target) => !shown.has(target));
+if (missing.length || unknown.length) {
+  console.error(`${id}: unusual notes do not match the panel (missing ${missing.join(', ') || 'none'}; not on it ${unknown.join(', ') || 'none'})`);
+  process.exit(1);
+}
 const limits = limitsFor(id);
 if (!limits) {
   console.error(`no entry for "${id}" in src/lib/limits.js`);
