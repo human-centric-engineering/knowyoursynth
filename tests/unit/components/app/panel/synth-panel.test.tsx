@@ -16,13 +16,7 @@
 
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { readFileSync } from 'node:fs';
-import {
-  NEUTRAL_PANEL,
-  SynthPanel,
-  neutralDef,
-  neutralTheme,
-} from '@/components/app/panel/synth-panel';
+import { SynthPanel, neutralDef } from '@/components/app/panel/synth-panel';
 import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import {
   MAP_OFF,
@@ -174,32 +168,31 @@ describe('design prop (D11)', () => {
     expect(container.querySelectorAll('[aria-label$=" jack"]')).toHaveLength(branded.jacks.length);
   });
 
-  it("neutral draws the neutral colours, lettering and metal cheeks; faithful keeps the synth's own", () => {
-    // Lettered in `helv`, so the neutral `din` lettering is a change the test can see.
-    const helv: SynthDef = { ...branded, theme: { ...branded.theme, font: 'helv' } };
-    const neutral = render(
-      <SynthPanel {...props({ def: helv, values: helv.init, design: 'neutral' })} />
-    ).container;
+  it("neutral keeps the synth's own colours, lettering and cheeks (D11 revised)", () => {
+    // Lettered in `helv` on a light face, so a swap to any house style would show.
+    const light: SynthDef = {
+      ...branded,
+      theme: {
+        ...branded.theme,
+        font: 'helv',
+        panel: '#d3d3cf',
+        panel2: '#c4c4c0',
+        ink: '#262626',
+      },
+    };
     const face = (c: HTMLElement) =>
       [...c.querySelectorAll('#kysFace stop')].map((st) => st.getAttribute('stop-color'));
-    expect(face(neutral)).toEqual([NEUTRAL_PANEL.panel, NEUTRAL_PANEL.panel2]);
-    expect(neutral.querySelector('rect[fill="url(#kysWood)"]')).toBeNull();
-    expect(neutral.querySelectorAll('rect[fill="url(#kysMetal)"]')).toHaveLength(2);
-    const labels = [...neutral.querySelectorAll('text')].filter(
-      (t) => t.getAttribute('fill') === NEUTRAL_PANEL.ink
-    );
-    expect(labels.length).toBeGreaterThan(0);
-    expect(labels[0].getAttribute('style')).toContain('Barlow Semi Condensed');
-
-    const faithful = render(
-      <SynthPanel {...props({ def: helv, values: helv.init, design: 'faithful' })} />
-    ).container;
-    expect(face(faithful)).toEqual([helv.theme.panel, helv.theme.panel2]);
-    expect(faithful.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
-    const faithfulLabel = [...faithful.querySelectorAll('text')].find(
-      (t) => t.getAttribute('fill') === helv.theme.ink
-    );
-    expect(faithfulLabel?.getAttribute('style')).toContain('Archivo Narrow');
+    for (const design of ['neutral', 'faithful'] as const) {
+      const c = render(
+        <SynthPanel {...props({ def: light, values: light.init, design })} />
+      ).container;
+      expect(face(c)).toEqual(['#d3d3cf', '#c4c4c0']);
+      expect(c.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
+      const label = [...c.querySelectorAll('text')].find(
+        (t) => t.getAttribute('fill') === '#262626'
+      );
+      expect(label?.getAttribute('style')).toContain('Archivo Narrow');
+    }
   });
 
   it('neutral leaves out the brand marks on the outline view too', () => {
@@ -229,16 +222,14 @@ describe('design prop (D11)', () => {
     }
   });
 
-  it("neutral picks the heat glow for the neutral faceplate, not the synth's own", () => {
-    // A red faceplate takes the amber-to-white ramp; the neutral faceplate is not red, so it takes yellow-to-red.
+  it("neutral picks the heat glow for the synth's own faceplate, as faithful does", () => {
+    // A red faceplate takes the amber-to-white ramp in both designs: neutral keeps the face colour.
     const red: SynthDef = { ...branded, theme: { ...branded.theme, panel: '#c0281e' } };
     const knob = red.controls.find((c) => c.type === 'knob')?.id ?? '';
     mapStore.set({ ...MAP_OFF, heat: { [knob]: 1 }, ranked: [knob] });
-    const faithful = html({ def: red, values: red.init, heatOn: true });
-    const neutral = html({ def: red, values: red.init, heatOn: true, design: 'neutral' });
-    expect(faithful).toContain('rgb(255 255 255)');
-    expect(neutral).not.toContain('rgb(255 255 255)');
-    expect(neutral).toContain('rgb(255 56 40)');
+    expect(html({ def: red, values: red.init, heatOn: true, design: 'neutral' })).toContain(
+      'rgb(255 255 255)'
+    );
   });
 });
 
@@ -252,48 +243,6 @@ describe('neutralDef', () => {
     });
     expect(cased.layout?.brand).toBe('Model D');
     expect(neutralDef(cased).layout?.brand).toBe('');
-  });
-});
-
-describe('NEUTRAL_PANEL', () => {
-  it('matches the dark consumer palette in app/brand-theme.css', () => {
-    const css = readFileSync('app/brand-theme.css', 'utf8');
-    const dark = css.slice(css.search(/^\[data-surface='consumer'\]\.dark \{/m));
-    const role = (name: string) =>
-      new RegExp(`--kys-${name}:\\s*(#[0-9a-f]{6})`, 'i').exec(dark)?.[1];
-    expect({ panel: role('raised'), panel2: role('surface'), ink: role('text') }).toEqual(
-      NEUTRAL_PANEL
-    );
-  });
-});
-
-describe('neutralTheme', () => {
-  it('replaces colours, lettering and cheeks, and keeps the structural flags', () => {
-    const t = neutralTheme({
-      panel: '#123456',
-      panel2: '#000000',
-      ink: '#ff0000',
-      font: 'helv',
-      cheeks: 'wood',
-      cheekW: 52,
-      tabs: true,
-      knobRing: 'dots',
-      jack: 'black',
-    });
-    expect(t).toEqual({
-      ...NEUTRAL_PANEL,
-      font: 'din',
-      weight: 500,
-      cheeks: 'metal',
-      cheekW: 52,
-      tabs: true,
-      knobRing: 'dots',
-      jack: 'black',
-    });
-  });
-
-  it('adds no cheeks to a synth that has none', () => {
-    expect(neutralTheme({ ...portedModelD.theme, cheeks: 'none' }).cheeks).toBe('none');
   });
 });
 

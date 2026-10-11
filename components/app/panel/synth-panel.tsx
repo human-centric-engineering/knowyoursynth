@@ -52,46 +52,25 @@ import {
   useStore,
 } from '@/components/app/synth/stores';
 import type { CableFocus } from '@/components/app/synth/stores';
-import type { ControlValues, PatchCable, SynthDef, Theme } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 
 /** Which end of a cable: the output plug (`from`) or the input plug (`to`). */
 export type CableEnd = 'from' | 'to';
 
 /**
- * How the panel is styled (D11). `faithful` draws the hardware as it looks. `neutral` draws the same layout, controls
- * and jacks in one house style for every synth, and leaves out every `brand` decor item (logos, wordmarks, badges).
+ * How the panel is styled (D11, revised 2026-10-11). `faithful` draws the hardware as it looks. `neutral` draws the
+ * same panel, in its own colours and lettering, without the maker's marks: every `brand` decor item (logos,
+ * wordmarks, badges) and the modular case's maker and model plates are left out.
  */
 export type PanelDesign = 'faithful' | 'neutral';
 
 /**
- * The neutral design's faceplate colours: the consumer palette's dark roles (`--kys-raised`, `--kys-surface`,
- * `--kys-text` under `[data-surface='consumer'].dark` in `app/brand-theme.css`). Copied as values, not `var()`,
- * because SVG presentation attributes do not reliably resolve custom properties. Change them with the palette.
- */
-export const NEUTRAL_PANEL = { panel: '#222630', panel2: '#191c23', ink: '#ece9e2' } as const;
-
-/**
- * A synth's theme in the neutral design: neutral colours, the panel's own `din` lettering and metal cheeks in place
- * of wood. The structural flags (label plates, knob rings, jack and button styles) stay, so the panel reads the same.
- */
-export function neutralTheme(theme: Theme): Theme {
-  return {
-    ...theme,
-    ...NEUTRAL_PANEL,
-    font: 'din',
-    weight: 500,
-    cheeks: theme.cheeks === 'none' ? 'none' : 'metal',
-  };
-}
-
-/**
- * The definition as the neutral design draws it: the neutral theme, no `brand` decor, and no maker or model name on
- * the modular case's plates. Every consumer of the faceplate's look (decor, heat glow, case) reads this, not `def`.
+ * The definition as the neutral design draws it: no `brand` decor, and no maker or model name on the modular case's
+ * plates. Every consumer of the faceplate's look (decor, case) reads this, not `def`.
  */
 export function neutralDef(def: SynthDef): SynthDef {
   return {
     ...def,
-    theme: neutralTheme(def.theme),
     decor: def.decor.filter((d) => !d.brand),
     layout: def.layout && { ...def.layout, brand: '' },
   };
