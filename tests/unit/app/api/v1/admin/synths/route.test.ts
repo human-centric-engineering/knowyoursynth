@@ -90,9 +90,7 @@ const APPROVED = {
 let stored: Row;
 
 const get = () =>
-  GET(new Request('http://localhost/api/v1/admin/synths') as unknown as NextRequest, {
-    params: Promise.resolve({}),
-  });
+  GET(new Request('http://localhost/api/v1/admin/synths') as unknown as NextRequest);
 const patch = (body: unknown, id = 'model-d') =>
   PATCH(
     new Request(`http://localhost/api/v1/admin/synths/${id}/design`, {
