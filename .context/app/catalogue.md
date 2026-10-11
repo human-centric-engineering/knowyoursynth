@@ -35,9 +35,12 @@ The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
   the synth has. One problem anywhere and it throws with the whole list.
 - **A re-run writes nothing.** JSON columns are compared by value, because `jsonb` does not keep
   key order.
-- **A row with `editedAt` set is an admin's**, and the seed never writes it again. No admin page
-  exists yet (`f-catalogue`), so until one does, **an edit made by hand (Prisma Studio, SQL) must
-  set `editedAt` too**, or the next seed run that finds the row different will put it back.
+- **A row with `editedAt` set is an admin's**, and the seed never writes it again. The admin API
+  sets it (below). **An edit made by hand (Prisma Studio, SQL) must set `editedAt` too**, or the
+  next seed run that finds the row different will put it back.
+- **Placement is set once.** A synth's `listed` and `order`, and a sound's `order`, are written
+  when the seed creates the row and never after, so an admin's order and hiding survive a re-seed
+  without marking the row edited. Reordering a synths file once its synths are seeded does nothing.
 - **It never deletes.** Retiring a sound is an admin's act.
 
 The seed re-runs when its hash changes, and the hash takes in the data files, the loader, the
@@ -46,6 +49,38 @@ seed logic, the definitions and the validator. **After pulling a change to any o
 
 `npm run check:synths <id>` plays a ported synth's sounds from the same seed data, so the
 baseline check covers exactly what the seed writes.
+
+## How admins edit it
+
+The admin API (`f-catalogue-admin`) is thin routes over `lib/app/catalogue/edit.ts`. All are
+admin only, and every write is `writesSharedSettings` (at `multi`, install-org admins only).
+
+| Route                                         | Does                                                                    |
+| --------------------------------------------- | ----------------------------------------------------------------------- |
+| `GET /api/v1/admin/synths`                    | Every synth, hidden ones included: design, content columns, counts.     |
+| `PUT /api/v1/admin/synths/order`              | The whole catalogue order, every synth once.                            |
+| `GET /api/v1/admin/synths/:id`                | One synth with every stored sound (and what stops it being served).     |
+| `PATCH /api/v1/admin/synths/:id`              | Name, maker, year, heritage, summary, `listed`.                         |
+| `POST /api/v1/admin/synths/:id/sounds`        | A new sound, at the end of the library, on the current definition.      |
+| `PUT /api/v1/admin/synths/:id/sounds/order`   | The library order, every sound once.                                    |
+| `PATCH /api/v1/admin/synths/:id/sounds/:slug` | Any field of a sound but its id, the lesson steps included.             |
+| `PUT /api/v1/admin/synths/:id/lineage`        | The whole lineage (the seed file's shape, less `synth`).                |
+| `POST /api/v1/admin/synths/:id/notes`         | An "Unusual on…" note on one of the synth's controls, jacks or areas.   |
+| `PATCH /api/v1/admin/synth-notes/:noteId`     | A note's text, or a limit's title. Shared limits too, so not per synth. |
+
+The rules, each tested in `tests/unit/app/api/v1/admin/synths/catalogue-edit.test.ts`:
+
+- **Checked as the seed checks.** A sound edit is merged into the stored sound and the whole goes
+  through `validatePreset`; a refusal is a 400 whose `details.errors` names each control or jack
+  at fault, in the same shape as any other invalid body. A note's target is checked with
+  `noteTargets`. A sound on an older definition version cannot be edited until a mapping exists.
+- **Content writes set `editedAt`; placement does not.** Reordering and `listed` leave it alone.
+  An edit that changes nothing writes nothing, so the row stays the seed's.
+- **Every change is audited** in the admin audit log, entity types `synth`, `synth_sound`,
+  `synth_lineage` and `synth_note`, with before and after. The audit page's type filter is a
+  fixed list in a platform file, so these show under "All types".
+- **A sound's id never changes**, and neither does what a note is about. Removing a sound is not
+  possible yet: the seed recreates a missing row, so it needs a retired flag first.
 
 ## How it is read
 

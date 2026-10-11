@@ -1,5 +1,5 @@
 /**
- * Unit Tests: GET /api/v1/admin/synths and PATCH /api/v1/admin/synths/[id]/design (f-panel-designs t-27)
+ * Unit Tests: GET /api/v1/admin/synths (designs and content counts, t-27/t-30) and PATCH /api/v1/admin/synths/[id]/design (f-panel-designs t-27)
  *
  * Real `withAdminAuth` and the real `lib/app/catalogue/designs.ts`, over a mocked Prisma whose `$transaction` runs the
  * callback against the same mock. Pins: admin only; every synth listed, unlisted ones included; `faithful` refused
@@ -131,9 +131,24 @@ beforeEach(() => {
 
 describe('GET /api/v1/admin/synths', () => {
   it('lists every synth, unlisted and unplayable ones included, with its design and approval', async () => {
+    // One query reads designs and one reads content; the mock answers both with every column.
+    const content = {
+      year: 2022,
+      heritage: 'Minimoog',
+      summary: 'A summary.',
+      editedAt: null,
+      lineage: null,
+      _count: { sounds: 0, notes: 0 },
+    };
     mockPrisma.synth.findMany.mockResolvedValue([
-      synthRow({ design: 'FAITHFUL', ...APPROVED }),
-      synthRow({ id: 'no-such-synth', name: 'Gone', listed: false, order: 2 }),
+      { ...synthRow({ design: 'FAITHFUL', ...APPROVED }), ...content },
+      {
+        ...synthRow({ id: 'no-such-synth', name: 'Gone', listed: false, order: 2 }),
+        ...content,
+        lineage: { synthId: 'no-such-synth' },
+        _count: { sounds: 4, notes: 2 },
+        editedAt: new Date('2026-10-01T00:00:00.000Z'),
+      },
     ]);
 
     const res = await get();
@@ -153,6 +168,11 @@ describe('GET /api/v1/admin/synths', () => {
           approvedAt: '2026-09-01',
           note: 'Email of 1 Sep',
         },
+        year: 2022,
+        heritage: 'Minimoog',
+        summary: 'A summary.',
+        editedAt: null,
+        counts: { sounds: 0, notes: 0, lineage: false },
       },
       {
         id: 'no-such-synth',
@@ -163,10 +183,16 @@ describe('GET /api/v1/admin/synths', () => {
         playable: false,
         design: 'neutral',
         approval: null,
+        year: 2022,
+        heritage: 'Minimoog',
+        summary: 'A summary.',
+        editedAt: '2026-10-01T00:00:00.000Z',
+        counts: { sounds: 4, notes: 2, lineage: true },
       },
     ]);
     // No `listed` filter: the admin sees the whole catalogue.
-    expect(mockPrisma.synth.findMany.mock.calls[0][0]).not.toHaveProperty('where');
+    for (const [args] of mockPrisma.synth.findMany.mock.calls)
+      expect(args).not.toHaveProperty('where');
   });
 
   it('is admin only', async () => {

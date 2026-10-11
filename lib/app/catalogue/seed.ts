@@ -10,6 +10,9 @@
  * - **Idempotent.** A row whose columns already match is not written, so a re-run touches nothing and `updatedAt`
  *   stays put. JSON columns are compared by value, not key order: Postgres `jsonb` does not keep the order it was given.
  * - **Operator-owned once edited.** A row with `editedAt` set has been changed by an admin and is never written again.
+ * - **Placement is set once.** A synth's `listed` and `order`, and a sound's `order`, are written when the row is created
+ *   and never after. An admin reorders and hides without setting `editedAt` (`lib/app/catalogue/edit.ts`), so the seed
+ *   keeps updating the row's content while leaving its place alone.
  * - **Never deletes.** A row the data no longer has stays, so an empty or partial source cannot empty a table. Retiring
  *   content is an admin's act.
  *
@@ -301,9 +304,15 @@ async function reconcile<Row extends object>(
   keyOf: (row: Row) => string,
   existing: Map<string, Record<string, unknown> & { editedAt: Date | null }>,
   create: (row: Row) => Promise<unknown>,
-  update: (row: Row) => Promise<unknown>
+  update: (row: Row) => Promise<unknown>,
+  /** Columns written on create only: neither compared nor updated after. */
+  placement: readonly (keyof Row)[] = []
 ): Promise<SeedCounts> {
   const c = counts();
+  const content = (row: Row): Row =>
+    Object.fromEntries(
+      Object.entries(row).filter(([column]) => !placement.includes(column as keyof Row))
+    ) as Row;
   for (const row of planned) {
     const current = existing.get(keyOf(row));
     if (!current) {
@@ -311,10 +320,10 @@ async function reconcile<Row extends object>(
       c.created++;
     } else if (current.editedAt) {
       c.edited++;
-    } else if (matches(current, row)) {
+    } else if (matches(current, content(row))) {
       c.unchanged++;
     } else {
-      await update(row);
+      await update(content(row));
       c.updated++;
     }
   }
@@ -339,7 +348,8 @@ export async function seedCatalogue(
     (r) => r.id,
     byKey(await prisma.synth.findMany({ where: { id: { in: synthIds } } }), (r) => r.id),
     (data) => prisma.synth.create({ data }),
-    ({ id, ...data }) => prisma.synth.update({ where: { id }, data })
+    ({ id, ...data }) => prisma.synth.update({ where: { id }, data }),
+    ['listed', 'order']
   );
 
   const sounds = await reconcile(
@@ -348,7 +358,8 @@ export async function seedCatalogue(
     byKey(await prisma.synthSound.findMany({ where: { synthId: { in: synthIds } } }), soundKey),
     (data) => prisma.synthSound.create({ data }),
     ({ synthId, slug, ...data }) =>
-      prisma.synthSound.update({ where: { synthId_slug: { synthId, slug } }, data })
+      prisma.synthSound.update({ where: { synthId_slug: { synthId, slug } }, data }),
+    ['order']
   );
 
   const lineage = await reconcile(
