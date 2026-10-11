@@ -1,0 +1,102 @@
+{
+  "synth": "system-15",
+  "unusual": [
+    {
+      "target": "m904a.regeneration",
+      "text": "REGENERATION is Moog’s word for resonance (the Minimoog calls it EMPHASIS)."
+    },
+    {
+      "target": "m904a.fixed_cv",
+      "text": "There is no cutoff knob as such: FIXED CONTROL VOLTAGE is a voltage added to the control inputs, an octave per volt, so the knob and an envelope work the same way."
+    },
+    {
+      "target": "m914",
+      "text": "A fixed filter bank is rare on a synthesizer. It is closer to a graphic equaliser: the bands never move with the note, which is what makes it good at body and formant sounds."
+    },
+    {
+      "target": "m921",
+      "text": "There is no module called LFO on a Moog system. The 921 with COARSE RNG on SUB is the LFO, and it can still run at audio rate when switched back."
+    },
+    {
+      "target": "cp35",
+      "text": "The attenuator inputs are half-normalled: one signal into IN 1 reaches all four attenuators until the inputs below it are used, so one source can be sent at four different levels without a multiple."
+    },
+    {
+      "target": "cm1a.trig_mode",
+      "text": "Moog modules expect S-triggers, the reverse of most synths’ gates. This switch lets the CM1A send either kind, or one of each."
+    },
+    {
+      "target": "m921b_1",
+      "text": "A 921B has no keyboard input of its own. Its playing pitch arrives from a 921A Oscillator Driver over the 921AB LINK cable, so one 921A tunes and plays a whole chain of 921Bs at once."
+    },
+    {
+      "target": "m921b_2",
+      "text": "A 921B has no keyboard input of its own. Its playing pitch arrives from a 921A Oscillator Driver over the 921AB LINK cable, so one 921A tunes and plays a whole chain of 921Bs at once."
+    },
+    {
+      "target": "m921a_1",
+      "text": "The 921A makes no sound. It is the shared pitch and pulse-width control for a bank of 921B oscillators, which is how Moog split one oscillator into a driver and a row of slaves."
+    },
+    {
+      "target": "m911_1",
+      "text": "T1, T2, E SUS and T3 are attack, decay, sustain and release under other names: T2 is the initial decay to the sustain level, T3 the final decay after the key is let go."
+    },
+    {
+      "target": "j.m911_1.strig",
+      "text": "An S-trigger input: it fires while the line is pulled down to 0 V. Most synths use V-triggers (+5 V while on); patch one in here and the envelope runs upside down."
+    },
+    {
+      "target": "m911_2",
+      "text": "T1, T2, E SUS and T3 are attack, decay, sustain and release under other names: T2 is the initial decay to the sustain level, T3 the final decay after the key is let go."
+    },
+    {
+      "target": "j.m911_2.strig",
+      "text": "An S-trigger input: it fires while the line is pulled down to 0 V. Most synths use V-triggers (+5 V while on); patch one in here and the envelope runs upside down."
+    },
+    {
+      "target": "m902_1.fixed_cv",
+      "text": "There is no level knob: FIXED CONTROL VOLTAGE is a voltage added to the control inputs. At 0 the amplifier stays shut until an envelope opens it; turn it up and the sound drones."
+    },
+    {
+      "target": "m902_1.mode",
+      "text": "The 902 can respond in a straight line (LIN) or exponentially (EXP). Most synths’ amplifiers have one fixed response."
+    },
+    {
+      "target": "m902_2.fixed_cv",
+      "text": "There is no level knob: FIXED CONTROL VOLTAGE is a voltage added to the control inputs. At 0 the amplifier stays shut until an envelope opens it; turn it up and the sound drones."
+    },
+    {
+      "target": "m902_2.mode",
+      "text": "The 902 can respond in a straight line (LIN) or exponentially (EXP). Most synths’ amplifiers have one fixed response."
+    },
+    {
+      "target": "cp3am_1",
+      "text": "The mixer has an inverted output beside the normal one, as well as two passive multiples. Inverted outputs are rare on synth mixers; on a modular they turn any control voltage upside down."
+    }
+  ],
+  "limits": {
+    "intro": "All sixteen modules are modelled and every jack carries its signal: the 921A driver, both 921B oscillators, the 921, the 904A ladder and 904B high-pass, the 914 filter bank, the 923 filters and noise, both 902 amplifiers, both 911 envelopes, the CP3A-M mixer and its multiples, the CP35 attenuators, voltages and multiples, the 961 interface and the CM1A.",
+    "items": [
+      {
+        "title": "The OUTPUT jacks are the app’s",
+        "text": "The real system has no master output: you patch whatever you want to hear to a mixer or audio interface. The OUTPUT plate printed on a blank panel is that cable’s other end in this app, and is marked as not on the hardware. Both jacks go to one mono output."
+      },
+      {
+        "title": "Tuned to the keyboard",
+        "text": "Every oscillator is calibrated so that 0 V plays middle C at 8’, and the CM1A gives 0 V at middle C, 1 V per octave. The hardware’s own reference (2’ = 640 Hz) is set by trimmers, and its oscillators drift as they warm up; here they are always in tune and never drift."
+      },
+      {
+        "title": "The CM1A’s rear button and MIDI settings",
+        "text": "The CV range (System 55 or System 100) and the duophonic mode are set with a button on the back of the CM1A, and the MIDI channel, bend range and note range in SynthTribe. Here the CM1A is always in the System 55 range and mono: CV 2 carries the same note as CV 1. MIDI IN, MIDI THRU and USB are printed."
+      },
+      {
+        "title": "Levels and curves are estimates",
+        "text": "The published ranges are used: 911 times from 2 ms to 10 s, the 904A’s three frequency ranges and the 904B’s two, the 923’s 10 Hz to 10 kHz, the 961’s 40 ms to 4 s, 902 gain with 6 V for full level. The knob curves between the ends, the 902’s exponential law (about 12 dB per volt), the Q of the 914’s bands and the corner frequencies of its low-pass and high-pass (about 100 Hz and 7 kHz), the AUX level taper and the mixer’s clipping are this app’s choices."
+      },
+      {
+        "title": "Sync and the 921’s clamping point",
+        "text": "SYNC IN resets the 921B on each sharp fall of its input: STRONG every time, WEAK only when the 921B is already near the end of its own cycle. The hardware’s sync circuit is softer and depends on the input’s shape. The clamping point jumps the 921 to that point of its cycle on each trigger."
+      }
+    ]
+  }
+}

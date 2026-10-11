@@ -4,7 +4,8 @@
 // Writes, under prisma/seeds/app-knowyoursynth/data/:
 //   sounds/<id>.json    the library: the definition's own presets, then sounds/<id>.js, in the prototype's order
 //   lineage/<id>.json   the lineage file, without "Heard on" (that comes from the databank, f-databank)
-//   notes/<id>.json     the "Unusual on…" notes and the synth's "What is not modelled" entry from src/lib/limits.js
+//   notes/<id>.json     the "Unusual on…" notes (the Moog 900 systems' shared ones expanded into each system's own) and
+//                       the synth's "What is not modelled" entry from src/lib/limits.js
 //   notes/shared.json   the "What is not modelled" entries that are true of every panel
 //   synths.json         the catalogue listing: each exported synth's place in the prototype's picker
 //
@@ -41,15 +42,20 @@ if (!id || !Number.isInteger(version) || version < 1) {
   process.exit(1);
 }
 if (!fs.existsSync(path.join(src, 'synths', 'unusual', `${file}.js`))) {
-  // The Moog 900 systems build their notes from shared files (p4); this script does not expand those yet.
-  console.error(`no src/synths/unusual/${file}.js: this synth's notes are not in the one-file shape this script exports`);
+  console.error(`no src/synths/unusual/${file}.js`);
   process.exit(1);
 }
+// The Moog 900 systems keep most of their notes in src/synths/moog900/unusual.js, written once per module type, and
+// their own file holds only extras. `forRack()` is how the prototype picks the shared notes a system's modules have,
+// so the export calls it too, and each system's rows hold every note it shows. Their cables (moog900/cables.js) and
+// lineage (moog900/lineage.js) are already spread into the sounds and the lineage the definition carries.
+const sharedNotes = fs.readFileSync(path.join(src, 'synths', `${file}.js`), 'utf8').includes('@/synths/moog900/unusual.js');
 
 const entry = `
 export { SYNTHS } from '@/synths/index.js';
 export { SHARED, limitsFor } from '@/lib/limits.js';
 export { default as unusual } from '@/synths/unusual/${file}.js';
+export { forRack } from '@/synths/moog900/unusual.js';
 `;
 const outFile = path.join(os.tmpdir(), `kys-export.${process.pid}.out.mjs`);
 await esbuild.build({
@@ -62,7 +68,7 @@ try {
 } finally {
   fs.rmSync(outFile, { force: true });
 }
-const { SYNTHS, SHARED, limitsFor, unusual } = mod;
+const { SYNTHS, SHARED, limitsFor, forRack } = mod;
 
 const order = SYNTHS.findIndex((s) => s.id === id);
 if (order < 0) {
@@ -70,6 +76,8 @@ if (order < 0) {
   process.exit(1);
 }
 const def = SYNTHS[order];
+// forRack() reads only the controls, jacks and areas, which the definition carries.
+const unusual = sharedNotes ? forRack(def, mod.unusual) : mod.unusual;
 const limits = limitsFor(id);
 if (!limits) {
   console.error(`no entry for "${id}" in src/lib/limits.js`);
