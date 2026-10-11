@@ -28,13 +28,11 @@ Rules for the fields: [`synths.md`](./synths.md). Model D's own checks, which a 
 ## 2. Brand tags
 
 Tag every maker's mark in `decor` with `brand: true`: logos, wordmarks, model badges. The neutral
-design (D11), which is the only one the page draws today, leaves `brand` items out, so an
-untagged logo shows on a panel that must not carry it.
+design (D11), which every synth shows until an admin records the maker's approval, draws the
+panel in its own colours and lettering and leaves only the `brand` items out. So an untagged logo
+shows exactly as the hardware prints it, on a panel that must not carry it.
 
-Look at the neutral panel once the page opens (step 6). Decor that sets its own colours (a text
-`fill`, a print pattern) keeps them on the neutral faceplate. That is fine on Model D and wrong on
-a light faceplate with dark print; choosing colours per synth is `f-panel-designs` (journal,
-`f-model-d`).
+Look at the neutral panel once the page opens (step 6) for any mark still showing.
 
 ## 3. Export
 
