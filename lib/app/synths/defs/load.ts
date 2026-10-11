@@ -12,9 +12,10 @@
  *
  * The cost: a raw `import()` gets no preload hint in the server's HTML, so on a first visit the definition is
  * requested only once the page's own code has run, and the panel the server drew is not interactive until it
- * arrives. One extra round trip for one definition, against every definition in every page's bundle. Revisit if a
- * large definition (the DeepMind) makes that wait noticeable: preloading the chunk for the id the server rendered is
- * the fix.
+ * arrives. One extra round trip for one definition, against every definition in every page's bundle. Measured on the
+ * largest, the DeepMind (t-22, production build, Fast 3G): its chunk is 23 KB gzipped and arrives 50 ms after Model D's,
+ * in a page whose shared bundle takes six seconds on that network. Revisit if a definition makes that wait noticeable:
+ * preloading the chunk for the id the server rendered is the fix.
  */
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 
