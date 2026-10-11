@@ -757,18 +757,17 @@ button('arp.hold', 210, 4, {
 });
 btnLabel(128, 4, 'ARP', 'ON', false);
 btnLabel(210, 4, 'HOLD');
-(
-  [
-    [337, 'SHIFT'],
-    [420, 'REST/TIE', 'SETTINGS'],
-    [503, 'RECORD', 'APPEND'],
-    [586, 'STOP', 'CLR LAST'],
-    [669, 'PLAY/PAUSE', 'RESTART'],
-    [751, 'COMPARE', 'GLOBALS'],
-    [834, 'MANUAL', 'VINTAGE'],
-    [917, 'WRITE', 'INITIAL'],
-  ] as [number, string, string?][]
-).forEach(([x, t, s]) => deadButton(x, 4, t, s));
+const SEQ_BUTTONS: [x: number, top: string, sub?: string][] = [
+  [337, 'SHIFT'],
+  [420, 'REST/TIE', 'SETTINGS'],
+  [503, 'RECORD', 'APPEND'],
+  [586, 'STOP', 'CLR LAST'],
+  [669, 'PLAY/PAUSE', 'RESTART'],
+  [751, 'COMPARE', 'GLOBALS'],
+  [834, 'MANUAL', 'VINTAGE'],
+  [917, 'WRITE', 'INITIAL'],
+];
+SEQ_BUTTONS.forEach(([x, t, s]) => deadButton(x, 4, t, s));
 decor.push({
   t: 'rect',
   x: 1455 - 28,
