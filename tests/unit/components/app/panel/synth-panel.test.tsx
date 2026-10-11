@@ -5,8 +5,8 @@
  *
  * - Model D's panel in the hardware and outline views (snapshots), and the
  *   modular case a `layout` puts in place of the long faceplate.
- * - `design` (D11): the neutral design leaves out Model D's brand marks and
- *   draws the neutral theme, and is the default; faithful draws the panel as before.
+ * - `design` (D11, revised): the neutral design leaves out Model D's brand marks
+ *   and keeps its own colours and lettering, and is the default; faithful draws the marks.
  * - Patching: press an output then an input to connect, the explanation is
  *   focused, Escape and a second press cancel, a cable press removes it.
  * - Dragging a plug onto another jack moves the cable.

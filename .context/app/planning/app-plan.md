@@ -653,8 +653,8 @@ the feature's done-when instead.
 
   Every surface that renders a panel follows the setting.
 
-  **Source:** the prototype's `theme` and decor are the faithful design. The neutral theme is
-  new. It has no prototype file.
+  **Source:** the prototype's `theme` and decor are the faithful design. Neutral is the same
+  definition without its `brand` decor (D11, revised 2026-10-11).
 
 - **doneWhen:**
   - On a deployed build, every synth shows the neutral design.
