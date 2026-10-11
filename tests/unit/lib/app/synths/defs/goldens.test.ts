@@ -62,7 +62,9 @@ describe.each(SYNTH_DEFS.map((d) => d.id))('%s', (id) => {
     ).toBe(true);
   });
 
-  it('does what the prototype does over the whole grid', () => {
+  // The DeepMind's grid is ~7,400 settings of 1,568 controls: about 6 s alone, and past the default 30 s when the
+  // whole suite runs in parallel. Every other synth's grid takes under a second.
+  it('does what the prototype does over the whole grid', { timeout: 120_000 }, () => {
     const want = golden(id);
     const got = recordGoldens(def);
     expect(got.id).toBe(want.id);
