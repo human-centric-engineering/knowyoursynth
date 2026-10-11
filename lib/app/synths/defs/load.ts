@@ -3,8 +3,9 @@
  *
  * The synth page is a client component, and a definition holds functions (`toEngine`, `fmt`), so the server cannot
  * hand one over as props: the page has to import it. Importing `defs/index.ts` would put every registered definition
- * in the page's bundle, the 1.3 MB DeepMind included, to play one of them. Here each definition is its own dynamic
- * `import()`, so the bundler gives each one its own chunk and the page fetches only the one it shows.
+ * in the page's bundle, the DeepMind (1,568 controls, 1.3 MB serialised) included, to play one of them. Here each
+ * definition is its own dynamic `import()`, so the bundler gives each one its own chunk and the page fetches only the
+ * one it shows.
  *
  * Server code (the read layer, the seed, `check:synths`) keeps using `defs/index.ts`, which holds every definition
  * at once. A synth joins both: one line in `SYNTH_DEFS` there and one line in `LOADERS` here. `registry.test.ts`
@@ -12,9 +13,11 @@
  *
  * The cost: a raw `import()` gets no preload hint in the server's HTML, so on a first visit the definition is
  * requested only once the page's own code has run, and the panel the server drew is not interactive until it
- * arrives. One extra round trip for one definition, against every definition in every page's bundle. Revisit if a
- * large definition (the DeepMind) makes that wait noticeable: preloading the chunk for the id the server rendered is
- * the fix.
+ * arrives. One extra round trip for one definition, against every definition in every page's bundle. Measured on the
+ * largest, the DeepMind (t-22, production build, Fast 3G): its chunk is 73 KB minified, 23 KB gzipped (the source
+ * builds its controls in loops), and arrives 50 ms after Model D's, in a page whose shared bundle takes six seconds on
+ * that network. Revisit if a definition makes that wait noticeable:
+ * preloading the chunk for the id the server rendered is the fix.
  */
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 
@@ -39,6 +42,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'jupiter-4': () => import('@/lib/app/synths/defs/jupiter-4'),
   'jupiter-6': () => import('@/lib/app/synths/defs/jupiter-6'),
   'jupiter-8': () => import('@/lib/app/synths/defs/jupiter-8'),
+  'deepmind-12d': () => import('@/lib/app/synths/defs/deepmind-12d'),
 };
 
 /** Every id a loader exists for. */
