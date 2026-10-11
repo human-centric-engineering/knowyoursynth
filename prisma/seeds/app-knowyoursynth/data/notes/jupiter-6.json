@@ -1,0 +1,150 @@
+{
+  "synth": "jupiter-6",
+  "unusual": [
+    {
+      "target": "vcf",
+      "text": "One filter that can be low-pass, high-pass or band-pass, chosen by two buttons: both lit is band-pass. Most polysynths of its time, the Jupiter-8 included, had a low-pass filter only."
+    },
+    {
+      "target": "vcf.hpf",
+      "text": "Lit together with LPF it gives band-pass. There is no third button for it: the BPF bracket printed beside the pair says so."
+    },
+    {
+      "target": "vcf.lpf",
+      "text": "Lit together with HPF it gives band-pass. There is no third button for it: the BPF bracket printed beside the pair says so."
+    },
+    {
+      "target": "vco.sync12",
+      "text": "The Jupiter-6 can sync either oscillator to the other. Most synths sync only the second oscillator to the first."
+    },
+    {
+      "target": "vco.sync21",
+      "text": "Syncing VCO-1 to VCO-2 is the reverse of most synths, and lets the cross mod and sync work on the same oscillator."
+    },
+    {
+      "target": "vco1.xmodEnv",
+      "text": "Cross mod is Roland’s name for audio-rate frequency modulation of VCO-1 by VCO-2. Here an envelope can open and close it, which few analogue synths allow; most have a fixed FM depth."
+    },
+    {
+      "target": "vco1.xmod",
+      "text": "Cross mod is Roland’s name for frequency modulation: VCO-2 moves VCO-1’s pitch, at audio rate for metallic tones or, with VCO-2 at LOW, as a vibrato."
+    },
+    {
+      "target": "vco1.tri",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco1.saw",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco1.pulse",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco1.square",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco2.tri",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco2.saw",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco2.pulse",
+      "text": "Most synths pick one waveform per oscillator. Here each wave has its own button and they can be lit together, so an oscillator can play a sawtooth and a triangle at once, like organ drawbars."
+    },
+    {
+      "target": "vco2.noise",
+      "text": "Noise is one of VCO-2’s waveform buttons, so it shares VCO-2’s side of the MIX knob. There is no separate noise level."
+    },
+    {
+      "target": "vco2.range",
+      "text": "One knob covers three jobs: a slow LFO at LOW, half steps from 32’ to 2’ in the middle, and HIGH beyond 2’. Most synths have an octave switch and a separate tuning knob."
+    },
+    {
+      "target": "vco1.range",
+      "text": "RANGE steps in half steps rather than octaves, so VCO-1 can be set a fifth or any interval above VCO-2 without a fine-tune knob."
+    },
+    {
+      "target": "mix.balance",
+      "text": "One knob for both oscillators: turning towards one turns the other down only past the middle. Most synths have a level knob for each."
+    },
+    {
+      "target": "env1.polarity",
+      "text": "Most synths invert an envelope only where it meets the filter. Here POLARITY turns ENV-1 upside down everywhere it goes: filter, pitch, PWM and cross mod."
+    },
+    {
+      "target": "env1.kf",
+      "text": "KEY FOLLOW here shortens the envelope times on higher notes. On many synths key follow means filter tracking only."
+    },
+    {
+      "target": "env2.kf",
+      "text": "KEY FOLLOW here shortens the envelope times on higher notes, as on a piano. On many synths key follow means filter tracking only."
+    },
+    {
+      "target": "voice.solo",
+      "text": "SOLO and UNISON lit together make a third mode, SOLO UNISON: all six voices on one note. UNISON alone shares the voices between the keys held."
+    },
+    {
+      "target": "glide.gliss",
+      "text": "Glissando steps through the half steps between notes, like a finger run along a keyboard, where portamento slides. Few synths offer both."
+    },
+    {
+      "target": "lfo2",
+      "text": "A second LFO kept for the player, brought in by a button beside the bender, with its own rise time. On many synths the mod wheel does this job."
+    },
+    {
+      "target": "vca.level",
+      "text": "Roland labels the VCA level ENV-2 LEVEL: it sets how far ENV-2 opens the amplifier, so it is the patch volume."
+    }
+  ],
+  "limits": {
+    "intro": "One patch is modelled on all six voices, as at KEY MODE WHOLE: both VCOs with their combinable waveforms, RANGE in half steps with LOW and HIGH, cross mod by hand and from ENV-1, sync either way round, PW and PWM, the mixer and noise, the low-, high- and band-pass filter, the VCA with tremolo, both envelopes with key follow and ENV-1 polarity, LFO-1 with its delay, LFO-2, the arpeggio, portamento, the assign modes and unison detune.",
+    "items": [
+      {
+        "title": "Two patches at once",
+        "text": "The Jupiter-6 can split the keyboard into a lower and an upper patch (SPLIT-1 four voices low and two high, SPLIT-2 the reverse). This app plays one patch on the whole keyboard, so KEY MODE, PANEL MODE, BALANCE and the BENDER switch beside it do not change the sound. WHOLE is shown lit."
+      },
+      {
+        "title": "The bender is the mod wheel",
+        "text": "The bender lever on the plate beside the keys is drawn for reference. The mod wheel beside the app’s keyboard stands in for the lever pushed to the right: it bends the VCOs lit under BEND by up to BEND VCO (or three octaves with WIDE) and the filter by up to BEND VCF. Bending down is not possible here."
+      },
+      {
+        "title": "How voices are shared out",
+        "text": "SOLO plays one voice, last key priority, and SOLO with UNISON stacks all six on one note, spread by UNISON DETUNE. UNISON alone shares the voices between the keys held on the hardware (one key gets all six, two keys three each, and so on); here it always gives each key two voices, so up to three notes. POLY-1 and POLY-2 play alike here: on the hardware POLY-2 keeps a key on the same voice and lets only the newest notes ring on, which suits glide."
+      },
+      {
+        "title": "Glissando slides",
+        "text": "GLISSANDO steps through the half steps between notes on the hardware. Here it slides smoothly, like PORTAMENTO."
+      },
+      {
+        "title": "Arpeggio",
+        "text": "UP, DOWN and both together (up and down) work, with RATE, RANGE and HOLD. D&U, down then up, which the hardware gives when DOWN is pressed before UP, plays as U&D here. The arpeggio always runs from the internal rate; ARPEGGIO CLOCK IN is not modelled. HOLD only latches the arpeggio: on the hardware it also sustains notes with the arpeggio off."
+      },
+      {
+        "title": "LFO MOD latches",
+        "text": "On the hardware LFO MOD brings in LFO-2 while it is held. Here it is a switch: click it on, click it off."
+      },
+      {
+        "title": "Ranges are estimates in between",
+        "text": "The manual gives the end points (envelope times up to 18 and 20 seconds, LFO-1 0.04 to 100 Hz and up to 2.5 s of delay, the filter from 5 Hz to 30 kHz, arpeggio 1 to 25 Hz, glide up to 1.6 s an octave, LFO-2 1 to 10 Hz with a 0.05 to 1 s rise, VCO-2 LOW 1.5 to 50 Hz), and this app uses them, except that the filter stops at 10 Hz and 20 kHz. The curve between the ends, the depth of the cross mod, the key-follow law and the resonance are this app’s estimates. LFO-1 RANDOM runs up to 100 Hz here, not the 400 Hz of the hardware."
+      },
+      {
+        "title": "LFO-1 DELAY and the random wave",
+        "text": "DELAY fades LFO-1 in on the pitch and filter routes but not on PWM or the VCA, as on the hardware. With the RANDOM wave the delay reaches PWM and the VCA as well."
+      },
+      {
+        "title": "Printed but not modelled",
+        "text": "The patch memory (PATCH PRESET, BANK, NUMBER, MANUAL, PROTECT, WRITE), TAPE MEMORY and the TUNE button (automatic tuning) are drawn for reference. Sounds are kept in this app’s library."
+      },
+      {
+        "title": "The rear panel",
+        "text": "MIDI IN and OUT, the arpeggio clock input, the PATCH SHIFT and hold pedal sockets, the VCA and VCF pedal inputs, the output level switch and the tape sockets are not modelled."
+      }
+    ]
+  }
+}

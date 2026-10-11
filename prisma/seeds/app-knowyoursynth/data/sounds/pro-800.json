@@ -1,0 +1,1962 @@
+{
+  "synth": "pro-800",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "p8-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of The Cars — \"Let’s Go\"",
+      "artist": "The Cars",
+      "tags": ["lead", "new wave", "70s"],
+      "level": 2,
+      "blurb": "A tearing lead whose tone sweeps down at the start of every note.",
+      "how": "SYNC makes OSC A restart with every cycle of OSC B, so OSC B holds the note and OSC A’s pitch only changes the tone. Poly-Mod sends the filter envelope to OSC A’s frequency: each note starts with OSC A far above OSC B and sweeps down, which is the tearing sound. UNISON TRACK stacks the voices on the one note.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 67, 0.45],
+          [1, 69, 0.9],
+          [2, 72, 0.45],
+          [2.5, 71, 0.45],
+          [3, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "OSC A alone, synced to OSC B",
+          "module": "osc",
+          "why": "Hard sync is the core of this lead. OSC A is locked to OSC B, which sets the note while staying silent, so from here on OSC A’s pitch changes only its tone.\n- SYNC on: OSC A restarts its wave every time OSC B starts a cycle. On the PRO-800 it is OSC A that follows OSC B, the reverse of many synths.\n- OSC A LEVEL 6 (60 %): just past 5, where the level starts to drive the filter, so the sawtooth picks up a little grit. Back to 5 for a cleaner tone.\n- OSC B LEVEL 0: not heard, but still running and still setting the note OSC A follows.\n- Listen for: very little change yet. Both oscillators sit at the same octave, so sync has nothing to tear. Turn OSC A FREQUENCY up a step and the tone turns hard and nasal while the note stays put.",
+          "set": { "osc1.sync": true, "osc1.level": 6, "osc2.level": 0 }
+        },
+        {
+          "title": "Sweep OSC A with Poly-Mod",
+          "module": "mod",
+          "why": "Poly-Mod is the Prophet’s name for modulation inside each voice. Here it uses the filter envelope to push OSC A’s pitch up at the start of every note; because OSC A is synced, that pitch sweep is heard as a sweep of tone.\n- FIL ENV +3: how much filter envelope goes into Poly-Mod. At +3 it throws OSC A more than an octave above OSC B at the peak. Left of the middle would push it down instead.\n- FREQ A on: sends the Poly-Mod mix to OSC A’s pitch. Off, and the envelope does nothing to the oscillators.\n- Listen for: a tearing “neow” at the front of each note as OSC A falls back towards OSC B. The filter envelope still has its default 50 % sustain, so held notes stay part way up the sweep. ENVELOPE AMOUNT is still 0, so the filter itself is not moving.",
+          "set": { "pmod.env": 3, "pmod.freqA": true }
+        },
+        {
+          "title": "Make the envelope a falling sweep",
+          "module": "env",
+          "why": "The filter envelope now drives the sweep, so its shape is the shape of the tear. The loudness is set to play plainly, and the filter is opened so the sweep comes through bright.\n- Filter ATTACK 0, DECAY 610 ms: the sweep starts at its peak the instant you play, then slides down over about half a second. Shorter decay gives a quick zap; longer, a slow vowel-like sweep.\n- SUSTAIN 15 %, RELEASE 130 ms: held notes settle just above OSC B’s pitch, which keeps a little edge; the release is short.\n- Amplifier 1 ms, 220 ms, 100 %, 130 ms: ADSR (attack, decay, sustain, release). Full volume at once, held at full, with a short tail.\n- CUTOFF 7.4 (3.1 kHz), RESONANCE 1.5: the 24 dB low-pass filter stays open, so the synced harmonics are heard, with a slight lift at the cutoff.\n- Listen for: the tear now lasts longer and ends almost at OSC B’s tone on long notes. Sweep filter DECAY while the riff plays.",
+          "set": {
+            "fenv.attack": 0,
+            "fenv.decay": 6,
+            "fenv.sustain": 1.5,
+            "fenv.release": 4.5,
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "aenv.release": 4.5,
+            "vcf.cutoff": 7.4,
+            "vcf.res": 1.5
+          }
+        },
+        {
+          "title": "One fat note at a time",
+          "module": "mode",
+          "why": "The line becomes one very thick voice, and each note slides into the next like a guitar bend.\n- UNISON TRACK on: all eight voices play the one key, each slightly detuned. The lead gets far wider and louder in the mix; switch it off to hear how thin a single voice is.\n- GLIDE 2 (160 ms): each note slides from the last instead of jumping. Short enough to keep the riff tight; turn it up and the line starts to smear.\n- Listen for: the slide between the notes of the riff, and the tearing sweep repeating on each new note as it glides in.",
+          "set": { "voice.unison": true, "glide.time": 2 }
+        }
+      ],
+      "context": {
+        "pmod.env": "In this sound: the depth of the sweep. More gives a longer, more dramatic tear; left of the middle it sweeps upwards instead.",
+        "fenv.decay": "In this sound: how long the sweep takes.",
+        "osc1.freq": "In this sound: where the sweep settles. Raise it an octave and the held tone gets harder.",
+        "osc1.sync": "In this sound: what turns OSC A’s pitch sweep into a sweep of tone."
+      },
+      "tweaks": [
+        {
+          "id": "fenv.decay",
+          "try": "Set between 4.5 and 7",
+          "hear": "A snappy zap at 4.5, a slow vowel-like sweep at 7."
+        },
+        {
+          "id": "osc1.freq",
+          "try": "Turn it up while holding a note",
+          "hear": "The synced tone jumps to a harder, more nasal colour each octave."
+        }
+      ]
+    },
+    {
+      "id": "p8-air-pad",
+      "name": "Night Drive Pad",
+      "ref": "In the style of Phil Collins — \"In the Air Tonight\"",
+      "artist": "Phil Collins",
+      "tags": ["pad", "pop", "80s"],
+      "level": 1,
+      "blurb": "Dark, hollow chords that swell in slowly and hang in the air.",
+      "how": "Two oscillators a little apart, a sawtooth on OSC A and a pulse on OSC B, beat slowly against each other. The filter is kept low so the chords stay dark, and both envelopes rise and fall slowly, so each chord swells in and fades away without a hard edge.",
+      "phrase": {
+        "bpm": 68,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.8],
+          [0, 53, 3.8],
+          [0, 57, 3.8],
+          [4, 48, 3.8],
+          [4, 52, 3.8],
+          [4, 55, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth and a pulse, slightly apart",
+          "module": "osc",
+          "why": "The pad’s raw tone: a sawtooth and a pulse a little out of tune with each other. That slow beating is what keeps a held chord from sounding static.\n- OSC B sawtooth off, pulse on: a pulse sounds hollower than a sawtooth, which gives the pad its dark, hollow middle.\n- OSC B PULSE WIDTH 3.5 (36 %): a little narrower than a square, so slightly thinner and more nasal. At 5 it is a plain square.\n- OSC B LEVEL 4.5: just under OSC A (still at 5), so the sawtooth leads and the pulse fills underneath.\n- OSC B FINE +16 cents: OSC B slightly sharp. More gives a faster, wobblier beat; less, a slower one.\n- Listen for: hold a chord and hear a slow swirl as the two drift in and out of phase. Turn OSC B LEVEL down to 0 to hear the plain sawtooth.",
+          "set": {
+            "osc2.saw": false,
+            "osc2.pulse": true,
+            "osc2.level": 4.5,
+            "osc2.fine": 0.8,
+            "osc2.pw": 3.5
+          }
+        },
+        {
+          "title": "Keep the filter dark",
+          "module": "filter",
+          "why": "The filter takes the brightness out. The PRO-800’s is a 24 dB low-pass: it keeps the lows and cuts the highs steeply, so the pad sits behind other parts rather than in front.\n- CUTOFF 4.8 (490 Hz): low, so most of the buzz is gone and the chord sounds dark and warm. Above 6 it turns bright and brassy.\n- RESONANCE 1.5: a small boost at the cutoff, just enough to give the dark tone a bit of shape.\n- ENVELOPE AMOUNT +1.2: the filter envelope opens the filter a little on each chord. Small, so there is a gentle lift rather than a pluck.\n- KEYBOARD 1/2: the cutoff follows half of the keyboard, so upper notes are a little brighter but nothing cuts through.\n- Listen for: a muffled, round chord with a small brightening at the start (the envelope is still fast until the next step).",
+          "set": { "vcf.cutoff": 4.8, "vcf.res": 1.5, "vcf.env": 1.2, "vcf.kbd": "half" }
+        },
+        {
+          "title": "Swell in, fade out",
+          "module": "amp",
+          "why": "Both envelopes are slowed right down. ADSR stands for attack, decay, sustain and release: how a sound starts, falls, holds and dies away. Here every chord rises out of nothing and hangs after you let go.\n- Filter ATTACK 1.0 s, DECAY 1.7 s: the filter opens slowly and eases back, so brightness swells in with the chord.\n- Filter SUSTAIN 60 %, RELEASE 1.7 s: held chords stay a little open and close slowly after release.\n- Amplifier ATTACK 610 ms: the volume fades in over more than half a second, so there is no hard edge. Shorter for a firmer start.\n- Amplifier DECAY 610 ms, SUSTAIN 90 %: a slight dip after the swell; held chords stay nearly full.\n- Amplifier RELEASE 1.7 s: each chord hangs in the air after you let go.\n- Listen for: chords that swell in and overlap as you change between them.",
+          "set": {
+            "fenv.attack": 6.5,
+            "fenv.decay": 7,
+            "fenv.sustain": 6,
+            "fenv.release": 7,
+            "aenv.attack": 6,
+            "aenv.decay": 6,
+            "aenv.sustain": 9,
+            "aenv.release": 7
+          }
+        }
+      ],
+      "context": {
+        "aenv.attack": "In this sound: how slowly each chord swells in.",
+        "vcf.cutoff": "In this sound: how dark the pad is. Above 6 it turns bright and brassy.",
+        "osc2.fine": "In this sound: the slow beating between the two oscillators."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Move between 4 and 6",
+          "hear": "From a muffled hum to an open, reedy chord."
+        },
+        { "id": "aenv.release", "try": "Raise to 8", "hear": "Chords hang over into each other." }
+      ]
+    },
+    {
+      "id": "p8-poly-brass",
+      "name": "Prophet Brass",
+      "ref": "In the style of early-80s synth-pop brass stabs",
+      "artist": "Classic technique",
+      "tags": ["brass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Bright sawtooth chords with a brassy bite at the front of every stab.",
+      "how": "Two sawtooths, slightly detuned, make each note thick. The filter starts part-closed and the filter envelope flicks it open and lets it settle, which gives the brassy \"blat\". Eight voices mean each note of the chord has its own filter and envelopes.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4],
+          [0, 64, 0.4],
+          [0, 67, 0.4],
+          [0.5, 60, 0.4],
+          [0.5, 64, 0.4],
+          [0.5, 67, 0.4],
+          [1.5, 62, 0.9],
+          [1.5, 65, 0.9],
+          [1.5, 69, 0.9],
+          [3, 59, 0.9],
+          [3, 62, 0.9],
+          [3, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, slightly apart",
+          "module": "osc",
+          "why": "Two sawtooths slightly out of tune are the classic starting point for synth brass. The detune makes each note sound like more than one player.\n- OSC B LEVEL 5: brought in at the same level as OSC A, so the two sawtooths are equal partners.\n- OSC B FINE +12 cents: OSC B slightly sharp, so the two beat against each other. More detune sounds wider and more out of tune; less, cleaner and narrower.\n- Listen for: play a chord and hear it thicken and shimmer compared with OSC A alone. It is still very bright: the filter is wide open at its starting point.",
+          "set": { "osc2.level": 5, "osc2.fine": 0.6 }
+        },
+        {
+          "title": "Close the filter part way",
+          "module": "filter",
+          "why": "The filter is closed part way so the chords are darker between stabs. That gives the filter envelope room to open it again, which is where the brass bite comes from.\n- CUTOFF 4.5 (396 Hz): the 24 dB low-pass filter now cuts a lot of the buzz. Lower gives a muted horn; higher, a brighter, harder one.\n- RESONANCE 1: a slight boost at the cutoff, just enough edge for the bite to be noticed.\n- ENVELOPE AMOUNT +2.5: how far the filter envelope pushes the cutoff up on each stab. Lower for a softer horn section, higher for more bite.\n- Listen for: a brief brightening at the front of each chord. Half keyboard tracking (the default) stops the top notes going dull.",
+          "set": { "vcf.cutoff": 4.5, "vcf.res": 1, "vcf.env": 2.5 }
+        },
+        {
+          "title": "Let the filter envelope open it",
+          "module": "env",
+          "why": "The filter envelope shapes the brassy “blat”: the filter opens as the stab hits and settles back down. This is what makes it read as brass rather than a plain pad.\n- ATTACK 3 (27 ms): not instant, so the brass swells open instead of clicking. At 0 it clicks; around 3 it blooms.\n- DECAY 5.5 (370 ms): how long the bite lasts before the tone settles. Longer gives a slower “waah”.\n- SUSTAIN 40 %: held chords stay fairly dark after the bite.\n- RELEASE 4.5 (130 ms): the filter closes quickly after you let go.\n- Listen for: a quick swell in brightness at the start of each chord, then a warmer held tone. Sweep DECAY while playing stabs.",
+          "set": { "fenv.attack": 3, "fenv.decay": 5.5, "fenv.sustain": 4, "fenv.release": 4.5 }
+        },
+        {
+          "title": "Shape the loudness",
+          "module": "amp",
+          "why": "The amplifier envelope sets the volume shape of each stab. For brass stabs you want a firm start and a clean stop so the rhythm is clear.\n- ATTACK 1.5 (4 ms): a very slight softening of the start, like air getting into a horn, without losing punch.\n- DECAY 220 ms, SUSTAIN 90 %: a tiny dip after the start, then the chord holds almost at full.\n- RELEASE 4.5 (130 ms): short, so stabs stop soon after you let go and stay separate.\n- Listen for: the gaps between stabs in a rhythmic part. Longer RELEASE blurs them together.",
+          "set": { "aenv.attack": 1.5, "aenv.decay": 5, "aenv.sustain": 9, "aenv.release": 4.5 }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: how far each stab opens the filter. Lower for a softer horn section, higher for more bite.",
+        "fenv.decay": "In this sound: the length of the bite. Longer gives a slower \"waah\".",
+        "fenv.attack": "In this sound: how quickly the brass swells open. At 0 it clicks; around 3 it blooms.",
+        "osc2.fine": "In this sound: the slight detune that thickens each note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Move between 1 and 4",
+          "hear": "From mellow pads to snarling brass."
+        },
+        {
+          "id": "fenv.attack",
+          "try": "Raise to 5",
+          "hear": "A slow, swelling brass section instead of a stab."
+        }
+      ]
+    },
+    {
+      "id": "p8-carpenter-bass",
+      "name": "Pulsing Octave Bass",
+      "ref": "In the style of John Carpenter — \"Escape from New York\"",
+      "artist": "John Carpenter",
+      "tags": ["bass", "soundtrack", "80s"],
+      "level": 1,
+      "blurb": "A dark, steady bass that pulses in eighth notes and jumps between octaves.",
+      "how": "OSC B plays an octave below OSC A, so the bass has weight under a bright edge. The filter is almost closed and a quick filter envelope with some resonance plucks each note open, which gives the pulse its tick.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.4],
+          [0.5, 40, 0.4],
+          [1, 52, 0.4],
+          [1.5, 40, 0.4],
+          [2, 40, 0.4],
+          [2.5, 52, 0.4],
+          [3, 43, 0.4],
+          [3.5, 45, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth with a sub-octave",
+          "module": "osc",
+          "why": "An octave below the sawtooth adds weight to the bass: the bright top gives edge, the lower octave gives the low end you feel.\n- OSC B FREQUENCY 2.5 (−1 oct): the knob steps in whole octaves, not smoothly, so one step left puts OSC B an octave below OSC A.\n- OSC B LEVEL 4.5: slightly under OSC A, so the sub-octave supports rather than takes over. Turn it up for more weight; to 0 to hear OSC A alone.\n- Listen for: a fuller, heavier note. Still bright for now, because the filter is open.",
+          "set": { "osc2.freq": 2.5, "osc2.level": 4.5 }
+        },
+        {
+          "title": "Nearly close the filter",
+          "module": "filter",
+          "why": "The filter is nearly closed so the bass is a dull thud at rest. The 24 dB low-pass filter cuts the highs steeply, and the filter envelope will open it on each note in the next step.\n- CUTOFF 3.6 (208 Hz): very low, so most of the sawtooth’s buzz is gone and the sub-octave dominates.\n- RESONANCE 3: a boost at the cutoff that gives each pluck a ring. More and it starts to squelch.\n- ENVELOPE AMOUNT +2.2: how far the filter envelope opens the filter on each note.\n- Listen for: a dark, thumping note with a small brightening at the start (the envelope still has its default shape).",
+          "set": { "vcf.cutoff": 3.6, "vcf.res": 3, "vcf.env": 2.2 }
+        },
+        {
+          "title": "Pluck each note",
+          "module": "env",
+          "why": "Both envelopes are set for a tight pulse. The filter envelope flicks the filter open and shut on every note, which gives the pulse its tick.\n- Filter ATTACK 0, DECAY 130 ms: opens at once and closes within about a tenth of a second. Longer DECAY turns the tick into a “wow”.\n- Filter SUSTAIN 10 %, RELEASE 77 ms: held notes go back to almost fully dark.\n- Amplifier 1 ms, 220 ms, 80 %, 46 ms: in ADSR order (attack, decay, sustain, release). Instant start, a small drop, then a very short release.\n- Listen for: play steady eighth notes and hear a clean tick at the front of each, with clear gaps in between. Sweep filter DECAY to hear the groove loosen.",
+          "set": {
+            "fenv.attack": 0,
+            "fenv.decay": 4.5,
+            "fenv.sustain": 1,
+            "fenv.release": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 8,
+            "aenv.release": 3.5
+          }
+        }
+      ],
+      "context": {
+        "fenv.decay": "In this sound: the length of the tick at the front of each note.",
+        "vcf.res": "In this sound: gives each pluck its ring.",
+        "osc2.freq": "In this sound: the octave below that gives the bass its weight."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep between 3 and 5.5 while it plays",
+          "hear": "The classic slow opening of a soundtrack bass line."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Set between 3.5 and 5.5",
+          "hear": "From a dry tick to a rounder, longer note."
+        }
+      ]
+    },
+    {
+      "id": "p8-polymod-bell",
+      "name": "Poly-Mod Bells",
+      "ref": "In the style of the classic Prophet Poly-Mod bell",
+      "artist": "Classic technique",
+      "tags": ["keys", "fm", "80s"],
+      "level": 3,
+      "blurb": "Clear, metallic bell chords with a slow ring.",
+      "how": "OSC B is not heard at all: it runs a little over an octave above OSC A and, through Poly-Mod, wobbles OSC A’s pitch at audio speed. That frequency modulation adds clangy, out-of-tune overtones, like a bell. A triangle on OSC A keeps the base tone pure, and a long decay with no sustain lets each chord ring out.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 76, 1],
+          [2, 79, 1],
+          [3, 84, 1.8],
+          [3, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure triangle on OSC A",
+          "module": "osc",
+          "why": "The bell starts from a pure tone. A triangle has very few overtones, so the metallic colour added later by Poly-Mod will stand out clearly.\n- OSC A sawtooth off, triangle on: soft and round, close to a sine. Each wave on the PRO-800 has its own switch, so the sawtooth must be turned off, not just swapped.\n- Listen for: a plain, flute-like tone, much softer than the default sawtooth.",
+          "set": { "osc1.saw": false, "osc1.tri": true }
+        },
+        {
+          "title": "Set OSC B as a silent modulator",
+          "module": "osc",
+          "why": "OSC B is set up as a modulator, not a sound. It stays silent but runs at an odd ratio to OSC A, which is where the bell’s clang will come from.\n- OSC B FREQUENCY 7.5 (+1 oct): one step up, an octave above OSC A.\n- OSC B FINE +100 cents: a full semitone sharp on top, so OSC B is 13 semitones above OSC A. That uneven ratio gives out-of-tune, clangy overtones; moving FINE changes which ones.\n- OSC B triangle on, sawtooth off: a smooth wave gives a cleaner modulation.\n- OSC B LEVEL 0: not heard, but it keeps running and can still feed Poly-Mod.\n- Listen for: no change yet. OSC B is not heard and not routed anywhere.",
+          "set": {
+            "osc2.freq": 7.5,
+            "osc2.fine": 5,
+            "osc2.tri": true,
+            "osc2.saw": false,
+            "osc2.level": 0
+          }
+        },
+        {
+          "title": "Poly-Mod OSC B into FREQ A",
+          "module": "mod",
+          "why": "Poly-Mod, the Prophet’s name for modulation inside each voice, now lets OSC B move OSC A’s pitch at audio speed. That is frequency modulation (FM), and it turns the plain triangle into a bell.\n- OSC B amount 5 (50 %): how much OSC B goes into Poly-Mod. Low is a soft chime, high a harsh gong.\n- FREQ A on: sends the Poly-Mod mix to OSC A’s pitch. Each voice has its own OSC B, so chords stay clean.\n- Listen for: a clangy, metallic tone replacing the flute. Turn the OSC B amount slowly from 0 to 5 while holding a note.",
+          "set": { "pmod.oscb": 5, "pmod.freqA": true }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "amp",
+          "why": "Both envelopes and the filter make it strike and ring like a bell: loud at once, then dying away even while you hold the key.\n- Amplifier ATTACK 0, DECAY 1.7 s: an instant start, then, with SUSTAIN at 0, a fade to silence over nearly two seconds. Longer DECAY rings longer.\n- Amplifier RELEASE 1.7 s: let go early and the note still rings out.\n- Filter 1 ms, 1.0 s, 0 %, 1.0 s: the filter envelope follows the same shape, so the tone darkens as it fades, like a real bell.\n- CUTOFF 5.5 (808 Hz), ENVELOPE AMOUNT +2: the strike opens the filter, then it closes back to this.\n- KEYBOARD FULL: the cutoff follows the notes fully, so high notes stay as bright as low ones.\n- Listen for: a bright strike that mellows as it decays.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 7,
+            "aenv.sustain": 0,
+            "aenv.release": 7,
+            "fenv.attack": 0,
+            "fenv.decay": 6.5,
+            "fenv.sustain": 0,
+            "fenv.release": 6.5,
+            "vcf.cutoff": 5.5,
+            "vcf.env": 2,
+            "vcf.kbd": "full"
+          }
+        }
+      ],
+      "context": {
+        "pmod.oscb": "In this sound: how metallic the bell is. Low is a soft chime, high a harsh gong.",
+        "osc2.fine": "In this sound: the ratio between the oscillators. Moving it changes which clangy overtones you get.",
+        "aenv.decay": "In this sound: how long each strike rings."
+      },
+      "tweaks": [
+        {
+          "id": "pmod.oscb",
+          "try": "Move between 2 and 8",
+          "hear": "From a glassy chime to a clanging gong."
+        },
+        {
+          "id": "osc2.fine",
+          "try": "Set to 0",
+          "hear": "In tune, the overtones line up and the bell turns into a hollow organ-like tone."
+        }
+      ]
+    },
+    {
+      "id": "p8-pwm-strings",
+      "name": "Shimmer Strings",
+      "ref": "In the style of early-80s string-synth pads",
+      "artist": "Classic technique",
+      "tags": ["strings", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Soft string chords that shimmer while they hold.",
+      "how": "Both oscillators play pulse waves and the LFO sweeps their width, which makes them shimmer like a string section. OSC B slightly detuned adds movement. A slow attack and long release make the chords swell in and fade away.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [0, 60, 3.8],
+          [0, 64, 3.8],
+          [0, 69, 3.8],
+          [4, 53, 3.8],
+          [4, 57, 3.8],
+          [4, 60, 3.8],
+          [4, 67, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse waves on both oscillators",
+          "module": "osc",
+          "why": "String-synth pads start from pulse waves. Two slightly detuned pulses give a thinner, more hollow body than sawtooths, which is closer to an ensemble of strings.\n- OSC A and B sawtooth off, pulse on: each wave has its own switch, so the sawtooths must go off or they add to the pulses.\n- OSC A PULSE WIDTH 4 (41 %): a little off square, slightly thinner. OSC B stays square at 5.\n- LEVEL 3.5 and 3: both fairly low and clean, OSC B a touch quieter.\n- OSC B FINE +16 cents: slightly sharp, so the two beat and the chord sounds wider.\n- Listen for: a hollow, reedy chord with a slow swirl from the detune.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "osc2.saw": false,
+            "osc2.pulse": true,
+            "osc1.level": 3.5,
+            "osc2.level": 3,
+            "osc2.fine": 0.8,
+            "osc1.pw": 4
+          }
+        },
+        {
+          "title": "Sweep the widths",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator, a slow wave that moves other controls) sweeps the width of both pulses. That changing width is pulse-width modulation, the shimmer of string machines.\n- PW A-B on: sends the LFO to both oscillators’ pulse width. Only heard on oscillators with the pulse switched on.\n- INITIAL AMOUNT 4 (40 %): how deep the width swings without touching the mod wheel. The mod wheel adds more on top.\n- LFO FREQUENCY 4.6 (1.01 Hz): about one sweep a second. Slower is a gentle drift; faster, a nervous flutter.\n- Listen for: the chord moving and shimmering while it holds. Switch PW A-B off to hear it go still.",
+          "set": { "lfo.pw": true, "lfo.amount": 4, "lfo.rate": 4.6 }
+        },
+        {
+          "title": "Soften the filter",
+          "module": "filter",
+          "why": "The filter smooths the top so the strings are soft rather than buzzy, and sit under a vocal or lead.\n- CUTOFF 6 (1.2 kHz): down from the default 2.4 kHz, taking the fizz off. Lower goes muffled; higher, brighter and more cutting.\n- Listen for: a smoother, warmer chord with the shimmer still clear.",
+          "set": { "vcf.cutoff": 6 }
+        },
+        {
+          "title": "Swell in, fade out",
+          "module": "amp",
+          "why": "The amplifier envelope makes every chord rise and fall like a bowed string section rather than starting and stopping like an organ.\n- ATTACK 6 (610 ms): each chord fades in over more than half a second.\n- DECAY 610 ms, SUSTAIN 100 %: the decay makes no difference with full sustain; held chords stay at full volume.\n- RELEASE 6.8 (1.4 s): chords hang after you let go and overlap into the next.\n- Listen for: slow swells and tails. Play chords in a row and hear them blend.",
+          "set": { "aenv.attack": 6, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 6.8 }
+        }
+      ],
+      "context": {
+        "lfo.amount": "In this sound: how deep the shimmer is.",
+        "lfo.rate": "In this sound: how fast the strings shimmer.",
+        "aenv.attack": "In this sound: how slowly each chord swells in."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Move between 3 and 6.5",
+          "hear": "From a slow sway to a nervous flutter."
+        },
+        {
+          "id": "lfo.amount",
+          "try": "Set to 0 and back",
+          "hear": "Without the LFO the chord goes flat and still."
+        }
+      ]
+    },
+    {
+      "id": "p8-unison-bass",
+      "name": "Eight-Voice Unison Bass",
+      "ref": "In the style of 80s synth-pop unison bass",
+      "artist": "Classic technique",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A heavy, punchy bass made of all eight voices stacked on each note.",
+      "how": "UNISON TRACK puts every voice on the one key, each a little out of tune with the others, so the bass is enormous. OSC B an octave down adds weight, and a short filter envelope gives each note a round thump.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.4],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 39, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack every voice",
+          "module": "mode",
+          "why": "All eight voices go onto one key. This is how a polysynth becomes a huge mono bass: each voice is slightly out of tune with the others.\n- UNISON TRACK on: every key now plays all eight voices, detuned against each other, and only one note sounds at a time.\n- Listen for: a much thicker, louder sawtooth than before. Switch it off and on to compare.",
+          "set": { "voice.unison": true }
+        },
+        {
+          "title": "A sub-octave under the sawtooth",
+          "module": "osc",
+          "why": "A second oscillator an octave below adds low end under the sawtooth.\n- OSC B FREQUENCY 2.5 (−1 oct): one step down on the octave knob.\n- OSC B LEVEL 5: equal to OSC A, so the sub-octave carries real weight.\n- OSC B FINE +10 cents: a touch sharp, for a little extra movement.\n- Listen for: the note dropping in weight. Turn OSC B LEVEL to 0 and back to hear what the sub-octave adds.",
+          "set": { "osc2.freq": 2.5, "osc2.level": 5, "osc2.fine": 0.5 }
+        },
+        {
+          "title": "A round, heavy filter",
+          "module": "filter",
+          "why": "The filter is set low so the bass is round and heavy, and the filter envelope opens it for a moment on each note to give a thump.\n- CUTOFF 3.2 (157 Hz): very dark. How much growl comes through between the thumps.\n- RESONANCE 2: a little boost at the cutoff for shape.\n- ENVELOPE AMOUNT +2.5: how far the filter envelope opens the filter on each note.\n- Filter ATTACK 0, DECAY 180 ms: opens at once and closes fast; the length of the thump.\n- Filter SUSTAIN 15 %, RELEASE 77 ms: held notes go back to dark.\n- Listen for: a round thump at the start of each note, then a deep hum.",
+          "set": {
+            "vcf.cutoff": 3.2,
+            "vcf.res": 2,
+            "vcf.env": 2.5,
+            "fenv.attack": 0,
+            "fenv.decay": 4.8,
+            "fenv.sustain": 1.5,
+            "fenv.release": 4
+          }
+        },
+        {
+          "title": "Tight loudness",
+          "module": "amp",
+          "why": "The amplifier envelope keeps notes tight so the bass line has a clear groove.\n- ATTACK 0: full volume at once, so the thump lands on the beat.\n- DECAY 220 ms, SUSTAIN 90 %: held notes keep almost all their weight.\n- RELEASE 3.5 (46 ms): notes stop almost as soon as you let go, keeping them apart.\n- Listen for: the gaps between notes. Raise RELEASE and they start to blur.",
+          "set": { "aenv.attack": 0, "aenv.decay": 5, "aenv.sustain": 9, "aenv.release": 3.5 }
+        }
+      ],
+      "context": {
+        "voice.unison": "In this sound: all eight voices on one note. Switch it off and the bass is thin by comparison.",
+        "vcf.cutoff": "In this sound: how much growl comes through between the thumps.",
+        "fenv.decay": "In this sound: the length of the thump."
+      },
+      "tweaks": [
+        { "id": "vcf.res", "try": "Raise to 6", "hear": "Each note gets a rubbery squelch." },
+        {
+          "id": "osc1.level",
+          "try": "Raise to 8",
+          "hear": "The filter is driven harder and the bass turns gritty."
+        }
+      ]
+    },
+    {
+      "id": "p8-updown-arp",
+      "name": "Up-Down Arpeggio",
+      "ref": "In the style of 80s soundtrack arpeggios",
+      "artist": "Classic technique",
+      "tags": ["seq", "soundtrack", "80s"],
+      "level": 1,
+      "blurb": "A held chord turned into a plucked arpeggio that slowly brightens and darkens.",
+      "how": "ARP UP-DN plays the held notes one at a time, up and back down. Each note is short and the filter envelope gives it a pluck. The LFO, very slow, sweeps the filter so the pattern keeps changing colour.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.9],
+          [0, 52, 3.9],
+          [0, 55, 3.9],
+          [0, 59, 3.9],
+          [4, 45, 3.9],
+          [4, 48, 3.9],
+          [4, 52, 3.9],
+          [4, 55, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Turn the arpeggiator on",
+          "module": "mode",
+          "why": "The arpeggiator turns a held chord into single notes played in turn. It is on the programmer keys, not a knob.\n- ARP UP-DN on: hold a chord and it plays the notes from the lowest up to the highest and back down, at 120 BPM. The lamp lights while it is on.\n- Listen for: a stream of bright sawtooth notes. Change the chord and the pattern follows.",
+          "set": { "arp.updn": true }
+        },
+        {
+          "title": "A square-wave pluck",
+          "module": "osc",
+          "why": "The tone for the pluck: a square wave on OSC A with a quieter sawtooth an octave above.\n- OSC A sawtooth off, pulse on: pulse width is at 5, so this is a square wave, hollow like a clarinet.\n- OSC B FREQUENCY 7.5 (+1 oct): one step up, an octave above OSC A.\n- OSC B LEVEL 2.5: quiet, so it adds a glassy edge on top rather than a second note.\n- Listen for: a hollow tone with a thin shine above it.",
+          "set": { "osc1.saw": false, "osc1.pulse": true, "osc2.freq": 7.5, "osc2.level": 2.5 }
+        },
+        {
+          "title": "Pluck the filter",
+          "module": "filter",
+          "why": "A plucked filter makes each arpeggio note short and percussive. Both envelopes are set for a quick pluck that still leaves a little body.\n- CUTOFF 3.4 (181 Hz): nearly closed at rest, so the envelope has plenty to open.\n- RESONANCE 4: a clear boost at the cutoff that makes each pluck ring.\n- ENVELOPE AMOUNT +2.6: how far the filter opens on each note.\n- Filter 1 ms, 130 ms, 0 %, 130 ms: in ADSR order (attack, decay, sustain, release). Opens at once and snaps shut.\n- Amplifier 1 ms, 220 ms, 70 %, 130 ms: the notes keep some body after the pluck.\n- Listen for: a bright, ringing “tick” on every note, then a dark tail.",
+          "set": {
+            "vcf.cutoff": 3.4,
+            "vcf.res": 4,
+            "vcf.env": 2.6,
+            "fenv.attack": 0,
+            "fenv.decay": 4.5,
+            "fenv.sustain": 0,
+            "fenv.release": 4.5,
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 7,
+            "aenv.release": 4.5
+          }
+        },
+        {
+          "title": "A slow filter sweep",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) slowly moves the filter, so the pattern brightens and darkens over several bars. It keeps a repeating arpeggio from sounding static.\n- FILTER on: sends the LFO to the cutoff.\n- LFO FREQUENCY 1.8 (0.22 Hz): one sweep about every four and a half seconds.\n- INITIAL AMOUNT 4 (40 %): how far the sweep moves the filter. The mod wheel adds more on top.\n- Listen for: the plucks getting brighter and more ringing, then duller, while you hold the same chord.",
+          "set": { "lfo.filter": true, "lfo.rate": 1.8, "lfo.amount": 4 }
+        }
+      ],
+      "context": {
+        "lfo.amount": "In this sound: how far the slow sweep moves the filter.",
+        "vcf.res": "In this sound: the ring on each pluck.",
+        "arp.updn": "In this sound: turns the held chord into a stream of single notes."
+      },
+      "tweaks": [
+        {
+          "id": "arp.assign",
+          "try": "Press ARP ASSIGN and switch UP-DN off",
+          "hear": "The notes now come in the order you pressed the keys."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Set between 3.5 and 6",
+          "hear": "From a tick to a soft, round note."
+        }
+      ]
+    },
+    {
+      "id": "p8-sync-brass",
+      "name": "Sync Brass",
+      "ref": "In the style of early-80s synth-rock brass",
+      "artist": "Classic technique",
+      "tags": ["brass", "rock", "80s"],
+      "level": 2,
+      "blurb": "Brass chords with a hard, biting edge that snarls at the start of each stab.",
+      "how": "A brass patch with OSC A synced to OSC B. Poly-Mod adds a small push from the filter envelope to OSC A, so the start of each chord snarls and then settles to a brassy tone. Every voice has its own sync and its own envelope, so the chords stay in tune.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [0, 64, 0.9],
+          [0, 67, 0.9],
+          [1.5, 62, 0.4],
+          [1.5, 65, 0.4],
+          [1.5, 69, 0.4],
+          [2, 60, 1.8],
+          [2, 64, 1.8],
+          [2, 67, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync OSC A an octave up",
+          "module": "osc",
+          "why": "Sync gives the brass its hard, bright edge. OSC A follows OSC B’s note, and raising OSC A changes only its tone.\n- SYNC on: OSC A restarts every time OSC B starts a cycle. On the PRO-800, OSC A is the one that is synced.\n- OSC A FREQUENCY 7.5 (+1 oct): one step up. With sync it stays on OSC B’s note but sounds harder and brighter.\n- OSC B LEVEL 4: OSC B’s sawtooth is now heard under OSC A, giving the note a solid body.\n- Listen for: a harder, more nasal tone at the same pitch. Switch SYNC off to hear OSC A jump up an octave instead.",
+          "set": { "osc1.sync": true, "osc1.freq": 7.5, "osc2.level": 4 }
+        },
+        {
+          "title": "A small Poly-Mod push",
+          "module": "mod",
+          "why": "Poly-Mod, the Prophet’s name for modulation inside each voice, adds a snarl. The filter envelope pushes OSC A’s pitch up at the start of each stab, and with sync that is heard as a quick sweep of tone.\n- FIL ENV +1.6: a small amount, a few semitones at the peak. More gives a longer, more obvious sweep.\n- FREQ A on: sends it to OSC A’s pitch.\n- Listen for: a short snarl at the front of every chord. Each voice has its own sync and envelope, so chords stay in tune.",
+          "set": { "pmod.env": 1.6, "pmod.freqA": true }
+        },
+        {
+          "title": "Brass filter and envelopes",
+          "module": "filter",
+          "why": "The brass filter and loudness. The filter is part-closed and the filter envelope opens it quickly, while the volume swells in slightly, like breath into a horn.\n- CUTOFF 4.6 (425 Hz): dark at rest.\n- ENVELOPE AMOUNT +2.4: how bright each stab gets.\n- Filter 16 ms, 370 ms, 40 %, 130 ms: in ADSR order (attack, decay, sustain, release). A quick bloom that settles. The same envelope drives the snarl.\n- Amplifier 4 ms, 220 ms, 90 %, 130 ms: a slight swell, held nearly full, with a short release to keep stabs apart.\n- Listen for: the snarl and the brightness now rising and falling together on each stab.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.env": 2.4,
+            "fenv.attack": 2.5,
+            "fenv.decay": 5.5,
+            "fenv.sustain": 4,
+            "fenv.release": 4.5,
+            "aenv.attack": 1.5,
+            "aenv.decay": 5,
+            "aenv.sustain": 9,
+            "aenv.release": 4.5
+          }
+        }
+      ],
+      "context": {
+        "pmod.env": "In this sound: the snarl at the front of each stab. Higher gives a longer, more obvious sweep.",
+        "osc1.freq": "In this sound: how hard the synced tone is.",
+        "vcf.env": "In this sound: how bright each stab gets."
+      },
+      "tweaks": [
+        {
+          "id": "pmod.env",
+          "try": "Move between 0 and 3",
+          "hear": "Plain brass at 0, a tearing sync sweep at 3."
+        },
+        {
+          "id": "osc1.sync",
+          "try": "Switch SYNC off",
+          "hear": "OSC A jumps an octave above OSC B instead: softer and more ordinary."
+        }
+      ]
+    },
+    {
+      "id": "p8-reverse-swell",
+      "name": "Reverse Swell",
+      "ref": "In the style of 80s ambient pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "ambient", "80s"],
+      "level": 2,
+      "blurb": "Chords that start bright and close, then open up again as you let go.",
+      "how": "ENVELOPE AMOUNT is turned left of the middle, so the filter envelope closes the filter instead of opening it. The chord starts bright, closes as the envelope rises slowly, and opens again during the release, which sounds like a chord played backwards.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.6],
+          [0, 60, 3.6],
+          [0, 64, 3.6],
+          [4, 55, 3.6],
+          [4, 59, 3.6],
+          [4, 62, 3.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Two detuned sawtooths give a wide, bright chord to work with. The trick in this sound comes later, in the filter.\n- OSC B LEVEL 4.5: brought in just under OSC A.\n- OSC B FINE −18 cents: OSC B a little flat, so the two beat against each other and the chord sounds wider.\n- Listen for: a bright, shimmering chord.",
+          "set": { "osc2.level": 4.5, "osc2.fine": -0.9 }
+        },
+        {
+          "title": "An open filter, inverted envelope",
+          "module": "filter",
+          "why": "The filter starts open and the envelope is turned upside down. Right of the middle, ENVELOPE AMOUNT opens the filter as the envelope rises; left of the middle, it closes it.\n- CUTOFF 7.2 (2.7 kHz): well up, so chords start bright.\n- RESONANCE 2.5: a small boost at the cutoff that makes the sweep easier to hear.\n- ENVELOPE AMOUNT −2.5: the filter envelope now pulls the cutoff down. Turn it right and the swell goes the usual way.\n- Listen for: a quick dip in brightness at the start of each chord (the envelope is still fast until the next step).",
+          "set": { "vcf.cutoff": 7.2, "vcf.res": 2.5, "vcf.env": -2.5 }
+        },
+        {
+          "title": "A slow filter envelope",
+          "module": "env",
+          "why": "Slow envelopes turn that dip into a long, reverse-sounding swell. The chord closes as the filter envelope rises, then opens again as it falls away after you let go.\n- Filter ATTACK 7 (1.7 s): how long the chord takes to close.\n- Filter DECAY 1.7 s, SUSTAIN 80 %: held chords stay mostly closed.\n- Filter RELEASE 7.2 (2.1 s): after you let go the envelope falls and the filter opens again.\n- Amplifier 27 ms, 610 ms, 100 %, 2.1 s: in ADSR order (attack, decay, sustain, release). A soft start, full while held, and a release as long as the filter’s, so you hear the reopening.\n- Listen for: play a chord, hold it two seconds, let go. It goes bright, dark, then bright again as it fades, like a chord played backwards.",
+          "set": {
+            "fenv.attack": 7,
+            "fenv.decay": 7,
+            "fenv.sustain": 8,
+            "fenv.release": 7.2,
+            "aenv.attack": 3,
+            "aenv.decay": 6,
+            "aenv.sustain": 10,
+            "aenv.release": 7.2
+          }
+        }
+      ],
+      "context": {
+        "vcf.env": "In this sound: left of the middle, so the envelope closes the filter. Turn it right and the swell goes the usual way.",
+        "fenv.attack": "In this sound: how long the chord takes to close.",
+        "aenv.release": "In this sound: long, so you hear the filter open again after you let go."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.env",
+          "try": "Move from −4 to +4",
+          "hear": "The swell turns from closing to opening as you pass the middle."
+        }
+      ]
+    },
+    {
+      "id": "p8-clav",
+      "name": "Hollow Clav",
+      "ref": "In the style of 80s funk-pop clavinet parts",
+      "artist": "Classic technique",
+      "tags": ["keys", "funk", "80s"],
+      "level": 1,
+      "blurb": "A short, nasal pluck for choppy rhythm parts.",
+      "how": "A narrow pulse wave is thin and nasal like a clavinet string. The filter envelope gives each note a bright click that dies at once, and the loudness decays quickly with little sustain.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [0.5, 63, 0.2],
+          [0.75, 60, 0.2],
+          [1.5, 65, 0.2],
+          [2, 67, 0.2],
+          [2.5, 63, 0.2],
+          [3, 60, 0.2],
+          [3.5, 58, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "A narrow pulse is thin and nasal, like a clavinet string. That makes it cut through a busy mix without taking up much room.\n- OSC A sawtooth off, pulse on: only the pulse plays.\n- OSC A PULSE WIDTH 1.5 (17 %): well towards one end, so the pulse is narrow. The further from 5, the thinner and more nasal.\n- OSC A LEVEL 7 (70 %): above 5 it drives the filter harder, adding a little grit and bite.\n- Listen for: a buzzy, nasal tone. Sweep PULSE WIDTH from 5 to 1.5 and hear it go from hollow to reedy.",
+          "set": { "osc1.saw": false, "osc1.pulse": true, "osc1.pw": 1.5, "osc1.level": 7 }
+        },
+        {
+          "title": "A bright click",
+          "module": "filter",
+          "why": "The filter gives each note a bright click that dies at once. That quick flick is what makes it sound plucked, and it fits choppy funk rhythms.\n- CUTOFF 4.8 (490 Hz), RESONANCE 2: fairly dark between clicks, with a little edge.\n- ENVELOPE AMOUNT +3: a strong push, so each click is bright.\n- KEYBOARD FULL: the cutoff follows the notes fully, so high notes stay as bright as low ones.\n- Filter ATTACK 0, DECAY 3.8 (63 ms): opens at once and shuts in about 60 ms. The length of the click.\n- Filter SUSTAIN 10 %, RELEASE 46 ms: held notes go dull.\n- Listen for: a sharp “tik” at the start of every note.",
+          "set": {
+            "vcf.cutoff": 4.8,
+            "vcf.res": 2,
+            "vcf.env": 3,
+            "vcf.kbd": "full",
+            "fenv.attack": 0,
+            "fenv.decay": 3.8,
+            "fenv.sustain": 1,
+            "fenv.release": 3.5
+          }
+        },
+        {
+          "title": "A short note",
+          "module": "amp",
+          "why": "The amplifier envelope keeps notes short so the rhythm stays tight and choppy.\n- ATTACK 0: instant start.\n- DECAY 4.8 (180 ms), SUSTAIN 30 %: the volume drops quickly to a low level, so even held notes fade back.\n- RELEASE 3.2 (33 ms): the note stops almost as soon as you let go.\n- Listen for: play a sixteenth-note rhythm and hear short, separate hits with space between them.",
+          "set": { "aenv.attack": 0, "aenv.decay": 4.8, "aenv.sustain": 3, "aenv.release": 3.2 }
+        }
+      ],
+      "context": {
+        "osc1.pw": "In this sound: how thin and nasal the tone is.",
+        "fenv.decay": "In this sound: the length of the click."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.pw",
+          "try": "Move between 1 and 5",
+          "hear": "From a thin twang to a hollow square."
+        },
+        { "id": "vcf.res", "try": "Raise to 5", "hear": "A quacky, wah-like pluck." }
+      ]
+    },
+    {
+      "id": "p8-organ",
+      "name": "Combo Organ",
+      "ref": "In the style of 60s combo organ, played on a polysynth",
+      "artist": "Classic technique",
+      "tags": ["keys", "pop", "60s"],
+      "level": 1,
+      "blurb": "A reedy organ that starts and stops instantly.",
+      "how": "OSC A plays a square and a triangle together, and OSC B adds an octave above: a stack of pitches, like organ drawbars. The loudness envelope is a plain on/off gate, and a little LFO vibrato gives it life.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9],
+          [0, 64, 0.9],
+          [0, 67, 0.9],
+          [1, 62, 0.9],
+          [1, 65, 0.9],
+          [1, 69, 0.9],
+          [2, 64, 1.8],
+          [2, 67, 1.8],
+          [2, 72, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and triangle together",
+          "module": "osc",
+          "why": "Organs build their tone by stacking simple waves. Here OSC A plays two of them together.\n- OSC A triangle and pulse on: with the sawtooth off, these two waves add up. The square (pulse at 5) gives a hollow, reedy body; the triangle rounds it off.\n- OSC A LEVEL 4 (40 %): a little lower, leaving room for OSC B and keeping it clean.\n- Listen for: a hollow, woody tone, like one organ drawbar setting.",
+          "set": { "osc1.saw": false, "osc1.tri": true, "osc1.pulse": true, "osc1.level": 4 }
+        },
+        {
+          "title": "An octave above",
+          "module": "osc",
+          "why": "A second oscillator an octave up adds the next drawbar, a brighter pitch on top.\n- OSC B sawtooth off, triangle on: a soft wave, so the upper octave adds shine without buzz.\n- OSC B FREQUENCY 7.5 (+1 oct): one step up, an octave above OSC A.\n- OSC B LEVEL 3.5: a little quieter. How much of the upper octave you hear, like pulling out a drawbar.\n- Listen for: the tone getting brighter and more organ-like.",
+          "set": { "osc2.saw": false, "osc2.tri": true, "osc2.freq": 7.5, "osc2.level": 3.5 }
+        },
+        {
+          "title": "An organ gate",
+          "module": "amp",
+          "why": "An organ is either on or off: no swell, no fade. The loudness is set as a plain gate and the filter is opened.\n- Amplifier ATTACK 0, SUSTAIN 100 %: full volume at once and held there. DECAY does nothing at full sustain.\n- Amplifier RELEASE 2.2 (11 ms): the note stops almost instantly.\n- CUTOFF 6.6 (1.8 kHz): fairly open, just taking the harshest top off.\n- KEYBOARD FULL: the filter follows the notes fully, so high notes stay bright.\n- Listen for: notes that start and stop cleanly. Play short chords and the gaps are silent.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "aenv.release": 2.2,
+            "vcf.cutoff": 6.6,
+            "vcf.kbd": "full"
+          }
+        },
+        {
+          "title": "A touch of vibrato",
+          "module": "mod",
+          "why": "A small vibrato from the LFO (low-frequency oscillator) keeps the organ from sounding frozen.\n- FREQ A-B on: sends the LFO to both oscillators’ pitch.\n- LFO FREQUENCY 7.2 (4.26 Hz): a natural vibrato speed.\n- INITIAL AMOUNT 1.5 (15 %): the depth of the vibrato, a fraction of a semitone. The mod wheel adds more on top.\n- Listen for: a gentle waver on held chords. Turn INITIAL AMOUNT to 0 to hear it go still.",
+          "set": { "lfo.freq": true, "lfo.rate": 7.2, "lfo.amount": 1.5 }
+        }
+      ],
+      "context": {
+        "osc2.level": "In this sound: how much of the upper octave you hear, like pulling out a drawbar.",
+        "lfo.amount": "In this sound: the depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "Set to 10 (two octaves up)",
+          "hear": "A thinner, whistling top like a high drawbar."
+        }
+      ]
+    },
+    {
+      "id": "p8-wah-lead",
+      "name": "Wah Lead",
+      "ref": "In the style of 70s funk synth leads",
+      "artist": "Classic technique",
+      "tags": ["lead", "funk", "70s"],
+      "level": 1,
+      "blurb": "A vocal, wobbling lead that wah-wahs on its own.",
+      "how": "The LFO sweeps the filter up and down several times a second while RESONANCE makes the sweep sound like a voice. UNISON TRACK makes it one thick note at a time.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 67, 1],
+          [1, 70, 0.5],
+          [1.5, 72, 1.5],
+          [3, 70, 0.5],
+          [3.5, 67, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One thick note",
+          "module": "mode",
+          "why": "One thick voice with weight under it: a lead that can hold its own against drums and bass.\n- UNISON TRACK on: all eight voices stack on one key, slightly detuned, and only one note plays at a time.\n- OSC B FREQUENCY 2.5 (−1 oct): one step down, an octave under OSC A.\n- OSC B LEVEL 3.5: under OSC A, adding body.\n- Listen for: a fat, buzzy single note.",
+          "set": { "voice.unison": true, "osc2.freq": 2.5, "osc2.level": 3.5 }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "A resonant filter gives the lead its vocal quality. The 24 dB low-pass filter cuts the highs, and RESONANCE boosts the band at the cutoff.\n- CUTOFF 5 (566 Hz): in the middle, so the sound is neither dull nor harsh.\n- RESONANCE 5.5: a strong peak at the cutoff. The higher it goes, the more the sweep will sound like a voice.\n- Listen for: a slightly honky, nasal note.",
+          "set": { "vcf.cutoff": 5, "vcf.res": 5.5 }
+        },
+        {
+          "title": "Let the LFO wah it",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) sweeps the filter up and down on its own, so the note wah-wahs without a pedal.\n- FILTER on: sends the LFO to the cutoff.\n- LFO FREQUENCY 7.1 (4.03 Hz): about four sweeps a second. Slower is a lazy wah; faster, a trill-like wobble.\n- INITIAL AMOUNT 4.5 (45 %): how far each sweep moves the filter. The mod wheel adds more on top.\n- Listen for: a regular “wow-wow” on every held note. Lower RESONANCE and the wah turns into a plain brightness change.",
+          "set": { "lfo.filter": true, "lfo.rate": 7.1, "lfo.amount": 4.5 }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how fast it wah-wahs.",
+        "vcf.res": "In this sound: the vocal quality of the sweep."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.shape",
+          "try": "Switch SHAPE to the pulse",
+          "hear": "The wah jumps between two positions instead of sweeping."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Move between 5.5 and 8",
+          "hear": "From a lazy sway to a fast flutter."
+        }
+      ]
+    },
+    {
+      "id": "p8-wind",
+      "name": "Wind and Surf",
+      "ref": "In the style of 70s synth sound effects",
+      "artist": "Classic technique",
+      "tags": ["fx", "ambient", "70s"],
+      "level": 1,
+      "blurb": "Noise shaped into gusting wind that rises and falls.",
+      "how": "Both oscillators are turned down and only NOISE reaches the filter. High RESONANCE turns the noise into a whistling tone, and a slow LFO moves the cutoff up and down like gusts. Long envelopes fade it in and out.",
+      "phrase": { "bpm": 60, "loop": true, "steps": [[0, 60, 7.5]] },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "The oscillators come out and only noise reaches the filter. White noise has every frequency at once, which is the raw material for wind and surf.\n- OSC A LEVEL 0: OSC A silent. OSC B is already at 0.\n- NOISE 8 (80 %): plenty of noise into the filter.\n- Listen for: a steady hiss, the same whatever key you play.",
+          "set": { "osc1.level": 0, "noise.level": 8 }
+        },
+        {
+          "title": "A whistling filter",
+          "module": "filter",
+          "why": "High resonance picks one band out of the noise and makes it whistle, so the hiss starts to sound like wind.\n- CUTOFF 5.4 (752 Hz): sets where that band sits. Lower is a deep rumble; higher, a thin whistle.\n- RESONANCE 7.5: a strong peak at the cutoff. How much the wind whistles; lower is a plain hiss.\n- Listen for: a howling tone inside the noise.",
+          "set": { "vcf.cutoff": 5.4, "vcf.res": 7.5 }
+        },
+        {
+          "title": "Gusts",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) moves the filter up and down slowly, like gusts.\n- FILTER on: sends the LFO to the cutoff.\n- LFO FREQUENCY 2 (0.24 Hz): one gust about every four seconds.\n- INITIAL AMOUNT 5 (50 %): how far the whistle rises and falls. The mod wheel adds more on top.\n- Listen for: the howl rising and falling. Hold a key and move the mod wheel to make the gusts wilder.",
+          "set": { "lfo.filter": true, "lfo.rate": 2, "lfo.amount": 5 }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "amp",
+          "why": "Long envelopes fade the wind in and out, so it rises from nothing and dies away slowly.\n- ATTACK 7 (1.7 s): the wind builds up over nearly two seconds.\n- DECAY 610 ms, SUSTAIN 100 %: held at full while you hold the key.\n- RELEASE 7.5 (2.8 s): a long fade after you let go.\n- Listen for: tap a key briefly and the gust swells and tails away.",
+          "set": { "aenv.attack": 7, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 7.5 }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: how much the wind whistles. Lower is a plain hiss.",
+        "lfo.rate": "In this sound: how often the gusts come."
+      },
+      "tweaks": [
+        { "id": "vcf.res", "try": "Move between 3 and 9", "hear": "From surf to a howling gale." }
+      ]
+    },
+    {
+      "id": "p8-siren",
+      "name": "Pulse Siren",
+      "ref": "In the style of 80s sci-fi sound effects",
+      "artist": "Classic technique",
+      "tags": ["fx", "soundtrack", "80s"],
+      "level": 1,
+      "blurb": "An alarm that jumps between two pitches.",
+      "how": "The LFO, set to its pulse shape, moves both oscillators’ pitch up and down in steps, which gives a two-tone alarm. Turned to the triangle it becomes a wailing siren.",
+      "phrase": { "bpm": 90, "loop": true, "steps": [[0, 72, 3.8]] },
+      "steps": [
+        {
+          "title": "LFO to pitch, pulse shape",
+          "module": "mod",
+          "why": "The LFO (low-frequency oscillator) moves both oscillators’ pitch. With its pulse shape it jumps between two values instead of sliding, which gives a two-tone alarm.\n- FREQ A-B on: sends the LFO to both oscillators’ pitch.\n- SHAPE PULSE: the LFO jumps between two levels. Up on TRIANGLE it slides smoothly and wails instead.\n- INITIAL AMOUNT 6 (60 %): large, so the two pitches are about eight or nine semitones apart. The mod wheel adds more on top.\n- LFO FREQUENCY 5.3 (1.49 Hz): about one and a half swaps a second.\n- Listen for: a “nee-naw” alternating pitch on any held key.",
+          "set": { "lfo.freq": true, "lfo.shape": "pulse", "lfo.amount": 6, "lfo.rate": 5.3 }
+        },
+        {
+          "title": "A bright tone",
+          "module": "osc",
+          "why": "A bright, simple tone makes the alarm cut through.\n- OSC A sawtooth off, pulse on: a square wave, hollow and piercing.\n- CUTOFF 7.5 (3.4 kHz): open, so the tone stays bright.\n- Listen for: a harder, more electronic alarm than the sawtooth. Flip SHAPE to TRIANGLE for a wailing siren.",
+          "set": { "osc1.saw": false, "osc1.pulse": true, "vcf.cutoff": 7.5 }
+        }
+      ],
+      "context": {
+        "lfo.amount": "In this sound: the distance between the two pitches.",
+        "lfo.shape": "In this sound: the pulse makes it jump; the triangle makes it wail."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.shape",
+          "try": "Switch to the triangle",
+          "hear": "A wailing police siren instead of a two-tone alarm."
+        }
+      ]
+    },
+    {
+      "id": "p8-glide-lead",
+      "name": "Gliding Lead",
+      "ref": "In the style of 80s prog-rock synth solos",
+      "artist": "Classic technique",
+      "tags": ["lead", "prog", "80s"],
+      "level": 1,
+      "blurb": "A singing lead that slides between notes.",
+      "how": "UNISON TRACK stacks the voices on one note, and GLIDE slides every note into the next. A sawtooth and a triangle together give it a full but smooth tone, and a gentle vibrato comes from a little LFO on pitch.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 64, 1],
+          [1, 71, 1.5],
+          [2.5, 69, 0.5],
+          [3, 67, 1],
+          [4, 64, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One stacked note",
+          "module": "mode",
+          "why": "The lead becomes a single, thick voice, which it needs for gliding solos.\n- UNISON TRACK on: all eight voices stack on one key, slightly detuned, and one note plays at a time.\n- Listen for: a much fatter sawtooth. Switch it off and play a chord to hear the difference.",
+          "set": { "voice.unison": true }
+        },
+        {
+          "title": "Sawtooth and triangle",
+          "module": "osc",
+          "why": "A triangle an octave up smooths the top of the sawtooth, so the lead sings rather than buzzes.\n- OSC B sawtooth off, triangle on: soft and round.\n- OSC B FREQUENCY 7.5 (+1 oct): an octave above OSC A.\n- OSC B LEVEL 3: fairly quiet, a smooth layer on top.\n- Listen for: a fuller, rounder lead.",
+          "set": { "osc2.saw": false, "osc2.tri": true, "osc2.freq": 7.5, "osc2.level": 3 }
+        },
+        {
+          "title": "Slide between notes",
+          "module": "glide",
+          "why": "Glide makes each note slide from the last instead of jumping, the classic prog-rock solo move.\n- GLIDE 3.2 (410 ms): each slide takes about four tenths of a second. Shorter is a quick scoop; longer and fast runs smear.\n- Listen for: play two notes far apart and hear the pitch bend between them.",
+          "set": { "glide.time": 3.2 }
+        },
+        {
+          "title": "A singing tone",
+          "module": "filter",
+          "why": "The filter and a light vibrato make the lead sing, and the loudness is set plainly.\n- CUTOFF 5.8 (1.0 kHz), RESONANCE 3: warm with a vocal edge.\n- ENVELOPE AMOUNT +1.5: a small lift in brightness at the start of each note.\n- LFO to FREQ A-B, FREQUENCY 4.50 Hz: the LFO (low-frequency oscillator) moves both pitches at a vibrato speed.\n- INITIAL AMOUNT 1.8: the depth of the vibrato. The mod wheel adds more.\n- Amplifier 2 ms, 220 ms, 100 %, 220 ms: in ADSR order (attack, decay, sustain, release). A clean start and a short tail.\n- Listen for: a gentle waver on held notes, and glides that end in vibrato.",
+          "set": {
+            "vcf.cutoff": 5.8,
+            "vcf.res": 3,
+            "vcf.env": 1.5,
+            "lfo.freq": true,
+            "lfo.rate": 7.3,
+            "lfo.amount": 1.8,
+            "aenv.attack": 1,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "aenv.release": 5
+          }
+        }
+      ],
+      "context": {
+        "glide.time": "In this sound: how long each slide takes.",
+        "lfo.amount": "In this sound: the depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "glide.time",
+          "try": "Move between 1 and 5",
+          "hear": "From a quick scoop to a slow, sliding wail."
+        }
+      ]
+    },
+    {
+      "id": "p8-epiano",
+      "name": "Soft Electric Piano",
+      "ref": "In the style of 80s ballad electric piano",
+      "artist": "Classic technique",
+      "tags": ["keys", "ballad", "80s"],
+      "level": 1,
+      "blurb": "A round, soft piano tone that fades while the key is held.",
+      "how": "Two triangles, the second an octave up and quieter, give a round tone with a little shine. The loudness decays slowly to silence like a struck note, and the filter envelope adds a soft brightness at the start.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.8],
+          [0, 60, 1.8],
+          [0, 64, 1.8],
+          [2, 55, 1.8],
+          [2, 59, 1.8],
+          [2, 62, 1.8],
+          [3, 67, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles",
+          "module": "osc",
+          "why": "Two triangles give a soft, round tone like an electric piano tine. The upper octave adds a little shine.\n- OSC A and B sawtooth off, triangle on: soft waves close to a sine.\n- OSC B FREQUENCY 7.5 (+1 oct): an octave above OSC A.\n- OSC B LEVEL 2.5: quiet. The shine of the upper octave; more and it gets bell-like.\n- Listen for: a mellow, hollow tone with a faint ring on top.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.tri": true,
+            "osc2.saw": false,
+            "osc2.tri": true,
+            "osc2.freq": 7.5,
+            "osc2.level": 2.5
+          }
+        },
+        {
+          "title": "A soft strike",
+          "module": "filter",
+          "why": "A soft strike from the filter envelope: each note starts a little brighter, then mellows, as a struck key does.\n- CUTOFF 5.2 (652 Hz): fairly dark at rest.\n- ENVELOPE AMOUNT +1.5: a small push, so the strike is gentle.\n- KEYBOARD FULL: high notes stay as bright as low ones.\n- Filter ATTACK 0, DECAY 5.8 (500 ms): the brightness fades over about half a second.\n- Filter SUSTAIN 20 %, RELEASE 370 ms: held notes stay mellow.\n- Listen for: a slight brightness at the front of each note that softens away.",
+          "set": {
+            "vcf.cutoff": 5.2,
+            "vcf.env": 1.5,
+            "vcf.kbd": "full",
+            "fenv.attack": 0,
+            "fenv.decay": 5.8,
+            "fenv.sustain": 2,
+            "fenv.release": 5.5
+          }
+        },
+        {
+          "title": "Fade like a piano",
+          "module": "amp",
+          "why": "A piano note fades even while you hold the key. The amplifier envelope does that here.\n- ATTACK 0: struck, not swelled.\n- DECAY 7.3 (2.3 s), SUSTAIN 0: the note dies away over a couple of seconds. How long each note rings.\n- RELEASE 5.8 (500 ms): let go early and the note fades quickly, like lifting a finger off a piano key.\n- Listen for: hold a chord and hear it fade to nothing.",
+          "set": { "aenv.attack": 0, "aenv.decay": 7.3, "aenv.sustain": 0, "aenv.release": 5.8 }
+        }
+      ],
+      "context": {
+        "aenv.decay": "In this sound: how long each note rings.",
+        "osc2.level": "In this sound: the shine of the upper octave."
+      },
+      "tweaks": [{ "id": "osc2.level", "try": "Raise to 5", "hear": "More bell-like and glassy." }]
+    },
+    {
+      "id": "p8-metal-perc",
+      "name": "Metal Hits",
+      "ref": "In the style of 80s industrial percussion",
+      "artist": "Classic technique",
+      "tags": ["perc", "industrial", "80s"],
+      "level": 3,
+      "blurb": "Short, clanging hits like struck sheet metal.",
+      "how": "Poly-Mod sends OSC B to both OSC A’s pitch and the filter at audio speed, which adds harsh, inharmonic overtones. A very short loudness envelope turns that into a hit.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.2],
+          [0.75, 55, 0.2],
+          [1.5, 48, 0.2],
+          [2, 60, 0.2],
+          [2.75, 51, 0.2],
+          [3.5, 58, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "OSC B as a fast modulator",
+          "module": "osc",
+          "why": "OSC B is set up as a fast, silent modulator. Its high, detuned pitch will produce harsh, inharmonic overtones in the next step.\n- OSC B FREQUENCY 10 (+2 oct): fully up, two octaves above OSC A.\n- OSC B FINE +70 cents: an uneven ratio, so the overtones clash rather than blend.\n- OSC B pulse on: added to the sawtooth that is already on, giving a sharper wave.\n- OSC B LEVEL 0: not heard, but it keeps running.\n- Listen for: no change yet: OSC B is silent and not routed.",
+          "set": { "osc2.freq": 10, "osc2.fine": 3.5, "osc2.level": 0, "osc2.pulse": true }
+        },
+        {
+          "title": "Poly-Mod everywhere",
+          "module": "mod",
+          "why": "Poly-Mod, the Prophet’s name for modulation inside each voice, sends OSC B to OSC A’s pitch and to the filter at audio speed. That frequency modulation creates clanging overtones like struck metal.\n- OSC B amount 7.5 (75 %): a lot. How harsh and metallic it gets.\n- FREQ A on: OSC B bends OSC A’s pitch hundreds of times a second.\n- FILTER on: OSC B also shakes the cutoff, adding grit.\n- Listen for: a harsh, clangy drone in place of the sawtooth.",
+          "set": { "pmod.oscb": 7.5, "pmod.freqA": true, "pmod.filter": true }
+        },
+        {
+          "title": "A short hit",
+          "module": "amp",
+          "why": "A short envelope turns the drone into a hit, and the mixer and filter are set for bite.\n- Amplifier ATTACK 0, DECAY 270 ms: an instant start and, with SUSTAIN at 0, a quick fade. The length of each hit.\n- Amplifier RELEASE 140 ms: a short tail if you let go early.\n- OSC A LEVEL 7.5: above 5 it drives the filter harder for extra grit.\n- CUTOFF 6.6 (1.8 kHz), RESONANCE 3: bright with an edge.\n- Listen for: short, clanging hits like struck sheet metal.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 5.2,
+            "aenv.sustain": 0,
+            "aenv.release": 4.6,
+            "osc1.level": 7.5,
+            "vcf.cutoff": 6.6,
+            "vcf.res": 3
+          }
+        }
+      ],
+      "context": {
+        "pmod.oscb": "In this sound: how harsh and metallic the hit is.",
+        "aenv.decay": "In this sound: the length of each hit."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.fine",
+          "try": "Move across its range",
+          "hear": "The metal changes pitch and colour, from tin can to gong."
+        }
+      ]
+    },
+    {
+      "id": "p8-whistle",
+      "name": "Filter Whistle",
+      "ref": "In the style of 70s sine-wave synth leads",
+      "artist": "Classic technique",
+      "tags": ["lead", "electronic", "70s"],
+      "level": 2,
+      "blurb": "A pure, whistling tone made by the filter alone.",
+      "how": "Both oscillators are turned down: the only sound is the filter itself, whistling at full RESONANCE. With KEYBOARD on FULL the whistle follows the notes, so the filter plays in tune like a third oscillator.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 74, 1],
+          [2, 76, 1],
+          [3, 79, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Turn the oscillators off",
+          "module": "mixer",
+          "why": "Both oscillators are silenced. The sound in this patch will come from the filter itself, not from an oscillator.\n- OSC A LEVEL 0: with OSC B already at 0, nothing reaches the filter.\n- Listen for: silence. That is expected.",
+          "set": { "osc1.level": 0 }
+        },
+        {
+          "title": "Make the filter whistle",
+          "module": "filter",
+          "why": "At full resonance the filter feeds back on itself and whistles, a pure tone close to a sine wave. Key tracking makes it play in tune.\n- RESONANCE 10: fully up. The filter sounds on its own; turn it down and the whistle stops.\n- KEYBOARD FULL: the cutoff follows the notes exactly, so the whistle plays the notes in tune, like a third oscillator.\n- CUTOFF 5 (566 Hz): the pitch of the whistle. Moving it retunes the whole instrument.\n- Listen for: a pure, flute-like whistle that changes pitch with the keys. Turn CUTOFF slowly to hear the pitch slide.",
+          "set": { "vcf.res": 10, "vcf.kbd": "full", "vcf.cutoff": 5 }
+        },
+        {
+          "title": "Shape it",
+          "module": "amp",
+          "why": "The loudness is softened a little and a gentle vibrato is added. Because the whistle is the filter, the vibrato goes to the filter, not to the oscillators.\n- Amplifier ATTACK 2 (8 ms): a slight softening of the start.\n- Amplifier DECAY 220 ms, SUSTAIN 100 %: held at full.\n- Amplifier RELEASE 4.5 (130 ms): a short fade after you let go.\n- LFO to FILTER, FREQUENCY 4.26 Hz: the LFO (low-frequency oscillator) moves the cutoff at a vibrato speed.\n- INITIAL AMOUNT 0.6: very small, just enough to waver the pitch. The mod wheel adds more.\n- Listen for: a singing waver on held notes, like a whistled tune.",
+          "set": {
+            "aenv.attack": 2,
+            "aenv.decay": 5,
+            "aenv.sustain": 10,
+            "aenv.release": 4.5,
+            "lfo.filter": true,
+            "lfo.rate": 7.2,
+            "lfo.amount": 0.6
+          }
+        }
+      ],
+      "context": {
+        "vcf.res": "In this sound: at the top the filter sounds on its own. Turn it down and the whistle stops.",
+        "vcf.kbd": "In this sound: FULL makes the whistle play the notes in tune.",
+        "vcf.cutoff": "In this sound: the pitch of the whistle."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.kbd",
+          "try": "Switch to 1/2",
+          "hear": "The whistle moves only half as far as the notes: the melody goes out of tune."
+        }
+      ]
+    },
+    {
+      "id": "p8-chord-stab",
+      "name": "House Chord Stab",
+      "ref": "In the style of late-80s house chord stabs",
+      "artist": "Classic technique",
+      "tags": ["keys", "house", "80s"],
+      "level": 1,
+      "blurb": "A short, bright chord hit for off-beat house riffs.",
+      "how": "Two detuned sawtooths give each chord its width. The loudness has no sustain, so every chord is a short stab, and the filter envelope makes the front of it bright.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.5, 60, 0.25],
+          [0.5, 63, 0.25],
+          [0.5, 67, 0.25],
+          [0.5, 70, 0.25],
+          [1.5, 60, 0.25],
+          [1.5, 63, 0.25],
+          [1.5, 67, 0.25],
+          [1.5, 70, 0.25],
+          [2.5, 58, 0.25],
+          [2.5, 62, 0.25],
+          [2.5, 65, 0.25],
+          [2.5, 69, 0.25],
+          [3.5, 58, 0.25],
+          [3.5, 62, 0.25],
+          [3.5, 65, 0.25],
+          [3.5, 69, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Two detuned sawtooths give each chord its width, which is what makes a house stab fill the space between the kick drums.\n- OSC B LEVEL 4.5: brought in just under OSC A.\n- OSC B FINE +24 cents: well off the middle, so the chord sounds wide and slightly sour. Less is narrower and cleaner.\n- Listen for: a thick, buzzy chord that beats noticeably.",
+          "set": { "osc2.level": 4.5, "osc2.fine": 1.2 }
+        },
+        {
+          "title": "A bright stab",
+          "module": "filter",
+          "why": "The filter envelope gives the front of each chord a bright edge, so the stab punches through.\n- CUTOFF 5 (566 Hz), RESONANCE 2: fairly dark at rest, with a little edge at the cutoff.\n- ENVELOPE AMOUNT +2.4: how far the filter opens at the start of each chord.\n- Filter ATTACK 0, DECAY 220 ms: opens instantly and closes in about a fifth of a second.\n- Filter SUSTAIN 15 %, RELEASE 130 ms: held chords go dark.\n- Listen for: a bright hit at the front of each chord.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.res": 2,
+            "vcf.env": 2.4,
+            "fenv.attack": 0,
+            "fenv.decay": 5,
+            "fenv.sustain": 1.5,
+            "fenv.release": 4.5
+          }
+        },
+        {
+          "title": "No sustain",
+          "module": "amp",
+          "why": "The chord is turned into a short hit. With no sustain, the length is set by the decay, not by how long you hold the keys.\n- ATTACK 0: instant start for punch.\n- DECAY 5.3 (300 ms), SUSTAIN 0: the chord fades to nothing in about a third of a second. The length of the stab.\n- RELEASE 130 ms: a short tail if you let go before the decay ends.\n- Listen for: play off-beat chords and hear short, punchy stabs with space between them.",
+          "set": { "aenv.attack": 0, "aenv.decay": 5.3, "aenv.sustain": 0, "aenv.release": 4.5 }
+        }
+      ],
+      "context": {
+        "aenv.decay": "In this sound: the length of the stab.",
+        "osc2.fine": "In this sound: the width of the chord."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Move between 4.5 and 6",
+          "hear": "From a clipped hit to a ringing chord."
+        }
+      ]
+    },
+    {
+      "id": "p8-drone",
+      "name": "Slow Beating Drone",
+      "ref": "In the style of 70s electronic drones",
+      "artist": "Classic technique",
+      "tags": ["drone", "ambient", "70s"],
+      "level": 1,
+      "blurb": "A dark, slowly shifting chord that goes on and on.",
+      "how": "Two oscillators, one tuned slightly off with FINE, beat against each other slowly. The LFO moves the filter over many seconds, so the drone keeps changing colour while it holds.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 7.8],
+          [0, 45, 7.8],
+          [0, 50, 7.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two slowly beating oscillators",
+          "module": "osc",
+          "why": "Two oscillators tuned very slightly apart beat slowly, which gives a drone its sense of motion.\n- OSC B sawtooth off, pulse on: a square wave (pulse width at 5), hollower than the sawtooth on OSC A.\n- OSC B LEVEL 5: equal to OSC A.\n- OSC B FINE +6 cents: a very small detune, so the beating is slow. More gives faster beats.\n- Listen for: hold a note and hear a slow pulsing as the two drift in and out of phase.",
+          "set": { "osc2.saw": false, "osc2.pulse": true, "osc2.level": 5, "osc2.fine": 0.3 }
+        },
+        {
+          "title": "A dark, moving filter",
+          "module": "filter",
+          "why": "A dark filter that moves very slowly, so the drone keeps changing colour while it holds.\n- CUTOFF 4.2 (320 Hz): low and dark.\n- RESONANCE 3.5: a peak at the cutoff that makes the movement audible.\n- LFO to FILTER: the LFO (low-frequency oscillator) moves the cutoff.\n- LFO FREQUENCY 0.8 (0.12 Hz): one sweep about every eight seconds.\n- INITIAL AMOUNT 4 (40 %): how far it sweeps. The mod wheel adds more.\n- Listen for: the tone slowly brightening and darkening over several seconds.",
+          "set": {
+            "vcf.cutoff": 4.2,
+            "vcf.res": 3.5,
+            "lfo.filter": true,
+            "lfo.rate": 0.8,
+            "lfo.amount": 4
+          }
+        },
+        {
+          "title": "Endless loudness",
+          "module": "amp",
+          "why": "Loudness that fades in slowly, holds and dies away slowly, so the drone has no hard edges.\n- ATTACK 6.5 (1.0 s): a slow fade in.\n- DECAY 610 ms, SUSTAIN 100 %: held at full for as long as you hold the key.\n- RELEASE 7.5 (2.8 s): a long tail.\n- Listen for: hold a chord for a long time and let it go.",
+          "set": { "aenv.attack": 6.5, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 7.5 }
+        }
+      ],
+      "context": {
+        "lfo.rate": "In this sound: how slowly the colour changes.",
+        "osc2.fine": "In this sound: the speed of the beating."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.fine",
+          "try": "Move a little either side",
+          "hear": "The beating speeds up or slows down."
+        }
+      ]
+    },
+    {
+      "id": "p8-sweep-pad",
+      "name": "Sweeping Pad",
+      "ref": "In the style of 80s synth-pop pads",
+      "artist": "Classic technique",
+      "tags": ["pad", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Wide sawtooth chords whose brightness rises and falls slowly.",
+      "how": "Two detuned sawtooths give width. A slow LFO triangle sweeps the filter, and RESONANCE makes the sweep audible, so the chords breathe while they hold.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8],
+          [0, 64, 3.8],
+          [0, 67, 3.8],
+          [0, 71, 3.8],
+          [4, 57, 3.8],
+          [4, 60, 3.8],
+          [4, 64, 3.8],
+          [4, 67, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two detuned sawtooths",
+          "module": "osc",
+          "why": "Two detuned sawtooths at equal level give the pad its width.\n- OSC A and B LEVEL 4.5: both slightly below 5, clean and even.\n- OSC B FINE +14 cents: slightly sharp, so the chord beats and sounds wider.\n- Listen for: a wide, bright chord.",
+          "set": { "osc2.level": 4.5, "osc2.fine": 0.7, "osc1.level": 4.5 }
+        },
+        {
+          "title": "A slow sweep",
+          "module": "mod",
+          "why": "A slow LFO (low-frequency oscillator) sweeps the filter, and resonance makes the sweep clear, so the chords open and close while they hold.\n- LFO to FILTER: sends the LFO to the cutoff.\n- LFO FREQUENCY 2.8 (0.38 Hz): one sweep about every two and a half seconds.\n- INITIAL AMOUNT 4.5 (45 %): how far the sweep moves. The mod wheel adds more.\n- CUTOFF 5.2 (652 Hz): the centre point of the sweep, fairly dark.\n- RESONANCE 3.5: how clearly you hear the sweep.\n- Listen for: the chord getting brighter and darker in a steady cycle.",
+          "set": {
+            "lfo.filter": true,
+            "lfo.rate": 2.8,
+            "lfo.amount": 4.5,
+            "vcf.cutoff": 5.2,
+            "vcf.res": 3.5
+          }
+        },
+        {
+          "title": "Pad envelopes",
+          "module": "amp",
+          "why": "Pad envelopes: a soft start and a long tail, so chords blend into each other.\n- ATTACK 5 (220 ms): a soft start without a click.\n- DECAY 610 ms, SUSTAIN 100 %: held at full.\n- RELEASE 6.8 (1.4 s): chords hang after you let go.\n- Listen for: chord changes that overlap smoothly.",
+          "set": { "aenv.attack": 5, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 6.8 }
+        }
+      ],
+      "context": {
+        "lfo.amount": "In this sound: how far the sweep moves.",
+        "vcf.res": "In this sound: how clearly you hear the sweep."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Move between 1.5 and 4.5",
+          "hear": "From a slow breath to a steady wobble."
+        }
+      ]
+    },
+    {
+      "id": "p8-hazy-chords",
+      "name": "Hazy Slow Chords",
+      "ref": "In the style of Daft Punk — \"Nightvision\"",
+      "artist": "Daft Punk",
+      "tags": ["pad", "french house", "ambient"],
+      "level": 2,
+      "blurb": "Soft, dark chords that drift slightly out of tune and fade in and out slowly.",
+      "how": "A quiet sawtooth on OSC A and a triangle on OSC B, tuned a little apart, give a soft tone that beats slowly. The filter is kept low with no envelope, so the chords stay muffled, and a touch of noise adds a faint hiss behind them. A very slow LFO, switched to FREQ A-B at a small INITIAL AMOUNT, pulls every voice slightly flat and sharp, like a worn tape, and slow attacks and long releases blur one chord into the next.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 51, 3.8],
+          [0, 55, 3.8],
+          [0, 58, 3.8],
+          [0, 62, 3.8],
+          [4, 48, 3.8],
+          [4, 51, 3.8],
+          [4, 55, 3.8],
+          [4, 58, 3.8],
+          [8, 44, 3.8],
+          [8, 51, 3.8],
+          [8, 55, 3.8],
+          [8, 60, 3.8],
+          [12, 46, 3.8],
+          [12, 50, 3.8],
+          [12, 53, 3.8],
+          [12, 58, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft sawtooth and a triangle",
+          "module": "osc",
+          "why": "A soft, quiet tone that beats slowly: a triangle does most of the work, with a little sawtooth for edge.\n- OSC A sawtooth on, LEVEL 3: kept low, so the sawtooth adds only a little edge.\n- OSC B triangle only: soft, with few overtones, and most of the tone.\n- OSC B LEVEL 5: louder than OSC A.\n- OSC B FINE +12 cents: slightly sharp, so each chord beats slowly.\n- Listen for: a mellow, slightly wavering chord.",
+          "set": {
+            "osc1.saw": true,
+            "osc1.tri": false,
+            "osc1.pulse": false,
+            "osc1.level": 3,
+            "osc2.saw": false,
+            "osc2.tri": true,
+            "osc2.pulse": false,
+            "osc2.level": 5,
+            "osc2.fine": 0.6
+          }
+        },
+        {
+          "title": "A faint hiss",
+          "module": "mixer",
+          "why": "A faint layer of noise adds a haze behind the chords, like tape hiss.\n- NOISE 1 (10 %): not enough to hear as noise on its own. Above 3 it becomes a separate sound.\n- Listen for: a very slight airiness on held chords. Turn NOISE to 0 and back to hear it.",
+          "set": { "noise.level": 1 }
+        },
+        {
+          "title": "Muffled and still",
+          "module": "filter",
+          "why": "The filter keeps the chords muffled and still. With the envelope amount at 0, nothing opens on each new chord.\n- CUTOFF 4.6 (425 Hz): well down. How muffled the chords are; above 6 they come forward and lose the haze.\n- RESONANCE 0: no peak, for a smooth, plain filter.\n- ENVELOPE AMOUNT 0: the filter envelope does nothing to the filter.\n- KEYBOARD 1/2: the cutoff follows half of the keyboard.\n- Listen for: dark, soft chords with no brightening at the start.",
+          "set": { "vcf.cutoff": 4.6, "vcf.res": 0, "vcf.env": 0, "vcf.kbd": "half" }
+        },
+        {
+          "title": "A slow wander in pitch",
+          "module": "mod",
+          "why": "A very slow LFO (low-frequency oscillator) pulls the pitch slightly flat and sharp, like a worn tape.\n- SHAPE TRIANGLE: a smooth wave, so the pitch drifts rather than jumps.\n- LFO FREQUENCY 3 (0.42 Hz): about one cycle every two seconds. Keep it slow.\n- INITIAL AMOUNT 1 (10 %): how far the pitch wanders. Above 2 it sounds out of tune rather than worn.\n- FREQ A-B on, PW A-B and FILTER off: the LFO goes to the pitch of both oscillators only.\n- Listen for: on a held chord, the pitch sags and lifts very slightly.",
+          "set": {
+            "lfo.shape": "tri",
+            "lfo.rate": 3,
+            "lfo.amount": 1,
+            "lfo.freq": true,
+            "lfo.pw": false,
+            "lfo.filter": false
+          }
+        },
+        {
+          "title": "Fade in, fade out",
+          "module": "amp",
+          "why": "Slow envelopes blur one chord into the next.\n- ATTACK 6.3 (830 ms): each chord fades in slowly.\n- DECAY 610 ms, SUSTAIN 100 %: held at full.\n- RELEASE 7.2 (2.1 s): each chord hangs after you let go.\n- Listen for: chords rising out of nothing and dissolving into the next.",
+          "set": { "aenv.attack": 6.3, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 7.2 }
+        }
+      ],
+      "context": {
+        "osc1.level": "In this sound: kept low so the sawtooth only adds a little edge to the triangle.",
+        "osc2.tri": "In this sound: the triangle is most of the tone: soft, with few overtones.",
+        "osc2.fine": "In this sound: the slow beating inside each chord.",
+        "noise.level": "In this sound: the faint hiss. Above 3 it becomes a separate sound.",
+        "vcf.cutoff": "In this sound: how muffled the chords are. Above 6 they come forward and lose the haze.",
+        "lfo.amount": "In this sound: how far the pitch wanders. Above 2 it sounds out of tune rather than worn.",
+        "lfo.rate": "In this sound: the speed of the wander. Keep it slow.",
+        "lfo.freq": "In this sound: sends the LFO to the pitch of both oscillators.",
+        "aenv.attack": "In this sound: how slowly each chord fades in.",
+        "aenv.release": "In this sound: how long each chord hangs after you let go."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.amount",
+          "try": "Set to 0 and back",
+          "hear": "Without the wander the chords are steady and clean, and the haze mostly goes."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Move between 3.8 and 5.5",
+          "hear": "From a distant hum to soft, clearer chords."
+        },
+        {
+          "id": "aenv.release",
+          "try": "Lower to 5",
+          "hear": "The chords stop blurring into each other."
+        }
+      ]
+    },
+    {
+      "id": "p8-glassy-chords",
+      "name": "Calm Glassy Chords",
+      "ref": "In the style of Kraftwerk — \"Radioland\"",
+      "artist": "Kraftwerk",
+      "tags": ["pad", "electronic", "80s"],
+      "level": 2,
+      "blurb": "Calm, sustained chords with a clear, slightly glassy shine on top.",
+      "how": "A fairly narrow pulse on OSC A gives a clear, hollow body. OSC B, an octave higher on triangle, adds a soft upper octave and also runs into Poly-Mod: a small amount of OSC B on FREQ A bends OSC A’s wave at audio speed and adds a faint ringing, glassy layer of overtones. The filter is fairly open and barely moves, and even envelopes with a gentle attack and a long release keep the chords calm.",
+      "phrase": {
+        "bpm": 64,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8],
+          [0, 64, 3.8],
+          [0, 69, 3.8],
+          [0, 72, 3.8],
+          [4, 53, 3.8],
+          [4, 60, 3.8],
+          [4, 65, 3.8],
+          [4, 69, 3.8],
+          [8, 55, 3.8],
+          [8, 62, 3.8],
+          [8, 67, 3.8],
+          [8, 71, 3.8],
+          [12, 52, 3.8],
+          [12, 59, 3.8],
+          [12, 64, 3.8],
+          [12, 67, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "A clear, hollow body from a fairly narrow pulse on OSC A.\n- OSC A pulse only: sawtooth and triangle off.\n- PULSE WIDTH 3 (31 %): narrower than a square, so clear and slightly reedy. At 5 it is a hollow square; lower still it gets thin and nasal.\n- OSC A LEVEL 3.5: kept low and clean.\n- Listen for: a clear, reedy tone.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.tri": false,
+            "osc1.pulse": true,
+            "osc1.pw": 3,
+            "osc1.level": 3.5
+          }
+        },
+        {
+          "title": "A soft octave above",
+          "module": "osc",
+          "why": "A soft octave above, from OSC B on triangle. OSC B will also feed Poly-Mod in the next step.\n- OSC B triangle only: soft.\n- OSC B FREQUENCY 7.5 (+1 oct): an octave above OSC A. It sets both the upper octave and the speed of the Poly-Mod.\n- OSC B FINE 0: exactly in tune, so the octave is clean.\n- OSC B LEVEL 2.5: how much of the upper octave you hear directly.\n- Listen for: a brighter, fuller chord.",
+          "set": {
+            "osc2.saw": false,
+            "osc2.tri": true,
+            "osc2.pulse": false,
+            "osc2.freq": 7.5,
+            "osc2.fine": 0,
+            "osc2.level": 2.5
+          }
+        },
+        {
+          "title": "The glassy layer",
+          "module": "mod",
+          "why": "Poly-Mod, the Prophet’s name for modulation inside each voice, adds a faint glassy layer. OSC B moves OSC A’s pitch at audio speed, heard as shine, not wobble.\n- OSC B amount 1.5 (15 %): the glassy shine. Above 3 it becomes a clanging bell.\n- FREQ A on: sends OSC B to OSC A’s pitch.\n- FIL ENV 0, FILTER off: the filter envelope and the filter stay out of Poly-Mod.\n- Listen for: a slight ringing on top of the chords. Turn the OSC B amount to 0 and back to hear it.",
+          "set": { "pmod.env": 0, "pmod.oscb": 1.5, "pmod.freqA": true, "pmod.filter": false }
+        },
+        {
+          "title": "Open and steady",
+          "module": "filter",
+          "why": "The filter is fairly open and barely moves, so the chords are clear.\n- CUTOFF 6.2 (1.3 kHz), RESONANCE 1.5: clear tone. Lower and the glassy top is the first thing to go.\n- ENVELOPE AMOUNT +0.8: a very small lift.\n- KEYBOARD FULL: high notes are as bright as low ones.\n- Filter 220 ms, 610 ms, 70 %, 1.0 s: in ADSR order (attack, decay, sustain, release). Slow and gentle, so the small lift is smooth.\n- Listen for: a clear chord with only a faint change at the start.",
+          "set": {
+            "vcf.cutoff": 6.2,
+            "vcf.res": 1.5,
+            "vcf.env": 0.8,
+            "vcf.kbd": "full",
+            "fenv.attack": 5,
+            "fenv.decay": 6,
+            "fenv.sustain": 7,
+            "fenv.release": 6.5
+          }
+        },
+        {
+          "title": "Calm, even chords",
+          "module": "amp",
+          "why": "Even loudness: the chords come in smoothly, hold still and fade out slowly.\n- ATTACK 5.2 (270 ms): the smooth start of each chord.\n- DECAY 610 ms, SUSTAIN 100 %: held at full.\n- RELEASE 6.8 (1.4 s): the slow fade after you let go.\n- Listen for: calm, even chords that tail off.",
+          "set": { "aenv.attack": 5.2, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 6.8 }
+        }
+      ],
+      "context": {
+        "osc1.pw": "In this sound: the clear, reedy body. At 5 it is a hollow square; lower still it gets thin and nasal.",
+        "osc2.freq": "In this sound: one step up, an octave above OSC A. It sets both the soft upper octave and the speed of the Poly-Mod.",
+        "osc2.level": "In this sound: how much of the upper octave you hear directly.",
+        "pmod.oscb": "In this sound: the glassy shine. Above 3 it turns into a clanging bell.",
+        "pmod.freqA": "In this sound: sends OSC B to OSC A’s pitch, which is where the shine comes from.",
+        "vcf.cutoff": "In this sound: fairly open for a clear tone. Lower it and the glassy top is the first thing to go.",
+        "vcf.kbd": "In this sound: FULL, so the high notes of each chord are as bright as the low ones.",
+        "aenv.attack": "In this sound: the smooth start of each chord.",
+        "aenv.release": "In this sound: the slow fade after you let go."
+      },
+      "tweaks": [
+        {
+          "id": "pmod.oscb",
+          "try": "Move between 0 and 3",
+          "hear": "From a plain, clean chord to a bright, bell-like ring."
+        },
+        {
+          "id": "osc2.fine",
+          "try": "Turn to 0.5",
+          "hear": "OSC B drifts off the octave and the shine starts to shimmer and beat."
+        },
+        {
+          "id": "aenv.attack",
+          "try": "Lower to 2",
+          "hear": "The chords start at once, more like an organ."
+        }
+      ]
+    },
+    {
+      "id": "p8-squelch-riff",
+      "name": "Rubbery Squelch Riff",
+      "ref": "In the style of Talking Heads — \"Once in a Lifetime\" (Stop Making Sense)",
+      "artist": "Bernie Worrell",
+      "tags": ["lead", "funk", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A bouncy, squelchy mid-range riff that slides between notes.",
+      "how": "Bernie Worrell played keyboards with Talking Heads on the Stop Making Sense tour. This sound is a playful, rubbery synth line for that kind of groove: a hollow pulse with a sawtooth an octave below goes through a low, resonant filter, and a short filter envelope snaps it open on every note, which gives the squelch. UNISON TRACK makes it one thick note at a time, and a short GLIDE bends each note into the next.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.35],
+          [0.5, 62, 0.25],
+          [0.75, 65, 0.4],
+          [1.25, 67, 0.6],
+          [2, 69, 0.3],
+          [2.5, 67, 0.25],
+          [2.75, 65, 0.4],
+          [3.25, 60, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hollow pulse over a sawtooth",
+          "module": "osc",
+          "why": "A hollow pulse on top and a sawtooth an octave below: the pulse gives the riff its nasal character, the sawtooth its weight.\n- OSC A pulse only, PULSE WIDTH 3.8 (39 %): a little under a square, so slightly nasal.\n- OSC A LEVEL 5: clean.\n- OSC B FREQUENCY 2.5 (−1 oct): an octave below OSC A.\n- OSC B LEVEL 3.5: under OSC A, adding body.\n- OSC B FINE +4 cents: a tiny detune for slight movement.\n- Listen for: a hollow tone with a solid low end.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.pulse": true,
+            "osc1.pw": 3.8,
+            "osc1.level": 5,
+            "osc2.freq": 2.5,
+            "osc2.level": 3.5,
+            "osc2.fine": 0.2
+          }
+        },
+        {
+          "title": "A low, resonant filter",
+          "module": "filter",
+          "why": "A low, resonant filter makes the riff dull and boxy on its own. That leaves the envelope in the next step room to snap it open.\n- CUTOFF 3.4 (181 Hz): kept low so the envelope has somewhere to open from. Above 5 the squelch turns into a plain buzz.\n- RESONANCE 6.5: a strong peak at the cutoff that gives each note a rubbery edge. Lower it and the riff goes flat.\n- KEYBOARD 1/2: the cutoff follows half of the keyboard.\n- Listen for: a dull, boxy note with a faint ring.",
+          "set": { "vcf.cutoff": 3.4, "vcf.res": 6.5, "vcf.kbd": "half" }
+        },
+        {
+          "title": "Snap the filter open on every note",
+          "module": "env",
+          "why": "The filter envelope snaps the filter open on every note, which is the squelch. The loudness is set to keep notes tight.\n- ENVELOPE AMOUNT +3.6: how far each note snaps open.\n- Filter ATTACK 0, DECAY 180 ms: opens at once and closes quickly. Short for a click, longer for a “wow”.\n- Filter SUSTAIN 15 %, RELEASE 46 ms: held notes close back down.\n- Amplifier 1 ms, 220 ms, 85 %, 46 ms: in ADSR order (attack, decay, sustain, release). Instant start, held near full, and a very short release.\n- Listen for: the “yow” at the front of every note. Sweep filter DECAY while playing the riff.",
+          "set": {
+            "vcf.env": 3.6,
+            "fenv.attack": 0,
+            "fenv.decay": 4.8,
+            "fenv.sustain": 1.5,
+            "fenv.release": 3.5,
+            "aenv.attack": 0,
+            "aenv.decay": 5,
+            "aenv.sustain": 8.5,
+            "aenv.release": 3.5
+          }
+        },
+        {
+          "title": "One fat note that slides",
+          "module": "mode",
+          "why": "One thick voice that slides between notes, so the riff bends rather than steps.\n- UNISON TRACK on: all eight voices stack on one key and only one note plays at a time, so the glide has a single line to follow.\n- GLIDE 1.6 (100 ms): a short bend between notes. Keep it short or the riff drags.\n- Listen for: each note bending up or down into the next.",
+          "set": { "voice.unison": true, "glide.time": 1.6 }
+        }
+      ],
+      "context": {
+        "osc1.pulse": "In this sound: the hollow, slightly nasal top of the riff.",
+        "osc2.freq": "In this sound: one step down, an octave below OSC A, which gives the riff its weight.",
+        "vcf.cutoff": "In this sound: kept low so the envelope has somewhere to open from. Above 5 the squelch turns into a plain buzz.",
+        "vcf.res": "In this sound: the vocal, rubbery edge of each note. Lower it and the riff goes flat and polite.",
+        "vcf.env": "In this sound: how far each note snaps open.",
+        "fenv.decay": "In this sound: how quickly the filter closes after each note starts: short for a click, longer for a “wow”.",
+        "voice.unison": "In this sound: one thick note at a time, so the glide has a single line to follow.",
+        "glide.time": "In this sound: the short bend between notes. Keep it short or the riff drags."
+      },
+      "tweaks": [
+        {
+          "id": "fenv.decay",
+          "try": "Move between 4 and 6",
+          "hear": "From a tight click to a slow, talking “wow” on every note."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 8",
+          "hear": "The squelch gets rubbery and starts to whistle."
+        },
+        {
+          "id": "glide.time",
+          "try": "Raise to 3",
+          "hear": "Every note slides further, and the riff sounds lazier and more playful."
+        }
+      ]
+    },
+    {
+      "id": "p8-slow-soft-bells",
+      "name": "Slow Soft Bells",
+      "ref": "In the style of Brian Eno — \"Thursday Afternoon\"",
+      "artist": "Brian Eno",
+      "tags": ["keys", "ambient", "80s"],
+      "level": 2,
+      "blurb": "Soft, bell-like single notes that ring for a long time and overlap into a still cloud.",
+      "how": "Two triangles, OSC B an octave above OSC A, give a soft, round tone. A small amount of OSC B through Poly-Mod to FREQ A adds a quiet ring of overtones, so each note sounds struck, like a soft bell or a treated piano. The amplifier envelope has a short attack, a very long decay and no sustain, and a long release, so notes ring on and fade slowly whether you hold them or not. Play a few notes far apart and let them overlap.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 64, 2],
+          [1.5, 71, 2],
+          [3, 69, 2],
+          [5, 76, 2],
+          [6.5, 72, 2],
+          [8, 57, 3],
+          [10, 67, 2],
+          [12.5, 74, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two triangles an octave apart",
+          "module": "osc",
+          "why": "Two triangles an octave apart give a soft, round base tone.\n- OSC A and B triangle only: soft waves close to a sine.\n- OSC A LEVEL 5: clean.\n- OSC B FREQUENCY 7.5 (+1 oct): an octave above OSC A. It sets both the upper octave and the pitch of the ring added next.\n- OSC B LEVEL 3.5, FINE 0: quieter than OSC A and exactly in tune.\n- Listen for: a soft, flute-like tone.",
+          "set": {
+            "osc1.saw": false,
+            "osc1.tri": true,
+            "osc1.level": 5,
+            "osc2.saw": false,
+            "osc2.tri": true,
+            "osc2.freq": 7.5,
+            "osc2.level": 3.5,
+            "osc2.fine": 0
+          }
+        },
+        {
+          "title": "A faint bell ring",
+          "module": "mod",
+          "why": "Poly-Mod, the Prophet’s name for modulation inside each voice, adds a faint bell ring. OSC B moves OSC A’s pitch at audio speed, which is heard as a metallic ring, not a wobble.\n- OSC B amount 1.8 (18 %): the bell ring. Above 3 it becomes a clanging gong.\n- FREQ A on: sends OSC B to OSC A’s pitch.\n- Listen for: a soft metallic ring. Turn the OSC B amount to 0 and back to hear it.",
+          "set": { "pmod.oscb": 1.8, "pmod.freqA": true }
+        },
+        {
+          "title": "Soften the strike",
+          "module": "filter",
+          "why": "The filter softens the strike: each note starts a little brighter and slowly goes dull as it rings.\n- CUTOFF 5.6 (868 Hz), RESONANCE 1: soft and clear. Lower for a muffled, distant piano; higher for a glassier bell.\n- ENVELOPE AMOUNT +1.5: a small lift at the start.\n- KEYBOARD FULL: high notes are as bright as low ones.\n- Filter ATTACK 0, DECAY 7.6 (3.1 s): how slowly each note goes dull.\n- Filter SUSTAIN 20 %, RELEASE 2.8 s: a slow close.\n- Listen for: a slightly brighter start that softens over several seconds.",
+          "set": {
+            "vcf.cutoff": 5.6,
+            "vcf.res": 1,
+            "vcf.env": 1.5,
+            "vcf.kbd": "full",
+            "fenv.attack": 0,
+            "fenv.decay": 7.6,
+            "fenv.sustain": 2,
+            "fenv.release": 7.5
+          }
+        },
+        {
+          "title": "Ring on and fade",
+          "module": "amp",
+          "why": "The amplifier envelope makes each note strike and ring, then fade on its own.\n- ATTACK 1.2 (3 ms): very short, so the note is struck.\n- DECAY 8.3 (6.4 s): how long each note rings. This is what makes notes overlap.\n- SUSTAIN 0: notes fade on their own rather than holding.\n- RELEASE 8 (4.7 s): long, so a note let go early still rings out.\n- Listen for: play a few notes far apart and let them overlap into a slow cloud.",
+          "set": { "aenv.attack": 1.2, "aenv.decay": 8.3, "aenv.sustain": 0, "aenv.release": 8 }
+        }
+      ],
+      "context": {
+        "osc2.freq": "In this sound: one step up, an octave above OSC A. It sets both the upper octave and the pitch of the ring.",
+        "pmod.oscb": "In this sound: the bell ring. Above 3 it turns into a clanging gong.",
+        "pmod.freqA": "In this sound: sends OSC B to OSC A’s pitch, which is where the ring comes from.",
+        "vcf.cutoff": "In this sound: how soft the tone is. Lower it for a muffled, distant piano; raise it for a glassier bell.",
+        "fenv.decay": "In this sound: how slowly each note goes dull as it rings.",
+        "aenv.decay": "In this sound: how long each note rings. This is what makes the notes overlap.",
+        "aenv.sustain": "In this sound: at 0, so notes fade on their own rather than holding like an organ.",
+        "aenv.release": "In this sound: long, so a note let go early still rings out."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "Move between 7 and 9.5",
+          "hear": "From short plucked notes to tones that ring for many seconds and pile up."
+        },
+        {
+          "id": "pmod.oscb",
+          "try": "Move between 0 and 3",
+          "hear": "From a plain soft tone to a bright, metallic bell."
+        },
+        {
+          "id": "osc2.fine",
+          "try": "Turn to 0.4",
+          "hear": "The ring starts to beat slowly, like an old, slightly out-of-tune piano."
+        }
+      ]
+    },
+    {
+      "id": "p8-steel-swell",
+      "name": "Swelling Steel Line",
+      "ref": "In the style of Daniel Lanois — \"Carla\" (Belladonna)",
+      "artist": "Daniel Lanois",
+      "tags": ["lead", "ambient", "2000s"],
+      "level": 2,
+      "blurb": "A warm single line whose notes fade in slowly and slide into each other, like a pedal steel played with a volume pedal.",
+      "how": "Lanois plays pedal steel across Belladonna. A pedal steel player often fades each note in with a volume pedal and bends between notes with the pedals and bar. Here a slow amplifier attack does the fade-in, GLIDE does the slide, and UNISON TRACK keeps it to one note at a time so the slide has a single line to follow. A sawtooth and a triangle a little apart, a mostly closed filter and a slight vibrato keep the tone warm and alive.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 62, 1.9],
+          [2, 64, 0.9],
+          [3, 66, 2.9],
+          [6, 64, 0.9],
+          [7, 69, 2.9],
+          [10, 66, 1.9],
+          [12, 64, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A warm sawtooth and triangle",
+          "module": "osc",
+          "why": "A warm tone: a sawtooth on OSC A and a triangle on OSC B, a little apart.\n- OSC A LEVEL 4.5: slightly lower, still clean.\n- OSC B triangle only: the soft, round part of the tone under the sawtooth.\n- OSC B LEVEL 5: a little louder than OSC A.\n- OSC B FINE +6 cents: a slow beat that keeps long notes from sounding static.\n- Listen for: a warm, slightly moving tone.",
+          "set": {
+            "osc1.level": 4.5,
+            "osc2.saw": false,
+            "osc2.tri": true,
+            "osc2.level": 5,
+            "osc2.fine": 0.3
+          }
+        },
+        {
+          "title": "Round off the top",
+          "module": "filter",
+          "why": "The filter rounds off the top, and a slow filter envelope brightens the tone slightly as each note swells in.\n- CUTOFF 4.9 (527 Hz), RESONANCE 1.5: warm. Above 6 it gets brighter and more like a synth lead.\n- ENVELOPE AMOUNT +1.2: a small lift in brightness.\n- KEYBOARD FULL: high notes are as bright as low ones.\n- Filter ATTACK 5.6 (410 ms): the lift arrives slowly.\n- Filter SUSTAIN 80 %: with DECAY 610 ms and RELEASE 1.0 s, held notes stay mostly open.\n- Listen for: a warm note that brightens a little after it starts.",
+          "set": {
+            "vcf.cutoff": 4.9,
+            "vcf.res": 1.5,
+            "vcf.env": 1.2,
+            "vcf.kbd": "full",
+            "fenv.attack": 5.6,
+            "fenv.decay": 6,
+            "fenv.sustain": 8,
+            "fenv.release": 6.5
+          }
+        },
+        {
+          "title": "Fade each note in",
+          "module": "amp",
+          "why": "A slow amplifier attack fades each note in, like pushing a volume pedal down.\n- ATTACK 5.6 (410 ms): the volume-pedal swell. Shorter and notes start with an edge; longer and they barely arrive before the next one.\n- DECAY 610 ms, SUSTAIN 100 %: held at full.\n- RELEASE 6.8 (1.4 s): how long the last note hangs after you let go.\n- Listen for: each note rising out of silence rather than starting with a pluck.",
+          "set": { "aenv.attack": 5.6, "aenv.decay": 6, "aenv.sustain": 10, "aenv.release": 6.8 }
+        },
+        {
+          "title": "One line that slides",
+          "module": "mode",
+          "why": "One note at a time that slides, like a steel bar moving along the strings.\n- UNISON TRACK on: all eight voices stack on one note, so the glide slides from each note to the next.\n- GLIDE 3 (360 ms): the slide between notes.\n- Listen for: play a slow melody and hear each note slide in as it swells.",
+          "set": { "voice.unison": true, "glide.time": 3 }
+        },
+        {
+          "title": "A slight vibrato",
+          "module": "mod",
+          "why": "A slight vibrato from the LFO (low-frequency oscillator) keeps long notes alive.\n- SHAPE TRIANGLE: a smooth wave for a natural vibrato.\n- LFO FREQUENCY 6.8 (3.42 Hz): a natural vibrato speed.\n- INITIAL AMOUNT 0.9 (9 %): the depth. Above 2 it wobbles like a siren. The mod wheel adds more.\n- FREQ A-B on: sends the LFO to both oscillators’ pitch.\n- Listen for: a very gentle waver, felt more than heard.",
+          "set": { "lfo.shape": "tri", "lfo.rate": 6.8, "lfo.amount": 0.9, "lfo.freq": true }
+        }
+      ],
+      "context": {
+        "osc2.tri": "In this sound: the soft, round part of the tone under the sawtooth.",
+        "osc2.fine": "In this sound: a slow beat that keeps long notes from sounding static.",
+        "vcf.cutoff": "In this sound: keeps the tone warm. Above 6 it gets brighter and more like a synth lead.",
+        "aenv.attack": "In this sound: the volume-pedal swell. Shorter and the notes start with an edge; longer and they barely arrive before the next one.",
+        "aenv.release": "In this sound: how long the last note hangs after you let go.",
+        "voice.unison": "In this sound: one note at a time, so the glide slides from each note to the next.",
+        "glide.time": "In this sound: the slide between notes, like a steel bar moving along the strings.",
+        "lfo.amount": "In this sound: the depth of the vibrato. Above 2 it wobbles like a siren."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.attack",
+          "try": "Move between 4.5 and 6.5",
+          "hear": "From a quick fade-in to a slow swell on every note."
+        },
+        {
+          "id": "glide.time",
+          "try": "Move between 1.5 and 4.5",
+          "hear": "From a small scoop into each note to a long, slow bend."
+        },
+        {
+          "id": "voice.unison",
+          "try": "Switch it off and play a chord",
+          "hear": "Each voice slides on its own, and chords smear into each other."
+        }
+      ]
+    }
+  ]
+}

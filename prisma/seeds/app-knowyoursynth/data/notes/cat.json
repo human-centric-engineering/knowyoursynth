@@ -1,0 +1,110 @@
+{
+  "synth": "cat",
+  "unusual": [
+    {
+      "target": "pitch.kbdCtrl",
+      "text": "The CAT is duophonic. On POLY, holding two keys splits them: VCO 1 plays the higher and VCO 2 the lower, through one shared filter and VCA, so both notes share one envelope. Most two-oscillator synths put both oscillators on the same key."
+    },
+    {
+      "target": "vco1.sync",
+      "text": "The SYNC switch is printed in the VCO 2 section but it acts on VCO 1, the oscillator that is synced. It has two modes. Behringer does not document them; owners describe MODE B as ordinary hard sync and MODE A as hard sync with VCO 1 cut off for half of each VCO 2 cycle."
+    },
+    {
+      "target": "vco1.mod1Src",
+      "text": "There are no fixed modulation routings and no matrix: each VCO and the filter has its own pair of source switches and depth knobs. This left switch picks the LFO sine, the LFO square or the sample and hold."
+    },
+    {
+      "target": "vco2.mod1Src",
+      "text": "There are no fixed modulation routings and no matrix: each VCO and the filter has its own pair of source switches and depth knobs. This left switch picks the LFO sine, the LFO square or the sample and hold."
+    },
+    {
+      "target": "vcf.mod1Src",
+      "text": "There are no fixed modulation routings and no matrix: each VCO and the filter has its own pair of source switches and depth knobs. This left switch picks the LFO sine, the LFO square or the sample and hold."
+    },
+    {
+      "target": "vco1.mod2Src",
+      "text": "The right-hand switch offers the envelopes and the other oscillator. With the other VCO selected it frequency-modulates at audio rate, which on most synths needs a patch cable or a dedicated cross-mod knob."
+    },
+    {
+      "target": "vco2.mod2Src",
+      "text": "The right-hand switch offers the envelopes and the other oscillator. With the other VCO selected it frequency-modulates at audio rate, which on most synths needs a patch cable or a dedicated cross-mod knob."
+    },
+    {
+      "target": "vcf.mod2Src",
+      "text": "The filter envelope amount is not a fixed knob: this switch picks the ADSR, the AR or VCO 1 for the depth knob below. VCO 1 at audio rate on the cutoff gives a rough, growling edge that most synths cannot make without patching."
+    },
+    {
+      "target": "vco1.saw",
+      "text": "Each VCO runs all its waves at once, and each wave has its own level slider. Instead of a waveform switch and a mixer, the sliders are both: raise several to blend them."
+    },
+    {
+      "target": "vcf.vco1Audio",
+      "text": "An on/off switch for VCO 1 in the audio path, separate from its sliders. With it off, VCO 1 still runs and can still modulate VCO 2 or the filter, or feed the sample and hold."
+    },
+    {
+      "target": "vco1.pw",
+      "text": "Only VCO 1 has a variable pulse width. VCO 2’s square is always 50 %."
+    },
+    {
+      "target": "lfo.rate",
+      "text": "One fader sets the LFO, the sample-and-hold clock and the ADSR repeat together, so they cannot run at different speeds."
+    },
+    {
+      "target": "lfo.delay",
+      "text": "LFO DELAY only fades in the LFO sine, wherever a switch selects it (a VCO, the filter or the pulse width). The square and the sample and hold are at full depth straight away. Every new note restarts the delay."
+    },
+    {
+      "target": "trig.repeat",
+      "text": "The LFO doubles as a clock for the envelopes: GATED fires them again every LFO cycle while a key is held, AUTO all the time, so the CAT can play a rhythm by itself."
+    },
+    {
+      "target": "sh.src",
+      "text": "In its VCO 1 position the sample and hold measures VCO 1’s mix of waves, not a single wave. With all of VCO 1’s sliders down there is nothing to sample."
+    },
+    {
+      "target": "vca.mode",
+      "text": "The VCA can be switched between the two envelopes, or to BYPASS, which holds it open so the synth drones."
+    },
+    {
+      "target": "pitch.glide",
+      "text": "The glide is made digitally, on the notes coming in over MIDI, so a pitch voltage patched into VCO1 CV or VCO2 CV does not glide."
+    },
+    {
+      "target": "pitch.bend",
+      "text": "Pitch bend is a slider on the panel rather than a wheel. MIDI pitch bend also works on the hardware."
+    },
+    {
+      "target": "vco2.fine",
+      "text": "VCO 2 has only a FINE TUNE knob, but it spans about two and a half octaves, so it sets intervals as well as detuning."
+    },
+    {
+      "target": "ar",
+      "text": "A second envelope with only attack and release: it rises, holds at full level while the key is held, and falls. Having it beside the ADSR means one can shape the loudness while the other shapes the filter or a pitch sweep."
+    }
+  ],
+  "limits": {
+    "intro": "The whole voice is modelled: both VCOs with every waveform slider, the sub octaves, VCO 1’s pulse width and its three sources, duophonic POLY / MONO / OFF keyboard control, both sync modes, the six modulation switch-and-knob groups (including audio-rate cross-modulation between the VCOs and from VCO 1 to the filter), the 24 dB filter with keyboard control, the ADSR and AR, the VCA switch, noise, the delayed LFO, sample and hold from noise or VCO 1, and ADSR REPEAT. The patch points work.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The Quick Start Guide gives no times or ranges. The envelope times, filter range, glide and bend here come from the manual of the earlier Octave CAT SRM, which the data model assumes carries over; the slider laws in between, the modulation depths and the VCO 1 COARSE span are this app’s choices. The filter tops out at 20 kHz rather than the SRM’s 27 kHz."
+      },
+      {
+        "title": "Sync modes",
+        "text": "Behringer does not document the two sync modes. MODE B is modelled as plain hard sync and MODE A as hard sync with VCO 1 silenced for the second half of each VCO 2 cycle, from owner reports; the real gating may differ."
+      },
+      {
+        "title": "Duophonic note memory",
+        "text": "On POLY, VCO 2 plays the lowest key held and VCO 1 the highest. The Octave manual describes an analogue two-note memory that holds intervals after release and drifts slowly; that is not modelled, and neither is the note-priority setting in Behringer’s app."
+      },
+      {
+        "title": "VCO1 CV",
+        "text": "The guide says VCO1 CV controls both VCOs. Here it moves the VCOs that follow the keys, so VCO 1 ignores it while KEYBOARD CONTROL is OFF."
+      },
+      {
+        "title": "MIDI, poly chain and the rear panel",
+        "text": "MIDI IN, MIDI THRU, USB, the MIDI channel switches, the poly chain and the POWER lamp’s colours are drawn for reference or not modelled. The low-level rear output is left out."
+      }
+    ]
+  }
+}

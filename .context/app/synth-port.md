@@ -110,9 +110,12 @@ Open it and look:
 - History and "What is not modelled" open with the synth's own text;
 - with "Dim unused parts" on, the map arrives and the dark controls are ones the sound really
   does not use; the big scope view's "What is making this shape" reads sensibly for the synth;
-- a synth with a `modular` layout switches between Modular and Long. No ported synth had one
-  before the Jupiters, so that switch has never been seen working (journal, `f-model-d`).
+- a synth with a `modular` layout switches between Modular and Long, and both draw every control.
 
-Add a render test that the synth opens on its page. The pattern for a test over the full
-catalogue content is `tests/unit/components/app/synth/synth-page-content.test.tsx`, with
-`tests/helpers/model-d-detail.ts` building the detail through the real read layer.
+`tests/unit/components/app/synth/synth-page-catalogue.test.tsx` opens every synth the catalogue
+lists, so a port gets its render test by being listed: the page shows every sound, draws every
+control the first sound shows and every jack, plays the first and last sound as the definition
+says, and draws the neutral panel without the marks tagged `brand`. A synth with a `modular`
+layout is also opened as modules, switched to Long and back, with every control drawn in each.
+The test finds a control by its accessible name, not where it sits, so overlapping or misplaced
+controls still need the look above. `tests/helpers/synth-detail.ts` builds any synth's detail through the real read layer.

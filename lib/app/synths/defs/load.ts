@@ -31,6 +31,14 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'td-3': () => import('@/lib/app/synths/defs/td-3'),
   'model-15': () => import('@/lib/app/synths/defs/model-15'),
   grandmother: () => import('@/lib/app/synths/defs/grandmother'),
+  cat: () => import('@/lib/app/synths/defs/cat'),
+  '2-xm': () => import('@/lib/app/synths/defs/2-xm'),
+  'poly-d': () => import('@/lib/app/synths/defs/poly-d'),
+  'pro-800': () => import('@/lib/app/synths/defs/pro-800'),
+  'ub-xa-d': () => import('@/lib/app/synths/defs/ub-xa-d'),
+  'jupiter-4': () => import('@/lib/app/synths/defs/jupiter-4'),
+  'jupiter-6': () => import('@/lib/app/synths/defs/jupiter-6'),
+  'jupiter-8': () => import('@/lib/app/synths/defs/jupiter-8'),
 };
 
 /** Every id a loader exists for. */

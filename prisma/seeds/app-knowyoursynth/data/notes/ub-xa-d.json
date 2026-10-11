@@ -1,0 +1,102 @@
+{
+  "synth": "ub-xa-d",
+  "unusual": [
+    {
+      "target": "osc1.saw",
+      "text": "Switching on both of OSC 1’s waves does not mix them: it gives a triangle. OSC 2 works the other way round and plays a triangle with both switched off."
+    },
+    {
+      "target": "osc2.pulse",
+      "text": "With both of OSC 2’s wave switches off, OSC 2 plays a triangle rather than falling silent. To take OSC 2 out of the sound, switch off HALF and FULL in the filter section."
+    },
+    {
+      "target": "osc.pw",
+      "text": "One PULSE WIDTH knob serves both oscillators. Only the LFO sweep of the width can be set for each oscillator separately, with OSC 1 PWM and OSC 2 PWM."
+    },
+    {
+      "target": "osc1.freq",
+      "text": "OSC 1 moves only in whole octaves, OSC 2 in semitones. Fine tuning between them is on its own knob, OSC 2 DETUNE, in the CONTROL section."
+    },
+    {
+      "target": "osc2.detune",
+      "text": "Most synths put fine tuning next to the oscillator. Here it sits in the CONTROL section, and a lamp shows whenever OSC 2 is not exactly in tune."
+    },
+    {
+      "target": "osc2.fenv",
+      "text": "Most synths with an envelope-to-pitch route give it its own depth knob. Here the depth comes from the filter’s MODULATION knob, so the filter and the OSC 2 sweep always move together."
+    },
+    {
+      "target": "mix.half",
+      "text": "There are no oscillator level knobs. OSC 1 is on or off, OSC 2 is off, HALF or FULL, and NOISE is the only continuous level."
+    },
+    {
+      "target": "vcf.fourPole",
+      "text": "Most synths default to a 24 dB filter. The OB-Xa family defaults to the brighter 12 dB (2-pole) mode, and 4 POLE is the option."
+    },
+    {
+      "target": "vcf.mod",
+      "text": "MODULATION is the filter envelope amount. The Quick Start Guide says it sets modulation \"by the LFO\", but the LFO reaches the filter through the FILTER FREQ switch and DEPTH 1."
+    },
+    {
+      "target": "mlfo.depth1",
+      "text": "One LFO has two depth knobs. DEPTH 1 serves the three frequency switches beside it and DEPTH 2 the width and volume switches below, so vibrato and PWM can run at different depths from the same LFO. The guide swaps the two; the panel is followed here."
+    },
+    {
+      "target": "mlfo.shape",
+      "text": "Two of the seven positions are not shapes. TRIG restarts the LFO on each key (what most synths call key sync) and SMP samples the performance LFO."
+    },
+    {
+      "target": "perf",
+      "text": "Most synths have one LFO for everything. The OB-Xa layout keeps a separate performance LFO for vibrato, so the modulation LFO stays free for PWM, wah or tremolo."
+    },
+    {
+      "target": "voice.unison",
+      "text": "UNISON takes every voice of the patch rather than a set number, and plays low-note priority, like a vintage mono synth."
+    },
+    {
+      "target": "glide.time",
+      "text": "Portamento is polyphonic: each voice glides on its own from the last note it played, so moving from one chord to another slides every note separately."
+    }
+  ],
+  "limits": {
+    "intro": "One patch is modelled on all sixteen voices: both oscillators with their waveform switches, sync and F-ENV, the HALF/FULL mixer and noise, the 2- and 4-pole filter with tracking, both envelopes, the modulation LFO with both depth rows and all six routing switches, the performance LFO, polyphonic portamento, unison and the arpeggiator.",
+    "items": [
+      {
+        "title": "Two patches at once",
+        "text": "The UB-Xa D holds a lower and an upper patch and plays them split or doubled. This app plays one patch, so SPLIT, DOUBLE, LOWER and UPPER in the KEYBOARD section and BALANCE do not change the sound. The performance LFO’s LOWER and UPPER switches both count for the one patch: it is heard while either is on."
+      },
+      {
+        "title": "Ranges are estimates",
+        "text": "The Quick Start Guide gives the LFO range (0.06 to 50 Hz) and the oscillator steps, and nothing else. Envelope times, the filter’s cutoff range and resonance, the depth of each modulation route, the pulse-width direction, the OSC 2 DETUNE range (here up to half a semitone sharp) and the MASTER TUNE range are this app’s choices."
+      },
+      {
+        "title": "F-ENV depth",
+        "text": "The guide does not say what sets how far F-ENV bends OSC 2. Here it follows the filter’s MODULATION knob, up to two octaves."
+      },
+      {
+        "title": "Two LFO positions are approximate",
+        "text": "The modulation LFO’s SMP position samples the performance LFO on the hardware; here it is a plain sample and hold at the modulation LFO’s rate. The performance LFO’s NOISE shape is a smoothly wandering random signal."
+      },
+      {
+        "title": "Unison stacks eight voices",
+        "text": "On the hardware UNISON stacks all sixteen voices on one note, with the spread set by the VOICE DETUNE shift function. Here it stacks eight, with a fixed small spread: sixteen full voices on one note is more than this page can run smoothly."
+      },
+      {
+        "title": "Arpeggiator settings",
+        "text": "ARP ON and HOLD work. The settings menu is not modelled: the arpeggio always plays upwards over one octave at 120 BPM."
+      },
+      {
+        "title": "Everything behind SHIFT",
+        "text": "The grey functions printed under the controls (PRESET VOLUME, TEMPO SYNC, VOICES, VOICE DETUNE, QUANTIZE, INVERT, the MOD 1 and MOD 2 DELAY and ATTACK, PEDAL RELEASE, VINTAGE and the rest) and the four menus are not modelled. Most are not described in the guide either."
+      },
+      {
+        "title": "Printed but not modelled",
+        "text": "TRANSPOSE, CHORD, the BEND switches (this app has no pitch bend), the sequencer, the programmer buttons, the display, the SELECT encoder and the four preset recall switches. Sounds are kept in this app’s library instead of in presets."
+      },
+      {
+        "title": "Pedals",
+        "text": "The vibrato and filter pedal inputs and the sustain, hold and program-advance footswitches on the back are not modelled."
+      }
+    ]
+  }
+}

@@ -2,7 +2,7 @@
 
 /**
  * Every listed synth opens on its page: the definition the page loads for the id, the catalogue content the API
- * serves for it, the panel drawn with all of its jacks and none of its maker's marks, and the library's sounds playing
+ * serves for it, the panel drawn with all of its controls and jacks and none of its maker's marks, and the library's sounds playing
  * as the definition says. Model D's page is tested sound by sound in `synth-page-content.test.tsx`; this is the same
  * page over each of the others. The router and the audio engine are fakes; the panel and the library are real.
  *
@@ -15,8 +15,11 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
+import { modularDef } from '@/lib/app/synths/lib/layout';
+import { isShown, presetState } from '@/lib/app/synths/lib/patch';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
 
@@ -43,6 +46,9 @@ vi.mock('@/lib/db/client', () => ({
 /** Every synth the catalogue lists: each one must open. */
 const LISTED = catalogueData().listing.synths.map((s) => s.id);
 
+/** Listed synths with a modular layout: they open as modules, and switch to the long faceplate and back. */
+const MODULAR = LISTED.filter((id) => getSynthDef(id)?.modular);
+
 /**
  * Listed synths whose panel prints no maker's marks. Every other definition must tag its marks `brand`, so a port that
  * forgot to tag them fails here; a synth with no marks is named here rather than given a tag it has no mark for.
@@ -63,6 +69,7 @@ beforeAll(() => {
 beforeEach(() => {
   window.localStorage.clear();
   window.location.hash = '';
+  window.history.replaceState(null, '', window.location.pathname);
   engine.send.mockReset();
 });
 
@@ -79,26 +86,52 @@ it('lists more than Model D, so the cases below are not one synth', () => {
   expect(LISTED.length).toBeGreaterThan(1);
 });
 
+/** The definition the page loads for a listed synth, and its detail built through the real read layer. */
+const loadPage = async (id: string): Promise<{ def: AppSynthDef; detail: SynthDetail }> => {
+  const loading = loadSynthDef(id);
+  if (!loading) throw new Error(`${id} is listed but has no definition to load`);
+  const def = await loading;
+  const { prisma } = await import('@/lib/db/client');
+  const { stored, noteRows } = synthRows(id);
+  vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored as never);
+  vi.mocked(prisma.synthNote.findMany).mockResolvedValue(noteRows as never);
+  const detail = await getSynthDetail(id);
+  if (!detail) throw new Error(`no ${id} detail`);
+  return { def, detail };
+};
+
+const frontPanel = (def: AppSynthDef) =>
+  screen.getByRole('group', { name: `${def.maker} ${def.name} front panel` });
+
+/**
+ * The ids of the controls the opening sound shows that the panel does not draw: each is found by the accessible name
+ * it is drawn with (a button row's options as `name: option`, a joystick's two axes as one "Joystick").
+ */
+const undrawn = (panel: HTMLElement, def: AppSynthDef, sound: SynthDetail['sounds'][number]) => {
+  const { values } = presetState(def, sound);
+  const names = [...panel.querySelectorAll('[aria-label]')].map((e) =>
+    (e.getAttribute('aria-label') ?? '').replace(/\n/g, ' ')
+  );
+  return def.controls
+    .filter((c) => isShown(c, values) && !(c.type === 'joystick' && c.pairOf))
+    .filter((c) => {
+      const name = c.type === 'joystick' ? 'Joystick' : (c.label || c.id).replace(/\n/g, ' ');
+      return !names.some((n) => n === name || n.startsWith(`${name}: `));
+    })
+    .map((c) => c.id);
+};
+
 describe.each(LISTED)('the %s page', (id) => {
   let def: AppSynthDef;
   let detail: SynthDetail;
 
   beforeAll(async () => {
-    const loading = loadSynthDef(id);
-    if (!loading) throw new Error(`${id} is listed but has no definition to load`);
-    def = await loading;
-    const { prisma } = await import('@/lib/db/client');
-    const { stored, noteRows } = synthRows(id);
-    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored as never);
-    vi.mocked(prisma.synthNote.findMany).mockResolvedValue(noteRows as never);
-    const d = await getSynthDetail(id);
-    if (!d) throw new Error(`no ${id} detail`);
-    detail = d;
+    ({ def, detail } = await loadPage(id));
   });
 
   const page = () => render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
 
-  it('opens with every sound in the library and every jack on the panel', () => {
+  it('opens with every sound in the library and every control and jack on the panel', () => {
     const { container } = page();
     expect(screen.getByRole('heading', { name: `About this ${def.name}` })).toBeTruthy();
     expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
@@ -108,6 +141,8 @@ describe.each(LISTED)('the %s page', (id) => {
       '[aria-label$=" input jack"], [aria-label$=" output jack"]'
     );
     expect(jacks).toHaveLength(def.jacks.length);
+    expect(def.controls.length).toBeGreaterThan(0);
+    expect(undrawn(frontPanel(def), def, detail.sounds[0])).toEqual([]);
   });
 
   it('draws the neutral panel without the maker’s marks it tags', () => {
@@ -118,7 +153,7 @@ describe.each(LISTED)('the %s page', (id) => {
     );
     // The panel's own SVG (the picker above it draws an icon first), read as whole lines of lettering: a mark such
     // as the TB-303's "R" is also a letter of RESONANCE.
-    const panel = screen.getByRole('group', { name: `${def.maker} ${def.name} front panel` });
+    const panel = frontPanel(def);
     const drawn = new Set(
       [...panel.querySelectorAll('text, tspan')].map((t) => t.textContent?.trim())
     );
@@ -159,4 +194,45 @@ describe.each(LISTED)('the %s page', (id) => {
     fireEvent.click(row);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, last));
   });
+});
+
+describe.each(MODULAR)('the %s page’s panel layout', (id) => {
+  let def: AppSynthDef;
+  let detail: SynthDetail;
+
+  beforeAll(async () => {
+    ({ def, detail } = await loadPage(id));
+  });
+
+  it('opens as modules, switches to the long faceplate, and back, drawing every control in each', () => {
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    const viewBox = (v: { w: number; h: number }) => `0 0 ${v.w} ${v.h}`;
+    const modules = viewBox(modularDef(def).view);
+    const long = viewBox(def.view);
+    expect(modules).not.toBe(long);
+    const panel = () => frontPanel(def);
+    const first = detail.sounds[0];
+    const layout = within(screen.getByRole('group', { name: 'Panel layout' }));
+    const pressed = (name: string) =>
+      layout.getByRole('button', { name }).getAttribute('aria-pressed');
+
+    expect(panel().getAttribute('viewBox')).toBe(modules);
+    expect(pressed('Modular')).toBe('true');
+    expect(undrawn(panel(), def, first)).toEqual([]);
+
+    fireEvent.click(layout.getByRole('button', { name: 'Long' }));
+    expect(panel().getAttribute('viewBox')).toBe(long);
+    expect(pressed('Long')).toBe('true');
+    expect(window.location.search).toBe('?view=long');
+    expect(undrawn(panel(), def, first)).toEqual([]);
+
+    fireEvent.click(layout.getByRole('button', { name: 'Modular' }));
+    expect(panel().getAttribute('viewBox')).toBe(modules);
+    expect(pressed('Modular')).toBe('true');
+    expect(window.location.search).toBe('');
+  });
+});
+
+it('switches the layout on every Jupiter, the synths that have one', () => {
+  expect(MODULAR).toEqual(expect.arrayContaining(['jupiter-4', 'jupiter-6', 'jupiter-8']));
 });

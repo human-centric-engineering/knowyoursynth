@@ -1,0 +1,114 @@
+{
+  "synth": "2-xm",
+  "unusual": [
+    {
+      "target": "xm1_vcf.notch",
+      "text": "Most multimode filters switch between low-pass, band-pass and high-pass. On the SEM one knob sweeps continuously from low-pass through a notch to high-pass, so every setting in between is available."
+    },
+    {
+      "target": "xm2_vcf.notch",
+      "text": "Most multimode filters switch between low-pass, band-pass and high-pass. On the SEM one knob sweeps continuously from low-pass through a notch to high-pass, so every setting in between is available."
+    },
+    {
+      "target": "xm1_vcf.mix_vco1",
+      "text": "There are no oscillator level knobs. Each mixer knob is a crossfade that is silent at the centre: one waveform to the left, the other to the right. To mix a saw and a pulse, use both VCOs."
+    },
+    {
+      "target": "xm2_vcf.mix_vco1",
+      "text": "There are no oscillator level knobs. Each mixer knob is a crossfade that is silent at the centre: one waveform to the left, the other to the right. To mix a saw and a pulse, use both VCOs."
+    },
+    {
+      "target": "xm1_vcf.mix_ext",
+      "text": "With nothing in the EXT jack, turning this left brings in a 440 Hz tuning tone rather than silence. If a steady A appears under every note, this knob is the reason."
+    },
+    {
+      "target": "xm2_vcf.mix_ext",
+      "text": "With nothing in the EXT jack, turning this left brings in a 440 Hz tuning tone rather than silence. If a steady A appears under every note, this knob is the reason."
+    },
+    {
+      "target": "xm1_vco1.modulation",
+      "text": "One bipolar knob does two jobs: vibrato or pitch sweeps to the left, pulse-width modulation to the right. You cannot have both from the same oscillator at once."
+    },
+    {
+      "target": "xm2_vco1.modulation",
+      "text": "One bipolar knob does two jobs: vibrato or pitch sweeps to the left, pulse-width modulation to the right. You cannot have both from the same oscillator at once."
+    },
+    {
+      "target": "xm1_vco2.mod_source",
+      "text": "VCO 2 is modulated by ENV 2, the filter envelope, while VCO 1 is modulated by ENV 1, the loudness envelope. Pick the oscillator by which envelope you want to shape it."
+    },
+    {
+      "target": "xm2_vco2.mod_source",
+      "text": "VCO 2 is modulated by ENV 2, the filter envelope, while VCO 1 is modulated by ENV 1, the loudness envelope. Pick the oscillator by which envelope you want to shape it."
+    },
+    {
+      "target": "xm1_vcf.mod_source",
+      "text": "The middle position is labelled EXT, but with no cable in VCF CV it gives ENV 2 scaled by velocity: the “velocity to filter” most synths have."
+    },
+    {
+      "target": "xm2_vcf.mod_source",
+      "text": "The middle position is labelled EXT, but with no cable in VCF CV it gives ENV 2 scaled by velocity: the “velocity to filter” most synths have."
+    },
+    {
+      "target": "xm1_env1.decay",
+      "text": "The envelopes are ADS: DECAY sets both the decay and the release, so a note that decays slowly also dies away slowly after you let go."
+    },
+    {
+      "target": "xm2_env1.decay",
+      "text": "The envelopes are ADS: DECAY sets both the decay and the release, so a note that decays slowly also dies away slowly after you let go."
+    },
+    {
+      "target": "xm1_vca.mode",
+      "text": "ON/EXT holds the amplifier open, so the module sounds with no key held. It is the easy way to a drone, and a surprise if left there by mistake."
+    },
+    {
+      "target": "xm2_vca.mode",
+      "text": "ON/EXT holds the amplifier open, so the module sounds with no key held. It is the easy way to a drone, and a surprise if left there by mistake."
+    },
+    {
+      "target": "alloc.assign",
+      "text": "The two modules are separate synths with separate panels, not two copies of one patch. In UNI or DUO they only sound alike if you set their knobs alike."
+    },
+    {
+      "target": "j.xm1.cv_out",
+      "text": "CV 1 is printed in the input column, but the guide lists it as an output: the MIDI pitch of XM1 as a voltage."
+    },
+    {
+      "target": "j.xm2.cv_out",
+      "text": "CV 2 is printed in the input column, but the guide lists it as an output: the MIDI pitch of XM2 as a voltage."
+    },
+    {
+      "target": "j.xm1.vco1_cv",
+      "text": "A cable here replaces the MIDI pitch rather than adding to it, and it drives VCO 2 as well until VCO 2 CV gets its own cable."
+    },
+    {
+      "target": "j.xm2.vco1_cv",
+      "text": "A cable here replaces the MIDI pitch rather than adding to it, and it drives VCO 2 as well until VCO 2 CV gets its own cable."
+    }
+  ],
+  "limits": {
+    "intro": "Both modules are modelled as separate voices, each with its own settings: two VCOs with sync and the bipolar MODULATION knobs, the saw/pulse and input/noise crossfades, the 12 dB filter with its low-pass to notch to high-pass sweep and band-pass, both ADS envelopes, the LFO and the VCA with velocity and ON/EXT. The master section’s level, pan, external level, portamento and UNI / SPLIT / DUO assignment work, and so do both patchbays, including cables from one module to the other.",
+    "items": [
+      {
+        "title": "Ranges are estimates",
+        "text": "The Quick Start Guide gives the envelope times and the LFO range, and this app uses them. It gives no cutoff range, resonance law, knob tapers, fine-tune or modulation depths, or crossfade law: those are this app’s choices. The filter here does not self-oscillate."
+      },
+      {
+        "title": "Things the guide does not say",
+        "text": "The LFO’s shape (a triangle here), which waveform comes out of each VCO jack (the sawtooth here), and whether the two modules share one noise source (each has its own here) are not stated."
+      },
+      {
+        "title": "Note priority and split point",
+        "text": "In UNI the newest key goes to XM1 and the key held before it to XM2; the hardware lets SynthTRIBE choose highest, lowest or last. The split point is fixed at middle C (C4), the hardware’s default."
+      },
+      {
+        "title": "Cables between the modules",
+        "text": "A signal patched from one module to the other arrives one sample late. That is inaudible for control signals, but audio-rate cross-modulation between the modules is very slightly different from the hardware."
+      },
+      {
+        "title": "Printed but not modelled",
+        "text": "STEREO OUT, MIDI IN and the power LED are drawn for reference: the sound always comes out of this page in stereo. Poly chaining, the MIDI channel switches and the SynthTRIBE settings are not modelled. LFO TRIG works from any signal here; the guide says it does not respond when the module is played over MIDI."
+      }
+    ]
+  }
+}
