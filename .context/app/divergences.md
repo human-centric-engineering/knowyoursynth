@@ -179,6 +179,7 @@ Today they are:
 
 - `prototype/**`, which goes at f-launch x5;
 - `app/(panel)/**`, the synth page's route group;
+- `app/admin/synths/**`, the admin Designs page;
 - `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
 - `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
@@ -192,11 +193,11 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 ## Excluded: filled seams
 
 - `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
-  `lib/app/auth-landing.ts` (the label only) and `lib/app/data-export.ts` (the catalogue tables,
-  excluded): fork-owned scaffolds, filled.
+  `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (the catalogue tables,
+  excluded) and `lib/app/admin-nav.ts` (the "Synths" admin section): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
-  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`, `admin-nav`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

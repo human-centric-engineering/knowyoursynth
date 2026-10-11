@@ -203,10 +203,16 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/admin-nav.ts',
     risk: 'a stray section would appear in every install’s admin sidebar',
+    // Know Your Synth fills this seam: pinned to its one "Synths" section, so a stray second one still fails.
     assert: () => {
       __resetNavRegistryForTests();
       initAppNav();
-      expect(getRegisteredNavSections()).toHaveLength(0);
+      expect(
+        getRegisteredNavSections().map(({ title, items }) => ({
+          title,
+          items: items?.map(({ href, label }) => ({ href, label })),
+        }))
+      ).toEqual([{ title: 'Synths', items: [{ href: '/admin/synths', label: 'Designs' }] }]);
     },
   },
   {
