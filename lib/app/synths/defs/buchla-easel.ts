@@ -1429,7 +1429,7 @@ bjack('j.portaIn', 1243, 1110, 'black', {
   add: true,
   help: 'A voltage here shortens the portamento: the more voltage, the quicker the glide.',
   hear: (v, x) =>
-    `${x.src} sets how fast the pitch glides between keys: the more voltage, the quicker the slide.${num(v, 'kbd.porta') <= 0.05 ? ' PORTAMENTO SLOPE is at 0, so there is no glide to shorten. Turn it up.' : ''}`,
+    `${x.src} sets how fast the pitch glides between keys: the more voltage, the quicker the slide.${portaS(num(v, 'kbd.porta')) === 0 ? ' PORTAMENTO SLOPE is at 0, so there is no glide to shorten. Turn it up.' : ''}`,
 });
 btext(1243, 1160, 'input', 18);
 btext(1100, 1203, 'PORTAMENTO  SLOPE', 19, { weight: 600 });

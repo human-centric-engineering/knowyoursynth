@@ -263,7 +263,7 @@ knob('in.ch1', 400, 850, 'white', {
   def: 5,
   module: 'util',
   name: 'INPUT LEVEL CHANNEL 1',
-  fmt: (v) => `${Math.round(v * 20) / 10} semitones per key`,
+  fmt: (v) => `${Math.round(v * 2) / 10} semitones per key`,
   help: 'Gain of input channel 1, which puts the keyboard’s pitch voltage on matrix row 8. Pin row 8 to an oscillator’s frequency column to play it from the keys. At 5 Oscillators 1 and 2 play one semitone per key; lower squeezes the notes together, higher spreads them apart.',
 });
 knob('in.ch2', 525, 850, 'white', {

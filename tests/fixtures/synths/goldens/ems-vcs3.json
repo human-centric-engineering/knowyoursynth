@@ -133,16 +133,16 @@
     ],
     "in.ch1": [
       "0 semitones per key",
-      "2 semitones per key",
-      "4 semitones per key",
-      "6 semitones per key",
-      "8 semitones per key",
-      "10 semitones per key",
-      "12 semitones per key",
-      "14 semitones per key",
-      "16 semitones per key",
-      "18 semitones per key",
-      "20 semitones per key"
+      "0.2 semitones per key",
+      "0.4 semitones per key",
+      "0.6 semitones per key",
+      "0.8 semitones per key",
+      "1 semitones per key",
+      "1.2 semitones per key",
+      "1.4 semitones per key",
+      "1.6 semitones per key",
+      "1.8 semitones per key",
+      "2 semitones per key"
     ],
     "ring.level": [
       "×0",
