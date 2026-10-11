@@ -33,6 +33,9 @@ import jupiter4 from '@/lib/app/synths/defs/jupiter-4';
 import jupiter6 from '@/lib/app/synths/defs/jupiter-6';
 import jupiter8 from '@/lib/app/synths/defs/jupiter-8';
 import deepmind12d from '@/lib/app/synths/defs/deepmind-12d';
+import system15 from '@/lib/app/synths/defs/system-15';
+import system35 from '@/lib/app/synths/defs/system-35';
+import system55 from '@/lib/app/synths/defs/system-55';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -59,6 +62,9 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   jupiter6,
   jupiter8,
   deepmind12d,
+  system15,
+  system35,
+  system55,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

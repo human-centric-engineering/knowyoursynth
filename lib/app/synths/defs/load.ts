@@ -43,6 +43,9 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'jupiter-6': () => import('@/lib/app/synths/defs/jupiter-6'),
   'jupiter-8': () => import('@/lib/app/synths/defs/jupiter-8'),
   'deepmind-12d': () => import('@/lib/app/synths/defs/deepmind-12d'),
+  'system-15': () => import('@/lib/app/synths/defs/system-15'),
+  'system-35': () => import('@/lib/app/synths/defs/system-35'),
+  'system-55': () => import('@/lib/app/synths/defs/system-55'),
 };
 
 /** Every id a loader exists for. */
