@@ -77,7 +77,8 @@ function today(): string {
 export function SynthDesignsTable({ synths: initial }: SynthDesignsTableProps) {
   const readOnly = useSharedSettingsReadOnly();
   const [synths, setSynths] = useState(initial);
-  const [busyId, setBusyId] = useState<string | null>(null);
+  // A set, not one id: two rows can be saving at once, and the first to finish must not re-enable the other.
+  const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(new Set());
   const [rowError, setRowError] = useState<{ id: string; message: string } | null>(null);
   const [approving, setApproving] = useState<AdminSynthDesign | null>(null);
 
@@ -86,14 +87,18 @@ export function SynthDesignsTable({ synths: initial }: SynthDesignsTableProps) {
 
   /** Sends one change. Returns the refusal's message, or null once it is saved. */
   const send = async (id: string, input: SynthDesignInput): Promise<string | null> => {
-    setBusyId(id);
+    setBusyIds((current) => new Set(current).add(id));
     try {
       replace(await apiClient.patch<AdminSynthDesign>(designPath(id), { body: input }));
       return null;
     } catch (err) {
       return describeError(err);
     } finally {
-      setBusyId(null);
+      setBusyIds((current) => {
+        const next = new Set(current);
+        next.delete(id);
+        return next;
+      });
     }
   };
 
@@ -124,7 +129,7 @@ export function SynthDesignsTable({ synths: initial }: SynthDesignsTableProps) {
           <TableBody>
             {synths.map((synth) => {
               const label = `${synth.maker} ${synth.name}`;
-              const busy = busyId === synth.id;
+              const busy = busyIds.has(synth.id);
               return (
                 <TableRow key={synth.id} data-testid={`synth-row-${synth.id}`}>
                   <TableCell>

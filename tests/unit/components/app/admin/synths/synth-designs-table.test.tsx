@@ -263,6 +263,32 @@ describe('switching to neutral', () => {
     expect(within(row('model-d')).getByRole('alert')).toHaveTextContent('Synth not found');
     expect(within(row('model-d')).getByText('Faithful')).toBeInTheDocument();
   });
+
+  it('keeps a row disabled while its own change is in flight, when another row finishes first', async () => {
+    const user = userEvent.setup();
+    let finishFirst!: (value: AdminSynthDesign) => void;
+    patch
+      .mockImplementationOnce(() => new Promise((resolve) => (finishFirst = resolve)))
+      .mockImplementationOnce(() => new Promise(() => {}));
+    const odyssey = synth({
+      id: 'odyssey',
+      name: 'Odyssey',
+      maker: 'Arp',
+      design: 'faithful',
+      approval: APPROVAL,
+    });
+    render(
+      <SynthDesignsTable synths={[synth({ design: 'faithful', approval: APPROVAL }), odyssey]} />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Switch Moog Model D to neutral' }));
+    await user.click(screen.getByRole('button', { name: 'Switch Arp Odyssey to neutral' }));
+    finishFirst(synth({ design: 'neutral', approval: APPROVAL }));
+
+    expect(await within(row('model-d')).findByText('Neutral')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Switch Arp Odyssey to neutral' })).toBeDisabled();
+    expect(patch).toHaveBeenCalledTimes(2);
+  });
 });
 
 it('cannot change anything where shared settings are read-only', () => {
