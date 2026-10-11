@@ -321,9 +321,9 @@ the layout follows D10 (`f-phone-and-tablet`).
 ### Two designs per synth (D11)
 
 - **Faithful** is the prototype's design: the real panel's colours, lettering and maker marks.
-- **Neutral** has the same layout, controls and jacks, so every sound and lesson works on
-  both. It uses neutral colours and fonts and carries no logos or wordmarks. The app's text
-  still names the synth.
+- **Neutral** is the same panel in its own colours and lettering, with no logos, wordmarks or
+  model badges, so every sound and lesson works on both. The app's text still names the synth.
+  (D11 revised 2026-10-11; it first meant a shared house colour scheme and font.)
 
 The design is set per synth in admin. **Neutral is the default.** Faithful needs a recorded
 vendor approval.
@@ -1351,9 +1351,11 @@ with a zoomable panel and a rotate prompt. Everything is in the API, so native a
 
 **Two designs per synth, neutral by default.**
 
-- **The designs.** The faithful designs are kept. Neutral changes the look only: the same
-  layout, controls and jacks, neutral colours and fonts, and no logos or wordmarks. The app's
-  text still names the synth.
+- **The designs.** The faithful designs are kept. Neutral leaves out the maker's marks only:
+  the same layout, controls, jacks, colours and lettering, with no logos, wordmarks or model
+  badges. The app's text still names the synth. _Revised 2026-10-11 (journal,
+  `f-panel-designs`): neutral first meant neutral colours and fonts too. The colour schemes are
+  trade dress as well, which the legal review should look at._
 - **Switching.** Set per synth in admin. Faithful only with a recorded vendor approval.
 - **Also:**
   - paraphrase the manuals, never quote them;

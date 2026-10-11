@@ -219,6 +219,7 @@ describe('reserved fork tiers', () => {
         'app-domain models belong in prisma/schema/platform.prisma.'
     ).toEqual([
       'model Synth {',
+      'enum PanelDesign {',
       'model SynthSound {',
       'model SynthLineage {',
       'enum SynthNoteKind {',

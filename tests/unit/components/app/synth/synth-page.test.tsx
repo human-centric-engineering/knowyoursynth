@@ -143,6 +143,7 @@ const OTHER_SYNTH: CatalogueSynth = {
   year: 1979,
   heritage: 'Polyphonic and bold',
   summary: 'Six voices.',
+  design: 'neutral',
   definitionVersion: 1,
   soundCount: 0,
 };
@@ -153,6 +154,7 @@ const MODEL_D_SYNTH: CatalogueSynth = {
   year: 2018,
   heritage: 'Modelled on the 1970 Minimoog Model D',
   summary: 'Three oscillators and noise feed a mixer, then a ladder filter.',
+  design: 'neutral',
   definitionVersion: def.version,
   soundCount: 2,
 };
@@ -259,14 +261,25 @@ describe('SynthPage layout', () => {
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
   });
 
-  it('draws the panel in the neutral design: its own faceplate colours, no maker mark', () => {
-    page();
+  /** The panel's outer SVG, lower-cased, and its printed text. */
+  const drawn = () => {
     const face = screen.getByRole('group', { name: 'Behringer Model D front panel' });
     const panel = face.closest('svg') ?? face;
-    const svg = panel.outerHTML.toLowerCase();
-    expect(svg).toContain('#222630'); // the neutral faceplate
-    expect(svg).not.toContain('#1b1c1e'); // Model D's own
-    expect(panel.textContent?.toLowerCase()).not.toContain('behringer'); // no printed maker mark
+    return { svg: panel.outerHTML.toLowerCase(), text: panel.textContent?.toLowerCase() ?? '' };
+  };
+
+  it('draws a neutral synth in its own faceplate colours with no maker mark (D11 revised)', () => {
+    page();
+    const { svg, text } = drawn();
+    expect(svg).toContain('#1b1c1e'); // Model D's own faceplate
+    expect(text).not.toContain('behringer'); // no printed maker mark
+  });
+
+  it("draws the maker's marks when the synth's design is faithful", () => {
+    page({ detail: { ...detail, synth: { ...MODEL_D_SYNTH, design: 'faithful' } } });
+    const { svg, text } = drawn();
+    expect(svg).toContain('#1b1c1e');
+    expect(text).toContain('behringer');
   });
 
   it('opens on the first sound with its steps applied and nothing moved', () => {

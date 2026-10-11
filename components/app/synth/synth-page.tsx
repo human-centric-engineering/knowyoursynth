@@ -8,7 +8,7 @@
  * - The panel view is in the query (`?view=`), with the last choice in browser storage.
  * - The panel, signed out, is kept per synth in browser storage (`storage.ts`); signed in is `f-my-sounds`.
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
- * - The panel uses the neutral design (D11). Choosing a design per synth is `f-panel-designs`.
+ * - The panel draws the synth's design (D11), as an admin set it: `neutral` leaves the maker's marks out.
  *
  * What is not here yet, so that no button opens nothing (`B31`): the tutor (`f-tutor`) and the databank
  * (`f-databank`). The theme switch is Sunrise's, in the header.
@@ -780,7 +780,7 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
               onConnect={onConnect}
               onRemoveCable={onRemoveCable}
               onMoveCable={onMoveCable}
-              design="neutral"
+              design={detail.synth.design}
             />
           </div>
         </div>

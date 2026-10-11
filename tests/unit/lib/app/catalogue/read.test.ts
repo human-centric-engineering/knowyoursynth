@@ -42,8 +42,10 @@ beforeEach(() => {
 });
 
 describe('listSynths', () => {
-  it('lists the listed synths in catalogue order, with the registry’s version and a sound count', async () => {
-    vi.mocked(prisma.synth.findMany).mockResolvedValue([synthRow] as never);
+  it('lists the listed synths in catalogue order, with their design, the registry’s version and a sound count', async () => {
+    vi.mocked(prisma.synth.findMany).mockResolvedValue([
+      { ...synthRow, design: 'FAITHFUL' },
+    ] as never);
 
     const list = await listSynths();
 
@@ -55,6 +57,7 @@ describe('listSynths', () => {
         year: 2018,
         heritage: synthRow.heritage,
         summary: synthRow.summary,
+        design: 'faithful',
         definitionVersion: 1,
         soundCount: 99,
       },

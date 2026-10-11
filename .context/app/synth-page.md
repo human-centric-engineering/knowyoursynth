@@ -45,7 +45,10 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   owns.
 - **Unusual notes are rows** (D13). `withNotes` attaches them to the definition, because the
   inspector, the search index and the tour read `unusual` from controls, jacks and areas.
-- **The panel draws the neutral design** (D11). A per-synth choice is `f-panel-designs`.
+- **The panel draws the synth's design** (D11), `Synth.design`, which an admin sets
+  (`PATCH /api/v1/admin/synths/[id]/design`). Neutral, the default, is the panel in its own
+  colours and lettering without the maker's marks; faithful adds them and needs a recorded
+  approval. See `lib/app/catalogue/designs.ts`.
 - **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
   _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
   sound leaves the walkthrough. The step is kept with the session.

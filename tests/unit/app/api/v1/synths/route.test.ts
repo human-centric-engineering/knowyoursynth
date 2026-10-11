@@ -36,6 +36,7 @@ const row = (({ id, name, maker, year, heritage, summary }) => ({
   year,
   heritage,
   summary,
+  design: 'NEUTRAL',
   _count: { sounds: sounds.filter((s) => s.synthId === 'model-d').length },
 }))(modelD());
 const url = 'http://localhost:3000/api/v1/synths';
@@ -62,6 +63,7 @@ describe('GET /api/v1/synths', () => {
           year: 2018,
           heritage: 'Modelled on the 1970 Minimoog Model D',
           summary: row.summary,
+          design: 'neutral',
           definitionVersion: 1,
           soundCount: 99,
         },
