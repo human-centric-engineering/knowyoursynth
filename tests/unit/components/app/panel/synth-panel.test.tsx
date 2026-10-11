@@ -6,7 +6,7 @@
  * - Model D's panel in the hardware and outline views (snapshots), and the
  *   modular case a `layout` puts in place of the long faceplate.
  * - `design` (D11): the neutral design leaves out Model D's brand marks and
- *   draws the neutral theme; faithful and the default draw the panel as before.
+ *   draws the neutral theme, and is the default; faithful draws the panel as before.
  * - Patching: press an output then an input to connect, the explanation is
  *   focused, Escape and a second press cancel, a cable press removes it.
  * - Dragging a plug onto another jack moves the cable.
@@ -70,6 +70,7 @@ function props(over: Partial<SynthPanelProps> = {}): SynthPanelProps {
     onChange: vi.fn(),
     onConnect: vi.fn(),
     onRemoveCable: vi.fn(),
+    design: 'faithful',
     ...over,
   };
 }
@@ -144,9 +145,9 @@ describe('design prop (D11)', () => {
     expect(branded.decor.filter((d) => d.brand).length).toBeGreaterThan(0);
   });
 
-  it('faithful is the default, and draws the brand marks', () => {
+  it('neutral is the default; faithful draws the brand marks', () => {
+    expect(html({ design: undefined })).toBe(html({ design: 'neutral' }));
     const withBrand = html({ design: 'faithful' });
-    expect(withBrand).toBe(html({}));
     expect(withBrand).toContain('behringer');
     expect(withBrand).not.toBe(html({ def: unbranded, values: unbranded.init }));
   });

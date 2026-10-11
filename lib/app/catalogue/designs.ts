@@ -50,9 +50,15 @@ export const SynthDesignInputSchema = z
     approval: z
       .object({
         approvedBy: z.string().trim().min(1).max(200),
-        approvedAt: z.iso.date().refine((day) => day <= new Date().toISOString().slice(0, 10), {
-          message: 'An approval cannot be dated in the future',
-        }),
+        // Compared with the latest calendar day anywhere (UTC+14), so an admin east of UTC can date it today.
+        approvedAt: z.iso
+          .date()
+          .refine(
+            (day) => day <= new Date(Date.now() + 14 * 3_600_000).toISOString().slice(0, 10),
+            {
+              message: 'An approval cannot be dated in the future',
+            }
+          ),
         note: z.string().trim().max(2000).nullable().optional(),
       })
       .strict()
@@ -124,7 +130,7 @@ export async function setSynthDesign(
       ? {
           designApprovedBy: input.approval.approvedBy,
           designApprovedAt: new Date(`${input.approval.approvedAt}T00:00:00.000Z`),
-          designApprovalNote: input.approval.note ?? null,
+          designApprovalNote: input.approval.note || null,
         }
       : {};
     if (input.design === 'faithful' && !input.approval && !before.approval) {

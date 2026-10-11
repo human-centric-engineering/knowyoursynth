@@ -53,6 +53,7 @@ import {
 } from '@/components/app/synth/stores';
 import type { CableFocus } from '@/components/app/synth/stores';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
+import type { SynthDesign } from '@/lib/app/catalogue/designs';
 
 /** Which end of a cable: the output plug (`from`) or the input plug (`to`). */
 export type CableEnd = 'from' | 'to';
@@ -62,7 +63,7 @@ export type CableEnd = 'from' | 'to';
  * same panel, in its own colours and lettering, without the maker's marks: every `brand` decor item (logos,
  * wordmarks, badges) and the modular case's maker and model plates are left out.
  */
-export type PanelDesign = 'faithful' | 'neutral';
+export type PanelDesign = SynthDesign;
 
 /**
  * The definition as the neutral design draws it: no `brand` decor, and no maker or model name on the modular case's
@@ -98,7 +99,7 @@ export interface SynthPanelProps {
   onRemoveCable: (i: number) => void;
   /** Moves one end of cable `i` to another jack. Without it the plugs cannot be dragged. */
   onMoveCable?: (i: number, end: CableEnd, jackId: string) => void;
-  /** D11. Default `faithful`. */
+  /** D11. Default `neutral`: faithful needs a recorded approval. */
   design?: PanelDesign;
 }
 
@@ -158,7 +159,7 @@ export function SynthPanel({
   onConnect,
   onRemoveCable,
   onMoveCable,
-  design = 'faithful',
+  design = 'neutral',
 }: SynthPanelProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragRef = useRef<PlugDrag | null>(null); // the plug being dragged: { i, end, x0, y0, moved, snap }
