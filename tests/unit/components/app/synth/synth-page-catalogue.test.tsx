@@ -10,7 +10,7 @@
  * @see lib/app/synths/defs/load.ts
  */
 
-import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeAll, beforeEach } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
@@ -65,6 +65,12 @@ beforeAll(() => {
     releasePointerCapture: () => undefined,
   });
 });
+
+// Yield a macrotask after each test, so V8 can free the page it drew. happy-dom holds its nodes through WeakRefs, and
+// V8 keeps a WeakRef's target alive until the microtask queue drains — which, as the runner chains tests on promises,
+// it otherwise never does in this file. Without it every page drawn stays live: ~4 GB over 25 synths, past the heap of
+// a CI worker.
+afterEach(() => new Promise<void>((r) => setTimeout(r)));
 
 beforeEach(() => {
   window.localStorage.clear();
