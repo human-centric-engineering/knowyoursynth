@@ -11,7 +11,8 @@
  *   stays put. JSON columns are compared by value, not key order: Postgres `jsonb` does not keep the order it was given.
  * - **Operator-owned once edited.** A row with `editedAt` set has been changed by an admin and is never written again.
  * - **Placement is set once.** A synth's `listed` and `order`, and a sound's `order`, are written when the row is created
- *   and never after. An admin reorders and hides without setting `editedAt` (`lib/app/catalogue/edit.ts`), so the seed
+ *   and never after. A row added to a list that already has rows goes after the last of them, whatever its place in
+ *   the file. An admin reorders and hides without setting `editedAt` (`lib/app/catalogue/edit.ts`), so the seed
  *   keeps updating the row's content while leaving its place alone.
  * - **Never deletes.** A row the data no longer has stays, so an empty or partial source cannot empty a table. Retiring
  *   content is an admin's act.
@@ -331,6 +332,15 @@ async function reconcile<Row extends object>(
 }
 
 const byKey = <T>(rows: T[], keyOf: (row: T) => string) => new Map(rows.map((r) => [keyOf(r), r]));
+
+/**
+ * Where a new row goes. In an empty list, the file's position. In one that already has rows, after the last of them:
+ * the stored order may be an admin's, so a file position could land on one already taken.
+ */
+function placer(lastStored: number | null): (fileOrder: number) => number {
+  let next = lastStored === null ? null : lastStored + 1;
+  return (fileOrder) => (next === null ? fileOrder : next++);
+}
 const soundKey = (r: { synthId: string; slug: string }) => `${r.synthId}/${r.slug}`;
 
 /** Check the data, then write it. Throws {@link CatalogueDataError}, having written nothing, when the data is wrong. */
@@ -343,20 +353,31 @@ export async function seedCatalogue(
   const synthIds = rows.synths.map((s) => s.id);
 
   // Synths first: every other row points at one.
+  const placeSynth = placer((await prisma.synth.aggregate({ _max: { order: true } }))._max.order);
   const synths = await reconcile(
     rows.synths,
     (r) => r.id,
     byKey(await prisma.synth.findMany({ where: { id: { in: synthIds } } }), (r) => r.id),
-    (data) => prisma.synth.create({ data }),
+    (data) => prisma.synth.create({ data: { ...data, order: placeSynth(data.order) } }),
     ({ id, ...data }) => prisma.synth.update({ where: { id }, data }),
     ['listed', 'order']
   );
 
+  const storedSounds = await prisma.synthSound.findMany({ where: { synthId: { in: synthIds } } });
+  const placeSound = new Map(
+    synthIds.map((id) => {
+      const orders = storedSounds.filter((s) => s.synthId === id).map((s) => s.order);
+      return [id, placer(orders.length ? Math.max(...orders) : null)];
+    })
+  );
   const sounds = await reconcile(
     rows.sounds,
     soundKey,
-    byKey(await prisma.synthSound.findMany({ where: { synthId: { in: synthIds } } }), soundKey),
-    (data) => prisma.synthSound.create({ data }),
+    byKey(storedSounds, soundKey),
+    (data) =>
+      prisma.synthSound.create({
+        data: { ...data, order: placeSound.get(data.synthId)?.(data.order) ?? data.order },
+      }),
     ({ synthId, slug, ...data }) =>
       prisma.synthSound.update({ where: { synthId_slug: { synthId, slug } }, data }),
     ['order']

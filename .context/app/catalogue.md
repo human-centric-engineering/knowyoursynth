@@ -40,7 +40,9 @@ The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
   next seed run that finds the row different will put it back.
 - **Placement is set once.** A synth's `listed` and `order`, and a sound's `order`, are written
   when the seed creates the row and never after, so an admin's order and hiding survive a re-seed
-  without marking the row edited. Reordering a synths file once its synths are seeded does nothing.
+  without marking the row edited. Reordering a synths file once its synths are seeded does nothing,
+  and a synth or sound added to a list that already has rows goes at its end, not at its place in
+  the file (which might be one an admin's order has taken).
 - **It never deletes.** Retiring a sound is an admin's act.
 
 The seed re-runs when its hash changes, and the hash takes in the data files, the loader, the

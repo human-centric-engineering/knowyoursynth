@@ -92,6 +92,7 @@ function table() {
 }
 
 const mockPrisma = vi.hoisted(() => ({}));
+const mockQueryRaw = vi.hoisted(() => vi.fn(async () => []));
 vi.mock('@/lib/db/client', () => ({ prisma: mockPrisma }));
 
 const mockLogAdminAction = vi.hoisted(() => vi.fn());
@@ -241,6 +242,7 @@ beforeEach(async () => {
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
     $transaction: vi.fn((fn: (tx: unknown) => unknown) => fn(mockPrisma)),
+    $queryRaw: mockQueryRaw,
   });
   await seedCatalogue(mockPrisma as unknown as TenancyClient, sample());
   for (const t of Object.values(db)) {
@@ -345,6 +347,17 @@ describe('PATCH /api/v1/admin/synths/:id', () => {
     expect(row.listed).toBe(false);
     expect(row.editedAt).toBeNull();
     expect(auditCalls()[0].changes).toEqual({ listed: { from: true, to: false } });
+  });
+
+  it('writes and audits nothing for an edit that changes nothing', async () => {
+    const res = await patchSynth(
+      request('PATCH', 'synths/model-d', { listed: true, name: 'Model D' }),
+      ctx({ id: 'model-d' })
+    );
+
+    expect(res.status).toBe(200);
+    expect(writes()).toBe(0);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
   it('refuses an unknown field and an empty change', async () => {
@@ -530,6 +543,18 @@ describe('POST /api/v1/admin/synths/:id/sounds and PUT …/sounds/order', () => 
     expect(db.synthSound.rows.every((r) => r.editedAt === null)).toBe(true);
     // The middle sound did not move, so only two rows were written.
     expect(db.synthSound.update).toHaveBeenCalledTimes(2);
+  });
+
+  it('holds the synth’s row while it adds or reorders, so a sound created meanwhile cannot share a place', async () => {
+    const slugs = sortRows(db.synthSound.rows, [{ order: 'asc' }]).map((r) => String(r.slug));
+    await putSoundOrder(
+      request('PUT', 'synths/model-d/sounds/order', { ids: slugs }),
+      ctx({ id: 'model-d' })
+    );
+
+    const [sql, id] = mockQueryRaw.mock.calls[0] as unknown as [string[], string];
+    expect(sql.join('?')).toMatch(/FROM synth WHERE id = \? FOR UPDATE/);
+    expect(id).toBe('model-d');
   });
 });
 
@@ -718,5 +743,24 @@ describe('the seed afterwards', () => {
       ['model-d', 1, true],
       ['tb-303', 0, false],
     ]);
+  });
+
+  it('adds a new seed sound after the admin’s order, not at its place in the file', async () => {
+    const slugs = sortRows(db.synthSound.rows, [{ order: 'asc' }]).map((r) => String(r.slug));
+    await putSoundOrder(
+      request('PUT', 'synths/model-d/sounds/order', { ids: [...slugs].reverse() }),
+      ctx({ id: 'model-d' })
+    );
+
+    // The file gains a sound at index 1, a place the admin's order has given to another sound.
+    const data = sample();
+    const file = data.sounds[0];
+    const added = real.sounds.find((f) => f.synth === 'model-d')!.sounds[3];
+    file.sounds.splice(1, 0, added);
+    await seedCatalogue(mockPrisma as unknown as TenancyClient, data);
+
+    const order = sortRows(db.synthSound.rows, [{ order: 'asc' }]).map((r) => r.order);
+    expect(new Set(order).size).toBe(order.length);
+    expect(db.synthSound.rows.find((r) => r.slug === added.id)?.order).toBe(3);
   });
 });

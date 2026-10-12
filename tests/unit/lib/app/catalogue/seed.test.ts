@@ -43,6 +43,10 @@ function table(keyOf: (row: Row) => string, filterField: string) {
         .filter((r) => wanted.has(String(r[filterField])))
         .map((r) => reorder(r) as Row);
     }),
+    aggregate: vi.fn(async () => {
+      const orders = [...rows.values()].map((r) => r.order as number);
+      return { _max: { order: orders.length ? Math.max(...orders) : null } };
+    }),
     create: vi.fn(async ({ data }: { data: Row }) => {
       const row = { ...data, editedAt: null };
       rows.set(keyOf(row), row);

@@ -44,6 +44,14 @@ const fromSoundProblems = (problems: SoundProblem[]) =>
 /** A copy typed as JSON for a Prisma `Json` column. */
 const toJson = (value: unknown): Json => JSON.parse(JSON.stringify(value)) as Json;
 
+/**
+ * Hold the synth's row until the transaction ends, so a reorder of its sounds and a new sound on it cannot interleave:
+ * the reorder's check that it lists every sound would otherwise miss one created meanwhile, which then shares a place.
+ */
+async function lockSynth(tx: Tx, id: string) {
+  await tx.$queryRaw`SELECT id FROM synth WHERE id = ${id} FOR UPDATE`;
+}
+
 async function synthOr404(tx: Tx, id: string) {
   const row = await tx.synth.findUnique({ where: { id } });
   if (!row) throw new NotFoundError('Synth not found');
@@ -152,9 +160,11 @@ export async function editSynth(
 ): Promise<{ before: SynthEditable; after: SynthEditable }> {
   return prisma.$transaction(async (tx) => {
     const before = pickSynth(await synthOr404(tx, id));
-    const changesContent = CONTENT_COLUMNS.some(
-      (column) => input[column] !== undefined && input[column] !== before[column]
-    );
+    const changes = (column: keyof SynthEditable) =>
+      input[column] !== undefined && input[column] !== before[column];
+    // An edit that changes nothing writes nothing.
+    if (!changes('listed') && !CONTENT_COLUMNS.some(changes)) return { before, after: before };
+    const changesContent = CONTENT_COLUMNS.some(changes);
     const after = await tx.synth.update({
       where: { id },
       data: { ...input, ...(changesContent ? { editedAt: new Date() } : {}) },
@@ -415,6 +425,7 @@ export async function createSound(
       { path: 'id', message: `${sound.id} is not a usable id` },
     ]);
   return prisma.$transaction(async (tx) => {
+    await lockSynth(tx, synthId);
     await synthOr404(tx, synthId);
     const taken = await tx.synthSound.findUnique({
       where: { synthId_slug: { synthId, slug: sound.id } },
@@ -443,6 +454,7 @@ export async function reorderSounds(
   slugs: string[]
 ): Promise<{ before: string[]; after: string[] }> {
   return prisma.$transaction(async (tx) => {
+    await lockSynth(tx, synthId);
     await synthOr404(tx, synthId);
     const rows = await tx.synthSound.findMany({
       where: { synthId },
