@@ -1,22 +1,15 @@
 /**
- * Every synth's panel design, for the admin Designs page (D11, `f-panel-designs`).
+ * The catalogue as the admin sees it (`f-panel-designs`, `f-catalogue-admin`).
  *
- * GET /api/v1/admin/synths — every synth in the catalogue, listed or not, with its design and the maker's approval
- *     behind it. See `lib/app/catalogue/designs.ts`.
+ * GET /api/v1/admin/synths — every synth in the catalogue, listed or not, in catalogue order: its design and the
+ *     maker's approval behind it, its descriptive columns, when an admin last edited it, and how many sounds and notes
+ *     it has. See `lib/app/catalogue/edit.ts`.
  */
 import { withAdminAuth } from '@/lib/auth/guards';
 import { successResponse } from '@/lib/api/responses';
-import { listSynthDesigns } from '@/lib/app/catalogue/designs';
-
-const CATALOGUE_ADMIN = {
-  // Ownership: no ownership decision — catalogue configuration every org shares, admin only. See RouteOwnership in lib/auth/guards.ts.
-  ownership: {
-    decidedBy: 'nothing',
-    because:
-      'The catalogue is product configuration shared by every org (GLOBAL_CONFIG_MODELS); no row belongs to a user, and the guard already limits this to admins.',
-  },
-} as const;
+import { listAdminSynths } from '@/lib/app/catalogue/edit';
+import { CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 
 export const GET = withAdminAuth(async () => {
-  return successResponse(await listSynthDesigns());
-}, CATALOGUE_ADMIN);
+  return successResponse(await listAdminSynths());
+}, CATALOGUE_READ);
