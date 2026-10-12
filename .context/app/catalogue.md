@@ -84,6 +84,14 @@ The rules, each tested in `tests/unit/app/api/v1/admin/synths/catalogue-edit.tes
 - **A sound's id never changes**, and neither does what a note is about. Removing a sound is not
   possible yet: the seed recreates a missing row, so it needs a retired flag first.
 
+**The pages** sit under Synths → Catalogue in the admin nav, as thin server shells that fetch
+these routes with `serverFetch` (an admin's request carries their session, so it is limited per
+admin). `/admin/synths/catalogue` orders and lists the synths; `/admin/synths/catalogue/:id` has
+a tab each for details, sounds, lineage and notes (`?tab=` opens one); `…/:id/sounds/:slug` and
+`…/:id/new-sound` edit and add a sound. A lesson step's values and cables are JSON text, which the
+server checks either way. A refused save puts each of the server's `details.errors` on the field
+its path names, and lists whatever no field claims (`components/app/admin/synths/problems.tsx`).
+
 ## How it is read
 
 - `GET /api/v1/synths`: the listed synths, in order, each with its definition's version and a
