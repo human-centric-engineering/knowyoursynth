@@ -446,3 +446,216 @@ describe('placeProblems', () => {
     expect(placed.unplaced).toEqual([{ path: '', message: 'd' }]);
   });
 });
+
+// ─── Beyond the four the task names ──────────────────────────────────────────
+
+describe("a synth's library, refused and undone", () => {
+  const sounds = [adminSound('bass', 'Bass'), adminSound('pad', 'Pad', { order: 1 })];
+
+  it('keeps the moved order and says why when the server refuses it, then undoes the moves', async () => {
+    const user = userEvent.setup();
+    put.mockRejectedValue(
+      refusal('The order must list every sound', [{ path: 'ids', message: 'Missing lead' }])
+    );
+    render(<SoundLibrary synthId="model-d" canAdd sounds={sounds} />);
+
+    await user.click(screen.getByRole('button', { name: 'Move Pad up' }));
+    await user.click(screen.getByRole('button', { name: 'Save order' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'The order must list every sound Missing lead'
+    );
+    const order = () => screen.getAllByTestId(/^sound-row-/).map((r) => r.dataset.testid);
+    expect(order()).toEqual(['sound-row-pad', 'sound-row-bass']);
+
+    await user.click(screen.getByRole('button', { name: 'Undo moves' }));
+    expect(order()).toEqual(['sound-row-bass', 'sound-row-pad']);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('says a synth with no sounds has none, and marks an edited sound', () => {
+    const { unmount } = render(<SoundLibrary synthId="model-d" canAdd sounds={[]} />);
+    expect(screen.getByText('This synth has no sounds yet.')).toBeInTheDocument();
+    unmount();
+
+    render(
+      <SoundLibrary
+        synthId="model-d"
+        canAdd
+        sounds={[adminSound('bass', 'Bass', { editedAt: '2026-10-12T00:00:00.000Z' })]}
+      />
+    );
+    expect(within(screen.getByTestId('sound-row-bass')).getByText('Edited')).toBeInTheDocument();
+  });
+});
+
+describe('editing a sound, row by row', () => {
+  it('adds a step, a control and a tweak, and moves a step', async () => {
+    const user = userEvent.setup();
+    patch.mockResolvedValue(STORED);
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Add a step' }));
+    const step3 = within(screen.getByTestId('step-2'));
+    await user.type(step3.getByLabelText('Title', INPUT), 'Add the envelope');
+    await user.selectOptions(step3.getByLabelText('Module', INPUT), 'env');
+    await user.type(step3.getByLabelText('Why', INPUT), 'Pluck.');
+    await user.click(screen.getByRole('button', { name: 'Move step 3 up' }));
+
+    await user.click(screen.getByRole('button', { name: 'Add a control' }));
+    await user.type(screen.getByLabelText('Control 2'), 'resonance');
+    await user.type(screen.getByLabelText('What control 2 is doing'), 'Low');
+
+    await user.click(screen.getByRole('button', { name: 'Add a tweak' }));
+    const tweakControls = screen.getAllByLabelText('Control', INPUT);
+    await user.type(tweakControls[1], 'resonance');
+    await user.type(screen.getAllByLabelText('Try', INPUT)[1], 'Raise it');
+    await user.type(screen.getAllByLabelText('Hear', INPUT)[1], 'Squelch');
+
+    await user.type(screen.getByLabelText(/^Tags/, INPUT), ', , classic');
+    await user.selectOptions(screen.getByLabelText(/^Level/, INPUT), '2');
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+
+    const body = patch.mock.calls[0][1]?.body as Record<string, unknown>;
+    expect(body.steps).toEqual([
+      STORED.steps[0],
+      { title: 'Add the envelope', module: 'env', why: 'Pluck.' },
+      STORED.steps[1],
+    ]);
+    expect(body.context).toEqual({ cutoff: 'Almost closed', resonance: 'Low' });
+    expect(body.tweaks).toEqual([
+      STORED.tweaks[0],
+      { id: 'resonance', try: 'Raise it', hear: 'Squelch' },
+    ]);
+    expect(body.tags).toEqual(['bass', 'funk', 'classic']);
+    expect(body.level).toBe(2);
+  });
+
+  it('removes a control and a tweak', async () => {
+    const user = userEvent.setup();
+    patch.mockResolvedValue(STORED);
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Remove' }));
+    await user.click(screen.getByRole('button', { name: 'Remove tweak 1' }));
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+
+    expect(patch.mock.calls[0][1]?.body).toMatchObject({ context: {}, tweaks: [] });
+  });
+
+  it('does not send a control listed twice, and says which', async () => {
+    const user = userEvent.setup();
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Add a control' }));
+    await user.type(screen.getByLabelText('Control 2'), 'cutoff');
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+
+    expect(patch).not.toHaveBeenCalled();
+    expect(screen.getAllByText('cutoff is listed twice')).not.toHaveLength(0);
+    expect(screen.getByLabelText('Control 2')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('says it could not save when the failure is not a refusal', async () => {
+    const user = userEvent.setup();
+    patch.mockRejectedValue(new Error('network'));
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not save the sound. Try again.'
+    );
+  });
+
+  it('keeps an unknown stored module selectable rather than dropping it', () => {
+    render(
+      <SoundForm
+        synthId="model-d"
+        mode="edit"
+        sound={{ ...STORED, steps: [{ ...STORED.steps[0], module: 'wavefolder' }] }}
+      />
+    );
+    expect(within(screen.getByTestId('step-0')).getByLabelText('Module', INPUT)).toHaveValue(
+      'wavefolder'
+    );
+  });
+});
+
+describe('notes, beyond the first save', () => {
+  it('adds a new unusual note to the list, trimming its target, and clears the form', async () => {
+    const user = userEvent.setup();
+    post.mockResolvedValue(note({ id: 'n2', target: 'vcf.emphasis', text: 'Resonance.' }));
+    render(<NotesEditor synthId="model-d" notes={[]} sharedLimits={[]} canAdd />);
+
+    expect(screen.getByText('No unusual notes yet.')).toBeInTheDocument();
+    const target = screen.getByLabelText(/Control, jack or area/, INPUT);
+    await user.type(target, '  vcf.emphasis ');
+    await user.type(screen.getByLabelText('Text'), 'Resonance.');
+    await user.click(screen.getByRole('button', { name: 'Add note' }));
+
+    expect(post).toHaveBeenCalledWith('/api/v1/admin/synths/model-d/notes', {
+      body: { target: 'vcf.emphasis', text: 'Resonance.' },
+    });
+    expect(await screen.findByTestId('note-n2')).toHaveTextContent('Unusual on vcf.emphasis');
+    expect(target).toHaveValue('');
+  });
+
+  it('says it could not add a note when the failure is not a refusal', async () => {
+    const user = userEvent.setup();
+    post.mockRejectedValue(new Error('network'));
+    render(<NotesEditor synthId="model-d" notes={[]} sharedLimits={[]} canAdd />);
+
+    await user.type(screen.getByLabelText(/Control, jack or area/, INPUT), 'osc1.range');
+    await user.type(screen.getByLabelText('Text'), 'Hi');
+    await user.click(screen.getByRole('button', { name: 'Add note' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not add the note. Try again.'
+    );
+  });
+
+  it("saves an unusual note's text alone, and shows a refusal on it", async () => {
+    const user = userEvent.setup();
+    patch.mockRejectedValue(refusal('Invalid note', [{ path: 'text', message: 'Too long' }]));
+    render(<NotesEditor synthId="model-d" notes={[note({})]} sharedLimits={[]} canAdd={false} />);
+
+    const form = within(screen.getByTestId('note-n1'));
+    expect(form.queryByLabelText('Title')).not.toBeInTheDocument();
+    await user.type(form.getByLabelText('Text'), '!');
+    await user.click(form.getByRole('button', { name: 'Save' }));
+
+    expect(patch).toHaveBeenCalledWith('/api/v1/admin/synth-notes/n1', {
+      body: { text: 'Footage, not octaves.!' },
+    });
+    expect(await form.findByText('Too long')).toBeInTheDocument();
+    expect(form.getByLabelText('Text')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('shows the intro, untitled limits and shared limits, each where it belongs', () => {
+    render(
+      <NotesEditor
+        synthId="model-d"
+        notes={[
+          note({ id: 'intro', kind: 'LIMIT_INTRO', target: null, text: 'Left out:' }),
+          note({ id: 'lim', kind: 'LIMIT', target: null, title: null, text: 'No MIDI.' }),
+        ]}
+        sharedLimits={[
+          note({ id: 'shared', kind: 'LIMIT', target: null, title: 'Mono', text: 'One voice.' }),
+        ]}
+        canAdd={false}
+      />
+    );
+
+    expect(screen.getByTestId('note-intro')).toHaveTextContent('Intro');
+    expect(screen.getByTestId('note-lim')).toHaveTextContent('Limit');
+    expect(screen.getByTestId('note-shared')).toHaveTextContent('Every panel');
+    expect(screen.queryByText('This synth has no limits listed.')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add note' })).not.toBeInTheDocument();
+  });
+
+  it('says a synth with no limits has none', () => {
+    render(<NotesEditor synthId="model-d" notes={[]} sharedLimits={[]} canAdd={false} />);
+    expect(screen.getByText('This synth has no limits listed.')).toBeInTheDocument();
+  });
+});
