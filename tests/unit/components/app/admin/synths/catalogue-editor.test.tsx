@@ -154,7 +154,7 @@ describe('the catalogue list', () => {
 
   it('disables every change for an admin acting for another org', () => {
     render(
-      <SharedSettingsAccessProvider readOnly>
+      <SharedSettingsAccessProvider readOnly canSwitch={false}>
         <CatalogueTable synths={SYNTHS} />
       </SharedSettingsAccessProvider>
     );
