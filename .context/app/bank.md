@@ -83,8 +83,9 @@ recorded by `npx tsx scripts/record-heard-on.ts`. Never re-record it to make a p
 source.
 
 - **"Heard on"** is inside a synth's lineage, as the contract shapes it: `getSynthDetail` calls
-  `getHeardOn`, which reads only the songs the synth lists. The lineage dialog shows it, with
-  "Load a sound in this style".
+  `getHeardOn`, which reads only the songs the synth lists, and the names of the artists those
+  credit (`heardArtists`). The lineage dialog shows it, with "Load a sound in this style" and an
+  "About <artist>" link to each artist's page.
 - `GET /api/v1/bank/:kind` (`artists`, `makers`, `instruments`, `songs`): every row, sorted as the
   prototype's databank sorted them.
 - `GET /api/v1/bank/:kind/:id`: one row with what it joins to. An artist's records, members,
@@ -94,6 +95,30 @@ source.
 Public, the section rate limit, ETags. These two read the whole databank once per request and
 join in memory, as the prototype did. When the compiled list (b4) or more records make that slow,
 give the slow join its own query, as `getHeardOn` has.
+
+## The pages
+
+`/bank` and `/bank/[tab]/[id]`, in `(public)`, transliterated from the prototype's `Bank.jsx`
+dialog (D3). The tabs are its four, in its order and with its labels: Artists, Innovators,
+Records, Instruments. A tab's URL segment is the API's kind, so the prototype's
+`#bank/<tab>/<id>` links map straight across (`components/app/bank/routes.ts`).
+
+- **`/bank` is the artists tab.** `/bank/artists` redirects there. `/bank/[tab]` is a tab's
+  welcome, `/bank/[tab]/[id]` a row. An unknown tab or row is a 404.
+- **The layout holds the list** (`components/app/bank/bank-shell.tsx`): the tabs with their
+  counts, "Find", the era filter and the grouped rows. It persists between pages, so the search
+  survives a click. Its rows are worked out on the server (`lists.ts`); the search runs in the
+  browser over them. Below `lg`, the list and the page take turns, as in the prototype.
+- **The pages are server components** (`bank-detail.tsx`) over `detailFrom`. Every link is a
+  URL: another databank page, a synth's panel (`/synths/<id>`), or a synth with a sound loaded
+  (`/synths/<id>?sound=<soundId>`). A panel or sound link shows only for a listed synth, and a
+  sound only when that synth's library has it (`listSoundNames`).
+- **An instrument says what it recreates and lists its recreations.** The prototype had no
+  recreations; this is the one addition to its pages.
+- **Read in-process, once per request**: `components/app/bank/load.ts` wraps the reads in React
+  `cache`, so the layout and the page share one `loadBank`.
+- **In the sitemap**: `/bank`, each tab, and every row (`components/app/bank/sitemap.ts`). If the
+  databank cannot be read, the sitemap still serves the tabs and the site's other pages.
 
 ## Don't
 

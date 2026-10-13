@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { bankSitemapPaths } from '@/components/app/bank/sitemap';
 
 /**
  * Sitemap Configuration
@@ -9,8 +10,13 @@ import type { MetadataRoute } from 'next';
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
  *
  * Phase 3.5: Landing Page & Marketing
+ *
+ * Know Your Synth: adds the databank's pages, read from its tables per request
+ * (`.context/app/divergences.md`).
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = 'force-dynamic';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
   // Public pages - add new public pages here
@@ -20,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/contact', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
     { path: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
+    ...(await bankSitemapPaths()),
   ];
 
   return publicPages.map((page) => ({
