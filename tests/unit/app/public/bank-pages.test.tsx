@@ -111,6 +111,35 @@ describe('/bank/[tab]/[id]', () => {
     });
   });
 
+  it.each([
+    ['makers', 'robert-moog', () => bank.makers.find((m) => m.id === 'robert-moog')?.summary],
+    [
+      'instruments',
+      'moog-minimoog',
+      () => bank.instruments.find((i) => i.id === 'moog-minimoog')?.text,
+    ],
+    [
+      'songs',
+      'donna-summer-i-feel-love',
+      () => bank.songs.find((x) => x.id === 'donna-summer-i-feel-love')?.parts[0].text,
+    ],
+  ])('describes %s/%s from its own text', async (t, id, text) => {
+    const meta = await rowMetadata(row(t, id));
+    expect(meta.description).toBe(text());
+    expect(meta.title).toMatch(/ · Databank$/);
+  });
+
+  it.each(['makers', 'instruments', 'songs'])(
+    'titles a %s row it does not have plainly',
+    async (t) => {
+      expect(await rowMetadata(row(t, 'no-such-row'))).toEqual({ title: 'Databank' });
+    }
+  );
+
+  it.each(['makers', 'songs', 'instruments'])('404s a %s row it does not have', async (t) => {
+    await expect(BankRowRoute(row(t, 'no-such-row'))).rejects.toThrow('NEXT_NOT_FOUND');
+  });
+
   it('titles a row it does not have plainly, and does not echo the id', async () => {
     expect(await rowMetadata(row('artists', '<b>x</b>'))).toEqual({ title: 'Databank' });
     expect(await rowMetadata(row('nope', 'kraftwerk'))).toEqual({ title: 'Databank' });
