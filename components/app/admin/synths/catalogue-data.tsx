@@ -9,7 +9,7 @@
  * the stored one.
  *
  * The downloads fetch `GET /api/v1/admin/synths/data/schema` and `GET /api/v1/admin/synths/data/[id]/template` and
- * save the result as a file. Nothing here writes: the page is read-only.
+ * save the result as a file. The only write is the content upload (`CatalogueUpload`, t-33).
  */
 
 import { useState } from 'react';
@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { FieldHelp } from '@/components/ui/field-help';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { CatalogueUpload } from '@/components/app/admin/synths/catalogue-upload';
 import { apiClient } from '@/lib/api/client';
 import type {
   CatalogueReconciliation,
@@ -250,6 +251,10 @@ export function CatalogueData({ data }: CatalogueDataProps) {
           })}
         />
       </section>
+
+      <CatalogueUpload
+        synths={data.groups.flatMap((g) => (g.synthId ? [{ id: g.synthId, name: g.name }] : []))}
+      />
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">
