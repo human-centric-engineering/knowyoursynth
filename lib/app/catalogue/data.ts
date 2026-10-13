@@ -87,6 +87,13 @@ export const SynthContentSchema = z
 
 export type SynthContent = z.infer<typeof SynthContentSchema>;
 
+/**
+ * The largest content file the upload takes (`lib/app/catalogue/upload.ts`), here so the page can check it too. The
+ * biggest synth's content in the seed data is about 720 KB, so this leaves room for a library to grow to nearly three
+ * times that.
+ */
+export const MAX_CONTENT_BYTES = 2 * 1024 * 1024;
+
 /** The per-synth seed files a content object stands for. */
 export function toSeedFiles(content: SynthContent): {
   sounds: SoundsFile;

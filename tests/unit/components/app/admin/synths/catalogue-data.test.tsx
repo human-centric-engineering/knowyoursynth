@@ -124,6 +124,20 @@ describe('CatalogueData', () => {
     expect(within(modelD).getByText('edited 2026-10-12')).toBeInTheDocument();
   });
 
+  it('offers the upload only for synths the tables have', () => {
+    const data = reconciliation();
+    data.groups.push({
+      synthId: 'tb-303',
+      name: 'TB-303',
+      counts: { ...ZERO, 'not-in-tables': 1 },
+      rows: [row({ table: 'SYNTH', key: 'tb-303', label: 'Details', status: 'not-in-tables' })],
+    });
+    render(<CatalogueData data={data} />);
+
+    const options = within(screen.getByLabelText('Synth')).getAllByRole('option');
+    expect(options.map((o) => o.textContent)).toEqual(['Model D']);
+  });
+
   it('says the seed has recorded nothing yet instead of comparing', () => {
     render(<CatalogueData data={{ recorded: false, lastRecordedAt: null, groups: [] }} />);
 

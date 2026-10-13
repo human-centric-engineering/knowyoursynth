@@ -9,7 +9,7 @@ import { logger } from '@/lib/logging';
 export const metadata: Metadata = {
   title: 'Catalogue data',
   description:
-    'Where the catalogue’s content comes from, which rows still match the seed, and a template for new content.',
+    'Where the catalogue’s content comes from, which rows still match the seed, a template for new content, and its upload.',
 };
 
 /**
@@ -41,7 +41,7 @@ const PATH = [
   },
   {
     title: 'The tables',
-    text: 'The source of truth once seeded. Admins edit them in the Catalogue pages; an edit is the admin’s from then on.',
+    text: 'The source of truth once seeded. Admins edit them in the Catalogue pages or upload a synth’s content below; either is the admin’s from then on.',
   },
   {
     title: 'One read layer',
@@ -66,7 +66,10 @@ export default async function CatalogueDataPage() {
               Where the catalogue&apos;s content comes from, how each row stands against the seed,
               and a template for preparing new content.
             </p>
-            <p className="mt-2">This page only reads; nothing here changes the catalogue.</p>
+            <p className="mt-2">
+              The only change made here is a content upload, which adds to one synth&apos;s content
+              and never overwrites an admin&apos;s edit.
+            </p>
           </FieldHelp>
         </h1>
         <p className="text-muted-foreground text-sm">

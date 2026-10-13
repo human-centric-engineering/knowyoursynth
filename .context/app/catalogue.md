@@ -63,8 +63,8 @@ baseline check covers exactly what the seed writes.
 
 `planCatalogue` plans the whole data set; its per-synth half, `planSynthContent(def, files)`,
 plans one synth's sounds, lineage and notes on their own and returns its problems rather than
-throwing. Anything that takes one synth's content (the upload, `f-catalogue-admin` c4) goes
-through it, so it is checked exactly as the seed checks it.
+throwing. The content upload (`lib/app/catalogue/upload.ts`) goes through it, so an uploaded
+file is checked exactly as the seed checks it.
 
 ## How admins edit it
 
@@ -109,7 +109,8 @@ its path names, and lists whatever no field claims (`components/app/admin/synths
 ## Which content is still the seed's
 
 `/admin/synths/data` (Synths → Data) explains how content reaches the app, compares every row with
-the seed, and offers a template. It is read-only, over three admin `GET` routes:
+the seed, offers a template, and takes a synth's content back as an upload. It reads through three
+admin `GET` routes:
 
 | Route                                        | Does                                                                       |
 | -------------------------------------------- | -------------------------------------------------------------------------- |
@@ -139,6 +140,29 @@ sound stored on another definition version.
 Tested in `tests/unit/app/api/v1/admin/synths/catalogue-data.test.ts`, which reaches each status
 through the real seed and admin routes and round-trips the template through the seed's schemas
 and planning.
+
+**The upload** is `POST /api/v1/admin/synths/:id/content`, over `lib/app/catalogue/upload.ts`. The
+body is one content object in the template's shape, as `application/json`, at most 2 MB. Content
+only (owner ruling, 2026-10-11): a synth with no definition is refused, saying adding a synth is
+developer work. The rules, tested in `tests/unit/lib/app/catalogue/upload.test.ts` and
+`tests/unit/app/api/v1/admin/synths/catalogue-upload.test.ts`:
+
+- **Checked whole before anything is written**: `SynthContentSchema`, sound ids, then
+  `planSynthContent`. Any problem refuses the file, a 400 whose `details.errors` names each one.
+- **What it writes is the admin's.** Every row it creates or updates gets `editedAt`, as an edit in
+  the Catalogue pages does; otherwise the next seed run would put a seeded row back. A row an admin
+  has edited is skipped (unless it already holds the file's value, which counts as unchanged), a
+  re-upload of the same file writes nothing, nothing is deleted, and a new sound goes after the
+  last. One transaction, holding the synth's row. The editor's writes do not take that lock, so an
+  update lands only on a row still unedited; an admin's edit made meanwhile is skipped, and a row
+  an admin created meanwhile refuses the whole upload as a 409 to try again.
+- **Kept and audited.** An accepted file is stored privately at
+  `catalogue-uploads/<id>/<time>-<uuid>.json` and audited as `synth.content_upload` with its path
+  and the counts. With no storage configured, or a provider that cannot keep a file privately (Vercel Blob),
+  the upload is refused (503); if the write fails the
+  stored file is removed. A refused file is neither stored nor audited.
+- **Rate limited** by the admin section cap and `uploadLimiter` (10 per 15 minutes), keyed per
+  admin.
 
 ## How it is read
 
