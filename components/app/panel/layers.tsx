@@ -527,7 +527,7 @@ export function DoorRings({ def, values }: { def: SynthDef; values: ControlValue
   const from = dark && id != null ? cm[id] : undefined;
   if (!from) return null;
   const doors: { c: Control; tag: string }[] = [];
-  (ways || []).forEach((combo, way) =>
+  (Array.isArray(ways) ? ways : []).forEach((combo, way) =>
     combo.forEach((d) => {
       const dc = cm[d.id];
       if (d.id !== WHEEL && dc && !doors.some((x) => x.c.id === d.id))

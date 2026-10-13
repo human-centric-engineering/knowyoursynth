@@ -582,7 +582,11 @@ export interface Mapper {
     onDone: (map: SoundMap) => void,
     onError: (err: unknown) => void
   ): void;
-  explain(controlId: string, onDone: (id: string, combos: DoorCombo[]) => void): void;
+  explain(
+    controlId: string,
+    onDone: (id: string, combos: DoorCombo[]) => void,
+    onError: (id: string, err: unknown) => void
+  ): boolean;
   cancel(): void;
   dispose(): void;
 }
@@ -837,9 +841,12 @@ export function createMapper(): Mapper {
     },
     /**
      * Why is this control dead? → onDone(id, [combo, …]): up to two ways in, each a list of doors ({ id, v } or
-     * { id: '@wheel' }) to open together; empty if one or two doors are not enough. Asked once per control per analysis.
+     * { id: '@wheel' }) to open together; empty if one or two doors are not enough. Asked once per control per analysis,
+     * unless the search throws: that is logged and reported to `onError`, and the control can be asked again. Returns
+     * whether a search was started: false when there is nothing to ask (no current analysis, the control is not dead,
+     * or it is already asked), and then neither callback is called.
      */
-    explain(controlId, onDone) {
+    explain(controlId, onDone, onError) {
       const sess = session;
       if (
         !sess ||
@@ -848,42 +855,56 @@ export function createMapper(): Mapper {
         sess.state[controlId] !== 'dead' ||
         sess.asked.has(controlId)
       )
-        return;
+        return false;
       const state = sess.state;
       sess.asked.add(controlId);
-      sess.tail = (sess.tail ?? Promise.resolve())
-        .then(async () => {
-          if (sess.id !== run) return;
-          const search = doorSearch(sess.def, sess.values, sess.cables, sess.wheel, state, [
+      const search = (sess.tail ?? Promise.resolve()).then(async () => {
+        if (sess.id !== run) return null;
+        const doors = doorSearch(sess.def, sess.values, sess.cables, sess.wheel, state, [
+          controlId,
+        ]);
+        const found: DoorJob[] = [];
+        const each = (r: ProbeResult, job: ProbeJob) => {
+          if (r.live && job) found.push(job as DoorJob);
+        };
+        // Doors are tried nearest first; a little past the first answer is far enough to look for a second.
+        const stale = (job: ProbeJob) =>
+          found.length >= 2 ||
+          (found.length > 0 && (job as DoorJob).rank > Math.min(...found.map((f) => f.rank)) + 4);
+        await phase(sess, doors.firstRound(), each, stale);
+        if (!found.length) await phase(sess, doors.secondRound([controlId]), each, stale);
+        return found;
+      });
+      // The queue waits for this search to settle, whatever its outcome or the caller's.
+      sess.tail = search.then(
+        () => undefined,
+        () => undefined
+      );
+      // Two-armed, so a throw from the caller's own onDone is not reported as a failed explanation.
+      void search.then(
+        (found) => {
+          if (!found || sess.id !== run) return;
+          onDone(
             controlId,
-          ]);
-          const found: DoorJob[] = [];
-          const each = (r: ProbeResult, job: ProbeJob) => {
-            if (r.live && job) found.push(job as DoorJob);
-          };
-          // Doors are tried nearest first; a little past the first answer is far enough to look for a second.
-          const stale = (job: ProbeJob) =>
-            found.length >= 2 ||
-            (found.length > 0 && (job as DoorJob).rank > Math.min(...found.map((f) => f.rank)) + 4);
-          await phase(sess, search.firstRound(), each, stale);
-          if (!found.length) await phase(sess, search.secondRound([controlId]), each, stale);
-          if (sess.id === run)
-            onDone(
-              controlId,
-              found
-                .sort((a, b) => a.rank - b.rank)
-                .slice(0, 2)
-                .map((f) => f.combo)
-            );
-        })
-        .catch((err: unknown) => {
+            found
+              .sort((a, b) => a.rank - b.rank)
+              .slice(0, 2)
+              .map((f) => f.combo)
+          );
+        },
+        (err: unknown) => {
           if (sess.id !== run) return;
           logger.error('Sound-map explanation failed', {
             control: controlId,
             error: err instanceof Error ? err.message : String(err),
           });
-          onDone(controlId, []);
-        });
+          // Not `[]`: that would say no one or two controls bring it in, which nobody found out. Forgotten as asked,
+          // so the control can be asked again.
+          sess.asked.delete(controlId);
+          onError(controlId, err);
+        }
+      );
+      return true;
     },
     cancel: close,
     dispose() {

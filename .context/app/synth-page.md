@@ -56,8 +56,11 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
   back to the main thread where a host blocks workers. A new map starts 300 ms after the panel
   goes still; until then the old one stays up, marked "Updating…". An analysis that throws is
-  logged and the map goes off rather than staying on "Working out…"; the next change to the
-  sound tries again. The panel's dim, glow and ring layers read it from `mapStore`.
+  logged and the map goes to `failed`: the legend says it could not be worked out, the layers
+  draw nothing (as for off), and the next change to the sound tries again. A "why is it dark?"
+  search that throws is filed as `'failed'`, not `[]` (which means no one or two controls bring
+  it in), and is asked again once the control is pointed at after something else. The panel's dim,
+  glow and ring layers read it from `mapStore`.
 - **The scope reads the synth's own output**, before the effects rack. The harmonics strip shows
   the live sound while a key is down or the riff plays, and otherwise a note rendered offline
   through the model (`predict`). The big view's "What is making this shape" is `waveStory`, run

@@ -78,6 +78,27 @@ describe('MapLegend', () => {
     expect(screen.getByRole('status').textContent).toBe('Working out what is in this sound… 42%');
   });
 
+  it('says the map could not be worked out, with no key and no progress', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'failed', key: 'model-d/x/null' }));
+    render(legend());
+    expect(screen.getByRole('status').textContent).toBe(
+      'Could not work out what is in this sound. Changing the sound tries again.'
+    );
+    expect(screen.queryByText(/Working out/)).toBeNull();
+    expect(screen.queryByText('Bright:')).toBeNull();
+    expect(screen.queryByText(/Why is it dark/)).toBeNull();
+  });
+
+  it('says it could not work out what brings in the dark control being pointed at, not that nothing does', () => {
+    act(() => mapStore.set(ready({ why: { [GLIDE]: 'failed' } })));
+    render(legend());
+    pointAt(GLIDE);
+    const line = screen.getByText(`${name(GLIDE)} is dark.`).parentElement;
+    expect(line?.textContent).toContain('Could not work out what would bring it in.');
+    expect(line?.textContent).not.toContain('No one or two controls');
+    expect(line?.textContent).not.toContain('ringed');
+  });
+
   it('keys the dimming, and names it for the hardware or the paper outline', () => {
     act(() => mapStore.set(ready()));
     const { rerender } = render(legend());
@@ -136,7 +157,7 @@ describe('MapLegend', () => {
 
 describe('WhyAsker', () => {
   const fakeMapper = () => {
-    const explain = vi.fn<Mapper['explain']>();
+    const explain = vi.fn<Mapper['explain']>(() => true);
     const mapper: Mapper = { analyse: vi.fn(), explain, cancel: vi.fn(), dispose: vi.fn() };
     return { mapper, explain, ref: { current: mapper } };
   };
@@ -157,6 +178,37 @@ describe('WhyAsker', () => {
     pointAt(CUTOFF);
     pointAt(GLIDE);
     expect(explain).toHaveBeenCalledTimes(1);
+  });
+
+  it('files a failed explanation as failed, and asks again the next time the control is pointed at', () => {
+    const { explain, ref } = fakeMapper();
+    act(() => mapStore.set(ready()));
+    render(<WhyAsker mapperRef={ref} />);
+    pointAt(GLIDE);
+    expect(explain).toHaveBeenCalledTimes(1);
+    act(() => explain.mock.calls[0][2](GLIDE, new Error('door render blew up')));
+    expect(mapStore.get().why[GLIDE]).toBe('failed');
+    // Still pointed at: no retry loop.
+    expect(explain).toHaveBeenCalledTimes(1);
+    // Pointed at again, within the same map: asked again, and back to "Looking for…" meanwhile.
+    pointAt(CUTOFF);
+    pointAt(GLIDE);
+    expect(explain).toHaveBeenCalledTimes(2);
+    expect(GLIDE in mapStore.get().why).toBe(false);
+    const ways = [[{ id: CUTOFF, v: 10 }]];
+    act(() => explain.mock.calls[1][1](GLIDE, ways));
+    expect(mapStore.get().why[GLIDE]).toEqual(ways);
+  });
+
+  it('leaves a failed answer in place when the mapper does not take the question up again', () => {
+    const { explain, ref } = fakeMapper();
+    act(() => mapStore.set(ready({ why: { [GLIDE]: 'failed' } })));
+    explain.mockReturnValue(false); // the mapper has nothing to ask, e.g. its session is out of step with the store
+    render(<WhyAsker mapperRef={ref} />);
+    pointAt(GLIDE);
+    expect(explain).toHaveBeenCalledTimes(1);
+    // Not "Looking for…" with nothing looking.
+    expect(mapStore.get().why[GLIDE]).toBe('failed');
   });
 
   it('drops an answer that arrives after the sound has changed', () => {
@@ -180,12 +232,21 @@ describe('WhyAsker', () => {
 
 describe('useWheelWanted', () => {
   it('is true only while the dark control pointed at would come in with the mod wheel', () => {
-    act(() => mapStore.set(ready({ why: { [GLIDE]: [[{ id: WHEEL }]], [OSC2]: [] } })));
+    act(() =>
+      mapStore.set(
+        ready({
+          state: { ...ready().state, [EMPHASIS]: 'dead' },
+          why: { [GLIDE]: [[{ id: WHEEL }]], [OSC2]: [], [EMPHASIS]: 'failed' },
+        })
+      )
+    );
     const { result } = renderHook(() => useWheelWanted());
     expect(result.current).toBe(false);
     pointAt(GLIDE);
     expect(result.current).toBe(true);
     pointAt(CUTOFF);
+    expect(result.current).toBe(false);
+    pointAt(EMPHASIS); // dark, but what brings it in could not be worked out
     expect(result.current).toBe(false);
   });
 });
@@ -225,5 +286,13 @@ describe('MapNote', () => {
     expect(container.textContent).toContain('Looking for what would bring it in…');
     act(() => mapStore.set((m) => ({ ...m, why: { [GLIDE]: [] } })));
     expect(container.textContent).toContain('No one or two controls bring it in.');
+  });
+
+  it('says a dark control could not be explained when the search failed, rather than that nothing brings it in', () => {
+    act(() => mapStore.set(ready({ why: { [GLIDE]: 'failed' } })));
+    const { container } = render(note(GLIDE));
+    expect(container.textContent).toContain('Does nothing at the moment');
+    expect(container.textContent).toContain('Could not work out what would bring it in.');
+    expect(container.textContent).not.toContain('No one or two controls');
   });
 });

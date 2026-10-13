@@ -349,7 +349,7 @@ describe('createMapper', () => {
     await vi.advanceTimersByTimeAsync(4 * 40);
 
     const onExplain = vi.fn();
-    mapper.explain('mod.depth', onExplain);
+    mapper.explain('mod.depth', onExplain, vi.fn());
     await vi.advanceTimersByTimeAsync(4 * 60);
 
     expect(onExplain).toHaveBeenCalledTimes(1);
@@ -376,14 +376,14 @@ describe('createMapper', () => {
     await vi.advanceTimersByTimeAsync(4 * 40);
 
     const onLive = vi.fn();
-    mapper.explain('filter.cutoff', onLive); // state is 'on', not 'dead'
+    mapper.explain('filter.cutoff', onLive, vi.fn()); // state is 'on', not 'dead'
     await vi.advanceTimersByTimeAsync(4 * 10);
     expect(onLive).not.toHaveBeenCalled();
 
     const onDead = vi.fn();
-    mapper.explain('mod.depth', onDead);
+    mapper.explain('mod.depth', onDead, vi.fn());
     await vi.advanceTimersByTimeAsync(4 * 60);
-    mapper.explain('mod.depth', onDead); // already asked this analysis
+    mapper.explain('mod.depth', onDead, vi.fn()); // already asked this analysis
     await vi.advanceTimersByTimeAsync(4 * 60);
     expect(onDead).toHaveBeenCalledTimes(1);
   });
@@ -425,7 +425,7 @@ describe('createMapper', () => {
     mapper.dispose();
 
     const onExplain = vi.fn();
-    mapper.explain('mod.depth', onExplain);
+    mapper.explain('mod.depth', onExplain, vi.fn());
 
     expect(onExplain).not.toHaveBeenCalled();
   });
@@ -796,7 +796,32 @@ describe('createMapper', () => {
       expect(unhandled).toEqual([new Error('caller broke')]);
     });
 
-    it('answers an explanation that throws with no ways in, and logs it', async () => {
+    it('does not report a throw from the caller’s own explain onDone as a failed explanation', async () => {
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
+      await vi.advanceTimersByTimeAsync(4 * 40);
+
+      const onExplain = vi.fn(() => {
+        throw new Error('caller broke');
+      });
+      const onFail = vi.fn();
+      expect(mapper.explain('mod.depth', onExplain, onFail)).toBe(true);
+      await vi.advanceTimersByTimeAsync(4 * 60);
+
+      expect(onExplain).toHaveBeenCalledTimes(1);
+      expect(onFail).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      await Promise.resolve();
+      expect(unhandled).toEqual([new Error('caller broke')]);
+      // Still asked: answered, so not searched again.
+      expect(mapper.explain('mod.depth', onExplain, onFail)).toBe(false);
+    });
+
+    it('reports an explanation that throws as failed, not as no way in, logs it, and lets it be asked again', async () => {
       let explaining = false;
       const throwing = (job: RealProbeJob): RealProbeResult => {
         if (explaining) throw new Error('door render blew up');
@@ -814,15 +839,27 @@ describe('createMapper', () => {
 
       explaining = true;
       const onExplain = vi.fn();
-      mapper.explain('mod.depth', onExplain);
+      const onFail = vi.fn();
+      mapper.explain('mod.depth', onExplain, onFail);
       await vi.advanceTimersByTimeAsync(4 * 60);
 
-      expect(onExplain).toHaveBeenCalledWith('mod.depth', []);
+      expect(onExplain).not.toHaveBeenCalled();
+      expect(onFail).toHaveBeenCalledTimes(1);
+      expect(onFail.mock.calls[0][0]).toBe('mod.depth');
       expect(error).toHaveBeenCalledWith(
         'Sound-map explanation failed',
         expect.objectContaining({ control: 'mod.depth', error: 'door render blew up' })
       );
       expect(unhandled).toEqual([]);
+
+      // Same analysis, asked again: the search runs this time and finds the door.
+      explaining = false;
+      mapper.explain('mod.depth', onExplain, onFail);
+      await vi.advanceTimersByTimeAsync(4 * 60);
+      expect(onFail).toHaveBeenCalledTimes(1);
+      expect(onExplain).toHaveBeenCalledWith('mod.depth', [
+        [{ id: 'mod.toOsc', v: true, latent: true }],
+      ]);
     });
   });
 });

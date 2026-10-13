@@ -351,9 +351,13 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
                 ? { status: 'ready', progress: 1, key: soundKey, why: {}, ...res }
                 : m
             ),
-          // The analysis threw part-way (the mapper has logged it): leave "Working out…" rather than hang there. The
+          // The analysis threw part-way (the mapper has logged it): leave "Working out…" for a line saying the map
+          // could not be worked out, rather than hang there or vanish. The panel draws nothing for it, as for off. The
           // next change to the sound tries again.
-          () => mapStore.set((m) => (m.key === soundKey ? MAP_OFF : m))
+          () =>
+            mapStore.set((m) =>
+              m.key === soundKey ? { ...MAP_OFF, status: 'failed', key: soundKey } : m
+            )
         );
       } catch {
         mapStore.set(MAP_OFF); // toEngine threw: the panel already reports that
