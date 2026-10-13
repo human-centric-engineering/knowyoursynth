@@ -339,9 +339,15 @@ describe('the template', () => {
   it('is the empty skeleton for a synth with no content yet', async () => {
     const tb303 = getSynthDef('tb-303');
 
-    expect(await template('tb-303')).toEqual({
+    const skeleton = await template('tb-303');
+
+    expect(skeleton).toEqual({
       content: { synth: 'tb-303', version: tb303?.version, sounds: [] },
       problems: [],
+    });
+    // As seed files it is a sounds file alone: no lineage or notes file is made up for it.
+    expect(toSeedFiles(SynthContentSchema.parse(skeleton.content))).toEqual({
+      sounds: { synth: 'tb-303', version: tb303?.version, sounds: [] },
     });
   });
 
@@ -356,6 +362,59 @@ describe('the template', () => {
         message: `${firstSlug} was made on definition version ${modelD.version + 1}, not ${modelD.version}`,
       },
     ]);
+  });
+
+  it('carries a lineage’s users and note when it has them', async () => {
+    Object.assign(db.synthLineage.rows[0], { users: ['A player'], note: 'A note.' });
+
+    const { content, problems } = await template('model-d');
+
+    expect(problems).toEqual([]);
+    expect(SynthContentSchema.parse(content).lineage).toMatchObject({
+      users: ['A player'],
+      note: 'A note.',
+    });
+  });
+
+  it('gives limits an empty intro when the synth has notes but no intro', async () => {
+    const intro = db.synthNote.rows.findIndex(
+      (n) => n.synthId === 'model-d' && n.kind === 'LIMIT_INTRO'
+    );
+    expect(intro).toBeGreaterThanOrEqual(0);
+    db.synthNote.rows.splice(intro, 1);
+
+    const { content } = await template('model-d');
+
+    expect(content).toMatchObject({ notes: { limits: { intro: '' } } });
+  });
+
+  it('takes the version from the first sound, or 1, for a synth the registry lacks', async () => {
+    const synthRow = db.synth.rows.find((r) => r.id === 'model-d') as Row;
+    db.synth.rows.push({ ...synthRow, id: 'not-registered' }, { ...synthRow, id: 'bare' });
+    db.synthSound.rows.push({
+      ...firstSoundRow(),
+      synthId: 'not-registered',
+      definitionVersion: 7,
+    });
+    const { getSynthContentTemplate } = await import('@/lib/app/catalogue/template');
+
+    const withSound = await getSynthContentTemplate('not-registered');
+    const empty = await getSynthContentTemplate('bare');
+
+    expect(withSound).toMatchObject({ content: { version: 7 }, problems: [] });
+    expect(empty).toEqual({ content: { synth: 'bare', version: 1, sounds: [] }, problems: [] });
+  });
+
+  it('returns the draft unchecked, with where it does not fit, when a stored row breaks the schema', async () => {
+    firstSoundRow().level = 9;
+
+    const { content, problems } = await template('model-d');
+
+    expect(SynthContentSchema.safeParse(content).success).toBe(false);
+    expect(content).toMatchObject({
+      sounds: expect.arrayContaining([expect.objectContaining({ id: firstSlug, level: 9 })]),
+    });
+    expect(problems).toEqual([expect.objectContaining({ path: 'sounds.0.level' })]);
   });
 
   it('is 404 for a synth that does not exist, and 400 for an id that cannot be one', async () => {
