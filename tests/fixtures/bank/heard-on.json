@@ -1,0 +1,3117 @@
+{
+  "2-xm": [
+    {
+      "who": "Don Lewis",
+      "what": "Sessions for Sérgio Mendes (Homecooking) and The Brothers Johnson (Look Out for #1)",
+      "year": "1976",
+      "on": "Oberheim SEM (four modules)",
+      "text": "Lewis played a home-built bank of four SEMs from a digital keyboard, one of the ways SEMs were used for polyphony before Oberheim’s own Four Voice. Each 2-XM module is one of these SEMs.",
+      "song": "don-lewis-sessions-for-sergio-mendes-and-the-brothers-johnso",
+      "artists": ["don-lewis"]
+    },
+    {
+      "who": "Mark Mothersbaugh",
+      "what": "The Life Aquatic with Steve Zissou (score)",
+      "year": "2004",
+      "on": "Oberheim Two Voice",
+      "text": "Mothersbaugh used his Two Voice for the score’s electronic sounds and cues.",
+      "sound": "aquatic-bubbles",
+      "song": "mark-mothersbaugh-the-life-aquatic-with-steve-zissou",
+      "artists": ["mark-mothersbaugh"]
+    },
+    {
+      "who": "Geoff Barrow & Ben Salisbury",
+      "what": "Drokk: Music Inspired by Mega-City One",
+      "year": "2012",
+      "on": "Oberheim Two Voice",
+      "text": "Made largely on three original Two Voice units, for music first meant for the film Dredd.",
+      "sound": "drokk-drone",
+      "song": "barrow-salisbury-drokk-music-inspired-by-mega-city-one",
+      "artists": ["barrow-salisbury"]
+    },
+    {
+      "who": "Ben Salisbury and Geoff Barrow",
+      "what": "Ex Machina (score)",
+      "year": "2015",
+      "on": "Oberheim Two Voice",
+      "text": "Between them the composers owned three or four Two Voice units, which Salisbury says made many of the score’s heavy, noise-driven sounds.",
+      "song": "barrow-salisbury-ex-machina",
+      "artists": ["barrow-salisbury"]
+    },
+    {
+      "who": "Kyle Dixon & Michael Stein",
+      "what": "\"Stranger Things\" theme",
+      "year": "2016",
+      "on": "Roland Jupiter-8 (the lead), with an Oberheim, a Sequential Pro-One and a Roland SH-2",
+      "text": "The theme’s arpeggio is played on an Oberheim Two Voice, by hand rather than by a sequencer.",
+      "sound": "duo-counterpoint",
+      "song": "kyle-dixon-michael-stein-stranger-things-theme",
+      "artists": ["kyle-dixon-michael-stein"]
+    },
+    {
+      "who": "Ben Salisbury and Geoff Barrow",
+      "what": "Annihilation (score), “The Alien”",
+      "year": "2018",
+      "on": "Oberheim Two Voice",
+      "text": "Salisbury has said the four-note synth theme heard in the film’s trailer was played on a Two Voice and then processed.",
+      "song": "barrow-salisbury-annihilation-the-alien",
+      "artists": ["barrow-salisbury"]
+    }
+  ],
+  "b2600": [
+    {
+      "who": "The Edgar Winter Group",
+      "what": "\"Frankenstein\"",
+      "year": "1972",
+      "on": "ARP 2600",
+      "text": "Edgar Winter played the lead lines on an ARP 2600, with its keyboard hung from a strap so he could move around the stage.",
+      "sound": "monster-sync-lead",
+      "song": "edgar-winter-group-frankenstein",
+      "artists": ["edgar-winter-group"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "Innervisions",
+      "year": "1973",
+      "on": "ARP 2600",
+      "text": "The sleeve credits Arp and Moog synthesizers together. Wonder was an early 2600 owner and had the panel of his own unit labelled in Braille.",
+      "sound": "stevie-arp-funk-bass",
+      "song": "stevie-wonder-innervisions",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Herbie Hancock",
+      "what": "Sextant",
+      "year": "1973",
+      "on": "ARP 2600 and ARP Pro Soloist, with a Moog",
+      "text": "Patrick Gleeson and Hancock are both credited on the 2600 and the Pro Soloist, and Hancock on a Moog as well. Gleeson had joined the band as Hancock’s synthesizer technician.",
+      "sound": "gleeson-space-lead",
+      "song": "herbie-hancock-sextant",
+      "artists": ["herbie-hancock", "patrick-gleeson"]
+    },
+    {
+      "who": "Klaus Schulze",
+      "what": "Timewind",
+      "year": "1975",
+      "on": "ARP 2600 and ARP Odyssey, with an EMS Synthi A and a Synthanorma sequencer",
+      "text": "Two side-long pieces, “Bayreuth Return” and “Wahnfried 1883”. Schulze’s first solo album to use a sequencer.",
+      "sound": "schulze-beating-drone",
+      "song": "klaus-schulze-timewind",
+      "artists": ["klaus-schulze"]
+    },
+    {
+      "who": "Weather Report / Joe Zawinul",
+      "what": "Black Market, Heavy Weather",
+      "year": "1976–77",
+      "on": "ARP 2600",
+      "text": "Zawinul played two 2600s, one with its keyboard scaled upside down so that familiar fingerings gave unfamiliar lines.",
+      "song": "weather-report-black-market-heavy-weather",
+      "artists": ["weather-report", "joe-zawinul"]
+    },
+    {
+      "who": "Jean-Michel Jarre",
+      "what": "Oxygène",
+      "year": "1976",
+      "on": "EMS VCS3 and Synthi AKS",
+      "text": "One of a handful of synths on the album, used alongside an EMS VCS3 and an organ for its washes of filtered noise and effects.",
+      "sound": "surf-and-wind",
+      "song": "jean-michel-jarre-oxygene",
+      "artists": ["jean-michel-jarre"]
+    },
+    {
+      "who": "Weather Report",
+      "what": "Heavy Weather — \"Birdland\"",
+      "year": "1977",
+      "on": "ARP 2600",
+      "text": "Joe Zawinul’s ARP 2600 is one of the main voices on the album, played with a lot of hand-moved pitch bending.",
+      "sound": "jazz-funk-line",
+      "song": "weather-report-heavy-weather-birdland",
+      "artists": ["weather-report"]
+    },
+    {
+      "who": "Ben Burtt",
+      "what": "Star Wars — the voice of R2-D2",
+      "year": "1977",
+      "on": "ARP 2600",
+      "text": "The sound designer built the robot’s chirps and whistles on an ARP 2600, blended with his own voice.",
+      "sound": "droid-chatter",
+      "song": "ben-burtt-star-wars-the-voice-of-r2-d2",
+      "artists": ["ben-burtt"]
+    },
+    {
+      "who": "Jean-Michel Jarre",
+      "what": "Équinoxe",
+      "year": "1978",
+      "on": "ARP 2600, run by Michel Geiss’s Matrisequencer",
+      "text": "The 2600 is one of the main voices on the album, with sequenced lines from the Matrisequencer that Michel Geiss built.",
+      "sound": "jarre-octave-seq",
+      "song": "jean-michel-jarre-equinoxe",
+      "artists": ["jean-michel-jarre"]
+    },
+    {
+      "who": "Depeche Mode",
+      "what": "Across the catalogue",
+      "year": "1980s onwards",
+      "on": "ARP 2600",
+      "text": "The band have used a 2600 from the early records to the late ones; Martin Gore was photographed playing one during the Sounds of the Universe sessions.",
+      "sound": "dm-dirty-drive-bass",
+      "song": "depeche-mode-across-the-catalogue",
+      "artists": ["depeche-mode"]
+    },
+    {
+      "who": "Martin Hannett",
+      "what": "Joy Division — Closer, \"The Eternal\"",
+      "year": "1980",
+      "on": "ARP 2600",
+      "text": "Hannett owned a 2600 and its sequencer and used them on the second album. The synthesizers on Unknown Pleasures the year before were a Transcendent 2000 and an ARP Omni, not this one.",
+      "sound": "hannett-atmosphere",
+      "song": "martin-hannett-joy-division-closer-the-eternal",
+      "artists": ["martin-hannett"]
+    },
+    {
+      "who": "Vince Clarke",
+      "what": "Yazoo and Erasure records",
+      "year": "1980s onwards",
+      "on": "ARP 2600",
+      "text": "The 2600 is the instrument Clarke is most associated with. He has owned several and has kept using them across four decades of records.",
+      "sound": "clarke-pop-square-lead",
+      "song": "vince-clarke-yazoo-and-erasure-records",
+      "artists": ["vince-clarke"]
+    },
+    {
+      "who": "Depeche Mode / Daniel Miller",
+      "what": "Speak & Spell",
+      "year": "1981",
+      "on": "ARP 2600",
+      "text": "Producer Daniel Miller made the kick and snare sounds on a 2600 with a sequencer in place of a drum machine: a pitch-swept sine for the kick, filtered noise for the snare.",
+      "song": "depeche-mode-speak-spell",
+      "artists": ["depeche-mode", "daniel-miller"]
+    },
+    {
+      "who": "Kyle Dixon & Michael Stein",
+      "what": "Stranger Things (score), the Upside Down",
+      "year": "2016",
+      "on": "ARP 2600 (percussion blasts), with a 5U modular and a Polymoog",
+      "text": "Made after the directors asked for a monster theme. Stein sequenced it on the eight-step Encore Event Generator in his large 5U modular, with rising dissonant pads from a Polymoog, sub-bass and percussion blasts from an ARP 2600.",
+      "song": "kyle-dixon-michael-stein-the-upside-down",
+      "artists": ["kyle-dixon-michael-stein"]
+    }
+  ],
+  "buchla-easel": [
+    {
+      "who": "Morton Subotnick",
+      "what": "Silver Apples of the Moon",
+      "year": "1967",
+      "on": "Buchla 100 series modular",
+      "text": "Not an Easel record: it was made on the Buchla 100 series modular, the system the Easel’s circuits grew out of.",
+      "song": "morton-subotnick-silver-apples-of-the-moon",
+      "artists": ["morton-subotnick"]
+    },
+    {
+      "who": "Suzanne Ciani",
+      "what": "Buchla Concerts 1975",
+      "year": "1975",
+      "on": "Buchla 200 series modular",
+      "text": "Not an Easel record: played on a Buchla 200 modular, the series whose circuits the Music Easel puts in one case.",
+      "song": "suzanne-ciani-buchla-concerts-1975",
+      "artists": ["suzanne-ciani"]
+    },
+    {
+      "who": "Alessandro Cortini",
+      "what": "Forse 1–3",
+      "year": "2013",
+      "on": "Buchla Music Easel, nothing else",
+      "text": "The whole Forse series was played on one Music Easel, which Cortini had spent several years looking for.",
+      "sound": "easel-breathing-drone",
+      "song": "alessandro-cortini-forse",
+      "artists": ["alessandro-cortini"]
+    },
+    {
+      "who": "Kaitlyn Aurelia Smith",
+      "what": "Tides",
+      "year": "2014",
+      "on": "Buchla Music Easel",
+      "text": "Made with the new Music Easel Smith bought in 2013, as was Euclid the following year.",
+      "song": "kaitlyn-aurelia-smith-tides",
+      "artists": ["kaitlyn-aurelia-smith"]
+    },
+    {
+      "who": "Charles Cohen",
+      "what": "Brother I Prove You Wrong",
+      "year": "2015",
+      "on": "Buchla Music Easel, nothing else",
+      "text": "Improvised pieces made entirely on Cohen’s 1970s Music Easel, recorded in Berlin in 2014: quick, scattered tones and patterns.",
+      "sound": "easel-chance-melody",
+      "song": "charles-cohen-brother-i-prove-you-wrong",
+      "artists": ["charles-cohen"]
+    },
+    {
+      "who": "Kaitlyn Aurelia Smith",
+      "what": "Euclid",
+      "year": "2015",
+      "on": "Buchla Music Easel",
+      "text": "Smith built the rippling, sequenced patterns of her early albums on a Music Easel.",
+      "sound": "easel-arp-plucks",
+      "song": "kaitlyn-aurelia-smith-euclid",
+      "artists": ["kaitlyn-aurelia-smith"]
+    },
+    {
+      "who": "Kaitlyn Aurelia Smith",
+      "what": "EARS",
+      "year": "2016",
+      "on": "Buchla Music Easel, with woodwind and Smith’s voice",
+      "text": "Smith wrote the album on the Easel, then arranged woodwind parts and added her voice. The Easel plays most of what you hear.",
+      "sound": "easel-spring-pad",
+      "song": "kaitlyn-aurelia-smith-ears",
+      "artists": ["kaitlyn-aurelia-smith"]
+    },
+    {
+      "who": "Suzanne Ciani / Kaitlyn Aurelia Smith",
+      "what": "Sunergy",
+      "year": "2016",
+      "on": "Buchla Music Easel",
+      "text": "Smith’s Music Easel, played against Ciani’s 200e in long, slowly changing improvisations.",
+      "sound": "easel-spring-pad",
+      "song": "suzanne-ciani-sunergy",
+      "artists": ["suzanne-ciani", "kaitlyn-aurelia-smith"]
+    },
+    {
+      "who": "Kaitlyn Aurelia Smith",
+      "what": "The Kid",
+      "year": "2017",
+      "on": "Buchla Music Easel, with an EMS Synthi 100 and other synths",
+      "text": "The Music Easel remains the main voice, joined on some tracks by the rare EMS Synthi 100.",
+      "song": "kaitlyn-aurelia-smith-the-kid",
+      "artists": ["kaitlyn-aurelia-smith"]
+    },
+    {
+      "who": "Todd Barton",
+      "what": "Multum in Parvo",
+      "year": "2018",
+      "on": "Buchla Music Easel with an Epoch Modular Benjolin",
+      "text": "A 50-minute improvisation on the Easel and a Benjolin, recorded in one take with no edits.",
+      "song": "todd-barton-multum-in-parvo",
+      "artists": ["todd-barton"]
+    }
+  ],
+  "cat": [
+    {
+      "who": "Devo",
+      "what": "Late-70s and early-80s records",
+      "year": "1970s–80s",
+      "on": "Octave CAT",
+      "text": "Devo are named among the best-known CAT users on the Vintage Synth Explorer and Cherry Audio lists, and Mark Mothersbaugh has been filmed playing one. No single Devo record credits it by name.",
+      "sound": "devo-buzz-riff",
+      "song": "devo-late-70s-and-early-80s-records",
+      "artists": ["devo"]
+    },
+    {
+      "who": "Gary Daly (China Crisis)",
+      "what": "His first synthesizer",
+      "year": "Around 1979",
+      "on": "Octave CAT",
+      "text": "Daly has said his first synth was a CAT mono synth bought for £30, which he sold for £40 to buy a Moog Prodigy. That was before China Crisis made their first records, so the CAT is not on them.",
+      "song": "china-crisis-his-first-synthesizer",
+      "artists": ["china-crisis"]
+    },
+    {
+      "who": "Split Enz",
+      "what": "True Colours — \"I Got You\"",
+      "year": "1980",
+      "on": "Octave CAT",
+      "text": "The CAT is the synth most often linked to the song’s keyboard break, played by Eddie Rayner. The band’s keyboards at the time also included a Prophet-5 and a Yamaha CS-80.",
+      "sound": "enz-break-lead",
+      "song": "split-enz-true-colours-i-got-you",
+      "artists": ["split-enz"]
+    },
+    {
+      "who": "The Chemical Brothers",
+      "what": "Studio work",
+      "year": "1990s onwards",
+      "on": "Octave CAT",
+      "text": "Tom Rowlands has talked in interview about using a CAT in the studio. No single track is credited to it.",
+      "sound": "big-beat-squelch",
+      "song": "chemical-brothers-studio-work",
+      "artists": ["chemical-brothers"]
+    },
+    {
+      "who": "Squarepusher",
+      "what": "Hello Everything — \"Bubble Life\"",
+      "year": "2006",
+      "on": "Octave CAT",
+      "text": "Tom Jenkinson has said the drum track of \"Bubble Life\" was built layer by layer from CAT sounds played by hand on its keyboard, and that apart from a Roland SH-101 it was the only vintage synth he owned. The CAT is on the left of the album cover.",
+      "sound": "bubble-life-kit",
+      "song": "squarepusher-hello-everything-bubble-life",
+      "artists": ["squarepusher"]
+    },
+    {
+      "who": "Ty Segall",
+      "what": "Seen playing one",
+      "year": "2010s",
+      "on": "Octave CAT",
+      "text": "Segall is seen playing a CAT in a short clip made for Adult Swim’s Squidbillies. Which records it is on is not known.",
+      "song": "ty-segall-seen-playing-one",
+      "artists": ["ty-segall"]
+    },
+    {
+      "who": "Bonobo",
+      "what": "Studio",
+      "year": "2010s",
+      "on": "Octave CAT",
+      "text": "A CAT can be seen in a photo of Simon Green’s studio that he posted online. Which records it is on is not known.",
+      "song": "bonobo-studio",
+      "artists": ["bonobo"]
+    }
+  ],
+  "deepmind-12d": [
+    {
+      "who": "Duran Duran",
+      "what": "\"Hungry Like the Wolf\"",
+      "year": "1982",
+      "on": "Roland Jupiter-8",
+      "text": "The bubbling riff is the Jupiter-8’s arpeggiator, run with a sequencer and a TR-808 drum machine. The backing track was built in a day.",
+      "sound": "bubbling-arp",
+      "song": "duran-duran-hungry-like-the-wolf",
+      "artists": ["duran-duran"]
+    },
+    {
+      "who": "Duran Duran",
+      "what": "\"Rio\"",
+      "year": "1982",
+      "on": "Roland Jupiter-4",
+      "text": "Nick Rhodes played a C major seventh chord into the Jupiter-4’s arpeggiator set to random, which gives the scattered synth line. The noise at the very start is a piano with metal rods thrown on its strings, played backwards.",
+      "sound": "random-arp",
+      "song": "duran-duran-rio",
+      "artists": ["duran-duran"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "\"White Eagle\"",
+      "year": "1982",
+      "on": "Two Roland Jupiter-8s",
+      "text": "Johannes Schmoelling played the hypnotic line on the Jupiter-8’s arpeggiator rather than a sequencer, set to random instead of up or down. Two Jupiter-8s were synced together, panned apart and sent through a delay timed to the pattern.",
+      "sound": "white-eagle",
+      "song": "tangerine-dream-white-eagle",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Cyndi Lauper",
+      "what": "\"Girls Just Wanna Have Fun\"",
+      "year": "1983",
+      "on": "Roland Juno-60",
+      "text": "The bouncing keyboard part and the solo that sounds like a steel drum are both a Juno-60. The solo is said to have been recorded in one take.",
+      "sound": "steel-pan",
+      "song": "cyndi-lauper-girls-just-wanna-have-fun",
+      "artists": ["cyndi-lauper"]
+    },
+    {
+      "who": "Journey",
+      "what": "\"Separate Ways (Worlds Apart)\"",
+      "year": "1983",
+      "on": "Roland Jupiter-8",
+      "text": "Jonathan Cain has said the opening synth riff is a Jupiter-8.",
+      "sound": "arena-riff",
+      "song": "journey-separate-ways",
+      "artists": ["journey"]
+    },
+    {
+      "who": "Cyndi Lauper",
+      "what": "\"Time After Time\"",
+      "year": "1983",
+      "on": "Roland Juno-60, doubled by a Moog Memorymoog",
+      "text": "Co-writer Rob Hyman built the song on a Juno-60 pad with its own stereo chorus switched on. He has said he still remembers the memory number, 61.",
+      "sound": "juno-ballad-pad",
+      "song": "cyndi-lauper-time-after-time",
+      "artists": ["cyndi-lauper"]
+    },
+    {
+      "who": "Harold Faltermeyer",
+      "what": "\"Axel F\"",
+      "year": "1984",
+      "on": "Roland Jupiter-8",
+      "text": "The theme from Beverly Hills Cop. The sawtooth lead is a Jupiter-8; the bass is a Moog modular and the drums a LinnDrum.",
+      "sound": "staccato-saw-lead",
+      "song": "harold-faltermeyer-axel-f",
+      "artists": ["harold-faltermeyer"]
+    },
+    {
+      "who": "Wham!",
+      "what": "\"Last Christmas\"",
+      "year": "1984",
+      "on": "Roland Juno-60",
+      "text": "George Michael played the synth parts himself on a Juno-60, with a bass guitar and sleigh bells alongside.",
+      "sound": "soft-chorus-keys",
+      "song": "wham-last-christmas",
+      "artists": ["wham"]
+    },
+    {
+      "who": "a-ha",
+      "what": "\"Take On Me\"",
+      "year": "1985",
+      "on": "Roland Juno-60, layered with a Yamaha DX7",
+      "text": "The riff is a Juno-60 layered with a DX7.",
+      "sound": "bouncy-pop-keys",
+      "song": "a-ha-take-on-me",
+      "artists": ["a-ha"]
+    },
+    {
+      "who": "George Michael",
+      "what": "\"A Different Corner\"",
+      "year": "1986",
+      "on": "Roland Juno-60",
+      "text": "A slow ballad George Michael played almost entirely himself, with soft synth chords under the voice.",
+      "sound": "chorus-strings",
+      "song": "george-michael-a-different-corner",
+      "artists": ["george-michael"]
+    },
+    {
+      "who": "Mr. Fingers (Larry Heard)",
+      "what": "\"Can You Feel It\"",
+      "year": "1986",
+      "on": "Roland Juno-60",
+      "text": "Bass and melody both come from a Juno-60, with a TR-909 for the drums. Larry Heard recorded it by bouncing between two cassette decks, days after buying the two machines. It is one of the founding records of deep house.",
+      "sound": "deep-house-bass",
+      "song": "larry-heard-can-you-feel-it",
+      "artists": ["larry-heard"]
+    },
+    {
+      "who": "Enya",
+      "what": "\"Storms in Africa\"",
+      "year": "1988",
+      "on": "Roland Juno-60",
+      "text": "From the album Watermark. The piece began as a melody Enya improvised on the Juno-60’s arpeggiator. She said in 1989 that the Juno was one of their favourites: they had meant to replace its parts with better sounds but could not find any.",
+      "sound": "storms-arp",
+      "song": "enya-storms-in-africa",
+      "artists": ["enya"]
+    },
+    {
+      "who": "808 State",
+      "what": "\"Pacific State\"",
+      "year": "1989",
+      "on": "Roland Juno-106 chords, sampled into a Casio FZ-1 and layered with a Roland D-50",
+      "text": "The warm pad is Juno-106 chords with the chorus on and the filter well down, sampled and layered with the D-50’s “Warm Strings” preset.",
+      "song": "808-state-pacific-state",
+      "artists": ["808-state"]
+    },
+    {
+      "who": "Human Resource",
+      "what": "\"Dominator\"",
+      "year": "1991",
+      "on": "Roland Alpha Juno",
+      "text": "Another early hit built on the same hoover sound, released the same year as \"Mentasm\".",
+      "sound": "rave-hoover",
+      "song": "human-resource-dominator",
+      "artists": ["human-resource"]
+    },
+    {
+      "who": "Second Phase (Joey Beltram and Mundo Muzique)",
+      "what": "\"Mentasm\"",
+      "year": "1991",
+      "on": "Roland Alpha Juno 2",
+      "text": "The lead is the Alpha Juno 2 factory sound \"What the…\", sampled and edited further. The sound became known as the hoover and was copied across rave, jungle and hardcore.",
+      "sound": "rave-hoover",
+      "song": "joey-beltram-mentasm",
+      "artists": ["joey-beltram"]
+    },
+    {
+      "who": "The Chemical Brothers",
+      "what": "\"Chemical Beats\"",
+      "year": "1994",
+      "on": "Roland Juno-106 through a Boss Heavy Metal distortion pedal",
+      "text": "Their MIDI technician Matt Cox has said the Juno-106 through a Boss Heavy Metal pedal is the signature sound of “Chemical Beats”, and that they still played it that way live.",
+      "song": "chemical-brothers-chemical-beats",
+      "artists": ["chemical-brothers"]
+    },
+    {
+      "who": "Global Communication",
+      "what": "76:14",
+      "year": "1994",
+      "on": "Roland Juno-106, with a Jupiter-6 and a Yamaha TX81Z",
+      "text": "An ambient album made in a spare bedroom in Somerset. Mark Pritchard has said the Juno-106 played bass and some of the pads, which they pitch-shifted with a Zoom unit, and that the signature reverb was an Alesis Quadraverb on a chorus-reverb setting: noisy and detuned.",
+      "sound": "quadraverb-pad",
+      "song": "global-communication-76-14",
+      "artists": ["global-communication"]
+    },
+    {
+      "who": "Underworld",
+      "what": "\"Born Slippy .NUXX\"",
+      "year": "1995",
+      "on": "Roland Juno-106 (chords), with a Roland TR-909",
+      "text": "The chord sequence is a Juno-106, which Rick Smith has called “a supreme piece of kit”. The drums are a 909, heavily driven through the mixing desk.",
+      "song": "underworld-born-slippy-nuxx",
+      "artists": ["underworld"]
+    },
+    {
+      "who": "Justice",
+      "what": "† — \"Genesis\", \"D.A.N.C.E.\"",
+      "year": "2007",
+      "on": "Roland Juno-106",
+      "text": "Xavier de Rosnay has said the Juno-106 plays the opening arpeggio and the chorus chords of “D.A.N.C.E.” and the bass on “Genesis”.",
+      "song": "justice-cross-genesis-dance",
+      "artists": ["justice"]
+    },
+    {
+      "who": "Kyle Dixon & Michael Stein",
+      "what": "\"Stranger Things\" theme",
+      "year": "2016",
+      "on": "Roland Jupiter-8 (the lead), with an Oberheim, a Sequential Pro-One and a Roland SH-2",
+      "text": "The theme to the Netflix series is built from many synthesizers. The slow, haunting lead is a Jupiter-8 that the two composers fitted with MIDI themselves. The arpeggio was played by hand on an Oberheim, the heartbeat pulses on a Pro-One and the bass on an SH-2.",
+      "sound": "haunting-lead",
+      "song": "kyle-dixon-michael-stein-stranger-things-theme",
+      "artists": ["kyle-dixon-michael-stein"]
+    }
+  ],
+  "ems-vcs3": [
+    {
+      "who": "The Who",
+      "what": "\"Won’t Get Fooled Again\"",
+      "year": "1971",
+      "on": "Lowrey organ through an EMS VCS3",
+      "text": "Pete Townshend’s organ part was fed through a VCS3, whose filter and envelope turn it into the pulsing, rhythmic pattern the song opens with.",
+      "sound": "vcs3-organ-chop",
+      "song": "the-who-wont-get-fooled-again",
+      "artists": ["the-who"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Alpha Centauri",
+      "year": "1971",
+      "on": "Two EMS VCS3s, one borrowed from WDR radio in Cologne, with organ",
+      "text": "The band’s first use of a synthesizer. Christopher Franke and a guest, Roland Paulyck, each played a VCS3 after learning it in a day and a half.",
+      "sound": "vcs3-bubbling",
+      "song": "tangerine-dream-alpha-centauri",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Roxy Music",
+      "what": "\"Ladytron\"",
+      "year": "1972",
+      "on": "EMS VCS3",
+      "text": "Brian Eno played a VCS3 in Roxy Music, using it to treat the band’s instruments and add electronic squeals and chatter.",
+      "sound": "vcs3-eno-treatment",
+      "song": "roxy-music-ladytron",
+      "artists": ["roxy-music"]
+    },
+    {
+      "who": "Hawkwind",
+      "what": "\"Silver Machine\"",
+      "year": "1972",
+      "on": "EMS VCS3",
+      "text": "Hawkwind’s electronics players, Dik Mik and Del Dettmar, used VCS3s for the swooping, whooshing sounds that run through the band’s records of this period.",
+      "sound": "vcs3-silver-swoop",
+      "song": "hawkwind-silver-machine",
+      "artists": ["hawkwind"]
+    },
+    {
+      "who": "Roxy Music",
+      "what": "\"Virginia Plain\"",
+      "year": "1972",
+      "on": "EMS VCS3, with tape treatments",
+      "text": "Brian Eno is credited with “VCS3 synthesizer, treatments”: the noises and effects that sit around the band.",
+      "sound": "vcs3-eno-treatment",
+      "song": "roxy-music-virginia-plain",
+      "artists": ["roxy-music"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"Any Colour You Like\"",
+      "year": "1973",
+      "on": "EMS VCS3 (the solo), with a Synthi AKS",
+      "text": "Richard Wright’s VCS3 solo was fed through a long tape delay, which gives the rising and falling line before the guitar comes in.",
+      "sound": "vcs3-filter-whistle",
+      "song": "pink-floyd-any-colour-you-like",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"On the Run\"",
+      "year": "1973",
+      "on": "EMS Synthi AKS",
+      "text": "The racing eight-note line comes from the Synthi AKS’s sequencer, not a VCS3, though the voice is the same family.",
+      "sound": "vcs3-run-sequence",
+      "song": "pink-floyd-on-the-run",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Gong",
+      "what": "\"A Sprinkling of Clouds\"",
+      "year": "1974",
+      "on": "EMS synthesizer (the model is not credited), with a Moog",
+      "text": "Tim Blake’s EMS synth builds a bed of delayed, bubbling tones for the first half of the track before the band joins in.",
+      "sound": "vcs3-bubbling",
+      "song": "gong-a-sprinkling-of-clouds",
+      "artists": ["gong"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"Shine On You Crazy Diamond\"",
+      "year": "1975",
+      "on": "EMS VCS3, with an ARP Solina and a Minimoog",
+      "text": "In the long opening section Richard Wright layers VCS3, Solina and Minimoog sounds over the drone. Sound On Sound names the VCS3 but not the passage it plays.",
+      "song": "pink-floyd-shine-on-you-crazy-diamond",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"Welcome to the Machine\"",
+      "year": "1975",
+      "on": "EMS VCS3",
+      "text": "The mechanical throb that opens the track is credited to a VCS3.",
+      "sound": "vcs3-machine-throb",
+      "song": "pink-floyd-welcome-to-the-machine",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Jean-Michel Jarre",
+      "what": "Oxygène",
+      "year": "1976",
+      "on": "EMS VCS3 and Synthi AKS",
+      "text": "Jarre used his EMS synthesizers for the wind, sea and sweeping effects on the album.",
+      "sound": "vcs3-oxygene-wind",
+      "song": "jean-michel-jarre-oxygene",
+      "artists": ["jean-michel-jarre"]
+    },
+    {
+      "who": "David Bowie",
+      "what": "\"Heroes\"",
+      "year": "1977",
+      "on": "EMS Synthi AKS, also used to filter Robert Fripp’s guitar",
+      "text": "Brian Eno’s Synthi AKS, the VCS3 in a briefcase: an oscillator set very slow and the noise filter worked by hand give the chattering texture that builds through the song.",
+      "sound": "vcs3-eno-treatment",
+      "song": "david-bowie-heroes",
+      "artists": ["david-bowie"]
+    },
+    {
+      "who": "Jean-Michel Jarre",
+      "what": "Équinoxe",
+      "year": "1978",
+      "on": "EMS VCS3, through an Electro-Harmonix Small Stone phaser",
+      "text": "The VCS3 gives the sweeping echo effects, and with an Eminent organ through the phaser makes the string pads.",
+      "song": "jean-michel-jarre-equinoxe",
+      "artists": ["jean-michel-jarre"]
+    },
+    {
+      "who": "LCD Soundsystem",
+      "what": "\"Someone Great\"",
+      "year": "2007",
+      "on": "EMS Synthi A",
+      "text": "James Murphy has said the swooping chords are the Synthi A: he set the joystick to move the oscillator pitches between chords and faded a fixed lower note in and out by hand with the third oscillator’s level.",
+      "song": "lcd-soundsystem-someone-great",
+      "artists": ["lcd-soundsystem"]
+    },
+    {
+      "who": "Alessandro Cortini",
+      "what": "Avanti",
+      "year": "2017",
+      "on": "EMS Synthi AKS, nothing else",
+      "text": "Cortini made music for his grandfather’s Super 8 films of his childhood using only a Synthi AKS, with no overdubs, and kept the mistakes in as the films kept theirs.",
+      "song": "alessandro-cortini-avanti",
+      "artists": ["alessandro-cortini"]
+    }
+  ],
+  "grandmother": [
+    {
+      "who": "Jasper Tygner",
+      "what": "Blue",
+      "year": "2026",
+      "on": "Moog Grandmother, with a Moog Matriarch and a Prophet",
+      "text": "Tygner played the album’s synth parts by hand and ran them through a Vermona RetroVerb for spring reverb and a little drive. Which tracks use the Grandmother is not stated.",
+      "song": "jasper-tygner-blue",
+      "artists": ["jasper-tygner"]
+    }
+  ],
+  "jupiter-4": [
+    {
+      "who": "BBC Radiophonic Workshop",
+      "what": "\"Doctor Who\" theme (1980 arrangement)",
+      "year": "1980",
+      "on": "Roland Jupiter-4 (arpeggio and chords), ARP Odyssey (melody), Yamaha CS-80",
+      "text": "Peter Howell’s arrangement for the 1980 series: the Jupiter-4’s arpeggio leaps across octaves and its chords are doubled on a CS-80, while an ARP Odyssey plays the tune.",
+      "sound": "j4-random-arp",
+      "song": "bbc-radiophonic-workshop-doctor-who-theme-1980",
+      "artists": ["bbc-radiophonic-workshop"]
+    },
+    {
+      "who": "Japan",
+      "what": "Gentlemen Take Polaroids",
+      "year": "1980",
+      "on": "Roland System-700, Prophet-5, Oberheim OB-X and Roland Jupiter-4, with a Polymoog and a Micromoog",
+      "text": "The credits list synths for Richard Barbieri, Steve Jansen and David Sylvian. Barbieri has described the set-up as in transition, using whatever came to hand, including a hired Polymoog; the System-700 was his own, bought in 1978.",
+      "song": "japan-gentlemen-take-polaroids",
+      "artists": ["japan"]
+    },
+    {
+      "who": "Gary Numan",
+      "what": "Telekon",
+      "year": "1980",
+      "on": "Roland Jupiter-4, alongside a Minimoog, a Polymoog and a Prophet-5",
+      "text": "The album credits list a Jupiter-4 among the newer polysynths Numan added to his Moog-based sound on Telekon. Which tracks it plays on is not documented.",
+      "song": "gary-numan-telekon",
+      "artists": ["gary-numan"]
+    },
+    {
+      "who": "Depeche Mode / Vince Clarke",
+      "what": "\"Just Can’t Get Enough\"",
+      "year": "1981",
+      "on": "Roland Jupiter-4 and Kawai 100F (Vince Clarke), Yamaha CS-5 (Martin Gore), Moog Prodigy (Andy Fletcher)",
+      "text": "The credits name each member’s synth, with Daniel Miller programming an ARP 2600 and a Roland MC-4 sequencer. The riff is usually credited to Clarke’s Jupiter-4.",
+      "song": "depeche-mode-just-cant-get-enough",
+      "artists": ["depeche-mode", "vince-clarke"]
+    },
+    {
+      "who": "The Human League",
+      "what": "Dare",
+      "year": "1981",
+      "on": "Roland Jupiter-4 and System-700, sequenced from a Roland MC-8, with a Linn LM-1 drum machine",
+      "text": "The producer Martin Rushent built each song up from a Linn LM-1 pattern, with sequenced synth parts locked to it; the System-700, MC-8 and Linn were his own. The main synth riff of “Don’t You Want Me” is credited to the Jupiter-4.",
+      "song": "the-human-league-dare",
+      "artists": ["the-human-league"]
+    },
+    {
+      "who": "Thomas Dolby",
+      "what": "\"One of Our Submarines\"",
+      "year": "1982",
+      "on": "Roland Jupiter-4, with a Micromoog bass",
+      "text": "Dolby has said the shimmering arpeggio that runs through the song is the Jupiter-4. The bass is a Micromoog.",
+      "sound": "j4-rio-arp",
+      "song": "thomas-dolby-one-of-our-submarines",
+      "artists": ["thomas-dolby"]
+    },
+    {
+      "who": "Duran Duran",
+      "what": "\"Rio\"",
+      "year": "1982",
+      "on": "Roland Jupiter-4",
+      "text": "Nick Rhodes used a Jupiter-4 on Duran Duran’s first records; the running arpeggio of “Rio” is often credited to its arpeggiator.",
+      "sound": "j4-rio-arp",
+      "song": "duran-duran-rio",
+      "artists": ["duran-duran"]
+    },
+    {
+      "who": "Thomas Dolby",
+      "what": "\"She Blinded Me with Science\"",
+      "year": "1982",
+      "on": "Roland Jupiter-4 (most of the keyboards)",
+      "text": "Most of the keyboard parts, including the horns in the chorus and the strings, recorded on four tracks two octaves apart, are the Jupiter-4.",
+      "song": "thomas-dolby-she-blinded-me-with-science",
+      "artists": ["thomas-dolby"]
+    },
+    {
+      "who": "LCD Soundsystem",
+      "what": "\"how do you sleep?\"",
+      "year": "2017",
+      "on": "Roland Jupiter-4",
+      "text": "The Jupiter-4 plays the arpeggios that run across the song’s nine minutes.",
+      "sound": "j4-random-arp",
+      "song": "lcd-soundsystem-how-do-you-sleep",
+      "artists": ["lcd-soundsystem"]
+    },
+    {
+      "who": "Sharon Van Etten",
+      "what": "\"Jupiter 4\"",
+      "year": "2019",
+      "on": "Roland Jupiter-4",
+      "text": "The song is named after the synth that plays its dark drone and slow pulses. Van Etten demoed most of the album on a Jupiter-4.",
+      "sound": "j4-pwm-pad",
+      "song": "sharon-van-etten-jupiter-4",
+      "artists": ["sharon-van-etten"]
+    }
+  ],
+  "jupiter-6": [
+    {
+      "who": "Mr. Fingers (Larry Heard)",
+      "what": "\"Mystery of Love\"",
+      "year": "1985",
+      "on": "Roland Jupiter-6 (bass line and chords), with a Roland TR-707",
+      "text": "The Jupiter-6 plays both the arpeggiated bass line and the wavering chords over a TR-707 beat: one of the first Chicago house records.",
+      "sound": "jp6-unison-bass",
+      "song": "larry-heard-mystery-of-love",
+      "artists": ["larry-heard"]
+    },
+    {
+      "who": "Pet Shop Boys",
+      "what": "\"West End Girls\"",
+      "year": "1985",
+      "on": "Roland Jupiter-6, Yamaha DX7 and E-mu Emulator II, joined by MIDI (the bass)",
+      "text": "For Stephen Hague’s re-recording, the bass part was played on three instruments linked by MIDI: a Jupiter-6, which gives it its body, a DX7 and an Emulator II. The choirs, strings and the trumpet solo are Emulator samples.",
+      "song": "pet-shop-boys-west-end-girls",
+      "artists": ["pet-shop-boys"]
+    },
+    {
+      "who": "Mr. Fingers (Larry Heard)",
+      "what": "\"Washing Machine\"",
+      "year": "1986",
+      "on": "Roland Jupiter-6, with a Roland TR-707",
+      "text": "Larry Heard has said he made “Washing Machine” and “Mystery of Love” on the same day he brought the Jupiter-6 and TR-707 home, in 1984. It was released on Trax in 1986.",
+      "song": "larry-heard-washing-machine",
+      "artists": ["larry-heard"]
+    },
+    {
+      "who": "Moby",
+      "what": "\"Go\" (Rainforest Mix)",
+      "year": "1991",
+      "on": "Roland Jupiter-6",
+      "text": "The loud, distorted bass line is a Jupiter-6 that Moby bought second-hand from a New York shop, and later learned had been Joey Beltram’s.",
+      "sound": "jp6-unison-bass",
+      "song": "moby-go",
+      "artists": ["moby"]
+    },
+    {
+      "who": "Orbital",
+      "what": "\"I Wish I Had Duck Feet\"",
+      "year": "1994",
+      "on": "A faulty Roland Jupiter-6",
+      "text": "The bubbling sound that comes in before the vocals is a broken Jupiter-6. Paul Hartnoll has said it started making sounds it had never made before, and they recorded them.",
+      "sound": "jp6-random-drone",
+      "song": "orbital-i-wish-i-had-duck-feet",
+      "artists": ["orbital"]
+    },
+    {
+      "who": "Global Communication",
+      "what": "76:14",
+      "year": "1994",
+      "on": "Roland Juno-106, with a Jupiter-6 and a Yamaha TX81Z",
+      "text": "An ambient album made in a spare bedroom in Somerset. Mark Pritchard has said the Juno-106 played bass and some of the pads, which they pitch-shifted with a Zoom unit, and that the signature reverb was an Alesis Quadraverb on a chorus-reverb setting: noisy and detuned.",
+      "song": "global-communication-76-14",
+      "artists": ["global-communication"]
+    },
+    {
+      "who": "Pulp, remixed by Steve Rodway (Motiv8)",
+      "what": "\"Common People\" (Motiv8 remix)",
+      "year": "1995",
+      "on": "Roland Jupiter-6 layered with an Oberheim Matrix-1000",
+      "text": "For the remix, not the album version, Steve Rodway added a lead hook with a little portamento, layering a Jupiter-6 with a Matrix-1000.",
+      "sound": "jp6-vibrato-lead",
+      "song": "pulp-common-people-motiv8-remix",
+      "artists": ["pulp"]
+    }
+  ],
+  "jupiter-8": [
+    {
+      "who": "Duran Duran",
+      "what": "\"Hungry Like the Wolf\"",
+      "year": "1982",
+      "on": "Roland Jupiter-8",
+      "text": "The bubbling riff is the Jupiter-8’s arpeggiator, run with a sequencer and a TR-808 drum machine. The backing track was built in a day.",
+      "song": "duran-duran-hungry-like-the-wolf",
+      "artists": ["duran-duran"]
+    },
+    {
+      "who": "Duran Duran",
+      "what": "\"Save a Prayer\"",
+      "year": "1982",
+      "on": "Roland Jupiter-8",
+      "text": "Nick Rhodes’ Jupiter-8 plays the arpeggiated figure that opens the song.",
+      "sound": "jp8-prayer-arp",
+      "song": "duran-duran-save-a-prayer",
+      "artists": ["duran-duran"]
+    },
+    {
+      "who": "Marvin Gaye",
+      "what": "\"Sexual Healing\"",
+      "year": "1982",
+      "on": "Roland Jupiter-8, with a Roland TR-808 drum machine",
+      "text": "The held synth pad the whole track is built on is a Jupiter-8, over a TR-808 pattern. Gaye’s guitarist Gordon Banks has said those two machines were the only electronic instruments used.",
+      "sound": "jp8-glass-pad",
+      "song": "marvin-gaye-sexual-healing",
+      "artists": ["marvin-gaye"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "\"White Eagle\"",
+      "year": "1982",
+      "on": "Two Roland Jupiter-8s",
+      "text": "Johannes Schmoelling played the hypnotic line on the Jupiter-8’s arpeggiator rather than a sequencer, set to random instead of up or down. Two Jupiter-8s were synced together, panned apart and sent through a delay timed to the pattern.",
+      "song": "tangerine-dream-white-eagle",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Frankie Goes to Hollywood",
+      "what": "\"Relax\"",
+      "year": "1983",
+      "on": "Roland Jupiter-8 sequenced from a Roland MC-4, with a Fairlight CMI and a LinnDrum",
+      "text": "Session player Andy Richards’ Jupiter-8, driven by an MC-4 sequencer, plays chords and the sound effects, including the explosion near the end. Producer Trevor Horn described them as “Andy playing his JP8”.",
+      "sound": "jp8-poly-brass",
+      "song": "frankie-goes-to-hollywood-relax",
+      "artists": ["frankie-goes-to-hollywood"]
+    },
+    {
+      "who": "Journey",
+      "what": "\"Separate Ways (Worlds Apart)\"",
+      "year": "1983",
+      "on": "Roland Jupiter-8",
+      "text": "Jonathan Cain has said the opening synth riff is a Jupiter-8.",
+      "song": "journey-separate-ways",
+      "artists": ["journey"]
+    },
+    {
+      "who": "Howard Jones",
+      "what": "\"What Is Love?\"",
+      "year": "1983",
+      "on": "Roland Jupiter-8",
+      "text": "The Jupiter-8 was at the centre of Howard Jones’ one-man live and studio set-up for his first album.",
+      "sound": "jp8-pop-stab",
+      "song": "howard-jones-what-is-love",
+      "artists": ["howard-jones"]
+    },
+    {
+      "who": "Harold Faltermeyer",
+      "what": "\"Axel F\"",
+      "year": "1984",
+      "on": "Roland Jupiter-8",
+      "text": "The theme from Beverly Hills Cop. The sawtooth lead is a Jupiter-8; the bass is a Moog modular and the drums a LinnDrum.",
+      "song": "harold-faltermeyer-axel-f",
+      "artists": ["harold-faltermeyer"]
+    },
+    {
+      "who": "Queen",
+      "what": "\"Radio Ga Ga\"",
+      "year": "1984",
+      "on": "Roland Jupiter-8 (arpeggio and pads), with a LinnDrum",
+      "text": "The Jupiter-8’s arpeggiator runs through almost every section except the chorus, with sawtooth pads from the same synth on top.",
+      "sound": "jp8-prayer-arp",
+      "song": "queen-radio-ga-ga",
+      "artists": ["queen"]
+    },
+    {
+      "who": "Jan Hammer",
+      "what": "\"Crockett’s Theme\"",
+      "year": "1986",
+      "on": "Roland Jupiter-8 (the bass line)",
+      "text": "Hammer said he used the Jupiter-8 for the rolling bass line. The single reached number two in the UK.",
+      "song": "jan-hammer-crocketts-theme",
+      "artists": ["jan-hammer"]
+    },
+    {
+      "who": "Kyle Dixon & Michael Stein",
+      "what": "\"Stranger Things\" theme",
+      "year": "2016",
+      "on": "Roland Jupiter-8 (the lead), with an Oberheim, a Sequential Pro-One and a Roland SH-2",
+      "text": "The theme’s arpeggio is played on an Oberheim Two Voice, by hand rather than by a sequencer.",
+      "song": "kyle-dixon-michael-stein-stranger-things-theme",
+      "artists": ["kyle-dixon-michael-stein"]
+    }
+  ],
+  "k2": [
+    {
+      "who": "Vince Clarke",
+      "what": "Erasure and Depeche Mode work",
+      "year": "1980s",
+      "on": "Korg MS-20",
+      "text": "Clarke is a long-standing MS-20 owner and has used it for basses and effects across decades of records.",
+      "sound": "ms20-lead",
+      "song": "vince-clarke-erasure-and-depeche-mode-work",
+      "artists": ["vince-clarke"]
+    },
+    {
+      "who": "Aphex Twin",
+      "what": "Selected Ambient Works 85–92",
+      "year": "1992",
+      "on": "Roland SH-101 and Korg MS-20, among other home-modified gear",
+      "text": "Richard D. James has named the MS-20 among the handful of cheap instruments the early records were made on, and its screaming resonant filter runs through them.",
+      "sound": "acid-scream",
+      "song": "aphex-twin-selected-ambient-works-85-92",
+      "artists": ["aphex-twin"]
+    },
+    {
+      "who": "Daft Punk",
+      "what": "Homework",
+      "year": "1997",
+      "on": "Korg MS-20",
+      "text": "The duo have listed the MS-20 among the second-hand analogue gear the first album was built on, at a time when the instrument was still cheap.",
+      "sound": "rubber-funk",
+      "song": "daft-punk-homework",
+      "artists": ["daft-punk"]
+    },
+    {
+      "who": "Air",
+      "what": "Moon Safari",
+      "year": "1998",
+      "on": "Korg MS-20",
+      "text": "Both play the MS-20 on the album; Godin is credited with it on “Sexy Boy”, and Dunckel plays the intro of “All I Need” on it.",
+      "song": "air-moon-safari",
+      "artists": ["air"]
+    },
+    {
+      "who": "Mr. Oizo",
+      "what": "\"Flat Beat\"",
+      "year": "1999",
+      "on": "Korg MS-20",
+      "text": "The lead line that carried the record is probably the best-known MS-20 part ever put on tape.",
+      "sound": "oizo-flat-bass",
+      "song": "mr-oizo-flat-beat",
+      "artists": ["mr-oizo"]
+    },
+    {
+      "who": "Goldfrapp",
+      "what": "Black Cherry, Supernature",
+      "year": "2003–05",
+      "on": "Korg MS-20",
+      "text": "Will Gregory’s buzzing glam bass and lead sounds.",
+      "song": "goldfrapp-black-cherry-supernature",
+      "artists": ["goldfrapp"]
+    },
+    {
+      "who": "The Prodigy",
+      "what": "\"Girls\"",
+      "year": "2004",
+      "on": "Korg MS-20",
+      "text": "Damian Taylor, who worked on the album, has said most of the synth lines on the track are the MS-20 put through a lot of distortion and fuzz.",
+      "sound": "prodigy-fuzz-bass",
+      "song": "the-prodigy-girls",
+      "artists": ["the-prodigy"]
+    },
+    {
+      "who": "The Chemical Brothers",
+      "what": "\"The Big Jump\"",
+      "year": "2005",
+      "on": "Korg MS-20",
+      "text": "The squiggling synth lines that run through the track come from the MS-20, usually with effects on top.",
+      "sound": "chem-squiggle-line",
+      "song": "chemical-brothers-the-big-jump",
+      "artists": ["chemical-brothers"]
+    },
+    {
+      "who": "Ladytron",
+      "what": "Witching Hour",
+      "year": "2005",
+      "on": "Korg MS-20 and Roland SH-2 (the bass riffs)",
+      "text": "Daniel Hunt said most of the bass riffs are an SH-2 or an MS-20, and that the effects they were put through mattered as much as the synths: some parts listeners take for guitar are synths, and the other way round.",
+      "song": "ladytron-witching-hour",
+      "artists": ["ladytron"]
+    },
+    {
+      "who": "Portishead",
+      "what": "Third",
+      "year": "2008",
+      "on": "Korg MS-20",
+      "text": "The band’s return leaned on old analogue monosynths for its harsher textures, the MS-20 among them.",
+      "sound": "noise-wind",
+      "song": "portishead-third",
+      "artists": ["portishead"]
+    },
+    {
+      "who": "Jon Hopkins",
+      "what": "\"Open Eye Signal\"",
+      "year": "2013",
+      "on": "Korg MS-20",
+      "text": "Hopkins has said every synth sound in the track is the MS-20, which is unusual — most records use it for one part.",
+      "sound": "hopkins-driving-bass",
+      "song": "jon-hopkins-open-eye-signal",
+      "artists": ["jon-hopkins"]
+    },
+    {
+      "who": "Thom Yorke",
+      "what": "Atoms for Peace — AMOK",
+      "year": "2013",
+      "on": "Korg MS-20",
+      "text": "The MS-20 runs through the album, including the title track. Yorke has used one in his own work for years, though it is not documented on Radiohead’s own records.",
+      "sound": "yorke-amok-lead",
+      "song": "thom-yorke-atoms-for-peace-amok",
+      "artists": ["thom-yorke"]
+    },
+    {
+      "who": "Dr Meaker",
+      "what": "\"MS20 Life\"",
+      "on": "Korg MS-20",
+      "text": "Meaker built the drums from other sources, but all the bass and synth sounds on the track are the MS-20. Whether it is an original or one of Korg’s reissues is not stated.",
+      "song": "dr-meaker-ms20-life",
+      "artists": ["dr-meaker"]
+    }
+  ],
+  "kobol": [
+    {
+      "who": "Jean-Michel Jarre",
+      "what": "Les Chants Magnétiques (Magnetic Fields)",
+      "year": "1981",
+      "on": "RSF Kobol",
+      "text": "The Kobol is listed among the album’s instruments, and the sleeve thanks RSF.",
+      "song": "jean-michel-jarre-les-chants-magnetiques",
+      "artists": ["jean-michel-jarre"]
+    },
+    {
+      "who": "Depeche Mode, with producer Daniel Miller",
+      "what": "A Broken Frame studio sessions",
+      "year": "1982",
+      "on": "RSF Kobol Expander",
+      "text": "Miller told Electronics & Music Maker that the band used “an RSF expander module” in the studio alongside the PPG, and praised its voltage control of every setting and the speed of its envelopes. He did not name the tracks it was used on.",
+      "song": "depeche-mode-a-broken-frame-studio-sessions",
+      "artists": ["depeche-mode", "daniel-miller"]
+    },
+    {
+      "who": "Jean-Michel Jarre, with Frédérick Rousseau and Dominique Perrier",
+      "what": "Les Concerts en Chine",
+      "year": "1982",
+      "on": "RSF Kobol Expander",
+      "text": "For the 1981 concerts in China, Rousseau played sequences and bass lines on a rack of Kobol Expanders driven by an MDB Polysequencer.",
+      "sound": "kobol-sequencer",
+      "song": "jean-michel-jarre-les-concerts-en-chine",
+      "artists": ["jean-michel-jarre"]
+    }
+  ],
+  "model-15": [
+    {
+      "who": "Jasper Tygner",
+      "what": "Blue",
+      "year": "2026",
+      "on": "Moog Grandmother, with a Moog Matriarch and a Prophet",
+      "text": "Tygner played the album’s synth parts by hand and ran them through a Vermona RetroVerb for spring reverb and a little drive. Which tracks use the Grandmother is not stated.",
+      "song": "jasper-tygner-blue",
+      "artists": ["jasper-tygner"]
+    }
+  ],
+  "model-d": [
+    {
+      "who": "Wendy Carlos",
+      "what": "Switched-On Bach",
+      "year": "1968",
+      "on": "Moog modular",
+      "text": "Every line played and overdubbed separately. The record that made \"Moog\" a household word.",
+      "sound": "baroque-line-voice",
+      "song": "wendy-carlos-switched-on-bach",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "The Beatles",
+      "what": "Abbey Road — \"Here Comes the Sun\", \"Because\"",
+      "year": "1969",
+      "on": "Moog modular",
+      "text": "George Harrison’s modular, used for ribbon-like lead lines and white-noise wind.",
+      "sound": "ribbon-slide-lead",
+      "song": "the-beatles-abbey-road-here-comes-the-sun-because",
+      "artists": ["the-beatles"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "\"Lucky Man\"",
+      "year": "1970",
+      "on": "Moog modular",
+      "text": "Keith Emerson’s closing solo: a square-wave lead with heavy glide, improvised in one take.",
+      "sound": "lucky-lead",
+      "song": "emerson-lake-palmer-lucky-man",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Sun Ra",
+      "what": "My Brother the Wind",
+      "year": "1970",
+      "on": "Minimoog prototype (Model B)",
+      "text": "Moog lent Sun Ra a prototype before the Model D went on sale. He used it for noise, clusters and free solos.",
+      "sound": "noise-torn-solo",
+      "song": "sun-ra-my-brother-the-wind",
+      "artists": ["sun-ra"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "Tarkus",
+      "year": "1971",
+      "on": "Moog modular, over Hammond organ and piano",
+      "text": "Keith Emerson overdubbed Moog parts on the title suite; “Aquatarkus” has a long Moog solo.",
+      "sound": "growl-filter-lead",
+      "song": "emerson-lake-palmer-tarkus",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Yes / Rick Wakeman",
+      "what": "Close to the Edge, The Six Wives of Henry VIII",
+      "year": "1972–73",
+      "on": "Minimoog",
+      "text": "Fast, bright sawtooth solos played against Hammond and Mellotron. Wakeman toured with several Minimoogs so he did not have to re-set one between songs.",
+      "sound": "fast-prog-lead",
+      "song": "rick-wakeman-close-to-the-edge-the-six-wives-of-henry-viii",
+      "artists": ["rick-wakeman", "yes"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Sonic Seasonings",
+      "year": "1972",
+      "on": "Moog modular, with field recordings",
+      "text": "Four long pieces, one for each season, that mix slow Moog sounds with recordings of wind, rain, birds and insects. An early example of what was later called ambient music.",
+      "sound": "night-crickets",
+      "song": "wendy-carlos-sonic-seasonings",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Mahavishnu Orchestra / Jan Hammer",
+      "what": "Birds of Fire",
+      "year": "1973",
+      "on": "Minimoog",
+      "text": "Hammer took up the Minimoog for the band’s second album. On “One Word” he takes the third solo after John McLaughlin’s guitar and Jerry Goodman’s violin, bending notes with the pitch wheel as a guitarist would.",
+      "song": "jan-hammer-birds-of-fire",
+      "artists": ["jan-hammer"]
+    },
+    {
+      "who": "Kraftwerk",
+      "what": "\"Autobahn\"",
+      "year": "1974",
+      "on": "Minimoog",
+      "text": "The bass line that runs through the whole piece.",
+      "sound": "round-staccato-bass",
+      "song": "kraftwerk-autobahn",
+      "artists": ["kraftwerk"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Boogie On Reggae Woman\"",
+      "year": "1974",
+      "on": "Moog modular (the TONTO system)",
+      "text": "A squelching, resonant bass played by hand, with the filter doing the talking.",
+      "sound": "squelch-clav-bass",
+      "song": "stevie-wonder-boogie-on-reggae-woman",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Isao Tomita",
+      "what": "Snowflakes Are Dancing",
+      "year": "1974",
+      "on": "Moog III modular, with a Mellotron",
+      "text": "Debussy’s piano pieces, including “Clair de Lune” and “Arabesque No. 1”, arranged and overdubbed voice by voice on the Moog. It was nominated for four Grammy Awards.",
+      "sound": "thin-high-strings",
+      "song": "isao-tomita-snowflakes-are-dancing",
+      "artists": ["isao-tomita"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"Shine On You Crazy Diamond\"",
+      "year": "1975",
+      "on": "Minimoog",
+      "text": "Richard Wright’s horn-like lead over the opening pad.",
+      "sound": "shine-lead",
+      "song": "pink-floyd-shine-on-you-crazy-diamond",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Synergy",
+      "what": "Electronic Realizations for Rock Orchestra",
+      "year": "1975",
+      "on": "A small Moog modular, a Minimoog and an Oberheim SEM, with sequencers",
+      "text": "Rock arrangements in which every part is a synthesizer, multitracked by Fast alone. It sold more than any all-electronic album since Switched-On Bach.",
+      "song": "larry-fast-electronic-realizations-for-rock-orchestra",
+      "artists": ["larry-fast"]
+    },
+    {
+      "who": "Parliament",
+      "what": "Mothership Connection",
+      "year": "1975",
+      "on": "Minimoog, with ARP Pro Soloist and ARP String Ensemble",
+      "text": "Bernie Worrell is credited with Minimoog among his keyboards. His gliding, warbling synth lines run through the title track, “Mothership Connection (Star Child)”.",
+      "sound": "warbling-glide-lead",
+      "song": "parliament-mothership-connection",
+      "artists": ["parliament"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Rubycon",
+      "year": "1975",
+      "on": "Moog modular with 960 sequencers",
+      "text": "Christopher Franke’s Moog modular plays the plucked bass sequence of Part I from its 960 sequencers, with Mellotron, organ and other synths over it.",
+      "sound": "two-note-ostinato",
+      "song": "tangerine-dream-rubycon",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Manfred Mann’s Earth Band",
+      "what": "\"Blinded by the Light\"",
+      "year": "1976",
+      "on": "Minimoog",
+      "text": "Manfred Mann played his leads on a Minimoog: a singing, resonant line with vibrato brought in by hand on the long notes.",
+      "sound": "singing-filter-lead",
+      "song": "manfred-manns-earth-band-blinded-by-the-light",
+      "artists": ["manfred-manns-earth-band"]
+    },
+    {
+      "who": "Return to Forever",
+      "what": "Romantic Warrior",
+      "year": "1976",
+      "on": "Minimoog, ARP Odyssey, Micromoog, Polymoog and a Moog 15 modular",
+      "text": "Corea is credited with five synthesizers alongside piano, Rhodes, Clavinet and organ. Which one plays each part is not set out track by track.",
+      "song": "chick-corea-romantic-warrior",
+      "artists": ["chick-corea"]
+    },
+    {
+      "who": "Jeff Beck / Jan Hammer",
+      "what": "Wired",
+      "year": "1976",
+      "on": "Minimoog",
+      "text": "Hammer plays synthesizer on “Led Boots”, “Come Dancing”, “Blue Wind” and “Play with Me”, trading bent, guitar-like lines with Beck. On “Blue Wind”, which he wrote and produced, he also plays drums and keyboard bass.",
+      "sound": "driven-bend-lead",
+      "song": "jan-hammer-wired",
+      "artists": ["jan-hammer"]
+    },
+    {
+      "who": "Parliament",
+      "what": "\"Flash Light\"",
+      "year": "1977",
+      "on": "Minimoog",
+      "text": "Bernie Worrell played the bass line on Minimoog rather than bass guitar, and funk bass changed with it.",
+      "sound": "funk-bass",
+      "song": "parliament-flash-light",
+      "artists": ["parliament"]
+    },
+    {
+      "who": "Donna Summer / Giorgio Moroder",
+      "what": "\"I Feel Love\"",
+      "year": "1977",
+      "on": "Moog modular with sequencer",
+      "text": "The pulsing sequencer bass that pointed the way to disco, Hi-NRG and techno.",
+      "sound": "seq-pulse",
+      "song": "donna-summer-i-feel-love",
+      "artists": ["donna-summer", "giorgio-moroder"]
+    },
+    {
+      "who": "Giorgio Moroder",
+      "what": "\"Chase\"",
+      "year": "1978",
+      "on": "Minimoog (the bass lines), with a Roland SH-2000 for the melody",
+      "text": "The director Alan Parker asked for something in the manner of “I Feel Love”. The pulsing bass lines are a Minimoog and the melody a Roland SH-2000; Harold Faltermeyer arranged the music under Moroder.",
+      "song": "giorgio-moroder-chase",
+      "artists": ["giorgio-moroder"]
+    },
+    {
+      "who": "Tubeway Army / Gary Numan",
+      "what": "\"Are ‘Friends’ Electric?\", \"Cars\"",
+      "year": "1979",
+      "on": "Minimoog",
+      "text": "Numan found a Minimoog left in the studio and rebuilt his band’s sound around it: a buzzing lead and an open, droning bass.",
+      "sound": "wavering-saw-lead",
+      "song": "gary-numan-are-friends-electric-cars",
+      "artists": ["gary-numan"]
+    },
+    {
+      "who": "The Buggles",
+      "what": "\"Video Killed the Radio Star\"",
+      "year": "1979",
+      "on": "Minimoog and Sequential Circuits Prophet-5, with an ARP Solina string ensemble",
+      "text": "Geoff Downes made the overdubbed orchestral parts from a Solina, a Minimoog and a Prophet-5. Its video was the first one MTV showed when the channel opened in 1981.",
+      "song": "the-buggles-video-killed-the-radio-star",
+      "artists": ["the-buggles"]
+    },
+    {
+      "who": "Zapp",
+      "what": "\"More Bounce to the Ounce\"",
+      "year": "1980",
+      "on": "Minimoog, with Roger Troutman’s talk box",
+      "text": "Roger Troutman sang through an Electro-Harmonix “Golden Throat” talk box driven by a Minimoog, and the bass line is usually credited to a Minimoog too. Produced by Bootsy Collins and Troutman, it reached number two on the US soul chart.",
+      "song": "zapp-more-bounce-to-the-ounce",
+      "artists": ["zapp"]
+    },
+    {
+      "who": "Ultravox",
+      "what": "\"Vienna\"",
+      "year": "1980",
+      "on": "Minimoog (the bass), with an Elka string synthesizer and a Roland CR-78 drum machine",
+      "text": "Warren Cann’s CR-78 pattern was the starting point. Under the piano, viola and Midge Ure’s voice, the slow bass line is a Minimoog. Released as a single in 1981, it reached number two in the UK.",
+      "song": "ultravox-vienna",
+      "artists": ["ultravox"]
+    },
+    {
+      "who": "Kate Bush",
+      "what": "Never for Ever",
+      "year": "1980",
+      "on": "Minimoog (Max Middleton) and Prophet-5 (Michael Moran)",
+      "text": "On “Egypt” Max Middleton plays a Minimoog and Michael Moran a Prophet-5, according to the album credits.",
+      "song": "kate-bush-never-for-ever",
+      "artists": ["kate-bush"]
+    },
+    {
+      "who": "Kitaro",
+      "what": "Silk Road",
+      "year": "1980",
+      "on": "Minimoog, with a Korg miniKORG 700 and a Korg 800DV",
+      "text": "Music for the NHK television series about the Silk Road, composed mainly on these three synthesizers. Kitaro named the same three as his favourites in 1989, and said a Minimoog fitted with MIDI did not sound the same as an unmodified one.",
+      "song": "kitaro-silk-road",
+      "artists": ["kitaro"]
+    },
+    {
+      "who": "Visage",
+      "what": "Visage",
+      "year": "1980",
+      "on": "Two ARP Odysseys, a Yamaha CS-80 and a Minimoog, with a Fairlight CMI on “Fade to Grey”",
+      "text": "Rusty Egan listed the synths in 1984: two Odysseys, a CS-80, a Minimoog and several Yamaha string machines, shared by Billy Currie and Dave Formula. The producer Richard James Burgess programmed a Fairlight that was used heavily on “Fade to Grey”. Which synth plays each part is not documented.",
+      "song": "visage-visage",
+      "artists": ["visage"]
+    },
+    {
+      "who": "Rush",
+      "what": "\"Countdown\"",
+      "year": "1982",
+      "on": "Minimoog",
+      "text": "Geddy Lee played the lead on a Minimoog, and told Keyboard magazine in 1984 that he did not think he would do that again.",
+      "song": "rush-countdown",
+      "artists": ["rush"]
+    },
+    {
+      "who": "Thomas Dolby",
+      "what": "\"She Blinded Me with Science\"",
+      "year": "1982",
+      "on": "Moog Source, played by Matthew Seligman",
+      "text": "The bass line, a piccolo-trumpet line and the falling “phone” part after the chorus are a Moog Source, played by Dolby’s bass guitarist.",
+      "song": "thomas-dolby-she-blinded-me-with-science",
+      "artists": ["thomas-dolby"]
+    },
+    {
+      "who": "Michael Jackson",
+      "what": "\"Thriller\"",
+      "year": "1982",
+      "on": "Minimoog",
+      "text": "The bass line is two Minimoogs layered.",
+      "sound": "stacked-night-bass",
+      "song": "michael-jackson-thriller",
+      "artists": ["michael-jackson"]
+    },
+    {
+      "who": "New Order",
+      "what": "\"Blue Monday\"",
+      "year": "1983",
+      "on": "Moog Source",
+      "text": "The octave-jumping sequenced bass.",
+      "sound": "octave-seq-bass",
+      "song": "new-order-blue-monday",
+      "artists": ["new-order"]
+    },
+    {
+      "who": "Dr. Dre",
+      "what": "The Chronic — \"Nuthin’ but a ‘G’ Thang\"",
+      "year": "1992",
+      "on": "Minimoog",
+      "text": "The high, gliding sine-like lead that became the signature of G-funk.",
+      "sound": "gfunk-whistle",
+      "song": "dr-dre-the-chronic-nuthin-but-a-g-thang",
+      "artists": ["dr-dre"]
+    },
+    {
+      "who": "Nine Inch Nails",
+      "what": "The Downward Spiral",
+      "year": "1994",
+      "on": "Minimoog, Sequential Circuits Prophet VS and Oberheim OB-Mx, with Akai samplers",
+      "text": "Reznor’s equipment for the album included a Minimoog, a Prophet VS and an Oberheim OB-Mx alongside samplers and guitars. Which part each synth plays is not documented track by track.",
+      "sound": "feedback-growl",
+      "song": "nine-inch-nails-the-downward-spiral",
+      "artists": ["nine-inch-nails"]
+    },
+    {
+      "who": "Air",
+      "what": "Moon Safari",
+      "year": "1998",
+      "on": "Minimoog",
+      "text": "The album credits list Nicolas Godin on Minimoog on five tracks and Jean-Benoît Dunckel on Minimoog on “Kelly Watch the Stars” and “Talisman”, with Moog solos on “La Femme d’argent”, “Sexy Boy” and others.",
+      "sound": "round-melodic-bass",
+      "song": "air-moon-safari",
+      "artists": ["air"]
+    },
+    {
+      "who": "J Dilla",
+      "what": "Welcome 2 Detroit and later productions",
+      "year": "2001–06",
+      "on": "Minimoog Voyager",
+      "text": "Round, sliding sub bass played by hand. His custom Voyager is now in the Smithsonian.",
+      "sound": "sliding-round-sub",
+      "song": "j-dilla-welcome-2-detroit-and-later-productions",
+      "artists": ["j-dilla"]
+    }
+  ],
+  "neutron": [
+    {
+      "who": "The Edgar Winter Group",
+      "what": "\"Frankenstein\"",
+      "year": "1972",
+      "on": "ARP 2600",
+      "text": "Winter hung the 2600’s keyboard round his neck and played filter sweeps and sample-and-hold runs as a lead instrument.",
+      "sound": "random-steps",
+      "song": "edgar-winter-group-frankenstein",
+      "artists": ["edgar-winter-group"]
+    },
+    {
+      "who": "Herbie Hancock",
+      "what": "\"Chameleon\"",
+      "year": "1973",
+      "on": "ARP Odyssey",
+      "text": "The bass line: a synth doing the job of the bass guitar on a hit jazz-funk record.",
+      "sound": "jazz-funk-dry-bass",
+      "song": "herbie-hancock-chameleon",
+      "artists": ["herbie-hancock"]
+    },
+    {
+      "who": "Pink Floyd",
+      "what": "\"On the Run\"",
+      "year": "1973",
+      "on": "EMS Synthi AKS",
+      "text": "An eight-note sequence sped up, with the filter and noise worked by hand.",
+      "sound": "fast-filter-seq",
+      "song": "pink-floyd-on-the-run",
+      "artists": ["pink-floyd"]
+    },
+    {
+      "who": "Weather Report / Joe Zawinul",
+      "what": "Black Market, Heavy Weather",
+      "year": "1976–77",
+      "on": "ARP 2600",
+      "text": "Zawinul played two 2600s, one with its keyboard scaled upside down so that familiar fingerings gave unfamiliar lines.",
+      "sound": "upside-down-keys-lead",
+      "song": "weather-report-black-market-heavy-weather",
+      "artists": ["weather-report", "joe-zawinul"]
+    },
+    {
+      "who": "Ben Burtt",
+      "what": "Star Wars — the voice of R2-D2",
+      "year": "1977",
+      "on": "ARP 2600",
+      "text": "Patched whistles and chirps mixed with Burtt’s own voice.",
+      "sound": "droid-chirps",
+      "song": "ben-burtt-star-wars-the-voice-of-r2-d2",
+      "artists": ["ben-burtt"]
+    },
+    {
+      "who": "Depeche Mode / Daniel Miller",
+      "what": "Speak & Spell",
+      "year": "1981",
+      "on": "ARP 2600",
+      "text": "Producer Daniel Miller made the kick and snare sounds on a 2600 with a sequencer in place of a drum machine: a pitch-swept sine for the kick, filtered noise for the snare.",
+      "sound": "zap-kick",
+      "song": "depeche-mode-speak-spell",
+      "artists": ["depeche-mode", "daniel-miller"]
+    },
+    {
+      "who": "Aphex Twin",
+      "what": "Selected Ambient Works 85–92",
+      "year": "1992",
+      "on": "Roland SH-101 and Korg MS-20, among other home-modified gear",
+      "text": "Simple 3340-style mono lines, delay and a great deal of modulation.",
+      "sound": "random-bleeps",
+      "song": "aphex-twin-selected-ambient-works-85-92",
+      "artists": ["aphex-twin"]
+    },
+    {
+      "who": "Boards of Canada",
+      "what": "Music Has the Right to Children",
+      "year": "1998",
+      "on": "Roland SH-101 among others",
+      "text": "Detuned, slowly wavering leads made to sound like worn tape.",
+      "sound": "para-keys",
+      "song": "boards-of-canada-music-has-the-right-to-children",
+      "artists": ["boards-of-canada"]
+    },
+    {
+      "who": "Mr. Oizo",
+      "what": "\"Flat Beat\"",
+      "year": "1999",
+      "on": "Korg MS-20",
+      "text": "A distorted, rubbery bass line made on one small semi-modular.",
+      "sound": "rubber-drive-bass",
+      "song": "mr-oizo-flat-beat",
+      "artists": ["mr-oizo"]
+    },
+    {
+      "who": "Goldfrapp",
+      "what": "Black Cherry, Supernature",
+      "year": "2003–05",
+      "on": "Korg MS-20",
+      "text": "Will Gregory’s buzzing glam bass and lead sounds.",
+      "sound": "sync-buzz-glam-bass",
+      "song": "goldfrapp-black-cherry-supernature",
+      "artists": ["goldfrapp"]
+    },
+    {
+      "who": "Dr Meaker",
+      "what": "\"The Neutron\"",
+      "year": "2022",
+      "on": "Behringer Neutron, nothing else",
+      "text": "Every element of the drum and bass track was made on one Neutron, an idea that began as a demonstration video for Behringer. It was released on Symmetry Recordings.",
+      "song": "dr-meaker-the-neutron",
+      "artists": ["dr-meaker"]
+    }
+  ],
+  "poly-d": [
+    {
+      "who": "Kraftwerk",
+      "what": "\"Autobahn\"",
+      "year": "1974",
+      "on": "Minimoog",
+      "text": "Not a Poly D record: the bass line was played on the Minimoog whose panel the Poly D copies.",
+      "sound": "pd-autobahn-bass",
+      "song": "kraftwerk-autobahn",
+      "artists": ["kraftwerk"]
+    },
+    {
+      "who": "Parliament",
+      "what": "Mothership Connection",
+      "year": "1975",
+      "on": "Minimoog, with ARP Pro Soloist and ARP String Ensemble",
+      "text": "Not a Poly D record: Bernie Worrell played these lines on the Minimoog whose panel the Poly D copies.",
+      "song": "parliament-mothership-connection",
+      "artists": ["parliament"]
+    },
+    {
+      "who": "Parliament",
+      "what": "\"Flash Light\"",
+      "year": "1977",
+      "on": "Minimoog",
+      "text": "Not a Poly D record: Bernie Worrell played the bass line on a Minimoog rather than a bass guitar.",
+      "sound": "pd-funk-bass",
+      "song": "parliament-flash-light",
+      "artists": ["parliament"]
+    },
+    {
+      "who": "Tubeway Army / Gary Numan",
+      "what": "\"Are ‘Friends’ Electric?\", \"Cars\"",
+      "year": "1979",
+      "on": "Minimoog",
+      "text": "Not a Poly D record: a buzzing Minimoog lead and a droning bass at the centre of the band’s sound.",
+      "sound": "pd-buzz-lead",
+      "song": "gary-numan-are-friends-electric-cars",
+      "artists": ["gary-numan"]
+    },
+    {
+      "who": "Rina Sawayama",
+      "what": "SAWAYAMA",
+      "year": "2020",
+      "on": "Poly D",
+      "text": "The Poly D is listed as used on the album. Which tracks and sounds it plays is not documented.",
+      "song": "rina-sawayama-sawayama",
+      "artists": ["rina-sawayama"]
+    },
+    {
+      "who": "Rina Sawayama",
+      "what": "BRIT Awards Rising Star session, Abbey Road",
+      "year": "2021",
+      "on": "Poly D",
+      "text": "Her keyboard player used a Poly D for the live session.",
+      "song": "rina-sawayama-brit-awards-rising-star-session-abbey-road",
+      "artists": ["rina-sawayama"]
+    },
+    {
+      "who": "Kartell",
+      "what": "Everything Is Here",
+      "year": "2024",
+      "on": "Poly D",
+      "text": "Kartell told MusicRadar the Poly D was one of the first hardware synths he bought while making the album, that it is the piece of gear he uses most, and that he uses it for basses and leads.",
+      "song": "kartell-everything-is-here",
+      "artists": ["kartell"]
+    },
+    {
+      "who": "Electric Callboy",
+      "what": "\"Fckboi\" (music video)",
+      "on": "Poly D",
+      "text": "Kevin Ratajczak plays a Poly D in the video. Whether it is on the recording itself is not documented.",
+      "song": "electric-callboy-fckboi",
+      "artists": ["electric-callboy"]
+    }
+  ],
+  "pro-1": [
+    {
+      "who": "The Cars",
+      "what": "\"Let’s Go\"",
+      "year": "1979",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "Greg Hawkes’s hard-sync lead. The same sync switch is on this panel.",
+      "sound": "sync-lead",
+      "song": "the-cars-lets-go",
+      "artists": ["the-cars"]
+    },
+    {
+      "who": "Gary Numan",
+      "what": "Telekon",
+      "year": "1980",
+      "on": "Prophet-5",
+      "text": "After two albums built on Moogs, Numan added a Prophet-5 for smoother, layered parts.",
+      "sound": "smooth-layer-line",
+      "song": "gary-numan-telekon",
+      "artists": ["gary-numan"]
+    },
+    {
+      "who": "Phil Collins",
+      "what": "\"In the Air Tonight\"",
+      "year": "1981",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "The dark, held chords under the drum machine.",
+      "sound": "dark-swell-pad",
+      "song": "phil-collins-in-the-air-tonight",
+      "artists": ["phil-collins"]
+    },
+    {
+      "who": "John Carpenter",
+      "what": "Escape from New York (soundtrack)",
+      "year": "1981",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "Pulsing eighth-note bass and simple lead lines, recorded quickly to picture.",
+      "sound": "dark-eighths-bass",
+      "song": "john-carpenter-escape-from-new-york",
+      "artists": ["john-carpenter"]
+    },
+    {
+      "who": "Japan",
+      "what": "Tin Drum — \"Ghosts\"",
+      "year": "1981",
+      "on": "Prophet-5",
+      "text": "Richard Barbieri used Oscillator B to modulate pitch and filter for atonal, metallic tones that barely sound like a keyboard.",
+      "sound": "ghost-metal-tones",
+      "song": "japan-tin-drum-ghosts",
+      "artists": ["japan"]
+    },
+    {
+      "who": "Yazoo / Vince Clarke",
+      "what": "Upstairs at Eric’s — \"Don’t Go\", \"Only You\"",
+      "year": "1982",
+      "on": "Sequential Pro-One",
+      "text": "Clarke built most of the album from a Pro-One and a sequencer: riffs, bass and much of the percussion, each sound recorded as its own track.",
+      "sound": "pop-riff",
+      "song": "yazoo-upstairs-at-erics-dont-go-only-you",
+      "artists": ["yazoo", "vince-clarke"]
+    },
+    {
+      "who": "Talking Heads",
+      "what": "\"Burning Down the House\"",
+      "year": "1983",
+      "on": "Prophet-5",
+      "text": "The swooping synth parts that answer the vocal.",
+      "sound": "swoop-answer-lead",
+      "song": "talking-heads-burning-down-the-house",
+      "artists": ["talking-heads"]
+    },
+    {
+      "who": "Cybotron and Juan Atkins",
+      "what": "\"Clear\"",
+      "year": "1983",
+      "on": "Sequential Circuits Pro-One (bass line), sequenced from a drum machine",
+      "text": "The bass line is a Pro-One step sequence triggered by a drum machine. Juan Atkins has said he tried about three different note sequences before settling on a four-note pattern.",
+      "song": "cybotron-clear",
+      "artists": ["cybotron", "juan-atkins"]
+    },
+    {
+      "who": "Ryuichi Sakamoto",
+      "what": "Merry Christmas Mr. Lawrence",
+      "year": "1983",
+      "on": "Sequential Circuits Prophet-5, with piano, a Fairlight CMI and a LinnDrum",
+      "text": "Sakamoto’s first film score, for Nagisa Oshima’s film in which he also acted. The Prophet-5, which he named in interviews as his favourite synthesizer, plays most of the string-like parts.",
+      "song": "ryuichi-sakamoto-merry-christmas-mr-lawrence",
+      "artists": ["ryuichi-sakamoto"]
+    },
+    {
+      "who": "Howard Jones",
+      "what": "Human’s Lib",
+      "year": "1984",
+      "on": "Sequential Pro-One",
+      "text": "Part of the one-man live rig he played early in his career, used for bass lines and solo lines.",
+      "sound": "pwm-strings",
+      "song": "howard-jones-humans-lib",
+      "artists": ["howard-jones"]
+    },
+    {
+      "who": "Model 500 (Juan Atkins)",
+      "what": "\"No UFOs\"",
+      "year": "1985",
+      "on": "Sequential Circuits Pro-One (stabs and drones), through a Lexicon PCM60 reverb",
+      "text": "The stabs and drone effects are a Pro-One run through reverb. It was the first release on Atkins’s own label, Metroplex, recorded in his mother’s basement.",
+      "song": "juan-atkins-no-ufos",
+      "artists": ["juan-atkins"]
+    },
+    {
+      "who": "Radiohead",
+      "what": "\"Everything In Its Right Place\"",
+      "year": "2000",
+      "on": "Prophet-5",
+      "text": "The soft electric-piano-like chords that open Kid A.",
+      "sound": "rounded-ep-keys",
+      "song": "radiohead-everything-in-its-right-place",
+      "artists": ["radiohead"]
+    },
+    {
+      "who": "Steve Moore",
+      "what": "Zombi records",
+      "year": "2000s–10s",
+      "on": "Sequential Circuits Pro-One, Prophet-600 and Korg Polysix",
+      "text": "Moore has said these three synths are on every Zombi recording and go on every tour. On stage he uses the chord memory of the Prophet-600 and Polysix to play chords from one key while also covering the bass.",
+      "song": "steve-moore-zombi-records",
+      "artists": ["steve-moore"]
+    },
+    {
+      "who": "Tame Impala",
+      "what": "Lonerism",
+      "year": "2012",
+      "on": "Sequential Circuits Pro-One and Roland Juno-106",
+      "text": "Kevin Parker made the album’s synth parts mainly on these two, layered with guitars and warped audio.",
+      "song": "tame-impala-lonerism",
+      "artists": ["tame-impala"]
+    },
+    {
+      "who": "Steve Moore",
+      "what": "The Guest (score)",
+      "year": "2014",
+      "on": "Sequential Circuits Pro-One, among his analogue synths",
+      "text": "Moore said in 2014, just after finishing the score, that his Pro-One had been used on every recording he had made since buying it in 2002, and that he uses it and his Prophet-600 on almost every score for atmospheres and Carpenter-style stings.",
+      "sound": "dark-eighths-bass",
+      "song": "steve-moore-the-guest",
+      "artists": ["steve-moore"]
+    },
+    {
+      "who": "Tame Impala",
+      "what": "Currents",
+      "year": "2015",
+      "on": "Roland Juno-106 and Sequential Circuits Pro-One",
+      "text": "Parker kept the two synths he had used on Lonerism.",
+      "song": "tame-impala-currents",
+      "artists": ["tame-impala"]
+    },
+    {
+      "who": "Kyle Dixon & Michael Stein",
+      "what": "\"Stranger Things\" theme",
+      "year": "2016",
+      "on": "Roland Jupiter-8 (the lead), with an Oberheim, a Sequential Pro-One and a Roland SH-2",
+      "text": "The theme’s arpeggio is played on an Oberheim Two Voice, by hand rather than by a sequencer.",
+      "song": "kyle-dixon-michael-stein-stranger-things-theme",
+      "artists": ["kyle-dixon-michael-stein"]
+    },
+    {
+      "who": "Kelly Lee Owens",
+      "what": "\"Arpeggi\"",
+      "year": "2020",
+      "on": "Sequential Circuits Pro-One",
+      "text": "Owens’s cover of Radiohead’s “Weird Fishes/Arpeggi” was worked out over MIDI on a Pro-One in two afternoons, a year before the rest of the album.",
+      "song": "kelly-lee-owens-arpeggi",
+      "artists": ["kelly-lee-owens"]
+    }
+  ],
+  "pro-800": [
+    {
+      "who": "The Cars",
+      "what": "\"Let’s Go\"",
+      "year": "1979",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "Greg Hawkes played a Prophet-5 on Candy-O. The oscillator-sync lead of the kind heard on the band’s records is exactly what the PRO-800’s SYNC switch and Poly-Mod FIL ENV do.",
+      "sound": "p8-sync-lead",
+      "song": "the-cars-lets-go",
+      "artists": ["the-cars"]
+    },
+    {
+      "who": "Phil Collins",
+      "what": "\"In the Air Tonight\"",
+      "year": "1981",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "The dark, slow chords that open the song were played on a Prophet-5.",
+      "sound": "p8-air-pad",
+      "song": "phil-collins-in-the-air-tonight",
+      "artists": ["phil-collins"]
+    },
+    {
+      "who": "John Carpenter",
+      "what": "Escape from New York (soundtrack)",
+      "year": "1981",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "Carpenter and Alan Howarth built the score on a Prophet-5: pulsing bass lines and slow, dark pads.",
+      "sound": "p8-carpenter-bass",
+      "song": "john-carpenter-escape-from-new-york",
+      "artists": ["john-carpenter"]
+    },
+    {
+      "who": "Ryuichi Sakamoto",
+      "what": "Merry Christmas Mr. Lawrence",
+      "year": "1983",
+      "on": "Sequential Circuits Prophet-5, with piano, a Fairlight CMI and a LinnDrum",
+      "text": "Sakamoto’s first film score, for Nagisa Oshima’s film in which he also acted. The Prophet-5, which he named in interviews as his favourite synthesizer, plays most of the string-like parts.",
+      "song": "ryuichi-sakamoto-merry-christmas-mr-lawrence",
+      "artists": ["ryuichi-sakamoto"]
+    },
+    {
+      "who": "Talking Heads",
+      "what": "Stop Making Sense",
+      "year": "1984",
+      "on": "Sequential Circuits Prophet-5",
+      "text": "Bernie Worrell plays the synth parts in the concert film, recorded at the Pantages Theatre in Hollywood in 1983. He has said he used Prophet-5s for his work with the band.",
+      "sound": "p8-squelch-riff",
+      "song": "talking-heads-stop-making-sense",
+      "artists": ["talking-heads"]
+    },
+    {
+      "who": "Carl Craig",
+      "what": "Early recordings",
+      "year": "1989–90",
+      "on": "Sequential Circuits Prophet-600, with an Alesis MMT-8 sequencer",
+      "text": "Carl Craig has said that when he started making music he had a Prophet-600, an MMT-8 sequencer and a four-track. His records of 1989–90 as Psyche and BFC were later collected on Elements 1989–1990; which tracks use the Prophet is not stated.",
+      "song": "carl-craig-early-recordings",
+      "artists": ["carl-craig"]
+    },
+    {
+      "who": "Steve Moore",
+      "what": "Zombi records",
+      "year": "2000s–10s",
+      "on": "Sequential Circuits Pro-One, Prophet-600 and Korg Polysix",
+      "text": "Moore has said these three synths are on every Zombi recording and go on every tour. On stage he uses the chord memory of the Prophet-600 and Polysix to play chords from one key while also covering the bass.",
+      "sound": "p8-carpenter-bass",
+      "song": "steve-moore-zombi-records",
+      "artists": ["steve-moore"]
+    },
+    {
+      "who": "Bon Iver",
+      "what": "22, A Million",
+      "year": "2016",
+      "on": "Sequential Circuits Prophet-600, layered with bass guitar through effects pedals",
+      "text": "The album’s bass sounds were made by layering a Prophet-600 with bass guitar through a chain of effects pedals.",
+      "sound": "p8-unison-bass",
+      "song": "bon-iver-22-a-million",
+      "artists": ["bon-iver"]
+    }
+  ],
+  "system-15": [
+    {
+      "who": "The Monkees",
+      "what": "\"Daily Nightly\"",
+      "year": "1967",
+      "on": "Moog modular, programmed by Paul Beaver",
+      "text": "Micky Dolenz plays the swooping, whistling fills on his own Moog, one of the first three sold.",
+      "song": "the-monkees-daily-nightly",
+      "artists": ["the-monkees"]
+    },
+    {
+      "who": "The Doors",
+      "what": "\"Strange Days\"",
+      "year": "1967",
+      "on": "Moog modular, set up by Paul Beaver",
+      "text": "Jim Morrison’s vocal was fed through the Moog so that it could be played from the keyboard, giving the voice its wavering, processed sound. One of the earliest uses of the Moog on a rock record.",
+      "song": "the-doors-strange-days",
+      "artists": ["the-doors"]
+    },
+    {
+      "who": "Perrey and Kingsley",
+      "what": "Kaleidoscopic Vibrations",
+      "year": "1967",
+      "on": "Moog modular, with Ondioline and tape effects",
+      "text": "The duo’s second album added the Moog to their tape loops and Ondioline, a year before Switched-On Bach. It was reissued in 1971 as Spotlight on the Moog.",
+      "song": "perrey-kingsley-kaleidoscopic-vibrations",
+      "artists": ["perrey-kingsley"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Switched-On Bach",
+      "year": "1968",
+      "on": "Moog modular",
+      "text": "Every line played and overdubbed separately. The record that made \"Moog\" a household word.",
+      "sound": "s15-brass",
+      "song": "wendy-carlos-switched-on-bach",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Beaver & Krause",
+      "what": "The Nonesuch Guide to Electronic Music",
+      "year": "1968",
+      "on": "Moog III modular",
+      "text": "A double album that goes through the Moog’s oscillators, filters, envelopes and noise one at a time, with a short piece, “Peace Three”, to close.",
+      "song": "beaver-krause-the-nonesuch-guide-to-electronic-music",
+      "artists": ["beaver-krause"]
+    },
+    {
+      "who": "The Beatles",
+      "what": "Abbey Road — \"Here Comes the Sun\", \"Because\"",
+      "year": "1969",
+      "on": "Moog modular",
+      "text": "George Harrison’s modular, used for ribbon-like lead lines and white-noise wind.",
+      "song": "the-beatles-abbey-road-here-comes-the-sun-because",
+      "artists": ["the-beatles"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "\"Lucky Man\"",
+      "year": "1970",
+      "on": "Moog modular",
+      "text": "Keith Emerson’s closing solo: a square-wave lead with heavy glide, improvised in one take.",
+      "song": "emerson-lake-palmer-lucky-man",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Popol Vuh",
+      "what": "Affenstunde",
+      "year": "1970",
+      "on": "Moog III modular",
+      "text": "Florian Fricke’s Moog plays long held tones and slowly wandering lines over hand percussion: one of the first German records built around a synthesizer.",
+      "song": "popol-vuh-affenstunde",
+      "artists": ["popol-vuh"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "A Clockwork Orange",
+      "year": "1971",
+      "on": "Moog modular, with a vocoder built by Robert Moog",
+      "text": "Carlos’s Moog versions of Beethoven and Purcell and her own “Timesteps”. The sung parts of the Ninth Symphony and of “Timesteps” were put through the vocoder.",
+      "song": "wendy-carlos-a-clockwork-orange",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "Tarkus",
+      "year": "1971",
+      "on": "Moog modular, over Hammond organ and piano",
+      "text": "Keith Emerson overdubbed Moog parts on the title suite; “Aquatarkus” has a long Moog solo.",
+      "song": "emerson-lake-palmer-tarkus",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Tonto’s Expanding Head Band",
+      "what": "Zero Time",
+      "year": "1971",
+      "on": "TONTO, built around a Moog III modular",
+      "text": "Every sound on the album comes from Cecil and Margouleff’s expanded Moog system. Stevie Wonder heard it and asked to work with them.",
+      "song": "tonto-expanding-head-band-zero-time",
+      "artists": ["tonto-expanding-head-band"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Superstition\"",
+      "year": "1972",
+      "on": "Moog synthesizer (the TONTO system), under a Hohner Clavinet riff",
+      "text": "Wonder is credited with Moog bass; Malcolm Cecil and Robert Margouleff programmed the sound on TONTO. The riff on top is a Clavinet, not a synth.",
+      "song": "stevie-wonder-superstition",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Sonic Seasonings",
+      "year": "1972",
+      "on": "Moog modular, with field recordings",
+      "text": "Four long pieces, one for each season, that mix slow Moog sounds with recordings of wind, rain, birds and insects. An early example of what was later called ambient music.",
+      "song": "wendy-carlos-sonic-seasonings",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Boogie On Reggae Woman\"",
+      "year": "1974",
+      "on": "Moog modular (the TONTO system)",
+      "text": "A squelching, resonant bass played by hand, with the filter doing the talking.",
+      "song": "stevie-wonder-boogie-on-reggae-woman",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Phaedra",
+      "year": "1974",
+      "on": "Moog modular with its sequencer",
+      "text": "Christopher Franke’s Moog modular and its sequencer play the repeating bass patterns that the band shifted and filtered by hand, live in the studio: the start of the Berlin-school sequencer sound.",
+      "song": "tangerine-dream-phaedra",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Isao Tomita",
+      "what": "Snowflakes Are Dancing",
+      "year": "1974",
+      "on": "Moog III modular, with a Mellotron",
+      "text": "Debussy’s piano pieces, including “Clair de Lune” and “Arabesque No. 1”, arranged and overdubbed voice by voice on the Moog. It was nominated for four Grammy Awards.",
+      "song": "isao-tomita-snowflakes-are-dancing",
+      "artists": ["isao-tomita"]
+    },
+    {
+      "who": "Synergy",
+      "what": "Electronic Realizations for Rock Orchestra",
+      "year": "1975",
+      "on": "A small Moog modular, a Minimoog and an Oberheim SEM, with sequencers",
+      "text": "Rock arrangements in which every part is a synthesizer, multitracked by Fast alone. It sold more than any all-electronic album since Switched-On Bach.",
+      "song": "larry-fast-electronic-realizations-for-rock-orchestra",
+      "artists": ["larry-fast"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Rubycon",
+      "year": "1975",
+      "on": "Moog modular with 960 sequencers",
+      "text": "Christopher Franke’s Moog modular plays the plucked bass sequence of Part I from its 960 sequencers, with Mellotron, organ and other synths over it.",
+      "song": "tangerine-dream-rubycon",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Klaus Schulze",
+      "what": "Moondawn",
+      "year": "1976",
+      "on": "Moog modular (Florian Fricke’s Moog IIIp and sequencer cabinet)",
+      "text": "Schulze’s first album on the large Moog he bought from Florian Fricke of Popol Vuh late in 1975, used within weeks of buying it.",
+      "song": "klaus-schulze-moondawn",
+      "artists": ["klaus-schulze"]
+    },
+    {
+      "who": "Mort Garson",
+      "what": "Mother Earth’s Plantasia",
+      "year": "1976",
+      "on": "Moog modular",
+      "text": "Short, melodic pieces written for houseplants to listen to, all played on the Moog. It was first given away by a Los Angeles plant shop and with mattresses sold at Sears.",
+      "song": "mort-garson-mother-earths-plantasia",
+      "artists": ["mort-garson"]
+    },
+    {
+      "who": "Return to Forever",
+      "what": "Romantic Warrior",
+      "year": "1976",
+      "on": "Minimoog, ARP Odyssey, Micromoog, Polymoog and a Moog 15 modular",
+      "text": "Corea is credited with five synthesizers alongside piano, Rhodes, Clavinet and organ. Which one plays each part is not set out track by track.",
+      "song": "chick-corea-romantic-warrior",
+      "artists": ["chick-corea"]
+    },
+    {
+      "who": "Donna Summer / Giorgio Moroder",
+      "what": "\"I Feel Love\"",
+      "year": "1977",
+      "on": "Moog modular with sequencer",
+      "text": "The pulsing sequencer bass that pointed the way to disco, Hi-NRG and techno.",
+      "song": "donna-summer-i-feel-love",
+      "artists": ["donna-summer", "giorgio-moroder"]
+    },
+    {
+      "who": "John Carpenter",
+      "what": "Halloween",
+      "year": "1978",
+      "on": "Moog Series III modular, patched by Dan Wyman, with piano",
+      "text": "Carpenter played most of the parts while Dan Wyman, a music professor at San Jose State University, set up the patches on his expanded Moog modular and joined in on the hardest lines. The score was recorded at Sound Arts in Los Angeles.",
+      "song": "john-carpenter-halloween",
+      "artists": ["john-carpenter"]
+    },
+    {
+      "who": "Ryuichi Sakamoto",
+      "what": "Thousand Knives",
+      "year": "1978",
+      "on": "Moog III-C with a Roland MC-8 Microcomposer, with an Oberheim Eight Voice, a Polymoog, a Minimoog, an ARP Odyssey and a Korg PS-3100",
+      "text": "Sakamoto’s first solo album, made just before Yellow Magic Orchestra formed. He played and programmed the synthesizers himself, with Hideki Matsutake operating the MC-8 computer sequencer that drove the Moog III-C.",
+      "song": "ryuichi-sakamoto-thousand-knives",
+      "artists": ["ryuichi-sakamoto"]
+    },
+    {
+      "who": "Yellow Magic Orchestra",
+      "what": "Yellow Magic Orchestra",
+      "year": "1978",
+      "on": "Moog III-C modular driven by a Roland MC-8 Microcomposer, with a Minimoog, a Polymoog, ARP Odysseys and a Korg PS-3100",
+      "text": "Hideki Matsutake typed the parts into the MC-8, which played the Moog modular and the other synths. He gave the machine-played lines their swing by making small changes to the timing he entered.",
+      "song": "yellow-magic-orchestra-yellow-magic-orchestra",
+      "artists": ["yellow-magic-orchestra"]
+    }
+  ],
+  "system-35": [
+    {
+      "who": "The Monkees",
+      "what": "\"Daily Nightly\"",
+      "year": "1967",
+      "on": "Moog modular, programmed by Paul Beaver",
+      "text": "Micky Dolenz plays the swooping, whistling fills on his own Moog, one of the first three sold.",
+      "song": "the-monkees-daily-nightly",
+      "artists": ["the-monkees"]
+    },
+    {
+      "who": "The Doors",
+      "what": "\"Strange Days\"",
+      "year": "1967",
+      "on": "Moog modular, set up by Paul Beaver",
+      "text": "Jim Morrison’s vocal was fed through the Moog so that it could be played from the keyboard, giving the voice its wavering, processed sound. One of the earliest uses of the Moog on a rock record.",
+      "song": "the-doors-strange-days",
+      "artists": ["the-doors"]
+    },
+    {
+      "who": "Perrey and Kingsley",
+      "what": "Kaleidoscopic Vibrations",
+      "year": "1967",
+      "on": "Moog modular, with Ondioline and tape effects",
+      "text": "The duo’s second album added the Moog to their tape loops and Ondioline, a year before Switched-On Bach. It was reissued in 1971 as Spotlight on the Moog.",
+      "song": "perrey-kingsley-kaleidoscopic-vibrations",
+      "artists": ["perrey-kingsley"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Switched-On Bach",
+      "year": "1968",
+      "on": "Moog modular",
+      "text": "Every line played and overdubbed separately. The record that made \"Moog\" a household word.",
+      "song": "wendy-carlos-switched-on-bach",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Beaver & Krause",
+      "what": "The Nonesuch Guide to Electronic Music",
+      "year": "1968",
+      "on": "Moog III modular",
+      "text": "A double album that goes through the Moog’s oscillators, filters, envelopes and noise one at a time, with a short piece, “Peace Three”, to close.",
+      "song": "beaver-krause-the-nonesuch-guide-to-electronic-music",
+      "artists": ["beaver-krause"]
+    },
+    {
+      "who": "The Beatles",
+      "what": "Abbey Road — \"Here Comes the Sun\", \"Because\"",
+      "year": "1969",
+      "on": "Moog modular",
+      "text": "George Harrison’s modular, used for ribbon-like lead lines and white-noise wind.",
+      "song": "the-beatles-abbey-road-here-comes-the-sun-because",
+      "artists": ["the-beatles"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "\"Lucky Man\"",
+      "year": "1970",
+      "on": "Moog modular",
+      "text": "Keith Emerson’s closing solo: a square-wave lead with heavy glide, improvised in one take.",
+      "song": "emerson-lake-palmer-lucky-man",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Popol Vuh",
+      "what": "Affenstunde",
+      "year": "1970",
+      "on": "Moog III modular",
+      "text": "Florian Fricke’s Moog plays long held tones and slowly wandering lines over hand percussion: one of the first German records built around a synthesizer.",
+      "song": "popol-vuh-affenstunde",
+      "artists": ["popol-vuh"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "A Clockwork Orange",
+      "year": "1971",
+      "on": "Moog modular, with a vocoder built by Robert Moog",
+      "text": "Carlos’s Moog versions of Beethoven and Purcell and her own “Timesteps”. The sung parts of the Ninth Symphony and of “Timesteps” were put through the vocoder.",
+      "song": "wendy-carlos-a-clockwork-orange",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "Tarkus",
+      "year": "1971",
+      "on": "Moog modular, over Hammond organ and piano",
+      "text": "Keith Emerson overdubbed Moog parts on the title suite; “Aquatarkus” has a long Moog solo.",
+      "song": "emerson-lake-palmer-tarkus",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Tonto’s Expanding Head Band",
+      "what": "Zero Time",
+      "year": "1971",
+      "on": "TONTO, built around a Moog III modular",
+      "text": "Every sound on the album comes from Cecil and Margouleff’s expanded Moog system. Stevie Wonder heard it and asked to work with them.",
+      "song": "tonto-expanding-head-band-zero-time",
+      "artists": ["tonto-expanding-head-band"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Superstition\"",
+      "year": "1972",
+      "on": "Moog synthesizer (the TONTO system), under a Hohner Clavinet riff",
+      "text": "Wonder is credited with Moog bass; Malcolm Cecil and Robert Margouleff programmed the sound on TONTO. The riff on top is a Clavinet, not a synth.",
+      "song": "stevie-wonder-superstition",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Sonic Seasonings",
+      "year": "1972",
+      "on": "Moog modular, with field recordings",
+      "text": "Four long pieces, one for each season, that mix slow Moog sounds with recordings of wind, rain, birds and insects. An early example of what was later called ambient music.",
+      "song": "wendy-carlos-sonic-seasonings",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Boogie On Reggae Woman\"",
+      "year": "1974",
+      "on": "Moog modular (the TONTO system)",
+      "text": "A squelching, resonant bass played by hand, with the filter doing the talking.",
+      "song": "stevie-wonder-boogie-on-reggae-woman",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Phaedra",
+      "year": "1974",
+      "on": "Moog modular with its sequencer",
+      "text": "Christopher Franke’s Moog modular and its sequencer play the repeating bass patterns that the band shifted and filtered by hand, live in the studio: the start of the Berlin-school sequencer sound.",
+      "song": "tangerine-dream-phaedra",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Isao Tomita",
+      "what": "Snowflakes Are Dancing",
+      "year": "1974",
+      "on": "Moog III modular, with a Mellotron",
+      "text": "Debussy’s piano pieces, including “Clair de Lune” and “Arabesque No. 1”, arranged and overdubbed voice by voice on the Moog. It was nominated for four Grammy Awards.",
+      "song": "isao-tomita-snowflakes-are-dancing",
+      "artists": ["isao-tomita"]
+    },
+    {
+      "who": "Synergy",
+      "what": "Electronic Realizations for Rock Orchestra",
+      "year": "1975",
+      "on": "A small Moog modular, a Minimoog and an Oberheim SEM, with sequencers",
+      "text": "Rock arrangements in which every part is a synthesizer, multitracked by Fast alone. It sold more than any all-electronic album since Switched-On Bach.",
+      "song": "larry-fast-electronic-realizations-for-rock-orchestra",
+      "artists": ["larry-fast"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Rubycon",
+      "year": "1975",
+      "on": "Moog modular with 960 sequencers",
+      "text": "Christopher Franke’s Moog modular plays the plucked bass sequence of Part I from its 960 sequencers, with Mellotron, organ and other synths over it.",
+      "song": "tangerine-dream-rubycon",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Klaus Schulze",
+      "what": "Moondawn",
+      "year": "1976",
+      "on": "Moog modular (Florian Fricke’s Moog IIIp and sequencer cabinet)",
+      "text": "Schulze’s first album on the large Moog he bought from Florian Fricke of Popol Vuh late in 1975, used within weeks of buying it.",
+      "song": "klaus-schulze-moondawn",
+      "artists": ["klaus-schulze"]
+    },
+    {
+      "who": "Mort Garson",
+      "what": "Mother Earth’s Plantasia",
+      "year": "1976",
+      "on": "Moog modular",
+      "text": "Short, melodic pieces written for houseplants to listen to, all played on the Moog. It was first given away by a Los Angeles plant shop and with mattresses sold at Sears.",
+      "song": "mort-garson-mother-earths-plantasia",
+      "artists": ["mort-garson"]
+    },
+    {
+      "who": "Return to Forever",
+      "what": "Romantic Warrior",
+      "year": "1976",
+      "on": "Minimoog, ARP Odyssey, Micromoog, Polymoog and a Moog 15 modular",
+      "text": "Corea is credited with five synthesizers alongside piano, Rhodes, Clavinet and organ. Which one plays each part is not set out track by track.",
+      "song": "chick-corea-romantic-warrior",
+      "artists": ["chick-corea"]
+    },
+    {
+      "who": "Donna Summer / Giorgio Moroder",
+      "what": "\"I Feel Love\"",
+      "year": "1977",
+      "on": "Moog modular with sequencer",
+      "text": "The pulsing sequencer bass that pointed the way to disco, Hi-NRG and techno.",
+      "song": "donna-summer-i-feel-love",
+      "artists": ["donna-summer", "giorgio-moroder"]
+    },
+    {
+      "who": "John Carpenter",
+      "what": "Halloween",
+      "year": "1978",
+      "on": "Moog Series III modular, patched by Dan Wyman, with piano",
+      "text": "Carpenter played most of the parts while Dan Wyman, a music professor at San Jose State University, set up the patches on his expanded Moog modular and joined in on the hardest lines. The score was recorded at Sound Arts in Los Angeles.",
+      "song": "john-carpenter-halloween",
+      "artists": ["john-carpenter"]
+    },
+    {
+      "who": "Ryuichi Sakamoto",
+      "what": "Thousand Knives",
+      "year": "1978",
+      "on": "Moog III-C with a Roland MC-8 Microcomposer, with an Oberheim Eight Voice, a Polymoog, a Minimoog, an ARP Odyssey and a Korg PS-3100",
+      "text": "Sakamoto’s first solo album, made just before Yellow Magic Orchestra formed. He played and programmed the synthesizers himself, with Hideki Matsutake operating the MC-8 computer sequencer that drove the Moog III-C.",
+      "song": "ryuichi-sakamoto-thousand-knives",
+      "artists": ["ryuichi-sakamoto"]
+    },
+    {
+      "who": "Yellow Magic Orchestra",
+      "what": "Yellow Magic Orchestra",
+      "year": "1978",
+      "on": "Moog III-C modular driven by a Roland MC-8 Microcomposer, with a Minimoog, a Polymoog, ARP Odysseys and a Korg PS-3100",
+      "text": "Hideki Matsutake typed the parts into the MC-8, which played the Moog modular and the other synths. He gave the machine-played lines their swing by making small changes to the timing he entered.",
+      "song": "yellow-magic-orchestra-yellow-magic-orchestra",
+      "artists": ["yellow-magic-orchestra"]
+    }
+  ],
+  "system-55": [
+    {
+      "who": "The Monkees",
+      "what": "\"Daily Nightly\"",
+      "year": "1967",
+      "on": "Moog modular, programmed by Paul Beaver",
+      "text": "Micky Dolenz plays the swooping, whistling fills on his own Moog, one of the first three sold.",
+      "song": "the-monkees-daily-nightly",
+      "artists": ["the-monkees"]
+    },
+    {
+      "who": "The Doors",
+      "what": "\"Strange Days\"",
+      "year": "1967",
+      "on": "Moog modular, set up by Paul Beaver",
+      "text": "Jim Morrison’s vocal was fed through the Moog so that it could be played from the keyboard, giving the voice its wavering, processed sound. One of the earliest uses of the Moog on a rock record.",
+      "song": "the-doors-strange-days",
+      "artists": ["the-doors"]
+    },
+    {
+      "who": "Perrey and Kingsley",
+      "what": "Kaleidoscopic Vibrations",
+      "year": "1967",
+      "on": "Moog modular, with Ondioline and tape effects",
+      "text": "The duo’s second album added the Moog to their tape loops and Ondioline, a year before Switched-On Bach. It was reissued in 1971 as Spotlight on the Moog.",
+      "song": "perrey-kingsley-kaleidoscopic-vibrations",
+      "artists": ["perrey-kingsley"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Switched-On Bach",
+      "year": "1968",
+      "on": "Moog modular",
+      "text": "Every line played and overdubbed separately. The record that made \"Moog\" a household word.",
+      "song": "wendy-carlos-switched-on-bach",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Beaver & Krause",
+      "what": "The Nonesuch Guide to Electronic Music",
+      "year": "1968",
+      "on": "Moog III modular",
+      "text": "A double album that goes through the Moog’s oscillators, filters, envelopes and noise one at a time, with a short piece, “Peace Three”, to close.",
+      "song": "beaver-krause-the-nonesuch-guide-to-electronic-music",
+      "artists": ["beaver-krause"]
+    },
+    {
+      "who": "The Beatles",
+      "what": "Abbey Road — \"Here Comes the Sun\", \"Because\"",
+      "year": "1969",
+      "on": "Moog modular",
+      "text": "George Harrison’s modular, used for ribbon-like lead lines and white-noise wind.",
+      "song": "the-beatles-abbey-road-here-comes-the-sun-because",
+      "artists": ["the-beatles"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "\"Lucky Man\"",
+      "year": "1970",
+      "on": "Moog modular",
+      "text": "Keith Emerson’s closing solo: a square-wave lead with heavy glide, improvised in one take.",
+      "song": "emerson-lake-palmer-lucky-man",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Popol Vuh",
+      "what": "Affenstunde",
+      "year": "1970",
+      "on": "Moog III modular",
+      "text": "Florian Fricke’s Moog plays long held tones and slowly wandering lines over hand percussion: one of the first German records built around a synthesizer.",
+      "song": "popol-vuh-affenstunde",
+      "artists": ["popol-vuh"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "A Clockwork Orange",
+      "year": "1971",
+      "on": "Moog modular, with a vocoder built by Robert Moog",
+      "text": "Carlos’s Moog versions of Beethoven and Purcell and her own “Timesteps”. The sung parts of the Ninth Symphony and of “Timesteps” were put through the vocoder.",
+      "song": "wendy-carlos-a-clockwork-orange",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Emerson, Lake & Palmer",
+      "what": "Tarkus",
+      "year": "1971",
+      "on": "Moog modular, over Hammond organ and piano",
+      "text": "Keith Emerson overdubbed Moog parts on the title suite; “Aquatarkus” has a long Moog solo.",
+      "song": "emerson-lake-palmer-tarkus",
+      "artists": ["emerson-lake-palmer"]
+    },
+    {
+      "who": "Tonto’s Expanding Head Band",
+      "what": "Zero Time",
+      "year": "1971",
+      "on": "TONTO, built around a Moog III modular",
+      "text": "Every sound on the album comes from Cecil and Margouleff’s expanded Moog system. Stevie Wonder heard it and asked to work with them.",
+      "song": "tonto-expanding-head-band-zero-time",
+      "artists": ["tonto-expanding-head-band"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Superstition\"",
+      "year": "1972",
+      "on": "Moog synthesizer (the TONTO system), under a Hohner Clavinet riff",
+      "text": "Wonder is credited with Moog bass; Malcolm Cecil and Robert Margouleff programmed the sound on TONTO. The riff on top is a Clavinet, not a synth.",
+      "song": "stevie-wonder-superstition",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Wendy Carlos",
+      "what": "Sonic Seasonings",
+      "year": "1972",
+      "on": "Moog modular, with field recordings",
+      "text": "Four long pieces, one for each season, that mix slow Moog sounds with recordings of wind, rain, birds and insects. An early example of what was later called ambient music.",
+      "song": "wendy-carlos-sonic-seasonings",
+      "artists": ["wendy-carlos"]
+    },
+    {
+      "who": "Stevie Wonder",
+      "what": "\"Boogie On Reggae Woman\"",
+      "year": "1974",
+      "on": "Moog modular (the TONTO system)",
+      "text": "A squelching, resonant bass played by hand, with the filter doing the talking.",
+      "song": "stevie-wonder-boogie-on-reggae-woman",
+      "artists": ["stevie-wonder"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Phaedra",
+      "year": "1974",
+      "on": "Moog modular with its sequencer",
+      "text": "Christopher Franke’s Moog modular and its sequencer play the repeating bass patterns that the band shifted and filtered by hand, live in the studio: the start of the Berlin-school sequencer sound.",
+      "sound": "s55-berlin",
+      "song": "tangerine-dream-phaedra",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Isao Tomita",
+      "what": "Snowflakes Are Dancing",
+      "year": "1974",
+      "on": "Moog III modular, with a Mellotron",
+      "text": "Debussy’s piano pieces, including “Clair de Lune” and “Arabesque No. 1”, arranged and overdubbed voice by voice on the Moog. It was nominated for four Grammy Awards.",
+      "song": "isao-tomita-snowflakes-are-dancing",
+      "artists": ["isao-tomita"]
+    },
+    {
+      "who": "Synergy",
+      "what": "Electronic Realizations for Rock Orchestra",
+      "year": "1975",
+      "on": "A small Moog modular, a Minimoog and an Oberheim SEM, with sequencers",
+      "text": "Rock arrangements in which every part is a synthesizer, multitracked by Fast alone. It sold more than any all-electronic album since Switched-On Bach.",
+      "song": "larry-fast-electronic-realizations-for-rock-orchestra",
+      "artists": ["larry-fast"]
+    },
+    {
+      "who": "Tangerine Dream",
+      "what": "Rubycon",
+      "year": "1975",
+      "on": "Moog modular with 960 sequencers",
+      "text": "Christopher Franke’s Moog modular plays the plucked bass sequence of Part I from its 960 sequencers, with Mellotron, organ and other synths over it.",
+      "song": "tangerine-dream-rubycon",
+      "artists": ["tangerine-dream"]
+    },
+    {
+      "who": "Klaus Schulze",
+      "what": "Moondawn",
+      "year": "1976",
+      "on": "Moog modular (Florian Fricke’s Moog IIIp and sequencer cabinet)",
+      "text": "Schulze’s first album on the large Moog he bought from Florian Fricke of Popol Vuh late in 1975, used within weeks of buying it.",
+      "song": "klaus-schulze-moondawn",
+      "artists": ["klaus-schulze"]
+    },
+    {
+      "who": "Mort Garson",
+      "what": "Mother Earth’s Plantasia",
+      "year": "1976",
+      "on": "Moog modular",
+      "text": "Short, melodic pieces written for houseplants to listen to, all played on the Moog. It was first given away by a Los Angeles plant shop and with mattresses sold at Sears.",
+      "song": "mort-garson-mother-earths-plantasia",
+      "artists": ["mort-garson"]
+    },
+    {
+      "who": "Return to Forever",
+      "what": "Romantic Warrior",
+      "year": "1976",
+      "on": "Minimoog, ARP Odyssey, Micromoog, Polymoog and a Moog 15 modular",
+      "text": "Corea is credited with five synthesizers alongside piano, Rhodes, Clavinet and organ. Which one plays each part is not set out track by track.",
+      "song": "chick-corea-romantic-warrior",
+      "artists": ["chick-corea"]
+    },
+    {
+      "who": "Donna Summer / Giorgio Moroder",
+      "what": "\"I Feel Love\"",
+      "year": "1977",
+      "on": "Moog modular with sequencer",
+      "text": "The pulsing sequencer bass that pointed the way to disco, Hi-NRG and techno.",
+      "sound": "s55-hi-nrg",
+      "song": "donna-summer-i-feel-love",
+      "artists": ["donna-summer", "giorgio-moroder"]
+    },
+    {
+      "who": "John Carpenter",
+      "what": "Halloween",
+      "year": "1978",
+      "on": "Moog Series III modular, patched by Dan Wyman, with piano",
+      "text": "Carpenter played most of the parts while Dan Wyman, a music professor at San Jose State University, set up the patches on his expanded Moog modular and joined in on the hardest lines. The score was recorded at Sound Arts in Los Angeles.",
+      "song": "john-carpenter-halloween",
+      "artists": ["john-carpenter"]
+    },
+    {
+      "who": "Ryuichi Sakamoto",
+      "what": "Thousand Knives",
+      "year": "1978",
+      "on": "Moog III-C with a Roland MC-8 Microcomposer, with an Oberheim Eight Voice, a Polymoog, a Minimoog, an ARP Odyssey and a Korg PS-3100",
+      "text": "Sakamoto’s first solo album, made just before Yellow Magic Orchestra formed. He played and programmed the synthesizers himself, with Hideki Matsutake operating the MC-8 computer sequencer that drove the Moog III-C.",
+      "song": "ryuichi-sakamoto-thousand-knives",
+      "artists": ["ryuichi-sakamoto"]
+    },
+    {
+      "who": "Yellow Magic Orchestra",
+      "what": "Yellow Magic Orchestra",
+      "year": "1978",
+      "on": "Moog III-C modular driven by a Roland MC-8 Microcomposer, with a Minimoog, a Polymoog, ARP Odysseys and a Korg PS-3100",
+      "text": "Hideki Matsutake typed the parts into the MC-8, which played the Moog modular and the other synths. He gave the machine-played lines their swing by making small changes to the timing he entered.",
+      "song": "yellow-magic-orchestra-yellow-magic-orchestra",
+      "artists": ["yellow-magic-orchestra"]
+    }
+  ],
+  "tb-303": [
+    {
+      "who": "Charanjit Singh",
+      "what": "Synthesizing: Ten Ragas to a Disco Beat",
+      "year": "1982",
+      "on": "Roland TB-303",
+      "text": "An Indian film musician’s album of ragas played on a TB-303, TR-808 and Jupiter-8. Rediscovered decades later for sounding like acid house five years early.",
+      "sound": "tb-raga-line",
+      "song": "charanjit-singh-synthesizing-ten-ragas-to-a-disco-beat",
+      "artists": ["charanjit-singh"]
+    },
+    {
+      "who": "Sleezy D (Derrick Harris), produced by Marshall Jefferson",
+      "what": "\"I’ve Lost Control\"",
+      "year": "1986",
+      "on": "Roland TB-303, with a Roland TR-808",
+      "text": "Released on Trax in 1986, a year before “Acid Tracks”, with a TB-303 line under Sleezy D’s voice. Marshall Jefferson has said he did not know how to programme the 303 and just hit some notes.",
+      "song": "marshall-jefferson-ive-lost-control",
+      "artists": ["marshall-jefferson"]
+    },
+    {
+      "who": "Phuture",
+      "what": "\"Acid Tracks\"",
+      "year": "1987",
+      "on": "Roland TB-303",
+      "text": "DJ Pierre, Spanky and Herb J’s long track built on a TB-303 pattern whose filter and resonance are moved by hand throughout.",
+      "sound": "tb-first-squelch",
+      "song": "phuture-acid-tracks",
+      "artists": ["phuture"]
+    },
+    {
+      "who": "Armando",
+      "what": "\"Land of Confusion\"",
+      "year": "1987",
+      "on": "Roland TB-303, with a Roland TR-707",
+      "text": "A loose, overdriven TB-303 line over a heavily swung TR-707 pattern, made when Armando was seventeen.",
+      "sound": "tb-jack-house",
+      "song": "armando-land-of-confusion",
+      "artists": ["armando"]
+    },
+    {
+      "who": "A Guy Called Gerald",
+      "what": "\"Voodoo Ray\"",
+      "year": "1988",
+      "on": "Roland TB-303",
+      "text": "A TB-303 plays a counter-riff, which Simpson has said also covered up timing problems between the machines.",
+      "song": "a-guy-called-gerald-voodoo-ray",
+      "artists": ["a-guy-called-gerald"]
+    },
+    {
+      "who": "808 State (Graham Massey, Martin Price, Gerald Simpson)",
+      "what": "Newbuild",
+      "year": "1988",
+      "on": "Roland TB-303",
+      "text": "Graham Massey has said the 303 was central to the album, which was recorded over a weekend at Spirit Studios in Manchester in January 1988.",
+      "sound": "tb-hollow-square",
+      "song": "808-state-newbuild",
+      "artists": ["808-state"]
+    },
+    {
+      "who": "Orbital",
+      "what": "\"Chime\"",
+      "year": "1989",
+      "on": "Roland TB-303, with a Yamaha DX100 bass line",
+      "text": "Paul Hartnoll made the track at home before going to the pub, recording it live onto cassette. A 303 runs under the sampled chime refrain, with a big DX100 bass line and a TR-909.",
+      "song": "orbital-chime",
+      "artists": ["orbital"]
+    },
+    {
+      "who": "Hardfloor",
+      "what": "\"Acperience 1\"",
+      "year": "1992",
+      "on": "Roland TB-303",
+      "text": "German acid techno built from several TB-303s at once, with long filter builds.",
+      "sound": "tb-slide-acid",
+      "song": "hardfloor-acperience-1",
+      "artists": ["hardfloor"]
+    },
+    {
+      "who": "Plastikman (Richie Hawtin)",
+      "what": "Sheet One",
+      "year": "1993",
+      "on": "Roland TB-303, with a Roland TR-606",
+      "text": "Richie Hawtin has said the album came together when he paired the TR-606 with the TB-303, the drum machine it was designed to partner, and jammed live on the two for most of 48 hours.",
+      "sound": "tb-dark-rumble",
+      "song": "plastikman-sheet-one",
+      "artists": ["plastikman"]
+    },
+    {
+      "who": "Emmanuel Top",
+      "what": "\"Acid Phase\"",
+      "year": "1994",
+      "on": "Roland TB-303",
+      "text": "A long, hypnotic acid techno track built on a single repeating 303 line.",
+      "sound": "tb-dotted-phase",
+      "song": "emmanuel-top-acid-phase",
+      "artists": ["emmanuel-top"]
+    },
+    {
+      "who": "Daft Punk",
+      "what": "\"Da Funk\"",
+      "year": "1995",
+      "on": "Roland TB-303",
+      "text": "The main line is a TB-303 played through distortion, in a slow, funky groove rather than an acid squelch.",
+      "sound": "tb-funk-stab",
+      "song": "daft-punk-da-funk",
+      "artists": ["daft-punk"]
+    },
+    {
+      "who": "Josh Wink",
+      "what": "\"Higher State of Consciousness\"",
+      "year": "1995",
+      "on": "Roland TB-303",
+      "text": "A 303 line that builds for most of the track, its resonance and cutoff pushed until it screams.",
+      "sound": "tb-rising-acid",
+      "song": "josh-wink-higher-state-of-consciousness",
+      "artists": ["josh-wink"]
+    },
+    {
+      "who": "Leftfield",
+      "what": "\"Song of Life\"",
+      "year": "1995",
+      "on": "Roland TB-303, sampled and played back at half speed",
+      "text": "The album version adds a 303 line that is not on the 1992 single. Played back at half speed, every slide, accent and delay can be heard, alongside samples of the Bulgarian singer Yanka Rupkina.",
+      "song": "leftfield-song-of-life",
+      "artists": ["leftfield"]
+    },
+    {
+      "who": "Fatboy Slim",
+      "what": "\"Everybody Needs a 303\"",
+      "year": "1996",
+      "on": "Roland TB-303",
+      "text": "A sample-built big-beat track whose TB-303 line comes out of the breakdown, filtered at first and then opened up into a squelch.",
+      "song": "fatboy-slim-everybody-needs-a-303",
+      "artists": ["fatboy-slim"]
+    },
+    {
+      "who": "AFX (Richard D. James)",
+      "what": "Analord",
+      "year": "2004–05",
+      "on": "Roland SH-101 and TB-303, with a Synton Fenix modular and a Roland MC-4 sequencer",
+      "text": "A series of eleven vinyl EPs made mostly on analogue synths, drum machines and sequencers, after years of computer-based records.",
+      "song": "aphex-twin-analord",
+      "artists": ["aphex-twin"]
+    }
+  ],
+  "td-3": [
+    {
+      "who": "Charanjit Singh",
+      "what": "Synthesizing: Ten Ragas to a Disco Beat",
+      "year": "1982",
+      "on": "Roland TB-303",
+      "text": "An Indian film musician’s album of ragas played on a TB-303, TR-808 and Jupiter-8. Rediscovered decades later for sounding like acid house five years early.",
+      "song": "charanjit-singh-synthesizing-ten-ragas-to-a-disco-beat",
+      "artists": ["charanjit-singh"]
+    },
+    {
+      "who": "Sleezy D (Derrick Harris), produced by Marshall Jefferson",
+      "what": "\"I’ve Lost Control\"",
+      "year": "1986",
+      "on": "Roland TB-303, with a Roland TR-808",
+      "text": "Released on Trax in 1986, a year before “Acid Tracks”, with a TB-303 line under Sleezy D’s voice. Marshall Jefferson has said he did not know how to programme the 303 and just hit some notes.",
+      "song": "marshall-jefferson-ive-lost-control",
+      "artists": ["marshall-jefferson"]
+    },
+    {
+      "who": "Phuture",
+      "what": "\"Acid Tracks\"",
+      "year": "1987",
+      "on": "Roland TB-303",
+      "text": "The record that started acid house, made on an original TB-303.",
+      "sound": "td-first-squelch",
+      "song": "phuture-acid-tracks",
+      "artists": ["phuture"]
+    },
+    {
+      "who": "Armando",
+      "what": "\"Land of Confusion\"",
+      "year": "1987",
+      "on": "Roland TB-303, with a Roland TR-707",
+      "text": "A loose, overdriven TB-303 line over a heavily swung TR-707 pattern, made when Armando was seventeen.",
+      "song": "armando-land-of-confusion",
+      "artists": ["armando"]
+    },
+    {
+      "who": "A Guy Called Gerald",
+      "what": "\"Voodoo Ray\"",
+      "year": "1988",
+      "on": "Roland TB-303",
+      "text": "A TB-303 plays a counter-riff, which Simpson has said also covered up timing problems between the machines.",
+      "song": "a-guy-called-gerald-voodoo-ray",
+      "artists": ["a-guy-called-gerald"]
+    },
+    {
+      "who": "808 State (Graham Massey, Martin Price, Gerald Simpson)",
+      "what": "Newbuild",
+      "year": "1988",
+      "on": "Roland TB-303",
+      "text": "Graham Massey has said the 303 was central to the album, which was recorded over a weekend at Spirit Studios in Manchester in January 1988.",
+      "song": "808-state-newbuild",
+      "artists": ["808-state"]
+    },
+    {
+      "who": "Orbital",
+      "what": "\"Chime\"",
+      "year": "1989",
+      "on": "Roland TB-303, with a Yamaha DX100 bass line",
+      "text": "Paul Hartnoll made the track at home before going to the pub, recording it live onto cassette. A 303 runs under the sampled chime refrain, with a big DX100 bass line and a TR-909.",
+      "song": "orbital-chime",
+      "artists": ["orbital"]
+    },
+    {
+      "who": "Hardfloor",
+      "what": "\"Acperience 1\"",
+      "year": "1992",
+      "on": "Roland TB-303",
+      "text": "Acid techno built from several 303 lines rolling at once.",
+      "sound": "td-rolling-sixteenths",
+      "song": "hardfloor-acperience-1",
+      "artists": ["hardfloor"]
+    },
+    {
+      "who": "Plastikman (Richie Hawtin)",
+      "what": "Sheet One",
+      "year": "1993",
+      "on": "Roland TB-303, with a Roland TR-606",
+      "text": "Richie Hawtin has said the album came together when he paired the TR-606 with the TB-303, the drum machine it was designed to partner, and jammed live on the two for most of 48 hours.",
+      "song": "plastikman-sheet-one",
+      "artists": ["plastikman"]
+    },
+    {
+      "who": "Emmanuel Top",
+      "what": "\"Acid Phase\"",
+      "year": "1994",
+      "on": "Roland TB-303",
+      "text": "A long, hypnotic acid techno track built on a single repeating 303 line.",
+      "song": "emmanuel-top-acid-phase",
+      "artists": ["emmanuel-top"]
+    },
+    {
+      "who": "Daft Punk",
+      "what": "\"Da Funk\"",
+      "year": "1995",
+      "on": "Roland TB-303",
+      "text": "A TB-303 played through distortion, the job the TD-3’s built-in distortion does.",
+      "sound": "td-high-lead",
+      "song": "daft-punk-da-funk",
+      "artists": ["daft-punk"]
+    },
+    {
+      "who": "Josh Wink",
+      "what": "\"Higher State of Consciousness\"",
+      "year": "1995",
+      "on": "Roland TB-303",
+      "text": "A screaming, heavily driven 303 line that builds for most of the track.",
+      "sound": "td-distorted-acid",
+      "song": "josh-wink-higher-state-of-consciousness",
+      "artists": ["josh-wink"]
+    },
+    {
+      "who": "Leftfield",
+      "what": "\"Song of Life\"",
+      "year": "1995",
+      "on": "Roland TB-303, sampled and played back at half speed",
+      "text": "The album version adds a 303 line that is not on the 1992 single. Played back at half speed, every slide, accent and delay can be heard, alongside samples of the Bulgarian singer Yanka Rupkina.",
+      "song": "leftfield-song-of-life",
+      "artists": ["leftfield"]
+    },
+    {
+      "who": "Fatboy Slim",
+      "what": "\"Everybody Needs a 303\"",
+      "year": "1996",
+      "on": "Roland TB-303",
+      "text": "A sample-built big-beat track whose TB-303 line comes out of the breakdown, filtered at first and then opened up into a squelch.",
+      "sound": "td-square-line",
+      "song": "fatboy-slim-everybody-needs-a-303",
+      "artists": ["fatboy-slim"]
+    },
+    {
+      "who": "AFX (Richard D. James)",
+      "what": "Analord",
+      "year": "2004–05",
+      "on": "Roland SH-101 and TB-303, with a Synton Fenix modular and a Roland MC-4 sequencer",
+      "text": "A series of eleven vinyl EPs made mostly on analogue synths, drum machines and sequencers, after years of computer-based records.",
+      "song": "aphex-twin-analord",
+      "artists": ["aphex-twin"]
+    }
+  ],
+  "ub-xa-d": [
+    {
+      "who": "Rush",
+      "what": "\"Tom Sawyer\"",
+      "year": "1981",
+      "on": "Oberheim OB-X in unison mode",
+      "text": "Geddy Lee developed the melody from improvisations he played on the OB-X at soundchecks. The growling sweep is the OB-X with its voices stacked on one note; small differences between the voices’ filters and envelopes keep the sound shifting.",
+      "song": "rush-tom-sawyer",
+      "artists": ["rush"]
+    },
+    {
+      "who": "Prince",
+      "what": "\"1999\"",
+      "year": "1982",
+      "on": "Oberheim OB-Xa",
+      "text": "The OB-Xa is at the centre of the early-80s Minneapolis sound: short, bright synth stabs playing the parts a horn section would have played.",
+      "sound": "minneapolis-stab",
+      "song": "prince-1999",
+      "artists": ["prince"]
+    },
+    {
+      "who": "Prince",
+      "what": "\"Little Red Corvette\"",
+      "year": "1982",
+      "on": "Oberheim OB-Xa, with a Linn LM-1",
+      "text": "Prince played the OB-Xa and programmed the LM-1 himself. The song builds from the drum machine and slow synth chords into a rock chorus.",
+      "sound": "poly-pluck",
+      "song": "prince-little-red-corvette",
+      "artists": ["prince"]
+    },
+    {
+      "who": "Van Halen",
+      "what": "\"Jump\"",
+      "year": "1984",
+      "on": "Oberheim OB-Xa",
+      "text": "Eddie Van Halen wrote the song on an OB-Xa, and its chord riff is the best-known Oberheim brass sound. The synth solo in the middle is the OB-Xa too.",
+      "sound": "jump-brass",
+      "song": "van-halen-jump",
+      "artists": ["van-halen"]
+    },
+    {
+      "who": "Prince",
+      "what": "\"When Doves Cry\"",
+      "year": "1984",
+      "on": "Oberheim OB-Xa and Yamaha DX7, with a Linn LM-1",
+      "text": "Prince recorded the fast, baroque-sounding synth line at half speed and an octave lower, then played the tape back at normal speed. Matt Fink said this gave the part its staccato, classical feel.",
+      "song": "prince-when-doves-cry",
+      "artists": ["prince"]
+    },
+    {
+      "who": "Van Halen",
+      "what": "\"Why Can’t This Be Love\"",
+      "year": "1986",
+      "on": "Oberheim OB-8",
+      "text": "The first single with Sammy Hagar singing, it began as a jam in which Eddie Van Halen played the riff on an OB-8. Hagar said the riff sounded like a guitar part, where “Jump” had sounded like a synthesizer. On tour Van Halen played it from a keyboard on stage linked by MIDI to an OB-8 kept backstage.",
+      "song": "van-halen-why-cant-this-be-love",
+      "artists": ["van-halen"]
+    },
+    {
+      "who": "Editors",
+      "what": "\"Camera\"",
+      "year": "2005",
+      "on": "Oberheim OB-Xa",
+      "text": "Producer Jim Abbiss stripped the song back to a four-to-the-floor beat and built it up again from an OB-Xa drone. The OB-Xa and a Korg Mono/Poly were the only keyboards on the album.",
+      "sound": "sync-drone",
+      "song": "editors-camera",
+      "artists": ["editors"]
+    }
+  ],
+  "wasp-deluxe": [
+    {
+      "who": "Devo",
+      "what": "Duty Now for the Future",
+      "year": "1979",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed in connection with the album, and Jerry Casale is named as a Wasp user.",
+      "sound": "wasp-buzz-bass",
+      "song": "devo-duty-now-for-the-future",
+      "artists": ["devo"]
+    },
+    {
+      "who": "John Foxx",
+      "what": "Metamatic",
+      "year": "1980",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed among Foxx’s equipment for his first solo album, made after he left Ultravox.",
+      "sound": "wasp-cold-machine",
+      "song": "john-foxx-metamatic",
+      "artists": ["john-foxx"]
+    },
+    {
+      "who": "Genesis",
+      "what": "Abacab",
+      "year": "1981",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed in the album’s equipment. Which track or part it plays is not recorded.",
+      "sound": "wasp-fifths-lead",
+      "song": "genesis-abacab",
+      "artists": ["genesis"]
+    },
+    {
+      "who": "Blancmange",
+      "what": "\"Sad Day\"",
+      "year": "1982",
+      "on": "EDP Wasp",
+      "text": "Used on the original version, released on the Some Bizarre Album. It was apparently not used on the later version on Happy Families.",
+      "sound": "wasp-hollow-reed",
+      "song": "blancmange-sad-day",
+      "artists": ["blancmange"]
+    },
+    {
+      "who": "Solid Space",
+      "what": "Space Museum",
+      "year": "1982",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed in the album’s equipment. First released on cassette; the 2017 reissue brought it to a wider audience.",
+      "sound": "wasp-random-bleeps",
+      "song": "solid-space-space-museum",
+      "artists": ["solid-space"]
+    },
+    {
+      "who": "Eurythmics",
+      "what": "\"Sweet Dreams (Are Made of This)\"",
+      "year": "1983",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed among the equipment used on the recording.",
+      "sound": "wasp-dream-riff",
+      "song": "eurythmics-sweet-dreams",
+      "artists": ["eurythmics"]
+    },
+    {
+      "who": "The Cassandra Complex",
+      "what": "Hello America",
+      "year": "1986",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed in connection with the album.",
+      "sound": "wasp-repeat-pulse",
+      "song": "the-cassandra-complex-hello-america",
+      "artists": ["the-cassandra-complex"]
+    },
+    {
+      "who": "Metronomy",
+      "what": "Nights Out — \"Holiday\", \"Heartbreaker\"",
+      "year": "2008",
+      "on": "EDP Wasp",
+      "text": "Joe Mount is documented using a Wasp on the album and its singles, and one can be seen in the \"Holiday\" video.",
+      "sound": "wasp-pop-wobble",
+      "song": "metronomy-nights-out-holiday-heartbreaker",
+      "artists": ["metronomy"]
+    },
+    {
+      "who": "Orbital",
+      "what": "Wonky",
+      "year": "2012",
+      "on": "EDP Wasp",
+      "text": "A Wasp is documented on the album, and Paul Hartnoll has demonstrated one in his studio.",
+      "sound": "wasp-rave-stab",
+      "song": "orbital-wonky",
+      "artists": ["orbital"]
+    },
+    {
+      "who": "The Flaming Lips",
+      "what": "The Terror",
+      "year": "2013",
+      "on": "EDP Wasp",
+      "text": "A Wasp is listed in the album’s equipment.",
+      "sound": "wasp-feedback-lead",
+      "song": "the-flaming-lips-the-terror",
+      "artists": ["the-flaming-lips"]
+    },
+    {
+      "who": "Chelsea Wolfe",
+      "what": "Abyss",
+      "year": "2015",
+      "on": "EDP Wasp",
+      "text": "A Wasp can be seen in studio material from the album and is listed for it.",
+      "sound": "wasp-hold-drone",
+      "song": "chelsea-wolfe-abyss",
+      "artists": ["chelsea-wolfe"]
+    },
+    {
+      "who": "Chris Carter",
+      "what": "Small Moon",
+      "year": "2018",
+      "on": "EDP Wasp",
+      "text": "The album’s liner notes name an EDP Wasp.",
+      "sound": "wasp-ramp-sequence",
+      "song": "chris-carter-small-moon",
+      "artists": ["chris-carter"]
+    }
+  ]
+}

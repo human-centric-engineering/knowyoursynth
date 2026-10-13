@@ -22,7 +22,10 @@ import { globSync } from 'tinyglobby';
 
 const SEED_FOLDER = 'prisma/seeds/app-knowyoursynth/';
 const ALLOWED = (path: string) =>
-  path.startsWith(SEED_FOLDER) || path === 'scripts/check-synths.ts';
+  path.startsWith(SEED_FOLDER) ||
+  path === 'scripts/check-synths.ts' ||
+  // Dev-only: checks the seeded tables read back as the seed data (f-databank b1).
+  path === 'scripts/smoke/bank.ts';
 
 // Any mention of the seed folder in code: an import of the loader or a data file, or a path built to read one
 // (`'…/app-knowyoursynth/data'`, or `join('seeds', 'app-knowyoursynth', 'data')`).
