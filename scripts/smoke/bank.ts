@@ -18,10 +18,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
+import { z } from 'zod';
 import { prisma } from '@/lib/db/client';
 import { runAsOrg } from '@/lib/tenancy/context';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
-import type { HeardEntry } from '@/lib/app/synths/contract';
 import type { Bank } from '@/lib/app/bank/data';
 import { groupsOf, membersOf } from '@/lib/app/bank/joins';
 import { getHeardOn, loadBank } from '@/lib/app/bank/read';
@@ -89,9 +89,17 @@ async function main(): Promise<void> {
     );
   }
 
-  const golden = JSON.parse(
-    readFileSync(resolve(import.meta.dirname, '../../tests/fixtures/bank/heard-on.json'), 'utf8')
-  ) as Record<string, HeardEntry[]>;
+  // Compared by value, so each list only needs to be a list.
+  const golden = z
+    .record(z.string(), z.array(z.unknown()))
+    .parse(
+      JSON.parse(
+        readFileSync(
+          resolve(import.meta.dirname, '../../tests/fixtures/bank/heard-on.json'),
+          'utf8'
+        )
+      )
+    );
   let entries = 0;
   for (const [synthId, expected] of Object.entries(golden)) {
     const heard = await getHeardOn(synthId);
