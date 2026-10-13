@@ -11,6 +11,7 @@ import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
   CatalogueDataError,
   planCatalogue,
+  planSynthContent,
   sameValue,
   seedCatalogue,
 } from '@/lib/app/catalogue/seed';
@@ -61,20 +62,50 @@ function table(keyOf: (row: Row) => string, filterField: string) {
   };
 }
 
+/** The seed's record table: read whole, created in bulk, updated by `table_key`, removed by an `OR` of keys. */
+function recordTable() {
+  const rows = new Map<string, Row>();
+  const id = (r: Row) => `${String(r.table)}:${String(r.key)}`;
+  return {
+    rows,
+    findMany: vi.fn(async () => [...rows.values()].map((r) => reorder(r) as Row)),
+    createMany: vi.fn(async ({ data }: { data: Row[] }) => {
+      for (const r of data) rows.set(id(r), { ...r });
+      return { count: data.length };
+    }),
+    update: vi.fn(async ({ where, data }: { where: { table_key: Row }; data: Row }) => {
+      const key = id(where.table_key);
+      rows.set(key, { ...rows.get(key), ...data });
+    }),
+    deleteMany: vi.fn(async ({ where }: { where: { OR: Row[] } }) => {
+      for (const w of where.OR) rows.delete(id(w));
+      return { count: where.OR.length };
+    }),
+  };
+}
+
 function fakeDb() {
   return {
     synth: table((r) => String(r.id), 'id'),
     synthSound: table((r) => `${String(r.synthId)}/${String(r.slug)}`, 'synthId'),
     synthLineage: table((r) => String(r.synthId), 'synthId'),
     synthNote: table((r) => String(r.key), 'key'),
+    catalogueSeedRecord: recordTable(),
   };
 }
 type FakeDb = ReturnType<typeof fakeDb>;
 const asClient = (db: FakeDb) => db as unknown as TenancyClient;
+/** The four catalogue tables, without the seed's record. */
+const content = ({ catalogueSeedRecord: _, ...tables }: FakeDb) => Object.values(tables);
 
+/** Every write to any table, the record included. */
 const writes = (db: FakeDb) =>
   Object.values(db).reduce(
-    (n, t) => n + t.create.mock.calls.length + t.update.mock.calls.length,
+    (n, t) =>
+      n +
+      Object.entries(t)
+        .filter(([name]) => ['create', 'update', 'createMany', 'deleteMany'].includes(name))
+        .reduce((m, [, fn]) => m + (fn as ReturnType<typeof vi.fn>).mock.calls.length, 0),
     0
   );
 
@@ -135,6 +166,7 @@ describe('seedCatalogue', () => {
     expect(writes(db)).toBe(before);
     expect(report.sounds).toEqual({ created: 0, updated: 0, unchanged: 3, edited: 0 });
     expect(report.notes).toEqual({ created: 0, updated: 0, unchanged: 46, edited: 0 });
+    expect(report.records).toEqual({ created: 0, updated: 0, unchanged: 51, removed: 0 });
   });
 
   it('updates a row whose data changed, and only that row', async () => {
@@ -177,7 +209,7 @@ describe('seedCatalogue', () => {
 
   it('deletes nothing when the source is empty', async () => {
     await seedCatalogue(asClient(db), sample());
-    const counts = Object.values(db).map((t) => t.rows.size);
+    const counts = content(db).map((t) => t.rows.size);
     expect(counts.every((n) => n > 0)).toBe(true);
 
     const report = await seedCatalogue(asClient(db), {
@@ -188,7 +220,7 @@ describe('seedCatalogue', () => {
       shared: real.shared,
     });
 
-    expect(Object.values(db).map((t) => t.rows.size)).toEqual(counts);
+    expect(content(db).map((t) => t.rows.size)).toEqual(counts);
     expect(report.sounds).toEqual({ created: 0, updated: 0, unchanged: 0, edited: 0 });
   });
 
@@ -218,6 +250,109 @@ describe('seedCatalogue', () => {
     await expect(run).rejects.toThrow(`sound ${id} at steps.${steps.length}.set.filter.cutoff`);
     expect(writes(db)).toBe(0);
     expect(db.synth.findMany).not.toHaveBeenCalled();
+  });
+});
+
+describe('the seed record', () => {
+  let db: FakeDb;
+  beforeEach(() => {
+    db = fakeDb();
+  });
+  const recorded = (key: string) => db.catalogueSeedRecord.rows.get(key)?.values as Row | undefined;
+
+  it('records every planned row, content only, keyed as the seed matches it', async () => {
+    const report = await seedCatalogue(asClient(db), sample());
+
+    // 1 synth, 3 sounds, 1 lineage and 46 notes.
+    expect(report.records).toEqual({ created: 51, updated: 0, unchanged: 0, removed: 0 });
+    expect(db.catalogueSeedRecord.rows.size).toBe(51);
+    // Placement is not content: the synth's record has no `listed` or `order`, the sound's no `order`.
+    expect(recorded('SYNTH:model-d')).toEqual({
+      id: 'model-d',
+      name: 'Model D',
+      maker: 'Behringer',
+      year: expect.any(Number),
+      heritage: expect.any(String),
+      summary: expect.any(String),
+    });
+    const slug = String(realModelDSounds.sounds[0].id);
+    const sound = recorded(`SOUND:model-d/${slug}`);
+    expect(sound).toMatchObject({
+      synthId: 'model-d',
+      slug,
+      blurb: realModelDSounds.sounds[0].blurb,
+    });
+    expect(sound).not.toHaveProperty('order');
+    // The shared limits are recorded with no synth.
+    expect(
+      [...db.catalogueSeedRecord.rows.values()].filter((r) => r.synthId === null)
+    ).toHaveLength(5);
+  });
+
+  it('records what the data now says for a row an admin edited, and leaves the row alone', async () => {
+    await seedCatalogue(asClient(db), sample());
+    const slug = String(realModelDSounds.sounds[0].id);
+    db.synthSound.rows.set(`model-d/${slug}`, {
+      ...db.synthSound.rows.get(`model-d/${slug}`),
+      blurb: 'The admin’s blurb.',
+      editedAt: new Date('2026-10-07'),
+    });
+    const data = sample();
+    data.sounds[0].sounds[0].blurb = 'A newer seed blurb.';
+
+    const report = await seedCatalogue(asClient(db), data);
+
+    expect(report.records).toEqual({ created: 0, updated: 1, unchanged: 50, removed: 0 });
+    expect(recorded(`SOUND:model-d/${slug}`)?.blurb).toBe('A newer seed blurb.');
+    expect(db.synthSound.rows.get(`model-d/${slug}`)?.blurb).toBe('The admin’s blurb.');
+    expect(db.synthSound.update).not.toHaveBeenCalled();
+  });
+
+  it('removes the record of a row the data no longer has, and keeps the row', async () => {
+    await seedCatalogue(asClient(db), sample());
+    const data = sample();
+    const gone = data.sounds[0].sounds.pop();
+
+    const report = await seedCatalogue(asClient(db), data);
+
+    expect(report.records).toEqual({ created: 0, updated: 0, unchanged: 50, removed: 1 });
+    expect(recorded(`SOUND:model-d/${String(gone?.id)}`)).toBeUndefined();
+    expect(db.synthSound.rows.has(`model-d/${String(gone?.id)}`)).toBe(true);
+  });
+});
+
+describe('planSynthContent', () => {
+  it('plans one synth on its own exactly as the whole catalogue plans it', () => {
+    const data = sample();
+    const def = getSynthDef('model-d');
+    if (!def) throw new Error('fixture: Model D has a definition');
+    const { synths: _, ...whole } = planCatalogue(data);
+    const sharedNotes = whole.notes.filter((n) => n.synthId === null);
+    expect(sharedNotes).toHaveLength(5);
+
+    const one = planSynthContent(def, {
+      sounds: data.sounds[0],
+      lineage: data.lineage[0],
+      notes: data.notes[0],
+    });
+
+    expect(one.problems).toEqual([]);
+    expect(one.rows).toEqual({ ...whole, notes: whole.notes.filter((n) => n.synthId !== null) });
+  });
+
+  it('returns its problems rather than throwing, and plans what it can', () => {
+    const data = sample();
+    const def = getSynthDef('model-d');
+    if (!def) throw new Error('fixture: Model D has a definition');
+    data.notes[0].unusual.push({ target: 'no.such.control', text: 'Nothing here.' });
+
+    const one = planSynthContent(def, { notes: data.notes[0], lineage: data.lineage[0] });
+
+    expect(one.problems).toEqual([
+      'notes/model-d.json has an unusual note on no.such.control, which model-d does not have',
+    ]);
+    expect(one.rows.sounds).toEqual([]);
+    expect(one.rows.lineage).toHaveLength(1);
   });
 });
 

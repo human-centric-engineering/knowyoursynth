@@ -160,3 +160,32 @@ model SynthNote {
   @@index([synthId, kind, order])
   @@map("synth_note")
 }
+
+enum CatalogueTable {
+  SYNTH
+  SOUND
+  LINEAGE
+  NOTE
+}
+
+/// What the seed last planned for one catalogue row: the content it would write, placement left out. Written by the
+/// seed alone, on every run, so the admin data page (`lib/app/catalogue/reconcile.ts`) can say whether a row matches
+/// the seed without the app reading the seed files (D13). The seed writes a record only when its values change, and
+/// removes the records of rows the data no longer has. No foreign key: a record describes the seed, not the table, and
+/// may name a row the table does not have yet.
+model CatalogueSeedRecord {
+  table     CatalogueTable
+  /// The row's natural key: the synth id, `<synthId>/<slug>` for a sound, the synth id for lineage, a note's `key`.
+  key       String
+  /// The synth the row belongs to; null for a limit shared by every panel.
+  synthId   String?
+  /// The columns the seed planned, as it would write them.
+  values    Json
+  createdAt DateTime       @default(now())
+  /// When the seed last planned different values for the row.
+  updatedAt DateTime       @updatedAt
+
+  @@id([table, key])
+  @@index([synthId])
+  @@map("catalogue_seed_record")
+}

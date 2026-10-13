@@ -224,6 +224,8 @@ describe('reserved fork tiers', () => {
       'model SynthLineage {',
       'enum SynthNoteKind {',
       'model SynthNote {',
+      'enum CatalogueTable {',
+      'model CatalogueSeedRecord {',
     ]);
   });
 
