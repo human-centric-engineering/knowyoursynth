@@ -211,7 +211,7 @@ describe('reserved fork tiers', () => {
       .split('\n')
       .filter((line) => /^\s*(model|enum|type|view)\s+\w+/.test(line));
 
-    // FORK (Know Your Synth): pinned to the catalogue's declarations rather than deleted, as this
+    // FORK (Know Your Synth): pinned to the catalogue's and databank's declarations rather than deleted, as this
     // file's header asks, so a stray extra declaration still fails. Ledger: .context/app/divergences.md.
     expect(
       declarations,
@@ -226,6 +226,18 @@ describe('reserved fork tiers', () => {
       'model SynthNote {',
       'enum CatalogueTable {',
       'model CatalogueSeedRecord {',
+      'model BankMaker {',
+      'model BankInstrument {',
+      'model BankInstrumentPerson {',
+      'model BankInstrumentSynth {',
+      'model BankArtist {',
+      'model BankArtistMember {',
+      'model BankArtistInstrument {',
+      'model BankSong {',
+      'model BankSongArtist {',
+      'model BankSongPart {',
+      'model BankPartInstrument {',
+      'model BankPartSynth {',
     ]);
   });
 
