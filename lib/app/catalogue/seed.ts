@@ -320,11 +320,13 @@ export function planCatalogue(
     rows.notes.push(...planned.rows.notes);
   }
 
-  const shared = new Set<string>();
+  // Seeded with every synth's note keys, so a shared limit cannot take a key a synth's note already has.
+  const keys = new Set(rows.notes.map((n) => n.key));
   data.shared.limits.forEach(({ title, text }, order) => {
     const key = noteKey.limit(null, title);
-    if (shared.has(key)) problems.push(`notes/shared.json has two notes with the key ${key}`);
-    shared.add(key);
+    if (keys.has(key))
+      problems.push(`notes/shared.json has a note with the key ${key}, which is taken`);
+    keys.add(key);
     rows.notes.push({ key, kind: 'LIMIT', synthId: null, target: null, title, text, order });
   });
 

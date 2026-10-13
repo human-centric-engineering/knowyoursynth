@@ -413,6 +413,14 @@ describe('planCatalogue', () => {
     );
   });
 
+  it('refuses a shared limit whose note key is taken, which would otherwise fail part way through writing', () => {
+    const data = sample();
+    data.shared.limits.push(structuredClone(data.shared.limits[0]));
+    expect(() => planCatalogue(data)).toThrow(
+      /notes\/shared\.json has a note with the key shared\/limit\/\S+, which is taken/
+    );
+  });
+
   it('refuses a library sound marked as designed by the tutor', () => {
     const data = sample();
     data.sounds[0].sounds[0].ai = true;
