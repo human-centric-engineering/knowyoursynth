@@ -2,9 +2,12 @@
  * The synth page's URLs: the panel view in the query, and the prototype's hash routes.
  *
  * Plan §3 "Prototype state": the URL is the synth, `?view=` is the panel view, and the prototype's hash links
- * (`#<id>`, `#<id>/outline`, `#<id>/long`) redirect to them. The databank's `#bank/…` links are the bank pages' to
- * redirect (`f-databank`), so they are left alone here.
+ * (`#<id>`, `#<id>/outline`, `#<id>/long`) redirect to them. The databank's `#bank/…` links redirect to its pages
+ * (`components/app/bank/routes.ts`). `?sound=` opens the synth with one of its library sounds loaded, which is how a
+ * databank record's "Load a sound in this style" reaches a synth.
  */
+
+import { bankHashRoute } from '@/components/app/bank/routes';
 
 /** How the panel is drawn: ink on paper or the shaded hardware, and the long faceplate or the modular case. */
 export interface PanelView {
@@ -37,6 +40,11 @@ export function synthHref(id: string, view: PanelView = DEFAULT_VIEW): string {
   return `/synths/${encodeURIComponent(id)}${q ? `?view=${q}` : ''}`;
 }
 
+/** One synth's page, opening with one of its library sounds loaded. */
+export function soundHref(id: string, soundId: string): string {
+  return `/synths/${encodeURIComponent(id)}?sound=${encodeURIComponent(soundId)}`;
+}
+
 /**
  * A prototype hash route → the synth and view it names, or `null` when the hash is not one (or names a synth the app
  * cannot play). `isSynth` says which ids are real.
@@ -50,8 +58,13 @@ export function hashTarget(
   return { id, view: { outline: rest.includes('outline'), long: rest.includes('long') } };
 }
 
-/** A prototype hash route → the app URL it now lives at, or `null` (see {@link hashTarget}). */
+/**
+ * A prototype hash route → the app URL it now lives at, or `null`: a databank link's page (`bankHashRoute`), else a
+ * synth's (see {@link hashTarget}).
+ */
 export function hashRoute(hash: string, isSynth: (id: string) => boolean): string | null {
+  const bank = bankHashRoute(hash);
+  if (bank) return bank;
   const t = hashTarget(hash, isSynth);
   return t && synthHref(t.id, t.view);
 }

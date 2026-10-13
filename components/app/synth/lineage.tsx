@@ -7,11 +7,13 @@
  * the API by the page (D13).
  *
  * "Heard on" is joined from the databank by the read layer (`getHeardOn`, `f-databank`). A record with a library
- * sound in its style loads it. What is not here yet: each record's "About <artist>" links, which open the databank's
- * artist pages and arrive with them (`f-databank` b2).
+ * sound in its style loads it, and each of its artists the databank has links to their page ("About <artist>"). In the
+ * prototype that opened the databank dialog over the synth; here it is a page of its own, so it is a link.
  */
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { bankHref } from '@/components/app/bank/routes';
 import type { Lineage as LineageData } from '@/lib/app/synths/contract';
 import { useDialog } from '@/components/app/synth/use-dialog';
 
@@ -36,6 +38,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
   }, [synth.id]);
 
   const heard = l.heard ?? [];
+  const artistNames = new Map((l.heardArtists ?? []).map((a) => [a.id, a.name]));
   const users = l.users ?? [];
   const tabs: [TabId, string, number][] = [
     ['timeline', 'How it got here', l.timeline.length],
@@ -174,6 +177,24 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                         <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-(--kys-muted)">
                           {h.text}
                         </p>
+                        {h.artists.some((id) => artistNames.has(id)) && (
+                          <p className="mt-2 flex flex-wrap gap-x-3 text-sm">
+                            {h.artists.flatMap((id) => {
+                              const name = artistNames.get(id);
+                              return name
+                                ? [
+                                    <Link
+                                      key={id}
+                                      href={bankHref('artists', id)}
+                                      className="text-(--kys-accent) underline-offset-2 hover:underline"
+                                    >
+                                      About {name} ›
+                                    </Link>,
+                                  ]
+                                : [];
+                            })}
+                          </p>
+                        )}
                         {soundId && sound && (
                           <button
                             type="button"

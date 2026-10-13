@@ -270,8 +270,15 @@ function readable<R extends { id: string }, T>(
   });
 }
 
+/** A synth's "Heard on" list, and the databank artists its records credit, each with the page an "About" link opens. */
+export interface HeardOn {
+  heard: HeardEntry[];
+  /** By name. */
+  artists: PersonRef[];
+}
+
 /** One synth's "Heard on" list, read from the songs it lists. */
-export async function getHeardOn(synthId: string): Promise<HeardEntry[]> {
+export async function getHeardOn(synthId: string): Promise<HeardOn> {
   const covering = await prisma.bankInstrument.findMany({
     where: { synths: { some: { synthId } } },
     include: instrumentInclude,
@@ -299,14 +306,20 @@ export async function getHeardOn(synthId: string): Promise<HeardEntry[]> {
   const artists = new Map(
     songs.flatMap((s) => s.artists.map((a) => [a.artistId, a.artist.name] as const))
   );
-  return heardFor(
-    {
-      instruments: readable(covering, instrumentFromRow, 'BankInstrument'),
-      artists: [...artists].map(([id, name]) => ({ id, name })),
-      songs: readable(songs, songFromRow, 'BankSong'),
-    },
-    synthId
-  );
+  const people = [...artists]
+    .map(([id, name]) => ({ id, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return {
+    heard: heardFor(
+      {
+        instruments: readable(covering, instrumentFromRow, 'BankInstrument'),
+        artists: people,
+        songs: readable(songs, songFromRow, 'BankSong'),
+      },
+      synthId
+    ),
+    artists: people,
+  };
 }
 
 /** The whole databank, in the files' shapes. */

@@ -102,7 +102,7 @@ async function main(): Promise<void> {
     );
   let entries = 0;
   for (const [synthId, expected] of Object.entries(golden)) {
-    const heard = await getHeardOn(synthId);
+    const { heard } = await getHeardOn(synthId);
     entries += heard.length;
     if (!isDeepStrictEqual(heard, expected))
       check(false, `${synthId}: Heard on equals the prototype's`);

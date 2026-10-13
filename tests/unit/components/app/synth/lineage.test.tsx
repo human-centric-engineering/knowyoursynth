@@ -143,6 +143,30 @@ describe('Lineage', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("links each record's artists to their databank page", () => {
+    const heard = lineage.heard ?? [];
+    const names = new Map((lineage.heardArtists ?? []).map((a) => [a.id, a.name]));
+    // Every artist a record credits is in the databank, so every one gets a link.
+    expect(heard.every((h) => h.artists.every((id) => names.has(id)))).toBe(true);
+    setup();
+    fireEvent.click(tab(/Heard on/));
+    const items = within(screen.getByRole('tabpanel')).getAllByRole('listitem');
+    heard.forEach((h, i) => {
+      const links = within(items[i]).getAllByRole('link', { name: /^About / });
+      expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual(
+        h.artists.map((id) => [`About ${names.get(id)} ›`, `/bank/artists/${id}`])
+      );
+    });
+  });
+
+  it('links no artist the databank does not name', () => {
+    setup({ heardArtists: undefined });
+    fireEvent.click(tab(/Heard on/));
+    expect(screen.queryAllByRole('link', { name: /^About / })).toEqual([]);
+    // The records are still there.
+    expect(within(screen.getByRole('tabpanel')).getAllByRole('listitem')).toHaveLength(36);
+  });
+
   it('offers no sound a record names that the library does not have', () => {
     const first = (lineage.heard ?? [])[0];
     setup({ heard: [{ ...first, sound: 'not-in-the-library' }] });

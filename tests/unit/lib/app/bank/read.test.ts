@@ -77,10 +77,24 @@ describe('loadBank', () => {
 
 describe('getHeardOn', () => {
   it.each(Object.keys(golden))('%s: equals the prototype', async (id) => {
-    const heard = await getHeardOn(id);
+    const { heard } = await getHeardOn(id);
     expect(heard.length).toBeGreaterThan(0);
     expect(heard).toEqual(golden[id]);
   });
+
+  it.each(Object.keys(golden))(
+    '%s: names every artist its records credit, A–Z, and no other',
+    async (id) => {
+      const { heard, artists } = await getHeardOn(id);
+      const bank = loadBankData();
+      const credited = [...new Set(heard.flatMap((h) => h.artists))];
+      expect(artists.map((a) => a.id).sort()).toEqual([...credited].sort());
+      for (const a of artists) expect(a.name).toBe(bank.artists.find((x) => x.id === a.id)?.name);
+      expect(artists.map((a) => a.name)).toEqual(
+        [...artists.map((a) => a.name)].sort((x, y) => x.localeCompare(y))
+      );
+    }
+  );
 
   it('asks only for the songs the synth lists', async () => {
     await getHeardOn('cat');
@@ -106,7 +120,7 @@ describe('getHeardOn', () => {
       songs.map((s) => (s === broken ? { ...broken, artists: [] } : s))
     );
 
-    const heard = await getHeardOn('cat');
+    const { heard } = await getHeardOn('cat');
 
     expect(heard.map((h) => h.song)).toEqual(golden.cat.slice(1).map((h) => h.song));
     expect(logger.error).toHaveBeenCalledWith(
@@ -117,7 +131,7 @@ describe('getHeardOn', () => {
   });
 
   it('is empty for a synth the databank does not name', async () => {
-    expect(await getHeardOn('no-such-synth')).toEqual([]);
+    expect(await getHeardOn('no-such-synth')).toEqual({ heard: [], artists: [] });
   });
 });
 

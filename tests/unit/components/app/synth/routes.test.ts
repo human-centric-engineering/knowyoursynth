@@ -107,17 +107,22 @@ describe('hashRoute', () => {
     expect(hashRoute(hash, isSynth)).toBe(href);
   });
 
-  it.each(['', '#', '#bank', '#bank/model-d', '#unknown', '#unknown/long', '#/long'])(
-    'leaves %j alone',
-    (hash) => {
-      expect(hashRoute(hash, isSynth)).toBeNull();
-    }
-  );
+  it.each(['', '#', '#unknown', '#unknown/long', '#/long'])('leaves %j alone', (hash) => {
+    expect(hashRoute(hash, isSynth)).toBeNull();
+  });
 
   it('asks the caller which ids are real, with the bare id', () => {
     const seen: string[] = [];
     hashRoute('#model-d/long', (id) => (seen.push(id), true));
     expect(seen).toEqual(['model-d']);
+  });
+
+  it.each([
+    ['#bank', '/bank'],
+    ['#bank/model-d', '/bank'],
+    ['#bank/songs/donna-summer-i-feel-love', '/bank/songs/donna-summer-i-feel-love'],
+  ])("sends the databank's %s to its page, %s", (hash, href) => {
+    expect(hashRoute(hash, isSynth)).toBe(href);
   });
 
   it('does not consult isSynth for the bank', () => {

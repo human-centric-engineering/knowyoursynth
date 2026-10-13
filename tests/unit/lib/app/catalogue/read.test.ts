@@ -5,7 +5,7 @@
  * `planCatalogue` (`synthRows()`), so the read is tested against the real shape and the real Model D content.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
+import { getSynthDetail, listSoundNames, listSynths } from '@/lib/app/catalogue/read';
 import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
@@ -14,6 +14,7 @@ import { bankDb } from '@/tests/helpers/bank-db';
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findMany: vi.fn(), findFirst: vi.fn() },
+    synthSound: { findMany: vi.fn() },
     synthNote: { findMany: vi.fn() },
     bankInstrument: { findMany: vi.fn() },
     bankSong: { findMany: vi.fn() },
@@ -197,5 +198,39 @@ describe('getSynthDetail', () => {
     );
     const detail = await getSynthDetail('model-d');
     expect(detail?.lineage).toMatchObject({ users: ['Jan Hammer'], note: 'Not a full list.' });
+  });
+});
+
+describe('getSynthDetail heardArtists', () => {
+  it("names the databank artists Model D's records credit, for their About links", async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    const lineage = (await getSynthDetail('model-d'))?.lineage;
+    const credited = new Set((lineage?.heard ?? []).flatMap((h) => h.artists));
+    expect(credited.size).toBeGreaterThan(0);
+    expect(new Set(lineage?.heardArtists?.map((a) => a.id))).toEqual(credited);
+  });
+});
+
+describe('listSoundNames', () => {
+  it("asks for the listed synths' sounds only, and files their names by synth and sound", async () => {
+    const version = (await import('@/lib/app/synths/defs')).getSynthDef('model-d')?.version;
+    vi.mocked(prisma.synthSound.findMany).mockResolvedValue([
+      { synthId: 'model-d', slug: 'fat-bass', name: 'Fat bass', definitionVersion: version },
+      { synthId: 'model-d', slug: 'wobble', name: 'Wobble lead', definitionVersion: version },
+    ] as never);
+
+    expect(await listSoundNames()).toEqual({
+      'model-d': { 'fat-bass': 'Fat bass', wobble: 'Wobble lead' },
+    });
+    const [args] = vi.mocked(prisma.synthSound.findMany).mock.calls[0] as [{ where: unknown }];
+    expect(args.where).toEqual({ synth: { listed: true } });
+  });
+
+  it('leaves out a sound made on a definition version the registry does not have, or a synth it lacks', async () => {
+    vi.mocked(prisma.synthSound.findMany).mockResolvedValue([
+      { synthId: 'model-d', slug: 'old', name: 'Old', definitionVersion: -1 },
+      { synthId: 'no-such-synth', slug: 'x', name: 'X', definitionVersion: 1 },
+    ] as never);
+    expect(await listSoundNames()).toEqual({});
   });
 });
