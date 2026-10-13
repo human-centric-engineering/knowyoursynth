@@ -153,7 +153,9 @@ developer work. The rules, tested in `tests/unit/lib/app/catalogue/upload.test.t
   the Catalogue pages does; otherwise the next seed run would put a seeded row back. A row an admin
   has edited is skipped (unless it already holds the file's value, which counts as unchanged), a
   re-upload of the same file writes nothing, nothing is deleted, and a new sound goes after the
-  last. One transaction, holding the synth's row.
+  last. One transaction, holding the synth's row. The editor's writes do not take that lock, so an
+  update lands only on a row still unedited; an admin's edit made meanwhile is skipped, and a row
+  an admin created meanwhile refuses the whole upload as a 409 to try again.
 - **Kept and audited.** An accepted file is stored privately at
   `catalogue-uploads/<id>/<time>-<uuid>.json` and audited as `synth.content_upload` with its path
   and the counts. With no storage configured the upload is refused (503); if the write fails the

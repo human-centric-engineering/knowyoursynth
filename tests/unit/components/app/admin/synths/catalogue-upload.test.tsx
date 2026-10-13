@@ -53,14 +53,14 @@ beforeEach(() => {
 });
 
 describe('CatalogueUpload', () => {
-  it('posts the file as it is to the chosen synth, shows the counts and refreshes the page', async () => {
+  it('posts the file itself to the chosen synth, shows the counts and refreshes the page', async () => {
     post.mockResolvedValue({ report: REPORT, file: { path: 'x', size: 1 } });
-    const text = '{\n  "synth": "tb-303",  "version": 1,\n  "sounds": []\n}\n';
+    const file = jsonFile('{\n  "synth": "tb-303",  "version": 1,\n  "sounds": []\n}\n');
 
-    await choose(jsonFile(text));
+    await choose(file);
 
     expect(post).toHaveBeenCalledWith('/api/v1/admin/synths/tb-303/content', {
-      options: { body: text },
+      options: { body: file },
     });
     const status = await screen.findByRole('status');
     expect(status).toHaveTextContent('Uploaded TB-303');

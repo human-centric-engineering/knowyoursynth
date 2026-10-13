@@ -252,6 +252,19 @@ describe('POST /api/v1/admin/synths/:id/content', () => {
     expect(writes()).toBe(0);
   });
 
+  it('reports the write’s own failure when removing its file fails too', async () => {
+    db.synth.rows.splice(0);
+    mockStorage.delete.mockRejectedValueOnce(new Error('storage down'));
+
+    const res = await post(content(3));
+
+    expect(res.status).toBe(404);
+    expect(mockLog.error).toHaveBeenCalledWith(
+      expect.stringContaining('could not remove'),
+      expect.objectContaining({ error: 'storage down' })
+    );
+  });
+
   it('removes the stored file when the write fails', async () => {
     db.synth.rows.splice(0);
 

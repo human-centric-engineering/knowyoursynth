@@ -28,6 +28,7 @@ import {
   uploadStorageKey,
   writeSynthContent,
 } from '@/lib/app/catalogue/upload';
+import { Prisma } from '@prisma/client';
 import { ValidationError } from '@/lib/api/errors';
 import {
   MAX_CONTENT_BYTES,
@@ -298,6 +299,22 @@ describe('writeSynthContent', () => {
     await upload(content(2));
 
     expect(db.synthSound.rows.map((r) => r.order)).toEqual([0, 1]);
+  });
+
+  it('refuses with a conflict when an admin created one of its rows meanwhile', async () => {
+    db.synthNote.create.mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'test',
+      })
+    );
+    // The upload reads no notes, so it creates them; the first create meets a row made since.
+    db.synthNote.rows.splice(0);
+
+    await expect(upload(content(3))).rejects.toMatchObject({
+      status: 409,
+      message: expect.stringContaining('Upload it again'),
+    });
   });
 
   it('refuses, having written nothing, when the catalogue has no such synth', async () => {

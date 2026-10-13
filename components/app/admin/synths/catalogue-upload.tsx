@@ -3,8 +3,8 @@
 /**
  * CatalogueUpload — upload one synth's content as JSON (`f-catalogue-admin`, t-33).
  *
- * Posts the file to `POST /api/v1/admin/synths/:id/content` exactly as it is, so the file the server keeps is the admin's.
- * Only its size is checked here; every real check, JSON included, is the server's. A refusal lists each problem the server named, and nothing was written.
+ * Posts the file to `POST /api/v1/admin/synths/:id/content` byte for byte, so the file the server keeps is the admin's.
+ * Only its size is checked here; every real check, JSON and UTF-8 included, is the server's. A refusal lists each problem the server named, and nothing was written.
  * An accepted upload shows what it did per table and refreshes the page, so the comparison below reflects it.
  */
 
@@ -61,7 +61,9 @@ export interface CatalogueUploadProps {
 
 export function CatalogueUpload({ synths }: CatalogueUploadProps) {
   const router = useRouter();
-  const [synthId, setSynthId] = useState(synths[0]?.id ?? '');
+  const [chosen, setChosen] = useState(synths[0]?.id ?? '');
+  // The list can change on a refresh; a choice no longer in it falls back to the first.
+  const synthId = synths.some((s) => s.id === chosen) ? chosen : (synths[0]?.id ?? '');
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
@@ -77,10 +79,11 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
     if (file.size > MAX_CONTENT_BYTES) return refuse(`The file is larger than ${MAX_MB}.`);
     setBusy(true);
     try {
-      // Sent as raw text rather than as `body`, which `apiClient` would serialise again.
+      // The file itself, not its text: `apiClient`'s `body` would serialise it again, and decoding it here would
+      // replace bytes that are not UTF-8 before the server's check could refuse them.
       const { report } = await apiClient.post<{ report: UploadReport }>(
         `/api/v1/admin/synths/${encodeURIComponent(synthId)}/content`,
-        { options: { body: await file.text() } }
+        { options: { body: file } }
       );
       setOutcome({
         kind: 'done',
@@ -126,7 +129,7 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
               id="catalogue-upload-synth"
               className="border-input bg-background h-9 rounded-md border px-3 text-sm"
               value={synthId}
-              onChange={(e) => setSynthId(e.target.value)}
+              onChange={(e) => setChosen(e.target.value)}
             >
               {synths.map((s) => (
                 <option key={s.id} value={s.id}>

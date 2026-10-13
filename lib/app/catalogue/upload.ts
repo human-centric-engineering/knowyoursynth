@@ -28,7 +28,13 @@
 import type { NextRequest } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
-import { APIError, ErrorCodes, NotFoundError, ValidationError } from '@/lib/api/errors';
+import {
+  APIError,
+  ConflictError,
+  ErrorCodes,
+  NotFoundError,
+  ValidationError,
+} from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
@@ -194,10 +200,24 @@ async function bringIn<Row extends object>(
 }
 
 /**
- * Write a checked file's rows for synth `id`. Throws `NotFoundError` when the catalogue has no such synth, having
- * written nothing.
+ * Write a checked file's rows for synth `id`. Throws `NotFoundError` when the catalogue has no such synth, and
+ * `ConflictError` when an admin created one of the file's rows while it was being written; either way, having written
+ * nothing.
  */
 export async function writeSynthContent(id: string, rows: SynthContentRows): Promise<UploadReport> {
+  try {
+    return await write(id, rows);
+  } catch (err) {
+    // Read structurally: lib/app may not import Prisma's runtime (its error classes included).
+    if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002')
+      throw new ConflictError(
+        `${id} changed while the file was being written, so nothing was written. Upload it again.`
+      );
+    throw err;
+  }
+}
+
+async function write(id: string, rows: SynthContentRows): Promise<UploadReport> {
   return prisma.$transaction(
     async (tx: Tx) => {
       await lockSynth(tx, id);

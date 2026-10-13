@@ -74,8 +74,16 @@ export const POST = withAdminAuth<{ id: string }>(
     try {
       report = await writeSynthContent(id, checked.rows);
     } catch (err) {
-      // Nothing was written, so the file records nothing: do not keep it.
-      await storage.delete(file.key);
+      // Nothing was written, so the file records nothing: do not keep it. A failed delete is logged, never thrown,
+      // so the caller still sees why the write failed.
+      try {
+        await storage.delete(file.key);
+      } catch (deleteErr) {
+        log.error('Catalogue upload: could not remove the file of a failed write', {
+          file: file.key,
+          error: deleteErr instanceof Error ? deleteErr.message : String(deleteErr),
+        });
+      }
       throw err;
     }
 
