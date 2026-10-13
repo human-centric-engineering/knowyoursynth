@@ -20,15 +20,17 @@
  * - **Never deletes.** A row the file does not have stays, so an empty or partial file cannot empty the synth.
  * - **Placement is set once.** A new sound goes after the synth's last; an existing sound keeps its place.
  *
- * The write runs in one transaction holding the synth's row, so it is all or nothing and cannot interleave with an
- * admin's edit of the same synth.
+ * The write runs in one transaction holding the synth's row, so it is all or nothing and cannot interleave with a new
+ * sound or a reorder on the same synth. Other edits do not take that lock, so an update writes only a row that is
+ * still unedited when it lands: an admin's edit made meanwhile is skipped, not overwritten. A note an admin creates
+ * meanwhile with a key the file also has fails the upload whole, writing nothing.
  */
 import type { NextRequest } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { APIError, ErrorCodes, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
-import { SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
+import { MAX_CONTENT_BYTES, SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
 import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
 import {
   catalogueKey,
@@ -37,12 +39,6 @@ import {
   type SeedCounts,
   type SynthContentRows,
 } from '@/lib/app/catalogue/seed';
-
-/**
- * The largest file an upload takes. The biggest synth's content in the seed data is about 720 KB, so this leaves room
- * for a library to grow to nearly three times that.
- */
-export const MAX_CONTENT_BYTES = 2 * 1024 * 1024;
 
 /** A problem with the file, in the shape `validateRequestBody` uses, so the page shows both the same way. */
 export interface UploadProblem {
@@ -161,14 +157,16 @@ const byKey = <T>(rows: T[], keyOf: (row: T) => string) => new Map(rows.map((r) 
 
 /**
  * Bring each planned row in under the rules above. `create` and `update` receive the row with `editedAt` set; columns
- * listed in `placement` are left out of the comparison and of an update.
+ * listed in `placement` are left out of the comparison and of an update. The edits in the Catalogue pages do not take
+ * the synth's lock, so an update is conditional on the row still being unedited rather than trusting what was read.
  */
 async function bringIn<Row extends object>(
   planned: Row[],
   keyOf: (row: NoInfer<Row>) => string,
   stored: Map<string, Stored>,
   create: (row: Row & { editedAt: Date }) => Promise<unknown>,
-  update: (row: Row & { editedAt: Date }) => Promise<unknown>,
+  /** Writes only while the row is still unedited, and returns how many rows it wrote. */
+  update: (row: Row & { editedAt: Date }) => Promise<{ count: number }>,
   placement: readonly string[] = []
 ): Promise<SeedCounts> {
   const c = counts();
@@ -185,9 +183,11 @@ async function bringIn<Row extends object>(
       c.unchanged++;
     } else if (current.editedAt) {
       c.edited++;
-    } else {
-      await update({ ...content, editedAt: now });
+    } else if ((await update({ ...content, editedAt: now })).count) {
       c.updated++;
+    } else {
+      // An admin's edit committed after this upload read the row: theirs stands.
+      c.edited++;
     }
   }
   return c;
@@ -215,7 +215,7 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
             data: { ...data, order: storedSounds.length ? next++ : data.order },
           }),
         ({ synthId, slug, ...data }) =>
-          tx.synthSound.update({ where: { synthId_slug: { synthId, slug } }, data }),
+          tx.synthSound.updateMany({ where: { synthId, slug, editedAt: null }, data }),
         ['order']
       );
 
@@ -224,7 +224,8 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
         catalogueKey.LINEAGE,
         byKey(await tx.synthLineage.findMany({ where: { synthId: id } }), catalogueKey.LINEAGE),
         (data) => tx.synthLineage.create({ data }),
-        ({ synthId, ...data }) => tx.synthLineage.update({ where: { synthId }, data })
+        ({ synthId, ...data }) =>
+          tx.synthLineage.updateMany({ where: { synthId, editedAt: null }, data })
       );
 
       const notes = await bringIn(
@@ -235,7 +236,7 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
           catalogueKey.NOTE
         ),
         (data) => tx.synthNote.create({ data }),
-        ({ key, ...data }) => tx.synthNote.update({ where: { key }, data })
+        ({ key, ...data }) => tx.synthNote.updateMany({ where: { key, editedAt: null }, data })
       );
 
       return { sounds, lineage, notes };

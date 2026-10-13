@@ -3,8 +3,8 @@
 /**
  * CatalogueUpload — upload one synth's content as JSON (`f-catalogue-admin`, t-33).
  *
- * Posts the file to `POST /api/v1/admin/synths/:id/content`. The file is parsed here first only to say early that it is
- * not JSON; every real check is the server's. A refusal lists each problem the server named, and nothing was written.
+ * Posts the file to `POST /api/v1/admin/synths/:id/content` exactly as it is, so the file the server keeps is the admin's.
+ * Only its size is checked here; every real check, JSON included, is the server's. A refusal lists each problem the server named, and nothing was written.
  * An accepted upload shows what it did per table and refreshes the page, so the comparison below reflects it.
  */
 
@@ -17,10 +17,10 @@ import { FieldHelp } from '@/components/ui/field-help';
 import { Label } from '@/components/ui/label';
 import { apiClient, APIClientError } from '@/lib/api/client';
 import type { SeedCounts } from '@/lib/app/catalogue/seed';
+import { MAX_CONTENT_BYTES } from '@/lib/app/catalogue/data';
 import type { UploadProblem, UploadReport } from '@/lib/app/catalogue/upload';
 
-/** The server's limit (`MAX_CONTENT_BYTES`), checked here too so a large file is refused before it is sent. */
-const MAX_BYTES = 2 * 1024 * 1024;
+const MAX_MB = `${MAX_CONTENT_BYTES / (1024 * 1024)} MB`;
 
 const TABLES: { key: keyof UploadReport; label: string }[] = [
   { key: 'sounds', label: 'Sounds' },
@@ -73,18 +73,14 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
     event.preventDefault();
     if (!file || !synthId) return;
     setOutcome(null);
-    if (file.size > MAX_BYTES) return refuse('The file is larger than 2 MB.');
+    // The server's limit, checked here too so a large file is refused before it is sent.
+    if (file.size > MAX_CONTENT_BYTES) return refuse(`The file is larger than ${MAX_MB}.`);
     setBusy(true);
     try {
-      let body: unknown;
-      try {
-        body = JSON.parse(await file.text());
-      } catch {
-        return refuse('The file is not valid JSON.');
-      }
+      // Sent as raw text rather than as `body`, which `apiClient` would serialise again.
       const { report } = await apiClient.post<{ report: UploadReport }>(
         `/api/v1/admin/synths/${encodeURIComponent(synthId)}/content`,
-        { body }
+        { options: { body: await file.text() } }
       );
       setOutcome({
         kind: 'done',
@@ -140,7 +136,7 @@ export function CatalogueUpload({ synths }: CatalogueUploadProps) {
             </select>
           </div>
           <div className="space-y-1">
-            <Label htmlFor="catalogue-upload-file">Content file (JSON, up to 2 MB)</Label>
+            <Label htmlFor="catalogue-upload-file">Content file (JSON, up to {MAX_MB})</Label>
             <input
               id="catalogue-upload-file"
               type="file"

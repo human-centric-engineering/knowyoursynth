@@ -47,11 +47,10 @@ const mockStorage = vi.hoisted(() => ({
     url: `http://storage/${opts.key}`,
     size: body.length,
   })),
+  delete: vi.fn(async (key: string) => ({ success: true, key })),
 }));
 const mockGetStorageClient = vi.hoisted(() => vi.fn<() => typeof mockStorage | null>());
 vi.mock('@/lib/storage/client', () => ({ getStorageClient: mockGetStorageClient }));
-const mockDeleteFile = vi.hoisted(() => vi.fn(async (key: string) => ({ success: true, key })));
-vi.mock('@/lib/storage/upload', () => ({ deleteFile: mockDeleteFile }));
 
 const mockLimiterCheck = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/security/rate-limit', async (importOriginal) => ({
@@ -103,7 +102,8 @@ const content = (n: number): SynthContent => ({
 let db: CatalogueTables;
 const writes = () =>
   Object.values(db).reduce(
-    (n, t) => n + t.create.mock.calls.length + t.update.mock.calls.length,
+    (n, t) =>
+      n + t.create.mock.calls.length + t.update.mock.calls.length + t.updateMany.mock.calls.length,
     0
   );
 
@@ -145,6 +145,7 @@ beforeEach(async () => {
   for (const t of Object.values(db)) {
     t.create.mockClear();
     t.update.mockClear();
+    t.updateMany.mockClear();
   }
   mockGetSession.mockResolvedValue(session('ADMIN'));
   mockGetStorageClient.mockReturnValue(mockStorage);
@@ -258,7 +259,7 @@ describe('POST /api/v1/admin/synths/:id/content', () => {
 
     expect(res.status).toBe(404);
     const key = mockStorage.upload.mock.calls[0][1].key;
-    expect(mockDeleteFile).toHaveBeenCalledWith(key);
+    expect(mockStorage.delete).toHaveBeenCalledWith(key);
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 });

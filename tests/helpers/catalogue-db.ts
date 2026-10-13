@@ -63,6 +63,12 @@ export function table() {
       Object.assign(r, structuredClone(data));
       return structuredClone(r);
     }),
+    /** Writes every matching row, as Prisma's does; the `where` may include `editedAt: null`. */
+    updateMany: vi.fn(async ({ where, data }: { where: Where; data: Row }) => {
+      const hit = rows.filter((r) => matches(r, where));
+      for (const r of hit) Object.assign(r, structuredClone(data));
+      return { count: hit.length };
+    }),
     upsert: vi.fn(async ({ where, create, update }: { where: Where; create: Row; update: Row }) => {
       const r = find(where);
       if (r) return Object.assign(r, structuredClone(update)) && structuredClone(r);

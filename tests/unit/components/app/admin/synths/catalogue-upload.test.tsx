@@ -3,9 +3,9 @@
 /**
  * CatalogueUpload (`f-catalogue-admin` t-33) — uploading one synth's content from the data page.
  *
- * Pins: the file goes to the chosen synth's content route as parsed JSON; an accepted upload shows its counts per
- * table and refreshes the page; a refusal lists every problem the server named; a file that is not JSON, or is past
- * the limit, is refused here without a request.
+ * Pins: the file goes to the chosen synth's content route exactly as it is, so the server keeps the admin's file; an
+ * accepted upload shows its counts per table and refreshes the page; a refusal lists every problem the server named;
+ * a file past the limit is refused here without a request.
  *
  * @see components/app/admin/synths/catalogue-upload.tsx
  */
@@ -53,13 +53,14 @@ beforeEach(() => {
 });
 
 describe('CatalogueUpload', () => {
-  it('posts the parsed file to the chosen synth, shows the counts and refreshes the page', async () => {
+  it('posts the file as it is to the chosen synth, shows the counts and refreshes the page', async () => {
     post.mockResolvedValue({ report: REPORT, file: { path: 'x', size: 1 } });
+    const text = '{\n  "synth": "tb-303",  "version": 1,\n  "sounds": []\n}\n';
 
-    await choose(jsonFile('{"synth":"tb-303","version":1,"sounds":[]}'));
+    await choose(jsonFile(text));
 
     expect(post).toHaveBeenCalledWith('/api/v1/admin/synths/tb-303/content', {
-      body: { synth: 'tb-303', version: 1, sounds: [] },
+      options: { body: text },
     });
     const status = await screen.findByRole('status');
     expect(status).toHaveTextContent('Uploaded TB-303');
@@ -100,13 +101,6 @@ describe('CatalogueUpload', () => {
       'notes/tb-303.json has an unusual note on x',
     ]);
     expect(mockRefresh).not.toHaveBeenCalled();
-  });
-
-  it('refuses a file that is not JSON without sending it', async () => {
-    await choose(jsonFile('{ not json'));
-
-    expect(await screen.findByRole('alert')).toHaveTextContent('not valid JSON');
-    expect(post).not.toHaveBeenCalled();
   });
 
   it('refuses a file past 2 MB without sending it', async () => {

@@ -253,7 +253,12 @@ export function CatalogueData({ data }: CatalogueDataProps) {
       </section>
 
       <CatalogueUpload
-        synths={data.groups.flatMap((g) => (g.synthId ? [{ id: g.synthId, name: g.name }] : []))}
+        synths={data.groups.flatMap((g) =>
+          // Only synths the tables have: one the seed planned but has not written yet cannot take content.
+          g.synthId && g.rows.some((r) => r.table === 'SYNTH' && r.status !== 'not-in-tables')
+            ? [{ id: g.synthId, name: g.name }]
+            : []
+        )}
       />
 
       <section className="space-y-3">

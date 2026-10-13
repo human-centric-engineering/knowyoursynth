@@ -21,7 +21,6 @@ import { logAdminAction } from '@/lib/orchestration/audit/admin-audit-logger';
 import { createRateLimitResponse, uploadLimiter } from '@/lib/security/rate-limit';
 import { getClientIP } from '@/lib/security/ip';
 import { getStorageClient } from '@/lib/storage/client';
-import { deleteFile } from '@/lib/storage/upload';
 import { SynthIdSchema } from '@/lib/app/catalogue/edit';
 import { CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 import {
@@ -76,7 +75,7 @@ export const POST = withAdminAuth<{ id: string }>(
       report = await writeSynthContent(id, checked.rows);
     } catch (err) {
       // Nothing was written, so the file records nothing: do not keep it.
-      await deleteFile(file.key);
+      await storage.delete(file.key);
       throw err;
     }
 

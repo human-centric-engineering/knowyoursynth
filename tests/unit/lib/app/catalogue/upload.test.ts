@@ -24,13 +24,16 @@ import {
 import { seedCatalogue } from '@/lib/app/catalogue/seed';
 import {
   checkSynthContent,
-  MAX_CONTENT_BYTES,
   readJsonBody,
   uploadStorageKey,
   writeSynthContent,
 } from '@/lib/app/catalogue/upload';
 import { ValidationError } from '@/lib/api/errors';
-import type { CatalogueSeedData, SynthContent } from '@/lib/app/catalogue/data';
+import {
+  MAX_CONTENT_BYTES,
+  type CatalogueSeedData,
+  type SynthContent,
+} from '@/lib/app/catalogue/data';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 
@@ -66,7 +69,8 @@ function content(n = 3): SynthContent {
 let db: CatalogueTables;
 const writes = () =>
   Object.values(db).reduce(
-    (n, t) => n + t.create.mock.calls.length + t.update.mock.calls.length,
+    (n, t) =>
+      n + t.create.mock.calls.length + t.update.mock.calls.length + t.updateMany.mock.calls.length,
     0
   );
 const rowCount = () => Object.values(db).reduce((n, t) => n + t.rows.length, 0);
@@ -104,6 +108,7 @@ beforeEach(async () => {
   for (const t of Object.values(db)) {
     t.create.mockClear();
     t.update.mockClear();
+    t.updateMany.mockClear();
   }
 });
 
@@ -246,6 +251,25 @@ describe('writeSynthContent', () => {
     expect(row.blurb).toBe('The admin’s blurb');
     expect(lineage.intro).toBe('The admin’s intro');
     expect(writes()).toBe(0);
+  });
+
+  it('skips a row an admin edited after the upload read it, rather than overwriting the edit', async () => {
+    const file = content(3);
+    const slug = file.sounds[0].id;
+    const row = db.synthSound.rows.find((r) => r.slug === slug)!;
+    file.sounds[0].blurb = 'The file’s blurb';
+    // The upload reads the row unedited; the admin's edit lands before the upload writes it.
+    const read = db.synthSound.findMany.getMockImplementation()!;
+    db.synthSound.findMany.mockImplementationOnce(async (args) => {
+      const rows = await read(args);
+      Object.assign(row, { blurb: 'The admin’s blurb', editedAt: new Date('2026-10-13') });
+      return rows;
+    });
+
+    const report = await upload(file);
+
+    expect(report.sounds).toEqual({ created: 0, updated: 0, unchanged: 2, edited: 1 });
+    expect(row.blurb).toBe('The admin’s blurb');
   });
 
   it('counts an edited row that already holds the file as unchanged', async () => {
