@@ -796,6 +796,31 @@ describe('createMapper', () => {
       expect(unhandled).toEqual([new Error('caller broke')]);
     });
 
+    it('does not report a throw from the caller’s own explain onDone as a failed explanation', async () => {
+      vi.mocked(await getCreateProbe()).mockReturnValue({ rms: 0, measure });
+      const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
+      vi.useFakeTimers();
+      const mapper = made(createMapper());
+      const def = makeMiniD();
+      mapper.analyse(def, def.init, [], 0, [48, 55], vi.fn(), vi.fn(), vi.fn());
+      await vi.advanceTimersByTimeAsync(4 * 40);
+
+      const onExplain = vi.fn(() => {
+        throw new Error('caller broke');
+      });
+      const onFail = vi.fn();
+      expect(mapper.explain('mod.depth', onExplain, onFail)).toBe(true);
+      await vi.advanceTimersByTimeAsync(4 * 60);
+
+      expect(onExplain).toHaveBeenCalledTimes(1);
+      expect(onFail).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      await Promise.resolve();
+      expect(unhandled).toEqual([new Error('caller broke')]);
+      // Still asked: answered, so not searched again.
+      expect(mapper.explain('mod.depth', onExplain, onFail)).toBe(false);
+    });
+
     it('reports an explanation that throws as failed, not as no way in, logs it, and lets it be asked again', async () => {
       let explaining = false;
       const throwing = (job: RealProbeJob): RealProbeResult => {

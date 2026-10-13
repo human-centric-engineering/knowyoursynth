@@ -135,7 +135,8 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
 /**
  * Renders nothing. When a dark control is pointed at, asks the mapper why it is dark (once per control per map) and
  * files the answer in the map store, where the cards and the panel pick it up. An answer that failed is asked for
- * again the next time the control is pointed at.
+ * again once the control is pointed at after another: it stays the one in question while the pointer leaves and
+ * comes back, so that alone is not a new question.
  */
 export function WhyAsker({ mapperRef }: { mapperRef: RefObject<Mapper | null> }) {
   const id = useStore(focusStore, (f) => (f && f.kind === 'control' ? f.id : null));
@@ -160,13 +161,15 @@ export function WhyAsker({ mapperRef }: { mapperRef: RefObject<Mapper | null> })
         else why[cid] = answer;
         return { ...m, why };
       });
-    // Asking again after a failure: back to "Looking for…" while it is worked out.
-    if (mapStore.get().why[id] === 'failed') file(id, undefined);
-    mapper.explain(
+    const retry = mapStore.get().why[id] === 'failed';
+    const asked = mapper.explain(
       id,
       (cid, ways) => file(cid, ways),
       (cid) => file(cid, 'failed')
     );
+    // Asking again after a failure: back to "Looking for…" while it is worked out, but only if it is. The answer
+    // cannot land before this, as the search is asynchronous.
+    if (asked && retry) file(id, undefined);
   }, [ask, id, mapperRef]);
   return null;
 }

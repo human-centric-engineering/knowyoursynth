@@ -157,7 +157,7 @@ describe('MapLegend', () => {
 
 describe('WhyAsker', () => {
   const fakeMapper = () => {
-    const explain = vi.fn<Mapper['explain']>();
+    const explain = vi.fn<Mapper['explain']>(() => true);
     const mapper: Mapper = { analyse: vi.fn(), explain, cancel: vi.fn(), dispose: vi.fn() };
     return { mapper, explain, ref: { current: mapper } };
   };
@@ -198,6 +198,17 @@ describe('WhyAsker', () => {
     const ways = [[{ id: CUTOFF, v: 10 }]];
     act(() => explain.mock.calls[1][1](GLIDE, ways));
     expect(mapStore.get().why[GLIDE]).toEqual(ways);
+  });
+
+  it('leaves a failed answer in place when the mapper does not take the question up again', () => {
+    const { explain, ref } = fakeMapper();
+    act(() => mapStore.set(ready({ why: { [GLIDE]: 'failed' } })));
+    explain.mockReturnValue(false); // e.g. the analysis behind the map has been cancelled
+    render(<WhyAsker mapperRef={ref} />);
+    pointAt(GLIDE);
+    expect(explain).toHaveBeenCalledTimes(1);
+    // Not "Looking for…" with nothing looking.
+    expect(mapStore.get().why[GLIDE]).toBe('failed');
   });
 
   it('drops an answer that arrives after the sound has changed', () => {
