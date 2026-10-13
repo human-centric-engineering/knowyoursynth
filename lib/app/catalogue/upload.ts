@@ -29,7 +29,7 @@ import { prisma } from '@/lib/db/client';
 import { APIError, ErrorCodes, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { SynthContentSchema, toSeedFiles } from '@/lib/app/catalogue/data';
-import { SoundSlugSchema } from '@/lib/app/catalogue/edit';
+import { lockSynth, SoundSlugSchema } from '@/lib/app/catalogue/edit';
 import {
   catalogueKey,
   planSynthContent,
@@ -200,7 +200,7 @@ async function bringIn<Row extends object>(
 export async function writeSynthContent(id: string, rows: SynthContentRows): Promise<UploadReport> {
   return prisma.$transaction(
     async (tx: Tx) => {
-      await tx.$queryRaw`SELECT id FROM synth WHERE id = ${id} FOR UPDATE`;
+      await lockSynth(tx, id);
       if (!(await tx.synth.findUnique({ where: { id }, select: { id: true } })))
         throw new NotFoundError('Synth not found');
 

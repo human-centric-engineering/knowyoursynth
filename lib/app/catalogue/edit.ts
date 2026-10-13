@@ -47,8 +47,9 @@ const toJson = (value: unknown): Json => JSON.parse(JSON.stringify(value)) as Js
 /**
  * Hold the synth's row until the transaction ends, so a reorder of its sounds and a new sound on it cannot interleave:
  * the reorder's check that it lists every sound would otherwise miss one created meanwhile, which then shares a place.
+ * The content upload (`lib/app/catalogue/upload.ts`) holds it the same way.
  */
-async function lockSynth(tx: Tx, id: string) {
+export async function lockSynth(tx: Tx, id: string): Promise<void> {
   await tx.$queryRaw`SELECT id FROM synth WHERE id = ${id} FOR UPDATE`;
 }
 
