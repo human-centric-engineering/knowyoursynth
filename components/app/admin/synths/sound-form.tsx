@@ -100,7 +100,8 @@ export function prettyJson(value: unknown, indent = ''): string {
   return JSON.stringify(value) ?? '';
 }
 
-const EMPTY_PHRASE = { bpm: 100, loop: true, steps: [] };
+/** A phrase needs at least one note to be accepted, so a new sound starts with one: C3 on the first beat. */
+const STARTER_PHRASE = { bpm: 100, loop: true, steps: [[0, 48, 1]] };
 
 function draftOf(stored: unknown): Draft | null {
   const parsed = StoredSoundSchema.safeParse(stored);
@@ -142,7 +143,7 @@ const blankDraft = (): Draft => ({
   level: '1',
   blurb: '',
   how: '',
-  phrase: prettyJson(EMPTY_PHRASE),
+  phrase: prettyJson(STARTER_PHRASE),
   steps: [],
   context: [],
   tweaks: [],
@@ -173,6 +174,10 @@ function bodyOf(d: Draft): { body: Record<string, unknown> } | { problems: Probl
   const seen = new Set<string>();
   for (const row of d.context) {
     const control = row.control.trim();
+    if (!control) {
+      problems.push({ path: 'context', message: 'Every control row needs a control id' });
+      continue;
+    }
     if (seen.has(control))
       problems.push({ path: `context.${control}`, message: `${control} is listed twice` });
     seen.add(control);
@@ -244,6 +249,11 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
   const update = (change: (d: Draft) => Draft) => {
     setDraft((d) => (d ? change(d) : d));
     setSavedNote(null);
+  };
+  /** Moving or removing a row changes which row an index names, so an earlier refusal no longer points anywhere. */
+  const restructure = (change: (d: Draft) => Draft) => {
+    update(change);
+    setRefusal(null);
   };
   const setField = (field: keyof Omit<Draft, 'steps' | 'context' | 'tweaks'>) => (v: string) =>
     update((d) => ({ ...d, [field]: v }));
@@ -450,59 +460,90 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
                 label={`step ${i + 1}`}
                 index={i}
                 length={draft.steps.length}
-                onMove={(by) => update((d) => ({ ...d, steps: move(d.steps, i, by) }))}
+                onMove={(by) => restructure((d) => ({ ...d, steps: move(d.steps, i, by) }))}
               />
               <Button
                 type="button"
                 size="sm"
                 variant="ghost"
                 className="ml-auto"
-                onClick={() => update((d) => ({ ...d, steps: d.steps.filter((_, j) => j !== i) }))}
+                onClick={() =>
+                  restructure((d) => ({ ...d, steps: d.steps.filter((_, j) => j !== i) }))
+                }
               >
                 Remove step {i + 1}
               </Button>
             </div>
             <FieldProblems messages={placed.at(`steps.${i}`)} />
             <div className="grid gap-3 sm:grid-cols-[1fr_10rem]">
-              {field(`steps.${i}.title`, 'Title', (p) => (
-                <Input
-                  {...p}
-                  value={step.title}
-                  onChange={(e) => setStep(i, 'title')(e.target.value)}
-                />
-              ))}
-              {field(`steps.${i}.module`, 'Module', (p) => (
-                <select
-                  {...p}
-                  value={step.module}
-                  onChange={(e) => setStep(i, 'module')(e.target.value)}
-                  className="border-input bg-background h-9 rounded-md border px-3 text-sm"
-                >
-                  {!SYNTH_MODULES.some((m) => m === step.module) && (
-                    <option value={step.module}>{step.module || 'Choose…'}</option>
-                  )}
-                  {SYNTH_MODULES.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              ))}
+              {field(
+                `steps.${i}.title`,
+                'Title',
+                (p) => (
+                  <Input
+                    {...p}
+                    value={step.title}
+                    onChange={(e) => setStep(i, 'title')(e.target.value)}
+                  />
+                ),
+                <p>
+                  What this step does, in a few words, for example &quot;Drop to 16&apos;&quot;.
+                </p>
+              )}
+              {field(
+                `steps.${i}.module`,
+                'Module',
+                (p) => (
+                  <select
+                    {...p}
+                    value={step.module}
+                    onChange={(e) => setStep(i, 'module')(e.target.value)}
+                    className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+                  >
+                    {!SYNTH_MODULES.some((m) => m === step.module) && (
+                      <option value={step.module}>{step.module || 'Choose…'}</option>
+                    )}
+                    {SYNTH_MODULES.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                ),
+                <p>The section of the panel the step works in. The lesson highlights it.</p>
+              )}
             </div>
-            {field(`steps.${i}.why`, 'Why', (p) => (
-              <Textarea
-                {...p}
-                rows={4}
-                value={step.why}
-                onChange={(e) => setStep(i, 'why')(e.target.value)}
-              />
-            ))}
+            {field(
+              `steps.${i}.why`,
+              'Why',
+              (p) => (
+                <Textarea
+                  {...p}
+                  rows={4}
+                  value={step.why}
+                  onChange={(e) => setStep(i, 'why')(e.target.value)}
+                />
+              ),
+              <p>What the change does to the sound and what to listen for as it happens.</p>
+            )}
             <div className="grid gap-3 md:grid-cols-2">
-              {field(`steps.${i}.set`, 'Values (JSON)', json(step.set, setStep(i, 'set'), 6))}
+              {field(
+                `steps.${i}.set`,
+                'Values (JSON)',
+                json(step.set, setStep(i, 'set'), 6),
+                <p>
+                  A JSON object of control id → value, for example{' '}
+                  <code>{'{ "osc1.range": "16" }'}</code>. Leave empty when the step sets nothing.
+                </p>
+              )}
               {field(
                 `steps.${i}.cables`,
                 'Cables (JSON)',
-                json(step.cables, setStep(i, 'cables'), 6)
+                json(step.cables, setStep(i, 'cables'), 6),
+                <p>
+                  A JSON list of <code>[output jack, input jack]</code> pairs. Leave empty when the
+                  step patches nothing.
+                </p>
               )}
             </div>
           </div>
@@ -562,7 +603,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
                 size="sm"
                 variant="ghost"
                 onClick={() =>
-                  update((d) => ({ ...d, context: d.context.filter((_, j) => j !== i) }))
+                  restructure((d) => ({ ...d, context: d.context.filter((_, j) => j !== i) }))
                 }
               >
                 Remove
@@ -609,27 +650,44 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
             <div key={row.key} className="space-y-2 rounded-md border p-3">
               <FieldProblems messages={placed.at(`tweaks.${i}`)} />
               <div className="grid gap-2 sm:grid-cols-[12rem_1fr_1fr]">
-                {field(`tweaks.${i}.id`, 'Control', (p) => (
-                  <Input
-                    {...p}
-                    className="font-mono"
-                    value={row.id}
-                    onChange={(e) => set('id')(e.target.value)}
-                  />
-                ))}
-                {field(`tweaks.${i}.try`, 'Try', (p) => (
-                  <Input {...p} value={row.try} onChange={(e) => set('try')(e.target.value)} />
-                ))}
-                {field(`tweaks.${i}.hear`, 'Hear', (p) => (
-                  <Input {...p} value={row.hear} onChange={(e) => set('hear')(e.target.value)} />
-                ))}
+                {field(
+                  `tweaks.${i}.id`,
+                  'Control',
+                  (p) => (
+                    <Input
+                      {...p}
+                      className="font-mono"
+                      value={row.id}
+                      onChange={(e) => set('id')(e.target.value)}
+                    />
+                  ),
+                  <p>
+                    The id of the control to move, for example <code>filter.cutoff</code>.
+                  </p>
+                )}
+                {field(
+                  `tweaks.${i}.try`,
+                  'Try',
+                  (p) => (
+                    <Input {...p} value={row.try} onChange={(e) => set('try')(e.target.value)} />
+                  ),
+                  <p>What to do with the control, for example &quot;Sweep it slowly up&quot;.</p>
+                )}
+                {field(
+                  `tweaks.${i}.hear`,
+                  'Hear',
+                  (p) => (
+                    <Input {...p} value={row.hear} onChange={(e) => set('hear')(e.target.value)} />
+                  ),
+                  <p>What changes in the sound when they do.</p>
+                )}
               </div>
               <Button
                 type="button"
                 size="sm"
                 variant="ghost"
                 onClick={() =>
-                  update((d) => ({ ...d, tweaks: d.tweaks.filter((_, j) => j !== i) }))
+                  restructure((d) => ({ ...d, tweaks: d.tweaks.filter((_, j) => j !== i) }))
                 }
               >
                 Remove tweak {i + 1}

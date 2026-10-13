@@ -108,6 +108,26 @@ describe('the catalogue list', () => {
     expect(save).toBeDisabled();
   });
 
+  it('keeps a listed change that lands while the order is saving', async () => {
+    const user = userEvent.setup();
+    let answerOrder: (value: { ids: string[] }) => void = () => {};
+    put.mockReturnValue(new Promise((resolve) => (answerOrder = resolve)));
+    patch.mockResolvedValue({ id: 'model-d', listed: false });
+    render(<CatalogueTable synths={SYNTHS} />);
+
+    await user.click(screen.getByRole('button', { name: 'Move Arp 2-XM up' }));
+    await user.click(screen.getByRole('button', { name: 'Save order' }));
+    const listed = screen.getByRole('switch', { name: 'List Moog Model D' });
+    await user.click(listed);
+    expect(listed).not.toBeChecked();
+
+    answerOrder({ ids: ['2-xm', 'model-d', 'pro-1'] });
+
+    expect(await screen.findByRole('button', { name: 'Save order' })).toBeDisabled();
+    expect(rowOrder()).toEqual(['2-xm', 'model-d', 'pro-1']);
+    expect(screen.getByRole('switch', { name: 'List Moog Model D' })).not.toBeChecked();
+  });
+
   it('puts the saved order back when the moves are undone, sending nothing', async () => {
     const user = userEvent.setup();
     render(<CatalogueTable synths={SYNTHS} />);
@@ -361,7 +381,14 @@ describe('editing a sound', () => {
     await user.click(screen.getByRole('button', { name: 'Add sound' }));
 
     expect(post).toHaveBeenCalledWith('/api/v1/admin/synths/model-d/sounds', {
-      body: expect.objectContaining({ id: 'wobble', name: 'Wobble', level: 1, steps: [] }),
+      body: expect.objectContaining({
+        id: 'wobble',
+        name: 'Wobble',
+        level: 1,
+        steps: [],
+        // A phrase is refused without a note, so the starter has one.
+        phrase: { bpm: 100, loop: true, steps: [[0, 48, 1]] },
+      }),
     });
     expect(push).toHaveBeenCalledWith('/admin/synths/catalogue/model-d/sounds/wobble');
   });
@@ -425,6 +452,9 @@ describe('notes', () => {
       body: { text: 'None.', title: 'No MIDI in' },
     });
     expect(await form.findByText('Edited')).toBeInTheDocument();
+    // The card is named by the title just saved, not the one the page loaded with.
+    expect(form.getByText('No MIDI in')).toBeInTheDocument();
+    expect(form.queryByText('No MIDI')).not.toBeInTheDocument();
   });
 });
 
@@ -554,6 +584,40 @@ describe('editing a sound, row by row', () => {
     expect(patch).not.toHaveBeenCalled();
     expect(screen.getAllByText('cutoff is listed twice')).not.toHaveLength(0);
     expect(screen.getByLabelText('Control 2')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('does not send a control row with no control id, and says so', async () => {
+    const user = userEvent.setup();
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Add a control' }));
+    await user.click(screen.getByRole('button', { name: 'Add a control' }));
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+
+    expect(patch).not.toHaveBeenCalled();
+    expect(screen.getAllByText('Every control row needs a control id')).not.toHaveLength(0);
+    expect(screen.queryByText(/is listed twice/)).not.toBeInTheDocument();
+  });
+
+  it("drops a refusal's problems once a step is removed, rather than leaving them on the wrong step", async () => {
+    const user = userEvent.setup();
+    patch.mockRejectedValue(
+      refusal('The sound does not fit model-d', [
+        { path: 'steps.1.set.cutoff', message: 'cutoff must be between 0 and 10' },
+      ])
+    );
+    render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
+
+    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    expect(await screen.findByText('cutoff must be between 0 and 10')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Remove step 1' }));
+
+    // The step that was second is now first; the problem named index 1, which is no longer it.
+    expect(screen.queryByText('cutoff must be between 0 and 10')).not.toBeInTheDocument();
+    expect(
+      within(screen.getByTestId('step-0')).getByLabelText(/Values \(JSON\)/, INPUT)
+    ).toHaveAttribute('aria-invalid', 'false');
   });
 
   it('says it could not save when the failure is not a refusal', async () => {

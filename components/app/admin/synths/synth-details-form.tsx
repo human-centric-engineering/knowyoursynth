@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useSharedSettingsReadOnly } from '@/components/admin/shared-settings-access';
 import {
@@ -37,6 +38,7 @@ const draftOf = (s: Pick<Synth, (typeof FIELDS)[number]>): Draft => ({
 });
 
 export function SynthDetailsForm({ synth }: { synth: Synth }) {
+  const router = useRouter();
   const readOnly = useSharedSettingsReadOnly();
   const [saved, setSaved] = useState(draftOf(synth));
   const [draft, setDraft] = useState(saved);
@@ -74,6 +76,8 @@ export function SynthDetailsForm({ synth }: { synth: Synth }) {
       setSaved(next);
       setDraft(next);
       setSavedNote('Saved.');
+      // The page heading and title are server-rendered from the same columns.
+      router.refresh();
     } catch (err) {
       setRefusal(refusalOf(err, 'Could not save the synth. Try again.'));
     } finally {

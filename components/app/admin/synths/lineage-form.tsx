@@ -135,6 +135,11 @@ export function LineageForm({
     setDraft((d) => (d ? change(d) : d));
     setSavedNote(null);
   };
+  /** Moving or removing a row changes which row an index names, so an earlier refusal no longer points anywhere. */
+  const restructure = (change: (d: Draft) => Draft) => {
+    update(change);
+    setRefusal(null);
+  };
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -246,14 +251,14 @@ export function LineageForm({
                   label={`timeline entry ${i + 1}`}
                   index={i}
                   length={draft.timeline.length}
-                  onMove={(by) => update((d) => ({ ...d, timeline: move(d.timeline, i, by) }))}
+                  onMove={(by) => restructure((d) => ({ ...d, timeline: move(d.timeline, i, by) }))}
                 />
                 <Button
                   type="button"
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    update((d) => ({ ...d, timeline: d.timeline.filter((_, j) => j !== i) }))
+                    restructure((d) => ({ ...d, timeline: d.timeline.filter((_, j) => j !== i) }))
                   }
                 >
                   Remove entry
@@ -312,14 +317,16 @@ export function LineageForm({
                   label={`relative ${i + 1}`}
                   index={i}
                   length={draft.relatives.length}
-                  onMove={(by) => update((d) => ({ ...d, relatives: move(d.relatives, i, by) }))}
+                  onMove={(by) =>
+                    restructure((d) => ({ ...d, relatives: move(d.relatives, i, by) }))
+                  }
                 />
                 <Button
                   type="button"
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    update((d) => ({ ...d, relatives: d.relatives.filter((_, j) => j !== i) }))
+                    restructure((d) => ({ ...d, relatives: d.relatives.filter((_, j) => j !== i) }))
                   }
                 >
                   Remove relative

@@ -62,13 +62,16 @@ export function CatalogueTable({ synths: initial }: CatalogueTableProps) {
       const { ids } = await apiClient.put<{ ids: string[] }>('/api/v1/admin/synths/order', {
         body: { ids: synths.map((s) => s.id) },
       });
-      const byId = new Map(synths.map((s) => [s.id, s]));
-      const ordered = ids.flatMap((id, order) => {
-        const s = byId.get(id);
-        return s ? [{ ...s, order }] : [];
-      });
-      setSaved(ordered);
-      setSynths(ordered);
+      // Reorder the rows as they are now, not as they were at the click: a listed toggle may have landed meanwhile.
+      const reorder = (list: AdminSynth[]) => {
+        const byId = new Map(list.map((s) => [s.id, s]));
+        return ids.flatMap((id, order) => {
+          const s = byId.get(id);
+          return s ? [{ ...s, order }] : [];
+        });
+      };
+      setSaved(reorder);
+      setSynths(reorder);
     } catch (err) {
       setRefusal(refusalOf(err, 'Could not save the order. Try again.'));
     } finally {

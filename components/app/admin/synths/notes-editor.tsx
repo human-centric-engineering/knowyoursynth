@@ -150,7 +150,8 @@ function NoteForm({ note, label, shared }: { note: AdminNote; label: string; sha
       data-testid={`note-${note.id}`}
     >
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">{label}</span>
+        {/* A limit is named by its title as last saved here, not as the page loaded it. */}
+        <span className="text-sm font-medium">{isLimit ? saved.title || label : label}</span>
         {shared && <Badge variant="secondary">Every panel</Badge>}
         {saved.editedAt && <Badge variant="outline">Edited</Badge>}
       </div>

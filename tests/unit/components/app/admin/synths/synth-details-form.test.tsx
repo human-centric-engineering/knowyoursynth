@@ -29,6 +29,9 @@ vi.mock('@/lib/api/client', () => ({
   },
 }));
 
+const refresh = vi.fn();
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
+
 const patch = vi.mocked(apiClient.patch);
 const SYNTH = adminSynthDetail().synth;
 /** A field by its label; the label also names its ⓘ button, so ask for the input. */
@@ -36,6 +39,7 @@ const INPUT = { selector: 'input, textarea' };
 
 beforeEach(() => {
   patch.mockReset();
+  refresh.mockReset();
 });
 
 describe('SynthDetailsForm', () => {
@@ -69,6 +73,8 @@ describe('SynthDetailsForm', () => {
       },
     });
     expect(await screen.findByText('Saved.')).toBeInTheDocument();
+    // The heading and title above the form are server-rendered, so the page re-renders with the new name.
+    expect(refresh).toHaveBeenCalledTimes(1);
     expect(save).toBeDisabled();
   });
 
