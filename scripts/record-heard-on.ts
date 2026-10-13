@@ -14,12 +14,20 @@
  */
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 
-const OUT = join(resolve(import.meta.dirname, '..'), 'tests', 'fixtures', 'bank', 'heard-on.json');
+export const HEARD_ON_FILE = join(
+  resolve(import.meta.dirname, '..'),
+  'tests',
+  'fixtures',
+  'bank',
+  'heard-on.json'
+);
 
-async function main(args: string[]): Promise<void> {
+/** Record the file at `out`. Exported for its test; run from the command line, it records `HEARD_ON_FILE`. */
+export async function recordHeardOn(args: string[], OUT = HEARD_ON_FILE): Promise<void> {
   if (existsSync(OUT) && !args.includes('--rerecord'))
     throw new Error(
       `${OUT} is already recorded. A port that differs from it is the port's to fix (D3)`
@@ -37,7 +45,8 @@ async function main(args: string[]): Promise<void> {
   console.log(`wrote ${counts.length} synths: ${counts.join(', ')}`);
 }
 
-main(process.argv.slice(2)).catch((error: unknown) => {
-  console.log('ERR', error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
+  recordHeardOn(process.argv.slice(2)).catch((error: unknown) => {
+    console.log('ERR', error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
