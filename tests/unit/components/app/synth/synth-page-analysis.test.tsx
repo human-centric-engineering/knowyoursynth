@@ -255,7 +255,7 @@ describe('the sound map', () => {
     expect(mapStore.get()).toMatchObject({ status: 'ready', key: replaced });
   });
 
-  it('leaves "Working out…" when the analysis fails part-way, rather than hanging there', async () => {
+  it('says the map could not be worked out when the analysis fails part-way, rather than hanging or vanishing', async () => {
     vi.stubGlobal('Worker', undefined);
     const error = vi.spyOn(logger, 'error').mockImplementation(() => {});
     let n = 0;
@@ -271,9 +271,50 @@ describe('the sound map', () => {
     expect(screen.getByText(/Working out what is in this sound/)).toBeTruthy();
     await settle(400 + 40 * 400);
     expect(n).toBe(5);
-    expect(mapStore.get().status).toBe('off');
+    expect(mapStore.get()).toMatchObject({ status: 'failed', state: null, heat: null });
     expect(screen.queryByText(/Working out what is in this sound/)).toBeNull();
+    expect(screen.getByText(/Could not work out what is in this sound/)).toBeTruthy();
     expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
+  });
+
+  it('clears a failed map at the next change to the sound, which works it out again', async () => {
+    vi.stubGlobal('Worker', undefined);
+    vi.spyOn(logger, 'error').mockImplementation(() => {});
+    let n = 0;
+    vi.mocked(createProbe).mockReturnValue({
+      rms: 0.1,
+      measure: (job) => {
+        if (++n === 5) throw new Error('render blew up');
+        return measure(job);
+      },
+    });
+    page();
+    fireEvent.click(button('Dim unused parts'));
+    await settle(400 + 40 * 400);
+    expect(mapStore.get().status).toBe('failed');
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
+    expect(mapStore.get().status).toBe('working');
+    expect(screen.queryByText(/Could not work out/)).toBeNull();
+    await settle(400 + 40 * 400);
+    expect(mapStore.get().status).toBe('ready');
+  });
+
+  it('clears a failed map when both switches are turned off', async () => {
+    vi.stubGlobal('Worker', undefined);
+    vi.spyOn(logger, 'error').mockImplementation(() => {});
+    vi.mocked(createProbe).mockReturnValue({
+      rms: 0.1,
+      measure: () => {
+        throw new Error('render blew up');
+      },
+    });
+    page();
+    fireEvent.click(button('Dim unused parts'));
+    await settle(400 + 40 * 400);
+    expect(mapStore.get().status).toBe('failed');
+    fireEvent.click(button('Dim unused parts'));
+    expect(mapStore.get()).toEqual(MAP_OFF);
+    expect(screen.queryByText(/Could not work out/)).toBeNull();
   });
 
   it('stops the running analysis as soon as the panel changes, so nothing it says lands in the 300 ms wait', async () => {

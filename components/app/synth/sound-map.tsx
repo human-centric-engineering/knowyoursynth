@@ -16,7 +16,7 @@ import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { Control, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 import { findStore, focusStore, mapStore, useStore } from '@/components/app/synth/stores';
-import type { Door } from '@/components/app/synth/stores';
+import type { Door, WhyAnswer } from '@/components/app/synth/stores';
 
 // [name on the hardware view, name on the paper outline (where unused parts fade instead of going dark), meaning, wash, hatched]
 const KEY: [string, string, string, number, boolean][] = [
@@ -36,7 +36,10 @@ export interface MapLegendProps {
   outline: boolean;
 }
 
-/** Strip under the faceplate: progress while the map is worked out, then the key, the most sensitive controls and the way in to the dark control being pointed at. */
+/**
+ * Strip under the faceplate: progress while the map is worked out, then the key, the most sensitive controls and the
+ * way in to the dark control being pointed at. Says so when the map could not be worked out.
+ */
 export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProps) {
   const map = useStore(mapStore);
   if (map.status === 'off') return null;
@@ -47,7 +50,12 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
     .filter((c) => !!c);
   return (
     <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-3 py-2 text-xs text-(--kys-muted)">
-      {!map.state && (
+      {map.status === 'failed' && (
+        <span role="status">
+          Could not work out what is in this sound. Changing the sound tries again.
+        </span>
+      )}
+      {!map.state && map.status !== 'failed' && (
         <span role="status">
           Working out what is in this sound… {Math.round(map.progress * 100)}%
         </span>
@@ -126,29 +134,45 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
 
 /**
  * Renders nothing. When a dark control is pointed at, asks the mapper why it is dark (once per control per map) and
- * files the answer in the map store, where the cards and the panel pick it up.
+ * files the answer in the map store, where the cards and the panel pick it up. An answer that failed is asked for
+ * again the next time the control is pointed at.
  */
 export function WhyAsker({ mapperRef }: { mapperRef: RefObject<Mapper | null> }) {
   const id = useStore(focusStore, (f) => (f && f.kind === 'control' ? f.id : null));
   const ask = useStore(
     mapStore,
-    (m) => !!id && m.status === 'ready' && !!m.state && m.state[id] === 'dead' && !(id in m.why)
+    (m) =>
+      !!id &&
+      m.status === 'ready' &&
+      !!m.state &&
+      m.state[id] === 'dead' &&
+      (!(id in m.why) || m.why[id] === 'failed')
   );
   useEffect(() => {
     const mapper = mapperRef.current;
     if (!ask || !id || !mapper) return;
     const key = mapStore.get().key;
-    mapper.explain(id, (cid, ways) =>
-      mapStore.set((m) =>
-        m.key === key && m.status !== 'off' ? { ...m, why: { ...m.why, [cid]: ways } } : m
-      )
+    const file = (cid: string, answer: WhyAnswer | undefined) =>
+      mapStore.set((m) => {
+        if (m.key !== key || m.status === 'off' || m.status === 'failed') return m;
+        const why = { ...m.why };
+        if (answer === undefined) delete why[cid];
+        else why[cid] = answer;
+        return { ...m, why };
+      });
+    // Asking again after a failure: back to "Looking for…" while it is worked out.
+    if (mapStore.get().why[id] === 'failed') file(id, undefined);
+    mapper.explain(
+      id,
+      (cid, ways) => file(cid, ways),
+      (cid) => file(cid, 'failed')
     );
   }, [ask, id, mapperRef]);
   return null;
 }
 
 /** The dark control being pointed at (it stays the one in question after the pointer leaves, like the inspector), and the ways in to it once known. */
-function useDarkFocus(): { id: string; ways: Door[][] | undefined } | null {
+function useDarkFocus(): { id: string; ways: WhyAnswer | undefined } | null {
   const id = useStore(focusStore, (f) => (f && f.kind === 'control' ? f.id : null));
   const dark = useStore(mapStore, (m) => !!id && !!m.state && m.state[id] === 'dead');
   const ways = useStore(mapStore, (m) => (id ? m.why[id] : undefined));
@@ -158,7 +182,8 @@ function useDarkFocus(): { id: string; ways: Door[][] | undefined } | null {
 /** True while the control being pointed at would come in if the mod wheel were pushed up: the keyboard strip rings its wheel. */
 export function useWheelWanted(): boolean {
   const focus = useDarkFocus();
-  return !!focus?.ways && focus.ways.some((combo) => combo.some((d) => d.id === WHEEL));
+  const ways = focus?.ways;
+  return Array.isArray(ways) && ways.some((combo) => combo.some((d) => d.id === WHEEL));
 }
 
 /** The line of the legend that goes with the dashed rings: which dark control is in question, and what would bring it in. */
@@ -178,7 +203,8 @@ function WhyLine({ def, values }: { def: SynthDef; values: ControlValues }) {
       <span className="font-semibold text-(--kys-text)">{displayName(def, c)} is dark.</span>
       <Why def={def} ways={focus.ways} values={values} link />
       {/* The mod wheel is not on the panel: it pulses on the keyboard instead, and gets no ring. */}
-      {focus.ways?.some((combo) => combo.some((d) => d.id !== WHEEL)) &&
+      {Array.isArray(focus.ways) &&
+        focus.ways.some((combo) => combo.some((d) => d.id !== WHEEL)) &&
         ' They are ringed on the panel.'}
     </p>
   );
@@ -242,11 +268,12 @@ function Why({
   link,
 }: {
   def: SynthDef;
-  ways: Door[][] | undefined;
+  ways: WhyAnswer | undefined;
   values: ControlValues;
   link: boolean;
 }) {
   if (!ways) return <> Looking for what would bring it in…</>;
+  if (ways === 'failed') return <> Could not work out what would bring it in.</>;
   if (!ways.length)
     return (
       <>

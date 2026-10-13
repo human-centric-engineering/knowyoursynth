@@ -582,7 +582,11 @@ export interface Mapper {
     onDone: (map: SoundMap) => void,
     onError: (err: unknown) => void
   ): void;
-  explain(controlId: string, onDone: (id: string, combos: DoorCombo[]) => void): void;
+  explain(
+    controlId: string,
+    onDone: (id: string, combos: DoorCombo[]) => void,
+    onError: (id: string, err: unknown) => void
+  ): void;
   cancel(): void;
   dispose(): void;
 }
@@ -837,9 +841,10 @@ export function createMapper(): Mapper {
     },
     /**
      * Why is this control dead? → onDone(id, [combo, …]): up to two ways in, each a list of doors ({ id, v } or
-     * { id: '@wheel' }) to open together; empty if one or two doors are not enough. Asked once per control per analysis.
+     * { id: '@wheel' }) to open together; empty if one or two doors are not enough. Asked once per control per analysis,
+     * unless the search throws: that is logged and reported to `onError`, and the control can be asked again.
      */
-    explain(controlId, onDone) {
+    explain(controlId, onDone, onError) {
       const sess = session;
       if (
         !sess ||
@@ -882,7 +887,10 @@ export function createMapper(): Mapper {
             control: controlId,
             error: err instanceof Error ? err.message : String(err),
           });
-          onDone(controlId, []);
+          // Not `[]`: that would say no one or two controls bring it in, which nobody found out. Forgotten as asked,
+          // so the control can be asked again.
+          sess.asked.delete(controlId);
+          onError(controlId, err);
         });
     },
     cancel: close,

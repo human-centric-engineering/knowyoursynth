@@ -123,13 +123,17 @@ export interface Door {
   v?: ControlValue;
 }
 
+/** What the mapper said about a dark control: its ways in (`[]` = no one or two controls bring it in), or that the search failed. */
+export type WhyAnswer = Door[][] | 'failed';
+
 export interface SoundMap {
-  status: 'off' | 'working' | 'ready';
+  /** `failed`: the analysis threw, so nothing is known; drawn like `off`, but the legend says so. */
+  status: 'off' | 'working' | 'ready' | 'failed';
   progress: number;
   state: Record<string, MapCellState> | null;
   heat: Record<string, number> | null;
   ranked: string[];
-  why: Record<string, Door[][]>;
+  why: Record<string, WhyAnswer>;
   /** The sound the map was worked out for. */
   key?: string;
 }
@@ -144,7 +148,8 @@ export const findStore = createStore<FindTarget | null>(null); // { kind: 'contr
 /**
  * The sound map (src/lib/soundmap.js): `state[id]` is 'on' | 'zero' | 'dead' for controls and 'from>to' cables, `heat[id]`
  * 0..1 for knobs and sliders. `why[id]` = the ways in to a dead control, once it has been pointed at and worked out:
- * [[door, …], …] with door = { id, v } or { id: '@wheel' }; [] = no one or two controls bring it in.
+ * [[door, …], …] with door = { id, v } or { id: '@wheel' }; [] = no one or two controls bring it in; 'failed' = the
+ * search threw, so nothing is known (the control is asked again the next time it is pointed at).
  */
 export const MAP_OFF: SoundMap = {
   status: 'off',

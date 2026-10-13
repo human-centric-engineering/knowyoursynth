@@ -141,6 +141,18 @@ describe('DimLayer', () => {
     expect(container.querySelector('path')).toBeNull();
   });
 
+  it('draws nothing when the sound map could not be worked out, as for off', () => {
+    act(() => mapStore.set({ ...MAP_OFF, status: 'failed', key: 'k' }));
+    const { container } = inSvg(
+      <>
+        <DimLayer def={def} cables={cables} values={def.init} outline={false} />
+        <HeatLayer def={def} values={def.init} outline={false} />
+        <HeatRanks def={def} values={def.init} outline={false} />
+      </>
+    );
+    expect(container.querySelector('svg')?.innerHTML).toBe('');
+  });
+
   it('washes unused parts, stripes the ones at zero, and never dims what a lesson points at', () => {
     setMap({
       state: { 'select.mode': 'on', 'knob.vcs3': 'zero', 'j.out>j.in': 'on' },
@@ -202,6 +214,14 @@ describe('heat', () => {
 describe('DoorRings', () => {
   const focusOn = (id: string) =>
     act(() => focusStore.set({ kind: 'control', id, x: 0, y: 0, tip: false }));
+
+  it('rings only the dark control when what brings it in could not be worked out', () => {
+    setMap({ state: { 'knob.pro1': 'dead' }, why: { 'knob.pro1': 'failed' } });
+    const { container } = inSvg(<DoorRings def={def} values={def.init} />);
+    focusOn('knob.pro1');
+    expect(container.querySelectorAll('circle')).toHaveLength(2); // the dark control's own ring, drawn twice
+    expect(container.querySelector('text')).toBeNull();
+  });
 
   it('draws nothing unless the control in focus is dark', () => {
     setMap({ state: { 'knob.pro1': 'on' } });
