@@ -4,7 +4,7 @@
  * @see app/sitemap.ts
  */
 
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import sitemap, { dynamic } from '@/app/sitemap';
 
 vi.mock('@/components/app/bank/sitemap', () => ({
@@ -14,14 +14,19 @@ vi.mock('@/components/app/bank/sitemap', () => ({
   ]),
 }));
 
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
 describe('sitemap', () => {
   it('is built per request, since the databank rows are in the tables', () => {
     expect(dynamic).toBe('force-dynamic');
   });
 
   it("lists the site's pages, then the databank's, as absolute URLs", async () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.test');
     const entries = await sitemap();
-    const base = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const base = 'https://example.test';
     expect(entries.map((e) => e.url)).toEqual([
       base,
       `${base}/about`,
@@ -32,5 +37,10 @@ describe('sitemap', () => {
       `${base}/bank/artists/kraftwerk`,
     ]);
     expect(entries.at(-1)).toMatchObject({ priority: 0.5, changeFrequency: 'monthly' });
+  });
+
+  it('falls back to localhost when the app URL is not set', async () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
+    expect((await sitemap())[0].url).toBe('http://localhost:3000');
   });
 });
