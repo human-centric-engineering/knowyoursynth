@@ -464,7 +464,10 @@ const recordId = (r: { table: CatalogueTable; key: string }) => `${r.table}:${r.
  * changed, and remove the records of rows the data no longer has. The record table is the seed's alone, so removing
  * from it is safe in a way removing catalogue rows is not: it never touches content, and the next run rebuilds it.
  */
-async function record(prisma: TenancyClient, planned: SeedRecord[]): Promise<RecordCounts> {
+async function rewriteSeedRecord(
+  prisma: TenancyClient,
+  planned: SeedRecord[]
+): Promise<RecordCounts> {
   const c: RecordCounts = { created: 0, updated: 0, unchanged: 0, removed: 0 };
   const stored = byKey(await prisma.catalogueSeedRecord.findMany(), recordId);
   const fresh: SeedRecord[] = [];
@@ -559,7 +562,7 @@ export async function seedCatalogue(
   );
 
   // Last, so a run that fails part way leaves the record of the run before, which the next run completes.
-  const records = await record(prisma, seedRecords(rows));
+  const records = await rewriteSeedRecord(prisma, seedRecords(rows));
 
   return { synths, sounds, lineage, notes, records };
 }
