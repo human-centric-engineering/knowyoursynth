@@ -5,12 +5,15 @@
  * for Model D, so the response is Model D's real content in the shape a client gets.
  * getRouteLogger is mocked globally in tests/setup.ts.
  */
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { z } from 'zod';
 import { GET } from '@/app/api/v1/synths/[id]/route';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
+import { bankDb } from '@/tests/helpers/bank-db';
 import {
   assertErrorResponse,
   assertSuccessResponse,
@@ -22,10 +25,14 @@ vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },
     synthNote: { findMany: vi.fn() },
+    bankInstrument: { findMany: vi.fn() },
+    bankSong: { findMany: vi.fn() },
   },
 }));
 
 const { prisma } = await import('@/lib/db/client');
+/** The databank's rows, for each synth's "Heard on". */
+const bank = bankDb();
 const data = loadCatalogueData();
 const { stored, noteRows } = modelDRows();
 const firstModelDSound = () => {
@@ -51,6 +58,10 @@ const call = (id: string, headers?: Record<string, string>) =>
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.mocked(prisma.bankInstrument.findMany).mockImplementation(
+    bank.bankInstrument.findMany as never
+  );
+  vi.mocked(prisma.bankSong.findMany).mockImplementation(bank.bankSong.findMany as never);
   vi.mocked(prisma.synth.findFirst).mockImplementation((async (args: { where: { id: string } }) =>
     args.where.id === 'model-d' ? stored : null) as never);
   vi.mocked(prisma.synthNote.findMany).mockResolvedValue(noteRows as never);
@@ -79,6 +90,15 @@ describe('GET /api/v1/synths/:id', () => {
     expect(detail.sounds).toHaveLength(99);
     expect(detail.sounds[0]).toEqual({ ...firstModelDSound(), version: 1 });
     expect(response.headers.get('ETag')).toMatch(/^W\/".+"$/);
+  });
+
+  it("serves the lineage with its Heard on list, the prototype's own for Model D", async () => {
+    const golden = JSON.parse(
+      readFileSync(resolve(process.cwd(), 'tests/fixtures/bank/heard-on.json'), 'utf8')
+    ) as Record<string, unknown[]>;
+    const body = DetailBody.parse(await parseJsonResponse(await call('model-d')));
+    expect(golden['model-d']).toHaveLength(36);
+    expect(body.data.lineage?.heard).toEqual(golden['model-d']);
   });
 
   it('serves exactly what the read layer returns, which is what the synth page renders', async () => {

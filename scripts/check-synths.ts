@@ -13,8 +13,12 @@
  *   specifier; D13 (nothing in the app imports `prototype/`) is about the live app, and this is a dev-only checker.
  * - **The sounds and lineage.** A ported synth's come from the seed data the catalogue is seeded from
  *   (`prisma/seeds/app-knowyoursynth/data/`), each sound passed through `validatePreset` on the way in, so the check
- *   plays what the app will serve. Its "Heard on" list still comes from the prototype bundle, because the databank
- *   that fills it is not ported yet (b1). A synth not ported yet keeps the prototype's own sounds and lineage.
+ *   plays what the app will serve. Its "Heard on" list is joined from the databank's seed data (`data/bank/`) by the
+ *   app's own join (`heardFor`), so a record pointing at a sound the library lacks is caught here. A synth not ported
+ *   yet keeps the prototype's own sounds and lineage.
+ * - **The databank check** (`checkBank`, ported as `planBank` in `lib/app/bank/seed.ts`): every reference in the
+ *   databank's seed data resolves, and every sound it names is in that synth's library. Run once, by the process that
+ *   starts the others, as `check.mjs` did; a problem refuses the run.
  * - **Parity with the prototype.** A ported definition must equal the prototype's as data: geometry, ids, help text,
  *   areas, decor, init (`definitionDrift`). The baseline only hears what a sound plays, and this catches a
  *   transliteration slip no sound would.
@@ -22,7 +26,6 @@
  * Left out of the transliteration, and why:
  * - The "What is not modelled" check only asks that a ported synth's seed data has an entry. The prototype's
  *   `limitsFor` check ran on every synth, and the unported ones still have theirs in `prototype/src/lib/limits.js`.
- * - The databank check (`checkBank`): the databank is not ported yet (b1).
  * - `--write-baseline`: the baseline in `.context/app/check/` is the prototype's own rendering. The ported engine has
  *   to reproduce it, not overwrite it, so this script only reads it. Re-record it with the prototype's own checker
  *   (`node check.mjs --write-baseline`, run in the prototype folder) if a sound is ever meant to change.
@@ -55,6 +58,10 @@ import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
+import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+import type { Bank } from '@/lib/app/bank/data';
+import { heardFor } from '@/lib/app/bank/joins';
+import { BankDataError, planBank } from '@/lib/app/bank/seed';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
@@ -132,7 +139,8 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
  */
 function withPorted(
   prototypes: SynthDef[],
-  data: CatalogueSeedData
+  data: CatalogueSeedData,
+  bank: Bank
 ): {
   synths: SynthDef[];
   drift: Map<string, string>;
@@ -173,7 +181,7 @@ function withPorted(
     let history: Lineage | undefined;
     if (lineage) {
       const { synth: _synth, ...rest } = lineage;
-      history = { ...rest, heard: proto.lineage?.heard };
+      history = { ...rest, heard: heardFor(bank, ported.id) };
     }
     return { ...ported, presets, lineage: history };
   });
@@ -181,17 +189,32 @@ function withPorted(
 }
 
 async function main(): Promise<void> {
+  const BANK = loadBankData();
   const {
     synths: SYNTHS,
     drift,
     orphans,
     content,
-  } = withPorted(await loadPrototypeSynths(), loadCatalogueData());
+  } = withPorted(await loadPrototypeSynths(), loadCatalogueData(), BANK);
   if (orphans.length) {
     console.log(
       `ERR registered with no prototype definition to check against: ${orphans.join(', ')}`
     );
     process.exit(1);
+  }
+  // The databank: every id resolves and every linked sound exists. Checked once, by the process that starts the others.
+  if (!process.env.KYS_CHECK_CHILD) {
+    try {
+      planBank(
+        BANK,
+        new Map(SYNTHS.map((d) => [d.id, new Set((d.presets ?? []).map((p) => p.id))]))
+      );
+    } catch (error) {
+      if (!(error instanceof BankDataError)) throw error;
+      for (const problem of error.problems) console.log(`ERR bank: ${problem}`);
+      console.log(`${error.problems.length} databank errors`);
+      process.exit(1);
+    }
   }
 
   const args = process.argv.slice(2);

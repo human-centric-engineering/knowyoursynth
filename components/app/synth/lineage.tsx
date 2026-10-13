@@ -6,9 +6,9 @@
  * Transliterated from the prototype file `src/ui/Lineage.jsx` (decision D3). The lineage is the catalogue's, read from
  * the API by the page (D13).
  *
- * What is not here yet (`B31`): "Heard on", the records made on this family, is joined from the databank, and so are
- * its "About <artist>" links. Both arrive with `f-databank`. Until then the third tab shows only when the lineage
- * names players ("Also known to have played one").
+ * "Heard on" is joined from the databank by the read layer (`getHeardOn`, `f-databank`). A record with a library
+ * sound in its style loads it. What is not here yet: each record's "About <artist>" links, which open the databank's
+ * artist pages and arrive with them (`f-databank` b2).
  */
 
 import { useEffect, useState } from 'react';
@@ -20,23 +20,31 @@ type TabId = 'timeline' | 'relatives' | 'heard';
 export interface LineageProps {
   synth: { id: string; maker: string; name: string };
   lineage: LineageData;
+  /** The synth's library, for a record's "Load a sound in this style". */
+  sounds: { id: string; name: string }[];
   open: boolean;
   onClose: () => void;
+  /** Load one of the synth's sounds. */
+  onSelect: (soundId: string) => void;
 }
 
-export function Lineage({ synth, lineage: l, open, onClose }: LineageProps) {
+export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: LineageProps) {
   const { ref, close } = useDialog(open);
   const [tab, setTab] = useState<TabId>('timeline');
   useEffect(() => {
     setTab('timeline');
   }, [synth.id]);
 
+  const heard = l.heard ?? [];
   const users = l.users ?? [];
   const tabs: [TabId, string, number][] = [
     ['timeline', 'How it got here', l.timeline.length],
     ['relatives', 'Close relatives', l.relatives.length],
-    ...(users.length ? [['heard', 'Heard on', users.length] as [TabId, string, number]] : []),
+    ...(heard.length || users.length
+      ? [['heard', 'Heard on', heard.length || users.length] as [TabId, string, number]]
+      : []),
   ];
+  const soundName = (id: string | undefined) => sounds.find((p) => p.id === id)?.name;
 
   return (
     <dialog
@@ -143,10 +151,55 @@ export function Lineage({ synth, lineage: l, open, onClose }: LineageProps) {
 
           {tab === 'heard' && (
             <>
-              <p className="kys-label text-(--kys-muted)">Also known to have played one</p>
-              <p className="mt-1.5 max-w-[78ch] text-[14px] leading-relaxed text-(--kys-text)/90">
-                {users.join(' · ')}
-              </p>
+              {heard.length > 0 && (
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {heard.map((h) => {
+                    const soundId = h.sound;
+                    const sound = soundName(soundId);
+                    return (
+                      <li
+                        key={h.song}
+                        className="flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5"
+                      >
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="min-w-0 leading-snug font-semibold">{h.who}</p>
+                          <span className="shrink-0 font-mono text-xs text-(--kys-faint)">
+                            {h.year}
+                          </span>
+                        </div>
+                        <p className="text-[14px] leading-snug text-(--kys-text)/90">{h.what}</p>
+                        <p className="kys-label mt-1.5 text-(--kys-muted)">
+                          Played on: <span className="text-(--kys-text)">{h.on}</span>
+                        </p>
+                        <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-(--kys-muted)">
+                          {h.text}
+                        </p>
+                        {soundId && sound && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onSelect(soundId);
+                              close();
+                            }}
+                            className="mt-2.5 self-start rounded-md border border-(--kys-line) px-2.5 py-1 text-left text-sm text-(--kys-muted) hover:border-(--kys-muted) hover:text-(--kys-text)"
+                          >
+                            Load a sound in this style:{' '}
+                            <span className="text-(--kys-text)">{sound}</span>
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              {users.length > 0 && (
+                <div className={heard.length ? 'mt-4' : ''}>
+                  <p className="kys-label text-(--kys-muted)">Also known to have played one</p>
+                  <p className="mt-1.5 max-w-[78ch] text-[14px] leading-relaxed text-(--kys-text)/90">
+                    {users.join(' · ')}
+                  </p>
+                </div>
+              )}
               {l.note && (
                 <p className="mt-3 text-sm leading-relaxed text-(--kys-faint)">{l.note}</p>
               )}

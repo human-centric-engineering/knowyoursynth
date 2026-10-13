@@ -56,6 +56,10 @@ model Synth {
   lineage SynthLineage?
   notes   SynthNote[]
 
+  /// Databank instruments this synth models, and record parts listed under it.
+  bankInstruments BankInstrumentSynth[]
+  bankParts       BankPartSynth[]
+
   @@index([listed, order])
   @@map("synth")
 }
@@ -188,4 +192,242 @@ model CatalogueSeedRecord {
   @@id([table, key])
   @@index([synthId])
   @@map("catalogue_seed_record")
+}
+
+// ─── Databank (f-databank, plan §9) ──────────────────────────────────────────
+//
+// The artists, records, instruments and the people who built them, joined by id
+// (`Databank` in prototype/CONTRACT.md). Product content every org shares, so on
+// GLOBAL_CONFIG_MODELS beside the catalogue; no row has a user foreign key.
+//
+// Seeded from prisma/seeds/app-knowyoursynth/data/bank/ by `002-bank.ts`, with
+// the catalogue's rules (lib/app/bank/seed.ts): checked first, idempotent, an
+// `editedAt` row is the admin's and never written again, and no row is deleted.
+// A join belongs to the row that lists it, so the seed rewrites a row's joins
+// only while that row is the seed's. A reference to another row is `Restrict`:
+// a row something points at cannot be removed until the reference is gone.
+//
+// The vocabularies (`kind`) are text checked by lib/app/bank/data.ts, so a new
+// kind is a code change, not a migration.
+
+/// A designer, engineer or founder ("Innovators"). What they made is read from
+/// the instruments that list them.
+model BankMaker {
+  id          String    @id // e.g. "robert-moog"
+  name        String
+  born        String?
+  died        String?
+  country     String
+  companies   String[]
+  summary     String    @db.Text
+  story       String    @db.Text
+  innovations String[]
+  editedAt    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  instruments BankInstrumentPerson[]
+
+  @@map("bank_maker")
+}
+
+/// A real instrument: one named on records, an original a panel is modelled
+/// on, or (from b4) any synth that exists.
+model BankInstrument {
+  id             String    @id // e.g. "moog-minimoog"
+  name           String
+  /// The company, as text.
+  maker          String
+  /// A year or range, as text ("1970", "1980s").
+  year           String
+  kind           String
+  text           String    @db.Text
+  /// The original this one recreates (a Behringer Model D → the Minimoog).
+  recreationOfId String?
+  editedAt       DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  recreationOf BankInstrument?        @relation("BankRecreation", fields: [recreationOfId], references: [id], onDelete: Restrict)
+  recreations  BankInstrument[]       @relation("BankRecreation")
+  people       BankInstrumentPerson[]
+  synths       BankInstrumentSynth[]
+  parts        BankPartInstrument[]
+  artists      BankArtistInstrument[]
+
+  @@index([recreationOfId])
+  @@map("bank_instrument")
+}
+
+/// The people behind an instrument, in the order it lists them.
+model BankInstrumentPerson {
+  instrumentId String
+  makerId      String
+  order        Int
+
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  maker      BankMaker      @relation(fields: [makerId], references: [id], onDelete: Restrict)
+
+  @@id([instrumentId, makerId])
+  @@index([makerId])
+  @@map("bank_instrument_person")
+}
+
+/// An app synth that models an instrument (`app` in the contract). Records
+/// made on the instrument show in that synth's "Heard on" list.
+model BankInstrumentSynth {
+  instrumentId String
+  synthId      String
+
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  synth      Synth          @relation(fields: [synthId], references: [id], onDelete: Restrict)
+
+  @@id([instrumentId, synthId])
+  @@index([synthId])
+  @@map("bank_instrument_synth")
+}
+
+/// A player, band, producer, composer or sound designer.
+model BankArtist {
+  id          String    @id // e.g. "aphex-twin"
+  name        String
+  /// person | group
+  kind        String
+  country     String
+  active      String
+  eras        String[]
+  genres      String[]
+  roles       String[]
+  summary     String    @db.Text
+  story       String    @db.Text
+  innovations String[]
+  editedAt    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  members     BankArtistMember[]     @relation("BankGroup")
+  groups      BankArtistMember[]     @relation("BankMember")
+  instruments BankArtistInstrument[]
+  songs       BankSongArtist[]
+  playedParts BankSongPart[]
+
+  @@map("bank_artist")
+}
+
+/// A member of a group. The group lists its members, so the row is the
+/// group's. The prototype recorded membership on either side (`members`,
+/// `memberOf`); both become rows here.
+model BankArtistMember {
+  groupId  String
+  memberId String
+  order    Int
+
+  group  BankArtist @relation("BankGroup", fields: [groupId], references: [id], onDelete: Cascade)
+  member BankArtist @relation("BankMember", fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@id([groupId, memberId])
+  @@index([memberId])
+  @@map("bank_artist_member")
+}
+
+/// An instrument an artist is known to have used beyond their records.
+model BankArtistInstrument {
+  artistId     String
+  instrumentId String
+  order        Int
+
+  artist     BankArtist     @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Restrict)
+
+  @@id([artistId, instrumentId])
+  @@index([instrumentId])
+  @@map("bank_artist_instrument")
+}
+
+/// A song, album, score, performance or body of work.
+model BankSong {
+  id        String    @id
+  title     String
+  /// song | album | score | body | performance
+  kind      String
+  year      String?
+  album     String?
+  /// The printed credit, when the names alone lose something.
+  credit    String?
+  editedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  artists BankSongArtist[]
+  parts   BankSongPart[]
+
+  @@map("bank_song")
+}
+
+/// A work's credited artists, in credit order.
+model BankSongArtist {
+  songId   String
+  artistId String
+  order    Int
+
+  song   BankSong   @relation(fields: [songId], references: [id], onDelete: Cascade)
+  artist BankArtist @relation(fields: [artistId], references: [id], onDelete: Restrict)
+
+  @@id([songId, artistId])
+  @@index([artistId])
+  @@map("bank_song_artist")
+}
+
+/// What a synth plays on a work.
+model BankSongPart {
+  id       String  @id @default(cuid())
+  songId   String
+  order    Int
+  /// The real instrument, as printed ("Roland Jupiter-8 (the lead), with …").
+  on       String
+  text     String  @db.Text
+  playerId String?
+
+  song        BankSong             @relation(fields: [songId], references: [id], onDelete: Cascade)
+  player      BankArtist?          @relation(fields: [playerId], references: [id], onDelete: Restrict)
+  instruments BankPartInstrument[]
+  synths      BankPartSynth[]
+
+  @@unique([songId, order])
+  @@index([playerId])
+  @@map("bank_song_part")
+}
+
+/// An instrument a part is played on, in the order the part lists them.
+model BankPartInstrument {
+  partId       String
+  instrumentId String
+  order        Int
+
+  part       BankSongPart   @relation(fields: [partId], references: [id], onDelete: Cascade)
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Restrict)
+
+  @@id([partId, instrumentId])
+  @@index([instrumentId])
+  @@map("bank_part_instrument")
+}
+
+/// What a part says about one app synth: listed under it by hand (`synths`),
+/// a library sound in its style (`sounds`), or its own text there (`notes`).
+model BankPartSynth {
+  partId  String
+  synthId String
+  /// Listed in this synth's "Heard on" whatever its instruments.
+  listed  Boolean
+  /// The slug of a library sound on this synth, checked by the seed.
+  sound   String?
+  /// Shown in this synth's list in place of the part's text.
+  note    String? @db.Text
+
+  part  BankSongPart @relation(fields: [partId], references: [id], onDelete: Cascade)
+  synth Synth        @relation(fields: [synthId], references: [id], onDelete: Restrict)
+
+  @@id([partId, synthId])
+  @@index([synthId])
+  @@map("bank_part_synth")
 }

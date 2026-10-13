@@ -106,24 +106,25 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds two bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
-  the engine, the validator and the definition registry) and `lib/app/catalogue/` (seeding the
-  catalogue and reading it for the API).
+- **Change:** adds three bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+  the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
+  catalogue and reading it for the API) and `lib/app/bank/` (the same for the databank).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our two bullets in the `lib/app/` list, in
+- **On conflict:** take theirs and re-insert our three bullets in the `lib/app/` list, in
   alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth or catalogue code lives in `lib/app/`, or when the guard reads fork
+- **Delete when:** none while synth, catalogue or databank code lives in `lib/app/`, or when the guard reads fork
   scaffolds from a fork-owned file.
 
 ### The reserved-tier test, pinned to our app models
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
-  declarations (five models and three enums) instead of none, under a `FORK` comment.
+  declarations (five models and three enums) and the databank's (twelve models) instead of none,
+  under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -133,20 +134,21 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
 
-### The catalogue tables on the global-config list
+### The catalogue and databank tables on the global-config list
 
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
-  `GLOBAL_CONFIG_MODELS`, under a one-line comment.
+  `GLOBAL_CONFIG_MODELS`, under a one-line comment. The twelve databank tables (`BankMaker` …
+  `BankPartSynth`, `f-databank` t-34) follow under a second one.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
-  one of the two lists, and the lists have no fork seam. The catalogue is product content every
-  org shares, so it is global config (owner ruling on `f-model-d`, 2026-10-07). The databank
-  tables (`f-databank`) will join the same lines.
-- **On conflict:** take theirs, and re-append our five names (and the comment) to the end of
-  `GLOBAL_CONFIG_MODELS`.
+  one of the two lists, and the lists have no fork seam. The catalogue and the databank are
+  product content every org shares, so they are global config (owner ruling on `f-model-d`,
+  2026-10-07).
+- **On conflict:** take theirs, and re-append our seventeen names (and the two comments) to the
+  end of `GLOBAL_CONFIG_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the five names into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the seventeen names into the new seam's scaffold.
 
 ### CI pulls Docker Hub images logged in
 
@@ -194,7 +196,7 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 ## Excluded: filled seams
 
 - `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
-  `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (the catalogue tables,
+  `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (the catalogue and databank tables,
   excluded) and `lib/app/admin-nav.ts` (the "Synths" admin section): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).

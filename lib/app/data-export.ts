@@ -106,9 +106,34 @@ export type AppSubjectData = Record<string, unknown>;
 export function initAppSubjectSources(): void {
   registerAppSubjectSources({
     tier: 'app',
-    excluded: CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
+    excluded: [
+      ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
+      ...BANK_MODELS.map((model) => ({ model, reason: BANK_REASON })),
+    ],
   });
 }
+
+/**
+ * The databank (`f-databank`): reference facts about records, instruments, musicians and instrument designers, the same
+ * for every user. Its artists and makers are people, but public figures written up from published sources, not users
+ * of this app: no row has a user foreign key, and none is about a data subject of this service.
+ */
+export const BANK_MODELS = [
+  'BankMaker',
+  'BankInstrument',
+  'BankInstrumentPerson',
+  'BankInstrumentSynth',
+  'BankArtist',
+  'BankArtistMember',
+  'BankArtistInstrument',
+  'BankSong',
+  'BankSongArtist',
+  'BankSongPart',
+  'BankPartInstrument',
+  'BankPartSynth',
+] as const;
+const BANK_REASON =
+  'Databank reference content written by the seed and by admins, the same for every user; no row is about a user of this app.';
 
 /**
  * The catalogue (`f-model-d`): product content every user sees alike, with no column about a person. With it, the

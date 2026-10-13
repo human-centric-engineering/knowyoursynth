@@ -12,7 +12,7 @@ belongs to the seed alone (below).
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Synth`        | One row per synth: name, maker, year, heritage, summary (from the definition), listed, order.                                                                                   |
 | `SynthSound`   | A library sound, built step by step (`Preset`), and the definition version it was made on.                                                                                      |
-| `SynthLineage` | A synth's history section, without "Heard on" (that comes from the databank, `f-databank`).                                                                                     |
+| `SynthLineage` | A synth's history section, without "Heard on" (that comes from the databank: [`bank.md`](./bank.md)).                                                                           |
 | `SynthNote`    | `UNUSUAL` notes on a control, jack or area, and the `LIMIT_INTRO` and `LIMIT` entries of a synth's "What is not modelled" list. A `LIMIT` with no synth is true of every panel. |
 
 `CatalogueSeedRecord` holds, per catalogue row, what the seed last planned for it: the content
@@ -168,8 +168,9 @@ developer work. The rules, tested in `tests/unit/lib/app/catalogue/upload.test.t
 
 - `GET /api/v1/synths`: the listed synths, in order, each with its definition's version and a
   sound count.
-- `GET /api/v1/synths/:id`: one synth with its sounds, lineage and notes. A 404 for an id that is
-  not a listed synth the registry can play.
+- `GET /api/v1/synths/:id`: one synth with its sounds, lineage and notes. The lineage carries the
+  synth's "Heard on" list, joined from the databank (`getHeardOn`). A 404 for an id that is not a
+  listed synth the registry can play.
 
 Both are public, inherit the section rate limit, and carry an ETag.
 

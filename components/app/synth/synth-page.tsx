@@ -907,8 +907,13 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
         <Lineage
           synth={detail.synth}
           lineage={detail.lineage}
+          sounds={sounds}
           open={lineageOpen}
           onClose={() => setLineageOpen(false)}
+          onSelect={(id) => {
+            selectPreset(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         />
       )}
       <Limits
