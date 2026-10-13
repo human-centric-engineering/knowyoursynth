@@ -135,7 +135,7 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
 /**
  * Renders nothing. When a dark control is pointed at, asks the mapper why it is dark (once per control per map) and
  * files the answer in the map store, where the cards and the panel pick it up. An answer that failed is asked for
- * again once the control is pointed at after another: it stays the one in question while the pointer leaves and
+ * again once the control is pointed at after something else: it stays the one in question while the pointer leaves and
  * comes back, so that alone is not a new question.
  */
 export function WhyAsker({ mapperRef }: { mapperRef: RefObject<Mapper | null> }) {

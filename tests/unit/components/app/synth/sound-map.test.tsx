@@ -203,7 +203,7 @@ describe('WhyAsker', () => {
   it('leaves a failed answer in place when the mapper does not take the question up again', () => {
     const { explain, ref } = fakeMapper();
     act(() => mapStore.set(ready({ why: { [GLIDE]: 'failed' } })));
-    explain.mockReturnValue(false); // e.g. the analysis behind the map has been cancelled
+    explain.mockReturnValue(false); // the mapper has nothing to ask, e.g. its session is out of step with the store
     render(<WhyAsker mapperRef={ref} />);
     pointAt(GLIDE);
     expect(explain).toHaveBeenCalledTimes(1);
