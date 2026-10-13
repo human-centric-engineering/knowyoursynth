@@ -12,7 +12,7 @@
  *
  * Printing goes through `console`, not `logger` — see the `scripts/**` override in `eslint.config.mjs`.
  */
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { format, resolveConfig } from 'prettier';
@@ -28,10 +28,6 @@ export const HEARD_ON_FILE = join(
 
 /** Record the file at `out`. Exported for its test; run from the command line, it records `HEARD_ON_FILE`. */
 export async function recordHeardOn(args: string[], OUT = HEARD_ON_FILE): Promise<void> {
-  if (existsSync(OUT) && !args.includes('--rerecord'))
-    throw new Error(
-      `${OUT} is already recorded. A port that differs from it is the port's to fix (D3)`
-    );
   const heard = Object.fromEntries(
     (await loadPrototypeSynths())
       .map((d) => [d.id, d.lineage?.heard ?? []] as const)
@@ -40,7 +36,17 @@ export async function recordHeardOn(args: string[], OUT = HEARD_ON_FILE): Promis
   mkdirSync(dirname(OUT), { recursive: true });
   const options = await resolveConfig(OUT);
   // A JSON round trip drops the keys the prototype set to undefined (`year`, `sound`), as the API does.
-  writeFileSync(OUT, await format(JSON.stringify(heard), { ...options, filepath: OUT }));
+  const json = await format(JSON.stringify(heard), { ...options, filepath: OUT });
+  // `wx` refuses an existing file in the write itself, so nothing can land between a check and the write.
+  try {
+    writeFileSync(OUT, json, { flag: args.includes('--rerecord') ? 'w' : 'wx' });
+  } catch (error: unknown) {
+    if (error instanceof Error && 'code' in error && error.code === 'EEXIST')
+      throw new Error(
+        `${OUT} is already recorded. A port that differs from it is the port's to fix (D3)`
+      );
+    throw error;
+  }
   const counts = Object.entries(heard).map(([id, list]) => `${id} ${list.length}`);
   console.log(`wrote ${counts.length} synths: ${counts.join(', ')}`);
 }
