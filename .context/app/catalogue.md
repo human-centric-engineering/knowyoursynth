@@ -158,7 +158,8 @@ developer work. The rules, tested in `tests/unit/lib/app/catalogue/upload.test.t
   an admin created meanwhile refuses the whole upload as a 409 to try again.
 - **Kept and audited.** An accepted file is stored privately at
   `catalogue-uploads/<id>/<time>-<uuid>.json` and audited as `synth.content_upload` with its path
-  and the counts. With no storage configured the upload is refused (503); if the write fails the
+  and the counts. With no storage configured, or a provider that cannot keep a file privately (Vercel Blob),
+  the upload is refused (503); if the write fails the
   stored file is removed. A refused file is neither stored nor audited.
 - **Rate limited** by the admin section cap and `uploadLimiter` (10 per 15 minutes), keyed per
   admin.

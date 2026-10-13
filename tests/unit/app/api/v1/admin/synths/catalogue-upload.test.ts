@@ -42,6 +42,7 @@ vi.mock('@/lib/logging', () => ({ logger: mockLog }));
 
 const mockStorage = vi.hoisted(() => ({
   name: 'local',
+  capabilities: { privateObjects: true },
   upload: vi.fn(async (body: Buffer, opts: { key: string }) => ({
     key: opts.key,
     url: `http://storage/${opts.key}`,
@@ -263,6 +264,21 @@ describe('POST /api/v1/admin/synths/:id/content', () => {
       expect.stringContaining('could not remove'),
       expect.objectContaining({ error: 'storage down' })
     );
+  });
+
+  it('refuses with a 503 when the storage provider cannot keep a file privately, writing nothing', async () => {
+    mockGetStorageClient.mockReturnValue({
+      ...mockStorage,
+      name: 'vercel-blob',
+      capabilities: { privateObjects: false },
+    });
+
+    const res = await post(content(3));
+
+    expect(res.status).toBe(503);
+    expect((await json(res)).error?.message).toContain('cannot store private files');
+    expect(mockStorage.upload).not.toHaveBeenCalled();
+    expect(writes()).toBe(0);
   });
 
   it('removes the stored file when the write fails', async () => {

@@ -21,6 +21,7 @@ import { logAdminAction } from '@/lib/orchestration/audit/admin-audit-logger';
 import { createRateLimitResponse, uploadLimiter } from '@/lib/security/rate-limit';
 import { getClientIP } from '@/lib/security/ip';
 import { getStorageClient } from '@/lib/storage/client';
+import { getStorageCapabilities } from '@/lib/storage/providers/types';
 import { SynthIdSchema } from '@/lib/app/catalogue/edit';
 import { CATALOGUE_READ } from '@/lib/app/catalogue/admin-route';
 import {
@@ -60,6 +61,13 @@ export const POST = withAdminAuth<{ id: string }>(
     if (!storage)
       throw new APIError(
         'File storage is not configured, so the upload cannot be kept',
+        ErrorCodes.STORAGE_NOT_CONFIGURED,
+        503
+      );
+    // Kept privately: a provider that can only publish (Vercel Blob) would refuse at upload with a bare 500.
+    if (!getStorageCapabilities(storage).privateObjects)
+      throw new APIError(
+        `Uploads are kept privately, and the ${storage.name} storage provider cannot store private files. Configure S3 or local storage.`,
         ErrorCodes.STORAGE_NOT_CONFIGURED,
         503
       );
