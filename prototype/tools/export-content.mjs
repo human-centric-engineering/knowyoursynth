@@ -9,6 +9,12 @@
 //   notes/shared.json   the "What is not modelled" entries that are true of every panel
 //   synths.json         the catalogue listing: each exported synth's place in the prototype's picker
 //
+// Or the databank, once, in f-databank b1:
+//   node prototype/tools/export-content.mjs --bank
+// writes bank/makers.json, bank/instruments.json, bank/artists.json and bank/songs.json: the four files in
+// src/bank/, as they are (CONTRACT.md → Databank). The seed turns them into the Bank* tables and checks every
+// reference (lib/app/bank/seed.ts), as check.mjs's checkBank did.
+//
 // Run once per synth, in that synth's port task, and commit the output. The app and the seed never run this:
 // after the first seed the database is the source of truth and admins edit it there (D2).
 //
@@ -31,7 +37,42 @@ const require = createRequire(path.join(repo, 'package.json'));
 const esbuild = require('esbuild');
 const prettier = require('prettier');
 
+// Formatted as the repo's Prettier would, so a re-export of unchanged content is no diff and `npm run validate` passes.
+const write = async (rel, data) => {
+  const file = path.join(out, rel);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const options = await prettier.resolveConfig(file);
+  fs.writeFileSync(file, await prettier.format(JSON.stringify(data), { ...options, filepath: file }));
+  console.log(`wrote ${path.relative(repo, file)}`);
+};
+
+/** Bundle an entry module's source against src/ and import it. */
+const load = async (contents) => {
+  const outFile = path.join(os.tmpdir(), `kys-export.${process.pid}.out.mjs`);
+  await esbuild.build({
+    stdin: { contents, resolveDir: src, loader: 'js' },
+    bundle: true, format: 'esm', platform: 'node', outfile: outFile, alias: { '@': src }, loader: { '.js': 'jsx' }, logLevel: 'warning',
+  });
+  try {
+    return await import(`${pathToFileURL(outFile).href}?t=${Date.now()}`);
+  } finally {
+    fs.rmSync(outFile, { force: true });
+  }
+};
+
 const args = process.argv.slice(2);
+
+if (args.includes('--bank')) {
+  const bank = await load(`export { SONGS, ARTISTS, MAKERS, INSTRUMENTS } from '@/bank/index.js';`);
+  // A JSON round trip drops nothing: the databank is plain data.
+  await write('bank/makers.json', { makers: bank.MAKERS });
+  await write('bank/instruments.json', { instruments: bank.INSTRUMENTS });
+  await write('bank/artists.json', { artists: bank.ARTISTS });
+  await write('bank/songs.json', { songs: bank.SONGS });
+  console.log(`bank: ${bank.MAKERS.length} makers, ${bank.INSTRUMENTS.length} instruments, ${bank.ARTISTS.length} artists, ${bank.SONGS.length} songs`);
+  process.exit(0);
+}
+
 const id = args.find((a) => !a.startsWith('--'));
 const versionArg = args.find((a) => a.startsWith('--def-version='));
 const version = versionArg ? Number(versionArg.slice('--def-version='.length)) : NaN;
@@ -51,17 +92,7 @@ export { SHARED, limitsFor } from '@/lib/limits.js';
 export { default as unusual } from '@/synths/unusual/${file}.js';
 export { forRack } from '@/synths/moog900/unusual.js';
 `;
-const outFile = path.join(os.tmpdir(), `kys-export.${process.pid}.out.mjs`);
-await esbuild.build({
-  stdin: { contents: entry, resolveDir: src, loader: 'js' },
-  bundle: true, format: 'esm', platform: 'node', outfile: outFile, alias: { '@': src }, loader: { '.js': 'jsx' }, logLevel: 'warning',
-});
-let mod;
-try {
-  mod = await import(`${pathToFileURL(outFile).href}?t=${Date.now()}`);
-} finally {
-  fs.rmSync(outFile, { force: true });
-}
+const mod = await load(entry);
 const { SYNTHS, SHARED, limitsFor, forRack } = mod;
 
 const order = SYNTHS.findIndex((s) => s.id === id);
@@ -95,14 +126,6 @@ if (!limits) {
   process.exit(1);
 }
 
-// Formatted as the repo's Prettier would, so a re-export of unchanged content is no diff and `npm run validate` passes.
-const write = async (rel, data) => {
-  const file = path.join(out, rel);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  const options = await prettier.resolveConfig(file);
-  fs.writeFileSync(file, await prettier.format(JSON.stringify(data), { ...options, filepath: file }));
-  console.log(`wrote ${path.relative(repo, file)}`);
-};
 const pair = ([title, text]) => ({ title, text });
 
 // A JSON round trip drops nothing a sound holds: presets are plain data (CONTRACT.md → Preset).
