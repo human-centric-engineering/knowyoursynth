@@ -5,7 +5,7 @@
  *
  * Transliterated from the prototype file `src/ui/Bank.jsx` (D3), where the databank was a dialog over the synth with
  * its route in state. Here each row is a page (`/bank/[tab]/[id]`) and this is the layout around them, so the search
- * and the era picked stay put while the visitor moves from page to page, and the browser's Back walks the trail as
+ * and the era picked stay put while the visitor moves from page to page, and the browser's Back walks the pages as
  * the dialog's did. The rows arrive worked out (`components/app/bank/lists.ts`); the page beside them is `children`.
  *
  * Below the `lg` breakpoint the list and the page take turns, as in the prototype: the list on a tab, the page (with
@@ -41,23 +41,40 @@ export function BankShell({ lists, children }: BankShellProps) {
   const [q, setQ] = useState('');
   const [era, setEra] = useState<string | null>(null);
 
+  // How many databank pages deep the browser's history is, so "‹ Back" knows whether there is one of its own to go
+  // back to. A link moves one deeper, the browser's Back (a `popstate`) one shallower, and the hash redirect below
+  // replaces the entry it landed on. Forward is a `popstate` too and is counted as a step back: an undercount only
+  // sends "‹ Back" to the tab list, where an overcount would take the visitor out of the databank.
+  const depth = useRef(0);
+  const popped = useRef(false);
+  const replaced = useRef(false);
+  const arrived = useRef(false);
+  useEffect(() => {
+    const onPop = () => {
+      popped.current = true;
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+  useEffect(() => {
+    if (!arrived.current) arrived.current = true;
+    else if (popped.current) depth.current = Math.max(0, depth.current - 1);
+    else if (!replaced.current) depth.current += 1;
+    popped.current = false;
+    replaced.current = false;
+  }, [pathname]);
+  const back = () => {
+    if (depth.current > 0) router.back();
+    else router.push(bankHref(tab));
+  };
+
   // A prototype link that landed on `/bank` itself (`/bank#bank/artists/kraftwerk`).
   useEffect(() => {
     const target = bankHashRoute(window.location.hash);
-    if (target) router.replace(target);
+    if (!target || target === pathname) return;
+    replaced.current = true;
+    router.replace(target);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
-
-  // The pages visited inside the databank, so "‹ Back" knows whether there is one of its own to go back to.
-  const trail = useRef<string[]>([]);
-  useEffect(() => {
-    const t = trail.current;
-    if (t[t.length - 2] === pathname) t.pop();
-    else if (t[t.length - 1] !== pathname) t.push(pathname);
-  }, [pathname]);
-  const back = () => {
-    if (trail.current.length > 1) router.back();
-    else router.push(bankHref(tab));
-  };
 
   const fq = fold(q.trim());
   const matches = useMemo(

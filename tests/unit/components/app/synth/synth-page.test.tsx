@@ -755,6 +755,22 @@ describe('SynthPage ?sound=', () => {
     expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d?view=outline');
   });
 
+  it.each(['#bank/artists/kraftwerk', '#ob-x'])(
+    'leaves the stored panel alone when %s sends the visitor elsewhere',
+    (hash) => {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      storeSession({ presetId: 'fat-bass', step: null, values: {}, cables: [] });
+      window.location.hash = hash;
+      page({ soundParam: 'wobble' });
+      expect(router.replace).toHaveBeenCalledTimes(1);
+      act(() => {
+        vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS * 2);
+      });
+      expect(readStored(SESSION_KEY)).toMatchObject({ presetId: 'fat-bass' });
+      vi.useRealTimers();
+    }
+  );
+
   it('opens as it would have for a sound the library does not have', () => {
     storeSession({ presetId: 'wobble', step: null, values: {}, cables: [] });
     window.history.replaceState(null, '', '/synths/model-d?sound=nope');

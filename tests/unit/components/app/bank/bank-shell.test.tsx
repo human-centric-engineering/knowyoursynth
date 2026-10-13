@@ -139,14 +139,52 @@ describe('BankShell', () => {
     expect(nav.back).toHaveBeenCalledTimes(1);
   });
 
+  it('counts a step back in the browser, so "‹ Back" does not leave the databank', () => {
+    const { goTo } = setup('/bank');
+    goTo('/bank/artists/kraftwerk');
+    goTo('/bank/songs/donna-summer-i-feel-love');
+    // The browser's Back, twice: to the artist, then to /bank.
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    goTo('/bank/artists/kraftwerk');
+    fireEvent.click(screen.getByRole('button', { name: '‹ Back' }));
+    expect(nav.back).toHaveBeenCalledTimes(1);
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    goTo('/bank');
+    goTo('/bank/artists/kraftwerk');
+    fireEvent.click(screen.getByRole('button', { name: '‹ Back' }));
+    expect(nav.back).toHaveBeenCalledTimes(2);
+  });
+
+  it('counts a link back to a page as a step forward, as the browser does', () => {
+    const { goTo } = setup('/bank/artists/kraftwerk');
+    goTo('/bank/songs/donna-summer-i-feel-love');
+    goTo('/bank/artists/kraftwerk');
+    fireEvent.click(screen.getByRole('button', { name: '‹ Back' }));
+    expect(nav.back).toHaveBeenCalledTimes(1);
+    expect(nav.push).not.toHaveBeenCalled();
+  });
+
   it('has no Back on a tab', () => {
     setup('/bank/songs');
     expect(screen.queryByRole('button', { name: '‹ Back' })).toBeNull();
   });
 
-  it('follows a prototype link that landed on /bank', () => {
+  it('follows a prototype link that landed on /bank, and does not count it as a page to go back to', () => {
     window.location.hash = '#bank/makers/robert-moog';
-    setup();
+    const { goTo } = setup();
     expect(nav.replace).toHaveBeenCalledWith('/bank/makers/robert-moog');
+
+    // The replace overwrote /bank in the browser's history.
+    goTo('/bank/makers/robert-moog');
+    fireEvent.click(screen.getByRole('button', { name: '‹ Back' }));
+    expect(nav.back).not.toHaveBeenCalled();
+    expect(nav.push).toHaveBeenCalledWith('/bank/makers');
+  });
+
+  it('does not replace /bank with itself for a link to the artists tab', () => {
+    window.location.hash = '#bank/artists';
+    setup();
+    expect(nav.replace).not.toHaveBeenCalled();
   });
 });

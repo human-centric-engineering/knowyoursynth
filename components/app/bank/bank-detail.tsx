@@ -301,7 +301,6 @@ function Part({ p, names }: { p: BankPart; names: BankNames }) {
 export function ArtistPage({ d, names }: { d: ArtistDetail; names: BankNames }) {
   const a = d.artist;
   const over = line([a.kind === 'group' ? 'Group' : a.roles.join(', '), a.country, a.active]);
-  const linked = [...d.members, ...d.groups];
   return (
     <article>
       <Head over={over} name={a.name} line={a.summary} />
@@ -327,16 +326,28 @@ export function ArtistPage({ d, names }: { d: ArtistDetail; names: BankNames }) 
         {a.story}
       </p>
       <Innovations title="What they did differently" items={a.innovations} />
-      {linked.length > 0 && (
-        <Section title={d.members.length ? 'Members in the databank' : 'Member of'}>
-          <PeopleChips tab="artists" people={linked} />
+      {/* The prototype put both under one heading, which mislabels a group that is also in a group. */}
+      {d.members.length > 0 && (
+        <Section title="Members in the databank">
+          <PeopleChips tab="artists" people={d.members} />
+        </Section>
+      )}
+      {d.groups.length > 0 && (
+        <Section title="Member of">
+          <PeopleChips tab="artists" people={d.groups} />
         </Section>
       )}
       {d.songs.length > 0 && (
         <Section title={`Records (${d.songs.length})`}>
           <ul className="grid gap-2 xl:grid-cols-2">
             {d.songs.map((s) => (
-              <SongCard key={s.id} s={s} names={names} hideArtist={s.artists.length === 1} />
+              <SongCard
+                key={s.id}
+                s={s}
+                names={names}
+                // Their own record needs no credit; one they only played a part on does.
+                hideArtist={s.artists.length === 1 && s.artists[0] === a.id}
+              />
             ))}
           </ul>
         </Section>

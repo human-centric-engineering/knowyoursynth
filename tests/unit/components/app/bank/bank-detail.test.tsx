@@ -87,6 +87,39 @@ describe('ArtistPage', () => {
   });
 });
 
+describe('ArtistPage credits and groups', () => {
+  it('credits a record they only played a part on to whoever made it, and not their own', () => {
+    const d = must(detailFrom(bank, 'artists', 'christopher-franke'));
+    const record = d.songs.find((s) => s.id === 'tangerine-dream-phaedra');
+    expect(record?.artists).toEqual(['tangerine-dream']);
+    render(<ArtistPage d={d} names={names} />);
+    const card = screen.getByRole('link', { name: record?.title ?? '' }).closest('li');
+    expect(within(card as HTMLElement).getByRole('link', { name: 'Tangerine Dream' })).toBeTruthy();
+  });
+
+  it('gives members and groups a heading each', () => {
+    const d = must(detailFrom(bank, 'artists', 'george-michael'));
+    const both = {
+      ...d,
+      members: [{ id: 'kraftwerk', name: 'Kraftwerk' }],
+    };
+    render(<ArtistPage d={both} names={names} />);
+    const members = screen.getByRole('heading', { name: 'Members in the databank' })
+      .parentElement as HTMLElement;
+    const groups = screen.getByRole('heading', { name: 'Member of' }).parentElement as HTMLElement;
+    expect(
+      within(members)
+        .getAllByRole('link')
+        .map((l) => l.textContent)
+    ).toEqual(['Kraftwerk']);
+    expect(
+      within(groups)
+        .getAllByRole('link')
+        .map((l) => l.getAttribute('href'))
+    ).toEqual(['/bank/artists/wham']);
+  });
+});
+
 describe('InstrumentPage', () => {
   const d = must(detailFrom(bank, 'instruments', 'moog-minimoog'));
 

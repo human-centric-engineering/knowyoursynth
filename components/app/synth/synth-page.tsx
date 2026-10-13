@@ -220,6 +220,10 @@ function Synth({
   // arrival effect above may already have put the restored view in the URL.
   useEffect(() => {
     if (!soundParam) return;
+    // The arrival effect is sending the visitor elsewhere: leave this synth's stored panel as it was.
+    const hash = window.location.hash;
+    const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
+    if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     const p = sounds.find((x) => x.id === soundParam);
     if (p) patch(() => freshSession(synthDef, p));
     const url = new URL(window.location.href);
