@@ -110,8 +110,17 @@ export function initAppSubjectSources(): void {
   });
 }
 
-/** The catalogue (`f-model-d`): product content every user sees alike, with no column about a person. */
-export const CATALOGUE_MODELS = ['Synth', 'SynthSound', 'SynthLineage', 'SynthNote'] as const;
+/**
+ * The catalogue (`f-model-d`): product content every user sees alike, with no column about a person. With it, the
+ * seed's record of what it planned for each row (`f-catalogue-admin`), which is the same content again.
+ */
+export const CATALOGUE_MODELS = [
+  'Synth',
+  'SynthSound',
+  'SynthLineage',
+  'SynthNote',
+  'CatalogueSeedRecord',
+] as const;
 const CATALOGUE_REASON =
   'Catalogue content written by the seed and by admins, the same for every user; it holds no column about a person.';
 

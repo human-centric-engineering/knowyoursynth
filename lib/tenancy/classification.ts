@@ -77,6 +77,7 @@ export const GLOBAL_CONFIG_MODELS = [
   'SynthSound',
   'SynthLineage',
   'SynthNote',
+  'CatalogueSeedRecord',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];
