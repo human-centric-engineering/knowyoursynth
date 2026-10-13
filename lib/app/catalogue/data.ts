@@ -10,6 +10,7 @@
 import { z } from 'zod';
 import { slugify } from '@/lib/utils';
 import type { SynthDef } from '@/lib/app/synths/contract';
+import { PresetSchema } from '@/lib/app/synths/validate';
 
 const text = z.string().trim().min(1);
 
@@ -66,6 +67,39 @@ export type SoundsFile = z.infer<typeof SoundsFileSchema>;
 export type LineageFile = z.infer<typeof LineageFileSchema>;
 export type NotesFile = z.infer<typeof NotesFileSchema>;
 export type SharedNotesFile = z.infer<typeof SharedNotesFileSchema>;
+
+/**
+ * One synth's content as a single object: its sounds, lineage and notes, the parts an admin edits (D2). It is the
+ * three per-synth files with their `synth` field said once, so `toSeedFiles` turns it back into what `planSynthContent`
+ * plans. A sound is shaped by `PresetSchema` here, not left as an object as in `SoundsFileSchema`, so the JSON Schema
+ * made from this (the data page's template) describes every field of one.
+ */
+export const SynthContentSchema = z
+  .object({
+    synth: text,
+    /** The definition version the sounds were made on. */
+    version: z.number().int().min(1),
+    sounds: z.array(PresetSchema),
+    lineage: LineageFileSchema.omit({ synth: true }).optional(),
+    notes: NotesFileSchema.omit({ synth: true }).optional(),
+  })
+  .strict();
+
+export type SynthContent = z.infer<typeof SynthContentSchema>;
+
+/** The per-synth seed files a content object stands for. */
+export function toSeedFiles(content: SynthContent): {
+  sounds: SoundsFile;
+  lineage?: LineageFile;
+  notes?: NotesFile;
+} {
+  const { synth, version, sounds, lineage, notes } = content;
+  return {
+    sounds: { synth, version, sounds },
+    ...(lineage ? { lineage: { synth, ...lineage } } : {}),
+    ...(notes ? { notes: { synth, ...notes } } : {}),
+  };
+}
 
 /** Everything the seed writes, as read from the data folder. */
 export interface CatalogueSeedData {
