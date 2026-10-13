@@ -78,6 +78,19 @@ export const GLOBAL_CONFIG_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
+  // Know Your Synth: the databank (same divergence row).
+  'BankMaker',
+  'BankInstrument',
+  'BankInstrumentPerson',
+  'BankInstrumentSynth',
+  'BankArtist',
+  'BankArtistMember',
+  'BankArtistInstrument',
+  'BankSong',
+  'BankSongArtist',
+  'BankSongPart',
+  'BankPartInstrument',
+  'BankPartSynth',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];
