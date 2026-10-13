@@ -96,9 +96,21 @@ export function instrumentsOf(bank: Bank, artistId: string): BankInstrument[] {
   return [...ids].map((id) => instruments.get(id)).filter((i): i is BankInstrument => Boolean(i));
 }
 
-/** Artists linked to an instrument, by record or by their own list. */
-export const artistsOn = (bank: Bank, instrumentId: string): BankArtist[] =>
-  bank.artists.filter((a) => instrumentsOf(bank, a.id).some((i) => i.id === instrumentId));
+/**
+ * Artists linked to an instrument, by record or by their own list: the artists {@link instrumentsOf} links to it, found
+ * in one pass over the songs rather than once per artist. A record links every artist on it, credited or playing, to
+ * every instrument on it.
+ */
+export function artistsOn(bank: Bank, instrumentId: string): BankArtist[] {
+  if (!bank.instruments.some((i) => i.id === instrumentId)) return [];
+  const linked = new Set<string>();
+  for (const s of bank.songs) {
+    if (!s.parts.some((p) => p.instruments.includes(instrumentId))) continue;
+    for (const a of s.artists) linked.add(a);
+    for (const p of s.parts) if (p.player) linked.add(p.player);
+  }
+  return bank.artists.filter((a) => linked.has(a.id) || a.instruments?.includes(instrumentId));
+}
 
 /** Instruments a maker had a hand in. */
 export const instrumentsBy = (bank: Pick<Bank, 'instruments'>, makerId: string): BankInstrument[] =>

@@ -10,7 +10,9 @@
  * list (b4) or the record count makes that slow, move the join that is slow into its own query, as here.
  */
 import type { Prisma } from '@prisma/client';
+import { ZodError } from 'zod';
 import { prisma } from '@/lib/db/client';
+import { logger } from '@/lib/logging';
 import type { HeardEntry } from '@/lib/app/synths/contract';
 import {
   BankArtistSchema,
@@ -245,6 +247,29 @@ function makerFromRow(row: Prisma.BankMakerGetPayload<object>): BankMaker {
   return { ...columns, ...(born ? { born } : {}), ...(died ? { died } : {}) };
 }
 
+/**
+ * Rows in the files' shapes, leaving out any that no longer fit them. The seed's checks never see an admin's edit, so
+ * one row an edit left malformed is logged and skipped rather than failing every synth page and databank request.
+ */
+function readable<R extends { id: string }, T>(
+  rows: R[],
+  fromRow: (row: R) => T,
+  model: string
+): T[] {
+  return rows.flatMap((row) => {
+    try {
+      return [fromRow(row)];
+    } catch (error) {
+      if (!(error instanceof ZodError)) throw error;
+      logger.error('bank: stored row does not fit its shape, left out', error, {
+        model,
+        id: row.id,
+      });
+      return [];
+    }
+  });
+}
+
 /** One synth's "Heard on" list, read from the songs it lists. */
 export async function getHeardOn(synthId: string): Promise<HeardEntry[]> {
   const covering = await prisma.bankInstrument.findMany({
@@ -276,9 +301,9 @@ export async function getHeardOn(synthId: string): Promise<HeardEntry[]> {
   );
   return heardFor(
     {
-      instruments: covering.map(instrumentFromRow),
+      instruments: readable(covering, instrumentFromRow, 'BankInstrument'),
       artists: [...artists].map(([id, name]) => ({ id, name })),
-      songs: songs.map(songFromRow),
+      songs: readable(songs, songFromRow, 'BankSong'),
     },
     synthId
   );
@@ -294,9 +319,9 @@ export async function loadBank(): Promise<Bank> {
   ]);
   return {
     makers: makers.map(makerFromRow),
-    instruments: instruments.map(instrumentFromRow),
-    artists: artists.map(artistFromRow),
-    songs: songs.map(songFromRow),
+    instruments: readable(instruments, instrumentFromRow, 'BankInstrument'),
+    artists: readable(artists, artistFromRow, 'BankArtist'),
+    songs: readable(songs, songFromRow, 'BankSong'),
   };
 }
 

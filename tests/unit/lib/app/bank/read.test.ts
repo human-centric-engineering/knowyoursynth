@@ -21,7 +21,12 @@ vi.mock('@/lib/db/client', () => ({
   },
 }));
 
+vi.mock('@/lib/logging', () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
 const { prisma } = await import('@/lib/db/client');
+const { logger } = await import('@/lib/logging');
 const golden = JSON.parse(
   readFileSync(resolve(process.cwd(), 'tests/fixtures/bank/heard-on.json'), 'utf8')
 ) as Record<string, HeardEntry[]>;
@@ -90,6 +95,25 @@ describe('getHeardOn', () => {
         },
       },
     });
+  });
+
+  it('leaves out a stored song that no longer fits its shape, and logs it', async () => {
+    const songs = await prisma.bankSong.findMany();
+    const first = golden.cat[0];
+    const broken = songs.find((s) => s.id === first.song);
+    if (!broken) throw new Error('fixture: the first cat record is a stored song');
+    vi.mocked(prisma.bankSong.findMany).mockResolvedValue(
+      songs.map((s) => (s === broken ? { ...broken, artists: [] } : s))
+    );
+
+    const heard = await getHeardOn('cat');
+
+    expect(heard.map((h) => h.song)).toEqual(golden.cat.slice(1).map((h) => h.song));
+    expect(logger.error).toHaveBeenCalledWith(
+      'bank: stored row does not fit its shape, left out',
+      expect.anything(),
+      { model: 'BankSong', id: broken.id }
+    );
   });
 
   it('is empty for a synth the databank does not name', async () => {

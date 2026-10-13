@@ -10,11 +10,13 @@ import { describe, it, expect } from 'vitest';
 import type { HeardEntry } from '@/lib/app/synths/contract';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import {
+  artistsOn,
   creditOf,
   decadeOf,
   erasOf,
   groupsOf,
   heardFor,
+  instrumentsOf,
   membersOf,
   yearOf,
 } from '@/lib/app/bank/joins';
@@ -112,5 +114,23 @@ describe('the helpers', () => {
     expect(membersOf(b, 'band')).toEqual(['x', 'y']);
     expect(groupsOf(b, 'y')).toEqual(['band']);
     expect(groupsOf(b, 'x')).toEqual(['band']);
+  });
+});
+
+describe('artistsOn', () => {
+  const bank = loadBankData();
+
+  it.each(bank.instruments.map((i) => i.id))(
+    '%s: links the artists instrumentsOf links to it, in the same order',
+    (id) => {
+      const expected = bank.artists.filter((a) =>
+        instrumentsOf(bank, a.id).some((i) => i.id === id)
+      );
+      expect(artistsOn(bank, id).map((a) => a.id)).toEqual(expected.map((a) => a.id));
+    }
+  );
+
+  it('links no one to an instrument the databank does not have', () => {
+    expect(artistsOn(bank, 'no-such-instrument')).toEqual([]);
   });
 });

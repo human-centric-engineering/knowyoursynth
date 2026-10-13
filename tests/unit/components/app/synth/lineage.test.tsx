@@ -158,6 +158,7 @@ describe('Lineage', () => {
 
   it('lists the players and the caveat under Heard on when the lineage has them', () => {
     setup({ heard: [], users: ['Player One', 'Player Two'], note: 'An incomplete list.' });
+    expect(tab(/Heard on/).textContent).toContain('2');
     fireEvent.click(tab(/Heard on/));
     const body = screen.getByRole('tabpanel');
     expect(within(body).getByText('Player One · Player Two')).toBeTruthy();

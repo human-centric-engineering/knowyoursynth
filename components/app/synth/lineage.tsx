@@ -41,7 +41,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
     ['timeline', 'How it got here', l.timeline.length],
     ['relatives', 'Close relatives', l.relatives.length],
     ...(heard.length || users.length
-      ? [['heard', 'Heard on', heard.length] as [TabId, string, number]]
+      ? [['heard', 'Heard on', heard.length || users.length] as [TabId, string, number]]
       : []),
   ];
   const soundName = (id: string | undefined) => sounds.find((p) => p.id === id)?.name;
@@ -158,7 +158,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                     const sound = soundName(soundId);
                     return (
                       <li
-                        key={`${h.who}${h.what}`}
+                        key={h.song}
                         className="flex flex-col rounded-xl border border-(--kys-line) bg-(--kys-ground) p-3.5"
                       >
                         <div className="flex items-baseline justify-between gap-3">

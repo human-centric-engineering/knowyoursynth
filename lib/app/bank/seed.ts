@@ -348,7 +348,12 @@ export function planBank(bank: Bank, synths: SynthSounds): BankRows {
 /** Group a join table's rows by their owner, for comparing with what the data plans. */
 const groupBy = <T>(rows: T[], ownerOf: (row: T) => string): Map<string, T[]> => {
   const out = new Map<string, T[]>();
-  for (const r of rows) out.set(ownerOf(r), [...(out.get(ownerOf(r)) ?? []), r]);
+  for (const r of rows) {
+    const owner = ownerOf(r);
+    const list = out.get(owner);
+    if (list) list.push(r);
+    else out.set(owner, [r]);
+  }
   return out;
 };
 
