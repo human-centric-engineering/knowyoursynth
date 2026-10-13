@@ -3,7 +3,8 @@
 The synths the app lists and everything said about them: each synth's library of sounds, its
 lineage, its "Unusual on…" notes and its "What is not modelled" list. It is content, not
 instrument (D1). The definitions in `lib/app/synths/defs/` are code; the catalogue is four
-tables, and the live app reads it only from them (D13).
+tables, and the live app reads it only from them (D13). A fifth table, `CatalogueSeedRecord`,
+belongs to the seed alone (below).
 
 ## Where it lives
 
@@ -13,6 +14,10 @@ tables, and the live app reads it only from them (D13).
 | `SynthSound`   | A library sound, built step by step (`Preset`), and the definition version it was made on.                                                                                      |
 | `SynthLineage` | A synth's history section, without "Heard on" (that comes from the databank, `f-databank`).                                                                                     |
 | `SynthNote`    | `UNUSUAL` notes on a control, jack or area, and the `LIMIT_INTRO` and `LIMIT` entries of a synth's "What is not modelled" list. A `LIMIT` with no synth is true of every panel. |
+
+`CatalogueSeedRecord` holds, per catalogue row, what the seed last planned for it: the content
+columns it would write, placement left out, keyed by table and the row's natural key. Nothing but
+the seed writes it, and nothing but the Data page reads it.
 
 The schema is in `prisma/schema/app.prisma`. The tables are product content every org shares, so
 they are on `GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964), and they hold nothing about a
@@ -44,6 +49,10 @@ The seed's rules, each tested in `tests/unit/lib/app/catalogue/seed.test.ts`:
   and a synth or sound added to a list that already has rows goes at its end, not at its place in
   the file (which might be one an admin's order has taken).
 - **It never deletes.** Retiring a sound is an admin's act.
+- **It records what it planned.** After writing, it brings `CatalogueSeedRecord` in line with
+  this run's plan: a record per planned row, edited rows included, written only when its values
+  change, and the records of rows the data no longer has removed. The record is the seed's own, so
+  removing from it never touches content. Writing it never writes an edited catalogue row.
 
 The seed re-runs when its hash changes, and the hash takes in the data files, the loader, the
 seed logic, the definitions and the validator. **After pulling a change to any of them, run
@@ -51,6 +60,11 @@ seed logic, the definitions and the validator. **After pulling a change to any o
 
 `npm run check:synths <id>` plays a ported synth's sounds from the same seed data, so the
 baseline check covers exactly what the seed writes.
+
+`planCatalogue` plans the whole data set; its per-synth half, `planSynthContent(def, files)`,
+plans one synth's sounds, lineage and notes on their own and returns its problems rather than
+throwing. Anything that takes one synth's content (the upload, `f-catalogue-admin` c4) goes
+through it, so it is checked exactly as the seed checks it.
 
 ## How admins edit it
 
@@ -92,6 +106,40 @@ a tab each for details, sounds, lineage and notes (`?tab=` opens one); `…/:id/
 server checks either way. A refused save puts each of the server's `details.errors` on the field
 its path names, and lists whatever no field claims (`components/app/admin/synths/problems.tsx`).
 
+## Which content is still the seed's
+
+`/admin/synths/data` (Synths → Data) explains how content reaches the app, compares every row with
+the seed, and offers a template. It is read-only, over three admin `GET` routes:
+
+| Route                                        | Does                                                                       |
+| -------------------------------------------- | -------------------------------------------------------------------------- |
+| `GET /api/v1/admin/synths/data`              | Every row, grouped by synth, marked against what the seed last planned.    |
+| `GET /api/v1/admin/synths/data/schema`       | The JSON Schema of one synth's content object (`SynthContentSchema`).      |
+| `GET /api/v1/admin/synths/data/:id/template` | `{ content, problems }`: a synth's content from the tables, in that shape. |
+
+**The comparison** (`lib/app/catalogue/reconcile.ts`) reads the four tables and
+`CatalogueSeedRecord`, never the seed files, and compares with the seed's own `sameValue`, so a
+row it calls matching is one the seed would leave alone. A row is `matches`, `edited` (an admin
+changed it and the seed now has something else; the page shows each column, the seed's value
+beside the stored one), `edited-matches`, `differs` (unedited but not what the seed planned: a
+seed run is pending or failed part way), `not-in-seed` (an admin added it, or the data dropped
+it) or `not-in-tables` (planned, not yet written). Placement never counts.
+
+The comparison is only as current as the seed's last run on that database. It cannot tell that a
+deploy shipped new data without running the seed: that belongs to the deploy, not this page
+(owner ruling on `f-catalogue-admin`, 2026-10-13).
+
+**The template** (`lib/app/catalogue/template.ts`) is `SynthContentSchema` in
+`lib/app/catalogue/data.ts`: the three per-synth files with `synth` said once, and each sound
+shaped by `PresetSchema`. `toSeedFiles` turns one back into the files `planSynthContent` takes.
+The schema route serves it as JSON Schema; the template route serves a synth's current content in
+it (edits included), parsed through it, with a problem for anything that does not fit, such as a
+sound stored on another definition version.
+
+Tested in `tests/unit/app/api/v1/admin/synths/catalogue-data.test.ts`, which reaches each status
+through the real seed and admin routes and round-trips the template through the seed's schemas
+and planning.
+
 ## How it is read
 
 - `GET /api/v1/synths`: the listed synths, in order, each with its definition's version and a
@@ -117,7 +165,13 @@ such an error stands.
 ## Don't
 
 - **Don't read the seed data from app code.** Only the seed folder and `scripts/check-synths.ts`
-  may. `tests/unit/lib/app/catalogue/seed-data-boundary.test.ts` fails on any other reader.
+  may. `tests/unit/lib/app/catalogue/seed-data-boundary.test.ts` fails on any other reader. To
+  know what the seed has, read `CatalogueSeedRecord`, as the Data page does.
+- **Don't write `CatalogueSeedRecord` from anywhere but the seed.** It is the seed's account of
+  what it planned; anything else writing it makes the Data page wrong in a way nothing flags.
+- **Don't run `prisma migrate dev` without `--create-only`** for a catalogue table. It applies
+  Prisma's drops of the unmodelled search and vector indexes before it fails; see
+  `.context/database/prisma-unmodelled-objects.md`.
 - **Don't fix content by editing the data files once a synth is seeded.** The seed never
   overwrites an edited row, but it will overwrite an unedited one, and the edit belongs in the
   table, where the next admin will see it.
