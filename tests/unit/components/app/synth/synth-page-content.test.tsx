@@ -37,7 +37,13 @@ vi.mock('@/components/app/synth/engine', () => ({
   listen: () => () => undefined,
 }));
 vi.mock('@/lib/db/client', () => ({
-  prisma: { synth: { findFirst: vi.fn() }, synthNote: { findMany: vi.fn() } },
+  prisma: {
+    synth: { findFirst: vi.fn() },
+    synthNote: { findMany: vi.fn() },
+    // "Heard on" (the databank): none, unless a test says otherwise.
+    bankInstrument: { findMany: vi.fn(async () => []) },
+    bankSong: { findMany: vi.fn(async () => []) },
+  },
 }));
 
 const found = getSynthDef('model-d');

@@ -42,7 +42,13 @@ vi.mock('@/components/app/synth/engine', () => ({
   listen: () => () => undefined,
 }));
 vi.mock('@/lib/db/client', () => ({
-  prisma: { synth: { findFirst: vi.fn() }, synthNote: { findMany: vi.fn() } },
+  prisma: {
+    synth: { findFirst: vi.fn() },
+    synthNote: { findMany: vi.fn() },
+    // "Heard on" (the databank): none, unless a test says otherwise.
+    bankInstrument: { findMany: vi.fn(async () => []) },
+    bankSong: { findMany: vi.fn(async () => []) },
+  },
 }));
 // The real probe renders every job through the voice: hundreds of renders per map. Its measurement is replaced; its
 // renderer (which `predict` uses) and its worker URL are the real ones.

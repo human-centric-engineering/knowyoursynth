@@ -14,7 +14,13 @@ import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 
 vi.mock('@/lib/db/client', () => ({
-  prisma: { synth: { findFirst: vi.fn() }, synthNote: { findMany: vi.fn() } },
+  prisma: {
+    synth: { findFirst: vi.fn() },
+    synthNote: { findMany: vi.fn() },
+    // "Heard on" (the databank): none, unless a test says otherwise.
+    bankInstrument: { findMany: vi.fn(async () => []) },
+    bankSong: { findMany: vi.fn(async () => []) },
+  },
 }));
 
 const SYNTH = { maker: 'Behringer', name: 'Model D' };

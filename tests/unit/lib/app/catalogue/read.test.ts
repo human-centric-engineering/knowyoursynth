@@ -9,11 +9,14 @@ import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
+import { bankDb } from '@/tests/helpers/bank-db';
 
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findMany: vi.fn(), findFirst: vi.fn() },
     synthNote: { findMany: vi.fn() },
+    bankInstrument: { findMany: vi.fn() },
+    bankSong: { findMany: vi.fn() },
   },
 }));
 vi.mock('@/lib/logging', () => ({
@@ -21,6 +24,8 @@ vi.mock('@/lib/logging', () => ({
 }));
 
 const { prisma } = await import('@/lib/db/client');
+/** The databank's rows, for each synth's "Heard on". */
+const bank = bankDb();
 // Model D's rows, as the seed would write them (the other synths' rows are not part of these cases).
 const { stored: modelD, noteRows: notes } = synthRows('model-d');
 const { sounds: storedSounds, lineage: storedLineage, ...synthRow } = modelD;
@@ -38,6 +43,10 @@ const firstModelDSound = () => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.mocked(prisma.bankInstrument.findMany).mockImplementation(
+    bank.bankInstrument.findMany as never
+  );
+  vi.mocked(prisma.bankSong.findMany).mockImplementation(bank.bankSong.findMany as never);
   vi.mocked(prisma.synthNote.findMany).mockResolvedValue(notes as never);
 });
 

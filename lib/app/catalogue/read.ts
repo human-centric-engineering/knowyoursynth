@@ -16,6 +16,7 @@ import type { Lineage, Preset } from '@/lib/app/synths/contract';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
+import { getHeardOn } from '@/lib/app/bank/read';
 import {
   LimitSchema,
   LineageEntrySchema,
@@ -112,7 +113,7 @@ const LineageColumnsSchema = z.object({
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows] = await Promise.all([
+  const [row, noteRows, heard] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -126,6 +127,8 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       orderBy: [{ order: 'asc' }, { key: 'asc' }],
       select: { kind: true, synthId: true, target: true, title: true, text: true },
     }),
+    // "Heard on" is the databank's, joined into the lineage as the contract shapes it (`f-databank`).
+    getHeardOn(id),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, ...synthRow } = row;
@@ -175,6 +178,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         title: lineageRow.title,
         intro: lineageRow.intro,
         ...parsed.data,
+        heard,
         ...(lineageRow.users.length ? { users: lineageRow.users } : {}),
         ...(lineageRow.note ? { note: lineageRow.note } : {}),
       };
