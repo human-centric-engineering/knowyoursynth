@@ -4,7 +4,7 @@
  * Admin — synth suggestions (`f-databank` t-37): the queue for the status `?status=` names, pending by default, and a
  * message where the API could not be read.
  *
- * @see app/admin/synths/bank/suggestions/page.tsx
+ * @see app/admin/synths/suggestions/page.tsx
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -34,7 +34,7 @@ vi.mock('next/link', () => ({
 const mockLogger = vi.hoisted(() => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() }));
 vi.mock('@/lib/logging', () => ({ logger: mockLogger }));
 
-import SuggestionsAdminPage from '@/app/admin/synths/bank/suggestions/page';
+import SuggestionsAdminPage from '@/app/admin/synths/suggestions/page';
 
 const ok = (data: unknown) =>
   new Response(JSON.stringify({ success: true, data }), { status: 200 });

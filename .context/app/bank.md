@@ -154,7 +154,7 @@ each tested in `tests/unit/app/api/v1/admin/bank/route.test.ts`:
 
 `f-databank` t-37. A signed-in user whose synth is missing says so from the Instruments tab
 (`components/app/bank/suggest-form.tsx`); a visitor without a session is offered sign-in back to
-it. Admins decide each one at `/admin/synths/bank/suggestions`, with a tab per status.
+it. Admins decide each one at `/admin/synths/suggestions`, with a tab per status.
 
 - `POST /api/v1/bank/suggestions`: `{ name, maker, link?, note? }`, stored as `PENDING` under the
   caller's id. A link must be http or https. Capped at ten an hour per user

@@ -45,7 +45,7 @@ export function initAppNav(): void {
         description: 'Create, edit and remove the artists, innovators, records and instruments',
       },
       {
-        href: '/admin/synths/bank/suggestions',
+        href: '/admin/synths/suggestions',
         label: 'Suggestions',
         icon: Inbox,
         description: 'Synths users say are missing: accept, merge or decline each',

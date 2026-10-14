@@ -223,7 +223,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
             { href: '/admin/synths', label: 'Designs' },
             { href: '/admin/synths/catalogue', label: 'Catalogue' },
             { href: '/admin/synths/bank', label: 'Databank' },
-            { href: '/admin/synths/bank/suggestions', label: 'Suggestions' },
+            { href: '/admin/synths/suggestions', label: 'Suggestions' },
             { href: '/admin/synths/data', label: 'Data' },
           ],
         },
