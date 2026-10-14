@@ -131,6 +131,7 @@ export const BANK_MODELS = [
   'BankSongPart',
   'BankPartInstrument',
   'BankPartSynth',
+  'BankRemoval',
 ] as const;
 const BANK_REASON =
   'Databank reference content written by the seed and by admins, the same for every user; no row is about a user of this app.';

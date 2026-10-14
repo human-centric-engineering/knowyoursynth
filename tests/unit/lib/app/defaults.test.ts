@@ -218,6 +218,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
           items: [
             { href: '/admin/synths', label: 'Designs' },
             { href: '/admin/synths/catalogue', label: 'Catalogue' },
+            { href: '/admin/synths/bank', label: 'Databank' },
             { href: '/admin/synths/data', label: 'Data' },
           ],
         },
@@ -297,6 +298,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'BankSongPart',
         'BankPartInstrument',
         'BankPartSynth',
+        'BankRemoval',
       ]);
     },
   },

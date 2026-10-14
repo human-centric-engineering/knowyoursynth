@@ -431,3 +431,16 @@ model BankPartSynth {
   @@index([synthId])
   @@map("bank_part_synth")
 }
+
+/// A databank row an admin removed (`f-databank` t-36). The seed re-creates a
+/// row it does not find, so it reads these and leaves the row out. Saving a row
+/// with the same kind and id again deletes the record.
+model BankRemoval {
+  /// The API's kind: makers | instruments | artists | songs
+  kind      String
+  id        String
+  removedAt DateTime @default(now())
+
+  @@id([kind, id])
+  @@map("bank_removal")
+}

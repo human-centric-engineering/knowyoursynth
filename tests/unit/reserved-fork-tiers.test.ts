@@ -238,6 +238,7 @@ describe('reserved fork tiers', () => {
       'model BankSongPart {',
       'model BankPartInstrument {',
       'model BankPartSynth {',
+      'model BankRemoval {',
     ]);
   });
 
