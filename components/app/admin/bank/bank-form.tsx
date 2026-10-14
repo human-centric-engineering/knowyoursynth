@@ -652,7 +652,14 @@ export function BankForm({ kind, detail }: BankFormProps) {
                     >
                       <div className="grid gap-1">
                         <Label htmlFor={`${prefix}-id`} className="text-xs">
-                          Synth
+                          Synth{' '}
+                          <FieldHelp title="Synth" ariaLabel="About the synth">
+                            <p>
+                              The id of one of the app&apos;s synths: <code>model-d</code>. Tick
+                              &quot;Listed under it&quot; to show the work in that synth&apos;s
+                              &quot;Heard on&quot; list whatever the part&apos;s instruments.
+                            </p>
+                          </FieldHelp>
                         </Label>
                         <Input
                           id={`${prefix}-id`}

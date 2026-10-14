@@ -123,6 +123,12 @@ describe('BankRowPage', () => {
     await expect(BankRowPage(props('makers', 'nope'))).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
+  it('is a 404 for an id no row can have, without asking the API', async () => {
+    await expect(BankRowPage(props('artists', 'Aphex_Twin'))).rejects.toThrow('NEXT_NOT_FOUND');
+    expect((await generateMetadata(props('artists', 'Aphex_Twin'))).title).toBe('Artists');
+    expect(mockServerFetch).not.toHaveBeenCalled();
+  });
+
   it('says so when the row could not be loaded', async () => {
     mockServerFetch.mockResolvedValue(new Response('{}', { status: 500 }));
     render(await BankRowPage(props('makers', 'robert-moog')));

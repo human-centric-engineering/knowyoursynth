@@ -176,7 +176,11 @@ export function bankStore(options: { empty?: boolean } = {}): BankStore {
     }),
     update: vi.fn(async ({ where, data }: { where: Where; data: Row }) => {
       const row = tables[name].find((r) => matches(r, where));
-      if (!row) throw new Error(`${name}: no row ${JSON.stringify(where)}`);
+      // As Prisma reports an update of a row that is not there.
+      if (!row)
+        throw Object.assign(new Error(`${name}: no row ${JSON.stringify(where)}`), {
+          code: 'P2025',
+        });
       Object.assign(row, data);
       writes.push(`${name}.update`);
     }),

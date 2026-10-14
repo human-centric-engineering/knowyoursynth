@@ -186,13 +186,16 @@ const withRow = (bank: Bank, kind: BankKind, id: string, row: BankRow | null): B
 const planOne = (kind: BankKind, row: BankRow) =>
   rowsOf({ makers: [], instruments: [], artists: [], songs: [], [kind]: [row] });
 
-/** A foreign key failing at write time: something the row points at went between the check and the write. */
+/**
+ * A key failing at write time: something the row points at went between the check and the write (P2003), the id was
+ * taken (P2002), or the row being updated was removed (P2025).
+ */
 function conflictOnRace(err: unknown): never {
   if (
     typeof err === 'object' &&
     err !== null &&
     'code' in err &&
-    (err.code === 'P2003' || err.code === 'P2002')
+    (err.code === 'P2003' || err.code === 'P2002' || err.code === 'P2025')
   )
     throw new ConflictError(
       'The databank changed while this was being saved. Reload the page and try again.'
@@ -200,11 +203,62 @@ function conflictOnRace(err: unknown): never {
   throw err;
 }
 
+/**
+ * An id the row lists twice, where its join can hold it once (each join's key is its owner and the id). Refused with
+ * the reference problems, rather than reaching the write as a key clash.
+ */
+function repeated(plan: ReturnType<typeof rowsOf>): string[] {
+  const twice = (owner: string, what: string, ids: string[]) =>
+    ids
+      .filter((x, i) => ids.indexOf(x) !== i)
+      .filter((x, i, all) => all.indexOf(x) === i)
+      .map((x) => `${owner}: ${what} ${x} is listed twice`);
+  return [
+    ...plan.instrumentJoins.flatMap(({ ownerId, joins }) => [
+      ...twice(
+        `instrument ${ownerId}`,
+        'maker',
+        joins.people.map((p) => p.makerId)
+      ),
+      ...twice(
+        `instrument ${ownerId}`,
+        'app synth',
+        joins.synths.map((x) => x.synthId)
+      ),
+    ]),
+    ...plan.artistJoins.flatMap(({ ownerId, joins }) => [
+      ...twice(
+        `artist ${ownerId}`,
+        'instrument',
+        joins.instruments.map((i) => i.instrumentId)
+      ),
+      ...twice(
+        `artist ${ownerId}`,
+        'member',
+        joins.members.map((m) => m.memberId)
+      ),
+    ]),
+    ...plan.songJoins.flatMap(({ ownerId, joins }) => [
+      ...twice(
+        `song ${ownerId}`,
+        'artist',
+        joins.artists.map((a) => a.artistId)
+      ),
+      ...joins.parts.flatMap((p) =>
+        twice(
+          `song ${ownerId} part ${p.order + 1}`,
+          'instrument',
+          joins.partInstruments.filter((i) => i.partId === p.id).map((i) => i.instrumentId)
+        )
+      ),
+    ]),
+  ];
+}
+
 /** One row for the edit form, or `null`. */
 export async function getAdminBankRow(kind: BankKind, id: string): Promise<AdminBankDetail | null> {
-  const bank = await loadBank();
+  const [bank, editedAt] = await Promise.all([loadBank(), storedEditedAt(prisma, kind, id)]);
   const row = findIn(bank, kind, id);
-  const editedAt = await storedEditedAt(prisma, kind, id);
   if (!row || editedAt === undefined) return null;
   const artist = kind === 'artists' ? bank.artists.find((a) => a.id === id) : undefined;
   if (artist) {
@@ -251,7 +305,10 @@ export async function saveBankRow(
   // Validated as the kind's shape by the route; the id is the URL's.
   const row: BankRow = { ...input, id };
   const stored = findIn(bank, kind, id) ?? null;
-  const problems = added(bank, withRow(bank, kind, id, row), synths);
+  const problems = [
+    ...repeated(planOne(kind, row)),
+    ...added(bank, withRow(bank, kind, id, row), synths),
+  ];
   if (problems.length)
     refuse(
       `The ${kind.slice(0, -1)} would break ${problems.length === 1 ? 'a reference' : `${problems.length} references`} in the databank`,
@@ -265,7 +322,7 @@ export async function saveBankRow(
   const editedAt = new Date();
   try {
     await prisma.$transaction(async (tx) => {
-      await writePlanned(tx, kind, id, plan, editedAt);
+      await writePlanned(tx, kind, id, plan, editedAt, mode);
       await tx.bankRemoval.deleteMany({ where: { kind, id } });
     });
   } catch (err) {
@@ -280,19 +337,28 @@ async function writePlanned(
   kind: BankKind,
   id: string,
   plan: ReturnType<typeof rowsOf>,
-  editedAt: Date
+  editedAt: Date,
+  mode: 'create' | 'update'
 ): Promise<void> {
-  const upsert = <R extends { id: string }>(rows: R[]) => {
+  // An update never creates: a row removed since the existence check fails (P2025) rather than coming back.
+  const fields = <R extends { id: string }>(rows: R[]) => {
     const [{ id: _id, ...data }] = rows;
-    return { where: { id }, create: { ...rows[0], editedAt }, update: { ...data, editedAt } };
+    return { row: { ...rows[0], editedAt }, data: { ...data, editedAt } };
   };
   switch (kind) {
-    case 'makers':
-      await tx.bankMaker.upsert(upsert(plan.makers));
+    case 'makers': {
+      const { row, data } = fields(plan.makers);
+      await (mode === 'create'
+        ? tx.bankMaker.create({ data: row })
+        : tx.bankMaker.update({ where: { id }, data }));
       return;
+    }
     case 'instruments': {
       const { people, synths } = plan.instrumentJoins[0].joins;
-      await tx.bankInstrument.upsert(upsert(plan.instruments));
+      const { row, data } = fields(plan.instruments);
+      await (mode === 'create'
+        ? tx.bankInstrument.create({ data: row })
+        : tx.bankInstrument.update({ where: { id }, data }));
       await tx.bankInstrumentPerson.deleteMany({ where: { instrumentId: id } });
       await tx.bankInstrumentSynth.deleteMany({ where: { instrumentId: id } });
       await tx.bankInstrumentPerson.createMany({ data: people });
@@ -301,7 +367,10 @@ async function writePlanned(
     }
     case 'artists': {
       const { instruments, members } = plan.artistJoins[0].joins;
-      await tx.bankArtist.upsert(upsert(plan.artists));
+      const { row, data } = fields(plan.artists);
+      await (mode === 'create'
+        ? tx.bankArtist.create({ data: row })
+        : tx.bankArtist.update({ where: { id }, data }));
       await tx.bankArtistInstrument.deleteMany({ where: { artistId: id } });
       await tx.bankArtistMember.deleteMany({ where: { groupId: id } });
       await tx.bankArtistInstrument.createMany({ data: instruments });
@@ -310,7 +379,10 @@ async function writePlanned(
     }
     case 'songs': {
       const { artists, parts, partInstruments, partSynths } = plan.songJoins[0].joins;
-      await tx.bankSong.upsert(upsert(plan.songs));
+      const { row, data } = fields(plan.songs);
+      await (mode === 'create'
+        ? tx.bankSong.create({ data: row })
+        : tx.bankSong.update({ where: { id }, data }));
       // A part's instruments and synths go with it (cascade).
       await tx.bankSongPart.deleteMany({ where: { songId: id } });
       await tx.bankSongArtist.deleteMany({ where: { songId: id } });

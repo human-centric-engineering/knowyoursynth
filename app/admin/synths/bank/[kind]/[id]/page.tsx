@@ -12,6 +12,7 @@ import { BANK_SINGULAR, bankAdminPath } from '@/components/app/admin/bank/paths'
 import { bankHref, isBankTab, tabLabel } from '@/components/app/bank/routes';
 import { Badge } from '@/components/ui/badge';
 import { parseApiResponse, serverFetch } from '@/lib/api/server-fetch';
+import { BankIdSchema } from '@/lib/app/bank/data';
 import type { AdminBankDetail } from '@/lib/app/bank/admin';
 import type { BankKind } from '@/lib/app/bank/read';
 import { logger } from '@/lib/logging';
@@ -52,6 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const label = isBankTab(kind) ? tabLabel(kind) : 'Databank';
   if (!isBankTab(kind) || id === 'new')
     return { title: `New · ${label}`, description: 'Add a row to the databank.' };
+  if (!BankIdSchema.safeParse(id).success) return { title: label };
   const detail = await getRow(kind, id);
   return {
     title: detail && detail !== 'missing' ? `${nameOf(detail)} · ${label}` : label,
@@ -67,6 +69,8 @@ export default async function BankRowPage({ params }: Props) {
   const { kind, id } = await params;
   if (!isBankTab(kind)) notFound();
   const isNew = id === 'new';
+  // An id no row can have is not found, rather than a fetch the API refuses as malformed.
+  if (!isNew && !BankIdSchema.safeParse(id).success) notFound();
   const detail = isNew ? null : await getRow(kind, id);
   if (detail === 'missing') notFound();
 

@@ -490,17 +490,17 @@ export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankS
     artists: removed('artists'),
     songs: removed('songs'),
   };
+  const [storedMakers, storedInstruments, storedArtists, storedSongs] = await Promise.all([
+    prisma.bankMaker.findMany({ where: { id: { in: rows.makers.map((r) => r.id) } } }),
+    prisma.bankInstrument.findMany({ where: { id: { in: rows.instruments.map((r) => r.id) } } }),
+    prisma.bankArtist.findMany({ where: { id: { in: rows.artists.map((r) => r.id) } } }),
+    prisma.bankSong.findMany({ where: { id: { in: rows.songs.map((r) => r.id) } } }),
+  ]);
   const stored = {
-    makers: await prisma.bankMaker.findMany({
-      where: { id: { in: rows.makers.map((r) => r.id) } },
-    }),
-    instruments: await prisma.bankInstrument.findMany({
-      where: { id: { in: rows.instruments.map((r) => r.id) } },
-    }),
-    artists: await prisma.bankArtist.findMany({
-      where: { id: { in: rows.artists.map((r) => r.id) } },
-    }),
-    songs: await prisma.bankSong.findMany({ where: { id: { in: rows.songs.map((r) => r.id) } } }),
+    makers: storedMakers,
+    instruments: storedInstruments,
+    artists: storedArtists,
+    songs: storedSongs,
   };
   const problems = removedReferences(rows, gone, {
     instruments: editedIds(stored.instruments),

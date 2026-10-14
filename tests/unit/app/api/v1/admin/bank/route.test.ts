@@ -320,6 +320,43 @@ describe('PUT: an edit', () => {
     ]);
   });
 
+  it('refuses an id a list names twice, naming each, rather than reaching the join as a key clash', async () => {
+    const body = await songBody(BACH, (s) => ({
+      ...s,
+      artists: ['wendy-carlos', 'wendy-carlos'],
+      parts: [{ instruments: ['moog-modular', 'moog-modular'], on: 'Moog', text: 'x' }],
+    }));
+    const res = await putRow(
+      request('PUT', `songs/${BACH}`, body),
+      ctx({ kind: 'songs', id: BACH })
+    );
+
+    expect(res.status).toBe(400);
+    expect(await problems(res)).toEqual([
+      `song ${BACH}: artist wendy-carlos is listed twice`,
+      `song ${BACH} part 1: instrument moog-modular is listed twice`,
+    ]);
+    expect(store.writes).toEqual([]);
+  });
+
+  it('updates rather than recreates, so a row removed since the check is a conflict, not back', async () => {
+    const songs = store.client.bankSong as { update: ReturnType<typeof vi.fn> };
+    songs.update.mockRejectedValueOnce(
+      Object.assign(new Error('Record to update not found'), { code: 'P2025' })
+    );
+    const body = await songBody(BACH, (s) => ({ ...s, title: 'Renamed' }));
+    const res = await putRow(
+      request('PUT', `songs/${BACH}`, body),
+      ctx({ kind: 'songs', id: BACH })
+    );
+
+    expect(res.status).toBe(409);
+    expect((await json(res)).error?.message).toMatch(/changed while this was being saved/);
+    expect(store.writes).not.toContain('bankSong.create');
+    expect(store.writes).not.toContain('bankSong.upsert');
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
   it('is a 404 for a row that is not there', async () => {
     const res = await putRow(
       request('PUT', 'makers/nope', { name: 'x' }),
