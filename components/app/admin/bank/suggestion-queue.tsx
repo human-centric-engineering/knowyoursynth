@@ -185,10 +185,10 @@ function DecisionForm({
           : { action: 'decline', reason };
     try {
       await apiClient.post(`/api/v1/admin/bank/suggestions/${encodeURIComponent(s.id)}`, { body });
+      // Stays saving until the refresh replaces this form with the outcome, so it cannot be sent twice.
       router.refresh();
     } catch (err) {
       setRefusal(refusalOf(err, 'Could not save the decision. Try again.'));
-    } finally {
       setSaving(false);
     }
   }

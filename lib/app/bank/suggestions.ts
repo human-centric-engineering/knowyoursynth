@@ -9,6 +9,7 @@
  */
 import type { SynthSuggestion } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
+import { logger } from '@/lib/logging';
 import { ConflictError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { createRateLimiter } from '@/lib/security/rate-limit';
 import { saveBankRow, type BankSaveResult } from '@/lib/app/bank/admin';
@@ -108,10 +109,17 @@ export async function decideSuggestion(
       try {
         created = await saveBankRow('instruments', instrumentId, fields, 'create');
       } catch (err) {
-        await prisma.synthSuggestion.update({
-          where: { id },
-          data: { status: 'PENDING', instrumentId: null, decidedAt: null },
-        });
+        // The refusal is what the admin needs to see. A failed hand-back must not replace it.
+        await prisma.synthSuggestion
+          .update({
+            where: { id },
+            data: { status: 'PENDING', instrumentId: null, decidedAt: null },
+          })
+          .catch((rollbackErr: unknown) =>
+            logger.error('Could not hand a refused synth suggestion back to pending', rollbackErr, {
+              suggestionId: id,
+            })
+          );
         throw err;
       }
       return { before, after, created };

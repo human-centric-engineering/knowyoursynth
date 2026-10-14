@@ -449,9 +449,9 @@ model BankRemoval {
 //
 // A signed-in user's "this synth is missing", queued for an admin. Unlike the
 // databank tables, a row is about a person: it carries the suggester's user id,
-// so it is declared for subject export in lib/app/data-export.ts. Still on
-// GLOBAL_CONFIG_MODELS: it feeds the shared databank, and the queue that acts on
-// it is the install org's.
+// so it is declared for subject export in lib/app/data-export.ts. On
+// SYSTEM_MODELS beside ContactSubmission: an inbound queue, not a shared
+// setting, decided by admins from one queue.
 //
 // `userId` is a plain string, not a @relation, so `User` (platform-owned) needs
 // no back-relation field (CUSTOMIZATION.md §5). The FK is written by hand in the

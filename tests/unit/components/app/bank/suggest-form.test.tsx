@@ -85,7 +85,6 @@ describe('SuggestForm', () => {
     expect(await screen.findByRole('status')).toHaveTextContent('Thanks: Prophet-5 Rev4');
 
     await user.click(screen.getByRole('button', { name: 'Suggest another' }));
-    await user.click(screen.getByRole('button', { name: 'Suggest a synth' }));
     expect(screen.getByLabelText(/^Name/, INPUT)).toHaveValue('');
   });
 

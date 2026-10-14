@@ -338,6 +338,25 @@ describe('accept', () => {
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
+  it('still reports the refusal, and logs it, when handing the suggestion back fails', async () => {
+    const id = await suggestOne();
+    const taken = String(store.tables.bankInstrument[0].id);
+    const handBack = new Error('connection lost');
+    suggestions.client.update.mockRejectedValueOnce(handBack);
+
+    const res = await decision(id, {
+      action: 'accept',
+      instrument: { ...NEW_INSTRUMENT, id: taken },
+    });
+
+    expect(res.status).toBe(409);
+    expect(mockLog.error).toHaveBeenCalledWith(
+      'Could not hand a refused synth suggestion back to pending',
+      handBack,
+      { suggestionId: id }
+    );
+  });
+
   it('leaves the suggestion pending when the instrument would break a reference, naming it', async () => {
     const id = await suggestOne();
     const res = await decision(id, {

@@ -106,6 +106,8 @@ describe('SuggestionQueue', () => {
       },
     });
     expect(mockRefresh).toHaveBeenCalled();
+    // Until the refresh replaces the form with the outcome, it cannot be sent again.
+    expect(screen.getByRole('button', { name: /Add instrument|Saving/ })).toBeDisabled();
   });
 
   it('shows a refused accept on the field the server named, and does not refresh', async () => {
@@ -125,6 +127,7 @@ describe('SuggestionQueue', () => {
     expect(screen.getByLabelText(/^Year/, INPUT)).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByText('Validation failed')).toBeInTheDocument();
     expect(mockRefresh).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Add instrument' })).toBeEnabled();
   });
 
   it('merges into the instrument id typed', async () => {

@@ -62,6 +62,7 @@ export function SuggestForm() {
           onClick={() => {
             setSent(null);
             setDraft(EMPTY);
+            setOpen(true);
           }}
         >
           Suggest another
