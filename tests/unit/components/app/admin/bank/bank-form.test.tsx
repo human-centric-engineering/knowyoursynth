@@ -133,6 +133,55 @@ describe('BankForm', () => {
     expect(await screen.findByText('Saved.')).toBeInTheDocument();
   });
 
+  it('adds, fills, moves and removes parts and synth rows', async () => {
+    const user = userEvent.setup();
+    put.mockImplementation(async (_path, opts) => ({ id: 'bach', ...(opts?.body as object) }));
+    render(<BankForm kind="songs" detail={SONG} />);
+
+    await user.click(screen.getByRole('button', { name: 'Add a part' }));
+    await user.type(screen.getAllByLabelText(/^Instruments/, INPUT)[1], 'moog-minimoog, arp-2600');
+    await user.type(screen.getAllByLabelText(/^Player/, INPUT)[1], 'wendy-carlos');
+    await user.type(screen.getAllByLabelText(/^On/, INPUT)[1], 'Minimoog');
+    await user.type(screen.getAllByLabelText(/^Text/, INPUT)[1], 'The second part.');
+    await user.click(screen.getAllByRole('button', { name: 'Add an app synth' })[1]);
+    await user.type(screen.getAllByLabelText('Synth', INPUT)[2], 'model-d');
+    await user.click(screen.getAllByLabelText('Listed under it')[2]);
+    await user.type(screen.getAllByLabelText(/^Sound/, INPUT)[2], 'fat-bass');
+    await user.click(screen.getByRole('button', { name: 'Move part 2 up' }));
+    // The first part's System 15 row, now in part 2.
+    await user.click(screen.getAllByRole('button', { name: 'Remove synth' })[2]);
+    await user.click(screen.getByRole('button', { name: 'Save record' }));
+
+    expect(sentBody(put).parts).toEqual([
+      {
+        instruments: ['moog-minimoog', 'arp-2600'],
+        on: 'Minimoog',
+        player: 'wendy-carlos',
+        synths: ['model-d'],
+        sounds: { 'model-d': 'fat-bass' },
+        text: 'The second part.',
+      },
+      {
+        instruments: ['moog-modular'],
+        on: 'Moog modular',
+        synths: ['model-d'],
+        sounds: { 'model-d': 'baroque-line-voice' },
+        text: 'Every line overdubbed.',
+      },
+    ]);
+
+    await user.click(screen.getAllByRole('button', { name: 'Remove part' })[0]);
+    expect(screen.getAllByLabelText(/^On/, INPUT)).toHaveLength(1);
+  });
+
+  it('says why the form cannot save when the API refuses for no stated reason', async () => {
+    const user = userEvent.setup();
+    put.mockRejectedValue(new Error('network'));
+    render(<BankForm kind="songs" detail={SONG} />);
+    await user.click(screen.getByRole('button', { name: 'Save record' }));
+    expect(await screen.findByText('Could not save the record. Try again.')).toBeInTheDocument();
+  });
+
   it("shows the server's refusal, naming each reference the save would break", async () => {
     const user = userEvent.setup();
     put.mockRejectedValue(

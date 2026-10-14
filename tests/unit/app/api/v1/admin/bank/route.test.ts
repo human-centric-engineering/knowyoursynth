@@ -153,6 +153,19 @@ describe('GET', () => {
     expect(list.every((m) => m.editedAt === null)).toBe(true);
   });
 
+  it('lists each kind with a detail line', async () => {
+    const list = async (kind: string) =>
+      (await json(await getList(request('GET', kind), ctx({ kind })))).data as unknown as {
+        id: string;
+        detail: string;
+      }[];
+    expect((await list('instruments')).find((r) => r.id === 'moog-minimoog')?.detail).toMatch(
+      /^Moog.* · 19/
+    );
+    expect((await list('artists')).find((r) => r.id === 'devo')?.detail).toBe('group');
+    expect((await list('songs')).find((r) => r.id === BACH)?.detail).toBe('album · 1968');
+  });
+
   it("returns a row in the files' shape, and a member's groups beside it rather than in it", async () => {
     const res = await getRow(
       request('GET', 'artists/vince-clarke'),
@@ -436,6 +449,54 @@ describe('DELETE: a removal', () => {
       entityId: BACH,
       entityName: 'Switched-On Bach',
     });
+  });
+
+  it('removes an innovator and an artist nothing points at', async () => {
+    // Every artist in the data is credited or in a group, so this one is new.
+    const { memberOf: _m, ...pierre } = loadBankData().artists.find((a) => a.id === 'dj-pierre')!;
+    await postRow(
+      request('POST', 'artists', { ...pierre, id: 'someone-new' }),
+      ctx({ kind: 'artists' })
+    );
+    mockLogAdminAction.mockClear();
+
+    const maker = await deleteRow(
+      request('DELETE', 'makers/harald-bode'),
+      ctx({ kind: 'makers', id: 'harald-bode' })
+    );
+    const artist = await deleteRow(
+      request('DELETE', 'artists/someone-new'),
+      ctx({ kind: 'artists', id: 'someone-new' })
+    );
+
+    expect([maker.status, artist.status]).toEqual([200, 200]);
+    expect(row('bankMaker', 'harald-bode')).toBeUndefined();
+    expect(row('bankArtist', 'someone-new')).toBeUndefined();
+    expect(auditCalls().map((c) => c.action)).toEqual(['bank_maker.delete', 'bank_artist.delete']);
+  });
+
+  it('reports a reference that went between the check and the write as a conflict', async () => {
+    const tx = store.client.bankSong as { delete: ReturnType<typeof vi.fn> };
+    tx.delete.mockRejectedValueOnce(Object.assign(new Error('FK'), { code: 'P2003' }));
+
+    const res = await deleteRow(
+      request('DELETE', `songs/${BACH}`),
+      ctx({ kind: 'songs', id: BACH })
+    );
+
+    expect(res.status).toBe(409);
+    expect((await json(res)).error?.message).toMatch(/changed while this was being saved/);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('lets any other write failure through as itself', async () => {
+    const tx = store.client.bankSong as { delete: ReturnType<typeof vi.fn> };
+    tx.delete.mockRejectedValueOnce(new Error('connection lost'));
+    const res = await deleteRow(
+      request('DELETE', `songs/${BACH}`),
+      ctx({ kind: 'songs', id: BACH })
+    );
+    expect(res.status).toBe(500);
   });
 
   it('is a 404 for a row that is not there', async () => {
