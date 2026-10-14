@@ -123,8 +123,8 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
-  declarations (five models and three enums) and the databank's (thirteen models) instead of none,
-  under a `FORK` comment.
+  declarations (five models and three enums), the databank's (thirteen models) and the synth
+  suggestions' (one model and one enum, `f-databank` t-37) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -134,21 +134,35 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
 
-### The catalogue and databank tables on the global-config list
+### The catalogue, databank and synth suggestion tables on the global-config list
 
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
-  `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one.
+  `BankRemoval`, `f-databank` t-34 and t-36) and `SynthSuggestion` (t-37) follow under a second one.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
   product content every org shares, so they are global config (owner ruling on `f-model-d`,
-  2026-10-07).
-- **On conflict:** take theirs, and re-append our eighteen names (and the two comments) to the
+  2026-10-07). A synth suggestion carries its user, but it feeds that shared databank and is
+  decided from one queue, so scoping it to an org would hide it from the admins who act on it.
+- **On conflict:** take theirs, and re-append our nineteen names (and the two comments) to the
   end of `GLOBAL_CONFIG_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the seventeen names into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the nineteen names into the new seam's scaffold.
+
+### The drift-probe scaffold test, pinned to our probe
+
+- **Files:** `tests/unit/lib/db/drift-probes.test.ts`
+- **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our one probe's name (the
+  hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37) instead of none, under a `FORK`
+  comment.
+- **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
+  (`HB2`). Pinning keeps a stray extra probe failing.
+- **On conflict:** take theirs, and re-apply the pin to whichever case asserts the scaffold
+  registers nothing.
+- **Upstream:** working as designed upstream; nothing to raise.
+- **Delete when:** the fork no longer registers a drift probe.
 
 ### The databank's pages in the sitemap
 
@@ -198,7 +212,8 @@ Today they are:
 - `prototype/**`, which goes at f-launch x5;
 - `app/(panel)/**`, the synth page's route group;
 - `app/(public)/bank/**`, the databank's pages;
-- `app/admin/synths/**`, the admin Designs page;
+- `app/api/v1/bank/**` and `app/api/v1/admin/bank/**`, the databank's API and its suggestions;
+- `app/admin/synths/**`, the Synths admin pages;
 - `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
 - `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
@@ -213,8 +228,9 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 ## Excluded: filled seams
 
 - `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
-  `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (the catalogue and databank tables,
-  excluded) and `lib/app/admin-nav.ts` (the "Synths" admin section): fork-owned scaffolds, filled.
+  `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
+  the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
+  `lib/app/admin-nav.ts` (the "Synths" admin section): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,

@@ -17,6 +17,6 @@ import { listSuggestions } from '@/lib/app/bank/suggestions';
 const QuerySchema = z.object({ status: z.enum(SUGGESTION_STATUSES).optional() });
 
 export const GET = withAdminAuth(async (request) => {
-  const { status } = validateQueryParams(request.nextUrl.searchParams, QuerySchema);
+  const { status } = validateQueryParams(new URL(request.url).searchParams, QuerySchema);
   return successResponse(await listSuggestions(status));
 }, SUGGESTION_ADMIN);
