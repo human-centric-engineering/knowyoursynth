@@ -11,13 +11,13 @@
  * client-safe — registrar + icon imports only, no server code — and use a
  * `title` distinct from the core sections.
  *
- * Know Your Synth fills it with one "Synths" section, for the pages that look after the catalogue: Designs
- * (`f-panel-designs`), the catalogue editor and the data page (`f-catalogue-admin`). Designs lives at the section's root, so it is
+ * Know Your Synth fills it with one "Synths" section, for the pages that look after the content: Designs
+ * (`f-panel-designs`), the catalogue editor and the data page (`f-catalogue-admin`), and the databank (`f-databank`). Designs lives at the section's root, so it is
  * `exact`: otherwise it would also light up on every catalogue page beneath it.
  *
  * Full guide + example: CUSTOMIZATION.md §4 · lib/admin-nav/registry.ts
  */
-import { DatabaseZap, Library, Palette } from 'lucide-react';
+import { BookUser, DatabaseZap, Library, Palette } from 'lucide-react';
 
 import { registerNavSection } from '@/lib/admin-nav/registry';
 
@@ -37,6 +37,12 @@ export function initAppNav(): void {
         label: 'Catalogue',
         icon: Library,
         description: 'Order and list the synths, and edit their sounds, lessons, lineage and notes',
+      },
+      {
+        href: '/admin/synths/bank',
+        label: 'Databank',
+        icon: BookUser,
+        description: 'Create, edit and remove the artists, innovators, records and instruments',
       },
       {
         href: '/admin/synths/data',

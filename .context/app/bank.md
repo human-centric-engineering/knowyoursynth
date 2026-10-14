@@ -21,6 +21,7 @@ only from them (D13).
 | `BankSongPart`         | What a synth plays on a work: `on`, `text`, the player.                                 |
 | `BankPartInstrument`   | The instruments a part is played on, in order.                                          |
 | `BankPartSynth`        | What a part says about one app synth: listed under it, a sound in its style, a note.    |
+| `BankRemoval`          | A row an admin removed (kind and id), so the seed does not re-create it.                |
 
 The schema is in `prisma/schema/app.prisma`. Like the catalogue, the tables are on
 `GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964) and hold nothing about a person.
@@ -45,7 +46,7 @@ Things the files did that the tables do differently:
    they are, to `prisma/seeds/app-knowyoursynth/data/bank/`. Committed. Nothing else runs it.
 2. **Seed.** `npm run db:seed` runs `002-bank.ts` after the catalogue's unit, since the databank
    points at synths and their sounds. It hands the data to `seedBank()` (`lib/app/bank/seed.ts`).
-3. **Admins edit the tables** after that (`f-databank` b3).
+3. **Admins edit the tables** after that, at `/admin/synths/bank` ([below](#admin-editing)).
 
 The seed's rules, each tested in `tests/unit/lib/app/bank/seed.test.ts`, are the catalogue's:
 
@@ -61,6 +62,9 @@ The seed's rules, each tested in `tests/unit/lib/app/bank/seed.test.ts`, are the
   `<songId>#<position>`.
 - **It never deletes a row**, so an empty source writes nothing. A reference between rows is
   `Restrict`: a row something points at cannot be removed until the reference goes.
+- **It leaves out a row an admin removed** (`BankRemoval`), and that row's joins. Data that has
+  come to point at a removed row is a problem like any other, found before anything is written,
+  unless the row pointing at it is an admin's (the seed does not write that).
 
 `npm run check:synths` joins each synth's "Heard on" from the same seed data and runs `planBank`
 against every synth's library, so a record that names a missing sound fails the check.
@@ -120,10 +124,37 @@ Records, Instruments. A tab's URL segment is the API's kind, so the prototype's
 - **In the sitemap**: `/bank`, each tab, and every row (`components/app/bank/sitemap.ts`). If the
   databank cannot be read, the sitemap still serves the tabs and the site's other pages.
 
+## Admin editing
+
+`f-databank` t-36. Pages under the Synths admin section, beside Designs and Catalogue:
+`/admin/synths/bank?kind=<kind>` lists one kind, `/admin/synths/bank/<kind>/<id>` edits a row and
+`/admin/synths/bank/<kind>/new` adds one (so `new` cannot be an id). They are thin shells over:
+
+- `GET /api/v1/admin/bank/:kind`: id, name, a detail line and `editedAt`, by name.
+- `POST /api/v1/admin/bank/:kind`: create, the row in the files' shape with its id.
+- `GET|PUT|DELETE /api/v1/admin/bank/:kind/:id`: read, replace whole, or remove.
+
+All `withAdminAuth`, `writesSharedSettings` on writes, each change in `AiAdminAuditLog` as
+`bank_<kind>.create|update|delete` with what changed. The rules live in `lib/app/bank/admin.ts`,
+each tested in `tests/unit/app/api/v1/admin/bank/route.test.ts`:
+
+- **A row is edited whole, with its joins**: an instrument's people and synths, an artist's other
+  instruments and (for a group) members, a song's artists and parts. An artist's groups are shown
+  but set on the group, since membership is the group's row.
+- **Checked as the seed checks.** The change is put into the databank as it stands and `checkBank`
+  run over it; any problem it adds refuses the save, naming each. A problem already there does not
+  block an unrelated save.
+- **A removal is refused while anything points at the row**, naming what does. Only the row's own
+  joins go with it. It is recorded in `BankRemoval`; creating the id again clears that.
+- **Saving marks the row edited** (`editedAt`), so the seed leaves it and its joins alone. A save
+  that changes nothing writes and audits nothing.
+
 ## Don't
 
 - **Don't read the seed data from app code.** The seed folder, `scripts/check-synths.ts` and
   `scripts/smoke/bank.ts` may (`seed-data-boundary.test.ts`).
 - **Don't run `prisma migrate dev` without `--create-only`** on these tables: the generated
   migration drops the unmodelled search and vector indexes (`B13`).
-- **Don't fix content in the data files once seeded.** Edit the table.
+- **Don't fix content in the data files once seeded.** Edit the row at `/admin/synths/bank`.
+- **Don't delete a row with SQL.** Without a `BankRemoval` record the seed brings it back on its
+  next run.
