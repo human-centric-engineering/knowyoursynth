@@ -47,7 +47,17 @@
  * populated, so the check goes green while the feature is silently broken.
  *
  * Full guide: CUSTOMIZATION.md §5 · .context/database/prisma-unmodelled-objects.md
+ *
+ * Know Your Synth registers one: the hand-written FK from a synth suggestion to its user (`f-databank` t-37), pinned
+ * to `ON DELETE SET NULL` so an erasure keeps working and the suggestion outlives its author.
  */
+import { constraintExists, registerAppDriftProbe } from '@/lib/db/drift-probes';
+
 export function registerAppDriftProbes(): void {
-  // No app drift probes by default.
+  registerAppDriftProbe({
+    name: 'synth_suggestion_userId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'synth_suggestion',
+    probe: constraintExists('synth_suggestion_userId_fkey', 'ON DELETE SET NULL'),
+  });
 }

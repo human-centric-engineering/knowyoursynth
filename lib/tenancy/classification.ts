@@ -49,6 +49,8 @@ export const SYSTEM_MODELS = [
   'AuthBootstrap',
   'SeedHistory',
   'ContactSubmission',
+  // Know Your Synth: users' synth suggestions, an inbound queue like the one above (divergence row in .context/app/divergences.md).
+  'SynthSuggestion',
   'DataErasureReceipt',
   'McpAuditLog',
   'AiAdminAuditLog',

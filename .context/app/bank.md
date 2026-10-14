@@ -24,7 +24,8 @@ only from them (D13).
 | `BankRemoval`          | A row an admin removed (kind and id), so the seed does not re-create it.                |
 
 The schema is in `prisma/schema/app.prisma`. Like the catalogue, the tables are on
-`GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964) and hold nothing about a person.
+`GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964) and hold nothing about a person. Users'
+suggestions are a separate table, `SynthSuggestion` ([below](#suggestions)).
 
 Things the files did that the tables do differently:
 
@@ -148,6 +149,41 @@ each tested in `tests/unit/app/api/v1/admin/bank/route.test.ts`:
   joins go with it. It is recorded in `BankRemoval`; creating the id again clears that.
 - **Saving marks the row edited** (`editedAt`), so the seed leaves it and its joins alone. A save
   that changes nothing writes and audits nothing.
+
+## Suggestions
+
+`f-databank` t-37. A signed-in user whose synth is missing says so from the Instruments tab
+(`components/app/bank/suggest-form.tsx`); a visitor without a session is offered sign-in back to
+it. Admins decide each one at `/admin/synths/suggestions`, with a tab per status.
+
+- `POST /api/v1/bank/suggestions`: `{ name, maker, link?, note? }`, stored as `PENDING` under the
+  caller's id. A link must be http or https. Capped at ten an hour per user
+  (`suggestionLimiter`, on top of the proxy's section cap), a 429 past that.
+- `GET /api/v1/admin/bank/suggestions?status=`: newest first, each naming its suggester.
+- `POST /api/v1/admin/bank/suggestions/:id`: `accept` with the instrument in the files' shape,
+  `merge` with an `instrumentId`, or `decline` with a `reason`. Audited as
+  `synth_suggestion.<action>`; an accept is audited as `bank_instrument.create` too.
+
+The rules live in `lib/app/bank/suggestions.ts`, each tested in
+`tests/unit/app/api/v1/bank/suggestions/route.test.ts`:
+
+- **Accept goes through the databank's own create path** (`saveBankRow`), so the instrument is
+  checked, marked edited and refused exactly as a new row from the Databank page would be.
+- **A suggestion is decided once.** A decision moves it out of `PENDING` with a conditional
+  update, so of two admins deciding at once, one gets a 409. An accept claims the row first and
+  hands it back to `PENDING` if the databank refuses the instrument.
+- **`instrumentId` records the outcome, not a reference.** It is not a foreign key, so it does not
+  block removing that instrument.
+
+`SynthSuggestion` is about a person, unlike the tables above. Its `userId` is a plain string,
+since a Prisma relation would need a field on the platform's `User`. The foreign key is written by
+hand in the migration, `ON DELETE SET NULL`, so an erased user's suggestions stay as history with
+nobody attached. A drift probe in `lib/app/db-drift.ts` pins it. The table is declared in
+`lib/app/data-export.ts`, so a subject-access export includes the user's own suggestions. It is
+on `SYSTEM_MODELS`, beside `ContactSubmission`: like a contact message it is an inbound
+submission decided from one queue, so scoping it to an org would hide it from the admins who act
+on it. It is not on `GLOBAL_CONFIG_MODELS` because a suggestion is not a shared setting. That list
+is what the shared-settings guard reads, and it would refuse the signed-in user's `POST`.
 
 ## Don't
 

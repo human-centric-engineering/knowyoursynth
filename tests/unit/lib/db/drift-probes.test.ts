@@ -433,6 +433,10 @@ describe('tenancyDriftProbes', () => {
 describe('shipped lib/app/db-drift.ts scaffold', () => {
   it('registers zero probes by default (Sunrise ships the scaffold empty)', () => {
     registerAppDriftProbes();
-    expect(getAppDriftProbes()).toEqual([]);
+    // FORK (Know Your Synth): pinned to its one probe rather than deleted, so a stray extra still fails. Ledger:
+    // .context/app/divergences.md.
+    expect(getAppDriftProbes().map((p) => p.name)).toEqual([
+      'synth_suggestion_userId_fkey (hand-written FK → User)',
+    ]);
   });
 });

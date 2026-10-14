@@ -20,6 +20,7 @@ import type {
   SongDetail,
 } from '@/lib/app/bank/read';
 import { bankHref } from '@/components/app/bank/routes';
+import { SuggestForm } from '@/components/app/bank/suggest-form';
 import { soundHref, synthHref } from '@/components/app/synth/routes';
 
 const KIND: Record<BankSong['kind'], string> = {
@@ -104,6 +105,7 @@ export function Welcome({ tab, names }: { tab: BankKind; names: BankNames }) {
           </div>
         </>
       )}
+      {tab === 'instruments' && <SuggestForm />}
     </div>
   );
 }

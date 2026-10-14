@@ -7,6 +7,9 @@ import type { BankKind } from '@/lib/app/bank/read';
 
 export const BANK_ADMIN_ROOT = '/admin/synths/bank';
 
+/** The synth suggestion queue (`f-databank` t-37): beside the databank, not under it, so its sidebar item lights alone. */
+export const BANK_SUGGESTIONS_PATH = '/admin/synths/suggestions';
+
 /** A kind's list, a row's editor, or the form for a new row (`id` of `'new'`). */
 export function bankAdminPath(kind: BankKind, id?: string): string {
   return id ? `${BANK_ADMIN_ROOT}/${kind}/${id}` : `${BANK_ADMIN_ROOT}?kind=${kind}`;

@@ -49,6 +49,7 @@
  * Full guide: .context/privacy/data-export.md · CUSTOMIZATION.md §4
  */
 
+import { prisma } from '@/lib/db/client';
 import { registerAppSubjectSources } from '@/lib/privacy/subject-source-registry';
 
 /** Identity of the subject being exported. */
@@ -106,6 +107,15 @@ export type AppSubjectData = Record<string, unknown>;
 export function initAppSubjectSources(): void {
   registerAppSubjectSources({
     tier: 'app',
+    sources: [
+      {
+        model: 'SynthSuggestion',
+        section: SUGGESTIONS_SECTION,
+        disposition: 'export',
+        description:
+          'Synths you suggested for the databank, with what you wrote and what an admin decided.',
+      },
+    ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
       ...BANK_MODELS.map((model) => ({ model, reason: BANK_REASON })),
@@ -150,16 +160,29 @@ export const CATALOGUE_MODELS = [
 const CATALOGUE_REASON =
   'Catalogue content written by the seed and by admins, the same for every user; it holds no column about a person.';
 
+/** The export section for a user's synth suggestions (`f-databank` t-37). */
+const SUGGESTIONS_SECTION = 'synthSuggestions';
+
 /**
- * Collect this app's data about one subject. Ships empty — vanilla Sunrise has
- * no app tables, so the export's `app` section is `{}`.
+ * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37). Every declared section is
+ * returned, empty when they have none.
  */
-/*
- * `async` is the seam's contract, not an implementation detail: every real
- * collector awaits its queries, and the empty default must not force forks to
- * change the signature just to add one.
- */
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function collectAppSubjectData(_subject: AppSubjectQuery): Promise<AppSubjectData> {
-  return {};
+export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
+  const suggestions = await prisma.synthSuggestion.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      maker: true,
+      link: true,
+      note: true,
+      status: true,
+      instrumentId: true,
+      reason: true,
+      decidedAt: true,
+      createdAt: true,
+    },
+  });
+  return { [SUGGESTIONS_SECTION]: suggestions };
 }

@@ -19,6 +19,19 @@ export const BANK_ADMIN = {
   },
 } as const;
 
+/**
+ * The suggestion queue's ownership decision (`f-databank` t-37). Unlike a databank row, a suggestion carries the user
+ * who made it, but the queue is every user's suggestions by design: it is where admins act on them.
+ */
+export const SUGGESTION_ADMIN = {
+  // Ownership: no ownership decision — the admin queue of every user's suggestions. See RouteOwnership in lib/auth/guards.ts.
+  ownership: {
+    decidedBy: 'nothing',
+    because:
+      "The suggestion queue is every user's suggestions by design, for admins to decide; the guard already limits this to admins.",
+  },
+} as const;
+
 /** What the audit log names a row by: a song's title, any other row's name, else its id. */
 export const bankRowName = (row: object | null, id: string): string =>
   row && 'title' in row && typeof row.title === 'string'

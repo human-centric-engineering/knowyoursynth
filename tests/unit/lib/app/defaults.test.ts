@@ -29,6 +29,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it, expect, afterEach, vi } from 'vitest';
+
+// FORK (Know Your Synth): the data-export collector reads the synth suggestions table (`f-databank` t-37).
+vi.mock('@/lib/db/client', () => ({ prisma: { synthSuggestion: { findMany: vi.fn() } } }));
 import { registerAppRateLimits } from '@/lib/app/rate-limit';
 import { registerAppTenantResolver } from '@/lib/app/tenant-resolver';
 import { hasTenantResolver } from '@/lib/tenancy/resolver';
@@ -64,6 +67,7 @@ import {
 import { occupiedTiers } from '@/lib/app/reserved-tiers';
 import { initAppUserCreatedHooks } from '@/lib/app/user-created';
 import { collectAppSubjectData } from '@/lib/app/data-export';
+import { prisma } from '@/lib/db/client';
 import {
   getAppSubjectSources,
   getAppExcludedSubjectSources,
@@ -219,6 +223,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
             { href: '/admin/synths', label: 'Designs' },
             { href: '/admin/synths/catalogue', label: 'Catalogue' },
             { href: '/admin/synths/bank', label: 'Databank' },
+            { href: '/admin/synths/suggestions', label: 'Suggestions' },
             { href: '/admin/synths/data', label: 'Data' },
           ],
         },
@@ -271,15 +276,23 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/data-export.ts',
     risk: 'a stray collector would leak app rows into every install’s subject-access export, and a stray declaration would pre-account for a table nobody decided about',
     assert: async () => {
-      expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual(
-        {}
+      // Know Your Synth collects one section, a user's synth suggestions (`f-databank` t-37), and asks only for theirs.
+      vi.mocked(prisma.synthSuggestion.findMany).mockResolvedValue([]);
+      expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual({
+        synthSuggestions: [],
+      });
+      expect(prisma.synthSuggestion.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { userId: 'user-1' } })
       );
       // The declaration half (#533). The reads trigger the lazy init, so this
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
-      expect(getAppSubjectSources()).toEqual([]);
-      // Know Your Synth declares its catalogue and databank tables as excluded: no row is about a user.
+      // Know Your Synth exports a user's synth suggestions, and declares its catalogue and databank tables as excluded:
+      // no row of theirs is about a user.
+      expect(getAppSubjectSources().map((s) => [s.model, s.section, s.disposition])).toEqual([
+        ['SynthSuggestion', 'synthSuggestions', 'export'],
+      ]);
       expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
         'Synth',
         'SynthSound',
