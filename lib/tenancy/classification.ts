@@ -91,6 +91,7 @@ export const GLOBAL_CONFIG_MODELS = [
   'BankSongPart',
   'BankPartInstrument',
   'BankPartSynth',
+  'BankRemoval',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];

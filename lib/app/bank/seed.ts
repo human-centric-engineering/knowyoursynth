@@ -12,6 +12,9 @@
  * - **Operator-owned once edited.** A maker, instrument, artist or song with `editedAt` set is the admin's, and the
  *   seed never writes it or its joins again.
  * - **Never deletes a row.** A row the data no longer has stays, so an empty or partial source cannot empty a table.
+ * - **Leaves out what an admin removed.** A removal is recorded (`BankRemoval`), and the seed neither re-creates that
+ *   row nor writes its joins. Data that comes to point at a removed row is a problem like any other, found before
+ *   anything is written.
  *
  * A join belongs to the row that lists it: an instrument's people and synths, an artist's other instruments, a
  * group's members, a song's artists and parts. While that row is the seed's, the seed brings its joins in line by
@@ -22,6 +25,7 @@ import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import { sameValue } from '@/lib/app/catalogue/seed';
 import { membersOf } from '@/lib/app/bank/joins';
 import type { Bank } from '@/lib/app/bank/data';
+import type { BankKind } from '@/lib/app/bank/read';
 
 /** The data's references do not resolve. Nothing was written. */
 export class BankDataError extends Error {
@@ -155,11 +159,11 @@ export const partId = (songId: string, order: number): string => `${songId}#${or
 const orNull = <T>(v: T | undefined): T | null => (v === undefined ? null : v);
 
 /**
- * Turn the data into rows, checking every reference: the prototype's `checkBank`, plus the recreation link this
- * port adds. `synths` is every app synth the data may name, with its sounds' slugs. Pure. Throws
- * {@link BankDataError} listing every problem.
+ * Every reference in the data that does not resolve: the prototype's `checkBank`, plus the recreation link this port
+ * adds. `synths` is every app synth the data may name, with its sounds' slugs. Pure. The seed runs it over the data
+ * files, and an admin's save over the tables with the change in place (`lib/app/bank/admin.ts`).
  */
-export function planBank(bank: Bank, synths: SynthSounds): BankRows {
+export function checkBank(bank: Bank, synths: SynthSounds): string[] {
   const errs: string[] = [];
   const makers = new Set(bank.makers.map((m) => m.id));
   const instruments = new Set(bank.instruments.map((i) => i.id));
@@ -227,8 +231,22 @@ export function planBank(bank: Bank, synths: SynthSounds): BankRows {
     }
   }
 
-  if (errs.length) throw new BankDataError(errs);
+  return errs;
+}
 
+/**
+ * Turn the data into rows, checking every reference first ({@link checkBank}). Pure. Throws {@link BankDataError}
+ * listing every problem.
+ */
+export function planBank(bank: Bank, synths: SynthSounds): BankRows {
+  const errs = checkBank(bank, synths);
+  if (errs.length) throw new BankDataError(errs);
+  return rowsOf(bank);
+}
+
+/** The rows the data describes, unchecked: {@link planBank} once the data is known to be sound. */
+export function rowsOf(bank: Bank): BankRows {
+  const recreates = new Map(bank.instruments.map((i) => [i.id, i.recreationOf]));
   // An original before anything that recreates it, so each row's target exists when it is written.
   const depth = (id: string): number => {
     let n = 0;
@@ -405,6 +423,53 @@ async function reconcile<Row extends { id: string }>(
   return { counts, edited };
 }
 
+const editedIds = (rows: { id: string; editedAt: Date | null }[]): Set<string> =>
+  new Set(rows.filter((r) => r.editedAt).map((r) => r.id));
+
+/**
+ * What the seed would write that points at a row an admin removed. A removal is refused while anything points at the
+ * row, so this finds only data that came to name it later. The rows and joins of a removed or edited row are not
+ * written, so they cannot.
+ */
+export function removedReferences(
+  rows: BankRows,
+  gone: Record<BankKind, Set<string>>,
+  edited: Record<'instruments' | 'artists' | 'songs', Set<string>>
+): string[] {
+  const errs: string[] = [];
+  const written = (kind: 'instruments' | 'artists' | 'songs', id: string) =>
+    !gone[kind].has(id) && !edited[kind].has(id);
+  const say = (owner: string, what: string, id: string) =>
+    errs.push(`${owner}: ${what} ${id} was removed by an admin`);
+  for (const i of rows.instruments)
+    if (written('instruments', i.id) && i.recreationOfId && gone.instruments.has(i.recreationOfId))
+      say(`instrument ${i.id}`, 'the original instrument', i.recreationOfId);
+  for (const { ownerId, joins } of rows.instrumentJoins) {
+    if (!written('instruments', ownerId)) continue;
+    for (const p of joins.people)
+      if (gone.makers.has(p.makerId)) say(`instrument ${ownerId}`, 'maker', p.makerId);
+  }
+  for (const { ownerId, joins } of rows.artistJoins) {
+    if (!written('artists', ownerId)) continue;
+    for (const i of joins.instruments)
+      if (gone.instruments.has(i.instrumentId))
+        say(`artist ${ownerId}`, 'instrument', i.instrumentId);
+    for (const m of joins.members)
+      if (gone.artists.has(m.memberId)) say(`artist ${ownerId}`, 'member', m.memberId);
+  }
+  for (const { ownerId, joins } of rows.songJoins) {
+    if (!written('songs', ownerId)) continue;
+    for (const a of joins.artists)
+      if (gone.artists.has(a.artistId)) say(`song ${ownerId}`, 'artist', a.artistId);
+    for (const p of joins.parts)
+      if (p.playerId && gone.artists.has(p.playerId)) say(`song ${ownerId}`, 'player', p.playerId);
+    for (const i of joins.partInstruments)
+      if (gone.instruments.has(i.instrumentId))
+        say(`song ${ownerId}`, 'instrument', i.instrumentId);
+  }
+  return errs;
+}
+
 /** Check the data, then write it. Throws {@link BankDataError}, having written nothing, when the data is wrong. */
 export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankSeedReport> {
   const synthRows = await prisma.synth.findMany({
@@ -416,29 +481,57 @@ export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankS
   );
   let joinsRewritten = 0;
 
+  const removals = await prisma.bankRemoval.findMany();
+  const removed = (kind: BankKind) =>
+    new Set(removals.filter((r) => r.kind === kind).map((r) => r.id));
+  const gone = {
+    makers: removed('makers'),
+    instruments: removed('instruments'),
+    artists: removed('artists'),
+    songs: removed('songs'),
+  };
+  const stored = {
+    makers: await prisma.bankMaker.findMany({
+      where: { id: { in: rows.makers.map((r) => r.id) } },
+    }),
+    instruments: await prisma.bankInstrument.findMany({
+      where: { id: { in: rows.instruments.map((r) => r.id) } },
+    }),
+    artists: await prisma.bankArtist.findMany({
+      where: { id: { in: rows.artists.map((r) => r.id) } },
+    }),
+    songs: await prisma.bankSong.findMany({ where: { id: { in: rows.songs.map((r) => r.id) } } }),
+  };
+  const problems = removedReferences(rows, gone, {
+    instruments: editedIds(stored.instruments),
+    artists: editedIds(stored.artists),
+    songs: editedIds(stored.songs),
+  });
+  if (problems.length) throw new BankDataError(problems);
+
+  const kept = <R extends { id: string }>(planned: R[], kind: BankKind) =>
+    planned.filter((r) => !gone[kind].has(r.id));
   const makers = await reconcile(
-    rows.makers,
-    await prisma.bankMaker.findMany({ where: { id: { in: rows.makers.map((r) => r.id) } } }),
+    kept(rows.makers, 'makers'),
+    stored.makers,
     (data) => prisma.bankMaker.create({ data }),
     ({ id, ...data }) => prisma.bankMaker.update({ where: { id }, data })
   );
   const instruments = await reconcile(
-    rows.instruments,
-    await prisma.bankInstrument.findMany({
-      where: { id: { in: rows.instruments.map((r) => r.id) } },
-    }),
+    kept(rows.instruments, 'instruments'),
+    stored.instruments,
     (data) => prisma.bankInstrument.create({ data }),
     ({ id, ...data }) => prisma.bankInstrument.update({ where: { id }, data })
   );
   const artists = await reconcile(
-    rows.artists,
-    await prisma.bankArtist.findMany({ where: { id: { in: rows.artists.map((r) => r.id) } } }),
+    kept(rows.artists, 'artists'),
+    stored.artists,
     (data) => prisma.bankArtist.create({ data }),
     ({ id, ...data }) => prisma.bankArtist.update({ where: { id }, data })
   );
   const songs = await reconcile(
-    rows.songs,
-    await prisma.bankSong.findMany({ where: { id: { in: rows.songs.map((r) => r.id) } } }),
+    kept(rows.songs, 'songs'),
+    stored.songs,
     (data) => prisma.bankSong.create({ data }),
     ({ id, ...data }) => prisma.bankSong.update({ where: { id }, data })
   );
@@ -455,7 +548,7 @@ export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankS
       (r) => r.instrumentId
     );
     for (const { ownerId, joins } of rows.instrumentJoins) {
-      if (instruments.edited.has(ownerId)) continue;
+      if (instruments.edited.has(ownerId) || gone.instruments.has(ownerId)) continue;
       const storedPeople = people.get(ownerId) ?? [];
       const storedSynths = synths.get(ownerId) ?? [];
       if (
@@ -484,7 +577,7 @@ export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankS
       (r) => r.groupId
     );
     for (const { ownerId, joins } of rows.artistJoins) {
-      if (artists.edited.has(ownerId)) continue;
+      if (artists.edited.has(ownerId) || gone.artists.has(ownerId)) continue;
       const storedOwned = owned.get(ownerId) ?? [];
       const storedMembers = members.get(ownerId) ?? [];
       if (
@@ -523,7 +616,7 @@ export async function seedBank(prisma: TenancyClient, bank: Bank): Promise<BankS
       (r) => songOfPart.get(r.partId) ?? ''
     );
     for (const { ownerId, joins } of rows.songJoins) {
-      if (songs.edited.has(ownerId)) continue;
+      if (songs.edited.has(ownerId) || gone.songs.has(ownerId)) continue;
       const stored = {
         artists: credited.get(ownerId) ?? [],
         parts: parts.get(ownerId) ?? [],

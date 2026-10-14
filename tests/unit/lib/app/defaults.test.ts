@@ -297,6 +297,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'BankSongPart',
         'BankPartInstrument',
         'BankPartSynth',
+        'BankRemoval',
       ]);
     },
   },

@@ -67,6 +67,7 @@ function fakeDb() {
     bankSongPart: table('songPart', writes),
     bankPartInstrument: table('partInstrument', writes),
     bankPartSynth: table('partSynth', writes),
+    bankRemoval: table('removal', writes),
   };
   const client = {
     ...tables,

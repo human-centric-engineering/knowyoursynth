@@ -123,7 +123,7 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
-  declarations (five models and three enums) and the databank's (twelve models) instead of none,
+  declarations (five models and three enums) and the databank's (thirteen models) instead of none,
   under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
@@ -139,13 +139,13 @@ the same PR**, and each row names what deletes it.
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
-  `GLOBAL_CONFIG_MODELS`, under a one-line comment. The twelve databank tables (`BankMaker` …
-  `BankPartSynth`, `f-databank` t-34) follow under a second one.
+  `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
+  `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
   product content every org shares, so they are global config (owner ruling on `f-model-d`,
   2026-10-07).
-- **On conflict:** take theirs, and re-append our seventeen names (and the two comments) to the
+- **On conflict:** take theirs, and re-append our eighteen names (and the two comments) to the
   end of `GLOBAL_CONFIG_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
 - **Delete when:** sunrise#964 lands. Move the seventeen names into the new seam's scaffold.
