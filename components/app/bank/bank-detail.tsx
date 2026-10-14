@@ -487,6 +487,19 @@ export function InstrumentPage({ d, names }: { d: InstrumentDetail; names: BankN
           <InstrumentChips items={d.recreations} />
         </Section>
       )}
+      {i.source && (
+        <p className="mt-6 text-[13px] text-(--kys-muted)">
+          Source:{' '}
+          <a
+            href={i.source}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline hover:text-(--kys-accent)"
+          >
+            {new URL(i.source).hostname.replace(/^www\./, '')}
+          </a>
+        </p>
+      )}
     </article>
   );
 }

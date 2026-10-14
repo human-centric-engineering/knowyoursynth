@@ -153,6 +153,17 @@ export const BANK_FIELDS: Record<BankKind, FieldSpec[]> = {
       ),
     },
     { key: 'text', label: 'Text', type: 'textarea', help: <p>The instrument&apos;s page text.</p> },
+    {
+      key: 'source',
+      label: 'Source',
+      type: 'optional',
+      help: (
+        <p>
+          A web address where its facts can be checked: the maker&apos;s page or manual, a dated
+          press release, or an encyclopedia article. Shown on its page. Optional.
+        </p>
+      ),
+    },
   ],
   artists: [
     { key: 'name', label: 'Name', type: 'text' },

@@ -138,6 +138,11 @@ function Outcome({ suggestion: s }: { suggestion: AdminSuggestion }) {
   );
 }
 
+/** An empty source is left out, as the databank has none. */
+function withSource<T extends { source: string }>({ source, ...rest }: T) {
+  return source.trim() ? { ...rest, source } : rest;
+}
+
 const ACCEPT_KEYS = [
   'instrument.id',
   'instrument.name',
@@ -145,6 +150,7 @@ const ACCEPT_KEYS = [
   'instrument.year',
   'instrument.kind',
   'instrument.text',
+  'instrument.source',
 ];
 
 function DecisionForm({
@@ -166,6 +172,7 @@ function DecisionForm({
     year: '',
     kind: 'mono' as (typeof INSTRUMENT_KINDS)[number],
     text: '',
+    source: s.link ?? '',
   });
   const [instrumentId, setInstrumentId] = useState('');
   const [reason, setReason] = useState('');
@@ -179,7 +186,7 @@ function DecisionForm({
     setRefusal(null);
     const body: SuggestionDecision =
       mode === 'accept'
-        ? { action: 'accept', instrument }
+        ? { action: 'accept', instrument: withSource(instrument) }
         : mode === 'merge'
           ? { action: 'merge', instrumentId: instrumentId.trim() }
           : { action: 'decline', reason };
@@ -284,6 +291,19 @@ function DecisionForm({
             />
             <FieldProblems messages={placed.at('instrument.text')} />
           </div>
+          <Field
+            id={f('source')}
+            label="Source"
+            value={instrument.source}
+            onChange={set('source')}
+            problems={placed.at('instrument.source')}
+            help={
+              <p>
+                A web address where its facts can be checked, shown on its page. Starts as the
+                suggestion&apos;s link. Optional.
+              </p>
+            }
+          />
         </>
       )}
 

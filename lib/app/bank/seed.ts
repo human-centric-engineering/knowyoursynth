@@ -75,6 +75,7 @@ interface InstrumentRow {
   year: string;
   kind: string;
   text: string;
+  source: string | null;
   recreationOfId: string | null;
 }
 
@@ -274,6 +275,7 @@ export function rowsOf(bank: Bank): BankRows {
       year: i.year,
       kind: i.kind,
       text: i.text,
+      source: orNull(i.source),
       recreationOfId: orNull(i.recreationOf),
     })),
     artists: bank.artists.map((a) => ({
