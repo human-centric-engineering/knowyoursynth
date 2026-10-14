@@ -46,6 +46,7 @@ import { Lesson } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { Lineage } from '@/components/app/synth/lineage';
+import { bankHashRoute } from '@/components/app/bank/routes';
 import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import {
@@ -134,6 +135,8 @@ export interface SynthPageProps {
   synths: CatalogueSynth[];
   /** The `view` query, as the request had it. */
   viewParam: string | null;
+  /** The `sound` query: a library sound to open with, as a databank record's link names it. */
+  soundParam?: string | null;
 }
 
 /**
@@ -150,7 +153,13 @@ export function SynthPage(props: SynthPageProps) {
   return baseDef ? <Synth baseDef={baseDef} {...props} /> : null;
 }
 
-function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDef: AppSynthDef }) {
+function Synth({
+  baseDef,
+  detail,
+  synths,
+  viewParam,
+  soundParam = null,
+}: SynthPageProps & { baseDef: AppSynthDef }) {
   const router = useRouter();
   const synthId = baseDef.id;
   const sounds = detail.sounds;
@@ -176,8 +185,13 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
 
   // On arrival: follow a prototype hash link, remember this synth, and restore the last view if the URL has none.
   // A hash link to this same synth only sets the view: a navigation to the same page keeps this component, and with
-  // it the view it started with.
+  // it the view it started with. A databank link (`#bank/…`) goes to the databank's page.
   useEffect(() => {
+    const bank = bankHashRoute(window.location.hash);
+    if (bank) {
+      router.replace(bank);
+      return;
+    }
     const hash = hashTarget(window.location.hash, (id) => synths.some((s) => s.id === id));
     if (hash && hash.id !== synthId) {
       router.replace(synthHref(hash.id, hash.view));
@@ -200,6 +214,22 @@ function Synth({ baseDef, detail, synths, viewParam }: SynthPageProps & { baseDe
   );
 
   const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]));
+  // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
+  // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
+  // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
+  // arrival effect above may already have put the restored view in the URL.
+  useEffect(() => {
+    if (!soundParam) return;
+    // The arrival effect is sending the visitor elsewhere: leave this synth's stored panel as it was.
+    const hash = window.location.hash;
+    const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
+    if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
+    const p = sounds.find((x) => x.id === soundParam);
+    if (p) patch(() => freshSession(synthDef, p));
+    const url = new URL(window.location.href);
+    url.searchParams.delete('sound');
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
   // sound, then.

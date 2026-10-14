@@ -36,9 +36,14 @@ describe('reopenTarget', () => {
     }
   );
 
-  it('ignores a hash naming an unlisted synth, or the bank', () => {
+  it('ignores a hash naming an unlisted synth', () => {
     expect(reopenTarget(IDS, '#unlisted', 'minimoog')).toBe('/synths/minimoog');
-    expect(reopenTarget(IDS, '#bank/x', null)).toBe('/synths/model-d');
+  });
+
+  it("sends a databank link to the databank's page, over the stored synth", () => {
+    expect(reopenTarget(IDS, '#bank/artists/kraftwerk', 'minimoog')).toBe(
+      '/bank/artists/kraftwerk'
+    );
   });
 
   it('is null when nothing is listed, whatever else says', () => {

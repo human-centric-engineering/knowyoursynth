@@ -1062,6 +1062,8 @@ export interface Lineage {
   relatives: LineageRelative[];
   /** Filled from the databank; absent in the lineage file itself. */
   heard?: HeardEntry[];
+  /** The databank artists `heard` credits, by name: what its "About <artist>" links open. Absent when there are none. */
+  heardArtists?: { id: string; name: string }[];
   /** Players known to have used one, with no single record to list. */
   users?: string[];
   /** A caveat about the list. */

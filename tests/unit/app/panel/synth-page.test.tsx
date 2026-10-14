@@ -33,9 +33,12 @@ vi.mock('@/lib/app/catalogue/read', () => ({
   listSynths: vi.fn(),
 }));
 
-const props = (id: string, view?: string | string[]) => ({
+const props = (id: string, view?: string | string[], sound?: string | string[]) => ({
   params: Promise.resolve({ id }),
-  searchParams: Promise.resolve(view === undefined ? {} : { view }),
+  searchParams: Promise.resolve({
+    ...(view === undefined ? {} : { view }),
+    ...(sound === undefined ? {} : { sound }),
+  }),
 });
 
 const DETAIL = {
@@ -46,8 +49,12 @@ const DETAIL = {
 } as unknown as SynthDetail;
 const LIST = [{ id: 'model-d' }, { id: 'minimoog' }] as unknown as CatalogueSynth[];
 
-const render = async (id: string, view?: string | string[]): Promise<ReactElement> => {
-  const el = await SynthRoute(props(id, view));
+const render = async (
+  id: string,
+  view?: string | string[],
+  sound?: string | string[]
+): Promise<ReactElement> => {
+  const el = await SynthRoute(props(id, view, sound));
   if (!isValidElement(el)) throw new Error('expected an element');
   return el;
 };
@@ -79,7 +86,12 @@ describe('/synths/[id]', () => {
 
   it('passes the detail, the listed synths, and the view to the page, keyed by synth', async () => {
     const el = await render('model-d', 'long,outline');
-    expect(el.props).toEqual({ detail: DETAIL, synths: LIST, viewParam: 'long,outline' });
+    expect(el.props).toEqual({
+      detail: DETAIL,
+      synths: LIST,
+      viewParam: 'long,outline',
+      soundParam: null,
+    });
     expect(el.key).toBe('model-d');
   });
 
@@ -97,6 +109,19 @@ describe('/synths/[id]', () => {
     expect((await render('model-d', 'x'.repeat(33))).props).toMatchObject({ viewParam: null });
     expect((await render('model-d', 'x'.repeat(32))).props).toMatchObject({
       viewParam: 'x'.repeat(32),
+    });
+  });
+
+  it('passes the sound query to the page, and an array or one over 128 characters as null', async () => {
+    expect((await render('model-d', undefined, 'wobble')).props).toMatchObject({
+      soundParam: 'wobble',
+      viewParam: null,
+    });
+    expect((await render('model-d', undefined, ['a', 'b'])).props).toMatchObject({
+      soundParam: null,
+    });
+    expect((await render('model-d', undefined, 'x'.repeat(129))).props).toMatchObject({
+      soundParam: null,
     });
   });
 

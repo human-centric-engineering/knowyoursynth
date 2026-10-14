@@ -150,6 +150,21 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
 - **Delete when:** sunrise#964 lands. Move the seventeen names into the new seam's scaffold.
 
+### The databank's pages in the sitemap
+
+- **Files:** `app/sitemap.ts`
+- **Change:** the function is `async` and `force-dynamic`, and spreads
+  `bankSitemapPaths()` (`components/app/bank/sitemap.ts`) into its page list: `/bank`, each other
+  tab and every databank row. One import and a comment line besides.
+- **Why:** the plan names `sitemap.ts` among the platform files the fork edits (plan §5), and the
+  databank's rows are in the tables, so the list is read per request rather than at build. There
+  is no fork seam for sitemap entries.
+- **On conflict:** take theirs, then re-apply the import, `force-dynamic`, `async` and the spread
+  at the end of `publicPages`.
+- **Upstream:** none filed. A sitemap-contributor seam would remove the row; file it if a second
+  fork-owned surface (`/explore`, `/u/[username]`) needs the sitemap too.
+- **Delete when:** Sunrise ships a seam for sitemap entries. Move the call into it.
+
 ### CI pulls Docker Hub images logged in
 
 - **Files:** `.github/workflows/ci.yml`
@@ -182,6 +197,7 @@ Today they are:
 
 - `prototype/**`, which goes at f-launch x5;
 - `app/(panel)/**`, the synth page's route group;
+- `app/(public)/bank/**`, the databank's pages;
 - `app/admin/synths/**`, the admin Designs page;
 - `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
@@ -189,7 +205,8 @@ Today they are:
 - `tests/fixtures/synths/**`;
 - `tests/unit/prototype-boundary.test.ts`;
 - the tests for fork-owned code, under `tests/unit/lib/app/synths/**`,
-  `tests/unit/components/app/**` and `tests/unit/app/panel/**`.
+  `tests/unit/components/app/**`, `tests/unit/app/panel/**` and
+  `tests/unit/app/public/bank-pages.test.tsx`.
 
 Before a sync, intersect that list with `git diff --diff-filter=A --name-only <base> <target>`.
 

@@ -13,7 +13,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/synth.css`        | The instrument's classes: `kys-label`, `kys-stage`, `kys-pulse`, …        |
 | `components/app/synth/engine.ts`        | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`       | What a signed-out visitor's browser keeps                                 |
-| `components/app/synth/routes.ts`        | `?view=` and the prototype's hash links                                   |
+| `components/app/synth/routes.ts`        | `?view=`, `?sound=` and the prototype's hash links                        |
 | `components/app/synth/with-notes.ts`    | Puts the API's "Unusual on…" notes back on the definition                 |
 | `components/app/synth/library.tsx`      | The sound library: search, categories, the loaded sound                   |
 | `components/app/synth/lesson.tsx`       | The lesson: how it works, build it step by step, make it yours            |
@@ -77,8 +77,12 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   storage and applied when the URL has no `view`. Changing it rewrites the URL in place.
 - `/synths` reopens the synth in `kys.synth`, or the first listed one. This stands in until a
   catalogue is planned (journal, `f-model-d`).
+- `?sound=<id>` opens the synth with that library sound loaded, over whatever the browser had
+  stored, then drops out of the URL so a reload keeps what was done since. A sound the library
+  does not have is ignored. A databank record's "Load a sound in this style" links here.
 - The prototype's hash links (`#model-d`, `#model-d/outline`, `#model-d/long`) redirect from
-  `/synths` and from any synth page. `#bank/…` links are the bank pages' to redirect.
+  `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and
+  from `/bank`, to the databank's page (`components/app/bank/routes.ts`).
 
 ## Browser storage (signed out)
 
@@ -102,5 +106,3 @@ Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 Each arrives with the surface it opens, so no button opens nothing (`B31`):
 
 - the tutor (`f-tutor`), and with it the library's "ask the tutor" hint;
-- the databank (`f-databank`): the lineage's "Heard on" records and their artist links. Until
-  then that tab shows only for a lineage that names its players.

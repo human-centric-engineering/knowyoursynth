@@ -718,10 +718,65 @@ describe('SynthPage navigation', () => {
   });
 
   it('leaves a hash that is not a listed synth alone', () => {
-    window.location.hash = '#bank/moog';
+    window.location.hash = '#unlisted/outline';
     page();
     expect(router.replace).not.toHaveBeenCalled();
     expect(readStored('kys.synth')).toBe('model-d');
+  });
+
+  it("sends a databank link to the databank's page, and does not store the synth", () => {
+    window.location.hash = '#bank/artists/kraftwerk';
+    page();
+    expect(router.replace).toHaveBeenCalledExactlyOnceWith('/bank/artists/kraftwerk');
+    expect(readStored('kys.synth')).toBeNull();
+  });
+});
+
+describe('SynthPage ?sound=', () => {
+  it('opens with that sound loaded, over the one stored, and takes it out of the URL', () => {
+    storeSession({ presetId: 'fat-bass', step: null, values: { 'filter.cutoff': 5 }, cables: [] });
+    window.history.replaceState(null, '', '/synths/model-d?sound=wobble');
+    const replace = vi.spyOn(window.history, 'replaceState');
+
+    page({ soundParam: 'wobble' });
+
+    expect(loadedName()).toBe(WOBBLE.name);
+    expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d');
+  });
+
+  it('keeps the view the URL or the last choice gave it', () => {
+    window.localStorage.setItem('kys.view', JSON.stringify({ outline: true, long: false }));
+    window.history.replaceState(null, '', '/synths/model-d?sound=wobble');
+    const replace = vi.spyOn(window.history, 'replaceState');
+
+    page({ soundParam: 'wobble' });
+
+    expect(loadedName()).toBe(WOBBLE.name);
+    expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d?view=outline');
+  });
+
+  it.each(['#bank/artists/kraftwerk', '#ob-x'])(
+    'leaves the stored panel alone when %s sends the visitor elsewhere',
+    (hash) => {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      storeSession({ presetId: 'fat-bass', step: null, values: {}, cables: [] });
+      window.location.hash = hash;
+      page({ soundParam: 'wobble' });
+      expect(router.replace).toHaveBeenCalledTimes(1);
+      act(() => {
+        vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS * 2);
+      });
+      expect(readStored(SESSION_KEY)).toMatchObject({ presetId: 'fat-bass' });
+      vi.useRealTimers();
+    }
+  );
+
+  it('opens as it would have for a sound the library does not have', () => {
+    storeSession({ presetId: 'wobble', step: null, values: {}, cables: [] });
+    window.history.replaceState(null, '', '/synths/model-d?sound=nope');
+    page({ soundParam: 'nope' });
+    expect(loadedName()).toBe(WOBBLE.name);
+    expect(window.location.search).toBe('');
   });
 });
 

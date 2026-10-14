@@ -109,11 +109,30 @@ const LineageColumnsSchema = z.object({
   relatives: z.array(LineageRelativeSchema),
 });
 
+/**
+ * The names of every listed synth's library sounds, by synth then sound id: what the databank's "Load a sound in this
+ * style" links print. Only sounds made on the definition the registry has, as the detail serves; the detail can still
+ * leave out one that fails validation, and a link to that sound then opens the synth on its first sound.
+ */
+export async function listSoundNames(): Promise<Record<string, Record<string, string>>> {
+  const rows = await prisma.synthSound.findMany({
+    where: { synth: { listed: true } },
+    orderBy: [{ synthId: 'asc' }, { order: 'asc' }, { slug: 'asc' }],
+    select: { synthId: true, slug: true, name: true, definitionVersion: true },
+  });
+  const names: Record<string, Record<string, string>> = {};
+  for (const r of rows) {
+    if (getSynthDef(r.synthId)?.version !== r.definitionVersion) continue;
+    (names[r.synthId] ??= {})[r.slug] = r.name;
+  }
+  return names;
+}
+
 /** One listed synth with its sounds, lineage and notes, or `null` when no listed, playable synth has that id. */
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows, heard] = await Promise.all([
+  const [row, noteRows, heardOn] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -178,7 +197,8 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         title: lineageRow.title,
         intro: lineageRow.intro,
         ...parsed.data,
-        heard,
+        heard: heardOn.heard,
+        ...(heardOn.artists.length ? { heardArtists: heardOn.artists } : {}),
         ...(lineageRow.users.length ? { users: lineageRow.users } : {}),
         ...(lineageRow.note ? { note: lineageRow.note } : {}),
       };

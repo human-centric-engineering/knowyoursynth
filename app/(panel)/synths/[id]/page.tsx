@@ -29,6 +29,7 @@ type Props = {
 };
 
 const viewParam = z.string().max(32).optional().catch(undefined);
+const soundParam = z.string().max(128).optional().catch(undefined);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -43,12 +44,14 @@ export default async function SynthRoute({ params, searchParams }: Props) {
   const [detail, synths] = await Promise.all([getSynthDetail(id), listSynths()]);
   if (!detail) notFound();
 
+  const query = await searchParams;
   return (
     <SynthPage
       key={id}
       detail={detail}
       synths={synths}
-      viewParam={viewParam.parse((await searchParams).view) ?? null}
+      viewParam={viewParam.parse(query.view) ?? null}
+      soundParam={soundParam.parse(query.sound) ?? null}
     />
   );
 }
