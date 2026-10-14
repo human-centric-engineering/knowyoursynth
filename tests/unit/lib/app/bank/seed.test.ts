@@ -244,4 +244,45 @@ describe('seedBank', () => {
     await expect(seedBank(db.prisma, data)).rejects.toBeInstanceOf(BankDataError);
     expect(db.writes).toEqual([]);
   });
+
+  it('leaves out a row an admin removed, and its joins', async () => {
+    const db = fakeDb();
+    db.tables.bankRemoval.rows.push({ kind: 'songs', id: 'wendy-carlos-switched-on-bach' });
+    const report = await seedBank(db.prisma, data);
+    expect(report.songs.created).toBe(247);
+    expect(db.tables.bankSong.rows.some((r) => r.id === 'wendy-carlos-switched-on-bach')).toBe(
+      false
+    );
+    expect(
+      db.tables.bankSongPart.rows.some((r) => r.songId === 'wendy-carlos-switched-on-bach')
+    ).toBe(false);
+  });
+
+  it('refuses, before writing, data that has come to point at a removed row', async () => {
+    const db = fakeDb();
+    // Nothing pointed at the theremin when it was removed; the data now has a record played on it.
+    db.tables.bankRemoval.rows.push({ kind: 'instruments', id: 'rca-theremin' });
+    data.songs[0].parts[0].instruments = ['rca-theremin'];
+
+    const err = await seedBank(db.prisma, data).catch((e: unknown) => e);
+
+    expect(err).toBeInstanceOf(BankDataError);
+    expect((err as BankDataError).problems).toEqual([
+      `song ${data.songs[0].id}: instrument rca-theremin was removed by an admin`,
+    ]);
+    expect(db.writes).toEqual([]);
+  });
+
+  it("does not hold a removed row against an admin's row, which it does not write", async () => {
+    const db = fakeDb();
+    await seedBank(db.prisma, data);
+    const song = data.songs[0];
+    const stored = db.tables.bankSong.rows.find((r) => r.id === song.id);
+    if (!stored) throw new Error('fixture');
+    stored.editedAt = new Date();
+    db.tables.bankRemoval.rows.push({ kind: 'instruments', id: 'rca-theremin' });
+    song.parts[0].instruments = ['rca-theremin'];
+
+    await expect(seedBank(db.prisma, data)).resolves.toBeDefined();
+  });
 });
