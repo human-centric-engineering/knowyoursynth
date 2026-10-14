@@ -444,3 +444,51 @@ model BankRemoval {
   @@id([kind, id])
   @@map("bank_removal")
 }
+
+// ─── Synth suggestions (f-databank t-37) ─────────────────────────────────────
+//
+// A signed-in user's "this synth is missing", queued for an admin. Unlike the
+// databank tables, a row is about a person: it carries the suggester's user id,
+// so it is declared for subject export in lib/app/data-export.ts. Still on
+// GLOBAL_CONFIG_MODELS: it feeds the shared databank, and the queue that acts on
+// it is the install org's.
+//
+// `userId` is a plain string, not a @relation, so `User` (platform-owned) needs
+// no back-relation field (CUSTOMIZATION.md §5). The FK is written by hand in the
+// migration, `ON DELETE SET NULL`: an erased user's suggestion stays as databank
+// history with nobody attached. A drift probe in lib/app/db-drift.ts pins it.
+
+enum SynthSuggestionStatus {
+  PENDING
+  /// An admin created an instrument from it (`instrumentId`).
+  ACCEPTED
+  /// It was already in the databank, as `instrumentId`.
+  MERGED
+  /// Not added; `reason` says why.
+  DECLINED
+}
+
+/// A synth a user says is missing from the databank.
+model SynthSuggestion {
+  id           String                @id @default(cuid())
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration).
+  userId       String?
+  name         String
+  /// The company, as text, as BankInstrument.maker is.
+  maker        String
+  link         String?
+  note         String?               @db.Text
+  status       SynthSuggestionStatus @default(PENDING)
+  /// The instrument it became (ACCEPTED) or was merged into (MERGED). Not a
+  /// foreign key: it records the outcome, and does not stop the row's removal.
+  instrumentId String?
+  /// Why it was declined.
+  reason       String?               @db.Text
+  decidedAt    DateTime?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  @@index([status, createdAt])
+  @@index([userId])
+  @@map("synth_suggestion")
+}
