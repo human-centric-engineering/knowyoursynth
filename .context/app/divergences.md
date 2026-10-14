@@ -134,22 +134,27 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
 
-### The catalogue, databank and synth suggestion tables on the global-config list
+### The catalogue and databank tables on the global-config list, and synth suggestions on the system list
 
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
-  `BankRemoval`, `f-databank` t-34 and t-36) and `SynthSuggestion` (t-37) follow under a second one.
+  `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37) is
+  appended to `SYSTEM_MODELS` after `ContactSubmission`, under its own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
   product content every org shares, so they are global config (owner ruling on `f-model-d`,
   2026-10-07). A synth suggestion carries its user, but it feeds that shared databank and is
-  decided from one queue, so scoping it to an org would hide it from the admins who act on it.
-- **On conflict:** take theirs, and re-append our nineteen names (and the two comments) to the
-  end of `GLOBAL_CONFIG_MODELS`.
+  decided from one queue, so scoping it to an org would hide it from the admins who act on it. It
+  is not a shared setting, which is what `GLOBAL_CONFIG_MODELS` means to the shared-settings guard
+  (`scripts/ci/shared-settings-writes.ts`). That guard would refuse the signed-in user's `POST`.
+  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`.
+- **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion` (and its comment) after
+  `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the nineteen names into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the nineteen names (eighteen global, one system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 

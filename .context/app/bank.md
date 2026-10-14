@@ -180,8 +180,10 @@ since a Prisma relation would need a field on the platform's `User`. The foreign
 hand in the migration, `ON DELETE SET NULL`, so an erased user's suggestions stay as history with
 nobody attached. A drift probe in `lib/app/db-drift.ts` pins it. The table is declared in
 `lib/app/data-export.ts`, so a subject-access export includes the user's own suggestions. It is
-on `GLOBAL_CONFIG_MODELS` with the databank, because it feeds the shared databank and is decided
-from one queue.
+on `SYSTEM_MODELS`, beside `ContactSubmission`: like a contact message it is an inbound
+submission decided from one queue, so scoping it to an org would hide it from the admins who act
+on it. It is not on `GLOBAL_CONFIG_MODELS` because a suggestion is not a shared setting. That list
+is what the shared-settings guard reads, and it would refuse the signed-in user's `POST`.
 
 ## Don't
 

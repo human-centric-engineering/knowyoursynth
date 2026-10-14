@@ -49,6 +49,8 @@ export const SYSTEM_MODELS = [
   'AuthBootstrap',
   'SeedHistory',
   'ContactSubmission',
+  // Know Your Synth: users' synth suggestions, an inbound queue like the one above (divergence row in .context/app/divergences.md).
+  'SynthSuggestion',
   'DataErasureReceipt',
   'McpAuditLog',
   'AiAdminAuditLog',
@@ -78,7 +80,7 @@ export const GLOBAL_CONFIG_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
-  // Know Your Synth: the databank and its suggestions (same divergence row).
+  // Know Your Synth: the databank (same divergence row).
   'BankMaker',
   'BankInstrument',
   'BankInstrumentPerson',
@@ -92,7 +94,6 @@ export const GLOBAL_CONFIG_MODELS = [
   'BankPartInstrument',
   'BankPartSynth',
   'BankRemoval',
-  'SynthSuggestion',
 ] as const;
 
 export type SystemModel = (typeof SYSTEM_MODELS)[number];
