@@ -31,8 +31,8 @@ the same PR**, and each row names what deletes it.
 - **Files:** `package.json`, `package-lock.json`, `README.md`, `.env.development`
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
-    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers` and `check:synths`
-    scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
+    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `check:synths` and
+    `smoke:sounds` scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
     dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).

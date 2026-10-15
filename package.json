@@ -60,6 +60,7 @@
     "db:tenancy:role": "tsx --env-file=.env.local scripts/db/tenancy-role.ts",
     "smoke:chat": "tsx --env-file=.env.local scripts/smoke/chat.ts",
     "smoke:bank": "tsx --env-file=.env.local scripts/smoke/bank.ts",
+    "smoke:sounds": "tsx --env-file=.env.local scripts/smoke/sounds.ts",
     "smoke:orchestration": "tsx --env-file=.env.local scripts/smoke/orchestration.ts",
     "smoke:hybrid-search": "tsx --env-file=.env.local scripts/smoke/knowledge-hybrid-search.ts",
     "smoke:transcribe": "tsx --env-file=.env.local scripts/smoke/transcribe.ts",
