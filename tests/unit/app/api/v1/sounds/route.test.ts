@@ -283,7 +283,22 @@ describe("another user's sound is a 404", () => {
   it('reads the same as an id nobody has, and an id that cannot be one', async () => {
     const missing = await read(request('GET', '/api/v1/sounds/nobodys'), ctx('nobodys'));
     const malformed = await read(request('GET', '/api/v1/sounds/NOT_AN_ID!'), ctx('NOT_AN_ID!'));
-    expect([missing.status, malformed.status]).toEqual([404, 404]);
+    const malformedChange = await change(
+      request('PATCH', '/api/v1/sounds/NOT_AN_ID!', { name: 'x' }),
+      ctx('NOT_AN_ID!')
+    );
+    const malformedDelete = await remove(
+      request('DELETE', '/api/v1/sounds/NOT_AN_ID!'),
+      ctx('NOT_AN_ID!')
+    );
+    expect([
+      missing.status,
+      malformed.status,
+      malformedChange.status,
+      malformedDelete.status,
+    ]).toEqual([404, 404, 404, 404]);
+    expect(table.client.updateMany).not.toHaveBeenCalled();
+    expect(table.client.deleteMany).not.toHaveBeenCalled();
   });
 });
 
