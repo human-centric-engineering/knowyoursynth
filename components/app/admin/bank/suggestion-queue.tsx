@@ -138,11 +138,6 @@ function Outcome({ suggestion: s }: { suggestion: AdminSuggestion }) {
   );
 }
 
-/** An empty source is left out, as the databank has none. */
-function withSource<T extends { source: string }>({ source, ...rest }: T) {
-  return source.trim() ? { ...rest, source } : rest;
-}
-
 const ACCEPT_KEYS = [
   'instrument.id',
   'instrument.name',
@@ -186,7 +181,10 @@ function DecisionForm({
     setRefusal(null);
     const body: SuggestionDecision =
       mode === 'accept'
-        ? { action: 'accept', instrument: withSource(instrument) }
+        ? {
+            action: 'accept',
+            instrument: { ...instrument, source: instrument.source.trim() || undefined },
+          }
         : mode === 'merge'
           ? { action: 'merge', instrumentId: instrumentId.trim() }
           : { action: 'decline', reason };

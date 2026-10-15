@@ -119,8 +119,11 @@ describe('SuggestionQueue', () => {
     await user.clear(screen.getByLabelText(/^Source/, INPUT));
     await user.click(screen.getByRole('button', { name: 'Add instrument' }));
 
-    const [, { body }] = post.mock.calls[0] as [string, { body: { instrument: object } }];
-    expect(body.instrument).not.toHaveProperty('source');
+    const [, { body }] = post.mock.calls[0] as [
+      string,
+      { body: { instrument: { source?: string } } },
+    ];
+    expect(body.instrument.source).toBeUndefined();
   });
 
   it('shows a refused accept on the field the server named, and does not refresh', async () => {
