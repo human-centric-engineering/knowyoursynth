@@ -32,7 +32,8 @@ describe('the seed data', () => {
   it('holds the prototype databank whole', () => {
     expect(bank.artists).toHaveLength(184);
     expect(bank.songs).toHaveLength(248);
-    expect(bank.instruments).toHaveLength(86);
+    // The reference list (b4) adds the rest, each with a source; the prototype's 86 have none.
+    expect(bank.instruments.filter((i) => !i.source)).toHaveLength(86);
     expect(bank.makers).toHaveLength(50);
   });
 });

@@ -164,7 +164,7 @@ describe('listBank', () => {
 
   it('sorts instruments by year, and makers by birth', async () => {
     const instruments = await listBank('instruments');
-    expect(instruments).toHaveLength(86);
+    expect(instruments).toHaveLength(data.instruments.length);
     const built = instruments.map((i) => yearOf(i.year));
     expect(built).toEqual([...built].sort((x, y) => x - y));
     const makers = await listBank('makers');
@@ -196,42 +196,26 @@ describe('getBankDetail', () => {
       people: [{ id: 'robert-moog' }, { id: 'bill-hemsath' }, { id: 'jim-scott' }],
       synths: ['model-d'],
       recreationOf: null,
-      recreations: [],
+      recreations: expect.arrayContaining([expect.objectContaining({ id: 'behringer-model-d' })]),
     });
     expect(detail?.songs.length).toBeGreaterThan(0);
     expect(detail?.artists.length).toBeGreaterThan(0);
   });
 
   it('joins a recreation to its original and back', async () => {
-    const recreated: Bank = {
-      ...data,
-      instruments: [
-        ...data.instruments,
-        {
-          id: 'behringer-model-d',
-          name: 'Model D',
-          maker: 'Behringer',
-          year: '2017',
-          kind: 'mono',
-          recreationOf: 'moog-minimoog',
-          text: 'A recreation.',
-        },
-      ],
-    };
-    useDb(bankDb(recreated));
     expect((await getBankDetail('instruments', 'behringer-model-d'))?.recreationOf).toMatchObject({
       id: 'moog-minimoog',
     });
-    expect((await getBankDetail('instruments', 'moog-minimoog'))?.recreations).toEqual([
-      {
-        id: 'behringer-model-d',
-        name: 'Model D',
-        maker: 'Behringer',
-        year: '2017',
-        kind: 'mono',
-        recreationOf: 'moog-minimoog',
-      },
-    ]);
+    const recreations = (await getBankDetail('instruments', 'moog-minimoog'))?.recreations ?? [];
+    expect(recreations).toContainEqual({
+      id: 'behringer-model-d',
+      name: 'Behringer Model D',
+      maker: 'Behringer',
+      year: '2018',
+      kind: 'module',
+      recreationOf: 'moog-minimoog',
+    });
+    expect(recreations.every((r) => r.recreationOf === 'moog-minimoog')).toBe(true);
   });
 
   it('joins a maker to what they made, and a song to its artists and instruments', async () => {

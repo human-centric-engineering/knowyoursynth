@@ -7,21 +7,21 @@ only from them (D13).
 
 ## Where it lives
 
-| Table                  | Holds                                                                                   |
-| ---------------------- | --------------------------------------------------------------------------------------- |
-| `BankMaker`            | A designer, engineer or founder: the "Innovators". The file calls them makers.          |
-| `BankInstrument`       | A real instrument. `maker` is the company, as text. `recreationOfId` names an original. |
-| `BankInstrumentPerson` | The makers behind an instrument, in order.                                              |
-| `BankInstrumentSynth`  | An app synth that models the instrument (`app`).                                        |
-| `BankArtist`           | A player, band, producer, composer or sound designer.                                   |
-| `BankArtistMember`     | A member of a group: one row per pair, under the group.                                 |
-| `BankArtistInstrument` | An instrument an artist is known to have used beyond their records.                     |
-| `BankSong`             | A song, album, score, performance or body of work.                                      |
-| `BankSongArtist`       | A work's credited artists, in credit order.                                             |
-| `BankSongPart`         | What a synth plays on a work: `on`, `text`, the player.                                 |
-| `BankPartInstrument`   | The instruments a part is played on, in order.                                          |
-| `BankPartSynth`        | What a part says about one app synth: listed under it, a sound in its style, a note.    |
-| `BankRemoval`          | A row an admin removed (kind and id), so the seed does not re-create it.                |
+| Table                  | Holds                                                                                                                             |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `BankMaker`            | A designer, engineer or founder: the "Innovators". The file calls them makers.                                                    |
+| `BankInstrument`       | A real instrument. `maker` is the company, as text. `recreationOfId` names an original. `source` is where its facts were checked. |
+| `BankInstrumentPerson` | The makers behind an instrument, in order.                                                                                        |
+| `BankInstrumentSynth`  | An app synth that models the instrument (`app`).                                                                                  |
+| `BankArtist`           | A player, band, producer, composer or sound designer.                                                                             |
+| `BankArtistMember`     | A member of a group: one row per pair, under the group.                                                                           |
+| `BankArtistInstrument` | An instrument an artist is known to have used beyond their records.                                                               |
+| `BankSong`             | A song, album, score, performance or body of work.                                                                                |
+| `BankSongArtist`       | A work's credited artists, in credit order.                                                                                       |
+| `BankSongPart`         | What a synth plays on a work: `on`, `text`, the player.                                                                           |
+| `BankPartInstrument`   | The instruments a part is played on, in order.                                                                                    |
+| `BankPartSynth`        | What a part says about one app synth: listed under it, a sound in its style, a note.                                              |
+| `BankRemoval`          | A row an admin removed (kind and id), so the seed does not re-create it.                                                          |
 
 The schema is in `prisma/schema/app.prisma`. Like the catalogue, the tables are on
 `GLOBAL_CONFIG_MODELS` (a divergence, sunrise#964) and hold nothing about a person. Users'
@@ -41,10 +41,42 @@ Things the files did that the tables do differently:
 - **A recreation is its own instrument** (owner ruling, 2026-10-13): a Behringer Model D is a
   row whose `recreationOfId` is the Minimoog. "Heard on" still follows `app` on the original.
 
+## The reference list
+
+`f-databank` t-38 (b4). Owned and wishlist (D4) need every synth that exists, not only the ones
+named on records, so `data/bank/reference.json` lists the rest: hardware synths sold commercially,
+from any maker and era. It was compiled for this app from facts (D9), each entry checked against a
+page that states it, and that page is the entry's `source`. Its entries are instruments like the
+others; the loader adds them after the 86.
+
+- **In:** keyboards, desktop and rack modules, semi-modulars, and modular systems sold as systems.
+  Sampling keyboards, sample-playback synths, string machines and workstations count. **Out:**
+  drum machines, single Eurorack modules (for the first release only, owner ruling 2026-10-13),
+  software, samplers and grooveboxes, home keyboards, organs and pianos, theremins.
+- **A recreation is its own entry**, linked to its original by `recreationOf`, and lists no app
+  synths. "Heard on" stays on the original, so a synth's list is the same with or without the
+  reference list (`heard-on.json` still matches).
+- **Every reference entry has a `source`**, a web address checked when it was compiled: the maker's
+  page or manual, a dated press release or review, or an encyclopedia article, never another
+  site's synth database. The 86 have none yet. An admin can add one from the instrument's form;
+  accepting a suggestion starts it from the suggestion's link. The instrument's page links it.
+- **`maker` is the company as it was named when the instrument came out**: `Sequential Circuits`,
+  `Dave Smith Instruments` and `Sequential` are one line of instruments under three names.
+- **`kind`**: `modular` for modules sold in a system; `semi-modular` where a patch bay re-routes the
+  main signal path over wiring that works without cables; `sequencer` for a synth played from its
+  own step sequencer with no keyboard (TB-303); `module` for any other unit without a keyboard;
+  otherwise `mono` (duophonic included), `paraphonic` or `poly`.
+
+`tests/unit/lib/app/bank/reference.test.ts` holds it to that: every company named on the 86 has
+the rest of its range here (or is listed as having none), the recreations behind the app's
+panels link to their originals, nothing repeats one of the 86, and the whole databank passes
+`checkBank`.
+
 ## How content gets in
 
 1. **Export, once.** `node prototype/tools/export-content.mjs --bank` writes the four files, as
    they are, to `prisma/seeds/app-knowyoursynth/data/bank/`. Committed. Nothing else runs it.
+   `reference.json` beside them is the [reference list](#the-reference-list), compiled here.
 2. **Seed.** `npm run db:seed` runs `002-bank.ts` after the catalogue's unit, since the databank
    points at synths and their sounds. It hands the data to `seedBank()` (`lib/app/bank/seed.ts`).
 3. **Admins edit the tables** after that, at `/admin/synths/bank` ([below](#admin-editing)).
