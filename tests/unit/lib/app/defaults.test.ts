@@ -31,7 +31,9 @@ import path from 'node:path';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
 // FORK (Know Your Synth): the data-export collector reads the synth suggestions table (`f-databank` t-37).
-vi.mock('@/lib/db/client', () => ({ prisma: { synthSuggestion: { findMany: vi.fn() } } }));
+vi.mock('@/lib/db/client', () => ({
+  prisma: { synthSuggestion: { findMany: vi.fn() }, userSound: { findMany: vi.fn() } },
+}));
 import { registerAppRateLimits } from '@/lib/app/rate-limit';
 import { registerAppTenantResolver } from '@/lib/app/tenant-resolver';
 import { hasTenantResolver } from '@/lib/tenancy/resolver';
@@ -276,22 +278,29 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/data-export.ts',
     risk: 'a stray collector would leak app rows into every install’s subject-access export, and a stray declaration would pre-account for a table nobody decided about',
     assert: async () => {
-      // Know Your Synth collects one section, a user's synth suggestions (`f-databank` t-37), and asks only for theirs.
+      // Know Your Synth collects two sections, a user's synth suggestions (`f-databank` t-37) and their sounds
+      // (`f-my-sounds` s1), and asks only for theirs.
       vi.mocked(prisma.synthSuggestion.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.userSound.findMany).mockResolvedValue([]);
       expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual({
         synthSuggestions: [],
+        sounds: [],
       });
       expect(prisma.synthSuggestion.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { userId: 'user-1' } })
+      );
+      expect(prisma.userSound.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { userId: 'user-1' } })
       );
       // The declaration half (#533). The reads trigger the lazy init, so this
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
-      // Know Your Synth exports a user's synth suggestions, and declares its catalogue and databank tables as excluded:
+      // Know Your Synth exports a user's synth suggestions and sounds, and declares its catalogue and databank tables as excluded:
       // no row of theirs is about a user.
       expect(getAppSubjectSources().map((s) => [s.model, s.section, s.disposition])).toEqual([
         ['SynthSuggestion', 'synthSuggestions', 'export'],
+        ['UserSound', 'sounds', 'export'],
       ]);
       expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
         'Synth',

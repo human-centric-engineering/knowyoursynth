@@ -115,6 +115,13 @@ export function initAppSubjectSources(): void {
         description:
           'Synths you suggested for the databank, with what you wrote and what an admin decided.',
       },
+      {
+        model: 'UserSound',
+        section: SOUNDS_SECTION,
+        disposition: 'export',
+        description:
+          'Sounds you saved: the synth, the name and notes, the panel settings and cables, and the library sound each copy credits.',
+      },
     ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
@@ -163,12 +170,44 @@ const CATALOGUE_REASON =
 /** The export section for a user's synth suggestions (`f-databank` t-37). */
 const SUGGESTIONS_SECTION = 'synthSuggestions';
 
+/** The export section for a user's own sounds (`f-my-sounds` s1). */
+const SOUNDS_SECTION = 'sounds';
+
 /**
- * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37). Every declared section is
- * returned, empty when they have none.
+ * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37) and the sounds they saved
+ * (`f-my-sounds` s1). Every declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const suggestions = await prisma.synthSuggestion.findMany({
+  const [suggestions, sounds] = await Promise.all([
+    collectSuggestions(userId),
+    collectSounds(userId),
+  ]);
+  return { [SUGGESTIONS_SECTION]: suggestions, [SOUNDS_SECTION]: sounds };
+}
+
+function collectSounds(userId: string) {
+  return prisma.userSound.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      synthId: true,
+      definitionVersion: true,
+      name: true,
+      notes: true,
+      values: true,
+      cables: true,
+      sourceSlug: true,
+      sourceName: true,
+      sourceRef: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+}
+
+function collectSuggestions(userId: string) {
+  return prisma.synthSuggestion.findMany({
     where: { userId },
     orderBy: { createdAt: 'asc' },
     select: {
@@ -184,5 +223,4 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
       createdAt: true,
     },
   });
-  return { [SUGGESTIONS_SECTION]: suggestions };
 }
