@@ -123,8 +123,9 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
-  declarations (five models and three enums), the databank's (thirteen models) and the synth
-  suggestions' (one model and one enum, `f-databank` t-37) instead of none, under a `FORK` comment.
+  declarations (five models and three enums), the databank's (thirteen models), the synth
+  suggestions' (one model and one enum, `f-databank` t-37) and user sounds' (one model,
+  `f-my-sounds` s1) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -134,14 +135,15 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** never, while the fork has app models, unless upstream makes the case read a
   fork-owned declaration.
 
-### The catalogue and databank tables on the global-config list, and synth suggestions on the system list
+### The catalogue and databank tables on the global-config list, and synth suggestions and user sounds on the system list
 
 - **Files:** `lib/tenancy/classification.ts`
 - **Change:** `Synth`, `SynthSound`, `SynthLineage`, `SynthNote` and `CatalogueSeedRecord` (the
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
-  `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37) is
-  appended to `SYSTEM_MODELS` after `ContactSubmission`, under its own comment.
+  `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37) and
+  `UserSound` (`f-my-sounds` s1) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under
+  their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
   product content every org shares, so they are global config (owner ruling on `f-model-d`,
@@ -149,19 +151,21 @@ the same PR**, and each row names what deletes it.
   decided from one queue, so scoping it to an org would hide it from the admins who act on it. It
   is not a shared setting, which is what `GLOBAL_CONFIG_MODELS` means to the shared-settings guard
   (`scripts/ci/shared-settings-writes.ts`). That guard would refuse the signed-in user's `POST`.
-  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`.
+  So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
+  own sounds are theirs whichever org they act in, and are never a shared setting either, so
+  `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15).
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion` (and its comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion` and `UserSound` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the nineteen names (eighteen global, one system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty names (eighteen global, two system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
 - **Files:** `tests/unit/lib/db/drift-probes.test.ts`
-- **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our one probe's name (the
-  hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37) instead of none, under a `FORK`
-  comment.
+- **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our probes' names (the
+  hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, and `user_sound_userId_fkey`,
+  `f-my-sounds` s1) instead of none, under a `FORK` comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.
 - **On conflict:** take theirs, and re-apply the pin to whichever case asserts the scaffold

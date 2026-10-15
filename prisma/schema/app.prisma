@@ -52,9 +52,10 @@ model Synth {
   designApprovedAt   DateTime?
   designApprovalNote String?     @db.Text
 
-  sounds  SynthSound[]
-  lineage SynthLineage?
-  notes   SynthNote[]
+  sounds     SynthSound[]
+  lineage    SynthLineage?
+  notes      SynthNote[]
+  userSounds UserSound[]
 
   /// Databank instruments this synth models, and record parts listed under it.
   bankInstruments BankInstrumentSynth[]
@@ -106,6 +107,9 @@ model SynthSound {
   updatedAt         DateTime  @updatedAt
 
   synth Synth @relation(fields: [synthId], references: [id], onDelete: Cascade)
+
+  /// Users' sounds copied from this one.
+  copies UserSound[]
 
   @@unique([synthId, slug])
   @@index([synthId, order])
@@ -493,4 +497,50 @@ model SynthSuggestion {
   @@index([status, createdAt])
   @@index([userId])
   @@map("synth_suggestion")
+}
+
+// ─── Users' sounds (f-my-sounds s1) ──────────────────────────────────────────
+//
+// A sound a user made on a synth: the panel they left, named and kept. A row is
+// about a person, so it is declared for subject export in lib/app/data-export.ts.
+// On SYSTEM_MODELS beside SynthSuggestion, with no orgId (owner ruling on
+// f-my-sounds, 2026-10-15): a user's sounds are theirs in every org.
+//
+// `userId` is a plain string, as SynthSuggestion's is, so `User` needs no
+// back-relation field. The FK is written by hand in the migration,
+// `ON DELETE CASCADE`: erasing a user erases their sounds. A drift probe in
+// lib/app/db-drift.ts pins it.
+
+/// A user's own sound: a panel state on one synth, validated against the synth's definition on write and on read
+/// (lib/app/sounds/). Owner-scoped: only its user reads or changes it.
+model UserSound {
+  id                String   @id @default(cuid())
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
+  userId            String
+  synthId           String
+  /// The definition version the panel was saved on.
+  definitionVersion Int
+  name              String
+  notes             String?  @db.Text
+  /// `ControlValues`: control id → value.
+  values            Json
+  /// `CablePair[]`: `[outputJackId, inputJackId]`.
+  cables            Json
+  /// The library sound it was copied from. Null for a sound made from scratch, and once that sound is removed.
+  sourceSoundId     String?
+  /// The credit, as the library sound read when it was copied, so it survives that sound being renamed or removed.
+  sourceSlug        String?
+  sourceName        String?
+  /// `In the style of <artist> — "<work>"`.
+  sourceRef         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  synth       Synth       @relation(fields: [synthId], references: [id], onDelete: Restrict)
+  sourceSound SynthSound? @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
+
+  @@index([userId, updatedAt])
+  @@index([synthId])
+  @@index([sourceSoundId])
+  @@map("user_sound")
 }
