@@ -187,6 +187,7 @@ describe('saving and reading back', () => {
       playable: true,
       panel,
       problems: [],
+      fitted: null,
     });
     expect(table.rows).toHaveLength(1);
     expect(table.rows[0]).toMatchObject({ userId: 'user-1', definitionVersion: modelD.version });
@@ -430,6 +431,11 @@ describe('a sound saved on an older definition version', () => {
     const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
     expect(got.data).toMatchObject({ playable: false, panel: null });
     expect(got.data?.problems).toEqual([expect.stringContaining('no mapping')]);
+    // What still fits is served, so the page can open the sound with it and say what was lost.
+    expect(got.data?.fitted).toEqual({
+      values: { ...modelD.init, [cont.id]: cont.min },
+      cables: [[outJack.id, inJack.id]],
+    });
 
     const listed = await json(await list(request('GET', '/api/v1/sounds')));
     expect(listed.data).toEqual([expect.objectContaining({ id, playable: false })]);
@@ -438,9 +444,14 @@ describe('a sound saved on an older definition version', () => {
   it('is not served when its stored panel no longer fits, and that is logged', async () => {
     const { data } = await json(await save({ synthId: 'model-d', name: 'Bent', panel }));
     const id = String(data!.id);
-    table.rows[0].values = { 'no-such-control': 1 };
+    table.rows[0].values = { 'no-such-control': 1, [cont.id]: cont.min };
     const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
     expect(got.data).toMatchObject({ playable: false, panel: null });
+    // The control the synth has is kept, the one it does not is dropped, and the cable still fits.
+    expect(got.data?.fitted).toEqual({
+      values: { ...modelD.init, [cont.id]: cont.min },
+      cables: [[outJack.id, inJack.id]],
+    });
     expect(mockLog.error).toHaveBeenCalledWith(
       'user sounds: stored panel fails validation',
       expect.objectContaining({ soundId: id })

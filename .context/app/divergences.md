@@ -189,6 +189,24 @@ the same PR**, and each row names what deletes it.
   fork-owned surface (`/explore`, `/u/[username]`) needs the sitemap too.
 - **Delete when:** Sunrise ships a seam for sitemap entries. Move the call into it.
 
+### My sounds on the dashboard
+
+- **Files:** `app/(protected)/dashboard/page.tsx`, `tests/unit/app/(protected)/dashboard/page.test.tsx`
+- **Change:**
+  - `page.tsx`: renders `<MySoundsCard userId={user.id} />`
+    (`components/app/dashboard/my-sounds-card.tsx`) between the stats row and Quick Actions. One
+    import and the element, each with a `FORK` comment.
+  - `page.test.tsx`: stubs `MySoundsCard` the way it already stubs `EmailStatusCard`, with a `FORK`
+    comment. The card is an async server component, which the test's client render cannot draw,
+    and it has its own test.
+- **Why:** `f-my-sounds` s2 (t-40) lists the user's sounds on `/dashboard`, which the app calls
+  My synths. Sunrise has no seam for dashboard content.
+- **On conflict:** take theirs, then re-add the import and the element wherever the page's cards
+  now sit, and the stub beside the test's other component stubs.
+- **Upstream:** none filed. A dashboard-sections seam would remove the row; file it if a second
+  card (favourites, lesson progress in s4) needs the page too.
+- **Delete when:** Sunrise ships a seam for dashboard content. Move the card into it.
+
 ### CI pulls Docker Hub images logged in
 
 - **Files:** `.github/workflows/ci.yml`

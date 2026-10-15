@@ -20,7 +20,7 @@ import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import { NotFoundError, ValidationError } from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
-import { presetState } from '@/lib/app/synths/lib/patch';
+import { presetState, sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 import {
   validatePreset,
   validateSound,
@@ -74,19 +74,35 @@ function checkPanel(def: AppSynthDef, panel: unknown): SoundState {
   return result.value;
 }
 
+/** As much of a stored panel as fits the synth's definition now: what the page opens for a sound that is not playable. */
+const fit = (def: AppSynthDef, row: UserSound): NonNullable<UserSoundDetail['fitted']> => ({
+  values: { ...def.init, ...sanitizeSet(def, row.values) },
+  cables: sanitizeCables(def, row.cables),
+});
+
 /**
- * The stored panel as the synth can play it now, or why it cannot. The mapping between definition versions (D1)
- * belongs here; no definition has one yet, so a sound on any other version than the current one has no panel.
+ * The stored panel as the synth can play it now, or why it cannot and what of it still fits. The mapping between
+ * definition versions (D1) belongs here; no definition has one yet, so a sound on any other version than the current
+ * one has no panel.
  */
-function panelOf(row: UserSound, log: boolean): Pick<UserSoundDetail, 'panel' | 'problems'> {
+function panelOf(
+  row: UserSound,
+  log: boolean
+): Pick<UserSoundDetail, 'panel' | 'problems' | 'fitted'> {
   const def = getSynthDef(row.synthId);
-  if (!def) return { panel: null, problems: [`${row.synthId} is not a synth the app can play`] };
+  if (!def)
+    return {
+      panel: null,
+      problems: [`${row.synthId} is not a synth the app can play`],
+      fitted: null,
+    };
   if (row.definitionVersion !== def.version)
     return {
       panel: null,
       problems: [
         `Saved on version ${row.definitionVersion} of ${row.synthId}, which is now at version ${def.version}, and there is no mapping between them`,
       ],
+      fitted: fit(def, row),
     };
   const result = validateSound(def, { values: row.values, cables: row.cables });
   if (!result.ok) {
@@ -97,13 +113,17 @@ function panelOf(row: UserSound, log: boolean): Pick<UserSoundDetail, 'panel' | 
         synthId: row.synthId,
         problems: result.problems,
       });
-    return { panel: null, problems: result.problems.map((p) => p.message) };
+    return {
+      panel: null,
+      problems: result.problems.map((p) => p.message),
+      fitted: fit(def, row),
+    };
   }
-  return { panel: result.value, problems: [] };
+  return { panel: result.value, problems: [], fitted: null };
 }
 
 function toDetail(row: UserSound, log = true): UserSoundDetail {
-  const { panel, problems } = panelOf(row, log);
+  const { panel, problems, fitted } = panelOf(row, log);
   return {
     id: row.id,
     synthId: row.synthId,
@@ -122,13 +142,14 @@ function toDetail(row: UserSound, log = true): UserSoundDetail {
     playable: panel !== null,
     panel,
     problems,
+    fitted,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
 }
 
 function toSummary(row: UserSound): UserSoundSummary {
-  const { panel: _panel, problems: _problems, ...summary } = toDetail(row, false);
+  const { panel: _panel, problems: _problems, fitted: _fitted, ...summary } = toDetail(row, false);
   return summary;
 }
 

@@ -25,8 +25,9 @@ export const SoundSlugSchema = z.string().regex(/^[a-z0-9-]{1,120}$/, 'Not a lib
 /** A user sound's id, as Prisma's `cuid()` writes them. Anything else cannot be one, so it is not looked up. */
 export const UserSoundIdSchema = z.string().regex(/^[a-z0-9]{1,40}$/);
 
-const NameSchema = z.string().trim().min(1, 'Name the sound').max(120);
-const NotesSchema = z.string().trim().max(2000);
+/** A sound's name and notes, as the API takes them. Exported so the save dialog checks them the same way. */
+export const NameSchema = z.string().trim().min(1, 'Name the sound').max(120);
+export const NotesSchema = z.string().trim().max(2000);
 
 /** A panel as the page sends it: control values and the cables in, before they are checked against the synth. */
 export const PanelInputSchema = z.object({
@@ -104,4 +105,11 @@ export interface UserSoundDetail extends UserSoundSummary {
   /** The panel, checked against the synth's definition; null when it is not `playable`, and `problems` says why. */
   panel: { values: ControlValues; cables: CablePair[] } | null;
   problems: string[];
+  /**
+   * When the panel is not `playable`: as much of it as fits the synth now. Controls it no longer has, values out of
+   * range and cables to jacks it does not have are dropped, and every control missing takes its `init`. The synth page
+   * opens this and says what `problems` lists, rather than refusing the sound. Null when `panel` is set, or when the
+   * synth is not one the app can play.
+   */
+  fitted: { values: ControlValues; cables: CablePair[] } | null;
 }

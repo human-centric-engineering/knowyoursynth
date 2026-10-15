@@ -7,6 +7,7 @@ import '@/components/app/synth/synth.css';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 
 /**
  * One synth: play it, patch it and read about it (plan §4 "The synth page").
@@ -30,6 +31,8 @@ type Props = {
 
 const viewParam = z.string().max(32).optional().catch(undefined);
 const soundParam = z.string().max(128).optional().catch(undefined);
+// One of the signed-in user's sounds, as the dashboard links to it. Whether it is theirs is the sounds API's answer.
+const mineParam = UserSoundIdSchema.optional().catch(undefined);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -52,6 +55,7 @@ export default async function SynthRoute({ params, searchParams }: Props) {
       synths={synths}
       viewParam={viewParam.parse(query.view) ?? null}
       soundParam={soundParam.parse(query.sound) ?? null}
+      mineParam={mineParam.parse(query.mine) ?? null}
     />
   );
 }
