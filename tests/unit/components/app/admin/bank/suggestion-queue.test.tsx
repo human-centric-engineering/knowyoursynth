@@ -87,6 +87,7 @@ describe('SuggestionQueue', () => {
 
     expect(screen.getByLabelText(/^Id/, INPUT)).toHaveValue('sequential-prophet-5-rev4');
     expect(screen.getByLabelText(/^Name/, INPUT)).toHaveValue('Prophet-5 Rev4');
+    expect(screen.getByLabelText(/^Source/, INPUT)).toHaveValue(PENDING.link);
     await user.type(screen.getByLabelText(/^Year/, INPUT), '2020');
     await user.selectOptions(screen.getByLabelText(/^Kind/, INPUT), 'poly');
     await user.type(screen.getByLabelText(/^Text/, INPUT), 'A reissue.');
@@ -102,12 +103,27 @@ describe('SuggestionQueue', () => {
           year: '2020',
           kind: 'poly',
           text: 'A reissue.',
+          source: PENDING.link,
         },
       },
     });
     expect(mockRefresh).toHaveBeenCalled();
     // Until the refresh replaces the form with the outcome, it cannot be sent again.
     expect(screen.getByRole('button', { name: /Add instrument|Saving/ })).toBeDisabled();
+  });
+
+  it('sends no source when the admin clears it, as the databank has none', async () => {
+    const user = userEvent.setup();
+    render(<SuggestionQueue suggestions={[PENDING]} />);
+    await user.click(screen.getByRole('button', { name: 'Accept…' }));
+    await user.clear(screen.getByLabelText(/^Source/, INPUT));
+    await user.click(screen.getByRole('button', { name: 'Add instrument' }));
+
+    const [, { body }] = post.mock.calls[0] as [
+      string,
+      { body: { instrument: { source?: string } } },
+    ];
+    expect(body.instrument.source).toBeUndefined();
   });
 
   it('shows a refused accept on the field the server named, and does not refresh', async () => {

@@ -18,7 +18,6 @@ import {
 } from '@/components/app/bank/bank-detail';
 import { detailFrom } from '@/lib/app/bank/read';
 import { songsOn } from '@/lib/app/bank/joins';
-import type { Bank } from '@/lib/app/bank/data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 
 const bank = loadBankData();
@@ -141,41 +140,44 @@ describe('InstrumentPage', () => {
   });
 
   it('links a recreation to its original, and the original to its recreations', () => {
-    const recreated: Bank = {
-      ...bank,
-      instruments: [
-        ...bank.instruments,
-        {
-          id: 'behringer-model-d',
-          name: 'Model D',
-          maker: 'Behringer',
-          year: '2017',
-          kind: 'mono',
-          recreationOf: 'moog-minimoog',
-          text: 'A copy of the original, smaller.',
-        },
-      ],
-    };
-    const copy = must(detailFrom(recreated, 'instruments', 'behringer-model-d'));
+    const copy = must(detailFrom(bank, 'instruments', 'behringer-model-d'));
     const { unmount } = render(<InstrumentPage d={copy} names={names} />);
     expect(copy.recreationOf?.id).toBe('moog-minimoog');
     expect(href(copy.recreationOf?.name ?? '')).toBe('/bank/instruments/moog-minimoog');
     expect(screen.getByText(/A recreation of the/)).toBeTruthy();
     unmount();
 
-    const original = must(detailFrom(recreated, 'instruments', 'moog-minimoog'));
-    render(<InstrumentPage d={original} names={names} />);
+    render(<InstrumentPage d={d} names={names} />);
     const section = screen.getByRole('heading', { name: 'Recreations' })
       .parentElement as HTMLElement;
-    expect(within(section).getByRole('link').getAttribute('href')).toBe(
+    const links = within(section).getAllByRole('link');
+    expect(links).toHaveLength(d.recreations.length);
+    expect(links.map((a) => a.getAttribute('href'))).toContain(
       '/bank/instruments/behringer-model-d'
     );
   });
 
   it('has no recreation lines when there are none', () => {
-    render(<InstrumentPage d={d} names={names} />);
+    const original = must(detailFrom(bank, 'instruments', 'yamaha-cs-80'));
+    expect(original.recreations).toEqual([]);
+    render(<InstrumentPage d={original} names={names} />);
     expect(screen.queryByText(/A recreation of the/)).toBeNull();
     expect(screen.queryByRole('heading', { name: 'Recreations' })).toBeNull();
+  });
+
+  it('links where its facts were checked, and shows no source line without one', () => {
+    const listed = must(detailFrom(bank, 'instruments', 'behringer-model-d'));
+    const source = listed.instrument.source ?? '';
+    expect(source).toMatch(/^https:\/\//);
+    const { unmount } = render(<InstrumentPage d={listed} names={names} />);
+    const link = screen.getByRole('link', { name: new URL(source).hostname.replace(/^www\./, '') });
+    expect(link.getAttribute('href')).toBe(source);
+    expect(link.getAttribute('rel')).toContain('noopener');
+    unmount();
+
+    render(<InstrumentPage d={d} names={names} />);
+    expect(d.instrument.source).toBeUndefined();
+    expect(screen.queryByText(/^Source:/)).toBeNull();
   });
 });
 

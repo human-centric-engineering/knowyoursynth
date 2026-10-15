@@ -12,6 +12,22 @@ import { z } from 'zod';
 const text = z.string().trim().min(1);
 const texts = z.array(text);
 
+/** A web link: http or https only, so an admin or reader can follow it safely. */
+export const WebLinkSchema = z
+  .string()
+  .trim()
+  .max(500)
+  .refine(isWebLink, 'must be a web address starting with http:// or https://');
+
+function isWebLink(value: string): boolean {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === 'http:' || protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /** Ids are lowercase words joined by hyphens (`checkBank`'s rule), so they can sit in a URL as they are. */
 export const BankIdSchema = z
   .string()
@@ -62,7 +78,17 @@ export const BankInstrumentSchema = z.object({
   /** The instrument id of the original this one recreates. */
   recreationOf: BankIdSchema.optional(),
   text,
+  /** Where its facts were checked. */
+  source: WebLinkSchema.optional(),
 });
+
+/**
+ * An entry in the reference list (b4, `reference.json`): any hardware synth, beside the instruments named on records.
+ * Every entry says where its facts were checked. None lists app synths, so "Heard on" stays with the originals.
+ */
+export const BankReferenceInstrumentSchema = BankInstrumentSchema.omit({ app: true })
+  .extend({ source: WebLinkSchema })
+  .strict();
 
 export const BankArtistSchema = z.object({
   id: BankIdSchema,
@@ -117,6 +143,9 @@ export const BankMakersFileSchema = z.object({ makers: z.array(BankMakerSchema) 
 export const BankInstrumentsFileSchema = z.object({ instruments: z.array(BankInstrumentSchema) });
 export const BankArtistsFileSchema = z.object({ artists: z.array(BankArtistSchema) });
 export const BankSongsFileSchema = z.object({ songs: z.array(BankSongSchema) });
+export const BankReferenceFileSchema = z.object({
+  instruments: z.array(BankReferenceInstrumentSchema),
+});
 
 /** The whole databank, or any part of it the joins need. */
 export interface Bank {

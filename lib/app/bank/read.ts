@@ -217,6 +217,7 @@ export function instrumentFromRow(row: InstrumentRow): BankInstrument {
       app: row.synths.map((s) => s.synthId),
       recreationOf: row.recreationOfId,
       text: row.text,
+      source: row.source,
     })
   );
 }

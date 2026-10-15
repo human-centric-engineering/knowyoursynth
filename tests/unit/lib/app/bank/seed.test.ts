@@ -90,7 +90,9 @@ describe('planBank', () => {
   it('plans the committed data without a problem', () => {
     const rows = planBank(data, catalogueSynthSounds());
     expect(rows.makers).toHaveLength(50);
-    expect(rows.instruments).toHaveLength(86);
+    // The 86 named on records and the reference list (b4).
+    expect(rows.instruments).toHaveLength(data.instruments.length);
+    expect(data.instruments.length).toBeGreaterThan(86);
     expect(rows.artists).toHaveLength(184);
     expect(rows.songs).toHaveLength(248);
   });

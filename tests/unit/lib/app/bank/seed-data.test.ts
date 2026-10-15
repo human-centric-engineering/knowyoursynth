@@ -23,7 +23,11 @@ const EMPTY = {
   'instruments.json': { instruments: [] },
   'artists.json': { artists: [] },
   'songs.json': { songs: [] },
+  'reference.json': { instruments: [] },
 };
+
+const SYNTH = { id: 'x', name: 'X', maker: 'M', year: '1980', kind: 'mono', text: 'T' };
+const REFERENCE = { ...SYNTH, id: 'r', source: 'https://example.com/r' };
 
 function folder(files: Record<string, unknown>): string {
   const dir = mkdtempSync(join(tmpdir(), 'kys-bank-'));
@@ -33,13 +37,40 @@ function folder(files: Record<string, unknown>): string {
 }
 
 describe('loadBankData', () => {
-  it('reads the four files', () => {
+  it('reads the five files', () => {
     expect(loadBankData(folder(EMPTY))).toEqual({
       makers: [],
       instruments: [],
       artists: [],
       songs: [],
     });
+  });
+
+  it('adds the reference list to the instruments, after the ones named on records', () => {
+    const dir = folder({
+      ...EMPTY,
+      'instruments.json': { instruments: [SYNTH] },
+      'reference.json': { instruments: [REFERENCE] },
+    });
+    expect(loadBankData(dir).instruments).toEqual([SYNTH, REFERENCE]);
+  });
+
+  it.each([
+    ['without a source', { ...REFERENCE, source: undefined }, /source/],
+    [
+      'whose source is not a web address',
+      { ...REFERENCE, source: 'javascript:alert(1)' },
+      /source/,
+    ],
+    [
+      'naming an app synth, which would move "Heard on" off the original',
+      { ...REFERENCE, app: ['model-d'] },
+      /app/,
+    ],
+  ])('refuses a reference entry %s', (_what, entry, field) => {
+    const dir = folder({ ...EMPTY, 'reference.json': { instruments: [entry] } });
+    expect(() => loadBankData(dir)).toThrow(/^bank\/reference\.json: /);
+    expect(() => loadBankData(dir)).toThrow(field);
   });
 
   it('names the file and the field when a file has the wrong shape', () => {
@@ -88,6 +119,7 @@ describe('bankDataFiles', () => {
       'artists.json',
       'instruments.json',
       'makers.json',
+      'reference.json',
       'songs.json',
     ]);
   });
@@ -108,6 +140,7 @@ describe('the seed unit', () => {
     for (const expected of [
       'prisma/seeds/app-knowyoursynth/data/bank/songs.json',
       'prisma/seeds/app-knowyoursynth/data/bank/makers.json',
+      'prisma/seeds/app-knowyoursynth/data/bank/reference.json',
       'prisma/seeds/app-knowyoursynth/bank-data.ts',
       'lib/app/bank/seed.ts',
       'lib/app/bank/joins.ts',

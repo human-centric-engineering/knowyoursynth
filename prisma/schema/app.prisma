@@ -242,6 +242,8 @@ model BankInstrument {
   year           String
   kind           String
   text           String    @db.Text
+  /// Where its facts were checked: a URL. The reference list (b4) gives one for every entry.
+  source         String?
   /// The original this one recreates (a Behringer Model D → the Minimoog).
   recreationOfId String?
   editedAt       DateTime?

@@ -3,29 +3,13 @@
  * no database client, so the forms validate with the same schemas the routes do.
  */
 import { z } from 'zod';
-import { BankInstrumentSchema } from '@/lib/app/bank/data';
-
-/** A web link: http or https only, so an admin can follow it safely. */
-const LinkSchema = z
-  .string()
-  .trim()
-  .max(500)
-  .refine(isWebLink, 'must be a web address starting with http:// or https://');
-
-function isWebLink(value: string): boolean {
-  try {
-    const { protocol } = new URL(value);
-    return protocol === 'http:' || protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
+import { BankInstrumentSchema, WebLinkSchema } from '@/lib/app/bank/data';
 
 /** `POST /api/v1/bank/suggestions`: what a user says is missing. */
 export const SuggestionInputSchema = z.object({
   name: z.string().trim().min(1, 'Name the synth').max(120),
   maker: z.string().trim().min(1, 'Name the company that made it').max(120),
-  link: LinkSchema.optional(),
+  link: WebLinkSchema.optional(),
   note: z.string().trim().max(1000).optional(),
 });
 export type SuggestionInput = z.infer<typeof SuggestionInputSchema>;

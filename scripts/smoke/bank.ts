@@ -5,7 +5,8 @@
  *
  * What no unit test can prove, because unit tests have no database:
  *
- * 1. The seeded tables hold the prototype's counts: 50 makers, 86 instruments, 184 artists, 248 songs.
+ * 1. The seeded tables hold the seed data's counts: 50 makers, 184 artists and 248 songs from the prototype, and its 86
+ *    instruments plus the reference list (b4).
  * 2. Seeding again writes nothing: every row unchanged and no joins rewritten.
  * 3. The read layer gives back what was seeded: `loadBank()` equals the seed data, with a membership read from
  *    either side (the table holds each pair once).
@@ -66,12 +67,13 @@ async function main(): Promise<void> {
     prisma.bankArtist.count(),
     prisma.bankSong.count(),
   ]);
+  const data = loadBankData();
+  const expected = [50, data.instruments.length, 184, 248];
   check(
-    isDeepStrictEqual(counts, [50, 86, 184, 248]),
-    `counts ${counts.join('/')} are 50/86/184/248`
+    isDeepStrictEqual(counts, expected),
+    `counts ${counts.join('/')} are ${expected.join('/')}`
   );
 
-  const data = loadBankData();
   const report = await seedBank(prisma, data);
   const tables = [report.makers, report.instruments, report.artists, report.songs];
   check(
