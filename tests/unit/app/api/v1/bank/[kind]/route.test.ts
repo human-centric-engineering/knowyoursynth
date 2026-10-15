@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { z } from 'zod';
 import { GET } from '@/app/api/v1/bank/[kind]/route';
 import { listBank } from '@/lib/app/bank/read';
+import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { bankDb } from '@/tests/helpers/bank-db';
 import { assertErrorResponse, createMockRequest, parseJsonResponse } from '@/tests/helpers/api';
 
@@ -43,7 +44,8 @@ describe('GET /api/v1/bank/:kind', () => {
   it.each([
     ['artists', 184],
     ['makers', 50],
-    ['instruments', 86],
+    // The 86 named on records and the reference list (b4).
+    ['instruments', loadBankData().instruments.length],
     ['songs', 248],
   ])('lists every one of the %s (%i), as the read layer does', async (kind, count) => {
     const response = await call(kind);

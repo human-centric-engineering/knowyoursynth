@@ -1,6 +1,249 @@
 {
   "instruments": [
     {
+      "id": "access-virus-a",
+      "name": "Access Virus A",
+      "maker": "Access Music",
+      "year": "1997",
+      "kind": "module",
+      "text": "The first Access Virus, a virtual analogue desktop synthesiser unveiled at Musikmesse Frankfurt in February 1997.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-b",
+      "name": "Access Virus B",
+      "maker": "Access Music",
+      "year": "1999",
+      "kind": "module",
+      "text": "A desktop (rackable) virtual analogue module that followed the Virus A with improved converters and more polyphony, later given three oscillators plus a sub oscillator and two filters per voice.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-indigo",
+      "name": "Access Virus Indigo",
+      "maker": "Access Music",
+      "year": "2000",
+      "kind": "poly",
+      "text": "A silver Virus B with a three-octave keyboard, black knobs and blue LEDs, offering 24 voices.",
+      "source": "https://sonicstate.com/news/2000/04/10/virus-indigo-preliminary-information/"
+    },
+    {
+      "id": "access-virus-c",
+      "name": "Access Virus C",
+      "maker": "Access Music",
+      "year": "2002",
+      "kind": "module",
+      "text": "The third generation of the Virus virtual analogue desktop synthesiser, with more polyphony and additional synthesis features.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-indigo-2",
+      "name": "Access Virus Indigo 2",
+      "maker": "Access Music",
+      "year": "2002",
+      "kind": "poly",
+      "text": "A portable three-octave keyboard carrying the Virus C virtual analogue engine.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-kc",
+      "name": "Access Virus KC",
+      "maker": "Access Music",
+      "year": "2002",
+      "kind": "poly",
+      "text": "The keyboard version of the Virus C, sharing its virtual analogue engine.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-rack-xl",
+      "name": "Access Virus Rack XL",
+      "maker": "Access Music",
+      "year": "2002",
+      "kind": "module",
+      "text": "A rack-mounted version of the Virus C, sharing its virtual analogue engine.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-ti",
+      "name": "Access Virus TI",
+      "maker": "Access Music",
+      "year": "2005",
+      "kind": "poly",
+      "text": "The Virus TI (Total Integration) series of virtual analogue synthesisers, sold as the 61-key Virus TI Keyboard and the 37-key Virus TI Polar.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-ti-snow",
+      "name": "Access Virus TI Snow",
+      "maker": "Access Music",
+      "year": "2008",
+      "kind": "module",
+      "text": "A small desktop Virus TI using a single DSP chip, giving it about half the polyphony of the other TI models.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "access-virus-ti2",
+      "name": "Access Virus TI2",
+      "maker": "Access Music",
+      "year": "2009",
+      "kind": "poly",
+      "text": "A revision of the Virus TI series with faster DSP controllers, more polyphony, more effects and a slightly changed design.",
+      "source": "https://en.wikipedia.org/wiki/Access_Virus"
+    },
+    {
+      "id": "akai-ax80",
+      "name": "Akai AX80",
+      "maker": "Akai",
+      "year": "1984",
+      "kind": "poly",
+      "text": "An eight-voice analogue polysynth with two oscillators per voice, a resonant low-pass and high-pass filter, a five-octave velocity-sensitive keyboard and 96 memories edited through LED and LCD bar displays.",
+      "source": "https://en.wikipedia.org/wiki/Akai"
+    },
+    {
+      "id": "akai-ax60",
+      "name": "Akai AX60",
+      "maker": "Akai",
+      "year": "1986",
+      "kind": "poly",
+      "text": "A six-voice, bitimbral analogue polysynth with one VCO per voice and Curtis CEM3394 voice chips, a 61-key keyboard, an arpeggiator, BBD chorus, 64 memories and inputs that put Akai sampler sounds through its voice circuits.",
+      "source": "https://en.wikipedia.org/wiki/Akai_AX60"
+    },
+    {
+      "id": "akai-ax73",
+      "name": "Akai AX73",
+      "maker": "Akai",
+      "year": "1986",
+      "kind": "poly",
+      "text": "A six-voice digitally controlled analogue polysynth with one VCO, VCF, high-pass filter and VCA per voice on Curtis CEM3394 chips, stereo chorus and a 73-note velocity-sensitive keyboard, able to process sounds from Akai samplers.",
+      "source": "https://www.smemmusic.ch/de/node/1818"
+    },
+    {
+      "id": "akai-vx90",
+      "name": "Akai VX90",
+      "maker": "Akai",
+      "year": "1986",
+      "kind": "module",
+      "text": "The keyboardless rack version of the AX73: a six-voice digitally controlled analogue synth module with 100 patch memories and polyphonic or unison modes.",
+      "source": "https://www.smemmusic.ch/de/node/1818"
+    },
+    {
+      "id": "akai-vx600",
+      "name": "Akai VX600",
+      "maker": "Akai",
+      "year": "1988",
+      "kind": "poly",
+      "text": "A compact analogue polysynth with a three-octave keyboard and a connection jack for Akai's EWI and EVI wind controllers.",
+      "source": "https://en.wikipedia.org/wiki/Akai"
+    },
+    {
+      "id": "akai-ewi4000s",
+      "name": "Akai EWI4000s",
+      "maker": "Akai",
+      "year": "2006",
+      "kind": "mono",
+      "text": "A wind controller with a built-in analogue-modelling synth of two oscillators with sawtooth, triangle, square and pulse waves, 2- or 4-pole filters, breath noise and reverb, delay and chorus.",
+      "source": "https://www.synthtopia.com/content/2006/01/30/ewi-midi-wind-controller/"
+    },
+    {
+      "id": "akai-miniak",
+      "name": "Akai Miniak",
+      "maker": "Akai",
+      "year": "2009",
+      "kind": "poly",
+      "text": "A 37-key virtual analogue synth sharing the Alesis Micron's engine, with three oscillators per voice, two multimode filters, a 40-band vocoder with gooseneck microphone, a step and phrase sequencer, rhythm patterns and an arpeggiator.",
+      "source": "https://www.synthtopia.com/content/2009/04/01/akai-miniak-micro-synth-vocoder/"
+    },
+    {
+      "id": "akai-timbre-wolf",
+      "name": "Akai Timbre Wolf",
+      "maker": "Akai",
+      "year": "2015",
+      "kind": "poly",
+      "text": "A four-voice analogue synth with 25 keys whose voices can be set up as four mono synths, a four-voice unison mono synth or a polysynth, with a 32-step sequencer for each voice.",
+      "source": "https://www.synthtopia.com/content/2015/01/22/akai-pro-intros-500-timbre-wolf-four-voice-analog-synthesizer/"
+    },
+    {
+      "id": "alesis-quadrasynth",
+      "name": "Alesis QuadraSynth",
+      "maker": "Alesis",
+      "year": "1993",
+      "kind": "poly",
+      "text": "A 76-key, 64-voice, 16-part multitimbral sample-based digital synth with 16MB of PCM waveform ROM, PCMCIA expansion cards and the first ADAT optical interface on a synth; the QuadraSynth Plus revised it.",
+      "source": "https://en.wikipedia.org/wiki/Alesis_Quadrasynth"
+    },
+    {
+      "id": "alesis-s4-quadrasynth",
+      "name": "Alesis S4 QuadraSynth",
+      "maker": "Alesis",
+      "year": "1994",
+      "kind": "module",
+      "text": "The 1U rack module of the QuadraSynth: a 64-voice sample-plus-synthesis engine with 16MB of 16-bit ROM, 16-part multitimbral Mixes and ADAT optical output.",
+      "source": "https://www.soundonsound.com/reviews/alesis-s4-quadrasynth"
+    },
+    {
+      "id": "alesis-qs6",
+      "name": "Alesis QS6",
+      "maker": "Alesis",
+      "year": "1996",
+      "kind": "poly",
+      "text": "A 64-voice sample-plus-synthesis keyboard on the QuadraSynth engine with a five-octave keyboard, 8MB of sample ROM, PCMCIA expansion and no resonant filters, followed in 1996 by the 76-key QS7 and 88-key weighted QS8 with 16MB of ROM.",
+      "source": "https://www.soundonsound.com/reviews/alesis-qs6"
+    },
+    {
+      "id": "alesis-nanosynth",
+      "name": "Alesis NanoSynth",
+      "maker": "Alesis",
+      "year": "1997",
+      "kind": "module",
+      "text": "A third-rack, 64-voice General MIDI-compatible module with the QS6's sounds and 8MB of waveform ROM, editable in full over MIDI controllers.",
+      "source": "https://www.soundonsound.com/reviews/alesis-nanosynth"
+    },
+    {
+      "id": "alesis-qsr",
+      "name": "Alesis QSR",
+      "maker": "Alesis",
+      "year": "1997",
+      "kind": "module",
+      "text": "A 64-voice rack module with the QS8's sample-plus-synthesis engine, 16MB of ROM, two PCMCIA slots, ADAT optical output and a serial computer connection.",
+      "source": "https://www.soundonsound.com/reviews/alesis-qsr"
+    },
+    {
+      "id": "alesis-andromeda-a6",
+      "name": "Alesis Andromeda A6",
+      "maker": "Alesis",
+      "year": "2000",
+      "kind": "poly",
+      "text": "A 16-voice, 16-part multitimbral analogue polysynth with two VCOs and a sub-oscillator per voice, a 2-pole multimode and a 4-pole low-pass filter per voice, a 61-key velocity and aftertouch keyboard, a ribbon and a 16-step sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Alesis_Andromeda_A6"
+    },
+    {
+      "id": "alesis-ion",
+      "name": "Alesis Ion",
+      "maker": "Alesis",
+      "year": "2003",
+      "kind": "poly",
+      "text": "An eight-voice virtual analogue synth with three oscillators per voice, 17 filter types and 49 keys.",
+      "source": "https://en.wikipedia.org/wiki/Alesis_Ion"
+    },
+    {
+      "id": "alesis-micron",
+      "name": "Alesis Micron",
+      "maker": "Alesis",
+      "year": "2004",
+      "kind": "poly",
+      "text": "A 37-key virtual analogue synth with almost the same engine as the Ion, whose patches it shares, adding reverb and long delay.",
+      "source": "https://en.wikipedia.org/wiki/Alesis_Ion"
+    },
+    {
+      "id": "alesis-fusion",
+      "name": "Alesis Fusion",
+      "maker": "Alesis",
+      "year": "2005",
+      "kind": "poly",
+      "text": "A hard-disk workstation combining sample playback, virtual analogue, FM and physical-modelling synthesis with sampling and 80 effects, sold with a 61-key (6HD) or 88-key weighted (8HD) keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Alesis_Fusion"
+    },
+    {
       "id": "arp-2500",
       "name": "ARP 2500",
       "maker": "ARP Instruments",
@@ -107,6 +350,132 @@
       "kind": "mono",
       "text": "An affordable 37-note monophonic two-oscillator synthesiser built into its own road case, ARP's last shipping product.",
       "source": "https://artsandculture.google.com/story/kQXxk0CqOrLViA"
+    },
+    {
+      "id": "arturia-origin",
+      "name": "Arturia Origin",
+      "maker": "Arturia",
+      "year": "2009",
+      "kind": "module",
+      "text": "Arturia's first hardware synth, a standalone DSP-based system using the same software engine as its virtual synth products.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-minibrute",
+      "name": "Arturia MiniBrute",
+      "maker": "Arturia",
+      "year": "2012",
+      "kind": "mono",
+      "text": "A 25-key monophonic analogue synthesiser with one voltage-controlled oscillator, two LFOs and a multimode Steiner-Parker filter.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-microbrute",
+      "name": "Arturia MicroBrute",
+      "maker": "Arturia",
+      "year": "2013",
+      "kind": "mono",
+      "text": "A smaller and cheaper version of the MiniBrute with mini keys, a patch bank and a sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-matrixbrute",
+      "name": "Arturia MatrixBrute",
+      "maker": "Arturia",
+      "year": "2016",
+      "kind": "mono",
+      "text": "An all-analogue monosynth with three Brute oscillators, a Steiner-Parker and a ladder filter, five analogue effects, a modulation matrix, a step sequencer and a 49-note keyboard with aftertouch.",
+      "source": "https://www.synthtopia.com/content/2016/12/28/arturia-matrixbrute-now-shipping/"
+    },
+    {
+      "id": "arturia-minibrute-2",
+      "name": "Arturia MiniBrute 2",
+      "maker": "Arturia",
+      "year": "2018",
+      "kind": "semi-modular",
+      "text": "A semi-modular analogue monosynth with a patch bay that connects to Eurorack modular gear.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-minibrute-2s",
+      "name": "Arturia MiniBrute 2S",
+      "maker": "Arturia",
+      "year": "2018",
+      "kind": "semi-modular",
+      "text": "A semi-modular version of the MiniBrute 2 that replaces the 25-note keyboard with performance pads and a triple-layer sequencer storing up to 64 sequences.",
+      "source": "https://musictech.com/news/arturia-reveal-minibrute-2s/"
+    },
+    {
+      "id": "arturia-microfreak",
+      "name": "Arturia MicroFreak",
+      "maker": "Arturia",
+      "year": "2019",
+      "kind": "paraphonic",
+      "text": "A four-voice paraphonic hybrid synthesiser with digital oscillators, an analogue filter and a touch-capacitive keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-polybrute",
+      "name": "Arturia PolyBrute",
+      "maker": "Arturia",
+      "year": "2021",
+      "kind": "poly",
+      "text": "A six-voice analogue polysynth, Arturia's flagship, with a layout like the MatrixBrute's and a voice architecture shared with the Brute range.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-minifreak",
+      "name": "Arturia MiniFreak",
+      "maker": "Arturia",
+      "year": "2022",
+      "kind": "poly",
+      "text": "A follow-up to the MicroFreak with six voices of polyphony, more functions and a larger conventional keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "arturia-polybrute-12",
+      "name": "Arturia PolyBrute 12",
+      "maker": "Arturia",
+      "year": "2024",
+      "kind": "poly",
+      "text": "A 12-voice analogue polysynth with two VCOs per voice, Steiner-Parker and ladder filters, and a 61-key FullTouch keyboard with polyphonic aftertouch.",
+      "source": "https://synthanatomy.com/2024/05/superbooth-24-arturia-polybrute-12.html"
+    },
+    {
+      "id": "asm-hydrasynth",
+      "name": "Ashun Sound Machines Hydrasynth",
+      "maker": "Ashun Sound Machines",
+      "year": "2019",
+      "kind": "poly",
+      "text": "An eight-voice digital wave-morphing synthesizer with three oscillators per voice, a four-octave polyphonic-aftertouch keyboard and a ribbon controller, also sold as a desktop version with the same engine.",
+      "source": "https://ra.co/news/84393"
+    },
+    {
+      "id": "asm-hydrasynth-deluxe",
+      "name": "Ashun Sound Machines Hydrasynth Deluxe",
+      "maker": "Ashun Sound Machines",
+      "year": "2021",
+      "kind": "poly",
+      "text": "A 16-voice, bi-timbral Hydrasynth with two engines for layering and splitting, a 73-note polyphonic-aftertouch keyboard and a CV/gate section.",
+      "source": "https://musictech.com/news/gear/asm-hydrasynth-explorer-deluxe/"
+    },
+    {
+      "id": "asm-hydrasynth-explorer",
+      "name": "Ashun Sound Machines Hydrasynth Explorer",
+      "maker": "Ashun Sound Machines",
+      "year": "2021",
+      "kind": "poly",
+      "text": "A compact eight-voice Hydrasynth with a 37-note polyphonic-aftertouch mini keyboard that can run on eight AA batteries.",
+      "source": "https://musictech.com/news/gear/asm-hydrasynth-explorer-deluxe/"
+    },
+    {
+      "id": "asm-leviasynth",
+      "name": "Ashun Sound Machines Leviasynth",
+      "maker": "Ashun Sound Machines",
+      "year": "2026",
+      "kind": "poly",
+      "text": "A 16-voice hybrid FM synthesizer with eight digital oscillators per voice, 144 FM algorithms, digital and analogue filters and a five-octave polyphonic-aftertouch keyboard, also made as a desktop edition with pads.",
+      "source": "https://ra.co/news/84393"
     },
     {
       "id": "behringer-deepmind-12d",
@@ -482,6 +851,24 @@
       "source": "https://synthanatomy.com/2026/07/behringer-jt-2-a-jupiter-8-style-paraphonic-analog-synthesizer-for-eurorack.html"
     },
     {
+      "id": "black-corporation-deckards-dream",
+      "name": "Black Corporation Deckard's Dream",
+      "maker": "Black Corporation",
+      "year": "2018",
+      "kind": "module",
+      "text": "An eight-voice analogue polysynth modelled on the Yamaha CS-80, with two layers per voice, 16 VCOs, polyphonic aftertouch and MPE, sold built or as a DIY kit.",
+      "source": "https://www.synthtopia.com/?p=92926"
+    },
+    {
+      "id": "black-corporation-kijimi",
+      "name": "Black Corporation Kijimi",
+      "maker": "Black Corporation",
+      "year": "2018",
+      "kind": "module",
+      "text": "An eight-voice analogue polysynth in a 4U rack-style case with two oscillators per voice and a 24dB low-pass filter, inspired by the RSF PolyKobol II without being a copy of it.",
+      "source": "https://www.bonedo.de/?p=1907467"
+    },
+    {
       "id": "buchla-400",
       "name": "Buchla 400",
       "maker": "Buchla & Associates",
@@ -526,6 +913,384 @@
       "kind": "semi-modular",
       "text": "The Music Easel's 208C sound source in a standalone desktop case with MIDI, adding five audio inputs and outputs and five CV inputs for the modulation and complex oscillators, envelope and gate.",
       "source": "https://synthanatomy.com/?p=37786"
+    },
+    {
+      "id": "casio-cz-1000",
+      "name": "Casio CZ-1000",
+      "maker": "Casio",
+      "year": "1984",
+      "kind": "poly",
+      "text": "A digital phase-distortion synth functionally identical to the CZ-101, with four voices from eight oscillators, but with a 49-key full-size keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Casio_CZ_synthesizers"
+    },
+    {
+      "id": "casio-cz-101",
+      "name": "Casio CZ-101",
+      "maker": "Casio",
+      "year": "1984",
+      "kind": "poly",
+      "text": "A battery-powered digital phase-distortion synth with 49 mini keys and eight oscillators giving four voices (eight with one oscillator per voice), with eight-stage envelopes, and the first fully programmable synth sold for under $500.",
+      "source": "https://en.wikipedia.org/wiki/Casio_CZ_synthesizers"
+    },
+    {
+      "id": "casio-cz-5000",
+      "name": "Casio CZ-5000",
+      "maker": "Casio",
+      "year": "1985",
+      "kind": "poly",
+      "text": "A digital phase-distortion synth with a five-octave keyboard without velocity, eight voices from 16 oscillators, eight digital waveforms, stereo chorus and an eight-track real- and step-time sequencer.",
+      "source": "https://www.muzines.co.uk/articles/casio-cz-5000/12598"
+    },
+    {
+      "id": "casio-cz-1",
+      "name": "Casio CZ-1",
+      "maker": "Casio",
+      "year": "1986",
+      "kind": "poly",
+      "text": "The top CZ phase-distortion synth, with two DCOs, DCWs and DCAs per voice, a five-octave keyboard with velocity and aftertouch, split and dual modes, a backlit display and 64 preset and 64 user memories.",
+      "source": "https://www.muzines.co.uk/articles/casio-cz1-polyphonic-synthesiser/1702"
+    },
+    {
+      "id": "casio-cz-230s",
+      "name": "Casio CZ-230S",
+      "maker": "Casio",
+      "year": "1986",
+      "kind": "poly",
+      "text": "A phase-distortion CZ synth with 49 mini keys, 100 preset tones with limited programmability and a built-in drum machine using RZ-1 sounds.",
+      "source": "https://en.wikipedia.org/wiki/Casio_CZ_synthesizers"
+    },
+    {
+      "id": "casio-cz-3000",
+      "name": "Casio CZ-3000",
+      "maker": "Casio",
+      "year": "1986",
+      "kind": "poly",
+      "text": "A digital phase-distortion synth with a 61-key keyboard, eight voices from 16 oscillators, keyboard split and layer, a stereo chorus and pitch and mod wheels: the CZ-5000 without its sequencer.",
+      "source": "https://www.muzines.co.uk/articles/casio-cz3000-synth/13400"
+    },
+    {
+      "id": "casio-fz-1",
+      "name": "Casio FZ-1",
+      "maker": "Casio",
+      "year": "1987",
+      "kind": "poly",
+      "text": "A 16-bit eight-voice sampling keyboard with 1MB of memory expandable to 2MB, a five-octave velocity- and aftertouch-sensitive keyboard, a graphic display for waveform editing, digital wave synthesis and eight individual outputs.",
+      "source": "https://www.muzines.co.uk/articles/casio-fz1/2041"
+    },
+    {
+      "id": "casio-hz-600",
+      "name": "Casio HZ-600",
+      "maker": "Casio",
+      "year": "1987",
+      "kind": "poly",
+      "text": "A 61-key, eight-voice splittable digital synth using Casio's SD synthesis, a simplified variant of phase distortion, and the only SD model built like a professional synth, without speakers or auto-accompaniment.",
+      "source": "https://en.wikipedia.org/wiki/Casio_SD_Synthesizers"
+    },
+    {
+      "id": "casio-vz-1",
+      "name": "Casio VZ-1",
+      "maker": "Casio",
+      "year": "1988",
+      "kind": "poly",
+      "text": "A 16-voice digital keyboard synth using Casio's iPD (interactive phase distortion) synthesis, with eight configurable sound modules per voice and a multitimbral mode.",
+      "source": "https://www.muzines.co.uk/articles/casio-vz8m/152"
+    },
+    {
+      "id": "casio-vz-10m",
+      "name": "Casio VZ-10M",
+      "maker": "Casio",
+      "year": "1988",
+      "kind": "module",
+      "text": "The rack-mount version of the VZ-1: a 16-voice multitimbral iPD (interactive phase distortion) digital synth module.",
+      "source": "https://www.muzines.co.uk/articles/casio-vz8m/152"
+    },
+    {
+      "id": "casio-vz-8m",
+      "name": "Casio VZ-8M",
+      "maker": "Casio",
+      "year": "1989",
+      "kind": "module",
+      "text": "A 1U rack iPD (interactive phase distortion) expander with eight voices, an eight-part Multi mode and a 2x16-character display, the cheapest of the VZ range.",
+      "source": "https://www.muzines.co.uk/articles/casio-vz8m/152"
+    },
+    {
+      "id": "casio-xw-g1",
+      "name": "Casio XW-G1",
+      "maker": "Casio",
+      "year": "2012",
+      "kind": "poly",
+      "text": "A 61-key groove synth with 420 preset tones including Solo Synthesizer and PCM tones, a step sequencer, a phrase sequencer and a sample looper of up to 19 seconds for DJ-style performance.",
+      "source": "https://rekkerd.org/?p=41637"
+    },
+    {
+      "id": "casio-xw-p1",
+      "name": "Casio XW-P1",
+      "maker": "Casio",
+      "year": "2012",
+      "kind": "poly",
+      "text": "A 61-key battery-capable performance synth with 620 preset tones, including Solo Synthesizer presets of analogue-style sounds, six-tone Hex Layer presets and drawbar organ, more than 2,100 PCM waves, step and phrase sequencers and four-zone performance setups.",
+      "source": "https://rekkerd.org/?p=41637"
+    },
+    {
+      "id": "cheetah-ms6",
+      "name": "Cheetah MS6",
+      "maker": "Cheetah",
+      "year": "1988",
+      "kind": "module",
+      "text": "A 1U rack expander with six voices, six-part multitimbrality and 12 DCOs.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "cheetah-ms800",
+      "name": "Cheetah MS800",
+      "maker": "Cheetah",
+      "year": "1990s",
+      "kind": "module",
+      "text": "A 15-note polyphonic, multitimbral digital wave-sequencing synthesiser module with no filter.",
+      "source": "https://www.gforcesoftware.com/blog/cheetah-ms800/"
+    },
+    {
+      "id": "nord-lead",
+      "name": "Nord Lead",
+      "maker": "Clavia",
+      "year": "1995",
+      "kind": "poly",
+      "text": "Clavia's first synthesiser, a 49-key virtual analogue subtractive instrument with four voices expandable to twelve, known for popularising the term virtual analogue, and also sold as the Nord Rack.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-lead-2",
+      "name": "Nord Lead 2",
+      "maker": "Clavia",
+      "year": "1997",
+      "kind": "poly",
+      "text": "A 49-key virtual analogue subtractive synthesiser that raised the Nord Lead's polyphony from four to sixteen voices, also sold as the Nord Rack 2.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-modular",
+      "name": "Nord Modular",
+      "maker": "Clavia",
+      "year": "1997",
+      "kind": "poly",
+      "text": "A digital modular synthesiser patched from a computer editor, with four DSPs (expandable to eight) running up to 32 voices, sold as a keyboard and as a rack, and described by Nord as the first digital modular synthesiser.",
+      "source": "https://www.nordkeyboards.com/about-us/"
+    },
+    {
+      "id": "nord-micro-modular",
+      "name": "Nord Micro Modular",
+      "maker": "Clavia",
+      "year": "1999",
+      "kind": "module",
+      "text": "A small four-knob desktop version of the Nord Modular, patched from the same computer software but with less DSP power, up to four voices and no multitimbrality.",
+      "source": "https://www.matrixsynth.com/2021/04/nord-micro-modular-digital-spaghetti.html?m=0"
+    },
+    {
+      "id": "nord-lead-3",
+      "name": "Nord Lead 3",
+      "maker": "Clavia",
+      "year": "2001",
+      "kind": "poly",
+      "text": "A 24-voice, 49-key virtual analogue subtractive synthesiser that added four-operator FM (sine modulation) synthesis, also sold as the Nord Rack 3.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-lead-2x",
+      "name": "Nord Lead 2X",
+      "maker": "Clavia",
+      "year": "2003",
+      "kind": "poly",
+      "text": "A 20-voice update of the Nord Lead 2, a 49-key virtual analogue subtractive synthesiser, also sold as the Nord Rack 2X.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-modular-g2",
+      "name": "Nord Modular G2",
+      "maker": "Clavia",
+      "year": "2004",
+      "kind": "poly",
+      "text": "The second-generation Nord Modular, a digital modular synthesiser whose patches are built in software, also sold as the G2X.",
+      "source": "https://en.wikipedia.org/wiki/Clavia"
+    },
+    {
+      "id": "nord-wave",
+      "name": "Nord Wave",
+      "maker": "Clavia",
+      "year": "2007",
+      "kind": "poly",
+      "text": "A performance synthesiser and sampler that, in Nord's words, took the Nord Lead concept to a new level.",
+      "source": "https://www.nordkeyboards.com/about-us/"
+    },
+    {
+      "id": "nord-lead-4",
+      "name": "Nord Lead 4",
+      "maker": "Clavia",
+      "year": "2013",
+      "kind": "poly",
+      "text": "A 20-voice, 49-key virtual analogue subtractive synthesiser with an updated engine and an effects section.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-lead-a1",
+      "name": "Nord Lead A1",
+      "maker": "Clavia",
+      "year": "2014",
+      "kind": "poly",
+      "text": "A 26-voice, 49-key virtual analogue subtractive synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Nord_Lead"
+    },
+    {
+      "id": "nord-wave-2",
+      "name": "Nord Wave 2",
+      "maker": "Clavia",
+      "year": "2020",
+      "kind": "poly",
+      "text": "A four-part, 48-voice performance synthesiser combining virtual analogue, sample, FM and wavetable synthesis, with 1 GB of sample memory and a 61-note keyboard with aftertouch.",
+      "source": "https://routenote.com/blog/nord-unveil-their-new-keyboard-at-namm/"
+    },
+    {
+      "id": "clef-microsynth",
+      "name": "Clef Microsynth",
+      "maker": "Clef",
+      "year": "1982",
+      "kind": "mono",
+      "text": "A two-VCO, one-VCF monophonic synthesiser with a 30-note keyboard and noise generator.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "cre8audio-east-beast",
+      "name": "Cre8audio East Beast",
+      "maker": "Cre8audio",
+      "year": "2022",
+      "kind": "semi-modular",
+      "text": "A small East Coast-style analogue semi-modular made with Pittsburgh Modular, with a Pittsburgh multimode filter, a button keyboard, a 32-step sequencer and MIDI, removable as a 40hp Eurorack module.",
+      "source": "https://musictech.com/news/gear/superbooth-2022-cre8audio-east-beast-east-coast-semi-modular-pittsburgh-modular-synthesizers"
+    },
+    {
+      "id": "cre8audio-west-pest",
+      "name": "Cre8audio West Pest",
+      "maker": "Cre8audio",
+      "year": "2022",
+      "kind": "semi-modular",
+      "text": "A small West Coast-style monophonic semi-modular made with Pittsburgh Modular, with wavefolding, a Dynamics Controller, a digital multi-mod tool, a sequencer and 18 Eurorack patch points.",
+      "source": "https://musictech.com/news/gear/cre8audio-unleashes-west-pest-west-coast-semi-modular-synthesizer"
+    },
+    {
+      "id": "crumar-stringman",
+      "name": "Crumar Stringman",
+      "maker": "Crumar",
+      "year": "1974",
+      "kind": "poly",
+      "text": "A 61-note string synthesiser with violin, cello and bass sounds and a three-band EQ.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-multiman",
+      "name": "Crumar Multiman",
+      "maker": "Crumar",
+      "year": "1975",
+      "kind": "poly",
+      "text": "A 61-note string, brass and piano keyboard, later revised as the Multiman S3.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "crumar-ds-1",
+      "name": "Crumar DS-1",
+      "maker": "Crumar",
+      "year": "1978",
+      "kind": "mono",
+      "text": "A monophonic synthesiser with two digitally controlled oscillators and a 44-note keyboard.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "crumar-ds-2",
+      "name": "Crumar DS-2",
+      "maker": "Crumar",
+      "year": "1978",
+      "kind": "mono",
+      "text": "A two-DCO monophonic synthesiser with a 44-note keyboard and an added string section.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "crumar-performer",
+      "name": "Crumar Performer",
+      "maker": "Crumar",
+      "year": "1978",
+      "kind": "poly",
+      "text": "A 49-note polyphonic string and brass synthesiser.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "crumar-trilogy",
+      "name": "Crumar Trilogy",
+      "maker": "Crumar",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A 49-note polyphonic string and organ synthesiser with two oscillators, seven presets and joystick control.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-composer",
+      "name": "Crumar Composer",
+      "maker": "Crumar",
+      "year": "1982",
+      "kind": "poly",
+      "text": "A 49-note keyboard combining string and brass sections with a polyphonic and monophonic synthesiser.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7614"
+    },
+    {
+      "id": "crumar-stratus",
+      "name": "Crumar Stratus",
+      "maker": "Crumar",
+      "year": "1982",
+      "kind": "poly",
+      "text": "A 49-note polyphonic string, brass and organ synthesiser with two oscillators, invertible envelopes and joystick control.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-synthephone",
+      "name": "Crumar Synthephone",
+      "maker": "Crumar",
+      "year": "1982",
+      "kind": "mono",
+      "text": "A 37-note monophonic synthesiser played with a breath controller for expression.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-spirit",
+      "name": "Crumar Spirit",
+      "maker": "Crumar",
+      "year": "1983",
+      "kind": "mono",
+      "text": "A two-VCO monophonic synthesiser with a 37-note keyboard, ring modulation, switchable 12dB and 24dB filters and three modulation wheels.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-bit-one",
+      "name": "Crumar Bit One",
+      "maker": "Crumar",
+      "year": "1984",
+      "kind": "poly",
+      "text": "A 61-note velocity-sensitive polysynth with 12 DCOs, sold under Crumar's Bit brand.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7586"
+    },
+    {
+      "id": "crumar-bit-01",
+      "name": "Crumar Bit 01",
+      "maker": "Crumar",
+      "year": "1985",
+      "kind": "module",
+      "text": "A six-voice, 12-DCO expander module version of the Bit polysynths.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7586"
+    },
+    {
+      "id": "crumar-bit-99",
+      "name": "Crumar Bit 99",
+      "maker": "Crumar",
+      "year": "1985",
+      "kind": "poly",
+      "text": "A 61-note velocity-sensitive polysynth with 12 DCOs that followed the Bit One under Crumar's Bit brand.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7586"
     },
     {
       "id": "sequential-evolver",
@@ -618,6 +1383,51 @@
       "source": "https://synthanatomy.com/2017/01/namm-2017-news-dave-smith-instruments.html"
     },
     {
+      "id": "davoli-davolisint",
+      "name": "Davolisint",
+      "maker": "Davoli",
+      "year": "1972",
+      "kind": "mono",
+      "text": "Described as the first Italian synthesiser, a monophonic two-octave instrument with a divide-down square-wave generator at seven footages, vibrato and portamento but no filter or envelope generators.",
+      "source": "https://www.soundonsound.com/node/4911850"
+    },
+    {
+      "id": "dewtron-gipsy",
+      "name": "Dewtron Gipsy",
+      "maker": "Dewtron",
+      "year": "1973",
+      "kind": "mono",
+      "text": "A two-VCO monophonic synthesiser with a 37-note keyboard, vernier pitch knobs, ring modulator and spring reverb in a mahogany case.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "dgs-spider",
+      "name": "DGS Spider",
+      "maker": "DGS",
+      "year": "1982",
+      "kind": "mono",
+      "text": "A three-VCO monophonic synthesiser with a 37-note keyboard and a patchbay on its sharply angled rear panel.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "crumar-gds",
+      "name": "Crumar GDS",
+      "maker": "Digital Keyboards",
+      "year": "1980",
+      "kind": "poly",
+      "text": "The General Development System, a Z80-based digital additive synthesiser with disk drives and a keyboard, made by Digital Keyboards, a collaboration of Crumar and Music Technologies of New York, and priced around $30,000.",
+      "source": "https://en.wikipedia.org/wiki/Bell_Labs_Digital_Synthesizer"
+    },
+    {
+      "id": "digital-keyboards-synergy",
+      "name": "Digital Keyboards Synergy",
+      "maker": "Digital Keyboards",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A lower-cost repackaging of the GDS additive synthesiser into a single case with a 77-key keyboard and no separate computer, used by Wendy Carlos.",
+      "source": "https://en.wikipedia.org/wiki/Bell_Labs_Digital_Synthesizer"
+    },
+    {
       "id": "doepfer-ms-404",
       "name": "Doepfer MS-404",
       "maker": "Doepfer Musikelektronik",
@@ -652,6 +1462,105 @@
       "kind": "module",
       "text": "A monophonic analogue desktop synthesizer with a triangle-core VCO that needs no settling time, the Dark Energy II's filter, two resettable LFOs, CV inputs, MIDI and USB.",
       "source": "https://www.gearnews.com/doepfer-dark-energy-iii-monosynth-throbs-into-availability"
+    },
+    {
+      "id": "dreadbox-murmux",
+      "name": "Dreadbox Murmux",
+      "maker": "Dreadbox",
+      "year": "2014",
+      "kind": "module",
+      "text": "Dreadbox's first synthesizer line, a handmade analogue monosynth with two VCOs with sub-octave, a four-pole resonant low-pass filter and separate filter and amp envelopes, sold in Initiate, semi-modular and pedal versions.",
+      "source": "https://synthtopia.com/?p=54721"
+    },
+    {
+      "id": "dreadbox-erebus",
+      "name": "Dreadbox Erebus",
+      "maker": "Dreadbox",
+      "year": "2015",
+      "kind": "semi-modular",
+      "text": "A desktop duophonic analogue synth, sold as paraphonic, with two VCOs, a two-pole filter, a built-in digital delay and a patchbay of nine inputs and six outputs.",
+      "source": "https://www.soundonsound.com/reviews/dreadbox-erebus"
+    },
+    {
+      "id": "dreadbox-hades",
+      "name": "Dreadbox Hades",
+      "maker": "Dreadbox",
+      "year": "2015",
+      "kind": "module",
+      "text": "A through-hole analogue bass monosynth with one VCO and two sub-octaves, a three-pole resonant low-pass filter, OTA distortion and a small patch matrix.",
+      "source": "https://www.synthtopia.com/content/2015/12/30/dreadbox-hades-bass-synthesizer-review/"
+    },
+    {
+      "id": "dreadbox-abyss",
+      "name": "Dreadbox Abyss",
+      "maker": "Dreadbox",
+      "year": "2017",
+      "kind": "module",
+      "text": "A four-voice analogue desktop polysynth with one oscillator and a sub-oscillator per voice, a four-pole low-pass filter and built-in BBD, delay and phaser effects.",
+      "source": "https://www.soundonsound.com/news/dreadbox-unveil-abyss-four-voice-polysynth-fx"
+    },
+    {
+      "id": "dreadbox-nyx",
+      "name": "Dreadbox Nyx",
+      "maker": "Dreadbox",
+      "year": "2017",
+      "kind": "semi-modular",
+      "text": "A paraphonic analogue desktop synth with two VCOs, a dual state-variable filter, a reverb by Crazy Tube Circuits and 15 patch points for re-routing.",
+      "source": "https://synthtopia.com/content/2017/05/21/dreadbox-nyx-analog-desktop-synthesizer-review"
+    },
+    {
+      "id": "dreadbox-typhon",
+      "name": "Dreadbox Typhon",
+      "maker": "Dreadbox",
+      "year": "2020",
+      "kind": "module",
+      "text": "A USB-powered analogue monosynth with two VCOs and a four-pole low-pass filter under digital control, with Sinevibes stereo effects, a 32-step sequencer and 256 presets.",
+      "source": "https://musictech.com/reviews/hardware-instruments/the-big-review-dreadbox-typhon"
+    },
+    {
+      "id": "dreadbox-nymphes",
+      "name": "Dreadbox Nymphes",
+      "maker": "Dreadbox",
+      "year": "2021",
+      "kind": "module",
+      "text": "A USB-powered six-voice analogue polysynth with one wave-forming oscillator, sub-oscillator and noise per voice, a 24dB low-pass and a high-pass filter, a digital reverb and six playing modes.",
+      "source": "https://www.gearnews.com/superbooth-2021-dreadbox-nymphes-6-voice-analog-synthesizer"
+    },
+    {
+      "id": "dreadbox-murmux-adept",
+      "name": "Dreadbox Murmux Adept",
+      "maker": "Dreadbox",
+      "year": "2024",
+      "kind": "module",
+      "text": "An eight-voice analogue desktop polysynth limited to 300 units, with two VCOs per voice, a 24dB low-pass and 6dB high-pass filter, a BBD chorus/flanger and a hybrid stereo delay.",
+      "source": "https://www.gearnews.com/dreadbox-murmux-adept/"
+    },
+    {
+      "id": "dreadbox-artemis",
+      "name": "Dreadbox Artemis",
+      "maker": "Dreadbox",
+      "year": "2025",
+      "kind": "module",
+      "text": "A six-voice analogue desktop polysynth with two VCOs per voice, a sub-oscillator or noise, and an effects section made with Sinevibes.",
+      "source": "https://www.soundonsound.com/reviews/dreadbox-artemis"
+    },
+    {
+      "id": "dubreq-stylophone",
+      "name": "Dubreq Stylophone",
+      "maker": "Dubreq",
+      "year": "1968",
+      "kind": "mono",
+      "text": "A miniature monophonic instrument played with a stylus on a 20-note keyboard, with a built-in speaker.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
+    },
+    {
+      "id": "dubreq-stylophone-350s",
+      "name": "Dubreq Stylophone 350S",
+      "maker": "Dubreq",
+      "year": "1974",
+      "kind": "mono",
+      "text": "A larger monophonic Stylophone with two styli, three presets, vibrato, decay and a seven-inch speaker.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7644"
     },
     {
       "id": "emu-emulator-ii",
@@ -969,12 +1878,75 @@
       "source": "https://en.wikipedia.org/wiki/E-mu_Proteus"
     },
     {
+      "id": "eko-ekosynth-p15",
+      "name": "EKO Ekosynth P15",
+      "maker": "EKO",
+      "year": "1979",
+      "kind": "mono",
+      "text": "A 15-preset monophonic synthesiser with a 44-note keyboard, VCF, VCA and LFO.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
+      "id": "electro-harmonix-mini-synthesizer",
+      "name": "Electro-Harmonix Mini-Synthesizer",
+      "maker": "Electro-Harmonix",
+      "year": "1980",
+      "kind": "mono",
+      "text": "A one-VCO monophonic synthesiser with a 25-note touch keyboard.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
       "id": "edp-gnat",
       "name": "EDP Gnat",
       "maker": "Electronic Dream Plant",
       "year": "1980",
       "kind": "mono",
       "text": "A single-oscillator version of the Wasp: one digital oscillator, a resonant low-pass filter, an attack–decay envelope, an LFO and a built-in speaker, played from a 25-note touch keyboard.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
+      "id": "eml-electrocomp-200",
+      "name": "EML Electrocomp 200",
+      "maker": "Electronic Music Laboratories",
+      "year": "1969",
+      "kind": "semi-modular",
+      "text": "A monophonic two-VCO expander with no keyboard, sold to extend EML's Electrocomp systems.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
+      "id": "eml-electrocomp-100",
+      "name": "EML Electrocomp 100",
+      "maker": "Electronic Music Laboratories",
+      "year": "1970",
+      "kind": "semi-modular",
+      "text": "A duophonic portable suitcase synthesiser from EML, produced a year before the ARP 2600.",
+      "source": "https://en.wikipedia.org/wiki/Electronic_Music_Laboratories"
+    },
+    {
+      "id": "eml-electrocomp-101",
+      "name": "EML Electrocomp 101",
+      "maker": "Electronic Music Laboratories",
+      "year": "1972",
+      "kind": "semi-modular",
+      "text": "A duophonic semi-modular synthesiser with four oscillators and a 44-note keyboard, built on the design of the Electrocomp 100.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
+      "id": "eml-electrocomp-500",
+      "name": "EML Electrocomp 500",
+      "maker": "Electronic Music Laboratories",
+      "year": "1973",
+      "kind": "mono",
+      "text": "A two-VCO monophonic performance synthesiser with a keyboard, essentially EML's 401 sequencer-system synth in keyboard form, built to compete with the Minimoog and ARP Odyssey.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
+    },
+    {
+      "id": "eml-synkey",
+      "name": "EML SynKey",
+      "maker": "Electronic Music Laboratories",
+      "year": "1978",
+      "kind": "paraphonic",
+      "text": "A 44-note programmable synthesiser using organ-style divide-down oscillators, with its patches stored on punched cards; the SynKey 1500 was followed by the semi-programmable SynKey 2001.",
       "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7665"
     },
     {
@@ -994,6 +1966,69 @@
       "kind": "poly",
       "text": "A polyphonic synthesizer with an unusual rocking keyboard mechanism and an aftertouch effect.",
       "source": "https://www.electronicsound.co.uk/features/long-reads/ems-the-gear/"
+    },
+    {
+      "id": "elektron-sidstation",
+      "name": "Elektron SidStation",
+      "maker": "Elektron",
+      "year": "1999",
+      "kind": "module",
+      "text": "Elektron's first product, a synthesiser built around the MOS Technology SID chip from the Commodore 64 home computer.",
+      "source": "https://en.wikipedia.org/wiki/Elektron_(company)"
+    },
+    {
+      "id": "elektron-monomachine",
+      "name": "Elektron Monomachine",
+      "maker": "Elektron",
+      "year": "2004",
+      "kind": "poly",
+      "text": "A six-part digital synth with five synthesis engines (SID, VO, FM+, SuperWave and DigiPro), sold as the SFX-6 keyboard with a joystick and the SFX-60 desktop module.",
+      "source": "https://en.wikipedia.org/wiki/Elektron_Monomachine"
+    },
+    {
+      "id": "elektron-analog-four",
+      "name": "Elektron Analog Four",
+      "maker": "Elektron",
+      "year": "2012",
+      "kind": "module",
+      "text": "Elektron's first analogue instrument, a four-voice synth with two oscillators per voice, effects and the Elektron step sequencer with parameter locks.",
+      "source": "https://en.wikipedia.org/wiki/Elektron_(company)"
+    },
+    {
+      "id": "elektron-analog-keys",
+      "name": "Elektron Analog Keys",
+      "maker": "Elektron",
+      "year": "2013",
+      "kind": "poly",
+      "text": "A four-voice analogue synthesiser with two oscillators, two sub-oscillators, dual filters and overdrive per voice, and a 37-key semi-weighted keyboard with aftertouch.",
+      "source": "https://rekkerd.org/elektron-introduces-analog-keys-analog-synthesizer/"
+    },
+    {
+      "id": "elektron-digitone",
+      "name": "Elektron Digitone",
+      "maker": "Elektron",
+      "year": "2018",
+      "kind": "module",
+      "text": "Elektron's first FM synthesiser, with eight voices combining FM with a subtractive signal path, and four internal and four external sequencer tracks.",
+      "source": "https://www.gearnews.com/namm-2018-digitone-polyphonic-fm-digital-synthesizer-elektron/"
+    },
+    {
+      "id": "elektron-digitone-keys",
+      "name": "Elektron Digitone Keys",
+      "maker": "Elektron",
+      "year": "2019",
+      "kind": "poly",
+      "text": "An eight-voice FM synth using the Digitone's engine, with a 37-note keyboard with velocity and aftertouch and four separate track outputs.",
+      "source": "https://musictech.com/news/superbooth-2019-elektron-launches-digitone-keys-polysynth-keyboard/"
+    },
+    {
+      "id": "elektron-digitone-ii",
+      "name": "Elektron Digitone II",
+      "maker": "Elektron",
+      "year": "2024",
+      "kind": "module",
+      "text": "A 16-voice, 16-track digital synth with four synth machines (Wavetone, Swarmer, FM Tone and FM Drum), six filter types and a 128-step sequencer.",
+      "source": "https://www.synthtopia.com/?p=145320"
     },
     {
       "id": "elka-rhapsody-490",
@@ -1059,6 +2094,249 @@
       "source": "https://www.muzines.co.uk/articles/elka-ek22-ek44-synthesizers/1431"
     },
     {
+      "id": "ensoniq-mirage",
+      "name": "Ensoniq Mirage",
+      "maker": "Ensoniq",
+      "year": "1984",
+      "kind": "poly",
+      "text": "An 8-bit, 8-voice sampling keyboard with an analogue resonant four-pole low-pass filter per voice and a 61-key velocity-sensitive keyboard, known for bringing sampling within reach of many more musicians at $1,695.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_Mirage"
+    },
+    {
+      "id": "ensoniq-esq-1",
+      "name": "Ensoniq ESQ-1",
+      "maker": "Ensoniq",
+      "year": "1986",
+      "kind": "poly",
+      "text": "An 8-voice digital-wave synthesiser with three oscillators per voice from 32 ROM waveforms, an analogue resonant low-pass filter per voice, a 61-key velocity-sensitive keyboard and a built-in sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-esq-m",
+      "name": "Ensoniq ESQ-M",
+      "maker": "Ensoniq",
+      "year": "1987",
+      "kind": "module",
+      "text": "A rackmount version of the ESQ-1 synthesiser without its sequencer and with a reduced display and controls.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_ESQ-1"
+    },
+    {
+      "id": "ensoniq-eps",
+      "name": "Ensoniq EPS",
+      "maker": "Ensoniq",
+      "year": "1988",
+      "kind": "poly",
+      "text": "The Mirage's successor, a 20-voice, 13-bit performance sampling keyboard with 61 keys, polyphonic aftertouch and a built-in sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_EPS"
+    },
+    {
+      "id": "ensoniq-sq-80",
+      "name": "Ensoniq SQ-80",
+      "maker": "Ensoniq",
+      "year": "1988",
+      "kind": "poly",
+      "text": "An enhanced successor to the ESQ-1: an 8-voice synthesiser with three wavetable oscillators and an analogue filter per voice, more waveforms, a polyphonic-aftertouch keyboard, a floppy disk drive and an eight-track sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-vfx",
+      "name": "Ensoniq VFX",
+      "maker": "Ensoniq",
+      "year": "1989",
+      "kind": "poly",
+      "text": "A 21-voice synthesiser combining Transwave wavetable synthesis, sample playback and subtractive synthesis, with a polyphonic-aftertouch keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_VFX"
+    },
+    {
+      "id": "ensoniq-vfx-sd",
+      "name": "Ensoniq VFX-SD",
+      "maker": "Ensoniq",
+      "year": "1989",
+      "kind": "poly",
+      "text": "A version of the VFX with a 24-track sequencer, using Transwave wavetable synthesis, sample playback and subtractive synthesis with polyphonic aftertouch.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_VFX"
+    },
+    {
+      "id": "ensoniq-sd-1",
+      "name": "Ensoniq SD-1",
+      "maker": "Ensoniq",
+      "year": "1990",
+      "kind": "poly",
+      "text": "A Transwave wavetable and sample-playback workstation following the VFX-SD, with dual multimode digital filters, three envelopes and an on-board sequencer, later offered with 32 voices as the SD-1/32.",
+      "source": "https://synthanatomy.com/2026/03/sojus-records-ensoniq-sd-1-an-open-source-emulation-of-the-1990-transewavetm-synth.html"
+    },
+    {
+      "id": "ensoniq-sq-1",
+      "name": "Ensoniq SQ-1",
+      "maker": "Ensoniq",
+      "year": "1990",
+      "kind": "poly",
+      "text": "A 61-key workstation with sampled and Transwave waveforms, two digital filters per voice, effects and an eight- or 16-track sequencer, later updated as the SQ-1 Plus.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-sq-r",
+      "name": "Ensoniq SQ-R",
+      "maker": "Ensoniq",
+      "year": "1990",
+      "kind": "module",
+      "text": "A rack-mounted sound module version of the SQ-1 synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-eps-16-plus",
+      "name": "Ensoniq EPS-16 Plus",
+      "maker": "Ensoniq",
+      "year": "1991",
+      "kind": "poly",
+      "text": "The EPS sampling keyboard's successor, with 16-bit samples and a 24-bit effects system.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_EPS"
+    },
+    {
+      "id": "ensoniq-sq-2",
+      "name": "Ensoniq SQ-2",
+      "maker": "Ensoniq",
+      "year": "1991",
+      "kind": "poly",
+      "text": "A 76-key member of Ensoniq's SQ workstation series.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-asr-10",
+      "name": "Ensoniq ASR-10",
+      "maker": "Ensoniq",
+      "year": "1992",
+      "kind": "poly",
+      "text": "A 31-voice, 16-bit sampling keyboard with 61 polyphonic-aftertouch keys, onboard effects and a 16-track sequencer, also sold with 88 weighted keys as the ASR-88 and as the rackmount ASR-10R.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_ASR-10"
+    },
+    {
+      "id": "ensoniq-ks-32",
+      "name": "Ensoniq KS-32",
+      "maker": "Ensoniq",
+      "year": "1992",
+      "kind": "poly",
+      "text": "A 76-note weighted-action keyboard synthesiser with 32-voice polyphony, Transwave and sampled waveforms, effects and an eight-track sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-ts-10",
+      "name": "Ensoniq TS-10",
+      "maker": "Ensoniq",
+      "year": "1993",
+      "kind": "poly",
+      "text": "A 32-note polyphonic synthesiser with up to six oscillators per patch, sample playback from ROM and RAM, 24-bit effects, a sequencer and 61 polyphonic-aftertouch keys.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_TS-10"
+    },
+    {
+      "id": "ensoniq-ts-12",
+      "name": "Ensoniq TS-12",
+      "maker": "Ensoniq",
+      "year": "1993",
+      "kind": "poly",
+      "text": "The TS-10's synthesis and effects in a version with 76 weighted Fatar keys and channel aftertouch.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_TS-10"
+    },
+    {
+      "id": "ensoniq-kt-76",
+      "name": "Ensoniq KT-76",
+      "maker": "Ensoniq",
+      "year": "1994",
+      "kind": "poly",
+      "text": "A weighted-action keyboard workstation with 76 keys, also sold with 88 keys as the KT-88.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-mr-61",
+      "name": "Ensoniq MR-61",
+      "maker": "Ensoniq",
+      "year": "1996",
+      "kind": "poly",
+      "text": "A 64-voice music workstation with a 16-track sequencer, effects, several hundred onboard sounds and an Idea Pad that captures recent playing, sold with 61 keys and with 76 weighted keys as the MR-76.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_MR61"
+    },
+    {
+      "id": "ensoniq-fizmo",
+      "name": "Ensoniq Fizmo",
+      "maker": "Ensoniq",
+      "year": "1998",
+      "kind": "poly",
+      "text": "A 48-voice Transwave synthesiser with two oscillators per voice, resonant digital filters, a 61-key semi-weighted keyboard and five control knobs named F-I-Z-M-O.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq_Fizmo"
+    },
+    {
+      "id": "ensoniq-zr-76",
+      "name": "Ensoniq ZR-76",
+      "maker": "Ensoniq",
+      "year": "1998",
+      "kind": "poly",
+      "text": "A 76-key Ensoniq keyboard released in 1998.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "ensoniq-halo",
+      "name": "Ensoniq Halo",
+      "maker": "Ensoniq",
+      "year": "2002",
+      "kind": "poly",
+      "text": "A 61-key sample-playback keyboard made by E-mu, a keyboard version of the Proteus 2500 module sharing the layout of the E-mu MK-6, XK-6 and PK-6 with its own soundset.",
+      "source": "https://en.wikipedia.org/wiki/Ensoniq"
+    },
+    {
+      "id": "erica-synths-bassline-db-01",
+      "name": "Erica Synths Bassline DB-01",
+      "maker": "Erica Synths",
+      "year": "2020",
+      "kind": "sequencer",
+      "text": "A compact analogue bass synth with one VCO, a transistor sub-oscillator, a Polivoks-based two-pole filter, overdrive and a 64-step sequencer with accent and slide.",
+      "source": "https://musictech.com/reviews/hardware-instruments/erica-synths-bassline-db-01"
+    },
+    {
+      "id": "erica-synths-syntrx",
+      "name": "Erica Synths Syntrx",
+      "maker": "Erica Synths",
+      "year": "2020",
+      "kind": "semi-modular",
+      "text": "An analogue synthesizer whose interface follows the EMS Synthi AKS, with three VCOs, a resonant filter, ring modulator, spring reverb, joystick and a digitally controlled analogue patch matrix with stored patches.",
+      "source": "https://news.hummingbirdmedia.com/erica-synths-syntrx-now-shipping-worldwide"
+    },
+    {
+      "id": "erica-synths-syntrx-ii",
+      "name": "Erica Synths Syntrx II",
+      "maker": "Erica Synths",
+      "year": "2022",
+      "kind": "semi-modular",
+      "text": "The successor to the Syntrx, with two main oscillators and a modulation oscillator, high- and low-pass filters, ring modulator, delay and reverb, a recordable joystick, a stored analogue patch matrix and a piano-roll sequencer.",
+      "source": "https://news.hummingbirdmedia.com/erica-synths-syntrx-ii-is-now-available"
+    },
+    {
+      "id": "erica-synths-bullfrog",
+      "name": "Erica Synths Bullfrog",
+      "maker": "Erica Synths",
+      "year": "2023",
+      "kind": "semi-modular",
+      "text": "An educational analogue subtractive synth made with Richie Hawtin, with a VCO, noise, filter, VCA/delay, two envelopes and sample and hold patched together by cable or by plug-in voice cards.",
+      "source": "https://musictech.com/news/gear/richie-hawtin-bullfrog-erica-synths-educational"
+    },
+    {
+      "id": "erica-synths-steampipe",
+      "name": "Erica Synths Steampipe",
+      "maker": "Erica Synths",
+      "year": "2024",
+      "kind": "module",
+      "text": "An eight-voice physical-modelling desktop synth developed with 112dB, using Karplus-Strong-style feedback loops rather than oscillators to imitate wind and string instruments.",
+      "source": "https://musictech.com/news/gear/erica-synths-steampipe-everything-you-need-to-know"
+    },
+    {
+      "id": "expressive-e-osmose",
+      "name": "Expressive E Osmose",
+      "maker": "Expressive E",
+      "year": "2022",
+      "kind": "poly",
+      "text": "A 49-key polyphonic synthesizer with per-note expressive key movement, running Haken Audio's EaganMatrix engine, the same engine as the Continuum Fingerboard.",
+      "source": "https://www.synthtopia.com/content/2022/11/24/expressive-e-osmose-to-start-shipping-in-december-2022/"
+    },
+    {
       "id": "fairlight-cmi-series-ii",
       "name": "Fairlight CMI Series II",
       "maker": "Fairlight",
@@ -1077,6 +2355,114 @@
       "source": "https://en.wikipedia.org/wiki/Fairlight_CMI"
     },
     {
+      "id": "farfisa-syntorchestra",
+      "name": "Farfisa Syntorchestra",
+      "maker": "Farfisa",
+      "year": "1975",
+      "kind": "poly",
+      "text": "A three-octave keyboard combining a polyphonic string ensemble with a monophonic analogue synthesiser, with separate outputs for each section.",
+      "source": "https://en.wikipedia.org/wiki/Farfisa"
+    },
+    {
+      "id": "farfisa-polychrome",
+      "name": "Farfisa Polychrome",
+      "maker": "Farfisa",
+      "year": "1979",
+      "kind": "poly",
+      "text": "A 61-note multi-instrument keyboard with percussive, string, ensemble and vocal sections and a programmable split.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
+    },
+    {
+      "id": "farfisa-soundmaker",
+      "name": "Farfisa Soundmaker",
+      "maker": "Farfisa",
+      "year": "1979",
+      "kind": "poly",
+      "text": "A 61-note preset keyboard developed from the Syntorchestra, with an improved string sound and a more adjustable monophonic synthesiser section with VCF, VCA, ADSR and LFO.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
+    },
+    {
+      "id": "firstman-fs4v",
+      "name": "Firstman FS4V",
+      "maker": "Firstman",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A 49-note polyphonic string synthesiser with string presets, seven variable presets and a polysynth section.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
+    },
+    {
+      "id": "firstman-sq-01",
+      "name": "Firstman SQ-01",
+      "maker": "Firstman",
+      "year": "1981",
+      "kind": "sequencer",
+      "text": "A monophonic synthesiser with a 1024-event sequencer and a 13-note printed keypad, also sold as the Multivox SQ-01.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
+    },
+    {
+      "id": "formanta-polivoks",
+      "name": "Formanta Polivoks",
+      "maker": "Formanta",
+      "year": "1982",
+      "kind": "mono",
+      "text": "A Soviet duophonic analogue synthesiser with two oscillators, a filter switchable between low-pass and band-pass and a 48-key keyboard, of which around 32,000 were made.",
+      "source": "https://en.wikipedia.org/wiki/Polivoks"
+    },
+    {
+      "id": "fuller-pp2000",
+      "name": "Fuller PP2000",
+      "maker": "Fuller",
+      "year": "1983",
+      "kind": "paraphonic",
+      "text": "A 49-note polyphonic keyboard with one waveform at 2', 4' and 8', noise, a VCA, LFO and ADSR, and pitch bend.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7710"
+    },
+    {
+      "id": "gleeman-pentaphonic",
+      "name": "Gleeman Pentaphonic",
+      "maker": "Gleeman",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A five-voice synthesiser with 15 VCOs, a 37-note keyboard, a 600-note sequencer and built-in chorus, also sold in a transparent case as the Pentaphonic Clear.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7728"
+    },
+    {
+      "id": "godwin-string-concert-749",
+      "name": "Godwin String Concert 749",
+      "maker": "Godwin",
+      "year": "1979",
+      "kind": "poly",
+      "text": "A 49-note string synthesiser with ten sliders for its string voices and effects.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7728"
+    },
+    {
+      "id": "groove-electronics-stinger",
+      "name": "Groove Electronics Stinger",
+      "maker": "Groove Electronics",
+      "year": "1989",
+      "kind": "module",
+      "text": "A duophonic four-DCO MIDI rack module combining two EDP Wasp voices, with 46 knobs.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7728"
+    },
+    {
+      "id": "groove-synthesis-3rd-wave",
+      "name": "Groove Synthesis 3rd Wave",
+      "maker": "Groove Synthesis",
+      "year": "2022",
+      "kind": "poly",
+      "text": "A 24-voice, four-part hybrid wavetable synth presented as a successor to the PPG Wave, with three wavetable or virtual-analogue oscillators and an analogue low-pass plus a digital filter per voice, later also in a desktop version.",
+      "source": "https://synthanatomy.com/2022/10/groove-synthesis-3rd-wave-synthesizer-is-shipping-now-new-interview-and-sound-demo.html"
+    },
+    {
+      "id": "groove-synthesis-3rd-wave-8m",
+      "name": "Groove Synthesis 3rd Wave 8M",
+      "maker": "Groove Synthesis",
+      "year": "2025",
+      "kind": "module",
+      "text": "An eight-voice, bi-timbral desktop version of the 3rd Wave with the same three-oscillator engine and analogue filters, patch-compatible with the 24-voice models.",
+      "source": "https://synthanatomy.com/2025/09/groove-synthesis-3rd-wave-8m-hybrid-wavetable-ppg-style-synthesizer-with-8-voices-and-cheaper.html"
+    },
+    {
       "id": "hammond-solovox",
       "name": "Hammond Solovox",
       "maker": "Hammond",
@@ -1084,6 +2470,213 @@
       "kind": "mono",
       "text": "A monophonic attachment instrument for the piano, with a three-octave mini keyboard and a tone cabinet holding a vacuum-tube oscillator and octave-divider circuits, giving lead organ and orchestral voices.",
       "source": "https://en.wikipedia.org/wiki/Hammond_Solovox"
+    },
+    {
+      "id": "hammond-sy100",
+      "name": "Hammond SY100",
+      "maker": "Hammond",
+      "year": "1974",
+      "kind": "mono",
+      "text": "A 44-note monophonic synthesiser with Hammond's Autopatch preset system and a seven-by-seven grid of knobs.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7749"
+    },
+    {
+      "id": "hartmann-neuron",
+      "name": "Hartmann Neuron",
+      "maker": "Hartmann Music",
+      "year": "2003",
+      "kind": "poly",
+      "text": "A 61-key synthesiser using neural-network resynthesis, with two 'Resynator' oscillators per voice and a hard disk, designed by Axel Hartmann.",
+      "source": "https://en.wikipedia.org/wiki/Hartmann_Neuron"
+    },
+    {
+      "id": "hillwood-blue-comet-73",
+      "name": "Hillwood Blue Comet 73",
+      "maker": "Hillwood",
+      "year": "1973",
+      "kind": "mono",
+      "text": "A Japanese 37-note monophonic synthesiser with ten sliders, over 20 rocker switches and pitch bend.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7749"
+    },
+    {
+      "id": "hohner-hi-string",
+      "name": "Hohner Hi-String",
+      "maker": "Hohner",
+      "year": "1975",
+      "kind": "poly",
+      "text": "A string synthesiser with cello and string sounds, volume and decay sliders and a swell pedal.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7768"
+    },
+    {
+      "id": "hohner-k4-string-thing",
+      "name": "Hohner K4 String Thing",
+      "maker": "Hohner",
+      "year": "1975",
+      "kind": "poly",
+      "text": "A 49-note string synthesiser with four faders for the volume and decay of its cello and string sounds, and an ensemble effect.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7768"
+    },
+    {
+      "id": "hohner-orchestral-string-performer",
+      "name": "Hohner Orchestral String Performer",
+      "maker": "Hohner",
+      "year": "1978",
+      "kind": "poly",
+      "text": "A 60-note split multi-instrument keyboard with polyphonic clavichord, piano, cello, violin and viola sounds and a monophonic brass section.",
+      "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7768"
+    },
+    {
+      "id": "ik-multimedia-uno-synth",
+      "name": "IK Multimedia UNO Synth",
+      "maker": "IK Multimedia",
+      "year": "2018",
+      "kind": "mono",
+      "text": "A battery-powered analogue monosynth made with Soundmachines, with two VCOs, a two-pole OTA multimode filter, a 16-step sequencer and a 27-note touch keyboard.",
+      "source": "https://synthanatomy.com/2018/07/ik-multimedia-uno-synth-portable-analog-synthesizer-is-now-available-first-look-video.html"
+    },
+    {
+      "id": "ik-multimedia-uno-synth-pro",
+      "name": "IK Multimedia UNO Synth Pro",
+      "maker": "IK Multimedia",
+      "year": "2021",
+      "kind": "paraphonic",
+      "text": "A three-oscillator paraphonic analogue synth with the UNO's OTA filter plus an SSI 2/4-pole low-pass filter, a 64-step sequencer and a 37-key Fatar keyboard, also sold as a desktop version.",
+      "source": "https://musictech.com/news/gear/ik-multimedia-uno-synth-pro/"
+    },
+    {
+      "id": "ik-multimedia-uno-synth-pro-x",
+      "name": "IK Multimedia UNO Synth Pro X",
+      "maker": "IK Multimedia",
+      "year": "2023",
+      "kind": "paraphonic",
+      "text": "A compact three-oscillator paraphonic analogue synth with OTA and SSI filters, analogue overdrive, ten digital effects and a 64-step sequencer.",
+      "source": "https://www.synthtopia.com/content/2023/08/03/ik-multimedia-intros-paraphonic-dual-filter-analog-uno-synth-pro-x-synthesizer/"
+    },
+    {
+      "id": "intellijel-cascadia",
+      "name": "Intellijel Cascadia",
+      "maker": "Intellijel",
+      "year": "2023",
+      "kind": "semi-modular",
+      "text": "A desktop analogue semi-modular monosynth mixing East and West Coast synthesis, with two VCOs, a multimode filter, a wavefolder, utility sections and 101 patch points.",
+      "source": "https://www.gearnews.com/intellijel-cascadia-semi-modular-synthesizer-our-review/"
+    },
+    {
+      "id": "ionic-performer",
+      "name": "Ionic Performer",
+      "maker": "Ionic",
+      "year": "1973",
+      "kind": "mono",
+      "text": "An American three-VCO monophonic synthesiser with a 49-note keyboard, pushbutton matrix patching and quadraphonic output.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/8099"
+    },
+    {
+      "id": "jen-sx-1000",
+      "name": "Jen SX-1000",
+      "maker": "Jen Elettronica",
+      "year": "1978",
+      "kind": "mono",
+      "text": "An Italian monophonic synthesiser with one DCO and a 37-note keyboard.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/8099"
+    },
+    {
+      "id": "jen-sx-2000",
+      "name": "Jen SX-2000",
+      "maker": "Jen Elettronica",
+      "year": "1978",
+      "kind": "mono",
+      "text": "A monophonic preset synthesiser with seven presets and a 44-note keyboard.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/8099"
+    },
+    {
+      "id": "kawai-sx-210",
+      "name": "Kawai SX-210",
+      "maker": "Kawai",
+      "year": "1983",
+      "kind": "poly",
+      "text": "An eight-voice programmable analogue polysynth with eight DCOs, eight 24dB/octave low-pass VCFs and a static high-pass filter, an ensemble circuit, a five-octave keyboard without velocity and 32 memories.",
+      "source": "https://www.muzines.co.uk/articles/kawai-sx-210/6086"
+    },
+    {
+      "id": "kawai-sx-240",
+      "name": "Kawai SX-240",
+      "maker": "Kawai",
+      "year": "1985",
+      "kind": "poly",
+      "text": "An eight-voice analogue polysynth with 16 DCOs (two per voice, or four per voice in four-voice mode), a split at middle C, 48 memories and a 1,500-note real-time sequencer.",
+      "source": "https://www.muzines.co.uk/articles/sx-appeal/3790"
+    },
+    {
+      "id": "kawai-k3",
+      "name": "Kawai K3",
+      "maker": "Kawai",
+      "year": "1986",
+      "kind": "poly",
+      "text": "A six-voice hybrid synth with two digital-waveform oscillators per voice, 31 factory waveforms and a user waveform built from the levels of 32 harmonics, an analogue resonant filter and a velocity- and pressure-sensitive five-octave keyboard; the rack K3m shares its engine.",
+      "source": "https://www.muzines.co.uk/articles/kawai-k3/1452"
+    },
+    {
+      "id": "kawai-k5",
+      "name": "Kawai K5",
+      "maker": "Kawai",
+      "year": "1987",
+      "kind": "poly",
+      "text": "A 16-voice digital additive synth with up to 126 harmonics per sound, a digital dynamic filter and an 11-band formant filter, 15-part multitimbral operation and a velocity-sensitive keyboard; the K5m is its expander version.",
+      "source": "https://www.muzines.co.uk/articles/kawai-k5/2552"
+    },
+    {
+      "id": "kawai-k1",
+      "name": "Kawai K1",
+      "maker": "Kawai",
+      "year": "1988",
+      "kind": "poly",
+      "text": "A 16-voice digital synth playing back 256 8-bit PCM waveforms (204 additive and 52 sampled), without filters, with a 61-key keyboard with velocity and aftertouch; also sold as the K1m and K1r modules and revised as the K1II with drum sounds.",
+      "source": "https://en.wikipedia.org/wiki/Kawai_K1"
+    },
+    {
+      "id": "kawai-k4",
+      "name": "Kawai K4",
+      "maker": "Kawai",
+      "year": "1989",
+      "kind": "poly",
+      "text": "A 16-voice digital synth with four sources per patch drawn from 96 harmonic-based waveforms and 160 PCM waveforms, a digital resonant filter, built-in effects and a velocity- and pressure-sensitive five-octave keyboard; the K4r is its rack version.",
+      "source": "https://www.muzines.co.uk/articles/kawai-k4-and-k4r/185"
+    },
+    {
+      "id": "kawai-spectra",
+      "name": "Kawai Spectra",
+      "maker": "Kawai",
+      "year": "1990",
+      "kind": "poly",
+      "text": "A budget 10-voice digital synth (KC10) using 16-bit PCM and harmonic-based waveforms, with 64 preset and 32 user sounds, preset rhythm patterns and no filters or aftertouch.",
+      "source": "https://en.wikipedia.org/wiki/Kawai_Musical_Instruments"
+    },
+    {
+      "id": "kawai-k11",
+      "name": "Kawai K11",
+      "maker": "Kawai",
+      "year": "1993",
+      "kind": "poly",
+      "text": "A 32-voice, 32-part multitimbral digital synth playing 6MB of 16-bit samples through a resonant digital filter, with seven drum kits, reverb and a 61-key velocity- and pressure-sensitive keyboard.",
+      "source": "https://www.muzines.co.uk/articles/k-klass/10740"
+    },
+    {
+      "id": "kawai-k5000",
+      "name": "Kawai K5000",
+      "maker": "Kawai",
+      "year": "1996",
+      "kind": "poly",
+      "text": "A 32-voice additive synth with up to six sources per sound, each of up to 64 harmonics or a PCM sample with its own formant filter, sold as the K5000W workstation with sequencer, the K5000S with knobs and arpeggiator, and the K5000R rack.",
+      "source": "https://en.wikipedia.org/wiki/Kawai_K5000"
+    },
+    {
+      "id": "keynote-scorpion",
+      "name": "Keynote Scorpion",
+      "maker": "Keynote",
+      "year": "1978",
+      "kind": "mono",
+      "text": "A two-VCO monophonic synthesiser with a 44-note keyboard and aftertouch.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/8143"
     },
     {
       "id": "korg-800dv",
@@ -2239,6 +3832,195 @@
       "source": "https://en.wikipedia.org/wiki/Kurzweil_Music_Systems"
     },
     {
+      "id": "logan-string-melody",
+      "name": "Logan String Melody",
+      "maker": "Logan",
+      "year": "1973",
+      "kind": "poly",
+      "text": "A 49-note string synthesiser with a splittable keyboard, followed by the functionally identical String Melody II.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/12095"
+    },
+    {
+      "id": "logan-string-orchestra",
+      "name": "Logan String Orchestra",
+      "maker": "Logan",
+      "year": "1977",
+      "kind": "poly",
+      "text": "A 49-note string synthesiser with portamento.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/12095"
+    },
+    {
+      "id": "logan-vocal-synth",
+      "name": "Logan Vocal Synth",
+      "maker": "Logan",
+      "year": "1979",
+      "kind": "poly",
+      "text": "A 60-note multi-instrument keyboard with string, vocal and monosynth sections.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/12095"
+    },
+    {
+      "id": "lord-skywave",
+      "name": "Lord Skywave",
+      "maker": "Lord",
+      "year": "1978",
+      "kind": "mono",
+      "text": "A British two-VCO monophonic synthesiser with a 49-note keyboard and joystick modulation.",
+      "source": "https://www.muzines.co.uk/articles/total-recall/12095"
+    },
+    {
+      "id": "make-noise-0-coast",
+      "name": "Make Noise 0-Coast",
+      "maker": "Make Noise",
+      "year": "2016",
+      "kind": "semi-modular",
+      "text": "A single-voice patchable analogue synthesizer mixing Moog and Buchla approaches, with an oscillator, a Slope generator, a Contour envelope and MIDI, playable with or without patch cables.",
+      "source": "https://synthtopia.com/content/2016/07/13/make-noise-0-coast-synthesizer-review-an-affordable-introduction-to-west-coast-synthesis"
+    },
+    {
+      "id": "make-noise-strega",
+      "name": "Make Noise Strega",
+      "maker": "Make Noise",
+      "year": "2021",
+      "kind": "semi-modular",
+      "text": "A patchable analogue instrument made with Alessandro Cortini, with an oscillator, a degrading delay, a filter, a function generator and touch plates, built for textures and imperfect sounds.",
+      "source": "https://www.synthtopia.com/content/2021/03/26/make-noise-strega-review-simple-dirty-and-interesting/"
+    },
+    {
+      "id": "mfb-kraftzwerg",
+      "name": "MFB Kraftzwerg",
+      "maker": "MFB",
+      "year": "2008",
+      "kind": "semi-modular",
+      "text": "A semi-modular analogue monosynth based on MFB's Synth II, with three VCOs, a resonant 24dB low-pass filter, ring modulator, two envelopes, two LFOs and 37 patch points over pre-wired routing.",
+      "source": "https://www.synthtopia.com/content/2008/08/18/mfb-kraftzwerg-semi-modular-analog-synthesizer/"
+    },
+    {
+      "id": "mfb-dominion-x",
+      "name": "MFB Dominion X",
+      "maker": "MFB",
+      "year": "2012",
+      "kind": "module",
+      "text": "A programmable analogue desktop monosynth with three VCOs, ring modulation, a six-mode multimode filter, three LFOs, 128 patches and CV inputs for modular use.",
+      "source": "https://synthtopia.com/?p=39004"
+    },
+    {
+      "id": "mfb-dominion-1",
+      "name": "MFB Dominion 1",
+      "maker": "MFB",
+      "year": "2014",
+      "kind": "semi-modular",
+      "text": "A programmable analogue mono and paraphonic synth with three VCOs, a multimode filter, a 26-point patch panel, sequencer and a three-octave Fatar keyboard.",
+      "source": "https://greatsynthesizers.com/en/review/mfb-dominion-1-a-deluxe-analog-synth/"
+    },
+    {
+      "id": "mfb-dominion-club",
+      "name": "MFB Dominion Club",
+      "maker": "MFB",
+      "year": "2017",
+      "kind": "module",
+      "text": "A compact desktop monosynth based on the Dominion 1, with two analogue and one digital oscillator, two sub-oscillators, a 24dB multimode filter, a sequencer and 100 memories.",
+      "source": "https://www.bonedo.de/artikel/superbooth-17-mfb-dominion-club"
+    },
+    {
+      "id": "modal-008",
+      "name": "Modal Electronics 008",
+      "maker": "Modal Electronics",
+      "year": "2015",
+      "kind": "poly",
+      "text": "An eight-voice analogue polysynth with two VCOs and two sub-oscillators per voice, multi-mode filters, a 32-step sequencer, a touchscreen and a five-octave Fatar keyboard with aftertouch.",
+      "source": "https://www.synthtopia.com/content/2015/04/15/modal-electronics-intros-008-8-voice-analog-monster-synth/"
+    },
+    {
+      "id": "modal-craftsynth",
+      "name": "Modal Electronics CRAFTsynth",
+      "maker": "Modal Electronics",
+      "year": "2016",
+      "kind": "mono",
+      "text": "A small self-assembly digital monophonic synth kit with two oscillators, up to eight detunable sub-oscillators in unison mode, a resonant low-pass filter and a five-note touch panel, later followed by the wavetable CRAFTsynth 2.0.",
+      "source": "https://www.soundonsound.com/node/4915617"
+    },
+    {
+      "id": "modal-skulpt",
+      "name": "Modal Electronics Skulpt",
+      "maker": "Modal Electronics",
+      "year": "2018",
+      "kind": "poly",
+      "text": "A portable four-voice digital virtual-analogue synth with eight oscillators per voice, a 16-key touch keyboard, a sequencer and battery power.",
+      "source": "https://www.synthtopia.com/content/2018/07/13/modal-electronics-skulpt-synthesizer-now-available-to-pre-order/"
+    },
+    {
+      "id": "modal-argon8",
+      "name": "Modal Electronics Argon8",
+      "maker": "Modal Electronics",
+      "year": "2019",
+      "kind": "poly",
+      "text": "An eight-voice digital wavetable synth with four oscillators per voice, effects, an arpeggiator and a sequencer, sold with 37 keys and later also as the 61-key Argon8X.",
+      "source": "https://www.synthtopia.com/content/2019/12/18/modal-argon8-wavetable-synthesizer-review/"
+    },
+    {
+      "id": "modal-argon8m",
+      "name": "Modal Electronics Argon8M",
+      "maker": "Modal Electronics",
+      "year": "2020",
+      "kind": "module",
+      "text": "A desktop and 3U rackmount version of the eight-voice Argon8 wavetable synth with 32 wavetable oscillators.",
+      "source": "https://synthanatomy.com/2020/01/modal-electronics-expands-the-argon8-synthesizer-family-with-61-keys-desktop-version.html"
+    },
+    {
+      "id": "modal-cobalt8",
+      "name": "Modal Electronics Cobalt8",
+      "maker": "Modal Electronics",
+      "year": "2020",
+      "kind": "poly",
+      "text": "An eight-voice virtual-analogue synth with up to eight oscillators per voice, a four-pole resonant ladder-style filter, a joystick and 37 keys with aftertouch, later also sold as the 61-key Cobalt8X.",
+      "source": "https://www.soundonsound.com/news/8-voice-polysynth-modal"
+    },
+    {
+      "id": "modal-cobalt8m",
+      "name": "Modal Electronics Cobalt8M",
+      "maker": "Modal Electronics",
+      "year": "2020",
+      "kind": "module",
+      "text": "A desktop and rack version of the Cobalt8 with the same eight-voice, 64-oscillator virtual-analogue engine, ladder filter and effects.",
+      "source": "https://www.gearnews.com/modal-electronics-announce-bigger-and-smaller-cobalt8s"
+    },
+    {
+      "id": "modal-cobalt5s",
+      "name": "Modal Electronics Cobalt5S",
+      "maker": "Modal Electronics",
+      "year": "2022",
+      "kind": "poly",
+      "text": "A compact five-voice virtual-analogue synth on the Cobalt engine, with up to eight oscillators per voice, a morphable ladder filter, MPE support, an X/Y/Z touchpad and 37 compact keys.",
+      "source": "https://synthtopia.com/content/2022/03/01/modal-electronics-announces-cobalt5s-compact-synthesizer"
+    },
+    {
+      "id": "modal-carbon8",
+      "name": "Modal Electronics Carbon8",
+      "maker": "Modal Electronics",
+      "year": "2024",
+      "kind": "poly",
+      "text": "An eight-voice digital synthesizer with two oscillators per voice drawing on 56 core waveforms, 34 filter types and three effects slots, released after Modal's takeover by Alltronics.",
+      "source": "https://synthanatomy.com/2025/01/modal-electronics-carbon8m-desktop-version-of-the-new-carbon8-digital-synthesizer.html"
+    },
+    {
+      "id": "modal-carbon8m",
+      "name": "Modal Electronics Carbon8M",
+      "maker": "Modal Electronics",
+      "year": "2025",
+      "kind": "module",
+      "text": "A desktop and 3U rack version of the Carbon8 with the same digital engine and a joystick in place of the keys.",
+      "source": "https://synthanatomy.com/2025/01/modal-electronics-carbon8m-desktop-version-of-the-new-carbon8-digital-synthesizer.html"
+    },
+    {
+      "id": "modal-002",
+      "name": "Modulus 002",
+      "maker": "Modulus",
+      "year": "2014",
+      "kind": "poly",
+      "text": "A twelve-voice analogue/digital hybrid polysynth designed and built in the UK, launched by Modulus before the company was renamed Modal Electronics in 2015.",
+      "source": "https://synthtopia.com/?p=61263"
+    },
+    {
       "id": "moog-model-12",
       "name": "Moog Model 12",
       "maker": "Moog Music",
@@ -2642,6 +4424,15 @@
       "source": "https://news.hummingbirdmedia.com/moog-music-announces-moog-messenger-a-new-era-of-analog-synthesis"
     },
     {
+      "id": "aelita",
+      "name": "Aelita",
+      "maker": "Murom Radio Plant",
+      "year": "1980",
+      "kind": "mono",
+      "text": "A Soviet monophonic analogue synthesiser with three oscillators, a resonant low-pass filter, a 44-key keyboard and a hinged lid over its control panel.",
+      "source": "https://en.wikipedia.org/wiki/Aelita_(synthesizer)"
+    },
+    {
       "id": "ned-synclavier-ii",
       "name": "Synclavier II",
       "maker": "New England Digital",
@@ -2676,6 +4467,150 @@
       "kind": "poly",
       "text": "The largest model of the Macintosh-based Synclavier range, operated with a Macintosh II as its terminal.",
       "source": "https://en.wikipedia.org/wiki/Synclavier"
+    },
+    {
+      "id": "novation-bass-station",
+      "name": "Novation Bass Station",
+      "maker": "Novation",
+      "year": "1993",
+      "kind": "mono",
+      "text": "A monophonic synth with digitally controlled oscillators, joined in 1994 by the Bass Station Rack with dual ADSR envelopes, a 12/24dB filter and oscillator sync.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-super-bass-station",
+      "name": "Novation Super Bass Station",
+      "maker": "Novation",
+      "year": "1997",
+      "kind": "module",
+      "text": "A development of the Bass Station that added an arpeggiator, a noise source, a ring modulator, a second LFO and a sub-oscillator.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-supernova",
+      "name": "Novation Supernova",
+      "maker": "Novation",
+      "year": "1998",
+      "kind": "module",
+      "text": "A 3U rack-mount virtual analogue polysynth with 16-note polyphony (expandable), eight audio outputs and 56 programmable effects across its eight parts.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-nova",
+      "name": "Novation Nova",
+      "maker": "Novation",
+      "year": "1999",
+      "kind": "module",
+      "text": "A desktop performance module with the Supernova's synth engine and a 40-band vocoder.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-supernova-ii",
+      "name": "Novation Supernova II",
+      "maker": "Novation",
+      "year": "2000",
+      "kind": "poly",
+      "text": "A virtual analogue polysynth in 24-, 36- and 48-voice models, sold as a 3U rack and as a 61-note keyboard, adding FM synthesis, an eight-part arpeggiator and a vocoder.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-a-station",
+      "name": "Novation A-Station",
+      "maker": "Novation",
+      "year": "2001",
+      "kind": "module",
+      "text": "A compact analogue-modelling synth module with eight-voice polyphony, FM synthesis and a 12-voice vocoder.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-k-station",
+      "name": "Novation K-Station",
+      "maker": "Novation",
+      "year": "2002",
+      "kind": "poly",
+      "text": "A two-octave keyboard version of the A-Station with eight-voice polyphony, three oscillators and FM synthesis.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-ks",
+      "name": "Novation KS Series",
+      "maker": "Novation",
+      "year": "2002",
+      "kind": "poly",
+      "text": "Enhanced versions of the K-Station engine with four-part multitimbral operation, sold as the four-octave KS4, the five-octave KS5 and the KS Rack.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-x-station",
+      "name": "Novation X-Station",
+      "maker": "Novation",
+      "year": "2004",
+      "kind": "poly",
+      "text": "A keyboard synth with an eight-voice Supernova-class engine and a built-in audio interface, designed with a computer sequencer to make a complete music-making set-up.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-xiosynth",
+      "name": "Novation XioSynth",
+      "maker": "Novation",
+      "year": "2006",
+      "kind": "poly",
+      "text": "A keyboard synthesiser with a USB audio interface and template-based MIDI control, in 25- and 49-key versions.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-ultranova",
+      "name": "Novation UltraNova",
+      "maker": "Novation",
+      "year": "2010",
+      "kind": "poly",
+      "text": "A USB bus-powered, single-part analogue-modelling synth in the Nova series with 18 voices and wavetable synthesis.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-mininova",
+      "name": "Novation MiniNova",
+      "maker": "Novation",
+      "year": "2012",
+      "kind": "poly",
+      "text": "A micro synth with a 37-note keyboard and up to 18 voices, built around the same synth engine as the UltraNova.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-bass-station-ii",
+      "name": "Novation Bass Station II",
+      "maker": "Novation",
+      "year": "2013",
+      "kind": "mono",
+      "text": "An analogue monosynth reworking the original Bass Station concept, with three oscillators and two filters.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-circuit-mono-station",
+      "name": "Novation Circuit Mono Station",
+      "maker": "Novation",
+      "year": "2017",
+      "kind": "sequencer",
+      "text": "An analogue paraphonic synthesiser in the Circuit family, played from its own sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-peak",
+      "name": "Novation Peak",
+      "maker": "Novation",
+      "year": "2017",
+      "kind": "module",
+      "text": "An eight-voice digital/analogue hybrid polysynth with digital oscillators and analogue filters.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
+    },
+    {
+      "id": "novation-summit",
+      "name": "Novation Summit",
+      "maker": "Novation",
+      "year": "2019",
+      "kind": "poly",
+      "text": "A 16-voice polyphonic flagship synthesiser with a 61-key keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Novation_Digital_Music_Systems"
     },
     {
       "id": "oberheim-ob-mx",
@@ -2804,6 +4739,15 @@
       "source": "https://en.wikipedia.org/wiki/Voyetra-8"
     },
     {
+      "id": "osc-oscar",
+      "name": "OSC OSCar",
+      "maker": "Oxford Synthesiser Company",
+      "year": "1983",
+      "kind": "mono",
+      "text": "A monophonic synthesiser with limited duophony, two digital oscillators with additive harmonic editing, two combinable analogue filters, a 37-key keyboard, MIDI and a rubberised case.",
+      "source": "https://en.wikipedia.org/wiki/OSC_OSCar"
+    },
+    {
       "id": "paia-2720",
       "name": "PAiA 2720",
       "maker": "PAiA Electronics",
@@ -2856,6 +4800,105 @@
       "kind": "modular",
       "text": "PAiA's later modular synthesizer line.",
       "source": "https://sdiy.info/wiki/PAiA_Electronics_Inc"
+    },
+    {
+      "id": "peavey-dpm-3",
+      "name": "Peavey DPM 3",
+      "maker": "Peavey",
+      "year": "1990",
+      "kind": "poly",
+      "text": "Peavey's first synthesiser, a 16-voice sample-plus-synthesis workstation with two oscillators per voice, a sequencer, effects and a velocity- and aftertouch-sensitive five-octave keyboard.",
+      "source": "https://www.muzines.co.uk/articles/peavey-dpm3/5816"
+    },
+    {
+      "id": "peavey-dpm-sp",
+      "name": "Peavey DPM SP",
+      "maker": "Peavey",
+      "year": "1992",
+      "kind": "module",
+      "text": "A dedicated sample-playback synthesiser module, partnered by the DPM SX sample input unit.",
+      "source": "https://www.muzines.co.uk/gear/22/108/290"
+    },
+    {
+      "id": "peavey-spectrum-bass",
+      "name": "Peavey Spectrum Bass",
+      "maker": "Peavey",
+      "year": "1993",
+      "kind": "module",
+      "text": "A 1U rack bass module with 200 preset bass sounds, eight-voice polyphony and four-part multitimbrality, using synthesis from the DPM series.",
+      "source": "https://www.muzines.co.uk/articles/peavey-dpm-spectrum-bass-module/2453"
+    },
+    {
+      "id": "pittsburgh-modular-lifeforms-sv-1-blackbox",
+      "name": "Pittsburgh Modular Lifeforms SV-1 Blackbox",
+      "maker": "Pittsburgh Modular",
+      "year": "2016",
+      "kind": "semi-modular",
+      "text": "A desktop analogue semi-modular with two oscillators with sub-octaves, noise, a state-variable filter, ADSR, VCA, MIDI-to-CV with LFOs and about 53 patch points over normalled routing.",
+      "source": "https://pt-br.ra.co/reviews/20395"
+    },
+    {
+      "id": "pittsburgh-modular-microvolt-3900",
+      "name": "Pittsburgh Modular Microvolt 3900",
+      "maker": "Pittsburgh Modular",
+      "year": "2018",
+      "kind": "semi-modular",
+      "text": "A desktop analogue semi-modular monosynth with one wave-shaping oscillator, a two-pole low-pass filter with a self-resonating mode, an arpeggiator and optional patch cables.",
+      "source": "https://www.synthtopia.com/content/2018/07/07/pittsburgh-modular-microvolt-3900-synthesizer-hands-on-demo/"
+    },
+    {
+      "id": "pittsburgh-modular-voltage-research-laboratory",
+      "name": "Pittsburgh Modular Voltage Research Laboratory",
+      "maker": "Pittsburgh Modular",
+      "year": "2019",
+      "kind": "semi-modular",
+      "text": "A West Coast-inspired analogue modular workstation of three Eurorack modules (a voice, a touch controller and an output utility) in one handmade case, funded on Kickstarter.",
+      "source": "https://www.synthtopia.com/content/2019/05/13/pittsburgh-modular-voltage-research-laboratory-hands-on-demo/"
+    },
+    {
+      "id": "pittsburgh-modular-taiga",
+      "name": "Pittsburgh Modular Taiga",
+      "maker": "Pittsburgh Modular",
+      "year": "2023",
+      "kind": "semi-modular",
+      "text": "A three-oscillator paraphonic analogue semi-modular that works standalone or as a 60hp Eurorack panel, with wave-shaping oscillators, a multimode filter and a Dynamics Controller, later also made in a keyboard version.",
+      "source": "https://www.synthtopia.com/content/2023/01/31/pittsburgh-modular-taiga-review/"
+    },
+    {
+      "id": "pittsburgh-modular-voltage-lab-2",
+      "name": "Pittsburgh Modular Voltage Lab 2",
+      "maker": "Pittsburgh Modular",
+      "year": "2024",
+      "kind": "semi-modular",
+      "text": "A standalone dual-oscillator analogue modular synth succeeding the Voltage Research Laboratory, with wave-shaping Laboratory Oscillators, a low-pass-gate Dynamics Controller, a touch controller, effects and a chance sequencer.",
+      "source": "https://www.soundonsound.com/news/voltage-lab-2-pittsburgh-modular"
+    },
+    {
+      "id": "polyend-medusa",
+      "name": "Polyend Medusa",
+      "maker": "Polyend",
+      "year": "2018",
+      "kind": "module",
+      "text": "A hybrid synth made with Dreadbox, with three analogue and three digital wavetable oscillators, mono and three- or six-note paraphonic modes through a shared filter, played and sequenced from a pad grid.",
+      "source": "https://synthtopia.com/content/2018/08/27/polyend-dreadbox-medusa-synthesizer-review"
+    },
+    {
+      "id": "polyend-synth",
+      "name": "Polyend Synth",
+      "maker": "Polyend",
+      "year": "2024",
+      "kind": "module",
+      "text": "An eight-voice digital synthesizer that runs three of its eight engines at once, played from an RGB pad grid with polyphonic aftertouch and three 64-step sequencers.",
+      "source": "https://www.soundonsound.com/news/polyend-unveil-synth"
+    },
+    {
+      "id": "polyfusion-series-2000",
+      "name": "Polyfusion Series 2000",
+      "maker": "Polyfusion",
+      "year": "1970s",
+      "kind": "modular",
+      "text": "A large-format modular synthesiser built by former Moog Music staff Ron Folkman and Alan Pearce as a successor to the Moog modular system.",
+      "source": "https://www.synthtopia.com/content/2018/09/10/polyfusion-modular-synthesizer-returning-after-40-years/"
     },
     {
       "id": "ppg-300-series",
@@ -2937,6 +4980,42 @@
       "kind": "poly",
       "text": "A hybrid wavetable synthesizer whose voices can each play a different sound, with resolution raised from 8 to 12 bits and MIDI added.",
       "source": "https://www.hermannseib.com/english/synths/ppg/history.htm"
+    },
+    {
+      "id": "quasimidi-quasar",
+      "name": "Quasimidi Quasar",
+      "maker": "Quasimidi",
+      "year": "1994",
+      "kind": "module",
+      "text": "A rack synthesiser combining sample-plus-synthesis, FM and additive methods, with built-in effects in a 2U rack case.",
+      "source": "https://www.soundonsound.com/reviews/quasimidi-quasar"
+    },
+    {
+      "id": "quasimidi-raven",
+      "name": "Quasimidi Raven",
+      "maker": "Quasimidi",
+      "year": "1995",
+      "kind": "poly",
+      "text": "A full-size sample-based virtual analogue keyboard synthesiser with a sequencer for muting and transposing tracks, expandable with the MAXX board.",
+      "source": "https://en.wikipedia.org/wiki/Quasimidi"
+    },
+    {
+      "id": "quasimidi-technox",
+      "name": "Quasimidi Technox",
+      "maker": "Quasimidi",
+      "year": "1995",
+      "kind": "module",
+      "text": "A synthesiser module from Quasimidi's mid-1990s range.",
+      "source": "https://en.wikipedia.org/wiki/Quasimidi"
+    },
+    {
+      "id": "quasimidi-polymorph",
+      "name": "Quasimidi Polymorph",
+      "maker": "Quasimidi",
+      "year": "1999",
+      "kind": "module",
+      "text": "The successor to the Rave-O-Lution and Quasimidi's last product before the company closed in 2000.",
+      "source": "https://en.wikipedia.org/wiki/Quasimidi"
     },
     {
       "id": "moog-synthesizer-i",
@@ -4147,6 +6226,268 @@
       "source": "https://en.wikipedia.org/wiki/Split-8"
     },
     {
+      "id": "siel-mono",
+      "name": "Siel Mono",
+      "maker": "Siel",
+      "year": "1980",
+      "kind": "mono",
+      "text": "A simple monophonic synthesiser with one DCO and one VCF.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-cruise",
+      "name": "Siel Cruise",
+      "maker": "Siel",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A hybrid combining the Siel Mono synthesiser with the divide-down polyphonic Orchestra in one keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-orchestra-2",
+      "name": "Siel Orchestra 2",
+      "maker": "Siel",
+      "year": "1982",
+      "kind": "poly",
+      "text": "An improved Orchestra (OR400) with more parameter sliders, which Sequential Circuits sold as the Prelude.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-opera-6",
+      "name": "Siel Opera 6",
+      "maker": "Siel",
+      "year": "1983",
+      "kind": "poly",
+      "text": "A six-voice analogue polysynth with two oscillators per voice, 100 memories and a velocity-sensitive five-octave keyboard with MIDI.",
+      "source": "https://www.muzines.co.uk/articles/siel-opera-6/6204"
+    },
+    {
+      "id": "siel-dk600",
+      "name": "Siel DK600",
+      "maker": "Siel",
+      "year": "1984",
+      "kind": "poly",
+      "text": "The Opera 6 in different styling, with a later EPROM adding MIDI channel and Omni-off support.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-expander",
+      "name": "Siel Expander",
+      "maker": "Siel",
+      "year": "1984",
+      "kind": "module",
+      "text": "A tabletop module version of the Opera 6 and DK600.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-dk70",
+      "name": "Siel DK70",
+      "maker": "Siel",
+      "year": "1985",
+      "kind": "poly",
+      "text": "One half of the DK80, using eight DCOs as eight single-oscillator voices or four two-oscillator voices, also sold as the Giannini GS 7010.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-dk80",
+      "name": "Siel DK80",
+      "maker": "Siel",
+      "year": "1985",
+      "kind": "poly",
+      "text": "A polysynth that can split or layer two six-voice synthesisers.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-expander-80",
+      "name": "Siel Expander 80",
+      "maker": "Siel",
+      "year": "1985",
+      "kind": "module",
+      "text": "The DK80 in module form.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "siel-dk700",
+      "name": "Siel DK700",
+      "maker": "Siel",
+      "year": "1986",
+      "kind": "poly",
+      "text": "An enhanced DK600 with digital parameter editing in place of knobs.",
+      "source": "https://en.wikipedia.org/wiki/Siel"
+    },
+    {
+      "id": "soma-lyra-8",
+      "name": "SOMA Laboratory Lyra-8",
+      "maker": "SOMA Laboratory",
+      "year": "2017",
+      "kind": "module",
+      "text": "An eight-voice analogue \"organismic\" synthesizer whose individually tuned voices are played from touch pads and modulate one another, with a modulation delay and distortion and no keyboard.",
+      "source": "https://www.soundonsound.com/reviews/soma-laboratory-lyra-8"
+    },
+    {
+      "id": "sonicware-liven-8bit-warps",
+      "name": "Sonicware Liven 8bit Warps",
+      "maker": "Sonicware",
+      "year": "2020",
+      "kind": "poly",
+      "text": "A portable 27-key 8-bit wave-memory synthesizer with four engines, filters, effects, a 64-step sequencer and a built-in speaker.",
+      "source": "https://synthanatomy.com/2020/02/sonicware-liven-8bit-warps-new-volca-style-8-bit-wave-synthesizer.html"
+    },
+    {
+      "id": "sonicware-liven-xfm",
+      "name": "Sonicware Liven XFM",
+      "maker": "Sonicware",
+      "year": "2021",
+      "kind": "poly",
+      "text": "A portable 27-key four-operator FM synthesizer with six-note polyphony, three fused-FM engines and a four-track sequencer.",
+      "source": "https://synthanatomy.com/2021/01/sonicware-liven-xfm-4-track-groovebox-with-fusing-fm-synthesis.html"
+    },
+    {
+      "id": "sonicware-liven-ambient-o",
+      "name": "Sonicware Liven Ambient Ø",
+      "maker": "Sonicware",
+      "year": "2024",
+      "kind": "poly",
+      "text": "A portable ambient synthesizer with four mixable layers (drone, pads, atmos and noise), up to ten voices, a per-layer 64-step sequencer and several reverbs and delays.",
+      "source": "https://synthanatomy.com/2024/07/sonicware-liven-ambient-o.html"
+    },
+    {
+      "id": "sonicware-liven-evoke",
+      "name": "Sonicware Liven Evoke",
+      "maker": "Sonicware",
+      "year": "2025",
+      "kind": "poly",
+      "text": "A portable synth whose oscillator is built from sliced recordings of 34 acoustic instruments, with a harmonic sub-oscillator, granular effects, a chord engine and a four-track sequencer.",
+      "source": "https://synthanatomy.com/2025/07/sonicware-evoke-portable-synthesizer-with-acoustronic-flux-oscillator-and-granular.html"
+    },
+    {
+      "id": "steiner-parker-synthacon",
+      "name": "Steiner-Parker Synthacon",
+      "maker": "Steiner-Parker",
+      "year": "1975",
+      "kind": "mono",
+      "text": "A monophonic analogue synthesiser from Salt Lake City with three VCOs, a 12dB/octave multimode filter and a 49-key keyboard, using the same circuitry as Steiner-Parker's SynthaSystem modular.",
+      "source": "https://en.wikipedia.org/wiki/Steiner-Parker_Synthacon"
+    },
+    {
+      "id": "steiner-parker-microcon",
+      "name": "Steiner-Parker Microcon",
+      "maker": "Steiner-Parker",
+      "year": "1977",
+      "kind": "mono",
+      "text": "A smaller version of the Synthacon, developed for the Swede Patch 2000 guitar synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Steiner-Parker_Synthacon"
+    },
+    {
+      "id": "studio-electronics-midimini",
+      "name": "Studio Electronics Midimini",
+      "maker": "Studio Electronics",
+      "year": "1989",
+      "kind": "module",
+      "text": "A rackmounted three-oscillator monosynth built as a Minimoog in rack form with MIDI.",
+      "source": "https://synthanatomy.com/2019/12/studio-electronics-midimini-v30-classic-analog-synth-returns-with-more-features.html"
+    },
+    {
+      "id": "studio-electronics-se-1",
+      "name": "Studio Electronics SE-1",
+      "maker": "Studio Electronics",
+      "year": "1993",
+      "kind": "module",
+      "text": "A 3U rack analogue monosynth under digital control with three oscillators, licensed Moog circuitry, a 24dB/12dB resonant filter and 99 memories, described as the first new analogue monosynth since 1984.",
+      "source": "https://www.soundonsound.com/reviews/studio-electronics-se1"
+    },
+    {
+      "id": "studio-electronics-atc-1",
+      "name": "Studio Electronics ATC-1",
+      "maker": "Studio Electronics",
+      "year": "1996",
+      "kind": "module",
+      "text": "A 2U rack analogue monosynth with two VCOs and plug-in filter cartridges modelled on the Minimoog, TB-303, Oberheim SEM and ARP 2600 filters.",
+      "source": "https://www.soundonsound.com/reviews/studio-electronics-atc1-0"
+    },
+    {
+      "id": "studio-electronics-se-1x",
+      "name": "Studio Electronics SE-1X",
+      "maker": "Studio Electronics",
+      "year": "2000",
+      "kind": "module",
+      "text": "An updated version of the SE-1 rackmounted analogue monosynth.",
+      "source": "https://en.wikipedia.org/wiki/Studio_Electronics"
+    },
+    {
+      "id": "studio-electronics-omega-8",
+      "name": "Studio Electronics Omega 8",
+      "maker": "Studio Electronics",
+      "year": "2000s",
+      "kind": "module",
+      "text": "An eight-voice digitally controlled analogue rack polysynth with two oscillators, a filter and an amplifier per voice, a multitimbral mode and many front-panel knobs.",
+      "source": "https://www.soundonsound.com/reviews/studio-electronics-omega-8"
+    },
+    {
+      "id": "studio-electronics-atc-x",
+      "name": "Studio Electronics ATC-X",
+      "maker": "Studio Electronics",
+      "year": "2003",
+      "kind": "module",
+      "text": "A 2U rack analogue monosynth with two oscillators and four built-in selectable filters modelled on the Minimoog, Oberheim SEM, TB-303 and ARP 2600, plus distortion and a ring modulator.",
+      "source": "https://www.soundonsound.com/node/4916355"
+    },
+    {
+      "id": "studio-electronics-boomstar-3003",
+      "name": "Studio Electronics Boomstar 3003",
+      "maker": "Studio Electronics",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop analogue monosynth with two VCOs, two hardware envelopes and a 24dB filter modelled on the Roland TB-303's.",
+      "source": "https://www.soundonsound.com/node/4908918"
+    },
+    {
+      "id": "studio-electronics-boomstar-4075",
+      "name": "Studio Electronics Boomstar 4075",
+      "maker": "Studio Electronics",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop analogue monosynth with two VCOs, two hardware envelopes and a 24dB filter modelled on the ARP 2600's.",
+      "source": "https://www.soundonsound.com/node/4908918"
+    },
+    {
+      "id": "studio-electronics-boomstar-5089",
+      "name": "Studio Electronics Boomstar 5089",
+      "maker": "Studio Electronics",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop analogue monosynth with two VCOs, two hardware envelopes and a 24dB ladder filter modelled on the Minimoog's.",
+      "source": "https://www.soundonsound.com/node/4908918"
+    },
+    {
+      "id": "studio-electronics-boomstar-sem",
+      "name": "Studio Electronics Boomstar SEM",
+      "maker": "Studio Electronics",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop analogue monosynth with two VCOs, two hardware envelopes and a 12dB multi-mode filter modelled on the Oberheim SEM's.",
+      "source": "https://www.soundonsound.com/node/4908918"
+    },
+    {
+      "id": "studio-electronics-midimini-v30",
+      "name": "Studio Electronics Midimini V30",
+      "maker": "Studio Electronics",
+      "year": "2019",
+      "kind": "semi-modular",
+      "recreationOf": "studio-electronics-midimini",
+      "text": "A 30th-anniversary return of the Midimini as a 4U rack analogue monosynth on a three-oscillator Minimoog-style core, adding an LFO, ring modulation, overdrive and CV patch points.",
+      "source": "https://synthanatomy.com/2019/12/studio-electronics-midimini-v30-classic-analog-synth-returns-with-more-features.html"
+    },
+    {
+      "id": "studio-electronics-se-3x",
+      "name": "Studio Electronics SE-3X",
+      "maker": "Studio Electronics",
+      "year": "2021",
+      "kind": "module",
+      "text": "A three-oscillator rack synth developed from the SE-1X that plays mono or three-note paraphonic, with four switchable analogue filters modelled on Moog, ARP, Roland and Oberheim designs.",
+      "source": "https://www.synthtopia.com/content/2021/06/05/studio-electronics-se-3x-uber-synth-like-a-midi-minimoog-on-steroids/"
+    },
+    {
       "id": "synclavier-regen",
       "name": "Synclavier Regen",
       "maker": "Synclavier Digital",
@@ -4155,6 +6496,177 @@
       "recreationOf": "ned-synclavier-ii",
       "text": "A desktop digital synthesizer built on an enhanced Synclavier II DSP engine, with 12 partials per sound, additive and subtractive synthesis, sample playback and resynthesis.",
       "source": "https://rekkerd.org/synclavier-launches-regen-digital-fm-synthesizer/"
+    },
+    {
+      "id": "synton-syrinx",
+      "name": "Synton Syrinx",
+      "maker": "Synton",
+      "year": "1983",
+      "kind": "mono",
+      "text": "A monophonic analogue synthesiser made in a small run across 1983 and 1984.",
+      "source": "https://en.wikipedia.org/wiki/Synton_Fenix"
+    },
+    {
+      "id": "synton-fenix",
+      "name": "Synton Fénix",
+      "maker": "Synton",
+      "year": "1997",
+      "kind": "modular",
+      "text": "An analogue modular synthesiser built by former Synton staff Marc Paping and Bert Vermeulen, made in a run of 75 units until 2000.",
+      "source": "https://en.wikipedia.org/wiki/Synton_Fenix"
+    },
+    {
+      "id": "technics-sx-wsa1",
+      "name": "Technics SX-WSA1",
+      "maker": "Technics",
+      "year": "1995",
+      "kind": "poly",
+      "text": "A 64-note polyphonic acoustic-modelling synthesiser that pairs PCM drivers with modelled resonators, with a 61-note velocity- and pressure-sensitive keyboard and a 16-track sequencer.",
+      "source": "https://www.soundonsound.com/reviews/technics-sx-wsa1"
+    },
+    {
+      "id": "technics-sx-wsa1r",
+      "name": "Technics SX-WSA1R",
+      "maker": "Technics",
+      "year": "1996",
+      "kind": "module",
+      "text": "The rack module version of the WSA1, with 64-voice polyphony and 32-part multitimbrality.",
+      "source": "https://www.soundonsound.com/reviews/technics-sx-wsa1r"
+    },
+    {
+      "id": "te-op-1",
+      "name": "Teenage Engineering OP-1",
+      "maker": "Teenage Engineering",
+      "year": "2011",
+      "kind": "poly",
+      "text": "A portable six-voice digital synthesizer, sampler and sequencer with eleven synthesis engines including FM, a 24-key keyboard and a built-in tape recorder, first shown as a prototype at NAMM 2010.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering_OP-1"
+    },
+    {
+      "id": "te-po-14-sub",
+      "name": "Teenage Engineering PO-14 Sub",
+      "maker": "Teenage Engineering",
+      "year": "2015",
+      "kind": "sequencer",
+      "text": "A credit-card-sized Pocket Operator bass-line synthesizer with a built-in sequencer, launched with the first three Pocket Operators.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering"
+    },
+    {
+      "id": "te-po-16-factory",
+      "name": "Teenage Engineering PO-16 Factory",
+      "maker": "Teenage Engineering",
+      "year": "2015",
+      "kind": "sequencer",
+      "text": "A credit-card-sized Pocket Operator lead synthesizer for key melodies, played from its own sequencer.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering"
+    },
+    {
+      "id": "te-po-20-arcade",
+      "name": "Teenage Engineering PO-20 Arcade",
+      "maker": "Teenage Engineering",
+      "year": "2016",
+      "kind": "sequencer",
+      "text": "A credit-card-sized Pocket Operator synthesizer and sequencer with arcade-game sounds.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering"
+    },
+    {
+      "id": "te-po-28-robot",
+      "name": "Teenage Engineering PO-28 Robot",
+      "maker": "Teenage Engineering",
+      "year": "2016",
+      "kind": "sequencer",
+      "text": "A credit-card-sized Pocket Operator synthesizer and sequencer designed for live playing.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering"
+    },
+    {
+      "id": "te-op-z",
+      "name": "Teenage Engineering OP-Z",
+      "maker": "Teenage Engineering",
+      "year": "2018",
+      "kind": "poly",
+      "text": "A screenless 16-track synthesizer and sequencer with several synth engines, sample tracks and two octaves of pressure-sensitive keys, edited through a phone or tablet app and able to sequence lights and visuals.",
+      "source": "https://en.wikipedia.org/wiki/Teenage_Engineering"
+    },
+    {
+      "id": "te-pocket-operator-modular-170",
+      "name": "Teenage Engineering Pocket Operator Modular 170",
+      "maker": "Teenage Engineering",
+      "year": "2019",
+      "kind": "modular",
+      "text": "A flat-pack monophonic analogue modular synthesizer kit with nine modules, a built-in keyboard, a programmable sequencer and a speaker box, using ±12 volt modules and 3.5mm patch cables.",
+      "source": "https://musictech.com/news/gear/namm-2019-teenage-engineering-launches-the-pocket-operator-modular-series"
+    },
+    {
+      "id": "te-pocket-operator-modular-400",
+      "name": "Teenage Engineering Pocket Operator Modular 400",
+      "maker": "Teenage Engineering",
+      "year": "2019",
+      "kind": "modular",
+      "text": "The largest flat-pack analogue modular kit of the series, with three oscillators, noise, a mixer, random generator, two envelopes, two VCAs, an LFO, a 16-step sequencer and 16 modules in all.",
+      "source": "https://musictech.com/news/gear/namm-2019-teenage-engineering-launches-the-pocket-operator-modular-series"
+    },
+    {
+      "id": "te-op-1-field",
+      "name": "Teenage Engineering OP-1 field",
+      "maker": "Teenage Engineering",
+      "year": "2022",
+      "kind": "poly",
+      "text": "The successor to the OP-1, with a fully stereo 32-bit signal path, a four-track stereo tape recorder with several tape modes, Bluetooth MIDI and a new Dimension synth engine beside the original engines.",
+      "source": "https://www.soundonsound.com/reviews/teenage-engineering-op-1-field"
+    },
+    {
+      "id": "te-op-xy",
+      "name": "Teenage Engineering OP-XY",
+      "maker": "Teenage Engineering",
+      "year": "2024",
+      "kind": "poly",
+      "text": "A portable 24-voice synthesizer, sampler and 64-step sequencer with multiple stereo synth engines, a small keyboard, eight instrument tracks and a built-in speaker, positioned as the successor to the OP-Z.",
+      "source": "https://musictech.com/news/gear/teenage-engineering-op-xy-2/"
+    },
+    {
+      "id": "teisco-s-100f",
+      "name": "Teisco S-100F",
+      "maker": "Teisco",
+      "year": "1977",
+      "kind": "mono",
+      "text": "Kawai's first synthesizer, sold under the revived Teisco name: a monophonic analogue synth with one VCO, a 24dB resonant low-pass filter, a manual high-pass filter, two envelopes and a three-octave keyboard.",
+      "source": "https://ja.wikipedia.org/wiki/%E3%83%86%E3%82%B9%E3%82%B3_(%E6%A5%BD%E5%99%A8%E3%83%A1%E3%83%BC%E3%82%AB%E3%83%BC)"
+    },
+    {
+      "id": "teisco-s-100p",
+      "name": "Teisco S-100P",
+      "maker": "Teisco",
+      "year": "1979",
+      "kind": "mono",
+      "text": "A monophonic analogue preset synth with a 37-key aftertouch keyboard, 32 presets, one VCO, a 24dB low-pass filter, spring reverb and portamento and glissando, also sold as the Kawai S-100P.",
+      "source": "https://www.smemmusic.ch/index.php/fr/node/691"
+    },
+    {
+      "id": "teisco-s-110f",
+      "name": "Teisco S-110F",
+      "maker": "Teisco",
+      "year": "1980",
+      "kind": "mono",
+      "text": "A duophonic analogue synth in a wedge-shaped case with two independently playable oscillators offering triangle, sawtooth and variable pulse waves, sample-and-hold and a fixed eight-band filter bank.",
+      "source": "https://guitar-catalog.com/keyboard-and-effector/teisco/1980jan/en_index.html"
+    },
+    {
+      "id": "teisco-s-60f",
+      "name": "Teisco S-60F",
+      "maker": "Teisco",
+      "year": "1980",
+      "kind": "mono",
+      "text": "A one-oscillator monophonic analogue synth, the smaller companion to the S-110F.",
+      "source": "https://guitar-catalog.com/keyboard-and-effector/teisco/1980jan/en_index.html"
+    },
+    {
+      "id": "teisco-sx-400",
+      "name": "Teisco SX-400",
+      "maker": "Teisco",
+      "year": "1981",
+      "kind": "poly",
+      "text": "A four-voice analogue polysynth with one VCO and sub-oscillator per voice, a 24dB low-pass filter plus high-pass filter, two ADSR envelopes, a four-octave pressure-sensitive keyboard and eight preset and eight user memories.",
+      "source": "https://www.smemmusic.ch/index.php/fr/node/692"
     },
     {
       "id": "telefunken-trautonium-ela-t-42",
@@ -4184,6 +6696,258 @@
       "recreationOf": "oberheim-two-voice",
       "text": "A two-voice SEM-based synthesiser manufactured by Marion Systems and branded tomoberheim.com.",
       "source": "https://en.wikipedia.org/wiki/Oberheim_Electronics"
+    },
+    {
+      "id": "twisted-electrons-therapsid",
+      "name": "Twisted Electrons TherapSid",
+      "maker": "Twisted Electrons",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop synth built around the Commodore SID chip, with three oscillators, a multimode filter, three LFOs, a 16-step modulator and 100 presets.",
+      "source": "https://www.synthtopia.com/?p=58882"
+    },
+    {
+      "id": "twisted-electrons-ay3",
+      "name": "Twisted Electrons AY3",
+      "maker": "Twisted Electrons",
+      "year": "2016",
+      "kind": "module",
+      "text": "A six-voice desktop chip synth built around two AY-3 sound chips, with a 16-step sequencer.",
+      "source": "https://synthanatomy.com/2025/11/twisted-electrons-ay3-firmware-4-0-overhauls-the-8-bit-polysynth-and-goes-open-source.html"
+    },
+    {
+      "id": "udo-super-6",
+      "name": "UDO Audio Super 6",
+      "maker": "UDO Audio",
+      "year": "2020",
+      "kind": "poly",
+      "text": "A twelve-voice binaural analogue-hybrid polysynth whose FPGA digital oscillators feed a true-stereo analogue signal path, later also sold as a keyboardless desktop version.",
+      "source": "https://musictech.com/news/udo-super-6-is-now-shipping/"
+    },
+    {
+      "id": "udo-super-gemini",
+      "name": "UDO Audio Super Gemini",
+      "maker": "UDO Audio",
+      "year": "2023",
+      "kind": "poly",
+      "text": "A 20-voice bi-timbral analogue-hybrid flagship with FPGA oscillators, analogue low-pass filters, a stereo signal path, a five-octave polyphonic-aftertouch keyboard and a ribbon controller.",
+      "source": "https://www.synthtopia.com/content/2023/11/28/udo-audio-super-gemini-synthesizer-hands-on-demo/"
+    },
+    {
+      "id": "vermona-mars",
+      "name": "Vermona MARS",
+      "maker": "Vermona",
+      "year": "2002",
+      "kind": "module",
+      "text": "A monophonic analogue synth that preceded the Perfourmer in Vermona's modern range.",
+      "source": "https://www.soundonsound.com/node/4917342"
+    },
+    {
+      "id": "vermona-perfourmer",
+      "name": "Vermona Perfourmer",
+      "maker": "Vermona",
+      "year": "2003",
+      "kind": "module",
+      "text": "A five-rack-space analogue synthesizer with four voices and 74 front-panel controls, later revised as the Perfourmer MkII.",
+      "source": "https://www.soundonsound.com/node/4917342"
+    },
+    {
+      "id": "vermona-mono-lancet",
+      "name": "Vermona Mono Lancet",
+      "maker": "Vermona",
+      "year": "2010",
+      "kind": "module",
+      "text": "A desktop analogue monosynth with two VCOs, a 24dB low-pass filter, one ADSR and an LFO, later updated as the Mono Lancet '15.",
+      "source": "https://sonicstate.com/news/2010/06/04/new-hardware-analog-synths/"
+    },
+    {
+      "id": "waldorf-microwave",
+      "name": "Waldorf Microwave",
+      "maker": "Waldorf",
+      "year": "1989",
+      "kind": "module",
+      "text": "Waldorf's first synthesiser, a rack-mounted wavetable synthesiser developed from the PPG Wave.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-wave",
+      "name": "Waldorf Wave",
+      "maker": "Waldorf",
+      "year": "1993",
+      "kind": "poly",
+      "text": "A wavetable keyboard synthesiser with 16 voices as standard, expandable to 32 or 48.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-pulse",
+      "name": "Waldorf Pulse",
+      "maker": "Waldorf",
+      "year": "1995",
+      "kind": "module",
+      "text": "A monophonic analogue rack synthesiser, revised in 1997 as the Pulse+ with an added audio input and a MIDI/CV/gate interface.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-microwave-ii",
+      "name": "Waldorf Microwave II",
+      "maker": "Waldorf",
+      "year": "1997",
+      "kind": "module",
+      "text": "A wavetable rack synthesiser driven by a Motorola DSP.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-microwave-xt",
+      "name": "Waldorf Microwave XT",
+      "maker": "Waldorf",
+      "year": "1998",
+      "kind": "module",
+      "text": "A Microwave II wavetable synthesiser with 44 knobs and an audio input in a 5U package.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-microwave-xtk",
+      "name": "Waldorf Microwave XTk",
+      "maker": "Waldorf",
+      "year": "1999",
+      "kind": "poly",
+      "text": "The Microwave XT wavetable synthesiser with a 49-key keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-q",
+      "name": "Waldorf Q",
+      "maker": "Waldorf",
+      "year": "1999",
+      "kind": "poly",
+      "text": "A DSP-driven virtual analogue synthesiser with 58 knobs, also sold as the Q Rack and, from 2002, as the red Q+ with up to 100 voices and 16 analogue low-pass filters.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-micro-q",
+      "name": "Waldorf microQ",
+      "maker": "Waldorf",
+      "year": "2000",
+      "kind": "module",
+      "text": "A compact virtual analogue synthesiser with 25 voices, upgradable to 75, later also sold as the microQ Keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-blofeld",
+      "name": "Waldorf Blofeld",
+      "maker": "Waldorf",
+      "year": "2007",
+      "kind": "module",
+      "text": "An affordable desktop module combining the sound engines of the Q and the Microwave, later also sold as the Blofeld Keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-pulse-2",
+      "name": "Waldorf Pulse 2",
+      "maker": "Waldorf",
+      "year": "2013",
+      "kind": "module",
+      "text": "A paraphonic analogue desktop synthesiser, the successor to the Pulse.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-rocket",
+      "name": "Waldorf Rocket",
+      "maker": "Waldorf",
+      "year": "2013",
+      "kind": "module",
+      "text": "A small paraphonic hybrid desktop synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-streichfett",
+      "name": "Waldorf Streichfett",
+      "maker": "Waldorf",
+      "year": "2014",
+      "kind": "module",
+      "text": "A desktop string synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-quantum",
+      "name": "Waldorf Quantum",
+      "maker": "Waldorf",
+      "year": "2018",
+      "kind": "poly",
+      "text": "Waldorf's flagship analogue/digital hybrid keyboard synthesiser.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-kyra",
+      "name": "Waldorf Kyra",
+      "maker": "Waldorf",
+      "year": "2019",
+      "kind": "module",
+      "text": "A 128-voice virtual analogue module described as the first synthesiser to run entirely on an FPGA.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-stvc",
+      "name": "Waldorf STVC",
+      "maker": "Waldorf",
+      "year": "2019",
+      "kind": "poly",
+      "text": "A keyboard version of the Streichfett string synthesiser with an added vocoder.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-iridium",
+      "name": "Waldorf Iridium",
+      "maker": "Waldorf",
+      "year": "2020",
+      "kind": "module",
+      "text": "A digital 16-voice, dual-timbral polyphonic desktop module, later also sold as the Iridium Keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-m",
+      "name": "Waldorf M",
+      "maker": "Waldorf",
+      "year": "2021",
+      "kind": "module",
+      "text": "A hybrid 8-voice polyphonic desktop module with two digital wavetable oscillators per voice.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-iridium-core",
+      "name": "Waldorf Iridium Core",
+      "maker": "Waldorf",
+      "year": "2023",
+      "kind": "module",
+      "text": "A compact 12-voice desktop carrying the full Iridium engine, with wavetable, multi-sample and granular, waveform, resonator and kernel FM synthesis and dual digital filters.",
+      "source": "https://sonicstate.com/news/2023/10/10/waldorf-introduces-iridium-core/"
+    },
+    {
+      "id": "waldorf-quantum-mk2",
+      "name": "Waldorf Quantum MK2",
+      "maker": "Waldorf",
+      "year": "2023",
+      "kind": "poly",
+      "text": "A new version of the Quantum hybrid synthesiser with a keyboard capable of polyphonic aftertouch among other changes.",
+      "source": "https://en.wikipedia.org/wiki/Waldorf_Music"
+    },
+    {
+      "id": "waldorf-protein",
+      "name": "Waldorf Protein",
+      "maker": "Waldorf",
+      "year": "2025",
+      "kind": "module",
+      "text": "A compact 8-voice desktop wavetable synthesiser built around the original Microwave 1 ASIC oscillators, with up to four layers, an arpeggiator, step sequencer and effects.",
+      "source": "https://mixdownmag.com.au/news/waldorf-protein-brings-classic-microwave-wavetable-synthesis-to-desktop-format/"
+    },
+    {
+      "id": "waldorf-iridium-desktop-mk2",
+      "name": "Waldorf Iridium Desktop MK2",
+      "maker": "Waldorf",
+      "year": "2026",
+      "kind": "module",
+      "text": "A 16-voice second generation of the Iridium desktop with a faster CPU board, more RAM and flash storage, up to four layers, a new Seeds synthesis method and per-note parameter locks.",
+      "source": "https://www.synthtopia.com/content/2026/03/05/waldorf-iridium-mk2-features-more-ram-storage-aphex-twins-parameter-locks/"
     },
     {
       "id": "yamaha-sy-1",

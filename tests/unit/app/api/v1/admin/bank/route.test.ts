@@ -375,8 +375,8 @@ describe('PUT: an edit', () => {
 
 describe('POST: a new row', () => {
   const instrument = {
-    id: 'sequential-prophet-x',
-    name: 'Prophet X',
+    id: 'example-hybrid-synth',
+    name: 'Example Hybrid Synth',
     maker: 'Sequential',
     year: '2018',
     kind: 'poly',
@@ -400,7 +400,7 @@ describe('POST: a new row', () => {
     expect(auditCalls()[0]).toMatchObject({
       action: 'bank_instrument.create',
       entityId: instrument.id,
-      entityName: 'Prophet X',
+      entityName: 'Example Hybrid Synth',
     });
     expect((await getBankDetail('instruments', instrument.id))?.people).toEqual([
       expect.objectContaining({ id: 'dave-smith' }),

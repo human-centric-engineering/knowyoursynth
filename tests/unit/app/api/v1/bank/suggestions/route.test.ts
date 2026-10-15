@@ -137,7 +137,7 @@ let store: BankStore;
 let suggestions: ReturnType<typeof suggestionTable>;
 const suggestion = (id: string) => suggestions.rows.find((r) => r.id === id);
 
-async function suggestOne(body: Row = { name: 'Prophet-5 Rev4', maker: 'Sequential' }) {
+async function suggestOne(body: Row = { name: 'Example Prophet Tribute', maker: 'Sequential' }) {
   mockGetSession.mockResolvedValue(session('USER'));
   const res = await suggest(request('POST', '/api/v1/bank/suggestions', body));
   mockGetSession.mockResolvedValue(session('ADMIN'));
@@ -148,8 +148,8 @@ const decision = (id: string, body: unknown) =>
   decide(request('POST', `/api/v1/admin/bank/suggestions/${id}`, body), ctx(id));
 
 const NEW_INSTRUMENT = {
-  id: 'sequential-prophet-5-rev4',
-  name: 'Prophet-5 Rev4',
+  id: 'example-prophet-tribute',
+  name: 'Example Prophet Tribute',
   maker: 'Sequential',
   year: '2020',
   kind: 'poly',
@@ -190,7 +190,7 @@ describe('POST /api/v1/bank/suggestions', () => {
   it("stores a suggestion under the caller's id, pending, and returns it", async () => {
     const res = await suggest(
       request('POST', '/api/v1/bank/suggestions', {
-        name: '  Prophet-5 Rev4 ',
+        name: '  Example Prophet Tribute ',
         maker: 'Sequential',
         link: 'https://sequential.com/product/prophet-5/',
         note: 'The 2020 reissue.',
@@ -198,11 +198,14 @@ describe('POST /api/v1/bank/suggestions', () => {
       })
     );
     expect(res.status).toBe(201);
-    expect((await json(res)).data).toMatchObject({ name: 'Prophet-5 Rev4', status: 'PENDING' });
+    expect((await json(res)).data).toMatchObject({
+      name: 'Example Prophet Tribute',
+      status: 'PENDING',
+    });
     expect(suggestions.rows).toHaveLength(1);
     expect(suggestions.rows[0]).toMatchObject({
       userId: 'user-1',
-      name: 'Prophet-5 Rev4',
+      name: 'Example Prophet Tribute',
       maker: 'Sequential',
       link: 'https://sequential.com/product/prophet-5/',
       note: 'The 2020 reissue.',
@@ -299,7 +302,9 @@ describe('accept', () => {
     expect(suggestion(id)?.decidedAt).toBeInstanceOf(Date);
 
     const detail = await getBankDetail('instruments', NEW_INSTRUMENT.id);
-    expect(detail).toMatchObject({ instrument: { name: 'Prophet-5 Rev4', maker: 'Sequential' } });
+    expect(detail).toMatchObject({
+      instrument: { name: 'Example Prophet Tribute', maker: 'Sequential' },
+    });
     expect(
       store.tables.bankInstrument.find((r) => r.id === NEW_INSTRUMENT.id)?.editedAt
     ).toBeInstanceOf(Date);
@@ -310,7 +315,7 @@ describe('accept', () => {
       userId: 'admin-1',
       entityType: 'synth_suggestion',
       entityId: id,
-      entityName: 'Prophet-5 Rev4',
+      entityName: 'Example Prophet Tribute',
       changes: {
         status: { from: 'PENDING', to: 'ACCEPTED' },
         instrumentId: { from: null, to: NEW_INSTRUMENT.id },
