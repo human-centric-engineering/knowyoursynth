@@ -78,7 +78,7 @@ function checkPanel(def: AppSynthDef, panel: unknown): SoundState {
  * The stored panel as the synth can play it now, or why it cannot. The mapping between definition versions (D1)
  * belongs here; no definition has one yet, so a sound on any other version than the current one has no panel.
  */
-function panelOf(row: UserSound): Pick<UserSoundDetail, 'panel' | 'problems'> {
+function panelOf(row: UserSound, log: boolean): Pick<UserSoundDetail, 'panel' | 'problems'> {
   const def = getSynthDef(row.synthId);
   if (!def) return { panel: null, problems: [`${row.synthId} is not a synth the app can play`] };
   if (row.definitionVersion !== def.version)
@@ -90,18 +90,20 @@ function panelOf(row: UserSound): Pick<UserSoundDetail, 'panel' | 'problems'> {
     };
   const result = validateSound(def, { values: row.values, cables: row.cables });
   if (!result.ok) {
-    logger.error('user sounds: stored panel fails validation', {
-      soundId: row.id,
-      synthId: row.synthId,
-      problems: result.problems,
-    });
+    // Logged when one sound is read, not on every list, so one bad row is not an error on each page load.
+    if (log)
+      logger.error('user sounds: stored panel fails validation', {
+        soundId: row.id,
+        synthId: row.synthId,
+        problems: result.problems,
+      });
     return { panel: null, problems: result.problems.map((p) => p.message) };
   }
   return { panel: result.value, problems: [] };
 }
 
-function toDetail(row: UserSound): UserSoundDetail {
-  const { panel, problems } = panelOf(row);
+function toDetail(row: UserSound, log = true): UserSoundDetail {
+  const { panel, problems } = panelOf(row, log);
   return {
     id: row.id,
     synthId: row.synthId,
@@ -126,7 +128,7 @@ function toDetail(row: UserSound): UserSoundDetail {
 }
 
 function toSummary(row: UserSound): UserSoundSummary {
-  const { panel: _panel, problems: _problems, ...summary } = toDetail(row);
+  const { panel: _panel, problems: _problems, ...summary } = toDetail(row, false);
   return summary;
 }
 
@@ -236,14 +238,8 @@ export async function updateUserSound(
   if (input.name !== undefined) data.name = input.name;
   if (input.notes !== undefined) data.notes = input.notes || null;
   if (input.panel !== undefined) {
-    const def = getSynthDef(existing.synthId);
-    if (!def)
-      refuse(`${existing.synthId} is not a synth the app can play`, [
-        {
-          path: 'panel',
-          message: `${existing.synthId} has no definition to check the panel against`,
-        },
-      ]);
+    // The same rule as a new sound: a panel is only saved on a listed synth the app can play.
+    const def = await playableSynth(existing.synthId);
     const panel = checkPanel(def, input.panel);
     data.values = toJson(panel.values);
     data.cables = toJson(panel.cables);

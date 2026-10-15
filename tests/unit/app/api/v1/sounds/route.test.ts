@@ -255,6 +255,19 @@ describe('a panel that does not fit the synth is refused', () => {
     expect(res.status).toBe(400);
     expect(table.rows[0]).toMatchObject({ values: panel.values, cables: panel.cables });
   });
+
+  it('is refused on a synth that has been unlisted since, the same as a new sound', async () => {
+    const { data } = await json(await save({ synthId: 'model-d', name: 'Good', panel }));
+    mockPrisma.synth = { findUnique: vi.fn(async () => ({ listed: false })) };
+    const next = { values: { [cont.id]: cont.max }, cables: [] };
+    const res = await change(
+      request('PATCH', `/api/v1/sounds/${String(data!.id)}`, { panel: next }),
+      ctx(String(data!.id))
+    );
+    expect(res.status).toBe(400);
+    expect(table.client.updateMany).not.toHaveBeenCalled();
+    expect(table.rows[0]).toMatchObject({ values: panel.values, cables: panel.cables });
+  });
 });
 
 describe("another user's sound is a 404", () => {
@@ -432,5 +445,14 @@ describe('a sound saved on an older definition version', () => {
       'user sounds: stored panel fails validation',
       expect.objectContaining({ soundId: id })
     );
+  });
+
+  it('is listed as not playable without logging an error on every list', async () => {
+    const { data } = await json(await save({ synthId: 'model-d', name: 'Bent', panel }));
+    const id = String(data!.id);
+    table.rows[0].values = { 'no-such-control': 1 };
+    const listed = await json(await list(request('GET', '/api/v1/sounds')));
+    expect(listed.data).toEqual([expect.objectContaining({ id, playable: false })]);
+    expect(mockLog.error).not.toHaveBeenCalled();
   });
 });

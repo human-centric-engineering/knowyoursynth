@@ -536,6 +536,7 @@ model UserSound {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  /// Restrict, unlike SynthSound's Cascade: deleting a synth must never take users' own sounds with it. Unlist it instead.
   synth       Synth       @relation(fields: [synthId], references: [id], onDelete: Restrict)
   sourceSound SynthSound? @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
 
