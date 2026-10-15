@@ -111,7 +111,7 @@ recorded by `npx tsx scripts/record-heard-on.ts`. Never re-record it to make a p
 - `tests/unit/lib/app/bank/read.test.ts`: the read layer over the seed's own rows equals it, and
   reads every row back as the seed data.
 - `npm run smoke:bank`, after `npm run db:seed`: the same against the dev database, with the
-  counts (50 makers, 86 instruments, 184 artists, 248 songs) and a second seed writing nothing.
+  counts (50 makers, 184 artists, 248 songs, and the 86 instruments plus the reference list) and a second seed writing nothing.
 
 ## How it is read
 
