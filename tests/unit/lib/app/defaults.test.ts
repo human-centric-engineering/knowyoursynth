@@ -40,6 +40,7 @@ vi.mock('@/lib/db/client', () => ({
     lessonProgress: { findMany: vi.fn() },
     favourite: { findMany: vi.fn() },
     synthProfile: { findMany: vi.fn() },
+    ownedInstrument: { findMany: vi.fn() },
   },
 }));
 import { registerAppRateLimits } from '@/lib/app/rate-limit';
@@ -286,9 +287,9 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/data-export.ts',
     risk: 'a stray collector would leak app rows into every install’s subject-access export, and a stray declaration would pre-account for a table nobody decided about',
     assert: async () => {
-      // Know Your Synth collects seven sections, a user's synth suggestions (`f-databank` t-37), their sounds
-      // (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), and their
-      // synth profile (`f-profiles` r1), and asks only for theirs.
+      // Know Your Synth collects eight sections, a user's synth suggestions (`f-databank` t-37), their sounds
+      // (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their
+      // synth profile (`f-profiles` r1) and the synths they own and want (r2), and asks only for theirs.
       vi.mocked(prisma.synthSuggestion.findMany).mockResolvedValue([]);
       vi.mocked(prisma.userSound.findMany).mockResolvedValue([]);
       vi.mocked(prisma.synthPreference.findMany).mockResolvedValue([]);
@@ -296,6 +297,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       vi.mocked(prisma.lessonProgress.findMany).mockResolvedValue([]);
       vi.mocked(prisma.favourite.findMany).mockResolvedValue([]);
       vi.mocked(prisma.synthProfile.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.ownedInstrument.findMany).mockResolvedValue([]);
       expect(await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' })).toEqual({
         synthSuggestions: [],
         sounds: [],
@@ -304,6 +306,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         lessonProgress: [],
         favourites: [],
         synthProfile: [],
+        ownedSynths: [],
       });
       expect(prisma.synthSuggestion.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { userId: 'user-1' } })
@@ -326,11 +329,14 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       expect(prisma.synthProfile.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { userId: 'user-1' } })
       );
+      expect(prisma.ownedInstrument.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { userId: 'user-1' } })
+      );
       // The declaration half (#533). The reads trigger the lazy init, so this
       // exercises the REAL seam. A stray source here would also silence the
       // fork-accounting rule in export-sources.test.ts for that model.
       __resetAppSubjectSourceRegistryForTests();
-      // Know Your Synth exports a user's synth suggestions, sounds, last panels, settings, lesson progress, favourites and profile, and declares its catalogue and databank tables
+      // Know Your Synth exports a user's synth suggestions, sounds, last panels, settings, lesson progress, favourites, profile and owned and wanted synths, and declares its catalogue and databank tables
       // and its held usernames as excluded: no row of theirs is about a user.
       expect(getAppSubjectSources().map((s) => [s.model, s.section, s.disposition])).toEqual([
         ['SynthSuggestion', 'synthSuggestions', 'export'],
@@ -340,6 +346,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         ['LessonProgress', 'lessonProgress', 'export'],
         ['Favourite', 'favourites', 'export'],
         ['SynthProfile', 'synthProfile', 'export'],
+        ['OwnedInstrument', 'ownedSynths', 'export'],
       ]);
       expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
         'Synth',
@@ -492,11 +499,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     assert: () => {
       __resetAccountSectionRegistryForTests();
       // The read triggers the lazy init, so this exercises the REAL seam.
-      // FORK (Know Your Synth): pinned to the synth profile (`f-profiles` r1), on settings only, rather than deleted, so
-      // a stray second section still fails. Ledger: .context/app/divergences.md.
+      // FORK (Know Your Synth): pinned to the synth profile (`f-profiles` r1) and the synths owned and wanted (r2), on
+      // settings only, rather than deleted, so a stray extra section still fails. Ledger: .context/app/divergences.md.
       for (const surface of ACCOUNT_SURFACES) {
         expect(getRegisteredAccountSections(surface).map((s) => s.id)).toEqual(
-          surface === 'settings' ? ['synth-profile'] : []
+          surface === 'settings' ? ['synth-profile', 'synth-lists'] : []
         );
       }
     },
