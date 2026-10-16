@@ -46,10 +46,10 @@ vi.mock('@/components/dashboard/email-status-card', () => ({
   EmailStatusCard: () => <div data-testid="email-card" />,
 }));
 
-// FORK (Know Your Synth): the user's sounds card is an async server component with reads of its own, tested in
+// FORK (Know Your Synth): the app's cards are async server components with reads of their own, tested in
 // tests/unit/components/app/dashboard/. Stubbed like the email card. See .context/app/divergences.md.
-vi.mock('@/components/app/dashboard/my-sounds-card', () => ({
-  MySoundsCard: () => <div data-testid="my-sounds-card" />,
+vi.mock('@/components/app/dashboard/synth-cards', () => ({
+  SynthCards: () => <div data-testid="synth-cards" />,
 }));
 
 import DashboardPage from '@/app/(protected)/dashboard/page';

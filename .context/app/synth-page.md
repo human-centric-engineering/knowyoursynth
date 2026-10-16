@@ -84,6 +84,9 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - `?mine=<id>` opens one of the signed-in user's own sounds the same way, once the session is
   known; the dashboard links here. Signed out, or when a hash link is sending the visitor
   elsewhere, it opens nothing. See [`sounds.md`](./sounds.md).
+- Signed in, the library and the lesson show how far the user got through each lesson, and stars
+  beside the chooser, the library and My sounds add favourites (`f-my-sounds` s4, in
+  [`sounds.md`](./sounds.md)).
 - The prototype's hash links (`#model-d`, `#model-d/outline`, `#model-d/long`) redirect from
   `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and
   from `/bank`, to the databank's page (`components/app/bank/routes.ts`).

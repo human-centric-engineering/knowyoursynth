@@ -19,7 +19,8 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 import { focusStore, highlightStore } from '@/components/app/synth/stores';
-import { LevelDots } from '@/components/app/synth/library';
+import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
+import type { LessonMark } from '@/components/app/synth/progress';
 
 /** The controls and jacks a step touches, for the panel highlight. */
 export const stepIds = (s: PresetStep): string[] => [
@@ -415,9 +416,11 @@ export interface LessonProps {
   step: number | null;
   /** Move the panel to a step, or `null` to finish. */
   onStep: (k: number | null) => void;
+  /** How far the signed-in user has got through this lesson, if they have started it. */
+  mark?: LessonMark | null;
 }
 
-export function Lesson({ def, preset, step, onStep }: LessonProps) {
+export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) {
   const n = preset.steps.length;
   const walking = step != null;
   const [picked, setPicked] = useState<TabId>('how');
@@ -469,6 +472,24 @@ export function Lesson({ def, preset, step, onStep }: LessonProps) {
         </h2>
         <p className="text-(--kys-muted)">{preset.ref}</p>
         <p className="max-w-[66ch] text-[15.5px]">{preset.blurb}</p>
+        {mark && n > 0 && (
+          <p className="flex flex-wrap items-center gap-x-3 text-sm text-(--kys-muted)">
+            <span className={mark.completed ? 'text-(--kys-good)' : undefined}>
+              {mark.completed
+                ? '✓ You finished this lesson'
+                : `You ${markText(mark, n).toLowerCase()}`}
+            </span>
+            {!mark.completed && !walking && (
+              <button
+                type="button"
+                onClick={() => onStep(reachedStep(mark, n))}
+                className="text-(--kys-accent) underline underline-offset-2"
+              >
+                Continue from step {reachedStep(mark, n) + 1}
+              </button>
+            )}
+          </p>
+        )}
       </header>
 
       <div>

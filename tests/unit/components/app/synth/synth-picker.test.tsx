@@ -131,3 +131,47 @@ describe('SynthPicker', () => {
     other.remove();
   });
 });
+
+describe('SynthPicker stars (f-my-sounds s4)', () => {
+  const starred = new Set(['model-d']);
+  const renderStars = (isStarred: (id: string) => boolean | null, onStar = vi.fn()) => {
+    render(
+      <SynthPicker
+        synths={SYNTHS}
+        synthId="model-d"
+        onSelect={vi.fn()}
+        isStarred={isStarred}
+        onStar={onStar}
+      />
+    );
+    return onStar;
+  };
+
+  it('stars the synth on show from beside the chooser, not inside its list', () => {
+    const onStar = renderStars((id) => starred.has(id));
+    const star = screen.getByRole('button', { name: 'Remove Model D from favourites' });
+    expect(star.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(star);
+    expect(onStar).toHaveBeenCalledExactlyOnceWith('model-d');
+    // Opening the list does not close on the star, and the list holds only options.
+    fireEvent.click(screen.getByRole('button', { expanded: false }));
+    const list = screen.getByRole('listbox');
+    expect(within(list).queryAllByRole('button')).toHaveLength(0);
+  });
+
+  it('marks the starred synths in the list', () => {
+    renderStars((id) => starred.has(id));
+    fireEvent.click(screen.getByRole('button', { expanded: false }));
+    const options = within(screen.getByRole('listbox')).getAllByRole('option');
+    expect(options.map((o) => o.textContent?.includes('(in your favourites)'))).toEqual([
+      true,
+      false,
+      false,
+    ]);
+  });
+
+  it('shows no star while signed out or still loading', () => {
+    renderStars(() => null);
+    expect(screen.queryByRole('button', { name: /favourites$/ })).toBeNull();
+  });
+});

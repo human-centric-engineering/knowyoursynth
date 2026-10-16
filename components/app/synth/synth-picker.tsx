@@ -6,19 +6,27 @@
  *
  * Transliterated from the prototype file `prototype/src/ui/SynthPicker.jsx` (decision D3). One change: the list is
  * the catalogue (`GET /api/v1/synths`), passed in, rather than the prototype's built-in `SYNTHS`.
+ *
+ * A signed-in user stars the synth they are on with the button beside the chooser (`f-my-sounds` s4), and the list
+ * marks the ones they have starred. The star is not inside the list: its entries are listbox options, which cannot hold
+ * a button of their own.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { CatalogueSynth } from '@/lib/app/catalogue/read';
+import { StarButton, StarIcon } from '@/components/app/synth/favourites';
 
 export interface SynthPickerProps {
   synths: readonly Pick<CatalogueSynth, 'id' | 'name' | 'maker' | 'year' | 'heritage'>[];
   synthId: string;
   onSelect: (id: string) => void;
+  /** Whether a synth is starred; `null` when no star shows (signed out, or still loading). */
+  isStarred?: (id: string) => boolean | null;
+  onStar?: (id: string) => void;
 }
 
-export function SynthPicker({ synths, synthId, onSelect }: SynthPickerProps) {
+export function SynthPicker({ synths, synthId, onSelect, isStarred, onStar }: SynthPickerProps) {
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLDivElement>(null);
@@ -79,8 +87,9 @@ export function SynthPicker({ synths, synthId, onSelect }: SynthPickerProps) {
   };
 
   if (!current) return null;
+  const starred = isStarred?.(current.id) ?? null;
   return (
-    <div ref={wrap} className="relative">
+    <div ref={wrap} className="relative flex items-center gap-1">
       <button
         type="button"
         aria-haspopup="listbox"
@@ -107,6 +116,9 @@ export function SynthPicker({ synths, synthId, onSelect }: SynthPickerProps) {
           />
         </svg>
       </button>
+      {starred !== null && onStar && (
+        <StarButton on={starred} name={current.name} onToggle={() => onStar(current.id)} />
+      )}
 
       {open && (
         <div
@@ -131,6 +143,12 @@ export function SynthPicker({ synths, synthId, onSelect }: SynthPickerProps) {
               <span className="min-w-0">
                 <span className="flex flex-wrap items-baseline gap-x-2">
                   <span className="text-sm font-semibold">{s.name}</span>
+                  {isStarred?.(s.id) && (
+                    <span className="self-center text-(--kys-accent)" title="In your favourites">
+                      <StarIcon filled />
+                      <span className="sr-only">(in your favourites)</span>
+                    </span>
+                  )}
                   <span className="kys-label text-(--kys-faint)">
                     {s.maker} · {s.year}
                   </span>

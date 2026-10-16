@@ -126,7 +126,8 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
-  `f-my-sounds` s1) and user preferences' (two models, s3) instead of none, under a `FORK` comment.
+  `f-my-sounds` s1), user preferences' (two models, s3) and lesson progress and favourites' (two
+  models, s4) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -143,7 +144,8 @@ the same PR**, and each row names what deletes it.
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
-  `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3) are appended to
+  `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
+  `Favourite` (s4) are appended to
   `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
@@ -155,20 +157,20 @@ the same PR**, and each row names what deletes it.
   So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels and settings follow the same ruling.
+  panels, settings, lesson progress and favourites follow the same ruling.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference` and `UserPreference` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference`, `UserPreference`, `LessonProgress` and `Favourite` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-two names (eighteen global, four system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty-four names (eighteen global, six system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
 - **Files:** `tests/unit/lib/db/drift-probes.test.ts`
 - **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our probes' names (the
   hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
-  `f-my-sounds` s1, and `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3)
-  instead of none, under a `FORK` comment.
+  `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
+  `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4) instead of none, under a `FORK` comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.
 - **On conflict:** take theirs, and re-apply the pin to whichever case asserts the scaffold
@@ -191,23 +193,24 @@ the same PR**, and each row names what deletes it.
   fork-owned surface (`/explore`, `/u/[username]`) needs the sitemap too.
 - **Delete when:** Sunrise ships a seam for sitemap entries. Move the call into it.
 
-### My sounds on the dashboard
+### My sounds, favourites and lessons on the dashboard
 
 - **Files:** `app/(protected)/dashboard/page.tsx`, `tests/unit/app/(protected)/dashboard/page.test.tsx`
 - **Change:**
-  - `page.tsx`: renders `<MySoundsCard userId={user.id} />`
-    (`components/app/dashboard/my-sounds-card.tsx`) between the stats row and Quick Actions. One
-    import and the element, each with a `FORK` comment.
-  - `page.test.tsx`: stubs `MySoundsCard` the way it already stubs `EmailStatusCard`, with a `FORK`
-    comment. The card is an async server component, which the test's client render cannot draw,
-    and it has its own test.
+  - `page.tsx`: renders `<SynthCards userId={user.id} />`
+    (`components/app/dashboard/synth-cards.tsx`, which draws the my-sounds, favourites and lessons
+    cards) between the stats row and Quick Actions. One import and the element, each with a `FORK`
+    comment.
+  - `page.test.tsx`: stubs `SynthCards` the way it already stubs `EmailStatusCard`, with a `FORK`
+    comment. The cards are async server components, which the test's client render cannot draw,
+    and they have their own tests.
 - **Why:** `f-my-sounds` s2 (t-40) lists the user's sounds on `/dashboard`, which the app calls
-  My synths. Sunrise has no seam for dashboard content.
+  My synths, and s4 (t-42) adds their favourites and lessons. Sunrise has no seam for dashboard
+  content. The cards share one fork element, so a further card is not a further edit here.
 - **On conflict:** take theirs, then re-add the import and the element wherever the page's cards
   now sit, and the stub beside the test's other component stubs.
-- **Upstream:** none filed. A dashboard-sections seam would remove the row; file it if a second
-  card (favourites, lesson progress in s4) needs the page too.
-- **Delete when:** Sunrise ships a seam for dashboard content. Move the card into it.
+- **Upstream:** none filed. A dashboard-sections seam would remove the row.
+- **Delete when:** Sunrise ships a seam for dashboard content. Move `SynthCards` into it.
 
 ### CI pulls Docker Hub images logged in
 
