@@ -3,7 +3,7 @@
 `f-my-sounds`. A signed-in user's own sounds: a panel they left on a synth, named and kept under
 their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. s3
 keeps their settings and the last panel on each synth in the account as well, so both follow them
-to another device. A browser that is not signed in keeps them in browser storage only
+to another device. s4 keeps how far they got through each lesson, and what they starred. A browser that is not signed in keeps them in browser storage only
 ([`synth-page.md`](./synth-page.md)).
 
 ## The table
@@ -158,4 +158,55 @@ so the plan's "scope" has no row.
 - Signed out, none of this runs.
 
 `npm run smoke:sounds` also proves the two tables' cascades through `eraseUser()` and their export
+sections.
+
+## Lesson progress and favourites (s4)
+
+What the prototype did not have: how far a signed-in user got through each library sound's lesson,
+and a star on a synth, a library sound or one of their own sounds. Signed out, neither shows.
+
+- **Two tables**, beside the others on `SYSTEM_MODELS` with no `orgId`, each with a hand-written
+  `ON DELETE CASCADE` user FK pinned by a drift probe, and each declared for export
+  (`app.lessonProgress`, `app.favourites`, which name the library sound by synth and slug, not by
+  row id). What a row points at is a real `Cascade` relation: progress on a library sound, or a
+  star on something, that has gone means nothing.
+  - `LessonProgress` is keyed on user and library sound: the furthest step reached (from 0) and
+    when the lesson was first finished.
+  - `Favourite` stars exactly one of `synthId`, `synthSoundId` and `userSoundId`, which the store
+    keeps to one; there is no check constraint, which the migration generator would drop (B13).
+    Each target has a unique key with the user, and Postgres treats nulls as distinct, so each
+    binds only the column that is set.
+- **The API** (`app/api/v1/me/`; rules in `lib/app/sounds/progress.ts` and `favourites.ts`, shapes
+  in `progress-data.ts` and `favourite-data.ts`, tested in
+  `tests/unit/app/api/v1/me/progress-favourites.test.ts`):
+  - `GET /api/v1/me/progress[?synthId=]`: the lessons the caller has started, most recently moved
+    first, with each one's step count and whether its synth is listed.
+  - `PUT /api/v1/me/progress/:synthId/:slug`: `{ step, completed? }`. **Forward only**: a step
+    behind the furthest changes nothing and a finish is kept, each a conditional update so a
+    request that lands late cannot move it back. A synth that is not listed, a library sound it
+    does not have, or a step its lesson does not have is a 400.
+  - `GET`/`POST /api/v1/me/favourites`, `DELETE /api/v1/me/favourites/:id`. `POST` takes
+    `{ kind: 'synth', synthId }`, `{ kind: 'sound', synthId, slug }` or `{ kind: 'mine', soundId }`;
+    201 with a new star, 200 with the one already there. **A sound the caller cannot see is
+    refused**: a synth or library sound on an unlisted synth is a 400, another user's sound a 404,
+    as the sounds API says each.
+- **On the page** (`components/app/synth/progress.ts`, `favourites.tsx`; tested in
+  `synth-page-marks.test.tsx`):
+  - Every lesson move goes through the page's `setStep`. A step further than the user had got is
+    sent; stepping back, or to a step already reached, sends nothing. **Finish from the last step
+    finishes the lesson**; nothing else does. Scrolling the step bar moves the step, so it counts.
+    A step the account did not keep is forgotten, so the next one that far sends it again.
+  - The library shows "Reached step k of n" or "✓ Finished" on each lesson started, and the lesson
+    says the same with **Continue from step k**.
+  - Stars sit beside each library sound and each of the user's own sounds, and **beside the synth
+    chooser** for the synth on show: the chooser's entries are listbox options, which cannot hold a
+    button, so its list only marks the starred ones. A star changes at once and is put back if the
+    request fails; while one is on its way, pressing it again does nothing.
+- **On `/dashboard`**, Favourites and Lessons sit under My sounds
+  (`components/app/dashboard/favourites-card.tsx`, `lessons-card.tsx`, drawn with My sounds by
+  `synth-cards.tsx`, the one fork element in the platform's page). A favourite opens its synth with
+  the sound on the panel (`?sound=`, `?mine=`); a lesson opens its library sound, where the lesson
+  offers to continue. One on a synth no longer listed shows without a link.
+
+`npm run smoke:sounds` also proves both tables' cascades through `eraseUser()` and their export
 sections.
