@@ -36,7 +36,19 @@
  * registration and the import, never the JSX.
  *
  * Full guide: CUSTOMIZATION.md §4 · lib/account-sections/registry.ts
+ *
+ * Know Your Synth registers one section, the synth profile (`f-profiles` r1).
  */
+import { SynthProfileSection } from '@/components/app/account/synth-profile-section';
+import { registerAccountSection } from '@/lib/account-sections/registry';
+
 export function initAppAccountSections(): void {
-  // No app account sections by default.
+  /* Settings only: /profile is Sunrise's account card, whose name field is the private account name the username
+     exists to keep apart. */
+  registerAccountSection({
+    id: 'synth-profile',
+    surfaces: ['settings'],
+    order: 10,
+    Component: SynthProfileSection,
+  });
 }
