@@ -134,8 +134,10 @@ describe('SynthProfileForm', () => {
     expect(put).not.toHaveBeenCalled();
   });
 
-  it("shows the server's refusal when the name is taken", async () => {
-    put.mockRejectedValue(new APIClientError("That one's taken. Try another.", 'CONFLICT', 409));
+  it("shows the server's refusal under the username when the name is taken", async () => {
+    put.mockRejectedValue(
+      new APIClientError("That one's taken. Try another.", 'CONFLICT', 409, { username: ['taken'] })
+    );
     const user = userEvent.setup();
     render(<SynthProfileForm profile={null} />);
     await user.type(screen.getByRole('textbox', { name: /^Username/ }), 'tape_loops');
@@ -143,6 +145,10 @@ describe('SynthProfileForm', () => {
 
     expect(await screen.findByText("That one's taken. Try another.")).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /^Username/ })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   it('says when the username can next change', () => {

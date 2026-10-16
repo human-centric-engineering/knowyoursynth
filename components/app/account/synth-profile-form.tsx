@@ -85,6 +85,7 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(ProfileInputSchema),
@@ -103,6 +104,10 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
       reset(defaults(answer));
       setDone(true);
     } catch (error) {
+      if (error instanceof APIClientError && error.details?.username) {
+        setError('username', { type: 'server', message: error.message }, { shouldFocus: true });
+        return;
+      }
       setServerError(
         error instanceof APIClientError ? error.message : "That didn't save. Try again."
       );
