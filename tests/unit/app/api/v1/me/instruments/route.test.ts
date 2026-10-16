@@ -442,6 +442,12 @@ describe('owner-scoped', () => {
   it('answers an id that is not an instrument id as a 404', async () => {
     const res = await remove(request('DELETE', '/api/v1/me/instruments/x'), of('Not An Id'));
     expect(res.status).toBe(404);
+    const moved = await move(
+      request('PATCH', '/api/v1/me/instruments/x', { kind: 'owned' }),
+      of('Not An Id')
+    );
+    expect(moved.status).toBe(404);
+    expect(rows).toHaveLength(1);
   });
 
   it('lets the same synth be on two users’ lists', async () => {
