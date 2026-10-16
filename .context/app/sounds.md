@@ -1,8 +1,9 @@
 # My sounds
 
 `f-my-sounds`. A signed-in user's own sounds: a panel they left on a synth, named and kept under
-their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. A
-browser that is not signed in still keeps its one panel per synth in `kys.session.<id>`
+their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. s3
+keeps their settings and the last panel on each synth in the account as well, so both follow them
+to another device. A browser that is not signed in keeps them in browser storage only
 ([`synth-page.md`](./synth-page.md)).
 
 ## The table
@@ -94,3 +95,67 @@ through `eraseUser()`, and the export.
   them), each linking to `/synths/<id>?mine=<sound>`. A
   sound on a synth no longer listed has no link. The card is a platform-file edit, ledgered in
   [`divergences.md`](./divergences.md).
+
+## Settings and the last panel, in the account (s3)
+
+What the page keeps in browser storage as `kys.tips`, `dim`, `heat`, `harm`, `fx` and
+`kys.session.<id>` is kept under a signed-in user's account too. The screen-only keys
+(`kys.synth`, `view`, `fxOpen`, `midi`) stay in the browser (D4). There is no stored scope setting,
+so the plan's "scope" has no row.
+
+- **Two tables**, beside `UserSound` on `SYSTEM_MODELS` with no `orgId`, each with a hand-written
+  `ON DELETE CASCADE` user FK pinned by a drift probe, and each declared for export
+  (`app.synthPanels`, `app.synthSettings`). `SynthPreference` is keyed on user and synth, and holds
+  the `kys.session` shape with the definition version. `UserPreference` is one row per user: a
+  null column is a setting the account has no value for yet.
+- **The API** (`app/api/v1/me/`; rules in `lib/app/sounds/preferences.ts`, shapes in
+  `preference-data.ts`, tested in `tests/unit/app/api/v1/me/route.test.ts`):
+  - `GET`/`PATCH /api/v1/me/settings`. `PATCH` takes the settings that changed; its `fx` must be
+    exactly what `normalizeFx` returns (every field, in range, nothing more), checked against
+    `normalizeFx` itself, so a field added to the rack needs no schema change. It is not
+    `/api/v1/users/me/preferences`, which is the platform's.
+  - `GET`/`PUT /api/v1/me/panels/:synthId`. `GET` is `{ panel, now }`, `panel` being `null` when
+    there is none. Both `GET`s carry `now`, the server's time as it answered. `PUT` is checked
+    with `validateSound` and refused when anything is wrong, as a saved sound is; only a listed
+    synth takes one. A `soundId` that is not the caller's own is kept as `null`. `GET` fits the stored panel to the synth as it is now (values clamped, what it
+    no longer has dropped), as the page fits its own copy: it is only where the user left off.
+- **On the page** (`components/app/synth/account-storage.ts` and `settings.ts`, wired through
+  `useStoredSession` and `useSettings`; tested in `synth-page-account.test.tsx`):
+  - Browser storage is still written on every change, as before.
+  - **The newer panel wins.** The browser's panel records when it was last changed and who was
+    signed in then. The account's last panel replaces it when the account's is as new or newer,
+    and it is written back to the browser. When the browser's is newer (work done signed out, or a
+    last request that did not land), it is sent to the account. A panel saved while **another**
+    user was signed in is never sent. Panels stored before this change have no time, so the
+    account's wins.
+  - Settings work the same way, as one set: `kys.settingsAt` is when they were last changed and
+    `kys.settingsBy` who was signed in then. The browser's fill what the account has no value for,
+    and replace what it has when they are newer; the account's are written back to the browser.
+    Settings last changed while another user was signed in are never sent, and where the account
+    has no value the browser goes back to the default rather than showing theirs. `GET
+/api/v1/me/settings` returns `updatedAt` for the comparison.
+  - **One clock.** Each answer carries the server's time (`now`), and the page turns the account's
+    `updatedAt` into its own clock's time (`skewOf`) before comparing, and stores it that way. So a
+    device whose clock is off still weighs the two copies correctly.
+  - **Another user.** When one user signs out, or another signs in without a reload, what is
+    waiting to be sent is dropped, not sent to whoever is signed in next, and the next user's panel
+    and settings are read. A panel moved by the user who left is stored as theirs.
+  - The page reads both answers through Zod schemas (`AccountSettingsSchema`,
+    `PanelPrefReadSchema`), and treats one that does not fit as an account it could not read.
+  - A stored panel is held to what `PUT` takes: a `presetId` that is not a library slug, or a step
+    past `MAX_STEP`, is dropped on reading, so the panel itself can always be kept.
+  - A change made before the account answered beats both, including one made before the session
+    said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
+    older panel never overwrites a newer one.
+  - The times compared measure different moments: the browser's is when the change was made, the
+    account's when its request landed (5–30 s later). So when two devices change the same thing
+    within seconds of each other, the wrong copy can win.
+  - **The account is written less often than the browser.** The browser is written 400 ms after the
+    panel goes still, which sent to the server would pass the section's 100 a minute during play.
+    The account copy goes 5 s after changes stop, and at least every 30 s while they keep coming:
+    at most 12 a minute from each writer. Leaving the page, or moving to another synth, sends what
+    is waiting with `keepalive`; signing out drops it.
+- Signed out, none of this runs.
+
+`npm run smoke:sounds` also proves the two tables' cascades through `eraseUser()` and their export
+sections.

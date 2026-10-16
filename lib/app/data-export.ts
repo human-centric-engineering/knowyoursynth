@@ -122,6 +122,20 @@ export function initAppSubjectSources(): void {
         description:
           'Sounds you saved: the synth, the name and notes, the panel settings and cables, and the library sound each copy credits.',
       },
+      {
+        model: 'SynthPreference',
+        section: PANELS_SECTION,
+        disposition: 'export',
+        description:
+          'The panel you last left on each synth: the library sound and lesson step, your sound if one was open, and the settings and cables.',
+      },
+      {
+        model: 'UserPreference',
+        section: SETTINGS_SECTION,
+        disposition: 'export',
+        description:
+          'Your synth page settings: hover help, the sound map toggles, the harmonics strip and the effects rack.',
+      },
     ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
@@ -173,16 +187,53 @@ const SUGGESTIONS_SECTION = 'synthSuggestions';
 /** The export section for a user's own sounds (`f-my-sounds` s1). */
 const SOUNDS_SECTION = 'sounds';
 
+/** The export sections for a user's last panels and their settings (`f-my-sounds` s3). */
+const PANELS_SECTION = 'synthPanels';
+const SETTINGS_SECTION = 'synthSettings';
+
 /**
- * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37) and the sounds they saved
- * (`f-my-sounds` s1). Every declared section is returned, empty when they have none.
+ * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
+ * (`f-my-sounds` s1), and their last panels and settings (s3). Every declared section is returned, empty when they
+ * have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const [suggestions, sounds] = await Promise.all([
+  const [suggestions, sounds, panels, settings] = await Promise.all([
     collectSuggestions(userId),
     collectSounds(userId),
+    collectPanels(userId),
+    collectSettings(userId),
   ]);
-  return { [SUGGESTIONS_SECTION]: suggestions, [SOUNDS_SECTION]: sounds };
+  return {
+    [SUGGESTIONS_SECTION]: suggestions,
+    [SOUNDS_SECTION]: sounds,
+    [PANELS_SECTION]: panels,
+    [SETTINGS_SECTION]: settings,
+  };
+}
+
+function collectPanels(userId: string) {
+  return prisma.synthPreference.findMany({
+    where: { userId },
+    orderBy: { synthId: 'asc' },
+    select: {
+      synthId: true,
+      definitionVersion: true,
+      presetId: true,
+      step: true,
+      soundId: true,
+      values: true,
+      cables: true,
+      updatedAt: true,
+    },
+  });
+}
+
+/** At most one row; a list, as every section is, so a user with none gets an empty one. */
+function collectSettings(userId: string) {
+  return prisma.userPreference.findMany({
+    where: { userId },
+    select: { tips: true, dim: true, heat: true, harm: true, fx: true, updatedAt: true },
+  });
 }
 
 function collectSounds(userId: string) {

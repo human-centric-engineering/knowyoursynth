@@ -4,8 +4,8 @@
  * What the synth page keeps in browser storage for a visitor who is not signed in (plan §3 "Prototype state").
  *
  * The keys are the prototype's (`kys.*`), so nothing about them has to be explained twice. Everything read back is
- * outside data, so each value is checked on the way in and a bad one falls back to its default. Signed-in storage
- * is `f-my-sounds`.
+ * outside data, so each value is checked on the way in and a bad one falls back to its default. Signed in, the
+ * settings and each synth's panel are kept under the account as well (`account-storage.ts`, `settings.ts`).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -14,9 +14,11 @@ import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
-import { UserSoundIdSchema } from '@/lib/app/sounds/data';
+import { SoundSlugSchema, UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
+import { useAccountPanel } from '@/components/app/synth/account-storage';
+import { MAX_STEP, type PanelPrefInput } from '@/lib/app/sounds/preference-data';
 
 export const STORAGE_KEYS = {
   /** The last synth opened: `/synths` reopens it. */
@@ -37,6 +39,10 @@ export const STORAGE_KEYS = {
   heat: 'kys.heat',
   /** The harmonics strip under the panel. */
   harm: 'kys.harm',
+  /** Who was signed in when the settings above were last changed: no one's (`null`) or a user id. */
+  settingsBy: 'kys.settingsBy',
+  /** When the settings above were last changed (ms since the epoch), to weigh against the account's copy. */
+  settingsAt: 'kys.settingsAt',
 } as const;
 
 /** One synth's panel, as it was left. */
@@ -100,13 +106,35 @@ export interface Session {
 }
 
 const StoredSessionSchema = z.object({
-  presetId: z.string().nullable(),
-  step: z.number().int().min(0).nullable(),
+  // Held to what the account takes too, so a panel the page holds is one it can keep there: a sound id the library
+  // cannot have, or a step past any lesson, is dropped, not the panel with it.
+  presetId: z
+    .string()
+    .nullable()
+    .transform((id) => (id !== null && SoundSlugSchema.safeParse(id).success ? id : null)),
+  step: z
+    .number()
+    .int()
+    .min(0)
+    .nullable()
+    .transform((step) => (step !== null && step <= MAX_STEP ? step : null)),
   // Stored before `f-my-sounds` without it. One that is not a sound id is dropped, not the panel with it.
   soundId: UserSoundIdSchema.nullable().optional().catch(null),
   values: z.unknown(),
   cables: z.unknown(),
 });
+
+/** When a stored panel was last changed and who was signed in then. Stored before t-41 without either. */
+const StoredStampSchema = z.object({
+  savedAt: z.number().optional().catch(undefined),
+  owner: z.string().nullable().optional().catch(undefined),
+});
+
+/** When a panel was last changed (ms since the epoch), and the user signed in then, or `null` for no one. */
+export interface PanelStamp {
+  savedAt: number;
+  owner: string | null;
+}
 
 /**
  * A stored session, checked against the definition: values outside a control's range, controls the synth no longer
@@ -145,8 +173,18 @@ export function fitPanel(
 }
 
 /** A session as it is stored: cables as `[from, to]` pairs, since their colours follow from their order. */
-export function storedSession(s: Session): unknown {
-  return { ...s, cables: s.cables.map((c) => [c.from, c.to]) };
+export function storedSession(s: Session, stamp?: PanelStamp): unknown {
+  return { ...s, cables: s.cables.map((c) => [c.from, c.to]), ...stamp };
+}
+
+/** A session as the account keeps it (`/api/v1/me/panels/:synthId`). */
+export function panelPrefOf(s: Session): PanelPrefInput {
+  return {
+    presetId: s.presetId,
+    step: s.step,
+    soundId: s.soundId,
+    panel: { values: s.values, cables: s.cables.map((c) => [c.from, c.to]) },
+  };
 }
 
 /** How long the panel must stay still before it is written to storage: a knob drag is many changes, not one. */
@@ -155,13 +193,19 @@ export const SESSION_WRITE_DELAY_MS = 400;
 /**
  * One synth's session: starts at `fresh` (so server and client agree), then takes up what was stored for this synth
  * once mounted, and writes each change back after the panel has been still for {@link SESSION_WRITE_DELAY_MS}.
+ *
+ * Signed in (`userId`), the account's last panel then replaces it when it is the newer of the two, and each change is
+ * kept in the account too, less often (`account-storage.ts`). Each stored panel says when it was changed and who was
+ * signed in then, so another user's is never taken for this one's.
  */
 export function useStoredSession(
   def: SynthDef,
-  fresh: () => Session
+  fresh: () => Session,
+  userId: string | null = null
 ): [Session, (fn: (s: Session) => Session) => void] {
   const [session, setSession] = useState<Session>(fresh);
   const key = sessionKey(def.id);
+  const signedIn = userId !== null;
 
   // Once per synth, not per definition object: a server re-render hands a new (equal) definition, and re-reading
   // storage then would put back a panel the write delay had not yet saved.
@@ -169,10 +213,25 @@ export function useStoredSession(
   useEffect(() => {
     defRef.current = def;
   });
+  // When the browser's panel for this synth was changed and by whom, and when it was last moved here: what the
+  // account's copy is weighed against when it arrives.
+  const storedStamp = useRef<{ savedAt: number; owner: string | null | undefined } | null>(null);
+  const movedAt = useRef<number | null>(null);
+  const readStamp = useCallback((raw: unknown, stored: Session | null) => {
+    const stamp = StoredStampSchema.safeParse(raw);
+    storedStamp.current = stored && {
+      // One stored without a time is older than anything the account has.
+      savedAt: (stamp.success && stamp.data.savedAt) || 0,
+      owner: stamp.success ? stamp.data.owner : undefined,
+    };
+  }, []);
   useEffect(() => {
-    const stored = parseSession(defRef.current, readStored(key));
+    const raw = readStored(key);
+    const stored = parseSession(defRef.current, raw);
+    readStamp(raw, stored);
+    movedAt.current = null;
     if (stored) setSession(stored);
-  }, [key]);
+  }, [key, readStamp]);
 
   // Only a change the visitor made is written. The fresh panel and the restored one are not: writing either back
   // would race the restore, and React's development remount (or any unmount before the restore re-renders) would
@@ -182,24 +241,73 @@ export function useStoredSession(
   useEffect(() => {
     latest.current = session;
   });
+  const toAccount = useRef(false);
   const update = useCallback((fn: (s: Session) => Session) => {
     dirty.current = true;
+    movedAt.current = Date.now();
+    toAccount.current = true;
     setSession(fn);
   }, []);
+  const user = useRef(userId);
+  const stamp = useCallback(
+    (): PanelStamp => ({ savedAt: movedAt.current ?? Date.now(), owner: user.current }),
+    []
+  );
+  // A user signed out (or another signed in): what they moved is written as theirs, and is not the next one's to keep.
+  // Signing in after no one is not a change of hands: what was moved signed out is the newcomer's, as it always was.
+  useEffect(() => {
+    if (user.current === userId) return;
+    const left = user.current !== null;
+    if (left && dirty.current) writeStored(key, storedSession(latest.current, stamp()));
+    user.current = userId;
+    if (!left) return;
+    dirty.current = false;
+    toAccount.current = false;
+    movedAt.current = null;
+    const raw = readStored(key);
+    readStamp(raw, parseSession(defRef.current, raw));
+  }, [userId, key, stamp, readStamp]);
+
+  const keepInAccount = useAccountPanel(def.id, userId, {
+    onArrive: (pref, savedAt) => {
+      const restored = parseSession(defRef.current, pref);
+      if (!restored) return;
+      setSession(restored);
+      // The browser keeps it too, so signed out (or with the account unread) the page reopens where they left off.
+      storedStamp.current = { savedAt, owner: user.current };
+      writeStored(key, storedSession(restored, { savedAt, owner: user.current }));
+    },
+    latest: () => panelPrefOf(latest.current),
+    touched: () => movedAt.current !== null,
+    localAt: () => {
+      if (movedAt.current !== null) return movedAt.current;
+      const stored = storedStamp.current;
+      // Kept while someone else was signed in: theirs, not this user's to keep.
+      if (!stored || (stored.owner && stored.owner !== user.current)) return null;
+      return stored.savedAt;
+    },
+  });
+  // After `latest` has caught up with the change, so what is queued is the panel as it now is.
+  useEffect(() => {
+    if (!toAccount.current) return;
+    toAccount.current = false;
+    if (signedIn) keepInAccount();
+  }, [session, signedIn, keepInAccount]);
 
   useEffect(() => {
     if (!dirty.current) return undefined;
     const t = setTimeout(() => {
-      writeStored(key, storedSession(session));
+      // Unless a change of user has written it already.
+      if (dirty.current) writeStored(key, storedSession(session, stamp()));
       dirty.current = false;
     }, SESSION_WRITE_DELAY_MS);
     return () => clearTimeout(t);
-  }, [key, session]);
+  }, [key, session, stamp]);
   // Leaving the page (or the tab) writes a change the delay has not saved yet, so a move made just before going is
   // not lost.
   useEffect(() => {
     const flush = () => {
-      if (dirty.current) writeStored(key, storedSession(latest.current));
+      if (dirty.current) writeStored(key, storedSession(latest.current, stamp()));
       dirty.current = false;
     };
     window.addEventListener('pagehide', flush);
@@ -207,7 +315,7 @@ export function useStoredSession(
       window.removeEventListener('pagehide', flush);
       flush();
     };
-  }, [key]);
+  }, [key, stamp]);
 
   return [session, update];
 }

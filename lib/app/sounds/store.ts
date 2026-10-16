@@ -46,15 +46,15 @@ const fromSoundProblems = (problems: SoundProblem[], prefix: string) =>
   }));
 
 /** A copy typed as JSON for a Prisma `Json` column. */
-const toJson = (value: unknown): Prisma.InputJsonValue =>
+export const toJson = (value: unknown): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 const notFound = (): never => {
   throw new NotFoundError('Sound not found');
 };
 
-/** The synth a new sound is saved on: a listed synth the app can play. */
-async function playableSynth(synthId: string): Promise<AppSynthDef> {
+/** The synth a new sound (or a last panel, `preferences.ts`) is saved on: a listed synth the app can play. */
+export async function playableSynth(synthId: string): Promise<AppSynthDef> {
   const def = getSynthDef(synthId);
   const row = def
     ? await prisma.synth.findUnique({ where: { id: synthId }, select: { listed: true } })
@@ -67,7 +67,7 @@ async function playableSynth(synthId: string): Promise<AppSynthDef> {
 }
 
 /** A panel checked against the synth's current definition, or a 400 naming every problem. */
-function checkPanel(def: AppSynthDef, panel: unknown): SoundState {
+export function checkPanel(def: AppSynthDef, panel: unknown): SoundState {
   const result = validateSound(def, panel);
   if (!result.ok)
     refuse(`The panel does not fit ${def.id}`, fromSoundProblems(result.problems, 'panel'));
