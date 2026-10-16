@@ -88,9 +88,11 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and
   from `/bank`, to the databank's page (`components/app/bank/routes.ts`).
 
-## Browser storage (signed out)
+## Browser storage
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
+Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat` and `kys.harm` are kept
+in the account as well, and the account's copy wins once it has one ([`sounds.md`](./sounds.md)).
 
 | Key                    | Holds                                                                                                                                                                                            |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -102,8 +104,6 @@ Keys are the prototype's. Every value is checked when read; a bad one falls back
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                 |
 | `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                 |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                              |
-
-Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 
 ## Not here yet
 
