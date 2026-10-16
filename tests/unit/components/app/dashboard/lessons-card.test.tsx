@@ -64,6 +64,18 @@ describe('LessonsCard', () => {
     expect(item.textContent).toContain('gone, no longer available');
   });
 
+  it('keeps a lesson cut shorter since within its steps, and one left with none as started', async () => {
+    vi.mocked(listProgress).mockResolvedValue([
+      entry({ slug: 'short', name: 'Short', steps: 2, furthestStep: 5 }),
+      entry({ slug: 'empty', name: 'Empty', steps: 0, furthestStep: 1 }),
+    ]);
+    await renderCard();
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      'ShortModel D · Step 2 of 2',
+      'EmptyModel D · Started',
+    ]);
+  });
+
   it('says how to start one when there are none', async () => {
     vi.mocked(listProgress).mockResolvedValue([]);
     await renderCard();

@@ -384,6 +384,21 @@ describe('favourites', () => {
     expect(screen.getByRole('button', { name: 'Add Model D to favourites' })).toBeTruthy();
   });
 
+  it('removes a star pressed again the moment it was added, before the page has drawn it', async () => {
+    let answer: (v: unknown) => void = () => undefined;
+    api.post.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+    api.delete.mockResolvedValue({ id: 'cmfav1' });
+    page();
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Model D to favourites' }));
+    const star = screen.getByRole('button', { name: 'Remove Model D from favourites' });
+    // The reply lands and the press follows in the same task, before React has drawn it.
+    answer({ id: 'cmfav1', kind: 'synth', synthId: 'model-d', slug: null, soundId: null });
+    for (let i = 0; i < 5; i++) await Promise.resolve();
+    fireEvent.click(star);
+    await waitFor(() => expect(api.delete).toHaveBeenCalledWith('/api/v1/me/favourites/cmfav1'));
+    expect(api.post).toHaveBeenCalledTimes(1);
+  });
+
   it('puts a star back when the account did not take it', async () => {
     api.post.mockRejectedValue(new Error('refused'));
     page();

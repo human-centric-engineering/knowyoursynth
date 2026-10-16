@@ -40,7 +40,9 @@ export async function LessonsCard({ userId }: { userId: string }) {
           {' · '}
           {e.completedAt !== null
             ? 'Finished'
-            : `Step ${Math.min(e.furthestStep + 1, e.steps)} of ${e.steps}`}
+            : e.steps === 0
+              ? 'Started'
+              : `Step ${Math.min(e.furthestStep + 1, e.steps)} of ${e.steps}`}
         </span>
       </li>
     );

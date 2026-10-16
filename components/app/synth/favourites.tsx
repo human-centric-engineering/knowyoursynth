@@ -67,13 +67,15 @@ export function useFavourites(userId: string | null): Favourites {
     const key = favouriteKey(target);
     if (!user || !now || pending.current.has(key)) return;
     pending.current.add(key);
-    const set = (fn: (m: Map<string, string | null>) => void) =>
-      setStars((m) => {
-        if (!m || owner.current !== user) return m;
-        const next = new Map(m);
-        fn(next);
-        return next;
-      });
+    // Kept in the ref at once, not after the render: the press that follows a reply reads what the reply set.
+    const set = (fn: (m: Map<string, string | null>) => void) => {
+      const m = starsRef.current;
+      if (!m || owner.current !== user) return;
+      const next = new Map(m);
+      fn(next);
+      starsRef.current = next;
+      setStars(next);
+    };
     const done = () => pending.current.delete(key);
 
     const id = now.get(key);
