@@ -48,10 +48,10 @@
  *
  * Full guide: CUSTOMIZATION.md §5 · .context/database/prisma-unmodelled-objects.md
  *
- * Know Your Synth registers four hand-written FKs to the user: a synth suggestion's (`f-databank` t-37), pinned to
+ * Know Your Synth registers six hand-written FKs to the user: a synth suggestion's (`f-databank` t-37), pinned to
  * `ON DELETE SET NULL` so an erasure keeps working and the suggestion outlives its author; and a user sound's
- * (`f-my-sounds` s1), a last panel's and a user's settings (s3), each pinned to `ON DELETE CASCADE` so an erasure takes
- * them with the user.
+ * (`f-my-sounds` s1), a last panel's and a user's settings (s3), and a lesson progress's and a favourite's (s4), each
+ * pinned to `ON DELETE CASCADE` so an erasure takes them with the user.
  */
 import { constraintExists, registerAppDriftProbe } from '@/lib/db/drift-probes';
 
@@ -79,5 +79,17 @@ export function registerAppDriftProbes(): void {
     kind: 'FK constraint',
     table: 'user_preference',
     probe: constraintExists('user_preference_userId_fkey', 'ON DELETE CASCADE'),
+  });
+  registerAppDriftProbe({
+    name: 'lesson_progress_userId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'lesson_progress',
+    probe: constraintExists('lesson_progress_userId_fkey', 'ON DELETE CASCADE'),
+  });
+  registerAppDriftProbe({
+    name: 'favourite_userId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'favourite',
+    probe: constraintExists('favourite_userId_fkey', 'ON DELETE CASCADE'),
   });
 }

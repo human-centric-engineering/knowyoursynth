@@ -136,6 +136,19 @@ export function initAppSubjectSources(): void {
         description:
           'Your synth page settings: hover help, the sound map toggles, the harmonics strip and the effects rack.',
       },
+      {
+        model: 'LessonProgress',
+        section: PROGRESS_SECTION,
+        disposition: 'export',
+        description:
+          'How far you got through each lesson: the library sound, the furthest step and when you finished it.',
+      },
+      {
+        model: 'Favourite',
+        section: FAVOURITES_SECTION,
+        disposition: 'export',
+        description: 'What you starred: synths, library sounds and your own sounds.',
+      },
     ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
@@ -191,24 +204,75 @@ const SOUNDS_SECTION = 'sounds';
 const PANELS_SECTION = 'synthPanels';
 const SETTINGS_SECTION = 'synthSettings';
 
+/** The export sections for a user's lesson progress and favourites (`f-my-sounds` s4). */
+const PROGRESS_SECTION = 'lessonProgress';
+const FAVOURITES_SECTION = 'favourites';
+
 /**
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
- * (`f-my-sounds` s1), and their last panels and settings (s3). Every declared section is returned, empty when they
- * have none.
+ * (`f-my-sounds` s1), their last panels and settings (s3), and their lesson progress and favourites (s4). Every
+ * declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const [suggestions, sounds, panels, settings] = await Promise.all([
+  const [suggestions, sounds, panels, settings, progress, favourites] = await Promise.all([
     collectSuggestions(userId),
     collectSounds(userId),
     collectPanels(userId),
     collectSettings(userId),
+    collectProgress(userId),
+    collectFavourites(userId),
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
     [SOUNDS_SECTION]: sounds,
     [PANELS_SECTION]: panels,
     [SETTINGS_SECTION]: settings,
+    [PROGRESS_SECTION]: progress,
+    [FAVOURITES_SECTION]: favourites,
   };
+}
+
+/** Named by the library sound's synth and slug, which mean something outside this database; its row id does not. */
+async function collectProgress(userId: string) {
+  const rows = await prisma.lessonProgress.findMany({
+    where: { userId },
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      furthestStep: true,
+      completedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      sound: { select: { synthId: true, slug: true, name: true } },
+    },
+  });
+  return rows.map(({ sound, ...row }) => ({ ...sound, ...row }));
+}
+
+/** Each names what it stars: the synth, the library sound by synth and slug, or the user's own sound by id and name. */
+async function collectFavourites(userId: string) {
+  const rows = await prisma.favourite.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      createdAt: true,
+      synthId: true,
+      synthSound: { select: { synthId: true, slug: true, name: true } },
+      userSound: { select: { id: true, synthId: true, name: true } },
+    },
+  });
+  return rows.map((row) =>
+    row.synthSound
+      ? { kind: 'sound', ...row.synthSound, createdAt: row.createdAt }
+      : row.userSound
+        ? {
+            kind: 'mine',
+            soundId: row.userSound.id,
+            synthId: row.userSound.synthId,
+            name: row.userSound.name,
+            createdAt: row.createdAt,
+          }
+        : { kind: 'synth', synthId: row.synthId, createdAt: row.createdAt }
+  );
 }
 
 function collectPanels(userId: string) {
