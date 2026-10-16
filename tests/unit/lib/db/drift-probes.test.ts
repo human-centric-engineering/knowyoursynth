@@ -442,6 +442,7 @@ describe('shipped lib/app/db-drift.ts scaffold', () => {
       'user_preference_userId_fkey (hand-written FK → User)',
       'lesson_progress_userId_fkey (hand-written FK → User)',
       'favourite_userId_fkey (hand-written FK → User)',
+      'synth_profile_userId_fkey (hand-written FK → User)',
     ]);
   });
 });

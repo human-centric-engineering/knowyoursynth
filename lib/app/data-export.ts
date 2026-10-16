@@ -149,10 +149,22 @@ export function initAppSubjectSources(): void {
         disposition: 'export',
         description: 'What you starred: synths, library sounds and your own sounds.',
       },
+      {
+        model: 'SynthProfile',
+        section: PROFILE_SECTION,
+        disposition: 'export',
+        description:
+          'Your synth profile: your username and when you last changed it, your links, and who can see your page.',
+      },
     ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
       ...BANK_MODELS.map((model) => ({ model, reason: BANK_REASON })),
+      {
+        model: 'HeldUsername',
+        reason:
+          'A username given up by a change, held for 30 days so nobody else takes it. It records a name with no link to who gave it up: no user foreign key, nothing to find a subject by.',
+      },
     ],
   });
 }
@@ -208,19 +220,23 @@ const SETTINGS_SECTION = 'synthSettings';
 const PROGRESS_SECTION = 'lessonProgress';
 const FAVOURITES_SECTION = 'favourites';
 
+/** The export section for a user's synth profile (`f-profiles` r1). */
+const PROFILE_SECTION = 'synthProfile';
+
 /**
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
- * (`f-my-sounds` s1), their last panels and settings (s3), and their lesson progress and favourites (s4). Every
- * declared section is returned, empty when they have none.
+ * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), and their synth
+ * profile (`f-profiles` r1). Every declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const [suggestions, sounds, panels, settings, progress, favourites] = await Promise.all([
+  const [suggestions, sounds, panels, settings, progress, favourites, profile] = await Promise.all([
     collectSuggestions(userId),
     collectSounds(userId),
     collectPanels(userId),
     collectSettings(userId),
     collectProgress(userId),
     collectFavourites(userId),
+    collectProfile(userId),
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
@@ -229,7 +245,28 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     [SETTINGS_SECTION]: settings,
     [PROGRESS_SECTION]: progress,
     [FAVOURITES_SECTION]: favourites,
+    [PROFILE_SECTION]: profile,
   };
+}
+
+/** At most one row; a list, as every section is, so a user with none gets an empty one. */
+function collectProfile(userId: string) {
+  return prisma.synthProfile.findMany({
+    where: { userId },
+    select: {
+      username: true,
+      usernameChangedAt: true,
+      youtube: true,
+      spotify: true,
+      instagram: true,
+      bandcamp: true,
+      public: true,
+      showOwned: true,
+      showWishlist: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 }
 
 /** Named by the library sound's synth and slug, which mean something outside this database; its row id does not. */

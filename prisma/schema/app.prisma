@@ -665,3 +665,48 @@ model Favourite {
   @@index([userSoundId])
   @@map("favourite")
 }
+
+// ─── Synth profiles (f-profiles r1) ──────────────────────────────────────────
+//
+// The public face of a user: the username they choose (never the account name or email), a link each for YouTube,
+// Spotify, Instagram and Bandcamp, and who may see it. The rules for a username and a link are
+// lib/app/profile/username.ts and links.ts, the one place each is written; lib/app/profile/profile.ts is where they meet
+// the database. On SYSTEM_MODELS with no orgId, as UserSound is: a profile is its user's in every org.
+//
+// `userId` is a plain string, so `User` needs no back-relation field. The FK is written by hand in the migration,
+// `ON DELETE CASCADE`, and pinned by a drift probe in lib/app/db-drift.ts. The profile is about a person, so it is
+// declared for subject export in lib/app/data-export.ts.
+
+/// A user's synth profile. Born private, with owned and wishlist hidden: nothing about a person goes public until they
+/// switch it on.
+model SynthProfile {
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration). One profile per user.
+  userId            String    @id
+  /// Stored lower-case, so uniqueness is case-insensitive.
+  username          String    @unique @db.VarChar(24)
+  /// When the username last changed; null until the first change. Choosing the first one is not a change.
+  usernameChangedAt DateTime?
+  /// Each link as lib/app/profile/links.ts rebuilds it, never the string typed. Null for none.
+  youtube           String?
+  spotify           String?
+  instagram         String?
+  bandcamp          String?
+  /// Whether /u/<username> shows anything. Off: the page is a 404.
+  public            Boolean   @default(false)
+  /// Whether the public page lists the synths they own, and the ones they want (f-profiles r2).
+  showOwned         Boolean   @default(false)
+  showWishlist      Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("synth_profile")
+}
+
+/// A username someone has just given up, held so nobody else can take it while links to the old /u/ address still
+/// circulate. No user FK: it records a name, not a person, and outlives the change that released it.
+model HeldUsername {
+  username  String   @id @db.VarChar(24)
+  heldUntil DateTime
+
+  @@map("held_username")
+}
