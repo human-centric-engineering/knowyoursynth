@@ -1,3 +1,6 @@
+import { prisma } from '@/lib/db/client';
+import { registerAppJob } from '@/lib/orchestration/maintenance/app-jobs';
+
 /**
  * App recurring-job registrations.
  *
@@ -35,5 +38,18 @@
  * Full guide: CUSTOMIZATION.md §4 · .context/orchestration/scheduling.md
  */
 export function initAppJobs(): void {
-  // No app jobs by default.
+  /* FORK (Know Your Synth): a held username (`f-profiles` r1) is only cleared when someone claims that name again, so
+     without this a name given up and never re-claimed would be kept for good, after its hold and after its owner's
+     erasure. Ledger: .context/app/divergences.md. */
+  registerAppJob({
+    name: 'app:prune-held-usernames',
+    intervalMs: 6 * 60 * 60 * 1000,
+    scope: { system: 'held_username has no orgId: a name is held across the whole install' },
+    run: async () => {
+      const { count } = await prisma.heldUsername.deleteMany({
+        where: { heldUntil: { lte: new Date() } },
+      });
+      return { pruned: count };
+    },
+  });
 }

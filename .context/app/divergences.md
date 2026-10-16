@@ -268,11 +268,12 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile, on settings only): fork-owned scaffolds, filled.
+  profile, on settings only) and `lib/app/jobs.ts` (the prune of lapsed held usernames): fork-owned
+  scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`, `admin-nav`,
-  `account-sections`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `account-sections`, `jobs`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

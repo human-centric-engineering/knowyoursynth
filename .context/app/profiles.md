@@ -25,7 +25,9 @@ anyone else yet.
 `HeldUsername`: a name someone gave up by changing it, and when the hold ends. It has no user
 foreign key and records no person, so it is excluded from the export with that reason. **A name
 freed by erasing the account is not held**: holding it would keep a row about someone who asked
-to be forgotten.
+to be forgotten. A lapsed hold is pruned by the `app:prune-held-usernames` job in
+`lib/app/jobs.ts` (every six hours, system scope), so a name nobody claims again does not outlive
+its hold.
 
 ## The rules
 
