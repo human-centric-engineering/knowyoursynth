@@ -128,13 +128,15 @@ so the plan's "scope" has no row.
   - Settings work the same way, as one set: `kys.settingsAt` is when they were last changed and
     `kys.settingsBy` who was signed in then. The browser's fill what the account has no value for,
     and replace what it has when they are newer; the account's are written back to the browser.
-    Settings `kys.settingsBy` gives to another user are never sent. `GET /api/v1/me/settings`
-    returns `updatedAt` for the comparison.
+    Settings last changed while another user was signed in are never sent. `GET
+/api/v1/me/settings` returns `updatedAt` for the comparison.
   - A change made before the account answered beats both, including one made before the session
     said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
     older panel never overwrites a newer one.
-  - The times compared come from two clocks, the browser's and the server's, so a skew of more
-    than a few seconds can pick the wrong copy when both were changed within that window.
+  - The times compared come from two clocks, the browser's and the server's, and measure
+    different moments: the browser's is when the change was made, the account's when its request
+    landed (5–30 s later). So when two devices change the same thing within seconds of each
+    other, or a clock is skewed, the wrong copy can win.
   - **The account is written less often than the browser.** The browser is written 400 ms after the
     panel goes still, which sent to the server would pass the section's 100 a minute during play.
     The account copy goes 5 s after changes stop, and at least every 30 s while they keep coming:

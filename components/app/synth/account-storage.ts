@@ -11,9 +11,9 @@
  * **The newer copy wins.** A panel in the browser says when it was last changed and who was signed in then; the account's
  * says when it was kept. The account's replaces the browser's when it is as new or newer, and is written to the browser
  * too; the browser's, when newer, is sent to the account (work done while signed out, or a last change whose request
- * did not land). One kept while another user was signed in is never sent. Settings have no time, so there the account
- * wins once it has a value, and where it has none yet the browser's fills it, once (unless another user changed them
- * last). A change made before the account answered beats both.
+ * did not land). One kept while another user was signed in is never sent. Settings are weighed the same way, as one
+ * set (`settings.ts`), and where the account has no value yet the browser's fills it. A change made before the account
+ * answered beats both.
  *
  * **Writes to the server are slower than writes to the browser.** The page writes the browser 400 ms after the panel
  * goes still; sent to the server, that would hit the section's 100-a-minute cap (`proxy.ts`) during active play. So the
