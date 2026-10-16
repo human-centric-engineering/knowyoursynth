@@ -56,6 +56,8 @@ model Synth {
   lineage    SynthLineage?
   notes      SynthNote[]
   userSounds UserSound[]
+  /// Signed-in users' last panel on this synth.
+  panelPrefs SynthPreference[]
 
   /// Databank instruments this synth models, and record parts listed under it.
   bankInstruments BankInstrumentSynth[]
@@ -544,4 +546,61 @@ model UserSound {
   @@index([synthId])
   @@index([sourceSoundId])
   @@map("user_sound")
+}
+
+// ─── Users' preferences and last panels (f-my-sounds s3) ─────────────────────
+//
+// What the synth page keeps in browser storage for a visitor (components/app/synth/storage.ts), kept under the
+// account for a signed-in user so it follows them to another device. Screen-only keys (`kys.synth`, `view`,
+// `fxOpen`, `midi`) stay in the browser (D4). Both are about a person, so they are declared for subject export in
+// lib/app/data-export.ts, and both sit on SYSTEM_MODELS with no orgId, as UserSound does.
+//
+// `userId` is a plain string, so `User` needs no back-relation field. Each FK is written by hand in the migration,
+// `ON DELETE CASCADE`, and pinned by a drift probe in lib/app/db-drift.ts.
+
+/// A signed-in user's last panel on one synth: the `kys.session.<id>` shape. The panel is checked against the synth's
+/// definition on write (`validateSound`) and fitted to it on read (lib/app/sounds/preferences.ts).
+model SynthPreference {
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
+  userId            String
+  synthId           String
+  /// The definition version the panel was saved on.
+  definitionVersion Int
+  /// The library sound the panel came from (its slug), which the lesson reads.
+  presetId          String?
+  /// The lesson step, or null for the finished sound.
+  step              Int?
+  /// The user's own sound open on the panel. Only an id: whether it is still theirs is the sounds API's answer.
+  soundId           String?
+  /// `ControlValues`: control id → value.
+  values            Json
+  /// `CablePair[]`: `[outputJackId, inputJackId]`.
+  cables            Json
+  updatedAt         DateTime @updatedAt
+
+  synth Synth @relation(fields: [synthId], references: [id], onDelete: Cascade)
+
+  @@id([userId, synthId])
+  @@index([synthId])
+  @@map("synth_preference")
+}
+
+/// A signed-in user's settings on the synth page. A null column is one the account has no value for yet: the page
+/// fills it once from the browser's, and otherwise the account's value wins.
+model UserPreference {
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
+  userId    String   @id
+  /// `kys.tips`: info cards on hover.
+  tips      Boolean?
+  /// `kys.dim`: the sound map's "Dim unused parts".
+  dim       Boolean?
+  /// `kys.heat`: the sound map's "Show sensitive controls".
+  heat      Boolean?
+  /// `kys.harm`: the harmonics strip under the panel.
+  harm      Boolean?
+  /// `kys.fx`: the effects rack's settings (`RackFx`).
+  fx        Json?
+  updatedAt DateTime @updatedAt
+
+  @@map("user_preference")
 }
