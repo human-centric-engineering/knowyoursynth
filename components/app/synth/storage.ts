@@ -14,6 +14,7 @@ import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
+import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
 
@@ -86,8 +87,14 @@ export const PanelViewSchema: z.ZodType<PanelView> = z.object({
 
 /** One synth's panel: the sound it came from, the lesson step, and what has been moved and plugged since. */
 export interface Session {
+  /** The library sound the panel came from, which the lesson reads. */
   presetId: string | null;
   step: number | null;
+  /**
+   * The user's own sound open on the panel (`f-my-sounds`), which Save writes back to. Kept when the panel is moved,
+   * cleared when a library sound is chosen. Only an id: whether it is still theirs is the API's answer.
+   */
+  soundId: string | null;
   values: ControlValues;
   cables: PatchCable[];
 }
@@ -95,6 +102,8 @@ export interface Session {
 const StoredSessionSchema = z.object({
   presetId: z.string().nullable(),
   step: z.number().int().min(0).nullable(),
+  // Stored before `f-my-sounds` without it. One that is not a sound id is dropped, not the panel with it.
+  soundId: UserSoundIdSchema.nullable().optional().catch(null),
   values: z.unknown(),
   cables: z.unknown(),
 });
@@ -111,8 +120,23 @@ export function parseSession(def: SynthDef, raw: unknown): Session | null {
   return {
     presetId,
     step,
-    values: { ...def.init, ...sanitizeSet(def, parsed.data.values) },
-    cables: sanitizeCables(def, parsed.data.cables).map(([from, to], i) => ({
+    soundId: parsed.data.soundId ?? null,
+    ...fitPanel(def, parsed.data.values, parsed.data.cables),
+  };
+}
+
+/**
+ * A panel from outside (storage, the sounds API), as the page holds it: checked against the definition the same way
+ * as a stored session, with each cable coloured by its place in the list.
+ */
+export function fitPanel(
+  def: SynthDef,
+  values: unknown,
+  cables: unknown
+): Pick<Session, 'values' | 'cables'> {
+  return {
+    values: { ...def.init, ...sanitizeSet(def, values) },
+    cables: sanitizeCables(def, cables).map(([from, to], i) => ({
       from,
       to,
       color: CABLE_COLORS[i % CABLE_COLORS.length],

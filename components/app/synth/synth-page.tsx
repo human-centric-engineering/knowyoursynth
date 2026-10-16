@@ -6,7 +6,8 @@
  * Split from the prototype file `prototype/src/App.jsx` (decision D3). What moved:
  * - The synth is the URL: the route fetches it from the API and passes it in, and the picker navigates.
  * - The panel view is in the query (`?view=`), with the last choice in browser storage.
- * - The panel, signed out, is kept per synth in browser storage (`storage.ts`); signed in is `f-my-sounds`.
+ * - The panel is kept per synth in browser storage (`storage.ts`). A signed-in user also saves it to their account
+ *   as one of their own sounds, and opens those again (`my-sounds.tsx`, `f-my-sounds`).
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
  * - The panel draws the synth's design (D11), as an admin set it: `neutral` leaves the maker's marks out.
  *
@@ -17,6 +18,9 @@
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { apiClient } from '@/lib/api/client';
+import { useSession } from '@/lib/auth/client';
+import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import { normalizeFx } from '@/lib/app/synths/audio/fx';
@@ -30,7 +34,7 @@ import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
-import type { ControlValue, Phrase, SynthDef } from '@/lib/app/synths/contract';
+import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import {
   HelpButton,
@@ -46,6 +50,7 @@ import { Lesson } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { Lineage } from '@/components/app/synth/lineage';
+import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { bankHashRoute } from '@/components/app/bank/routes';
 import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
@@ -60,6 +65,7 @@ import { MapLegend, WhyAsker } from '@/components/app/synth/sound-map';
 import {
   PanelViewSchema,
   STORAGE_KEYS,
+  fitPanel,
   readStored,
   useStoredPref,
   useStoredSession,
@@ -116,7 +122,7 @@ const FX_FALLBACK = normalizeFx(null);
 
 /** A panel with the synth's first sound loaded and no lesson step: how a synth opens the first time. */
 function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Session {
-  return { presetId: preset?.id ?? null, step: null, ...presetState(def, preset) };
+  return { presetId: preset?.id ?? null, step: null, soundId: null, ...presetState(def, preset) };
 }
 
 /** Jacks with a cable in, inputs and outputs alike, as `toEngine` wants them. */
@@ -137,6 +143,8 @@ export interface SynthPageProps {
   viewParam: string | null;
   /** The `sound` query: a library sound to open with, as a databank record's link names it. */
   soundParam?: string | null;
+  /** The `mine` query: one of the signed-in user's own sounds to open with, as the dashboard links to it. */
+  mineParam?: string | null;
 }
 
 /**
@@ -159,6 +167,7 @@ function Synth({
   synths,
   viewParam,
   soundParam = null,
+  mineParam = null,
 }: SynthPageProps & { baseDef: AppSynthDef }) {
   const router = useRouter();
   const synthId = baseDef.id;
@@ -234,7 +243,31 @@ function Synth({
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
   // sound, then.
   const step = preset && sess.step != null && sess.step < preset.steps.length ? sess.step : null;
-  const target = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
+
+  // ── the user's own sounds ──
+  // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
+  // left by someone else signed in on this browser, opens nothing.
+  const { data: auth, isPending: authPending } = useSession();
+  const signedIn = !!auth;
+  const mine = useMySounds(synthId, signedIn);
+  const openSound =
+    signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
+  // The open sound's panel as last saved: what "controls moved" counts from and Restore puts back.
+  const [saved, setSaved] = useState<{
+    id: string;
+    values: ControlValues;
+    cables: Session['cables'];
+  } | null>(null);
+  const savedOpen = openSound && saved?.id === openSound.id ? saved : null;
+  const [mineNotice, setMineNotice] = useState<string | null>(null);
+  const signInHref = `/login?callbackUrl=${encodeURIComponent(synthHref(synthId, view))}`;
+
+  const libraryTarget = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
+  const target = savedOpen ? savedOpen.values : libraryTarget;
+  const targetRef = useRef(target);
+  useEffect(() => {
+    targetRef.current = target;
+  });
 
   const [audio, setAudio] = useState<AudioState>('off');
   const [playing, setPlaying] = useState(false);
@@ -516,12 +549,11 @@ function Synth({
   const onChange = useCallback(
     (id: string, v: ControlValue | null) =>
       patch((s) => {
-        const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
-        const nv = v === null ? presetState(synthDef, from).values[id] : v;
+        const nv = v === null ? targetRef.current[id] : v;
         if (nv === undefined || s.values[id] === nv) return s;
         return { ...s, values: { ...s.values, [id]: nv } };
       }),
-    [patch, sounds, synthDef]
+    [patch]
   );
   const onConnect = useCallback(
     (from: string, to: string) =>
@@ -563,27 +595,137 @@ function Synth({
     [patch]
   );
 
+  // Each choice of what is on the panel counts here, so a user sound still being fetched does not open over a later one.
+  const openSeq = useRef(0);
   const selectPreset = (id: string) => {
     const p = sounds.find((x) => x.id === id);
     if (!p) return;
+    openSeq.current++;
     focusStore.set(null);
-    patch(() => ({ presetId: id, step: null, ...presetState(synthDef, p) }));
+    patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
   };
-  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound.
-  const setStep = (k: number | null) =>
+
+  // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
+  // from opens with what still fits, and says what did not.
+  const openMine = async (id: string) => {
+    const seq = ++openSeq.current;
+    setMineNotice(null);
+    let d: UserSoundDetail;
+    try {
+      d = await apiClient.get<UserSoundDetail>(`/api/v1/sounds/${encodeURIComponent(id)}`);
+    } catch {
+      if (seq === openSeq.current)
+        setMineNotice('That sound could not be opened. It may have been deleted.');
+      return;
+    }
+    if (seq !== openSeq.current) return;
+    // A link can name a sound saved on another synth; this panel cannot hold it.
+    if (d.synthId !== synthId) {
+      setMineNotice(`${d.name} was saved on another synth, so it cannot be opened on this one.`);
+      return;
+    }
+    const from = d.panel ?? d.fitted;
+    if (!from) {
+      setMineNotice(`${d.name} cannot be opened here: ${d.problems.join(' ')}`);
+      return;
+    }
+    const panel = fitPanel(synthDef, from.values, from.cables);
+    // A copy keeps its library sound's lesson beside it while the library still has that sound. Any other leaves the
+    // library sound that was on the panel behind, so it is not credited or read as this one's.
+    const lib = d.source && sounds.some((x) => x.id === d.source?.slug) ? d.source.slug : null;
+    focusStore.set(null);
+    patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
+    setSaved({ id: d.id, ...panel });
+    mine.put(d);
+    if (!d.panel)
+      setMineNotice(
+        `${d.name} no longer fits this synth as it is now, so it opened with what does. ${d.problems.join(' ')} Save it to keep it this way.`
+      );
+  };
+
+  // A reload with one of theirs open: fetch its saved panel, so "controls moved" and Restore count from it.
+  useEffect(() => {
+    if (!openSound || saved?.id === openSound.id) return undefined;
+    let live = true;
+    apiClient
+      .get<UserSoundDetail>(`/api/v1/sounds/${encodeURIComponent(openSound.id)}`)
+      .then((d) => {
+        const from = d.panel ?? d.fitted;
+        if (live && from) setSaved({ id: d.id, ...fitPanel(synthDef, from.values, from.cables) });
+      })
+      .catch(() => undefined); // nothing to count from; the panel itself is unaffected
+    return () => {
+      live = false;
+    };
+  }, [openSound, saved?.id, synthDef]);
+
+  // `?mine=` opens that sound once the session is known, then drops out of the URL, as `?sound=` does.
+  const mineArrived = useRef(false);
+  useEffect(() => {
+    if (!mineParam || authPending || mineArrived.current) return;
+    mineArrived.current = true;
+    // The arrival effect is sending the visitor elsewhere: leave this synth's stored panel as it was.
+    const hash = window.location.hash;
+    const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
+    if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
+    if (signedIn) void openMine(mineParam);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('mine');
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  }, [authPending, signedIn]); // eslint-disable-line react-hooks/exhaustive-deps -- once, when the session is known
+
+  // The panel as the sounds API takes it, remembered so a save can count from exactly what was sent.
+  const sentRef = useRef<Pick<Session, 'values' | 'cables'> | null>(null);
+  const panelInput = () => {
+    sentRef.current = { values: sess.values, cables: sess.cables };
+    return {
+      values: sess.values,
+      cables: sess.cables.map((c): [string, string] => [c.from, c.to]),
+    };
+  };
+  const onSaved = (d: UserSoundDetail, how: 'created' | 'saved' | 'renamed') => {
+    mine.put(d);
+    setMineNotice(null);
+    if (how === 'renamed') return;
+    if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
+    if (how === 'created') patch((s) => ({ ...s, soundId: d.id }));
+  };
+  const onDeleted = (id: string) => {
+    mine.remove(id);
+    setSaved(null);
+    patch((s) => (s.soundId === id ? { ...s, soundId: null } : s));
+  };
+  // What a new sound from this panel credits: the library sound it came from, or the one the open sound was copied
+  // from, while the library has it.
+  const creditSound = openSound
+    ? sounds.find((p) => p.id === openSound.source?.slug)
+    : sounds.find((p) => p.id === sess.presetId);
+  const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
+  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
+  // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
+  const setStep = (k: number | null) => {
+    openSeq.current++;
     patch((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
-      return { ...s, step: k, ...presetState(synthDef, from, k) };
+      return {
+        ...s,
+        presetId: from?.id ?? null,
+        step: k,
+        soundId: null,
+        ...presetState(synthDef, from, k),
+      };
     });
+  };
   const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
     if (id === synthId) return;
     router.push(synthHref(id, view));
   };
 
+  // Nothing to count from while the open sound's saved panel is still being fetched, or could not be.
   const changed = def.controls.filter(
-    (c) => step == null && sess.values[c.id] !== target[c.id]
+    (c) => step == null && (!openSound || savedOpen) && sess.values[c.id] !== target[c.id]
   ).length;
   const toggleAudio = async () => {
     if (!engine) return;
@@ -644,8 +786,15 @@ function Synth({
             </div>
             <p className="truncate text-[15px]">
               <span className="text-(--kys-muted)">Loaded: </span>
-              <span className="font-semibold">{preset ? preset.name : 'Blank patch'}</span>
-              {preset && step != null && (
+              <span className="font-semibold">
+                {openSound ? openSound.name : preset ? preset.name : 'Blank patch'}
+              </span>
+              {openSound && (
+                <span className="ml-2 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                  mine
+                </span>
+              )}
+              {!openSound && preset && step != null && (
                 <span className="ml-2 rounded bg-(--kys-accent) px-1.5 py-0.5 font-mono text-xs text-(--kys-accent-ink)">
                   step {step + 1} of {preset.steps.length}
                 </span>
@@ -656,12 +805,50 @@ function Synth({
                 </span>
               )}
             </p>
+            {mineNotice && (
+              <p role="status" className="mt-1 max-w-[80ch] text-sm text-(--kys-warn)">
+                {mineNotice}
+              </p>
+            )}
+            {/* Not until the open sound is known: without it, Save would make a new sound instead of saving this one. */}
+            {!authPending && !(signedIn && sess.soundId && !mine.sounds) && (
+              <SoundActions
+                synthId={synthId}
+                signedIn={signedIn}
+                signInHref={signInHref}
+                open={openSound}
+                credit={credit}
+                panel={panelInput}
+                onSaved={onSaved}
+                onDeleted={onDeleted}
+                buttonClass={smallBtn}
+              />
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            {preset && changed > 0 && (
-              <button type="button" onClick={() => selectPreset(preset.id)} className={smallBtn}>
+            {savedOpen && changed > 0 ? (
+              <button
+                type="button"
+                onClick={() =>
+                  patch((s) => ({
+                    ...s,
+                    step: null,
+                    values: savedOpen.values,
+                    cables: savedOpen.cables,
+                  }))
+                }
+                className={smallBtn}
+              >
                 Restore sound
               </button>
+            ) : (
+              !openSound &&
+              preset &&
+              changed > 0 && (
+                <button type="button" onClick={() => selectPreset(preset.id)} className={smallBtn}>
+                  Restore sound
+                </button>
+              )
             )}
             <button
               type="button"
@@ -896,7 +1083,21 @@ function Synth({
       </section>
 
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
-        <Library presets={sounds} currentId={preset?.id ?? null} onSelect={selectPreset} />
+        <div className="flex min-h-0 flex-col gap-5">
+          <MySoundsList
+            signedIn={authPending ? null : signedIn}
+            signInHref={signInHref}
+            sounds={mine.sounds}
+            failed={mine.failed}
+            currentId={openSound?.id ?? null}
+            onOpen={(id) => void openMine(id)}
+          />
+          <Library
+            presets={sounds}
+            currentId={openSound ? null : (preset?.id ?? null)}
+            onSelect={selectPreset}
+          />
+        </div>
         {preset ? (
           <Lesson def={def} preset={preset} step={step} onStep={setStep} />
         ) : (

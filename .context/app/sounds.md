@@ -1,8 +1,8 @@
 # My sounds
 
 `f-my-sounds`. A signed-in user's own sounds: a panel they left on a synth, named and kept under
-their account. s1 is the store and the API; the synth page uses them from s2. A browser that is
-not signed in still keeps its one panel per synth in `kys.session.<id>`
+their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. A
+browser that is not signed in still keeps its one panel per synth in `kys.session.<id>`
 ([`synth-page.md`](./synth-page.md)).
 
 ## The table
@@ -38,7 +38,8 @@ the same as one that does not exist, never a 403.
   library sound, `{ synthId, source: { slug }, name?, notes?, panel? }`: with no panel it is the
   library sound as it ends, every step applied, and with no name it takes the library sound's.
   201 with the sound.
-- `GET /api/v1/sounds/:id`: the sound with its panel.
+- `GET /api/v1/sounds/:id`: the sound with its panel. One that is not `playable` has no `panel`,
+  but carries `fitted`: as much of it as fits the synth now, which the page opens.
 - `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel? }`. `notes: null` clears them.
 - `DELETE /api/v1/sounds/:id`
 
@@ -50,9 +51,46 @@ in `tests/unit/app/api/v1/sounds/route.test.ts`:
   panel is saved on the current definition version.
 - **And on read.** A sound saved on another definition version needs the mapping D1 requires
   (plan §5). No definition has one yet, so such a sound is listed and kept, `playable: false`,
-  with no panel and the reason in `problems`. Saving a new panel over it brings it up to date.
+  with no panel and the reason in `problems`, and `fitted` holds what of it still fits (controls
+  the synth no longer has and cables to missing jacks dropped, values clamped, missing controls at
+  their `init`). Saving a new panel over it brings it up to date.
   When the first rename ships a mapping, it is applied in `panelOf`.
 - **Only a listed synth takes a new sound**, as only a listed synth has a page.
 
 `npm run smoke:sounds` proves against the dev database what the unit tests cannot: the cascade
 through `eraseUser()`, and the export.
+
+## On the synth page and the dashboard (s2)
+
+`components/app/synth/my-sounds.tsx`, wired into `synth-page.tsx`; tested in
+`tests/unit/components/app/synth/synth-page-mine.test.tsx`.
+
+- **My sounds sits above the library**: this synth's sounds, from one `GET ?synthId=`, kept in step
+  with what each save returns rather than re-read.
+- **Which buttons show depends on what is on the panel.** One of the user's sounds: Save (`PATCH`
+  the panel), Save as… (a new sound), Rename… (name and notes, panel untouched) and Delete… (asks
+  first; the panel stays). A library sound: Save a copy…, which `POST`s the panel as it is now with
+  `source`, so the copy keeps its credit. Save as of a copy keeps the credit while the library still
+  has the sound.
+- **The open sound is `soundId` in the stored session.** Choosing a library sound or a lesson step
+  clears it, since either replaces the panel. It counts as open only when the user's list has it,
+  so a sound deleted elsewhere, or a session left by someone else on the same browser, opens
+  nothing; until the list has loaded no Save buttons show, so Save cannot make a new sound in
+  place of saving the open one. "Controls moved" and Restore count from the sound as last saved,
+  which a reload fetches again.
+- **Opening one sets the lesson to the library sound it was copied from**, or to none when it is
+  not a copy, so nothing credits a library sound that happened to be on the panel before. One
+  saved on another synth does not open, and when two are clicked quickly the last one clicked
+  wins.
+- **A sound the synth has moved on from opens with `fitted`**, and the page says what did not fit.
+  Saving it then stores it on the current definition.
+- **Signed out, the buttons lead to sign-in** with `callbackUrl` set to this synth and view. The
+  panel is already in `kys.session.<id>` and is written when the page unmounts, so it is there when
+  the user comes back.
+- **The name form is inline, not a modal `<dialog>`**: its ⓘ help opens in a popover outside the
+  dialog, which a modal dialog would leave inert behind it.
+- **`/dashboard` lists every one of the user's sounds**
+  (`components/app/dashboard/my-sounds-card.tsx`, in-process reads, as the synth route makes
+  them), each linking to `/synths/<id>?mine=<sound>`. A
+  sound on a synth no longer listed has no link. The card is a platform-file edit, ledgered in
+  [`divergences.md`](./divergences.md).

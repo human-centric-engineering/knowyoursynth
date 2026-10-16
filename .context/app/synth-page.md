@@ -14,6 +14,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/engine.ts`        | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`       | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`        | `?view=`, `?sound=` and the prototype's hash links                        |
+| `components/app/synth/my-sounds.tsx`    | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
 | `components/app/synth/with-notes.ts`    | Puts the API's "Unusual on…" notes back on the definition                 |
 | `components/app/synth/library.tsx`      | The sound library: search, categories, the loaded sound                   |
 | `components/app/synth/lesson.tsx`       | The lesson: how it works, build it step by step, make it yours            |
@@ -80,6 +81,9 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - `?sound=<id>` opens the synth with that library sound loaded, over whatever the browser had
   stored, then drops out of the URL so a reload keeps what was done since. A sound the library
   does not have is ignored. A databank record's "Load a sound in this style" links here.
+- `?mine=<id>` opens one of the signed-in user's own sounds the same way, once the session is
+  known; the dashboard links here. Signed out, or when a hash link is sending the visitor
+  elsewhere, it opens nothing. See [`sounds.md`](./sounds.md).
 - The prototype's hash links (`#model-d`, `#model-d/outline`, `#model-d/long`) redirect from
   `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and
   from `/bank`, to the databank's page (`components/app/bank/routes.ts`).
@@ -88,16 +92,16 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
 
-| Key                    | Holds                                                                                                                                           |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `kys.synth`            | The last synth opened                                                                                                                           |
-| `kys.view`             | The last panel view                                                                                                                             |
-| `kys.session.<id>`     | That synth's panel: sound, lesson step, values, cables. Written 400 ms after the panel goes still, and checked against the definition when read |
-| `kys.tips`             | Info cards on                                                                                                                                   |
-| `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                     |
-| `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                |
-| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                |
-| `kys.harm`             | The harmonics strip under the panel                                                                                                             |
+| Key                    | Holds                                                                                                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `kys.synth`            | The last synth opened                                                                                                                                                                            |
+| `kys.view`             | The last panel view                                                                                                                                                                              |
+| `kys.session.<id>`     | That synth's panel: sound, lesson step, values, cables, and the user's own sound open on it (`soundId`). Written 400 ms after the panel goes still, and checked against the definition when read |
+| `kys.tips`             | Info cards on                                                                                                                                                                                    |
+| `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                      |
+| `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                 |
+| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                 |
+| `kys.harm`             | The harmonics strip under the panel                                                                                                                                                              |
 
 Signed-in storage is `f-my-sounds` (`SynthPreference`, `UserPreference`).
 

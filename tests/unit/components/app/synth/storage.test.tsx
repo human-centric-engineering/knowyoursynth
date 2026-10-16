@@ -38,7 +38,13 @@ const def: SynthDef = (() => {
   return d;
 })();
 
-const fresh = (): Session => ({ presetId: null, step: null, values: { ...def.init }, cables: [] });
+const fresh = (): Session => ({
+  presetId: null,
+  step: null,
+  soundId: null,
+  values: { ...def.init },
+  cables: [],
+});
 
 // A plain in-memory Storage whose methods are spies, swapped in for window.localStorage.
 const realStorage = Object.getOwnPropertyDescriptor(window, 'localStorage');
@@ -85,7 +91,16 @@ describe('parseSession', () => {
 
   it('keeps the preset and step, and fills every missing control from def.init', () => {
     const s = parseSession(def, stored());
-    expect(s).toEqual({ presetId: 'bass', step: 2, values: def.init, cables: [] });
+    expect(s).toEqual({ presetId: 'bass', step: 2, soundId: null, values: def.init, cables: [] });
+  });
+
+  it('keeps the open sound of the user, and drops a sound id that is not one, keeping the panel', () => {
+    expect(parseSession(def, stored({ soundId: 'cmabc123' }))?.soundId).toBe('cmabc123');
+    for (const soundId of [42, 'Not An Id', 'x'.repeat(41)]) {
+      const s = parseSession(def, stored({ soundId, values: { 'ctl.tune': 1.25 } }));
+      expect(s?.soundId).toBeNull();
+      expect(s?.values['ctl.tune']).toBe(1.25);
+    }
   });
 
   it('takes a stored value over the init', () => {
@@ -179,7 +194,7 @@ describe('parseSession', () => {
 
   it('survives values and cables of the wrong type', () => {
     const s = parseSession(def, stored({ values: 'oops', cables: 7 }));
-    expect(s).toEqual({ presetId: 'bass', step: 2, values: def.init, cables: [] });
+    expect(s).toEqual({ presetId: 'bass', step: 2, soundId: null, values: def.init, cables: [] });
   });
 });
 
@@ -197,6 +212,7 @@ describe('storedSession', () => {
     const session: Session = {
       presetId: 'lead',
       step: 3,
+      soundId: 'cmabc123',
       values: { ...def.init, 'ctl.tune': -1.5, 'mod.srcA': 'eg' },
       cables: [
         { from: 'j.lfoTri', to: 'j.oscCv', color: CABLE_COLORS[0] },
@@ -295,9 +311,11 @@ describe('useStoredSession', () => {
       })
     );
     const { result } = renderHook(() => useStoredSession(def, fresh));
+    // Stored before f-my-sounds, with no soundId: none is open.
     expect(result.current[0]).toEqual({
       presetId: 'bass',
       step: 1,
+      soundId: null,
       values: { ...def.init, 'ctl.tune': 2 },
       cables: [{ from: 'j.lfoTri', to: 'j.oscCv', color: CABLE_COLORS[0] }],
     });

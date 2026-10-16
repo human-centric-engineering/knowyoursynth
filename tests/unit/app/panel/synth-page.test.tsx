@@ -91,6 +91,7 @@ describe('/synths/[id]', () => {
       synths: LIST,
       viewParam: 'long,outline',
       soundParam: null,
+      mineParam: null,
     });
     expect(el.key).toBe('model-d');
   });
@@ -123,6 +124,20 @@ describe('/synths/[id]', () => {
     expect((await render('model-d', undefined, 'x'.repeat(129))).props).toMatchObject({
       soundParam: null,
     });
+  });
+
+  it('passes a sound id of the user (`?mine=`), and anything that cannot be one as null', async () => {
+    const mine = async (q: unknown) =>
+      (
+        await SynthRoute({
+          params: Promise.resolve({ id: 'model-d' }),
+          searchParams: Promise.resolve({ mine: q as string }),
+        })
+      ).props as { mineParam: string | null };
+    expect((await mine('cmabc123')).mineParam).toBe('cmabc123');
+    expect((await mine('../admin')).mineParam).toBeNull();
+    expect((await mine(['a', 'b'])).mineParam).toBeNull();
+    expect((await mine('x'.repeat(41))).mineParam).toBeNull();
   });
 
   it('lets a failed read reach the error boundary', async () => {

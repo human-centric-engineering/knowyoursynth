@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { EmailStatusCard } from '@/components/dashboard/email-status-card';
 import { User, Settings, Shield } from 'lucide-react';
 import { DEFAULT_USER_ROLE } from '@/lib/auth/roles';
+// FORK (Know Your Synth): the user's own sounds. See .context/app/divergences.md.
+import { MySoundsCard } from '@/components/app/dashboard/my-sounds-card';
 
 /**
  * Dashboard Page
@@ -131,6 +133,9 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* FORK (Know Your Synth): the user's own sounds */}
+      <MySoundsCard userId={user.id} />
 
       {/* Quick Actions */}
       <Card>
