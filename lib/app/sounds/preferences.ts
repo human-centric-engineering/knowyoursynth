@@ -32,6 +32,7 @@ function toSettings(row: UserPreference | null): AccountSettings {
     harm: row?.harm ?? null,
     // Checked field by field on the way out, as the page checks the browser's copy.
     fx: row?.fx == null ? null : normalizeFx(row.fx),
+    updatedAt: row ? row.updatedAt.toISOString() : null,
   };
 }
 
@@ -91,15 +92,13 @@ export async function putPanelPref(
   synthId: string,
   input: PanelPrefInput
 ): Promise<PanelPref> {
-  const def = await playableSynth(synthId);
-  const panel = checkPanel(def, input.panel);
-  const own =
+  const [def, own] = await Promise.all([
+    playableSynth(synthId),
     input.soundId === null
       ? null
-      : await prisma.userSound.findFirst({
-          where: { id: input.soundId, userId },
-          select: { id: true },
-        });
+      : prisma.userSound.findFirst({ where: { id: input.soundId, userId }, select: { id: true } }),
+  ]);
+  const panel = checkPanel(def, input.panel);
   const data = {
     definitionVersion: def.version,
     presetId: input.presetId,

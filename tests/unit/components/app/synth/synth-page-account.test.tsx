@@ -116,7 +116,15 @@ const SESSION_KEY = 'kys.session.model-d';
 const PANEL_PATH = '/api/v1/me/panels/model-d';
 const SETTINGS_PATH = '/api/v1/me/settings';
 
-const NO_SETTINGS: AccountSettings = { tips: null, dim: null, heat: null, harm: null, fx: null };
+const NO_SETTINGS: AccountSettings = {
+  tips: null,
+  dim: null,
+  heat: null,
+  harm: null,
+  fx: null,
+  updatedAt: null,
+};
+const KEPT_AT = '2026-10-16T08:00:00.000Z';
 
 /** What the account holds, as the API serves it. `null` panel: none kept on Model D yet. */
 let account: { settings: AccountSettings; panel: PanelPref | null };
@@ -269,6 +277,32 @@ describe('signed in, opening a synth', () => {
     expect(cutoff()).toBe(shown);
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
     expect(api.put).not.toHaveBeenCalled();
+  });
+
+  it("writes the account's settings to the browser, stamped with the account's time", async () => {
+    account.settings = { ...NO_SETTINGS, dim: true, updatedAt: KEPT_AT };
+    page();
+    await waitFor(() => expect(pressed('Dim unused parts')).toBe('true'));
+    expect(readStored('kys.dim')).toBe(true);
+    expect(readStored('kys.settingsAt')).toBe(Date.parse(KEPT_AT));
+    expect(readStored('kys.settingsBy')).toBe('user-1');
+    expect(api.patch).not.toHaveBeenCalled();
+  });
+
+  it('keeps settings changed in the browser after the account’s were kept, and sends them', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    // A change an hour later whose request did not land.
+    storeLocal('kys.harm', true);
+    storeLocal('kys.settingsAt', Date.parse('2026-10-16T09:00:00.000Z'));
+    storeLocal('kys.settingsBy', 'user-1');
+    account.settings = { ...NO_SETTINGS, harm: false, updatedAt: KEPT_AT };
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(pressed('Show harmonics')).toBe('true');
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_DELAY_MS + 1));
+    expect(settingsPatches()).toEqual([
+      [SETTINGS_PATH, { body: { harm: true }, options: undefined }],
+    ]);
   });
 
   it('does not fill the account from settings another user changed last', async () => {
@@ -424,7 +458,14 @@ describe('signed in, writing to the account', () => {
   beforeEach(async () => {
     auth.signedIn = true;
     account.panel = accountPanel(0);
-    account.settings = { tips: true, dim: false, heat: false, harm: false, fx: null };
+    account.settings = {
+      tips: true,
+      dim: false,
+      heat: false,
+      harm: false,
+      fx: null,
+      updatedAt: KEPT_AT,
+    };
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
     page();
     await act(async () => vi.advanceTimersByTimeAsync(0));

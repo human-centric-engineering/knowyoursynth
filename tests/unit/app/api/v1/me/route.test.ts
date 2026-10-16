@@ -159,6 +159,7 @@ describe('settings', () => {
       heat: null,
       harm: null,
       fx: null,
+      updatedAt: null,
     });
   });
 
@@ -167,7 +168,14 @@ describe('settings', () => {
     const fx = { ...FX_DEFAULT, on: true, delay: { ...FX_DEFAULT.delay, mix: 0.6 } };
     const res = await changeSettings(request('PATCH', '/api/v1/me/settings', { fx }));
     expect(res.status).toBe(200);
-    const expected = { tips: false, dim: true, heat: null, harm: null, fx };
+    const expected = {
+      tips: false,
+      dim: true,
+      heat: null,
+      harm: null,
+      fx,
+      updatedAt: expect.any(String),
+    };
     expect((await json(res)).data).toEqual(expected);
     expect((await json(await readSettings(request('GET', '/api/v1/me/settings')))).data).toEqual(
       expected
@@ -207,11 +215,13 @@ describe('settings', () => {
       heat: null,
       harm: null,
       fx: { on: 'yes', drive: { amount: 9 } },
+      updatedAt: new Date('2026-10-16T08:00:00.000Z'),
     });
     const { data } = await json(await readSettings(request('GET', '/api/v1/me/settings')));
     expect(data).toMatchObject({
       tips: true,
       fx: { ...FX_DEFAULT, drive: { ...FX_DEFAULT.drive, amount: 1 } },
+      updatedAt: '2026-10-16T08:00:00.000Z',
     });
   });
 });

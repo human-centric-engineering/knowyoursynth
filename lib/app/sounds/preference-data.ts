@@ -42,6 +42,8 @@ export interface AccountSettings {
   heat: boolean | null;
   harm: boolean | null;
   fx: RackFx | null;
+  /** When they were last changed, or `null` when the account has none yet. */
+  updatedAt: string | null;
 }
 
 /** The settings the account keeps, in the order the page reads them. */

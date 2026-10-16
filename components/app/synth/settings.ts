@@ -41,6 +41,7 @@ const SCHEMAS = {
   fx: FxSchema,
 } satisfies Record<SettingKey, z.ZodType>;
 const SettingsBySchema = z.string().nullable();
+const SettingsAtSchema = z.number();
 
 type SettingValue<K extends SettingKey> = NonNullable<AccountSettings[K]>;
 type Setting<K extends SettingKey> = [SettingValue<K>, (next: SettingValue<K>) => void];
@@ -65,6 +66,11 @@ export function useSettings(userId: string | null): Settings {
   const heat = useStoredPref(STORAGE_KEYS.heat, SCHEMAS.heat, false);
   const harm = useStoredPref(STORAGE_KEYS.harm, SCHEMAS.harm, false);
   const fx = useStoredPref<RackFx>(STORAGE_KEYS.fx, SCHEMAS.fx, FX_FALLBACK);
+  // The browser's setters, for writing the account's settings back once they arrive.
+  const toBrowser = useRef({ tips: tips[1], dim: dim[1], heat: heat[1], harm: harm[1], fx: fx[1] });
+  useEffect(() => {
+    toBrowser.current = { tips: tips[1], dim: dim[1], heat: heat[1], harm: harm[1], fx: fx[1] };
+  });
 
   const [account, setAccount] = useState<AccountSettings | null>(null);
   // Whether the account has answered, for the setters; and what changed before it did (signed in or still finding
@@ -94,18 +100,34 @@ export function useSettings(userId: string | null): Settings {
       .get<AccountSettings>(settingsPath)
       .then((acct) => {
         if (!live) return;
-        // Where the account has no value yet, the browser's fills it, once, unless another user changed them last.
+        // Unless another user changed them last, the browser's settings fill what the account has no value for, and
+        // replace what it has when they were changed after it was kept (a change whose request did not land).
         const by = SettingsBySchema.safeParse(readStored(STORAGE_KEYS.settingsBy));
         const theirs = by.success && by.data !== null && by.data !== userId;
+        const at = SettingsAtSchema.safeParse(readStored(STORAGE_KEYS.settingsAt));
+        const kept = acct.updatedAt === null ? null : Date.parse(acct.updatedAt);
+        const newer = at.success && (kept === null || at.data > kept);
         const fill: SettingsPatch = {};
         for (const key of theirs ? [] : SETTING_KEYS) {
           const mine = storedSetting(key);
-          if (acct[key] === null && mine !== undefined) Object.assign(fill, { [key]: mine });
+          if (mine !== undefined && (acct[key] === null || newer))
+            Object.assign(fill, { [key]: mine });
         }
         const send = { ...fill, ...early.current };
         if (Object.keys(send).length > 0) queue((w) => ({ ...w, ...send }));
         answered.current = true;
-        setAccount({ ...acct, ...send });
+        const merged = { ...acct, ...send };
+        setAccount(merged);
+        // The browser keeps the account's too, so signed out (or with the account unread) the page shows the same.
+        const put = toBrowser.current;
+        if (merged.tips !== null) put.tips(merged.tips);
+        if (merged.dim !== null) put.dim(merged.dim);
+        if (merged.heat !== null) put.heat(merged.heat);
+        if (merged.harm !== null) put.harm(merged.harm);
+        if (merged.fx !== null) put.fx(merged.fx);
+        writeStored(STORAGE_KEYS.settingsBy, userId);
+        if (Object.keys(send).length === 0 && kept !== null)
+          writeStored(STORAGE_KEYS.settingsAt, kept);
       })
       .catch((err: unknown) => warnAccount('read the settings from the account', err));
     return () => {
@@ -117,6 +139,7 @@ export function useSettings(userId: string | null): Settings {
   const toAccount = useCallback(
     (change: SettingsPatch) => {
       writeStored(STORAGE_KEYS.settingsBy, userId);
+      writeStored(STORAGE_KEYS.settingsAt, Date.now());
       if (answered.current) setAccount((a) => a && { ...a, ...change });
       else early.current = { ...early.current, ...change };
       if (userId) queue((w) => ({ ...w, ...change }));

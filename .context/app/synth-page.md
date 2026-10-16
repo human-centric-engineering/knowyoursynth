@@ -92,8 +92,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
 Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat` and `kys.harm` are kept
-in the account as well. For the panel the newer copy wins; for settings the account's copy wins
-once it has one ([`sounds.md`](./sounds.md)).
+in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 
 | Key                    | Holds                                                                                                                                                                                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -106,6 +105,7 @@ once it has one ([`sounds.md`](./sounds.md)).
 | `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                                                                                   |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.settingsBy`       | Who was signed in when the settings were last changed (`null` for no one), so another user's are not filled into an account                                                                                                                                        |
+| `kys.settingsAt`       | When the settings were last changed (ms), weighed against the account's copy                                                                                                                                                                                       |
 
 ## Not here yet
 

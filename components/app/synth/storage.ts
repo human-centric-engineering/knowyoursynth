@@ -41,6 +41,8 @@ export const STORAGE_KEYS = {
   harm: 'kys.harm',
   /** Who was signed in when the settings above were last changed: no one's (`null`) or a user id. */
   settingsBy: 'kys.settingsBy',
+  /** When the settings above were last changed (ms since the epoch), to weigh against the account's copy. */
+  settingsAt: 'kys.settingsAt',
 } as const;
 
 /** One synth's panel, as it was left. */

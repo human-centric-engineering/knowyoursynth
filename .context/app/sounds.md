@@ -125,8 +125,11 @@ so the plan's "scope" has no row.
     last request that did not land), it is sent to the account. A panel saved while **another**
     user was signed in is never sent. Panels stored before this change have no time, so the
     account's wins.
-  - Settings have no time. The account's win once it has a value; where it has none yet, the
-    browser's fill it, once, unless `kys.settingsBy` names another user.
+  - Settings work the same way, as one set: `kys.settingsAt` is when they were last changed and
+    `kys.settingsBy` who was signed in then. The browser's fill what the account has no value for,
+    and replace what it has when they are newer; the account's are written back to the browser.
+    Settings `kys.settingsBy` gives to another user are never sent. `GET /api/v1/me/settings`
+    returns `updatedAt` for the comparison.
   - A change made before the account answered beats both, including one made before the session
     said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
     older panel never overwrites a newer one.
