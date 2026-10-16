@@ -92,18 +92,20 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
 Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat` and `kys.harm` are kept
-in the account as well, and the account's copy wins once it has one ([`sounds.md`](./sounds.md)).
+in the account as well. For the panel the newer copy wins; for settings the account's copy wins
+once it has one ([`sounds.md`](./sounds.md)).
 
-| Key                    | Holds                                                                                                                                                                                            |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `kys.synth`            | The last synth opened                                                                                                                                                                            |
-| `kys.view`             | The last panel view                                                                                                                                                                              |
-| `kys.session.<id>`     | That synth's panel: sound, lesson step, values, cables, and the user's own sound open on it (`soundId`). Written 400 ms after the panel goes still, and checked against the definition when read |
-| `kys.tips`             | Info cards on                                                                                                                                                                                    |
-| `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                      |
-| `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                 |
-| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                 |
-| `kys.harm`             | The harmonics strip under the panel                                                                                                                                                              |
+| Key                    | Holds                                                                                                                                                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `kys.synth`            | The last synth opened                                                                                                                                                                                                                                              |
+| `kys.view`             | The last panel view                                                                                                                                                                                                                                                |
+| `kys.session.<id>`     | That synth's panel: sound, lesson step, values, cables, the user's own sound open on it (`soundId`), when it was changed (`savedAt`) and who was signed in then (`owner`). Written 400 ms after the panel goes still, and checked against the definition when read |
+| `kys.tips`             | Info cards on                                                                                                                                                                                                                                                      |
+| `kys.fx`, `kys.fxOpen` | The effects rack and whether it is unfolded                                                                                                                                                                                                                        |
+| `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                                                                                   |
+| `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                                                                                   |
+| `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
+| `kys.settingsBy`       | Who was signed in when the settings were last changed (`null` for no one), so another user's are not filled into an account                                                                                                                                        |
 
 ## Not here yet
 

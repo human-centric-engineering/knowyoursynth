@@ -46,7 +46,7 @@ const fromSoundProblems = (problems: SoundProblem[], prefix: string) =>
   }));
 
 /** A copy typed as JSON for a Prisma `Json` column. */
-const toJson = (value: unknown): Prisma.InputJsonValue =>
+export const toJson = (value: unknown): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 const notFound = (): never => {

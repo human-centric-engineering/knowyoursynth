@@ -10,6 +10,7 @@
  * - settings start as nulls, a change touches only what it names, and each user has their own;
  * - a last panel is kept under the caller on the synth's current definition version, replaced by the next, and read
  *   back fitted to the synth as it is now; another user's is not the caller's;
+ * - a sound named with a panel is kept with it only when it is the caller's own;
  * - a panel that does not fit the synth, a synth that is not listed, and a malformed body are refused, storing nothing.
  *
  * What a unit test cannot prove, because it has no database, is in `npm run smoke:sounds`: the hand-written cascades
@@ -117,6 +118,12 @@ beforeEach(() => {
   });
   mockPrisma.userPreference = settings.client;
   mockPrisma.synthPreference = panels.client;
+  // One sound, `cmmine1`, which is user-1's.
+  mockPrisma.userSound = {
+    findFirst: vi.fn(async ({ where }: { where: { id: string; userId: string } }) =>
+      where.id === 'cmmine1' && where.userId === 'user-1' ? { id: 'cmmine1' } : null
+    ),
+  };
   mockPrisma.synth = {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) =>
       where.id === 'model-d' ? { listed: true } : where.id === 'minimoog' ? { listed: false } : null
@@ -259,6 +266,18 @@ describe('the last panel', () => {
       await readPanel(request('GET', '/api/v1/me/panels/model-d'), ctx('model-d'))
     );
     expect(data).toBeNull();
+  });
+
+  it("keeps the panel but not a sound that is not the caller's", async () => {
+    signIn('user-2');
+    const res = await keepPanel(request('PUT', '/api/v1/me/panels/model-d', last), ctx('model-d'));
+    expect(res.status).toBe(200);
+    expect(panels.rows.get('user-2/model-d')).toMatchObject({
+      presetId: 'stacked-night-bass',
+      soundId: null,
+      values: panel.values,
+    });
+    expect((await json(res)).data?.soundId).toBeNull();
   });
 
   it('fits a stored panel to the synth: a value out of range is clamped, what the synth no longer has is dropped', async () => {

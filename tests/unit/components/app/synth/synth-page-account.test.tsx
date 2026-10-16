@@ -7,8 +7,11 @@
  *
  * Pins:
  * - signed out, the page never calls the account and works from browser storage alone;
- * - signed in, the account's last panel replaces the browser's, and the account's settings beat the browser's;
- * - where the account has nothing yet, the browser's fills it, once; a change made before the account answered wins;
+ * - signed in, the newer of the account's last panel and the browser's wins, and the account's settings beat the
+ *   browser's; a restored panel is written to the browser too;
+ * - where the account has nothing yet, the browser's fills it, once; a change made before the account answered wins,
+ *   including one made before the session said who is signed in;
+ * - a panel or settings another user left in the browser are never sent to this one's account;
  * - the account is written after the panel goes still, never at the browser's pace: continuous play stays well under
  *   the section's 100 a minute, and leaving the page sends what is waiting with `keepalive`.
  *
@@ -132,7 +135,18 @@ function storeLocal(key: string, value: unknown) {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-const page = () => render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />);
+const synthPage = () => <SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />;
+const page = () => render(synthPage());
+
+/** A panel as the browser keeps it, changed at `savedAt` while `owner` was signed in. */
+const browserPanel = (cutoff: number, savedAt?: string, owner?: string | null) => ({
+  presetId: 'fat-bass',
+  step: null,
+  values: { 'filter.cutoff': cutoff },
+  cables: [],
+  ...(savedAt !== undefined && { savedAt: Date.parse(savedAt) }),
+  ...(owner !== undefined && { owner }),
+});
 
 const cutoffSlider = () => screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
 const cutoff = () => cutoffSlider().getAttribute('aria-valuenow');
@@ -219,6 +233,80 @@ describe('signed in, opening a synth', () => {
     await waitFor(() => expect(cutoff()).toBe('-4'));
     // Restoring is not a change: nothing is written back.
     expect(api.put).not.toHaveBeenCalled();
+    // The browser keeps it too, stamped with the account's time, so signed out the page reopens it.
+    expect(readStored(SESSION_KEY)).toMatchObject({
+      values: expect.objectContaining({ 'filter.cutoff': -4 }),
+      savedAt: Date.parse(accountPanel(-4).updatedAt),
+      owner: 'user-1',
+    });
+  });
+
+  it("keeps the browser's panel when it is newer than the account's, and sends it", async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    // Changed an hour after the account's was kept: signed out since, or a last request that did not land.
+    storeLocal(SESSION_KEY, browserPanel(3, '2026-10-16T09:00:00.000Z', null));
+    account.panel = accountPanel(-4);
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe('3');
+
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_DELAY_MS + 1));
+    expect(panelPuts()).toHaveLength(1);
+    expect(panelPuts()[0][1]).toMatchObject({
+      body: { panel: { values: expect.objectContaining({ 'filter.cutoff': 3 }) } },
+    });
+  });
+
+  it.each([
+    ['restores the account’s, however new the other is', accountPanel(-4), '-4'],
+    ['sends nothing when the account has none', null, '3'],
+  ])('with a panel another user left in the browser, %s', async (_, kept, shown) => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    storeLocal(SESSION_KEY, browserPanel(3, '2026-10-16T09:00:00.000Z', 'user-2'));
+    account.panel = kept;
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe(shown);
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(api.put).not.toHaveBeenCalled();
+  });
+
+  it('does not fill the account from settings another user changed last', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    storeLocal('kys.heat', true);
+    storeLocal('kys.settingsBy', 'user-2');
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(api.patch).not.toHaveBeenCalled();
+  });
+
+  it('keeps and sends what was changed while the session was still loading', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    auth.signedIn = false;
+    auth.pending = true;
+    account.panel = accountPanel(-4);
+    account.settings = { ...NO_SETTINGS, harm: false };
+    const { rerender } = page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
+    fireEvent.click(screen.getByRole('button', { name: 'Show harmonics' }));
+    const moved = cutoff();
+
+    auth.signedIn = true;
+    auth.pending = false;
+    rerender(synthPage());
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe(moved);
+    expect(pressed('Show harmonics')).toBe('true');
+
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_DELAY_MS + 1));
+    expect(panelPuts()).toHaveLength(1);
+    expect(panelPuts()[0][1]).toMatchObject({
+      body: { panel: { values: expect.objectContaining({ 'filter.cutoff': Number(moved) }) } },
+    });
+    expect(settingsPatches()).toEqual([
+      [SETTINGS_PATH, { body: { harm: true }, options: undefined }],
+    ]);
   });
 
   it("loads the settings from the account, and the account's value beats the browser's", async () => {

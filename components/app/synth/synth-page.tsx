@@ -218,11 +218,8 @@ function Synth({
   // The session is read before the panel: signed in, the account's last panel replaces the browser's once it arrives.
   const { data: auth, isPending: authPending } = useSession();
   const signedIn = !!auth;
-  const [sess, patch] = useStoredSession(
-    synthDef,
-    () => freshSession(synthDef, sounds[0]),
-    signedIn
-  );
+  const userId = auth?.user.id ?? null;
+  const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]), userId);
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -279,7 +276,7 @@ function Synth({
   const [lineageOpen, setLineageOpen] = useState(false);
   const [limitsOpen, setLimitsOpen] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
-  const settings = useSettings(signedIn);
+  const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
   const [dimOn, setDimOn] = settings.dim;
   const [heatOn, setHeatOn] = settings.heat;

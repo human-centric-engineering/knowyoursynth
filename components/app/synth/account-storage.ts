@@ -8,8 +8,12 @@
  * **Browser storage is still written.** Every change goes to the browser as it did, and to the account as well, so the
  * page reads the same whichever of the two answers.
  *
- * **The account wins, once it has a value.** Where it has none yet, the browser's fills it, once: that is how a first
- * sign-in on a browser that already has settings keeps them. A change made before the account answered beats both.
+ * **The newer copy wins.** A panel in the browser says when it was last changed and who was signed in then; the account's
+ * says when it was kept. The account's replaces the browser's when it is as new or newer, and is written to the browser
+ * too; the browser's, when newer, is sent to the account (work done while signed out, or a last change whose request
+ * did not land). One kept while another user was signed in is never sent. Settings have no time, so there the account
+ * wins once it has a value, and where it has none yet the browser's fills it, once (unless another user changed them
+ * last). A change made before the account answered beats both.
  *
  * **Writes to the server are slower than writes to the browser.** The page writes the browser 400 ms after the panel
  * goes still; sent to the server, that would hit the section's 100-a-minute cap (`proxy.ts`) during active play. So the
@@ -107,14 +111,14 @@ export function useAccountWriter<T>(
 // ── the last panel ──────────────────────────────────────────────────────────
 
 export interface AccountPanel {
-  /** The account's last panel on this synth, the moment it arrives, to restore when nothing has moved yet. */
+  /** The account's last panel on this synth, the moment it arrives, when it is the newer one. */
   onArrive: (pref: PanelPref) => void;
   /** The panel as it now is, to keep. */
   latest: () => PanelPrefInput;
   /** Something was moved on the panel since it opened. */
   touched: () => boolean;
-  /** The browser had a panel for this synth when it opened. */
-  hadStored: () => boolean;
+  /** When the panel on the page was last changed (ms), or `null` when it is not this user's to keep. */
+  localAt: () => number | null;
 }
 
 /**
@@ -124,7 +128,7 @@ export interface AccountPanel {
 export function useAccountPanel(
   synthId: string,
   signedIn: boolean,
-  { onArrive, latest, touched, hadStored }: AccountPanel
+  { onArrive, latest, touched, localAt }: AccountPanel
 ): () => void {
   const [loaded, setLoaded] = useState<string | null>(null);
   const ready = signedIn && loaded === synthId;
@@ -141,12 +145,12 @@ export function useAccountPanel(
   const arrive = useRef(onArrive);
   const now = useRef(latest);
   const moved = useRef(touched);
-  const stored = useRef(hadStored);
+  const local = useRef(localAt);
   useEffect(() => {
     arrive.current = onArrive;
     now.current = latest;
     moved.current = touched;
-    stored.current = hadStored;
+    local.current = localAt;
   });
 
   const keep = useCallback(
@@ -162,10 +166,14 @@ export function useAccountPanel(
       .get<PanelPref | null>(panelPath(synthId))
       .then((pref) => {
         if (!live) return;
-        // Something moved before the account answered: that is the newest panel, and it is already waiting to go.
-        if (pref && !moved.current()) arrive.current(pref);
-        // The account has none here yet: the browser's fills it, once.
-        else if (!pref && stored.current() && !moved.current()) keep();
+        const at = local.current();
+        // Something moved before the account answered is the newest panel whatever the clocks say.
+        if (pref && !moved.current() && (at === null || Date.parse(pref.updatedAt) >= at)) {
+          arrive.current(pref);
+        } else if (at !== null) {
+          // The page's is newer, or the account has none here yet: it goes to the account.
+          keep();
+        }
         setLoaded(synthId);
       })
       .catch((err: unknown) => {

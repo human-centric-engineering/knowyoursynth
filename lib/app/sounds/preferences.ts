@@ -11,22 +11,18 @@
  * (`components/app/synth/storage.ts`): it is only where the user left off, so a panel from an older definition opens
  * with what still fits rather than not at all.
  */
-import type { Prisma, SynthPreference, UserPreference } from '@prisma/client';
+import type { SynthPreference, UserPreference } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { normalizeFx } from '@/lib/app/synths/audio/fx';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
-import { checkPanel, playableSynth } from '@/lib/app/sounds/store';
+import { checkPanel, playableSynth, toJson } from '@/lib/app/sounds/store';
 import type {
   AccountSettings,
   PanelPref,
   PanelPrefInput,
   SettingsPatch,
 } from '@/lib/app/sounds/preference-data';
-
-/** A copy typed as JSON for a Prisma `Json` column. */
-const toJson = (value: unknown): Prisma.InputJsonValue =>
-  JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 function toSettings(row: UserPreference | null): AccountSettings {
   return {
@@ -86,7 +82,10 @@ export async function getPanelPref(userId: string, synthId: string): Promise<Pan
   return row ? toPanelPref(row) : null;
 }
 
-/** Keep the caller's panel on one synth, replacing the last one. Only a listed synth the app can play has one. */
+/**
+ * Keep the caller's panel on one synth, replacing the last one. Only a listed synth the app can play has one. A sound
+ * that is not the caller's is not kept with it: a browser shared with another user can hold theirs.
+ */
 export async function putPanelPref(
   userId: string,
   synthId: string,
@@ -94,11 +93,18 @@ export async function putPanelPref(
 ): Promise<PanelPref> {
   const def = await playableSynth(synthId);
   const panel = checkPanel(def, input.panel);
+  const own =
+    input.soundId === null
+      ? null
+      : await prisma.userSound.findFirst({
+          where: { id: input.soundId, userId },
+          select: { id: true },
+        });
   const data = {
     definitionVersion: def.version,
     presetId: input.presetId,
     step: input.step,
-    soundId: input.soundId,
+    soundId: own?.id ?? null,
     values: toJson(panel.values),
     cables: toJson(panel.cables),
   };

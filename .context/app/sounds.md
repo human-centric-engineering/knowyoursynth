@@ -114,15 +114,24 @@ so the plan's "scope" has no row.
     `/api/v1/users/me/preferences`, which is the platform's.
   - `GET`/`PUT /api/v1/me/panels/:synthId`. `GET` is `null` when there is none. `PUT` is checked
     with `validateSound` and refused when anything is wrong, as a saved sound is; only a listed
-    synth takes one. `GET` fits the stored panel to the synth as it is now (values clamped, what it
+    synth takes one. A `soundId` that is not the caller's own is kept as `null`. `GET` fits the stored panel to the synth as it is now (values clamped, what it
     no longer has dropped), as the page fits its own copy: it is only where the user left off.
 - **On the page** (`components/app/synth/account-storage.ts` and `settings.ts`, wired through
   `useStoredSession` and `useSettings`; tested in `synth-page-account.test.tsx`):
   - Browser storage is still written on every change, as before.
-  - Once signed in, the account's last panel replaces the browser's, and its settings beat the
-    browser's. Where the account has no value yet, the browser's fills it, once. A change made
-    before the account answered beats both. If the account cannot be read, nothing is sent to it
-    that visit, so an older panel never overwrites a newer one.
+  - **The newer panel wins.** The browser's panel records when it was last changed and who was
+    signed in then. The account's last panel replaces it when the account's is as new or newer,
+    and it is written back to the browser. When the browser's is newer (work done signed out, or a
+    last request that did not land), it is sent to the account. A panel saved while **another**
+    user was signed in is never sent. Panels stored before this change have no time, so the
+    account's wins.
+  - Settings have no time. The account's win once it has a value; where it has none yet, the
+    browser's fill it, once, unless `kys.settingsBy` names another user.
+  - A change made before the account answered beats both, including one made before the session
+    said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
+    older panel never overwrites a newer one.
+  - The times compared come from two clocks, the browser's and the server's, so a skew of more
+    than a few seconds can pick the wrong copy when both were changed within that window.
   - **The account is written less often than the browser.** The browser is written 400 ms after the
     panel goes still, which sent to the server would pass the section's 100 a minute during play.
     The account copy goes 5 s after changes stop, and at least every 30 s while they keep coming:

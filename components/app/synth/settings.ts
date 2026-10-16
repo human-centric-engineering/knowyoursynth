@@ -17,7 +17,12 @@ import {
   type SettingKey,
   type SettingsPatch,
 } from '@/lib/app/sounds/preference-data';
-import { STORAGE_KEYS, readStored, useStoredPref } from '@/components/app/synth/storage';
+import {
+  STORAGE_KEYS,
+  readStored,
+  useStoredPref,
+  writeStored,
+} from '@/components/app/synth/storage';
 import {
   settingsPath,
   useAccountWriter,
@@ -27,6 +32,15 @@ import {
 const BoolSchema = z.boolean();
 const FxSchema = z.unknown().transform(normalizeFx);
 const FX_FALLBACK = normalizeFx(null);
+/** How each setting is checked on its way out of browser storage. */
+const SCHEMAS = {
+  tips: BoolSchema,
+  dim: BoolSchema,
+  heat: BoolSchema,
+  harm: BoolSchema,
+  fx: FxSchema,
+} satisfies Record<SettingKey, z.ZodType>;
+const SettingsBySchema = z.string().nullable();
 
 type SettingValue<K extends SettingKey> = NonNullable<AccountSettings[K]>;
 type Setting<K extends SettingKey> = [SettingValue<K>, (next: SettingValue<K>) => void];
@@ -36,24 +50,25 @@ export type Settings = { [K in SettingKey]: Setting<K> };
 function storedSetting(key: SettingKey): boolean | RackFx | undefined {
   const raw = readStored(STORAGE_KEYS[key]);
   if (raw === null) return undefined;
-  if (key === 'fx') return normalizeFx(raw);
-  const parsed = BoolSchema.safeParse(raw);
+  const parsed = SCHEMAS[key].safeParse(raw);
   return parsed.success ? parsed.data : undefined;
 }
 
 /**
- * The page's settings: from browser storage, as always, and signed in, from the account once it answers. Each setter
- * writes the browser as before and, signed in, queues the change for the account.
+ * The page's settings: from browser storage, as always, and signed in (`userId`), from the account once it answers.
+ * Each setter writes the browser as before and, signed in, queues the change for the account.
  */
-export function useSettings(signedIn: boolean): Settings {
-  const tips = useStoredPref(STORAGE_KEYS.tips, BoolSchema, true);
-  const dim = useStoredPref(STORAGE_KEYS.dim, BoolSchema, false);
-  const heat = useStoredPref(STORAGE_KEYS.heat, BoolSchema, false);
-  const harm = useStoredPref(STORAGE_KEYS.harm, BoolSchema, false);
-  const fx = useStoredPref<RackFx>(STORAGE_KEYS.fx, FxSchema, FX_FALLBACK);
+export function useSettings(userId: string | null): Settings {
+  const signedIn = userId !== null;
+  const tips = useStoredPref(STORAGE_KEYS.tips, SCHEMAS.tips, true);
+  const dim = useStoredPref(STORAGE_KEYS.dim, SCHEMAS.dim, false);
+  const heat = useStoredPref(STORAGE_KEYS.heat, SCHEMAS.heat, false);
+  const harm = useStoredPref(STORAGE_KEYS.harm, SCHEMAS.harm, false);
+  const fx = useStoredPref<RackFx>(STORAGE_KEYS.fx, SCHEMAS.fx, FX_FALLBACK);
 
   const [account, setAccount] = useState<AccountSettings | null>(null);
-  // Whether the account has answered, for the setters; and what changed before it did, which beats what it says.
+  // Whether the account has answered, for the setters; and what changed before it did (signed in or still finding
+  // out), which beats what it says.
   const answered = useRef(false);
   const early = useRef<SettingsPatch>({});
   const writer = useAccountWriter<SettingsPatch>(
@@ -69,16 +84,21 @@ export function useSettings(signedIn: boolean): Settings {
   useEffect(() => {
     setAccount(null);
     answered.current = false;
-    early.current = {};
-    if (!signedIn) return undefined;
+    // Kept through the wait for the session, so a change made then still counts once it says who is signed in.
+    if (!userId) {
+      early.current = {};
+      return undefined;
+    }
     let live = true;
     apiClient
       .get<AccountSettings>(settingsPath)
       .then((acct) => {
         if (!live) return;
-        // Where the account has no value yet, the browser's fills it, once.
+        // Where the account has no value yet, the browser's fills it, once, unless another user changed them last.
+        const by = SettingsBySchema.safeParse(readStored(STORAGE_KEYS.settingsBy));
+        const theirs = by.success && by.data !== null && by.data !== userId;
         const fill: SettingsPatch = {};
-        for (const key of SETTING_KEYS) {
+        for (const key of theirs ? [] : SETTING_KEYS) {
           const mine = storedSetting(key);
           if (acct[key] === null && mine !== undefined) Object.assign(fill, { [key]: mine });
         }
@@ -91,17 +111,17 @@ export function useSettings(signedIn: boolean): Settings {
     return () => {
       live = false;
     };
-  }, [signedIn, queue]);
+  }, [userId, queue]);
 
   // Signed in, a change is the account's too.
   const toAccount = useCallback(
     (change: SettingsPatch) => {
-      if (!signedIn) return;
+      writeStored(STORAGE_KEYS.settingsBy, userId);
       if (answered.current) setAccount((a) => a && { ...a, ...change });
       else early.current = { ...early.current, ...change };
-      queue((w) => ({ ...w, ...change }));
+      if (userId) queue((w) => ({ ...w, ...change }));
     },
-    [signedIn, queue]
+    [userId, queue]
   );
   const [setTips, setDim, setHeat, setHarm, setFx] = [tips[1], dim[1], heat[1], harm[1], fx[1]];
   const setters = useMemo(
