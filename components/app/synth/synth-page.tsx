@@ -17,14 +17,11 @@
 
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
-import { normalizeFx } from '@/lib/app/synths/audio/fx';
-import type { RackFx } from '@/lib/app/synths/audio/fx';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
@@ -67,11 +64,11 @@ import {
   STORAGE_KEYS,
   fitPanel,
   readStored,
-  useStoredPref,
   useStoredSession,
   writeStored,
 } from '@/components/app/synth/storage';
 import type { Session } from '@/components/app/synth/storage';
+import { useSettings } from '@/components/app/synth/settings';
 import {
   MAP_OFF,
   findStore,
@@ -115,10 +112,6 @@ const PLAY_HELP = [
 ] as const;
 
 type AudioState = 'off' | 'starting' | 'on' | 'error';
-
-const BoolSchema = z.boolean();
-const FxSchema = z.unknown().transform(normalizeFx);
-const FX_FALLBACK = normalizeFx(null);
 
 /** A panel with the synth's first sound loaded and no lesson step: how a synth opens the first time. */
 function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Session {
@@ -222,7 +215,14 @@ function Synth({
     [synthDef, view.long]
   );
 
-  const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]));
+  // The session is read before the panel: signed in, the account's last panel replaces the browser's once it arrives.
+  const { data: auth, isPending: authPending } = useSession();
+  const signedIn = !!auth;
+  const [sess, patch] = useStoredSession(
+    synthDef,
+    () => freshSession(synthDef, sounds[0]),
+    signedIn
+  );
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -247,8 +247,6 @@ function Synth({
   // ── the user's own sounds ──
   // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
   // left by someone else signed in on this browser, opens nothing.
-  const { data: auth, isPending: authPending } = useSession();
-  const signedIn = !!auth;
   const mine = useMySounds(synthId, signedIn);
   const openSound =
     signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
@@ -281,11 +279,12 @@ function Synth({
   const [lineageOpen, setLineageOpen] = useState(false);
   const [limitsOpen, setLimitsOpen] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
-  const [tipsOn, setTipsOn] = useStoredPref(STORAGE_KEYS.tips, BoolSchema, true);
-  const [dimOn, setDimOn] = useStoredPref(STORAGE_KEYS.dim, BoolSchema, false);
-  const [heatOn, setHeatOn] = useStoredPref(STORAGE_KEYS.heat, BoolSchema, false);
-  const [harmOn, setHarmOn] = useStoredPref(STORAGE_KEYS.harm, BoolSchema, false);
-  const [fx, setFx] = useStoredPref<RackFx>(STORAGE_KEYS.fx, FxSchema, FX_FALLBACK);
+  const settings = useSettings(signedIn);
+  const [tipsOn, setTipsOn] = settings.tips;
+  const [dimOn, setDimOn] = settings.dim;
+  const [heatOn, setHeatOn] = settings.heat;
+  const [harmOn, setHarmOn] = settings.harm;
+  const [fx, setFx] = settings.fx;
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);

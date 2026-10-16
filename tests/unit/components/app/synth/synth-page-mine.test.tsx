@@ -31,7 +31,7 @@ const { router, engine, auth, api } = vi.hoisted(() => ({
     running: false,
   },
   auth: { signedIn: false, pending: false },
-  api: { get: vi.fn(), post: vi.fn(), patch: vi.fn(), delete: vi.fn() },
+  api: { get: vi.fn(), post: vi.fn(), put: vi.fn(), patch: vi.fn(), delete: vi.fn() },
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
@@ -45,9 +45,28 @@ vi.mock('@/lib/auth/client', () => ({
     isPending: auth.pending,
   }),
 }));
+// The account's settings and last panel (`f-my-sounds` s3) answer "nothing kept yet" here, and their writes are
+// dropped, so `api` sees only the sounds API this file is about. They are tested in synth-page-account.test.tsx.
 vi.mock('@/lib/api/client', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/api/client')>();
-  return { ...real, apiClient: api };
+  const account = (path: string) => path.startsWith('/api/v1/me/');
+  return {
+    ...real,
+    apiClient: {
+      ...api,
+      get: (path: string, opts?: unknown) =>
+        account(path)
+          ? Promise.resolve(
+              path === '/api/v1/me/settings'
+                ? { tips: null, dim: null, heat: null, harm: null, fx: null }
+                : null
+            )
+          : api.get(path, opts),
+      put: (path: string) => (account(path) ? Promise.resolve(null) : api.put(path)),
+      patch: (path: string, opts?: unknown) =>
+        account(path) ? Promise.resolve(null) : api.patch(path, opts),
+    },
+  };
 });
 
 const def = getSynthDef('model-d');

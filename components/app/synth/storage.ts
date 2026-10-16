@@ -4,8 +4,8 @@
  * What the synth page keeps in browser storage for a visitor who is not signed in (plan §3 "Prototype state").
  *
  * The keys are the prototype's (`kys.*`), so nothing about them has to be explained twice. Everything read back is
- * outside data, so each value is checked on the way in and a bad one falls back to its default. Signed-in storage
- * is `f-my-sounds`.
+ * outside data, so each value is checked on the way in and a bad one falls back to its default. Signed in, the
+ * settings and each synth's panel are kept under the account as well (`account-storage.ts`, `settings.ts`).
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -17,6 +17,8 @@ import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
+import { useAccountPanel } from '@/components/app/synth/account-storage';
+import type { PanelPrefInput } from '@/lib/app/sounds/preference-data';
 
 export const STORAGE_KEYS = {
   /** The last synth opened: `/synths` reopens it. */
@@ -149,16 +151,30 @@ export function storedSession(s: Session): unknown {
   return { ...s, cables: s.cables.map((c) => [c.from, c.to]) };
 }
 
+/** A session as the account keeps it (`/api/v1/me/panels/:synthId`). */
+export function panelPrefOf(s: Session): PanelPrefInput {
+  return {
+    presetId: s.presetId,
+    step: s.step,
+    soundId: s.soundId,
+    panel: { values: s.values, cables: s.cables.map((c) => [c.from, c.to]) },
+  };
+}
+
 /** How long the panel must stay still before it is written to storage: a knob drag is many changes, not one. */
 export const SESSION_WRITE_DELAY_MS = 400;
 
 /**
  * One synth's session: starts at `fresh` (so server and client agree), then takes up what was stored for this synth
  * once mounted, and writes each change back after the panel has been still for {@link SESSION_WRITE_DELAY_MS}.
+ *
+ * Signed in, the account's last panel then replaces it, unless something has been moved meanwhile, and each change
+ * is kept in the account too, less often (`account-storage.ts`).
  */
 export function useStoredSession(
   def: SynthDef,
-  fresh: () => Session
+  fresh: () => Session,
+  signedIn = false
 ): [Session, (fn: (s: Session) => Session) => void] {
   const [session, setSession] = useState<Session>(fresh);
   const key = sessionKey(def.id);
@@ -169,8 +185,14 @@ export function useStoredSession(
   useEffect(() => {
     defRef.current = def;
   });
+  // Whether the browser had a panel for this synth, and whether anything has been moved on it since it opened: what
+  // the account's copy needs to know when it arrives.
+  const hadStored = useRef(false);
+  const touched = useRef(false);
   useEffect(() => {
     const stored = parseSession(defRef.current, readStored(key));
+    hadStored.current = stored !== null;
+    touched.current = false;
     if (stored) setSession(stored);
   }, [key]);
 
@@ -182,10 +204,29 @@ export function useStoredSession(
   useEffect(() => {
     latest.current = session;
   });
+  const toAccount = useRef(false);
   const update = useCallback((fn: (s: Session) => Session) => {
     dirty.current = true;
+    touched.current = true;
+    toAccount.current = true;
     setSession(fn);
   }, []);
+
+  const keepInAccount = useAccountPanel(def.id, signedIn, {
+    onArrive: (pref) => {
+      const restored = parseSession(defRef.current, pref);
+      if (restored) setSession(restored);
+    },
+    latest: () => panelPrefOf(latest.current),
+    touched: () => touched.current,
+    hadStored: () => hadStored.current,
+  });
+  // After `latest` has caught up with the change, so what is queued is the panel as it now is.
+  useEffect(() => {
+    if (!toAccount.current) return;
+    toAccount.current = false;
+    if (signedIn) keepInAccount();
+  }, [session, signedIn, keepInAccount]);
 
   useEffect(() => {
     if (!dirty.current) return undefined;
