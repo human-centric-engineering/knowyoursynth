@@ -16,7 +16,7 @@
  * What a unit test cannot prove, because it has no database, is in `npm run smoke:sounds`: the hand-written cascades
  * that erase both through `eraseUser`, and the export that carries them.
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import type { NextRequest } from 'next/server';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 
@@ -321,6 +321,41 @@ describe('favourites', () => {
       400, 400, 400, 400,
     ]);
     expect(favourites).toEqual([]);
+  });
+
+  it('return the star another request made first, when the create loses the race', async () => {
+    type Create = Mock<(args: { data: Row }) => Promise<Row>>;
+    const fav = mockPrisma.favourite as { create: Create };
+    const real = fav.create.getMockImplementation()!;
+    fav.create.mockImplementationOnce((args: { data: Row }) =>
+      // The other request's row lands, then this one's create hits the unique key.
+      real(args).then(() => {
+        throw Object.assign(new Error('Unique constraint failed'), { code: 'P2002' });
+      })
+    );
+    const res = await star({ kind: 'synth', synthId: 'model-d' });
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toMatchObject({ kind: 'synth', synthId: 'model-d' });
+    expect(favourites).toHaveLength(1);
+  });
+
+  it('fail on any other write error, rather than reporting a star that was not kept', async () => {
+    const fav = mockPrisma.favourite as { create: ReturnType<typeof vi.fn> };
+    fav.create.mockRejectedValueOnce(new Error('connection lost'));
+    const res = await star({ kind: 'synth', synthId: 'model-d' });
+    expect(res.status).toBe(500);
+    expect(favourites).toEqual([]);
+  });
+
+  it('show a star on a synth no longer listed as not available', async () => {
+    await star({ kind: 'synth', synthId: 'model-d' });
+    SYNTHS['model-d'].listed = false;
+    try {
+      const list = await json(await listFavourites(request('GET', '/api/v1/me/favourites')));
+      expect(list.data!.map((f: Row) => f.available)).toEqual([false]);
+    } finally {
+      SYNTHS['model-d'].listed = true;
+    }
   });
 
   it('are listed and removed by their owner only', async () => {
