@@ -14,11 +14,11 @@ import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
-import { UserSoundIdSchema } from '@/lib/app/sounds/data';
+import { SoundSlugSchema, UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
 import { useAccountPanel } from '@/components/app/synth/account-storage';
-import type { PanelPrefInput } from '@/lib/app/sounds/preference-data';
+import { MAX_STEP, type PanelPrefInput } from '@/lib/app/sounds/preference-data';
 
 export const STORAGE_KEYS = {
   /** The last synth opened: `/synths` reopens it. */
@@ -106,8 +106,18 @@ export interface Session {
 }
 
 const StoredSessionSchema = z.object({
-  presetId: z.string().nullable(),
-  step: z.number().int().min(0).nullable(),
+  // Held to what the account takes too, so a panel the page holds is one it can keep there: a sound id the library
+  // cannot have, or a step past any lesson, is dropped, not the panel with it.
+  presetId: z
+    .string()
+    .nullable()
+    .transform((id) => (id !== null && SoundSlugSchema.safeParse(id).success ? id : null)),
+  step: z
+    .number()
+    .int()
+    .min(0)
+    .nullable()
+    .transform((step) => (step !== null && step <= MAX_STEP ? step : null)),
   // Stored before `f-my-sounds` without it. One that is not a sound id is dropped, not the panel with it.
   soundId: UserSoundIdSchema.nullable().optional().catch(null),
   values: z.unknown(),
@@ -196,10 +206,6 @@ export function useStoredSession(
   const [session, setSession] = useState<Session>(fresh);
   const key = sessionKey(def.id);
   const signedIn = userId !== null;
-  const user = useRef(userId);
-  useEffect(() => {
-    user.current = userId;
-  });
 
   // Once per synth, not per definition object: a server re-render hands a new (equal) definition, and re-reading
   // storage then would put back a panel the write delay had not yet saved.
@@ -211,18 +217,21 @@ export function useStoredSession(
   // account's copy is weighed against when it arrives.
   const storedStamp = useRef<{ savedAt: number; owner: string | null | undefined } | null>(null);
   const movedAt = useRef<number | null>(null);
-  useEffect(() => {
-    const raw = readStored(key);
-    const stored = parseSession(defRef.current, raw);
+  const readStamp = useCallback((raw: unknown, stored: Session | null) => {
     const stamp = StoredStampSchema.safeParse(raw);
     storedStamp.current = stored && {
       // One stored without a time is older than anything the account has.
       savedAt: (stamp.success && stamp.data.savedAt) || 0,
       owner: stamp.success ? stamp.data.owner : undefined,
     };
+  }, []);
+  useEffect(() => {
+    const raw = readStored(key);
+    const stored = parseSession(defRef.current, raw);
+    readStamp(raw, stored);
     movedAt.current = null;
     if (stored) setSession(stored);
-  }, [key]);
+  }, [key, readStamp]);
 
   // Only a change the visitor made is written. The fresh panel and the restored one are not: writing either back
   // would race the restore, and React's development remount (or any unmount before the restore re-renders) would
@@ -239,18 +248,32 @@ export function useStoredSession(
     toAccount.current = true;
     setSession(fn);
   }, []);
+  const user = useRef(userId);
   const stamp = useCallback(
     (): PanelStamp => ({ savedAt: movedAt.current ?? Date.now(), owner: user.current }),
     []
   );
+  // A user signed out (or another signed in): what they moved is written as theirs, and is not the next one's to keep.
+  // Signing in after no one is not a change of hands: what was moved signed out is the newcomer's, as it always was.
+  useEffect(() => {
+    if (user.current === userId) return;
+    const left = user.current !== null;
+    if (left && dirty.current) writeStored(key, storedSession(latest.current, stamp()));
+    user.current = userId;
+    if (!left) return;
+    dirty.current = false;
+    toAccount.current = false;
+    movedAt.current = null;
+    const raw = readStored(key);
+    readStamp(raw, parseSession(defRef.current, raw));
+  }, [userId, key, stamp, readStamp]);
 
-  const keepInAccount = useAccountPanel(def.id, signedIn, {
-    onArrive: (pref) => {
+  const keepInAccount = useAccountPanel(def.id, userId, {
+    onArrive: (pref, savedAt) => {
       const restored = parseSession(defRef.current, pref);
       if (!restored) return;
       setSession(restored);
       // The browser keeps it too, so signed out (or with the account unread) the page reopens where they left off.
-      const savedAt = Date.parse(pref.updatedAt);
       storedStamp.current = { savedAt, owner: user.current };
       writeStored(key, storedSession(restored, { savedAt, owner: user.current }));
     },
@@ -274,7 +297,8 @@ export function useStoredSession(
   useEffect(() => {
     if (!dirty.current) return undefined;
     const t = setTimeout(() => {
-      writeStored(key, storedSession(session, stamp()));
+      // Unless a change of user has written it already.
+      if (dirty.current) writeStored(key, storedSession(session, stamp()));
       dirty.current = false;
     }, SESSION_WRITE_DELAY_MS);
     return () => clearTimeout(t);

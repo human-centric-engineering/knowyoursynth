@@ -160,6 +160,7 @@ describe('settings', () => {
       harm: null,
       fx: null,
       updatedAt: null,
+      now: expect.any(String),
     });
   });
 
@@ -175,6 +176,7 @@ describe('settings', () => {
       harm: null,
       fx,
       updatedAt: expect.any(String),
+      now: expect.any(String),
     };
     expect((await json(res)).data).toEqual(expected);
     expect((await json(await readSettings(request('GET', '/api/v1/me/settings')))).data).toEqual(
@@ -192,13 +194,14 @@ describe('settings', () => {
     expect(settings.client.findUnique).toHaveBeenLastCalledWith({ where: { userId: 'user-2' } });
   });
 
-  it('refuse an empty change, an unknown key and an out-of-range rack, storing nothing', async () => {
+  it('refuse an empty change, an unknown key and a rack that is out of range, partial or has more, storing nothing', async () => {
     const bad = [
       {},
       { tips: 'yes' },
       { scope: true },
       { fx: { ...FX_DEFAULT, reverb: { ...FX_DEFAULT.reverb, mix: 2 } } },
       { fx: { on: true } },
+      { fx: { ...FX_DEFAULT, flanger: { on: true } } },
     ];
     for (const body of bad) {
       const res = await changeSettings(request('PATCH', '/api/v1/me/settings', body));
@@ -230,7 +233,8 @@ describe('the last panel', () => {
   it('is null on a synth the caller has not played', async () => {
     const res = await readPanel(request('GET', '/api/v1/me/panels/model-d'), ctx('model-d'));
     expect(res.status).toBe(200);
-    expect((await json(res)).data).toBeNull();
+    // With the server's time, which the page weighs a panel's `updatedAt` against.
+    expect((await json(res)).data).toEqual({ panel: null, now: expect.any(String) });
   });
 
   it('is kept under the caller on the current definition version, and read back fitted to the synth', async () => {
@@ -251,14 +255,16 @@ describe('the last panel', () => {
       await readPanel(request('GET', '/api/v1/me/panels/model-d'), ctx('model-d'))
     );
     // Every control the panel did not name takes its init, as the page's own copy does.
-    expect(data).toMatchObject({
-      synthId: 'model-d',
-      presetId: 'stacked-night-bass',
-      step: 2,
-      soundId: 'cmmine1',
-      values: { ...modelD.init, [cont.id]: cont.min },
-      cables: panel.cables,
-    });
+    expect(data?.panel).toEqual(
+      expect.objectContaining({
+        synthId: 'model-d',
+        presetId: 'stacked-night-bass',
+        step: 2,
+        soundId: 'cmmine1',
+        values: { ...modelD.init, [cont.id]: cont.min },
+        cables: panel.cables,
+      })
+    );
   });
 
   it('is replaced by the next one, not added to', async () => {
@@ -275,7 +281,7 @@ describe('the last panel', () => {
     const { data } = await json(
       await readPanel(request('GET', '/api/v1/me/panels/model-d'), ctx('model-d'))
     );
-    expect(data).toBeNull();
+    expect(data?.panel).toBeNull();
   });
 
   it("keeps the panel but not a sound that is not the caller's", async () => {
@@ -305,8 +311,9 @@ describe('the last panel', () => {
     const { data } = await json(
       await readPanel(request('GET', '/api/v1/me/panels/model-d'), ctx('model-d'))
     );
-    expect(data?.values).toEqual({ ...modelD.init, [cont.id]: cont.max });
-    expect(data?.cables).toEqual([]);
+    expect(data?.panel).toEqual(
+      expect.objectContaining({ values: { ...modelD.init, [cont.id]: cont.max }, cables: [] })
+    );
   });
 
   it('refuses a panel that does not fit, naming the problem, and stores nothing', async () => {

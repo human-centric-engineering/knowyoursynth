@@ -110,9 +110,12 @@ so the plan's "scope" has no row.
   null column is a setting the account has no value for yet.
 - **The API** (`app/api/v1/me/`; rules in `lib/app/sounds/preferences.ts`, shapes in
   `preference-data.ts`, tested in `tests/unit/app/api/v1/me/route.test.ts`):
-  - `GET`/`PATCH /api/v1/me/settings`. `PATCH` takes the settings that changed. It is not
+  - `GET`/`PATCH /api/v1/me/settings`. `PATCH` takes the settings that changed; its `fx` must be
+    exactly what `normalizeFx` returns (every field, in range, nothing more), checked against
+    `normalizeFx` itself, so a field added to the rack needs no schema change. It is not
     `/api/v1/users/me/preferences`, which is the platform's.
-  - `GET`/`PUT /api/v1/me/panels/:synthId`. `GET` is `null` when there is none. `PUT` is checked
+  - `GET`/`PUT /api/v1/me/panels/:synthId`. `GET` is `{ panel, now }`, `panel` being `null` when
+    there is none. Both `GET`s carry `now`, the server's time as it answered. `PUT` is checked
     with `validateSound` and refused when anything is wrong, as a saved sound is; only a listed
     synth takes one. A `soundId` that is not the caller's own is kept as `null`. `GET` fits the stored panel to the synth as it is now (values clamped, what it
     no longer has dropped), as the page fits its own copy: it is only where the user left off.
@@ -128,20 +131,30 @@ so the plan's "scope" has no row.
   - Settings work the same way, as one set: `kys.settingsAt` is when they were last changed and
     `kys.settingsBy` who was signed in then. The browser's fill what the account has no value for,
     and replace what it has when they are newer; the account's are written back to the browser.
-    Settings last changed while another user was signed in are never sent. `GET
+    Settings last changed while another user was signed in are never sent, and where the account
+    has no value the browser goes back to the default rather than showing theirs. `GET
 /api/v1/me/settings` returns `updatedAt` for the comparison.
+  - **One clock.** Each answer carries the server's time (`now`), and the page turns the account's
+    `updatedAt` into its own clock's time (`skewOf`) before comparing, and stores it that way. So a
+    device whose clock is off still weighs the two copies correctly.
+  - **Another user.** When one user signs out, or another signs in without a reload, what is
+    waiting to be sent is dropped, not sent to whoever is signed in next, and the next user's panel
+    and settings are read. A panel moved by the user who left is stored as theirs.
+  - The page reads both answers through Zod schemas (`AccountSettingsSchema`,
+    `PanelPrefReadSchema`), and treats one that does not fit as an account it could not read.
+  - A stored panel is held to what `PUT` takes: a `presetId` that is not a library slug, or a step
+    past `MAX_STEP`, is dropped on reading, so the panel itself can always be kept.
   - A change made before the account answered beats both, including one made before the session
     said who is signed in. If the account cannot be read, nothing is sent to it that visit, so an
     older panel never overwrites a newer one.
-  - The times compared come from two clocks, the browser's and the server's, and measure
-    different moments: the browser's is when the change was made, the account's when its request
-    landed (5–30 s later). So when two devices change the same thing within seconds of each
-    other, or a clock is skewed, the wrong copy can win.
+  - The times compared measure different moments: the browser's is when the change was made, the
+    account's when its request landed (5–30 s later). So when two devices change the same thing
+    within seconds of each other, the wrong copy can win.
   - **The account is written less often than the browser.** The browser is written 400 ms after the
     panel goes still, which sent to the server would pass the section's 100 a minute during play.
     The account copy goes 5 s after changes stop, and at least every 30 s while they keep coming:
     at most 12 a minute from each writer. Leaving the page, or moving to another synth, sends what
-    is waiting with `keepalive`.
+    is waiting with `keepalive`; signing out drops it.
 - Signed out, none of this runs.
 
 `npm run smoke:sounds` also proves the two tables' cascades through `eraseUser()` and their export

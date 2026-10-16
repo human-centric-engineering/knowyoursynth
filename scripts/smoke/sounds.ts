@@ -111,7 +111,7 @@ async function main(): Promise<void> {
     await updateSettings(subject.id, { dim: true });
     await updateSettings(subject.id, { harm: true });
     await updateSettings(other.id, { dim: false });
-    const pref = await getPanelPref(subject.id, 'model-d');
+    const { panel: pref } = await getPanelPref(subject.id, 'model-d');
     check(
       pref?.step === 2 && pref.soundId === copy.id && pref.values[cont.id] === cont.min,
       'a last panel reads back as last kept, replacing the one before'

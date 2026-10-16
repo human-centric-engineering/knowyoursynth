@@ -3,7 +3,8 @@
  * strip and the effects rack, kept under the account.
  *
  * GET   /api/v1/me/settings — every setting; `null` for one the account has no value for yet. With `updatedAt`, when
- *       they were last changed (`null` before the first), which the page weighs against the browser's copy.
+ *       they were last changed (`null` before the first), which the page weighs against the browser's copy; and `now`,
+ *       the server's time, so it can do that with its own clock off.
  * PATCH /api/v1/me/settings — `{ tips?, dim?, heat?, harm?, fx? }`: the ones that changed. Returns them all.
  *
  * Not `/api/v1/users/me/preferences`, which is the platform's (email and notification preferences). The section rate

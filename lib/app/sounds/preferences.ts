@@ -21,6 +21,7 @@ import type {
   AccountSettings,
   PanelPref,
   PanelPrefInput,
+  PanelPrefRead,
   SettingsPatch,
 } from '@/lib/app/sounds/preference-data';
 
@@ -33,6 +34,7 @@ function toSettings(row: UserPreference | null): AccountSettings {
     // Checked field by field on the way out, as the page checks the browser's copy.
     fx: row?.fx == null ? null : normalizeFx(row.fx),
     updatedAt: row ? row.updatedAt.toISOString() : null,
+    now: new Date().toISOString(),
   };
 }
 
@@ -75,12 +77,15 @@ function toPanelPref(row: SynthPreference): PanelPref | null {
   };
 }
 
-/** The caller's last panel on one synth, or `null` when they have none there (or the app no longer plays it). */
-export async function getPanelPref(userId: string, synthId: string): Promise<PanelPref | null> {
+/**
+ * The caller's last panel on one synth, or `null` when they have none there (or the app no longer plays it), with the
+ * server's time to weigh it against the page's clock.
+ */
+export async function getPanelPref(userId: string, synthId: string): Promise<PanelPrefRead> {
   const row = await prisma.synthPreference.findUnique({
     where: { userId_synthId: { userId, synthId } },
   });
-  return row ? toPanelPref(row) : null;
+  return { panel: row ? toPanelPref(row) : null, now: new Date().toISOString() };
 }
 
 /**

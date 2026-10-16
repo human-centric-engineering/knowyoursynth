@@ -2,7 +2,8 @@
  * The signed-in user's last panel on one synth (`f-my-sounds` s3): the sound and lesson step it came from, their own
  * sound if one was open, and the controls and cables as they were left.
  *
- * GET /api/v1/me/panels/:synthId — the panel, fitted to the synth as it is now, or `null` when there is none.
+ * GET /api/v1/me/panels/:synthId — `{ panel, now }`: the panel, fitted to the synth as it is now, or `null` when there
+ *     is none; and the server's time, which the page weighs the panel's `updatedAt` against.
  * PUT /api/v1/me/panels/:synthId — `{ presetId, step, soundId, panel: { values, cables } }`. The panel is checked
  *     against the synth's definition and refused (400) when anything in it is wrong.
  *

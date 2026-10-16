@@ -11,7 +11,9 @@
  *   browser's; a restored panel is written to the browser too;
  * - where the account has nothing yet, the browser's fills it, once; a change made before the account answered wins,
  *   including one made before the session said who is signed in;
- * - a panel or settings another user left in the browser are never sent to this one's account;
+ * - a panel or settings another user left in the browser are never sent to this one's account, nor shown as theirs;
+ *   and when one user gives way to another without a reload, the next one's are read and nothing waiting goes to them;
+ * - the two copies are weighed on the server's clock, however far the device's is off;
  * - the account is written after the panel goes still, never at the browser's pace: continuous play stays well under
  *   the section's 100 a minute, and leaving the page sends what is waiting with `keepalive`.
  *
@@ -41,7 +43,7 @@ const { router, engine, auth, api } = vi.hoisted(() => ({
     suspend: vi.fn(),
     running: false,
   },
-  auth: { signedIn: false, pending: false },
+  auth: { signedIn: false, pending: false, userId: 'user-1' },
   api: { get: vi.fn(), post: vi.fn(), put: vi.fn(), patch: vi.fn(), delete: vi.fn() },
 }));
 
@@ -52,7 +54,7 @@ vi.mock('@/components/app/synth/engine', () => ({
 }));
 vi.mock('@/lib/auth/client', () => ({
   useSession: () => ({
-    data: auth.signedIn ? { user: { id: 'user-1' }, session: { id: 's-1' } } : null,
+    data: auth.signedIn ? { user: { id: auth.userId }, session: { id: 's-1' } } : null,
     isPending: auth.pending,
   }),
 }));
@@ -116,7 +118,10 @@ const SESSION_KEY = 'kys.session.model-d';
 const PANEL_PATH = '/api/v1/me/panels/model-d';
 const SETTINGS_PATH = '/api/v1/me/settings';
 
-const NO_SETTINGS: AccountSettings = {
+/** The account's settings as kept; the route adds the server's time as it answers ({@link served}). */
+type KeptSettings = Omit<AccountSettings, 'now'>;
+
+const NO_SETTINGS: KeptSettings = {
   tips: null,
   dim: null,
   heat: null,
@@ -127,7 +132,17 @@ const NO_SETTINGS: AccountSettings = {
 const KEPT_AT = '2026-10-16T08:00:00.000Z';
 
 /** What the account holds, as the API serves it. `null` panel: none kept on Model D yet. */
-let account: { settings: AccountSettings; panel: PanelPref | null };
+let account: { settings: KeptSettings; panel: PanelPref | null };
+
+/** How far the server's clock is ahead of the page's (ms). */
+let serverAhead = 0;
+const serverNow = () => new Date(Date.now() + serverAhead).toISOString();
+
+/** What each route answers with: what is kept, and the server's time. */
+const served = {
+  settings: (s: KeptSettings): AccountSettings => ({ ...s, now: serverNow() }),
+  panel: (panel: PanelPref | null) => ({ panel, now: serverNow() }),
+};
 
 const accountPanel = (cutoff: number): PanelPref => ({
   synthId: 'model-d',
@@ -171,11 +186,13 @@ beforeEach(() => {
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = false;
   auth.pending = false;
+  auth.userId = 'user-1';
+  serverAhead = 0;
   for (const f of Object.values(api)) f.mockReset();
   account = { settings: { ...NO_SETTINGS }, panel: null };
   api.get.mockImplementation(async (path: string) => {
-    if (path === SETTINGS_PATH) return account.settings;
-    if (path === PANEL_PATH) return account.panel;
+    if (path === SETTINGS_PATH) return served.settings(account.settings);
+    if (path === PANEL_PATH) return served.panel(account.panel);
     if (path === '/api/v1/sounds') return [];
     throw new Error(`unexpected GET ${path}`);
   });
@@ -230,6 +247,7 @@ describe('signed in, opening a synth', () => {
   });
 
   it("restores the account's last panel over the browser's", async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
     storeLocal(SESSION_KEY, {
       presetId: 'fat-bass',
       step: null,
@@ -238,7 +256,8 @@ describe('signed in, opening a synth', () => {
     });
     account.panel = accountPanel(-4);
     page();
-    await waitFor(() => expect(cutoff()).toBe('-4'));
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe('-4');
     // Restoring is not a change: nothing is written back.
     expect(api.put).not.toHaveBeenCalled();
     // The browser keeps it too, stamped with the account's time, so signed out the page reopens it.
@@ -280,9 +299,11 @@ describe('signed in, opening a synth', () => {
   });
 
   it("writes the account's settings to the browser, stamped with the account's time", async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
     account.settings = { ...NO_SETTINGS, dim: true, updatedAt: KEPT_AT };
     page();
-    await waitFor(() => expect(pressed('Dim unused parts')).toBe('true'));
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(pressed('Dim unused parts')).toBe('true');
     expect(readStored('kys.dim')).toBe(true);
     expect(readStored('kys.settingsAt')).toBe(Date.parse(KEPT_AT));
     expect(readStored('kys.settingsBy')).toBe('user-1');
@@ -388,13 +409,13 @@ describe('signed in, opening a synth', () => {
 
   it('keeps a change made before the account answered, over what it says', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
-    let answer: (s: AccountSettings) => void = () => undefined;
+    let answer: (s: KeptSettings) => void = () => undefined;
     api.get.mockImplementation(async (path: string) => {
       if (path === SETTINGS_PATH)
-        return new Promise<AccountSettings>((r) => {
-          answer = r;
+        return new Promise((r) => {
+          answer = (kept) => r(served.settings(kept));
         });
-      if (path === PANEL_PATH) return null;
+      if (path === PANEL_PATH) return served.panel(null);
       return [];
     });
     page();
@@ -414,10 +435,10 @@ describe('signed in, opening a synth', () => {
     let answer: (p: PanelPref) => void = () => undefined;
     api.get.mockImplementation(async (path: string) => {
       if (path === PANEL_PATH)
-        return new Promise<PanelPref>((r) => {
-          answer = r;
+        return new Promise((r) => {
+          answer = (p) => r(served.panel(p));
         });
-      if (path === SETTINGS_PATH) return NO_SETTINGS;
+      if (path === SETTINGS_PATH) return served.settings(NO_SETTINGS);
       return [];
     });
     page();
@@ -472,6 +493,9 @@ describe('signed in, writing to the account', () => {
     expect(cutoff()).toBe('0');
   });
 
+  /** Minutes of play, each move rendered: slow on a loaded machine, so given room. */
+  const PLAY_TIMEOUT_MS = 90_000;
+
   /** Move the cutoff once every `everyMs` for `minutes`, counting the account writes in each whole minute. */
   async function play(everyMs: number, minutes: number): Promise<number[]> {
     const at: number[] = [];
@@ -502,27 +526,35 @@ describe('signed in, writing to the account', () => {
     });
   });
 
-  it('stays far under the section cap during continuous play, and still keeps the panel every so often', async () => {
-    // A knob moved twice a second for two minutes: slow enough that the browser is written after every move (its
-    // delay is 400 ms), which sent to the server would be 120 a minute, over the section's 100.
-    const browserWrites = vi.spyOn(window.localStorage, 'setItem');
-    const perMinute = await play(500, 2);
-    expect(browserWrites.mock.calls.filter((c) => c[0] === SESSION_KEY).length).toBeGreaterThan(
-      200
-    );
-    expect(perMinute).toHaveLength(2);
-    // The account is written only when the max wait runs out: twice a minute, and well under the cap.
-    for (const n of perMinute) expect(n).toBeLessThanOrEqual(12);
-    expect(perMinute.every((n) => n > 0)).toBe(true);
-  });
+  it(
+    'stays far under the section cap during continuous play, and still keeps the panel every so often',
+    async () => {
+      // A knob moved twice a second for two minutes: slow enough that the browser is written after every move (its
+      // delay is 400 ms), which sent to the server would be 120 a minute, over the section's 100.
+      const browserWrites = vi.spyOn(window.localStorage, 'setItem');
+      const perMinute = await play(500, 2);
+      expect(browserWrites.mock.calls.filter((c) => c[0] === SESSION_KEY).length).toBeGreaterThan(
+        200
+      );
+      expect(perMinute).toHaveLength(2);
+      // The account is written only when the max wait runs out: twice a minute, and well under the cap.
+      for (const n of perMinute) expect(n).toBeLessThanOrEqual(12);
+      expect(perMinute.every((n) => n > 0)).toBe(true);
+    },
+    PLAY_TIMEOUT_MS
+  );
 
-  it('never writes more than once per delay, even when play pauses just long enough each time', async () => {
-    // One move, then still for just over the delay: the most writes the delay allows.
-    const perMinute = await play(ACCOUNT_WRITE_DELAY_MS + 10, 3);
-    for (const n of perMinute) expect(n).toBeLessThanOrEqual(12);
-    // Every pause did send: the bound is the delay doing its work, not writes going missing.
-    expect(perMinute.reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(30);
-  });
+  it(
+    'never writes more than once per delay, even when play pauses just long enough each time',
+    async () => {
+      // One move, then still for just over the delay: the most writes the delay allows.
+      const perMinute = await play(ACCOUNT_WRITE_DELAY_MS + 10, 3);
+      for (const n of perMinute) expect(n).toBeLessThanOrEqual(12);
+      // Every pause did send: the bound is the delay doing its work, not writes going missing.
+      expect(perMinute.reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(30);
+    },
+    PLAY_TIMEOUT_MS
+  );
 
   it('sends a setting after the same delay, gathering changes made meanwhile into one', async () => {
     fireEvent.click(screen.getByRole('button', { name: 'Dim unused parts' }));
@@ -552,5 +584,107 @@ describe('signed in, writing to the account', () => {
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS));
     expect(panelPuts()).toHaveLength(1);
     expect(settingsPatches()).toHaveLength(1);
+  });
+});
+
+// ── another user, another clock, an older panel, a bad answer ───────────────
+
+describe('signed in, guarding the account', () => {
+  beforeEach(() => {
+    auth.signedIn = true;
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+  });
+
+  it('shows the defaults, not settings another user left, where the account has none; and never sends theirs', async () => {
+    storeLocal('kys.heat', true);
+    storeLocal('kys.settingsBy', 'user-2');
+    storeLocal('kys.settingsAt', Date.parse('2026-10-16T09:00:00.000Z'));
+    const { unmount } = page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(pressed('Show sensitive controls')).toBe('false');
+    expect(readStored('kys.heat')).toBe(false);
+    expect(readStored('kys.settingsBy')).toBe('user-1');
+    unmount();
+
+    // The next visit: the browser is now this user's, and holds nothing of the other's to send.
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    for (const [, req] of settingsPatches())
+      expect(req).not.toMatchObject({ body: { heat: true } });
+  });
+
+  it('reads the next user’s panel when one user gives way to another, and sends nothing of the first’s to them', async () => {
+    account.panel = accountPanel(0);
+    const { rerender } = page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(accountGets().filter((p) => p === PANEL_PATH)).toHaveLength(1);
+    // A moves the panel and flips a setting, then signs out before either is sent.
+    fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
+    fireEvent.click(screen.getByRole('button', { name: 'Dim unused parts' }));
+    auth.signedIn = false;
+    rerender(synthPage());
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+
+    auth.signedIn = true;
+    auth.userId = 'user-2';
+    account.panel = accountPanel(-4);
+    rerender(synthPage());
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(accountGets().filter((p) => p === PANEL_PATH)).toHaveLength(2);
+    expect(cutoff()).toBe('-4');
+
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(api.put).not.toHaveBeenCalled();
+    expect(api.patch).not.toHaveBeenCalled();
+  });
+
+  it('weighs the panels on the server’s clock when the device’s runs fast', async () => {
+    // The account's was kept at 08:00; the browser's was left at 07:57, both by the server's clock. The device runs ten
+    // minutes fast, so it stamped its panel 08:07, which taken as it is would look the newer.
+    vi.setSystemTime(Date.parse('2026-10-16T08:12:00.000Z'));
+    serverAhead = -10 * 60_000;
+    storeLocal(SESSION_KEY, browserPanel(3, '2026-10-16T08:07:00.000Z', 'user-1'));
+    account.panel = accountPanel(-4);
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe('-4');
+    // Stored back on the device's clock, so the next visit weighs it the same way.
+    expect(readStored(SESSION_KEY)).toMatchObject({
+      savedAt: Date.parse('2026-10-16T08:10:00.000Z'),
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(api.put).not.toHaveBeenCalled();
+  });
+
+  it('keeps a stored panel the account would refuse as it stands, without what it would refuse', async () => {
+    storeLocal(SESSION_KEY, {
+      ...browserPanel(3, '2026-10-16T09:00:00.000Z', 'user-1'),
+      presetId: 'Old_Preset',
+      step: 5000,
+    });
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).toBe('3');
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_DELAY_MS + 1));
+    expect(panelPuts()).toHaveLength(1);
+    expect(panelPuts()[0][1]).toMatchObject({ body: { presetId: null, step: null } });
+  });
+
+  it('takes nothing from, and sends nothing to, an account whose answer is not what it should be', async () => {
+    api.get.mockImplementation(async (path: string) => {
+      if (path === SETTINGS_PATH)
+        return { ...served.settings(NO_SETTINGS), updatedAt: 'yesterday' };
+      if (path === PANEL_PATH) return { panel: { ...accountPanel(-4), updatedAt: 'yesterday' } };
+      return [];
+    });
+    storeLocal('kys.dim', true);
+    page();
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(cutoff()).not.toBe('-4');
+    fireEvent.keyDown(cutoffSlider(), { key: 'ArrowUp' });
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(api.put).not.toHaveBeenCalled();
+    expect(api.patch).not.toHaveBeenCalled();
+    expect(readStored('kys.dim')).toBe(true);
   });
 });
