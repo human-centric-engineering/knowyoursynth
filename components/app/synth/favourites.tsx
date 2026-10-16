@@ -4,13 +4,13 @@
  * A signed-in user's favourites on the synth page (`f-my-sounds` s4): the stars on the synth picker, the library and
  * My sounds. Read once from `GET /api/v1/me/favourites`, then kept in step with each star added or removed.
  *
- * A star changes at once and is put back if the request fails. While one is on its way, pressing it again does
+ * A star changes at once and is put back if the request fails, unless it was already gone. While one is on its way, pressing it again does
  * nothing, so a quick double press cannot leave two requests racing.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
-import { apiClient } from '@/lib/api/client';
+import { APIClientError, apiClient } from '@/lib/api/client';
 import { FavouriteReadSchema } from '@/lib/app/sounds/favourite-data';
 import type { FavouriteInput, FavouriteRead } from '@/lib/app/sounds/favourite-data';
 
@@ -81,7 +81,11 @@ export function useFavourites(userId: string | null): Favourites {
       set((m) => m.delete(key));
       apiClient
         .delete(`/api/v1/me/favourites/${encodeURIComponent(id)}`)
-        .catch(() => set((m) => m.set(key, id)))
+        .catch((err: unknown) => {
+          // Already gone, removed in another tab or on another device: off is what was wanted.
+          if (err instanceof APIClientError && err.status === 404) return;
+          set((m) => m.set(key, id));
+        })
         .finally(done);
       return;
     }

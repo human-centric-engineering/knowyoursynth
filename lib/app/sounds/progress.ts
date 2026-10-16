@@ -9,11 +9,12 @@
  * is a conditional update, so two devices writing at once cannot move it back.
  *
  * **Only a lesson the user can see.** The synth has to be listed and the app able to play it, and the step has to be
- * one the lesson has, or the write is refused (400) and nothing is stored.
+ * one the lesson has, or the write is refused (400) and nothing is stored. A finish has to come from the last step.
  */
 import { prisma } from '@/lib/db/client';
 import { ValidationError } from '@/lib/api/errors';
 import { playableSynth } from '@/lib/app/sounds/store';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import type { LessonProgressEntry, ProgressInput } from '@/lib/app/sounds/progress-data';
 
 /** How many steps a library sound's lesson has. `steps` is the catalogue's checked `PresetStep[]`. */
@@ -47,7 +48,8 @@ function toEntry(row: {
     furthestStep: row.furthestStep,
     completedAt: row.completedAt?.toISOString() ?? null,
     updatedAt: row.updatedAt.toISOString(),
-    available: row.sound.synth.listed,
+    // As the catalogue serves a synth: listed, with a definition to play it.
+    available: row.sound.synth.listed && getSynthDef(row.sound.synthId) !== null,
   };
 }
 
@@ -93,13 +95,17 @@ export async function recordProgress(
     throw new ValidationError(`${slug} has ${n} steps`, {
       errors: [{ path: 'step', message: `The lesson has ${n} steps, counted from 0` }],
     });
+  if (input.completed && input.step !== n - 1)
+    throw new ValidationError(`${slug} is finished from its last step`, {
+      errors: [{ path: 'completed', message: `A lesson is finished from its last step, ${n - 1}` }],
+    });
 
   const key = { userId, soundId: sound.id };
   const now = new Date();
-  await prisma.lessonProgress.upsert({
-    where: { userId_soundId: key },
-    create: { ...key, furthestStep: input.step, completedAt: input.completed ? now : null },
-    update: {},
+  // The first record of this lesson; one already there is left alone, so its `updatedAt` moves only when it does.
+  await prisma.lessonProgress.createMany({
+    data: [{ ...key, furthestStep: input.step, completedAt: input.completed ? now : null }],
+    skipDuplicates: true,
   });
   // Forward only, each a condition the database checks, so a slower request for an earlier step cannot undo a later one.
   await prisma.lessonProgress.updateMany({

@@ -50,9 +50,12 @@ export function useLessonProgress(synthId: string, userId: string | null): Lesso
   // Read by `record`, so a step taken twice before a render is sent once.
   const known = useRef(new Map<string, LessonMark>());
   const owner = useRef(userId);
+  // Moves on with the synth or the user, so a request answered after either changed is not written into the new marks.
+  const epoch = useRef(0);
 
   useEffect(() => {
     owner.current = userId;
+    epoch.current++;
     known.current = new Map();
     setMarks(null);
     if (!userId) return undefined;
@@ -80,6 +83,7 @@ export function useLessonProgress(synthId: string, userId: string | null): Lesso
     (slug: string, step: number, completed = false) => {
       const user = owner.current;
       if (!user) return;
+      const at = epoch.current;
       const before = known.current.get(slug);
       const next = further(before, { furthestStep: step, completed });
       if (
@@ -97,14 +101,14 @@ export function useLessonProgress(synthId: string, userId: string | null): Lesso
         )
         .then((raw) => {
           const e = LessonProgressReadSchema.safeParse(raw);
-          if (!e.success || owner.current !== user) return;
+          if (!e.success || epoch.current !== at) return;
           known.current.set(slug, further(known.current.get(slug), markOf(e.data)));
           setMarks(new Map(known.current));
         })
         .catch(() => {
           // Not kept: forget it, so the next step that reaches as far sends it again. A later step that has moved it on
           // since is its own request, and stands.
-          if (owner.current !== user || known.current.get(slug) !== next) return;
+          if (epoch.current !== at || known.current.get(slug) !== next) return;
           if (before) known.current.set(slug, before);
           else known.current.delete(slug);
           setMarks(new Map(known.current));

@@ -76,10 +76,11 @@ async function json(res: Response) {
   };
 }
 
-// ── the catalogue: model-d is listed, minimoog is not ──
+// ── the catalogue: model-d is listed, minimoog is not, and ghost is listed with no definition to play it ──
 const SYNTHS: Record<string, { id: string; name: string; listed: boolean }> = {
   'model-d': { id: 'model-d', name: 'Model D', listed: true },
   minimoog: { id: 'minimoog', name: 'Minimoog', listed: false },
+  ghost: { id: 'ghost', name: 'Ghost', listed: true },
 };
 const SOUNDS = [
   {
@@ -91,6 +92,7 @@ const SOUNDS = [
   },
   { id: 'ss-lead', synthId: 'model-d', slug: 'lead', name: 'Lead', steps: [1, 2] },
   { id: 'ss-mini', synthId: 'minimoog', slug: 'hidden', name: 'Hidden', steps: [1, 2] },
+  { id: 'ss-ghost', synthId: 'ghost', slug: 'gone', name: 'Gone', steps: [1, 2] },
 ];
 // user-1 owns cmmine1; user-2 owns cmtheirs.
 const USER_SOUNDS = [
@@ -143,14 +145,15 @@ beforeEach(() => {
     findMany: vi.fn(async ({ where }: { where: Row }) =>
       progress.filter((r) => matches(r, where)).map(progressView)
     ),
-    upsert: vi.fn(async ({ where, create }: { where: Row; create: Row }) => {
-      let row = findP(where);
-      if (!row) {
-        row = { ...create, createdAt: new Date(), updatedAt: new Date() };
-        progress.push(row);
+    // Only `skipDuplicates: true` is supported: a row already there is left exactly as it was.
+    createMany: vi.fn(
+      async ({ data, skipDuplicates }: { data: Row[]; skipDuplicates: boolean }) => {
+        if (!skipDuplicates) throw new Error('createMany without skipDuplicates');
+        const fresh = data.filter((d) => !findP({ userId_soundId: d }));
+        fresh.forEach((d) => progress.push({ ...d, createdAt: new Date(), updatedAt: new Date() }));
+        return { count: fresh.length };
       }
-      return { ...row };
-    }),
+    ),
     updateMany: vi.fn(async ({ where, data }: { where: Row; data: Row }) => {
       const hit = progress.filter((r) => matches(r, where));
       hit.forEach((r) => Object.assign(r, data, { updatedAt: new Date() }));
@@ -270,16 +273,35 @@ describe('lesson progress', () => {
     );
   });
 
-  it('refuses a step past the lesson, an unknown sound, an unlisted synth and a bad body, storing nothing', async () => {
+  it('reads a lesson on a listed synth with no definition as unavailable, as the catalogue does', async () => {
+    progress.push({
+      userId: 'user-1',
+      soundId: 'ss-ghost',
+      furthestStep: 0,
+      completedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    await step('lead', { step: 0 });
+    const list = await json(await listProgress(request('GET', '/api/v1/me/progress')));
+    expect(
+      Object.fromEntries(
+        list.data!.map((e: Row) => [`${String(e.synthId)}/${String(e.slug)}`, e.available])
+      )
+    ).toEqual({ 'ghost/gone': false, 'model-d/lead': true });
+  });
+
+  it('refuses a step past the lesson, a finish short of the last step, an unknown sound, an unlisted synth and a bad body, storing nothing', async () => {
     const refused = [
       await step('lead', { step: 2 }),
+      await step('lead', { step: 0, completed: true }),
       await step('no-such-sound', { step: 0 }),
       await step('hidden', { step: 0 }, 'minimoog'),
       await step('lead', { step: -1 }),
       await step('lead', { step: 0, extra: true }),
       await step('BAD SLUG', { step: 0 }),
     ];
-    expect(refused.map((r) => r.status)).toEqual([400, 400, 400, 400, 400, 400]);
+    expect(refused.map((r) => r.status)).toEqual([400, 400, 400, 400, 400, 400, 400]);
     expect(progress).toEqual([]);
   });
 });
@@ -356,6 +378,21 @@ describe('favourites', () => {
     } finally {
       SYNTHS['model-d'].listed = true;
     }
+  });
+
+  it('show a star on a listed synth with no definition as not available, as the catalogue does', async () => {
+    const at = new Date();
+    favourites.push(
+      { id: 'cmfavg1', userId: 'user-1', synthId: 'ghost', createdAt: at },
+      { id: 'cmfavg2', userId: 'user-1', synthSoundId: 'ss-ghost', createdAt: at }
+    );
+    await star({ kind: 'synth', synthId: 'model-d' });
+    const list = await json(await listFavourites(request('GET', '/api/v1/me/favourites')));
+    expect(
+      Object.fromEntries(
+        list.data!.map((f: Row) => [`${String(f.kind)}:${String(f.synthId)}`, f.available])
+      )
+    ).toEqual({ 'synth:ghost': false, 'sound:ghost': false, 'synth:model-d': true });
   });
 
   it('are listed and removed by their owner only', async () => {

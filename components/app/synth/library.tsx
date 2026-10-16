@@ -45,9 +45,13 @@ export interface LibraryProps {
   onStar?: (id: string) => void;
 }
 
+/** The furthest step reached, from 0, within the lesson as it is now: one cut shorter since leaves it at the last. */
+export const reachedStep = (mark: LessonMark, steps: number): number =>
+  Math.min(mark.furthestStep, steps - 1);
+
 /** How far the user has got through a lesson, in a few words. */
 export function markText(mark: LessonMark, steps: number): string {
-  return mark.completed ? 'Finished' : `Reached step ${mark.furthestStep + 1} of ${steps}`;
+  return mark.completed ? 'Finished' : `Reached step ${reachedStep(mark, steps) + 1} of ${steps}`;
 }
 
 export function Library({

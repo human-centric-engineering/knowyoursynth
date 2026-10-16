@@ -19,7 +19,7 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 import { focusStore, highlightStore } from '@/components/app/synth/stores';
-import { LevelDots, markText } from '@/components/app/synth/library';
+import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 
 /** The controls and jacks a step touches, for the panel highlight. */
@@ -479,13 +479,13 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
                 ? '✓ You finished this lesson'
                 : `You ${markText(mark, n).toLowerCase()}`}
             </span>
-            {!mark.completed && !walking && mark.furthestStep < n && (
+            {!mark.completed && !walking && (
               <button
                 type="button"
-                onClick={() => onStep(mark.furthestStep)}
+                onClick={() => onStep(reachedStep(mark, n))}
                 className="text-(--kys-accent) underline underline-offset-2"
               >
-                Continue from step {mark.furthestStep + 1}
+                Continue from step {reachedStep(mark, n) + 1}
               </button>
             )}
           </p>

@@ -180,11 +180,12 @@ and a star on a synth, a library sound or one of their own sounds. Signed out, n
   in `progress-data.ts` and `favourite-data.ts`, tested in
   `tests/unit/app/api/v1/me/progress-favourites.test.ts`):
   - `GET /api/v1/me/progress[?synthId=]`: the lessons the caller has started, most recently moved
-    first, with each one's step count and whether its synth is listed.
+    first, with each one's step count and whether its synth is available (listed, with a definition).
   - `PUT /api/v1/me/progress/:synthId/:slug`: `{ step, completed? }`. **Forward only**: a step
     behind the furthest changes nothing and a finish is kept, each a conditional update so a
-    request that lands late cannot move it back. A synth that is not listed, a library sound it
-    does not have, or a step its lesson does not have is a 400.
+    request that lands late cannot move it back; a step behind leaves `updatedAt` alone too. A
+    synth that is not listed, a library sound it does not have, a step its lesson does not have, or
+    a finish from any step but the last is a 400.
   - `GET`/`POST /api/v1/me/favourites`, `DELETE /api/v1/me/favourites/:id`. `POST` takes
     `{ kind: 'synth', synthId }`, `{ kind: 'sound', synthId, slug }` or `{ kind: 'mine', soundId }`;
     201 with a new star, 200 with the one already there. **A sound the caller cannot see is

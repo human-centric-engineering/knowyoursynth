@@ -15,6 +15,7 @@ import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { NotFoundError, ValidationError } from '@/lib/api/errors';
 import { playableSynth } from '@/lib/app/sounds/store';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import type { Favourite, FavouriteInput } from '@/lib/app/sounds/favourite-data';
 
 const FAVOURITE_SELECT = {
@@ -31,6 +32,9 @@ const FAVOURITE_SELECT = {
 
 type FavouriteRow = Prisma.FavouriteGetPayload<{ select: typeof FAVOURITE_SELECT }>;
 
+/** As the catalogue serves a synth: listed, with a definition to play it. */
+const servable = (synthId: string, listed: boolean) => listed && getSynthDef(synthId) !== null;
+
 function toFavourite(row: FavouriteRow): Favourite {
   const base = { id: row.id, createdAt: row.createdAt.toISOString() };
   if (row.synthSound)
@@ -41,7 +45,7 @@ function toFavourite(row: FavouriteRow): Favourite {
       slug: row.synthSound.slug,
       soundId: null,
       name: row.synthSound.name,
-      available: row.synthSound.synth.listed,
+      available: servable(row.synthSound.synthId, row.synthSound.synth.listed),
     };
   if (row.userSound)
     return {
@@ -51,7 +55,7 @@ function toFavourite(row: FavouriteRow): Favourite {
       slug: null,
       soundId: row.userSound.id,
       name: row.userSound.name,
-      available: row.userSound.synth.listed,
+      available: servable(row.userSound.synthId, row.userSound.synth.listed),
     };
   // The store writes exactly one target, and each is a Cascade relation, so a row with none cannot be read.
   if (!row.synth) throw new Error(`Favourite ${row.id} stars nothing`);
@@ -62,7 +66,7 @@ function toFavourite(row: FavouriteRow): Favourite {
     slug: null,
     soundId: null,
     name: row.synth.name,
-    available: row.synth.listed,
+    available: servable(row.synth.id, row.synth.listed),
   };
 }
 

@@ -129,8 +129,12 @@ async function main(): Promise<void> {
       settings.dim === true && settings.harm === true && settings.tips === null,
       'settings read back with each change kept and the rest unset'
     );
-    await recordProgress(subject.id, 'model-d', library.slug, { step: lastStep });
-    await recordProgress(subject.id, 'model-d', library.slug, { step: 0 });
+    const reached = await recordProgress(subject.id, 'model-d', library.slug, { step: lastStep });
+    const behind = await recordProgress(subject.id, 'model-d', library.slug, { step: 0 });
+    check(
+      behind.updatedAt === reached.updatedAt,
+      'a step behind the furthest leaves the lesson as it was, its updatedAt included'
+    );
     await recordProgress(subject.id, 'model-d', library.slug, { step: lastStep, completed: true });
     await recordProgress(other.id, 'model-d', library.slug, { step: 0 });
     const lessons = await listProgress(subject.id);

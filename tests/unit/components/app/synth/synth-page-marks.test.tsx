@@ -12,8 +12,18 @@
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
+import { APIClientError } from '@/lib/api/client';
 import { SynthPage } from '@/components/app/synth/synth-page';
+import { useLessonProgress } from '@/components/app/synth/progress';
 import { focusStore } from '@/components/app/synth/stores';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -255,6 +265,30 @@ describe('lesson progress', () => {
     ]);
   });
 
+  it('keeps a lesson cut shorter since within it: the last step, and Continue goes there', async () => {
+    serve({ progress: [entry('fat-bass', 7)] });
+    page();
+    await waitFor(() => expect(within(library()).getByText('Reached step 3 of 3')).toBeTruthy());
+    expect(within(lesson()).getByText('You reached step 3 of 3')).toBeTruthy();
+    fireEvent.click(within(lesson()).getByRole('button', { name: 'Continue from step 3' }));
+    expect(within(lesson()).getByRole('tab', { name: /Build it/ }).textContent).toContain('3/3');
+  });
+
+  it('does not write a step answered after the synth changed into the new synth’s progress', async () => {
+    let answer: (v: unknown) => void = () => undefined;
+    api.put.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+    const { result, rerender } = renderHook(
+      ({ synthId }: { synthId: string }) => useLessonProgress(synthId, 'user-1'),
+      { initialProps: { synthId: 'model-d' } }
+    );
+    await waitFor(() => expect(result.current.marks).not.toBeNull());
+    act(() => result.current.record('bass', 1));
+    rerender({ synthId: 'other-synth' });
+    await waitFor(() => expect(result.current.marks).not.toBeNull());
+    await act(async () => answer({ ...entry('bass', 1), synthId: 'model-d' }));
+    expect(result.current.marks?.get('bass')).toBeUndefined();
+  });
+
   it('forgets a step the account did not keep, so the next one that far sends it again', async () => {
     page();
     await waitFor(() =>
@@ -324,6 +358,30 @@ describe('favourites', () => {
     expect(api.post).toHaveBeenCalledWith('/api/v1/me/favourites', {
       body: { kind: 'sound', synthId: 'model-d', slug: 'fat-bass' },
     });
+  });
+
+  it('leaves a star off when it was already removed elsewhere, and puts one back that could not be', async () => {
+    serve({
+      favourites: [
+        { id: 'cmfav1', kind: 'synth', synthId: 'model-d', slug: null, soundId: null },
+        { id: 'cmfav2', kind: 'sound', synthId: 'model-d', slug: 'wobble', soundId: null },
+      ],
+    });
+    api.delete.mockImplementation(async (path: string) => {
+      if (path.endsWith('/cmfav1'))
+        throw new APIClientError('Favourite not found', 'NOT_FOUND', 404);
+      throw new APIClientError('Something went wrong', 'INTERNAL_ERROR', 500);
+    });
+    page();
+    fireEvent.click(await screen.findByRole('button', { name: 'Remove Model D from favourites' }));
+    fireEvent.click(
+      within(library()).getByRole('button', { name: 'Remove Wobble lead from favourites' })
+    );
+    await waitFor(() => expect(api.delete).toHaveBeenCalledTimes(2));
+    expect(
+      await within(library()).findByRole('button', { name: 'Remove Wobble lead from favourites' })
+    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Add Model D to favourites' })).toBeTruthy();
   });
 
   it('puts a star back when the account did not take it', async () => {
