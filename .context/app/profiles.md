@@ -2,8 +2,8 @@
 
 `f-profiles`. A signed-in user's synth profile: the username their public page goes under, where
 their music is, and who may see it. r1 is the profile itself, on the settings page; r2 adds the
-synths they own and want; r3 is the public page at `/u/[username]`. Nothing in r1 is shown to
-anyone else yet.
+synths they own and want; r3 is the public page at `/u/[username]`. Nothing in r1 or r2 is shown
+to anyone else yet.
 
 ## The tables
 
@@ -21,6 +21,18 @@ anyone else yet.
   `lib/app/db-drift.ts`. `lib/app/data-export.ts` returns the profile under `app.synthProfile`.
 - **It is on `SYSTEM_MODELS`, with no `orgId`**, under the ruling that covers users' own rows.
   Ledger row in [`divergences.md`](./divergences.md).
+
+`OwnedInstrument`: one databank instrument on one of a user's two lists, `owned` or `wishlist`,
+with its `position` in that list.
+
+- **Keyed on the user and the instrument**, so a synth is on one list or the other, never both.
+  Moving it between them is an update, not a second row.
+- **The instrument is a real relation, `Cascade`**, as a favourite's is: an entry on an instrument
+  the databank removed means nothing, and `Restrict` would let one user's list stop an admin
+  removing a duplicate.
+- **The user's foreign key is written by hand**, `owned_instrument_userId_fkey`, `ON DELETE
+CASCADE`, with a drift probe; exported under `app.ownedSynths`, each entry named by the
+  instrument's databank id and name; on `SYSTEM_MODELS` with no `orgId`, as `SynthProfile` is.
 
 `HeldUsername`: a name someone gave up by changing it, and when the hold ends. It has no user
 foreign key and records no person, so it is excluded from the export with that reason. **A name
@@ -63,12 +75,33 @@ showOwned, showWishlist }`, a link blank or null for none. A username or link th
   rules is a 400 naming the field. A name that is taken or held, or a change inside 30 days of
   the last, is a 409 with the words to show.
 
-Tested in `tests/unit/app/api/v1/me/profile/route.test.ts` and `tests/unit/lib/app/profile/`.
-`npm run smoke:profile` proves what no unit test can: the real unique index and hold, the export,
-and the erasure cascade.
+`/api/v1/me/instruments`, the same way (`lib/app/profile/instruments.ts`):
+
+- `GET`: `{ owned, wishlist }`, each in the user's order, each entry
+  `{ instrumentId, kind, name, maker, year, addedAt }`.
+- `POST`: `{ instrumentId, kind }`, at the end of that list. 201, or 200 with the entry it had
+  when it is already on that list. An instrument the databank does not have is a 400. One already
+  on the **other** list is a 409 that says to move it; so is a full list (200 synths per list).
+- `PATCH /:instrumentId`: `{ kind }`, moving it to the end of that list. `DELETE /:instrumentId`
+  takes it off. Another user's entry is a 404, the same as one on neither list.
+- `PUT /order`: `{ kind, instrumentIds }`, the whole list in its new order. A list that has
+  changed since the caller read it is a 409, and the remedy is to read the lists again, which the
+  settings section does.
+
+Tested in `tests/unit/app/api/v1/me/profile/route.test.ts`,
+`tests/unit/app/api/v1/me/instruments/route.test.ts` and `tests/unit/lib/app/profile/`.
+`npm run smoke:profile` proves what no unit test can: the real unique index and hold, the
+instrument key and its cascade from the databank, the export, and the erasure cascades.
 
 ## The settings section
 
 `components/app/account/synth-profile-section.tsx`, registered in `lib/app/account-sections.ts`
 on **settings only**: `/profile` is Sunrise's account card, whose name field is the private
 account name the username exists to keep apart. The seam-defaults test is re-pinned to it.
+
+Below it, **Your synths** (`components/app/account/synth-lists-section.tsx`, order 20): a search
+of the databank, then the two lists to reorder, move between and remove from. The search reads
+`GET /api/v1/bank/instruments` once, the first time it is used, and filters it in the browser:
+about 940 instruments, some 126 KB of JSON before compression, too small for a search parameter on
+the route to buy anything. Revisit if the databank grows by an order of magnitude. **Suggest a
+synth** (`components/app/bank/suggest-form.tsx`) sits beside the search for one that is missing.

@@ -122,7 +122,7 @@ covered by the version contract.
   - `lib/app/mcp-resources.ts` → `initAppMcpResources()` — MCP resource-type registry
   - `lib/app/platform-agents.ts` → `initAppPlatformAgents()` — platform agents every org gets an instance of (primitive: `registerPlatformAgent()` in `lib/orchestration/agents/platform-agents.ts`)
   - `lib/app/provider-credentials.ts` → `initAppProviderCredentials()` — where a provider row's API key comes from, per org (primitive: `registerProviderCredentialResolver()` in `lib/orchestration/llm/provider-credentials.ts`)
-  - `lib/app/profile/` → `getProfile()` / `saveProfile()` (`profile.ts`), `usernameSchema` / `usernameProblem()` (`username.ts`), `parseProfileLink()` (`links.ts`), the API shapes (`profile-data.ts`) — Know Your Synth's synth profiles: username, links and visibility, owner-scoped
+  - `lib/app/profile/` → `getProfile()` / `saveProfile()` (`profile.ts`), `usernameSchema` / `usernameProblem()` (`username.ts`), `parseProfileLink()` (`links.ts`), `listInstruments()` / `addInstrument()` / `moveInstrument()` / `removeInstrument()` / `reorderInstruments()` (`instruments.ts`), the API shapes (`profile-data.ts`, `instruments-data.ts`) — Know Your Synth's synth profiles: username, links, visibility and the synths owned and wanted, owner-scoped
   - `lib/app/protected-nav.ts` → `protectedNavItems` — authenticated-area nav
   - `lib/app/protected-routes.ts` → `appProtectedRoutes` — extra route prefixes the proxy protects
   - `lib/app/public-nav.ts` → `publicNavItems` / `footerNavItems` / `footerLegalItems` — public nav and footer

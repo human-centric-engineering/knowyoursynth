@@ -128,8 +128,8 @@ the same PR**, and each row names what deletes it.
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
   `f-my-sounds` s1), user preferences' (two models, s3), lesson progress and favourites' (two
-  models, s4) and synth profiles' (two models, `f-profiles` r1) instead of none, under a `FORK`
-  comment.
+  models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one
+  model and one enum, r2) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -147,7 +147,7 @@ the same PR**, and each row names what deletes it.
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
   `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
-  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1) are appended to
+  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1) and `OwnedInstrument` (r2) are appended to
   `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
@@ -159,13 +159,13 @@ the same PR**, and each row names what deletes it.
   So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels, settings, lesson progress, favourites and profiles follow the same ruling, and so do the
+  panels, settings, lesson progress, favourites, profiles and owned synths follow the same ruling, and so do the
   usernames held after a change, which record a name and no person.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile` and `HeldUsername` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-six names (eighteen global, eight system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty-seven names (eighteen global, nine system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
@@ -173,8 +173,9 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our probes' names (the
   hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
   `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
-  `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`,
-  `f-profiles` r1) instead of none, under a `FORK` comment.
+  `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`
+  and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2) instead of none, under a `FORK`
+  comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.
 - **On conflict:** take theirs, and re-apply the pin to whichever case asserts the scaffold
@@ -268,7 +269,7 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile, on settings only) and `lib/app/jobs.ts` (the prune of lapsed held usernames): fork-owned
+  profile and the synths owned and wanted, on settings only) and `lib/app/jobs.ts` (the prune of lapsed held usernames): fork-owned
   scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
