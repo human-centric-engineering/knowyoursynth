@@ -36,11 +36,12 @@ function summaryOf(d: UserSoundDetail): UserSoundSummary {
 }
 
 /** What went wrong, in words the person can act on. */
-function failureOf(err: unknown, doing: string): string {
+function failureOf(err: unknown, doing: string, existing: boolean): string {
   if (err instanceof APIClientError) {
     if (err.status === 429) return `Too many changes at once. Wait a minute, then ${doing} again.`;
     if (err.status === 401) return `Your session has ended. Sign in again to ${doing}.`;
-    if (err.status === 404) return 'That sound is no longer in your account.';
+    // Only a request about a sound they have can say it has gone; a new one's 404 is the synth's, said as the API says it.
+    if (err.status === 404 && existing) return 'That sound is no longer in your account.';
     return err.message;
   }
   return `Could not ${doing}. Check your connection and try again.`;
@@ -67,8 +68,12 @@ export function useMySounds(synthId: string, signedIn: boolean): MySounds {
     let live = true;
     apiClient
       .get<UserSoundSummary[]>('/api/v1/sounds', { params: { synthId } })
+      // A sound saved or opened before the list arrived stays in it: the list may have been read before it existed.
       .then((list) => {
-        if (live) setSounds(list);
+        if (live)
+          setSounds((kept) =>
+            kept ? [...kept, ...list.filter((s) => !kept.some((k) => k.id === s.id))] : list
+          );
       })
       .catch(() => {
         if (live) setFailed(true);
@@ -232,14 +237,14 @@ export function SoundActions({
       </Link>
     );
 
-  const run = async (doing: string, fn: () => Promise<void>) => {
+  const run = async (doing: string, fn: () => Promise<void>, existing = true) => {
     setBusy(true);
     setFailure(null);
     setStatus(null);
     try {
       await fn();
     } catch (err) {
-      setFailure(failureOf(err, doing));
+      setFailure(failureOf(err, doing, existing));
     } finally {
       setBusy(false);
     }
@@ -265,29 +270,33 @@ export function SoundActions({
     });
 
   const submit = (mode: FormMode, name: string, notes: string) =>
-    run(mode === 'rename' ? 'rename it' : 'save', async () => {
-      if (mode === 'rename') {
-        if (!open) return;
-        const d = await apiClient.patch<UserSoundDetail>(soundPath(open.id), {
-          body: { name, notes: notes || null },
-        });
-        onSaved(d, 'renamed');
-        setStatus(`Renamed to ${d.name}.`);
-      } else {
-        const d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
-          body: {
-            synthId,
-            name,
-            ...(notes ? { notes } : {}),
-            panel: panel(),
-            ...(credit ? { source: { slug: credit.slug } } : {}),
-          },
-        });
-        onSaved(d, 'created');
-        setStatus(`Saved ${d.name} to My sounds.`);
-      }
-      setForm(null);
-    });
+    run(
+      mode === 'rename' ? 'rename it' : 'save',
+      async () => {
+        if (mode === 'rename') {
+          if (!open) return;
+          const d = await apiClient.patch<UserSoundDetail>(soundPath(open.id), {
+            body: { name, notes: notes || null },
+          });
+          onSaved(d, 'renamed');
+          setStatus(`Renamed to ${d.name}.`);
+        } else {
+          const d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
+            body: {
+              synthId,
+              name,
+              ...(notes ? { notes } : {}),
+              panel: panel(),
+              ...(credit ? { source: { slug: credit.slug } } : {}),
+            },
+          });
+          onSaved(d, 'created');
+          setStatus(`Saved ${d.name} to My sounds.`);
+        }
+        setForm(null);
+      },
+      mode === 'rename'
+    );
 
   const toggle = (mode: FormMode) => {
     setConfirmDelete(false);

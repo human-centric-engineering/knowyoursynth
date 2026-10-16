@@ -353,6 +353,26 @@ describe('My sounds', () => {
     expect(cutoff()).toBe('2');
   });
 
+  it('does not open over a library sound chosen while it was being fetched', async () => {
+    let answerNight: (d: UserSoundDetail) => void = () => undefined;
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/sounds') return [summary()];
+      return new Promise<UserSoundDetail>((r) => {
+        answerNight = r;
+      });
+    });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    fireEvent.click(
+      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+        name: /Wobble lead/,
+      })
+    );
+    await act(async () => answerNight(NIGHT_BASS));
+    expect(loadedName()).toBe('Wobble lead');
+    expect(screen.queryByText('mine')).toBeNull();
+  });
+
   it('leaves the open sound when a lesson step is chosen, since the step replaces the panel', async () => {
     const copy = {
       ...NIGHT_BASS,
@@ -446,6 +466,40 @@ describe('saving', () => {
     fireEvent.click(button('Save'));
     expect(screen.getByText('Name the sound')).toBeTruthy();
     expect(api.post).not.toHaveBeenCalled();
+  });
+
+  it('says what the API said when a new sound is refused as not found, not that a sound has gone', async () => {
+    const { APIClientError } = await import('@/lib/api/client');
+    api.post.mockRejectedValue(new APIClientError('Synth not found', 'NOT_FOUND', 404));
+    page();
+    fireEvent.click(button('Save a copy…'));
+    fireEvent.click(button('Save'));
+    expect((await screen.findByRole('alert')).textContent).toBe('Synth not found');
+  });
+
+  it('keeps a sound saved before the list arrived, when the list was read without it', async () => {
+    let answerList: (l: UserSoundSummary[]) => void = () => undefined;
+    api.get.mockImplementation(
+      () =>
+        new Promise<UserSoundSummary[]>((r) => {
+          answerList = r;
+        })
+    );
+    api.post.mockResolvedValue({ ...NIGHT_BASS, id: 'cmnew1', name: 'Fat bass' });
+    page();
+    fireEvent.click(button('Save a copy…'));
+    fireEvent.click(button('Save'));
+    await waitFor(() => expect(loadedName()).toBe('Fat bass'));
+    await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
+    await act(async () => answerList([summary()]));
+
+    expect(screen.getByText('mine')).toBeTruthy();
+    const names = within(mySounds())
+      .getAllByRole('button')
+      .map((b) => b.textContent);
+    expect(names).toHaveLength(2);
+    expect(names[0]).toMatch(/Fat bass/);
+    expect(names[1]).toMatch(/Night bass/);
   });
 
   it('says what went wrong when the save is refused', async () => {
@@ -632,6 +686,17 @@ describe('a reload with one of theirs open', () => {
     page();
     await waitFor(() => expect(within(mySounds()).getByText('Loading your sounds…')).toBeTruthy());
     expect(screen.queryByRole('button', { name: /^Save/ })).toBeNull();
+  });
+
+  it('counts no moves while the sound as saved is still being fetched', async () => {
+    auth.signedIn = true;
+    api.get.mockImplementation(async (path: string) =>
+      path === '/api/v1/sounds' ? [summary()] : new Promise(() => undefined)
+    );
+    reload();
+    page();
+    await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
   it('offers no Save when the list cannot be read', async () => {

@@ -595,9 +595,12 @@ function Synth({
     [patch]
   );
 
+  // Each choice of what is on the panel counts here, so a user sound still being fetched does not open over a later one.
+  const openSeq = useRef(0);
   const selectPreset = (id: string) => {
     const p = sounds.find((x) => x.id === id);
     if (!p) return;
+    openSeq.current++;
     focusStore.set(null);
     patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
@@ -605,8 +608,6 @@ function Synth({
 
   // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
   // from opens with what still fits, and says what did not.
-  // Only the last one asked for opens: a slower answer to an earlier click is dropped.
-  const openSeq = useRef(0);
   const openMine = async (id: string) => {
     const seq = ++openSeq.current;
     setMineNotice(null);
@@ -703,7 +704,8 @@ function Synth({
   const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
   // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
-  const setStep = (k: number | null) =>
+  const setStep = (k: number | null) => {
+    openSeq.current++;
     patch((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
       return {
@@ -714,14 +716,16 @@ function Synth({
         ...presetState(synthDef, from, k),
       };
     });
+  };
   const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
     if (id === synthId) return;
     router.push(synthHref(id, view));
   };
 
+  // Nothing to count from while the open sound's saved panel is still being fetched, or could not be.
   const changed = def.controls.filter(
-    (c) => step == null && sess.values[c.id] !== target[c.id]
+    (c) => step == null && (!openSound || savedOpen) && sess.values[c.id] !== target[c.id]
   ).length;
   const toggleAudio = async () => {
     if (!engine) return;
