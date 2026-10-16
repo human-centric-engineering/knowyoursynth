@@ -101,6 +101,7 @@ export const USERNAME_MESSAGES = {
   shape: `Use ${USERNAME_RULE}, starting with a letter or number.`,
   unavailable: "That username isn't available.",
   taken: "That one's taken. Try another.",
+  changed: 'Your username was changed somewhere else just now. Reload to see it.',
 } as const;
 
 /** A username as a request carries it: trimmed, folded, and held to the rules. */

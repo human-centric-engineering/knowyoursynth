@@ -104,6 +104,20 @@ function installFakes() {
       profiles.set(userId, row);
       return row;
     }),
+    updateMany: vi.fn(async ({ where, data }: { where: Row; data: Row }) => {
+      const userId = String(where.userId);
+      const current = profiles.get(userId);
+      if (!current || current.username !== where.username) return { count: 0 };
+      const other = data.username === undefined ? undefined : byUsername(data.username);
+      if (other && other.userId !== userId) throw clash();
+      profiles.set(userId, { ...current, ...data, updatedAt: new Date() });
+      return { count: 1 };
+    }),
+    findUniqueOrThrow: vi.fn(async ({ where }: { where: Row }) => {
+      const row = profiles.get(String(where.userId));
+      if (!row) throw Object.assign(new Error('Not found'), { code: 'P2025' });
+      return row;
+    }),
   };
   const heldUsername = {
     findUnique: vi.fn(
@@ -311,6 +325,45 @@ describe('/api/v1/me/profile', () => {
     const saved = await save(input({ username: 'tape_loops' }));
     expect(saved.status).toBe(200);
     expect(saved.body.data?.username).toBe('tape_loops');
+  });
+
+  it('refuses a change that races another change of the same name, so only one is spent and the first is held', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-01T12:00:00Z'));
+    signIn('user-a');
+    await save(input({ username: 'tape_loops' }));
+    // the other tab's change from tape_loops to reel_to_reel lands after this request read tape_loops
+    const synthProfile = mockPrisma.synthProfile as {
+      updateMany: ReturnType<typeof vi.fn<(args: unknown) => Promise<{ count: number }>>>;
+    };
+    const real = synthProfile.updateMany.getMockImplementation()!;
+    synthProfile.updateMany.mockImplementationOnce(async (args: unknown) => {
+      profiles.set('user-a', {
+        ...profiles.get('user-a'),
+        username: 'reel_to_reel',
+        usernameChangedAt: new Date(),
+      });
+      return real(args);
+    });
+    const saved = await save(input({ username: 'cassette' }));
+    expect(saved.status).toBe(409);
+    expect(saved.body.error?.details).toEqual({ username: ['changed'] });
+    expect(profiles.get('user-a')?.username).toBe('reel_to_reel');
+  });
+
+  it('refuses a name that someone gave up while this claim was in flight', async () => {
+    signIn('user-b');
+    // user-a's change away from tape_loops commits its hold after user-b's availability check
+    const synthProfile = mockPrisma.synthProfile as {
+      create: ReturnType<typeof vi.fn<typeof createProfile>>;
+    };
+    synthProfile.create.mockImplementationOnce(async (args) => {
+      held.set('tape_loops', { username: 'tape_loops', heldUntil: new Date(Date.now() + DAY) });
+      return createProfile(args);
+    });
+    const saved = await save(input({ username: 'tape_loops' }));
+    expect(saved.status).toBe(409);
+    expect(saved.body.error?.details).toEqual({ username: ['taken'] });
   });
 
   it('lets a user save their own name again, with other changes, as no change of name', async () => {

@@ -130,21 +130,43 @@ export async function saveProfile(
 
   try {
     const row = await prisma.$transaction(async (tx) => {
-      // a lapsed hold is cleared as the name is claimed, so its key is free
-      await tx.heldUsername.deleteMany({ where: { username, heldUntil: { lte: now } } });
-      if (!current) return tx.synthProfile.create({ data: { userId, username, ...settings } });
-      if (changing) {
+      if (!current || changing) {
+        // a lapsed hold is cleared as the name is claimed, so its key is free
+        await tx.heldUsername.deleteMany({ where: { username, heldUntil: { lte: now } } });
+      }
+      let saved: ProfileRow;
+      if (!current) {
+        saved = await tx.synthProfile.create({ data: { userId, username, ...settings } });
+      } else if (changing) {
+        /* Keyed on the name we read as well as the user: a second change racing this one finds the row already moved
+           on, and is refused rather than spending two changes and dropping the first new name with no hold. */
+        const moved = await tx.synthProfile.updateMany({
+          where: { userId, username: current.username },
+          data: { username, usernameChangedAt: now, ...settings },
+        });
+        if (moved.count === 0)
+          throw new ConflictError(USERNAME_MESSAGES.changed, { username: ['changed'] });
         const heldUntil = new Date(now.getTime() + USERNAME_HOLD_DAYS * DAY_MS);
         await tx.heldUsername.upsert({
           where: { username: current.username },
           create: { username: current.username, heldUntil },
           update: { heldUntil },
         });
+        saved = await tx.synthProfile.findUniqueOrThrow({ where: { userId } });
+      } else {
+        saved = await tx.synthProfile.update({ where: { userId }, data: settings });
       }
-      return tx.synthProfile.update({
-        where: { userId },
-        data: { ...(changing ? { username, usernameChangedAt: now } : {}), ...settings },
-      });
+      if (!current || changing) {
+        /* Checked again after the write: the write waits on anyone giving this name up at the same moment, so a hold
+           they commit is visible here, and the name is not claimed out from under it. */
+        const held = await tx.heldUsername.findUnique({
+          where: { username },
+          select: { heldUntil: true },
+        });
+        if (held && held.heldUntil > now)
+          throw new ConflictError(USERNAME_MESSAGES.taken, { username: ['taken'] });
+      }
+      return saved;
     });
     return view(row, now);
   } catch (error) {
