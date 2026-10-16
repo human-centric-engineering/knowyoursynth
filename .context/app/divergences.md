@@ -31,8 +31,8 @@ the same PR**, and each row names what deletes it.
 - **Files:** `package.json`, `package-lock.json`, `README.md`, `.env.development`
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
-    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `check:synths` and
-    `smoke:sounds` scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
+    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `check:synths`,
+    `smoke:sounds` and `smoke:profile` scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
     dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
@@ -106,18 +106,19 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds four bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+- **Change:** adds five bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
   the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
-  catalogue and reading it for the API), `lib/app/bank/` (the same for the databank) and
-  `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1).
+  catalogue and reading it for the API), `lib/app/bank/` (the same for the databank),
+  `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1) and `lib/app/profile/` (synth profiles,
+  `f-profiles` r1).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our four bullets in the `lib/app/` list, in
+- **On conflict:** take theirs and re-insert our five bullets in the `lib/app/` list, in
   alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth, catalogue, databank or sounds code lives in `lib/app/`, or when the guard reads fork
+- **Delete when:** none while synth, catalogue, databank, sounds or profile code lives in `lib/app/`, or when the guard reads fork
   scaffolds from a fork-owned file.
 
 ### The reserved-tier test, pinned to our app models
@@ -126,8 +127,9 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
-  `f-my-sounds` s1), user preferences' (two models, s3) and lesson progress and favourites' (two
-  models, s4) instead of none, under a `FORK` comment.
+  `f-my-sounds` s1), user preferences' (two models, s3), lesson progress and favourites' (two
+  models, s4) and synth profiles' (two models, `f-profiles` r1) instead of none, under a `FORK`
+  comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
   own header says a fork with app models pins that row rather than deleting it, so a stray extra
   declaration still fails.
@@ -145,7 +147,7 @@ the same PR**, and each row names what deletes it.
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
   `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
-  `Favourite` (s4) are appended to
+  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1) are appended to
   `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
@@ -157,12 +159,13 @@ the same PR**, and each row names what deletes it.
   So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels, settings, lesson progress and favourites follow the same ruling.
+  panels, settings, lesson progress, favourites and profiles follow the same ruling, and so do the
+  usernames held after a change, which record a name and no person.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference`, `UserPreference`, `LessonProgress` and `Favourite` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile` and `HeldUsername` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-four names (eighteen global, six system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty-six names (eighteen global, eight system) into the new seam's scaffold.
 
 ### The drift-probe scaffold test, pinned to our probe
 
@@ -170,7 +173,8 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `shipped lib/app/db-drift.ts scaffold` case expects our probes' names (the
   hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
   `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
-  `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4) instead of none, under a `FORK` comment.
+  `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`,
+  `f-profiles` r1) instead of none, under a `FORK` comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.
 - **On conflict:** take theirs, and re-apply the pin to whichever case asserts the scaffold
@@ -263,10 +267,12 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 - `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
-  `lib/app/admin-nav.ts` (the "Synths" admin section): fork-owned scaffolds, filled.
+  `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
+  profile, on settings only): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
-  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`, `admin-nav`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`, `admin-nav`,
+  `account-sections`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.
