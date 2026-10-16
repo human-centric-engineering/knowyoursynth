@@ -21,6 +21,7 @@ vi.mock('@/lib/db/client', () => ({
     lessonProgress: { findMany: vi.fn() },
     favourite: { findMany: vi.fn() },
     synthProfile: { findMany: vi.fn(async () => []) },
+    ownedInstrument: { findMany: vi.fn(async () => []) },
   },
 }));
 
