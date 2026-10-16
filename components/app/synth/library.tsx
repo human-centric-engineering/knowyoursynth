@@ -4,11 +4,14 @@
  * The sound library: the synth's sounds, searched and filtered by category, beside the panel.
  *
  * Transliterated from the prototype file `src/ui/Library.jsx` (decision D3). The sounds are the catalogue's, read from
- * the API by the page (D13). "My sounds" joins them in `f-my-sounds`.
+ * the API by the page (D13). "My sounds" joins them in `f-my-sounds`, and a signed-in user's progress through each
+ * lesson and their stars on the sounds (s4).
  */
 
 import { useMemo, useState } from 'react';
 import type { Preset } from '@/lib/app/synths/contract';
+import { StarButton } from '@/components/app/synth/favourites';
+import type { LessonMark, LessonMarks } from '@/components/app/synth/progress';
 
 const LEVELS = ['', 'Beginner', 'Intermediate', 'Advanced'] as const;
 
@@ -35,9 +38,26 @@ export interface LibraryProps {
   /** The sound on the panel, if any. */
   currentId: string | null;
   onSelect: (id: string) => void;
+  /** How far the user has got through each lesson; `null` or absent when signed out. */
+  marks?: LessonMarks | null;
+  /** Whether a sound is starred; `null` when no star shows (signed out, or still loading). */
+  isStarred?: (id: string) => boolean | null;
+  onStar?: (id: string) => void;
 }
 
-export function Library({ presets, currentId, onSelect }: LibraryProps) {
+/** How far the user has got through a lesson, in a few words. */
+export function markText(mark: LessonMark, steps: number): string {
+  return mark.completed ? 'Finished' : `Reached step ${mark.furthestStep + 1} of ${steps}`;
+}
+
+export function Library({
+  presets,
+  currentId,
+  onSelect,
+  marks = null,
+  isStarred,
+  onStar,
+}: LibraryProps) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('all');
   // The first tag is the category (contract `Preset.tags`).
@@ -87,13 +107,15 @@ export function Library({ presets, currentId, onSelect }: LibraryProps) {
       <ul className="kys-scroll -mr-1 flex max-h-[560px] flex-col gap-1.5 overflow-y-auto pr-1">
         {shown.map((p) => {
           const on = p.id === currentId;
+          const mark = marks?.get(p.id);
+          const starred = isStarred?.(p.id) ?? null;
           return (
-            <li key={p.id}>
+            <li key={p.id} className="flex items-start gap-1">
               <button
                 type="button"
                 onClick={() => onSelect(p.id)}
                 aria-current={on}
-                className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors ${on ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-transparent bg-(--kys-surface) hover:border-(--kys-line)'}`}
+                className={`min-w-0 flex-1 rounded-lg border px-3 py-2.5 text-left transition-colors ${on ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-transparent bg-(--kys-surface) hover:border-(--kys-line)'}`}
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="leading-tight font-semibold">{p.name}</span>
@@ -112,7 +134,23 @@ export function Library({ presets, currentId, onSelect }: LibraryProps) {
                     </span>
                   ))}
                 </span>
+                {mark && p.steps.length > 0 && (
+                  <span
+                    className={`mt-1.5 block font-mono text-[11px] ${mark.completed ? 'text-(--kys-good)' : 'text-(--kys-muted)'}`}
+                  >
+                    {mark.completed ? '✓ ' : ''}
+                    {markText(mark, p.steps.length)}
+                  </span>
+                )}
               </button>
+              {starred !== null && onStar && (
+                <StarButton
+                  on={starred}
+                  name={p.name}
+                  onToggle={() => onStar(p.id)}
+                  className="mt-1.5"
+                />
+              )}
             </li>
           );
         })}

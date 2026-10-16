@@ -7,7 +7,8 @@
  * - The synth is the URL: the route fetches it from the API and passes it in, and the picker navigates.
  * - The panel view is in the query (`?view=`), with the last choice in browser storage.
  * - The panel is kept per synth in browser storage (`storage.ts`). A signed-in user also saves it to their account
- *   as one of their own sounds, and opens those again (`my-sounds.tsx`, `f-my-sounds`).
+ *   as one of their own sounds, and opens those again (`my-sounds.tsx`, `f-my-sounds`). Signed in, how far they got
+ *   through each lesson is kept, and they star synths and sounds (`progress.ts`, `favourites.tsx`, s4).
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
  * - The panel draws the synth's design (D11), as an admin set it: `neutral` leaves the maker's marks out.
  *
@@ -40,6 +41,7 @@ import {
   Segmented,
 } from '@/components/app/synth/bar-controls';
 import { getEngine, listen } from '@/components/app/synth/engine';
+import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
@@ -48,6 +50,7 @@ import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
+import { useLessonProgress } from '@/components/app/synth/progress';
 import { bankHashRoute } from '@/components/app/bank/routes';
 import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
@@ -245,6 +248,9 @@ function Synth({
   // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
   // left by someone else signed in on this browser, opens nothing.
   const mine = useMySounds(synthId, signedIn);
+  // ── lesson progress and favourites (s4) ──
+  const progress = useLessonProgress(synthId, userId);
+  const favourites = useFavourites(userId);
   const openSound =
     signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
   // The open sound's panel as last saved: what "controls moved" counts from and Restore puts back.
@@ -700,7 +706,11 @@ function Synth({
   const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
   // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
+  // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   const setStep = (k: number | null) => {
+    if (preset && k != null) progress.record(preset.id, k);
+    else if (preset && step != null && step === preset.steps.length - 1)
+      progress.record(preset.id, step, true);
     openSeq.current++;
     patch((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
@@ -741,7 +751,13 @@ function Synth({
   return (
     <div className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <SynthPicker synths={synths} synthId={synthId} onSelect={switchSynth} />
+        <SynthPicker
+          synths={synths}
+          synthId={synthId}
+          onSelect={switchSynth}
+          isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
+          onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
+        />
         <button
           type="button"
           onClick={() => void toggleAudio()}
@@ -1087,15 +1103,26 @@ function Synth({
             failed={mine.failed}
             currentId={openSound?.id ?? null}
             onOpen={(id) => void openMine(id)}
+            isStarred={(id) => favourites.isOn({ kind: 'mine', soundId: id })}
+            onStar={(id) => favourites.toggle({ kind: 'mine', soundId: id })}
           />
           <Library
             presets={sounds}
             currentId={openSound ? null : (preset?.id ?? null)}
             onSelect={selectPreset}
+            marks={progress.marks}
+            isStarred={(slug) => favourites.isOn({ kind: 'sound', synthId, slug })}
+            onStar={(slug) => favourites.toggle({ kind: 'sound', synthId, slug })}
           />
         </div>
         {preset ? (
-          <Lesson def={def} preset={preset} step={step} onStep={setStep} />
+          <Lesson
+            def={def}
+            preset={preset}
+            step={step}
+            onStep={setStep}
+            mark={progress.marks?.get(preset.id) ?? null}
+          />
         ) : (
           <p className="text-sm text-(--kys-muted)">This synth has no sounds yet.</p>
         )}

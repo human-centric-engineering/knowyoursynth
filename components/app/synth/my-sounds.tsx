@@ -17,6 +17,7 @@ import Link from 'next/link';
 
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
+import { StarButton } from '@/components/app/synth/favourites';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
@@ -106,6 +107,9 @@ export interface MySoundsListProps {
   /** The user's sound on the panel, if any. */
   currentId: string | null;
   onOpen: (id: string) => void;
+  /** Whether a sound is starred (`f-my-sounds` s4); `null` when no star shows. */
+  isStarred?: (id: string) => boolean | null;
+  onStar?: (id: string) => void;
 }
 
 export function MySoundsList({
@@ -115,6 +119,8 @@ export function MySoundsList({
   failed,
   currentId,
   onOpen,
+  isStarred,
+  onStar,
 }: MySoundsListProps) {
   return (
     <section aria-labelledby="mine-h" className="flex flex-col gap-2">
@@ -149,13 +155,14 @@ export function MySoundsList({
         <ul className="kys-scroll -mr-1 flex max-h-[240px] flex-col gap-1.5 overflow-y-auto pr-1">
           {sounds.map((s) => {
             const on = s.id === currentId;
+            const starred = isStarred?.(s.id) ?? null;
             return (
-              <li key={s.id}>
+              <li key={s.id} className="flex items-start gap-1">
                 <button
                   type="button"
                   onClick={() => onOpen(s.id)}
                   aria-current={on}
-                  className={`w-full rounded-lg border px-3 py-2 text-left transition-colors ${on ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-transparent bg-(--kys-surface) hover:border-(--kys-line)'}`}
+                  className={`min-w-0 flex-1 rounded-lg border px-3 py-2 text-left transition-colors ${on ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-transparent bg-(--kys-surface) hover:border-(--kys-line)'}`}
                 >
                   <span className="block leading-tight font-semibold">{s.name}</span>
                   {s.source && (
@@ -169,6 +176,14 @@ export function MySoundsList({
                     </span>
                   )}
                 </button>
+                {starred !== null && onStar && (
+                  <StarButton
+                    on={starred}
+                    name={s.name}
+                    onToggle={() => onStar(s.id)}
+                    className="mt-1"
+                  />
+                )}
               </li>
             );
           })}
