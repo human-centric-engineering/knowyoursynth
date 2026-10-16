@@ -94,9 +94,13 @@ describe('parseSession', () => {
     expect(s).toEqual({ presetId: 'bass', step: 2, soundId: null, values: def.init, cables: [] });
   });
 
-  it('keeps the open sound of the user, and refuses a session whose sound id is not a string', () => {
+  it('keeps the open sound of the user, and drops a sound id that is not one, keeping the panel', () => {
     expect(parseSession(def, stored({ soundId: 'cmabc123' }))?.soundId).toBe('cmabc123');
-    expect(parseSession(def, stored({ soundId: 42 }))).toBeNull();
+    for (const soundId of [42, 'Not An Id', 'x'.repeat(41)]) {
+      const s = parseSession(def, stored({ soundId, values: { 'ctl.tune': 1.25 } }));
+      expect(s?.soundId).toBeNull();
+      expect(s?.values['ctl.tune']).toBe(1.25);
+    }
   });
 
   it('takes a stored value over the init', () => {

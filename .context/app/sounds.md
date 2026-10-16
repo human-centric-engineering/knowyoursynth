@@ -72,10 +72,16 @@ through `eraseUser()`, and the export.
   first; the panel stays). A library sound: Save a copy…, which `POST`s the panel as it is now with
   `source`, so the copy keeps its credit. Save as of a copy keeps the credit while the library still
   has the sound.
-- **The open sound is `soundId` in the stored session.** Choosing a library sound clears it. It
-  counts as open only when the user's list has it, so a sound deleted elsewhere, or a session left
-  by someone else on the same browser, opens nothing. "Controls moved" and Restore count from the
-  sound as last saved, which a reload fetches again.
+- **The open sound is `soundId` in the stored session.** Choosing a library sound or a lesson step
+  clears it, since either replaces the panel. It counts as open only when the user's list has it,
+  so a sound deleted elsewhere, or a session left by someone else on the same browser, opens
+  nothing; until the list has loaded no Save buttons show, so Save cannot make a new sound in
+  place of saving the open one. "Controls moved" and Restore count from the sound as last saved,
+  which a reload fetches again.
+- **Opening one sets the lesson to the library sound it was copied from**, or to none when it is
+  not a copy, so nothing credits a library sound that happened to be on the panel before. One
+  saved on another synth does not open, and when two are clicked quickly the last one clicked
+  wins.
 - **A sound the synth has moved on from opens with `fitted`**, and the page says what did not fit.
   Saving it then stores it on the current definition.
 - **Signed out, the buttons lead to sign-in** with `callbackUrl` set to this synth and view. The

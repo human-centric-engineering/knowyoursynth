@@ -605,13 +605,23 @@ function Synth({
 
   // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
   // from opens with what still fits, and says what did not.
+  // Only the last one asked for opens: a slower answer to an earlier click is dropped.
+  const openSeq = useRef(0);
   const openMine = async (id: string) => {
+    const seq = ++openSeq.current;
     setMineNotice(null);
     let d: UserSoundDetail;
     try {
       d = await apiClient.get<UserSoundDetail>(`/api/v1/sounds/${encodeURIComponent(id)}`);
     } catch {
-      setMineNotice('That sound could not be opened. It may have been deleted.');
+      if (seq === openSeq.current)
+        setMineNotice('That sound could not be opened. It may have been deleted.');
+      return;
+    }
+    if (seq !== openSeq.current) return;
+    // A link can name a sound saved on another synth; this panel cannot hold it.
+    if (d.synthId !== synthId) {
+      setMineNotice(`${d.name} was saved on another synth, so it cannot be opened on this one.`);
       return;
     }
     const from = d.panel ?? d.fitted;
@@ -620,10 +630,11 @@ function Synth({
       return;
     }
     const panel = fitPanel(synthDef, from.values, from.cables);
-    // A copy keeps its library sound's lesson beside it while the library still has that sound.
+    // A copy keeps its library sound's lesson beside it while the library still has that sound. Any other leaves the
+    // library sound that was on the panel behind, so it is not credited or read as this one's.
     const lib = d.source && sounds.some((x) => x.id === d.source?.slug) ? d.source.slug : null;
     focusStore.set(null);
-    patch((s) => ({ presetId: lib ?? s.presetId, step: null, soundId: d.id, ...panel }));
+    patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     setSaved({ id: d.id, ...panel });
     mine.put(d);
     if (!d.panel)
@@ -653,6 +664,10 @@ function Synth({
   useEffect(() => {
     if (!mineParam || authPending || mineArrived.current) return;
     mineArrived.current = true;
+    // The arrival effect is sending the visitor elsewhere: leave this synth's stored panel as it was.
+    const hash = window.location.hash;
+    const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
+    if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     if (signedIn) void openMine(mineParam);
     const url = new URL(window.location.href);
     url.searchParams.delete('mine');
@@ -686,11 +701,18 @@ function Synth({
     ? sounds.find((p) => p.id === openSound.source?.slug)
     : sounds.find((p) => p.id === sess.presetId);
   const credit = creditSound ? { slug: creditSound.id, name: creditSound.name } : null;
-  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound.
+  // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
+  // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
   const setStep = (k: number | null) =>
     patch((s) => {
       const from = sounds.find((p) => p.id === s.presetId) || sounds[0];
-      return { ...s, step: k, ...presetState(synthDef, from, k) };
+      return {
+        ...s,
+        presetId: from?.id ?? null,
+        step: k,
+        soundId: null,
+        ...presetState(synthDef, from, k),
+      };
     });
   const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
@@ -784,7 +806,8 @@ function Synth({
                 {mineNotice}
               </p>
             )}
-            {!authPending && (
+            {/* Not until the open sound is known: without it, Save would make a new sound instead of saving this one. */}
+            {!authPending && !(signedIn && sess.soundId && !mine.sounds) && (
               <SoundActions
                 synthId={synthId}
                 signedIn={signedIn}

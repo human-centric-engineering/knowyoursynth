@@ -82,7 +82,8 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   stored, then drops out of the URL so a reload keeps what was done since. A sound the library
   does not have is ignored. A databank record's "Load a sound in this style" links here.
 - `?mine=<id>` opens one of the signed-in user's own sounds the same way, once the session is
-  known; the dashboard links here. Signed out it opens nothing. See [`sounds.md`](./sounds.md).
+  known; the dashboard links here. Signed out, or when a hash link is sending the visitor
+  elsewhere, it opens nothing. See [`sounds.md`](./sounds.md).
 - The prototype's hash links (`#model-d`, `#model-d/outline`, `#model-d/long`) redirect from
   `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and
   from `/bank`, to the databank's page (`components/app/bank/routes.ts`).

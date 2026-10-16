@@ -318,6 +318,74 @@ describe('My sounds', () => {
     expect(screen.getByText(/no mapping between them/)).toBeTruthy();
   });
 
+  it('opens nothing, and says so, when the sound was saved on another synth', async () => {
+    serve([summary()], { cmmine1: { ...NIGHT_BASS, synthId: 'ob-x' } });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    expect(await screen.findByText(/saved on another synth/)).toBeTruthy();
+    expect(loadedName()).toBe('Fat bass');
+    expect(cutoff()).toBe('-2');
+    expect(within(mySounds()).getAllByRole('button')).toHaveLength(1);
+  });
+
+  it('opens the one clicked last when an earlier answer arrives after it', async () => {
+    const other = summary({ id: 'cmmine2', name: 'Day lead' });
+    const DAY_LEAD: UserSoundDetail = {
+      ...NIGHT_BASS,
+      ...other,
+      panel: { values: { ...def.init, 'filter.cutoff': 2 }, cables: [] },
+    };
+    let answerNight: (d: UserSoundDetail) => void = () => undefined;
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/sounds') return [summary(), other];
+      if (path.endsWith('cmmine1'))
+        return new Promise<UserSoundDetail>((r) => {
+          answerNight = r;
+        });
+      return DAY_LEAD;
+    });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    fireEvent.click(within(mySounds()).getByRole('button', { name: /Day lead/ }));
+    await waitFor(() => expect(loadedName()).toBe('Day lead'));
+    await act(async () => answerNight(NIGHT_BASS));
+    expect(loadedName()).toBe('Day lead');
+    expect(cutoff()).toBe('2');
+  });
+
+  it('leaves the open sound when a lesson step is chosen, since the step replaces the panel', async () => {
+    const copy = {
+      ...NIGHT_BASS,
+      source: { soundId: 's0', slug: 'fat-bass', name: 'Fat bass', ref: 'x' },
+    };
+    serve([summary({ source: copy.source })], { cmmine1: copy });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    fireEvent.click(button('Build it step by step'));
+
+    expect(loadedName()).toBe('Fat bass');
+    expect(screen.queryByText('mine')).toBeNull();
+    expect(screen.getByText('step 1 of 1')).toBeTruthy();
+    // Save no longer writes to Night bass: it makes a new copy of the library sound.
+    expect(button('Save a copy…')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull();
+  });
+
+  it('credits no library sound for one that is not a copy, whatever was on the panel before', async () => {
+    serve([summary()], { cmmine1: NIGHT_BASS });
+    const view = page();
+    fireEvent.click(
+      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+        name: /Wobble lead/,
+      })
+    );
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    view.unmount();
+    expect(readStored(SESSION_KEY)).toMatchObject({ presetId: null, soundId: 'cmmine1' });
+  });
+
   it('opens nothing, and says so, when the sound has gone', async () => {
     serve([summary()], {});
     page();
@@ -479,7 +547,8 @@ describe('saving', () => {
     );
     expect(cutoff()).toBe('4');
     expect(screen.queryByText('mine')).toBeNull();
-    expect(button('Save a copy…')).toBeTruthy();
+    // Night bass was not a copy, so what is left on the panel credits no library sound.
+    expect(button('Save…')).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe('Deleted Night bass.');
   });
 
@@ -527,9 +596,53 @@ describe('?mine=', () => {
     expect(api.get).not.toHaveBeenCalled();
     expect(loadedName()).toBe('Fat bass');
   });
+
+  it.each(['#bank/artists/kraftwerk', '#ob-x'])(
+    'opens nothing when the address sends the visitor elsewhere (%s)',
+    async (hash) => {
+      serve([summary()], { cmmine1: NIGHT_BASS });
+      const ob: CatalogueSynth = { ...MODEL_D_SYNTH, id: 'ob-x', name: 'OB-X' };
+      window.history.replaceState(null, '', `/synths/model-d?mine=cmmine1${hash}`);
+      page({ mineParam: 'cmmine1', synths: [MODEL_D_SYNTH, ob] });
+      await waitFor(() => expect(router.replace).toHaveBeenCalled());
+      await act(async () => undefined);
+      expect(api.get).not.toHaveBeenCalledWith('/api/v1/sounds/cmmine1');
+      expect(loadedName()).toBe('Fat bass');
+    }
+  );
 });
 
 describe('a reload with one of theirs open', () => {
+  const reload = () =>
+    window.localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        presetId: null,
+        step: null,
+        soundId: 'cmmine1',
+        values: { 'filter.cutoff': 4 },
+        cables: [],
+      })
+    );
+
+  it('offers no Save until the list says which sound is open, so Save cannot make a new one', async () => {
+    auth.signedIn = true;
+    api.get.mockImplementation(() => new Promise(() => undefined));
+    reload();
+    page();
+    await waitFor(() => expect(within(mySounds()).getByText('Loading your sounds…')).toBeTruthy());
+    expect(screen.queryByRole('button', { name: /^Save/ })).toBeNull();
+  });
+
+  it('offers no Save when the list cannot be read', async () => {
+    auth.signedIn = true;
+    api.get.mockRejectedValue(new Error('offline'));
+    reload();
+    page();
+    await waitFor(() => expect(within(mySounds()).getByRole('alert')).toBeTruthy());
+    expect(screen.queryByRole('button', { name: /^Save/ })).toBeNull();
+  });
+
   it('counts moves from the sound as saved', async () => {
     auth.signedIn = true;
     serve([summary()], { cmmine1: NIGHT_BASS });

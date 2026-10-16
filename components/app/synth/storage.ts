@@ -14,6 +14,7 @@ import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 import { logger } from '@/lib/logging';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
+import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 import type { ControlValues, PatchCable, SynthDef } from '@/lib/app/synths/contract';
 import type { PanelView } from '@/components/app/synth/routes';
 
@@ -101,8 +102,8 @@ export interface Session {
 const StoredSessionSchema = z.object({
   presetId: z.string().nullable(),
   step: z.number().int().min(0).nullable(),
-  // Stored before `f-my-sounds` without it.
-  soundId: z.string().max(40).nullable().optional(),
+  // Stored before `f-my-sounds` without it. One that is not a sound id is dropped, not the panel with it.
+  soundId: UserSoundIdSchema.nullable().optional().catch(null),
   values: z.unknown(),
   cables: z.unknown(),
 });
