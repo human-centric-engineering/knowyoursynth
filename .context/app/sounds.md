@@ -1,8 +1,8 @@
 # My sounds
 
 `f-my-sounds`. A signed-in user's own sounds: a panel they left on a synth, named and kept under
-their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. A browser that is
-not signed in still keeps its one panel per synth in `kys.session.<id>`
+their account. s1 is the store and the API; s2 puts them on the synth page and the dashboard. A
+browser that is not signed in still keeps its one panel per synth in `kys.session.<id>`
 ([`synth-page.md`](./synth-page.md)).
 
 ## The table
@@ -83,7 +83,8 @@ through `eraseUser()`, and the export.
   the user comes back.
 - **The name form is inline, not a modal `<dialog>`**: its ⓘ help opens in a popover outside the
   dialog, which a modal dialog would leave inert behind it.
-- **`/dashboard` lists every one of the user's sounds** (`components/app/dashboard/my-sounds-card.tsx`,
-  in-process reads, as the synth route makes them), each linking to `/synths/<id>?mine=<sound>`. A
+- **`/dashboard` lists every one of the user's sounds**
+  (`components/app/dashboard/my-sounds-card.tsx`, in-process reads, as the synth route makes
+  them), each linking to `/synths/<id>?mine=<sound>`. A
   sound on a synth no longer listed has no link. The card is a platform-file edit, ledgered in
   [`divergences.md`](./divergences.md).
