@@ -28,6 +28,7 @@
 import type { NextRequest } from 'next/server';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
+import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import {
   APIError,
   ConflictError,
@@ -208,8 +209,7 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
   try {
     return await write(id, rows);
   } catch (err) {
-    // Read structurally: lib/app may not import Prisma's runtime (its error classes included).
-    if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002')
+    if (hasPrismaCode(err, 'P2002'))
       throw new ConflictError(
         `${id} changed while the file was being written, so nothing was written. Upload it again.`
       );

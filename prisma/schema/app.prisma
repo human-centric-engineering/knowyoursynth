@@ -519,17 +519,27 @@ model SynthSuggestion {
 // `ON DELETE CASCADE`: erasing a user erases their sounds. A drift probe in
 // lib/app/db-drift.ts pins it.
 
+/// Who may open a user's sound (`f-sharing` h1). Only lib/app/sounds/publish.ts writes `published`.
+enum SoundVisibility {
+  /// Its owner only.
+  private
+  /// Anyone with its address, signed in or not. Not listed anywhere.
+  link
+  /// As `link`, and listed under its owner's username.
+  published
+}
+
 /// A user's own sound: a panel state on one synth, validated against the synth's definition on write and on read
-/// (lib/app/sounds/). Owner-scoped: only its user reads or changes it.
+/// (lib/app/sounds/). Owner-scoped, unless its owner shares it (`f-sharing`, lib/app/sounds/sharing.ts).
 model UserSound {
-  id                String   @id @default(cuid())
+  id                String          @id @default(cuid())
   /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
   userId            String
   synthId           String
   /// The definition version the panel was saved on.
   definitionVersion Int
   name              String
-  notes             String?  @db.Text
+  notes             String?         @db.Text
   /// `ControlValues`: control id → value.
   values            Json
   /// `CablePair[]`: `[outputJackId, inputJackId]`.
@@ -541,12 +551,27 @@ model UserSound {
   sourceName        String?
   /// `In the style of <artist> — "<work>"`.
   sourceRef         String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  /// The shared sound it was copied from (`f-sharing` h1). Null for anything else, and once that sound is deleted or
+  /// its owner erased. The credit is read through it while that sound is published, never kept, so it cannot outlive
+  /// the erasure of the person it names.
+  sourceUserSoundId String?
+  visibility        SoundVisibility @default(private)
+  /// Its public address, `/synths/<synthId>/s/<slug>`. Minted the first time it leaves private and kept after, so a
+  /// link that stopped working when the sound went private works again when it is shared again.
+  slug              String?         @unique @db.VarChar(16)
+  /// When it was first published, kept when it is unpublished and republished.
+  publishedAt       DateTime?
+  /// Up to three of the tags that synth's library sounds use, chosen at publish.
+  tags              String[]        @default([])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   /// Restrict, unlike SynthSound's Cascade: deleting a synth must never take users' own sounds with it. Unlist it instead.
-  synth       Synth       @relation(fields: [synthId], references: [id], onDelete: Restrict)
-  sourceSound SynthSound? @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
+  synth           Synth       @relation(fields: [synthId], references: [id], onDelete: Restrict)
+  sourceSound     SynthSound? @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
+  sourceUserSound UserSound?  @relation("UserSoundCopies", fields: [sourceUserSoundId], references: [id], onDelete: SetNull)
+  /// Copies other users saved from it.
+  copies          UserSound[] @relation("UserSoundCopies")
 
   /// Its user's star on it.
   favourites Favourite[]
@@ -554,6 +579,9 @@ model UserSound {
   @@index([userId, updatedAt])
   @@index([synthId])
   @@index([sourceSoundId])
+  @@index([sourceUserSoundId])
+  @@index([userId, publishedAt])
+  @@index([visibility, publishedAt])
   @@map("user_sound")
 }
 
@@ -682,9 +710,9 @@ model Favourite {
 /// switch it on.
 model SynthProfile {
   /// FK to User.id, ON DELETE CASCADE (hand-written in the migration). One profile per user.
-  userId            String    @id
+  userId            String     @id
   /// Stored lower-case, so uniqueness is case-insensitive.
-  username          String    @unique @db.VarChar(24)
+  username          String     @unique @db.VarChar(24)
   /// When the username last changed; null until the first change. Choosing the first one is not a change.
   usernameChangedAt DateTime?
   /// Each link as lib/app/profile/links.ts rebuilds it, never the string typed. Null for none.
@@ -693,12 +721,16 @@ model SynthProfile {
   instagram         String?
   bandcamp          String?
   /// Whether /u/<username> shows anything. Off: the page is a 404.
-  public            Boolean   @default(false)
+  public            Boolean    @default(false)
   /// Whether the public page lists the synths they own, and the ones they want (f-profiles r2).
-  showOwned         Boolean   @default(false)
-  showWishlist      Boolean   @default(false)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  showOwned         Boolean    @default(false)
+  showWishlist      Boolean    @default(false)
+  /// When they first published each sound in the last 24 hours, pruned at each publish: what the daily cap counts
+  /// (lib/app/sounds/publish.ts). Kept here, not counted from user_sound, so deleting a published sound does not give
+  /// its place back.
+  recentPublishes   DateTime[] @default([])
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   @@map("synth_profile")
 }

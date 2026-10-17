@@ -241,6 +241,7 @@ describe('reserved fork tiers', () => {
       'model BankRemoval {',
       'enum SynthSuggestionStatus {',
       'model SynthSuggestion {',
+      'enum SoundVisibility {',
       'model UserSound {',
       'model SynthPreference {',
       'model UserPreference {',

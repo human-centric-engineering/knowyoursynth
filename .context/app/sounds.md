@@ -28,6 +28,9 @@ it was copied from.
 - **The synth is `Restrict`.** Nothing deletes a `Synth` row; if something ever does, it has to
   decide what happens to the sounds made on it first.
 
+Sharing a sound by link, publishing it and copying someone else's are [`sharing.md`](./sharing.md)
+(`f-sharing`); the table's sharing columns and the routes they add are described there.
+
 ## The API
 
 Signed in, owner-scoped, under the proxy's `/api/v1` section cap. Another user's sound is a 404,
@@ -41,7 +44,9 @@ the same as one that does not exist, never a 403.
   201 with the sound.
 - `GET /api/v1/sounds/:id`: the sound with its panel. One that is not `playable` has no `panel`,
   but carries `fitted`: as much of it as fits the synth now, which the page opens.
-- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel? }`. `notes: null` clears them.
+- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, visibility? }`. `notes: null` clears them;
+  `visibility` is `private` or `link` ([`sharing.md`](./sharing.md)).
+- `POST /api/v1/sounds/:id/publish`: [`sharing.md`](./sharing.md).
 - `DELETE /api/v1/sounds/:id`
 
 The rules live in `lib/app/sounds/store.ts`, the shapes in `lib/app/sounds/data.ts`, each tested

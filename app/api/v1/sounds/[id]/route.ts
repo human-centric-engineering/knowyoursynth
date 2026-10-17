@@ -2,7 +2,9 @@
  * One of the signed-in user's own sounds (`f-my-sounds` s1).
  *
  * GET    /api/v1/sounds/:id — the sound with its panel, checked against the synth as it is now.
- * PATCH  /api/v1/sounds/:id — `{ name?, notes?, panel? }`. A new panel is checked and saved on the current definition.
+ * PATCH  /api/v1/sounds/:id — `{ name?, notes?, panel?, visibility? }`. A new panel is checked and saved on the current
+ *        definition. `visibility` is `private` or `link`: share by link, stop sharing, or unpublish. Publishing is
+ *        `POST /api/v1/sounds/:id/publish`.
  * DELETE /api/v1/sounds/:id
  *
  * Another user's sound is a 404, the same as one that does not exist, never a 403. See `lib/app/sounds/store.ts`.
@@ -39,7 +41,11 @@ export const PATCH = withAuth<Params>(
     const log = await getRouteLogger(request);
     const input = await validateRequestBody(request, UpdateUserSoundSchema);
     const sound = await updateUserSound(session.user.id, id.data, input);
-    log.info('User sound changed', { soundId: sound.id, panel: input.panel !== undefined });
+    log.info('User sound changed', {
+      soundId: sound.id,
+      panel: input.panel !== undefined,
+      visibility: input.visibility ?? null,
+    });
     return successResponse(sound);
   },
   { ownership: OWNERSHIP }
