@@ -181,6 +181,16 @@ describe('the social card', () => {
     }
   });
 
+  it('names the author only when the byline rule gives one', () => {
+    const theme = getSynthDef('model-d')!.theme;
+    const card = (author: string | null) =>
+      renderToStaticMarkup(
+        <SocialCard name="X" synthName="Y" maker="Z" author={author} theme={theme} brand="B" />
+      );
+    expect(card('patchwork')).toContain('@patchwork');
+    expect(card(null)).not.toContain('@');
+  });
+
   it('has no card for a sound the page would 404', async () => {
     vi.mocked(getSharedSound).mockResolvedValue({ ...SOUND, synthId: 'pro-1' });
     await expect(Image({ params: Promise.resolve({ id: 'model-d', slug: SLUG }) })).rejects.toThrow(
