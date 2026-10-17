@@ -2,8 +2,8 @@
 
 `f-profiles`. A signed-in user's synth profile: the username their public page goes under, where
 their music is, and who may see it. r1 is the profile itself, on the settings page; r2 adds the
-synths they own and want; r3 is the public page at `/u/[username]`. Nothing in r1 or r2 is shown
-to anyone else yet.
+synths they own and want; r3 is the public page at `/u/[username]`, the only place any of it is
+shown to anyone else.
 
 ## The tables
 
@@ -88,7 +88,20 @@ showOwned, showWishlist }`, a link blank or null for none. A username or link th
   changed since the caller read it is a 409, and the remedy is to read the lists again, which the
   settings section does.
 
-Tested in `tests/unit/app/api/v1/me/profile/route.test.ts`,
+`/api/v1/profiles/:username`, public, no session, under the same cap
+(`lib/app/profile/public.ts`):
+
+- `GET`: `{ username, links: [{ platform, url, display }], owned?, wishlist? }`, each list
+  `[{ instrumentId, name, maker, year }]` in the user's order. **Only what the profile switched
+  on**: a hidden list is absent, not empty, and a stored link that no longer passes is left out.
+  Carries an ETag.
+- **A private profile, an unknown name and a held one are the same 404.** A held name is not
+  followed to the new one: that would publish the link between the two. A name no one could hold
+  is a 404 without a query.
+- **Never the account.** The read selects from `synth_profile` and the lists alone, never the
+  user's own row, so the account name and email cannot reach the answer.
+
+Tested in `tests/unit/app/api/v1/me/profile/route.test.ts`, `tests/unit/app/api/v1/profiles/`,
 `tests/unit/app/api/v1/me/instruments/route.test.ts` and `tests/unit/lib/app/profile/`.
 `npm run smoke:profile` proves what no unit test can: the real unique index and hold, the
 instrument key and its cascade from the databank, the export, and the erasure cascades.
@@ -105,3 +118,17 @@ of the databank, then the two lists to reorder, move between and remove from. Th
 about 940 instruments, some 126 KB of JSON before compression, too small for a search parameter on
 the route to buy anything. Revisit if the databank grows by an order of magnitude. **Suggest a
 synth** (`components/app/bank/suggest-form.tsx`) sits beside the search for one that is missing.
+
+## The public page
+
+`/u/[username]` (`app/(public)/u/[username]/page.tsx`), readable signed out, on the consumer
+surface with nothing added to `classifySurface`. It reads the same `getPublicProfile()` the API
+serves, in-process, as the databank's pages read theirs, once per request for the page and its
+metadata. `components/app/profile/public-profile.tsx` shows the username, the links (opened in a
+new tab, `nofollow`), and owned and wishlist where shown, each synth opening its databank page.
+A shown list that is empty says so. The title is the username, and the description says which
+lists it carries. Tested in `tests/unit/app/public/profile-page.test.tsx`, over the same fake
+tables as the route (`tests/helpers/public-profile-db.ts`), which can join the user's row so a
+read that asked for it would be caught.
+
+Published sounds on the profile are `f-sharing`'s, not this feature's.
