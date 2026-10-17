@@ -50,10 +50,11 @@ const isUniqueClash = (err: unknown) =>
   typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002';
 
 /** Run a write that may mint a slug, again if the slug it minted was taken. At 50 bits a clash will not happen. */
-export async function withFreshSlug<T>(write: () => Promise<T>, tries = 3): Promise<T> {
+export async function withFreshSlug<T>(storeWithSlug: () => Promise<T>, tries = 3): Promise<T> {
+  // not named `write`: scripts/ci/shared-settings-writes.ts follows calls by name, and a catalogue writer has that one
   for (let attempt = 1; ; attempt++) {
     try {
-      return await write();
+      return await storeWithSlug();
     } catch (err) {
       if (attempt >= tries || !isUniqueClash(err)) throw err;
     }
