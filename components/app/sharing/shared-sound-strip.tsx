@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 
 import { Byline } from '@/components/app/sharing/byline';
+import { ReportButton } from '@/components/app/sharing/report-button';
 import { APIClientError } from '@/lib/api/client';
 import { sharedSoundHref } from '@/components/app/synth/routes';
 import type { PublicSound } from '@/lib/app/sounds/data';
@@ -19,6 +20,7 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  *   The parent saves the panel as it is, so a copy keeps whatever the visitor changed before saving it. If the original
  *   has stopped being shared since the page opened, it saves a plain new sound instead (h3), and the strip says so.
  * - **Their own:** open it as one of theirs instead, where Save writes to it.
+ * - **Report** (h4), for a signed-in visitor whose sound it is not: never on their own, and not signed out.
  *
  * Who it belongs to is the visitor's own sounds list's answer (it carries each sound's address): the public read never
  * says, so it cannot leak whose a sound is. Until that list arrives, no action is offered.
@@ -156,6 +158,9 @@ export function SharedSoundStrip({
             >
               {busy ? 'Saving…' : 'Save a copy'}
             </button>
+          )}
+          {viewer === 'other' && (
+            <ReportButton slug={sound.slug} soundName={sound.name} buttonClass={buttonClass} />
           )}
           {viewer === 'owner' && (
             <>

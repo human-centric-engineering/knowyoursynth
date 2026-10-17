@@ -15,7 +15,9 @@
  * - the public read serves link and published sounds, one 404 for everything else, never the owner's ids or account;
  * - the byline: a published sound names its owner, a link share only when their profile is public;
  * - a copy of a shared sound records it, carries its library credit, and is credited only while the source is
- *   published; deleting the source leaves the copy with no credit.
+ *   published; deleting the source leaves the copy with no credit;
+ * - an unlisted sound (h4) is the public read's 404, cannot be copied or credited, and cannot be shared or published
+ *   again by its owner (409 `UNLISTED`), though it can still be made private; clearing it brings it all back.
  *
  * The `SetNull` foreign key and the export are proved against a real database in `npm run smoke:sounds`.
  */
@@ -150,6 +152,7 @@ function userSoundTable() {
           slug: null,
           publishedAt: null,
           tags: [],
+          unlistedAt: null,
           createdAt: at,
           updatedAt: at,
           ...data,
@@ -696,5 +699,80 @@ describe('copying a shared sound', () => {
       source: { shared: String(rowOf(mine.id).slug) },
     });
     expect(rowOf(copy.id).sourceUserSoundId).toBeNull();
+  });
+});
+
+describe('an unlisted sound (f-sharing h4)', () => {
+  /** user-2's published sound, unlisted by an admin, and a copy user-1 saved before it was. */
+  async function unlisted() {
+    signIn('user-2');
+    const sound = await save({ synthId: 'model-d', name: 'Their bass', panel: otherPanel });
+    await publishIt(String(sound.id));
+    signIn('user-1');
+    const copy = await save({
+      synthId: 'model-d',
+      source: { shared: String(rowOf(sound.id).slug) },
+    });
+    rowOf(sound.id).unlistedAt = new Date(Date.UTC(2026, 9, 17, 18));
+    return { sound: rowOf(sound.id), copy };
+  }
+  const credit = async (id: unknown) =>
+    (await json(await read(request('GET', `/api/v1/sounds/${String(id)}`), ctx(String(id))))).data!
+      .basedOn;
+
+  it("is the public read's 404, whatever its visibility, and comes back when cleared", async () => {
+    const { sound } = await unlisted();
+    expect(sound.visibility).toBe('published');
+    const gone = await shared(String(sound.slug));
+    expect(gone.status).toBe(404);
+
+    sound.unlistedAt = null;
+    expect((await shared(String(sound.slug))).status).toBe(200);
+  });
+
+  it('cannot be copied, and credits nothing on a copy saved before', async () => {
+    const { sound, copy } = await unlisted();
+    expect(await credit(copy.id)).toBeNull();
+    const before = table.rows.length;
+    const res = await create(
+      request('POST', '/api/v1/sounds', {
+        synthId: 'model-d',
+        source: { shared: String(sound.slug) },
+      })
+    );
+    expect(res.status).toBe(400);
+    expect(table.rows).toHaveLength(before);
+
+    sound.unlistedAt = null;
+    expect(await credit(copy.id)).toMatchObject({ username: 'patchwork' });
+  });
+
+  it('tells its owner it is unlisted, and refuses sharing or publishing it again', async () => {
+    const { sound } = await unlisted();
+    signIn('user-2');
+    const own = (
+      await json(
+        await read(request('GET', `/api/v1/sounds/${String(sound.id)}`), ctx(String(sound.id)))
+      )
+    ).data!;
+    expect(own).toMatchObject({ unlisted: true, visibility: 'published' });
+
+    const relink = await patch(String(sound.id), { visibility: 'link' });
+    expect(relink.status).toBe(409);
+    expect((await json(relink)).error?.code).toBe('UNLISTED');
+    const republish = await publishIt(String(sound.id));
+    expect(republish.status).toBe(409);
+    expect((await json(republish)).error?.code).toBe('UNLISTED');
+    expect(rowOf(sound.id).visibility).toBe('published');
+
+    // making it private is still theirs to do, and it stays unlisted
+    expect((await patch(String(sound.id), { visibility: 'private' })).status).toBe(200);
+    expect(rowOf(sound.id)).toMatchObject({ visibility: 'private' });
+    expect(rowOf(sound.id).unlistedAt).toBeInstanceOf(Date);
+    expect((await patch(String(sound.id), { visibility: 'link' })).status).toBe(409);
+
+    // restored: sharing works again
+    rowOf(sound.id).unlistedAt = null;
+    expect((await patch(String(sound.id), { visibility: 'link' })).status).toBe(200);
   });
 });

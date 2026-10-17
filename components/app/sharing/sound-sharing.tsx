@@ -10,6 +10,9 @@
  * What is shared is the sound as last saved, notes included: the notes were written when only their owner could read
  * them, so both say so.
  *
+ * An unlisted sound (h4: moderators took it down after a report) says so and offers only Stop sharing: the server
+ * refuses sharing or publishing it again (`UNLISTED`) until an admin restores it.
+ *
  * With no username yet, the dialog's first step sends them to choose one in settings, with the way back to this sound
  * (`chooseUsernameHref`). The panel goes with them in browser storage, as it does for sign-in.
  */
@@ -149,6 +152,27 @@ export function SoundSharing({
       Stop sharing
     </button>
   );
+
+  if (sound.unlisted)
+    return (
+      <section aria-label="Sharing" className="flex w-full flex-col items-start gap-1.5 text-sm">
+        <p className="text-(--kys-warn)">
+          Unlisted by moderators after a report: nobody else can open it, and it can&apos;t be
+          shared again for now.
+        </p>
+        {sound.visibility !== 'private' && <div className="flex gap-2">{stopButton}</div>}
+        {failure && (
+          <p role="alert" className="text-(--kys-warn)">
+            {failure}
+          </p>
+        )}
+        {status && (
+          <p role="status" className="text-(--kys-good)">
+            {status}
+          </p>
+        )}
+      </section>
+    );
 
   return (
     <section aria-label="Sharing" className="flex w-full flex-col items-start gap-1.5 text-sm">

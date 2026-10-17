@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { AudioLines } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
+import { soundStateLabel } from '@/components/app/sharing/visibility';
 import { mySoundHref, sharedSoundHref } from '@/components/app/synth/routes';
 import { listSynths } from '@/lib/app/catalogue/read';
 import { listUserSounds } from '@/lib/app/sounds/store';
@@ -63,15 +63,15 @@ export async function MySoundsCard({ userId }: { userId: string }) {
                     {synth ? `${synth.maker} ${synth.name}` : `${s.synthId}, no longer available`}
                     {s.source ? ` · copied from ${s.source.name}` : ''}
                     {' · '}
-                    {synth && s.visibility !== 'private' && s.slug ? (
+                    {synth && s.visibility !== 'private' && s.slug && !s.unlisted ? (
                       <Link
                         href={sharedSoundHref(s.synthId, s.slug)}
                         className="underline underline-offset-2"
                       >
-                        {VISIBILITY_LABELS[s.visibility]}
+                        {soundStateLabel(s)}
                       </Link>
                     ) : (
-                      VISIBILITY_LABELS[s.visibility]
+                      soundStateLabel(s)
                     )}
                   </span>
                 </li>
