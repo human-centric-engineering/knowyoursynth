@@ -183,20 +183,21 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** working as designed upstream; nothing to raise.
 - **Delete when:** the fork no longer registers a drift probe.
 
-### The databank's pages in the sitemap
+### The databank's pages and published sounds in the sitemap
 
-- **Files:** `app/sitemap.ts`
-- **Change:** the function is `async` and `force-dynamic`, and spreads
-  `bankSitemapPaths()` (`components/app/bank/sitemap.ts`) into its page list: `/bank`, each other
-  tab and every databank row. One import and a comment line besides.
-- **Why:** the plan names `sitemap.ts` among the platform files the fork edits (plan §5), and the
-  databank's rows are in the tables, so the list is read per request rather than at build. There
-  is no fork seam for sitemap entries.
-- **On conflict:** take theirs, then re-apply the import, `force-dynamic`, `async` and the spread
-  at the end of `publicPages`.
-- **Upstream:** none filed. A sitemap-contributor seam would remove the row; file it if a second
-  fork-owned surface (`/explore`, `/u/[username]`) needs the sitemap too.
-- **Delete when:** Sunrise ships a seam for sitemap entries. Move the call into it.
+- **Files:** `app/sitemap.ts`, `tests/unit/app/public/sitemap.test.ts`
+- **Change:** the function is `async` and `force-dynamic`, and spreads two lists into its page
+  list: `bankSitemapPaths()` (`components/app/bank/sitemap.ts`: `/bank`, each other tab and every
+  databank row), then `sharingSitemapPaths()` (`components/app/sharing/sitemap.ts`: `/explore` and
+  every published sound, never a link share). Two imports and a comment line besides. The test
+  mocks both and expects their entries after the platform's.
+- **Why:** the plan names `sitemap.ts` among the platform files the fork edits (plan §5), and both
+  lists are in the tables, so they are read per request rather than at build. There is no fork
+  seam for sitemap entries.
+- **On conflict:** take theirs, then re-apply the imports, `force-dynamic`, `async` and the two
+  spreads at the end of `publicPages`, in that order.
+- **Upstream:** filed when `/explore` became the second surface (`f-sharing` h2): ISSUE_LINK.
+- **Delete when:** Sunrise ships a seam for sitemap entries. Move both calls into it.
 
 ### My sounds, favourites and lessons on the dashboard
 
@@ -266,6 +267,7 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 ## Excluded: filled seams
 
 - `lib/app/brand.ts`, `lib/app/ci.ts`, `lib/app/reserved-tiers.ts`, `lib/app/protected-nav.ts`,
+  `lib/app/public-nav.ts` (the header list only, with Explore),
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
@@ -274,7 +276,7 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
-  `ci`, `reserved-tiers`, `protected-nav`, `auth-landing`, `data-export`, `admin-nav`,
+  `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

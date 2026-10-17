@@ -244,8 +244,15 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/public-nav.ts',
     risk: 'a stray non-null list would silently REPLACE the marketing nav',
+    // Know Your Synth fills the header list: pinned to its four links, so a stray change still fails. The footers
+    // stay null.
     assert: () => {
-      expect(publicNavItems).toBeNull();
+      expect(publicNavItems?.map(({ href, label }) => ({ href, label }))).toEqual([
+        { href: '/', label: 'Home' },
+        { href: '/explore', label: 'Explore' },
+        { href: '/about', label: 'About' },
+        { href: '/contact', label: 'Contact' },
+      ]);
       expect(footerNavItems).toBeNull();
       expect(footerLegalItems).toBeNull();
     },
@@ -253,12 +260,13 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/protected-nav.ts',
     risk: 'a stray non-null list would silently REPLACE the authenticated nav',
-    // Know Your Synth fills this seam: pinned to its four links, so a stray change still fails.
+    // Know Your Synth fills this seam: pinned to its five links, so a stray change still fails.
     assert: () =>
       expect(
         protectedNavItems?.map(({ href, label, adminOnly }) => ({ href, label, adminOnly }))
       ).toEqual([
         { href: '/dashboard', label: 'My synths', adminOnly: undefined },
+        { href: '/explore', label: 'Explore', adminOnly: undefined },
         { href: '/profile', label: 'Profile', adminOnly: undefined },
         { href: '/settings', label: 'Settings', adminOnly: undefined },
         { href: '/admin', label: 'Admin', adminOnly: true },

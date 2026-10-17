@@ -2,8 +2,9 @@
 
 `f-sharing`. A user's sound can be shared by a link, or published under their username; anyone can
 open a shared one signed out, and a signed-in user can save a copy that credits it (D5). h1 is the
-data and the API, described here. The sound page and Explore (h2), the buttons on the synth page
-(h3) and reports and moderation (h4) add their sections as they land.
+data and the API; h2 the sound page, Explore, published sounds on a profile, the social card and
+the sitemap. The buttons on the synth page (h3) and reports and moderation (h4) add their sections
+as they land.
 
 The model is BeatBreaker's (`~/code/beatbreaker/.context/app/sharing.md`) without variations,
 sessions or fixed published sounds. Where it differs, the reason is below.
@@ -26,16 +27,24 @@ sessions or fixed published sounds. Where it differs, the reason is below.
   library credit is a snapshot because it names an artist, not a user of this app.
 - **Don't credit a link share.** The credit links to the source, and a copy shared onward would
   hand a link-only address to strangers.
+- **Don't list a link share anywhere.** Explore, a profile and the sitemap read through
+  `listPublishedSounds`, `publishedSoundsOf` and `publishedSoundAddresses`, each filtered to
+  `published`; a new list goes through one of them.
+- **Don't decide "is this the visitor's own?" on the server from the public read.** It carries no
+  owner, on purpose. The sound page asks the visitor's own sounds list (`sharedViewerOf`), which
+  has each sound's slug.
+- **Don't colour a card or page by hand.** A synth's colours are its definition's `theme`
+  (`panel`, `panel2`, `ink`); `Synth.design` is only whether the maker's marks are drawn.
 
 ## Who can open a sound
 
 `UserSound.visibility` (`SoundVisibility`):
 
-| Value       | Who can open it                                                         | Listed?                 |
-| ----------- | ----------------------------------------------------------------------- | ----------------------- |
-| `private`   | Its owner.                                                              | No                      |
-| `link`      | Anyone with `/synths/<id>/s/<slug>`, signed in or not (the page is h2). | No                      |
-| `published` | As `link`, and listed under the owner's username.                       | Yes, in `/explore` (h2) |
+| Value       | Who can open it                                                   | Listed?                    |
+| ----------- | ----------------------------------------------------------------- | -------------------------- |
+| `private`   | Its owner.                                                        | No                         |
+| `link`      | Anyone with `/synths/<id>/s/<slug>`, signed in or not. `noindex`. | No                         |
+| `published` | As `link`, and listed under the owner's username.                 | `/explore`, `/u/`, sitemap |
 
 - **The slug** is ten characters of lower-case Crockford base32 (`mintSlug` in
   `lib/app/sounds/sharing.ts`, 50 bits, not enumerable; `SharedSlugSchema` in `data.ts` is its
@@ -130,6 +139,59 @@ and malformed are one 404. A panel that no longer passes is served unplayable an
 anyone holding the address cannot fill the error log. ETag and `304`; the platform's `private, no-cache`, so a sound made
 private stops being served on the next request.
 
+## The sound page
+
+`/synths/<id>/s/<slug>` (`app/(panel)/synths/[id]/s/[slug]/page.tsx`): the synth page with the
+shared sound loaded, signed out or in, reading the same `getSharedSound` as the public API,
+in-process. Private, unknown, malformed, on another synth, and on a synth the catalogue does not
+serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
+
+- **It is the synth page** (`SynthPage` with `shared`), so the panel draws the synth's
+  `Synth.design` and everything else on the page works. The sound loads over the panel stored for
+  that synth, as `?sound=` does, and counts as the visitor's change, so the account's last panel
+  arriving later does not replace it. Changing the view keeps the shared address
+  (`sharedSoundHref` with the view).
+- **The strip** (`components/app/sharing/shared-sound-strip.tsx`) above the panel: name, byline,
+  the `basedOn` and library credits, notes and tags. Signed out: **Sign in to save a copy**, back to
+  this address. Signed in on someone else's: **Save a copy**, which sends the panel as it is with
+  `source: { shared }`, so what they changed first is kept, and then opens the copy as theirs. On
+  their own: **Open it to edit**. Until the session and their list are known, nothing.
+- **While the shared sound is on the panel**, the panel's own Save buttons are hidden: saving it is
+  Save a copy, which credits it. "Controls moved" and Restore count from the shared panel. Opening
+  any other sound leaves it; **Load it again** puts it back.
+- **Metadata:** a link share is `noindex`, and its description names no author unless the byline
+  rule gives one. A published sound is canonical at its address.
+- **The social card** (`opengraph-image.tsx`, `components/app/sharing/social-card.tsx`): text only
+  (owner ruling): the maker and synth, the sound's name and `@author` as the byline rule allows, on
+  a `panel` to `panel2` gradient in `ink`, from that synth's `theme`. A picture of the panel is h5
+  (t-50).
+
+## Explore
+
+`/explore` (`app/(public)/explore/page.tsx`) and `GET /api/v1/public/sounds?synth=&tag=&sort=&page=`
+read `listPublishedSounds`: published sounds on synths the catalogue serves, 24 a page
+(`EXPLORE_PAGE_SIZE`).
+
+- **Filters:** a synth, and a tag from that synth's library tags (or every served synth's)
+  (`exploreTags`). `ExploreQuerySchema` drops what does not parse, and the read drops a synth it
+  does not serve and a tag no library sound there uses; `meta.applied` says what was used. A link
+  with a stale filter still opens.
+- **Sort:** `newest` by `publishedAt` (the first publication), or `saves`: the count of copies
+  (`sourceUserSoundId`), then newest. The row id breaks ties, so pages do not overlap.
+- **A card** (`PublishedSoundCard`): slug, synth and its name, name, tags, `publishedAt`, `author`,
+  `authorProfile` and `saves`. Never the row's id or the owner's.
+- The filters are a plain GET form, so the page needs no script.
+
+A profile (`/u/<username>`, `GET /api/v1/profiles/:username`) lists the user's published sounds
+the same way (`publishedSoundsOf`), never their link shares ([`profiles.md`](./profiles.md)).
+
+## Navigation and the sitemap
+
+Explore is in the public header (`lib/app/public-nav.ts`, which this fills) and the signed-in one
+(`lib/app/protected-nav.ts`). The sitemap adds `/explore` and every published sound
+(`components/app/sharing/sitemap.ts`), never a link share, through the platform edit the
+divergence ledger records.
+
 ## Erasure and export
 
 - Erasing a user deletes their sounds, shared and published ones included (the
@@ -146,3 +208,11 @@ private stops being served on the next request.
 refusal, the cap kept through deletes, the owner's lock, kept tags, the checks on a published
 sound, the public read and its 404, the byline, copies and their credit);
 `tests/unit/lib/app/profile/words.test.ts` (the word check); `npm run smoke:sounds` (the `SetNull` FK and the export, against a real database).
+
+h2: `tests/unit/app/api/v1/public/published-sounds.test.ts` (Explore's read: published only,
+the filters and what is dropped, sort by saves, paging; a profile's and the sitemap's lists);
+`tests/unit/app/panel/shared-sound-page.test.tsx` (the page, its 404s, the metadata, the card in
+each synth's theme); `tests/unit/components/app/synth/synth-page-shared.test.tsx` (the sound on the
+panel, Save a copy only for a signed-in non-owner, Load it again, the address kept);
+`tests/unit/app/public/explore-page.test.tsx`; `tests/unit/components/app/sharing/sitemap.test.ts`;
+the profile's in `tests/unit/app/public/profile-page.test.tsx`.

@@ -24,10 +24,19 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · lib/public-nav/types.ts
  */
+import { Compass, Home, Info, Mail } from 'lucide-react';
+
 import type { PublicNavItem } from '@/lib/public-nav/types';
 
 /** Header nav. `null` = platform default; a non-null array replaces it. */
-export const publicNavItems: PublicNavItem[] | null = null;
+// Know Your Synth: the platform's three links with Explore (`f-sharing` h2) after Home. Retyped rather than spread
+// from `DEFAULT_PUBLIC_NAV`, as `protected-nav.ts` is, because it goes in the middle. The footers keep the default.
+export const publicNavItems: PublicNavItem[] | null = [
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/explore', label: 'Explore', icon: Compass },
+  { href: '/about', label: 'About', icon: Info },
+  { href: '/contact', label: 'Contact', icon: Mail },
+];
 
 /** Footer link cluster. `null` = platform default; a non-null array replaces it. */
 export const footerNavItems: PublicNavItem[] | null = null;

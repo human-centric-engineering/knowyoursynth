@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { bankSitemapPaths } from '@/components/app/bank/sitemap';
+import { sharingSitemapPaths } from '@/components/app/sharing/sitemap';
 
 /**
  * Sitemap Configuration
@@ -11,8 +12,8 @@ import { bankSitemapPaths } from '@/components/app/bank/sitemap';
  *
  * Phase 3.5: Landing Page & Marketing
  *
- * Know Your Synth: adds the databank's pages, read from its tables per request
- * (`.context/app/divergences.md`).
+ * Know Your Synth: adds the databank's pages, and Explore with every published
+ * sound, read from its tables per request (`.context/app/divergences.md`).
  */
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
     { path: '/terms', priority: 0.3, changeFrequency: 'yearly' as const },
     ...(await bankSitemapPaths()),
+    ...(await sharingSitemapPaths()),
   ];
 
   return publicPages.map((page) => ({

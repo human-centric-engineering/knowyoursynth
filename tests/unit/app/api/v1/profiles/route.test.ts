@@ -86,6 +86,20 @@ describe('GET /api/v1/profiles/:username', () => {
           { instrumentId: 'juno-60', name: 'Juno-60', maker: 'Roland', year: '1982' },
         ],
         wishlist: [{ instrumentId: 'cs-80', name: 'CS-80', maker: 'Yamaha', year: '1977' }],
+        // published only: the link share and the private one are not listed (`f-sharing` h2)
+        sounds: [
+          {
+            slug: 's1xxxxxxxx',
+            synthId: 'model-d',
+            synthName: 'Model D',
+            name: 'Night bass',
+            tags: [],
+            publishedAt: '2026-10-16T00:00:00.000Z',
+            author: 'moog_fan',
+            authorProfile: true,
+            saves: 0,
+          },
+        ],
       },
     });
     expect(res.headers.get('ETag')).toBeTruthy();

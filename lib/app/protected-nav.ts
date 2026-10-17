@@ -27,17 +27,19 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · lib/protected-nav/types.ts
  */
-import { LayoutDashboard, Settings, Shield, User } from 'lucide-react';
+import { Compass, LayoutDashboard, Settings, Shield, User } from 'lucide-react';
 
 import type { ProtectedNavItem } from '@/lib/protected-nav/types';
 
 /** Authenticated header nav. `null` = platform default; a non-null array replaces it. */
 // Know Your Synth: Sunrise's four links, with the dashboard called what it is here
 // (plan §4, route map). Retyped rather than spread, because spreading pins the
-// default anyway and only the first label changes. Links to /synths, /bank and
-// /explore join when those routes exist; a link to a 404 is worse than none.
+// default anyway and only the first label changes. Explore (`f-sharing` h2) after
+// it. Links to /synths and /bank join when they are wanted here; a link to a 404
+// is worse than none.
 export const protectedNavItems: ProtectedNavItem[] | null = [
   { href: '/dashboard', label: 'My synths', icon: LayoutDashboard },
+  { href: '/explore', label: 'Explore', icon: Compass },
   { href: '/profile', label: 'Profile', icon: User },
   { href: '/settings', label: 'Settings', icon: Settings },
   { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },

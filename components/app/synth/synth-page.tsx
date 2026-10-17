@@ -11,6 +11,9 @@
  *   through each lesson is kept, and they star synths and sounds (`progress.ts`, `favourites.tsx`, s4).
  * - The audio engine outlives the page (`engine.ts`), so changing synth keeps the sound on.
  * - The panel draws the synth's design (D11), as an admin set it: `neutral` leaves the maker's marks out.
+ * - A sound someone shared opens at its own address, `/synths/<id>/s/<slug>` (`f-sharing` h2): this page with that
+ *   sound loaded and a strip above the panel saying whose it is (`SharedSoundStrip`). The view's query is kept on that
+ *   address, so changing the view does not lose it.
  *
  * What is not here yet, so that no button opens nothing (`B31`): the tutor (`f-tutor`) and the databank
  * (`f-databank`). The theme switch is Sunrise's, in the header.
@@ -20,7 +23,7 @@ import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
-import type { UserSoundDetail } from '@/lib/app/sounds/data';
+import type { PublicSound, UserSoundDetail } from '@/lib/app/sounds/data';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -52,7 +55,13 @@ import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { useLessonProgress } from '@/components/app/synth/progress';
 import { bankHashRoute } from '@/components/app/bank/routes';
-import { DEFAULT_VIEW, hashTarget, parseView, synthHref } from '@/components/app/synth/routes';
+import {
+  DEFAULT_VIEW,
+  hashTarget,
+  parseView,
+  sharedSoundHref,
+  synthHref,
+} from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import {
   HarmonicsStrip,
@@ -85,6 +94,7 @@ import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';
+import { SharedSoundStrip, sharedViewerOf } from '@/components/app/sharing/shared-sound-strip';
 
 const PANEL_HELP = [
   [
@@ -141,6 +151,8 @@ export interface SynthPageProps {
   soundParam?: string | null;
   /** The `mine` query: one of the signed-in user's own sounds to open with, as the dashboard links to it. */
   mineParam?: string | null;
+  /** On a shared sound's page: that sound, from `GET /api/v1/public/sounds/:slug`, on this synth. */
+  shared?: PublicSound | null;
 }
 
 /**
@@ -164,6 +176,7 @@ function Synth({
   viewParam,
   soundParam = null,
   mineParam = null,
+  shared = null,
 }: SynthPageProps & { baseDef: AppSynthDef }) {
   const router = useRouter();
   const synthId = baseDef.id;
@@ -179,13 +192,20 @@ function Synth({
   // ── the view: the query first, then the last choice, then the default ──
   const urlView = useMemo(() => parseView(viewParam), [viewParam]);
   const [view, setViewState] = useState<PanelView>(urlView ?? DEFAULT_VIEW);
+  // This page's own address with a view: a shared sound's page keeps its address.
+  const sharedSlug = shared?.slug ?? null;
+  const hereHref = useCallback(
+    (v: PanelView) =>
+      sharedSlug ? sharedSoundHref(synthId, sharedSlug, v) : synthHref(synthId, v),
+    [synthId, sharedSlug]
+  );
   const setView = useCallback(
     (next: PanelView) => {
       setViewState(next);
       writeStored(STORAGE_KEYS.view, next);
-      window.history.replaceState(null, '', synthHref(synthId, next));
+      window.history.replaceState(null, '', hereHref(next));
     },
-    [synthId]
+    [hereHref]
   );
 
   // On arrival: follow a prototype hash link, remember this synth, and restore the last view if the URL has none.
@@ -239,6 +259,16 @@ function Synth({
     url.searchParams.delete('sound');
     window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+
+  // ── a shared sound (`f-sharing` h2) ──
+  // Its panel, while it is what is on the panel: what "controls moved" counts from. Opening anything else clears it.
+  const [sharedPanel, setSharedPanel] = useState<Pick<Session, 'values' | 'cables'> | null>(null);
+  const [sharedNotice, setSharedNotice] = useState<string | null>(null);
+  const leaveShared = () => {
+    setSharedPanel(null);
+    setSharedNotice(null);
+  };
+
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
   // sound, then.
@@ -261,10 +291,10 @@ function Synth({
   } | null>(null);
   const savedOpen = openSound && saved?.id === openSound.id ? saved : null;
   const [mineNotice, setMineNotice] = useState<string | null>(null);
-  const signInHref = `/login?callbackUrl=${encodeURIComponent(synthHref(synthId, view))}`;
+  const signInHref = `/login?callbackUrl=${encodeURIComponent(hereHref(view))}`;
 
   const libraryTarget = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
-  const target = savedOpen ? savedOpen.values : libraryTarget;
+  const target = savedOpen ? savedOpen.values : sharedPanel ? sharedPanel.values : libraryTarget;
   const targetRef = useRef(target);
   useEffect(() => {
     targetRef.current = target;
@@ -604,6 +634,7 @@ function Synth({
     if (!p) return;
     openSeq.current++;
     focusStore.set(null);
+    leaveShared();
     patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
   };
@@ -637,6 +668,7 @@ function Synth({
     // library sound that was on the panel behind, so it is not credited or read as this one's.
     const lib = d.source && sounds.some((x) => x.id === d.source?.slug) ? d.source.slug : null;
     focusStore.set(null);
+    leaveShared();
     patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     setSaved({ id: d.id, ...panel });
     mine.put(d);
@@ -677,6 +709,38 @@ function Synth({
     window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
   }, [authPending, signedIn]); // eslint-disable-line react-hooks/exhaustive-deps -- once, when the session is known
 
+  // Load the shared sound onto the panel, as opening one of the user's does.
+  const loadShared = () => {
+    if (!shared) return;
+    const from = shared.panel ?? shared.fitted;
+    if (!from) {
+      setSharedNotice(`${shared.name} cannot be played on this synth as it is now.`);
+      return;
+    }
+    const panel = fitPanel(synthDef, from.values, from.cables);
+    // a copy of a library sound keeps that sound's lesson beside it while the library has it, as one of yours does
+    const lib =
+      shared.source && sounds.some((x) => x.id === shared.source?.slug) ? shared.source.slug : null;
+    openSeq.current++;
+    focusStore.set(null);
+    patch(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+    setSharedPanel(panel);
+    setSharedNotice(
+      shared.panel
+        ? null
+        : `${shared.name} no longer fits this synth as it is now, so it opened with what does.`
+    );
+  };
+  // On arrival, over whatever was stored, as `?sound=` does: the address names this sound. The account's last panel
+  // does not replace it when it arrives, since this counts as a change the visitor made.
+  useEffect(() => {
+    if (!shared) return;
+    const hash = window.location.hash;
+    const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
+    if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
+    loadShared();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+
   // The panel as the sounds API takes it, remembered so a save can count from exactly what was sent.
   const sentRef = useRef<Pick<Session, 'values' | 'cables'> | null>(null);
   const panelInput = () => {
@@ -691,8 +755,38 @@ function Synth({
     setMineNotice(null);
     if (how === 'renamed') return;
     if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
-    if (how === 'created') patch((s) => ({ ...s, soundId: d.id }));
+    if (how === 'created') {
+      leaveShared();
+      patch((s) => ({ ...s, soundId: d.id }));
+    }
   };
+
+  // Save a copy of the shared sound: the panel as it is, so what the visitor changed is kept, with the shared sound
+  // credited. It then opens as theirs, as a new save does. Returns what went wrong, or null.
+  const copyShared = async (): Promise<string | null> => {
+    if (!shared) return null;
+    const seq = openSeq.current;
+    try {
+      const d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
+        body: { synthId, source: { shared: shared.slug }, panel: panelInput() },
+      });
+      // something else was opened while it saved: the copy is in My sounds, but not what is on the panel now
+      if (seq !== openSeq.current) mine.put(d);
+      else onSaved(d, 'created');
+      return null;
+    } catch {
+      return 'The copy could not be saved. Try again.';
+    }
+  };
+  // Who is looking, as the strip needs it (`sharedViewerOf`).
+  const ownShared =
+    shared && mine.sounds ? mine.sounds.find((x) => x.slug === shared.slug) : undefined;
+  const sharedViewer = sharedViewerOf({
+    slug: shared?.slug ?? '',
+    authPending,
+    signedIn,
+    mine: mine.sounds,
+  });
   const onDeleted = (id: string) => {
     mine.remove(id);
     setSaved(null);
@@ -708,6 +802,7 @@ function Synth({
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   const setStep = (k: number | null) => {
+    leaveShared();
     if (preset && k != null) progress.record(preset.id, k);
     else if (preset && step != null && step === preset.steps.length - 1)
       progress.record(preset.id, step, true);
@@ -777,6 +872,18 @@ function Synth({
         </button>
       </div>
 
+      {shared && (
+        <SharedSoundStrip
+          sound={shared}
+          loaded={sharedPanel !== null}
+          onLoad={loadShared}
+          viewer={sharedViewer}
+          signInHref={signInHref}
+          onCopy={copyShared}
+          onOpen={() => ownShared && void openMine(ownShared.id)}
+          buttonClass={smallBtn}
+        />
+      )}
       <section
         aria-label={`${def.name} panel`}
         className="kys-stage rounded-2xl border border-(--kys-line) p-3 sm:p-5"
@@ -799,7 +906,13 @@ function Synth({
             <p className="truncate text-[15px]">
               <span className="text-(--kys-muted)">Loaded: </span>
               <span className="font-semibold">
-                {openSound ? openSound.name : preset ? preset.name : 'Blank patch'}
+                {openSound
+                  ? openSound.name
+                  : sharedPanel && shared
+                    ? shared.name
+                    : preset
+                      ? preset.name
+                      : 'Blank patch'}
               </span>
               {openSound && (
                 <span className="ml-2 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
@@ -817,13 +930,14 @@ function Synth({
                 </span>
               )}
             </p>
-            {mineNotice && (
+            {(mineNotice || sharedNotice) && (
               <p role="status" className="mt-1 max-w-[80ch] text-sm text-(--kys-warn)">
-                {mineNotice}
+                {mineNotice ?? sharedNotice}
               </p>
             )}
-            {/* Not until the open sound is known: without it, Save would make a new sound instead of saving this one. */}
-            {!authPending && !(signedIn && sess.soundId && !mine.sounds) && (
+            {/* Not until the open sound is known: without it, Save would make a new sound instead of saving this one.
+                Not while a shared sound is on the panel either: saving it is Save a copy, which credits it. */}
+            {!authPending && !sharedPanel && !(signedIn && sess.soundId && !mine.sounds) && (
               <SoundActions
                 synthId={synthId}
                 signedIn={signedIn}
@@ -838,7 +952,15 @@ function Synth({
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            {savedOpen && changed > 0 ? (
+            {sharedPanel && changed > 0 ? (
+              <button
+                type="button"
+                onClick={() => patch((s) => ({ ...s, step: null, ...sharedPanel }))}
+                className={smallBtn}
+              >
+                Restore sound
+              </button>
+            ) : savedOpen && changed > 0 ? (
               <button
                 type="button"
                 onClick={() =>

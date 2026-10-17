@@ -207,3 +207,36 @@ export interface PublicSound {
   problems: string[];
   fitted: UserSoundDetail['fitted'];
 }
+
+/** How Explore orders published sounds: by first publication, or by how many people saved a copy. */
+export const EXPLORE_SORTS = ['newest', 'saves'] as const;
+export type ExploreSort = (typeof EXPLORE_SORTS)[number];
+export const EXPLORE_PAGE_SIZE = 24;
+
+/**
+ * `GET /api/v1/public/sounds` and `/explore`'s query. A filter that does not parse is dropped, not an error: a link
+ * with a mistyped tag still opens Explore. A synth or tag that parses but is not served is dropped by the read.
+ */
+export const ExploreQuerySchema = z.object({
+  synth: SynthIdSchema.optional().catch(undefined),
+  tag: SoundTagSchema.optional().catch(undefined),
+  sort: z.enum(EXPLORE_SORTS).default('newest').catch('newest'),
+  page: z.coerce.number().int().positive().max(1000).default(1).catch(1),
+});
+export type ExploreQuery = z.infer<typeof ExploreQuerySchema>;
+
+/** A published sound as Explore and a profile list it: no panel, and never the owner's ids. */
+export interface PublishedSoundCard {
+  slug: string;
+  synthId: string;
+  synthName: string;
+  name: string;
+  tags: string[];
+  publishedAt: string;
+  /** Always present: publishing needs a username, and is choosing to be named. */
+  author: string;
+  /** Whether `/u/<author>` shows anything, so the byline can link to it. */
+  authorProfile: boolean;
+  /** How many copies people have saved of it. */
+  saves: number;
+}

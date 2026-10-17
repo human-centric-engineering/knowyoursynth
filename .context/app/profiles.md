@@ -91,10 +91,11 @@ showOwned, showWishlist }`, a link blank or null for none. A username or link th
 `/api/v1/profiles/:username`, public, no session, under the same cap
 (`lib/app/profile/public.ts`):
 
-- `GET`: `{ username, links: [{ platform, url, display }], owned?, wishlist? }`, each list
+- `GET`: `{ username, links: [{ platform, url, display }], owned?, wishlist?, sounds }`, each list
   `[{ instrumentId, name, maker, year }]` in the user's order. **Only what the profile switched
   on**: a hidden list is absent, not empty, and a stored link that no longer passes is left out.
-  Carries an ETag.
+  `sounds` is their published sounds, newest first, as Explore's cards (`publishedSoundsOf`,
+  [`sharing.md`](./sharing.md)); never a link share. Carries an ETag.
 - **A private profile, an unknown name and a held one are the same 404.** A held name is not
   followed to the new one: that would publish the link between the two. A name no one could hold
   is a 404 without a query.
@@ -125,7 +126,7 @@ synth** (`components/app/bank/suggest-form.tsx`) sits beside the search for one 
 surface with nothing added to `classifySurface`. It reads the same `getPublicProfile()` the API
 serves, in-process, as the databank's pages read theirs, once per request for the page and its
 metadata. `components/app/profile/public-profile.tsx` shows the username, the links (opened in a
-new tab, `nofollow`), and owned and wishlist where shown, each synth opening its databank page.
+new tab, `nofollow`), their published sounds, and owned and wishlist where shown, each synth opening its databank page.
 A shown list that is empty says so. The title is the username, and the description says which
 lists it carries. Tested in `tests/unit/app/public/profile-page.test.tsx`, over the same fake
 tables as the route (`tests/helpers/public-profile-db.ts`), which can join the user's row so a
