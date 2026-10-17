@@ -16,6 +16,9 @@
  * 3. `eraseUser()` erases them: the hand-written `user_sound_userId_fkey`, `synth_preference_userId_fkey`,
  *    `user_preference_userId_fkey`, `lesson_progress_userId_fkey` and `favourite_userId_fkey` cascade. Another user's
  *    rows stay.
+ * 4. Sharing (`f-sharing` h1): a published sound is served by its slug and copied with credit; the export carries its
+ *    visibility and slug; erasing its author keeps the other user's copy with no credit left
+ *    (`user_sound_sourceUserSoundId_fkey`, `ON DELETE SET NULL`).
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -27,7 +30,14 @@ import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import { eraseUser } from '@/lib/privacy/erase-user';
 import { exportUserData } from '@/lib/privacy/export-user';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { createUserSound, getUserSound, listUserSounds } from '@/lib/app/sounds/store';
+import {
+  createUserSound,
+  getUserSound,
+  listUserSounds,
+  updateUserSound,
+} from '@/lib/app/sounds/store';
+import { publishUserSound } from '@/lib/app/sounds/publish';
+import { getSharedSound } from '@/lib/app/sounds/public';
 import {
   getPanelPref,
   getSettings,
@@ -97,6 +107,32 @@ async function main(): Promise<void> {
       source: { slug: library.slug },
     });
     const theirs = await createUserSound(other.id, { synthId: 'model-d', name: 'Theirs', panel });
+
+    // 4. Sharing: the subject publishes under a username, and the other user copies it.
+    await prisma.synthProfile.create({
+      data: { userId: subject.id, username: `smk${String(stamp).slice(-12)}` },
+    });
+    await publishUserSound(subject.id, scratch.id, { confirm: true, tags: [] });
+    const published = await getUserSound(subject.id, scratch.id);
+    const servedShared = published.slug ? await getSharedSound(published.slug) : null;
+    check(
+      published.visibility === 'published' && servedShared?.name === 'Scratch',
+      'a published sound is served by its slug'
+    );
+    const theirCopy = await createUserSound(other.id, {
+      synthId: 'model-d',
+      source: { shared: published.slug ?? '' },
+    });
+    check(
+      theirCopy.basedOn?.slug === published.slug,
+      "the other user's copy credits the published sound"
+    );
+    await updateUserSound(subject.id, scratch.id, { visibility: 'link' });
+    check(
+      (await getUserSound(other.id, theirCopy.id)).basedOn === null,
+      'the credit goes when the source is no longer published'
+    );
+    await publishUserSound(subject.id, scratch.id, { confirm: true, tags: [] });
     check(
       (await getUserSound(subject.id, scratch.id)).panel?.values[cont.id] === cont.min,
       'a sound made from scratch reads back with its panel'
@@ -172,6 +208,11 @@ async function main(): Promise<void> {
       "the export's app.sounds holds the subject's two sounds, with their panels"
     );
     check(!JSON.stringify(exported).includes(theirs.id), "the export holds no other user's sound");
+    check(
+      JSON.stringify(exported).includes(`"slug":"${published.slug}"`) &&
+        JSON.stringify(exported).includes('"visibility":"published"'),
+      "the export carries the published sound's visibility and slug"
+    );
     const panels = bundle.app.synthPanels;
     check(
       Array.isArray(panels) &&
@@ -242,6 +283,12 @@ async function main(): Promise<void> {
       (await prisma.synthSound.count({ where: { id: library.id } })) === 1,
       'the library sound the copy credited stays'
     );
+    const orphan = await prisma.userSound.findUnique({ where: { id: theirCopy.id } });
+    check(
+      orphan !== null && orphan.sourceUserSoundId === null,
+      "the other user's copy of the subject's sound stays, its source set null"
+    );
+    check((await getUserSound(other.id, theirCopy.id)).basedOn === null, 'and it credits nobody');
   } finally {
     await prisma.dataErasureReceipt
       .deleteMany({ where: { subjectUserId: { in: userIds } } })

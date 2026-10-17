@@ -330,8 +330,6 @@ export async function updateUserSound(
   const data: Prisma.UserSoundUpdateManyMutationInput = {};
   if (input.name !== undefined) data.name = input.name;
   if (input.notes !== undefined) data.notes = input.notes || null;
-  if (input.visibility !== undefined)
-    Object.assign(data, visibilityData(existing, input.visibility));
   // Still published after this change: held to what publishing is.
   const published = existing.visibility === 'published' && input.visibility === undefined;
   if (published && (input.name !== undefined || input.notes !== undefined))
@@ -355,8 +353,13 @@ export async function updateUserSound(
   }
 
   // Keyed on the owner again, so a sound deleted meanwhile is a 404 rather than a write to nothing.
+  // The slug is minted inside the write, so a retry after a clash mints another.
+  const { visibility } = input;
   const { count } = await withFreshSlug(() =>
-    prisma.userSound.updateMany({ where: { id, userId }, data })
+    prisma.userSound.updateMany({
+      where: { id, userId },
+      data: visibility === undefined ? data : { ...data, ...visibilityData(existing, visibility) },
+    })
   );
   if (count === 0) return notFound();
   return getUserSound(userId, id);

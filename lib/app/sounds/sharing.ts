@@ -119,7 +119,10 @@ export function panelKey(
  */
 export function libraryPanel(
   def: AppSynthDef,
-  row: SynthSound
+  row: Pick<
+    SynthSound,
+    'slug' | 'definitionVersion' | 'name' | 'ref' | 'artist' | 'tags' | 'level' | 'blurb' | 'how'
+  > & { phrase: unknown; steps: unknown; context: unknown; tweaks: unknown }
 ): { values: ControlValues; cables: CablePair[] } | null {
   if (row.definitionVersion !== def.version) return null;
   const preset = validatePreset(def, {
