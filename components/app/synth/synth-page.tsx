@@ -94,7 +94,7 @@ import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';
-import { SharedSoundStrip, type SharedViewer } from '@/components/app/sharing/shared-sound-strip';
+import { SharedSoundStrip, sharedViewerOf } from '@/components/app/sharing/shared-sound-strip';
 
 const PANEL_HELP = [
   [
@@ -771,18 +771,15 @@ function Synth({
       return 'The copy could not be saved. Try again.';
     }
   };
-  // Who is looking, as the strip needs it. Theirs when their own list has it at this address; until that list is
-  // read, unknown.
+  // Who is looking, as the strip needs it (`sharedViewerOf`).
   const ownShared =
     shared && mine.sounds ? mine.sounds.find((x) => x.slug === shared.slug) : undefined;
-  const sharedViewer: SharedViewer =
-    authPending || (signedIn && !mine.sounds)
-      ? 'pending'
-      : !signedIn
-        ? 'guest'
-        : ownShared
-          ? 'owner'
-          : 'other';
+  const sharedViewer = sharedViewerOf({
+    slug: shared?.slug ?? '',
+    authPending,
+    signedIn,
+    mine: mine.sounds,
+  });
   const onDeleted = (id: string) => {
     mine.remove(id);
     setSaved(null);

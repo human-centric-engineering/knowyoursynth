@@ -26,6 +26,28 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  */
 export type SharedViewer = 'guest' | 'pending' | 'owner' | 'other';
 
+/**
+ * Who is looking at a shared sound. Theirs when their own list has a sound at its address; until the session and that
+ * list are both known, `pending`, so Save a copy is never offered on a sound that turns out to be theirs.
+ */
+export function sharedViewerOf({
+  slug,
+  authPending,
+  signedIn,
+  mine,
+}: {
+  slug: string;
+  authPending: boolean;
+  signedIn: boolean;
+  /** The visitor's own sounds on this synth, or null until read. */
+  mine: { slug: string | null }[] | null;
+}): SharedViewer {
+  if (authPending) return 'pending';
+  if (!signedIn) return 'guest';
+  if (!mine) return 'pending';
+  return mine.some((s) => s.slug === slug) ? 'owner' : 'other';
+}
+
 export function SharedSoundStrip({
   sound,
   loaded,

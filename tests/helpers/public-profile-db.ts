@@ -1,6 +1,6 @@
 /**
  * A small stateful fake of the tables a public profile reads (`f-profiles` r3): users, synth profiles, the synths on
- * their lists and the databank's instruments.
+ * their lists and the databank's instruments, and their sounds with the catalogue's synths (`f-sharing` h2).
  *
  * It honours `select` the way Prisma does, including a join to the user's own row, so a read that asked for the
  * account would carry its name and email into the answer and the tests' absence checks would see them.
@@ -14,6 +14,10 @@ export interface PublicProfileDb {
   profiles: Row[];
   owned: Row[];
   instruments: Row[];
+  /** Users' sounds: `u1` has one published, one link share and one private. */
+  sounds: Row[];
+  /** The catalogue's synths. */
+  synths: Row[];
 }
 
 /** The account's private name and email, seeded so a test can assert they never appear. */
@@ -76,6 +80,37 @@ export function seedPublicProfileDb(): PublicProfileDb {
       { id: 'cs-80', name: 'CS-80', maker: 'Yamaha', year: '1977' },
       { id: 'tb-303', name: 'TB-303', maker: 'Roland', year: '1981' },
     ],
+    sounds: [
+      sound('s1', 'u1', 'published', 'Night bass'),
+      sound('s2', 'u1', 'link', 'Link-only lead'),
+      sound('s3', 'u1', 'private', 'Unshared pad'),
+      sound('s4', 'u2', 'published', 'Quiet drone'),
+    ],
+    synths: [
+      {
+        id: 'model-d',
+        name: 'Model D',
+        maker: 'Behringer',
+        year: 2018,
+        heritage: 'Modelled on the Minimoog',
+        summary: 'Three oscillators.',
+        design: 'NEUTRAL',
+        listed: true,
+      },
+    ],
+  };
+}
+
+function sound(id: string, userId: string, visibility: string, name: string): Row {
+  return {
+    id,
+    userId,
+    synthId: 'model-d',
+    name,
+    visibility,
+    slug: visibility === 'private' ? null : `${id}${'x'.repeat(10 - id.length)}`,
+    publishedAt: visibility === 'published' ? new Date(Date.UTC(2026, 9, 16)) : null,
+    tags: [],
   };
 }
 
@@ -92,11 +127,43 @@ function project(row: Row, select: Row | undefined, join: (key: string, sub: Row
   return out;
 }
 
-/** The two delegates the public read uses, over `db`. Assign onto the mocked `prisma`. */
+/** The delegates the public read uses, over `db`. Assign onto the mocked `prisma`. */
 export function publicProfileDelegates(db: PublicProfileDb) {
   const userOf = (id: unknown) => db.users.find((u) => u.id === id);
   return {
+    synth: {
+      findMany: vi.fn(async (args: { where: { listed: boolean } }) =>
+        db.synths
+          .filter((r) => r.listed === args.where.listed)
+          .map((r) => ({ ...r, _count: { sounds: 0 } }))
+      ),
+    },
+    userSound: {
+      findMany: vi.fn(
+        async (args: {
+          where: { userId: string; visibility: string; synthId: { in: string[] } };
+          select?: Row;
+        }) =>
+          db.sounds
+            .filter(
+              (r) =>
+                r.userId === args.where.userId &&
+                r.visibility === args.where.visibility &&
+                r.slug !== null &&
+                args.where.synthId.in.includes(String(r.synthId))
+            )
+            .map((r) => {
+              const out = project(r, args.select, () => null);
+              return { ...out, _count: { copies: 0 } };
+            })
+      ),
+    },
     synthProfile: {
+      findMany: vi.fn(async (args: { where: { userId: { in: string[] } }; select?: Row }) =>
+        db.profiles
+          .filter((p) => args.where.userId.in.includes(String(p.userId)))
+          .map((p) => project(p, args.select, () => null))
+      ),
       findUnique: vi.fn(async (args: { where: Row; select?: Row }) => {
         const row = db.profiles.find((p) =>
           Object.entries(args.where).every(([k, v]) => p[k] === v)

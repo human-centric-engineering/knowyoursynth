@@ -75,6 +75,20 @@ describe('/u/[username]', () => {
     expect(wanted.getByRole('link', { name: /CS-80/ })).toBeInTheDocument();
   });
 
+  it('lists their published sounds, each opening its page, and never a link share or a private one', async () => {
+    await renderPage('moog_fan');
+    const sounds = within(screen.getByRole('heading', { name: /Sounds/ }).parentElement!);
+    expect(sounds.getAllByRole('link').map((a) => a.textContent)).toEqual(['Night bass']);
+    expect(sounds.getByRole('link', { name: 'Night bass' })).toHaveAttribute(
+      'href',
+      '/synths/model-d/s/s1xxxxxxxx'
+    );
+    expect(screen.queryByText('Link-only lead')).toBeNull();
+    expect(screen.queryByText('Unshared pad')).toBeNull();
+    // their own page does not name them on every card
+    expect(sounds.queryByText(/@moog_fan/)).toBeNull();
+  });
+
   it('never renders the account name or email, on a page that has content', async () => {
     const { container } = await renderPage('moog_fan');
     const html = container.innerHTML;
@@ -100,6 +114,7 @@ describe('/u/[username]', () => {
       showOwned: false,
       showWishlist: false,
     });
+    db.sounds = [];
     await renderPage('moog_fan');
     expect(screen.getByText('Nothing else here yet.')).toBeInTheDocument();
     expect(screen.queryByRole('list', { name: 'Where their music is' })).toBeNull();
