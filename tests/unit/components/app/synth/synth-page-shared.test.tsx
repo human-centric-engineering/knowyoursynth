@@ -28,6 +28,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { PublicSound, UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
+import { APIClientError } from '@/lib/api/client';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -349,6 +350,48 @@ describe('signed in', () => {
     expect(within(strip()).getByText(/Saved a copy to My sounds/)).toBeTruthy();
     // and is not offered again, so a second click is not a second copy
     expect(within(strip()).queryByRole('button', { name: 'Save a copy' })).toBeNull();
+  });
+
+  it('saves a plain new sound when the original has stopped being shared, and says so', async () => {
+    serve([]);
+    const NEW: UserSoundDetail = { ...NIGHT_BASS, id: 'cmnew1', name: 'Glass pluck' };
+    api.post
+      .mockRejectedValueOnce(
+        new APIClientError('That sound is not shared any more', 'VALIDATION_ERROR', 400, {
+          errors: [{ path: 'source.shared', message: `No shared model-d sound at ${SLUG}` }],
+        })
+      )
+      .mockResolvedValueOnce(NEW);
+    shared();
+    const save = await within(strip()).findByRole('button', { name: 'Save a copy' });
+    await act(async () => fireEvent.click(save));
+
+    expect(api.post).toHaveBeenCalledTimes(2);
+    const [, second] = api.post.mock.calls[1] as [string, { body: Record<string, unknown> }];
+    // no source to credit, the shared sound's name and notes, and the panel as it was sent the first time
+    expect(second.body).not.toHaveProperty('source');
+    expect(second.body).toMatchObject({
+      synthId: 'model-d',
+      name: 'Glass pluck',
+      notes: 'Short and bright.',
+    });
+    expect(second.body.panel).toEqual(
+      (api.post.mock.calls[0] as [string, { body: Record<string, unknown> }])[1].body.panel
+    );
+    await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
+    expect(within(strip()).getByRole('status').textContent).toMatch(
+      /not shared any more, so it was saved to My sounds as a new sound of yours, with no credit/
+    );
+  });
+
+  it('does not fall back to a plain sound on any other refusal', async () => {
+    serve([]);
+    api.post.mockRejectedValue(new APIClientError('Too many requests', 'RATE_LIMITED', 429));
+    shared();
+    const save = await within(strip()).findByRole('button', { name: 'Save a copy' });
+    await act(async () => fireEvent.click(save));
+    expect(api.post).toHaveBeenCalledTimes(1);
+    expect(within(strip()).getByRole('alert').textContent).toMatch(/could not be saved/);
   });
 
   it('says so when the copy cannot be saved, and leaves the panel as it was', async () => {

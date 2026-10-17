@@ -6,7 +6,10 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  backToSound,
+  chooseUsernameHref,
   hashTarget,
+  mySoundHref,
   DEFAULT_VIEW,
   hashRoute,
   parseView,
@@ -129,5 +132,35 @@ describe('hashRoute', () => {
     const seen: string[] = [];
     hashRoute('#bank/x', (id) => (seen.push(id), true));
     expect(seen).toEqual([]);
+  });
+});
+
+describe('mySoundHref', () => {
+  it("opens one of the user's sounds on its synth page", () => {
+    expect(mySoundHref('model-d', 'cmmine1')).toBe('/synths/model-d?mine=cmmine1');
+  });
+});
+
+describe('the way back from settings to a sound (f-sharing h3)', () => {
+  it('sends Publish with no username to the synth profile, with the synth page to come back to', () => {
+    const back = synthHref('model-d');
+    expect(chooseUsernameHref(back)).toBe('/settings?back=%2Fsynths%2Fmodel-d#synth-profile');
+    expect(backToSound(back)).toBe(back);
+  });
+
+  it.each([
+    null,
+    '',
+    'https://evil.example/synths/model-d?mine=cm1',
+    '//evil.example/synths/model-d?mine=cm1',
+    '/synths/model-d?mine=cm1&next=https://evil.example',
+    '/settings',
+    // `?mine=` would load the saved sound over the panel that came back from storage
+    '/synths/model-d?mine=cm1',
+    '/synths/model-d?view=long',
+    '/synths/model-d/s/abc',
+    '/synths/../admin',
+  ])('takes no other address: %s', (param) => {
+    expect(backToSound(param)).toBeNull();
   });
 });

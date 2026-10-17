@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -12,6 +13,7 @@ import { FieldHelp } from '@/components/ui/field-help';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { backToSound } from '@/components/app/synth/routes';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { LINK_LABELS, LINK_PLATFORMS, LINK_RULES } from '@/lib/app/profile/links';
 import {
@@ -79,6 +81,11 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
   const [saved, setSaved] = useState<ProfileView | null>(profile);
   const [serverError, setServerError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  // Sent here by Publish with no username yet (`f-sharing` h3): once there is one, the way back to that sound.
+  const [back, setBack] = useState<string | null>(null);
+  useEffect(() => {
+    setBack(backToSound(new URLSearchParams(window.location.search).get('back')));
+  }, []);
 
   const {
     register,
@@ -200,6 +207,14 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
       {done ? (
         <p className="text-sm" role="status">
           Saved.
+        </p>
+      ) : null}
+      {back && saved ? (
+        <p className="text-sm">
+          <Link href={back} className="underline underline-offset-2">
+            Back to your sound
+          </Link>{' '}
+          to publish it.
         </p>
       ) : null}
 

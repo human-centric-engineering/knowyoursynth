@@ -113,6 +113,10 @@ instrument key and its cascade from the databank, the export, and the erasure ca
 on **settings only**: `/profile` is Sunrise's account card, whose name field is the private
 account name the username exists to keep apart. The seam-defaults test is re-pinned to it.
 
+The card is `#synth-profile`. Publishing a sound with no username sends the user there with
+`?back=<the synth page>`, and once a username is saved the form offers **Back to your
+sound**. Only that shape of address is taken ([`sharing.md`](./sharing.md), "On the synth page").
+
 Below it, **Your synths** (`components/app/account/synth-lists-section.tsx`, order 20): a search
 of the databank, then the two lists to reorder, move between and remove from. The search reads
 `GET /api/v1/bank/instruments` once, the first time it is used, and filters it in the browser:

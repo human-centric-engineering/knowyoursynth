@@ -94,7 +94,12 @@ import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';
-import { SharedSoundStrip, sharedViewerOf } from '@/components/app/sharing/shared-sound-strip';
+import {
+  SharedSoundStrip,
+  sharedSourceGone,
+  sharedViewerOf,
+  type SharedCopyResult,
+} from '@/components/app/sharing/shared-sound-strip';
 
 const PANEL_HELP = [
   [
@@ -181,6 +186,8 @@ function Synth({
   const router = useRouter();
   const synthId = baseDef.id;
   const sounds = detail.sounds;
+  // What a published sound on this synth may be tagged with (`libraryTags` in `lib/app/sounds/publish.ts`).
+  const libraryTags = useMemo(() => [...new Set(sounds.flatMap((p) => p.tags))].sort(), [sounds]);
 
   // The definition with the catalogue's unusual notes on it. The sound map, when it comes, works from this, so it
   // gives the same answers whichever layout is showing.
@@ -750,10 +757,10 @@ function Synth({
       cables: sess.cables.map((c): [string, string] => [c.from, c.to]),
     };
   };
-  const onSaved = (d: UserSoundDetail, how: 'created' | 'saved' | 'renamed') => {
+  const onSaved = (d: UserSoundDetail, how: 'created' | 'saved' | 'renamed' | 'shared') => {
     mine.put(d);
     setMineNotice(null);
-    if (how === 'renamed') return;
+    if (how === 'renamed' || how === 'shared') return;
     if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
     if (how === 'created') {
       leaveShared();
@@ -762,21 +769,44 @@ function Synth({
   };
 
   // Save a copy of the shared sound: the panel as it is, so what the visitor changed is kept, with the shared sound
-  // credited. It then opens as theirs, as a new save does. Returns what went wrong, or null.
-  const copyShared = async (): Promise<string | null> => {
-    if (!shared) return null;
+  // credited. It then opens as theirs, as a new save does. If the original has stopped being shared since the page
+  // opened, there is nothing to credit: it is saved as a plain new sound of theirs instead, and says so.
+  const copyShared = async (): Promise<SharedCopyResult> => {
+    if (!shared) return { ok: false, error: 'There is no shared sound to copy.' };
     const seq = openSeq.current;
+    const panel = panelInput();
+    let gone = false;
+    let d: UserSoundDetail;
     try {
-      const d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
-        body: { synthId, source: { shared: shared.slug }, panel: panelInput() },
+      d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
+        body: { synthId, source: { shared: shared.slug }, panel },
       });
-      // something else was opened while it saved: the copy is in My sounds, but not what is on the panel now
-      if (seq !== openSeq.current) mine.put(d);
-      else onSaved(d, 'created');
-      return null;
-    } catch {
-      return 'The copy could not be saved. Try again.';
+    } catch (err) {
+      if (!sharedSourceGone(err))
+        return { ok: false, error: 'The copy could not be saved. Try again.' };
+      try {
+        d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
+          body: {
+            synthId,
+            name: shared.name,
+            ...(shared.notes ? { notes: shared.notes } : {}),
+            panel,
+          },
+        });
+      } catch {
+        return { ok: false, error: 'The copy could not be saved. Try again.' };
+      }
+      gone = true;
     }
+    // something else was opened while it saved: the copy is in My sounds, but not what is on the panel now
+    if (seq !== openSeq.current) mine.put(d);
+    else onSaved(d, 'created');
+    return {
+      ok: true,
+      note: gone
+        ? `${shared.name} is not shared any more, so it was saved to My sounds as a new sound of yours, with no credit.`
+        : null,
+    };
   };
   // Who is looking, as the strip needs it (`sharedViewerOf`).
   const ownShared =
@@ -947,6 +977,7 @@ function Synth({
                 panel={panelInput}
                 onSaved={onSaved}
                 onDeleted={onDeleted}
+                libraryTags={libraryTags}
                 buttonClass={smallBtn}
               />
             )}

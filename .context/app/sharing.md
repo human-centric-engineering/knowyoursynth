@@ -3,8 +3,8 @@
 `f-sharing`. A user's sound can be shared by a link, or published under their username; anyone can
 open a shared one signed out, and a signed-in user can save a copy that credits it (D5). h1 is the
 data and the API; h2 the sound page, Explore, published sounds on a profile, the social card and
-the sitemap. The buttons on the synth page (h3) and reports and moderation (h4) add their sections
-as they land.
+the sitemap; h3 the buttons on the synth page. Reports and moderation (h4) add their section when
+they land.
 
 The model is BeatBreaker's (`~/code/beatbreaker/.context/app/sharing.md`) without variations,
 sessions or fixed published sounds. Where it differs, the reason is below.
@@ -56,7 +56,7 @@ sessions or fixed published sounds. Where it differs, the reason is below.
   is unpublished, but shown only while it is published; a republish with `tags` left out keeps
   them, less any the library no longer uses. `tags: []` clears them.
 - **Notes go public with the sound.** Notes written while sounds could only be private are shown
-  once the sound is shared; the publish and share UI (h3) says so.
+  once the sound is shared; the sharing controls, the publish dialog and the Notes ⓘ say so.
 
 ## The byline
 
@@ -166,6 +166,48 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   a `panel` to `panel2` gradient in `ink`, from that synth's `theme`. A picture of the panel is h5
   (t-50).
 
+## On the synth page
+
+`components/app/sharing/sound-sharing.tsx`, under the open sound's own buttons (`SoundActions` in
+`components/app/synth/my-sounds.tsx`). Only one of the user's own sounds, open on the panel, has
+them: what is shared is the sound **as last saved**, so the panel's unsaved moves are not.
+
+| State       | Says                                                | Buttons                              |
+| ----------- | --------------------------------------------------- | ------------------------------------ |
+| `private`   | Only you can open it.                               | Share with a link · Publish…         |
+| `link`      | Anyone with _the link_ can open it, notes included. | Copy link · Publish… · Stop sharing  |
+| `published` | Listed on Explore and your profile, at _its page_.  | Copy link · Unpublish · Stop sharing |
+
+Share with a link and Unpublish are `PATCH` with `visibility: 'link'`; Stop sharing is `'private'`.
+Copy link copies the full address; where the browser blocks it, it says to copy it from the page.
+
+- **Publish…** opens a dialog (`PublishDialog`): who it appears as (`by @username`), that the
+  notes go with it, the tags (up to three of the synth's library tags, as `libraryTags` in
+  `publish.ts` reads them; it starts from the sound's own, less any the library dropped), and the
+  "I made this, or the sound it came from is credited on it" tick. Nothing is sent until it is
+  ticked. A refusal stays in the dialog in the server's words.
+- **No username yet.** The dialog reads `GET /api/v1/me/profile` when it opens. Only an answer of
+  `null` means none: its one step is **Choose a username**, to `/settings?back=…#synth-profile`
+  (`chooseUsernameHref`), and the profile form then offers **Back to your sound**: the synth page
+  itself (`/synths/<id>`), as sign-in's way back is. The panel, with the sound open and anything
+  moved since it was saved, comes back from browser storage; `?mine=` would load the saved sound
+  over it.
+  A read that failed says so and offers Try again, so nobody with a username is sent to choose
+  another. `USERNAME_REQUIRED` from the server turns the dialog to the same step.
+- **`back` takes one shape only** (`backToSound` in `components/app/synth/routes.ts`): one of the
+  synth page, default view. Anything else, another site included, offers no link.
+- **My sounds** says each sound's state under its name, and a shared one has ↗ to its page. The
+  dashboard's card says the same, the state linking to the page (`VISIBILITY_LABELS`,
+  `components/app/sharing/visibility.ts`, a plain module so the server card can read it).
+
+### Save a copy when the original has gone
+
+The strip's Save a copy (h2) sends `source: { shared }`. If the sound stopped being shared after
+the page opened (made private, deleted, or its owner erased), the copy route refuses on
+`source.shared` (`sharedSourceGone`), and the page saves the same panel as a **plain new sound**
+with the shared sound's name and notes and no credit, and says so. Any other refusal is just
+reported: nothing else falls back.
+
 ## Explore
 
 `/explore` (`app/(public)/explore/page.tsx`) and `GET /api/v1/public/sounds?synth=&tag=&sort=&page=`
@@ -216,3 +258,10 @@ each synth's theme); `tests/unit/components/app/synth/synth-page-shared.test.tsx
 panel, Save a copy only for a signed-in non-owner, Load it again, the address kept);
 `tests/unit/app/public/explore-page.test.tsx`; `tests/unit/components/app/sharing/sitemap.test.ts`;
 the profile's in `tests/unit/app/public/profile-page.test.tsx`.
+
+h3: `tests/unit/components/app/sharing/sound-sharing.test.tsx` (each state's buttons and requests,
+Copy link, the dialog: the tick, the three-tag cap, no username, an unreadable profile, each refusal
+kept in the dialog); `synth-page-mine.test.tsx` (the states in My sounds, sharing the open sound);
+`synth-page-shared.test.tsx` (the copy falling back to a plain sound, and only on that refusal);
+`my-sounds-card.test.tsx`; `routes.test.ts` (`backToSound`); `synth-profile-form.test.tsx` (Back
+to your sound).

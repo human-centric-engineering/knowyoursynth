@@ -51,6 +51,31 @@ export function soundHref(id: string, soundId: string): string {
   return `/synths/${encodeURIComponent(id)}?sound=${encodeURIComponent(soundId)}`;
 }
 
+/** One synth's page, opening with one of the user's own sounds (`?mine=`), as the dashboard links to it. */
+export function mySoundHref(id: string, soundId: string): string {
+  return `/synths/${encodeURIComponent(id)}?mine=${encodeURIComponent(soundId)}`;
+}
+
+const SYNTH_HREF = /^\/synths\/[a-z0-9-]{1,64}$/;
+
+/**
+ * Settings, at the synth profile, with the way back to the synth page (`f-sharing` h3): where Publish sends someone with
+ * no username yet. The profile form offers `back` once a username is saved ({@link backToSound}).
+ */
+export function chooseUsernameHref(back: string): string {
+  return `/settings?back=${encodeURIComponent(back)}#synth-profile`;
+}
+
+/**
+ * A `back` query → the address to go back to, or `null`. Only a synth page ({@link synthHref}, default view) is taken,
+ * so the link cannot be pointed anywhere else. It is the plain page, not `?mine=`, as sign-in's way back is: the panel,
+ * with the sound open and anything moved since it was saved, comes back from storage, where `?mine=` would load the
+ * saved sound over it.
+ */
+export function backToSound(param: string | null | undefined): string | null {
+  return param && SYNTH_HREF.test(param) ? param : null;
+}
+
 /**
  * A prototype hash route → the synth and view it names, or `null` when the hash is not one (or names a synth the app
  * cannot play). `isSynth` says which ids are real.
