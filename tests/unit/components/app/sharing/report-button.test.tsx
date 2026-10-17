@@ -125,4 +125,38 @@ describe('ReportButton', () => {
     );
     expect(screen.queryByRole('status')).toBeNull();
   });
+
+  it.each([
+    [new APIClientError('x', 'UNAUTHORIZED', 401), 'Your session has ended'],
+    [new APIClientError('x', 'NOT_FOUND', 404), 'This sound is not shared any more.'],
+    [
+      new APIClientError("You can't report your own sound.", 'OWN_SOUND', 400),
+      "You can't report your own sound.",
+    ],
+    [new Error('offline'), 'Check your connection'],
+  ])('says what went wrong: %s', async (err, words) => {
+    api.post.mockRejectedValueOnce(err);
+    const dialog = await open();
+    await userEvent.click(within(dialog).getByRole('radio', { name: 'Spam' }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Send report' }));
+    expect(within(screen.getByRole('dialog')).getByRole('alert')).toHaveTextContent(words);
+  });
+
+  it('closes on Cancel without sending, and opens again with nothing said', async () => {
+    const dialog = await open();
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(api.post).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Report' }));
+    expect(within(screen.getByRole('dialog')).queryByRole('alert')).toBeNull();
+  });
+
+  it('says a second report replaces the first', async () => {
+    let dialog = await open();
+    await userEvent.click(within(dialog).getByRole('radio', { name: 'Spam' }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Send report' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Report' }));
+    dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('sending again replaces that report');
+  });
 });
