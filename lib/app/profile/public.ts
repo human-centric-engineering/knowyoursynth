@@ -1,8 +1,8 @@
 import type { Prisma } from '@prisma/client';
 
 import { LINK_PLATFORMS, readStoredLink, type LinkPlatform } from '@/lib/app/profile/links';
-import { LIST_ORDER } from '@/lib/app/profile/instruments';
-import type { OwnedKind } from '@/lib/app/profile/instruments-data';
+import { listInstruments } from '@/lib/app/profile/instruments';
+import type { OwnedEntry } from '@/lib/app/profile/instruments-data';
 import { usernameProblem } from '@/lib/app/profile/username';
 import { prisma } from '@/lib/db/client';
 
@@ -71,25 +71,17 @@ export async function getPublicProfile(username: string): Promise<PublicProfile 
   });
   const profile: PublicProfile = { username: row.username, links };
 
-  const kinds: OwnedKind[] = [];
-  if (row.showOwned) kinds.push('owned');
-  if (row.showWishlist) kinds.push('wishlist');
-  if (kinds.length === 0) return profile;
+  if (!row.showOwned && !row.showWishlist) return profile;
 
-  const entries = await prisma.ownedInstrument.findMany({
-    where: { userId: row.userId, kind: { in: kinds } },
-    orderBy: LIST_ORDER,
-    select: {
-      instrumentId: true,
-      kind: true,
-      instrument: { select: { name: true, maker: true, year: true } },
-    },
+  // the owner's own read, so the two cannot drift; only the public fields leave it
+  const lists = await listInstruments(row.userId);
+  const toSynth = (e: OwnedEntry): PublicSynth => ({
+    instrumentId: e.instrumentId,
+    name: e.name,
+    maker: e.maker,
+    year: e.year,
   });
-  const list = (kind: OwnedKind): PublicSynth[] =>
-    entries
-      .filter((e) => e.kind === kind)
-      .map((e) => ({ instrumentId: e.instrumentId, ...e.instrument }));
-  if (row.showOwned) profile.owned = list('owned');
-  if (row.showWishlist) profile.wishlist = list('wishlist');
+  if (row.showOwned) profile.owned = lists.owned.map(toSynth);
+  if (row.showWishlist) profile.wishlist = lists.wishlist.map(toSynth);
   return profile;
 }

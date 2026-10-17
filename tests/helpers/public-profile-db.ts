@@ -109,14 +109,25 @@ export function publicProfileDelegates(db: PublicProfileDb) {
     },
     ownedInstrument: {
       findMany: vi.fn(
-        async (args: { where: { userId: string; kind?: { in: string[] } }; select?: Row }) => {
+        async (args: {
+          where: { userId: string; kind?: { in: string[] } };
+          orderBy?: Record<string, 'asc' | 'desc'>[];
+          select?: Row;
+        }) => {
+          // sorted as asked, not as the read is expected to ask, so an order test proves the order sent
+          const keys = (args.orderBy ?? []).flatMap((o) => Object.entries(o));
           const rows = db.owned
             .filter((r) => r.userId === args.where.userId)
             .filter((r) => !args.where.kind || args.where.kind.in.includes(String(r.kind)))
-            .sort(
-              (a, b) =>
-                Number(a.position) - Number(b.position) || Number(a.createdAt) - Number(b.createdAt)
-            );
+            .sort((a, b) => {
+              for (const [key, dir] of keys) {
+                const x = a[key] as number | string | Date;
+                const y = b[key] as number | string | Date;
+                if (x < y) return dir === 'asc' ? -1 : 1;
+                if (x > y) return dir === 'asc' ? 1 : -1;
+              }
+              return 0;
+            });
           return rows.map((r) =>
             project(r, args.select, (key, sub) => {
               if (key === 'instrument')

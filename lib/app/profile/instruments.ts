@@ -45,7 +45,7 @@ const toEntry = (row: EntryRow): OwnedEntry => ({
 });
 
 /** A list's order: its positions, then when each was added, so the order is total even if two places tie. */
-export const LIST_ORDER = [
+const LIST_ORDER = [
   { position: 'asc' },
   { createdAt: 'asc' },
   { instrumentId: 'asc' },
