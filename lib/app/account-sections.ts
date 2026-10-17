@@ -37,8 +37,10 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · lib/account-sections/registry.ts
  *
- * Know Your Synth registers one section, the synth profile (`f-profiles` r1).
+ * Know Your Synth registers two sections, the synth profile (`f-profiles` r1) and, below it, the synths a user owns and
+ * wants (r2).
  */
+import { SynthListsSection } from '@/components/app/account/synth-lists-section';
 import { SynthProfileSection } from '@/components/app/account/synth-profile-section';
 import { registerAccountSection } from '@/lib/account-sections/registry';
 
@@ -50,5 +52,11 @@ export function initAppAccountSections(): void {
     surfaces: ['settings'],
     order: 10,
     Component: SynthProfileSection,
+  });
+  registerAccountSection({
+    id: 'synth-lists',
+    surfaces: ['settings'],
+    order: 20,
+    Component: SynthListsSection,
   });
 }
