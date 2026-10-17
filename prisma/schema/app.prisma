@@ -735,7 +735,7 @@ model OwnedInstrument {
   userId       String
   instrumentId String
   kind         OwnedInstrumentKind
-  /// Its place in its list, from 0. Ties, which two adds at once can make, fall back to when it was added.
+  /// Its place in its list, from 0. Writes to one user's lists take a lock on their user row, so places do not tie.
   position     Int
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt

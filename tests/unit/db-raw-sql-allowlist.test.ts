@@ -101,6 +101,11 @@ const ALLOWLIST: ReadonlyArray<{ file: string; calls: number; why: string }> = [
     why: 'SELECT … FOR UPDATE row lock on a synth while its sounds are added or reordered — the id a bound parameter, and synth is shared catalogue content (GLOBAL_CONFIG_MODELS), not tenant rows',
   },
   {
+    file: 'lib/app/profile/instruments.ts',
+    calls: 1,
+    why: "SELECT … FOR UPDATE row lock on the caller's own user row while their synth lists are written — the id a bound parameter (the session's user id), and user is a system model, not tenant rows",
+  },
+  {
     file: 'lib/db/drift-probes.ts',
     calls: 6,
     why: 'catalog queries (pg_indexes/pg_constraint/pg_class/pg_policies/information_schema) — reads system catalogs, never tenant rows',

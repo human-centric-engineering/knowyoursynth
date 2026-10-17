@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { matchInstruments } from '@/components/app/account/instrument-picker';
@@ -139,6 +139,14 @@ describe('SynthLists', () => {
   it('adds a match to a list once the API answers, and then shows it as listed', async () => {
     const user = userEvent.setup();
     api.post.mockResolvedValue(entry('roland-juno-60', 'wishlist'));
+    api.get.mockImplementation(async (url: string) =>
+      url === '/api/v1/bank/instruments'
+        ? BANK
+        : {
+            owned: [entry('moog-minimoog', 'owned')],
+            wishlist: [entry('roland-juno-60', 'wishlist')],
+          }
+    );
     render(<SynthLists initial={{ owned: [entry('moog-minimoog', 'owned')], wishlist: [] }} />);
 
     await user.type(screen.getByRole('searchbox'), 'o');
@@ -154,6 +162,21 @@ describe('SynthLists', () => {
     });
     expect(listItems('My wishlist')).toEqual(['Juno-60']);
     expect(screen.getByText('On your wishlist')).toBeInTheDocument();
+  });
+
+  it('shows the stored order after an add, for one already listed from another tab', async () => {
+    const user = userEvent.setup();
+    const stored = [entry('roland-juno-60', 'owned'), entry('moog-minimoog', 'owned')];
+    api.post.mockResolvedValue(stored[0]);
+    api.get.mockImplementation(async (url: string) =>
+      url === '/api/v1/bank/instruments' ? BANK : { owned: stored, wishlist: [] }
+    );
+    render(<SynthLists initial={{ owned: [entry('moog-minimoog', 'owned')], wishlist: [] }} />);
+
+    await user.type(screen.getByRole('searchbox'), 'juno');
+    await user.click(await screen.findByRole('button', { name: 'I own Juno-60' }));
+    await waitFor(() => expect(listItems('Synths I own')).toEqual(['Juno-60', 'Minimoog']));
+    expect(api.get).toHaveBeenCalledWith('/api/v1/me/instruments');
   });
 
   it('moves an entry to the other list', async () => {

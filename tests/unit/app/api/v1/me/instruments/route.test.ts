@@ -142,15 +142,6 @@ const ownedInstrument = {
     hit.forEach((r) => Object.assign(r, data));
     return { count: hit.length };
   }),
-  update: vi.fn(
-    async ({ where, data }: { where: Parameters<typeof keyOf>[0]; data: Partial<Row> }) => {
-      const { userId, instrumentId } = keyOf(where);
-      const row = find(userId, instrumentId);
-      if (!row) throw Object.assign(new Error('missing'), { code: 'P2025' });
-      Object.assign(row, data);
-      return joined(row);
-    }
-  ),
   deleteMany: vi.fn(async ({ where }: { where: Partial<Row> }) => {
     const before = rows.length;
     rows = rows.filter((r) => !matches(r, where));
@@ -170,6 +161,7 @@ beforeEach(() => {
       ),
     },
     $transaction: vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => fn(mockPrisma)),
+    $queryRaw: vi.fn(async () => []),
   });
   signIn('user-1');
 });
@@ -368,6 +360,29 @@ describe('reordering', () => {
     expect(ids((await listOf()).owned)).toEqual(['roland-juno-60', 'moog-minimoog', 'korg-ms-20']);
   });
 
+  it('holds the user’s lists while it writes, as an add and a move do', async () => {
+    const lock = mockPrisma.$queryRaw as ReturnType<typeof vi.fn>;
+    expect(lock).toHaveBeenCalledTimes(3);
+    await put({ kind: 'owned', instrumentIds: ['roland-juno-60', 'moog-minimoog', 'korg-ms-20'] });
+    expect(lock).toHaveBeenCalledTimes(4);
+    expect(lock.mock.calls[3].slice(1)).toEqual(['user-1']);
+  });
+
+  it('never places a row that left the list after it was read', async () => {
+    // A move lands between the reorder's read and its writes.
+    ownedInstrument.findMany.mockImplementationOnce(async ({ where }: { where: Partial<Row> }) => {
+      const read = ordered(rows.filter((r) => matches(r, where))).map(joined);
+      Object.assign(find('user-1', 'roland-juno-60')!, { kind: 'wishlist', position: 0 });
+      return read;
+    });
+    const res = await put({
+      kind: 'owned',
+      instrumentIds: ['roland-juno-60', 'moog-minimoog', 'korg-ms-20'],
+    });
+    expect(res.status).toBe(409);
+    expect(find('user-1', 'roland-juno-60')).toMatchObject({ kind: 'wishlist', position: 0 });
+  });
+
   it('refuses a list that changed since it was read, or names one twice, storing nothing', async () => {
     const short = await put({ kind: 'owned', instrumentIds: ['korg-ms-20', 'moog-minimoog'] });
     expect(short.status).toBe(409);
@@ -382,7 +397,7 @@ describe('reordering', () => {
       instrumentIds: ['korg-ms-20', 'korg-ms-20', 'moog-minimoog'],
     });
     expect(twice.status).toBe(400);
-    expect(ownedInstrument.update).not.toHaveBeenCalled();
+    expect(ownedInstrument.updateMany).not.toHaveBeenCalled();
     expect(ids((await listOf()).owned)).toEqual(['moog-minimoog', 'korg-ms-20', 'roland-juno-60']);
   });
 });

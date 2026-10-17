@@ -44,7 +44,7 @@ const toEntry = (row: EntryRow): OwnedEntry => ({
   addedAt: row.createdAt.toISOString(),
 });
 
-/** A list's order: its positions, then when each was added, for the ties two adds at once can leave. */
+/** A list's order: its positions, then when each was added, so the order is total even if two places tie. */
 const LIST_ORDER = [
   { position: 'asc' },
   { createdAt: 'asc' },
@@ -55,6 +55,16 @@ const capitalised = (text: string) => text.charAt(0).toUpperCase() + text.slice(
 
 const hasCode = (err: unknown, code: string): boolean =>
   typeof err === 'object' && err !== null && 'code' in err && err.code === code;
+
+type Tx = Prisma.TransactionClient;
+
+/**
+ * Hold the user's row until the transaction ends, so two writes to their lists cannot interleave: two adds at once
+ * would both pass the cap, and a move landing inside a reorder would have the reorder place a row on the other list.
+ */
+async function lockLists(tx: Tx, userId: string): Promise<void> {
+  await tx.$queryRaw`SELECT id FROM "user" WHERE id = ${userId} FOR UPDATE`;
+}
 
 const unknownInstrument = (instrumentId: string) =>
   new ValidationError(`The databank has no instrument ${instrumentId}`, {
@@ -76,8 +86,8 @@ export async function listInstruments(userId: string): Promise<OwnedLists> {
 }
 
 /** The position at the end of one of the caller's lists, or a 409 when it is full. */
-async function endOf(userId: string, kind: OwnedKind): Promise<number> {
-  const { _count, _max } = await prisma.ownedInstrument.aggregate({
+async function endOf(tx: Tx, userId: string, kind: OwnedKind): Promise<number> {
+  const { _count, _max } = await tx.ownedInstrument.aggregate({
     where: { userId, kind },
     _count: { _all: true },
     _max: { position: true },
@@ -114,11 +124,14 @@ export async function addInstrument(
   });
   if (!instrument) throw unknownInstrument(instrumentId);
 
-  const position = await endOf(userId, kind);
   try {
-    const row = await prisma.ownedInstrument.create({
-      data: { userId, instrumentId, kind, position },
-      select: ENTRY_SELECT,
+    const row = await prisma.$transaction(async (tx) => {
+      await lockLists(tx, userId);
+      const position = await endOf(tx, userId, kind);
+      return tx.ownedInstrument.create({
+        data: { userId, instrumentId, kind, position },
+        select: ENTRY_SELECT,
+      });
     });
     return { entry: toEntry(row), created: true };
   } catch (err) {
@@ -142,11 +155,15 @@ export async function moveInstrument(
   const existing = await prisma.ownedInstrument.findUnique({ where: key, select: ENTRY_SELECT });
   if (!existing) throw new NotFoundError('Not on your lists');
   if (existing.kind === kind) return toEntry(existing);
-  const position = await endOf(userId, kind);
-  // Keyed on the owner as well as the instrument; removed meanwhile, it is a 404 rather than a write.
-  const { count } = await prisma.ownedInstrument.updateMany({
-    where: { userId, instrumentId },
-    data: { kind, position },
+  const count = await prisma.$transaction(async (tx) => {
+    await lockLists(tx, userId);
+    const position = await endOf(tx, userId, kind);
+    // Keyed on the owner as well as the instrument; removed meanwhile, it is a 404 rather than a write.
+    const moved = await tx.ownedInstrument.updateMany({
+      where: { userId, instrumentId },
+      data: { kind, position },
+    });
+    return moved.count;
   });
   if (count === 0) throw new NotFoundError('Not on your lists');
   return { ...toEntry(existing), kind };
@@ -167,27 +184,33 @@ export async function reorderInstruments(
   userId: string,
   { kind, instrumentIds }: ReorderInstrumentsInput
 ): Promise<OwnedLists> {
-  await prisma.$transaction(async (tx) => {
-    const rows = await tx.ownedInstrument.findMany({
-      where: { userId, kind },
-      select: { instrumentId: true, position: true },
+  const stale = () =>
+    new ConflictError(`${capitalised(LIST_NAMES[kind])} changed since you opened it. Reload it.`, {
+      reason: 'stale',
+      kind,
     });
-    const current = new Map(rows.map((r) => [r.instrumentId, r.position]));
-    if (rows.length !== instrumentIds.length || instrumentIds.some((id) => !current.has(id)))
-      throw new ConflictError(
-        `${capitalised(LIST_NAMES[kind])} changed since you opened it. Reload it.`,
-        {
-          reason: 'stale',
-          kind,
-        }
-      );
-    for (const [position, instrumentId] of instrumentIds.entries()) {
-      if (current.get(instrumentId) === position) continue;
-      await tx.ownedInstrument.update({
-        where: { userId_instrumentId: { userId, instrumentId } },
-        data: { position },
+  await prisma.$transaction(
+    async (tx) => {
+      await lockLists(tx, userId);
+      const rows = await tx.ownedInstrument.findMany({
+        where: { userId, kind },
+        select: { instrumentId: true, position: true },
       });
-    }
-  });
+      const current = new Map(rows.map((r) => [r.instrumentId, r.position]));
+      if (rows.length !== instrumentIds.length || instrumentIds.some((id) => !current.has(id)))
+        throw stale();
+      for (const [position, instrumentId] of instrumentIds.entries()) {
+        if (current.get(instrumentId) === position) continue;
+        // Keyed on the list too, so a row that is no longer on it is never given a place in it.
+        const { count } = await tx.ownedInstrument.updateMany({
+          where: { userId, instrumentId, kind },
+          data: { position },
+        });
+        if (count === 0) throw stale();
+      }
+    },
+    // The first reorder after removes rewrites every place, up to MAX_PER_LIST statements one after another.
+    { timeout: 15_000 }
+  );
   return listInstruments(userId);
 }

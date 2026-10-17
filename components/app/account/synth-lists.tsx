@@ -33,7 +33,7 @@ const without = (list: OwnedEntry[], id: string) => list.filter((e) => e.instrum
  * in the user's order, to reorder, move between the two, or remove from.
  *
  * Every change waits for the API's answer before it shows. A list that changed elsewhere (another tab) comes back as a
- * 409 on reorder; the lists are read again so the next try starts from what is stored.
+ * 409 on reorder; on any refusal the lists are read again so the next try starts from what is stored.
  */
 export function SynthLists({ initial }: { initial: OwnedLists }) {
   const [lists, setLists] = useState<OwnedLists>(initial);
@@ -57,8 +57,8 @@ export function SynthLists({ initial }: { initial: OwnedLists }) {
       await run();
     } catch (err) {
       setProblem(err instanceof APIClientError ? err.message : "That didn't save. Try again.");
-      if (err instanceof APIClientError && (err.status === 409 || err.status === 404))
-        await refresh().catch(() => undefined);
+      // Refused, the lists may have changed elsewhere (another tab, or the databank): read them again.
+      if (err instanceof APIClientError) await refresh().catch(() => undefined);
     } finally {
       setBusy(false);
     }
@@ -73,6 +73,9 @@ export function SynthLists({ initial }: { initial: OwnedLists }) {
         ...prev,
         [kind]: [...without(prev[kind], entry.instrumentId), entry],
       }));
+      // An instrument added in another tab comes back as the entry already stored, wherever it is in the list; read
+      // the lists so the order shown is the stored one.
+      await refresh().catch(() => undefined);
     });
 
   const move = (entry: OwnedEntry, kind: OwnedKind) =>
