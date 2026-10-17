@@ -6,9 +6,9 @@
  *
  * 1. Not yours: 404, as every other write.
  * 2. `USERNAME_REQUIRED` (409): a published sound is listed under its owner's username (D5).
- * 3. `NOT_PLAYABLE` (409): a sound saved on a definition the synth has moved on from, or whose panel no longer
- *    passes, has no panel anyone else could play. Saving it again brings it up to date. A synth no longer listed has
- *    no page to publish it on (400, as a save there is).
+ * 3. A synth no longer listed has no page to publish it on: 400, as a save there is.
+ *    `NOT_PLAYABLE` (409): a sound saved on a definition the synth has moved on from, or whose panel no longer
+ *    passes, has no panel anyone else could play. Saving it again brings it up to date.
  * 4. `NOT_ALLOWED` (422): a blocked word in the name or notes.
  * 5. `DUPLICATE` (409): it plays the same as the library sound or shared sound it was copied from.
  * 6. A tag that synth's library sounds do not use: 400.

@@ -65,8 +65,8 @@ sessions or fixed published sounds. Where it differs, the reason is below.
 | ------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
 | `NOT_FOUND`         | 404    | Not yours, as every write.                                                                               |
 | `USERNAME_REQUIRED` | 409    | No synth profile (`f-profiles`).                                                                         |
-| `NOT_PLAYABLE`      | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
 | (validation)        | 400    | The synth is not listed.                                                                                 |
+| `NOT_PLAYABLE`      | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
 | `NOT_ALLOWED`       | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): word by word.         |
 | `DUPLICATE`         | 409    | It plays the same as the library sound or the shared sound it was copied from (`assertChanged`).         |
 | (validation)        | 400    | A tag that synth's library does not use, or the same tag twice.                                          |
