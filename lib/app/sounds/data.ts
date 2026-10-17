@@ -157,6 +157,11 @@ export interface UserSoundSummary {
   publishedAt: string | null;
   tags: string[];
   /**
+   * Whether an admin unlisted it after a report (`f-sharing` h4): nobody else can open it, whatever `visibility` says,
+   * and it cannot be shared or published again until an admin restores it.
+   */
+  unlisted: boolean;
+  /**
    * Whether the panel can be played on the synth as it is now. False when it was saved on a definition version the
    * synth has moved on from with no mapping between them (D1), or when it no longer passes the definition.
    */

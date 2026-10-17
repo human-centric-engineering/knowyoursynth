@@ -35,6 +35,7 @@ import type {
 } from '@/lib/app/sounds/data';
 import {
   assertChanged,
+  assertNotUnlisted,
   assertPublishableText,
   libraryPanel,
   lockOwnersSounds,
@@ -162,6 +163,7 @@ function toDetail(row: UserSound, basedOn: SharedSource | null, log: boolean): U
     slug: row.slug,
     publishedAt: row.publishedAt?.toISOString() ?? null,
     tags: row.tags,
+    unlisted: row.unlistedAt !== null,
     playable: panel !== null,
     panel,
     problems,
@@ -205,8 +207,8 @@ export async function getUserSound(userId: string, id: string): Promise<UserSoun
 type LibraryCredit = { id: string | null; slug: string; name: string; ref: string };
 
 /**
- * The shared sound a copy is made from: someone's link or published sound on this synth. Private, unknown and on
- * another synth are one refusal, so a copy says nothing about which. The caller's own shared sound is copied as any
+ * The shared sound a copy is made from: someone's link or published sound on this synth. Private, unlisted, unknown and
+ * on another synth are one refusal, so a copy says nothing about which. The caller's own shared sound is copied as any
  * other of theirs would be, with no credit to themselves.
  */
 async function sharedCopySource(
@@ -221,7 +223,7 @@ async function sharedCopySource(
   panel: SoundState | null;
 }> {
   const row = await prisma.userSound.findFirst({
-    where: { slug, synthId: def.id, visibility: { in: ['link', 'published'] } },
+    where: { slug, synthId: def.id, visibility: { in: ['link', 'published'] }, unlistedAt: null },
   });
   if (!row)
     return refuse('That sound is not shared any more', [
@@ -336,11 +338,14 @@ export async function updateUserSound(
           notes: true,
           slug: true,
           visibility: true,
+          unlistedAt: true,
           sourceSoundId: true,
           sourceUserSoundId: true,
         },
       });
       if (!existing) return notFound();
+      // An unlisted sound can still be made private, but not shared again until an admin restores it.
+      if (input.visibility === 'link') assertNotUnlisted(existing);
 
       const data: Prisma.UserSoundUpdateManyMutationInput = {};
       if (input.name !== undefined) data.name = input.name;

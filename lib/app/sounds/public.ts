@@ -11,6 +11,9 @@
  *
  * **Lists are published only** (`listPublishedSounds` for Explore, `publishedSoundsOf` for a profile): a link share is
  * never listed anywhere, and only sounds on a synth the catalogue serves, since any other has no page to open.
+ *
+ * **Never an unlisted sound** (`f-sharing` h4). One an admin unlisted after a report reads as private everywhere here,
+ * whatever its visibility, until an admin restores it. Each read filters on `unlistedAt`.
  */
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
@@ -29,7 +32,7 @@ import {
 export async function getSharedSound(slug: string): Promise<PublicSound | null> {
   if (!SharedSlugSchema.safeParse(slug).success) return null;
   const row = await prisma.userSound.findUnique({ where: { slug } });
-  if (!row || row.visibility === 'private') return null;
+  if (!row || row.visibility === 'private' || row.unlistedAt) return null;
 
   // read as the owner's own is, so the panel is checked and fitted exactly as theirs is; only public fields leave it
   const [sound, names] = await Promise.all([quietDetail(row), usernamesOf([row.userId])]);
@@ -125,6 +128,7 @@ export async function listPublishedSounds(query: ExploreQuery): Promise<{
   const where: Prisma.UserSoundWhereInput = {
     visibility: 'published',
     slug: { not: null },
+    unlistedAt: null,
     synthId: synth ?? { in: [...synthNames.keys()] },
     ...(tag ? { tags: { has: tag } } : {}),
   };
@@ -156,6 +160,7 @@ export async function publishedSoundsOf(userId: string): Promise<PublishedSoundC
       userId,
       visibility: 'published',
       slug: { not: null },
+      unlistedAt: null,
       synthId: { in: [...synthNames.keys()] },
     },
     orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
@@ -168,7 +173,12 @@ export async function publishedSoundsOf(userId: string): Promise<PublishedSoundC
 export async function publishedSoundAddresses(): Promise<{ synthId: string; slug: string }[]> {
   const served = (await listSynths()).map((s) => s.id);
   const rows = await prisma.userSound.findMany({
-    where: { visibility: 'published', slug: { not: null }, synthId: { in: served } },
+    where: {
+      visibility: 'published',
+      slug: { not: null },
+      unlistedAt: null,
+      synthId: { in: served },
+    },
     orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
     select: { synthId: true, slug: true },
   });
