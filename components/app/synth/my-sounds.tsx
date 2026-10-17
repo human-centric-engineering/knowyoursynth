@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { StarButton } from '@/components/app/synth/favourites';
-import { mySoundHref, sharedSoundHref } from '@/components/app/synth/routes';
+import { sharedSoundHref, synthHref } from '@/components/app/synth/routes';
 import { SoundSharing } from '@/components/app/sharing/sound-sharing';
 import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
@@ -441,7 +441,7 @@ export function SoundActions({
         <SoundSharing
           sound={open}
           libraryTags={libraryTags}
-          backHref={mySoundHref(synthId, open.id)}
+          backHref={synthHref(synthId)}
           onChanged={(d) => onSaved(d, 'shared')}
           buttonClass={buttonClass}
         />

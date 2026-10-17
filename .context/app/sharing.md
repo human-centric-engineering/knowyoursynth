@@ -188,12 +188,14 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
   ticked. A refusal stays in the dialog in the server's words.
 - **No username yet.** The dialog reads `GET /api/v1/me/profile` when it opens. Only an answer of
   `null` means none: its one step is **Choose a username**, to `/settings?back=…#synth-profile`
-  (`chooseUsernameHref`), and the profile form then offers **Back to your sound**
-  (`/synths/<id>?mine=<id>`). The panel goes with them in browser storage, as it does for sign-in.
+  (`chooseUsernameHref`), and the profile form then offers **Back to your sound**: the synth page
+  itself (`/synths/<id>`), as sign-in's way back is. The panel, with the sound open and anything
+  moved since it was saved, comes back from browser storage; `?mine=` would load the saved sound
+  over it.
   A read that failed says so and offers Try again, so nobody with a username is sent to choose
   another. `USERNAME_REQUIRED` from the server turns the dialog to the same step.
 - **`back` takes one shape only** (`backToSound` in `components/app/synth/routes.ts`): one of the
-  user's sounds on a synth page. Anything else, another site included, offers no link.
+  synth page, default view. Anything else, another site included, offers no link.
 - **My sounds** says each sound's state under its name, and a shared one has ↗ to its page. The
   dashboard's card says the same, the state linking to the page (`VISIBILITY_LABELS`,
   `components/app/sharing/visibility.ts`, a plain module so the server card can read it).

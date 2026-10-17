@@ -71,7 +71,7 @@ const PROFILE = {
   showWishlist: false,
 };
 
-const BACK = '/synths/model-d?mine=cmmine1';
+const BACK = '/synths/model-d';
 
 function renderSharing(sound: UserSoundSummary) {
   const onChanged = vi.fn();
@@ -120,6 +120,34 @@ describe('a private sound', () => {
     await userEvent.click(button('Share with a link'));
     expect(screen.getByRole('alert').textContent).toBe('Too many requests');
     expect(onChanged).not.toHaveBeenCalled();
+  });
+});
+
+describe('another sound opened while a change is on its way', () => {
+  it('hands the answer to the list but says nothing about it under the new sound', async () => {
+    let answer: (d: UserSoundDetail) => void = () => undefined;
+    api.patch.mockImplementation(
+      () => new Promise<UserSoundDetail>((resolve) => (answer = resolve))
+    );
+    const onChanged = vi.fn();
+    const props = { libraryTags: TAGS, backHref: BACK, onChanged, buttonClass: 'btn' };
+    const { rerender } = render(
+      <SoundSharing sound={summary({ visibility: 'link', slug: SLUG })} {...props} />
+    );
+    await userEvent.click(button('Stop sharing'));
+    // while it is on its way, nothing that acts on the link is offered
+    expect(button('Copy link').hasAttribute('disabled')).toBe(true);
+
+    const other = summary({ id: 'cmmine2', name: 'Pad', visibility: 'link', slug: 'zyxwvutsrq' });
+    rerender(<SoundSharing sound={other} {...props} />);
+    // the new sound's buttons are its own, not held by the last one's request
+    expect(button('Stop sharing').hasAttribute('disabled')).toBe(false);
+
+    const stopped = detail({ visibility: 'private' });
+    await act(async () => answer(stopped));
+    expect(onChanged).toHaveBeenCalledExactlyOnceWith(stopped);
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(button('Stop sharing').hasAttribute('disabled')).toBe(false);
   });
 });
 

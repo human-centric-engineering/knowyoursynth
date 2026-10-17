@@ -14,7 +14,7 @@
  * (`chooseUsernameHref`). The panel goes with them in browser storage, as it does for sign-in.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import {
@@ -33,7 +33,10 @@ import { ProfileViewSchema } from '@/lib/app/profile/profile-data';
 
 const soundPath = (id: string) => `/api/v1/sounds/${encodeURIComponent(id)}`;
 
-/** What went wrong, in the server's words where it gave any. */
+/**
+ * What went wrong, in the server's words where it gave any. Not My sounds' helper: a 429 here is the publish limit,
+ * whose words (how many, and when to try again) are the ones to show.
+ */
 function failureOf(err: unknown, doing: string): string {
   if (err instanceof APIClientError) {
     if (err.status === 401) return `Your session has ended. Sign in again to ${doing}.`;
@@ -48,7 +51,7 @@ export interface SoundSharingProps {
   sound: UserSoundSummary;
   /** The tags that synth's library sounds use: what a published sound may be tagged with. */
   libraryTags: string[];
-  /** This sound on its synth page, for coming back from settings. */
+  /** The synth page, for coming back from settings to the panel as it was. */
   backHref: string;
   /** The API's answer after each change. */
   onChanged: (sound: UserSoundDetail) => void;
@@ -67,26 +70,29 @@ export function SoundSharing({
   const [status, setStatus] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
 
-  // Another sound on the panel: what was said about the last one is over.
+  // Another sound on the panel: what was said about the last one is over, and an answer about it that arrives later
+  // is not this one's to show (`current`). The list still takes it.
+  const current = useRef(sound.id);
   useEffect(() => {
+    current.current = sound.id;
+    setBusy(false);
     setFailure(null);
     setStatus(null);
     setPublishing(false);
   }, [sound.id]);
 
   const change = async (visibility: 'private' | 'link', done: string, doing: string) => {
+    const id = sound.id;
     setBusy(true);
     setFailure(null);
     setStatus(null);
     try {
-      onChanged(
-        await apiClient.patch<UserSoundDetail>(soundPath(sound.id), { body: { visibility } })
-      );
-      setStatus(done);
+      onChanged(await apiClient.patch<UserSoundDetail>(soundPath(id), { body: { visibility } }));
+      if (current.current === id) setStatus(done);
     } catch (err) {
-      setFailure(failureOf(err, doing));
+      if (current.current === id) setFailure(failureOf(err, doing));
     } finally {
-      setBusy(false);
+      if (current.current === id) setBusy(false);
     }
   };
 
@@ -179,7 +185,12 @@ export function SoundSharing({
           </>
         ) : (
           <>
-            <button type="button" onClick={() => void copyLink()} className={buttonClass}>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void copyLink()}
+              className={buttonClass}
+            >
               Copy link
             </button>
             {sound.visibility === 'link' ? (
@@ -222,6 +233,7 @@ export function SoundSharing({
           backHref={backHref}
           onPublished={(d) => {
             onChanged(d);
+            if (current.current !== d.id) return;
             setPublishing(false);
             setStatus('Published. It is on Explore and your profile.');
           }}

@@ -135,13 +135,16 @@ describe('hashRoute', () => {
   });
 });
 
+describe('mySoundHref', () => {
+  it("opens one of the user's sounds on its synth page", () => {
+    expect(mySoundHref('model-d', 'cmmine1')).toBe('/synths/model-d?mine=cmmine1');
+  });
+});
+
 describe('the way back from settings to a sound (f-sharing h3)', () => {
-  it('sends Publish with no username to the synth profile, with the sound to come back to', () => {
-    const back = mySoundHref('model-d', 'cmmine1');
-    expect(back).toBe('/synths/model-d?mine=cmmine1');
-    expect(chooseUsernameHref(back)).toBe(
-      '/settings?back=%2Fsynths%2Fmodel-d%3Fmine%3Dcmmine1#synth-profile'
-    );
+  it('sends Publish with no username to the synth profile, with the synth page to come back to', () => {
+    const back = synthHref('model-d');
+    expect(chooseUsernameHref(back)).toBe('/settings?back=%2Fsynths%2Fmodel-d#synth-profile');
     expect(backToSound(back)).toBe(back);
   });
 
@@ -152,8 +155,11 @@ describe('the way back from settings to a sound (f-sharing h3)', () => {
     '//evil.example/synths/model-d?mine=cm1',
     '/synths/model-d?mine=cm1&next=https://evil.example',
     '/settings',
-    '/synths/model-d',
-    '/synths/../admin?mine=cm1',
+    // `?mine=` would load the saved sound over the panel that came back from storage
+    '/synths/model-d?mine=cm1',
+    '/synths/model-d?view=long',
+    '/synths/model-d/s/abc',
+    '/synths/../admin',
   ])('takes no other address: %s', (param) => {
     expect(backToSound(param)).toBeNull();
   });

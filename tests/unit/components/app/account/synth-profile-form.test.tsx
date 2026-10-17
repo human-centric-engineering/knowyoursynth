@@ -159,7 +159,7 @@ describe('SynthProfileForm', () => {
 
 describe('coming from Publish with no username (f-sharing h3)', () => {
   const at = (search: string) => window.history.replaceState(null, '', `/settings${search}`);
-  const BACK = '/synths/model-d?mine=cmmine1';
+  const BACK = '/synths/model-d';
 
   it('offers the way back to the sound once the username is saved', async () => {
     at(`?back=${encodeURIComponent(BACK)}`);

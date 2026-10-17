@@ -56,22 +56,24 @@ export function mySoundHref(id: string, soundId: string): string {
   return `/synths/${encodeURIComponent(id)}?mine=${encodeURIComponent(soundId)}`;
 }
 
-const MY_SOUND_HREF = /^\/synths\/[a-z0-9-]{1,64}\?mine=[a-z0-9]{1,40}$/;
+const SYNTH_HREF = /^\/synths\/[a-z0-9-]{1,64}$/;
 
 /**
- * Settings, at the synth profile, with the way back to one of the user's sounds (`f-sharing` h3): where Publish sends
- * someone with no username yet. The profile form offers `back` once a username is saved ({@link backToSound}).
+ * Settings, at the synth profile, with the way back to the synth page (`f-sharing` h3): where Publish sends someone with
+ * no username yet. The profile form offers `back` once a username is saved ({@link backToSound}).
  */
 export function chooseUsernameHref(back: string): string {
   return `/settings?back=${encodeURIComponent(back)}#synth-profile`;
 }
 
 /**
- * A `back` query → the address to go back to, or `null`. Only one of the user's sounds on a synth page
- * ({@link mySoundHref}) is taken, so the link cannot be pointed anywhere else.
+ * A `back` query → the address to go back to, or `null`. Only a synth page ({@link synthHref}, default view) is taken,
+ * so the link cannot be pointed anywhere else. It is the plain page, not `?mine=`, as sign-in's way back is: the panel,
+ * with the sound open and anything moved since it was saved, comes back from storage, where `?mine=` would load the
+ * saved sound over it.
  */
 export function backToSound(param: string | null | undefined): string | null {
-  return param && MY_SOUND_HREF.test(param) ? param : null;
+  return param && SYNTH_HREF.test(param) ? param : null;
 }
 
 /**

@@ -114,7 +114,7 @@ on **settings only**: `/profile` is Sunrise's account card, whose name field is 
 account name the username exists to keep apart. The seam-defaults test is re-pinned to it.
 
 The card is `#synth-profile`. Publishing a sound with no username sends the user there with
-`?back=<the sound on its synth page>`, and once a username is saved the form offers **Back to your
+`?back=<the synth page>`, and once a username is saved the form offers **Back to your
 sound**. Only that shape of address is taken ([`sharing.md`](./sharing.md), "On the synth page").
 
 Below it, **Your synths** (`components/app/account/synth-lists-section.tsx`, order 20): a search
