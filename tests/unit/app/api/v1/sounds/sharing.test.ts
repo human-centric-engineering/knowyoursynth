@@ -9,6 +9,8 @@
  *
  * - a slug is minted the first time a sound leaves private and kept after; PATCH cannot publish;
  * - publishing refuses each case in `lib/app/sounds/publish.ts` with its code, and writes nothing when it does;
+ * - the daily cap is kept on the profile, so deleting published sounds does not give their places back;
+ * - publishing and every change take the owner's lock before they read the sound;
  * - a published sound's name, notes and panel stay held to those checks;
  * - the public read serves link and published sounds, one 404 for everything else, never the owner's ids or account;
  * - the byline: a published sound names its owner, a link share only when their profile is public;
@@ -168,27 +170,52 @@ function userSoundTable() {
 }
 
 let table: ReturnType<typeof userSoundTable>;
+type Profile = { username: string; public: boolean; recentPublishes: Date[] };
 /** Synth profiles by user id: `user-1` private, `user-2` public, `user-3` none. */
-let profiles: Map<string, { username: string; public: boolean }>;
+let profiles: Map<string, Profile>;
 const userTable = { findUnique: vi.fn(), findMany: vi.fn(), findFirst: vi.fn() };
+/** The owner's lock (`lockOwnersSounds`): the only raw query sharing runs. */
+const lockQuery = vi.fn();
 
 beforeEach(() => {
   vi.clearAllMocks();
   table = userSoundTable();
   mockPrisma.userSound = table.client;
   profiles = new Map([
-    ['user-1', { username: 'moog-fan', public: false }],
-    ['user-2', { username: 'patchwork', public: true }],
+    ['user-1', { username: 'moog-fan', public: false, recentPublishes: [] }],
+    ['user-2', { username: 'patchwork', public: true, recentPublishes: [] }],
   ]);
   mockPrisma.synthProfile = {
     findMany: vi.fn(async ({ where }: { where: { userId: { in: string[] } } }) =>
       where.userId.in.flatMap((userId) => {
         const p = profiles.get(userId);
-        return p ? [{ userId, ...p }] : [];
+        return p ? [{ userId, username: p.username, public: p.public }] : [];
       })
     ),
+    findUnique: vi.fn(async ({ where }: { where: { userId: string } }) => {
+      const p = profiles.get(where.userId);
+      return p ? { recentPublishes: [...p.recentPublishes] } : null;
+    }),
+    update: vi.fn(
+      async ({ where, data }: { where: { userId: string }; data: { recentPublishes: Date[] } }) => {
+        profiles.get(where.userId)!.recentPublishes = data.recentPublishes;
+      }
+    ),
   };
-  // Nothing in sharing reads the account: a read of it here fails the test that made it.
+  // A transaction against the same fakes, put back as it was when its function throws, as a rollback would.
+  mockPrisma.$transaction = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => {
+    const rows = table.rows.map((r) => ({ ...r }));
+    const saved = new Map([...profiles].map(([k, p]) => [k, { ...p }]));
+    try {
+      return await fn(mockPrisma);
+    } catch (err) {
+      table.rows.splice(0, table.rows.length, ...rows);
+      profiles = saved;
+      throw err;
+    }
+  });
+  mockPrisma.$queryRaw = lockQuery;
+  // Nothing in sharing reads the account (the lock only takes its row): a read of it here fails the test that made it.
   mockPrisma.user = userTable;
   mockPrisma.synth = {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) =>
@@ -272,6 +299,17 @@ describe('sharing by link', () => {
     expect((await patch(String(sound.id), { visibility: 'link' })).status).toBe(404);
     expect(rowOf(sound.id)).toMatchObject({ visibility: 'private', slug: null });
   });
+
+  it("takes the owner's lock before it reads the sound", async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    table.client.findFirst.mockClear();
+    await patch(String(sound.id), { visibility: 'link' });
+    expect(lockQuery).toHaveBeenCalledTimes(1);
+    expect(lockQuery.mock.calls[0]).toContain('user-1');
+    expect(lockQuery.mock.invocationCallOrder[0]).toBeLessThan(
+      table.client.findFirst.mock.invocationCallOrder[0]
+    );
+  });
 });
 
 describe('publishing', () => {
@@ -294,13 +332,37 @@ describe('publishing', () => {
     const again = await publishIt(String(sound.id));
     expect(again.status).toBe(200);
     expect(rowOf(sound.id).publishedAt).toBe(first);
-    expect(table.client.count).toHaveBeenCalledTimes(1);
+    expect(profiles.get('user-1')!.recentPublishes).toEqual([first]);
+  });
+
+  it('keeps the tags it had when republished with none sent, and drops one the library no longer uses', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    await publishIt(String(sound.id), { confirm: true, tags: [libraryTag] });
+    await patch(String(sound.id), { visibility: 'link' });
+    rowOf(sound.id).tags = [libraryTag, 'gone-from-the-library'];
+    expect((await publishIt(String(sound.id))).status).toBe(200);
+    expect(rowOf(sound.id).tags).toEqual([libraryTag]);
+    expect((await publishIt(String(sound.id), { confirm: true, tags: [] })).status).toBe(200);
+    expect(rowOf(sound.id).tags).toEqual([]);
+  });
+
+  it("takes the owner's lock before it reads the sound", async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    table.client.findFirst.mockClear();
+    await publishIt(String(sound.id));
+    expect(lockQuery).toHaveBeenCalledTimes(1);
+    expect(lockQuery.mock.calls[0]).toContain('user-1');
+    expect(lockQuery.mock.invocationCallOrder[0]).toBeLessThan(
+      table.client.findFirst.mock.invocationCallOrder[0]
+    );
   });
 
   async function refused(id: unknown, body: unknown = { confirm: true }) {
     const before = { ...rowOf(id) };
+    const spent = [...(profiles.get('user-1')?.recentPublishes ?? [])];
     const res = await publishIt(String(id), body);
     expect(rowOf(id)).toEqual(before);
+    expect(profiles.get('user-1')?.recentPublishes ?? []).toEqual(spent);
     return { status: res.status, code: (await json(res)).error?.code };
   }
 
@@ -324,7 +386,25 @@ describe('publishing', () => {
   it('refuses a sound saved on a definition the synth has moved on from', async () => {
     const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
     rowOf(sound.id).definitionVersion = modelD.version - 1;
-    expect(await refused(sound.id)).toEqual({ status: 409, code: 'NOT_PLAYABLE' });
+    const res = await publishIt(String(sound.id));
+    expect(res.status).toBe(409);
+    expect((await json(res)).error).toMatchObject({
+      code: 'NOT_PLAYABLE',
+      message: expect.stringContaining('saved on an older'),
+    });
+  });
+
+  it('refuses a panel that no longer passes, without blaming the version', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    rowOf(sound.id).values = { 'not-a-control': 1 };
+    const res = await publishIt(String(sound.id));
+    expect(res.status).toBe(409);
+    const { error } = await json(res);
+    expect(error).toMatchObject({
+      code: 'NOT_PLAYABLE',
+      message: expect.stringContaining('no longer fit'),
+    });
+    expect(error!.message).not.toContain('older');
   });
 
   it('refuses a blocked word in the name or the notes', async () => {
@@ -373,6 +453,28 @@ describe('publishing', () => {
     }
     const one = await save({ synthId: 'model-d', name: 'One more', panel });
     expect(await refused(one.id)).toEqual({ status: 429, code: 'PUBLISH_LIMIT' });
+  });
+
+  it('does not give a place back when a published sound is deleted', async () => {
+    for (let i = 0; i < PUBLISH_DAILY_CAP; i++) {
+      const s = await save({ synthId: 'model-d', name: `Sound ${i}`, panel });
+      await publishIt(String(s.id));
+    }
+    table.rows.splice(0, table.rows.length);
+    const one = await save({ synthId: 'model-d', name: 'One more', panel });
+    expect(await refused(one.id)).toEqual({ status: 429, code: 'PUBLISH_LIMIT' });
+  });
+
+  it('counts only the last 24 hours, and forgets the older ones', async () => {
+    const now = Date.now();
+    const old = Array.from(
+      { length: PUBLISH_DAILY_CAP },
+      () => new Date(now - 25 * 60 * 60 * 1000)
+    );
+    profiles.get('user-1')!.recentPublishes = old;
+    const one = await save({ synthId: 'model-d', name: 'One more', panel });
+    expect((await publishIt(String(one.id))).status).toBe(200);
+    expect(profiles.get('user-1')!.recentPublishes).toHaveLength(1);
   });
 });
 
@@ -423,6 +525,26 @@ describe('the public read', () => {
     const pub = await json(await shared(slug));
     expect(pub.data).toMatchObject({ visibility: 'published', panel });
     expect(pub.data!.publishedAt).toEqual(expect.any(String));
+  });
+
+  it('shows tags only while the sound is published', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    await publishIt(String(sound.id), { confirm: true, tags: [libraryTag] });
+    const slug = String(rowOf(sound.id).slug);
+    expect((await json(await shared(slug))).data!.tags).toEqual([libraryTag]);
+    await patch(String(sound.id), { visibility: 'link' });
+    expect((await json(await shared(slug))).data!.tags).toEqual([]);
+  });
+
+  it('logs nothing for a stored panel that no longer passes, however often it is read', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
+    await patch(String(sound.id), { visibility: 'link' });
+    rowOf(sound.id).values = { 'not-a-control': 1 };
+    const slug = String(rowOf(sound.id).slug);
+    const res = await shared(slug);
+    await shared(slug);
+    expect((await json(res)).data).toMatchObject({ playable: false, panel: null });
+    expect(mockLog.error).not.toHaveBeenCalled();
   });
 
   it('is one 404 for private, unknown and malformed', async () => {

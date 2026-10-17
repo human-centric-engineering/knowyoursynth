@@ -37,6 +37,7 @@ import {
   assertChanged,
   assertPublishableText,
   libraryPanel,
+  lockOwnersSounds,
   sharedSourcesOf,
   visibilityData,
   withFreshSlug,
@@ -114,7 +115,8 @@ function panelOf(
     };
   const result = validateSound(def, { values: row.values, cables: row.cables });
   if (!result.ok) {
-    // Logged when one sound is read, not on every list, so one bad row is not an error on each page load.
+    // Logged when its owner reads one sound, not on every list or public read, so one bad row is not an error on
+    // each page load.
     if (log)
       logger.error('user sounds: stored panel fails validation', {
         soundId: row.id,
@@ -184,6 +186,14 @@ export async function listUserSounds(
     orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
   });
   return (await details(rows, false)).map(toSummary);
+}
+
+/**
+ * The detail of a row already read, with no log when its panel fails: what the public read serves, where anyone
+ * holding the address could otherwise fill the error log by asking again.
+ */
+export async function quietDetail(row: UserSound): Promise<UserSoundDetail> {
+  return (await details([row], false))[0];
 }
 
 /** One of the caller's sounds, or a 404 when they have none with that id. */
@@ -313,55 +323,60 @@ export async function updateUserSound(
   id: string,
   input: UpdateUserSound
 ): Promise<UserSoundDetail> {
-  const existing = await prisma.userSound.findFirst({
-    where: { id, userId },
-    select: {
-      synthId: true,
-      name: true,
-      notes: true,
-      slug: true,
-      visibility: true,
-      sourceSoundId: true,
-      sourceUserSoundId: true,
-    },
-  });
-  if (!existing) return notFound();
-
-  const data: Prisma.UserSoundUpdateManyMutationInput = {};
-  if (input.name !== undefined) data.name = input.name;
-  if (input.notes !== undefined) data.notes = input.notes || null;
-  // Still published after this change: held to what publishing is.
-  const published = existing.visibility === 'published' && input.visibility === undefined;
-  if (published && (input.name !== undefined || input.notes !== undefined))
-    assertPublishableText({
-      name: input.name ?? existing.name,
-      notes: input.notes !== undefined ? input.notes || null : existing.notes,
-    });
-  if (input.panel !== undefined) {
-    // The same rule as a new sound: a panel is only saved on a listed synth the app can play.
-    const def = await playableSynth(existing.synthId);
-    const panel = checkPanel(def, input.panel);
-    if (published)
-      await assertChanged(def, {
-        panel,
-        sourceSoundId: existing.sourceSoundId,
-        sourceUserSoundId: existing.sourceUserSoundId,
+  // The slug is minted inside the transaction, so a retry after a clash mints another.
+  await withFreshSlug(() =>
+    prisma.$transaction(async (tx) => {
+      // Read under the owner's lock, so a publish cannot land between the checks below and this write.
+      await lockOwnersSounds(tx, userId);
+      const existing = await tx.userSound.findFirst({
+        where: { id, userId },
+        select: {
+          synthId: true,
+          name: true,
+          notes: true,
+          slug: true,
+          visibility: true,
+          sourceSoundId: true,
+          sourceUserSoundId: true,
+        },
       });
-    data.values = toJson(panel.values);
-    data.cables = toJson(panel.cables);
-    data.definitionVersion = def.version;
-  }
+      if (!existing) return notFound();
 
-  // Keyed on the owner again, so a sound deleted meanwhile is a 404 rather than a write to nothing.
-  // The slug is minted inside the write, so a retry after a clash mints another.
-  const { visibility } = input;
-  const { count } = await withFreshSlug(() =>
-    prisma.userSound.updateMany({
-      where: { id, userId },
-      data: visibility === undefined ? data : { ...data, ...visibilityData(existing, visibility) },
+      const data: Prisma.UserSoundUpdateManyMutationInput = {};
+      if (input.name !== undefined) data.name = input.name;
+      if (input.notes !== undefined) data.notes = input.notes || null;
+      // Still published after this change: held to what publishing is.
+      const published = existing.visibility === 'published' && input.visibility === undefined;
+      if (published && (input.name !== undefined || input.notes !== undefined))
+        assertPublishableText({
+          name: input.name ?? existing.name,
+          notes: input.notes !== undefined ? input.notes || null : existing.notes,
+        });
+      if (input.panel !== undefined) {
+        // The same rule as a new sound: a panel is only saved on a listed synth the app can play.
+        const def = await playableSynth(existing.synthId);
+        const panel = checkPanel(def, input.panel);
+        if (published)
+          await assertChanged(def, {
+            panel,
+            sourceSoundId: existing.sourceSoundId,
+            sourceUserSoundId: existing.sourceUserSoundId,
+          });
+        data.values = toJson(panel.values);
+        data.cables = toJson(panel.cables);
+        data.definitionVersion = def.version;
+      }
+
+      // Keyed on the owner again, so a sound deleted meanwhile (a delete does not take the lock) is a 404.
+      const { visibility } = input;
+      const { count } = await tx.userSound.updateMany({
+        where: { id, userId },
+        data:
+          visibility === undefined ? data : { ...data, ...visibilityData(existing, visibility) },
+      });
+      if (count === 0) notFound();
     })
   );
-  if (count === 0) return notFound();
   return getUserSound(userId, id);
 }
 

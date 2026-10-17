@@ -11,6 +11,7 @@ import {
   type ReorderInstrumentsInput,
 } from '@/lib/app/profile/instruments-data';
 import { prisma } from '@/lib/db/client';
+import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 
 /**
  * The synths a user owns and the ones they want (`f-profiles` r2), each a databank instrument.
@@ -52,9 +53,6 @@ const LIST_ORDER = [
 ] as const satisfies Prisma.OwnedInstrumentOrderByWithRelationInput[];
 
 const capitalised = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
-
-const hasCode = (err: unknown, code: string): boolean =>
-  typeof err === 'object' && err !== null && 'code' in err && err.code === code;
 
 type Tx = Prisma.TransactionClient;
 
@@ -136,9 +134,9 @@ export async function addInstrument(
     return { entry: toEntry(row), created: true };
   } catch (err) {
     // Removed from the databank between the read and the write.
-    if (hasCode(err, 'P2003')) throw unknownInstrument(instrumentId);
+    if (hasPrismaCode(err, 'P2003')) throw unknownInstrument(instrumentId);
     // Listed by another request between the read and the write: answer as if it had come first.
-    if (!hasCode(err, 'P2002')) throw err;
+    if (!hasPrismaCode(err, 'P2002')) throw err;
     const row = await prisma.ownedInstrument.findUnique({ where: key, select: ENTRY_SELECT });
     if (!row) throw err;
     return { entry: alreadyListed(row, kind), created: false };

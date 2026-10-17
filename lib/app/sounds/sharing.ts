@@ -15,6 +15,7 @@
 import type { Prisma, SynthSound } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { APIError } from '@/lib/api/errors';
+import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import { textIsBlocked } from '@/lib/app/profile/words';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -45,20 +46,32 @@ export function visibilityData(
   return { visibility: next, slug: mintSlug() };
 }
 
-/* `slug` is the only unique column a user-sound write can clash on besides the id, which is never written. */
-const isUniqueClash = (err: unknown) =>
-  typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002';
-
-/** Run a write that may mint a slug, again if the slug it minted was taken. At 50 bits a clash will not happen. */
+/**
+ * Run a write that may mint a slug, again if the slug it minted was taken. At 50 bits a clash will not happen. `slug`
+ * is the only unique column a user-sound write can clash on besides the id, which is never written. A clash aborts
+ * the transaction it is in, so the whole transaction is what is run again.
+ */
 export async function withFreshSlug<T>(storeWithSlug: () => Promise<T>, tries = 3): Promise<T> {
   // not named `write`: scripts/ci/shared-settings-writes.ts follows calls by name, and a catalogue writer has that one
   for (let attempt = 1; ; attempt++) {
     try {
       return await storeWithSlug();
     } catch (err) {
-      if (attempt >= tries || !isUniqueClash(err)) throw err;
+      if (attempt >= tries || !hasPrismaCode(err, 'P2002')) throw err;
     }
   }
+}
+
+/**
+ * Take the lock that orders one user's sound changes and publishes, held to the end of `tx`. Each reads the sound
+ * after taking it, so the checks run against the row the write lands on: two link shares do not mint two slugs, an
+ * edit racing a publish is checked as the published sound it becomes, and the daily cap is read and spent as one.
+ */
+export async function lockOwnersSounds(
+  tx: Prisma.TransactionClient,
+  userId: string
+): Promise<void> {
+  await tx.$queryRaw`SELECT id FROM "user" WHERE id = ${userId} FOR UPDATE`;
 }
 
 /** The usernames of these users, from one query. A user with no profile is absent. */

@@ -18,7 +18,9 @@
  *    rows stay.
  * 4. Sharing (`f-sharing` h1): a published sound is served by its slug and copied with credit; the export carries its
  *    visibility and slug; erasing its author keeps the other user's copy with no credit left
- *    (`user_sound_sourceUserSoundId_fkey`, `ON DELETE SET NULL`).
+ *    (`user_sound_sourceUserSoundId_fkey`, `ON DELETE SET NULL`). Publishes sent together at the daily cap are
+ *    counted one after another (the owner's `FOR UPDATE` lock), and deleting a published sound does not give its
+ *    place back.
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -30,13 +32,15 @@ import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import { eraseUser } from '@/lib/privacy/erase-user';
 import { exportUserData } from '@/lib/privacy/export-user';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { APIError } from '@/lib/api/errors';
 import {
   createUserSound,
+  deleteUserSound,
   getUserSound,
   listUserSounds,
   updateUserSound,
 } from '@/lib/app/sounds/store';
-import { publishUserSound } from '@/lib/app/sounds/publish';
+import { PUBLISH_DAILY_CAP, publishUserSound } from '@/lib/app/sounds/publish';
 import { getSharedSound } from '@/lib/app/sounds/public';
 import {
   getPanelPref,
@@ -133,6 +137,46 @@ async function main(): Promise<void> {
       'the credit goes when the source is no longer published'
     );
     await publishUserSound(subject.id, scratch.id, { confirm: true, tags: [] });
+
+    // The cap under the owner's lock: one place left, three publishes at once, and exactly one gets it. Then deleting
+    // the one that did does not give its place back. Deleted after, so the export below sees only the two sounds.
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    await prisma.synthProfile.update({
+      where: { userId: subject.id },
+      data: { recentPublishes: Array.from({ length: PUBLISH_DAILY_CAP - 1 }, () => hourAgo) },
+    });
+    const racers = await Promise.all(
+      [cont.min, cont.max, (cont.min + cont.max) / 2].map((v, i) =>
+        createUserSound(subject.id, {
+          synthId: 'model-d',
+          name: `Racer ${i}`,
+          panel: { values: { [cont.id]: v }, cables: [] },
+        })
+      )
+    );
+    const raced = await Promise.allSettled(
+      racers.map((r) => publishUserSound(subject.id, r.id, { confirm: true }))
+    );
+    const limited = raced.filter(
+      (r) =>
+        r.status === 'rejected' && r.reason instanceof APIError && r.reason.code === 'PUBLISH_LIMIT'
+    );
+    check(
+      raced.filter((r) => r.status === 'fulfilled').length === 1 && limited.length === 2,
+      'publishes sent together at the cap: one is published, the others refused (the owner lock)'
+    );
+    for (const r of racers) await deleteUserSound(subject.id, r.id);
+    const after = await createUserSound(subject.id, { synthId: 'model-d', name: 'After', panel });
+    const refusedAfter = await publishUserSound(subject.id, after.id, { confirm: true }).then(
+      () => null,
+      (err: unknown) => (err instanceof APIError ? err.code : 'other')
+    );
+    await deleteUserSound(subject.id, after.id);
+    check(
+      refusedAfter === 'PUBLISH_LIMIT',
+      'deleting a published sound does not give its place back'
+    );
+
     check(
       (await getUserSound(subject.id, scratch.id)).panel?.values[cont.id] === cont.min,
       'a sound made from scratch reads back with its panel'

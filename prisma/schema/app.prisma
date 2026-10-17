@@ -710,9 +710,9 @@ model Favourite {
 /// switch it on.
 model SynthProfile {
   /// FK to User.id, ON DELETE CASCADE (hand-written in the migration). One profile per user.
-  userId            String    @id
+  userId            String     @id
   /// Stored lower-case, so uniqueness is case-insensitive.
-  username          String    @unique @db.VarChar(24)
+  username          String     @unique @db.VarChar(24)
   /// When the username last changed; null until the first change. Choosing the first one is not a change.
   usernameChangedAt DateTime?
   /// Each link as lib/app/profile/links.ts rebuilds it, never the string typed. Null for none.
@@ -721,12 +721,16 @@ model SynthProfile {
   instagram         String?
   bandcamp          String?
   /// Whether /u/<username> shows anything. Off: the page is a 404.
-  public            Boolean   @default(false)
+  public            Boolean    @default(false)
   /// Whether the public page lists the synths they own, and the ones they want (f-profiles r2).
-  showOwned         Boolean   @default(false)
-  showWishlist      Boolean   @default(false)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  showOwned         Boolean    @default(false)
+  showWishlist      Boolean    @default(false)
+  /// When they first published each sound in the last 24 hours, pruned at each publish: what the daily cap counts
+  /// (lib/app/sounds/publish.ts). Kept here, not counted from user_sound, so deleting a published sound does not give
+  /// its place back.
+  recentPublishes   DateTime[] @default([])
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   @@map("synth_profile")
 }

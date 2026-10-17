@@ -137,6 +137,9 @@ beforeEach(() => {
   vi.clearAllMocks();
   table = userSoundTable();
   mockPrisma.userSound = table.client;
+  // a change runs in a transaction under the owner's lock (`lockOwnersSounds`): the same fakes, and a no-op lock
+  mockPrisma.$transaction = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => fn(mockPrisma));
+  mockPrisma.$queryRaw = vi.fn();
   mockPrisma.synth = {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) =>
       where.id === 'model-d' ? { listed: true } : null

@@ -102,7 +102,8 @@ export type UpdateUserSound = z.infer<typeof UpdateUserSoundSchema>;
 
 /**
  * `POST /api/v1/sounds/:id/publish`. `confirm` is the "I made this, or the sound it came from is credited on it" tick;
- * `tags` are up to three of the tags that synth's library sounds use.
+ * `tags` are up to three of the tags that synth's library sounds use; left out, a republished sound keeps the ones it
+ * had.
  */
 export const PublishUserSoundSchema = z.object({
   confirm: z.literal(true, { error: 'Confirm the sound is yours to publish' }),
@@ -110,7 +111,7 @@ export const PublishUserSoundSchema = z.object({
     .array(SoundTagSchema)
     .max(MAX_SOUND_TAGS, `At most ${MAX_SOUND_TAGS} tags`)
     .refine((t) => new Set(t).size === t.length, 'A tag is listed twice')
-    .default([]),
+    .optional(),
 });
 export type PublishUserSound = z.infer<typeof PublishUserSoundSchema>;
 

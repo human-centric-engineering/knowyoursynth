@@ -43,7 +43,9 @@ sessions or fixed published sounds. Where it differs, the reason is below.
   working when its sound went private works again when it is shared again.
 - **`publishedAt`** is the first publication, kept through unpublishing and republishing.
 - **`tags`**: up to three, chosen at publish from the tags that synth's library sounds use
-  (owner ruling, journaled on `f-sharing`). Users' sounds have no other tags.
+  (owner ruling, journaled on `f-sharing`). Users' sounds have no other tags. Kept when the sound
+  is unpublished, but shown only while it is published; a republish with `tags` left out keeps
+  them, less any the library no longer uses. `tags: []` clears them.
 - **Notes go public with the sound.** Notes written while sounds could only be private are shown
   once the sound is shared; the publish and share UI (h3) says so.
 
@@ -67,10 +69,26 @@ sessions or fixed published sounds. Where it differs, the reason is below.
 | `USERNAME_REQUIRED` | 409    | No synth profile (`f-profiles`).                                                                         |
 | (validation)        | 400    | The synth is not listed.                                                                                 |
 | `NOT_PLAYABLE`      | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
-| `NOT_ALLOWED`       | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): word by word.         |
+| `NOT_ALLOWED`       | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): see below.            |
 | `DUPLICATE`         | 409    | It plays the same as the library sound or the shared sound it was copied from (`assertChanged`).         |
 | (validation)        | 400    | A tag that synth's library does not use, or the same tag twice.                                          |
 | `PUBLISH_LIMIT`     | 429    | More than 10 (`PUBLISH_DAILY_CAP`) first publications in 24 hours. A republish does not count.           |
+
+`NOT_PLAYABLE` says which of its two cases it is: a sound on an older definition, or settings that
+no longer fit.
+
+- **The word check** goes word by word, so "Scunthorpe bass" is fine. A blocked word counts with a
+  usual ending only ("fucking", "shitty"; `ENDINGS`), so "shitake" and "retardant" are fine. A word
+  spelled out with separators ("f.u.c.k") is read whole, each part of a joined one ("bass.shit")
+  on its own, and a run of single letters ("f u c k") as one word.
+- **The daily cap is kept on the profile** (`SynthProfile.recentPublishes`, pruned to the last
+  24 hours at each publish), not counted from the sounds, so deleting a published sound does not
+  give its place back.
+- **One at a time per owner.** A publish and every PATCH run in a transaction that first takes
+  the owner's lock (`lockOwnersSounds`: their `user` row, `FOR UPDATE`) and then reads the sound.
+  So publishes sent together are counted one after another, two link shares never mint two slugs,
+  and an edit sent alongside a publish is checked as the published sound it becomes. A delete does
+  not take the lock; the write after it is keyed on the owner, so it finds nothing and is a 404.
 
 - **"Plays the same"** is `panelKey`: every control at its value or its `init`, and the cables
   sorted, so two panels stored differently but sounding alike compare equal. A source that has
@@ -108,7 +126,8 @@ no longer play needs the panel sent.
 sound: slug, synth, visibility, name, notes, tags, `publishedAt` (published only), `author`,
 `authorProfile`, the library `source` (without its row id), `basedOn`, and the panel exactly as
 the owner's read checks and fits it (`playable`, `panel`, `problems`, `fitted`). Private, unknown
-and malformed are one 404. ETag and `304`; the platform's `private, no-cache`, so a sound made
+and malformed are one 404. A panel that no longer passes is served unplayable and not logged, so
+anyone holding the address cannot fill the error log. ETag and `304`; the platform's `private, no-cache`, so a sound made
 private stops being served on the next request.
 
 ## Erasure and export
@@ -117,11 +136,13 @@ private stops being served on the next request.
   `user_sound_userId_fkey` cascade). Other people's copies stay, with `sourceUserSoundId` null
   and no credit.
 - The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt` and `tags`. Not
-  `sourceUserSoundId`: that is the row id of a sound someone else shared, about them.
+  `sourceUserSoundId`: that is the row id of a sound someone else shared, about them. The profile
+  section (`app.synthProfile`) carries `recentPublishes`.
 - Both are checked against the dev database by `npm run smoke:sounds`.
 
 ## Tests
 
 `tests/unit/app/api/v1/sounds/sharing.test.ts` (visibility, the slug and its retry, each publish
-refusal, the checks on a published sound, the public read and its 404, the byline, copies and
-their credit); `npm run smoke:sounds` (the `SetNull` FK and the export, against a real database).
+refusal, the cap kept through deletes, the owner's lock, kept tags, the checks on a published
+sound, the public read and its 404, the byline, copies and their credit);
+`tests/unit/lib/app/profile/words.test.ts` (the word check); `npm run smoke:sounds` (the `SetNull` FK and the export, against a real database).

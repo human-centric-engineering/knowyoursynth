@@ -13,6 +13,7 @@
  */
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
+import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 import { NotFoundError, ValidationError } from '@/lib/api/errors';
 import { playableSynth } from '@/lib/app/sounds/store';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -106,9 +107,6 @@ async function targetOf(
   return { synthSoundId: sound.id };
 }
 
-const isUniqueViolation = (err: unknown) =>
-  typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002';
-
 /** Star something for the caller. `created` is false when it was already starred, and the star is the one it had. */
 export async function addFavourite(
   userId: string,
@@ -123,7 +121,7 @@ export async function addFavourite(
     return { favourite: toFavourite(row), created: true };
   } catch (err) {
     // Starred by another request between the read and the write: that star is this one.
-    if (!isUniqueViolation(err)) throw err;
+    if (!hasPrismaCode(err, 'P2002')) throw err;
     const row = await prisma.favourite.findFirst({ where, select: FAVOURITE_SELECT });
     if (!row) throw err;
     return { favourite: toFavourite(row), created: false };

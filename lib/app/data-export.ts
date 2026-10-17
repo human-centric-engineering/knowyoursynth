@@ -154,7 +154,7 @@ export function initAppSubjectSources(): void {
         section: PROFILE_SECTION,
         disposition: 'export',
         description:
-          'Your synth profile: your username and when you last changed it, your links, and who can see your page.',
+          'Your synth profile: your username and when you last changed it, your links, who can see your page, and when you first published each sound in the last day.',
       },
       {
         model: 'OwnedInstrument',
@@ -298,6 +298,7 @@ function collectProfile(userId: string) {
       public: true,
       showOwned: true,
       showWishlist: true,
+      recentPublishes: true,
       createdAt: true,
       updatedAt: true,
     },

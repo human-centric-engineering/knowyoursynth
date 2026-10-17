@@ -10,36 +10,31 @@
  * row's id, its owner's id and the library sound's row id stay here.
  */
 import { prisma } from '@/lib/db/client';
-import { getUserSound } from '@/lib/app/sounds/store';
+import { quietDetail } from '@/lib/app/sounds/store';
 import { usernamesOf } from '@/lib/app/sounds/sharing';
 import { SharedSlugSchema, type PublicSound } from '@/lib/app/sounds/data';
 
 /** The shared sound at `slug`, or null if there is none to show. */
 export async function getSharedSound(slug: string): Promise<PublicSound | null> {
   if (!SharedSlugSchema.safeParse(slug).success) return null;
-  const row = await prisma.userSound.findUnique({
-    where: { slug },
-    select: { id: true, userId: true, visibility: true },
-  });
+  const row = await prisma.userSound.findUnique({ where: { slug } });
   if (!row || row.visibility === 'private') return null;
 
-  // the owner's own read, so the panel is checked and fitted exactly as theirs is; only public fields leave it
-  const [sound, names] = await Promise.all([
-    getUserSound(row.userId, row.id),
-    usernamesOf([row.userId]),
-  ]);
+  // read as the owner's own is, so the panel is checked and fitted exactly as theirs is; only public fields leave it
+  const [sound, names] = await Promise.all([quietDetail(row), usernamesOf([row.userId])]);
   const owner = names.get(row.userId);
-  if (sound.visibility === 'private' || sound.slug === null) return null;
-  const named = owner !== undefined && (sound.visibility === 'published' || owner.public);
+  const published = row.visibility === 'published';
+  const named = owner !== undefined && (published || owner.public);
 
   return {
-    slug: sound.slug,
+    slug,
     synthId: sound.synthId,
-    visibility: sound.visibility,
+    visibility: row.visibility,
     name: sound.name,
     notes: sound.notes,
-    tags: sound.tags,
-    publishedAt: sound.visibility === 'published' ? sound.publishedAt : null,
+    // chosen at publish, and shown only while it is: a sound taken back to a link share is not listed by them
+    tags: published ? sound.tags : [],
+    publishedAt: published ? sound.publishedAt : null,
     author: named ? owner.username : null,
     authorProfile: named && owner.public,
     source: sound.source

@@ -8,6 +8,7 @@ import {
   usernameProblem,
 } from '@/lib/app/profile/username';
 import { prisma } from '@/lib/db/client';
+import { hasPrismaCode } from '@/lib/app/synths/lib/prisma-errors';
 
 /**
  * A user's synth profile (`f-profiles` r1): the username their public page goes under, their links, and who may see
@@ -85,9 +86,6 @@ async function availability(
   if (held && held.heldUntil > now) return 'taken';
   return null;
 }
-
-const isUniqueClash = (err: unknown): boolean =>
-  typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002';
 
 /**
  * Choose a username, change it, or change the links and who sees the profile.
@@ -170,7 +168,7 @@ export async function saveProfile(
     });
     return view(row, now);
   } catch (error) {
-    if (!isUniqueClash(error)) throw error;
+    if (!hasPrismaCode(error, 'P2002')) throw error;
     /* The same user's first save sent twice meets the primary key, not someone else's name: answer with what landed. */
     const landed = await prisma.synthProfile.findUnique({ where: { userId } });
     if (landed && landed.username === username) return view(landed, now);
