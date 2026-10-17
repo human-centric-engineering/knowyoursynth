@@ -49,6 +49,13 @@ export async function reportSound(
   return prisma.$transaction(async (tx) => {
     // Orders reports on this one sound, so the open-report check below and the create cannot interleave.
     await tx.$queryRaw`SELECT id FROM user_sound WHERE id = ${sound.id} FOR UPDATE`;
+    // Read again under the lock: an unlist or a stop-sharing that landed since the read above refuses this too.
+    const locked = await tx.userSound.findUnique({
+      where: { id: sound.id },
+      select: { visibility: true, unlistedAt: true },
+    });
+    if (!locked || locked.visibility === 'private' || locked.unlistedAt)
+      throw new NotFoundError('Sound not found');
     const open = await tx.soundReport.findFirst({
       where: { soundId: sound.id, reporterId: userId, status: 'open' },
       select: { id: true },

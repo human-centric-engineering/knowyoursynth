@@ -12,6 +12,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { sharedSoundHref } from '@/components/app/synth/routes';
 import { Button } from '@/components/ui/button';
 import { APIClientError, apiClient } from '@/lib/api/client';
@@ -20,12 +21,6 @@ import {
   type ModerationAction,
   type QueueSound,
 } from '@/lib/app/sounds/report-data';
-
-const VISIBILITY: Record<QueueSound['visibility'], string> = {
-  private: 'private',
-  link: 'shared by link',
-  published: 'published',
-};
 
 export function ReportQueue({ sounds }: { sounds: QueueSound[] }) {
   if (sounds.length === 0) return <p className="text-muted-foreground text-sm">Nothing here.</p>;
@@ -79,7 +74,8 @@ function QueueCard({ sound: s }: { sound: QueueSound }) {
           <span className="text-muted-foreground font-normal">· {s.synthName}</span>
         </h2>
         <span className="text-muted-foreground text-xs">
-          by {s.owner ? `@${s.owner}` : 'an owner with no username'} · {VISIBILITY[s.visibility]}
+          by {s.owner ? `@${s.owner}` : 'an owner with no username'} ·{' '}
+          {VISIBILITY_LABELS[s.visibility].toLowerCase()}
           {s.unlistedAt && <> · unlisted on {new Date(s.unlistedAt).toLocaleDateString()}</>}
         </span>
       </header>
