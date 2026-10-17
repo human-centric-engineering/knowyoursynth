@@ -321,6 +321,15 @@ describe('signed out', () => {
     expect(JSON.parse(window.localStorage.getItem(SHARED_FROM_KEY) ?? 'null')).toBe(SLUG);
   });
 
+  it('loads the shared sound when the panel it was opened into cannot be read back', () => {
+    window.localStorage.setItem(SESSION_KEY, JSON.stringify({ not: 'a session' }));
+    window.localStorage.setItem(SHARED_FROM_KEY, JSON.stringify(SLUG));
+    shared();
+    expect(loadedName()).toBe('Glass pluck');
+    expect(cutoff()).toBe('-3');
+    expect(screen.queryByText(/control moved/)).toBeNull();
+  });
+
   it('loads the shared sound again on a reload once another sound was opened over it', () => {
     const first = shared();
     fireEvent.click(screen.getByRole('button', { name: /Wobble lead/ }));
@@ -426,6 +435,11 @@ describe('signed in', () => {
     );
     expect(said).toMatch(/without the original's name or notes/);
     expect(said).not.toContain(SHARED.name);
+    // its address is gone with it: the synth's own, and Load it again does not put the dead one back
+    expect(window.location.pathname).toBe('/synths/model-d');
+    fireEvent.click(within(strip()).getByRole('button', { name: 'Load it again' }));
+    expect(loadedName()).toBe('Glass pluck');
+    expect(window.location.pathname).toBe('/synths/model-d');
   });
 
   it("moves to the synth's own address after Save a copy, so a reload opens the copy", async () => {

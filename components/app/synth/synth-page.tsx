@@ -75,6 +75,7 @@ import {
   PanelViewSchema,
   STORAGE_KEYS,
   fitPanel,
+  parseSession,
   readStored,
   sessionKey,
   sharedFromKey,
@@ -208,6 +209,13 @@ function Synth({
   // as the visitor's own (t-51). Loading the shared sound again takes the address back.
   const [atShared, setAtShared] = useState(true);
   const sharedSlug = atShared ? (shared?.slug ?? null) : null;
+  // The view as it is now, for an address written after an await: the one a save started with may have changed since.
+  const viewRef = useRef(view);
+  useEffect(() => {
+    viewRef.current = view;
+  });
+  // The shared sound stopped being shared while the page was open (found by Save a copy): its address now 404s.
+  const sharedGone = useRef(false);
   const hereHref = useCallback(
     (v: PanelView) =>
       sharedSlug ? sharedSoundHref(synthId, sharedSlug, v) : synthHref(synthId, v),
@@ -739,7 +747,9 @@ function Synth({
       shared.source && sounds.some((x) => x.id === shared.source?.slug) ? shared.source.slug : null;
     openSeq.current++;
     focusStore.set(null);
-    if (!keep) patch(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+    // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
+    if (keep) patch((s) => s);
+    else patch(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
     writeStored(sharedFromKey(synthId), shared.slug);
     setSharedPanel(panel);
     setSharedNotice(
@@ -747,9 +757,9 @@ function Synth({
         ? null
         : `${shared.name} no longer fits this synth as it is now, so it opened with what does.`
     );
-    if (!atShared) {
+    if (!atShared && !sharedGone.current) {
       setAtShared(true);
-      window.history.replaceState(null, '', sharedSoundHref(synthId, shared.slug, view));
+      window.history.replaceState(null, '', sharedSoundHref(synthId, shared.slug, viewRef.current));
     }
   };
   // On arrival, over whatever was stored, as `?sound=` does: the address names this sound. The account's last panel
@@ -762,7 +772,7 @@ function Synth({
     if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     const reload =
       readStored(sharedFromKey(synthId)) === shared.slug &&
-      readStored(sessionKey(synthId)) !== null;
+      parseSession(synthDef, readStored(sessionKey(synthId))) !== null;
     loadShared(reload);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
 
@@ -783,6 +793,12 @@ function Synth({
     if (how === 'created') {
       leaveShared();
       patch((s) => ({ ...s, soundId: d.id }));
+      // On a shared sound's page the new sound is what is open now, so the address becomes the synth's own and a reload
+      // opens it rather than the shared sound (t-51).
+      if (shared) {
+        setAtShared(false);
+        window.history.replaceState(null, '', synthHref(synthId, viewRef.current));
+      }
     }
   };
 
@@ -812,14 +828,11 @@ function Synth({
         return { ok: false, error: 'The copy could not be saved. Try again.' };
       }
       gone = true;
+      sharedGone.current = true;
     }
     // something else was opened while it saved: the copy is in My sounds, but not what is on the panel now
     if (seq !== openSeq.current) mine.put(d);
-    else {
-      onSaved(d, 'created');
-      setAtShared(false);
-      window.history.replaceState(null, '', synthHref(synthId, view));
-    }
+    else onSaved(d, 'created');
     return {
       ok: true,
       note: gone

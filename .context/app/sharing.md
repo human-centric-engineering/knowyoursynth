@@ -161,9 +161,12 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   When the address is reloaded and the stored panel was opened from this same sound, the panel stays
   as the visitor left it. "Controls moved" and Restore still count from the shared sound. Any other
   arrival, including one from a different shared sound, loads the sound over the stored panel.
-- **After Save a copy** the address becomes the synth's own (`synthHref` with the view), so a
-  reload opens the copy as the visitor's sound instead of the shared one. **Load it again** takes
-  the shared address back.
+- **After Save a copy**, or any new save made on the page, the address becomes the synth's own
+  (`synthHref` with the view), so a reload opens the new sound instead of the shared one. **Load it
+  again** takes the shared address back, unless Save a copy found the sound is no longer shared.
+  Then its address would only 404.
+- A kept panel counts as the visitor's change, as a fresh load does, so the account's last panel
+  arriving does not replace it. An account panel that does arrive elsewhere clears the marker.
 - **The strip** (`components/app/sharing/shared-sound-strip.tsx`) above the panel: name, byline,
   the `basedOn` and library credits, notes and tags. Signed out: **Sign in to save a copy**, back to
   this address. Signed in on someone else's: **Save a copy**, which sends the panel as it is with

@@ -279,6 +279,8 @@ export function useStoredSession(
       const restored = parseSession(defRef.current, pref);
       if (!restored) return;
       setSession(restored);
+      // Not the panel a shared sound was opened into any more, so that sound's address is an arrival again (t-51).
+      writeStored(sharedFromKey(defRef.current.id), null);
       // The browser keeps it too, so signed out (or with the account unread) the page reopens where they left off.
       storedStamp.current = { savedAt, owner: user.current };
       writeStored(key, storedSession(restored, { savedAt, owner: user.current }));
