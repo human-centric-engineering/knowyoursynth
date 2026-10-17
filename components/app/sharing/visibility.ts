@@ -9,3 +9,12 @@ export const VISIBILITY_LABELS: Record<SoundVisibility, string> = {
   link: 'Shared by link',
   published: 'Published',
 };
+
+/** What a sound moderators unlisted is called instead (`f-sharing` h4), whatever its visibility. */
+export const UNLISTED_LABEL = 'Unlisted by moderators';
+
+/** A sound's state as My sounds and the dashboard say it. */
+export const soundStateLabel = (sound: {
+  visibility: SoundVisibility;
+  unlisted: boolean;
+}): string => (sound.unlisted ? UNLISTED_LABEL : VISIBILITY_LABELS[sound.visibility]);

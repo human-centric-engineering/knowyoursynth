@@ -88,8 +88,8 @@ export async function usernamesOf(
 }
 
 /**
- * The credit for each of these source ids, from two queries however many there are: only a source that is published,
- * whose owner has a username. Every other id is absent.
+ * The credit for each of these source ids, from two queries however many there are: only a source that is published
+ * and not unlisted, whose owner has a username. Every other id is absent: the credit links to the source's page.
  */
 export async function sharedSourcesOf(
   sourceIds: (string | null)[]
@@ -97,7 +97,7 @@ export async function sharedSourcesOf(
   const ids = [...new Set(sourceIds.filter((id): id is string => id !== null))];
   if (ids.length === 0) return new Map();
   const rows = await prisma.userSound.findMany({
-    where: { id: { in: ids }, visibility: 'published', slug: { not: null } },
+    where: { id: { in: ids }, visibility: 'published', slug: { not: null }, unlistedAt: null },
     select: { id: true, name: true, synthId: true, slug: true, userId: true },
   });
   const names = await usernamesOf(rows.map((r) => r.userId));
@@ -161,6 +161,19 @@ export function libraryPanel(
 const refuse = (code: string, status: number, message: string): never => {
   throw new APIError(message, code, status);
 };
+
+/**
+ * A sound an admin unlisted after a report cannot be shared or published again (`UNLISTED`, 409) until an admin restores
+ * it (`f-sharing` h4). Making it private is still allowed: that takes nothing public.
+ */
+export function assertNotUnlisted(row: { unlistedAt: Date | null }): void {
+  if (row.unlistedAt)
+    refuse(
+      'UNLISTED',
+      409,
+      'Moderators unlisted this sound after a report, so it cannot be shared again for now.'
+    );
+}
 
 /**
  * What a public sound's name and notes may not say: a blocked word (`NOT_ALLOWED`, 422). Run at publish, and on any

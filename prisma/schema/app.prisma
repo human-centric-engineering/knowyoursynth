@@ -563,6 +563,9 @@ model UserSound {
   publishedAt       DateTime?
   /// Up to three of the tags that synth's library sounds use, chosen at publish.
   tags              String[]        @default([])
+  /// When an admin unlisted it after a report (`f-sharing` h4): gone from every public read, and its owner cannot
+  /// share or publish it again until an admin restores it. Its visibility is kept, so a restore brings it back as it was.
+  unlistedAt        DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
@@ -575,6 +578,8 @@ model UserSound {
 
   /// Its user's star on it.
   favourites Favourite[]
+  /// What people reported about it (`f-sharing` h4).
+  reports    SoundReport[]
 
   @@index([userId, updatedAt])
   @@index([synthId])
@@ -583,6 +588,54 @@ model UserSound {
   @@index([userId, publishedAt])
   @@index([visibility, publishedAt])
   @@map("user_sound")
+}
+
+// ─── Reports about shared sounds (f-sharing h4) ──────────────────────────────
+//
+// A signed-in user reports someone's shared sound; an admin unlists it, restores it or dismisses the reports. The
+// report is the moderation record about a sound, so it outlives the person who filed it and the admin who resolved it
+// (both hand-written FKs, SET NULL), and goes with the sound (Cascade). On SYSTEM_MODELS beside UserSound, with no
+// orgId: the queue is every user's sounds, decided from one place. Declared for subject export in lib/app/data-export.ts
+// as the reports a person filed, never who resolved them.
+
+enum SoundReportReason {
+  /// Offensive or hateful words in its name or notes.
+  offensive
+  /// Someone else's sound put up as theirs.
+  not_theirs
+  spam
+  other
+}
+
+enum SoundReportStatus {
+  open
+  /// An admin looked and left the sound up.
+  dismissed
+  /// An admin unlisted the sound.
+  actioned
+}
+
+model SoundReport {
+  id           String            @id @default(cuid())
+  soundId      String
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration). Never shown to anyone but the reporter.
+  reporterId   String?
+  reason       SoundReportReason
+  note         String?           @db.Text
+  status       SoundReportStatus @default(open)
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration). The admin who dismissed or actioned it.
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  sound UserSound @relation(fields: [soundId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([soundId, status])
+  @@index([reporterId])
+  @@index([resolvedById])
+  @@map("sound_report")
 }
 
 // ─── Users' preferences and last panels (f-my-sounds s3) ─────────────────────

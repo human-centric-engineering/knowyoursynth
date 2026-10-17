@@ -10,7 +10,8 @@
  *   publish request with them;
  * - no username: the first step links to settings with the way back to this sound, and nothing is published;
  * - each refusal stays in the dialog in the server's words; `USERNAME_REQUIRED` turns it to the username step;
- * - a profile that could not be read never offers to choose a username.
+ * - a profile that could not be read never offers to choose a username;
+ * - unlisted by moderators (h4): it says so, and offers only Stop sharing, or nothing once it is private.
  *
  * The API client is a fake; `APIClientError` is the real one, as the client throws it.
  *
@@ -49,6 +50,7 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   slug: null,
   publishedAt: null,
   tags: [],
+  unlisted: false,
   playable: true,
   createdAt: '2026-10-15T10:00:00.000Z',
   updatedAt: '2026-10-15T10:00:00.000Z',
@@ -336,5 +338,31 @@ describe('the publish dialog', () => {
     await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(api.post).not.toHaveBeenCalled();
+  });
+});
+
+describe('a sound moderators unlisted (f-sharing h4)', () => {
+  it('says so, and offers only Stop sharing, which sends private', async () => {
+    api.patch.mockResolvedValue(detail({ visibility: 'private', slug: SLUG, unlisted: true }));
+    const { onChanged } = renderSharing(
+      summary({ visibility: 'published', slug: SLUG, unlisted: true })
+    );
+
+    expect(screen.getByText(/Unlisted by moderators after a report/)).toBeTruthy();
+    for (const name of ['Copy link', 'Unpublish', 'Publish…', 'Share with a link'])
+      expect(screen.queryByRole('button', { name })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'its page' })).toBeNull();
+
+    await userEvent.click(button('Stop sharing'));
+    expect(api.patch).toHaveBeenCalledWith(`/api/v1/sounds/cmmine1`, {
+      body: { visibility: 'private' },
+    });
+    await waitFor(() => expect(onChanged).toHaveBeenCalled());
+  });
+
+  it('offers nothing once it is private', () => {
+    renderSharing(summary({ visibility: 'private', slug: SLUG, unlisted: true }));
+    expect(screen.getByText(/Unlisted by moderators after a report/)).toBeTruthy();
+    expect(screen.queryByRole('button')).toBeNull();
   });
 });

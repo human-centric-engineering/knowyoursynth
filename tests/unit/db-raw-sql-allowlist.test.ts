@@ -106,6 +106,11 @@ const ALLOWLIST: ReadonlyArray<{ file: string; calls: number; why: string }> = [
     why: "SELECT … FOR UPDATE row lock on the caller's own user row while their synth lists are written — the id a bound parameter (the session's user id), and user is a system model, not tenant rows",
   },
   {
+    file: 'lib/app/sounds/reports.ts',
+    calls: 1,
+    why: "SELECT … FOR UPDATE row lock on the shared sound being reported, so one person's open-report check and its create cannot interleave — the id a bound parameter read from the sound's row, and user_sound is a system model, not tenant rows",
+  },
+  {
     file: 'lib/app/sounds/sharing.ts',
     calls: 1,
     why: "SELECT … FOR UPDATE row lock on the caller's own user row while a sound of theirs is changed or published, so the daily publish cap and the checks run against the row the write lands on — the id a bound parameter (the session's user id), and user is a system model, not tenant rows",

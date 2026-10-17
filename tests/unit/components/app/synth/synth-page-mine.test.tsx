@@ -148,6 +148,7 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   slug: null,
   publishedAt: null,
   tags: [],
+  unlisted: false,
   playable: true,
   createdAt: '2026-10-15T10:00:00.000Z',
   updatedAt: '2026-10-15T10:00:00.000Z',
@@ -283,6 +284,13 @@ describe('My sounds', () => {
       summary(),
       summary({ id: 'cmmine2', name: 'Glass pluck', visibility: 'link', slug: 'abcdefghjk' }),
       summary({ id: 'cmmine3', name: 'Brass', visibility: 'published', slug: 'mnpqrstvwx' }),
+      summary({
+        id: 'cmmine4',
+        name: 'Taken down',
+        visibility: 'published',
+        slug: 'zzzzzzzzzz',
+        unlisted: true,
+      }),
     ]);
     page();
     const item = async (name: string) =>
@@ -301,6 +309,9 @@ describe('My sounds', () => {
         .getByRole('link', { name: 'Brass: its shared page' })
         .getAttribute('href')
     ).toBe('/synths/model-d/s/mnpqrstvwx');
+    // unlisted by moderators (f-sharing h4): said so, and no link to a page nobody can open
+    expect((await item('Taken down')).textContent).toMatch(/Unlisted by moderators/);
+    expect(within(await item('Taken down')).queryByRole('link')).toBeNull();
   });
 
   it('says so when the list cannot be read', async () => {

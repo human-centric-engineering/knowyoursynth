@@ -20,7 +20,7 @@ import { APIClientError, apiClient } from '@/lib/api/client';
 import { StarButton } from '@/components/app/synth/favourites';
 import { sharedSoundHref, synthHref } from '@/components/app/synth/routes';
 import { SoundSharing } from '@/components/app/sharing/sound-sharing';
-import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
+import { soundStateLabel } from '@/components/app/sharing/visibility';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
@@ -178,11 +178,13 @@ export function MySoundsList({
                       Opens with what still fits this synth
                     </span>
                   )}
-                  <span className="mt-0.5 block text-[12px] leading-snug text-(--kys-faint)">
-                    {VISIBILITY_LABELS[s.visibility]}
+                  <span
+                    className={`mt-0.5 block text-[12px] leading-snug ${s.unlisted ? 'text-(--kys-warn)' : 'text-(--kys-faint)'}`}
+                  >
+                    {soundStateLabel(s)}
                   </span>
                 </button>
-                {s.visibility !== 'private' && s.slug && (
+                {s.visibility !== 'private' && s.slug && !s.unlisted && (
                   <Link
                     href={sharedSoundHref(s.synthId, s.slug)}
                     aria-label={`${s.name}: its shared page`}

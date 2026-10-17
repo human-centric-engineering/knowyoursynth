@@ -51,9 +51,10 @@ export const SYSTEM_MODELS = [
   'ContactSubmission',
   // Know Your Synth: users' synth suggestions, an inbound queue like the one above, and users' own sounds, last panels,
   // settings, lesson progress, favourites, profiles and the synths they own and want, theirs in every org, with the
-  // usernames held after a change (divergence row in .context/app/divergences.md).
+  // usernames held after a change and the reports about shared sounds (divergence row in .context/app/divergences.md).
   'SynthSuggestion',
   'UserSound',
+  'SoundReport',
   'SynthPreference',
   'UserPreference',
   'LessonProgress',

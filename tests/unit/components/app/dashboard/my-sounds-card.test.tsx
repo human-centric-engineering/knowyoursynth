@@ -43,6 +43,7 @@ const sound = (over: Partial<UserSoundSummary>): UserSoundSummary => ({
   slug: null,
   publishedAt: null,
   tags: [],
+  unlisted: false,
   playable: true,
   createdAt: '2026-10-15T10:00:00.000Z',
   updatedAt: '2026-10-15T10:00:00.000Z',
@@ -103,9 +104,16 @@ describe('MySoundsCard', () => {
         visibility: 'published',
         slug: 'zzzzzzzzzz',
       }),
+      sound({
+        id: 'cm4',
+        name: 'Taken down',
+        visibility: 'published',
+        slug: 'yyyyyyyyyy',
+        unlisted: true,
+      }),
     ]);
     await renderCard();
-    const [link, published, gone] = screen.getAllByRole('listitem');
+    const [link, published, gone, unlisted] = screen.getAllByRole('listitem');
     expect(within(link).getByRole('link', { name: 'Shared by link' }).getAttribute('href')).toBe(
       '/synths/model-d/s/abcdefghjk'
     );
@@ -115,6 +123,9 @@ describe('MySoundsCard', () => {
     // a synth the catalogue no longer serves has no page for it either
     expect(within(gone).queryByRole('link')).toBeNull();
     expect(gone.textContent).toContain('Published');
+    // unlisted by moderators (f-sharing h4): said so, and no link to a page nobody can open
+    expect(unlisted.textContent).toContain('Unlisted by moderators');
+    expect(within(unlisted).queryByRole('link', { name: /Unlisted|Published/ })).toBeNull();
   });
 
   it('says how to make one when there are none', async () => {

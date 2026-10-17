@@ -21,6 +21,11 @@
  *    (`user_sound_sourceUserSoundId_fkey`, `ON DELETE SET NULL`). Publishes sent together at the daily cap are
  *    counted one after another (the owner's `FOR UPDATE` lock), and deleting a published sound does not give its
  *    place back.
+ * 5. Reports and moderation (`f-sharing` h4): two reports sent together from one person are one open report (the
+ *    sound's `FOR UPDATE` lock); an unlisted sound is not served and a restored one is; the export carries the reports
+ *    the subject filed; erasing the subject keeps their reports with `reporterId` and `resolvedById` null
+ *    (`sound_report_reporterId_fkey`, `sound_report_resolvedById_fkey`, `ON DELETE SET NULL`), and takes the reports
+ *    about their own sounds with those sounds (`sound_report_soundId_fkey` cascades).
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -42,6 +47,8 @@ import {
 } from '@/lib/app/sounds/store';
 import { PUBLISH_DAILY_CAP, publishUserSound } from '@/lib/app/sounds/publish';
 import { getSharedSound } from '@/lib/app/sounds/public';
+import { reportSound } from '@/lib/app/sounds/reports';
+import { moderateSound } from '@/lib/app/sounds/moderation';
 import {
   getPanelPref,
   getSettings,
@@ -177,6 +184,32 @@ async function main(): Promise<void> {
       'deleting a published sound does not give its place back'
     );
 
+    // 5. Reports and moderation. The other user reports the subject's published sound twice at once; the subject
+    // reports the other's link share, and, standing in for an admin, dismisses that report and files another, so the
+    // erasure below has a report the subject both filed and resolved.
+    const scratchSlug = published.slug ?? '';
+    const filed = await Promise.all([
+      reportSound(other.id, scratchSlug, { reason: 'spam' }),
+      reportSound(other.id, scratchSlug, { reason: 'offensive' }),
+    ]);
+    check(
+      filed.filter((f) => f.created).length === 1 &&
+        (await prisma.soundReport.count({ where: { soundId: scratch.id, status: 'open' } })) === 1,
+      'two reports sent together from one person are one open report (the sound row lock)'
+    );
+    await moderateSound(other.id, scratch.id, 'unlist');
+    check((await getSharedSound(scratchSlug)) === null, 'an unlisted sound is not served');
+    await moderateSound(other.id, scratch.id, 'restore');
+    check(
+      (await getSharedSound(scratchSlug))?.name === 'Scratch',
+      'a restored one is served again'
+    );
+    await updateUserSound(other.id, theirs.id, { visibility: 'link' });
+    const theirsSlug = (await getUserSound(other.id, theirs.id)).slug ?? '';
+    const dismissed = await reportSound(subject.id, theirsSlug, { reason: 'not_theirs' });
+    await moderateSound(subject.id, theirs.id, 'dismiss');
+    await reportSound(subject.id, theirsSlug, { reason: 'other', note: 'Smoke' });
+
     check(
       (await getUserSound(subject.id, scratch.id)).panel?.values[cont.id] === cont.min,
       'a sound made from scratch reads back with its panel'
@@ -280,6 +313,14 @@ async function main(): Promise<void> {
         JSON.stringify(progressOut[0]).includes(`"slug":"${library.slug}"`),
       "the export's app.lessonProgress holds the subject's one lesson"
     );
+    const reportsOut = bundle.app.soundReportsFiled;
+    check(
+      Array.isArray(reportsOut) &&
+        reportsOut.length === 2 &&
+        JSON.stringify(reportsOut).includes(`"soundSlug":"${theirsSlug}"`) &&
+        !JSON.stringify(reportsOut).includes('resolvedById'),
+      "the export's app.soundReportsFiled holds the subject's two reports, by address, never who resolved them"
+    );
     const favouritesOut = bundle.app.favourites;
     check(
       Array.isArray(favouritesOut) &&
@@ -333,6 +374,16 @@ async function main(): Promise<void> {
       "the other user's copy of the subject's sound stays, its source set null"
     );
     check((await getUserSound(other.id, theirCopy.id)).basedOn === null, 'and it credits nobody');
+    const resolved = await prisma.soundReport.findUnique({ where: { id: dismissed.id } });
+    check(
+      resolved !== null && resolved.reporterId === null && resolved.resolvedById === null,
+      "the subject's report stays with its reporter and resolver set null (the h4 FKs)"
+    );
+    check(
+      (await prisma.soundReport.count({ where: { soundId: theirs.id } })) === 2 &&
+        (await prisma.soundReport.count({ where: { soundId: scratch.id } })) === 0,
+      "reports about the subject's own sounds go with them (sound_report_soundId_fkey cascades)"
+    );
   } finally {
     await prisma.dataErasureReceipt
       .deleteMany({ where: { subjectUserId: { in: userIds } } })

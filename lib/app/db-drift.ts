@@ -48,11 +48,12 @@
  *
  * Full guide: CUSTOMIZATION.md §5 · .context/database/prisma-unmodelled-objects.md
  *
- * Know Your Synth registers eight hand-written FKs to the user: a synth suggestion's (`f-databank` t-37), pinned to
- * `ON DELETE SET NULL` so an erasure keeps working and the suggestion outlives its author; and a user sound's
+ * Know Your Synth registers ten hand-written FKs to the user: a synth suggestion's (`f-databank` t-37), pinned to
+ * `ON DELETE SET NULL` so an erasure keeps working and the suggestion outlives its author; a user sound's
  * (`f-my-sounds` s1), a last panel's and a user's settings (s3), a lesson progress's and a favourite's (s4), a synth
  * profile's (`f-profiles` r1) and an owned or wanted synth's (r2), each pinned to `ON DELETE CASCADE` so an erasure
- * takes them with the user.
+ * takes them with the user; and a sound report's reporter and resolver (`f-sharing` h4), both `ON DELETE SET NULL` so
+ * the report outlives both.
  */
 import { constraintExists, registerAppDriftProbe } from '@/lib/db/drift-probes';
 
@@ -104,5 +105,17 @@ export function registerAppDriftProbes(): void {
     kind: 'FK constraint',
     table: 'owned_instrument',
     probe: constraintExists('owned_instrument_userId_fkey', 'ON DELETE CASCADE'),
+  });
+  registerAppDriftProbe({
+    name: 'sound_report_reporterId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'sound_report',
+    probe: constraintExists('sound_report_reporterId_fkey', 'ON DELETE SET NULL'),
+  });
+  registerAppDriftProbe({
+    name: 'sound_report_resolvedById_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'sound_report',
+    probe: constraintExists('sound_report_resolvedById_fkey', 'ON DELETE SET NULL'),
   });
 }

@@ -4,7 +4,7 @@
  *
  * In order, each refusal with its own code and the words to show:
  *
- * 1. Not yours: 404, as every other write.
+ * 1. Not yours: 404, as every other write. `UNLISTED` (409): an admin unlisted it after a report (`f-sharing` h4).
  * 2. `USERNAME_REQUIRED` (409): a published sound is listed under its owner's username (D5).
  * 3. A synth no longer listed has no page to publish it on: 400, as a save there is.
  *    `NOT_PLAYABLE` (409): a sound saved on a definition the synth has moved on from, or whose panel no longer
@@ -29,6 +29,7 @@ import { APIError, NotFoundError, ValidationError } from '@/lib/api/errors';
 import { playableSynth } from '@/lib/app/sounds/store';
 import {
   assertChanged,
+  assertNotUnlisted,
   assertPublishableText,
   lockOwnersSounds,
   visibilityData,
@@ -65,6 +66,7 @@ export async function publishUserSound(
       await lockOwnersSounds(tx, userId);
       const row = await tx.userSound.findFirst({ where: { id, userId } });
       if (!row) throw new NotFoundError('Sound not found');
+      assertNotUnlisted(row);
 
       const profile = await tx.synthProfile.findUnique({
         where: { userId },

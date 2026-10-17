@@ -120,7 +120,14 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the library sound each copy credits, and whether and when you shared or published each, with its address and tags.',
+          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the library sound each copy credits, whether and when you shared or published each, with its address and tags, and when moderators unlisted one.',
+      },
+      {
+        model: 'SoundReport',
+        section: REPORTS_SECTION,
+        disposition: 'export',
+        description:
+          "Reports you filed about other people's shared sounds: the sound's address, the reason and your note, and whether it is still open. Not who resolved it.",
       },
       {
         model: 'SynthPreference',
@@ -219,6 +226,9 @@ const SUGGESTIONS_SECTION = 'synthSuggestions';
 /** The export section for a user's own sounds (`f-my-sounds` s1). */
 const SOUNDS_SECTION = 'sounds';
 
+/** The export section for the reports a user filed about shared sounds (`f-sharing` h4). */
+const REPORTS_SECTION = 'soundReportsFiled';
+
 /** The export sections for a user's last panels and their settings (`f-my-sounds` s3). */
 const PANELS_SECTION = 'synthPanels';
 const SETTINGS_SECTION = 'synthSettings';
@@ -236,14 +246,15 @@ const SYNTHS_SECTION = 'ownedSynths';
 /**
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
- * profile (`f-profiles` r1), and the synths they own and want (r2). Every declared section is returned, empty when they
- * have none.
+ * profile (`f-profiles` r1), the synths they own and want (r2), and the reports they filed about shared sounds
+ * (`f-sharing` h4). Every declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const [suggestions, sounds, panels, settings, progress, favourites, profile, synths] =
+  const [suggestions, sounds, reports, panels, settings, progress, favourites, profile, synths] =
     await Promise.all([
       collectSuggestions(userId),
       collectSounds(userId),
+      collectReportsFiled(userId),
       collectPanels(userId),
       collectSettings(userId),
       collectProgress(userId),
@@ -254,6 +265,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
   return {
     [SUGGESTIONS_SECTION]: suggestions,
     [SOUNDS_SECTION]: sounds,
+    [REPORTS_SECTION]: reports,
     [PANELS_SECTION]: panels,
     [SETTINGS_SECTION]: settings,
     [PROGRESS_SECTION]: progress,
@@ -373,6 +385,32 @@ function collectSettings(userId: string) {
   });
 }
 
+/**
+ * The reports this subject filed. The sound is named by its public address only: it is someone else's, and the address
+ * is what the subject saw. Never `resolvedById`: who resolved it is about that admin, not this subject.
+ */
+async function collectReportsFiled(userId: string) {
+  const rows = await prisma.soundReport.findMany({
+    where: { reporterId: userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      reason: true,
+      note: true,
+      status: true,
+      resolvedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      sound: { select: { synthId: true, slug: true } },
+    },
+  });
+  return rows.map(({ sound, ...report }) => ({
+    ...report,
+    synthId: sound.synthId,
+    soundSlug: sound.slug,
+  }));
+}
+
 function collectSounds(userId: string) {
   return prisma.userSound.findMany({
     where: { userId },
@@ -393,6 +431,7 @@ function collectSounds(userId: string) {
       slug: true,
       publishedAt: true,
       tags: true,
+      unlistedAt: true,
       createdAt: true,
       updatedAt: true,
     },

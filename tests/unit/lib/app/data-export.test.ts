@@ -16,6 +16,7 @@ vi.mock('@/lib/db/client', () => ({
   prisma: {
     synthSuggestion: { findMany: vi.fn(async () => []) },
     userSound: { findMany: vi.fn(async () => []) },
+    soundReport: { findMany: vi.fn(async () => []) },
     synthPreference: { findMany: vi.fn(async () => []) },
     userPreference: { findMany: vi.fn(async () => []) },
     lessonProgress: { findMany: vi.fn() },
@@ -74,5 +75,42 @@ describe('collectAppSubjectData, s4 sections', () => {
       { kind: 'sound', synthId: 'model-d', slug: 'lead', name: 'Lead', createdAt: at },
       { kind: 'mine', soundId: 'cmmine1', synthId: 'model-d', name: 'My bass', createdAt: at },
     ]);
+  });
+});
+
+describe('collectAppSubjectData, the reports a user filed (f-sharing h4)', () => {
+  it('names the sound by its address, and never asks for or returns who resolved the report', async () => {
+    vi.mocked(prisma.soundReport.findMany).mockResolvedValue([
+      {
+        id: 'rep1',
+        reason: 'offensive',
+        note: 'Rude name',
+        status: 'actioned',
+        resolvedAt: at,
+        createdAt: at,
+        updatedAt: at,
+        sound: { synthId: 'model-d', slug: 'abcdefghjk' },
+      },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+    expect(data.soundReportsFiled).toEqual([
+      {
+        id: 'rep1',
+        reason: 'offensive',
+        note: 'Rude name',
+        status: 'actioned',
+        resolvedAt: at,
+        createdAt: at,
+        updatedAt: at,
+        synthId: 'model-d',
+        soundSlug: 'abcdefghjk',
+      },
+    ]);
+    const { select } = vi.mocked(prisma.soundReport.findMany).mock.calls[0][0] as {
+      select: Record<string, unknown>;
+    };
+    expect(select).not.toHaveProperty('resolvedById');
+    expect(select).not.toHaveProperty('reporterId');
   });
 });

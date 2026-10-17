@@ -7,6 +7,7 @@
  * visibility or the synth would reach the wrong rows here too. Pins:
  *
  * - only published sounds are listed, never a link share or a private one, and only on a synth the catalogue serves;
+ * - never one an admin unlisted (h4), in any of the three lists;
  * - a card carries the byline and save count, never the row's id or its owner's;
  * - synth and tag filter; a filter that does not parse, or names nothing served, is dropped, not refused;
  * - "most saved" orders by copies, then newest; paging is stable.
@@ -47,6 +48,7 @@ type Row = {
   publishedAt: Date | null;
   tags: string[];
   sourceUserSoundId: string | null;
+  unlistedAt: Date | null;
 };
 type Where = Record<string, unknown>;
 type Order = Record<string, unknown>;
@@ -67,6 +69,7 @@ function add(over: Partial<Row>): Row {
     publishedAt: at(n),
     tags: [],
     sourceUserSoundId: null,
+    unlistedAt: null,
     ...over,
   };
   rows.push(row);
@@ -177,6 +180,7 @@ describe('GET /api/v1/public/sounds', () => {
     add({ name: 'Link share', visibility: 'link' });
     add({ name: 'Private', visibility: 'private' });
     add({ name: 'Unserved synth', synthId: 'jupiter-8' });
+    add({ name: 'Unlisted by an admin', unlistedAt: at(30) });
     add({ name: 'New published', synthId: 'pro-1', userId: 'user-2' });
 
     const { data, meta } = await explore();
@@ -261,6 +265,7 @@ describe('publishedSoundsOf', () => {
     add({ name: 'Mine, published' });
     add({ name: 'Mine, link', visibility: 'link' });
     add({ name: 'Mine, private', visibility: 'private' });
+    add({ name: 'Mine, unlisted by an admin', unlistedAt: at(30) });
     add({ name: 'Theirs, published', userId: 'user-2' });
 
     const sounds = await publishedSoundsOf('user-1');
@@ -269,9 +274,10 @@ describe('publishedSoundsOf', () => {
 });
 
 describe('publishedSoundAddresses', () => {
-  it('gives every published sound, and no link share', async () => {
+  it('gives every published sound, and no link share or unlisted one', async () => {
     const pub = add({});
     add({ visibility: 'link' });
+    add({ unlistedAt: at(30) });
     add({ visibility: 'private' });
     add({ synthId: 'jupiter-8' });
 

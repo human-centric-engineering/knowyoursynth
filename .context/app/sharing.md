@@ -3,8 +3,7 @@
 `f-sharing`. A user's sound can be shared by a link, or published under their username; anyone can
 open a shared one signed out, and a signed-in user can save a copy that credits it (D5). h1 is the
 data and the API; h2 the sound page, Explore, published sounds on a profile, the social card and
-the sitemap; h3 the buttons on the synth page. Reports and moderation (h4) add their section when
-they land.
+the sitemap; h3 the buttons on the synth page; h4 reports and the moderation queue.
 
 The model is BeatBreaker's (`~/code/beatbreaker/.context/app/sharing.md`) without variations,
 sessions or fixed published sounds. Where it differs, the reason is below.
@@ -30,6 +29,11 @@ sessions or fixed published sounds. Where it differs, the reason is below.
 - **Don't list a link share anywhere.** Explore, a profile and the sitemap read through
   `listPublishedSounds`, `publishedSoundsOf` and `publishedSoundAddresses`, each filtered to
   `published`; a new list goes through one of them.
+- **Don't read a shared sound for anyone else without `unlistedAt: null`.** An unlisted sound keeps
+  its visibility, so a filter on visibility alone serves it. Every public read, the credit
+  (`sharedSourcesOf`) and the copy source (`sharedCopySource`) filter on it.
+- **Don't name a reporter to anyone.** The queue reads a report's reason, note, status and date,
+  and maps them field by field; `reporterId` and `resolvedById` never leave `moderation.ts`.
 - **Don't decide "is this the visitor's own?" on the server from the public read.** It carries no
   owner, on purpose. The sound page asks the visitor's own sounds list (`sharedViewerOf`), which
   has each sound's slug.
@@ -75,6 +79,7 @@ sessions or fixed published sounds. Where it differs, the reason is below.
 | Refusal             | Status | When                                                                                                     |
 | ------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
 | `NOT_FOUND`         | 404    | Not yours, as every write.                                                                               |
+| `UNLISTED`          | 409    | Moderators unlisted it ([below](#reports-and-moderation)). A PATCH to `link` is refused the same way.    |
 | `USERNAME_REQUIRED` | 409    | No synth profile (`f-profiles`).                                                                         |
 | (validation)        | 400    | The synth is not listed.                                                                                 |
 | `NOT_PLAYABLE`      | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
@@ -203,7 +208,7 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
 ### Save a copy when the original has gone
 
 The strip's Save a copy (h2) sends `source: { shared }`. If the sound stopped being shared after
-the page opened (made private, deleted, or its owner erased), the copy route refuses on
+the page opened (made private, unlisted, deleted, or its owner erased), the copy route refuses on
 `source.shared` (`sharedSourceGone`), and the page saves the same panel as a **plain new sound**
 with the shared sound's name and notes and no credit, and says so. Any other refusal is just
 reported: nothing else falls back.
@@ -234,14 +239,51 @@ Explore is in the public header (`lib/app/public-nav.ts`, which this fills) and 
 (`components/app/sharing/sitemap.ts`), never a link share, through the platform edit the
 divergence ledger records.
 
+## Reports and moderation
+
+`SoundReport` (h4): `soundId` (a relation, `Cascade`), `reporterId` and `resolvedById`
+(hand-written FKs to `user`, `SET NULL`, probed in `lib/app/db-drift.ts`), `reason`
+(`offensive` · `not_theirs` · `spam` · `other`; BeatBreaker's `bad-link` is left out, as a sound
+carries no links), `note`, `status` (`open` · `dismissed` · `actioned`), `resolvedAt`. A report
+outlives the person who filed it and the admin who resolved it: it is the record about the sound.
+
+| Route                                     | Does                                                                                                                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST /api/v1/public/sounds/:slug/report` | Signed in. `{ reason, note? }`. One open report per person per sound: a second updates it (200; new is 201). Your own is a 400 (`OWN_SOUND`); one nobody else can open is the public read's 404. 20 a day per user. |
+| `GET /api/v1/admin/sounds?view=`          | Admin. `reported`: sounds with open reports, the longest-waiting first. `unlisted`: unlisted sounds, the most recent first. The owner's username, never a reporter.                                                 |
+| `POST /api/v1/admin/sounds/:id`           | Admin. `{ action: unlist \| restore \| dismiss }`. Audited as `user_sound.<action>`. Nothing to change is a 409.                                                                                                    |
+
+- **Unlist** sets `UserSound.unlistedAt` and actions the open reports. The sound leaves its page,
+  Explore, its owner's profile, the sitemap, the credit on copies, and the copy route, on the next
+  request. Its owner can still make it private, but not share or publish it (`UNLISTED`).
+- **Restore** clears `unlistedAt`. **The visibility was never changed**, so the sound comes back
+  as its owner last left it, which is why this differs from BeatBreaker's take-down (which made the
+  pattern private, so its "restore" was the owner's to do).
+- **Dismiss** closes the open reports and changes nothing else.
+- **One open report per person** is checked and written under a lock on the sound's row
+  (`SELECT … FOR UPDATE` on `user_sound`), so two sent together are one.
+- **Each action is a conditional write**, so two admins at once cannot both win: the second is a
+  409, as a decided suggestion is.
+- **The owner is told in the app, not by email** (planning ruling): My sounds and the dashboard say
+  _Unlisted by moderators_ and drop the ↗ link; the sharing controls say why and offer only Stop
+  sharing.
+- **Report** on the sound page (`components/app/sharing/report-button.tsx`) is shown to a
+  signed-in visitor whose sound it is not (`viewer === 'other'`), never signed out or on their own.
+- **The queue** is `/admin/synths/reports`, _Reported sounds_ under Synths in the admin nav.
+
+Not built: emailing admins about a new report (BeatBreaker added it later). The queue has no
+count badge in the nav either.
+
 ## Erasure and export
 
 - Erasing a user deletes their sounds, shared and published ones included (the
-  `user_sound_userId_fkey` cascade). Other people's copies stay, with `sourceUserSoundId` null
-  and no credit.
-- The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt` and `tags`. Not
-  `sourceUserSoundId`: that is the row id of a sound someone else shared, about them. The profile
-  section (`app.synthProfile`) carries `recentPublishes`.
+  `user_sound_userId_fkey` cascade), and the reports about them with them. Other people's copies
+  stay, with `sourceUserSoundId` null and no credit. Reports they filed or resolved stay, with
+  `reporterId` or `resolvedById` null.
+- The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt`, `tags` and `unlistedAt`.
+  Not `sourceUserSoundId`: that is the row id of a sound someone else shared, about them. The
+  profile section (`app.synthProfile`) carries `recentPublishes`. `app.soundReportsFiled` is the
+  reports the user filed, the sound named by its synth and address; never who resolved one.
 - Both are checked against the dev database by `npm run smoke:sounds`.
 
 ## Tests
@@ -258,6 +300,15 @@ each synth's theme); `tests/unit/components/app/synth/synth-page-shared.test.tsx
 panel, Save a copy only for a signed-in non-owner, Load it again, the address kept);
 `tests/unit/app/public/explore-page.test.tsx`; `tests/unit/components/app/sharing/sitemap.test.ts`;
 the profile's in `tests/unit/app/public/profile-page.test.tsx`.
+
+h4: `tests/unit/app/api/v1/sounds/reports.test.ts` (the report route: own sound, the 404s, one
+open report per person under the lock, the 429; the queue and its actions: admin only, never the
+reporter, each action's effect, audit entry and 409); the unlisted cases in `sharing.test.ts` and
+`published-sounds.test.ts` (every public read, the credit, the copy, the owner's 409s);
+`report-button.test.tsx`, `report-queue.test.tsx`, `reports-page.test.tsx`; the unlisted state in
+`sound-sharing.test.tsx`, `synth-page-mine.test.tsx` and `my-sounds-card.test.tsx`;
+`npm run smoke:sounds` (the lock, unlist and restore, the export and the FKs against a real
+database).
 
 h3: `tests/unit/components/app/sharing/sound-sharing.test.tsx` (each state's buttons and requests,
 Copy link, the dialog: the tick, the three-tag cap, no username, an unreadable profile, each refusal
