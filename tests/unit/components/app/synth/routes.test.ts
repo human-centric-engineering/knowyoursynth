@@ -6,7 +6,10 @@
 
 import { describe, it, expect } from 'vitest';
 import {
+  backToSound,
+  chooseUsernameHref,
   hashTarget,
+  mySoundHref,
   DEFAULT_VIEW,
   hashRoute,
   parseView,
@@ -129,5 +132,29 @@ describe('hashRoute', () => {
     const seen: string[] = [];
     hashRoute('#bank/x', (id) => (seen.push(id), true));
     expect(seen).toEqual([]);
+  });
+});
+
+describe('the way back from settings to a sound (f-sharing h3)', () => {
+  it('sends Publish with no username to the synth profile, with the sound to come back to', () => {
+    const back = mySoundHref('model-d', 'cmmine1');
+    expect(back).toBe('/synths/model-d?mine=cmmine1');
+    expect(chooseUsernameHref(back)).toBe(
+      '/settings?back=%2Fsynths%2Fmodel-d%3Fmine%3Dcmmine1#synth-profile'
+    );
+    expect(backToSound(back)).toBe(back);
+  });
+
+  it.each([
+    null,
+    '',
+    'https://evil.example/synths/model-d?mine=cm1',
+    '//evil.example/synths/model-d?mine=cm1',
+    '/synths/model-d?mine=cm1&next=https://evil.example',
+    '/settings',
+    '/synths/model-d',
+    '/synths/../admin?mine=cm1',
+  ])('takes no other address: %s', (param) => {
+    expect(backToSound(param)).toBeNull();
   });
 });

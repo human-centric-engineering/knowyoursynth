@@ -156,3 +156,33 @@ describe('SynthProfileForm', () => {
     expect(screen.getByText(/You can change it again from 2026-11-15\./)).toBeInTheDocument();
   });
 });
+
+describe('coming from Publish with no username (f-sharing h3)', () => {
+  const at = (search: string) => window.history.replaceState(null, '', `/settings${search}`);
+  const BACK = '/synths/model-d?mine=cmmine1';
+
+  it('offers the way back to the sound once the username is saved', async () => {
+    at(`?back=${encodeURIComponent(BACK)}`);
+    put.mockResolvedValue({ ...SAVED, links: NO_LINKS });
+    render(<SynthProfileForm profile={null} />);
+    // no username yet: nothing to go back and publish with
+    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+    await userEvent.type(screen.getByRole('textbox', { name: /^Username/ }), 'tape_loops');
+    await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
+    expect(
+      (await screen.findByRole('link', { name: 'Back to your sound' })).getAttribute('href')
+    ).toBe(BACK);
+  });
+
+  it('offers no way back to anywhere but a sound', () => {
+    at(`?back=${encodeURIComponent('https://evil.example/')}`);
+    render(<SynthProfileForm profile={SAVED} />);
+    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+  });
+
+  it('offers none when not sent from a sound', () => {
+    at('');
+    render(<SynthProfileForm profile={SAVED} />);
+    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+  });
+});

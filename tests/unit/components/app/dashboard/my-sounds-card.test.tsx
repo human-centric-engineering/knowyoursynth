@@ -73,8 +73,8 @@ describe('MySoundsCard', () => {
     expect(listUserSounds).toHaveBeenCalledExactlyOnceWith('user-1');
     const items = screen.getAllByRole('listitem');
     expect(items.map((li) => li.textContent)).toEqual([
-      'Brass stabOberheim OB-X',
-      'My fat bassBehringer Model D · copied from Fat bass',
+      'Brass stabOberheim OB-X · Private',
+      'My fat bassBehringer Model D · copied from Fat bass · Private',
     ]);
     expect(within(items[0]).getByRole('link').getAttribute('href')).toBe('/synths/ob-x?mine=cm2');
     expect(within(items[1]).getByRole('link').getAttribute('href')).toBe(
@@ -90,6 +90,31 @@ describe('MySoundsCard', () => {
     const item = screen.getByRole('listitem');
     expect(within(item).queryByRole('link')).toBeNull();
     expect(item.textContent).toContain('gone-synth, no longer available');
+  });
+
+  it('says who can open each, and links a shared one to its page', async () => {
+    vi.mocked(listUserSounds).mockResolvedValue([
+      sound({ id: 'cm1', name: 'Glass pluck', visibility: 'link', slug: 'abcdefghjk' }),
+      sound({ id: 'cm2', name: 'Brass', visibility: 'published', slug: 'mnpqrstvwx' }),
+      sound({
+        id: 'cm3',
+        synthId: 'gone-synth',
+        name: 'Old one',
+        visibility: 'published',
+        slug: 'zzzzzzzzzz',
+      }),
+    ]);
+    await renderCard();
+    const [link, published, gone] = screen.getAllByRole('listitem');
+    expect(within(link).getByRole('link', { name: 'Shared by link' }).getAttribute('href')).toBe(
+      '/synths/model-d/s/abcdefghjk'
+    );
+    expect(within(published).getByRole('link', { name: 'Published' }).getAttribute('href')).toBe(
+      '/synths/model-d/s/mnpqrstvwx'
+    );
+    // a synth the catalogue no longer serves has no page for it either
+    expect(within(gone).queryByRole('link')).toBeNull();
+    expect(gone.textContent).toContain('Published');
   });
 
   it('says how to make one when there are none', async () => {

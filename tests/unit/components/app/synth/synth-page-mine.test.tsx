@@ -278,6 +278,31 @@ describe('My sounds', () => {
     });
   });
 
+  it('says who can open each, and links a shared one to its page', async () => {
+    serve([
+      summary(),
+      summary({ id: 'cmmine2', name: 'Glass pluck', visibility: 'link', slug: 'abcdefghjk' }),
+      summary({ id: 'cmmine3', name: 'Brass', visibility: 'published', slug: 'mnpqrstvwx' }),
+    ]);
+    page();
+    const item = async (name: string) =>
+      (await within(mySounds()).findByRole('button', { name: new RegExp(name) })).closest('li')!;
+    expect((await item('Night bass')).textContent).toMatch(/Private/);
+    expect(within(await item('Night bass')).queryByRole('link')).toBeNull();
+    expect((await item('Glass pluck')).textContent).toMatch(/Shared by link/);
+    expect(
+      within(await item('Glass pluck'))
+        .getByRole('link', { name: 'Glass pluck: its shared page' })
+        .getAttribute('href')
+    ).toBe('/synths/model-d/s/abcdefghjk');
+    expect((await item('Brass')).textContent).toMatch(/Published/);
+    expect(
+      within(await item('Brass'))
+        .getByRole('link', { name: 'Brass: its shared page' })
+        .getAttribute('href')
+    ).toBe('/synths/model-d/s/mnpqrstvwx');
+  });
+
   it('says so when the list cannot be read', async () => {
     api.get.mockRejectedValue(new Error('offline'));
     page();
@@ -605,6 +630,25 @@ describe('saving', () => {
     });
     // The move made before the rename is still a move: the rename saved no panel.
     expect(screen.getByText('1 control moved')).toBeTruthy();
+  });
+
+  it('shares the open sound with a link, and My sounds says so, leaving the panel alone', async () => {
+    serve([summary()], { cmmine1: NIGHT_BASS });
+    api.patch.mockResolvedValue({ ...NIGHT_BASS, visibility: 'link', slug: 'abcdefghjk' });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(cutoff()).toBe('4'));
+    fireEvent.click(button('A-440'));
+    fireEvent.click(button('Share with a link'));
+
+    await waitFor(() => expect(within(mySounds()).getByText('Shared by link')).toBeTruthy());
+    expect(api.patch).toHaveBeenCalledExactlyOnceWith('/api/v1/sounds/cmmine1', {
+      body: { visibility: 'link' },
+    });
+    // still theirs, open, and the move made before sharing is still a move: sharing saved no panel
+    expect(loadedName()).toBe('Night bass');
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    expect(button('Copy link')).toBeTruthy();
   });
 
   it('deletes the open sound after asking, and the panel stays as it is', async () => {
