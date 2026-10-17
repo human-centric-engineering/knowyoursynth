@@ -48,6 +48,12 @@ export const STORAGE_KEYS = {
 /** One synth's panel, as it was left. */
 export const sessionKey = (synthId: string): string => `kys.session.${synthId}`;
 
+/**
+ * The shared sound (its address slug) one synth's stored panel was opened from, while it still is (t-51): a reload of
+ * that sound's address keeps the panel instead of loading the sound over it again. Cleared when anything else opens.
+ */
+export const sharedFromKey = (synthId: string): string => `kys.sharedFrom.${synthId}`;
+
 /** Read a key directly, outside React: `null` when it is missing, unreadable or storage is blocked. */
 export function readStored(key: string): unknown {
   try {
@@ -273,6 +279,8 @@ export function useStoredSession(
       const restored = parseSession(defRef.current, pref);
       if (!restored) return;
       setSession(restored);
+      // Not the panel a shared sound was opened into any more, so that sound's address is an arrival again (t-51).
+      writeStored(sharedFromKey(defRef.current.id), null);
       // The browser keeps it too, so signed out (or with the account unread) the page reopens where they left off.
       storedStamp.current = { savedAt, owner: user.current };
       writeStored(key, storedSession(restored, { savedAt, owner: user.current }));
