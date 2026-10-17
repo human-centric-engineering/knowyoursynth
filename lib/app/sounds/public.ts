@@ -163,3 +163,14 @@ export async function publishedSoundsOf(userId: string): Promise<PublishedSoundC
   });
   return toCards(rows, synthNames);
 }
+
+/** Every published sound's address, for the sitemap. Never a link share. */
+export async function publishedSoundAddresses(): Promise<{ synthId: string; slug: string }[]> {
+  const served = (await listSynths()).map((s) => s.id);
+  const rows = await prisma.userSound.findMany({
+    where: { visibility: 'published', slug: { not: null }, synthId: { in: served } },
+    orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
+    select: { synthId: true, slug: true },
+  });
+  return rows.flatMap((r) => (r.slug ? [{ synthId: r.synthId, slug: r.slug }] : []));
+}
