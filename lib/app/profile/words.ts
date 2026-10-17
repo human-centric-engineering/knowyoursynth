@@ -1,5 +1,5 @@
 /**
- * The word check for a username (`f-profiles` r1), and later for what else goes public.
+ * The word check for a username (`f-profiles` r1), and for a shared sound's name and notes (`f-sharing` h1).
  *
  * Deliberately short, as BeatBreaker's is (`lib/app/breaks/community/words.ts` there): it catches the obvious, slurs
  * and the strongest profanity, and leaves the rest to reporting (`f-sharing` h3). A long list mostly refuses innocent
@@ -49,4 +49,16 @@ const BLOCKED_NORMALISED = BLOCKED.map(normaliseForCheck);
 export function usernameIsBlocked(username: string): boolean {
   const flat = normaliseForCheck(username);
   return BLOCKED_NORMALISED.some((w) => flat.includes(w));
+}
+
+/**
+ * Whether free text (a sound's name or notes) contains a blocked word as a word. Word by word rather than substring,
+ * so "Scunthorpe bass" is fine; a word that starts with a blocked one ("fucking") is caught.
+ */
+export function textIsBlocked(text: string): boolean {
+  return text
+    .split(/[^\p{L}\p{N}@$!|*]+/u)
+    .filter(Boolean)
+    .map(normaliseForCheck)
+    .some((word) => BLOCKED_NORMALISED.some((w) => word === w || word.startsWith(w)));
 }

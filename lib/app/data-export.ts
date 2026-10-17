@@ -120,7 +120,7 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Sounds you saved: the synth, the name and notes, the panel settings and cables, and the library sound each copy credits.',
+          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the library sound each copy credits, and whether and when you shared or published each, with its address and tags.',
       },
       {
         model: 'SynthPreference',
@@ -387,6 +387,11 @@ function collectSounds(userId: string) {
       sourceSlug: true,
       sourceName: true,
       sourceRef: true,
+      // Not `sourceUserSoundId`: that is the row id of a sound someone else shared, about them, not this subject.
+      visibility: true,
+      slug: true,
+      publishedAt: true,
+      tags: true,
       createdAt: true,
       updatedAt: true,
     },

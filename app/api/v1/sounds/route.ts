@@ -3,7 +3,9 @@
  *
  * GET  /api/v1/sounds[?synthId=model-d] — the caller's sounds, most recently changed first, without their panels.
  * POST /api/v1/sounds — save one: `{ synthId, name, notes?, panel }`, or a copy of a library sound,
- *      `{ synthId, source: { slug }, name?, notes?, panel? }`, which records its credit. 201 with the sound.
+ *      `{ synthId, source: { slug }, name?, notes?, panel? }`, which records its credit, or of a sound someone shared,
+ *      `{ synthId, source: { shared }, name?, notes?, panel? }`, which credits it while it is published. 201 with the
+ *      sound.
  *
  * A panel is checked against the synth's definition and refused (400) when anything in it is wrong. The section rate
  * limit applies (`proxy.ts`). See `lib/app/sounds/store.ts`.

@@ -13,26 +13,34 @@
  * **Credit.** A copy of a library sound links to it (`SetNull`) and keeps its slug, name and ref as they read when it
  * was copied. The catalogue seed and the admin never re-create a library sound (each is created once and then updated
  * by synth and slug, and nothing deletes one), so the link holds across seeds; the snapshot is what survives the
- * library sound being renamed, or a removal that does not exist yet.
+ * library sound being renamed, or a removal that does not exist yet. A copy of a sound someone shared links to it too,
+ * and carries its library credit across; that credit is read live (`sharing.ts`), never kept.
+ *
+ * **Sharing** (`f-sharing` h1): PATCH moves a sound between private and link; only `publish.ts` makes it published.
+ * Changing a published sound's name or notes runs the word check again, and its panel the unchanged-copy check.
  */
 import type { Prisma, UserSound } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import { NotFoundError, ValidationError } from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
-import { presetState, sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
-import {
-  validatePreset,
-  validateSound,
-  type SoundProblem,
-  type SoundState,
-} from '@/lib/app/synths/validate';
+import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
+import { validateSound, type SoundProblem, type SoundState } from '@/lib/app/synths/validate';
 import type {
   CreateUserSound,
+  SharedSource,
   UpdateUserSound,
   UserSoundDetail,
   UserSoundSummary,
 } from '@/lib/app/sounds/data';
+import {
+  assertChanged,
+  assertPublishableText,
+  libraryPanel,
+  sharedSourcesOf,
+  visibilityData,
+  withFreshSlug,
+} from '@/lib/app/sounds/sharing';
 
 function refuse(message: string, problems: { path: string; message: string }[]): never {
   throw new ValidationError(message, { errors: problems });
@@ -122,7 +130,15 @@ function panelOf(
   return { panel: result.value, problems: [], fitted: null };
 }
 
-function toDetail(row: UserSound, log = true): UserSoundDetail {
+/** The detail of rows already read, their credits read in one go. */
+async function details(rows: UserSound[], log: boolean): Promise<UserSoundDetail[]> {
+  const credits = await sharedSourcesOf(rows.map((r) => r.sourceUserSoundId));
+  return rows.map((row) =>
+    toDetail(row, row.sourceUserSoundId ? (credits.get(row.sourceUserSoundId) ?? null) : null, log)
+  );
+}
+
+function toDetail(row: UserSound, basedOn: SharedSource | null, log: boolean): UserSoundDetail {
   const { panel, problems, fitted } = panelOf(row, log);
   return {
     id: row.id,
@@ -139,6 +155,11 @@ function toDetail(row: UserSound, log = true): UserSoundDetail {
             ref: row.sourceRef,
           }
         : null,
+    basedOn,
+    visibility: row.visibility,
+    slug: row.slug,
+    publishedAt: row.publishedAt?.toISOString() ?? null,
+    tags: row.tags,
     playable: panel !== null,
     panel,
     problems,
@@ -148,8 +169,8 @@ function toDetail(row: UserSound, log = true): UserSoundDetail {
   };
 }
 
-function toSummary(row: UserSound): UserSoundSummary {
-  const { panel: _panel, problems: _problems, fitted: _fitted, ...summary } = toDetail(row, false);
+function toSummary(detail: UserSoundDetail): UserSoundSummary {
+  const { panel: _panel, problems: _problems, fitted: _fitted, ...summary } = detail;
   return summary;
 }
 
@@ -162,18 +183,60 @@ export async function listUserSounds(
     where: { userId, ...(synthId ? { synthId } : {}) },
     orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
   });
-  return rows.map(toSummary);
+  return (await details(rows, false)).map(toSummary);
 }
 
 /** One of the caller's sounds, or a 404 when they have none with that id. */
 export async function getUserSound(userId: string, id: string): Promise<UserSoundDetail> {
   const row = await prisma.userSound.findFirst({ where: { id, userId } });
-  return row ? toDetail(row) : notFound();
+  return row ? (await details([row], true))[0] : notFound();
+}
+
+type LibraryCredit = { id: string | null; slug: string; name: string; ref: string };
+
+/**
+ * The shared sound a copy is made from: someone's link or published sound on this synth. Private, unknown and on
+ * another synth are one refusal, so a copy says nothing about which. The caller's own shared sound is copied as any
+ * other of theirs would be, with no credit to themselves.
+ */
+async function sharedCopySource(
+  userId: string,
+  def: AppSynthDef,
+  slug: string
+): Promise<{
+  sourceUserSoundId: string | null;
+  library: LibraryCredit | null;
+  name: string;
+  notes: string | null;
+  panel: SoundState | null;
+}> {
+  const row = await prisma.userSound.findFirst({
+    where: { slug, synthId: def.id, visibility: { in: ['link', 'published'] } },
+  });
+  if (!row)
+    return refuse('That sound is not shared any more', [
+      { path: 'source.shared', message: `No shared ${def.id} sound at ${slug}` },
+    ]);
+  const stored =
+    row.definitionVersion === def.version
+      ? validateSound(def, { values: row.values, cables: row.cables })
+      : null;
+  return {
+    sourceUserSoundId: row.userId === userId ? null : row.id,
+    library:
+      row.sourceSlug !== null && row.sourceName !== null && row.sourceRef !== null
+        ? { id: row.sourceSoundId, slug: row.sourceSlug, name: row.sourceName, ref: row.sourceRef }
+        : null,
+    name: row.name,
+    notes: row.notes,
+    panel: stored?.ok ? stored.value : null,
+  };
 }
 
 /**
  * Save a new sound. A copy of a library sound records its credit; with no panel sent, the copy is that library sound
- * as it ends, every step applied, and with no name it takes the library sound's.
+ * as it ends, every step applied, and with no name it takes the library sound's. A copy of a shared sound records the
+ * sound it came from and carries its library credit; with no panel, name or notes sent it takes the shared sound's.
  */
 export async function createUserSound(
   userId: string,
@@ -181,9 +244,25 @@ export async function createUserSound(
 ): Promise<UserSoundDetail> {
   const def = await playableSynth(input.synthId);
 
-  let source: { id: string; slug: string; name: string; ref: string } | null = null;
+  let source: LibraryCredit | null = null;
+  let sourceUserSoundId: string | null = null;
+  let sourceName: string | undefined;
+  let notes = input.notes || null;
   let panel = input.panel ? checkPanel(def, input.panel) : null;
-  if (input.source) {
+  if (input.source && 'shared' in input.source) {
+    const shared = await sharedCopySource(userId, def, input.source.shared);
+    sourceUserSoundId = shared.sourceUserSoundId;
+    source = shared.library;
+    sourceName = shared.name;
+    if (input.notes === undefined) notes = shared.notes;
+    if (!panel) {
+      if (!shared.panel)
+        refuse(`That sound cannot be played on ${def.id} as it is now`, [
+          { path: 'source.shared', message: 'Open it, then save the panel you have' },
+        ]);
+      panel = shared.panel;
+    }
+  } else if (input.source) {
     const { slug } = input.source;
     const row = await prisma.synthSound.findUnique({
       where: { synthId_slug: { synthId: def.id, slug } },
@@ -193,36 +272,20 @@ export async function createUserSound(
         { path: 'source.slug', message: `No library sound ${slug} on ${def.id}` },
       ]);
     source = { id: row.id, slug: row.slug, name: row.name, ref: row.ref };
+    sourceName = row.name;
     if (!panel) {
       // The library sound's own panel, so it has to be one the synth can play now, as the catalogue serves it.
-      const preset =
-        row.definitionVersion === def.version
-          ? validatePreset(def, {
-              id: row.slug,
-              name: row.name,
-              ref: row.ref,
-              artist: row.artist,
-              tags: row.tags,
-              level: row.level,
-              blurb: row.blurb,
-              how: row.how,
-              phrase: row.phrase,
-              steps: row.steps,
-              context: row.context,
-              tweaks: row.tweaks,
-            })
-          : null;
-      if (!preset?.ok)
+      const preset = libraryPanel(def, row);
+      if (!preset)
         refuse(`${slug} cannot be played on ${def.id} as it is now`, [
           { path: 'source.slug', message: `${slug} is not a sound the catalogue serves` },
         ]);
-      const state = presetState(def, preset.value);
-      panel = { values: state.values, cables: state.cables.map((c) => [c.from, c.to]) };
+      panel = preset;
     }
   }
   if (!panel) return refuse('Send the panel', [{ path: 'panel', message: 'Send the panel' }]);
 
-  const name = input.name ?? source?.name;
+  const name = input.name ?? sourceName;
   if (!name) return refuse('Name the sound', [{ path: 'name', message: 'Name the sound' }]);
 
   const row = await prisma.userSound.create({
@@ -231,16 +294,17 @@ export async function createUserSound(
       synthId: def.id,
       definitionVersion: def.version,
       name,
-      notes: input.notes || null,
+      notes,
       values: toJson(panel.values),
       cables: toJson(panel.cables),
       sourceSoundId: source?.id ?? null,
       sourceSlug: source?.slug ?? null,
       sourceName: source?.name ?? null,
       sourceRef: source?.ref ?? null,
+      sourceUserSoundId,
     },
   });
-  return toDetail(row);
+  return (await details([row], true))[0];
 }
 
 /** Change one of the caller's sounds. A new panel is checked against, and saved on, the synth's current definition. */
@@ -251,24 +315,49 @@ export async function updateUserSound(
 ): Promise<UserSoundDetail> {
   const existing = await prisma.userSound.findFirst({
     where: { id, userId },
-    select: { synthId: true },
+    select: {
+      synthId: true,
+      name: true,
+      notes: true,
+      slug: true,
+      visibility: true,
+      sourceSoundId: true,
+      sourceUserSoundId: true,
+    },
   });
   if (!existing) return notFound();
 
   const data: Prisma.UserSoundUpdateManyMutationInput = {};
   if (input.name !== undefined) data.name = input.name;
   if (input.notes !== undefined) data.notes = input.notes || null;
+  if (input.visibility !== undefined)
+    Object.assign(data, visibilityData(existing, input.visibility));
+  // Still published after this change: held to what publishing is.
+  const published = existing.visibility === 'published' && input.visibility === undefined;
+  if (published && (input.name !== undefined || input.notes !== undefined))
+    assertPublishableText({
+      name: input.name ?? existing.name,
+      notes: input.notes !== undefined ? input.notes || null : existing.notes,
+    });
   if (input.panel !== undefined) {
     // The same rule as a new sound: a panel is only saved on a listed synth the app can play.
     const def = await playableSynth(existing.synthId);
     const panel = checkPanel(def, input.panel);
+    if (published)
+      await assertChanged(def, {
+        panel,
+        sourceSoundId: existing.sourceSoundId,
+        sourceUserSoundId: existing.sourceUserSoundId,
+      });
     data.values = toJson(panel.values);
     data.cables = toJson(panel.cables);
     data.definitionVersion = def.version;
   }
 
   // Keyed on the owner again, so a sound deleted meanwhile is a 404 rather than a write to nothing.
-  const { count } = await prisma.userSound.updateMany({ where: { id, userId }, data });
+  const { count } = await withFreshSlug(() =>
+    prisma.userSound.updateMany({ where: { id, userId }, data })
+  );
   if (count === 0) return notFound();
   return getUserSound(userId, id);
 }
