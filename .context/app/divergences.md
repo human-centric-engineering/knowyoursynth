@@ -127,7 +127,7 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
-  `f-my-sounds` s1), user preferences' (two models, s3), lesson progress and favourites' (two
+  `f-my-sounds` s1), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
   models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one
   model and one enum, r2) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
