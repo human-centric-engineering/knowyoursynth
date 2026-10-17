@@ -4,6 +4,8 @@ import { LINK_PLATFORMS, readStoredLink, type LinkPlatform } from '@/lib/app/pro
 import { listInstruments } from '@/lib/app/profile/instruments';
 import type { OwnedEntry } from '@/lib/app/profile/instruments-data';
 import { usernameProblem } from '@/lib/app/profile/username';
+import type { PublishedSoundCard } from '@/lib/app/sounds/data';
+import { publishedSoundsOf } from '@/lib/app/sounds/public';
 import { prisma } from '@/lib/db/client';
 
 /**
@@ -39,6 +41,8 @@ export interface PublicProfile {
   /** Each present only when the user shows it, in their order. */
   owned?: PublicSynth[];
   wishlist?: PublicSynth[];
+  /** Their published sounds, newest first (`f-sharing` h2). Never a link share: sharing a link is not listing it. */
+  sounds: PublishedSoundCard[];
 }
 
 const PROFILE_SELECT = {
@@ -69,7 +73,8 @@ export async function getPublicProfile(username: string): Promise<PublicProfile 
     const link = readStoredLink(platform, row[platform]);
     return link ? [{ platform, ...link }] : [];
   });
-  const profile: PublicProfile = { username: row.username, links };
+  const sounds = await publishedSoundsOf(row.userId);
+  const profile: PublicProfile = { username: row.username, links, sounds };
 
   if (!row.showOwned && !row.showWishlist) return profile;
 

@@ -40,6 +40,12 @@ export function synthHref(id: string, view: PanelView = DEFAULT_VIEW): string {
   return `/synths/${encodeURIComponent(id)}${q ? `?view=${q}` : ''}`;
 }
 
+/** A sound someone shared, by its public address (`f-sharing`): the synth's page with it loaded, and the view as above. */
+export function sharedSoundHref(id: string, slug: string, view: PanelView = DEFAULT_VIEW): string {
+  const q = viewQuery(view);
+  return `/synths/${encodeURIComponent(id)}/s/${encodeURIComponent(slug)}${q ? `?view=${q}` : ''}`;
+}
+
 /** One synth's page, opening with one of its library sounds loaded. */
 export function soundHref(id: string, soundId: string): string {
   return `/synths/${encodeURIComponent(id)}?sound=${encodeURIComponent(soundId)}`;

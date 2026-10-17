@@ -1,19 +1,20 @@
 import Link from 'next/link';
 
 import { bankHref } from '@/components/app/bank/routes';
+import { SoundCards } from '@/components/app/sharing/sound-cards';
 import { LINK_LABELS } from '@/lib/app/profile/links';
 import type { PublicProfile, PublicSynth } from '@/lib/app/profile/public';
 
 /**
- * A user's public profile (`/u/[username]`, `f-profiles` r3): their username, where their music is, and the synths they
- * own and want where they show them. Each synth opens its databank page.
+ * A user's public profile (`/u/[username]`, `f-profiles` r3): their username, where their music is, their published
+ * sounds (`f-sharing` h2), and the synths they own and want where they show them. Each synth opens its databank page.
  *
  * Only the {@link PublicProfile} reaches it, so it has nothing private to show. Styled as the databank's pages are,
  * on the consumer surface's `--kys-*` roles.
  */
 export function PublicProfileView({ profile }: { profile: PublicProfile }) {
-  const { username, links, owned, wishlist } = profile;
-  const empty = links.length === 0 && !owned && !wishlist;
+  const { username, links, owned, wishlist, sounds } = profile;
+  const empty = links.length === 0 && sounds.length === 0 && !owned && !wishlist;
   return (
     <article className="mx-auto w-full max-w-[960px] px-4 py-8 text-(--kys-text) sm:px-6">
       <header className="border-b border-(--kys-line) pb-5">
@@ -39,6 +40,12 @@ export function PublicProfileView({ profile }: { profile: PublicProfile }) {
           </ul>
         )}
       </header>
+      {sounds.length > 0 && (
+        <section className="mt-6">
+          <h2 className="kys-label mb-2 text-(--kys-muted)">Sounds ({sounds.length})</h2>
+          <SoundCards sounds={sounds} showAuthor={false} />
+        </section>
+      )}
       {owned && <SynthList title="Synths they own" synths={owned} />}
       {wishlist && <SynthList title="On their wishlist" synths={wishlist} />}
       {empty && <p className="mt-6 text-[15px] text-(--kys-muted)">Nothing else here yet.</p>}
