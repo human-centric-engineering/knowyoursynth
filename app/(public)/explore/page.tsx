@@ -128,7 +128,11 @@ export default async function ExploreRoute({ searchParams }: Props) {
       <section className="mt-6" aria-label="Sounds">
         {sounds.length === 0 ? (
           <p className="text-[15px] text-(--kys-muted)">
-            {filtered ? 'No published sounds match these filters.' : 'Nothing published yet.'}
+            {total > 0
+              ? 'There are not that many pages.'
+              : filtered
+                ? 'No published sounds match these filters.'
+                : 'Nothing published yet.'}
           </p>
         ) : (
           <SoundCards sounds={sounds} />
@@ -139,7 +143,7 @@ export default async function ExploreRoute({ searchParams }: Props) {
         <nav className="mt-6 flex items-center justify-between text-sm" aria-label="Pages">
           {applied.page > 1 ? (
             <Link
-              href={exploreHref({ ...applied, page: applied.page - 1 })}
+              href={exploreHref({ ...applied, page: Math.min(applied.page - 1, pages) })}
               className="hover:text-(--kys-accent)"
             >
               ← Previous

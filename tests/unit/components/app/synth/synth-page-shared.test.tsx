@@ -347,6 +347,8 @@ describe('signed in', () => {
     expect(loadedName()).toBe('Glass pluck');
     expect(screen.queryByText(/control moved/)).toBeNull();
     expect(within(strip()).getByText(/Saved a copy to My sounds/)).toBeTruthy();
+    // and is not offered again, so a second click is not a second copy
+    expect(within(strip()).queryByRole('button', { name: 'Save a copy' })).toBeNull();
   });
 
   it('says so when the copy cannot be saved, and leaves the panel as it was', async () => {

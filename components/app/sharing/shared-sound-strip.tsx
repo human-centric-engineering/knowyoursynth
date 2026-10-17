@@ -12,7 +12,8 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  * synth's panel, with what the visitor can do with it.
  *
  * - **Signed out:** sign in to save a copy.
- * - **Signed in, someone else's:** Save a copy (`POST /api/v1/sounds` with `source: { shared }`), which credits it.
+ * - **Signed in, someone else's:** Save a copy (`POST /api/v1/sounds` with `source: { shared }`), which credits it;
+ *   once saved it is not offered again, so a second click is not a second copy.
  *   The parent saves the panel as it is, so a copy keeps whatever the visitor changed before saving it.
  * - **Their own:** open it as one of theirs instead, where Save writes to it.
  *
@@ -127,7 +128,7 @@ export function SharedSoundStrip({
               Sign in to save a copy
             </Link>
           )}
-          {viewer === 'other' && (
+          {viewer === 'other' && !copied && (
             <button
               type="button"
               onClick={() => void copy()}

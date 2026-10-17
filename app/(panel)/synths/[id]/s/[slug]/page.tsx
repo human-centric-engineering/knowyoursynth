@@ -29,11 +29,11 @@ type Props = {
 
 const viewParam = z.string().max(32).optional().catch(undefined);
 
-// the metadata, the card and the page share one read
+// the metadata and the page share one read; a synth the catalogue does not serve has no metadata either
 const readShared = cache(async (id: string, slug: string) => {
   if (!getSynthDef(id)) return null;
-  const sound = await getSharedSound(slug);
-  return sound && sound.synthId === id ? sound : null;
+  const [sound, synths] = await Promise.all([getSharedSound(slug), listSynths()]);
+  return sound && sound.synthId === id && synths.some((s) => s.id === id) ? sound : null;
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

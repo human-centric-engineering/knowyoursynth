@@ -264,6 +264,10 @@ function Synth({
   // Its panel, while it is what is on the panel: what "controls moved" counts from. Opening anything else clears it.
   const [sharedPanel, setSharedPanel] = useState<Pick<Session, 'values' | 'cables'> | null>(null);
   const [sharedNotice, setSharedNotice] = useState<string | null>(null);
+  const leaveShared = () => {
+    setSharedPanel(null);
+    setSharedNotice(null);
+  };
 
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
@@ -630,7 +634,7 @@ function Synth({
     if (!p) return;
     openSeq.current++;
     focusStore.set(null);
-    setSharedPanel(null);
+    leaveShared();
     patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
   };
@@ -664,7 +668,7 @@ function Synth({
     // library sound that was on the panel behind, so it is not credited or read as this one's.
     const lib = d.source && sounds.some((x) => x.id === d.source?.slug) ? d.source.slug : null;
     focusStore.set(null);
-    setSharedPanel(null);
+    leaveShared();
     patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     setSaved({ id: d.id, ...panel });
     mine.put(d);
@@ -752,7 +756,7 @@ function Synth({
     if (how === 'renamed') return;
     if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
     if (how === 'created') {
-      setSharedPanel(null);
+      leaveShared();
       patch((s) => ({ ...s, soundId: d.id }));
     }
   };
@@ -761,11 +765,14 @@ function Synth({
   // credited. It then opens as theirs, as a new save does. Returns what went wrong, or null.
   const copyShared = async (): Promise<string | null> => {
     if (!shared) return null;
+    const seq = openSeq.current;
     try {
       const d = await apiClient.post<UserSoundDetail>('/api/v1/sounds', {
         body: { synthId, source: { shared: shared.slug }, panel: panelInput() },
       });
-      onSaved(d, 'created');
+      // something else was opened while it saved: the copy is in My sounds, but not what is on the panel now
+      if (seq !== openSeq.current) mine.put(d);
+      else onSaved(d, 'created');
       return null;
     } catch {
       return 'The copy could not be saved. Try again.';
@@ -795,7 +802,7 @@ function Synth({
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   const setStep = (k: number | null) => {
-    setSharedPanel(null);
+    leaveShared();
     if (preset && k != null) progress.record(preset.id, k);
     else if (preset && step != null && step === preset.steps.length - 1)
       progress.record(preset.id, step, true);

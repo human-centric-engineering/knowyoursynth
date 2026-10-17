@@ -71,7 +71,7 @@ const DETAIL = {
   synth: { id: 'model-d', name: 'Model D', design: 'faithful' },
   sounds: [],
 } as unknown as SynthDetail;
-const SYNTHS = [{ id: 'model-d' }] as unknown as CatalogueSynth[];
+const SYNTHS = [{ id: 'model-d' }, { id: 'pro-1' }] as unknown as CatalogueSynth[];
 
 const props = (id: string, slug = SLUG) => ({
   params: Promise.resolve({ id, slug }),
@@ -146,6 +146,11 @@ describe('the metadata', () => {
     vi.mocked(getSharedSound).mockResolvedValue(null);
     expect(await generateMetadata(props('model-d'))).toEqual({ title: 'Not found' });
   });
+
+  it('gives a synth the catalogue does not serve nothing about the sound', async () => {
+    vi.mocked(listSynths).mockResolvedValue([]);
+    expect(await generateMetadata(props('model-d'))).toEqual({ title: 'Not found' });
+  });
 });
 
 describe('the social card', () => {
@@ -193,6 +198,14 @@ describe('the social card', () => {
 
   it('has no card for a sound the page would 404', async () => {
     vi.mocked(getSharedSound).mockResolvedValue({ ...SOUND, synthId: 'pro-1' });
+    await expect(Image({ params: Promise.resolve({ id: 'model-d', slug: SLUG }) })).rejects.toThrow(
+      /404/
+    );
+    expect(imageResponse).not.toHaveBeenCalled();
+  });
+
+  it('has no card for a sound on a synth the catalogue does not serve', async () => {
+    vi.mocked(listSynths).mockResolvedValue([{ id: 'pro-1' }] as unknown as CatalogueSynth[]);
     await expect(Image({ params: Promise.resolve({ id: 'model-d', slug: SLUG }) })).rejects.toThrow(
       /404/
     );
