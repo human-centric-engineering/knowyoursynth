@@ -9,7 +9,10 @@
  *   copy then opens as theirs;
  * - on the visitor's own, no Save a copy: open it as theirs instead;
  * - while the session or the visitor's own list is unknown, no action at all;
- * - opening another sound leaves it, Load it again puts it back, and changing the view keeps the shared address.
+ * - opening another sound leaves it, Load it again puts it back, and changing the view keeps the shared address;
+ * - a reload of the shared address keeps what the visitor did to its panel, and after Save a copy the address is the
+ *   synth's own, so a reload opens the copy (t-51);
+ * - if the original has stopped being shared, the fallback saves the panel alone, never its owner's name or notes (t-52).
  *
  * The panel is real; the router, the audio engine, the session and the API client are fakes, as in
  * synth-page-mine.test.tsx.
@@ -236,6 +239,12 @@ const SHARED: PublicSound = {
 };
 
 const shared = (over: Partial<SynthPageProps> = {}) => page({ shared: SHARED, ...over });
+const SHARED_FROM_KEY = 'kys.sharedFrom.model-d';
+/** A reload: the page goes (writing what it has not saved yet) and comes back with what the browser kept. */
+const reload = (view: ReturnType<typeof render>, again: () => ReturnType<typeof render>) => {
+  view.unmount();
+  return again();
+};
 const strip = () => screen.getByRole('region', { name: 'Shared sound' });
 
 describe('signed out', () => {
@@ -284,6 +293,39 @@ describe('signed out', () => {
     fireEvent.click(screen.getByRole('button', { name: /Wobble lead/ }));
     expect(loadedName()).toBe('Wobble lead');
     fireEvent.click(within(strip()).getByRole('button', { name: 'Load it again' }));
+    expect(loadedName()).toBe('Glass pluck');
+    expect(cutoff()).toBe('-3');
+  });
+
+  it('keeps what was done to the panel when the shared address is reloaded', () => {
+    const first = shared();
+    fireEvent.click(button('A-440'));
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    reload(first, () => shared());
+    // the edit survived, still counted from the shared sound, which Restore still puts back
+    expect(loadedName()).toBe('Glass pluck');
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    fireEvent.click(button('Restore sound'));
+    expect(screen.queryByText(/control moved/)).toBeNull();
+  });
+
+  it('loads the shared sound over a panel that was opened from a different one', () => {
+    window.localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ presetId: 'wobble', step: null, soundId: null, ...presetState(def, WOBBLE) })
+    );
+    window.localStorage.setItem(SHARED_FROM_KEY, JSON.stringify('zzzzzzzzzz'));
+    shared();
+    expect(loadedName()).toBe('Glass pluck');
+    expect(cutoff()).toBe('-3');
+    expect(JSON.parse(window.localStorage.getItem(SHARED_FROM_KEY) ?? 'null')).toBe(SLUG);
+  });
+
+  it('loads the shared sound again on a reload once another sound was opened over it', () => {
+    const first = shared();
+    fireEvent.click(screen.getByRole('button', { name: /Wobble lead/ }));
+    expect(loadedName()).toBe('Wobble lead');
+    reload(first, () => shared());
     expect(loadedName()).toBe('Glass pluck');
     expect(cutoff()).toBe('-3');
   });
@@ -353,9 +395,9 @@ describe('signed in', () => {
     expect(within(strip()).queryByRole('button', { name: 'Save a copy' })).toBeNull();
   });
 
-  it('saves a plain new sound when the original has stopped being shared, and says so', async () => {
+  it("saves the panel alone when the original has stopped being shared: never its owner's name or notes", async () => {
     serve([]);
-    const NEW: UserSoundDetail = { ...NIGHT_BASS, id: 'cmnew1', name: 'Glass pluck' };
+    const NEW: UserSoundDetail = { ...NIGHT_BASS, id: 'cmnew1', name: 'Untitled sound' };
     api.post
       .mockRejectedValueOnce(
         new APIClientError('That sound is not shared any more', 'VALIDATION_ERROR', 400, {
@@ -369,20 +411,47 @@ describe('signed in', () => {
 
     expect(api.post).toHaveBeenCalledTimes(2);
     const [, second] = api.post.mock.calls[1] as [string, { body: Record<string, unknown> }];
-    // no source to credit, the shared sound's name and notes, and the panel as it was sent the first time
-    expect(second.body).not.toHaveProperty('source');
-    expect(second.body).toMatchObject({
+    // no source to credit, a name of no one's, no notes, and the panel as it was sent the first time
+    expect(second.body).toEqual({
       synthId: 'model-d',
-      name: 'Glass pluck',
-      notes: 'Short and bright.',
+      name: 'Untitled sound',
+      panel: (api.post.mock.calls[0] as [string, { body: Record<string, unknown> }])[1].body.panel,
     });
-    expect(second.body.panel).toEqual(
-      (api.post.mock.calls[0] as [string, { body: Record<string, unknown> }])[1].body.panel
-    );
+    expect(second.body.name).not.toBe(SHARED.name);
+    expect(second.body).not.toHaveProperty('notes');
     await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
-    expect(within(strip()).getByRole('status').textContent).toMatch(
-      /not shared any more, so it was saved to My sounds as a new sound of yours, with no credit/
+    const said = within(strip()).getByRole('status').textContent ?? '';
+    expect(said).toMatch(
+      /not shared any more, so your panel was saved to My sounds as a new sound of yours/
     );
+    expect(said).toMatch(/without the original's name or notes/);
+    expect(said).not.toContain(SHARED.name);
+  });
+
+  it("moves to the synth's own address after Save a copy, so a reload opens the copy", async () => {
+    const COPY: UserSoundDetail = {
+      ...NIGHT_BASS,
+      id: 'cmcopy1',
+      name: 'Glass pluck',
+      source: null,
+      panel: { values: { ...def.init, 'filter.cutoff': -3, 'out.a440': true }, cables: [] },
+    };
+    serve([]);
+    api.post.mockResolvedValue(COPY);
+    const first = shared();
+    fireEvent.click(button('A-440'));
+    const save = await within(strip()).findByRole('button', { name: 'Save a copy' });
+    await act(async () => fireEvent.click(save));
+    await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
+    expect(window.location.pathname).toBe('/synths/model-d');
+    expect(window.localStorage.getItem(SHARED_FROM_KEY)).toBe('null');
+
+    // the reload is of the synth's own address: no shared sound, the copy open as theirs
+    serve([{ ...summary(), id: COPY.id, name: COPY.name }], { [COPY.id]: COPY });
+    reload(first, () => page());
+    await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
+    expect(loadedName()).toBe('Glass pluck');
+    expect(screen.queryByRole('region', { name: 'Shared sound' })).toBeNull();
   });
 
   it('does not fall back to a plain sound on any other refusal', async () => {

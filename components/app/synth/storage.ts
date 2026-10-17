@@ -48,6 +48,12 @@ export const STORAGE_KEYS = {
 /** One synth's panel, as it was left. */
 export const sessionKey = (synthId: string): string => `kys.session.${synthId}`;
 
+/**
+ * The shared sound (its address slug) one synth's stored panel was opened from, while it still is (t-51): a reload of
+ * that sound's address keeps the panel instead of loading the sound over it again. Cleared when anything else opens.
+ */
+export const sharedFromKey = (synthId: string): string => `kys.sharedFrom.${synthId}`;
+
 /** Read a key directly, outside React: `null` when it is missing, unreadable or storage is blocked. */
 export function readStored(key: string): unknown {
   try {

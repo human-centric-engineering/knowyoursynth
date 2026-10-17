@@ -18,7 +18,8 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  * - **Signed in, someone else's:** Save a copy (`POST /api/v1/sounds` with `source: { shared }`), which credits it;
  *   once saved it is not offered again, so a second click is not a second copy.
  *   The parent saves the panel as it is, so a copy keeps whatever the visitor changed before saving it. If the original
- *   has stopped being shared since the page opened, it saves a plain new sound instead (h3), and the strip says so.
+ *   has stopped being shared since the page opened, it saves the panel alone as a new sound, without the original's
+ *   name or notes (t-52), and the strip says so.
  * - **Their own:** open it as one of theirs instead, where Save writes to it.
  * - **Report** (h4), for a signed-in visitor whose sound it is not: never on their own, and not signed out.
  *

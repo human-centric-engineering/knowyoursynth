@@ -156,6 +156,14 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   that synth, as `?sound=` does, and counts as the visitor's change, so the account's last panel
   arriving later does not replace it. Changing the view keeps the shared address
   (`sharedSoundHref` with the view).
+- **A reload is not an arrival** (t-51, owner ruling). Loading the sound records its slug against
+  the synth (`sharedFromKey`, `kys.sharedFrom.<synthId>`), and opening anything else clears it.
+  When the address is reloaded and the stored panel was opened from this same sound, the panel stays
+  as the visitor left it. "Controls moved" and Restore still count from the shared sound. Any other
+  arrival, including one from a different shared sound, loads the sound over the stored panel.
+- **After Save a copy** the address becomes the synth's own (`synthHref` with the view), so a
+  reload opens the copy as the visitor's sound instead of the shared one. **Load it again** takes
+  the shared address back.
 - **The strip** (`components/app/sharing/shared-sound-strip.tsx`) above the panel: name, byline,
   the `basedOn` and library credits, notes and tags. Signed out: **Sign in to save a copy**, back to
   this address. Signed in on someone else's: **Save a copy**, which sends the panel as it is with
@@ -209,9 +217,11 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
 
 The strip's Save a copy (h2) sends `source: { shared }`. If the sound stopped being shared after
 the page opened (made private, unlisted, deleted, or its owner erased), the copy route refuses on
-`source.shared` (`sharedSourceGone`), and the page saves the same panel as a **plain new sound**
-with the shared sound's name and notes and no credit, and says so. Any other refusal is just
-reported: nothing else falls back.
+`source.shared` (`sharedSourceGone`). The page then saves the same panel as a **plain new sound**
+called "Untitled sound" (`UNNAMED_COPY`), with no notes and no credit, and says so (t-52, owner
+ruling). The owner's name and notes were withdrawn with the sound. The notes were written when only
+the owner could read them, so they do not survive into another account. The visitor keeps their
+panel and renames the sound themselves. Any other refusal is just reported: nothing else falls back.
 
 ## Explore
 
@@ -297,7 +307,8 @@ h2: `tests/unit/app/api/v1/public/published-sounds.test.ts` (Explore's read: pub
 the filters and what is dropped, sort by saves, paging; a profile's and the sitemap's lists);
 `tests/unit/app/panel/shared-sound-page.test.tsx` (the page, its 404s, the metadata, the card in
 each synth's theme); `tests/unit/components/app/synth/synth-page-shared.test.tsx` (the sound on the
-panel, Save a copy only for a signed-in non-owner, Load it again, the address kept);
+panel, Save a copy only for a signed-in non-owner, Load it again, the address kept, a reload
+keeping the visitor's panel and the address after a copy, the gone-original fallback's body);
 `tests/unit/app/public/explore-page.test.tsx`; `tests/unit/components/app/sharing/sitemap.test.ts`;
 the profile's in `tests/unit/app/public/profile-page.test.tsx`.
 
