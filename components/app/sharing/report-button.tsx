@@ -6,7 +6,7 @@
  * person updates their first, so sending again is safe. The owner is never told who reported it.
  */
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import {
   Dialog,
@@ -49,6 +49,7 @@ export function ReportButton({
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const noteId = useId();
 
   const send = async () => {
     if (!reason) return;
@@ -126,24 +127,27 @@ export function ReportButton({
                   </label>
                 ))}
               </fieldset>
-              <label className="block space-y-1 text-sm">
-                <span className="flex items-center gap-1">
-                  Anything to add <span className="text-(--kys-muted)">(optional)</span>
+              <div className="space-y-1 text-sm">
+                <div className="flex items-center gap-1">
+                  <label htmlFor={noteId}>
+                    Anything to add <span className="text-(--kys-muted)">(optional)</span>
+                  </label>
                   <FieldHelp title="Note">
                     <p>
                       Only admins read it. For someone else&apos;s sound, say whose it is, if you
                       know.
                     </p>
                   </FieldHelp>
-                </span>
+                </div>
                 <textarea
+                  id={noteId}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   maxLength={REPORT_NOTE_MAX}
                   rows={3}
                   className="w-full rounded-md border border-(--kys-line) bg-(--kys-surface) px-2 py-1.5"
                 />
-              </label>
+              </div>
               {failure && (
                 <p role="alert" className="text-sm text-(--kys-warn)">
                   {failure}
