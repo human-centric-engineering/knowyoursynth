@@ -14,7 +14,8 @@ import { getProfile } from '@/lib/app/profile/profile';
 export async function SynthProfileSection({ userId }: AccountSectionProps) {
   const profile = await getProfile(userId);
   return (
-    <Card>
+    // `#synth-profile`: where Publish sends someone with no username yet (`chooseUsernameHref`).
+    <Card id="synth-profile" className="scroll-mt-20">
       <CardHeader>
         <CardTitle>Synth profile</CardTitle>
         <CardDescription>

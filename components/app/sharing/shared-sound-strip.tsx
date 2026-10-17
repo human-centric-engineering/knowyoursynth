@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { z } from 'zod';
 
 import { Byline } from '@/components/app/sharing/byline';
+import { APIClientError } from '@/lib/api/client';
 import { sharedSoundHref } from '@/components/app/synth/routes';
 import type { PublicSound } from '@/lib/app/sounds/data';
 
@@ -14,12 +16,29 @@ import type { PublicSound } from '@/lib/app/sounds/data';
  * - **Signed out:** sign in to save a copy.
  * - **Signed in, someone else's:** Save a copy (`POST /api/v1/sounds` with `source: { shared }`), which credits it;
  *   once saved it is not offered again, so a second click is not a second copy.
- *   The parent saves the panel as it is, so a copy keeps whatever the visitor changed before saving it.
+ *   The parent saves the panel as it is, so a copy keeps whatever the visitor changed before saving it. If the original
+ *   has stopped being shared since the page opened, it saves a plain new sound instead (h3), and the strip says so.
  * - **Their own:** open it as one of theirs instead, where Save writes to it.
  *
  * Who it belongs to is the visitor's own sounds list's answer (it carries each sound's address): the public read never
  * says, so it cannot leak whose a sound is. Until that list arrives, no action is offered.
  */
+
+/** A validation refusal's details, as far as this reads them. */
+const ProblemsSchema = z.object({ errors: z.array(z.object({ path: z.string() })) });
+
+/** What Save a copy came to: saved, with a word to say when it was not the credited copy asked for; or not. */
+export type SharedCopyResult = { ok: true; note: string | null } | { ok: false; error: string };
+
+/**
+ * Whether a copy was refused because the sound is not shared any more (made private, deleted, or its owner erased):
+ * the copy route's one 400 on `source.shared` (`sharedCopySource` in `lib/app/sounds/store.ts`).
+ */
+export function sharedSourceGone(err: unknown): boolean {
+  if (!(err instanceof APIClientError) || err.status !== 400) return false;
+  const details = ProblemsSchema.safeParse(err.details);
+  return details.success && details.data.errors.some((e) => e.path === 'source.shared');
+}
 
 /**
  * Who is looking: `guest` signed out; `pending` signed in, whose it is not known yet; `owner` it is theirs; `other` it
@@ -65,21 +84,21 @@ export function SharedSoundStrip({
   onLoad: () => void;
   viewer: SharedViewer;
   signInHref: string;
-  /** Save a copy; resolves to what went wrong, or null. */
-  onCopy: () => Promise<string | null>;
+  /** Save a copy. */
+  onCopy: () => Promise<SharedCopyResult>;
   /** Open it as one of the owner's own. */
   onOpen: () => void;
   buttonClass: string;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<{ note: string | null } | null>(null);
   const copy = async () => {
     setBusy(true);
     setError(null);
-    const problem = await onCopy();
-    setError(problem);
-    setCopied(problem === null);
+    const result = await onCopy();
+    if (result.ok) setCopied({ note: result.note });
+    else setError(result.error);
     setBusy(false);
   };
 
@@ -167,7 +186,7 @@ export function SharedSoundStrip({
       )}
       {copied && (
         <p role="status" className="mt-2 text-sm text-(--kys-good)">
-          Saved a copy to My sounds. It is open on the panel.
+          {copied.note ?? 'Saved a copy to My sounds.'} It is open on the panel.
         </p>
       )}
       {error && (

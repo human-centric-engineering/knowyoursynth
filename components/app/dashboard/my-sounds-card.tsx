@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { AudioLines } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
+import { mySoundHref, sharedSoundHref } from '@/components/app/synth/routes';
 import { listSynths } from '@/lib/app/catalogue/read';
 import { listUserSounds } from '@/lib/app/sounds/store';
 
@@ -11,6 +13,8 @@ import { listUserSounds } from '@/lib/app/sounds/store';
  * In-process reads, as the synth page's route makes them: the same functions `GET /api/v1/sounds` and
  * `GET /api/v1/synths` serve. A sound on a synth the catalogue no longer lists is shown without a link, since its
  * page would be a 404. One saved on a definition the synth has moved on from still opens, with what fits.
+ *
+ * Each says who can open it (`f-sharing` h3), and a shared one links to its page.
  */
 export async function MySoundsCard({ userId }: { userId: string }) {
   const [sounds, synths] = await Promise.all([listUserSounds(userId), listSynths()]);
@@ -47,7 +51,7 @@ export async function MySoundsCard({ userId }: { userId: string }) {
                 >
                   {synth ? (
                     <Link
-                      href={`/synths/${encodeURIComponent(s.synthId)}?mine=${encodeURIComponent(s.id)}`}
+                      href={mySoundHref(s.synthId, s.id)}
                       className="font-medium underline-offset-2 hover:underline"
                     >
                       {s.name}
@@ -58,6 +62,17 @@ export async function MySoundsCard({ userId }: { userId: string }) {
                   <span className="text-muted-foreground text-sm">
                     {synth ? `${synth.maker} ${synth.name}` : `${s.synthId}, no longer available`}
                     {s.source ? ` · copied from ${s.source.name}` : ''}
+                    {' · '}
+                    {synth && s.visibility !== 'private' && s.slug ? (
+                      <Link
+                        href={sharedSoundHref(s.synthId, s.slug)}
+                        className="underline underline-offset-2"
+                      >
+                        {VISIBILITY_LABELS[s.visibility]}
+                      </Link>
+                    ) : (
+                      VISIBILITY_LABELS[s.visibility]
+                    )}
                   </span>
                 </li>
               );

@@ -18,6 +18,9 @@ import Link from 'next/link';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { StarButton } from '@/components/app/synth/favourites';
+import { mySoundHref, sharedSoundHref } from '@/components/app/synth/routes';
+import { SoundSharing } from '@/components/app/sharing/sound-sharing';
+import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
@@ -175,7 +178,20 @@ export function MySoundsList({
                       Opens with what still fits this synth
                     </span>
                   )}
+                  <span className="mt-0.5 block text-[12px] leading-snug text-(--kys-faint)">
+                    {VISIBILITY_LABELS[s.visibility]}
+                  </span>
                 </button>
+                {s.visibility !== 'private' && s.slug && (
+                  <Link
+                    href={sharedSoundHref(s.synthId, s.slug)}
+                    aria-label={`${s.name}: its shared page`}
+                    title="Its shared page"
+                    className="mt-1 rounded-md px-1.5 py-1 text-(--kys-muted) hover:text-(--kys-accent)"
+                  >
+                    ↗
+                  </Link>
+                )}
                 {starred !== null && onStar && (
                   <StarButton
                     on={starred}
@@ -211,8 +227,13 @@ export interface SoundActionsProps {
   credit: { slug: string; name: string } | null;
   /** The panel as it is now. */
   panel: () => PanelInput;
-  /** A sound was saved as a new one, saved over with the panel, or renamed (its panel left as it was). */
-  onSaved: (sound: UserSoundDetail, how: 'created' | 'saved' | 'renamed') => void;
+  /**
+   * A sound was saved as a new one, saved over with the panel, renamed, or shared, published or unpublished (its panel
+   * left as it was in those last two).
+   */
+  onSaved: (sound: UserSoundDetail, how: 'created' | 'saved' | 'renamed' | 'shared') => void;
+  /** The tags that synth's library sounds use, which a published sound may carry (`f-sharing` h3). */
+  libraryTags: string[];
   onDeleted: (id: string) => void;
   /** Class for each button, so they match the others in the row. */
   buttonClass: string;
@@ -227,6 +248,7 @@ export function SoundActions({
   panel,
   onSaved,
   onDeleted,
+  libraryTags,
   buttonClass,
 }: SoundActionsProps) {
   const [form, setForm] = useState<FormMode | null>(null);
@@ -415,6 +437,15 @@ export function SoundActions({
           {status}
         </p>
       )}
+      {open && (
+        <SoundSharing
+          sound={open}
+          libraryTags={libraryTags}
+          backHref={mySoundHref(synthId, open.id)}
+          onChanged={(d) => onSaved(d, 'shared')}
+          buttonClass={buttonClass}
+        />
+      )}
     </div>
   );
 }
@@ -507,7 +538,8 @@ function SoundForm({ mode, open, credit, busy, onSubmit, onCancel, buttonClass }
           <FieldHelp title="Notes">
             <p>
               Anything you want to remember about it: what it is for, what you changed, how to play
-              it. Only you see them. Up to 2,000 characters.
+              it. Only you see them, until you share the sound: then they go with it. Up to 2,000
+              characters.
             </p>
           </FieldHelp>
         </label>
