@@ -23,6 +23,7 @@ import { SoundSharing } from '@/components/app/sharing/sound-sharing';
 import { soundStateLabel } from '@/components/app/sharing/visibility';
 import { NameSchema, NotesSchema } from '@/lib/app/sounds/data';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
+import type { SoundLesson } from '@/lib/app/sounds/lesson';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 
 /** A panel as the API takes it. */
@@ -232,6 +233,11 @@ export interface SoundActionsProps {
    * the one the panel came from; with one open, the one that was copied from, if the library still has it.
    */
   credit: { slug: string; name: string } | null;
+  /**
+   * A sound the tutor designed, open on the panel (`f-tutor` t-56): a new sound saved from it keeps its lesson and is
+   * marked as the tutor's, as Save as… keeps both from a sound of the user's.
+   */
+  design?: { name: string; lesson: SoundLesson } | null;
   /** The panel as it is now. */
   panel: () => PanelInput;
   /**
@@ -253,6 +259,7 @@ export function SoundActions({
   open,
   midLesson = false,
   credit,
+  design = null,
   panel,
   onSaved,
   onDeleted,
@@ -333,9 +340,11 @@ export function SoundActions({
               ...(notes ? { notes } : {}),
               panel: panel(),
               ...(credit ? { source: { slug: credit.slug } } : {}),
-              // Save as keeps what the sound was saved with: its lesson, and that the tutor designed it.
+              // Save as keeps what the sound was saved with: its lesson, and that the tutor designed it. A sound the tutor
+              // designed, saved for the first time, keeps both too.
               ...(mode === 'saveAs' && open?.lesson ? { lesson: open.lesson } : {}),
               ...(mode === 'saveAs' && open?.fromTutor ? { fromTutor: true } : {}),
+              ...(mode === 'new' && design ? { lesson: design.lesson, fromTutor: true } : {}),
             },
           });
           onSaved(d, 'created');
@@ -437,6 +446,7 @@ export function SoundActions({
           mode={form}
           open={open}
           credit={credit}
+          design={design}
           busy={busy}
           onSubmit={(name, notes) => void submit(form, name, notes)}
           onCancel={() => setForm(null)}
@@ -470,6 +480,7 @@ interface SoundFormProps {
   mode: FormMode;
   open: UserSoundSummary | null;
   credit: { slug: string; name: string } | null;
+  design: { name: string } | null;
   busy: boolean;
   onSubmit: (name: string, notes: string) => void;
   onCancel: () => void;
@@ -480,13 +491,22 @@ const inputClass =
   'w-full rounded-md border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm text-(--kys-text) focus:border-(--kys-muted) focus:outline-none';
 
 /** Name and notes, for a new sound or a rename. Checked with the API's own schemas before anything is sent. */
-function SoundForm({ mode, open, credit, busy, onSubmit, onCancel, buttonClass }: SoundFormProps) {
+function SoundForm({
+  mode,
+  open,
+  credit,
+  design,
+  busy,
+  onSubmit,
+  onCancel,
+  buttonClass,
+}: SoundFormProps) {
   const [name, setName] = useState(() =>
     mode === 'rename' && open
       ? open.name
       : mode === 'saveAs' && open
         ? `${open.name} (copy)`
-        : (credit?.name ?? '')
+        : (credit?.name ?? design?.name ?? '')
   );
   const [notes, setNotes] = useState(() => (mode === 'rename' && open?.notes) || '');
   const [problems, setProblems] = useState<{ name?: string; notes?: string }>({});
@@ -524,6 +544,12 @@ function SoundForm({ mode, open, credit, busy, onSubmit, onCancel, buttonClass }
       {mode !== 'rename' && credit && (
         <p className="text-sm text-(--kys-muted)">
           It goes into My sounds with the panel as it is now, and keeps the credit to {credit.name}.
+        </p>
+      )}
+      {mode === 'new' && !credit && design && (
+        <p className="text-sm text-(--kys-muted)">
+          It goes into My sounds with the panel as it is now, and keeps the tutor&apos;s lesson for{' '}
+          {design.name}.
         </p>
       )}
       <div className="space-y-1">
