@@ -293,6 +293,7 @@ Today they are:
 - `app/(panel)/**`, the synth page's route group;
 - `app/(public)/bank/**`, the databank's pages;
 - `app/api/v1/bank/**` and `app/api/v1/admin/bank/**`, the databank's API and its suggestions;
+- `app/api/v1/tutor/**`, the tutor's stream and allowance routes;
 - `app/admin/synths/**`, the Synths admin pages;
 - `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts`, `scripts/check-synths.ts` and
   `scripts/smoke/tutor.ts`;
@@ -301,7 +302,7 @@ Today they are:
 - `tests/fixtures/synths/**`;
 - `tests/unit/prototype-boundary.test.ts`;
 - the tests for fork-owned code, under `tests/unit/lib/app/synths/**`, `tests/unit/lib/app/tutor/**`
-  (with `tests/helpers/tutor.ts`), `tests/unit/components/app/**`, `tests/unit/app/panel/**` and
+  (with `tests/helpers/tutor.ts`), `tests/unit/app/api/v1/tutor/**`, `tests/unit/components/app/**`, `tests/unit/app/panel/**` and
   `tests/unit/app/public/bank-pages.test.tsx`.
 
 Before a sync, intersect that list with `git diff --diff-filter=A --name-only <base> <target>`.
@@ -316,12 +317,13 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames),
   `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
-  tools, synth context and agent, `f-tutor` t-53): fork-owned scaffolds, filled.
+  tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
+  `TUTOR_DAILY_TURNS`, t-54): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `platform-agents`, `env`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

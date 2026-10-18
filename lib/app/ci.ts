@@ -297,4 +297,23 @@ export interface AppOwnerlessSurfaceException {
  * ];
  * ```
  */
-export const appOwnerlessSurfaceExceptions: AppOwnerlessSurfaceException[] = [];
+export const appOwnerlessSurfaceExceptions: AppOwnerlessSurfaceException[] = [
+  {
+    path: 'lib/app/tutor/allowance.ts',
+    disposition: 'by-design',
+    reason:
+      "the tutor's daily allowance counts the caller's own messages to the tutor, " +
+      '`conversation: { userId }` from the session: hard-scoped on purpose, like core’s ' +
+      '`conversations/export`. A thread nobody owns is nobody’s turn, and a shared one ' +
+      'is its owner’s, so it has nothing to ask the helper (`f-tutor` t-54).',
+  },
+  {
+    path: 'app/api/v1/tutor/stream/route.ts',
+    disposition: 'by-design',
+    reason:
+      'the tutor carries on a conversation only when it is the caller’s own, on the synth the turn is ' +
+      'about: `userId` from the session, matched as `streamChat` itself loads a conversation. A thread ' +
+      'nobody owns is never carried on through a consumer route, so it has nothing to ask the helper ' +
+      '(`f-tutor` t-54).',
+  },
+];
