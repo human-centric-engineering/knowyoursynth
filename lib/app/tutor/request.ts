@@ -33,3 +33,6 @@ export const TutorStreamRequestSchema = z.object({
   conversationId: cuidSchema.optional(),
 });
 export type TutorStreamRequest = z.infer<typeof TutorStreamRequestSchema>;
+
+/** What `GET /api/v1/tutor/conversation` takes: the synth whose latest conversation to carry on. */
+export const TutorConversationQuerySchema = z.object({ synthId: SynthIdSchema });
