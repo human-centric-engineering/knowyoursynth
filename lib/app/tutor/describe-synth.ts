@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { readPanel, type TutorPanel } from '@/lib/app/tutor/panel';
-import { DESCRIBE_MAX_CHARS, modelled, sectionIndex } from '@/lib/app/tutor/sections';
+import {
+  DESCRIBE_MAX_CHARS,
+  describesWhole,
+  modelled,
+  sectionIndex,
+} from '@/lib/app/tutor/sections';
 import { areaMembers } from '@/lib/app/synths/lib/areas';
 import { jackName } from '@/lib/app/synths/lib/explain';
 import { describeSynth, displayName } from '@/lib/app/synths/lib/patch';
@@ -36,15 +41,16 @@ const EXAMPLES = 3;
 
 /** Heads a narrowed answer, whose cable list covers only the jacks in it. */
 const NARROWED =
-  'Cables listed are only those to and from the jacks below; get_panel lists every cable.';
+  "Cables listed are only those to and from the jacks below; get_panel lists the panel's cables (up to 100).";
 
 /**
  * `describe_synth`: the synth's controls, jacks and legal values, with the panel's current values, from the
  * definition (`describeSynth`). A lookup for every synth (the decision and its numbers are in `.context/app/tutor.md`):
  * with no arguments it returns the whole synth when that is small, and its section index when not; a section returns
  * what is in it, a prefix the controls whose ids start with it. Anything too big to hand over in one call comes back as
- * an index of the next prefixes down, so the DeepMind's 1,514 menu parameters are three short calls away, not one long
- * one.
+ * an index of the next prefixes down. A turn has five model calls in all (`MAX_TOOL_ITERATIONS`), so the context
+ * names the prefixes inside a large section up front: one effect's parameters on the DeepMind are two calls away
+ * (`fx1`, then `fx1.<effect>`), the first made alongside `get_panel`.
  */
 export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> {
   readonly slug = 'describe_synth';
@@ -90,8 +96,9 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     };
 
     if (section === undefined && prefix === undefined) {
-      const whole = textOf(def.controls, def.jacks.filter(modelled));
-      if (whole.length <= DESCRIBE_MAX_CHARS)
+      // A synth too big even on the init patch is never built whole just to be measured.
+      const whole = describesWhole(def) ? textOf(def.controls, def.jacks.filter(modelled)) : null;
+      if (whole !== null && whole.length <= DESCRIBE_MAX_CHARS)
         return this.success({ synthId, scope: 'whole', text: whole });
       return this.success({
         synthId,

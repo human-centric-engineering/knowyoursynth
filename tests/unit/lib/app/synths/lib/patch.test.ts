@@ -422,6 +422,17 @@ describe('describeSynth', () => {
     const def = makeMiniD();
     expect(describeSynth(def, def.init, [])).toContain('CABLES NOW: none');
   });
+
+  it('keeps a jack with a two-line panel label on one row', () => {
+    const def = makeMiniD();
+    const twoLine = {
+      ...def,
+      jacks: def.jacks.map((j) => (j.id === 'lfo.tri' ? { ...j, label: 'LFO\nTRI' } : j)),
+    };
+    const text = describeSynth(twoLine, def.init, []);
+    expect(text).toContain('lfo.tri | LFO TRI | out');
+    expect(text.split('\n')).not.toContain('TRI | out');
+  });
 });
 
 describe('displayName', () => {

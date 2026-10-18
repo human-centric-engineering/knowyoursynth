@@ -7,7 +7,7 @@
  * `.context/app/tutor.md`). `buildContext` caches it for a minute per learner and drops it after a tool call; it is
  * cheap to rebuild (the definition is in memory).
  */
-import { describesWhole, sectionIndex } from '@/lib/app/tutor/sections';
+import { describesWhole, largeSectionPrefixes, sectionIndex } from '@/lib/app/tutor/sections';
 import { getSynthDef } from '@/lib/app/synths/defs';
 
 /** The `contextType` the stream route sends with the synth id as `contextId`. */
@@ -23,9 +23,12 @@ export function synthContext(synthId: string): Promise<string> {
       `It has ${def.controls.length} controls. ${
         describesWhole(def)
           ? 'describe_synth with no arguments returns all of them (or its sections, on a heavily patched panel).'
-          : 'That is too many to look up at once: name a section when you call describe_synth.'
+          : 'That is too many to look up at once: name a section, or a prefix from the list below, when you call describe_synth.'
       }`,
       sectionIndex(def),
-    ].join('\n')
+      largeSectionPrefixes(def),
+    ]
+      .filter(Boolean)
+      .join('\n')
   );
 }

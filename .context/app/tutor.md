@@ -54,12 +54,22 @@ designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on i
 1. The tutor panel sends the learner's message and the panel to the app's stream route (t-54).
 2. The route validates the panel, checks the allowance, and calls `streamChat()` with
    `agentSlug: 'synth-tutor'`, `contextType: 'synth'`, `contextId` the synth id, and
-   `entityContext` `{ synthId, version, panel: { values, cables } }` (`TutorEntityContext`).
+   `entityContext` `{ synthId, version, panel: { values, cables } }` (`TutorEntityContext`). The
+   same synth in both: the tools see only `entityContext` and the prompt only `contextId`, so
+   nothing downstream can notice if they differ.
 3. The system prompt is the tutor's instructions, then the `LOCKED CONTEXT` the contributor builds
-   for the synth: its name, what it is, how many controls it has, and its section index. About
-   180 tokens for Model D, 260 for the DeepMind, 800 for System 55.
+   for the synth: its name, what it is, how many controls it has, its section index, and the
+   prefixes inside any section too big to describe at once. About 220 tokens for Model D, 420 for
+   the DeepMind, 920 for System 55.
 4. The model calls tools. Each reads the panel from `entityContext`; each result goes back to the
    model and out to the page as a `capability_result` event.
+   - **Five model calls a turn** (`MAX_TOOL_ITERATIONS` in Sunrise's chat handler); tools called
+     together in one call count once. So the instructions have the model read `get_panel` in the
+     same call as its first lookup and go straight to the narrowest prefix it knows. One change to
+     a DeepMind effect is three calls (`get_panel` and `fx1`, then `fx1.<effect>`, then the
+     proposal), leaving one for the answer and one spare.
+   - **Two failures and a tool is off for the turn** (`TOOL_FAILURE_THRESHOLD`). So a refused tool
+     gets one corrected retry, and the instructions say so.
 5. A proposal or a designed sound reaches the page only as a successful tool result, so only after
    it has passed validation. The page decides how to apply it (t-56).
 
@@ -78,6 +88,10 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 | Provider and model | none: inherits the org's default at run time                         | the admin's                     |
 | Per-turn cap       | **$0.20** to start (BeatBuddy's)                                     | the admin's, set once on create |
 | Monthly budget     | **$50** to start                                                     | the admin's, set once on create |
+
+Max tokens is the code's, so an admin cannot lower it, and nothing clamps it to the model's own
+output limit: a model that stops at 4,096 output tokens would refuse every tutor call. Choose one
+that allows at least 8,192, as Sunrise's provider auditors already need (they ask for 16,384).
 
 The starting caps are placeholders for the admin to tune. The production provider, model and the
 learner's daily allowance are decided at `x4` and recorded against D6. Changing the instructions
@@ -135,7 +149,7 @@ How it answers (`DESCRIBE_MAX_CHARS`, 8,000 characters, in `sections.ts`):
 
 - **No arguments.** The whole synth when it describes in 8,000 characters or fewer, measured with
   the panel's values and cables: the 21 small synths, in one call, unless the panel is heavily
-  patched. Otherwise the section index (155 tokens for the DeepMind), which counts each section's
+  patched. Otherwise the section index (190 tokens for the DeepMind), which counts each section's
   controls and jacks, so a section of only jacks (a modular's outputs) does not read as empty.
 - **A section** (an area id) returns what is in it. **A prefix** returns the controls whose ids are
   it or continue it after a dot. Both together narrow both ways. A narrowed answer lists only the
@@ -145,8 +159,9 @@ How it answers (`DESCRIBE_MAX_CHARS`, 8,000 characters, in `sections.ts`):
   labels, and describes in full any that are single controls. The DeepMind's `display` section
   holds 1,514 of its 1,568 controls, almost all the four FX slots' 373 parameters each. So
   `section: 'display'` gives the groups (329 tokens), `prefix: 'fx1'` gives `fx1.type` in full
-  with every effect it can hold and one group per effect (1,670 tokens), and
-  `prefix: 'fx1.tc-deepvrb'` gives that effect's parameters (192 tokens). A single control or jack
+  with every effect it can hold and one group per effect (1,700 tokens), and
+  `prefix: 'fx1.tc-deepvrb'` gives that effect's parameters (220 tokens). The context lists the
+  `display` section's prefixes, so the model can start at `fx1`. A single control or jack
   is always described, however long: an index of one would point back at itself.
 - Only the jacks the sound engine models are listed, counted or matched, as `describeSynth` lists
   no others.

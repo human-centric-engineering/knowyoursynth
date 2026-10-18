@@ -320,7 +320,8 @@ export function describeSynth(def: SynthDef, values: ControlValues, cables: Cabl
   });
   const jl = def.jacks
     .filter((j) => (j.dir === 'out' ? j.signal : j.dest))
-    .map((j) => `${j.id} | ${j.label} | ${j.dir}`);
+    // Cleaned like a control's: a two-line panel label would otherwise split the row and read as a second jack.
+    .map((j) => `${j.id} | ${cleanLabel(j)} | ${j.dir}`);
   const cl = cables.length ? cables.map((c) => `${c.from} -> ${c.to}`).join(', ') : 'none';
   return `CONTROLS (id | panel label | section | legal values | current value)\n${lines.join('\n')}\n\nPATCH JACKS (id | label | direction)\n${jl.join('\n')}\n\nCABLES NOW: ${cl}`;
 }

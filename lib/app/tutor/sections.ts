@@ -31,6 +31,43 @@ export function describesWhole(def: SynthDef): boolean {
   return size <= DESCRIBE_MAX_CHARS;
 }
 
+const sectionSizes = new WeakMap<SynthDef, Map<string, number>>();
+
+/** How many characters a section describes in on the init patch, cached per definition. */
+function sectionSize(def: SynthDef, areaId: string): number {
+  let sizes = sectionSizes.get(def);
+  if (!sizes) sectionSizes.set(def, (sizes = new Map<string, number>()));
+  let size = sizes.get(areaId);
+  if (size === undefined) {
+    const area = def.areas.find((a) => a.id === areaId);
+    const members = area ? areaMembers(def, area) : { controls: [], jacks: [] };
+    size = describeSynth({ ...def, ...members }, def.init, []).length;
+    sizes.set(areaId, size);
+  }
+  return size;
+}
+
+/**
+ * For each section too big for `describe_synth` to return at once, the prefixes inside it: `section | prefix |
+ * controls`. A turn gets five model calls, so naming these up front lets the model go straight to a prefix (the
+ * DeepMind's `fx1`) instead of spending a call on the section first. Empty for a synth with no such section.
+ */
+export function largeSectionPrefixes(def: SynthDef): string {
+  const rows = def.areas
+    .filter((a) => sectionSize(def, a.id) > DESCRIBE_MAX_CHARS)
+    .flatMap((a) => {
+      const counts = new Map<string, number>();
+      for (const c of areaMembers(def, a).controls) {
+        const key = c.id.split('.')[0];
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
+      return [...counts].map(([prefix, n]) => `${a.id} | ${prefix} | ${n}`);
+    });
+  return rows.length
+    ? `PREFIXES IN LARGE SECTIONS (section | prefix | controls)\n${rows.join('\n')}`
+    : '';
+}
+
 /**
  * One line per section: `id | name | controls | jacks`, in the definition's order. Jacks are counted too: a section
  * can hold only jacks (a modular's output panel), and a 0 there would read as empty.

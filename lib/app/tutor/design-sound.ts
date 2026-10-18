@@ -137,6 +137,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
               cables: {
                 type: 'array',
                 description: 'Cables to plug in, each [output jack id, input jack id].',
+                maxItems: 16,
                 items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
               },
             },

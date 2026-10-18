@@ -39,6 +39,15 @@ describe('synthContext', () => {
     expect(await synthContext('system-15')).toMatch(/^appout \| .+ \| 0 \| 2$/m);
   });
 
+  it('names the prefixes inside a section too big to describe at once, so the model can go straight to one', async () => {
+    const body = await synthContext('deepmind-12d');
+    expect(body).toContain('PREFIXES IN LARGE SECTIONS (section | prefix | controls)');
+    expect(body).toMatch(/^display \| fx1 \| 373$/m);
+    // A section small enough to describe whole gets no prefix rows (three fields; its index row has four).
+    expect(body).not.toMatch(/^env \| [\w.-]+ \| \d+$/m);
+    expect(await synthContext('model-d')).not.toContain('PREFIXES IN LARGE SECTIONS');
+  });
+
   it("does not list a synth's controls", async () => {
     expect(await synthContext('model-d')).not.toContain('filter.cutoff');
   });

@@ -89,7 +89,7 @@ describe('the tutor tools', () => {
     const asOther = await tool.execute(args, panelContext(modelD, panel, { userId: 'user-2' }));
     const asNobody = await tool.execute(args, panelContext(modelD, panel, { userId: null }));
     expect(asOne.success).toBe(true);
-    // design_sound mints a time-based id; everything else must match exactly.
+    // design_sound mints a random id per sound; everything else must match exactly.
     const strip = (r: typeof asOne) =>
       JSON.parse(JSON.stringify(r).replace(/"tutor-[a-z0-9]+"/g, '"tutor-id"')) as unknown;
     expect(strip(asOther)).toEqual(strip(asOne));

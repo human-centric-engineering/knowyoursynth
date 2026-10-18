@@ -79,6 +79,7 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
       properties: {
         set: {
           type: 'object',
+          maxProperties: MAX_SET,
           description:
             'Control id → new value. A number within the control\'s range, one of its options, or true/false for a switch. Example: {"filter.cutoff": 3.5, "osc1.wave": "saw"}.',
           additionalProperties: { type: ['number', 'string', 'boolean'] },
@@ -86,12 +87,14 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
         addCables: {
           type: 'array',
           description: 'Cables to plug in, each [output jack id, input jack id].',
+          maxItems: MAX_CABLES,
           items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
         },
         removeCables: {
           type: 'array',
           description:
             'Cables to take out, each [output jack id, input jack id], as get_panel lists them.',
+          maxItems: MAX_CABLES,
           items: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 2 },
         },
       },
