@@ -172,22 +172,25 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
 - **Delete when:** sunrise#964 lands. Move the twenty-eight names (eighteen global, ten system) into the new seam's scaffold.
 
-### The real-registry reconcile test, pinned to the tutor
+### The real-registry counts, pinned to the tutor
 
-- **Files:** `tests/unit/lib/orchestration/agents/reconcile-platform-agents.test.ts`
+- **Files:** `tests/unit/lib/orchestration/agents/reconcile-platform-agents.test.ts`,
+  `scripts/smoke/tenancy-isolation.ts`
 - **Change:** the `materialises the real registry` case expects one more agent in the install org
   than core defines (17, the tutor `synth-tutor` among them) and the tutor in no other org, under a
-  `FORK` comment (`f-tutor` t-53).
+  `FORK` comment (`f-tutor` t-53). The two-org smoke's step [11] check expects five install-only
+  agents, the tutor among them, not four.
 - **Why:** the case reads the real registry, which runs the fork's `initAppPlatformAgents()`, so
   filling `lib/app/platform-agents.ts` necessarily changes its count (`HB2`). It reaches the seam
   through the registry rather than importing it, so `fork-seam-coupling.test.ts` does not ask it
   for a fork note, and a fork meets the failure with nothing to read.
-- **On conflict:** take theirs, and re-apply the pin to whichever case counts the real registry's
-  install-org agents.
+- **On conflict:** take theirs, and re-apply the pin to whichever case or check counts the real
+  registry's install-org agents.
 - **Upstream:** raised as
   [sunrise#1032](https://github.com/human-centric-engineering/sunrise/issues/1032): mock the seam
   in that case, or give it a fork note.
-- **Delete when:** upstream mocks the seam in that case, or the fork registers no platform agent.
+- **Delete when:** upstream stops counting the fork's agents in both places, or the fork registers
+  no platform agent.
 
 ### The drift-probe scaffold test, pinned to our probe
 

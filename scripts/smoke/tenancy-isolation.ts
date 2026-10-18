@@ -1002,9 +1002,11 @@ async function main(): Promise<void> {
     const inB = await platformRows(b.orgId);
     const inA = await platformRows(a.orgId);
     const inInstall = await platformRows(INSTALL_ORG_ID);
+    // FORK (Know Your Synth): the registry includes the fork's own install-only agent, the tutor (`f-tutor` t-53).
+    // Pinned: one more in the install org, and it is the tutor.
     check(
-      everyOrg.length === 12 && installOnly.length === 4,
-      `the registry gives every org 12 and the install org 4 more (${everyOrg.length}/${installOnly.length})`
+      everyOrg.length === 12 && installOnly.length === 5 && installOnly.includes('synth-tutor'),
+      `the registry gives every org 12 and the install org 5 more, the tutor among them (${everyOrg.length}/${installOnly.length})`
     );
     check(
       inB.length === everyOrg.length && everyOrg.every((slug) => inB.some((r) => r.slug === slug)),
