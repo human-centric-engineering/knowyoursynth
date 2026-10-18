@@ -5,6 +5,7 @@
  * - the sound's values and cables are what is drawn, checked against the synth as the page checks them;
  * - each design path: `neutral` leaves the maker's marks out, `faithful` keeps them;
  * - a modular synth is drawn as the page opens it, as the modular case;
+ * - a picture cannot be played: the faceplate's handlers change nothing;
  * - the PNG fits the box, by width or by height as the panel's shape decides.
  *
  * The faceplate renderer is the bundle's entry itself (`panel-render-entry.tsx`): the bundle is a build product, and
@@ -15,12 +16,13 @@
 
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock(
-  '@/components/app/sharing/panel-render',
-  async () => import('@/components/app/sharing/panel-render-entry')
-);
+vi.mock('@/components/app/sharing/panel-render', async () => {
+  const entry = await import('@/components/app/sharing/panel-render-entry');
+  return { renderPanel: vi.fn(entry.renderPanel) };
+});
 
 import { panelPng, panelSvg } from '@/components/app/sharing/panel-image';
+import { renderPanel } from '@/components/app/sharing/panel-render';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 
@@ -80,6 +82,15 @@ describe('panelSvg', () => {
       expect(faithful.length).toBeGreaterThan(neutral.length);
     }
   );
+
+  it('hands the faceplate handlers that change nothing: a picture cannot be played', () => {
+    const plain = svg();
+    const props = vi.mocked(renderPanel).mock.lastCall![0];
+    expect(props.onChange('filter.cutoff', 9)).toBeUndefined();
+    expect(props.onConnect('a', 'b')).toBeUndefined();
+    expect(props.onRemoveCable(0)).toBeUndefined();
+    expect(svg()).toBe(plain);
+  });
 
   it('draws a modular synth as the modular case, as the page opens it', () => {
     const def = getSynthDef('jupiter-8')!;

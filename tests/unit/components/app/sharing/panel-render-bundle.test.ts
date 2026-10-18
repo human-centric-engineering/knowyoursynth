@@ -5,24 +5,29 @@
  *   time ("dynamic usage of require is not supported"). React's Node server build brings four (`async_hooks`,
  *   `crypto`, `stream`, `util`), which is why the entry uses its browser one; this is what catches a switch back.
  * - It runs on its own and draws the faceplate: loaded from a file, as the route loads it, it renders Model D's SVG.
+ * - The command line writes that same code to the file it is given, and says where.
  *
  * @see scripts/build-panel-renderer.ts
  * @see components/app/sharing/panel-render-entry.tsx
  */
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { renderPanel as RenderPanel } from '@/components/app/sharing/panel-render-entry';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { bundlePanelRenderer } from '@/scripts/build-panel-renderer';
+import { bundlePanelRenderer, writePanelRenderer } from '@/scripts/build-panel-renderer';
 
 let code: string;
 beforeAll(async () => {
-  code = await bundlePanelRenderer({ write: false });
+  code = await bundlePanelRenderer();
 }, 60_000);
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('the panel renderer bundle', () => {
   it('holds no require, which the route’s bundler refuses', () => {
@@ -51,4 +56,16 @@ describe('the panel renderer bundle', () => {
     expect(markup.startsWith('<svg')).toBe(true);
     expect(markup).toContain(`viewBox="0 0 ${def.view.w} ${def.view.h}"`);
   });
+
+  it('is written, as built, to the file it is given', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const file = join(
+      mkdtempSync(join(tmpdir(), 'kys-panel-render-')),
+      'nested',
+      'panel-render.mjs'
+    );
+    await writePanelRenderer(file);
+    expect(readFileSync(file, 'utf8')).toBe(code);
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('panel-render-entry.tsx →'));
+  }, 60_000);
 });

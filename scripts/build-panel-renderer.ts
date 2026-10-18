@@ -18,20 +18,20 @@
  */
 
 import { build } from 'esbuild';
-import { join, relative, resolve } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const ENTRY = 'components/app/sharing/panel-render-entry.tsx';
 const OUT = 'components/app/sharing/generated/panel-render.mjs';
 
-/** Writes the bundle; with `write: false`, returns its code instead (what the tests check). */
-export async function bundlePanelRenderer({ write = true } = {}): Promise<string> {
-  const outfile = join(ROOT, OUT);
+/** The bundle's code, built in memory. */
+export async function bundlePanelRenderer(): Promise<string> {
   const result = await build({
     entryPoints: [join(ROOT, ENTRY)],
-    outfile,
-    write,
+    outfile: join(ROOT, OUT),
+    write: false,
     bundle: true,
     minify: true,
     platform: 'node',
@@ -47,12 +47,22 @@ export async function bundlePanelRenderer({ write = true } = {}): Promise<string
     logOverride: { 'module-level-directive': 'silent' },
     logLevel: 'warning',
   });
-  if (write) console.log(`panel renderer: ${ENTRY} → ${relative(ROOT, outfile)}`);
-  return result.outputFiles?.[0]?.text ?? '';
+  return result.outputFiles.map((file) => file.text).join('');
 }
 
+/** Builds the bundle and writes it to `outfile`. */
+export async function writePanelRenderer(outfile: string): Promise<void> {
+  const code = await bundlePanelRenderer();
+  mkdirSync(dirname(outfile), { recursive: true });
+  writeFileSync(outfile, code);
+  console.log(`panel renderer: ${ENTRY} → ${relative(ROOT, outfile)}`);
+}
+
+// The command line, which `predev` and `prebuild` run: no unit test is the script's own entry point.
+/* v8 ignore start */
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
-  bundlePanelRenderer().catch((err: unknown) => {
+  writePanelRenderer(join(ROOT, OUT)).catch((err: unknown) => {
     console.error('build-panel-renderer failed:', err);
     process.exit(1);
   });
+/* v8 ignore stop */
