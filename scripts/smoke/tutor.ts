@@ -151,7 +151,12 @@ async function readAllowance(key: string) {
   return AllowanceSchema.parse(await res.json()).data;
 }
 
-/** One turn. Its conversation goes into `made` as soon as it exists, so a turn that fails is still cleaned up. */
+/**
+ * One turn. Its conversation goes into `made`, and is tagged, once the stream has been read: a turn that fails after
+ * that is still cleaned up. One whose stream cannot be read at all (the server stopped mid-turn) leaves its
+ * conversation behind, untagged and titled with the turn's message; remove it with
+ * `DELETE /api/v1/admin/orchestration/conversations/:id`, which has no button.
+ */
 async function runTurn(turn: Turn, key: string, made: string[]): Promise<void> {
   console.log(`\n════ ${turn.label} ════`);
   const def = getSynthDef(turn.synthId) ?? fail(`no synth ${turn.synthId}`);
@@ -175,6 +180,9 @@ async function runTurn(turn: Turn, key: string, made: string[]): Promise<void> {
   const events = parseSse(await res.text());
   console.log(`  ✓ the route streamed ${events.length} SSE events`);
 
+  // Before the start is looked for: a turn refused before it starts a conversation says why only here.
+  for (const e of events) if (e.type === 'error') console.log('  • error', JSON.stringify(e));
+
   const start = pick(events, StartSchema)[0];
   if (!start) fail('the turn ended before it started a conversation');
   const conversationId = start.conversationId;
@@ -183,7 +191,6 @@ async function runTurn(turn: Turn, key: string, made: string[]): Promise<void> {
     where: { id: conversationId },
     data: { tags: [SMOKE_TAG] },
   });
-  for (const e of events) if (e.type === 'error') console.log('  • error', JSON.stringify(e));
 
   const calls = toolResults(events);
   console.log(
