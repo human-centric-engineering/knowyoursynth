@@ -32,7 +32,7 @@ the same PR**, and each row names what deletes it.
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
-    `check:synths`, `smoke:sounds` and `smoke:profile` scripts, `esbuild` as a devDependency, and
+    `check:synths`, `smoke:sounds`, `smoke:profile` and `smoke:tutor` scripts, `esbuild` as a devDependency, and
     the five `@fontsource/*` packages and `@resvg/resvg-js` as dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
@@ -290,7 +290,8 @@ Today they are:
 - `app/(public)/bank/**`, the databank's pages;
 - `app/api/v1/bank/**` and `app/api/v1/admin/bank/**`, the databank's API and its suggestions;
 - `app/admin/synths/**`, the Synths admin pages;
-- `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts` and `scripts/check-synths.ts`;
+- `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts`, `scripts/check-synths.ts` and
+  `scripts/smoke/tutor.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
 - `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
 - `tests/fixtures/synths/**`;

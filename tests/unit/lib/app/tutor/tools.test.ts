@@ -19,6 +19,7 @@ vi.mock('@/lib/orchestration/capabilities/registry', () => ({
 import { initAppCapabilities } from '@/lib/app/capabilities';
 import { TUTOR_TOOL_SLUGS } from '@/lib/app/tutor/agent';
 import { TUTOR_TOOLS } from '@/lib/app/tutor/tools';
+import type { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
 import { panelContext, synth } from '@/tests/helpers/tutor';
 
 const OWNER_WORDS = /user|owner|account|author|email/i;
@@ -40,7 +41,8 @@ const GOOD_ARGS: Record<string, unknown> = {
   },
 };
 
-const tools = TUTOR_TOOLS.map((t) => [t.slug, t] as const);
+// Widened to the base class: each tool's own argument type is checked by its own test.
+const tools = TUTOR_TOOLS.map((t): readonly [string, BaseCapability] => [t.slug, t]);
 
 describe('the tutor tools', () => {
   it('are the four in the plan, and the ones the agent is bound to', () => {
