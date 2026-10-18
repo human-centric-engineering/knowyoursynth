@@ -17,6 +17,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/my-sounds.tsx`    | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
 | `components/app/synth/with-notes.ts`    | Puts the API's "Unusual on…" notes back on the definition                 |
 | `components/app/synth/library.tsx`      | The sound library: search, categories, the loaded sound                   |
+| `components/app/tutor/tutor-panel.tsx`  | The tutor, under the Inspector ([`tutor.md`](./tutor.md#the-panel))       |
 | `components/app/synth/lesson.tsx`       | The lesson: how it works, build it step by step, make it yours            |
 | `components/app/synth/tour.tsx`         | The orientation tour, docked under the panel                              |
 | `components/app/synth/lineage.tsx`      | The lineage dialog (History)                                              |
@@ -73,6 +74,13 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **The lesson, the tour and the search only point.** They light controls through
   `highlightStore` and `findStore` and open them in the inspector through `focusStore`. Nothing
   but the page changes the panel.
+- **The tutor changes it through the page too.** It hands the page a change the learner applies,
+  or a sound it designed, and the page puts it on the panel and hands back what undoes it. A
+  designed sound is `designed` in the page: its lesson shows as an open sound's does, until
+  something else opens or it is saved as one of the user's. It is not kept in browser storage
+  ([`tutor.md`](./tutor.md#the-panel)).
+- **A search the library has nothing for** offers the tutor, which puts the request in its
+  composer.
 
 ## The URL
 
@@ -111,9 +119,3 @@ in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.settingsBy`       | Who was signed in when the settings were last changed (`null` for no one), so another user's are not filled into an account                                                                                                                                        |
 | `kys.settingsAt`       | When the settings were last changed (ms), weighed against the account's copy                                                                                                                                                                                       |
-
-## Not here yet
-
-Each arrives with the surface it opens, so no button opens nothing (`B31`):
-
-- the tutor (`f-tutor`), and with it the library's "ask the tutor" hint;

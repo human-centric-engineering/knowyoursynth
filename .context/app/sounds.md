@@ -287,7 +287,9 @@ back.
   sound, so a stored step with a `soundId` is read against the sound's own lesson only: never
   against the library's while their list is loading, nor once the sound or its lesson has gone.
   Deleting the sound mid-lesson drops the step and leaves the panel.
-- **Save as… carries the lesson and the mark**, as it carries the credit to a library sound.
+- **Save as… carries the lesson and the mark**, as it carries the credit to a library sound. So does
+  saving a sound the tutor designed for the first time: Save… sends its lesson with
+  `fromTutor: true` ([`tutor.md`](./tutor.md#apply-and-undo)).
 - **Choosing a library sound** shows the library's lesson again, as it always did.
 
 The publish word check covers the lesson, with its own refusal and the way past it
