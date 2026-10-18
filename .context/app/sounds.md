@@ -228,10 +228,12 @@ build steps, what each control does in it, things to try and a riff. Saving it a
 sounds keeps that lesson with it, so it opens with its steps every time (owner ruling on `f-tutor`,
 2026-10-18). The tutor panel that saves one is t-56 ([`tutor.md`](./tutor.md)).
 
-- **Two columns.** `lesson` (JSONB, null for a sound without one) holds `SoundLesson`
+- **Three columns.** `lesson` (JSONB, null for a sound without one) holds `SoundLesson`
   (`lib/app/sounds/lesson.ts`): the blurb, level, category, how, steps, context, tweaks and
-  phrase (`{ bpm, steps }`), which is everything about a sound but its name. `fromTutor` (false
-  by default) marks one the tutor designed. Every sound saved before t-55 has neither.
+  phrase (`{ bpm, steps }`), which is everything about a sound but its name. `lessonVersion` is
+  the definition version it was checked against, apart from `definitionVersion`, which a new
+  panel moves on. `fromTutor` (false by default) marks one the tutor designed. Every sound saved
+  before t-55 has none of them.
 - **One set of rules for both writers.** `design_sound` takes the lesson from the model and
   `POST /api/v1/sounds` from any client, so both use `SoundLessonSchema`: the tutor's limits,
   refused rather than clamped (1–9 steps, each setting a control or plugging a cable; up to 16
@@ -240,12 +242,15 @@ sounds keeps that lesson with it, so it opens with its steps every time (owner r
   under `lesson.` (`lesson.steps.0.set.filter.cutoff`), and nothing is stored.
 - **Set when the sound is made, then only removed.** `PATCH` takes `lesson: null` and nothing else
   for it. Prisma's typed update writes a JSON column's NULL only with its runtime `DbNull`, which
-  `lib/app/**` may not import, so the store clears it in SQL inside the same locked transaction,
-  keyed on the owner, and sets `updatedAt` on the row itself. The mark stays.
+  `lib/app/**` may not import, so the store clears it and its version in SQL inside the same locked
+  transaction, keyed on the owner, and sets `updatedAt` on the row itself. The mark stays. On a
+  sound with no lesson it changes nothing, so the sound does not move up the list.
 - **Read only while the synth can use it.** The owner's reads, the list and the public read serve
-  the lesson when the sound was saved on the synth's current definition version and the lesson
-  still passes `checkLesson`, since its steps set the panel. Otherwise `lesson` is null; one that
-  fails is logged on its owner's read of the one sound, as a panel that fails is.
+  the lesson when its `lessonVersion` is the synth's current definition version and it still
+  passes `checkLesson`, since its steps set the panel. Otherwise `lesson` is null; one that fails
+  is logged on its owner's read of the one sound, as a panel that fails is. Its own version is
+  what counts: saving a new panel over a sound moves the panel onto the current definition, but
+  the lesson still waits for the mapping between versions (D1), kept as it was.
 - **The list carries it**, unlike the panel: the Lesson panel, the riff, the sound map and the
   inspector read the open sound's lesson as soon as it is open, including on a reload, with no
   second request.
@@ -274,8 +279,14 @@ back.
   lesson saved with this sound_ otherwise. No library sound is marked current in the library
   while it shows.
 - **Stepping through it keeps the sound open**, unlike a library lesson, since the lesson is the
-  sound's own: the header still says _mine_, and Save still writes to it. Nothing is recorded in
-  lesson progress, which is kept for the library's lessons (s4).
+  sound's own: the header still says _mine_. **Save waits for Finish** (`midLesson` on
+  `SoundActions`): the panel is a step of the lesson, not the sound, and saving it would replace
+  the sound with a half-built one. Save as… still keeps a step as a new sound. Nothing is recorded
+  in lesson progress, which is kept for the library's lessons (s4).
+- **A step with one of the user's sounds open is that sound's.** A library step closes the
+  sound, so a stored step with a `soundId` is read against the sound's own lesson only: never
+  against the library's while their list is loading, nor once the sound or its lesson has gone.
+  Deleting the sound mid-lesson drops the step and leaves the panel.
 - **Save as… carries the lesson and the mark**, as it carries the credit to a library sound.
 - **Choosing a library sound** shows the library's lesson again, as it always did.
 

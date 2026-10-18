@@ -129,6 +129,6 @@ describe("collectAppSubjectData, a sound's lesson and the tutor's mark (f-tutor 
       select: Record<string, unknown>;
     };
     expect(where).toEqual({ userId: 'user-1' });
-    expect(select).toMatchObject({ lesson: true, fromTutor: true });
+    expect(select).toMatchObject({ lesson: true, lessonVersion: true, fromTutor: true });
   });
 });

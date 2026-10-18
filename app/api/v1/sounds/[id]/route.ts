@@ -45,6 +45,7 @@ export const PATCH = withAuth<Params>(
     log.info('User sound changed', {
       soundId: sound.id,
       panel: input.panel !== undefined,
+      lessonRemoved: input.lesson === null,
       visibility: input.visibility ?? null,
     });
     return successResponse(sound);

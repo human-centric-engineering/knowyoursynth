@@ -881,8 +881,10 @@ describe('a sound saved with its lesson', () => {
     expect(loadedName()).toBe('Tutor bass');
     expect(screen.getByText('mine')).toBeTruthy();
     expect(cutoff()).toBe('-1');
-    // Still the open sound's buttons, since its lesson is its own.
-    expect(button('Save')).toBeTruthy();
+    // Still the open sound's buttons, since its lesson is its own, but Save waits for the lesson to finish: the panel is
+    // a step of it, not the sound.
+    expect(button('Save')).toBeDisabled();
+    expect(button('Save as…')).toBeEnabled();
     expect(screen.queryByRole('button', { name: 'Save a copy…' })).toBeNull();
 
     // the header's Next step, not the step bar's arrow of the same name
@@ -892,6 +894,7 @@ describe('a sound saved with its lesson', () => {
     expect(screen.getByText('step 2 of 2')).toBeTruthy();
     fireEvent.click(button('Finish'));
     expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(button('Save')).toBeEnabled();
     // The lesson builds the sound as the tutor designed it; the sound as saved differs, and Restore puts it back.
     expect(cutoff()).toBe('-1');
     expect(screen.getByText('1 control moved')).toBeTruthy();
@@ -916,6 +919,46 @@ describe('a sound saved with its lesson', () => {
     expect(api.post.mock.calls[0][1]).toMatchObject({
       body: { name: 'Tutor bass (copy)', lesson: LESSON, fromTutor: true },
     });
+  });
+
+  it('leaves no step behind when the sound is deleted part-way through its lesson', async () => {
+    api.delete.mockResolvedValue(undefined);
+    await openIt();
+    fireEvent.click(button('Build it step by step'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    fireEvent.click(button('Delete…'));
+    fireEvent.click(button('Delete it'));
+    await waitFor(() => expect(api.delete).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.queryByText('mine')).toBeNull());
+    // not read against a library lesson the panel never followed
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(cutoff()).toBe('-1');
+  });
+
+  it('reads a stored step of its lesson only once the list says the sound is theirs', async () => {
+    window.localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        presetId: null,
+        // step 0: the library's first sound has one step, so it would read as "step 1 of 1" against that
+        step: 0,
+        soundId: 'cmtutor',
+        values: { ...def.init, 'filter.cutoff': -1 },
+        cables: [{ from: 'j.lfoTri', to: 'j.cutCv', color: '#fff' }],
+      })
+    );
+    let answer: (list: UserSoundSummary[]) => void = () => undefined;
+    api.get.mockImplementation((path: string) =>
+      path === '/api/v1/sounds'
+        ? new Promise((resolve) => (answer = resolve))
+        : Promise.resolve(TUTOR_BASS)
+    );
+    page();
+    // the list has not answered: no library lesson is walked with this panel
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    await act(async () => answer([tutorSummary]));
+    expect(await screen.findByText('step 1 of 2')).toBeTruthy();
+    expect(loadedName()).toBe('Tutor bass');
   });
 
   it("shows the library's lesson again once a library sound is chosen", async () => {

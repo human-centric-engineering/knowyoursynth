@@ -807,8 +807,11 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
   beforeEach(() => {
     // Removing a lesson is one statement in SQL (`store.ts`), keyed on the sound and its owner, in that order.
     mockPrisma.$executeRaw = vi.fn(async (sql: TemplateStringsArray, ...values: unknown[]) => {
-      const hit = table.rows.filter((r) => r.id === values[0] && r.userId === values[1]);
-      if (sql.join('?').includes('SET "lesson" = NULL')) for (const r of hit) r.lesson = null;
+      const hit = table.rows.filter(
+        (r) => r.id === values[0] && r.userId === values[1] && r.lesson != null
+      );
+      if (sql.join('?').includes('SET "lesson" = NULL'))
+        for (const r of hit) Object.assign(r, { lesson: null, lessonVersion: null });
       return hit.length;
     });
   });
@@ -852,6 +855,27 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
     });
     expect(copy).toMatchObject({ lesson, fromTutor: true, panel: otherPanel });
     expect(rowOf(copy.id)).toMatchObject({ userId: 'user-1', lesson, fromTutor: true });
+  });
+
+  it('does not lend the mark to a copy sent with a lesson of its own', async () => {
+    signIn('user-2');
+    const theirs = await save({
+      synthId: 'model-d',
+      name: 'Their bass',
+      panel,
+      lesson,
+      fromTutor: true,
+    });
+    await publishIt(String(theirs.id));
+    signIn('user-1');
+
+    const mine = { ...lesson, blurb: 'My own words.' };
+    const copy = await save({
+      synthId: 'model-d',
+      source: { shared: String(rowOf(theirs.id).slug) },
+      lesson: mine,
+    });
+    expect(copy).toMatchObject({ lesson: mine, fromTutor: false });
   });
 
   it('is refused at publish for a blocked word, with nothing written, and removing it lets the sound publish', async () => {

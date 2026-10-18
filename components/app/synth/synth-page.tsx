@@ -324,8 +324,16 @@ function Synth({
   // The sound the lesson, the riff, the sound map and the inspector read.
   const shown = ownLesson ?? preset;
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
-  // sound, then.
-  const step = shown && sess.step != null && sess.step < shown.steps.length ? sess.step : null;
+  // sound, then. A step with one of the user's sounds open belongs to that sound's own lesson, since a library step
+  // closes the sound, so it is never read against the library's: not while their list is still loading, and not once
+  // the sound or its lesson has gone.
+  const step =
+    shown &&
+    sess.step != null &&
+    sess.step < shown.steps.length &&
+    (!sess.soundId || ownLesson !== null)
+      ? sess.step
+      : null;
   // The open sound's panel as last saved: what "controls moved" counts from and Restore puts back.
   const [saved, setSaved] = useState<{
     id: string;
@@ -456,6 +464,9 @@ function Synth({
   );
   const mapOn = dimOn || heatOn;
   const soundKey = `${synthId}/${shown?.id ?? ''}/${step}`;
+  // The notes the map probes with, as numbers, so a sound re-read with the same riff (a rename, a share) does not
+  // restart the analysis.
+  const [probeLow, probeHigh] = probeNotes(shown);
   useEffect(() => {
     if (!mapOn) {
       mapperRef.current?.cancel();
@@ -480,7 +491,7 @@ function Synth({
           sess.values,
           sess.cables,
           wheel,
-          probeNotes(shown),
+          [probeLow, probeHigh],
           (progress) =>
             mapStore.set((m) => (m.state || m.key !== soundKey ? m : { ...m, progress })),
           (res) =>
@@ -502,7 +513,7 @@ function Synth({
       }
     }, 300);
     return () => clearTimeout(t);
-  }, [mapOn, synthDef, sess.values, sess.cables, wheel, shown, soundKey]);
+  }, [mapOn, synthDef, sess.values, sess.cables, wheel, probeLow, probeHigh, soundKey]);
 
   const heldRef = useRef(new Set<number>());
   const noteOn = useCallback(
@@ -872,7 +883,8 @@ function Synth({
   const onDeleted = (id: string) => {
     mine.remove(id);
     setSaved(null);
-    patch((s) => (s.soundId === id ? { ...s, soundId: null } : s));
+    // A step of its own lesson goes with it; the panel stays as it is.
+    patch((s) => (s.soundId === id ? { ...s, soundId: null, step: null } : s));
   };
   // What a new sound from this panel credits: the library sound it came from, or the one the open sound was copied
   // from, while the library has it.
@@ -1032,6 +1044,7 @@ function Synth({
                 signedIn={signedIn}
                 signInHref={signInHref}
                 open={openSound}
+                midLesson={ownLesson !== null && step != null}
                 credit={credit}
                 panel={panelInput}
                 onSaved={onSaved}

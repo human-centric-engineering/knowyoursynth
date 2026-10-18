@@ -21,8 +21,9 @@
  *
  * **A lesson** (`f-tutor` t-55, `lesson.ts`) comes with a sound when it is made, checked against the synth as its panel
  * is, and refused (400) when anything in it is wrong. It is never changed after, only removed: saving a new panel over
- * the sound leaves it as it was, so it goes on teaching the sound as it was designed. On read it is checked again, and
- * served only while the synth can use it, as the panel is.
+ * the sound leaves it as it was, so it goes on teaching the sound as it was designed. It keeps the definition version it
+ * was checked against (`lessonVersion`), which a new panel does not move, and on read it is checked again and served
+ * only while that is the synth's current version, as the panel is.
  */
 import type { Prisma, UserSound } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
@@ -104,13 +105,14 @@ function checkSentLesson(def: AppSynthDef, lesson: SoundLessonInput): SoundLesso
 }
 
 /**
- * The stored lesson as the synth can use it now, or null. One saved on a definition version the synth has moved on
- * from waits for the mapping its panel waits for (`panelOf`), and one that no longer passes is not served, since its
- * steps set the panel.
+ * The stored lesson as the synth can use it now, or null. One checked against a definition version the synth has moved
+ * on from waits for the mapping a panel waits for (`panelOf`): its own version, not the panel's, since a new panel saved
+ * over the sound moves the panel's on without checking the lesson. One that no longer passes is not served either, since
+ * its steps set the panel.
  */
 function lessonOf(row: UserSound, log: boolean): SoundLesson | null {
   const def = getSynthDef(row.synthId);
-  if (row.lesson == null || !def || row.definitionVersion !== def.version) return null;
+  if (row.lesson == null || !def || row.lessonVersion !== def.version) return null;
   const stored = storedLesson(row.lesson);
   const result = stored ? checkLesson(def, stored) : null;
   if (result?.ok) return result.value;
@@ -316,8 +318,11 @@ export async function createUserSound(
     source = shared.library;
     sourceName = shared.name;
     if (input.notes === undefined) notes = shared.notes;
-    if (input.lesson === undefined) lesson = shared.lesson;
-    if (input.fromTutor === undefined) fromTutor = shared.fromTutor;
+    // The mark goes with the lesson it describes: a copy sent with a lesson of its own does not take the source's.
+    if (input.lesson === undefined) {
+      lesson = shared.lesson;
+      if (input.fromTutor === undefined) fromTutor = shared.fromTutor;
+    }
     if (!panel) {
       if (!shared.panel)
         refuse(`That sound cannot be played on ${def.id} as it is now`, [
@@ -360,7 +365,7 @@ export async function createUserSound(
       notes,
       values: toJson(panel.values),
       cables: toJson(panel.cables),
-      ...(lesson ? { lesson: toJson(lesson) } : {}),
+      ...(lesson ? { lesson: toJson(lesson), lessonVersion: def.version } : {}),
       fromTutor,
       sourceSoundId: source?.id ?? null,
       sourceSlug: source?.slug ?? null,
@@ -427,11 +432,13 @@ export async function updateUserSound(
 
       // Removing the lesson takes text off a public page and never puts any up, so a published sound needs no check for
       // it. In SQL: the typed update writes a JSON column's NULL only with Prisma's runtime `DbNull`, which lib/app may
-      // not import. Keyed on the owner too, and undone with the rest if the update below finds nothing. That update
-      // sets `updatedAt` itself: with nothing else to change, Prisma would not write the row at all.
+      // not import. Keyed on the owner too, and undone with the rest if the update below finds nothing. When it removed
+      // one, that update sets `updatedAt` itself: with nothing else to change, Prisma would not write the row at all. A
+      // sound with no lesson is left as it was.
       if (input.lesson === null) {
-        await tx.$executeRaw`UPDATE "user_sound" SET "lesson" = NULL WHERE "id" = ${id} AND "userId" = ${userId}`;
-        data.updatedAt = new Date();
+        const removed =
+          await tx.$executeRaw`UPDATE "user_sound" SET "lesson" = NULL, "lessonVersion" = NULL WHERE "id" = ${id} AND "userId" = ${userId} AND "lesson" IS NOT NULL`;
+        if (removed > 0) data.updatedAt = new Date();
       }
 
       // Keyed on the owner again, so a sound deleted meanwhile (a delete does not take the lock) is a 404.

@@ -134,7 +134,8 @@ so it never changes, which is variations, and D5 drops variations.
 `POST /api/v1/sounds` with `source: { shared: <slug> }`. A new, private sound for the caller,
 from any link or published sound on that synth. Private, unknown and on another synth are one 400. With no panel, name, notes, lesson or mark sent, it takes the shared sound's; a shared sound the synth can
 no longer play needs the panel sent. So a copy carries the sound's lesson and its `fromTutor`
-mark (t-55), whatever panel it sends.
+mark (t-55), whatever panel it sends. The mark goes with the lesson it describes: a copy sent
+with a lesson of its own does not take the source's mark.
 
 - **`sourceUserSoundId`** records the source, a self-relation `ON DELETE SET NULL`: deleting the
   source, or erasing its owner, leaves the copy with its new owner and no credit.

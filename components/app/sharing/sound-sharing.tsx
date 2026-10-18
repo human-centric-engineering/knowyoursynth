@@ -312,6 +312,7 @@ export function PublishDialog({
   const [failure, setFailure] = useState<string | null>(null);
   // The lesson is what was refused: the one thing to offer is publishing without it.
   const [lessonRefused, setLessonRefused] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [lessonRemoved, setLessonRemoved] = useState(false);
 
   useEffect(() => {
@@ -340,6 +341,7 @@ export function PublishDialog({
   const publish = async () => {
     setBusy(true);
     setFailure(null);
+    setLessonRemoved(false);
     try {
       const d = await apiClient.post<UserSoundDetail>(`${soundPath(sound.id)}/publish`, {
         body: { confirm: true, tags },
@@ -357,7 +359,7 @@ export function PublishDialog({
   };
 
   const removeLesson = async () => {
-    setBusy(true);
+    setRemoving(true);
     setFailure(null);
     try {
       onChanged(
@@ -368,7 +370,7 @@ export function PublishDialog({
     } catch (err) {
       setFailure(failureOf(err, 'remove the lesson'));
     } finally {
-      setBusy(false);
+      setRemoving(false);
     }
   };
 
@@ -476,11 +478,11 @@ export function PublishDialog({
                 <span>Removing it takes the lesson off this sound for good. The panel stays.</span>
                 <button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || removing}
                   onClick={() => void removeLesson()}
                   className={buttonClass}
                 >
-                  Remove the lesson
+                  {removing ? 'Removing…' : 'Remove the lesson'}
                 </button>
               </div>
             )}
@@ -493,7 +495,7 @@ export function PublishDialog({
               <button type="button" onClick={onClose} className={buttonClass}>
                 Cancel
               </button>
-              <button type="submit" disabled={!ticked || busy} className={buttonClass}>
+              <button type="submit" disabled={!ticked || busy || removing} className={buttonClass}>
                 {busy ? 'Publishing…' : 'Publish'}
               </button>
             </DialogFooter>

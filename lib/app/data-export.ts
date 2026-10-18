@@ -424,6 +424,7 @@ function collectSounds(userId: string) {
       values: true,
       cables: true,
       lesson: true,
+      lessonVersion: true,
       fromTutor: true,
       sourceSlug: true,
       sourceName: true,

@@ -548,6 +548,9 @@ model UserSound {
   /// it, things to try and a riff (`f-tutor` t-55). Null for a sound saved without one. Set when the sound is made, and
   /// after that only removed: saving a new panel over the sound leaves it as it was.
   lesson            Json?
+  /// The definition version the lesson was checked against, set with it. Not `definitionVersion`, which a new panel
+  /// moves on: a lesson waits for the mapping between versions (D1) until it is checked again.
+  lessonVersion     Int?
   /// Whether the tutor designed it. A copy carries it, as it carries the lesson.
   fromTutor         Boolean         @default(false)
   /// The library sound it was copied from. Null for a sound made from scratch, and once that sound is removed.

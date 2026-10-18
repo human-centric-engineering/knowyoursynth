@@ -27,8 +27,9 @@
  *    (`sound_report_reporterId_fkey`, `sound_report_resolvedById_fkey`, `ON DELETE SET NULL`), and takes the reports
  *    about their own sounds with those sounds (`sound_report_soundId_fkey` cascades).
  * 6. A lesson (`f-tutor` t-55): the published sound was saved with one, which the public read serves, a copy carries
- *    and the export holds with the tutor's mark. Removing it is one statement in SQL (`store.ts`), which another user
- *    cannot run on it: it leaves the column NULL and the mark as it was, and moves `updatedAt`.
+ *    and the export holds with the tutor's mark. Another user's request to remove it is refused (the store's owner
+ *    check, before any SQL runs). Its owner's removal is one statement in SQL (`store.ts`): it leaves the lesson and its
+ *    version NULL and the mark as it was, and moves `updatedAt`.
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -329,7 +330,7 @@ async function main(): Promise<void> {
     );
     const untouched = await prisma.userSound.findUniqueOrThrow({ where: { id: scratch.id } });
     check(
-      notTheirs === 404 && untouched.lesson !== null,
+      notTheirs === 404 && untouched.lesson !== null && untouched.lessonVersion === def.version,
       "another user cannot remove a sound's lesson: a 404, and the lesson stays"
     );
     const removed = await updateUserSound(subject.id, scratch.id, { lesson: null });
@@ -337,9 +338,10 @@ async function main(): Promise<void> {
     check(
       removed.lesson === null &&
         cleared.lesson === null &&
+        cleared.lessonVersion === null &&
         cleared.fromTutor &&
         cleared.updatedAt > before.updatedAt,
-      'its owner removes it: the column is NULL, the mark stays and updatedAt moves'
+      'its owner removes it: the lesson and its version are NULL, the mark stays and updatedAt moves'
     );
     const panels = bundle.app.synthPanels;
     check(

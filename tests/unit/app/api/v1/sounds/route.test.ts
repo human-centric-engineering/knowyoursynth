@@ -169,10 +169,18 @@ beforeEach(() => {
   // a change runs in a transaction under the owner's lock (`lockOwnersSounds`): the same fakes, and a no-op lock
   mockPrisma.$transaction = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => fn(mockPrisma));
   mockPrisma.$queryRaw = vi.fn();
-  // Removing a lesson is one statement in SQL (`store.ts`), keyed on the sound and its owner, in that order.
+  // Removing a lesson is one statement in SQL (`store.ts`), keyed on the sound and its owner, in that order, and only
+  // on a sound that has one.
   mockPrisma.$executeRaw = vi.fn(async (sql: TemplateStringsArray, ...values: unknown[]) => {
-    const hit = table.rows.filter((r) => r.id === values[0] && r.userId === values[1]);
-    if (sql.join('?').includes('SET "lesson" = NULL')) for (const r of hit) r.lesson = null;
+    const text = sql.join('?');
+    if (!text.includes('SET "lesson" = NULL, "lessonVersion" = NULL')) return 0;
+    const hit = table.rows.filter(
+      (r) =>
+        r.id === values[0] &&
+        r.userId === values[1] &&
+        (!text.includes('"lesson" IS NOT NULL') || (r.lesson !== null && r.lesson !== undefined))
+    );
+    for (const r of hit) Object.assign(r, { lesson: null, lessonVersion: null });
     return hit.length;
   });
   mockPrisma.synth = {
@@ -524,7 +532,7 @@ describe('a sound saved with its lesson (f-tutor t-55)', () => {
   it('stores the lesson and the mark, and reads both back, on the sound and in the list', async () => {
     const { data } = await create();
     expect(data).toMatchObject({ fromTutor: true, lesson });
-    expect(table.rows[0]).toMatchObject({ fromTutor: true, lesson });
+    expect(table.rows[0]).toMatchObject({ fromTutor: true, lesson, lessonVersion: modelD.version });
 
     const id = String(data!.id);
     const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
@@ -544,6 +552,7 @@ describe('a sound saved with its lesson (f-tutor t-55)', () => {
     expect(data).toMatchObject({ lesson: null, fromTutor: false });
     expect(table.rows[0]).toMatchObject({ fromTutor: false });
     expect(table.rows[0]).not.toHaveProperty('lesson');
+    expect(table.rows[0]).not.toHaveProperty('lessonVersion');
   });
 
   it("refuses a lesson past the tutor's limits, naming each field, and stores nothing", async () => {
@@ -599,10 +608,21 @@ describe('a sound saved with its lesson (f-tutor t-55)', () => {
     const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson: null }), ctx(id));
     expect(res.status).toBe(200);
     expect((await json(res)).data).toMatchObject({ lesson: null, fromTutor: true });
-    expect(table.rows[0].lesson).toBeNull();
+    expect(table.rows[0]).toMatchObject({ lesson: null, lessonVersion: null });
+    // nothing else changed, so the update writes the time itself, or Prisma would skip the row
+    expect(table.client.updateMany.mock.lastCall![0].data).toEqual({ updatedAt: expect.any(Date) });
 
     const rewrite = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson }), ctx(id));
     expect(rewrite.status).toBe(400);
+  });
+
+  it('leaves a sound with no lesson as it was when asked to remove one', async () => {
+    const { data } = await json(await save({ synthId: 'model-d', name: 'Plain', panel }));
+    const id = String(data!.id);
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson: null }), ctx(id));
+    expect(res.status).toBe(200);
+    // no time written: the sound does not move to the top of the list
+    expect(table.client.updateMany.mock.lastCall![0].data).toEqual({});
   });
 
   it("does not remove another user's lesson", async () => {
@@ -619,10 +639,30 @@ describe('a sound saved with its lesson (f-tutor t-55)', () => {
 
   it('is not served on a definition version the synth has moved on from', async () => {
     const id = String((await create()).data!.id);
-    table.rows[0].definitionVersion = modelD.version - 1;
+    Object.assign(table.rows[0], {
+      definitionVersion: modelD.version - 1,
+      lessonVersion: modelD.version - 1,
+    });
     const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
     expect(got.data).toMatchObject({ lesson: null, fromTutor: true });
     expect(mockLog.error).not.toHaveBeenCalled();
+  });
+
+  it('keeps waiting for its own version when a new panel moves the sound onto the current one', async () => {
+    const id = String((await create()).data!.id);
+    Object.assign(table.rows[0], {
+      definitionVersion: modelD.version - 1,
+      lessonVersion: modelD.version - 1,
+    });
+    const next = { values: { [cont.id]: cont.max }, cables: [] };
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { panel: next }), ctx(id));
+    expect((await json(res)).data).toMatchObject({
+      definitionVersion: modelD.version,
+      playable: true,
+      lesson: null,
+    });
+    // kept, for the mapping to the version the panel is on now
+    expect(table.rows[0]).toMatchObject({ lesson, lessonVersion: modelD.version - 1 });
   });
 
   it("is not served once it no longer fits the synth, logged on its owner's read only", async () => {
