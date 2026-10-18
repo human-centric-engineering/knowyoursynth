@@ -101,7 +101,7 @@ describe('design_sound: a good design', () => {
       context: { 'filter.cutoff': expect.any(String) },
       tweaks: [{ id: 'filter.emphasis', try: expect.any(String), hear: expect.any(String) }],
     });
-    expect(sound?.id).toMatch(/^tutor-/);
+    expect(sound?.id).toMatch(/^tutor-[0-9a-f]{12}$/);
     expect(sound?.steps.map((s) => s.title)).toEqual([
       'Two oscillators an octave apart',
       'Close the filter',

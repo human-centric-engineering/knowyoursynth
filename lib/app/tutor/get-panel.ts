@@ -10,11 +10,12 @@ import type {
 } from '@/lib/orchestration/capabilities/types';
 
 /**
- * How many changed controls one read lists. A library sound changes a few dozen; the cap is there so a panel that
- * differs from init everywhere (the DeepMind has 1,568 controls) cannot put tens of thousands of tokens into one turn.
- * `describe_synth` shows every control's current value, section by section.
+ * How many changed controls one read lists. A library sound changes a few dozen. A row is about 100 characters, and the
+ * tool loop sends every result again on each later step, so the cap keeps one read near `describe_synth`'s own budget
+ * (8,000 characters) however much of a DeepMind panel differs from init. `describe_synth` shows every control's current
+ * value, section by section.
  */
-const MAX_CHANGED = 300;
+const MAX_CHANGED = 100;
 
 const schema = z.object({}).strict();
 

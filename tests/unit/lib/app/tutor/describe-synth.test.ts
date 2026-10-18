@@ -76,6 +76,16 @@ describe('describe_synth on a small synth', () => {
   });
 });
 
+describe('describe_synth and the jacks it does not list', () => {
+  it('refuses a prefix that matches only a jack the sound engine does not model', async () => {
+    // Pro-1's mod wheel jack has no destination, so describeSynth leaves it out; a success would describe nothing.
+    const pro1 = synth('pro-1');
+    expect(pro1.jacks.find((j) => j.id === 'j.modWh')).toBeDefined();
+    const result = await run({ prefix: 'j.modWh' }, panelContext(pro1));
+    expect(result).toMatchObject({ success: false, error: { code: 'unknown_prefix' } });
+  });
+});
+
 describe('describe_synth on the DeepMind', () => {
   const ctx = panelContext(deepmind);
 

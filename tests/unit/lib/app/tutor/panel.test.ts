@@ -29,12 +29,15 @@ describe('readPanel', () => {
 
   it('refuses a conversation with no panel', () => {
     expect(readPanel({ userId: 'u', agentId: 'a' })).toMatchObject({ ok: false, code: 'no_panel' });
-    expect(
-      readPanel(panelContext(modelD, {}, { entityContext: { synthId: 'model-d' } }))
-    ).toMatchObject({
-      ok: false,
-      code: 'no_panel',
-    });
+  });
+
+  it('refuses a panel that came but is not the right shape, naming what is missing', () => {
+    const read = readPanel(panelContext(modelD, {}, { entityContext: { synthId: 'model-d' } }));
+    expect(read.ok).toBe(false);
+    if (read.ok) return;
+    expect(read.code).toBe('invalid_panel');
+    expect(read.message).toContain('version');
+    expect(read.message).toContain('panel');
   });
 
   it('refuses a synth the registry does not have', () => {

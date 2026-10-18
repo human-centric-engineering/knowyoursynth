@@ -90,10 +90,8 @@ function toolResults(events: ChatEvent[]): { slug: string; result: unknown }[] {
   );
 }
 
-async function runTurn(
-  turn: Turn,
-  userId: string
-): Promise<{ conversationId: string; costUsd: number }> {
+/** One turn. Its conversation goes into `made` as soon as it exists, so a turn that fails is still cleaned up. */
+async function runTurn(turn: Turn, userId: string, made: string[]): Promise<{ costUsd: number }> {
   console.log(`\n════ ${turn.label} ════`);
   const def = getSynthDef(turn.synthId) ?? fail(`no synth ${turn.synthId}`);
   const entityContext: TutorEntityContext = {
@@ -114,7 +112,10 @@ async function runTurn(
     entityContext,
   })) {
     events.push(event);
-    if (event.type === 'start') conversationId = event.conversationId;
+    if (event.type === 'start') {
+      conversationId = event.conversationId;
+      made.push(conversationId);
+    }
     if (event.type === 'content') reply += event.delta;
     if (event.type === 'error') console.log('  • error', JSON.stringify(event));
   }
@@ -151,6 +152,9 @@ async function runTurn(
     );
   console.log('  ✓ the proposal passes validateSound on the panel it was made against');
 
+  // `streamChat` writes cost rows without waiting (`void logCost(...)`), so give the last one time to land before
+  // reading them, and before the conversation it points at is deleted.
+  await new Promise((resolve) => setTimeout(resolve, 500));
   const done = events.find((e) => e.type === 'done');
   const logged = await prisma.aiCostLog.aggregate({
     where: { conversationId },
@@ -162,7 +166,7 @@ async function runTurn(
   console.log(`  model: ${binding}; ${logged._count} cost rows, logged $${costUsd.toFixed(6)}`);
   if (!(costUsd > 0)) fail(`${turn.label}: the turn logged no cost`);
   console.log('  ✓ the turn logged a cost above zero');
-  return { conversationId, costUsd };
+  return { costUsd };
 }
 
 function isOk(result: unknown): boolean {
@@ -208,7 +212,7 @@ async function main(): Promise<void> {
 
   const made: string[] = [];
   try {
-    for (const turn of TURNS) made.push((await runTurn(turn, user.id)).conversationId);
+    for (const turn of TURNS) await runTurn(turn, user.id, made);
   } finally {
     if (made.length) {
       await prisma.aiMessage.deleteMany({ where: { conversationId: { in: made } } });

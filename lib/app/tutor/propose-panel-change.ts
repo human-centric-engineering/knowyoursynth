@@ -126,7 +126,12 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
         });
     });
     args.removeCables.forEach((cable, i) => {
-      if (!hasCable(cables, cable))
+      if (hasCable(args.removeCables.slice(0, i), cable))
+        problems.push({
+          path: `removeCables.${i}`,
+          message: `Cable ${cableName(cable)} is listed twice`,
+        });
+      else if (!hasCable(cables, cable))
         problems.push({
           path: `removeCables.${i}`,
           message: `Cable ${cableName(cable)} is not in`,

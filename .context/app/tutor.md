@@ -69,15 +69,15 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 `lib/app/platform-agents.ts`, created by the reconcile in the install org only
 (`audience: 'install-only'`), and brought back in line with the definition after every deploy.
 
-| Field              | Value                                                            | Whose                           |
-| ------------------ | ---------------------------------------------------------------- | ------------------------------- |
-| Visibility         | `internal` (the baseline)                                        | the code's                      |
-| Temperature        | 0.4                                                              | the code's                      |
-| Max tokens         | 4,096 (a designed sound is the longest reply, as tool arguments) | the code's                      |
-| Tools              | the four below                                                   | the code's                      |
-| Provider and model | none: inherits the org's default at run time                     | the admin's                     |
-| Per-turn cap       | **$0.20** to start (BeatBuddy's)                                 | the admin's, set once on create |
-| Monthly budget     | **$50** to start                                                 | the admin's, set once on create |
+| Field              | Value                                                                     | Whose                           |
+| ------------------ | ------------------------------------------------------------------------- | ------------------------------- |
+| Visibility         | `internal` (the baseline)                                                 | the code's                      |
+| Temperature        | 0.4                                                                       | the code's                      |
+| Max tokens         | 8,192 (the largest designed sound is over 4,096 tokens of tool arguments) | the code's                      |
+| Tools              | the four below                                                            | the code's                      |
+| Provider and model | none: inherits the org's default at run time                              | the admin's                     |
+| Per-turn cap       | **$0.20** to start (BeatBuddy's)                                          | the admin's, set once on create |
+| Monthly budget     | **$50** to start                                                          | the admin's, set once on create |
 
 The starting caps are placeholders for the admin to tune. The production provider, model and the
 learner's daily allowance are decided at `x4` and recorded against D6. Changing the instructions
@@ -87,7 +87,7 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 
 | Tool                   | Arguments                                                         | Returns                                                                                                     | Refuses with                                                |
 | ---------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 300; the cables; the version | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel` |
+| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables; the version | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel` |
 | `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                   | the above, `unknown_section`, `unknown_prefix`              |
 | `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                      | the above, `invalid_proposal`, `no_change`                  |
 | `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                            | the above, `invalid_design`                                 |
@@ -103,6 +103,10 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   lengths `sanitizePreset` cut to.
 - A refusal lists up to twelve problems, each with its path (`steps.1.set.filter.drive`), then
   how many more there are.
+- **No per-tool rate limit.** The dispatcher counts a capability's `rateLimit` per agent, and one
+  tutor serves every learner, so any limit there would be a cap for the whole app. The rows leave
+  it `null` (unlimited); the tools are pure computation, and a learner's limit is the stream
+  route's daily allowance.
 
 ## The lookup decision
 

@@ -69,6 +69,12 @@ describe('003-tutor-tools', () => {
     }
   );
 
+  it('sets no per-tool rate limit: the dispatcher counts it per agent, and one tutor serves everyone', async () => {
+    const { ctx, upsert } = seedContext();
+    await seed.run(ctx);
+    for (const [{ create }] of upsert.mock.calls) expect(create).not.toHaveProperty('rateLimit');
+  });
+
   it("re-applies only the code-owned fields on update, leaving the admin's alone", async () => {
     const { ctx, upsert } = seedContext();
     await seed.run(ctx);
@@ -124,6 +130,8 @@ describe('003-tutor-tools', () => {
         '../../../lib/app/tutor/agent.ts',
         '../../../lib/app/tutor/tools.ts',
         '../../../lib/app/tutor/propose-panel-change.ts',
+        // design_sound's definition carries the contract's category and module lists.
+        '../../../lib/app/synths/contract.ts',
       ])
     );
   });

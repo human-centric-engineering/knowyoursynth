@@ -144,6 +144,18 @@ describe('propose_panel_change: refused against the panel', () => {
       'listed twice'
     ));
 
+  it('refuses a cable to remove listed twice', () =>
+    expectRefused(
+      {
+        removeCables: [
+          ['j.lfoTri', 'j.cutCv'],
+          ['j.lfoTri', 'j.cutCv'],
+        ],
+      },
+      'invalid_proposal',
+      'listed twice'
+    ));
+
   it('refuses a proposal that changes nothing', () =>
     expectRefused({ set: { 'filter.cutoff': 2 } }, 'no_change'));
 

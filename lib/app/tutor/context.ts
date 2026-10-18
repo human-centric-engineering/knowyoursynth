@@ -4,7 +4,8 @@
  *
  * The synth's name, what it is, and its section index, and no more: the controls are `describe_synth`'s, looked up as
  * the model needs them, because the tool loop sends the system prompt again on every iteration (the numbers are in
- * `.context/app/tutor.md`). The same for every learner, so it caches by synth.
+ * `.context/app/tutor.md`). `buildContext` caches it for a minute per learner and drops it after a tool call; it is
+ * cheap to rebuild (the definition is in memory).
  */
 import { describesWhole, sectionIndex } from '@/lib/app/tutor/sections';
 import { getSynthDef } from '@/lib/app/synths/defs';

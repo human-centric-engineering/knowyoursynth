@@ -244,13 +244,16 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     // `registerContextContributor` writes, which `context-builder.ts` keeps on `globalThis`.
     assert: () => {
       __resetContextContributorsForTests();
-      initAppContextContributors();
-      const store = (globalThis as { sunriseChatContextContributors?: Map<string, unknown> })
-        .sunriseChatContextContributors;
-      expect([...(store ?? new Map<string, unknown>())]).toEqual([
-        [TUTOR_CONTEXT_TYPE, synthContext],
-      ]);
-      __resetContextContributorsForTests();
+      try {
+        initAppContextContributors();
+        const store = (globalThis as { sunriseChatContextContributors?: Map<string, unknown> })
+          .sunriseChatContextContributors;
+        expect([...(store ?? new Map<string, unknown>())]).toEqual([
+          [TUTOR_CONTEXT_TYPE, synthContext],
+        ]);
+      } finally {
+        __resetContextContributorsForTests();
+      }
     },
   },
   {

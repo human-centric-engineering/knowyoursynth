@@ -169,7 +169,8 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
     if (!read.ok) return Promise.resolve(this.error(read.message, read.code));
     const { def } = read.panel;
     const checked = validatePreset(def, {
-      id: `tutor-${Date.now().toString(36)}`,
+      // Random, not time-based: two designs in one model step must not share an id.
+      id: `tutor-${crypto.randomUUID().replace(/-/g, '').slice(0, 12)}`,
       name: args.name,
       ref: 'Designed by the tutor from your description',
       artist: 'AI tutor',

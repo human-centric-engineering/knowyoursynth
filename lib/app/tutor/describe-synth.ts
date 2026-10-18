@@ -34,6 +34,9 @@ export interface DescribeData {
 /** How many example labels an index row gives for a prefix. */
 const EXAMPLES = 3;
 
+/** A jack the sound engine models, which is every jack `describeSynth` lists: an output with a signal, an input with a destination. */
+const modelled = (j: Jack) => (j.dir === 'out' ? !!j.signal : !!j.dest);
+
 /**
  * `describe_synth`: the synth's controls, jacks and legal values, with the panel's current values, from the
  * definition (`describeSynth`). A lookup for every synth (the decision and its numbers are in `.context/app/tutor.md`):
@@ -90,7 +93,8 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     }
 
     let controls = def.controls;
-    let jacks = def.jacks;
+    // Only the jacks `describeSynth` lists, so a prefix or a count never rests on one it leaves out.
+    let jacks = def.jacks.filter(modelled);
     let title = `The ${def.name}`;
     if (section !== undefined) {
       // A find, not a lookup in `areaMap`: the id comes from the model, and a plain object would answer `constructor`.
@@ -100,7 +104,9 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
           `The ${def.name} has no section "${section}". Its sections are: ${def.areas.map((a) => a.id).join(', ')}.`,
           'unknown_section'
         );
-      ({ controls, jacks } = areaMembers(def, area));
+      const members = areaMembers(def, area);
+      controls = members.controls;
+      jacks = members.jacks.filter(modelled);
       title = `Section ${area.id} (${area.label})`;
     }
     if (prefix !== undefined) {
@@ -121,7 +127,7 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     return this.success({
       synthId,
       scope: 'index',
-      text: this.index(panel, { controls, jacks, title, section, prefix }),
+      text: this.index(def, textOf, { controls, jacks, title, section, prefix }),
     });
   }
 
@@ -131,7 +137,8 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
    * (`fx1.type`, the effect a slot holds) unless even they are too many.
    */
   private index(
-    { def, values, cables }: TutorPanel,
+    def: TutorPanel['def'],
+    textOf: (controls: Control[], jacks: Jack[]) => string,
     at: { controls: Control[]; jacks: Jack[]; title: string; section?: string; prefix?: string }
   ): string {
     const { controls, jacks, title, section, prefix } = at;
@@ -151,14 +158,9 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
       g.controls.length + g.jacks.length === 1 && (g.controls[0]?.id ?? g.jacks[0]?.id) === key;
     const leaves = [...groups].filter(([key, g]) => isLeaf(key, g));
     let full = leaves.length
-      ? describeSynth(
-          {
-            ...def,
-            controls: leaves.flatMap(([, g]) => g.controls),
-            jacks: leaves.flatMap(([, g]) => g.jacks),
-          },
-          values,
-          cables.map(([from, to]) => ({ from, to }))
+      ? textOf(
+          leaves.flatMap(([, g]) => g.controls),
+          leaves.flatMap(([, g]) => g.jacks)
         )
       : '';
     if (full.length > DESCRIBE_MAX_CHARS) full = '';

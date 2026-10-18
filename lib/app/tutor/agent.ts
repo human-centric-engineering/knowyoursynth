@@ -52,8 +52,9 @@ export const TUTOR_AGENT: PlatformAgentDefinition = {
       'The tutor on the synth page: explains the sound on the panel, proposes changes the learner applies, and designs new sounds with a lesson.',
     systemInstructions: TUTOR_INSTRUCTIONS,
     temperature: 0.4,
-    // A designed sound is the longest reply: up to nine steps with their lesson lines, as tool arguments.
-    maxTokens: 4096,
+    // A designed sound is the longest reply, as tool arguments: the largest `design_sound` allows is about 18,000
+    // characters, over 4,096 tokens. A call cut off at the cap arrives as `{}`, and every retry would be cut off too.
+    maxTokens: 8192,
   },
   capabilities: TUTOR_TOOL_SLUGS,
   knowledgeTags: [],

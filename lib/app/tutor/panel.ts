@@ -62,12 +62,24 @@ export function refusal(lead: string, problems: readonly Problem[]): string {
 
 /** The panel this turn is about, checked; or why there is none a tool can use. */
 export function readPanel(context: CapabilityContext): PanelRead {
-  const parsed = TutorEntityContextSchema.safeParse(context.entityContext);
-  if (!parsed.success)
+  if (context.entityContext === undefined)
     return {
       ok: false,
       code: 'no_panel',
       message: 'No synth panel came with this conversation, so there is nothing to read or change.',
+    };
+  const parsed = TutorEntityContextSchema.safeParse(context.entityContext);
+  if (!parsed.success)
+    return {
+      ok: false,
+      code: 'invalid_panel',
+      message: refusal(
+        'The panel that came with this conversation is not one a synth can hold:',
+        parsed.error.issues.map((issue) => ({
+          path: issue.path.map(String).join('.'),
+          message: issue.message,
+        }))
+      ),
     };
   const { synthId, version, panel } = parsed.data;
   const def = getSynthDef(synthId);
