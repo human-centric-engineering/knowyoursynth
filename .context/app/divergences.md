@@ -208,6 +208,22 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** working as designed upstream; nothing to raise.
 - **Delete when:** the fork no longer registers a drift probe.
 
+### The raw-SQL allowlist, with our row locks and the lesson's removal
+
+- **Files:** `tests/unit/db-raw-sql-allowlist.test.ts`
+- **Change:** `ALLOWLIST` admits our raw-SQL sites, each with its reason: the `FOR UPDATE` row
+  locks in `lib/app/catalogue/edit.ts` (`f-catalogue-admin`), `lib/app/profile/instruments.ts`
+  (`f-profiles` r2), `lib/app/sounds/reports.ts` and `lib/app/sounds/sharing.ts` (`f-sharing` h1
+  and h4), and the `UPDATE` in `lib/app/sounds/store.ts` that removes a sound's lesson (`f-tutor`
+  t-55, under a `FORK` comment). The first four were added without a row here; t-55 records them.
+- **Why:** the guard fails on any raw-SQL call in `lib/**` or `app/**` it does not list, and the
+  list has no fork seam. Each site touches only system models (`user`, `user_sound`, `synth`), keyed
+  on bound parameters, so none needs the tenancy policies the guard is watching for.
+- **On conflict:** take theirs, and re-add our five entries in path order (the test checks the
+  order).
+- **Upstream:** working as designed upstream: the guard asks a fork to admit its own sites.
+- **Delete when:** a fork seam for the allowlist exists, or the fork has no raw SQL.
+
 ### The databank's pages and published sounds in the sitemap
 
 - **Files:** `app/sitemap.ts`, `tests/unit/app/public/sitemap.test.ts`

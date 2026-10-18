@@ -11,7 +11,10 @@
  * - another user's sound is a 404 on read, change and delete, and is left as it was; their list is not the caller's;
  * - a panel that does not fit the synth is refused with every problem named, and nothing is stored;
  * - copying a library sound records its credit, and with no panel the copy is the library sound as it ends;
- * - a sound saved on an older definition version is listed and kept, but has no panel to play, and says why.
+ * - a sound saved on an older definition version is listed and kept, but has no panel to play, and says why;
+ * - a lesson (`f-tutor` t-55) is stored with the sound and the tutor's mark, refused when it breaks the tutor's limits
+ *   or does not fit the synth, left as it was by a new panel, removed by `lesson: null`, and not served once the synth
+ *   cannot use it.
  *
  * What a unit test cannot prove, because it has no database, is in `npm run smoke:sounds`: the hand-written cascade
  * that erases a user's sounds through `eraseUser`, and the export that carries them.
@@ -62,6 +65,32 @@ const outJack = modelD.jacks.find((j) => j.dir === 'out' && j.signal)!;
 const inJack = modelD.jacks.find((j) => j.dir === 'in' && j.dest)!;
 
 const panel = { values: { [cont.id]: cont.min }, cables: [[outJack.id, inJack.id]] };
+
+/** A lesson for Model D inside every limit `design_sound` sets: one step sets a control, one plugs in a cable. */
+const lesson = {
+  blurb: 'A low, round bass.',
+  level: 1,
+  category: 'bass',
+  how: 'One oscillator through the filter, closed most of the way.',
+  steps: [
+    {
+      title: 'Close the filter',
+      module: cont.module,
+      why: 'Darker.',
+      set: { [cont.id]: cont.min },
+    },
+    { title: 'Plug it in', module: 'patch', why: 'A cable.', cables: [[outJack.id, inJack.id]] },
+  ],
+  context: { [cont.id]: 'How dark the sound is.' },
+  tweaks: [{ id: cont.id, try: 'Open it up', hear: 'It gets brighter.' }],
+  phrase: {
+    bpm: 100,
+    steps: [
+      [0, 36, 1],
+      [1, 43, 1],
+    ],
+  },
+};
 
 function session(id: string) {
   const base = createMockAuthSession();
@@ -140,6 +169,20 @@ beforeEach(() => {
   // a change runs in a transaction under the owner's lock (`lockOwnersSounds`): the same fakes, and a no-op lock
   mockPrisma.$transaction = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => fn(mockPrisma));
   mockPrisma.$queryRaw = vi.fn();
+  // Removing a lesson is one statement in SQL (`store.ts`), keyed on the sound and its owner, in that order, and only
+  // on a sound that has one.
+  mockPrisma.$executeRaw = vi.fn(async (sql: TemplateStringsArray, ...values: unknown[]) => {
+    const text = sql.join('?');
+    if (!text.includes('SET "lesson" = NULL, "lessonVersion" = NULL')) return 0;
+    const hit = table.rows.filter(
+      (r) =>
+        r.id === values[0] &&
+        r.userId === values[1] &&
+        (!text.includes('"lesson" IS NOT NULL') || (r.lesson !== null && r.lesson !== undefined))
+    );
+    for (const r of hit) Object.assign(r, { lesson: null, lessonVersion: null });
+    return hit.length;
+  });
   mockPrisma.synth = {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) =>
       where.id === 'model-d' ? { listed: true } : null
@@ -468,5 +511,184 @@ describe('a sound saved on an older definition version', () => {
     const listed = await json(await list(request('GET', '/api/v1/sounds')));
     expect(listed.data).toEqual([expect.objectContaining({ id, playable: false })]);
     expect(mockLog.error).not.toHaveBeenCalled();
+  });
+});
+
+describe('a sound saved with its lesson (f-tutor t-55)', () => {
+  const create = async (body: Row = {}) =>
+    json(
+      await save({
+        synthId: 'model-d',
+        name: 'Tutor bass',
+        panel,
+        lesson,
+        fromTutor: true,
+        ...body,
+      })
+    );
+  const errorPaths = async (res: Response) =>
+    ((await json(res)).error?.details?.errors ?? []).map((e) => e.path).sort();
+
+  it('stores the lesson and the mark, and reads both back, on the sound and in the list', async () => {
+    const { data } = await create();
+    expect(data).toMatchObject({ fromTutor: true, lesson });
+    expect(table.rows[0]).toMatchObject({ fromTutor: true, lesson, lessonVersion: modelD.version });
+
+    const id = String(data!.id);
+    const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
+    expect(got.data).toMatchObject({ fromTutor: true, lesson });
+    const listed = await json(await list(request('GET', '/api/v1/sounds')));
+    expect(listed.data).toEqual([expect.objectContaining({ id, fromTutor: true, lesson })]);
+  });
+
+  it('fills a lesson sent without context or tweaks with none', async () => {
+    const { context: _context, tweaks: _tweaks, ...bare } = lesson;
+    const { data } = await create({ lesson: bare });
+    expect(data?.lesson).toEqual({ ...bare, context: {}, tweaks: [] });
+  });
+
+  it("saves a sound without one as before: no lesson, and not the tutor's", async () => {
+    const { data } = await json(await save({ synthId: 'model-d', name: 'Plain', panel }));
+    expect(data).toMatchObject({ lesson: null, fromTutor: false });
+    expect(table.rows[0]).toMatchObject({ fromTutor: false });
+    expect(table.rows[0]).not.toHaveProperty('lesson');
+    expect(table.rows[0]).not.toHaveProperty('lessonVersion');
+  });
+
+  it("refuses a lesson past the tutor's limits, naming each field, and stores nothing", async () => {
+    const res = await save({
+      synthId: 'model-d',
+      name: 'Too much',
+      panel,
+      lesson: {
+        ...lesson,
+        blurb: 'x'.repeat(201),
+        steps: [{ title: 'Nothing', module: 'osc', why: 'It changes nothing.' }],
+      },
+    });
+    expect(res.status).toBe(400);
+    expect(await errorPaths(res)).toEqual(['lesson.blurb', 'lesson.steps.0']);
+    expect(table.rows).toHaveLength(0);
+  });
+
+  it('refuses a lesson that does not fit the synth, naming each problem, and stores nothing', async () => {
+    const res = await save({
+      synthId: 'model-d',
+      name: 'Wrong synth',
+      panel,
+      lesson: {
+        ...lesson,
+        steps: [{ ...lesson.steps[0], set: { 'no-such-control': 1 } }, lesson.steps[1]],
+        tweaks: [{ id: 'no-such-knob', try: 'Turn it', hear: 'Nothing' }],
+      },
+    });
+    expect(res.status).toBe(400);
+    const { error } = await json(res);
+    expect(error?.message).toBe('The lesson does not fit model-d');
+    expect((error?.details?.errors ?? []).map((e) => e.path).sort()).toEqual([
+      'lesson.steps.0.set.no-such-control',
+      'lesson.tweaks.0.id',
+    ]);
+    expect(table.rows).toHaveLength(0);
+  });
+
+  it('is left as it was designed when a new panel is saved over the sound', async () => {
+    const { data } = await create();
+    const id = String(data!.id);
+    const next = { values: { [cont.id]: cont.max }, cables: [] };
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { panel: next }), ctx(id));
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toMatchObject({ panel: next, lesson, fromTutor: true });
+    expect(table.rows[0]).toMatchObject({ lesson });
+  });
+
+  it('is removed by `lesson: null`, keeping the mark, and cannot be changed any other way', async () => {
+    const { data } = await create();
+    const id = String(data!.id);
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson: null }), ctx(id));
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toMatchObject({ lesson: null, fromTutor: true });
+    expect(table.rows[0]).toMatchObject({ lesson: null, lessonVersion: null });
+    // nothing else changed, so the update writes the time itself, or Prisma would skip the row
+    expect(table.client.updateMany.mock.lastCall![0].data).toEqual({ updatedAt: expect.any(Date) });
+
+    const rewrite = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson }), ctx(id));
+    expect(rewrite.status).toBe(400);
+  });
+
+  it('leaves a sound with no lesson as it was when asked to remove one', async () => {
+    const { data } = await json(await save({ synthId: 'model-d', name: 'Plain', panel }));
+    const id = String(data!.id);
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { lesson: null }), ctx(id));
+    expect(res.status).toBe(200);
+    // no time written: the sound does not move to the top of the list
+    expect(table.client.updateMany.mock.lastCall![0].data).toEqual({});
+  });
+
+  it("does not remove another user's lesson", async () => {
+    signIn('user-2');
+    const theirs = String((await create()).data!.id);
+    signIn('user-1');
+    const res = await change(
+      request('PATCH', `/api/v1/sounds/${theirs}`, { lesson: null }),
+      ctx(theirs)
+    );
+    expect(res.status).toBe(404);
+    expect(table.rows[0]).toMatchObject({ userId: 'user-2', lesson });
+  });
+
+  it('is not served on a definition version the synth has moved on from', async () => {
+    const id = String((await create()).data!.id);
+    Object.assign(table.rows[0], {
+      definitionVersion: modelD.version - 1,
+      lessonVersion: modelD.version - 1,
+    });
+    const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
+    expect(got.data).toMatchObject({ lesson: null, fromTutor: true });
+    expect(mockLog.error).not.toHaveBeenCalled();
+  });
+
+  it('keeps waiting for its own version when a new panel moves the sound onto the current one', async () => {
+    const id = String((await create()).data!.id);
+    Object.assign(table.rows[0], {
+      definitionVersion: modelD.version - 1,
+      lessonVersion: modelD.version - 1,
+    });
+    const next = { values: { [cont.id]: cont.max }, cables: [] };
+    const res = await change(request('PATCH', `/api/v1/sounds/${id}`, { panel: next }), ctx(id));
+    expect((await json(res)).data).toMatchObject({
+      definitionVersion: modelD.version,
+      playable: true,
+      lesson: null,
+    });
+    // kept, for the mapping to the version the panel is on now
+    expect(table.rows[0]).toMatchObject({ lesson, lessonVersion: modelD.version - 1 });
+  });
+
+  it("is not served once it no longer fits the synth, logged on its owner's read only", async () => {
+    const id = String((await create()).data!.id);
+    table.rows[0].lesson = { ...lesson, tweaks: [{ id: 'gone', try: 'Turn it', hear: 'Nothing' }] };
+
+    const listed = await json(await list(request('GET', '/api/v1/sounds')));
+    expect(listed.data).toEqual([expect.objectContaining({ id, lesson: null })]);
+    expect(mockLog.error).not.toHaveBeenCalled();
+
+    const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
+    expect(got.data).toMatchObject({ lesson: null, playable: true });
+    expect(mockLog.error).toHaveBeenCalledWith(
+      'user sounds: stored lesson fails validation',
+      expect.objectContaining({ soundId: id })
+    );
+  });
+
+  it('is not served when what is stored is not a lesson at all', async () => {
+    const id = String((await create()).data!.id);
+    table.rows[0].lesson = { steps: 'none' };
+    const got = await json(await read(request('GET', `/api/v1/sounds/${id}`), ctx(id)));
+    expect(got.data).toMatchObject({ lesson: null });
+    expect(mockLog.error).toHaveBeenCalledWith(
+      'user sounds: stored lesson fails validation',
+      expect.objectContaining({ problems: 'not a lesson' })
+    );
   });
 });

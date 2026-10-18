@@ -7,8 +7,8 @@
  * with `visibility`; publishing is `POST /api/v1/sounds/:id/publish`, whose refusals stay in the dialog in the server's
  * words (`.context/app/sharing.md`, "Publishing").
  *
- * What is shared is the sound as last saved, notes included: the notes were written when only their owner could read
- * them, so both say so.
+ * What is shared is the sound as last saved, notes and lesson included: the notes were written when only their owner
+ * could read them, so both say so.
  *
  * An unlisted sound (h4: moderators took it down after a report) says so and offers only Stop sharing: the server
  * refuses sharing or publishing it again (`UNLISTED`) until an admin restores it.
@@ -261,6 +261,7 @@ export function SoundSharing({
             setPublishing(false);
             setStatus('Published. It is on Explore and your profile.');
           }}
+          onChanged={onChanged}
           buttonClass={buttonClass}
         />
       )}
@@ -278,12 +279,15 @@ interface PublishDialogProps {
   libraryTags: string[];
   backHref: string;
   onPublished: (sound: UserSoundDetail) => void;
+  /** The sound changed without being published: its lesson was removed. */
+  onChanged: (sound: UserSoundDetail) => void;
   buttonClass: string;
 }
 
 /**
  * Publish, in a dialog: who it will appear as, that the notes go with it, the tags, and the tick. A refusal leaves the
- * dialog open with the server's reason in it; `USERNAME_REQUIRED` turns it to the username step.
+ * dialog open with the server's reason in it; `USERNAME_REQUIRED` turns it to the username step. `LESSON_NOT_ALLOWED`
+ * (a blocked word in the lesson, which cannot be reworded) offers to remove the lesson, after which it can be published.
  *
  * Mounted only while open, so each opening starts afresh: unticked, with the tags the sound had that the library still
  * uses. The username is read when the dialog opens. Only an answer of `null` means there is none yet: a read that failed
@@ -295,6 +299,7 @@ export function PublishDialog({
   libraryTags,
   backHref,
   onPublished,
+  onChanged,
   buttonClass,
 }: PublishDialogProps) {
   // `undefined` while being read; `null` when there is none yet.
@@ -305,6 +310,10 @@ export function PublishDialog({
   const [ticked, setTicked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
+  // The lesson is what was refused: the one thing to offer is publishing without it.
+  const [lessonRefused, setLessonRefused] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [lessonRemoved, setLessonRemoved] = useState(false);
 
   useEffect(() => {
     setUsername(undefined);
@@ -332,6 +341,7 @@ export function PublishDialog({
   const publish = async () => {
     setBusy(true);
     setFailure(null);
+    setLessonRemoved(false);
     try {
       const d = await apiClient.post<UserSoundDetail>(`${soundPath(sound.id)}/publish`, {
         body: { confirm: true, tags },
@@ -339,9 +349,28 @@ export function PublishDialog({
       onPublished(d);
     } catch (err) {
       if (err instanceof APIClientError && err.code === 'USERNAME_REQUIRED') setUsername(null);
-      else setFailure(failureOf(err, 'publish it'));
+      else {
+        setLessonRefused(err instanceof APIClientError && err.code === 'LESSON_NOT_ALLOWED');
+        setFailure(failureOf(err, 'publish it'));
+      }
     } finally {
       setBusy(false);
+    }
+  };
+
+  const removeLesson = async () => {
+    setRemoving(true);
+    setFailure(null);
+    try {
+      onChanged(
+        await apiClient.patch<UserSoundDetail>(soundPath(sound.id), { body: { lesson: null } })
+      );
+      setLessonRefused(false);
+      setLessonRemoved(true);
+    } catch (err) {
+      setFailure(failureOf(err, 'remove the lesson'));
+    } finally {
+      setRemoving(false);
     }
   };
 
@@ -393,8 +422,9 @@ export function PublishDialog({
             <DialogDescription className="text-sm text-(--kys-muted)">
               Anyone can find it on Explore and your profile, play it and save a copy, which credits
               you. It appears as <strong className="text-(--kys-text)">by @{username}</strong>, with
-              its notes. What is published is the sound as last saved. You can unpublish it whenever
-              you like; copies people have saved stay theirs.
+              its notes{sound.lesson ? ' and its lesson' : ''}. What is published is the sound as
+              last saved. You can unpublish it whenever you like; copies people have saved stay
+              theirs.
             </DialogDescription>
             {libraryTags.length > 0 && (
               <fieldset className="space-y-1.5">
@@ -443,11 +473,29 @@ export function PublishDialog({
                 {failure}
               </p>
             )}
+            {lessonRefused && (
+              <div className="flex flex-wrap items-center gap-2 text-sm text-(--kys-muted)">
+                <span>Removing it takes the lesson off this sound for good. The panel stays.</span>
+                <button
+                  type="button"
+                  disabled={busy || removing}
+                  onClick={() => void removeLesson()}
+                  className={buttonClass}
+                >
+                  {removing ? 'Removing…' : 'Remove the lesson'}
+                </button>
+              </div>
+            )}
+            {lessonRemoved && (
+              <p role="status" className="text-sm text-(--kys-good)">
+                The lesson is removed. Publish the sound without it.
+              </p>
+            )}
             <DialogFooter>
               <button type="button" onClick={onClose} className={buttonClass}>
                 Cancel
               </button>
-              <button type="submit" disabled={!ticked || busy} className={buttonClass}>
+              <button type="submit" disabled={!ticked || busy || removing} className={buttonClass}>
                 {busy ? 'Publishing…' : 'Publish'}
               </button>
             </DialogFooter>

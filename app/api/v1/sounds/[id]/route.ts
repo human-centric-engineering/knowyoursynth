@@ -2,8 +2,9 @@
  * One of the signed-in user's own sounds (`f-my-sounds` s1).
  *
  * GET    /api/v1/sounds/:id — the sound with its panel, checked against the synth as it is now.
- * PATCH  /api/v1/sounds/:id — `{ name?, notes?, panel?, visibility? }`. A new panel is checked and saved on the current
- *        definition. `visibility` is `private` or `link`: share by link, stop sharing, or unpublish. Publishing is
+ * PATCH  /api/v1/sounds/:id — `{ name?, notes?, panel?, lesson?, visibility? }`. A new panel is checked and saved on
+ *        the current definition, and leaves the lesson as it was. `lesson: null` removes the lesson, the one change a
+ *        lesson takes. `visibility` is `private` or `link`: share by link, stop sharing, or unpublish. Publishing is
  *        `POST /api/v1/sounds/:id/publish`.
  * DELETE /api/v1/sounds/:id
  *
@@ -44,6 +45,7 @@ export const PATCH = withAuth<Params>(
     log.info('User sound changed', {
       soundId: sound.id,
       panel: input.panel !== undefined,
+      lessonRemoved: input.lesson === null,
       visibility: input.visibility ?? null,
     });
     return successResponse(sound);

@@ -31,6 +31,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { PublicSound, UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
+import type { SoundLesson } from '@/lib/app/sounds/lesson';
 import { APIClientError } from '@/lib/api/client';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
@@ -156,6 +157,8 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   definitionVersion: def.version,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   visibility: 'private',
   slug: null,
   publishedAt: null,
@@ -231,6 +234,8 @@ const SHARED: PublicSound = {
   authorProfile: true,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   definitionVersion: def.version,
   playable: true,
   panel: { values: { ...def.init, 'filter.cutoff': -3 }, cables: [] },
@@ -520,5 +525,58 @@ describe('signed in', () => {
     expect(within(strip()).queryByRole('link', { name: /Sign in/ })).toBeNull();
     await act(async () => answer([]));
     expect(await within(strip()).findByRole('button', { name: 'Save a copy' })).toBeTruthy();
+  });
+});
+
+describe("a shared sound's lesson (f-tutor t-55)", () => {
+  const LESSON: SoundLesson = {
+    blurb: 'A glassy pluck the tutor built.',
+    level: 1,
+    category: 'pluck',
+    how: 'A short envelope on a bright filter.',
+    steps: [
+      {
+        title: 'Brighten the filter',
+        module: 'filter',
+        why: 'Glass.',
+        set: { 'filter.cutoff': 2 },
+      },
+    ],
+    context: {},
+    tweaks: [],
+    phrase: { bpm: 120, steps: [[0, 60, 0.25]] },
+  };
+  const WITH_LESSON: PublicSound = { ...SHARED, fromTutor: true, lesson: LESSON };
+  const lessonPanel = () => screen.getByRole('article', { name: /./ });
+
+  it("shows on its page in place of the library's, with the tutor's mark", () => {
+    shared({ shared: WITH_LESSON });
+    const lesson = lessonPanel();
+    expect(within(lesson).getByRole('heading', { level: 2 }).textContent).toBe('Glass pluck');
+    expect(within(lesson).getByText('Designed by the AI tutor')).toBeTruthy();
+    expect(within(lesson).getByText(LESSON.blurb)).toBeTruthy();
+  });
+
+  it('steps through with the shared sound still on show, and Restore puts its panel back', () => {
+    shared({ shared: WITH_LESSON });
+    fireEvent.click(button('Build it step by step'));
+    expect(screen.getByText('step 1 of 1')).toBeTruthy();
+    expect(loadedName()).toBe('Glass pluck');
+    expect(cutoff()).toBe('2');
+    expect(within(strip()).getByText(/patchwork/)).toBeTruthy();
+
+    fireEvent.click(button('Finish'));
+    // the lesson ends at 2; the shared sound as published is at -3
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    fireEvent.click(button('Restore sound'));
+    expect(cutoff()).toBe('-3');
+  });
+
+  it('shows no lesson of its own for a shared sound saved without one', () => {
+    shared();
+    expect(within(lessonPanel()).getByRole('heading', { level: 2 }).textContent).not.toBe(
+      'Glass pluck'
+    );
+    expect(within(lessonPanel()).queryByText('Designed by the AI tutor')).toBeNull();
   });
 });

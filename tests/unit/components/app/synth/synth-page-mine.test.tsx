@@ -2,8 +2,9 @@
 
 /**
  * The synth page with the user's own sounds (`f-my-sounds` s2): Save, Save as, Rename, Delete and Save a copy over the
- * panel, My sounds beside the library, `?mine=` from the dashboard, and the trip through sign-in when signed out. The
- * panel and library are real; the router, the audio engine, the session and the API client are fakes.
+ * panel, My sounds beside the library, `?mine=` from the dashboard, and the trip through sign-in when signed out. A
+ * sound saved with its lesson (`f-tutor` t-55) shows that lesson in the Lesson panel. The panel, library and lesson are
+ * real; the router, the audio engine, the session and the API client are fakes.
  *
  * @see components/app/synth/synth-page.tsx
  * @see components/app/synth/my-sounds.tsx
@@ -20,6 +21,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
+import type { SoundLesson } from '@/lib/app/sounds/lesson';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -144,6 +146,8 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   definitionVersion: def.version,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   visibility: 'private',
   slug: null,
   publishedAt: null,
@@ -803,5 +807,170 @@ describe('a reload with one of theirs open', () => {
     page();
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
     await waitFor(() => expect(screen.getByText('1 control moved')).toBeTruthy());
+  });
+});
+
+// ── a sound saved with its lesson (f-tutor t-55) ────────────────────────────
+
+describe('a sound saved with its lesson', () => {
+  const LESSON: SoundLesson = {
+    blurb: 'A dark, round bass the tutor built.',
+    level: 2,
+    category: 'bass',
+    how: 'The filter is nearly shut, and the LFO moves it.',
+    steps: [
+      {
+        title: 'Shut the filter',
+        module: 'filter',
+        why: 'Dark first.',
+        set: { 'filter.cutoff': -1 },
+      },
+      {
+        title: 'Let the LFO move it',
+        module: 'patch',
+        why: 'Movement.',
+        cables: [['j.lfoTri', 'j.cutCv']],
+      },
+    ],
+    context: { 'filter.cutoff': 'How much of the top gets through.' },
+    tweaks: [{ id: 'filter.cutoff', try: 'Open it to 2', hear: 'The bass gets a bite.' }],
+    phrase: { bpm: 96, steps: [[0, 36, 1]] },
+  };
+  const tutorSummary = summary({
+    id: 'cmtutor',
+    name: 'Tutor bass',
+    fromTutor: true,
+    lesson: LESSON,
+  });
+  /** Saved after a tweak: the filter at 4, where the lesson leaves it at -1. */
+  const TUTOR_BASS: UserSoundDetail = { ...NIGHT_BASS, ...tutorSummary };
+  const lessonPanel = () => screen.getByRole('article', { name: /./ });
+
+  beforeEach(() => {
+    auth.signedIn = true;
+  });
+
+  async function openIt() {
+    serve([tutorSummary], { cmtutor: TUTOR_BASS });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Tutor bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Tutor bass'));
+    await waitFor(() => expect(cutoff()).toBe('4'));
+  }
+
+  it("shows its own lesson in the Lesson panel, with the tutor's mark, in place of the library's", async () => {
+    await openIt();
+    const lesson = lessonPanel();
+    expect(within(lesson).getByRole('heading', { level: 2 }).textContent).toBe('Tutor bass');
+    expect(within(lesson).getByText('Designed by the AI tutor')).toBeTruthy();
+    expect(within(lesson).getByText('AI designed · check by ear')).toBeTruthy();
+    expect(within(lesson).getByText(LESSON.blurb)).toBeTruthy();
+    expect(within(lesson).getByText(LESSON.how)).toBeTruthy();
+    expect(within(lesson).getByRole('tab', { name: /Build it/ }).textContent).toContain('2 steps');
+    expect(within(lesson).getByRole('tab', { name: /Make it yours/ })).toBeTruthy();
+    expect(within(lesson).queryByText('Fat bass')).toBeNull();
+    // No library sound is the one on show.
+    const library = screen.getByRole('region', { name: 'Sound library' });
+    expect(within(library).queryAllByRole('button', { current: true })).toHaveLength(0);
+  });
+
+  it('steps through its lesson with the sound still open, and Finish builds the sound as designed', async () => {
+    await openIt();
+    fireEvent.click(button('Build it step by step'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(loadedName()).toBe('Tutor bass');
+    expect(screen.getByText('mine')).toBeTruthy();
+    expect(cutoff()).toBe('-1');
+    // Still the open sound's buttons, since its lesson is its own, but Save waits for the lesson to finish: the panel is
+    // a step of it, not the sound.
+    expect(button('Save')).toBeDisabled();
+    expect(button('Save as…')).toBeEnabled();
+    expect(screen.queryByRole('button', { name: 'Save a copy…' })).toBeNull();
+
+    // the header's Next step, not the step bar's arrow of the same name
+    const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
+    if (!next) throw new Error('no Next step');
+    fireEvent.click(next);
+    expect(screen.getByText('step 2 of 2')).toBeTruthy();
+    fireEvent.click(button('Finish'));
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(button('Save')).toBeEnabled();
+    // The lesson builds the sound as the tutor designed it; the sound as saved differs, and Restore puts it back.
+    expect(cutoff()).toBe('-1');
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    fireEvent.click(button('Restore sound'));
+    expect(cutoff()).toBe('4');
+  });
+
+  it('keeps the lesson on Save over, and Save as carries it with the mark', async () => {
+    api.patch.mockResolvedValue({ ...TUTOR_BASS, updatedAt: '2026-10-15T11:00:00.000Z' });
+    api.post.mockResolvedValue({ ...TUTOR_BASS, id: 'cmnew3', name: 'Tutor bass (copy)' });
+    await openIt();
+    fireEvent.click(button('A-440'));
+    fireEvent.click(button('Save'));
+    await waitFor(() => expect(api.patch).toHaveBeenCalledTimes(1));
+    // Only the panel: the lesson stays with the sound as it was designed.
+    expect(Object.keys((api.patch.mock.calls[0][1] as { body: object }).body)).toEqual(['panel']);
+    expect(within(lessonPanel()).getByText(LESSON.blurb)).toBeTruthy();
+
+    fireEvent.click(button('Save as…'));
+    fireEvent.click(button('Save as new'));
+    await waitFor(() => expect(api.post).toHaveBeenCalledTimes(1));
+    expect(api.post.mock.calls[0][1]).toMatchObject({
+      body: { name: 'Tutor bass (copy)', lesson: LESSON, fromTutor: true },
+    });
+  });
+
+  it('leaves no step behind when the sound is deleted part-way through its lesson', async () => {
+    api.delete.mockResolvedValue(undefined);
+    await openIt();
+    fireEvent.click(button('Build it step by step'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    fireEvent.click(button('Delete…'));
+    fireEvent.click(button('Delete it'));
+    await waitFor(() => expect(api.delete).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.queryByText('mine')).toBeNull());
+    // not read against a library lesson the panel never followed
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(cutoff()).toBe('-1');
+  });
+
+  it('reads a stored step of its lesson only once the list says the sound is theirs', async () => {
+    window.localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        presetId: null,
+        // step 0: the library's first sound has one step, so it would read as "step 1 of 1" against that
+        step: 0,
+        soundId: 'cmtutor',
+        values: { ...def.init, 'filter.cutoff': -1 },
+        cables: [{ from: 'j.lfoTri', to: 'j.cutCv', color: '#fff' }],
+      })
+    );
+    let answer: (list: UserSoundSummary[]) => void = () => undefined;
+    api.get.mockImplementation((path: string) =>
+      path === '/api/v1/sounds'
+        ? new Promise((resolve) => (answer = resolve))
+        : Promise.resolve(TUTOR_BASS)
+    );
+    page();
+    // the list has not answered: no library lesson is walked with this panel
+    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    await act(async () => answer([tutorSummary]));
+    expect(await screen.findByText('step 1 of 2')).toBeTruthy();
+    expect(loadedName()).toBe('Tutor bass');
+  });
+
+  it("shows the library's lesson again once a library sound is chosen", async () => {
+    await openIt();
+    fireEvent.click(
+      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+        name: /Wobble lead/,
+      })
+    );
+    expect(within(lessonPanel()).getByRole('heading', { level: 2 }).textContent).toBe(
+      'Wobble lead'
+    );
+    expect(within(lessonPanel()).queryByText('AI designed · check by ear')).toBeNull();
   });
 });

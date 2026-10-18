@@ -223,6 +223,11 @@ export interface SoundActionsProps {
   /** The user's sound on the panel, which Save writes back to. */
   open: UserSoundSummary | null;
   /**
+   * The panel is a step of the open sound's own lesson (`f-tutor` t-55), not the sound: Save is held back until the
+   * lesson is finished, so a half-built step is never saved over it. Save as… still keeps one as a new sound.
+   */
+  midLesson?: boolean;
+  /**
    * The library sound a new sound from this panel is a copy of, credited when saved. With no sound of the user's open,
    * the one the panel came from; with one open, the one that was copied from, if the library still has it.
    */
@@ -246,6 +251,7 @@ export function SoundActions({
   signedIn,
   signInHref,
   open,
+  midLesson = false,
   credit,
   panel,
   onSaved,
@@ -327,6 +333,9 @@ export function SoundActions({
               ...(notes ? { notes } : {}),
               panel: panel(),
               ...(credit ? { source: { slug: credit.slug } } : {}),
+              // Save as keeps what the sound was saved with: its lesson, and that the tutor designed it.
+              ...(mode === 'saveAs' && open?.lesson ? { lesson: open.lesson } : {}),
+              ...(mode === 'saveAs' && open?.fromTutor ? { fromTutor: true } : {}),
             },
           });
           onSaved(d, 'created');
@@ -351,7 +360,12 @@ export function SoundActions({
           <>
             <button
               type="button"
-              disabled={busy}
+              disabled={busy || midLesson}
+              title={
+                midLesson
+                  ? 'Finish the lesson first: Save writes the panel over this sound'
+                  : undefined
+              }
               onClick={() => void save()}
               className={buttonClass}
             >

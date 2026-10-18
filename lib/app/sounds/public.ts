@@ -55,6 +55,8 @@ export async function getSharedSound(slug: string): Promise<PublicSound | null> 
       ? { slug: sound.source.slug, name: sound.source.name, ref: sound.source.ref }
       : null,
     basedOn: sound.basedOn,
+    fromTutor: sound.fromTutor,
+    lesson: sound.lesson,
     definitionVersion: sound.definitionVersion,
     playable: sound.playable,
     panel: sound.panel,

@@ -46,6 +46,8 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   definitionVersion: 1,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   visibility: 'private',
   slug: null,
   publishedAt: null,
@@ -330,6 +332,55 @@ describe('the publish dialog', () => {
     await userEvent.click(within(dialog).getByRole('checkbox', { name: /I made this/ }));
     await act(async () => userEvent.click(within(dialog).getByRole('button', { name: 'Publish' })));
     expect(within(dialog).getByRole('link', { name: 'Choose a username' })).toBeTruthy();
+  });
+
+  it('offers to remove a lesson that cannot be published, then publishes the sound without it', async () => {
+    const lesson = {
+      blurb: 'A bass.',
+      level: 1 as const,
+      category: 'bass' as const,
+      how: 'How.',
+      steps: [
+        { title: 'One', module: 'filter' as const, why: 'Why.', set: { 'filter.cutoff': 1 } },
+      ],
+      context: {},
+      tweaks: [],
+      phrase: { bpm: 100, steps: [[0, 36, 1] as [number, number, number]] },
+    };
+    const withLesson = summary({ lesson, fromTutor: true });
+    const message =
+      "The lesson saved with this sound has wording that can't be published. Remove the lesson to publish the sound without it.";
+    api.post
+      .mockRejectedValueOnce(new APIClientError(message, 'LESSON_NOT_ALLOWED', 422))
+      .mockResolvedValueOnce(detail({ visibility: 'published', slug: SLUG }));
+    api.patch.mockResolvedValue(detail({ fromTutor: true }));
+    const { dialog, onChanged } = await openDialog(withLesson);
+    expect(await within(dialog).findByText(/with its notes and its lesson/)).toBeTruthy();
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: /I made this/ }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Publish' }));
+    expect(within(dialog).getByRole('alert').textContent).toBe(message);
+
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Remove the lesson' }));
+    expect(api.patch).toHaveBeenCalledWith('/api/v1/sounds/cmmine1', { body: { lesson: null } });
+    expect(onChanged).toHaveBeenCalledWith(expect.objectContaining({ lesson: null }));
+    expect(within(dialog).getByRole('status').textContent).toMatch(/lesson is removed/);
+    expect(within(dialog).queryByRole('button', { name: 'Remove the lesson' })).toBeNull();
+
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Publish' }));
+    expect(api.post).toHaveBeenCalledTimes(2);
+    expect(onChanged).toHaveBeenLastCalledWith(
+      expect.objectContaining({ visibility: 'published' })
+    );
+  });
+
+  it('offers no removal for any other refusal', async () => {
+    api.post.mockRejectedValue(new APIClientError('No.', 'NOT_ALLOWED', 422));
+    const { dialog } = await openDialog(summary({ lesson: null }));
+    await within(dialog).findByText('by @patchwork');
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: /I made this/ }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Publish' }));
+    expect(within(dialog).getByRole('alert').textContent).toBe('No.');
+    expect(within(dialog).queryByRole('button', { name: 'Remove the lesson' })).toBeNull();
   });
 
   it('Cancel closes it without publishing', async () => {

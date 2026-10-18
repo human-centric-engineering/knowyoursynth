@@ -17,7 +17,9 @@
  * - a copy of a shared sound records it, carries its library credit, and is credited only while the source is
  *   published; deleting the source leaves the copy with no credit;
  * - an unlisted sound (h4) is the public read's 404, cannot be copied or credited, and cannot be shared or published
- *   again by its owner (409 `UNLISTED`), though it can still be made private; clearing it brings it all back.
+ *   again by its owner (409 `UNLISTED`), though it can still be made private; clearing it brings it all back;
+ * - a sound's lesson (`f-tutor` t-55) is on its public read, goes with a copy, and is word-checked at publish with its
+ *   own code (`LESSON_NOT_ALLOWED`), which removing the lesson answers.
  *
  * The `SetNull` foreign key and the export are proved against a real database in `npm run smoke:sounds`.
  */
@@ -774,5 +776,140 @@ describe('an unlisted sound (f-sharing h4)', () => {
     // restored: sharing works again
     rowOf(sound.id).unlistedAt = null;
     expect((await patch(String(sound.id), { visibility: 'link' })).status).toBe(200);
+  });
+});
+
+describe("a shared sound's lesson (f-tutor t-55)", () => {
+  /** A lesson for Model D inside every limit `design_sound` sets. */
+  const lesson = {
+    blurb: 'A low, round bass.',
+    level: 1,
+    category: 'bass',
+    how: 'One oscillator through the filter, closed most of the way.',
+    steps: [
+      {
+        title: 'Close the filter',
+        module: cont.module,
+        why: 'Darker.',
+        set: { [cont.id]: cont.min },
+      },
+      { title: 'Plug it in', module: 'patch', why: 'A cable.', cables: [[outJack.id, inJack.id]] },
+    ],
+    context: { [cont.id]: 'How dark the sound is.' },
+    tweaks: [{ id: cont.id, try: 'Open it up', hear: 'It gets brighter.' }],
+    phrase: { bpm: 100, steps: [[0, 36, 1]] },
+  };
+  const withWord = {
+    ...lesson,
+    steps: [{ ...lesson.steps[0], why: 'Close it for a shitty, muffled tone.' }, lesson.steps[1]],
+  };
+
+  beforeEach(() => {
+    // Removing a lesson is one statement in SQL (`store.ts`), keyed on the sound and its owner, in that order.
+    mockPrisma.$executeRaw = vi.fn(async (sql: TemplateStringsArray, ...values: unknown[]) => {
+      const hit = table.rows.filter(
+        (r) => r.id === values[0] && r.userId === values[1] && r.lesson != null
+      );
+      if (sql.join('?').includes('SET "lesson" = NULL'))
+        for (const r of hit) Object.assign(r, { lesson: null, lessonVersion: null });
+      return hit.length;
+    });
+  });
+
+  it('is on the public read with the mark, shared by link and published', async () => {
+    const sound = await save({
+      synthId: 'model-d',
+      name: 'Tutor bass',
+      panel,
+      lesson,
+      fromTutor: true,
+    });
+    await patch(String(sound.id), { visibility: 'link' });
+    const slug = String(rowOf(sound.id).slug);
+    expect((await json(await shared(slug))).data).toMatchObject({ lesson, fromTutor: true });
+
+    expect((await publishIt(String(sound.id))).status).toBe(200);
+    expect((await json(await shared(slug))).data).toMatchObject({
+      visibility: 'published',
+      lesson,
+      fromTutor: true,
+    });
+  });
+
+  it('goes with a copy, with the mark, kept under the copier', async () => {
+    signIn('user-2');
+    const theirs = await save({
+      synthId: 'model-d',
+      name: 'Their bass',
+      panel,
+      lesson,
+      fromTutor: true,
+    });
+    await publishIt(String(theirs.id));
+    signIn('user-1');
+
+    const copy = await save({
+      synthId: 'model-d',
+      source: { shared: String(rowOf(theirs.id).slug) },
+      panel: otherPanel,
+    });
+    expect(copy).toMatchObject({ lesson, fromTutor: true, panel: otherPanel });
+    expect(rowOf(copy.id)).toMatchObject({ userId: 'user-1', lesson, fromTutor: true });
+  });
+
+  it('does not lend the mark to a copy sent with a lesson of its own', async () => {
+    signIn('user-2');
+    const theirs = await save({
+      synthId: 'model-d',
+      name: 'Their bass',
+      panel,
+      lesson,
+      fromTutor: true,
+    });
+    await publishIt(String(theirs.id));
+    signIn('user-1');
+
+    const mine = { ...lesson, blurb: 'My own words.' };
+    const copy = await save({
+      synthId: 'model-d',
+      source: { shared: String(rowOf(theirs.id).slug) },
+      lesson: mine,
+    });
+    expect(copy).toMatchObject({ lesson: mine, fromTutor: false });
+  });
+
+  it('is refused at publish for a blocked word, with nothing written, and removing it lets the sound publish', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Tutor bass', panel, lesson: withWord });
+    const before = { ...rowOf(sound.id) };
+    const res = await publishIt(String(sound.id));
+    expect(res.status).toBe(422);
+    expect((await json(res)).error).toMatchObject({
+      code: 'LESSON_NOT_ALLOWED',
+      message: expect.stringContaining('Remove the lesson'),
+    });
+    expect(rowOf(sound.id)).toEqual(before);
+    expect(profiles.get('user-1')?.recentPublishes).toEqual([]);
+
+    expect((await patch(String(sound.id), { lesson: null })).status).toBe(200);
+    expect((await publishIt(String(sound.id))).status).toBe(200);
+    expect(rowOf(sound.id)).toMatchObject({ visibility: 'published', lesson: null });
+  });
+
+  it('is checked as stored, even when the synth cannot use it now and the public read does not show it', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Tutor bass', panel, lesson: withWord });
+    rowOf(sound.id).lesson = {
+      ...withWord,
+      tweaks: [{ id: 'gone', try: 'Turn it', hear: 'Nothing' }],
+    };
+    const res = await publishIt(String(sound.id));
+    expect((await json(res)).error?.code).toBe('LESSON_NOT_ALLOWED');
+  });
+
+  it('is not checked again when a published sound is renamed: it cannot change after publishing', async () => {
+    const sound = await save({ synthId: 'model-d', name: 'Tutor bass', panel, lesson });
+    expect((await publishIt(String(sound.id))).status).toBe(200);
+    // as if the word list had grown since: the rename is about the name, so the lesson does not lock it out
+    rowOf(sound.id).lesson = withWord;
+    expect((await patch(String(sound.id), { name: 'Deep bass' })).status).toBe(200);
   });
 });
