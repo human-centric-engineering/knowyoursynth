@@ -1,4 +1,12 @@
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  closeSync,
+  existsSync,
+  mkdtempSync,
+  openSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -192,8 +200,28 @@ export function cardFontFiles(): string[] {
   const dir = fontDir;
   return SOURCES.map(({ family, path }) => {
     const out = join(dir, `${basename(path, '.woff')}.ttf`);
-    if (!existsSync(out))
-      writeFileSync(out, woffToSfnt(readFileSync(path), family), { mode: 0o600 });
+    unpack(path, family, out);
     return out;
   });
+}
+
+/** One face, unpacked to `out` unless it is already there. */
+function unpack(woff: string, family: string, out: string): void {
+  let fd: number;
+  try {
+    // `wx` makes the file or refuses one already there, in one step, so nothing lands between a check and the write.
+    fd = openSync(out, 'wx', 0o600);
+  } catch (err: unknown) {
+    if (err instanceof Error && 'code' in err && err.code === 'EEXIST') return;
+    throw err;
+  }
+  try {
+    writeFileSync(fd, woffToSfnt(readFileSync(woff), family));
+  } catch (err) {
+    // A font half written would pass for one already there; take it away, so the next draw writes it again.
+    rmSync(out, { force: true });
+    throw err;
+  } finally {
+    closeSync(fd);
+  }
 }

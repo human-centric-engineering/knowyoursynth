@@ -5,7 +5,8 @@
  * - a WOFF unpacks to an sfnt with the same tables, uncompressed, at 4-byte boundaries;
  * - its name table says the family alone (not "… Medium"), which is what makes the panel's lettering match;
  * - every file the card needs is written whole, left alone once it is there, and written again if it is removed;
- * - they are written in a directory of the process's own, under a fresh name, that no other user can read or write.
+ * - they are written in a directory of the process's own, under a fresh name, that no other user can read or write;
+ * - a disk failure is passed on, and a font it left half written is taken away to be written again.
  *
  * @see components/app/sharing/card-fonts.ts
  */
@@ -13,7 +14,7 @@
 import { existsSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { cardFontFiles, woffToSfnt } from '@/components/app/sharing/card-fonts';
 
@@ -137,5 +138,53 @@ describe('cardFontFiles', () => {
     expect(again.map((f) => basename(f))).toEqual(files.map((f) => basename(f)));
     for (const f of again) expect(existsSync(f)).toBe(true);
     expect(readFileSync(again[0]).equals(kept)).toBe(true);
+  });
+
+  describe('when the disk fails it', () => {
+    /** The module loaded afresh over `fs` with `patch` applied; the directory it makes is removed after the test. */
+    async function withFs(
+      patch: (fs: typeof import('node:fs')) => Partial<typeof import('node:fs')>
+    ) {
+      const fs = await vi.importActual<typeof import('node:fs')>('node:fs');
+      vi.resetModules();
+      vi.doMock('node:fs', () => ({
+        ...fs,
+        mkdtempSync: (prefix: string) => {
+          const dir = fs.mkdtempSync(prefix);
+          made.add(dir);
+          return dir;
+        },
+        ...patch(fs),
+      }));
+      return (await import('@/components/app/sharing/card-fonts')).cardFontFiles;
+    }
+    afterEach(() => {
+      vi.doUnmock('node:fs');
+      vi.resetModules();
+    });
+
+    it('says so, for anything but a file already there', async () => {
+      const denied = Object.assign(new Error('EACCES: permission denied'), { code: 'EACCES' });
+      const fresh = await withFs(() => ({
+        openSync: () => {
+          throw denied;
+        },
+      }));
+      expect(() => fresh()).toThrow(denied);
+    });
+
+    it('takes away a font it could not write whole, and writes it next time', async () => {
+      const full = Object.assign(new Error('ENOSPC: no space left on device'), { code: 'ENOSPC' });
+      const fresh = await withFs((fs) => ({
+        writeFileSync: vi.fn(fs.writeFileSync).mockImplementationOnce(() => {
+          throw full;
+        }),
+      }));
+      expect(() => fresh()).toThrow(full);
+      const [dir] = made;
+      expect(readdirSync(dir)).toEqual([]);
+      const files = fresh();
+      for (const f of files) expect(statSync(f).size).toBeGreaterThan(0);
+    });
   });
 });

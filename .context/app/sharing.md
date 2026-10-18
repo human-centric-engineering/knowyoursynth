@@ -202,8 +202,10 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
     name in the shared temp directory, where another user could make it first and plant fonts
     for the rasteriser (CodeQL's insecure-temporary-file rule). A file is written whenever it is
     missing, and the directory made again if it is gone, because a temp cleaner may empty or
-    remove it under a running server. Each process leaves its directory behind when it stops,
-    about 400KB.
+    remove it under a running server. Each file is made with `wx` and written through its
+    handle, so nothing lands between a check and the write (CodeQL's file-system-race rule), and
+    one the disk failed to write whole is removed, to be written on the next draw. Each process
+    leaves its directory behind when it stops, about 400KB.
 - **Rejected:**
   - A Pages API route. Any `pages/` directory makes Next type every `next/navigation` hook as
     nullable, which breaks the platform's own code.
