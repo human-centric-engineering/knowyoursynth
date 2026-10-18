@@ -129,13 +129,17 @@ function PanelCard({
             lineHeight: 1.1,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            maxWidth: author ? 820 : 1104,
+            // The name gives way, with an ellipsis; the byline never does.
+            flexShrink: 1,
+            minWidth: 0,
           }}
         >
           {name}
         </div>
         {author && (
-          <div style={{ display: 'flex', fontSize: 32, marginLeft: 20 }}>{`@${author}`}</div>
+          <div style={{ display: 'flex', flexShrink: 0, fontSize: 32, marginLeft: 20 }}>
+            {`@${author}`}
+          </div>
         )}
       </div>
       <div

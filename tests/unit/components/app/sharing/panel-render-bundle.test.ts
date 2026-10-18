@@ -10,11 +10,11 @@
  * @see scripts/build-panel-renderer.ts
  * @see components/app/sharing/panel-render-entry.tsx
  */
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { renderPanel as RenderPanel } from '@/components/app/sharing/panel-render-entry';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -24,6 +24,17 @@ let code: string;
 beforeAll(async () => {
   code = await bundlePanelRenderer();
 }, 60_000);
+
+/** A fresh temporary directory, removed when the file's tests are done. */
+const made: string[] = [];
+const tempDir = () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kys-panel-render-'));
+  made.push(dir);
+  return dir;
+};
+afterAll(() => {
+  for (const dir of made) rmSync(dir, { recursive: true, force: true });
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -37,7 +48,7 @@ describe('the panel renderer bundle', () => {
   });
 
   it('draws the faceplate when loaded on its own', async () => {
-    const file = join(mkdtempSync(join(tmpdir(), 'kys-panel-render-')), 'panel-render.mjs');
+    const file = join(tempDir(), 'panel-render.mjs');
     writeFileSync(file, code);
     const { renderPanel } = (await import(/* @vite-ignore */ pathToFileURL(file).href)) as {
       renderPanel: typeof RenderPanel;
@@ -59,11 +70,7 @@ describe('the panel renderer bundle', () => {
 
   it('is written, as built, to the file it is given', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
-    const file = join(
-      mkdtempSync(join(tmpdir(), 'kys-panel-render-')),
-      'nested',
-      'panel-render.mjs'
-    );
+    const file = join(tempDir(), 'nested', 'panel-render.mjs');
     await writePanelRenderer(file);
     expect(readFileSync(file, 'utf8')).toBe(code);
     expect(log).toHaveBeenCalledWith(expect.stringContaining('panel-render-entry.tsx →'));

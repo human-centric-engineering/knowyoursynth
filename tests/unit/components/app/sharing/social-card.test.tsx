@@ -3,7 +3,7 @@
  *
  * - with a panel, the picture is drawn at the size it was rasterised, under the synth, the brand, the sound's name
  *   and the byline, in the synth's own colours;
- * - the name gives the byline room only when there is one;
+ * - a long name gives way, with an ellipsis, and the byline never does;
  * - without a panel, the text card: no picture at all.
  *
  * Which synths get which card, and the 404s, are `shared-sound-page.test.tsx`'s.
@@ -52,12 +52,15 @@ describe('SocialCard with a panel', () => {
     expect(out).toContain(theme.ink);
   });
 
-  it('leaves the byline room only when there is one', () => {
-    const named = card();
-    const anonymous = card({ author: null });
-    expect(named).toContain('max-width:820px');
-    expect(anonymous).toContain('max-width:1104px');
-    expect(anonymous).not.toContain('@');
+  it('lets a long name give way, with an ellipsis, and never the byline', () => {
+    const out = card({ name: 'A very long name indeed', author: 'abcdefghijklmnopqrstuvwx' });
+    const name = /<div style="([^"]*)">A very long name indeed<\/div>/.exec(out)?.[1];
+    const byline = /<div style="([^"]*)">@abcdefghijklmnopqrstuvwx<\/div>/.exec(out)?.[1];
+    expect(name).toContain('text-overflow:ellipsis');
+    expect(name).toContain('flex-shrink:1');
+    expect(name).toContain('min-width:0');
+    expect(byline).toContain('flex-shrink:0');
+    expect(card({ author: null })).not.toContain('@');
   });
 });
 

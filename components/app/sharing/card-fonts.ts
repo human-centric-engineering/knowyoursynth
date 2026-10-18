@@ -1,6 +1,6 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
 
@@ -9,8 +9,8 @@ import { inflateSync } from 'node:zlib';
  *
  * The panel names its faces in CSS (`fontFor` in `components/app/panel/parts.tsx`), and the browser gets them from
  * `@fontsource`. The rasteriser (`@resvg/resvg-js`) has no browser: it reads only TrueType files from disk, and its
- * native build takes no font bytes in memory. So each `@fontsource` WOFF the panel uses is unpacked to TrueType once
- * per process, into a temporary directory, and its paths are handed over.
+ * native build takes no font bytes in memory. So each `@fontsource` WOFF the panel uses is unpacked to TrueType into
+ * a temporary directory, whenever it is not already there, and its paths are handed over.
  *
  * Each weight ships as its own family ("Barlow Semi Condensed Medium"), which the panel's `font-family` would never
  * match, so its name table is rewritten to the family alone; the weight still comes from the font's `OS/2` table.
@@ -172,26 +172,25 @@ export function woffToSfnt(woff: Buffer, family: string): Buffer {
   return Buffer.concat(parts);
 }
 
-let written: string[] | null = null;
+/** Each face's WOFF and the family it is renamed to. */
+const SOURCES = FACES.flatMap(({ family, files }) =>
+  files.map((src) => ({ family, path: fileURLToPath(src) }))
+);
 
-/** The card's font files on disk, unpacked on the first call in this process. */
-export function cardFontFiles(): string[] {
-  if (written) return written;
-  const dir = join(tmpdir(), 'kys-card-fonts');
-  mkdirSync(dir, { recursive: true });
-  written = FACES.flatMap(({ family, files }) =>
-    files.map((src) => {
-      const path = fileURLToPath(src);
-      const out = join(
-        dir,
-        path
-          .split('/')
-          .pop()!
-          .replace(/\.woff$/, '.ttf')
-      );
-      writeFileSync(out, woffToSfnt(readFileSync(path), family));
-      return out;
-    })
-  );
-  return written;
+/**
+ * The card's font files on disk, in `dir`. Each is unpacked whenever it is missing: on the first call, and again after
+ * a temp-directory cleaner has emptied `dir` under a running server. It is written under a name of its own and renamed
+ * into place, so a process sharing `dir` reads the whole file or none of it; whoever writes it, the bytes are the same.
+ */
+export function cardFontFiles(dir = join(tmpdir(), 'kys-card-fonts')): string[] {
+  return SOURCES.map(({ family, path }) => {
+    const out = join(dir, `${basename(path, '.woff')}.ttf`);
+    if (!existsSync(out)) {
+      mkdirSync(dir, { recursive: true });
+      const part = `${out}.${process.pid}.part`;
+      writeFileSync(part, woffToSfnt(readFileSync(path), family));
+      renameSync(part, out);
+    }
+    return out;
+  });
 }

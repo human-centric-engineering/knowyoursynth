@@ -4,13 +4,15 @@
  *
  * - a WOFF unpacks to an sfnt with the same tables, uncompressed, at 4-byte boundaries;
  * - its name table says the family alone (not "… Medium"), which is what makes the panel's lettering match;
- * - every file the card needs is written, once per process.
+ * - every file the card needs is written whole, left alone once it is there, and written again if it is removed.
  *
  * @see components/app/sharing/card-fonts.ts
  */
 
-import { existsSync, readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { cardFontFiles, woffToSfnt } from '@/components/app/sharing/card-fonts';
 
@@ -87,11 +89,31 @@ describe('woffToSfnt', () => {
 });
 
 describe('cardFontFiles', () => {
-  it('writes each face the panel uses, once', () => {
-    const files = cardFontFiles();
+  let dir: string;
+  beforeEach(() => {
+    dir = mkdtempSync(join(tmpdir(), 'kys-card-fonts-test-'));
+  });
+  afterEach(() => {
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it('writes each face the panel uses, whole, and leaves it be once it is there', () => {
+    const files = cardFontFiles(dir);
     expect(files.length).toBe(12);
     for (const f of files) expect(existsSync(f)).toBe(true);
     expect(files.some((f) => f.endsWith('michroma-latin-400-normal.ttf'))).toBe(true);
-    expect(cardFontFiles()).toBe(files);
+    expect(readdirSync(dir).filter((f) => !f.endsWith('.ttf'))).toEqual([]);
+    const written = files.map((f) => statSync(f).mtimeMs);
+    expect(cardFontFiles(dir)).toEqual(files);
+    expect(files.map((f) => statSync(f).mtimeMs)).toEqual(written);
+  });
+
+  it('unpacks again what a temp-directory cleaner has removed', () => {
+    const files = cardFontFiles(dir);
+    const kept = readFileSync(files[0]);
+    rmSync(dir, { recursive: true });
+    expect(cardFontFiles(dir)).toEqual(files);
+    for (const f of files) expect(existsSync(f)).toBe(true);
+    expect(readFileSync(files[0]).equals(kept)).toBe(true);
   });
 });

@@ -197,14 +197,26 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   - `@resvg/resvg-js` rasterises the SVG. It is native, so it is a server external in
     `next.config.js` (a divergence row).
   - `card-fonts.ts` unpacks the panel's `@fontsource` WOFFs to TrueType in the temp directory,
-    renaming each to its family, because the native resvg reads only font files.
+    renaming each to its family, because the native resvg reads only font files. A file is
+    written whenever it is missing (a temp cleaner may empty the directory under a running
+    server), under its own name and renamed into place, so another process never reads half of
+    one.
 - **Rejected:**
   - A Pages API route. Any `pages/` directory makes Next type every `next/navigation` hook as
     nullable, which breaks the platform's own code.
   - Satori alone. It draws a subset of CSS, not the faceplate's SVG.
-- **Drawn panels are kept in memory**, the last 64, keyed on a hash of synth, definition version,
-  design and panel. A repeat request costs the read, and an edit is a new picture. Drawing one
-  takes 0.2–1s.
+- **Drawing a panel takes 0.2–1s**, on a public route, so `sound-card-image.tsx` guards it:
+  - Drawn panels are kept in memory (`lru-cache`): the most recently used 64, within 24MB, keyed
+    on a hash of synth, definition version, design and panel. A repeat request costs the read, an
+    edit is a new picture, and requests for one card at the same moment (several unfurlers
+    fetching a link just posted) share one drawing. A failed drawing is not kept.
+  - At most two are drawn at once; the rest wait. The rasteriser runs on Node's thread pool (four
+    threads by default), which the rest of the app's file, DNS and crypto work shares.
+  - The drawing code, the native rasteriser with it, is loaded on first use inside the fallback,
+    so a server where it cannot load (a missing platform binary) serves the text card, logged,
+    rather than an error.
+- **Known quirk:** a name too long for the line with no byline loses part of its ellipsis at the
+  card's edge (Satori's measurement); with a byline, the name shortens correctly.
 
 ## On the synth page
 

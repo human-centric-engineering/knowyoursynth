@@ -2,7 +2,8 @@
  * A shared sound's panel as a picture (t-50): the synth page's own faceplate, rendered on the server and rasterised.
  * Pins, against the real registry and the real rasteriser:
  *
- * - the sound's values and cables are what is drawn, checked against the synth as the page checks them;
+ * - the sound's values and cables are what is drawn, checked against the synth as the page checks them, and fitted
+ *   exactly as the page fits them (`fitPanel`, which the card cannot import: it is client code);
  * - each design path: `neutral` leaves the maker's marks out, `faithful` keeps them;
  * - a modular synth is drawn as the page opens it, as the modular case;
  * - a picture cannot be played: the faceplate's handlers change nothing;
@@ -23,6 +24,7 @@ vi.mock('@/components/app/sharing/panel-render', async () => {
 
 import { panelPng, panelSvg } from '@/components/app/sharing/panel-image';
 import { renderPanel } from '@/components/app/sharing/panel-render';
+import { fitPanel } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 
@@ -82,6 +84,26 @@ describe('panelSvg', () => {
       expect(faithful.length).toBeGreaterThan(neutral.length);
     }
   );
+
+  it('fits the panel exactly as the page does', () => {
+    const control = Object.keys(modelD.init).find((k) => typeof modelD.init[k] === 'number')!;
+    const [out, into] = [
+      modelD.jacks.find((j) => j.dir === 'out')!,
+      modelD.jacks.find((j) => j.dir === 'in')!,
+    ];
+    const values = { [control]: 4, 'no.such.control': 9 };
+    const cables = [
+      [into.id, out.id],
+      ['j.nope', 'j.nada'],
+      [out.id, into.id],
+    ];
+    svg({ values, cables });
+    const { values: drawn, cables: drawnCables } = vi.mocked(renderPanel).mock.lastCall![0];
+    const page = fitPanel(modelD, values, cables);
+    expect(page.cables.length).toBe(2);
+    expect(drawn).toEqual(page.values);
+    expect(drawnCables).toEqual(page.cables);
+  });
 
   it('hands the faceplate handlers that change nothing: a picture cannot be played', () => {
     const plain = svg();
