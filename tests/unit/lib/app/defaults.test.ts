@@ -106,6 +106,16 @@ import {
   listPlatformAgents,
   __resetPlatformAgentsForTests,
 } from '@/lib/orchestration/agents/platform-agents';
+// FORK (Know Your Synth): the tutor fills the capability, context-contributor and platform-agent seams (`f-tutor` t-53).
+import { TUTOR_AGENT } from '@/lib/app/tutor/agent';
+import { TUTOR_CONTEXT_TYPE, synthContext } from '@/lib/app/tutor/context';
+import { TUTOR_TOOLS } from '@/lib/app/tutor/tools';
+import {
+  registerAppCapabilities,
+  __resetRegistrationForTests,
+} from '@/lib/orchestration/capabilities/registry';
+import { capabilityDispatcher } from '@/lib/orchestration/capabilities/dispatcher';
+import { __resetContextContributorsForTests } from '@/lib/orchestration/chat/context-builder';
 import {
   ACCOUNT_SURFACES,
   getRegisteredAccountSections,
@@ -208,13 +218,40 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/capabilities.ts',
     risk: 'a stray capability would be dispatchable on every install',
     // Behavioural reach into the dispatcher is covered by bootstrap-wiring.test.ts.
-    assert: () => expect(initAppCapabilities()).toBeUndefined(),
+    // Know Your Synth fills this seam: pinned to the tutor's four tools, the same instances in the same order, so a
+    // stray registration still fails.
+    assert: () => {
+      __resetRegistrationForTests();
+      const register = vi
+        .spyOn(capabilityDispatcher, 'register')
+        .mockImplementation(() => undefined);
+      try {
+        initAppCapabilities();
+        registerAppCapabilities();
+        expect(register.mock.calls.map(([capability]) => capability)).toEqual([...TUTOR_TOOLS]);
+        register.mock.calls.forEach(([capability], i) => expect(capability).toBe(TUTOR_TOOLS[i]));
+      } finally {
+        register.mockRestore();
+        __resetRegistrationForTests();
+      }
+    },
   },
   {
     seam: 'lib/app/context-contributors.ts',
     risk: 'a stray contributor would inject prompt context into every chat turn',
     // Behavioural reach into buildContext is covered by context-builder.test.ts.
-    assert: () => expect(initAppContextContributors()).toBeUndefined(),
+    // Know Your Synth fills this seam: pinned to its one type, the tutor's synth context. Read from the store
+    // `registerContextContributor` writes, which `context-builder.ts` keeps on `globalThis`.
+    assert: () => {
+      __resetContextContributorsForTests();
+      initAppContextContributors();
+      const store = (globalThis as { sunriseChatContextContributors?: Map<string, unknown> })
+        .sunriseChatContextContributors;
+      expect([...(store ?? new Map<string, unknown>())]).toEqual([
+        [TUTOR_CONTEXT_TYPE, synthContext],
+      ]);
+      __resetContextContributorsForTests();
+    },
   },
   {
     seam: 'lib/app/admin-nav.ts',
@@ -475,10 +512,10 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       __resetPlatformAgentsForTests();
       // The read triggers the lazy init, so this exercises the REAL file:
       // exactly core's definitions, the same objects, in the same order.
-      expect(listPlatformAgents()).toEqual(CORE_PLATFORM_AGENTS);
-      listPlatformAgents().forEach((definition, i) =>
-        expect(definition).toBe(CORE_PLATFORM_AGENTS[i])
-      );
+      // Know Your Synth fills this seam: pinned to core's definitions and then the tutor, so a stray one still fails.
+      const expected = [...CORE_PLATFORM_AGENTS, TUTOR_AGENT];
+      expect(listPlatformAgents()).toEqual(expected);
+      listPlatformAgents().forEach((definition, i) => expect(definition).toBe(expected[i]));
     },
   },
   {

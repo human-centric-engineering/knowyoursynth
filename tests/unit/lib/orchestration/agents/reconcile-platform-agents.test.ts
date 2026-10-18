@@ -902,7 +902,9 @@ describe('reconcilePlatformAgents', () => {
     });
   });
 
-  it('materialises the real registry: 12 agents per org, 16 in the install org', async () => {
+  // FORK (Know Your Synth): the real registry includes the fork's own platform agent, the tutor (`f-tutor` t-53),
+  // in the install org only. Pinned: one more in the install org, none more elsewhere.
+  it('materialises the real registry: 12 agents per org, 16 in the install org, and the tutor', async () => {
     mockEnv.TENANCY_MODE = 'multi';
     registry.definitions = null;
     fake.state.capabilities = [];
@@ -911,14 +913,16 @@ describe('reconcilePlatformAgents', () => {
     const install = await reconcilePlatformAgents('install');
     const other = await reconcilePlatformAgents(ORG_B);
 
-    expect(install.created).toHaveLength(CORE_PLATFORM_AGENTS.length);
-    expect(install.created).toHaveLength(16);
+    expect(install.created).toHaveLength(CORE_PLATFORM_AGENTS.length + 1);
+    expect(install.created).toHaveLength(17);
+    expect(install.created).toContain('synth-tutor');
     expect(other.created).toHaveLength(12);
     for (const slug of [
       'provider-model-auditor',
       'audit-report-writer',
       'pattern-advisor',
       'quiz-master',
+      'synth-tutor',
     ]) {
       expect(other.created).not.toContain(slug);
     }
