@@ -8,11 +8,12 @@
     "npm": ">=11.11.0"
   },
   "scripts": {
-    "predev": "tsx scripts/build-audio-workers.ts",
+    "predev": "tsx scripts/build-audio-workers.ts && tsx scripts/build-panel-renderer.ts",
     "dev": "node scripts/dev-server.mjs next-dev",
-    "prebuild": "tsx scripts/build-audio-workers.ts",
+    "prebuild": "tsx scripts/build-audio-workers.ts && tsx scripts/build-panel-renderer.ts",
     "build": "next build",
     "build:audio-workers": "tsx scripts/build-audio-workers.ts",
+    "build:panel-renderer": "tsx scripts/build-panel-renderer.ts",
     "check:synths": "tsx scripts/check-synths.ts",
     "start": "node scripts/dev-server.mjs next-start",
     "lint": "node scripts/run-capped.mjs eslint . --cache --cache-strategy content",
@@ -132,6 +133,7 @@
     "@radix-ui/react-tooltip": "^1.2.16",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.1.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@sentry/nextjs": "^11.4.0",
     "@tailwindcss/typography": "^0.5.20",
     "@vercel/blob": "^2.8.0",

@@ -177,10 +177,51 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   any other sound leaves it; **Load it again** puts it back.
 - **Metadata:** a link share is `noindex`, and its description names no author unless the byline
   rule gives one. A published sound is canonical at its address.
-- **The social card** (`opengraph-image.tsx`, `components/app/sharing/social-card.tsx`): text only
-  (owner ruling): the maker and synth, the sound's name and `@author` as the byline rule allows, on
-  a `panel` to `panel2` gradient in `ink`, from that synth's `theme`. A picture of the panel is h5
-  (t-50).
+- **The social card** (`opengraph-image.tsx`, `components/app/sharing/sound-card-image.tsx`,
+  `social-card.tsx`; t-50). It is 1200×630. One line gives the maker and synth with the brand.
+  The next gives the sound's name (cut short with an ellipsis) and `@author` as the byline rule
+  allows. Below them is the synth's panel with this sound's values and cables, in the synth's
+  `Synth.design` and in the view the page opens in (the modular case for a modular synth). It sits
+  on a `panel` to `panel2` gradient in `ink`, from that synth's `theme`. A sound with nothing that
+  fits the synth any more, or a panel that fails to draw (logged), gets the text card: the same
+  lines with no picture.
+- **How the panel is drawn** (owner ruling on `f-sharing`):
+  - App Router code cannot call `SynthPanel` (a `'use client'` module) or import
+    `react-dom/server`. So `scripts/build-panel-renderer.ts` bundles `panel-render-entry.tsx`, with
+    its own React, into `components/app/sharing/generated/panel-render.mjs`. That runs before `dev`
+    and `build`, and the output is gitignored; its type is the committed `.d.mts`. The entry imports
+    `react-dom/server.browser`, not `react-dom/server`: the Node build `require`s `async_hooks`,
+    `stream` and others at run time, and the route's bundler refuses a dynamic `require`.
+  - `panel-image.ts` renders the SVG through it, checking values and cables as the page's
+    `fitPanel` does.
+  - `@resvg/resvg-js` rasterises the SVG. It is native, so it is a server external in
+    `next.config.js` (a divergence row).
+  - `card-fonts.ts` unpacks the panel's `@fontsource` WOFFs to TrueType, renaming each to its
+    family, because the native resvg reads only font files. They go in a directory of the
+    process's own (`mkdtempSync`: a fresh name, open to the server's user alone), not a fixed
+    name in the shared temp directory, where another user could make it first and plant fonts
+    for the rasteriser (CodeQL's insecure-temporary-file rule). A file is written whenever it is
+    missing, and the directory made again if it is gone, because a temp cleaner may empty or
+    remove it under a running server. Each file is made with `wx` and written through its
+    handle, so nothing lands between a check and the write (CodeQL's file-system-race rule), and
+    one the disk failed to write whole is removed, to be written on the next draw. Each process
+    leaves its directory behind when it stops, about 400KB.
+- **Rejected:**
+  - A Pages API route. Any `pages/` directory makes Next type every `next/navigation` hook as
+    nullable, which breaks the platform's own code.
+  - Satori alone. It draws a subset of CSS, not the faceplate's SVG.
+- **Drawing a panel takes 0.2–1s**, on a public route, so `sound-card-image.tsx` guards it:
+  - Drawn panels are kept in memory (`lru-cache`): the most recently used 64, within 24MB, keyed
+    on a hash of synth, definition version, design and panel. A repeat request costs the read, an
+    edit is a new picture, and requests for one card at the same moment (several unfurlers
+    fetching a link just posted) share one drawing. A failed drawing is not kept.
+  - At most two are drawn at once; the rest wait. The rasteriser runs on Node's thread pool (four
+    threads by default), which the rest of the app's file, DNS and crypto work shares.
+  - The drawing code, the native rasteriser with it, is loaded on first use inside the fallback,
+    so a server where it cannot load (a missing platform binary) serves the text card, logged,
+    rather than an error.
+- **Known quirk:** a name too long for the line with no byline loses part of its ellipsis at the
+  card's edge (Satori's measurement); with a byline, the name shortens correctly.
 
 ## On the synth page
 
@@ -309,7 +350,9 @@ sound, the public read and its 404, the byline, copies and their credit);
 h2: `tests/unit/app/api/v1/public/published-sounds.test.ts` (Explore's read: published only,
 the filters and what is dropped, sort by saves, paging; a profile's and the sitemap's lists);
 `tests/unit/app/panel/shared-sound-page.test.tsx` (the page, its 404s, the metadata, the card in
-each synth's theme); `tests/unit/components/app/synth/synth-page-shared.test.tsx` (the sound on the
+each synth's theme, drawn in the catalogue's design); `tests/unit/components/app/sharing/`
+`panel-image.test.ts`, `sound-card-image.test.tsx` and `card-fonts.test.ts` (t-50: the panel's
+values, cables and design, the box, the text-card fallback, the kept panels, the fonts); `tests/unit/components/app/synth/synth-page-shared.test.tsx` (the sound on the
 panel, Save a copy only for a signed-in non-owner, Load it again, the address kept, a reload
 keeping the visitor's panel and the address after a copy, the gone-original fallback's body);
 `tests/unit/app/public/explore-page.test.tsx`; `tests/unit/components/app/sharing/sitemap.test.ts`;

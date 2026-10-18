@@ -1,0 +1,190 @@
+/**
+ * The social card's fonts (t-50): `@fontsource` WOFFs unpacked to TrueType for the rasteriser, each renamed to its
+ * family so the panel's `font-family` finds it. Pins:
+ *
+ * - a WOFF unpacks to an sfnt with the same tables, uncompressed, at 4-byte boundaries;
+ * - its name table says the family alone (not "… Medium"), which is what makes the panel's lettering match;
+ * - every file the card needs is written whole, left alone once it is there, and written again if it is removed;
+ * - they are written in a directory of the process's own, under a fresh name, that no other user can read or write;
+ * - a disk failure is passed on, and a font it left half written is taken away to be written again.
+ *
+ * @see components/app/sharing/card-fonts.ts
+ */
+
+import { existsSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { basename, dirname } from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { cardFontFiles, woffToSfnt } from '@/components/app/sharing/card-fonts';
+
+const WOFF = readFileSync(
+  'node_modules/@fontsource/barlow-semi-condensed/files/barlow-semi-condensed-latin-500-normal.woff'
+);
+
+/** The sfnt's tables: tag → [offset, length]. */
+function tables(sfnt: Buffer): Map<string, [number, number]> {
+  const count = sfnt.readUInt16BE(4);
+  return new Map(
+    Array.from({ length: count }, (_, i) => {
+      const at = 12 + i * 16;
+      return [
+        sfnt.toString('ascii', at, at + 4),
+        [sfnt.readUInt32BE(at + 8), sfnt.readUInt32BE(at + 12)],
+      ];
+    })
+  );
+}
+
+/** Every Windows-platform name record's text, by name id. */
+function names(sfnt: Buffer): Map<number, string> {
+  const [at] = tables(sfnt).get('name')!;
+  const count = sfnt.readUInt16BE(at + 2);
+  const strings = at + sfnt.readUInt16BE(at + 4);
+  const out = new Map<number, string>();
+  for (let i = 0; i < count; i++) {
+    const r = at + 6 + i * 12;
+    if (sfnt.readUInt16BE(r) !== 3) continue;
+    const len = sfnt.readUInt16BE(r + 8);
+    const off = strings + sfnt.readUInt16BE(r + 10);
+    out.set(
+      sfnt.readUInt16BE(r + 6),
+      Buffer.from(sfnt.subarray(off, off + len))
+        .swap16()
+        .toString('utf16le')
+    );
+  }
+  return out;
+}
+
+describe('woffToSfnt', () => {
+  it('unpacks every table, uncompressed and aligned, under the WOFF header’s flavour', () => {
+    const sfnt = woffToSfnt(WOFF, 'Barlow Semi Condensed');
+    expect(sfnt.readUInt32BE(0)).toBe(WOFF.readUInt32BE(4));
+    const count = WOFF.readUInt16BE(12);
+    const t = tables(sfnt);
+    expect(t.size).toBe(count);
+    for (let i = 0; i < count; i++) {
+      const e = 44 + i * 20;
+      const tag = WOFF.toString('ascii', e, e + 4);
+      const [offset, length] = t.get(tag)!;
+      expect(offset % 4).toBe(0);
+      expect(offset + length).toBeLessThanOrEqual(sfnt.length);
+      // every table but the rewritten name table is its original length
+      if (tag !== 'name') expect(length).toBe(WOFF.readUInt32BE(e + 12));
+    }
+  });
+
+  it('names the font for its family alone, where the WOFF names the weight too', () => {
+    const before = names(woffToSfnt(WOFF, 'placeholder'));
+    expect(before.get(1)).toBe('placeholder');
+    const after = names(woffToSfnt(WOFF, 'Barlow Semi Condensed'));
+    expect(after.get(1)).toBe('Barlow Semi Condensed');
+    expect(after.get(2)).toBe('Regular');
+  });
+
+  it('refuses a file that is not a WOFF', () => {
+    expect(() =>
+      woffToSfnt(Buffer.from('not a font at all, nowhere near 44 bytes long..'), 'X')
+    ).toThrow(/Not a WOFF/);
+  });
+});
+
+describe('cardFontFiles', () => {
+  /** Every directory a test's fonts went in, removed after it. */
+  const made = new Set<string>();
+  const fontFiles = () => {
+    const files = cardFontFiles();
+    made.add(dirname(files[0]));
+    return files;
+  };
+  afterEach(() => {
+    for (const dir of made) rmSync(dir, { recursive: true, force: true });
+    made.clear();
+  });
+
+  it('writes each face the panel uses, whole, and leaves it be once it is there', () => {
+    const files = fontFiles();
+    expect(files.length).toBe(12);
+    for (const f of files) expect(existsSync(f)).toBe(true);
+    expect(files.some((f) => f.endsWith('michroma-latin-400-normal.ttf'))).toBe(true);
+    expect(readdirSync(dirname(files[0])).filter((f) => !f.endsWith('.ttf'))).toEqual([]);
+    const written = files.map((f) => statSync(f).mtimeMs);
+    expect(fontFiles()).toEqual(files);
+    expect(files.map((f) => statSync(f).mtimeMs)).toEqual(written);
+  });
+
+  it('writes them in a directory of its own, under a fresh name, open to this user alone', () => {
+    const files = fontFiles();
+    const dir = dirname(files[0]);
+    expect(dirname(dir)).toBe(tmpdir());
+    expect(basename(dir)).toMatch(/^kys-card-fonts-.{6}$/);
+    expect(statSync(dir).mode & 0o777).toBe(0o700);
+    for (const f of files) {
+      expect(dirname(f)).toBe(dir);
+      expect(statSync(f).mode & 0o077).toBe(0);
+    }
+  });
+
+  it('unpacks again what a temp-directory cleaner has emptied or removed', () => {
+    const files = fontFiles();
+    const kept = readFileSync(files[0]);
+    rmSync(files[0]);
+    expect(fontFiles()).toEqual(files);
+    expect(readFileSync(files[0]).equals(kept)).toBe(true);
+
+    rmSync(dirname(files[0]), { recursive: true });
+    const again = fontFiles();
+    expect(again.map((f) => basename(f))).toEqual(files.map((f) => basename(f)));
+    for (const f of again) expect(existsSync(f)).toBe(true);
+    expect(readFileSync(again[0]).equals(kept)).toBe(true);
+  });
+
+  describe('when the disk fails it', () => {
+    /** The module loaded afresh over `fs` with `patch` applied; the directory it makes is removed after the test. */
+    async function withFs(
+      patch: (fs: typeof import('node:fs')) => Partial<typeof import('node:fs')>
+    ) {
+      const fs = await vi.importActual<typeof import('node:fs')>('node:fs');
+      vi.resetModules();
+      vi.doMock('node:fs', () => ({
+        ...fs,
+        mkdtempSync: (prefix: string) => {
+          const dir = fs.mkdtempSync(prefix);
+          made.add(dir);
+          return dir;
+        },
+        ...patch(fs),
+      }));
+      return (await import('@/components/app/sharing/card-fonts')).cardFontFiles;
+    }
+    afterEach(() => {
+      vi.doUnmock('node:fs');
+      vi.resetModules();
+    });
+
+    it('says so, for anything but a file already there', async () => {
+      const denied = Object.assign(new Error('EACCES: permission denied'), { code: 'EACCES' });
+      const fresh = await withFs(() => ({
+        openSync: () => {
+          throw denied;
+        },
+      }));
+      expect(() => fresh()).toThrow(denied);
+    });
+
+    it('takes away a font it could not write whole, and writes it next time', async () => {
+      const full = Object.assign(new Error('ENOSPC: no space left on device'), { code: 'ENOSPC' });
+      const fresh = await withFs((fs) => ({
+        writeFileSync: vi.fn(fs.writeFileSync).mockImplementationOnce(() => {
+          throw full;
+        }),
+      }));
+      expect(() => fresh()).toThrow(full);
+      const [dir] = made;
+      expect(readdirSync(dir)).toEqual([]);
+      const files = fresh();
+      for (const f of files) expect(statSync(f).size).toBeGreaterThan(0);
+    });
+  });
+});

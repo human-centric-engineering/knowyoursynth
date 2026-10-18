@@ -31,9 +31,9 @@ the same PR**, and each row names what deletes it.
 - **Files:** `package.json`, `package-lock.json`, `README.md`, `.env.development`
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
-    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `check:synths`,
-    `smoke:sounds` and `smoke:profile` scripts, `esbuild` as a devDependency, and the five `@fontsource/*` packages as
-    dependencies.
+    repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
+    `check:synths`, `smoke:sounds` and `smoke:profile` scripts, `esbuild` as a devDependency, and
+    the five `@fontsource/*` packages and `@resvg/resvg-js` as dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
   - `README.md`: rewritten as Know Your Synth's.
@@ -41,7 +41,9 @@ the same PR**, and each row names what deletes it.
 - **Why:**
   - This is an application fork, and `APP_VERSION` comes from `package.json` (VERSIONING.md).
   - `predev` and `prebuild` bundle the AudioWorklet and the probe worker into `public/worklets/`
-    (decision on f-engine t-2/t-3), and `esbuild` is the bundler they use.
+    (decision on f-engine t-2/t-3), and `esbuild` is the bundler they use. They also bundle the
+    social card's panel renderer (t-50, `.context/app/sharing.md`), which `@resvg/resvg-js`
+    rasterises.
   - The `@fontsource/*` packages self-host the prototype's faces under their real family names,
     which the ported panel names literally (`app/(panel)/layout.tsx`).
   - Port 3024 lets the app run beside the other HCE checkouts (3010–3022, listed in the file).
@@ -75,7 +77,8 @@ the same PR**, and each row names what deletes it.
 - **Files:** `.gitignore`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`
 - **Change:**
   - `.gitignore` ignores `public/worklets/`, the build output of
-    `scripts/build-audio-workers.ts`.
+    `scripts/build-audio-workers.ts`, and `components/app/sharing/generated/panel-render.mjs`, the
+    output of `scripts/build-panel-renderer.ts`.
   - `.prettierignore`, ESLint's `ignores` and `tsconfig.json`'s `exclude` each gain `prototype`.
 - **Why:**
   - `prototype/` is the original single-file artefact, kept verbatim as the source to port from
@@ -86,7 +89,8 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** app-specific, never going upstream.
 - **Delete when:**
   - the `prototype` entries: when `prototype/` is removed (f-launch x5, D13);
-  - the `public/worklets/` line: when the worklet and worker stop being built into `public/`.
+  - the `public/worklets/` line: when the worklet and worker stop being built into `public/`;
+  - the `panel-render.mjs` line: when the social card stops drawing the panel from a bundle.
 
 ### CLAUDE.md: the Hub block
 
@@ -239,6 +243,22 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** sunrise#976 lands with an equivalent that reads the same secret names (or we
   rename ours to match).
 
+### The card rasteriser as a server external
+
+- **Files:** `next.config.js`
+- **Change:** `serverExternalPackages` gains `@resvg/resvg-js`, with a comment naming this row.
+- **Why:** a shared sound's social card draws the panel and rasterises it with resvg (t-50,
+  `.context/app/sharing.md`). resvg loads a platform-specific `.node` binary by package name, and
+  the bundler cannot resolve that ("could not resolve `@resvg/resvg-js-darwin-arm64`"). Kept
+  external, it loads from `node_modules` at runtime, as `@napi-rs/canvas` does beside it. No seam
+  takes app packages for this list.
+- **On conflict:** take theirs and re-add the one entry, with its comment, at the end of the list.
+- **Upstream:** app-specific. A seam for app server externals would remove the row; none is filed
+  yet.
+- **Delete when:** the card stops using resvg, or Next lists `@resvg/resvg-js` among its built-in
+  server externals (`next/dist/lib/server-external-packages.jsonc`), or Sunrise gains a seam for
+  app server externals.
+
 ## New files in platform directories
 
 These aren't rows. A new file can't conflict until Sunrise adds a file at the same path, which
@@ -254,7 +274,7 @@ Today they are:
 - `app/(public)/bank/**`, the databank's pages;
 - `app/api/v1/bank/**` and `app/api/v1/admin/bank/**`, the databank's API and its suggestions;
 - `app/admin/synths/**`, the Synths admin pages;
-- `scripts/build-audio-workers.ts` and `scripts/check-synths.ts`;
+- `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts` and `scripts/check-synths.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
 - `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
 - `tests/fixtures/synths/**`;
@@ -272,12 +292,13 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile and the synths owned and wanted, on settings only) and `lib/app/jobs.ts` (the prune of lapsed held usernames): fork-owned
+  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames) and
+  `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50): fork-owned
   scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
-  `account-sections`, `jobs`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `account-sections`, `jobs`, `eslint.config`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.
