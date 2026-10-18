@@ -48,10 +48,12 @@ vi.mock('@/lib/auth/client', () => ({
   }),
 }));
 // The account's settings and last panel (`f-my-sounds` s3) answer "nothing kept yet" here, and their writes are
-// dropped, so `api` sees only the sounds API this file is about. They are tested in synth-page-account.test.tsx.
+// dropped, so `api` sees only the sounds API this file is about. They are tested in synth-page-account.test.tsx. The
+// tutor's reads (`f-tutor` t-56) answer "no conversation yet"; the tutor is tested in tests/unit/components/app/tutor/.
 vi.mock('@/lib/api/client', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/api/client')>();
   const account = (path: string) => path.startsWith('/api/v1/me/');
+  const tutor = (path: string) => path.startsWith('/api/v1/tutor/');
   return {
     ...real,
     apiClient: {
@@ -63,7 +65,13 @@ vi.mock('@/lib/api/client', async (importOriginal) => {
                 ? { tips: null, dim: null, heat: null, harm: null, fx: null }
                 : null
             )
-          : api.get(path, opts),
+          : tutor(path)
+            ? Promise.resolve(
+                path === '/api/v1/tutor/allowance'
+                  ? { limit: 30, used: 0, remaining: 30, resetsAt: '2026-10-19T00:00:00.000Z' }
+                  : { conversation: null }
+              )
+            : api.get(path, opts),
       put: (path: string) => (account(path) ? Promise.resolve(null) : api.put(path)),
       patch: (path: string, opts?: unknown) =>
         account(path) ? Promise.resolve(null) : api.patch(path, opts),
