@@ -42,4 +42,9 @@ import { z } from 'zod';
  *
  * Full guide: CUSTOMIZATION.md §4 · .context/environment/overview.md
  */
-export const appEnvSchema = z.object({});
+export const appEnvSchema = z.object({
+  /* Know Your Synth: the tutor's turns per person per UTC day (D6, `f-tutor` t-54). An env setting so it can be
+     tuned from the cost dashboard without a release; the production number is set at f-launch x4. See
+     .context/app/tutor.md. */
+  TUTOR_DAILY_TURNS: z.coerce.number().int().min(1).max(1000).default(30),
+});

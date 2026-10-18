@@ -467,7 +467,9 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/env.ts',
     risk: 'a stray key would make an unset env var fail boot on every install',
     // An empty z.object() accepts (and strips) anything → parses {} to {}.
-    assert: () => expect(appEnvSchema.parse({})).toEqual({}),
+    // FORK (Know Your Synth): pinned to the tutor's daily allowance (`f-tutor` t-54), which has a default, rather than
+    // deleted, so a stray key that fails boot when unset still fails here. Ledger: .context/app/divergences.md.
+    assert: () => expect(appEnvSchema.parse({})).toEqual({ TUTOR_DAILY_TURNS: 30 }),
   },
   {
     seam: 'lib/app/eslint.config.mjs',
