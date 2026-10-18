@@ -85,7 +85,7 @@ designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on t
 
 ## The routes
 
-**`POST /api/v1/tutor/stream`**, signed in (`withAuth`; a user's `chat` API key works too). The body
+**`POST /api/v1/tutor/stream`**, signed in (`withAuth`; a user's API key works too). The body
 is `{ synthId, panel: { values, cables }, message, conversationId? }`: the message up to 4,000
 characters, the conversation one the caller started with the tutor (another person's, or another
 agent's, ends the stream with `conversation_not_found`). The answer is Sunrise's chat SSE stream
@@ -130,6 +130,10 @@ hold: it is a cost cap, and the cost is per turn.
   browser. `resetsAt` is the next UTC midnight.
 - **Counted from the transcript, not stored.** So deleting a conversation gives its turns back. That
   is fine for a cost cap, and not worth a table.
+- **The caller's own rows only.** `conversation: { userId }` from the session, like core's
+  `conversations/export`: a thread nobody owns is nobody's turn. So it does not go through
+  `conversation-access`, and is declared to Sunrise's ownerless-surface guard in
+  `appOwnerlessSurfaceExceptions` (`lib/app/ci.ts`) with that reason.
 - **A soft cap.** Two turns sent at the same instant can both read 29 and both go ahead. That
   overshoots by a turn or two, never by a day's worth, and the per-minute caps keep it to a few.
 - **`TUTOR_DAILY_TURNS`**, through `lib/app/env.ts`: 1 to 1,000, **30** when unset, as BeatBuddy's.
@@ -261,7 +265,8 @@ model registry) leaves BeatBuddy's `hydrateFromDb()` workaround unneeded.
 
 It needs a server, `npm run db:seed` (the tool rows and the tutor, bound), an active provider whose
 key is in `.env.local`, and a default chat model. **Not run yet:** when t-53 was built the dev database
-had no provider configured, and the run was deferred (2026-10-18). Record each run here.
+had no provider configured, and the run was deferred (2026-10-18). At t-54 it was rewritten to go
+through the route, and deferred again by the owner (2026-10-18). Record each run here.
 
 | Date | Provider and model | Turn | Tools called | Cost |
 | ---- | ------------------ | ---- | ------------ | ---- |
