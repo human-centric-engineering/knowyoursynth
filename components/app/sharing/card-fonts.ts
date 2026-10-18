@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -177,20 +177,23 @@ const SOURCES = FACES.flatMap(({ family, files }) =>
   files.map((src) => ({ family, path: fileURLToPath(src) }))
 );
 
+/** This process's font directory, once it has one. */
+let fontDir: string | undefined;
+
 /**
- * The card's font files on disk, in `dir`. Each is unpacked whenever it is missing: on the first call, and again after
- * a temp-directory cleaner has emptied `dir` under a running server. It is written under a name of its own and renamed
- * into place, so a process sharing `dir` reads the whole file or none of it; whoever writes it, the bytes are the same.
+ * The card's font files on disk. They go in a directory of this process's own, made by `mkdtempSync`: a fresh name,
+ * open to this user alone. So nothing else on the machine can make it first, or put a font in it for the rasteriser to
+ * read, as it could under a fixed name in a shared temp directory. Each file is unpacked whenever it is missing: on the
+ * first call, and again after a temp-directory cleaner has emptied the directory, or removed it, under a running
+ * server.
  */
-export function cardFontFiles(dir = join(tmpdir(), 'kys-card-fonts')): string[] {
+export function cardFontFiles(): string[] {
+  if (!fontDir || !existsSync(fontDir)) fontDir = mkdtempSync(join(tmpdir(), 'kys-card-fonts-'));
+  const dir = fontDir;
   return SOURCES.map(({ family, path }) => {
     const out = join(dir, `${basename(path, '.woff')}.ttf`);
-    if (!existsSync(out)) {
-      mkdirSync(dir, { recursive: true });
-      const part = `${out}.${process.pid}.part`;
-      writeFileSync(part, woffToSfnt(readFileSync(path), family));
-      renameSync(part, out);
-    }
+    if (!existsSync(out))
+      writeFileSync(out, woffToSfnt(readFileSync(path), family), { mode: 0o600 });
     return out;
   });
 }

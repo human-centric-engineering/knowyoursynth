@@ -15,13 +15,16 @@
  * @see components/app/sharing/panel-image.ts
  */
 
-import { describe, expect, it, vi } from 'vitest';
+import { rmSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/components/app/sharing/panel-render', async () => {
   const entry = await import('@/components/app/sharing/panel-render-entry');
   return { renderPanel: vi.fn(entry.renderPanel) };
 });
 
+import { cardFontFiles } from '@/components/app/sharing/card-fonts';
 import { panelPng, panelSvg } from '@/components/app/sharing/panel-image';
 import { renderPanel } from '@/components/app/sharing/panel-render';
 import { fitPanel } from '@/components/app/synth/storage';
@@ -29,6 +32,9 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 
 const modelD = getSynthDef('model-d')!;
+
+// The drawings unpack the real fonts into a directory of this process's own; it goes with the tests.
+afterAll(() => rmSync(dirname(cardFontFiles()[0]), { recursive: true, force: true }));
 
 const svg = (over: Partial<Parameters<typeof panelSvg>[0]> = {}) =>
   panelSvg({ def: modelD, values: {}, cables: [], design: 'neutral', ...over }).svg;

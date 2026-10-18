@@ -196,11 +196,14 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
     `fitPanel` does.
   - `@resvg/resvg-js` rasterises the SVG. It is native, so it is a server external in
     `next.config.js` (a divergence row).
-  - `card-fonts.ts` unpacks the panel's `@fontsource` WOFFs to TrueType in the temp directory,
-    renaming each to its family, because the native resvg reads only font files. A file is
-    written whenever it is missing (a temp cleaner may empty the directory under a running
-    server), under its own name and renamed into place, so another process never reads half of
-    one.
+  - `card-fonts.ts` unpacks the panel's `@fontsource` WOFFs to TrueType, renaming each to its
+    family, because the native resvg reads only font files. They go in a directory of the
+    process's own (`mkdtempSync`: a fresh name, open to the server's user alone), not a fixed
+    name in the shared temp directory, where another user could make it first and plant fonts
+    for the rasteriser (CodeQL's insecure-temporary-file rule). A file is written whenever it is
+    missing, and the directory made again if it is gone, because a temp cleaner may empty or
+    remove it under a running server. Each process leaves its directory behind when it stops,
+    about 400KB.
 - **Rejected:**
   - A Pages API route. Any `pages/` directory makes Next type every `next/navigation` hook as
     nullable, which breaks the platform's own code.

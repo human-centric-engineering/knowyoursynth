@@ -4,15 +4,16 @@
  *
  * - a WOFF unpacks to an sfnt with the same tables, uncompressed, at 4-byte boundaries;
  * - its name table says the family alone (not "… Medium"), which is what makes the panel's lettering match;
- * - every file the card needs is written whole, left alone once it is there, and written again if it is removed.
+ * - every file the card needs is written whole, left alone once it is there, and written again if it is removed;
+ * - they are written in a directory of the process's own, under a fresh name, that no other user can read or write.
  *
  * @see components/app/sharing/card-fonts.ts
  */
 
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { basename, dirname } from 'node:path';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import { cardFontFiles, woffToSfnt } from '@/components/app/sharing/card-fonts';
 
@@ -89,31 +90,52 @@ describe('woffToSfnt', () => {
 });
 
 describe('cardFontFiles', () => {
-  let dir: string;
-  beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), 'kys-card-fonts-test-'));
-  });
+  /** Every directory a test's fonts went in, removed after it. */
+  const made = new Set<string>();
+  const fontFiles = () => {
+    const files = cardFontFiles();
+    made.add(dirname(files[0]));
+    return files;
+  };
   afterEach(() => {
-    rmSync(dir, { recursive: true, force: true });
+    for (const dir of made) rmSync(dir, { recursive: true, force: true });
+    made.clear();
   });
 
   it('writes each face the panel uses, whole, and leaves it be once it is there', () => {
-    const files = cardFontFiles(dir);
+    const files = fontFiles();
     expect(files.length).toBe(12);
     for (const f of files) expect(existsSync(f)).toBe(true);
     expect(files.some((f) => f.endsWith('michroma-latin-400-normal.ttf'))).toBe(true);
-    expect(readdirSync(dir).filter((f) => !f.endsWith('.ttf'))).toEqual([]);
+    expect(readdirSync(dirname(files[0])).filter((f) => !f.endsWith('.ttf'))).toEqual([]);
     const written = files.map((f) => statSync(f).mtimeMs);
-    expect(cardFontFiles(dir)).toEqual(files);
+    expect(fontFiles()).toEqual(files);
     expect(files.map((f) => statSync(f).mtimeMs)).toEqual(written);
   });
 
-  it('unpacks again what a temp-directory cleaner has removed', () => {
-    const files = cardFontFiles(dir);
+  it('writes them in a directory of its own, under a fresh name, open to this user alone', () => {
+    const files = fontFiles();
+    const dir = dirname(files[0]);
+    expect(dirname(dir)).toBe(tmpdir());
+    expect(basename(dir)).toMatch(/^kys-card-fonts-.{6}$/);
+    expect(statSync(dir).mode & 0o777).toBe(0o700);
+    for (const f of files) {
+      expect(dirname(f)).toBe(dir);
+      expect(statSync(f).mode & 0o077).toBe(0);
+    }
+  });
+
+  it('unpacks again what a temp-directory cleaner has emptied or removed', () => {
+    const files = fontFiles();
     const kept = readFileSync(files[0]);
-    rmSync(dir, { recursive: true });
-    expect(cardFontFiles(dir)).toEqual(files);
-    for (const f of files) expect(existsSync(f)).toBe(true);
+    rmSync(files[0]);
+    expect(fontFiles()).toEqual(files);
     expect(readFileSync(files[0]).equals(kept)).toBe(true);
+
+    rmSync(dirname(files[0]), { recursive: true });
+    const again = fontFiles();
+    expect(again.map((f) => basename(f))).toEqual(files.map((f) => basename(f)));
+    for (const f of again) expect(existsSync(f)).toBe(true);
+    expect(readFileSync(again[0]).equals(kept)).toBe(true);
   });
 });
