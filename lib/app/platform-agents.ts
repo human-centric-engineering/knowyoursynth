@@ -46,6 +46,10 @@
  *
  * Full guide: .context/orchestration/platform-agents.md
  */
+import { TUTOR_AGENT } from '@/lib/app/tutor/agent';
+import { registerPlatformAgent } from '@/lib/orchestration/agents/platform-agents';
+
+/** Know Your Synth: the tutor (`f-tutor` t-53), in the install org only. */
 export function initAppPlatformAgents(): void {
-  // No app platform agents by default.
+  registerPlatformAgent(TUTOR_AGENT);
 }

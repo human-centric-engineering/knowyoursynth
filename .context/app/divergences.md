@@ -32,7 +32,7 @@ the same PR**, and each row names what deletes it.
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
-    `check:synths`, `smoke:sounds` and `smoke:profile` scripts, `esbuild` as a devDependency, and
+    `check:synths`, `smoke:sounds`, `smoke:profile` and `smoke:tutor` scripts, `esbuild` as a devDependency, and
     the five `@fontsource/*` packages and `@resvg/resvg-js` as dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
@@ -110,20 +110,20 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds five bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+- **Change:** adds six bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
   the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
   catalogue and reading it for the API), `lib/app/bank/` (the same for the databank),
-  `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1) and `lib/app/profile/` (synth profiles,
-  `f-profiles` r1).
+  `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1), `lib/app/profile/` (synth profiles,
+  `f-profiles` r1) and `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our five bullets in the `lib/app/` list, in
+- **On conflict:** take theirs and re-insert our six bullets in the `lib/app/` list, in
   alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth, catalogue, databank, sounds or profile code lives in `lib/app/`, or when the guard reads fork
-  scaffolds from a fork-owned file.
+- **Delete when:** none while synth, catalogue, databank, sounds, profile or tutor code lives in `lib/app/`, or when the guard
+  reads fork scaffolds from a fork-owned file.
 
 ### The reserved-tier test, pinned to our app models
 
@@ -171,6 +171,26 @@ the same PR**, and each row names what deletes it.
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
 - **Delete when:** sunrise#964 lands. Move the twenty-eight names (eighteen global, ten system) into the new seam's scaffold.
+
+### The real-registry counts, pinned to the tutor
+
+- **Files:** `tests/unit/lib/orchestration/agents/reconcile-platform-agents.test.ts`,
+  `scripts/smoke/tenancy-isolation.ts`
+- **Change:** the `materialises the real registry` case expects one more agent in the install org
+  than core defines (17, the tutor `synth-tutor` among them) and the tutor in no other org, under a
+  `FORK` comment (`f-tutor` t-53). The two-org smoke's step [11] check expects five install-only
+  agents, the tutor among them, not four.
+- **Why:** the case reads the real registry, which runs the fork's `initAppPlatformAgents()`, so
+  filling `lib/app/platform-agents.ts` necessarily changes its count (`HB2`). It reaches the seam
+  through the registry rather than importing it, so `fork-seam-coupling.test.ts` does not ask it
+  for a fork note, and a fork meets the failure with nothing to read.
+- **On conflict:** take theirs, and re-apply the pin to whichever case or check counts the real
+  registry's install-org agents.
+- **Upstream:** raised as
+  [sunrise#1032](https://github.com/human-centric-engineering/sunrise/issues/1032): mock the seam
+  in that case, or give it a fork note.
+- **Delete when:** upstream stops counting the fork's agents in both places, or the fork registers
+  no platform agent.
 
 ### The drift-probe scaffold test, pinned to our probe
 
@@ -274,13 +294,14 @@ Today they are:
 - `app/(public)/bank/**`, the databank's pages;
 - `app/api/v1/bank/**` and `app/api/v1/admin/bank/**`, the databank's API and its suggestions;
 - `app/admin/synths/**`, the Synths admin pages;
-- `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts` and `scripts/check-synths.ts`;
+- `scripts/build-audio-workers.ts`, `scripts/build-panel-renderer.ts`, `scripts/check-synths.ts` and
+  `scripts/smoke/tutor.ts`;
 - `prisma/migrations/*_catalogue/` and the fork's later migrations;
 - `prisma/seeds/app-knowyoursynth/**`, the fork's seed units and their data;
 - `tests/fixtures/synths/**`;
 - `tests/unit/prototype-boundary.test.ts`;
-- the tests for fork-owned code, under `tests/unit/lib/app/synths/**`,
-  `tests/unit/components/app/**`, `tests/unit/app/panel/**` and
+- the tests for fork-owned code, under `tests/unit/lib/app/synths/**`, `tests/unit/lib/app/tutor/**`
+  (with `tests/helpers/tutor.ts`), `tests/unit/components/app/**`, `tests/unit/app/panel/**` and
   `tests/unit/app/public/bank-pages.test.tsx`.
 
 Before a sync, intersect that list with `git diff --diff-filter=A --name-only <base> <target>`.
@@ -292,13 +313,15 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames) and
-  `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50): fork-owned
-  scaffolds, filled.
+  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames),
+  `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
+  `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
+  tools, synth context and agent, `f-tutor` t-53): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
-  `account-sections`, `jobs`, `eslint.config`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
+  `platform-agents`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

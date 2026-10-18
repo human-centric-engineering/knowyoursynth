@@ -1185,25 +1185,34 @@ through the planning verbs:
 
 ## 8. The tutor — design
 
-**Shape.** BeatBuddy's pattern (BeatBreaker §6):
+The built design, with its numbers, is in [`../tutor.md`](../tutor.md). This section is the
+plan's summary of it, brought in line with the rulings made when `f-tutor` was planned
+(2026-10-18, journaled on the feature).
+
+**Shape.** BeatBuddy's pattern (BeatBreaker §6), with the 2026-10-18 rulings in bold:
 
 - a tutor panel on the synth page, where the prototype's tutor sat;
-- an app-owned stream route that pins the agent and passes the synth id and the current panel
-  as `entityContext`;
-- tools that execute server-side.
+- an app-owned stream route that pins the agent, passes the synth id as the context and the
+  current panel as `entityContext`, and enforces the allowance;
+- tools that execute server-side;
+- **a platform agent**, not a seeded one: registered in code from `lib/app/platform-agents.ts`
+  for the install org only, so its instructions, tools and visibility are re-applied after every
+  deploy. The provider, model and spend caps are the admin's;
+- **visibility `internal`**, the platform baseline. Sunrise's generic `/api/v1/chat/stream`
+  serves any `public` agent with no allowance, so the old sketch's `public` was wrong.
 
 The model never writes to the panel. It proposes, the server validates, and the user applies.
 
 **Tools.**
 
-| Tool                   | What it does                                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `get_panel`            | Reads the panel the client sent: values, cables, definition version.                                                |
-| `describe_synth`       | The synth's controls, jacks, areas and ranges, from the definition. It becomes a lookup if `t1` finds it too large. |
-| `propose_panel_change` | Returns a change set: controls to set, and cables to add or remove. Validated.                                      |
-| `design_sound`         | Returns a whole panel and a name, validated. The user can save it as one of their sounds, marked as from the tutor. |
-| `search_knowledge`     | Sunrise's vector search over the databank (`k1`).                                                                   |
-| `web_search`           | A search service when configured (`k2`). Otherwise the provider's own search, when it has one.                      |
+| Tool                   | What it does                                                                                                                                                          |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `get_panel`            | Reads the panel the route passed: the values that differ from init, the cables, the definition version.                                                               |
+| `describe_synth`       | The synth's controls, jacks and legal values, from the definition. A lookup for every synth (the DeepMind describes in about 40,600 tokens): by section, then prefix. |
+| `propose_panel_change` | Returns a change set: controls to set, and cables to add or remove. Validated against the synth and the panel; refused whole, naming what is wrong.                   |
+| `design_sound`         | Returns a whole sound **with its lesson** (steps, context, tweaks and a riff), validated. Saved as one of the user's sounds, it keeps the lesson and the tutor mark.  |
+| `search_knowledge`     | Sunrise's vector search over the databank (`k1`).                                                                                                                     |
+| `web_search`           | A search service when configured (`k2`). Otherwise the provider's own search, when it has one.                                                                        |
 
 **Sources.**
 
@@ -1211,17 +1220,17 @@ The model never writes to the panel. It proposes, the server validates, and the 
 - Answers about people and records try the databank first, then search, then the model's own
   knowledge.
 
-The tutor always says which source it used.
+The tutor always says which source it used (`f-tutor-knowledge`).
 
 **Guardrails and cost.**
 
 - A daily allowance per user. The number is set at `x4` and recorded against D6.
-- Per-turn caps.
+- A per-turn cap and a monthly budget, starting at $0.20 and $50 (the admin's to tune).
 - Topic boundaries.
-- No tool takes a user id from its arguments.
+- No tool takes a user id from its arguments, and no tool writes.
 
-**Provider.** The tutor shares BeatBuddy's provider and model choice. Its seed sets no
-provider.
+**Provider.** The tutor's definition sets no provider or model, so it inherits the org's
+default until an admin picks one. The production choice is made at `x4`.
 
 ---
 

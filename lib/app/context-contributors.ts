@@ -13,6 +13,10 @@
  *
  * Full guide + example: CUSTOMIZATION.md §4 · .context/orchestration/chat.md
  */
+import { TUTOR_CONTEXT_TYPE, synthContext } from '@/lib/app/tutor/context';
+import { registerContextContributor } from '@/lib/orchestration/chat/context-builder';
+
+/** Know Your Synth: the synth the tutor's learner has open (`f-tutor` t-53), keyed by synth id. */
 export function initAppContextContributors(): void {
-  // No app context contributors by default.
+  registerContextContributor(TUTOR_CONTEXT_TYPE, synthContext);
 }
