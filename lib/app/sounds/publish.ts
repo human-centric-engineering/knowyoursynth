@@ -9,7 +9,8 @@
  * 3. A synth no longer listed has no page to publish it on: 400, as a save there is.
  *    `NOT_PLAYABLE` (409): a sound saved on a definition the synth has moved on from, or whose panel no longer
  *    passes, has no panel anyone else could play. Saving it again brings it up to date.
- * 4. `NOT_ALLOWED` (422): a blocked word in the name or notes.
+ * 4. `NOT_ALLOWED` (422): a blocked word in the name or notes. `LESSON_NOT_ALLOWED` (422): one in the lesson, which
+ *    cannot be reworded, so the page offers to remove it.
  * 5. `DUPLICATE` (409): it plays the same as the library sound or shared sound it was copied from.
  * 6. A tag that synth's library sounds do not use: 400.
  * 7. `PUBLISH_LIMIT` (429): more than `PUBLISH_DAILY_CAP` first publications in 24 hours. Republishing keeps the
@@ -36,6 +37,7 @@ import {
   withFreshSlug,
 } from '@/lib/app/sounds/sharing';
 import type { PublishUserSound } from '@/lib/app/sounds/data';
+import { storedLesson } from '@/lib/app/sounds/lesson';
 import { validateSound } from '@/lib/app/synths/validate';
 
 /** First publications per person per 24 hours. */
@@ -94,7 +96,8 @@ export async function publishUserSound(
           `Some of this sound's settings no longer fit ${def.name}. Open it, check the panel and save it again before publishing.`
         );
 
-      assertPublishableText({ name: row.name, notes: row.notes });
+      // the lesson as stored, whether or not the synth can use it now: one that passes later is shown without a check
+      assertPublishableText({ name: row.name, notes: row.notes, lesson: storedLesson(row.lesson) });
       await assertChanged(def, {
         panel: panel.value,
         sourceSoundId: row.sourceSoundId,

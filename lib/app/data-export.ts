@@ -120,7 +120,7 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the library sound each copy credits, whether and when you shared or published each, with its address and tags, and when moderators unlisted one.',
+          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a sound and whether the tutor designed it, the library sound each copy credits, whether and when you shared or published each, with its address and tags, and when moderators unlisted one.',
       },
       {
         model: 'SoundReport',
@@ -423,6 +423,8 @@ function collectSounds(userId: string) {
       notes: true,
       values: true,
       cables: true,
+      lesson: true,
+      fromTutor: true,
       sourceSlug: true,
       sourceName: true,
       sourceRef: true,

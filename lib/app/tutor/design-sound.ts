@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { readPanel, refusal } from '@/lib/app/tutor/panel';
-import { CablePairSchema, validatePreset } from '@/lib/app/synths/validate';
+import { validatePreset } from '@/lib/app/synths/validate';
 import { PRESET_CATEGORIES, SYNTH_MODULES, type Preset } from '@/lib/app/synths/contract';
+import { MAX_CONTEXT, MAX_STEP_SET, SoundLessonSchema } from '@/lib/app/sounds/lesson';
 import { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
 import type {
   CapabilityContext,
@@ -10,66 +11,10 @@ import type {
 } from '@/lib/orchestration/capabilities/types';
 
 /**
- * The sound's limits: the ones `sanitizePreset` (`lib/app/synths/lib/patch.ts`) clamps the prototype's designs to.
- * There they repair; here going past one refuses, naming the field, as `validatePreset` refuses a bad id or value.
+ * The sound's name and its lesson. The lesson's limits are the ones a saved sound's lesson is held to
+ * (`lib/app/sounds/lesson.ts`), so a design the tool passes is one `POST /api/v1/sounds` takes.
  */
-const text = (max: number) => z.string().trim().min(1).max(max);
-/** The most controls one step sets, and the most controls the sound's context explains. */
-const MAX_STEP_SET = 32;
-const MAX_CONTEXT = 16;
-
-const PhraseNoteSchema = z.tuple([
-  z.number().min(0).max(16),
-  z.number().int().min(24).max(96),
-  z.number().min(0.05).max(16),
-]);
-
-const schema = z
-  .object({
-    name: text(60),
-    blurb: text(200),
-    level: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-    category: z.enum(PRESET_CATEGORIES),
-    how: text(900),
-    steps: z
-      .array(
-        z
-          .object({
-            title: text(90),
-            module: z.enum(SYNTH_MODULES),
-            why: text(1500),
-            set: z
-              .record(z.string().min(1).max(160), z.unknown())
-              .refine(
-                (set) => Object.keys(set).length <= MAX_STEP_SET,
-                `At most ${MAX_STEP_SET} controls in one step`
-              )
-              .optional(),
-            cables: z.array(CablePairSchema).max(16).optional(),
-          })
-          .strict()
-          .refine((s) => Object.keys(s.set ?? {}).length > 0 || (s.cables ?? []).length > 0, {
-            message: 'A step must set a control or plug in a cable',
-          })
-      )
-      .min(1)
-      .max(9),
-    context: z
-      .record(z.string().min(1).max(160), text(400))
-      .refine(
-        (context) => Object.keys(context).length <= MAX_CONTEXT,
-        `At most ${MAX_CONTEXT} controls in the context`
-      )
-      .optional(),
-    tweaks: z
-      .array(z.object({ id: z.string().min(1).max(160), try: text(200), hear: text(300) }).strict())
-      .max(5)
-      .optional(),
-    phrase: z
-      .object({ bpm: z.number().min(40).max(180), steps: z.array(PhraseNoteSchema).min(1).max(32) })
-      .strict(),
-  })
-  .strict();
+const schema = SoundLessonSchema.extend({ name: z.string().trim().min(1).max(60) }).strict();
 
 type Args = z.infer<typeof schema>;
 
@@ -203,8 +148,8 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
       how: args.how,
       phrase: { bpm: args.phrase.bpm, loop: true, steps: args.phrase.steps },
       steps: args.steps,
-      context: args.context ?? {},
-      tweaks: args.tweaks ?? [],
+      context: args.context,
+      tweaks: args.tweaks,
       ai: true,
     });
     if (!checked.ok)

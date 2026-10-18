@@ -18,6 +18,11 @@
  *
  * **Sharing** (`f-sharing` h1): PATCH moves a sound between private and link; only `publish.ts` makes it published.
  * Changing a published sound's name or notes runs the word check again, and its panel the unchanged-copy check.
+ *
+ * **A lesson** (`f-tutor` t-55, `lesson.ts`) comes with a sound when it is made, checked against the synth as its panel
+ * is, and refused (400) when anything in it is wrong. It is never changed after, only removed: saving a new panel over
+ * the sound leaves it as it was, so it goes on teaching the sound as it was designed. On read it is checked again, and
+ * served only while the synth can use it, as the panel is.
  */
 import type { Prisma, UserSound } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
@@ -26,6 +31,12 @@ import { NotFoundError, ValidationError } from '@/lib/api/errors';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 import { validateSound, type SoundProblem, type SoundState } from '@/lib/app/synths/validate';
+import {
+  checkLesson,
+  storedLesson,
+  type SoundLesson,
+  type SoundLessonInput,
+} from '@/lib/app/sounds/lesson';
 import type {
   CreateUserSound,
   SharedSource,
@@ -82,6 +93,35 @@ export function checkPanel(def: AppSynthDef, panel: unknown): SoundState {
   if (!result.ok)
     refuse(`The panel does not fit ${def.id}`, fromSoundProblems(result.problems, 'panel'));
   return result.value;
+}
+
+/** A lesson checked against the synth's current definition, or a 400 naming every problem. */
+function checkSentLesson(def: AppSynthDef, lesson: SoundLessonInput): SoundLesson {
+  const result = checkLesson(def, lesson);
+  if (!result.ok)
+    refuse(`The lesson does not fit ${def.id}`, fromSoundProblems(result.problems, 'lesson'));
+  return result.value;
+}
+
+/**
+ * The stored lesson as the synth can use it now, or null. One saved on a definition version the synth has moved on
+ * from waits for the mapping its panel waits for (`panelOf`), and one that no longer passes is not served, since its
+ * steps set the panel.
+ */
+function lessonOf(row: UserSound, log: boolean): SoundLesson | null {
+  const def = getSynthDef(row.synthId);
+  if (row.lesson == null || !def || row.definitionVersion !== def.version) return null;
+  const stored = storedLesson(row.lesson);
+  const result = stored ? checkLesson(def, stored) : null;
+  if (result?.ok) return result.value;
+  // logged on its owner's read of one sound only, as a panel that fails is
+  if (log)
+    logger.error('user sounds: stored lesson fails validation', {
+      soundId: row.id,
+      synthId: row.synthId,
+      problems: result?.problems ?? 'not a lesson',
+    });
+  return null;
 }
 
 /** As much of a stored panel as fits the synth's definition now: what the page opens for a sound that is not playable. */
@@ -159,6 +199,8 @@ function toDetail(row: UserSound, basedOn: SharedSource | null, log: boolean): U
           }
         : null,
     basedOn,
+    fromTutor: row.fromTutor,
+    lesson: lessonOf(row, log),
     visibility: row.visibility,
     slug: row.slug,
     publishedAt: row.publishedAt?.toISOString() ?? null,
@@ -221,6 +263,8 @@ async function sharedCopySource(
   name: string;
   notes: string | null;
   panel: SoundState | null;
+  lesson: SoundLesson | null;
+  fromTutor: boolean;
 }> {
   const row = await prisma.userSound.findFirst({
     where: { slug, synthId: def.id, visibility: { in: ['link', 'published'] }, unlistedAt: null },
@@ -242,13 +286,16 @@ async function sharedCopySource(
     name: row.name,
     notes: row.notes,
     panel: stored?.ok ? stored.value : null,
+    lesson: lessonOf(row, false),
+    fromTutor: row.fromTutor,
   };
 }
 
 /**
  * Save a new sound. A copy of a library sound records its credit; with no panel sent, the copy is that library sound
  * as it ends, every step applied, and with no name it takes the library sound's. A copy of a shared sound records the
- * sound it came from and carries its library credit; with no panel, name or notes sent it takes the shared sound's.
+ * sound it came from and carries its library credit; with no panel, name, notes, lesson or mark sent it takes the
+ * shared sound's.
  */
 export async function createUserSound(
   userId: string,
@@ -261,12 +308,16 @@ export async function createUserSound(
   let sourceName: string | undefined;
   let notes = input.notes || null;
   let panel = input.panel ? checkPanel(def, input.panel) : null;
+  let lesson = input.lesson ? checkSentLesson(def, input.lesson) : null;
+  let fromTutor = input.fromTutor ?? false;
   if (input.source && 'shared' in input.source) {
     const shared = await sharedCopySource(userId, def, input.source.shared);
     sourceUserSoundId = shared.sourceUserSoundId;
     source = shared.library;
     sourceName = shared.name;
     if (input.notes === undefined) notes = shared.notes;
+    if (input.lesson === undefined) lesson = shared.lesson;
+    if (input.fromTutor === undefined) fromTutor = shared.fromTutor;
     if (!panel) {
       if (!shared.panel)
         refuse(`That sound cannot be played on ${def.id} as it is now`, [
@@ -309,6 +360,8 @@ export async function createUserSound(
       notes,
       values: toJson(panel.values),
       cables: toJson(panel.cables),
+      ...(lesson ? { lesson: toJson(lesson) } : {}),
+      fromTutor,
       sourceSoundId: source?.id ?? null,
       sourceSlug: source?.slug ?? null,
       sourceName: source?.name ?? null,
@@ -371,6 +424,12 @@ export async function updateUserSound(
         data.cables = toJson(panel.cables);
         data.definitionVersion = def.version;
       }
+
+      // Removing the lesson takes text off a public page and never puts any up, so a published sound needs no check for
+      // it. In SQL: the typed update writes a JSON column's NULL only with Prisma's runtime `DbNull`, which lib/app may
+      // not import. Keyed on the owner too, and undone with the rest if the update below finds nothing.
+      if (input.lesson === null)
+        await tx.$executeRaw`UPDATE "user_sound" SET "lesson" = NULL WHERE "id" = ${id} AND "userId" = ${userId}`;
 
       // Keyed on the owner again, so a sound deleted meanwhile (a delete does not take the lock) is a 404.
       const { visibility } = input;

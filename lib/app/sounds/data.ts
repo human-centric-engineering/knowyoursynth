@@ -8,6 +8,7 @@
 import { z } from 'zod';
 import { CablePairSchema, SettingsSchema } from '@/lib/app/synths/validate';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
+import { SoundLessonSchema, type SoundLesson } from '@/lib/app/sounds/lesson';
 
 /**
  * More controls and cables than any panel has (the DeepMind has 1,568 controls). They bound what one request can
@@ -54,8 +55,11 @@ export const PanelInputSchema = z.object({
 /**
  * `POST /api/v1/sounds`. A sound made from scratch sends its panel. A copy of a library sound names it in `source`,
  * which records the credit; with no panel, the copy is the library sound as it ends, every step applied, and with no
- * name it takes the library sound's. A copy of a shared sound names its address, `source: { shared }`; with no panel
- * or name it takes the shared sound's.
+ * name it takes the library sound's. A copy of a shared sound names its address, `source: { shared }`; with no panel,
+ * name, notes, lesson or mark it takes the shared sound's.
+ *
+ * A sound can come with its lesson (`lesson.ts`), as one the tutor designed does, and `fromTutor` marks one the tutor
+ * designed. Both are kept as they were sent: a lesson is never changed after, only removed (`PATCH`, `lesson: null`).
  */
 export const CreateUserSoundSchema = z
   .object({
@@ -63,6 +67,8 @@ export const CreateUserSoundSchema = z
     name: NameSchema.optional(),
     notes: NotesSchema.optional(),
     panel: PanelInputSchema.optional(),
+    lesson: SoundLessonSchema.optional(),
+    fromTutor: z.boolean().optional(),
     /** The library sound to copy (`slug`), or a sound someone shared, by its public address (`shared`). */
     source: z
       .union([
@@ -79,14 +85,16 @@ export const CreateUserSoundSchema = z
 export type CreateUserSound = z.infer<typeof CreateUserSoundSchema>;
 
 /**
- * `PATCH /api/v1/sounds/:id`. A new panel is saved on the synth's current definition. `notes: null` clears them.
- * `visibility` is `private` or `link` only.
+ * `PATCH /api/v1/sounds/:id`. A new panel is saved on the synth's current definition, and leaves the lesson as it was.
+ * `notes: null` clears them, and `lesson: null` removes the lesson: a lesson cannot be changed, so removing it is how a
+ * sound whose lesson cannot be published is published without it. `visibility` is `private` or `link` only.
  */
 export const UpdateUserSoundSchema = z
   .object({
     name: NameSchema.optional(),
     notes: NotesSchema.nullable().optional(),
     panel: PanelInputSchema.optional(),
+    lesson: z.null().optional(),
     /** Share by link, or stop sharing. Publishing has its own route; this unpublishes a published sound. */
     visibility: z.enum(['private', 'link']).optional(),
   })
@@ -95,6 +103,7 @@ export const UpdateUserSoundSchema = z
       v.name !== undefined ||
       v.notes !== undefined ||
       v.panel !== undefined ||
+      v.lesson !== undefined ||
       v.visibility !== undefined,
     { message: 'Nothing to change' }
   );
@@ -150,6 +159,14 @@ export interface UserSoundSummary {
   source: UserSoundSource | null;
   /** The shared sound it was copied from, while that is published. */
   basedOn: SharedSource | null;
+  /** Whether the tutor designed it. */
+  fromTutor: boolean;
+  /**
+   * The lesson it was saved with, which the Lesson panel shows for it. Null when it has none, and when the sound was
+   * saved on a definition version the synth has moved on from or the lesson no longer passes the synth's definition,
+   * since a lesson's steps set the panel.
+   */
+  lesson: SoundLesson | null;
   visibility: SoundVisibility;
   /** Its public address once it has been shared; kept when it goes private again. */
   slug: string | null;
@@ -206,6 +223,9 @@ export interface PublicSound {
   /** The library sound it was copied from, as it read then. */
   source: Omit<UserSoundSource, 'soundId'> | null;
   basedOn: SharedSource | null;
+  fromTutor: boolean;
+  /** Its lesson, which the sound's page shows, as its owner's does. */
+  lesson: SoundLesson | null;
   definitionVersion: number;
   playable: boolean;
   panel: UserSoundDetail['panel'];

@@ -544,6 +544,12 @@ model UserSound {
   values            Json
   /// `CablePair[]`: `[outputJackId, inputJackId]`.
   cables            Json
+  /// `SoundLesson` (lib/app/sounds/lesson.ts): how the sound works, the steps that build it, what each control does in
+  /// it, things to try and a riff (`f-tutor` t-55). Null for a sound saved without one. Set when the sound is made, and
+  /// after that only removed: saving a new panel over the sound leaves it as it was.
+  lesson            Json?
+  /// Whether the tutor designed it. A copy carries it, as it carries the lesson.
+  fromTutor         Boolean         @default(false)
   /// The library sound it was copied from. Null for a sound made from scratch, and once that sound is removed.
   sourceSoundId     String?
   /// The credit, as the library sound read when it was copied, so it survives that sound being renamed or removed.

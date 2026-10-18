@@ -153,6 +153,8 @@ const MINE: UserSoundSummary = {
   definitionVersion: def.version,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   visibility: 'private',
   slug: null,
   publishedAt: null,

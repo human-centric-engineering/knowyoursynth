@@ -22,6 +22,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import { validatePreset, validateSound } from '@/lib/app/synths/validate';
 import type { SharedSource, SoundVisibility } from '@/lib/app/sounds/data';
+import { lessonText, type SoundLessonInput } from '@/lib/app/sounds/lesson';
 
 /* Crockford's base32, lower-case: no i, l, o or u, so an address read aloud or copied by hand survives. */
 const SLUG_ALPHABET = '0123456789abcdefghjkmnpqrstvwxyz';
@@ -176,16 +177,30 @@ export function assertNotUnlisted(row: { unlistedAt: Date | null }): void {
 }
 
 /**
- * What a public sound's name and notes may not say: a blocked word (`NOT_ALLOWED`, 422). Run at publish, and on any
- * change to a published sound's name or notes, so an edit after publishing cannot put up what publishing refuses.
- * Neither is HTML-sanitised: every surface renders them as text.
+ * What a public sound's name, notes and lesson may not say: a blocked word (`NOT_ALLOWED`, 422). Run at publish, and on
+ * any change to a published sound's name or notes, so an edit after publishing cannot put up what publishing refuses.
+ * None of it is HTML-sanitised: every surface renders it as text.
+ *
+ * The lesson (`f-tutor` t-55) is checked at publish only, since it cannot change after. Its refusal has its own code,
+ * `LESSON_NOT_ALLOWED`: a lesson cannot be reworded, only removed, so the page offers to remove it, and the sound can
+ * then be published without it. Any client can send a lesson, so it is checked whoever wrote it.
  */
-export function assertPublishableText(text: { name: string; notes: string | null }): void {
+export function assertPublishableText(text: {
+  name: string;
+  notes: string | null;
+  lesson?: SoundLessonInput | null;
+}): void {
   if (textIsBlocked(text.name) || (text.notes !== null && textIsBlocked(text.notes)))
     refuse(
       'NOT_ALLOWED',
       422,
       "That name or those notes can't be published. Change the wording and try again."
+    );
+  if (text.lesson && lessonText(text.lesson).some(textIsBlocked))
+    refuse(
+      'LESSON_NOT_ALLOWED',
+      422,
+      "The lesson saved with this sound has wording that can't be published. Remove the lesson to publish the sound without it."
     );
 }
 

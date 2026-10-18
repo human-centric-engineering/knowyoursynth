@@ -46,6 +46,8 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   definitionVersion: 1,
   source: null,
   basedOn: null,
+  fromTutor: false,
+  lesson: null,
   visibility: 'private',
   slug: null,
   publishedAt: null,
