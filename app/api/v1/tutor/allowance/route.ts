@@ -4,7 +4,8 @@
  * GET /api/v1/tutor/allowance — `{ limit, used, remaining, resetsAt }` for the caller, today (UTC). The stream route
  * refuses a turn when `remaining` is 0.
  *
- * Authentication: any authenticated user. Scoped to the caller by construction. The section rate limit applies
+ * Authentication: any authenticated user, or an API key with the `chat` scope. Scoped to the caller by construction.
+ * The section rate limit applies
  * (`proxy.ts`).
  */
 import { getRouteLogger } from '@/lib/api/context';
@@ -20,6 +21,8 @@ export const GET = withAuth(
     return successResponse(allowance);
   },
   {
+    // The stream route's companion: a key that can take turns can read how many are left.
+    scope: 'chat',
     // Ownership: this route is self-scoped by construction — see RouteOwnership in lib/auth/guards.ts.
     ownership: {
       decidedBy: 'self',

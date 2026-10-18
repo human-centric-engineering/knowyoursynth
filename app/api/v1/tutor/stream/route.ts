@@ -12,10 +12,13 @@
  *   validated against its current definition (`validateSound`), as a saved sound's is. Either refused is a 400, and
  *   the model is not called. The synth then goes to the context contributor as `contextId` and to the tools as
  *   `entityContext`, the same synth in both, at the definition version it was checked against.
+ * - **A conversation stays on its synth.** A `conversationId` carries on only a conversation the caller started with
+ *   the tutor on this synth; any other is a 404 `TUTOR_CONVERSATION_NOT_FOUND`, and the panel starts a new one.
  * - **The daily allowance (D6)** is checked before the model is paid for: a person past it gets a 429 with
- *   `TUTOR_ALLOWANCE_SPENT` and a sentence the panel shows as it is.
+ *   `TUTOR_ALLOWANCE_SPENT`, a sentence the panel shows as it is, and `Retry-After` until the reset.
  *
- * Authentication: any authenticated user; signed out is a 401, and the panel shows a sign-in prompt. `proxy.ts` has
+ * Authentication: any authenticated user, or an API key with the `chat` scope; signed out is a 401, and the panel
+ * shows a sign-in prompt. `proxy.ts` has
  * applied the section cap. The per-user and per-agent chat caps here are the same ones the consumer chat route
  * applies, so switching surfaces buys no extra turns.
  */
@@ -75,13 +78,37 @@ export const POST = withAuth(
     const agentLimit = agentChatLimiter.check(`${agent.id}:${userId}`, agent.rateLimitRpm);
     if (!agentLimit.success) return createRateLimitResponse(agentLimit);
 
+    if (body.conversationId) {
+      // A conversation is about the synth it started on. Carried on with another one, its history would talk about
+      // controls this turn's context and tools do not have.
+      const conversation = await prisma.aiConversation.findFirst({
+        where: {
+          id: body.conversationId,
+          userId,
+          agentId: agent.id,
+          contextType: TUTOR_CONTEXT_TYPE,
+          contextId: def.id,
+          isActive: true,
+        },
+        select: { id: true },
+      });
+      if (!conversation) {
+        return errorResponse(
+          "That conversation isn't about this synth, or has gone. Start a new one.",
+          { code: 'TUTOR_CONVERSATION_NOT_FOUND', status: 404 }
+        );
+      }
+    }
+
     const allowance = await readAllowance(userId);
     if (allowance.remaining === 0) {
       log.info('Tutor allowance spent', { used: allowance.used, limit: allowance.limit });
+      const secondsToReset = Math.ceil((Date.parse(allowance.resetsAt) - Date.now()) / 1000);
       return errorResponse(allowanceSpentMessage(allowance.limit), {
         code: 'TUTOR_ALLOWANCE_SPENT',
         status: 429,
         details: { ...allowance },
+        headers: { 'Retry-After': String(Math.max(1, secondsToReset)) },
       });
     }
 
@@ -108,6 +135,8 @@ export const POST = withAuth(
     return sseResponse(events, { signal: request.signal });
   },
   {
+    // A paid turn: an API key reaches it only when minted for chat.
+    scope: 'chat',
     // Ownership: this route is self-scoped by construction — see RouteOwnership in lib/auth/guards.ts.
     ownership: {
       decidedBy: 'self',

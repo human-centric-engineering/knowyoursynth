@@ -85,36 +85,42 @@ designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on t
 
 ## The routes
 
-**`POST /api/v1/tutor/stream`**, signed in (`withAuth`; a user's API key works too). The body
-is `{ synthId, panel: { values, cables }, message, conversationId? }`: the message up to 4,000
-characters, the conversation one the caller started with the tutor (another person's, or another
-agent's, ends the stream with `conversation_not_found`). The answer is Sunrise's chat SSE stream
-(`sseResponse`): `start`, `content`, `capability_result(s)`, `done`, or an `error` event.
+**`POST /api/v1/tutor/stream`**, signed in (`withAuth`; an API key works too if it has the `chat`
+scope). The body is `{ synthId, panel: { values, cables }, message, conversationId? }`: the message
+up to 4,000 characters, the conversation one the caller started with the tutor on this synth. The
+answer is Sunrise's chat SSE stream (`sseResponse`): `start`, `content`, `capability_result(s)`,
+`done`, or an `error` event.
 
 Everything that can refuse a turn runs before the model is called, in this order:
 
-| Check                                                                                    | Refused with                                                           |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Signed in                                                                                | 401                                                                    |
-| The per-user chat cap, `consumerChatLimiter`: 10 a minute (`RATE_LIMIT_CONSUMER_CHAT`)   | 429 `RATE_LIMIT_EXCEEDED`, before the body is read                     |
-| `Content-Length` at most 256 KB (the DeepMind's whole panel is about 40 KB)              | 413 `TUTOR_REQUEST_TOO_LARGE`, before the body is read                 |
-| The body's shape                                                                         | 400 `VALIDATION_ERROR`                                                 |
-| A synth the catalogue lists (`playableSynth`, as a saved sound)                          | 400 `VALIDATION_ERROR`, path `synthId`                                 |
-| The panel fits its current definition (`checkPanel`, `validateSound`)                    | 400 `VALIDATION_ERROR`, each problem's path under `panel`              |
-| The tutor is there and active                                                            | 503 `TUTOR_UNAVAILABLE`, a sentence the panel shows as it is           |
-| The tutor's own per-minute limit, `agentChatLimiter` (the admin's `rateLimitRpm`, or 10) | 429 `RATE_LIMIT_EXCEEDED`                                              |
-| The daily allowance                                                                      | 429 `TUTOR_ALLOWANCE_SPENT`, a sentence and the allowance in `details` |
+| Check                                                                                    | Refused with                                                                                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Signed in                                                                                | 401                                                                                                    |
+| The per-user chat cap, `consumerChatLimiter`: 10 a minute (`RATE_LIMIT_CONSUMER_CHAT`)   | 429 `RATE_LIMIT_EXCEEDED`, before the body is read                                                     |
+| `Content-Length` at most 256 KB (the DeepMind's whole panel is about 40 KB)              | 413 `TUTOR_REQUEST_TOO_LARGE`, before the body is read                                                 |
+| The body's shape                                                                         | 400 `VALIDATION_ERROR`                                                                                 |
+| A synth the catalogue lists (`playableSynth`, as a saved sound)                          | 400 `VALIDATION_ERROR`, path `synthId`                                                                 |
+| The panel fits its current definition (`checkPanel`, `validateSound`)                    | 400 `VALIDATION_ERROR`, each problem's path under `panel`                                              |
+| The tutor is there and active                                                            | 503 `TUTOR_UNAVAILABLE`, a sentence the panel shows as it is                                           |
+| The tutor's own per-minute limit, `agentChatLimiter` (the admin's `rateLimitRpm`, or 10) | 429 `RATE_LIMIT_EXCEEDED`                                                                              |
+| A `conversationId` names the caller's own tutor conversation on this synth               | 404 `TUTOR_CONVERSATION_NOT_FOUND`; the panel starts a new one                                         |
+| The daily allowance                                                                      | 429 `TUTOR_ALLOWANCE_SPENT`, a sentence, the allowance in `details`, and `Retry-After` until the reset |
 
 The two per-minute caps are the consumer chat route's, keyed the same way, so a learner gets no
 extra turns by switching surfaces. The prototype's copy for a 429 `RATE_LIMIT_EXCEEDED` was "Too
 many questions in a short time. Wait a moment, then ask again."; the panel (t-56) can carry it.
 
+A conversation stays on the synth it started on. Carried on with another one, its history would
+talk about controls the new synth's context and tools do not have, and the conversation would still
+be filed under the first synth. The check reads the caller's own conversation only, as `streamChat`
+loads one, so the route is declared to the ownerless-surface guard beside the allowance.
+
 The panel goes to the tools as checked, with the synth's current definition version. Like a saved
 sound, a page loaded before a deploy that changed a definition sends a panel that is checked against
 the new one.
 
-**`GET /api/v1/tutor/allowance`**, signed in: `{ limit, used, remaining, resetsAt }` for the caller,
-for the panel's meter.
+**`GET /api/v1/tutor/allowance`**, signed in (or a `chat`-scoped key): `{ limit, used, remaining,
+resetsAt }` for the caller, for the panel's meter.
 
 Signed out, both are a 401, and the panel shows a sign-in prompt: the allowance is per person (D6)
 and `streamChat()` needs a user.
@@ -125,7 +131,12 @@ Borrowed from BeatBuddy's (`~/code/beatbreaker/lib/app/breaks/buddy/allowance.ts
 hold: it is a cost cap, and the cost is per turn.
 
 - **A turn is a message the learner sent**: an `AiMessage` with `role: 'user'` in one of their
-  conversations with the tutor. The tutor's replies and tool messages are not turns.
+  conversations with the tutor (the platform's row, `isSystem`, as the route loads it). The tutor's
+  replies and tool messages are not turns.
+- **It counts once it is saved**, which `streamChat` does before the model answers. So a turn the
+  provider fails still counts, and a learner who retries through an outage spends a turn on each
+  try. Counting only answered turns would put the transcript's shape into the query; that is worth
+  it only if outages turn out to be common.
 - **Over the UTC day.** One boundary for everybody, "back at midnight UTC", and nothing from the
   browser. `resetsAt` is the next UTC midnight.
 - **Counted from the transcript, not stored.** So deleting a conversation gives its turns back. That
@@ -134,11 +145,14 @@ hold: it is a cost cap, and the cost is per turn.
   `conversations/export`: a thread nobody owns is nobody's turn. So it does not go through
   `conversation-access`, and is declared to Sunrise's ownerless-surface guard in
   `appOwnerlessSurfaceExceptions` (`lib/app/ci.ts`) with that reason.
-- **A soft cap.** Two turns sent at the same instant can both read 29 and both go ahead. That
-  overshoots by a turn or two, never by a day's worth, and the per-minute caps keep it to a few.
-- **`TUTOR_DAILY_TURNS`**, through `lib/app/env.ts`: 1 to 1,000, **30** when unset, as BeatBuddy's.
-  An env setting so it can be tuned from the cost dashboard without a release. The production
-  number is set at f-launch x4 and recorded against D6.
+- **A soft cap.** Turns sent together all read the count before any of them is saved, so all go
+  ahead. The per-user chat cap (10 a minute, per server process) bounds how many arrive together,
+  so a day's overshoot is at most that many on each server process.
+- **`TUTOR_DAILY_TURNS`**, through `lib/app/env.ts`: a whole number from 1 to 1,000, **30** when
+  unset, as BeatBuddy's. An env setting so the number changes without a code change: set it and
+  restart. Blank (`TUTOR_DAILY_TURNS=`) means unset, as core's `MIGRATE_DATABASE_URL`; anything
+  else outside the range stops the server at boot. It is not in `.env.example`, which is Sunrise's
+  file. The production number is set at f-launch x4 and recorded against D6.
 
 ## The agent
 

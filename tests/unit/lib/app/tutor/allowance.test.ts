@@ -68,6 +68,15 @@ describe('readAllowance', () => {
     expect((await readAllowance('user-1', NOW)).used).toBe(3);
   });
 
+  it("does not count turns to an org's own agent that shares the tutor's slug", async () => {
+    withMessages([
+      ...tutorTurns('user-1', 3, TODAY),
+      ...tutorTurns('user-1', 30, TODAY).map((m) => ({ ...m, agentIsSystem: false })),
+    ]);
+
+    expect((await readAllowance('user-1', NOW)).used).toBe(3);
+  });
+
   it('counts a turn sent at the very start of the UTC day, and not one a millisecond before', async () => {
     withMessages([
       ...tutorTurns('user-1', 1, TODAY),

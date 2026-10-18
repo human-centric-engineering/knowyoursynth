@@ -68,10 +68,62 @@ const outJack = modelD.jacks.find((j) => j.dir === 'out' && j.signal)!;
 const inJack = modelD.jacks.find((j) => j.dir === 'in' && j.dest)!;
 const PANEL = { values: { [cont.id]: cont.min }, cables: [[outJack.id, inJack.id]] };
 
+interface ConversationRow {
+  id: string;
+  userId: string;
+  agentId: string;
+  contextType: string;
+  contextId: string;
+  isActive: boolean;
+}
+
 const db = vi.hoisted(() => ({
   agent: null as { id: string; rateLimitRpm: number | null } | null,
   listed: new Set<string>(),
+  conversations: [] as ConversationRow[],
 }));
+
+const CONVERSATION_ID = 'cmjbv4i3x00003wsloputgaaa';
+
+/** The caller's tutor conversation on Model D, unless overridden. */
+const conversation = (overrides: Partial<ConversationRow> = {}): ConversationRow => ({
+  id: CONVERSATION_ID,
+  userId: USER_ID,
+  agentId: AGENT_ID,
+  contextType: 'synth',
+  contextId: 'model-d',
+  isActive: true,
+  ...overrides,
+});
+
+/** An API key's row as `resolveApiKey` reads it, for the key's owner, holding these scopes. */
+const keyRow = (scopes: string[]) => ({
+  id: 'cmkey000000000000000key1',
+  userId: USER_ID,
+  scopes,
+  rateLimitRpm: null,
+  expiresAt: null,
+  createdAt: new Date(),
+  user: {
+    id: USER_ID,
+    name: 'Key Owner',
+    email: 'owner@example.com',
+    emailVerified: true,
+    image: null,
+    role: 'USER',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+});
+const BEARER = { authorization: 'Bearer sk_deadbeefdeadbeefdeadbeefdeadbeef' };
+
+/** `BEARER` resolves to a live key with these scopes. */
+function holdKey(scopes: string[]) {
+  mockPrisma.aiApiKey = {
+    findFirst: vi.fn(async () => keyRow(scopes)),
+    update: vi.fn(async () => ({})),
+  };
+}
 
 function signIn() {
   const base = createMockAuthSession();
@@ -118,6 +170,17 @@ beforeEach(() => {
   agentChatLimiter.reset(`${AGENT_ID}:${USER_ID}`);
   db.agent = { id: AGENT_ID, rateLimitRpm: null };
   db.listed = new Set(['model-d']);
+  db.conversations = [];
+  mockPrisma.aiConversation = {
+    // As the database filters: every field the query names must match, and a field it leaves out is not checked.
+    findFirst: vi.fn(
+      async ({ where }: { where: Partial<ConversationRow> }) =>
+        db.conversations.find((c) =>
+          Object.entries(where).every(([k, v]) => c[k as keyof ConversationRow] === v)
+        ) ?? null
+    ),
+  };
+  mockPrisma.aiApiKey = { findFirst: vi.fn(async () => null), update: vi.fn(async () => ({})) };
   mockPrisma.synth = {
     findUnique: vi.fn(async ({ where }: { where: { id: string } }) =>
       getSynthDef(where.id) ? { listed: db.listed.has(where.id) } : null
@@ -176,10 +239,29 @@ describe('POST /api/v1/tutor/stream', () => {
     expect(request.entityContext).toMatchObject({ synthId: 'model-d' });
   });
 
-  it('carries on an existing conversation when given its id', async () => {
-    await POST(turn({ conversationId: 'cmjbv4i3x00003wsloputgaaa' }));
+  it('carries on a conversation the caller started with the tutor on this synth', async () => {
+    db.conversations = [conversation()];
 
-    expect(vi.mocked(streamChat).mock.calls[0][0].conversationId).toBe('cmjbv4i3x00003wsloputgaaa');
+    const res = await POST(turn({ conversationId: CONVERSATION_ID }));
+
+    expect(res.status).toBe(200);
+    expect(vi.mocked(streamChat).mock.calls[0][0].conversationId).toBe(CONVERSATION_ID);
+  });
+
+  it("refuses a conversation started on another synth, or another person's, before the model is called", async () => {
+    const theirs = 'cmjbv4i3x00003wsloputgbbb';
+    db.conversations = [
+      conversation({ contextId: 'deepmind-12d' }),
+      conversation({ id: theirs, userId: 'someone-else' }),
+    ];
+
+    for (const conversationId of [CONVERSATION_ID, theirs]) {
+      const res = await POST(turn({ conversationId }));
+
+      expect(res.status).toBe(404);
+      expect((await json(res)).error?.code).toBe('TUTOR_CONVERSATION_NOT_FOUND');
+    }
+    expect(streamChat).not.toHaveBeenCalled();
   });
 
   it('refuses a caller with no session, before the model is called', async () => {
@@ -189,6 +271,28 @@ describe('POST /api/v1/tutor/stream', () => {
 
     expect(res.status).toBe(401);
     expect(streamChat).not.toHaveBeenCalled();
+  });
+
+  describe('an API key', () => {
+    beforeEach(() => mockGetSession.mockResolvedValue(null));
+
+    it('takes a turn when it has the chat scope', async () => {
+      holdKey(['chat']);
+
+      const res = await POST(post({ synthId: 'model-d', panel: PANEL, message: 'hi' }, BEARER));
+
+      expect(res.status).toBe(200);
+      expect(vi.mocked(streamChat).mock.calls[0][0].userId).toBe(USER_ID);
+    });
+
+    it('is refused with any other scope, before the model is called: a turn spends money', async () => {
+      holdKey(['analytics']);
+
+      const res = await POST(post({ synthId: 'model-d', panel: PANEL, message: 'hi' }, BEARER));
+
+      expect(res.status).toBe(403);
+      expect(streamChat).not.toHaveBeenCalled();
+    });
   });
 
   describe('the synth and the panel are checked before the model is called', () => {
@@ -284,6 +388,8 @@ describe('POST /api/v1/tutor/stream', () => {
       const res = await POST(turn());
 
       expect(res.status).toBe(429);
+      // 15:30 UTC, so eight and a half hours to midnight.
+      expect(res.headers.get('retry-after')).toBe(String(8.5 * 60 * 60));
       const { error } = await json(res);
       expect(error?.code).toBe('TUTOR_ALLOWANCE_SPENT');
       expect(error?.message).toBe(

@@ -13,6 +13,7 @@
 import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { prisma } from '@/lib/db/client';
 import { env } from '@/lib/env';
+import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
 
 /** 30 turns a day by default, as BeatBuddy's. Tuned through `TUTOR_DAILY_TURNS`; the production number is f-launch x4's. */
 export function tutorDailyTurns(): number {
@@ -34,9 +35,14 @@ function startOfUtcDay(now: Date): Date {
 /**
  * The person's allowance as it stands. `userId` comes from the session.
  *
- * A soft cap: two turns sent at the same instant can both read 29 and both go ahead. That overshoots by a turn or two,
- * never by a day's worth, which is fine for a cost limit (Sunrise's conversation cap makes the same trade). The burst
- * cap in the stream route keeps it to a few.
+ * A soft cap: turns sent together all read the count before any of them is saved, so all go ahead. The stream route's
+ * per-minute chat cap (10 by default, per server process) bounds how many can arrive together, so a day's overshoot is
+ * at most that many on each server process. That is fine for a cost limit; Sunrise's conversation cap makes the same
+ * trade.
+ *
+ * A turn counts once `streamChat` saves the message, which is before the model answers, so a turn the provider fails
+ * still counts, and a learner who retries through a provider outage spends a turn on each try. Counting only answered
+ * turns would put the transcript's shape into the query; that is worth it only if outages turn out to be common.
  */
 export async function readAllowance(userId: string, now = new Date()): Promise<TutorAllowance> {
   const dayStart = startOfUtcDay(now);
@@ -44,7 +50,11 @@ export async function readAllowance(userId: string, now = new Date()): Promise<T
     where: {
       role: 'user',
       createdAt: { gte: dayStart },
-      conversation: { userId, agent: { slug: TUTOR_AGENT_SLUG } },
+      // The tutor as the route loads it: the platform's row, never an org's own agent under the same slug.
+      conversation: {
+        userId,
+        agent: { slug: TUTOR_AGENT_SLUG, ...platformSlugWhere(TUTOR_AGENT_SLUG) },
+      },
     },
   });
   const limit = tutorDailyTurns();

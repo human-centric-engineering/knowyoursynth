@@ -640,6 +640,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // Know Your Synth fills this seam: pinned to its entries (`f-tutor` t-54), so a stray extra one still fails.
       expect(appOwnerlessSurfaceExceptions.map((e) => e.path)).toEqual([
         'lib/app/tutor/allowance.ts',
+        'app/api/v1/tutor/stream/route.ts',
       ]);
     },
   },

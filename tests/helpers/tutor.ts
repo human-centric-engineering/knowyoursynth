@@ -44,6 +44,8 @@ export function manyCables(def: AppSynthDef, n: number): CablePair[] {
 export interface MessageRow {
   userId: string;
   agentSlug: string;
+  /** Whether the agent is the platform's row (the tutor is); false for an org's own agent under the same slug. */
+  agentIsSystem?: boolean;
   role: 'user' | 'assistant' | 'tool';
   createdAt: Date;
 }
@@ -51,13 +53,13 @@ export interface MessageRow {
 interface MessageCountWhere {
   role: string;
   createdAt: { gte: Date };
-  conversation: { userId: string; agent: { slug: string } };
+  conversation: { userId: string; agent: { slug: string; isSystem?: boolean } };
 }
 
 /**
  * An in-memory `prisma.aiMessage.count` that applies the allowance's filters the way the database would (owner, agent,
- * role and day), so a test that another person's turns, another agent's or yesterday's are not counted fails if the
- * filter goes.
+ * the agent's `isSystem` when asked, role and day), so a test that another person's turns, another agent's or
+ * yesterday's are not counted fails if the filter goes.
  *
  * @see lib/app/tutor/allowance.ts
  */
@@ -70,7 +72,9 @@ export function fakeMessageTable(rows: MessageRow[]) {
           m.role === where.role &&
           m.createdAt >= where.createdAt.gte &&
           m.userId === where.conversation.userId &&
-          m.agentSlug === where.conversation.agent.slug
+          m.agentSlug === where.conversation.agent.slug &&
+          (where.conversation.agent.isSystem === undefined ||
+            (m.agentIsSystem ?? true) === where.conversation.agent.isSystem)
       ).length,
   };
 }
