@@ -6,8 +6,9 @@ the learner applies, and designs new sounds with their lesson (D6, plan §8). Th
 reply. Here it runs through Sunrise's orchestration. **The model proposes, the server validates,
 and the learner applies. The model never writes to the panel.**
 
-t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance. A
-designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on them.
+t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance;
+t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sounds.md), _A
+sound's lesson_). The tutor panel (t-56) builds on them.
 
 ## Anti-patterns first
 
@@ -198,7 +199,12 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   limits refuse rather than clamp: 1–9 steps, each setting a control or plugging a cable; up to 5
   tweaks; 1–32 riff notes of `[beat 0–16, MIDI 24–96, length 0.05–16]` at 40–180 bpm; the string
   lengths `sanitizePreset` cut to. Two bounds of its own: at most 32 controls set in one step, and
-  context for at most 16. The id is random (`tutor-` and twelve hex digits).
+  context for at most 16. The id is random (`tutor-` and twelve hex digits). Everything but the
+  name is `SoundLessonSchema` (`lib/app/sounds/lesson.ts`), the same schema a saved sound's lesson
+  is held to, so a design the tool passes is one `POST /api/v1/sounds` takes. Saving one sends
+  `{ blurb, level, category, how, steps, context, tweaks, phrase: { bpm, steps } }` as `lesson`,
+  with `fromTutor: true`; the `Preset` the tool returns has the category as its first tag and a
+  phrase with `loop`.
 - Every tool's JSON schema says `additionalProperties: false`, as its Zod schema refuses any other
   key, so the model is told rather than refused.
 - A refusal lists up to twelve problems, each with its path (`steps.1.set.filter.drive`), then

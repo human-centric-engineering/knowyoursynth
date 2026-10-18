@@ -76,17 +76,18 @@ sessions or fixed published sounds. Where it differs, the reason is below.
 
 `POST /api/v1/sounds/:id/publish`: `{ confirm: true, tags? }`. In order:
 
-| Refusal             | Status | When                                                                                                     |
-| ------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| `NOT_FOUND`         | 404    | Not yours, as every write.                                                                               |
-| `UNLISTED`          | 409    | Moderators unlisted it ([below](#reports-and-moderation)). A PATCH to `link` is refused the same way.    |
-| `USERNAME_REQUIRED` | 409    | No synth profile (`f-profiles`).                                                                         |
-| (validation)        | 400    | The synth is not listed.                                                                                 |
-| `NOT_PLAYABLE`      | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
-| `NOT_ALLOWED`       | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): see below.            |
-| `DUPLICATE`         | 409    | It plays the same as the library sound or the shared sound it was copied from (`assertChanged`).         |
-| (validation)        | 400    | A tag that synth's library does not use, or the same tag twice.                                          |
-| `PUBLISH_LIMIT`     | 429    | More than 10 (`PUBLISH_DAILY_CAP`) first publications in 24 hours. A republish does not count.           |
+| Refusal              | Status | When                                                                                                     |
+| -------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| `NOT_FOUND`          | 404    | Not yours, as every write.                                                                               |
+| `UNLISTED`           | 409    | Moderators unlisted it ([below](#reports-and-moderation)). A PATCH to `link` is refused the same way.    |
+| `USERNAME_REQUIRED`  | 409    | No synth profile (`f-profiles`).                                                                         |
+| (validation)         | 400    | The synth is not listed.                                                                                 |
+| `NOT_PLAYABLE`       | 409    | Saved on a definition version the synth has moved on from, or its panel no longer passes. Save it again. |
+| `NOT_ALLOWED`        | 422    | A blocked word in the name or notes (`textIsBlocked`, `lib/app/profile/words.ts`): see below.            |
+| `LESSON_NOT_ALLOWED` | 422    | A blocked word in the sound's lesson (`f-tutor` t-55): see below.                                        |
+| `DUPLICATE`          | 409    | It plays the same as the library sound or the shared sound it was copied from (`assertChanged`).         |
+| (validation)         | 400    | A tag that synth's library does not use, or the same tag twice.                                          |
+| `PUBLISH_LIMIT`      | 429    | More than 10 (`PUBLISH_DAILY_CAP`) first publications in 24 hours. A republish does not count.           |
 
 `NOT_PLAYABLE` says which of its two cases it is: a sound on an older definition, or settings that
 no longer fit.
@@ -95,6 +96,13 @@ no longer fit.
   usual ending only ("fucking", "shitty"; `ENDINGS`), so "shitake" and "retardant" are fine. A word
   spelled out with separators ("f.u.c.k") is read whole, each part of a joined one ("bass.shit")
   on its own, and a run of single letters ("f u c k") as one word.
+- **It covers the lesson** a sound was saved with ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)):
+  the blurb, how it works, each step's title and text, the context and the tweaks (`lessonText`).
+  The page shows all of it, as it shows the notes, and any client can send a lesson, so the check
+  does not assume the tutor wrote it. The lesson is read as stored, whether or not the synth can use
+  it now, so one that starts to pass later has been checked. Its refusal has its own code because
+  a lesson cannot be reworded, only removed: the publish dialog offers **Remove the lesson**
+  (`PATCH` with `lesson: null`), and the sound then publishes without it.
 - **The daily cap is kept on the profile** (`SynthProfile.recentPublishes`, pruned to the last
   24 hours at each publish), not counted from the sounds, so deleting a published sound does not
   give its place back.
@@ -110,7 +118,9 @@ no longer fit.
 - **A published sound stays held to it.** A PATCH that changes its name or notes runs the word
   check; one that changes its panel runs `assertChanged`. A rename never runs `assertChanged`: the
   source can change after the copy was published, and that must not lock the copy out of its own
-  name. An edit that also unpublishes (`visibility` in the same PATCH) runs neither.
+  name. Nor does it check the lesson again, which cannot change after publishing, so a word added
+  to the list later does not lock a sound out of its name. An edit that also unpublishes
+  (`visibility` in the same PATCH) runs neither.
 - **Unpublishing** is `PATCH /api/v1/sounds/:id` with `visibility: 'link'` (the link still works)
   or `'private'` (stop sharing).
 
@@ -122,8 +132,9 @@ so it never changes, which is variations, and D5 drops variations.
 ## Copies
 
 `POST /api/v1/sounds` with `source: { shared: <slug> }`. A new, private sound for the caller,
-from any link or published sound on that synth. Private, unknown and on another synth are one 400. With no panel, name or notes sent, it takes the shared sound's; a shared sound the synth can
-no longer play needs the panel sent.
+from any link or published sound on that synth. Private, unknown and on another synth are one 400. With no panel, name, notes, lesson or mark sent, it takes the shared sound's; a shared sound the synth can
+no longer play needs the panel sent. So a copy carries the sound's lesson and its `fromTutor`
+mark (t-55), whatever panel it sends.
 
 - **`sourceUserSoundId`** records the source, a self-relation `ON DELETE SET NULL`: deleting the
   source, or erasing its owner, leaves the copy with its new owner and no credit.
@@ -138,8 +149,9 @@ no longer play needs the panel sent.
 
 `GET /api/v1/public/sounds/:slug`. No session (the section rate cap applies). A link or published
 sound: slug, synth, visibility, name, notes, tags, `publishedAt` (published only), `author`,
-`authorProfile`, the library `source` (without its row id), `basedOn`, and the panel exactly as
-the owner's read checks and fits it (`playable`, `panel`, `problems`, `fitted`). Private, unknown
+`authorProfile`, the library `source` (without its row id), `basedOn`, the `lesson` and the
+`fromTutor` mark as the owner's read serves them, and the panel exactly as the owner's read checks
+and fits it (`playable`, `panel`, `problems`, `fitted`). Private, unknown
 and malformed are one 404. A panel that no longer passes is served unplayable and not logged, so
 anyone holding the address cannot fill the error log. ETag and `304`; the platform's `private, no-cache`, so a sound made
 private stops being served on the next request.
@@ -167,6 +179,9 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
   Then its address would only 404.
 - A kept panel counts as the visitor's change, as a fresh load does, so the account's last panel
   arriving does not replace it. An account panel that does arrive elsewhere clears the marker.
+- **Its lesson** (t-55), when it was saved with one, is in the Lesson panel in place of the
+  library's, as on its owner's page. Stepping through it keeps the shared sound on show, so
+  "controls moved" and Restore still count from it.
 - **The strip** (`components/app/sharing/shared-sound-strip.tsx`) above the panel: name, byline,
   the `basedOn` and library credits, notes and tags. Signed out: **Sign in to save a copy**, back to
   this address. Signed in on someone else's: **Save a copy**, which sends the panel as it is with
@@ -239,10 +254,12 @@ Share with a link and Unpublish are `PATCH` with `visibility: 'link'`; Stop shar
 Copy link copies the full address; where the browser blocks it, it says to copy it from the page.
 
 - **Publish…** opens a dialog (`PublishDialog`): who it appears as (`by @username`), that the
-  notes go with it, the tags (up to three of the synth's library tags, as `libraryTags` in
-  `publish.ts` reads them; it starts from the sound's own, less any the library dropped), and the
-  "I made this, or the sound it came from is credited on it" tick. Nothing is sent until it is
-  ticked. A refusal stays in the dialog in the server's words.
+  notes go with it (and the lesson, when it has one), the tags (up to three of the synth's library
+  tags, as `libraryTags` in `publish.ts` reads them; it starts from the sound's own, less any the
+  library dropped), and the "I made this, or the sound it came from is credited on it" tick.
+  Nothing is sent until it is ticked. A refusal stays in the dialog in the server's words.
+  `LESSON_NOT_ALLOWED` adds **Remove the lesson**, which says it is for good; once it is removed,
+  Publish sends again.
 - **No username yet.** The dialog reads `GET /api/v1/me/profile` when it opens. Only an answer of
   `null` means none: its one step is **Choose a username**, to `/settings?back=…#synth-profile`
   (`chooseUsernameHref`), and the profile form then offers **Back to your sound**: the synth page
@@ -262,7 +279,7 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
 The strip's Save a copy (h2) sends `source: { shared }`. If the sound stopped being shared after
 the page opened (made private, unlisted, deleted, or its owner erased), the copy route refuses on
 `source.shared` (`sharedSourceGone`). The page then saves the same panel as a **plain new sound**
-called "Untitled sound" (`UNNAMED_COPY`), with no notes and no credit, and says so (t-52, owner
+called "Untitled sound" (`UNNAMED_COPY`), with no notes, no lesson and no credit, and says so (t-52, owner
 ruling). The owner's name and notes were withdrawn with the sound. The notes were written when only
 the owner could read them, so they do not survive into another account. The visitor keeps their
 panel and renames the sound themselves. Any other refusal is just reported: nothing else falls back.
@@ -334,7 +351,8 @@ count badge in the nav either.
   `user_sound_userId_fkey` cascade), and the reports about them with them. Other people's copies
   stay, with `sourceUserSoundId` null and no credit. Reports they filed or resolved stay, with
   `reporterId` or `resolvedById` null.
-- The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt`, `tags` and `unlistedAt`.
+- The export (`app.sounds`) carries `visibility`, `slug`, `publishedAt`, `tags` and `unlistedAt`,
+  and each sound's `lesson` and `fromTutor` (t-55).
   Not `sourceUserSoundId`: that is the row id of a sound someone else shared, about them. The
   profile section (`app.synthProfile`) carries `recentPublishes`. `app.soundReportsFiled` is the
   reports the user filed, the sound named by its synth and address; never who resolved one.
@@ -344,7 +362,8 @@ count badge in the nav either.
 
 `tests/unit/app/api/v1/sounds/sharing.test.ts` (visibility, the slug and its retry, each publish
 refusal, the cap kept through deletes, the owner's lock, kept tags, the checks on a published
-sound, the public read and its 404, the byline, copies and their credit);
+sound, the public read and its 404, the byline, copies and their credit, a lesson on the public
+read, on a copy and at publish);
 `tests/unit/lib/app/profile/words.test.ts` (the word check); `npm run smoke:sounds` (the `SetNull` FK and the export, against a real database).
 
 h2: `tests/unit/app/api/v1/public/published-sounds.test.ts` (Explore's read: published only,

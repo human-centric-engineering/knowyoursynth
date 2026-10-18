@@ -52,7 +52,9 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
   approval. See `lib/app/catalogue/designs.ts`.
 - **A lesson step is a panel state.** Choosing step _k_ sets the panel to the sound's steps up to
   _k_ (`presetState(def, sound, k)`); Finish sets it back to the whole sound. Picking another
-  sound leaves the walkthrough. The step is kept with the session.
+  sound leaves the walkthrough. The step is kept with the session. The lesson is the library
+  sound's, or the open sound's own when it was saved with one
+  ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)), which keeps that sound open while it steps.
 - **The sound map works from the definition, not the drawn layout**, so it answers the same
   whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
   back to the main thread where a host blocks workers. A new map starts 300 ms after the panel

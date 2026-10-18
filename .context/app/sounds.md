@@ -10,7 +10,8 @@ to another device. s4 keeps how far they got through each lesson, and what they 
 
 `UserSound` (`prisma/schema/app.prisma`): the synth, the definition version the panel was saved
 on, a name and notes, the panel's control values and cables, and, for a copy, the library sound
-it was copied from.
+it was copied from. A sound can also keep the lesson it was saved with and a mark that the tutor
+designed it (`lesson`, `fromTutor`, [below](#a-sounds-lesson-t-55)).
 
 - **The credit is a link and a snapshot.** `sourceSoundId` points at the `SynthSound` row,
   `ON DELETE SET NULL`. `sourceSlug`, `sourceName` and `sourceRef` keep what that sound read when
@@ -41,11 +42,13 @@ the same as one that does not exist, never a 403.
 - `POST /api/v1/sounds`: `{ synthId, name, notes?, panel: { values, cables } }`. A copy names the
   library sound, `{ synthId, source: { slug }, name?, notes?, panel? }`: with no panel it is the
   library sound as it ends, every step applied, and with no name it takes the library sound's.
-  201 with the sound.
+  Any of them can send `lesson` and `fromTutor` ([below](#a-sounds-lesson-t-55)). 201 with the
+  sound.
 - `GET /api/v1/sounds/:id`: the sound with its panel. One that is not `playable` has no `panel`,
   but carries `fitted`: as much of it as fits the synth now, which the page opens.
-- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, visibility? }`. `notes: null` clears them;
-  `visibility` is `private` or `link` ([`sharing.md`](./sharing.md)).
+- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, lesson?, visibility? }`. `notes: null`
+  clears them, and `lesson: null` removes the lesson, the only change a lesson takes; `visibility`
+  is `private` or `link` ([`sharing.md`](./sharing.md)).
 - `POST /api/v1/sounds/:id/publish`: [`sharing.md`](./sharing.md).
 - `DELETE /api/v1/sounds/:id`
 
@@ -86,6 +89,7 @@ through `eraseUser()`, and the export.
   which a reload fetches again.
 - **Opening one sets the lesson to the library sound it was copied from**, or to none when it is
   not a copy, so nothing credits a library sound that happened to be on the panel before. One
+  saved with a lesson of its own shows that instead ([below](#a-sounds-lesson-t-55)). One
   saved on another synth does not open, and when two are clicked quickly the last one clicked
   wins.
 - **A sound the synth has moved on from opens with `fitted`**, and the page says what did not fit.
@@ -216,3 +220,69 @@ and a star on a synth, a library sound or one of their own sounds. Signed out, n
 
 `npm run smoke:sounds` also proves both tables' cascades through `eraseUser()` and their export
 sections.
+
+## A sound's lesson (t-55)
+
+`f-tutor` t-55. In the prototype a sound the tutor designed came with a lesson: how it works, the
+build steps, what each control does in it, things to try and a riff. Saving it as one of the user's
+sounds keeps that lesson with it, so it opens with its steps every time (owner ruling on `f-tutor`,
+2026-10-18). The tutor panel that saves one is t-56 ([`tutor.md`](./tutor.md)).
+
+- **Two columns.** `lesson` (JSONB, null for a sound without one) holds `SoundLesson`
+  (`lib/app/sounds/lesson.ts`): the blurb, level, category, how, steps, context, tweaks and
+  phrase (`{ bpm, steps }`), which is everything about a sound but its name. `fromTutor` (false
+  by default) marks one the tutor designed. Every sound saved before t-55 has neither.
+- **One set of rules for both writers.** `design_sound` takes the lesson from the model and
+  `POST /api/v1/sounds` from any client, so both use `SoundLessonSchema`: the tutor's limits,
+  refused rather than clamped (1–9 steps, each setting a control or plugging a cable; up to 16
+  controls in the context and 5 tweaks; a riff of 1–32 notes). `checkLesson` then runs
+  `validatePreset` against the synth's current definition. Any problem is a 400 with every path
+  under `lesson.` (`lesson.steps.0.set.filter.cutoff`), and nothing is stored.
+- **Set when the sound is made, then only removed.** `PATCH` takes `lesson: null` and nothing else
+  for it. Prisma's typed update writes a JSON column's NULL only with its runtime `DbNull`, which
+  `lib/app/**` may not import, so the store clears it in SQL inside the same locked transaction,
+  keyed on the owner, and sets `updatedAt` on the row itself. The mark stays.
+- **Read only while the synth can use it.** The owner's reads, the list and the public read serve
+  the lesson when the sound was saved on the synth's current definition version and the lesson
+  still passes `checkLesson`, since its steps set the panel. Otherwise `lesson` is null; one that
+  fails is logged on its owner's read of the one sound, as a panel that fails is.
+- **The list carries it**, unlike the panel: the Lesson panel, the riff, the sound map and the
+  inspector read the open sound's lesson as soon as it is open, including on a reload, with no
+  second request.
+
+### Save over leaves the lesson as it was designed
+
+Saving a new panel over a sound with a lesson (Save, `PATCH` with `panel`) keeps the lesson
+unchanged. The lesson goes on teaching the sound as the tutor designed it, and the saved panel is
+the user's version of it. That is how a copy of a library sound already behaves: its lesson is the
+library sound's, whatever was saved over it since.
+
+Rejected: dropping the lesson once the panel differs from where the lesson ends, since a small
+tweak would throw away the steps the owner ruled are kept. Also rejected: rewriting the last step
+so the lesson ends on the new panel, which would put words in the lesson that nobody wrote.
+
+So the page tells the two apart. **Finish** at the end of the lesson builds the sound as designed;
+"_n_ controls moved" counts from the sound as saved, and **Restore sound** puts the saved panel
+back.
+
+### On the synth page
+
+- **The Lesson panel shows the sound's own lesson** in place of the library's, for one of the
+  user's own sounds and for a shared sound on its page ([`sharing.md`](./sharing.md)). It is a
+  `Preset` built by `lessonPreset`, under the user sound's own id and name. Its credit line is
+  _Designed by the AI tutor_ with the _AI designed · check by ear_ mark when `fromTutor`, and _A
+  lesson saved with this sound_ otherwise. No library sound is marked current in the library
+  while it shows.
+- **Stepping through it keeps the sound open**, unlike a library lesson, since the lesson is the
+  sound's own: the header still says _mine_, and Save still writes to it. Nothing is recorded in
+  lesson progress, which is kept for the library's lessons (s4).
+- **Save as… carries the lesson and the mark**, as it carries the credit to a library sound.
+- **Choosing a library sound** shows the library's lesson again, as it always did.
+
+The publish word check covers the lesson, with its own refusal and the way past it
+([`sharing.md`](./sharing.md#publishing)). The export carries both columns (`app.sounds`).
+
+Tests: `tests/unit/lib/app/sounds/lesson.test.ts` (the shape, the check, the read, the text the word
+check reads); `tests/unit/app/api/v1/sounds/route.test.ts` (create, the 400s, none, Save over,
+removal, the reads); `synth-page-mine.test.tsx` (the Lesson panel, stepping, Save over, Save as).
+`npm run smoke:sounds` proves the SQL removal and the export against the dev database.
