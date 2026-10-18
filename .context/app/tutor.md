@@ -6,8 +6,8 @@ the learner applies, and designs new sounds with their lesson (D6, plan §8). Th
 reply. Here it runs through Sunrise's orchestration. **The model proposes, the server validates,
 and the learner applies. The model never writes to the panel.**
 
-t-53 built the agent, its tools and its context. The stream route and the allowance (t-54), a
-designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on it.
+t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance. A
+designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on them.
 
 ## Anti-patterns first
 
@@ -31,28 +31,38 @@ designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on i
 - **Don't trust `entityContext`.** As far as the dispatcher knows it is a free-form record. Every
   tool reads it through `readPanel()` (`lib/app/tutor/panel.ts`), which parses it, finds the
   definition, refuses another definition version and runs `validateSound`.
+- **Don't take the agent, the context or the version from the client.** The stream route's body is
+  the synth, the panel, the message and a conversation id, and nothing else reaches `streamChat()`
+  from it (extra keys are stripped). The route pins the tutor, takes the user from the session, and
+  builds `contextId` and `entityContext` from the synth it checked, at that synth's current
+  definition version, so the prompt and the tools are about the same synth.
+- **Don't call the section limiters from the route.** `proxy.ts` applies the `api` section cap. The
+  route's own caps are the chat sub-caps the consumer chat route uses, so switching surfaces buys no
+  extra turns.
 - **Don't edit the instructions in the admin and expect them to stay.** The tutor is a platform
   agent: its instructions, tools and visibility are the code's and are written back after every
   deploy, and the admin's API refuses an edit to them. Provider, model and spend are the admin's.
 
 ## Where things are
 
-| Piece                     | Location                                                                                              |
-| ------------------------- | ----------------------------------------------------------------------------------------------------- |
-| The agent's definition    | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                          |
-| The tools                 | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound}.ts`, listed in `tools.ts` |
-| The panel they read       | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                  |
-| The synth context         | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                 |
-| Sections and the size cap | `lib/app/tutor/sections.ts`                                                                           |
-| Registration              | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`            |
-| The capability rows       | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                   |
-| Tests                     | `tests/unit/lib/app/tutor/`                                                                           |
-| Smoke run                 | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                      |
+| Piece                     | Location                                                                                                             |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| The stream route          | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                              |
+| The allowance             | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts` |
+| The agent's definition    | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                         |
+| The tools                 | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound}.ts`, listed in `tools.ts`                |
+| The panel they read       | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                 |
+| The synth context         | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                |
+| Sections and the size cap | `lib/app/tutor/sections.ts`                                                                                          |
+| Registration              | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                           |
+| The capability rows       | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                  |
+| Tests                     | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`                                                          |
+| Smoke run                 | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                     |
 
 ## One turn
 
-1. The tutor panel sends the learner's message and the panel to the app's stream route (t-54).
-2. The route validates the panel, checks the allowance, and calls `streamChat()` with
+1. The tutor panel sends the learner's message and the panel to `POST /api/v1/tutor/stream`.
+2. The route checks the synth and the panel, checks the allowance (below), and calls `streamChat()` with
    `agentSlug: 'synth-tutor'`, `contextType: 'synth'`, `contextId` the synth id, and
    `entityContext` `{ synthId, version, panel: { values, cables } }` (`TutorEntityContext`). The
    same synth in both: the tools see only `entityContext` and the prompt only `contextId`, so
@@ -72,6 +82,59 @@ designed sound kept with its lesson (t-55) and the tutor panel (t-56) build on i
      gets one corrected retry, and the instructions say so.
 5. A proposal or a designed sound reaches the page only as a successful tool result, so only after
    it has passed validation. The page decides how to apply it (t-56).
+
+## The routes
+
+**`POST /api/v1/tutor/stream`**, signed in (`withAuth`; a user's `chat` API key works too). The body
+is `{ synthId, panel: { values, cables }, message, conversationId? }`: the message up to 4,000
+characters, the conversation one the caller started with the tutor (another person's, or another
+agent's, ends the stream with `conversation_not_found`). The answer is Sunrise's chat SSE stream
+(`sseResponse`): `start`, `content`, `capability_result(s)`, `done`, or an `error` event.
+
+Everything that can refuse a turn runs before the model is called, in this order:
+
+| Check                                                                                    | Refused with                                                           |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Signed in                                                                                | 401                                                                    |
+| The per-user chat cap, `consumerChatLimiter`: 10 a minute (`RATE_LIMIT_CONSUMER_CHAT`)   | 429 `RATE_LIMIT_EXCEEDED`, before the body is read                     |
+| `Content-Length` at most 256 KB (the DeepMind's whole panel is about 40 KB)              | 413 `TUTOR_REQUEST_TOO_LARGE`, before the body is read                 |
+| The body's shape                                                                         | 400 `VALIDATION_ERROR`                                                 |
+| A synth the catalogue lists (`playableSynth`, as a saved sound)                          | 400 `VALIDATION_ERROR`, path `synthId`                                 |
+| The panel fits its current definition (`checkPanel`, `validateSound`)                    | 400 `VALIDATION_ERROR`, each problem's path under `panel`              |
+| The tutor is there and active                                                            | 503 `TUTOR_UNAVAILABLE`, a sentence the panel shows as it is           |
+| The tutor's own per-minute limit, `agentChatLimiter` (the admin's `rateLimitRpm`, or 10) | 429 `RATE_LIMIT_EXCEEDED`                                              |
+| The daily allowance                                                                      | 429 `TUTOR_ALLOWANCE_SPENT`, a sentence and the allowance in `details` |
+
+The two per-minute caps are the consumer chat route's, keyed the same way, so a learner gets no
+extra turns by switching surfaces. The prototype's copy for a 429 `RATE_LIMIT_EXCEEDED` was "Too
+many questions in a short time. Wait a moment, then ask again."; the panel (t-56) can carry it.
+
+The panel goes to the tools as checked, with the synth's current definition version. Like a saved
+sound, a page loaded before a deploy that changed a definition sends a panel that is checked against
+the new one.
+
+**`GET /api/v1/tutor/allowance`**, signed in: `{ limit, used, remaining, resetsAt }` for the caller,
+for the panel's meter.
+
+Signed out, both are a 401, and the panel shows a sign-in prompt: the allowance is per person (D6)
+and `streamChat()` needs a user.
+
+## The allowance
+
+Borrowed from BeatBuddy's (`~/code/beatbreaker/lib/app/breaks/buddy/allowance.ts`), and its reasons
+hold: it is a cost cap, and the cost is per turn.
+
+- **A turn is a message the learner sent**: an `AiMessage` with `role: 'user'` in one of their
+  conversations with the tutor. The tutor's replies and tool messages are not turns.
+- **Over the UTC day.** One boundary for everybody, "back at midnight UTC", and nothing from the
+  browser. `resetsAt` is the next UTC midnight.
+- **Counted from the transcript, not stored.** So deleting a conversation gives its turns back. That
+  is fine for a cost cap, and not worth a table.
+- **A soft cap.** Two turns sent at the same instant can both read 29 and both go ahead. That
+  overshoots by a turn or two, never by a day's worth, and the per-minute caps keep it to a few.
+- **`TUTOR_DAILY_TURNS`**, through `lib/app/env.ts`: 1 to 1,000, **30** when unset, as BeatBuddy's.
+  An env setting so it can be tuned from the cost dashboard without a release. The production
+  number is set at f-launch x4 and recorded against D6.
 
 ## The agent
 
@@ -186,15 +249,18 @@ were. Without `entityContext` every one of them refuses with `no_panel`.
 
 ## Smoke run
 
-`npm run smoke:tutor` runs real turns through `streamChat()` against the dev database with the
-configured provider: "Make this sound darker" on Model D, and one change on the DeepMind. Each must
-end in a proposal that passes `validateSound` on the panel it was made against, and log a cost
-above zero. Unlike the other smoke scripts it calls the real provider: the logged cost is the
+`npm run smoke:tutor` runs real turns through `POST /api/v1/tutor/stream` on a running server
+(`npm run dev`, or `SMOKE_BASE_URL`), against the dev database with the configured provider: "Make
+this sound darker" on Model D, and one change on the DeepMind. It mints the first user a `chat` API
+key, which `withAuth` takes in place of a session, and deletes it at the end. Each turn's SSE must
+carry a proposal that passes `validateSound` on the panel it was made against, and the turn must
+log a cost above zero. The allowance must then read two more turns used. It goes over HTTP because
+the route reads `next/headers`, which exist only inside a request. Unlike the other smoke scripts it calls the real provider: the logged cost is the
 check, and it is also the check that Sunrise 0.14's fix to #813 (the agent resolver loads the
 model registry) leaves BeatBuddy's `hydrateFromDb()` workaround unneeded.
 
-It needs `npm run db:seed` (the tool rows and the tutor, bound), an active provider whose key is
-in `.env.local`, and a default chat model. **Not run yet:** when t-53 was built the dev database
+It needs a server, `npm run db:seed` (the tool rows and the tutor, bound), an active provider whose
+key is in `.env.local`, and a default chat model. **Not run yet:** when t-53 was built the dev database
 had no provider configured, and the run was deferred (2026-10-18). Record each run here.
 
 | Date | Provider and model | Turn | Tools called | Cost |
@@ -202,8 +268,7 @@ had no provider configured, and the run was deferred (2026-10-18). Record each r
 
 ## Not yet
 
-- **The route, the allowance and the panel** are t-54 and t-56. Until t-54 lands nothing calls
-  the tutor.
+- **The panel** is t-56. Until it lands only the smoke run calls the routes.
 - **Grounding** in the databank and the web, the sourcing rules and the topic boundary are
   `f-tutor-knowledge`. Until then the instructions let the tutor answer general questions about
   synths from its own knowledge, and decline others in one line.
