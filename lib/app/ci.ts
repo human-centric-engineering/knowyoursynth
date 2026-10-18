@@ -297,4 +297,14 @@ export interface AppOwnerlessSurfaceException {
  * ];
  * ```
  */
-export const appOwnerlessSurfaceExceptions: AppOwnerlessSurfaceException[] = [];
+export const appOwnerlessSurfaceExceptions: AppOwnerlessSurfaceException[] = [
+  {
+    path: 'lib/app/tutor/allowance.ts',
+    disposition: 'by-design',
+    reason:
+      "the tutor's daily allowance counts the caller's own messages to the tutor, " +
+      '`conversation: { userId }` from the session: hard-scoped on purpose, like core’s ' +
+      '`conversations/export`. A thread nobody owns is nobody’s turn, and a shared one ' +
+      'is its owner’s, so it has nothing to ask the helper (`f-tutor` t-54).',
+  },
+];
