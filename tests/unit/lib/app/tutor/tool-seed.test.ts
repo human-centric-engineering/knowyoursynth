@@ -95,6 +95,29 @@ describe('003-tutor-tools', () => {
     );
   });
 
+  it('logs a reconcile that fails with something other than an Error', async () => {
+    const { ctx, logger } = seedContext();
+    mockReconcile.mockRejectedValueOnce('connection reset');
+    await seed.run(ctx);
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('not reconciled'),
+      expect.objectContaining({ error: 'connection reset' })
+    );
+  });
+
+  it('stops on a tool with no admin row, before writing it', async () => {
+    const { ctx, upsert } = seedContext();
+    const row = TUTOR_TOOL_ROWS.design_sound;
+    delete TUTOR_TOOL_ROWS.design_sound;
+    try {
+      await expect(seed.run(ctx)).rejects.toThrow('no row for the tutor tool design_sound');
+      expect(upsert.mock.calls.map(([a]) => a.where.slug)).not.toContain('design_sound');
+      expect(mockReconcile).not.toHaveBeenCalled();
+    } finally {
+      TUTOR_TOOL_ROWS.design_sound = row;
+    }
+  });
+
   it('re-runs when the tutor folder changes', () => {
     expect(seed.hashInputs).toEqual(
       expect.arrayContaining([

@@ -73,12 +73,13 @@ const unit: SeedUnit = {
     for (const tool of TUTOR_TOOLS) {
       const row = TUTOR_TOOL_ROWS[tool.slug];
       if (!row) throw new Error(`003-tutor-tools: no row for the tutor tool ${tool.slug}`);
-      const functionDefinition = tool.functionDefinition as unknown as Prisma.InputJsonValue;
+      // Written out as `functionDefinition: definition`, not shorthand: the code-owned-fields guard reads `key:` entries.
+      const definition = tool.functionDefinition as unknown as Prisma.InputJsonValue;
       await prisma.aiCapability.upsert({
         where: { slug: tool.slug },
         update: {
           isSystem: true,
-          functionDefinition,
+          functionDefinition: definition,
           executionType: 'internal',
           executionHandler: row.executionHandler,
         },
@@ -91,7 +92,7 @@ const unit: SeedUnit = {
           isIdempotent: true,
           isActive: true,
           isSystem: true,
-          functionDefinition,
+          functionDefinition: definition,
           executionType: 'internal',
           executionHandler: row.executionHandler,
         },

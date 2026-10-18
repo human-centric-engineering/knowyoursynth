@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { changedFromInit, readPanel } from '@/lib/app/tutor/panel';
-import { controlMap, displayName, formatValue } from '@/lib/app/synths/lib/patch';
+import { displayName, formatValue } from '@/lib/app/synths/lib/patch';
 import type { CablePair, ControlValue } from '@/lib/app/synths/contract';
 import { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
 import type {
@@ -58,12 +58,15 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
     const read = readPanel(context);
     if (!read.ok) return Promise.resolve(this.error(read.message, read.code));
     const { def, values, cables } = read.panel;
-    const cm = controlMap(def);
-    const changed: ChangedControl[] = [];
-    for (const [id, value] of Object.entries(changedFromInit(def, values))) {
-      const c = cm[id];
-      if (c) changed.push({ id, label: displayName(def, c), value, shown: formatValue(c, value) });
-    }
+    const diff = changedFromInit(def, values);
+    const changed: ChangedControl[] = def.controls
+      .filter((c) => Object.hasOwn(diff, c.id))
+      .map((c) => ({
+        id: c.id,
+        label: displayName(def, c),
+        value: diff[c.id],
+        shown: formatValue(c, diff[c.id]),
+      }));
     return Promise.resolve(
       this.success({
         synthId: def.id,
