@@ -427,9 +427,12 @@ export async function updateUserSound(
 
       // Removing the lesson takes text off a public page and never puts any up, so a published sound needs no check for
       // it. In SQL: the typed update writes a JSON column's NULL only with Prisma's runtime `DbNull`, which lib/app may
-      // not import. Keyed on the owner too, and undone with the rest if the update below finds nothing.
-      if (input.lesson === null)
+      // not import. Keyed on the owner too, and undone with the rest if the update below finds nothing. That update
+      // sets `updatedAt` itself: with nothing else to change, Prisma would not write the row at all.
+      if (input.lesson === null) {
         await tx.$executeRaw`UPDATE "user_sound" SET "lesson" = NULL WHERE "id" = ${id} AND "userId" = ${userId}`;
+        data.updatedAt = new Date();
+      }
 
       // Keyed on the owner again, so a sound deleted meanwhile (a delete does not take the lock) is a 404.
       const { visibility } = input;

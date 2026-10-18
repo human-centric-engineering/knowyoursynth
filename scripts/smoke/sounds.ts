@@ -26,6 +26,9 @@
  *    the subject filed; erasing the subject keeps their reports with `reporterId` and `resolvedById` null
  *    (`sound_report_reporterId_fkey`, `sound_report_resolvedById_fkey`, `ON DELETE SET NULL`), and takes the reports
  *    about their own sounds with those sounds (`sound_report_soundId_fkey` cascades).
+ * 6. A lesson (`f-tutor` t-55): the published sound was saved with one, which the public read serves, a copy carries
+ *    and the export holds with the tutor's mark. Removing it is one statement in SQL (`store.ts`), which another user
+ *    cannot run on it: it leaves the column NULL and the mark as it was, and moves `updatedAt`.
  *
  * Skips cleanly (exit 0) when no database is reachable. Self-cleaning: creates only `smoke-test-sounds-*` users, whose
  * sounds go with them, and removes whatever it created on every path. Printing goes through `console`, not `logger` —
@@ -106,12 +109,26 @@ async function main(): Promise<void> {
     const cont = def.controls.find((c) => c.kind === 'cont');
     if (!cont || cont.kind !== 'cont') throw new Error('Model D has no continuous control');
     const panel = { values: { [cont.id]: cont.min }, cables: [] };
+    const lesson = {
+      blurb: 'A smoke-test lesson.',
+      level: 1 as const,
+      category: 'bass' as const,
+      how: 'One control, set low.',
+      steps: [
+        { title: 'Set it low', module: cont.module, why: 'Low.', set: { [cont.id]: cont.min } },
+      ],
+      context: {},
+      tweaks: [],
+      phrase: { bpm: 100, steps: [[0, 36, 1] as [number, number, number]] },
+    };
 
-    // 1. Real rows.
+    // 1. Real rows. The one made from scratch is the one the subject publishes (4), saved with a lesson (6).
     const scratch = await createUserSound(subject.id, {
       synthId: 'model-d',
       name: 'Scratch',
       panel,
+      lesson,
+      fromTutor: true,
     });
     const copy = await createUserSound(subject.id, {
       synthId: 'model-d',
@@ -137,6 +154,14 @@ async function main(): Promise<void> {
     check(
       theirCopy.basedOn?.slug === published.slug,
       "the other user's copy credits the published sound"
+    );
+    check(
+      servedShared?.lesson?.blurb === lesson.blurb && servedShared.fromTutor,
+      'the published sound is served with its lesson and the mark'
+    );
+    check(
+      theirCopy.lesson?.blurb === lesson.blurb && theirCopy.fromTutor,
+      'the copy carries the lesson and the mark'
     );
     await updateUserSound(subject.id, scratch.id, { visibility: 'link' });
     check(
@@ -289,6 +314,32 @@ async function main(): Promise<void> {
       JSON.stringify(exported).includes(`"slug":"${published.slug}"`) &&
         JSON.stringify(exported).includes('"visibility":"published"'),
       "the export carries the published sound's visibility and slug"
+    );
+    check(
+      JSON.stringify(exported).includes(`"blurb":"${lesson.blurb}"`) &&
+        JSON.stringify(exported).includes('"fromTutor":true'),
+      "the export carries a sound's lesson and the tutor's mark"
+    );
+
+    // 6. Removing the lesson, in SQL: not by another user, and then by its owner.
+    const before = await prisma.userSound.findUniqueOrThrow({ where: { id: scratch.id } });
+    const notTheirs = await updateUserSound(other.id, scratch.id, { lesson: null }).then(
+      () => null,
+      (err: unknown) => (err instanceof APIError ? err.status : 'other')
+    );
+    const untouched = await prisma.userSound.findUniqueOrThrow({ where: { id: scratch.id } });
+    check(
+      notTheirs === 404 && untouched.lesson !== null,
+      "another user cannot remove a sound's lesson: a 404, and the lesson stays"
+    );
+    const removed = await updateUserSound(subject.id, scratch.id, { lesson: null });
+    const cleared = await prisma.userSound.findUniqueOrThrow({ where: { id: scratch.id } });
+    check(
+      removed.lesson === null &&
+        cleared.lesson === null &&
+        cleared.fromTutor &&
+        cleared.updatedAt > before.updatedAt,
+      'its owner removes it: the column is NULL, the mark stays and updatedAt moves'
     );
     const panels = bundle.app.synthPanels;
     check(

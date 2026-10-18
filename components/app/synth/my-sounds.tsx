@@ -327,6 +327,9 @@ export function SoundActions({
               ...(notes ? { notes } : {}),
               panel: panel(),
               ...(credit ? { source: { slug: credit.slug } } : {}),
+              // Save as keeps what the sound was saved with: its lesson, and that the tutor designed it.
+              ...(mode === 'saveAs' && open?.lesson ? { lesson: open.lesson } : {}),
+              ...(mode === 'saveAs' && open?.fromTutor ? { fromTutor: true } : {}),
             },
           });
           onSaved(d, 'created');

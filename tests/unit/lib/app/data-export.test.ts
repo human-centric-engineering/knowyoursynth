@@ -114,3 +114,21 @@ describe('collectAppSubjectData, the reports a user filed (f-sharing h4)', () =>
     expect(select).not.toHaveProperty('reporterId');
   });
 });
+
+describe("collectAppSubjectData, a sound's lesson and the tutor's mark (f-tutor t-55)", () => {
+  it('asks for both with each sound, and returns them as stored', async () => {
+    const lesson = { blurb: 'A bass.', steps: [{ title: 'One', why: 'Why.' }] };
+    vi.mocked(prisma.userSound.findMany).mockResolvedValueOnce([
+      { id: 'cmmine1', synthId: 'model-d', name: 'Tutor bass', lesson, fromTutor: true },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+    expect(data.sounds).toEqual([expect.objectContaining({ lesson, fromTutor: true })]);
+    const { where, select } = vi.mocked(prisma.userSound.findMany).mock.lastCall![0] as {
+      where: Record<string, unknown>;
+      select: Record<string, unknown>;
+    };
+    expect(where).toEqual({ userId: 'user-1' });
+    expect(select).toMatchObject({ lesson: true, fromTutor: true });
+  });
+});

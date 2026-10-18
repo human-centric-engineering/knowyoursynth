@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
 import type { PublicSound, UserSoundDetail } from '@/lib/app/sounds/data';
+import { lessonPreset } from '@/lib/app/sounds/lesson';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -293,9 +294,6 @@ function Synth({
   };
 
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
-  // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
-  // sound, then.
-  const step = preset && sess.step != null && sess.step < preset.steps.length ? sess.step : null;
 
   // ── the user's own sounds ──
   // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
@@ -306,6 +304,28 @@ function Synth({
   const favourites = useFavourites(userId);
   const openSound =
     signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
+  // The lesson the sound on the panel was saved with (`f-tutor` t-55): one of the user's own, or a shared sound on its
+  // page. It is that sound's, so it shows in place of the library's, and stepping through it keeps the sound open.
+  const ownLesson = useMemo(() => {
+    if (openSound?.lesson)
+      return lessonPreset(openSound.lesson, {
+        id: `mine:${openSound.id}`,
+        name: openSound.name,
+        fromTutor: openSound.fromTutor,
+      });
+    if (sharedPanel && shared?.lesson)
+      return lessonPreset(shared.lesson, {
+        id: `shared:${shared.slug}`,
+        name: shared.name,
+        fromTutor: shared.fromTutor,
+      });
+    return null;
+  }, [openSound, sharedPanel, shared]);
+  // The sound the lesson, the riff, the sound map and the inspector read.
+  const shown = ownLesson ?? preset;
+  // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
+  // sound, then.
+  const step = shown && sess.step != null && sess.step < shown.steps.length ? sess.step : null;
   // The open sound's panel as last saved: what "controls moved" counts from and Restore puts back.
   const [saved, setSaved] = useState<{
     id: string;
@@ -435,7 +455,7 @@ function Synth({
     []
   );
   const mapOn = dimOn || heatOn;
-  const soundKey = `${synthId}/${preset?.id ?? ''}/${step}`;
+  const soundKey = `${synthId}/${shown?.id ?? ''}/${step}`;
   useEffect(() => {
     if (!mapOn) {
       mapperRef.current?.cancel();
@@ -460,7 +480,7 @@ function Synth({
           sess.values,
           sess.cables,
           wheel,
-          probeNotes(preset),
+          probeNotes(shown),
           (progress) =>
             mapStore.set((m) => (m.state || m.key !== soundKey ? m : { ...m, progress })),
           (res) =>
@@ -482,7 +502,7 @@ function Synth({
       }
     }, 300);
     return () => clearTimeout(t);
-  }, [mapOn, synthDef, sess.values, sess.cables, wheel, preset, soundKey]);
+  }, [mapOn, synthDef, sess.values, sess.cables, wheel, shown, soundKey]);
 
   const heldRef = useRef(new Set<number>());
   const noteOn = useCallback(
@@ -863,7 +883,14 @@ function Synth({
   // A lesson step sets the panel to the sound as far as that step; `null` is the finished sound. Like choosing a
   // library sound, it replaces the panel, so one of the user's that was open is no longer what Save writes to.
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
+  // The open sound's own lesson is the exception: the sound stays open (its lesson goes with it), and nothing is
+  // recorded, since progress is kept for the library's lessons.
   const setStep = (k: number | null) => {
+    if (ownLesson) {
+      openSeq.current++;
+      patch((s) => ({ ...s, step: k, ...presetState(synthDef, ownLesson, k) }));
+      return;
+    }
     leaveShared();
     if (preset && k != null) progress.record(preset.id, k);
     else if (preset && step != null && step === preset.steps.length - 1)
@@ -981,9 +1008,9 @@ function Synth({
                   mine
                 </span>
               )}
-              {!openSound && preset && step != null && (
+              {shown && step != null && (
                 <span className="ml-2 rounded bg-(--kys-accent) px-1.5 py-0.5 font-mono text-xs text-(--kys-accent-ink)">
-                  step {step + 1} of {preset.steps.length}
+                  step {step + 1} of {shown.steps.length}
                 </span>
               )}
               {changed > 0 && (
@@ -1250,10 +1277,10 @@ function Synth({
             noteOff={noteOff}
           />
           <div className="flex gap-3">
-            {preset && (
+            {shown && (
               <button
                 type="button"
-                onClick={() => (playing ? stopRiff() : void playRiff(preset.phrase))}
+                onClick={() => (playing ? stopRiff() : void playRiff(shown.phrase))}
                 className={`flex w-[104px] shrink-0 flex-col items-center justify-center gap-1 rounded-md border text-sm font-semibold ${playing ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-text) hover:border-(--kys-muted)'}`}
               >
                 <span aria-hidden="true" className="text-xl leading-none">
@@ -1293,20 +1320,20 @@ function Synth({
           />
           <Library
             presets={sounds}
-            currentId={openSound ? null : (preset?.id ?? null)}
+            currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
             onSelect={selectPreset}
             marks={progress.marks}
             isStarred={(slug) => favourites.isOn({ kind: 'sound', synthId, slug })}
             onStar={(slug) => favourites.toggle({ kind: 'sound', synthId, slug })}
           />
         </div>
-        {preset ? (
+        {shown ? (
           <Lesson
             def={def}
-            preset={preset}
+            preset={shown}
             step={step}
             onStep={setStep}
-            mark={progress.marks?.get(preset.id) ?? null}
+            mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
           />
         ) : (
           <p className="text-sm text-(--kys-muted)">This synth has no sounds yet.</p>
@@ -1316,7 +1343,7 @@ function Synth({
             def={def}
             values={sess.values}
             target={step == null ? target : null}
-            preset={preset ?? null}
+            preset={shown ?? null}
             cables={sess.cables}
             onChange={onChange}
             onConnect={onConnect}
@@ -1373,7 +1400,7 @@ function Synth({
         def={def}
         values={sess.values}
         cables={sess.cables}
-        phrase={preset?.phrase ?? null}
+        phrase={shown?.phrase ?? null}
         playing={playing}
         onPlay={(ph) => void playRiff(ph)}
         onStop={stopRiff}
@@ -1393,7 +1420,7 @@ function Synth({
         def={def}
         values={sess.values}
         target={step == null ? target : null}
-        preset={preset ?? null}
+        preset={shown ?? null}
         cables={sess.cables}
       />
     </div>
