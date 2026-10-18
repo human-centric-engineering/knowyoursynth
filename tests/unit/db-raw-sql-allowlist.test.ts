@@ -116,6 +116,12 @@ const ALLOWLIST: ReadonlyArray<{ file: string; calls: number; why: string }> = [
     why: "SELECT … FOR UPDATE row lock on the caller's own user row while a sound of theirs is changed or published, so the daily publish cap and the checks run against the row the write lands on — the id a bound parameter (the session's user id), and user is a system model, not tenant rows",
   },
   {
+    // FORK: Know Your Synth, f-tutor t-55 (.context/app/divergences.md)
+    file: 'lib/app/sounds/store.ts',
+    calls: 1,
+    why: "UPDATE that sets one of the caller's own sounds' lesson to SQL NULL, since the typed client writes a JSON column's NULL only with Prisma's runtime DbNull, which lib/app/** may not import — keyed on the sound id and the session's user id, both bound parameters, inside the owner's locked transaction, and user_sound is a system model, not tenant rows",
+  },
+  {
     file: 'lib/db/drift-probes.ts',
     calls: 6,
     why: 'catalog queries (pg_indexes/pg_constraint/pg_class/pg_policies/information_schema) — reads system catalogs, never tenant rows',
