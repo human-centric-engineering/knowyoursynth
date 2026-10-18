@@ -220,3 +220,6 @@ public/uploads/
 # Sound engine AudioWorklet and probe Worker, bundled by scripts/build-audio-workers.ts
 # (predev / prebuild). Build products: the source is lib/app/synths/audio/.
 public/worklets/
+
+# The social card's panel renderer, bundled by scripts/build-panel-renderer.ts (t-50)
+components/app/sharing/generated/panel-render.mjs

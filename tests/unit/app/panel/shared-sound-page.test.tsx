@@ -8,7 +8,10 @@
  *   included);
  * - private, unknown and on another synth are each the 404, and so is a synth the registry or catalogue lacks;
  * - a link share is `noindex`; a published sound is canonical at its address;
- * - the card's colours are the synth's theme, so two synths give two cards, and the byline is the read's.
+ * - the card's colours are the synth's theme, so two synths give two cards, and the byline is the read's;
+ * - the card carries the sound's panel, drawn in the synth's design from the catalogue (t-50).
+ *
+ * The panel picture itself is `panel-image.test.ts`'s; here it is a fake.
  *
  * @see app/(panel)/synths/[id]/s/[slug]/page.tsx
  * @see app/(panel)/synths/[id]/s/[slug]/opengraph-image.tsx
@@ -35,9 +38,13 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/components/app/synth/synth-page', () => ({ SynthPage: () => null }));
 vi.mock('@/lib/app/catalogue/read', () => ({ getSynthDetail: vi.fn(), listSynths: vi.fn() }));
 vi.mock('@/lib/app/sounds/public', () => ({ getSharedSound: vi.fn() }));
+vi.mock('@/components/app/sharing/panel-image', () => ({
+  panelPng: vi.fn(async () => ({ png: Buffer.from('png'), width: 1104, height: 395 })),
+}));
 
 import SharedSoundRoute, { generateMetadata } from '@/app/(panel)/synths/[id]/s/[slug]/page';
 import Image from '@/app/(panel)/synths/[id]/s/[slug]/opengraph-image';
+import { panelPng } from '@/components/app/sharing/panel-image';
 import { SocialCard } from '@/components/app/sharing/social-card';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
@@ -71,7 +78,10 @@ const DETAIL = {
   synth: { id: 'model-d', name: 'Model D', design: 'faithful' },
   sounds: [],
 } as unknown as SynthDetail;
-const SYNTHS = [{ id: 'model-d' }, { id: 'pro-1' }] as unknown as CatalogueSynth[];
+const SYNTHS = [
+  { id: 'model-d', design: 'faithful' },
+  { id: 'pro-1', design: 'neutral' },
+] as unknown as CatalogueSynth[];
 
 const props = (id: string, slug = SLUG) => ({
   params: Promise.resolve({ id, slug }),
@@ -167,7 +177,24 @@ describe('the social card', () => {
       maker: def.maker,
       author: 'patchwork',
       theme: def.theme,
+      panel: { src: `data:image/png;base64,${Buffer.from('png').toString('base64')}`, width: 1104 },
     });
+  });
+
+  it("draws the sound's panel in the design the catalogue gives its synth", async () => {
+    // a panel no other test draws: drawn panels are kept between requests
+    const panel = { values: { 'filter.cutoff': 1 }, cables: [] };
+    vi.mocked(getSharedSound).mockResolvedValue({ ...SOUND, panel });
+    await Image({ params: Promise.resolve({ id: 'model-d', slug: SLUG }) });
+    expect(panelPng).toHaveBeenCalledWith(
+      expect.objectContaining({
+        def: getSynthDef('model-d'),
+        values: panel.values,
+        cables: panel.cables,
+        design: 'faithful',
+        box: { width: 1104, height: 408 },
+      })
+    );
   });
 
   it('gives two synths with different faceplates two different cards', () => {

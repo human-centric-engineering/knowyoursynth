@@ -434,7 +434,12 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     risk: 'a stray flat-config block would apply lint rules to every fork',
     // The root eslint.config.mjs spreads this array last; that spread itself is
     // exercised by every `npm run lint` run.
-    assert: () => expect(appEslintConfig).toEqual([]),
+    // FORK (Know Your Synth): pinned to the one ignore for the social card's generated panel renderer (t-50) rather
+    // than deleted, so a stray rule block still fails. Ledger: .context/app/divergences.md.
+    assert: () =>
+      expect(appEslintConfig).toEqual([
+        { ignores: ['components/app/sharing/generated/panel-render.mjs'] },
+      ]),
   },
   {
     seam: 'lib/app/jobs.ts',

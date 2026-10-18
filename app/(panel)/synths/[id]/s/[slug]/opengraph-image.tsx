@@ -1,16 +1,16 @@
-import { ImageResponse } from 'next/og';
 import { notFound } from 'next/navigation';
 
-import { SOCIAL_CARD_SIZE, SocialCard } from '@/components/app/sharing/social-card';
+import { SOCIAL_CARD_SIZE } from '@/components/app/sharing/social-card';
+import { soundCard } from '@/components/app/sharing/sound-card-image';
 import { listSynths } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { getSharedSound } from '@/lib/app/sounds/public';
 import { BRAND } from '@/lib/brand';
 
 /**
- * A shared sound's social card (`f-sharing` h2): a text card in the synth's own colours (`SocialCard`). The same read
- * as the page, so a sound made private, or on a synth the catalogue stops serving, stops having a card when it stops
- * having a page.
+ * A shared sound's social card (`f-sharing` h2): the synth's panel with this sound on it (t-50), in the synth's own
+ * colours and `Synth.design` (`soundCard`). The same read as the page, so a sound made private, or on a synth the
+ * catalogue stops serving, stops having a card when it stops having a page.
  */
 
 export const alt = `A sound shared on ${BRAND.name}`;
@@ -23,16 +23,7 @@ export default async function Image({ params }: { params: Promise<{ id: string; 
   const [sound, synths] = def
     ? await Promise.all([getSharedSound(slug), listSynths()])
     : [null, []];
-  if (!def || !sound || sound.synthId !== id || !synths.some((s) => s.id === id)) notFound();
-  return new ImageResponse(
-    <SocialCard
-      name={sound.name}
-      synthName={def.name}
-      maker={def.maker}
-      author={sound.author}
-      theme={def.theme}
-      brand={BRAND.name}
-    />,
-    size
-  );
+  const synth = synths.find((s) => s.id === id);
+  if (!def || !sound || sound.synthId !== id || !synth) notFound();
+  return soundCard(def, sound, synth.design);
 }
