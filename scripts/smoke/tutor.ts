@@ -152,21 +152,36 @@ async function runTurn(turn: Turn, userId: string, made: string[]): Promise<{ co
     );
   console.log('  ✓ the proposal passes validateSound on the panel it was made against');
 
-  // `streamChat` writes cost rows without waiting (`void logCost(...)`), so give the last one time to land before
-  // reading them, and before the conversation it points at is deleted.
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const done = events.find((e) => e.type === 'done');
-  const logged = await prisma.aiCostLog.aggregate({
-    where: { conversationId },
-    _sum: { totalCostUsd: true },
-    _count: true,
-  });
+  const logged = await settledCosts(conversationId);
   const costUsd = logged._sum.totalCostUsd ?? 0;
   const binding = done?.type === 'done' ? `${done.provider ?? '?'} / ${done.model ?? '?'}` : '?';
   console.log(`  model: ${binding}; ${logged._count} cost rows, logged $${costUsd.toFixed(6)}`);
   if (!(costUsd > 0)) fail(`${turn.label}: the turn logged no cost`);
   console.log('  ✓ the turn logged a cost above zero');
   return { costUsd };
+}
+
+/**
+ * The conversation's cost rows, once they have stopped arriving. `streamChat` writes them without waiting
+ * (`void logCost(...)`), so read until two reads 250ms apart agree and at least one row is there, for up to five
+ * seconds: before the total is checked, and before the conversation they point at is deleted.
+ */
+async function settledCosts(conversationId: string) {
+  const read = () =>
+    prisma.aiCostLog.aggregate({
+      where: { conversationId },
+      _sum: { totalCostUsd: true },
+      _count: true,
+    });
+  let last = await read();
+  for (const deadline = Date.now() + 5000; Date.now() < deadline;) {
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    const next = await read();
+    if (next._count > 0 && next._count === last._count) return next;
+    last = next;
+  }
+  return last;
 }
 
 function isOk(result: unknown): boolean {

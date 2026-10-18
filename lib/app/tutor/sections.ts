@@ -8,14 +8,20 @@
  */
 import { areaMembers } from '@/lib/app/synths/lib/areas';
 import { describeSynth } from '@/lib/app/synths/lib/patch';
-import type { SynthDef } from '@/lib/app/synths/contract';
+import type { Jack, SynthDef } from '@/lib/app/synths/contract';
 
 /** The most `describe_synth` returns in one call. A synth, section or prefix that describes in more gets an index. */
 export const DESCRIBE_MAX_CHARS = 8000;
 
 const wholeSizes = new WeakMap<SynthDef, number>();
 
-/** Whether `describe_synth` with no section returns the whole synth (true) or its section index. */
+/** A jack the sound engine models, which is every jack `describeSynth` lists: an output with a signal, an input with a destination. */
+export const modelled = (j: Jack): boolean => (j.dir === 'out' ? !!j.signal : !!j.dest);
+
+/**
+ * Whether the synth is small enough for `describe_synth` with no arguments to return it whole: measured on the init
+ * patch. On a heavily patched panel the answer can still be the section index, because the cables are part of it.
+ */
 export function describesWhole(def: SynthDef): boolean {
   let size = wholeSizes.get(def);
   if (size === undefined) {
@@ -25,10 +31,14 @@ export function describesWhole(def: SynthDef): boolean {
   return size <= DESCRIBE_MAX_CHARS;
 }
 
-/** One line per section: `id | name | controls`, in the definition's order. */
+/**
+ * One line per section: `id | name | controls | jacks`, in the definition's order. Jacks are counted too: a section
+ * can hold only jacks (a modular's output panel), and a 0 there would read as empty.
+ */
 export function sectionIndex(def: SynthDef): string {
-  const rows = def.areas.map(
-    (a) => `${a.id} | ${a.label} | ${areaMembers(def, a).controls.length}`
-  );
-  return `SECTIONS (id | name | controls)\n${rows.join('\n')}`;
+  const rows = def.areas.map((a) => {
+    const { controls, jacks } = areaMembers(def, a);
+    return `${a.id} | ${a.label} | ${controls.length} | ${jacks.filter(modelled).length}`;
+  });
+  return `SECTIONS (id | name | controls | jacks)\n${rows.join('\n')}`;
 }

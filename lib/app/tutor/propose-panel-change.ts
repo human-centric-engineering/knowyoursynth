@@ -75,6 +75,7 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
       'Propose a change to the panel for the learner to apply: controls to set, and cables to add or remove. Use only control ids, jack ids and legal values that describe_synth showed you. Every id and value is checked against the synth and the current panel; if anything is wrong the whole proposal is refused with the reason, so fix what it names and call again. Nothing changes until the learner applies it.',
     parameters: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         set: {
           type: 'object',
@@ -104,6 +105,13 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
   }
 
   private propose(panel: TutorPanel, args: Args): CapabilityResult<ProposalData> {
+    // Every argument defaults to empty, so an empty call passes the schema. It is also what a call cut off at the
+    // token cap arrives as, so it gets its own reason rather than "changes nothing".
+    if (!Object.keys(args.set).length && !args.addCables.length && !args.removeCables.length)
+      return this.error(
+        'Proposal refused: it was empty. Name at least one control to set or cable to add or remove; if you did, the call may have been cut off, so send a smaller change.',
+        'empty_proposal'
+      );
     const { def, values, cables } = panel;
     const { values: checked, problems: setProblems } = checkSettings(def, args.set, 'set');
     // A cable to remove needs only to be in: the panel's cables passed `checkCables` when it was read.
@@ -134,7 +142,9 @@ export class ProposePanelChangeCapability extends BaseCapability<Args, ProposalD
       else if (!hasCable(cables, cable))
         problems.push({
           path: `removeCables.${i}`,
-          message: `Cable ${cableName(cable)} is not in`,
+          message: hasCable(cables, [cable[1], cable[0]])
+            ? `Cable ${cableName(cable)} is not in; write it [output, input], as [${cable[1]}, ${cable[0]}]`
+            : `Cable ${cableName(cable)} is not in`,
         });
     });
     if (problems.length)

@@ -65,6 +65,16 @@ describe('the tutor tools', () => {
     expect(Object.keys(properties ?? {}).filter((p) => OWNER_WORDS.test(p))).toEqual([]);
   });
 
+  it.each(tools)(
+    '%s tells the model it takes no other arguments, as its schema refuses them',
+    (_slug, tool) => {
+      expect(tool.functionDefinition.parameters).toMatchObject({
+        type: 'object',
+        additionalProperties: false,
+      });
+    }
+  );
+
   it.each(tools)('%s refuses a userId slipped into its arguments', (slug, tool) => {
     expect(() => tool.validate({ userId: 'user-2' })).toThrow();
     const args = GOOD_ARGS[slug];

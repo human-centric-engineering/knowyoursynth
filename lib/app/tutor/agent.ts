@@ -52,8 +52,11 @@ export const TUTOR_AGENT: PlatformAgentDefinition = {
       'The tutor on the synth page: explains the sound on the panel, proposes changes the learner applies, and designs new sounds with a lesson.',
     systemInstructions: TUTOR_INSTRUCTIONS,
     temperature: 0.4,
-    // A designed sound is the longest reply, as tool arguments: the largest `design_sound` allows is about 18,000
-    // characters, over 4,096 tokens. A call cut off at the cap arrives as `{}`, and every retry would be cut off too.
+    // A designed sound is the longest reply, as tool arguments. One the size the instructions ask for (three to six
+    // steps with their lesson lines) is roughly 12,000 characters, some 3,000 tokens; 8,192 leaves room for a longer
+    // one, and for a reasoning model, which spends part of the cap thinking. One at every limit `design_sound` allows
+    // would not fit, and arrives cut off as `{}`. Not higher: nothing clamps this to the model's own output limit, and
+    // some models stop at 8,192.
     maxTokens: 8192,
   },
   capabilities: TUTOR_TOOL_SLUGS,

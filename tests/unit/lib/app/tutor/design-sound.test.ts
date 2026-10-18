@@ -175,6 +175,15 @@ describe("design_sound arguments: the prototype's limits refuse instead of clamp
     ).toThrow();
   });
 
+  it('refuses a step setting more than 32 controls, and context for more than 16', () => {
+    const many = (n: number) =>
+      Object.fromEntries(Array.from({ length: n }, (_, i) => [`c${i}`, 'x']));
+    const d = design();
+    d.steps[0].set = many(33);
+    expect(() => tool.validate(d)).toThrow();
+    expect(() => tool.validate({ ...design(), context: many(17) })).toThrow();
+  });
+
   it('refuses more than nine steps', () => {
     const step = design().steps[0];
     expect(() =>

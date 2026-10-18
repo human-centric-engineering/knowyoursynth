@@ -23,16 +23,20 @@ describe('synthContext', () => {
     );
     expect(body).toContain(modelD.summary);
     expect(body).toContain(
-      'It has 48 controls. describe_synth with no arguments returns all of them.'
+      'It has 48 controls. describe_synth with no arguments returns all of them (or its sections, on a heavily patched panel).'
     );
-    expect(body).toContain('SECTIONS (id | name | controls)');
-    expect(body).toMatch(/^filter \| .+ \| \d+$/m);
+    expect(body).toContain('SECTIONS (id | name | controls | jacks)');
+    expect(body).toMatch(/^filter \| .+ \| \d+ \| \d+$/m);
   });
 
   it('tells the model to name a section on a large synth', async () => {
     const body = await synthContext('deepmind-12d');
     expect(body).toContain('It has 1568 controls. That is too many to look up at once');
-    expect(body).toContain('display | Display and menus | 1514');
+    expect(body).toMatch(/^display \| Display and menus \| 1514 \| \d+$/m);
+  });
+
+  it("counts a section's jacks, so one that holds only jacks does not read as empty", async () => {
+    expect(await synthContext('system-15')).toMatch(/^appout \| .+ \| 0 \| 2$/m);
   });
 
   it("does not list a synth's controls", async () => {

@@ -31,3 +31,10 @@ export function panelContext(
     ...overrides,
   };
 }
+
+/** Up to `n` distinct cables a panel can hold: each from a modelled output to a modelled input. */
+export function manyCables(def: AppSynthDef, n: number): CablePair[] {
+  const outs = def.jacks.filter((j) => j.dir === 'out' && j.signal);
+  const ins = def.jacks.filter((j) => j.dir === 'in' && j.dest);
+  return outs.flatMap((o) => ins.map((i): CablePair => [o.id, i.id])).slice(0, n);
+}

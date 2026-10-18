@@ -22,7 +22,7 @@ export function synthContext(synthId: string): Promise<string> {
       def.summary,
       `It has ${def.controls.length} controls. ${
         describesWhole(def)
-          ? 'describe_synth with no arguments returns all of them.'
+          ? 'describe_synth with no arguments returns all of them (or its sections, on a heavily patched panel).'
           : 'That is too many to look up at once: name a section when you call describe_synth.'
       }`,
       sectionIndex(def),

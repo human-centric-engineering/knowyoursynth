@@ -6,7 +6,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { GetPanelCapability } from '@/lib/app/tutor/get-panel';
-import { panelContext, synth } from '@/tests/helpers/tutor';
+import { manyCables, panelContext, synth } from '@/tests/helpers/tutor';
 
 const tool = new GetPanelCapability();
 const modelD = synth('model-d');
@@ -48,6 +48,13 @@ describe('get_panel', () => {
     expect(Object.keys(values).length).toBeGreaterThan(100);
     const result = await tool.execute({}, panelContext(deepmind, { values }));
     expect(result.data?.changed).toHaveLength(100);
+    expect(result.data?.truncated).toBe(true);
+  });
+
+  it('lists at most 100 cables, and says when there are more', async () => {
+    const s15 = synth('system-15');
+    const result = await tool.execute({}, panelContext(s15, { cables: manyCables(s15, 150) }));
+    expect(result.data?.cables).toHaveLength(100);
     expect(result.data?.truncated).toBe(true);
   });
 

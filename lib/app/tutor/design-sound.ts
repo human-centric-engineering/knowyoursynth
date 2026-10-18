@@ -14,6 +14,10 @@ import type {
  * There they repair; here going past one refuses, naming the field, as `validatePreset` refuses a bad id or value.
  */
 const text = (max: number) => z.string().trim().min(1).max(max);
+/** The most controls one step sets, and the most controls the sound's context explains. */
+const MAX_STEP_SET = 32;
+const MAX_CONTEXT = 16;
+
 const PhraseNoteSchema = z.tuple([
   z.number().min(0).max(16),
   z.number().int().min(24).max(96),
@@ -34,7 +38,13 @@ const schema = z
             title: text(90),
             module: z.enum(SYNTH_MODULES),
             why: text(1500),
-            set: z.record(z.string().min(1).max(160), z.unknown()).optional(),
+            set: z
+              .record(z.string().min(1).max(160), z.unknown())
+              .refine(
+                (set) => Object.keys(set).length <= MAX_STEP_SET,
+                `At most ${MAX_STEP_SET} controls in one step`
+              )
+              .optional(),
             cables: z.array(CablePairSchema).max(16).optional(),
           })
           .strict()
@@ -44,7 +54,13 @@ const schema = z
       )
       .min(1)
       .max(9),
-    context: z.record(z.string().min(1).max(160), text(400)).optional(),
+    context: z
+      .record(z.string().min(1).max(160), text(400))
+      .refine(
+        (context) => Object.keys(context).length <= MAX_CONTEXT,
+        `At most ${MAX_CONTEXT} controls in the context`
+      )
+      .optional(),
     tweaks: z
       .array(z.object({ id: z.string().min(1).max(160), try: text(200), hear: text(300) }).strict())
       .max(5)
@@ -84,6 +100,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
       "Design a whole new sound on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's init patch. Use only control ids, jack ids and legal values that describe_synth showed you. The sound is checked against the synth; if anything is wrong the whole sound is refused with the reason, so fix what it names and call again.",
     parameters: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         name: { type: 'string', maxLength: 60, description: "The sound's name." },
         blurb: { type: 'string', maxLength: 200, description: 'One sentence.' },
@@ -106,12 +123,14 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
             'Three to six steps in the order a person would build the sound: oscillators, mixer, filter, envelopes, modulation, cables, effects. Each sets at least one control or plugs in a cable.',
           items: {
             type: 'object',
+            additionalProperties: false,
             properties: {
               title: { type: 'string', maxLength: 90 },
               module: { type: 'string', enum: [...SYNTH_MODULES] },
               why: { type: 'string', maxLength: 1500, description: STEP_LINE },
               set: {
                 type: 'object',
+                maxProperties: MAX_STEP_SET,
                 description: 'Control id → value.',
                 additionalProperties: { type: ['number', 'string', 'boolean'] },
               },
@@ -126,6 +145,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
         },
         context: {
           type: 'object',
+          maxProperties: MAX_CONTEXT,
           description:
             'Control id → what that control is doing in this sound, and what happens if the learner moves it (up to 400 characters).',
           additionalProperties: { type: 'string', maxLength: 400 },
@@ -136,6 +156,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
           description: 'Things to try: a control, an action, and what the learner will hear.',
           items: {
             type: 'object',
+            additionalProperties: false,
             properties: {
               id: { type: 'string', description: 'Control id.' },
               try: { type: 'string', maxLength: 200 },
@@ -146,6 +167,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
         },
         phrase: {
           type: 'object',
+          additionalProperties: false,
           description:
             'A short original riff of 4 to 8 beats that suits the sound, not a copy of any song. Each note is [beat 0–16, MIDI note 24–96, length in beats 0.05–16].',
           properties: {

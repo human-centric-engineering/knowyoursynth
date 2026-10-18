@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 import { DescribeSynthCapability } from '@/lib/app/tutor/describe-synth';
 import { DESCRIBE_MAX_CHARS } from '@/lib/app/tutor/sections';
 import { describeSynth } from '@/lib/app/synths/lib/patch';
-import { panelContext, synth } from '@/tests/helpers/tutor';
+import { manyCables, panelContext, synth } from '@/tests/helpers/tutor';
 
 const tool = new DescribeSynthCapability();
 const modelD = synth('model-d');
@@ -76,6 +76,29 @@ describe('describe_synth on a small synth', () => {
   });
 });
 
+describe('describe_synth on a heavily patched panel', () => {
+  // 250 cables: well within what a panel may hold (500), and far more than a lookup can carry.
+  const s15 = synth('system-15');
+  const patched = panelContext(s15, { cables: manyCables(s15, 250) });
+
+  it('still describes a single control, carrying only the cables to and from the jacks it lists', async () => {
+    const result = await run({ prefix: 'm914.band_low_pass' }, patched);
+    expect(result.data?.scope).toBe('prefix');
+    const text = result.data?.text ?? '';
+    expect(text).toMatch(/^m914\.band_low_pass \| /m);
+    expect(text).toContain('Cables listed are only those to and from the jacks below');
+    expect(text).toContain('CABLES NOW: none');
+    expect(text.length).toBeLessThan(DESCRIBE_MAX_CHARS);
+  });
+
+  it('returns the section list for a small synth whose cables make the whole too big', async () => {
+    const b2600 = synth('b2600');
+    const result = await run({}, panelContext(b2600, { cables: manyCables(b2600, 250) }));
+    expect(result.data?.scope).toBe('index');
+    expect((result.data?.text ?? '').length).toBeLessThan(DESCRIBE_MAX_CHARS);
+  });
+});
+
 describe('describe_synth and the jacks it does not list', () => {
   it('refuses a prefix that matches only a jack the sound engine does not model', async () => {
     // Pro-1's mod wheel jack has no destination, so describeSynth leaves it out; a success would describe nothing.
@@ -92,8 +115,8 @@ describe('describe_synth on the DeepMind', () => {
   it('returns the section list with no arguments, not 1,568 controls', async () => {
     const result = await run({}, ctx);
     expect(result.data?.scope).toBe('index');
-    expect(result.data?.text).toContain('SECTIONS (id | name | controls)');
-    expect(result.data?.text).toContain('display | Display and menus | 1514');
+    expect(result.data?.text).toContain('SECTIONS (id | name | controls | jacks)');
+    expect(result.data?.text).toMatch(/^display \| Display and menus \| 1514 \| \d+$/m);
     expect((result.data?.text ?? '').length).toBeLessThan(DESCRIBE_MAX_CHARS);
   });
 

@@ -16,6 +16,8 @@ import type {
  * value, section by section.
  */
 const MAX_CHANGED = 100;
+/** How many cables one read lists, for the same reason. A panel holds a handful; the panel schema allows 500. */
+const MAX_CABLES = 100;
 
 const schema = z.object({}).strict();
 
@@ -37,7 +39,7 @@ export interface PanelData {
   version: number;
   /** The controls that differ from the synth's init patch. */
   changed: ChangedControl[];
-  /** More controls differ than are listed. */
+  /** More controls differ, or more cables are in, than are listed. */
   truncated: boolean;
   /** The cables in, each `[output jack id, input jack id]`. */
   cables: CablePair[];
@@ -52,7 +54,7 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
     name: 'get_panel',
     description:
       "Read the synth panel as the learner has it now: the controls that differ from the synth's init patch (id, panel label and value) and the cables in. Call it before explaining or changing the sound. Read-only.",
-    parameters: { type: 'object', properties: {} },
+    parameters: { type: 'object', additionalProperties: false, properties: {} },
   };
 
   execute(_args: Args, context: CapabilityContext): Promise<CapabilityResult<PanelData>> {
@@ -74,8 +76,8 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
         synthName: `${def.maker} ${def.name}`,
         version: def.version,
         changed: changed.slice(0, MAX_CHANGED),
-        truncated: changed.length > MAX_CHANGED,
-        cables,
+        truncated: changed.length > MAX_CHANGED || cables.length > MAX_CABLES,
+        cables: cables.slice(0, MAX_CABLES),
       })
     );
   }

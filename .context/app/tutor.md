@@ -69,15 +69,15 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 `lib/app/platform-agents.ts`, created by the reconcile in the install org only
 (`audience: 'install-only'`), and brought back in line with the definition after every deploy.
 
-| Field              | Value                                                                     | Whose                           |
-| ------------------ | ------------------------------------------------------------------------- | ------------------------------- |
-| Visibility         | `internal` (the baseline)                                                 | the code's                      |
-| Temperature        | 0.4                                                                       | the code's                      |
-| Max tokens         | 8,192 (the largest designed sound is over 4,096 tokens of tool arguments) | the code's                      |
-| Tools              | the four below                                                            | the code's                      |
-| Provider and model | none: inherits the org's default at run time                              | the admin's                     |
-| Per-turn cap       | **$0.20** to start (BeatBuddy's)                                          | the admin's, set once on create |
-| Monthly budget     | **$50** to start                                                          | the admin's, set once on create |
+| Field              | Value                                                                | Whose                           |
+| ------------------ | -------------------------------------------------------------------- | ------------------------------- |
+| Visibility         | `internal` (the baseline)                                            | the code's                      |
+| Temperature        | 0.4                                                                  | the code's                      |
+| Max tokens         | 8,192 (room for a designed sound, the longest reply; see `agent.ts`) | the code's                      |
+| Tools              | the four below                                                       | the code's                      |
+| Provider and model | none: inherits the org's default at run time                         | the admin's                     |
+| Per-turn cap       | **$0.20** to start (BeatBuddy's)                                     | the admin's, set once on create |
+| Monthly budget     | **$50** to start                                                     | the admin's, set once on create |
 
 The starting caps are placeholders for the admin to tune. The production provider, model and the
 learner's daily allowance are decided at `x4` and recorded against D6. Changing the instructions
@@ -85,22 +85,27 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 
 ## The tools
 
-| Tool                   | Arguments                                                         | Returns                                                                                                     | Refuses with                                                |
-| ---------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables; the version | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel` |
-| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                   | the above, `unknown_section`, `unknown_prefix`              |
-| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                      | the above, `invalid_proposal`, `no_change`                  |
-| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                            | the above, `invalid_design`                                 |
+| Tool                   | Arguments                                                         | Returns                                                                                                                  | Refuses with                                                 |
+| ---------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables, at most 100; the version | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel`  |
+| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                | the above, `unknown_section`, `unknown_prefix`               |
+| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                   | the above, `empty_proposal`, `invalid_proposal`, `no_change` |
+| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                         | the above, `invalid_design`                                  |
 
 - **`propose_panel_change`** runs `checkSettings` on `set` and `checkCables` on `addCables`, then
   checks against the panel: a cable to remove must be in, a cable to add must not be (nor listed
   twice, nor also removed), and something must change. A control already at the proposed value is
-  left out of the result. At most 64 controls and 16 cables each way.
+  left out of the result. At most 64 controls and 16 cables each way. An empty call is refused as
+  `empty_proposal`, not `no_change`: it is what a call cut off at the token cap arrives as. A cable
+  to remove that is in but written input first gets the order to write it in.
 - **`design_sound`** builds the sound the way `sanitizePreset` did (id `tutor-…`, ref, artist
   `AI tutor`, tags `[category, 'ai']`, a looping phrase) and runs `validatePreset`. The prototype's
   limits refuse rather than clamp: 1–9 steps, each setting a control or plugging a cable; up to 5
   tweaks; 1–32 riff notes of `[beat 0–16, MIDI 24–96, length 0.05–16]` at 40–180 bpm; the string
-  lengths `sanitizePreset` cut to.
+  lengths `sanitizePreset` cut to. Two bounds of its own: at most 32 controls set in one step, and
+  context for at most 16. The id is random (`tutor-` and twelve hex digits).
+- Every tool's JSON schema says `additionalProperties: false`, as its Zod schema refuses any other
+  key, so the model is told rather than refused.
 - A refusal lists up to twelve problems, each with its path (`steps.1.set.filter.drive`), then
   how many more there are.
 - **No per-tool rate limit.** The dispatcher counts a capability's `rateLimit` per agent, and one
@@ -128,17 +133,23 @@ about $0.08 a call on gpt-4.1, and three iterations would pass the $0.20 per-tur
 
 How it answers (`DESCRIBE_MAX_CHARS`, 8,000 characters, in `sections.ts`):
 
-- **No arguments.** The whole synth when it describes in 8,000 characters or fewer: the 21 small
-  synths, in one call. Otherwise the section index (155 tokens for the DeepMind). The context
-  already tells the model which of the two it will get.
+- **No arguments.** The whole synth when it describes in 8,000 characters or fewer, measured with
+  the panel's values and cables: the 21 small synths, in one call, unless the panel is heavily
+  patched. Otherwise the section index (155 tokens for the DeepMind), which counts each section's
+  controls and jacks, so a section of only jacks (a modular's outputs) does not read as empty.
 - **A section** (an area id) returns what is in it. **A prefix** returns the controls whose ids are
-  it or continue it after a dot. Both together narrow both ways.
+  it or continue it after a dot. Both together narrow both ways. A narrowed answer lists only the
+  cables to and from the jacks in it, and says so: with the whole cable list in every answer, a
+  heavily patched panel left some controls unreachable.
 - **Too big to list**, it returns the ids one dot-segment deeper, each with a count and example
   labels, and describes in full any that are single controls. The DeepMind's `display` section
   holds 1,514 of its 1,568 controls, almost all the four FX slots' 373 parameters each. So
   `section: 'display'` gives the groups (329 tokens), `prefix: 'fx1'` gives `fx1.type` in full
   with every effect it can hold and one group per effect (1,670 tokens), and
-  `prefix: 'fx1.tc-deepvrb'` gives that effect's parameters (192 tokens).
+  `prefix: 'fx1.tc-deepvrb'` gives that effect's parameters (192 tokens). A single control or jack
+  is always described, however long: an index of one would point back at itself.
+- Only the jacks the sound engine models are listed, counted or matched, as `describeSynth` lists
+  no others.
 
 A section id is looked up with `find`, not through `areaMap`: the id comes from the model, and a
 plain object would answer `constructor`.

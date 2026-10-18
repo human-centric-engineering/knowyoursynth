@@ -156,6 +156,16 @@ describe('propose_panel_change: refused against the panel', () => {
       'listed twice'
     ));
 
+  it('says how to write a cable to remove that is in, but written input first', () =>
+    expectRefused(
+      { removeCables: [['j.cutCv', 'j.lfoTri']] },
+      'invalid_proposal',
+      'write it [output, input], as [j.lfoTri, j.cutCv]'
+    ));
+
+  it('refuses an empty proposal as empty, not as "changes nothing": it is what a cut-off call arrives as', () =>
+    expectRefused({}, 'empty_proposal', 'empty', 'cut off'));
+
   it('refuses a proposal that changes nothing', () =>
     expectRefused({ set: { 'filter.cutoff': 2 } }, 'no_change'));
 

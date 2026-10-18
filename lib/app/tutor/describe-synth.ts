@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { readPanel, type TutorPanel } from '@/lib/app/tutor/panel';
-import { DESCRIBE_MAX_CHARS, describesWhole, sectionIndex } from '@/lib/app/tutor/sections';
+import { DESCRIBE_MAX_CHARS, modelled, sectionIndex } from '@/lib/app/tutor/sections';
 import { areaMembers } from '@/lib/app/synths/lib/areas';
 import { jackName } from '@/lib/app/synths/lib/explain';
 import { describeSynth, displayName } from '@/lib/app/synths/lib/patch';
@@ -34,8 +34,9 @@ export interface DescribeData {
 /** How many example labels an index row gives for a prefix. */
 const EXAMPLES = 3;
 
-/** A jack the sound engine models, which is every jack `describeSynth` lists: an output with a signal, an input with a destination. */
-const modelled = (j: Jack) => (j.dir === 'out' ? !!j.signal : !!j.dest);
+/** Heads a narrowed answer, whose cable list covers only the jacks in it. */
+const NARROWED =
+  'Cables listed are only those to and from the jacks below; get_panel lists every cable.';
 
 /**
  * `describe_synth`: the synth's controls, jacks and legal values, with the panel's current values, from the
@@ -55,6 +56,7 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
       'Look up the synth\'s controls (id, panel label, section, legal values, current value) and patch jacks. With no arguments it returns the whole synth when it is small; on a large synth it returns the section list instead. Name a section to see what is in it, or a prefix to see the controls whose ids start with it (a prefix of "vcf" matches "vcf.cutoff"). When a result is too big to list, it returns the prefixes to narrow by. Use only ids and values it shows you. Read-only.',
     parameters: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         section: {
           type: 'string',
@@ -79,12 +81,18 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     const { def, values } = panel;
     const cables = panel.cables.map(([from, to]) => ({ from, to }));
     const synthId = def.id;
-    const textOf = (controls: Control[], jacks: Jack[]) =>
-      describeSynth({ ...def, controls, jacks }, values, cables);
+    // Only the cables to and from the jacks being listed: a lookup of a few controls must not carry a heavily patched
+    // panel's whole cable list, or no answer would ever fit and some controls could not be looked up at all.
+    const textOf = (controls: Control[], jacks: Jack[]) => {
+      const ids = new Set(jacks.map((j) => j.id));
+      const shown = cables.filter((c) => ids.has(c.from) || ids.has(c.to));
+      return describeSynth({ ...def, controls, jacks }, values, shown);
+    };
 
     if (section === undefined && prefix === undefined) {
-      if (describesWhole(def))
-        return this.success({ synthId, scope: 'whole', text: textOf(def.controls, def.jacks) });
+      const whole = textOf(def.controls, def.jacks.filter(modelled));
+      if (whole.length <= DESCRIBE_MAX_CHARS)
+        return this.success({ synthId, scope: 'whole', text: whole });
       return this.success({
         synthId,
         scope: 'index',
@@ -122,8 +130,13 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     }
 
     const text = textOf(controls, jacks);
-    if (text.length <= DESCRIBE_MAX_CHARS)
-      return this.success({ synthId, scope: prefix !== undefined ? 'prefix' : 'section', text });
+    // One control or jack is described however long it is: an index of one would point back at itself.
+    if (text.length <= DESCRIBE_MAX_CHARS || controls.length + jacks.length === 1)
+      return this.success({
+        synthId,
+        scope: prefix !== undefined ? 'prefix' : 'section',
+        text: `${NARROWED}\n${text}`,
+      });
     return this.success({
       synthId,
       scope: 'index',
@@ -176,7 +189,7 @@ export class DescribeSynthCapability extends BaseCapability<Args, DescribeData> 
     return [
       `${title} has ${controls.length} controls and ${jacks.length} jacks, too many to list at once. Call describe_synth again with a prefix from this list${section !== undefined ? `, and section ${section}` : ''}.`,
       `PREFIXES (prefix | how many | for example)\n${rows.join('\n')}`,
-      ...(full ? [`These are single controls, in full:\n${full}`] : []),
+      ...(full ? [`These are single controls, in full. ${NARROWED}\n${full}`] : []),
     ].join('\n\n');
   }
 }
