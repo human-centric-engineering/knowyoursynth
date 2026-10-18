@@ -184,8 +184,9 @@ the same PR**, and each row names what deletes it.
   for a fork note, and a fork meets the failure with nothing to read.
 - **On conflict:** take theirs, and re-apply the pin to whichever case counts the real registry's
   install-org agents.
-- **Upstream:** not raised yet. The fix upstream is to mock the seam in that case, or give it a
-  fork note.
+- **Upstream:** raised as
+  [sunrise#1032](https://github.com/human-centric-engineering/sunrise/issues/1032): mock the seam
+  in that case, or give it a fork note.
 - **Delete when:** upstream mocks the seam in that case, or the fork registers no platform agent.
 
 ### The drift-probe scaffold test, pinned to our probe
