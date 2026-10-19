@@ -13,7 +13,9 @@
 import { z } from 'zod';
 import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { TUTOR_CONTEXT_TYPE } from '@/lib/app/tutor/context';
+import { addSources, readSources, SOURCE_TOOLS, type TutorSource } from '@/lib/app/tutor/sources';
 import { prisma } from '@/lib/db/client';
+import { logger } from '@/lib/logging';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
 
 /** The most messages the panel shows from a resumed conversation: the last twenty or so questions and answers. */
@@ -30,11 +32,16 @@ export interface TutorTranscriptMessage {
   content: string;
   /** Not a whole answer: the panel shows its own line for how it ended. */
   ended?: TutorAnswerEnd;
+  /** An answer's sources: what the turn's searches found before it. Left out when there were none. */
+  sources?: TutorSource[];
 }
 
 export interface TutorTranscript {
   conversationId: string;
-  /** Oldest first: the learner's questions and the tutor's answers, without tool calls or empty steps. */
+  /**
+   * Oldest first: the learner's questions and the tutor's answers, without tool calls or empty steps. The searches'
+   * results are read into each answer's `sources`.
+   */
   messages: TutorTranscriptMessage[];
 }
 
@@ -87,22 +94,118 @@ export async function latestConversation(
         // `id` breaks a tie between rows saved in the same millisecond, as Sunrise's own history read does.
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: TRANSCRIPT_MESSAGES,
-        select: { role: true, content: true, metadata: true },
+        select: { id: true, role: true, content: true, metadata: true, createdAt: true },
       },
     },
   });
   if (!conversation) return null;
+  const shown = conversation.messages.reverse();
+  const searches = shown[0] ? await searchesSince(conversation.id, shown[0]) : [];
   return {
     conversationId: conversation.id,
-    messages: conversation.messages
-      .flatMap((m): TutorTranscriptMessage[] => {
-        if (!isTranscriptRole(m.role)) return [];
-        const ended = EndedSchema.safeParse(m.metadata);
-        if (!ended.success) return [{ role: m.role, content: m.content }];
-        return [
-          { role: m.role, content: ended.data === 'cost' ? m.content : '', ended: ended.data },
-        ];
-      })
-      .reverse(),
+    messages: withSources(shown, searches).flatMap((m): TutorTranscriptMessage[] => {
+      if (!isTranscriptRole(m.role)) return [];
+      const sources = m.sources.length ? { sources: m.sources } : {};
+      const ended = EndedSchema.safeParse(m.metadata);
+      if (!ended.success) return [{ role: m.role, content: m.content, ...sources }];
+      return [
+        {
+          role: m.role,
+          content: ended.data === 'cost' ? m.content : '',
+          ended: ended.data,
+          ...sources,
+        },
+      ];
+    }),
   };
+}
+
+interface Row {
+  id: string;
+  role: string;
+  content: string;
+  createdAt: Date;
+}
+
+type SearchRow = Row & { capabilitySlug: string | null };
+
+/**
+ * About twenty turns of five steps, with up to two searches a step. Read newest first, so if a conversation ever has
+ * more, it is the oldest answers that lose their sources.
+ */
+const MAX_SEARCHES = TRANSCRIPT_MESSAGES * 5;
+
+/**
+ * The conversation's search results from the turn of its first shown message on, oldest first: the tool messages
+ * Sunrise saves, whose content is the result as JSON. Read apart from the transcript so they do not use up its
+ * `TRANSCRIPT_MESSAGES`. When the transcript opens on an answer, its question was cut off, and that answer's searches
+ * were saved before it: they are read from that question on.
+ */
+async function searchesSince(conversationId: string, first: Row): Promise<SearchRow[]> {
+  const question =
+    first.role === 'user'
+      ? first
+      : await prisma.aiMessage.findFirst({
+          where: { conversationId, role: 'user', createdAt: { lte: first.createdAt } },
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+          select: { createdAt: true },
+        });
+  const rows = await prisma.aiMessage.findMany({
+    where: {
+      conversationId,
+      role: 'tool',
+      capabilitySlug: { in: [...SOURCE_TOOLS] },
+      ...(question ? { createdAt: { gte: question.createdAt } } : {}),
+    },
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take: MAX_SEARCHES,
+    select: { id: true, role: true, content: true, createdAt: true, capabilitySlug: true },
+  });
+  return rows.reverse();
+}
+
+/** Saved order: by time, then id, as Sunrise's history read orders rows saved in the same millisecond. */
+const before = (a: Row, b: Row) =>
+  a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
+/**
+ * Each answer with the sources its turn's searches found. Sunrise saves each step's text as a row of its own, so a turn
+ * can show more than one: a line written before a search ("Let me look that up"), then the answer. The turn's sources
+ * all go to its last shown row, as the live panel shows them under the one bubble the turn has.
+ */
+function withSources<M extends Row>(
+  shown: M[],
+  searches: SearchRow[]
+): (M & { sources: TutorSource[] })[] {
+  const out: (M & { sources: TutorSource[] })[] = shown.map((m) => ({ ...m, sources: [] }));
+  let s = 0;
+  let turnStart = 0;
+  for (let i = 0; i <= out.length; i++) {
+    const m = out[i];
+    if (m && m.role !== 'user') continue;
+    // A turn ends before the next question, or at the end: its searches are those saved before that question.
+    let found: TutorSource[] = [];
+    while (s < searches.length && (!m || before(searches[s], m) < 0)) {
+      found = addSources(
+        found,
+        readSources(searches[s].capabilitySlug ?? '', parse(searches[s].content))
+      );
+      s++;
+    }
+    const last = i - 1;
+    if (last >= turnStart && out[last].role !== 'user') out[last].sources = found;
+    turnStart = i + 1;
+  }
+  return out;
+}
+
+function parse(json: string): unknown {
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    logger.warn('Tutor conversation: a stored search result is not JSON', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
 }

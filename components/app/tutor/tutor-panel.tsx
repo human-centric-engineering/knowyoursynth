@@ -3,7 +3,8 @@
 /**
  * The tutor panel on the synth page (`f-tutor` t-56), under the Inspector where the prototype's sat
  * (`prototype/src/ui/Tutor.jsx`): the conversation, suggested questions to start from, a chip under each answer that
- * proposed a change or designed a sound, and the day's allowance.
+ * proposed a change or designed a sound, the sources under each answer (`f-tutor-knowledge` t-60), and the day's
+ * allowance.
  *
  * The prototype had two modes, Ask and Design a sound, because each sent its own prompt. Here the tutor picks its tool
  * from the question, so there is one composer, and the suggestions carry both kinds. Its Claude-account and permission
@@ -15,6 +16,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 
 import { proposalLabel, proposalRows, type TutorDesign } from '@/components/app/tutor/apply';
+import { TutorSources } from '@/components/app/tutor/sources';
 import {
   useTutorChat,
   type TutorChat,
@@ -105,7 +107,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   useEffect(() => {
     const el = log.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.error]);
+  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.sources, last?.error]);
 
   const submit = () => {
     if (!draft.trim() || chat.busy || closed) return;
@@ -140,8 +142,14 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
           aria-label="Conversation with the tutor"
           className="kys-scroll flex max-h-[380px] flex-col gap-2.5 overflow-y-auto pr-1"
         >
-          {chat.messages.map((m) => (
-            <Message key={m.id} message={m} chat={chat} def={def} />
+          {chat.messages.map((m, i) => (
+            <Message
+              key={m.id}
+              message={m}
+              chat={chat}
+              def={def}
+              endsTurn={chat.messages[i + 1]?.role !== 'assistant'}
+            />
           ))}
           {chat.busy && (
             <p className="text-[13px] text-(--kys-faint)">{chat.status ?? 'Thinking…'}</p>
@@ -245,11 +253,19 @@ function Message({
   message: m,
   chat,
   def,
+  endsTurn,
 }: {
   message: TutorMessage;
   chat: TutorChat;
   def: SynthDef;
+  /**
+   * The turn's last answer. A carried-on turn can show two: a line the tutor wrote before it searched ("Let me look
+   * that up") is saved as its own, and is no answer to label.
+   */
+  endsTurn: boolean;
 }) {
+  // The own-knowledge label goes under a finished answer whose turn found no source.
+  const ownKnowledge = endsTurn && !!m.text && !m.answering && !m.error;
   if (m.role === 'note') return <p className="text-[13px] text-(--kys-faint)">{m.text}</p>;
   if (m.role === 'user')
     return (
@@ -262,6 +278,7 @@ function Message({
       {m.text && <p className="whitespace-pre-wrap">{m.text}</p>}
       {m.proposal && <ProposalChip message={m} chat={chat} def={def} />}
       {m.design && <DesignChip message={m} chat={chat} />}
+      {(!!m.sources?.length || ownKnowledge) && <TutorSources sources={m.sources ?? []} />}
       {m.error && (
         <p role={m.past ? undefined : 'alert'} className="mt-2 text-[13.5px] text-(--kys-warn)">
           {m.error}

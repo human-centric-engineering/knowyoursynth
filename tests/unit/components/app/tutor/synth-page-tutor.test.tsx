@@ -25,6 +25,10 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
 import { TUTOR_ERRORS } from '@/components/app/tutor/use-tutor-chat';
+import { OWN_KNOWLEDGE } from '@/components/app/tutor/sources';
+import type { DatabankSearchData } from '@/lib/app/tutor/search-databank';
+import type { TutorSource } from '@/lib/app/tutor/sources';
+import type { WebSearchData } from '@/lib/app/tutor/web-search';
 import { MAX_TUTOR_MESSAGE_CHARS } from '@/lib/app/tutor/request';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
@@ -244,7 +248,12 @@ function serve({
   allowance?: typeof ALLOWANCE;
   conversation?: {
     conversationId: string;
-    messages: { role: string; content: string; ended?: 'stopped' | 'failed' | 'cost' }[];
+    messages: {
+      role: string;
+      content: string;
+      ended?: 'stopped' | 'failed' | 'cost';
+      sources?: TutorSource[];
+    }[];
   } | null;
 } = {}) {
   served.allowance = allowance;
@@ -1231,5 +1240,163 @@ describe('how a turn ended', () => {
       s.send(done);
       s.close();
     });
+  });
+});
+
+describe("an answer's sources", () => {
+  const databankResult = {
+    success: true,
+    data: {
+      results: [
+        {
+          kind: 'artists',
+          id: 'vangelis',
+          name: 'Vangelis',
+          href: '/bank/artists/vangelis',
+          about: 'composer · Greece · 1970s',
+          excerpt: 'Scored Blade Runner on a Yamaha CS-80.',
+          related: [],
+          matchedBy: ['lexical', 'meaning'],
+        },
+      ],
+      search: 'lexical+meaning',
+    } satisfies DatabankSearchData,
+  };
+  const webResult = {
+    success: true,
+    data: {
+      results: [
+        { title: 'Yamaha CS-80', url: 'https://www.example.com/cs80', snippet: 'A polysynth.' },
+        // not a web page: never a link
+        { title: 'Click me', url: 'javascript:alert(1)', snippet: '' },
+      ],
+    } satisfies WebSearchData,
+  };
+  const sourcesList = () => within(tutor()).queryByRole('list', { name: 'Sources' });
+
+  it('lists what the searches found under the answer, the databank row linking to its page', async () => {
+    answer(() => [
+      start,
+      { type: 'capability_result', capabilitySlug: 'search_databank', result: databankResult },
+      {
+        type: 'capability_results',
+        results: [{ capabilitySlug: 'web_search', result: webResult }],
+      },
+      { type: 'content', delta: 'Vangelis played it on Blade Runner.' },
+      done,
+    ]);
+    page();
+    await ask('Who played the CS-80?');
+
+    await waitFor(() => expect(sourcesList()).toBeTruthy());
+    const list = sourcesList();
+    if (!list) throw new Error('no sources');
+    const vangelis = within(list).getByRole('link', { name: 'Vangelis' });
+    expect(vangelis.getAttribute('href')).toBe('/bank/artists/vangelis');
+    expect(within(list).getByText(/databank, artists/)).toBeTruthy();
+
+    const cs80 = within(list).getByRole('link', { name: 'Yamaha CS-80' });
+    expect(cs80.getAttribute('href')).toBe('https://www.example.com/cs80');
+    expect(cs80.getAttribute('rel')).toBe('noopener noreferrer nofollow');
+    expect(cs80.getAttribute('target')).toBe('_blank');
+    expect(within(list).getByText('· example.com')).toBeTruthy();
+
+    expect(within(list).getAllByRole('link')).toHaveLength(2);
+    expect(within(tutor()).queryByText('Click me')).toBeNull();
+    expect(within(tutor()).queryByText(OWN_KNOWLEDGE)).toBeNull();
+  });
+
+  it("labels an answer that used no search as the tutor's own knowledge", async () => {
+    answer(() => [start, { type: 'content', delta: 'CUTOFF darkens the sound.' }, done]);
+    page();
+    await ask('What does CUTOFF do?');
+
+    await waitFor(() => expect(within(tutor()).getByText(OWN_KNOWLEDGE)).toBeTruthy());
+    expect(sourcesList()).toBeNull();
+  });
+
+  it('shows no sources for a search that failed', async () => {
+    answer(() => [
+      start,
+      {
+        type: 'capability_result',
+        capabilitySlug: 'web_search',
+        // A refusal is read by its flag: rows that came with one are still not sources.
+        result: {
+          success: false,
+          error: { code: 'web_search_failed', message: "The web search didn't work just now." },
+          data: webResult.data,
+        },
+      },
+      { type: 'content', delta: 'From my own knowledge, Vangelis.' },
+      done,
+    ]);
+    page();
+    await ask('Who played the CS-80?');
+
+    await waitFor(() => expect(within(tutor()).getByText(OWN_KNOWLEDGE)).toBeTruthy());
+    expect(sourcesList()).toBeNull();
+    expect(within(tutor()).queryAllByRole('link')).toHaveLength(0);
+  });
+
+  it('shows the sources of a conversation carried on', async () => {
+    serve({
+      conversation: {
+        conversationId: CONVERSATION_ID,
+        messages: [
+          { role: 'user', content: 'Who played the CS-80?' },
+          {
+            role: 'assistant',
+            content: 'Vangelis did.',
+            sources: [
+              {
+                type: 'databank',
+                kind: 'artists',
+                name: 'Vangelis',
+                href: '/bank/artists/vangelis',
+              },
+              { type: 'web', title: 'Yamaha CS-80', url: 'https://example.com/cs80' },
+              // one this build would not take: left out, and the conversation still carried on
+              { type: 'web', title: 'Click me', url: 'javascript:alert(1)' },
+            ],
+          },
+          { role: 'user', content: 'What does CUTOFF do?' },
+          { role: 'assistant', content: 'It darkens.' },
+        ],
+      },
+    });
+    page();
+
+    expect(await within(tutor()).findByText('Vangelis did.')).toBeTruthy();
+    const list = sourcesList();
+    if (!list) throw new Error('no sources');
+    expect(within(list).getByRole('link', { name: 'Vangelis' }).getAttribute('href')).toBe(
+      '/bank/artists/vangelis'
+    );
+    expect(within(list).getAllByRole('link')).toHaveLength(2);
+    expect(within(tutor()).queryByText('Click me')).toBeNull();
+    const web = within(list).getByRole('link', { name: 'Yamaha CS-80' });
+    expect(web.getAttribute('rel')).toBe('noopener noreferrer nofollow');
+    // the later answer used none
+    expect(within(tutor()).getAllByText(OWN_KNOWLEDGE)).toHaveLength(1);
+  });
+
+  it('labels only the answer of a carried-on turn, not the line written before its search', async () => {
+    serve({
+      conversation: {
+        conversationId: CONVERSATION_ID,
+        messages: [
+          { role: 'user', content: 'Who played the CS-80?' },
+          { role: 'assistant', content: 'Let me look that up.' },
+          { role: 'assistant', content: 'From what I know, Vangelis.' },
+        ],
+      },
+    });
+    page();
+
+    expect(await within(tutor()).findByText('Let me look that up.')).toBeTruthy();
+    const labels = within(tutor()).getAllByText(OWN_KNOWLEDGE);
+    expect(labels).toHaveLength(1);
+    expect(labels[0].closest('div')?.textContent).toContain('From what I know, Vangelis.');
   });
 });
