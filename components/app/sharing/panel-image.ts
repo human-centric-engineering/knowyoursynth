@@ -1,11 +1,8 @@
 import { renderAsync } from '@resvg/resvg-js';
 
 import { CARD_DEFAULT_FAMILY, cardFontFiles } from '@/components/app/sharing/card-fonts';
-import { renderPanel } from '@/components/app/sharing/panel-render';
 import type { SynthDesign } from '@/lib/app/catalogue/designs';
-import { modularDef } from '@/lib/app/synths/lib/layout';
-import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
+import { panelSvg } from '@/components/app/sharing/panel-svg';
 import type { SynthDef } from '@/lib/app/synths/contract';
 
 /**
@@ -30,39 +27,6 @@ export interface PanelImageInput {
   design: SynthDesign;
   /** The box the picture must fit inside, in pixels; it keeps the panel's own proportions. */
   box: { width: number; height: number };
-}
-
-const noop = () => undefined;
-
-/** The panel's SVG, standalone: namespaced, and sized at its own view so a rasteriser can scale it. */
-export function panelSvg({ def, values, cables, design }: Omit<PanelImageInput, 'box'>): {
-  svg: string;
-  width: number;
-  height: number;
-} {
-  const shown = def.modular ? modularDef(def) : def;
-  const markup = renderPanel({
-    def: shown,
-    values: { ...def.init, ...sanitizeSet(def, values) },
-    cables: sanitizeCables(def, cables).map(([from, to], i) => ({
-      from,
-      to,
-      color: CABLE_COLORS[i % CABLE_COLORS.length],
-    })),
-    design,
-    onChange: noop,
-    onConnect: noop,
-    onRemoveCable: noop,
-  });
-  const { w, h } = shown.view;
-  return {
-    svg: markup.replace(
-      /^<svg /,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" `
-    ),
-    width: w,
-    height: h,
-  };
 }
 
 /**

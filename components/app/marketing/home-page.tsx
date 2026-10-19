@@ -122,7 +122,7 @@ export default async function HomePage() {
 
   return (
     <div className="kys-frame text-(--kys-text)">
-      <section className="mx-auto grid w-full max-w-[1120px] gap-10 px-4 pt-12 pb-14 sm:px-6 md:pt-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+      <section className="mx-auto grid w-full max-w-[1120px] grid-cols-[minmax(0,1fr)] gap-10 px-4 pt-12 pb-14 sm:px-6 md:pt-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
         <div>
           <h1 className="kys-display text-[30px] leading-tight sm:text-[38px]">
             Get to know your synth.
@@ -158,18 +158,21 @@ export default async function HomePage() {
                 <li key={s.id}>
                   <Link
                     href={synthHref(s.id)}
-                    className="group grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 py-3 hover:bg-(--kys-raised) sm:grid-cols-[minmax(0,14rem)_minmax(0,10rem)_1fr_auto] sm:items-baseline sm:px-2"
+                    className="group block py-3 hover:bg-(--kys-raised) sm:grid sm:grid-cols-[minmax(0,14rem)_minmax(0,10rem)_minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-4 sm:px-2"
                   >
-                    <span className="font-semibold group-hover:text-(--kys-accent)">{s.name}</span>
-                    <span className="order-last col-span-2 text-[13px] text-(--kys-muted) sm:order-none sm:col-span-1 sm:text-[14px]">
+                    {/* One line on a phone, name then year; on a wider screen these join the row's grid. */}
+                    <span className="flex items-baseline justify-between gap-3 sm:contents">
+                      <span className="font-semibold group-hover:text-(--kys-accent)">
+                        {s.name}
+                      </span>
+                      <span className="font-mono text-[13px] text-(--kys-faint) sm:order-last">
+                        {s.year}
+                      </span>
+                    </span>
+                    <span className="block text-[13px] text-(--kys-muted) sm:text-[14px]">
                       {s.maker}
                     </span>
-                    <span className="order-last col-span-2 text-[13px] text-(--kys-muted) sm:order-none sm:col-span-1">
-                      {s.heritage}
-                    </span>
-                    <span className="row-start-1 font-mono text-[13px] text-(--kys-faint) sm:row-auto">
-                      {s.year}
-                    </span>
+                    <span className="block text-[13px] text-(--kys-muted)">{s.heritage}</span>
                   </Link>
                 </li>
               ))}

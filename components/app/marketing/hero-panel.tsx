@@ -32,7 +32,7 @@ export async function drawHeroPanel(
   const kept = drawn.get(key);
   if (kept) return kept;
   try {
-    const { panelSvg } = await import('@/components/app/sharing/panel-image');
+    const { panelSvg } = await import('@/components/app/sharing/panel-svg');
     const panel = panelSvg({ def, values: {}, cables: [], design });
     drawn.set(key, panel);
     return panel;

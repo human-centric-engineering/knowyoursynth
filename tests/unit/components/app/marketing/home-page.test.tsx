@@ -11,11 +11,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 
 vi.mock('@/lib/app/catalogue/read', () => ({ listSynths: vi.fn() }));
-vi.mock('@/components/app/sharing/panel-image', () => ({ panelSvg: vi.fn() }));
+vi.mock('@/components/app/sharing/panel-svg', () => ({ panelSvg: vi.fn() }));
 
 import HomeRoute, { metadata as routeMetadata } from '@/app/(public)/page';
 import HomePage, { metadata } from '@/components/app/marketing/home-page';
-import { panelSvg } from '@/components/app/sharing/panel-image';
+import { panelSvg } from '@/components/app/sharing/panel-svg';
 import { listSynths, type CatalogueSynth } from '@/lib/app/catalogue/read';
 
 const synth = (over: Partial<CatalogueSynth>): CatalogueSynth => ({

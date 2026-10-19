@@ -25,7 +25,8 @@ vi.mock('@/components/app/sharing/panel-render', async () => {
 });
 
 import { cardFontFiles } from '@/components/app/sharing/card-fonts';
-import { panelPng, panelSvg } from '@/components/app/sharing/panel-image';
+import { panelPng } from '@/components/app/sharing/panel-image';
+import { panelSvg } from '@/components/app/sharing/panel-svg';
 import { renderPanel } from '@/components/app/sharing/panel-render';
 import { fitPanel } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
