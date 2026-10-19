@@ -283,7 +283,7 @@ call `search_databank` first, then `web_search` once, and keep to what it found.
   from the allowlist reads the same. Brave failing, timing out (8 seconds) or replying in a shape
   it can't read is `web_search_failed`, and Brave's own message is logged, not passed on.
 - **To turn it on**: set `BRAVE_SEARCH_API_KEY` and add `api.search.brave.com` to
-  `ORCHESTRATION_ALLOWED_HOSTS`, then restart. Both are read per call. After the merge that brought
+  `ORCHESTRATION_ALLOWED_HOSTS`, then restart (the key is read at boot, with the other env vars). After the merge that brought
   the tool in, `db:seed` writes its capability row and binds it (`sunrise.mcp-reseed`).
 
 ## The meaning-based layer
