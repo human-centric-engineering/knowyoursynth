@@ -24,6 +24,8 @@ describe('tokens', () => {
     expect(tokens('Who played the Synths?')).toEqual(['played', 'synth']);
     expect(tokens('melodies')).toEqual(['melody']);
     expect(tokens("Jarre's Jean-Michel")).toEqual(['jarre', 'jean', 'michel']);
+    // The typographic apostrophe phones and models write, too.
+    expect(tokens('Vangelis’s synth')).toEqual(['vangeli', 'synth']);
     // Words ending -ss and -us are not plurals.
     expect(tokens('bass chorus')).toEqual(['bass', 'chorus']);
   });
@@ -45,6 +47,23 @@ describe('searchBankIn', () => {
     const hits = ids(searchBankIn(bank, 'Minimoog Model D'));
     expect(hits[0]).toBe('instruments/moog-minimoog');
     expect(hits).toContain('instruments/moog-minimoog-model-d-2016');
+  });
+
+  it('finds a row whose name is all stop words', () => {
+    expect(ids(searchBankIn(bank, 'The Who'))[0]).toBe('artists/the-who');
+    expect(ids(searchBankIn(bank, 'who are the Who?'))[0]).toBe('artists/the-who');
+  });
+
+  it('lifts a whole name only when it is most of the query, so a one-word name does not hijack a question', () => {
+    const named = searchBankIn(bank, 'Europe')[0];
+    expect(named?.id).toBe('europe');
+    // The question holds the artist's whole name but is about something else, so the artist is scored on its words
+    // alone. With the lift it would score above the bare name, for which the lift is due.
+    const asked = searchBankIn(bank, 'which synths were made in Europe').find(
+      (h) => h.id === 'europe'
+    );
+    expect(asked).toBeDefined();
+    expect(asked?.score).toBeLessThan(named?.score ?? 0);
   });
 
   it('keeps a model name whole rather than reading its letter as a plural', () => {
@@ -80,7 +99,7 @@ describe('searchBankIn', () => {
     expect(hits.every((h) => h.kind === 'songs')).toBe(true);
   });
 
-  it('finds nothing for a query with no match, or with only stop words', () => {
+  it('finds nothing for a query with no match, or with only stop words that name nothing', () => {
     expect(searchBankIn(bank, 'xqzvy wublat')).toEqual([]);
     expect(searchBankIn(bank, 'who was the')).toEqual([]);
   });

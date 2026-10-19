@@ -79,6 +79,8 @@ const unit: SeedUnit = {
     ...tsIn('lib/app/tutor'),
     '../../../lib/app/synths/contract.ts',
     '../../../lib/app/bank/read.ts',
+    // search_databank's definition advertises its MAX_QUERY_LENGTH.
+    '../../../lib/app/bank/search.ts',
   ],
   async run({ prisma, logger }) {
     for (const tool of TUTOR_TOOLS) {

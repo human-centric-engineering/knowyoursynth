@@ -8,7 +8,8 @@
  *
  * Public, like the rest of `/api/v1/bank`: no session needed, and the section rate limit applies (`proxy.ts`). It calls
  * no AI provider: BM25 over the tables, as `lib/app/bank/search.ts` describes. Each result carries its page's URL and the
- * rows it links to. A query with no searchable words (all stop words) finds nothing rather than failing.
+ * rows it links to. A query of only stop words finds only a row they name (The Who), and otherwise nothing rather than
+ * failing.
  */
 import { NextRequest } from 'next/server';
 import { z } from 'zod';

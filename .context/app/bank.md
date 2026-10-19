@@ -144,9 +144,11 @@ provider. `GET /api/v1/bank/search?q=&kind=&limit=` serves it publicly (`q` 1–
   artist's or maker's summary, story, innovations; an instrument's text and maker; a record's
   parts, album and credit); and the names of the rows it links to. The last is what lets "who
   played a Minimoog" reach artists whose rows only link to it, without outranking the instrument.
-- **A query that holds a row's whole name lifts that row** above rows that mention it or add to
-  its name: "Tom Oberheim" finds the maker before the Tom Oberheim SEM, and "Minimoog Model D" the
-  original before its 2016 reissue.
+- **A query that holds a row's whole name, as at least half its words, lifts that row** above
+  rows that mention it or add to its name: "Tom Oberheim" finds the maker before the Tom Oberheim
+  SEM, and "Minimoog Model D" the original before its 2016 reissue. The half keeps a one-word name
+  (the artists Europe and Air, the record "Blue") from topping a question that only uses the word.
+  The match keeps stop words, so "The Who" is found by its name.
 - **Words are compared loosely**: case and accents off, stop words out, plain plurals folded
   ("synths" → "synth"). A word with a digit is kept whole, so "DX7s" is not a plural of "DX7".
 - **Each result** carries its kind, id, name, page (`bankHref`), a line that places it ("Moog Music

@@ -5,7 +5,7 @@
  * fields of each row, weighted: its name, its own text, and the names of the rows it links to (an artist's records and
  * instruments, an instrument's people and records). So "Vangelis" finds the artist first and their records after, and
  * "who played a Minimoog" still reaches the artists whose rows only link to it. A query that contains a row's whole
- * name lifts that row above every partial match.
+ * name, as most of what it asks, lifts that row above every partial match.
  *
  * In memory, over the whole bank, read once per search as the databank pages read it (`lib/app/bank/read.ts`): about
  * 1,420 short rows. Building the documents (each row's joins) takes some 150 ms, so the built index is kept for as long
@@ -39,8 +39,10 @@ const B = 0.75;
 /** How much a match in each field counts. A name says what a row is; a link only says what it touches. */
 const WEIGHTS = { name: 3, text: 1, links: 0.5 } as const;
 /**
- * Added when the query contains a row's whole name, so the row itself outranks every row that mentions it or adds to
- * its name: "Minimoog Model D" finds the original before "Minimoog Model D (2016)".
+ * Added when the query contains a row's whole name and the name is at least half the query, so the row itself outranks
+ * every row that mentions it or adds to its name: "Minimoog Model D" finds the original before "Minimoog Model D
+ * (2016)". The half is what keeps a one-word name (the artists Europe and Air, the record "Blue") from topping every
+ * question that happens to use the word.
  */
 const WHOLE_NAME_BONUS = 10;
 
@@ -77,16 +79,30 @@ const STOP = new Set(
   )
 );
 
-/** Lower case, accents off, split on anything not a letter or digit, stop words out, and plurals folded. */
-export function tokens(text: string): string[] {
+/** Lower case, accents off, possessives off, split on anything not a letter or digit. */
+function split(text: string): string[] {
   return text
     .normalize('NFKD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
-    .replace(/'s\b/g, '')
+    .replace(/['’]s\b/g, '')
     .split(/[^a-z0-9]+/)
-    .filter((t) => t && !STOP.has(t))
+    .filter(Boolean);
+}
+
+/** The words of a text as the index scores them: stop words out, and plurals folded. */
+export function tokens(text: string): string[] {
+  return split(text)
+    .filter((t) => !STOP.has(t))
     .map(fold);
+}
+
+/**
+ * Every word, stop words kept: what a whole name is matched on, so a name made only of stop words ("The Who") can
+ * still be found by it.
+ */
+function allTokens(text: string): string[] {
+  return split(text).map((t) => (STOP.has(t) ? t : fold(t)));
 }
 
 /**
@@ -109,7 +125,7 @@ interface Doc {
   prose: string;
   related: BankRef[];
   fields: Record<Field, string[]>;
-  /** The name's tokens, for the whole-name bonus. */
+  /** The name's every word, stop words kept, for the whole-name bonus. */
   nameTokens: string[];
 }
 
@@ -145,18 +161,18 @@ function documents(bank: Bank): Doc[] {
     text: string,
     related: BankRef[]
   ): void => {
-    const nameTokens = tokens(ref.name);
+    const linked = dedupe(related);
     docs.push({
       ref,
       about,
       prose,
-      related: dedupe(related),
+      related: linked,
       fields: {
-        name: nameTokens,
+        name: tokens(ref.name),
         text: tokens(text),
-        links: tokens(related.map((r) => r.name).join(' ')),
+        links: tokens(linked.map((r) => r.name).join(' ')),
       },
-      nameTokens,
+      nameTokens: allTokens(ref.name),
     });
   };
 
@@ -240,9 +256,9 @@ function documentsOf(bank: Bank): Doc[] {
   return built.docs;
 }
 
-/** Does `hay` hold `needle` as a run of consecutive tokens? */
-function containsRun(hay: string[], needle: string[]): boolean {
-  if (!needle.length || needle.length > hay.length) return false;
+/** Does `hay` hold `needle` as a run of consecutive tokens, and is `needle` at least half of it? */
+function holdsWholeName(hay: string[], needle: string[]): boolean {
+  if (!needle.length || needle.length * 2 < hay.length) return false;
   for (let i = 0; i + needle.length <= hay.length; i++) {
     if (needle.every((t, j) => hay[i + j] === t)) return true;
   }
@@ -270,11 +286,12 @@ export function searchBankIn(
   query: string,
   options: BankSearchOptions = {}
 ): BankSearchHit[] {
-  const queryTokens = tokens(query);
-  if (!queryTokens.length) return [];
+  // Every word of the query, for the whole-name match; only a query of nothing at all is refused here.
+  const queryWords = allTokens(query);
+  if (!queryWords.length) return [];
   const limit = Math.min(Math.max(options.limit ?? DEFAULT_RESULTS, 1), MAX_RESULTS);
   const docs = documentsOf(bank);
-  const unique = [...new Set(queryTokens)];
+  const unique = [...new Set(tokens(query))];
 
   // Per field: its average length, and each query term's inverse document frequency over the whole bank.
   const fieldNames = Object.keys(WEIGHTS) as Field[];
@@ -306,7 +323,7 @@ export function searchBankIn(
           score += WEIGHTS[f] * (idf.get(t) ?? 0) * ((tf * (K1 + 1)) / norm);
         }
       }
-      if (score > 0 && containsRun(queryTokens, d.nameTokens)) score += WHOLE_NAME_BONUS;
+      if (holdsWholeName(queryWords, d.nameTokens)) score += WHOLE_NAME_BONUS;
       return { d, score };
     })
     .filter((s) => s.score > 0)
