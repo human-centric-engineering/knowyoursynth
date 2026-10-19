@@ -19,16 +19,6 @@
  * you are reading a regression out of, and costs money per case for arithmetic.
  * Register those here.
  *
- * @example
- * ```ts
- * import { registerGrader } from '@/lib/orchestration/evaluations/graders/registry';
- * import { triageAccuracyGrader } from '@/lib/app/evaluations/triage-accuracy';
- *
- * export function initAppGraders(): void {
- *   registerGrader(triageAccuracyGrader);
- * }
- * ```
- *
  * Import `registerGrader` from `.../graders/registry`, not from the barrel: the
  * barrel's whole job is to side-effect-import every core grader, and pulling
  * that in from here makes the import cycle longer than it needs to be
@@ -42,6 +32,10 @@
  *
  * Full guide: CUSTOMIZATION.md §4 · .context/orchestration/evaluations.md
  */
+import { TUTOR_GRADERS } from '@/lib/app/tutor/evals/graders';
+import { registerGrader } from '@/lib/orchestration/evaluations/graders/registry';
+
+/** Know Your Synth: the tutor's four graders (`f-tutor-knowledge` t-61, `.context/app/tutor.md`). */
 export function initAppGraders(): void {
-  // No app graders by default.
+  TUTOR_GRADERS.forEach((grader) => registerGrader(grader));
 }

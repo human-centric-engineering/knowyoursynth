@@ -1,0 +1,280 @@
+{
+  "name": "Tutor: sourcing and scope",
+  "description": "The synth tutor's eval set (f-tutor-knowledge t-61): databank, meaning-based, web, general sound-design and off-topic questions. Each case's expected output is the expectation the tutor_* graders read. Written by the seed: edit prisma/seeds/app-knowyoursynth/data/tutor-evals.json, not this dataset.",
+  "cases": [
+    {
+      "input": "Who designed the Roland TB-303?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/makers/tadao-kikumoto", "/bank/instruments/roland-tb-303"]
+      }
+    },
+    {
+      "input": "Which synth did Vangelis play on the Blade Runner soundtrack?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/artists/vangelis", "/bank/songs/vangelis-blade-runner"]
+      }
+    },
+    {
+      "input": "Tell me about Wendy Carlos and Switched-On Bach.",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/songs/wendy-carlos-switched-on-bach", "/bank/artists/wendy-carlos"]
+      }
+    },
+    {
+      "input": "What synths are on a-ha's Take On Me?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/songs/a-ha-take-on-me", "/bank/artists/a-ha"]
+      }
+    },
+    {
+      "input": "Who was Daphne Oram?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/makers/daphne-oram"]
+      }
+    },
+    {
+      "input": "How was Donna Summer's I Feel Love made?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/songs/donna-summer-i-feel-love"]
+      }
+    },
+    {
+      "input": "When did the Yamaha DX7 come out?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/instruments/yamaha-dx7"]
+      }
+    },
+    {
+      "input": "What is Phuture's Acid Tracks?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/songs/phuture-acid-tracks", "/bank/artists/phuture"]
+      }
+    },
+    {
+      "input": "Who designed the Prophet-5?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/makers/dave-smith", "/bank/instruments/sequential-prophet-5"]
+      }
+    },
+    {
+      "input": "Tell me about the EMS VCS3.",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/instruments/ems-vcs3"]
+      }
+    },
+    {
+      "input": "What did Suzanne Ciani play?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/artists/suzanne-ciani"]
+      }
+    },
+    {
+      "input": "Which instruments did Kraftwerk use on Autobahn?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/songs/kraftwerk-autobahn", "/bank/artists/kraftwerk"]
+      }
+    },
+    {
+      "input": "Who was Leon Theremin?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/makers/leon-theremin"]
+      }
+    },
+    {
+      "input": "What is Isao Tomita known for?",
+      "expect": {
+        "kind": "databank",
+        "rows": ["/bank/artists/isao-tomita"]
+      }
+    },
+    {
+      "input": "Who first built synthesizers out of separate units patched together with cables?",
+      "expect": {
+        "kind": "meaning",
+        "rows": [
+          "/bank/makers/robert-moog",
+          "/bank/makers/don-buchla",
+          "/bank/makers/harald-bode",
+          "/bank/instruments/moog-modular",
+          "/bank/instruments/buchla-100"
+        ]
+      }
+    },
+    {
+      "input": "Who turned hand-drawn pictures into sound?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/daphne-oram", "/bank/instruments/oramics-machine"]
+      }
+    },
+    {
+      "input": "Who first made a keyboard sound like a whole orchestra of violins?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/ken-freeman", "/bank/instruments/freeman-string-symphonizer"]
+      }
+    },
+    {
+      "input": "Who let a synth step through a table of stored waveforms?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/wolfgang-palm", "/bank/instruments/ppg-wave-2"]
+      }
+    },
+    {
+      "input": "Who got rival companies to agree one standard for instruments to talk to each other?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/dave-smith", "/bank/makers/ikutaro-kakehashi"]
+      }
+    },
+    {
+      "input": "Who invented an instrument you play without touching it?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/leon-theremin", "/bank/instruments/rca-theremin"]
+      }
+    },
+    {
+      "input": "Which Japanese composer turned orchestral classics into electronic arrangements?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/artists/isao-tomita"]
+      }
+    },
+    {
+      "input": "Who worked out how to make bright metallic tones by having one wave bend the pitch of another?",
+      "expect": {
+        "kind": "meaning",
+        "rows": ["/bank/makers/john-chowning", "/bank/instruments/yamaha-dx7"]
+      }
+    },
+    {
+      "input": "What synths did Finneas use producing Billie Eilish's first album?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "Which synths made the main sounds on Charli XCX's album Brat?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "What synthesizers does deadmau5 use in his studio?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "What gear did Grimes make the album Visions on?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "Which synths does Four Tet use when he plays live?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "What synths did Caribou use on the album Our Love?",
+      "expect": {
+        "kind": "web"
+      }
+    },
+    {
+      "input": "How do I make a warm pad sound?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "What does a low-pass filter do?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "What is the difference between attack and release on an envelope?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "How does an LFO make vibrato?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "Why do two slightly detuned oscillators sound thicker than one?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "What does resonance do on a filter?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "How do I make a short plucky bass sound?",
+      "expect": {
+        "kind": "general"
+      }
+    },
+    {
+      "input": "What is the capital of Australia?",
+      "expect": {
+        "kind": "off_topic"
+      }
+    },
+    {
+      "input": "Can you help me write a cover letter for a job?",
+      "expect": {
+        "kind": "off_topic"
+      }
+    },
+    {
+      "input": "What's a good recipe for banana bread?",
+      "expect": {
+        "kind": "off_topic"
+      }
+    },
+    {
+      "input": "Who won the football World Cup in 2014?",
+      "expect": {
+        "kind": "off_topic"
+      }
+    },
+    {
+      "input": "How do I file my tax return?",
+      "expect": {
+        "kind": "off_topic"
+      }
+    },
+    {
+      "input": "Write me a Python function that sorts a list.",
+      "expect": {
+        "kind": "off_topic"
+      }
+    }
+  ]
+}

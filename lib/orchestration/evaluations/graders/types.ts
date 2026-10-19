@@ -63,8 +63,21 @@ export interface GraderInput {
   expectedOutput?: string;
   /** Citations the subject emitted, used by faithfulness / RAG graders. */
   citations?: Citation[];
-  /** Tool/capability calls the subject made — used by trajectory graders. */
-  toolCalls?: Array<{ slug: string; args?: Record<string, unknown> }>;
+  /**
+   * Tool/capability calls the subject made — used by trajectory graders.
+   *
+   * FORK (Know Your Synth, `f-tutor-knowledge` t-61): `success`, `errorCode` and
+   * `resultPreview` carried from the call's trace, so a grader can check what a
+   * call returned, not only that it was made. The preview is the capability's
+   * `redactProvenance` output, as the trace stores it. Agent subjects only.
+   */
+  toolCalls?: Array<{
+    slug: string;
+    args?: Record<string, unknown>;
+    success?: boolean;
+    errorCode?: string;
+    resultPreview?: string;
+  }>;
   /**
    * User context for model graders. Heuristic graders ignore this; model
    * graders use `userId` when invoking the judge agent via `streamChat`

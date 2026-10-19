@@ -378,6 +378,10 @@ async function processOneCase(args: ProcessCaseArgs): Promise<CaseResultRowInput
           t.arguments && typeof t.arguments === 'object' && !Array.isArray(t.arguments)
             ? (t.arguments as Record<string, unknown>)
             : undefined,
+        // FORK (Know Your Synth, t-61): what each call returned, for the graders only; stored metadata keeps slug + args.
+        success: t.success,
+        ...(t.errorCode ? { errorCode: t.errorCode } : {}),
+        ...(t.resultPreview ? { resultPreview: t.resultPreview } : {}),
       }));
       if (result.errorCode) {
         subjectErrorCode = result.errorCode;
@@ -474,7 +478,7 @@ async function processOneCase(args: ProcessCaseArgs): Promise<CaseResultRowInput
     subjectOutput,
     subjectMetadata: {
       citations,
-      toolCalls,
+      toolCalls: toolCalls?.map(({ slug, args }) => ({ slug, args })),
       subjectCostUsd,
       subjectLatencyMs: subjectLatency,
     },

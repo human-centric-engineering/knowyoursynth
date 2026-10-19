@@ -5,7 +5,11 @@ import { prisma } from '@/lib/db/client';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
-import { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
+import {
+  BaseCapability,
+  type ProvenanceRedaction,
+} from '@/lib/orchestration/capabilities/base-capability';
+import { sourcesPreview } from '@/lib/app/tutor/sources';
 import type {
   CapabilityContext,
   CapabilityFunctionDefinition,
@@ -138,6 +142,12 @@ export class WebSearchCapability extends BaseCapability<Args, WebSearchData> {
       required: ['query'],
     },
   };
+
+  /** The links the panel would show, so the trace (and the eval graders, t-61) can read what the search found. */
+  redactProvenance(args: Args, result: CapabilityResult<WebSearchData>): ProvenanceRedaction {
+    if (!result.success) return super.redactProvenance(args, result);
+    return { args, resultPreview: sourcesPreview(this.slug, result) };
+  }
 
   async execute(args: Args, context: CapabilityContext): Promise<CapabilityResult<WebSearchData>> {
     // Read per call, not at module scope, so setting the key and restarting is all it takes.
