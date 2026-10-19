@@ -19,7 +19,7 @@ import {
   type MessageRow,
 } from '@/tests/helpers/tutor';
 
-const appEnv = vi.hoisted(() => ({
+const appEnv = vi.hoisted((): { TUTOR_DAILY_TURNS: number; BRAVE_SEARCH_API_KEY?: string } => ({
   TUTOR_DAILY_TURNS: 30,
   BRAVE_SEARCH_API_KEY: 'brave-key',
 }));
