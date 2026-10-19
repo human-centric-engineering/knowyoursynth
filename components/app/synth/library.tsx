@@ -5,7 +5,8 @@
  *
  * Transliterated from the prototype file `src/ui/Library.jsx` (decision D3). The sounds are the catalogue's, read from
  * the API by the page (D13). "My sounds" joins them in `f-my-sounds`, and a signed-in user's progress through each
- * lesson and their stars on the sounds (s4).
+ * lesson and their stars on the sounds (s4). A search nothing matches offers the tutor instead, as the prototype's did
+ * (`f-tutor` t-56).
  */
 
 import { useMemo, useState } from 'react';
@@ -43,6 +44,8 @@ export interface LibraryProps {
   /** Whether a sound is starred; `null` when no star shows (signed out, or still loading). */
   isStarred?: (id: string) => boolean | null;
   onStar?: (id: string) => void;
+  /** Ask the tutor to design a sound like the search (`f-tutor` t-56), when nothing in the library matches it. */
+  onAskTutor?: (query: string) => void;
 }
 
 /** The furthest step reached, from 0, within the lesson as it is now: one cut shorter since leaves it at the last. */
@@ -61,6 +64,7 @@ export function Library({
   marks = null,
   isStarred,
   onStar,
+  onAskTutor,
 }: LibraryProps) {
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('all');
@@ -70,12 +74,14 @@ export function Library({
     [presets]
   );
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-  const shown = presets.filter((p) => {
-    if (cat !== 'all' && p.tags[0] !== cat) return false;
+  const matches = (p: Preset) => {
     if (!words.length) return true;
     const hay = `${p.name} ${p.ref} ${p.artist} ${p.tags.join(' ')} ${p.blurb}`.toLowerCase();
     return words.every((w) => hay.includes(w));
-  });
+  };
+  const shown = presets.filter((p) => (cat === 'all' || p.tags[0] === cat) && matches(p));
+  // Another category has what the search names: the way to it is there, not the tutor's.
+  const elsewhere = cat !== 'all' && presets.some(matches);
   return (
     <section aria-labelledby="lib-h" className="flex min-h-0 flex-col gap-3">
       <div className="flex items-baseline justify-between">
@@ -160,7 +166,22 @@ export function Library({
         })}
         {!shown.length && (
           <li className="rounded-lg border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
-            No sounds match. Clear the search or pick another category.
+            {onAskTutor && words.length ? (
+              <>
+                No sounds match. Clear the search
+                {elsewhere ? ', pick another category' : ''}, or{' '}
+                <button
+                  type="button"
+                  onClick={() => onAskTutor(q.trim())}
+                  className="text-(--kys-accent) underline underline-offset-2"
+                >
+                  ask the tutor to design one
+                </button>
+                .
+              </>
+            ) : (
+              'No sounds match. Clear the search or pick another category.'
+            )}
           </li>
         )}
       </ul>

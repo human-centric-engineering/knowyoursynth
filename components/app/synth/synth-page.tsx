@@ -15,8 +15,11 @@
  *   sound loaded and a strip above the panel saying whose it is (`SharedSoundStrip`). The view's query is kept on that
  *   address, so changing the view does not lose it.
  *
- * What is not here yet, so that no button opens nothing (`B31`): the tutor (`f-tutor`) and the databank
- * (`f-databank`). The theme switch is Sunrise's, in the header.
+ * - The tutor sits under the Inspector (`f-tutor` t-56, `components/app/tutor/`). It changes the panel only through the
+ *   page: a proposal the learner applies, and a sound it designs, which opens here with its lesson (`designed`). Either
+ *   is undone back to what was on the panel before.
+ *
+ * The theme switch is Sunrise's, in the header.
  */
 
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -31,7 +34,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
+import { cablesToEngine, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
@@ -96,6 +99,8 @@ import {
 } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
+import type { TutorDesign } from '@/components/app/tutor/apply';
+import { TutorPanel } from '@/components/app/tutor/tutor-panel';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';
 import {
@@ -294,6 +299,9 @@ function Synth({
   };
 
   const preset = sounds.find((p) => p.id === sess.presetId) || sounds[0];
+  // A sound the tutor designed, open on the panel (`f-tutor` t-56): its lesson shows until something else opens. Held
+  // for the visit only; saving it as one of the user's sounds is what keeps it.
+  const [designed, setDesigned] = useState<TutorDesign | null>(null);
 
   // ── the user's own sounds ──
   // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
@@ -319,8 +327,8 @@ function Synth({
         name: shared.name,
         fromTutor: shared.fromTutor,
       });
-    return null;
-  }, [openSound, sharedPanel, shared]);
+    return designed?.preset ?? null;
+  }, [openSound, sharedPanel, shared, designed]);
   // The sound the lesson, the riff, the sound map and the inspector read.
   const shown = ownLesson ?? preset;
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
@@ -344,7 +352,10 @@ function Synth({
   const [mineNotice, setMineNotice] = useState<string | null>(null);
   const signInHref = `/login?callbackUrl=${encodeURIComponent(hereHref(view))}`;
 
-  const libraryTarget = useMemo(() => presetState(synthDef, preset).values, [synthDef, preset]);
+  const libraryTarget = useMemo(
+    () => presetState(synthDef, designed?.preset ?? preset).values,
+    [synthDef, designed, preset]
+  );
   const target = savedOpen ? savedOpen.values : sharedPanel ? sharedPanel.values : libraryTarget;
   const targetRef = useRef(target);
   useEffect(() => {
@@ -689,8 +700,50 @@ function Synth({
     openSeq.current++;
     focusStore.set(null);
     leaveShared();
+    setDesigned(null);
     patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
+  };
+
+  // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
+  // tutor's Undo is handed what puts back everything that was on the panel before, its lesson and step included.
+  const openDesign = (d: TutorDesign) => {
+    const before = { sess, designed, sharedPanel };
+    openSeq.current++;
+    focusStore.set(null);
+    leaveShared();
+    setDesigned(d);
+    patch(() => ({
+      presetId: null,
+      step: null,
+      soundId: null,
+      ...presetState(synthDef, d.preset),
+    }));
+    if (playing) void playRiff(d.preset.phrase);
+    return () => {
+      openSeq.current++;
+      setDesigned(before.designed);
+      if (before.sharedPanel && shared) {
+        setSharedPanel(before.sharedPanel);
+        writeStored(sharedFromKey(synthId), shared.slug);
+      }
+      patch(() => before.sess);
+    };
+  };
+  // A change the learner applied from the tutor lands as turning the controls would: the step and the sound stay.
+  const setTutorPanel = useCallback(
+    (p: PanelState) => patch((s) => ({ ...s, values: p.values, cables: p.cables })),
+    [patch]
+  );
+  const tutorPanel = useMemo(
+    () => ({ values: sess.values, cables: sess.cables }),
+    [sess.values, sess.cables]
+  );
+  // The library's "ask the tutor to design one": the question goes in the tutor's composer, for the learner to send.
+  const [tutorAsk, setTutorAsk] = useState<{ text: string; n: number } | null>(null);
+  const askTutor = (query: string) => {
+    setTutorAsk((a) => ({ text: `Design a sound: ${query}`, n: (a?.n ?? 0) + 1 }));
+    document.getElementById('tutor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
@@ -723,6 +776,7 @@ function Synth({
     const lib = d.source && sounds.some((x) => x.id === d.source?.slug) ? d.source.slug : null;
     focusStore.set(null);
     leaveShared();
+    setDesigned(null);
     patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     setSaved({ id: d.id, ...panel });
     mine.put(d);
@@ -778,6 +832,7 @@ function Synth({
       shared.source && sounds.some((x) => x.id === shared.source?.slug) ? shared.source.slug : null;
     openSeq.current++;
     focusStore.set(null);
+    setDesigned(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
     else patch(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
@@ -823,6 +878,8 @@ function Synth({
     if (sentRef.current) setSaved({ id: d.id, ...sentRef.current });
     if (how === 'created') {
       leaveShared();
+      // A designed sound saved is one of theirs now, with its lesson kept with it.
+      setDesigned(null);
       patch((s) => ({ ...s, soundId: d.id }));
       // On a shared sound's page the new sound is what is open now, so the address becomes the synth's own and a reload
       // opens it rather than the shared sound (t-51).
@@ -1011,13 +1068,20 @@ function Synth({
                   ? openSound.name
                   : sharedPanel && shared
                     ? shared.name
-                    : preset
-                      ? preset.name
-                      : 'Blank patch'}
+                    : designed
+                      ? designed.name
+                      : preset
+                        ? preset.name
+                        : 'Blank patch'}
               </span>
               {openSound && (
                 <span className="ml-2 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                   mine
+                </span>
+              )}
+              {designed && !openSound && (
+                <span className="ml-2 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                  from the tutor
                 </span>
               )}
               {shown && step != null && (
@@ -1046,6 +1110,7 @@ function Synth({
                 open={openSound}
                 midLesson={ownLesson !== null && step != null}
                 credit={credit}
+                design={designed && !openSound ? designed : null}
                 panel={panelInput}
                 onSaved={onSaved}
                 onDeleted={onDeleted}
@@ -1073,6 +1138,16 @@ function Synth({
                     values: savedOpen.values,
                     cables: savedOpen.cables,
                   }))
+                }
+                className={smallBtn}
+              >
+                Restore sound
+              </button>
+            ) : designed && !openSound && changed > 0 ? (
+              <button
+                type="button"
+                onClick={() =>
+                  patch((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }))
                 }
                 className={smallBtn}
               >
@@ -1338,6 +1413,7 @@ function Synth({
             marks={progress.marks}
             isStarred={(slug) => favourites.isOn({ kind: 'sound', synthId, slug })}
             onStar={(slug) => favourites.toggle({ kind: 'sound', synthId, slug })}
+            onAskTutor={askTutor}
           />
         </div>
         {shown ? (
@@ -1361,6 +1437,16 @@ function Synth({
             onChange={onChange}
             onConnect={onConnect}
             onUnplug={onUnplug}
+          />
+          <TutorPanel
+            def={synthDef}
+            panel={tutorPanel}
+            designedId={designed && !openSound ? designed.id : null}
+            signedIn={authPending ? null : signedIn}
+            signInHref={signInHref}
+            setPanel={setTutorPanel}
+            openDesign={openDesign}
+            ask={tutorAsk}
           />
           <section className="rounded-xl border border-(--kys-line) p-4 text-sm text-(--kys-muted)">
             <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>

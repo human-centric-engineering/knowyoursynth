@@ -8,7 +8,7 @@ and the learner applies. The model never writes to the panel.**
 
 t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance;
 t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sounds.md), _A
-sound's lesson_). The tutor panel (t-56) builds on them.
+sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)).
 
 ## Anti-patterns first
 
@@ -40,25 +40,37 @@ sound's lesson_). The tutor panel (t-56) builds on them.
 - **Don't call the section limiters from the route.** `proxy.ts` applies the `api` section cap. The
   route's own caps are the chat sub-caps the consumer chat route uses, so switching surfaces buys no
   extra turns.
+- **Don't start a conversation on every visit.** An admin's `maxConversationsPerUser` counts each
+  one, and a learner cannot archive a tutor conversation (the consumer routes do not serve an
+  internal agent), so a panel that started afresh would lock them out at the cap. The panel carries
+  on the synth's latest ([below](#which-conversation)).
+- **Don't retry a failed turn.** A turn counts once its message is saved, even when the provider then
+  fails ([The allowance](#the-allowance)). The panel sends a turn again only when the route refused
+  it before saving anything, and only once.
+- **Don't apply a proposal to a panel it was not made for.** It was worked out against the panel the
+  turn sent; on any other it would silently undo what the learner did since. The chip offers Apply
+  only while the panel is still that one.
 - **Don't edit the instructions in the admin and expect them to stay.** The tutor is a platform
   agent: its instructions, tools and visibility are the code's and are written back after every
   deploy, and the admin's API refuses an edit to them. Provider, model and spend are the admin's.
 
 ## Where things are
 
-| Piece                     | Location                                                                                                             |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| The stream route          | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                              |
-| The allowance             | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts` |
-| The agent's definition    | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                         |
-| The tools                 | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound}.ts`, listed in `tools.ts`                |
-| The panel they read       | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                 |
-| The synth context         | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                |
-| Sections and the size cap | `lib/app/tutor/sections.ts`                                                                                          |
-| Registration              | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                           |
-| The capability rows       | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                  |
-| Tests                     | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`                                                          |
-| Smoke run                 | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                     |
+| Piece                      | Location                                                                                                             |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                              |
+| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                    |
+| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`          |
+| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts` |
+| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                         |
+| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound}.ts`, listed in `tools.ts`                |
+| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                 |
+| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                |
+| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                          |
+| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                           |
+| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                  |
+| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                      |
+| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                     |
 
 ## One turn
 
@@ -82,7 +94,7 @@ sound's lesson_). The tutor panel (t-56) builds on them.
    - **Two failures and a tool is off for the turn** (`TOOL_FAILURE_THRESHOLD`). So a refused tool
      gets one corrected retry, and the instructions say so.
 5. A proposal or a designed sound reaches the page only as a successful tool result, so only after
-   it has passed validation. The page decides how to apply it (t-56).
+   it has passed validation. The panel checks it again and offers it ([The panel](#the-panel)).
 
 ## The routes
 
@@ -109,7 +121,7 @@ Everything that can refuse a turn runs before the model is called, in this order
 
 The two per-minute caps are the consumer chat route's, keyed the same way, so a learner gets no
 extra turns by switching surfaces. The prototype's copy for a 429 `RATE_LIMIT_EXCEEDED` was "Too
-many questions in a short time. Wait a moment, then ask again."; the panel (t-56) can carry it.
+many questions in a short time. Wait a moment, then ask again."; the panel carries it.
 
 A conversation stays on the synth it started on. Carried on with another one, its history would
 talk about controls the new synth's context and tools do not have, and the conversation would still
@@ -122,6 +134,20 @@ the new one.
 
 **`GET /api/v1/tutor/allowance`**, signed in (or a `chat`-scoped key): `{ limit, used, remaining,
 resetsAt }` for the caller, for the panel's meter.
+
+**`GET /api/v1/tutor/conversation?synthId=`**, signed in (or a `chat`-scoped key): `{ conversation:
+{ conversationId, messages } | null }`, the caller's latest active tutor conversation on that synth,
+with its last 40 questions and answers oldest first. Tool calls and empty steps are left out, and
+rows saved in the same millisecond are ordered by id. An answer that did not finish says how it
+ended, from the marker Sunrise saved in its metadata: `ended: 'failed'` for `error: true`,
+`'stopped'` for the same with `errorCode: 'aborted'` (the learner pressed Stop), and `'cost'` for
+`endedReason: 'budget_exceeded'` (the per-turn cap, mid-loop), which keeps what was written and is
+kept even when that is nothing. A failure marker's own text is written for an admin and is dropped.
+The panel shows the line it showed at the time ("The tutor could not answer this one." for a
+failure), not as an alert: it was said already. Read as
+the stream route checks a conversation it carries on, so the id it returns is one that route takes.
+The app's own because Sunrise's consumer conversation routes serve only `public` and `invite_only`
+agents. Like the stream route, it is declared to the ownerless-surface guard.
 
 Signed out, both are a 401, and the panel shows a sign-in prompt: the allowance is per person (D6)
 and `streamChat()` needs a user.
@@ -291,9 +317,111 @@ through the route, and deferred again by the owner (2026-10-18). Record each run
 | Date | Provider and model | Turn | Tools called | Cost |
 | ---- | ------------------ | ---- | ------------ | ---- |
 
+## The panel
+
+`components/app/tutor/`, in the synth page's aside under the Inspector, where the prototype's sat.
+Signed out, it says what the tutor does and links to sign-in, back to this synth: the allowance is
+per person and `streamChat()` needs a user. Borrowed from BeatBuddy's drawer
+(`~/code/beatbreaker/.context/app/beatbuddy.md`, _The drawer and the apply loop_), with two
+differences that follow from the tools: a proposal waits for the learner's Apply rather than landing
+as it arrives, and a designed sound opens as it arrives, as the prototype's did.
+
+- **One composer.** The prototype had Ask and Design a sound because each sent its own prompt. Here
+  the tutor picks its tool from the question, so the suggested questions carry both kinds. Its
+  Claude-account and permission copy is gone.
+- **The meter** reads the allowance when the panel opens and after every turn. At zero, or on a 429
+  `TUTOR_ALLOWANCE_SPENT` (whose `details` it takes), the composer closes.
+- **The library's empty search** offers "ask the tutor to design one", which scrolls to the panel and
+  puts "Design a sound: _the search_" in the composer, cut to the 4,000 characters the route takes.
+  It does not send it: each question counts. With a category chosen and the search matching sounds
+  in another, it says to pick another category too.
+
+### Which conversation
+
+**The panel carries on the synth's latest conversation** (`GET /api/v1/tutor/conversation`), showing
+what was said, and the composer waits for that read. One a learner keeps coming back to stays one
+conversation, so the admin's `maxConversationsPerUser` counts about one per synth rather than one
+per visit. Each synth keeps its own: the route refuses a conversation from another synth, and its
+history would talk about controls this one does not have. So changing synth changes conversation, as
+the prototype's did, and coming back to a synth picks its own up again.
+
+A conversation that cannot take the turn is replaced, once: the route's 404
+`TUTOR_CONVERSATION_NOT_FOUND` (archived, pruned, or the agent made again) and Sunrise's
+`conversation_length_cap_reached` (the admin's `maxMessagesPerConversation`). Both refuse before the
+message is saved, so nothing has been counted, and the same question goes again on a new
+conversation with a line saying so.
+
+Rejected: a new conversation on every page load, BeatBuddy's, which locks a learner out at the cap.
+Also rejected: keeping the conversation id in browser storage, which loses the history on another
+device and still needs a read to show it. **Cost accepted:** an admin who sets
+`maxConversationsPerUser` below the number of synths a learner uses the tutor on locks them out of
+the rest (`conversation_cap_reached`, which the panel words for the learner). Leave it unset, or
+above the number of synths.
+
+### Apply and Undo
+
+`apply.ts` is pure and holds the rules; `use-tutor-chat.ts` runs them.
+
+- **Checked again on the client.** A `propose_panel_change` result counts only if it parses, names
+  this synth at this definition version, and passes `checkSettings` and `checkCables`; Apply checks
+  it once more. A `design_sound` result counts only if its lesson passes `SoundLessonSchema` and
+  `checkLesson`, so a design the panel opens is one Save can keep. A refused call carries no data.
+- **One proposal a turn: the last step's.** The calls the model makes together in one step (one
+  `capability_result(s)` frame) were all worked out against the panel the turn sent, so they
+  combine, a later call winning a control both set and overriding what an earlier one did with a
+  cable. A proposal from a later step replaces the earlier: the model made it after seeing the
+  first, and the instructions ask for one, so a second is a correction. Rejected: combining every
+  proposal of the turn, which would keep a control a correction meant to drop; and offering each as
+  its own chip, where applying one makes the others stale.
+- **The chip** lists the change one line per control and cable, as the panel reads them
+  ("CUTOFF FREQUENCY: 1 · 1.3 kHz → −3 · 80 Hz"), and offers "Apply 3 changes + 1 cable". Apply
+  waits for the turn to end, since a later step may still replace the proposal, and is then offered
+  only while the panel is still the one the turn sent. Otherwise the proposal is dropped and the chip
+  says the panel changed since, and to ask again.
+- **Apply** snapshots the panel, then sets the controls, takes the cables out and plugs the new ones
+  in, as turning the controls would: the sound and the lesson step stay. **Undo** puts the snapshot
+  back, and is enabled only while the panel still shows the change: BeatBuddy's chip rule. After
+  Undo the panel is the one the proposal was made for again, so Apply is offered again.
+- **A designed sound opens as it arrives**, as choosing a library sound does: the panel is its whole
+  sound, the Lesson panel shows its lesson (_Designed by the AI tutor_, _AI designed · check by ear_),
+  "Loaded:" names it _from the tutor_, and no library sound is current. Stepping through its lesson
+  keeps it open, and Restore builds it again. The chip's Undo puts back everything that was on the
+  panel before: the sound, the step, one of the user's sounds or a shared one. It is enabled once
+  the turn has ended, while that design is open and the panel still shows it. A turn that designs
+  two opens each in turn, and one Undo goes back to before the first. Undoing a later turn's design
+  opens the earlier one again, so its Undo comes back: designs undo in the order they opened.
+- **Save keeps the lesson and the mark.** With a designed sound open, Save… makes a new sound named
+  after it and sends its lesson with `fromTutor: true`; once saved, it is one of the user's, with its
+  lesson ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)).
+
+### When a turn fails
+
+Every failure ends the turn with a line in the panel, and nothing else on the page waits on a turn.
+Sunrise's own copy is written for an admin ("Go to Admin → Providers"), so the panel words each one
+for the learner (`TUTOR_ERRORS`):
+
+| What happened                                                                                     | The line                                                                                   |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| A provider error, or any other `error` frame                                                      | The tutor could not answer just now. The synth and everything else on the page still work. |
+| A stream that closes with no `done`, breaks, or stops at the token cap (`finishReason: 'length'`) | The tutor's answer was cut off. …                                                          |
+| 429 `RATE_LIMIT_EXCEEDED`                                                                         | Too many questions in a short time. Wait a moment, then ask again. (The prototype's.)      |
+| 429 `TUTOR_ALLOWANCE_SPENT`, 503 `TUTOR_UNAVAILABLE`, 413                                         | The route's own sentence, written for the learner                                          |
+| 400 (a panel the current definition refuses)                                                      | The tutor could not read the panel as it is. Reload the page, then ask again.              |
+| 401                                                                                               | Your session has ended. Sign in again to ask the tutor.                                    |
+| `output_blocked`, `input_blocked`, or `done` with `finishReason: 'error'` (a refusal or a filter) | The tutor declined that one. Try asking it a different way. (The prototype's.)             |
+| `tool_loop_cap`, `budget_exceeded`, `budget_exceeded_per_turn`                                    | Too many steps; the month's budget; an answer that cost more than a question is allowed    |
+| `conversation_cap_reached`                                                                        | The tutor can't start another conversation for your account. …                             |
+
+A turn gets one line, the first: a cost stop followed by a `done` at the token cap, a Stop or a
+broken stream keeps the cost line. None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
+stream.
+
 ## Not yet
 
-- **The panel** is t-56. Until it lands only the smoke run calls the routes.
+- **A designed sound lasts the visit.** The panel keeps its values in browser storage like any
+  other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
+  panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
+  would mean reading them back from the conversation's tool messages.
 - **Grounding** in the databank and the web, the sourcing rules and the topic boundary are
   `f-tutor-knowledge`. Until then the instructions let the tutor answer general questions about
   synths from its own knowledge, and decline others in one line.

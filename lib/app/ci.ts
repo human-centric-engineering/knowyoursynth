@@ -316,4 +316,12 @@ export const appOwnerlessSurfaceExceptions: AppOwnerlessSurfaceException[] = [
       'nobody owns is never carried on through a consumer route, so it has nothing to ask the helper ' +
       '(`f-tutor` t-54).',
   },
+  {
+    path: 'lib/app/tutor/conversation.ts',
+    disposition: 'by-design',
+    reason:
+      'the tutor panel resumes the caller’s own latest tutor conversation on the synth it is open on: `userId` ' +
+      'from the session, matched as the stream route checks one it carries on. A thread nobody owns is never ' +
+      'resumed through a consumer route, so it has nothing to ask the helper (`f-tutor` t-56).',
+  },
 ];

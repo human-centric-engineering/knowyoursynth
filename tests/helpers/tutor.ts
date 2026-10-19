@@ -93,3 +93,50 @@ export function tutorTurns(
     createdAt: new Date(from.getTime() + i * 60_000),
   }));
 }
+
+/**
+ * The arguments the model might send `design_sound` for "a dark, round bass" on Model D: three steps, a context line,
+ * a tweak and a riff, every id and value legal. For the tutor panel's tests, which take the tool's real result.
+ */
+export function darkBassDesign() {
+  return {
+    name: 'Dark round bass',
+    blurb: 'A low, rounded bass with a soft pluck.',
+    level: 1,
+    category: 'bass',
+    how: 'Two oscillators an octave apart into a mostly closed filter, with a short contour for the pluck.',
+    steps: [
+      {
+        title: 'Two oscillators an octave apart',
+        module: 'osc',
+        why: 'Stacking an octave gives the bass weight.\n- Osc 2 range 16: an octave below osc 1.',
+        set: { 'osc2.range': '16', 'mix.osc2On': true, 'mix.osc2': 7 },
+      },
+      {
+        title: 'Close the filter',
+        module: 'filter',
+        why: 'A low cutoff takes the edge off.\n- CUTOFF -2: dark and round.',
+        set: { 'filter.cutoff': -2, 'filter.contour': 4 },
+      },
+      {
+        title: 'Pluck the loudness',
+        module: 'env',
+        why: 'A short decay makes each note pluck.\n- DECAY 3: a short tail.',
+        set: { 'aenv.decay': 3, 'aenv.sustain': 6 },
+      },
+    ],
+    context: { 'filter.cutoff': 'Keeps the bass dark; turn it up to brighten it.' },
+    tweaks: [
+      { id: 'filter.emphasis', try: 'Turn EMPHASIS to 5', hear: 'A vocal peak on each note' },
+    ],
+    phrase: {
+      bpm: 96,
+      steps: [
+        [0, 36, 0.5],
+        [1, 36, 0.5],
+        [2, 43, 0.5],
+        [3, 41, 1],
+      ],
+    },
+  };
+}

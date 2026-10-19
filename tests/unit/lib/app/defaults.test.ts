@@ -637,10 +637,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'tests/unit/lib/app/synths/defs/load-chunks.test.ts',
         'tests/unit/lib/app/synths/defs/goldens.test.ts',
       ]);
-      // Know Your Synth fills this seam: pinned to its entries (`f-tutor` t-54), so a stray extra one still fails.
+      // Know Your Synth fills this seam: pinned to its entries (`f-tutor` t-54, t-56), so a stray extra one still fails.
       expect(appOwnerlessSurfaceExceptions.map((e) => e.path)).toEqual([
         'lib/app/tutor/allowance.ts',
         'app/api/v1/tutor/stream/route.ts',
+        'lib/app/tutor/conversation.ts',
       ]);
     },
   },
