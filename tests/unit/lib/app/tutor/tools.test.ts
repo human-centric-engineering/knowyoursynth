@@ -4,7 +4,7 @@
  * dispatcher registers is the set the agent is bound to.
  *
  * FORK NOTE — this reads the real `lib/app/capabilities.ts` on purpose: a mock would hold the rules to a list of its own
- * and let a new tool slip past them. Adding or removing a tutor tool in that seam fails "are the four in the plan"
+ * and let a new tool slip past them. Adding or removing a tutor tool in that seam fails "are the five in the plan"
  * until the expected slugs here are updated; the rules then cover the new tool without another test.
  *
  * @see lib/app/tutor/tools.ts · lib/app/capabilities.ts
@@ -15,6 +15,11 @@ const mockRegister = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/orchestration/capabilities/registry', () => ({
   registerAppCapability: mockRegister,
 }));
+// `search_databank` reads the databank: the seed's own rows, in memory (`tests/helpers/bank-db.ts`).
+vi.mock('@/lib/db/client', async () => {
+  const { bankDb } = await import('@/tests/helpers/bank-db');
+  return { prisma: bankDb() };
+});
 
 import { initAppCapabilities } from '@/lib/app/capabilities';
 import { TUTOR_TOOL_SLUGS } from '@/lib/app/tutor/agent';
@@ -39,16 +44,23 @@ const GOOD_ARGS: Record<string, unknown> = {
     steps: [{ title: 'Close it', module: 'filter', why: 'Darker.', set: { 'filter.cutoff': -2 } }],
     phrase: { bpm: 100, steps: [[0, 48, 1]] },
   },
+  search_databank: { query: 'Vangelis' },
 };
 
 // Widened to the base class: each tool's own argument type is checked by its own test.
 const tools = TUTOR_TOOLS.map((t): readonly [string, BaseCapability] => [t.slug, t]);
 
 describe('the tutor tools', () => {
-  it('are the four in the plan, and the ones the agent is bound to', () => {
+  it('are the five in the plan, and the ones the agent is bound to', () => {
     expect(TUTOR_TOOLS.map((t) => t.slug)).toEqual([...TUTOR_TOOL_SLUGS]);
     expect([...TUTOR_TOOL_SLUGS].sort()).toEqual(
-      ['describe_synth', 'design_sound', 'get_panel', 'propose_panel_change'].sort()
+      [
+        'describe_synth',
+        'design_sound',
+        'get_panel',
+        'propose_panel_change',
+        'search_databank',
+      ].sort()
     );
   });
 

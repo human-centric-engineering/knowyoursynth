@@ -11,6 +11,8 @@
  * 3. The read layer gives back what was seeded: `loadBank()` equals the seed data, with a membership read from
  *    either side (the table holds each pair once).
  * 4. `getHeardOn()` gives every synth the list the prototype gave it (`tests/fixtures/bank/heard-on.json`).
+ * 5. The databank search (`f-tutor-knowledge` t-57) over the tables, with no AI provider: an artist is found first by
+ *    name, and found by a word only their story holds, through the search and through the tutor's `search_databank`.
  *
  * Read-only apart from step 2, which writes nothing when the database is seeded. Like `check-synths.ts`, this reads
  * the seed data, so it is an allowed reader in `seed-data-boundary.test.ts`. Printing goes through `console`, not
@@ -26,7 +28,9 @@ import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import type { Bank } from '@/lib/app/bank/data';
 import { groupsOf, membersOf } from '@/lib/app/bank/joins';
 import { getHeardOn, loadBank } from '@/lib/app/bank/read';
+import { searchBank, tokens } from '@/lib/app/bank/search';
 import { seedBank } from '@/lib/app/bank/seed';
+import { SearchDatabankCapability } from '@/lib/app/tutor/search-databank';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 
 const failures: string[] = [];
@@ -112,6 +116,35 @@ async function main(): Promise<void> {
   check(
     entries > 0 && !failures.some((f) => f.includes('Heard on')),
     `Heard on equals the prototype's for ${Object.keys(golden).length} synths (${entries} entries)`
+  );
+
+  // 5. Search. The longest word of the artist's story that is not in their name.
+  const artist = await prisma.bankArtist.findUniqueOrThrow({ where: { id: 'vangelis' } });
+  const started = performance.now();
+  const byName = await searchBank(artist.name);
+  const firstMs = performance.now() - started;
+  check(
+    byName[0]?.id === artist.id,
+    `"${artist.name}" finds the artist first (${firstMs.toFixed(0)} ms, index built)`
+  );
+  const nameWords = new Set(tokens(artist.name));
+  const word = [...new Set(tokens(artist.story))]
+    .filter((t) => !nameWords.has(t) && /^[a-z]+$/.test(t))
+    .sort((a, b) => b.length - a.length)[0];
+  const again = performance.now();
+  const byWord = word ? await searchBank(word) : [];
+  check(
+    byWord.some((h) => h.id === artist.id),
+    `"${word}" from their story finds them (${(performance.now() - again).toFixed(0)} ms, index kept)`
+  );
+  const tool = new SearchDatabankCapability();
+  const result = await tool.execute(tool.validate({ query: artist.name }), {
+    userId: 'smoke',
+    agentId: 'smoke',
+  });
+  check(
+    result.success && result.data?.results[0]?.href === `/bank/artists/${artist.id}`,
+    'search_databank answers with their page'
   );
 }
 

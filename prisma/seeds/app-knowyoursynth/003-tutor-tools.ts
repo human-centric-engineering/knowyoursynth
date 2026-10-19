@@ -65,11 +65,23 @@ export const TUTOR_TOOL_ROWS: Record<
       'Designs a whole sound with its lesson, checked against the synth. The learner keeps it or not; the tool changes nothing.',
     executionHandler: 'DesignSoundCapability',
   },
+  search_databank: {
+    name: 'Tutor: search the databank',
+    description:
+      "Searches the databank's artists, innovators, instruments and records by name and text, with each row's page and links. Read-only.",
+    executionHandler: 'SearchDatabankCapability',
+  },
 };
 
 const unit: SeedUnit = {
   name: 'app-knowyoursynth/003-tutor-tools',
-  hashInputs: [...tsIn('lib/app/tutor'), '../../../lib/app/synths/contract.ts'],
+  hashInputs: [
+    ...tsIn('lib/app/tutor'),
+    '../../../lib/app/synths/contract.ts',
+    '../../../lib/app/bank/read.ts',
+    // search_databank's definition advertises its MAX_QUERY_LENGTH.
+    '../../../lib/app/bank/search.ts',
+  ],
   async run({ prisma, logger }) {
     for (const tool of TUTOR_TOOLS) {
       const row = TUTOR_TOOL_ROWS[tool.slug];

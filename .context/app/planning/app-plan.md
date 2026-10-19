@@ -957,30 +957,31 @@ the feature's done-when instead.
 
   Answers about artists and history are where a model invents things.
 
-  - **The databank in vector search.** It is loaded into Sunrise's knowledge base, one
-    document per row, and re-indexed when an admin edits it. The tutor searches it with
-    `search-knowledge`.
-  - **Online search, either route** (D12):
-    - a search service through `call-external-api`, which counts against the allowance and
-      is off without a key;
-    - the provider's own web search, where the model has one.
+  - **The databank, two ways under one tool** (D7, refined 2026-10-19): a lexical search over the
+    bank tables, BM25 with no model call, always on; and Sunrise's vector store with OpenAI
+    embeddings, one knowledge document per row, merged in when configured.
+  - **Online search** (D12, refined 2026-10-19): Brave's Search API, counted in the allowance and
+    off without a key. The provider's own search is asked of Sunrise.
   - **Sourcing rules.** The tutor says whether an answer came from the databank, the web
-    (with links), or its own knowledge.
+    (with links), or its own knowledge, and the panel shows the sources under each answer.
   - **Topic boundary.** It declines topics outside music and synthesis.
 
   **Source:** none. The prototype's tutor had no grounding.
 
-- **doneWhen:** On a deployed build:
-  - a question about an artist in the databank is answered with the databank cited;
-  - with search configured, a question the databank cannot answer is answered with links;
+- **doneWhen:** On a deployed build with the tutor's provider, OpenAI embeddings and a Brave key
+  configured:
+  - a question about an artist in the databank is answered with their databank page linked;
+  - a question that names nothing in the databank finds the right rows by meaning;
+  - a question the databank cannot answer is answered with web links;
   - an off-topic question is declined.
-- **indicative tasks:**
 
-| Ref | Title                                                            | Size | Depends on | Done when                                                                                                                                                                                                                                                 | Files in scope                                                       |
-| --- | ---------------------------------------------------------------- | ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| k1  | Load the databank into the knowledge base and keep it current    | M    | —          | A seed unit and an on-edit hook write one knowledge document per databank row. They are idempotent, and a deleted row's document is removed (tests). The tutor is bound to `search-knowledge`. A smoke run against the dev database finds a known artist. | `lib/app/bank/`, `prisma/seeds/app-knowyoursynth/`, `lib/app/tutor/` |
-| k2  | Give the tutor web search by either route                        | M    | —          | A search capability over `call-external-api`, off without a key and counted in the allowance. The provider-search switch. The admin setting chooses. Tests for each route and for neither.                                                                | `lib/app/tutor/`, `lib/app/capabilities.ts`                          |
-| k3  | Set the tutor's sourcing rules and topic boundary, and test them | M    | k1, k2     | The instructions and output-guard topics. An evaluation set of 30–50 questions with checkable outcomes in Sunrise's dataset evals. The pass threshold is set after its first run and recorded.                                                            | `lib/app/tutor/`, `prisma/seeds/app-knowyoursynth/`                  |
+  With no embedding provider the databank search still answers by name. The eval set's first run
+  sets its pass threshold.
+
+- **tasks:** planned 2026-10-19 and held in the Hub, which is their record: t-57 the lexical
+  search, its public API and the tutor's tool → t-60 sources in the panel and the sourcing rules →
+  t-61 the eval set; t-58 the meaning-based layer (after t-57) and t-59 Brave web search in
+  parallel. The reconciliation that reshaped the sketch is in the feature's description.
 
 ---
 
@@ -1211,8 +1212,8 @@ The model never writes to the panel. It proposes, the server validates, and the 
 | `describe_synth`       | The synth's controls, jacks and legal values, from the definition. A lookup for every synth (the DeepMind describes in about 40,600 tokens): by section, then prefix. |
 | `propose_panel_change` | Returns a change set: controls to set, and cables to add or remove. Validated against the synth and the panel; refused whole, naming what is wrong.                   |
 | `design_sound`         | Returns a whole sound **with its lesson** (steps, context, tweaks and a riff), validated. Saved as one of the user's sounds, it keeps the lesson and the tutor mark.  |
-| `search_knowledge`     | Sunrise's vector search over the databank (`k1`).                                                                                                                     |
-| `web_search`           | A search service when configured (`k2`). Otherwise the provider's own search, when it has one.                                                                        |
+| `search_databank`      | The databank by name and text (BM25, no model; t-57), with Sunrise's vector search over it merged in when OpenAI embeddings are configured (t-58).                    |
+| `web_search`           | Brave's Search API when its key is set (t-59). The provider's own search waits on Sunrise.                                                                            |
 
 **Sources.**
 
@@ -1337,6 +1338,11 @@ their own sounds, not synths.
 
 **Use Sunrise's vector store for RAG where it fits.** The databank is the first corpus.
 
+_Refined 2026-10-19 (journal, `f-tutor-knowledge`):_ the databank is searched two ways under one
+tool. A lexical search (BM25 over the bank tables) is always on and calls no model; the vector
+store, with OpenAI embeddings, is merged in when configured. The vector store is never the only
+way in, because every vector search makes an embedding call and Anthropic offers none.
+
 **D8 · The BeatBreaker link** (Q5)
 
 **Separate accounts.**
@@ -1383,6 +1389,10 @@ with a zoomable panel and a rotate prompt. Everything is in the API, so native a
 - The provider's own web search, where the model has one.
 
 An admin setting chooses between them.
+
+_Refined 2026-10-19 (journal, `f-tutor-knowledge`):_ Brave's Search API now. Sunrise's provider
+layer sends only function tools, so the provider's own search is asked of Sunrise, and the admin
+setting waits until it lands.
 
 **D13 · The prototype at runtime** (owner, 2026-10-04)
 
