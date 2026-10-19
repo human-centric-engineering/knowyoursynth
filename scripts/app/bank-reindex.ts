@@ -1,4 +1,5 @@
 import { reconcileBankKnowledge } from '@/lib/app/bank/knowledge';
+import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
 import { runAsOrg } from '@/lib/tenancy/context';
@@ -18,7 +19,9 @@ async function main() {
   if (result.status === 'done' && result.failed > 0) process.exit(1);
 }
 
-main().catch((err) => {
-  logger.error('Databank reindex failed', err);
-  process.exit(1);
-});
+main()
+  .then(() => prisma.$disconnect())
+  .catch((err) => {
+    logger.error('Databank reindex failed', err);
+    return prisma.$disconnect().finally(() => process.exit(1));
+  });

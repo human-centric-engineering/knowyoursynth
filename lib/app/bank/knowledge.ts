@@ -161,10 +161,19 @@ export async function reconcileBankKnowledge(
   }
 
   const result = { written: 0, unchanged: 0, deleted: 0, failed: 0 };
+  // Never throws: a delete that fails (the document already gone) is logged and left for the next run, so it cannot
+  // reject the pool mid-flight and skip the rest of the reconcile.
   const remove = async (docs: Held[]): Promise<void> => {
     for (const doc of docs) {
-      await deleteDocument(doc.id);
-      result.deleted++;
+      try {
+        await deleteDocument(doc.id);
+        result.deleted++;
+      } catch (err) {
+        logger.warn('Databank knowledge: a document could not be deleted', {
+          documentId: doc.id,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
   };
 
@@ -200,13 +209,20 @@ export async function reconcileBankKnowledge(
       result.written++;
       await remove(docs.filter((d) => d.id !== doc.id));
     } catch (err) {
-      // The old copy stays searchable. A failed upload is left untagged; clear it, or its slug would hand the failed
+      // The old copy stays searchable, unless forced (deleted above). A failed upload is left untagged; clear it, or its slug would hand the failed
       // row back to the next run as this content's document.
       result.failed++;
       logger.error('Databank knowledge: a row failed to project', err, { row: keyOf(p.ref) });
-      await prisma.aiKnowledgeDocument.deleteMany({
-        where: { fileName: p.fileName, fileHash: p.hash, status: 'failed', tags: { none: {} } },
-      });
+      await prisma.aiKnowledgeDocument
+        .deleteMany({
+          where: { fileName: p.fileName, fileHash: p.hash, status: 'failed', tags: { none: {} } },
+        })
+        .catch((cleanupErr: unknown) =>
+          logger.warn('Databank knowledge: a failed upload could not be cleared', {
+            row: keyOf(p.ref),
+            error: cleanupErr instanceof Error ? cleanupErr.message : String(cleanupErr),
+          })
+        );
     }
   });
 

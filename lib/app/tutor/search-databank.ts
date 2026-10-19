@@ -142,10 +142,9 @@ export class SearchDatabankCapability extends BaseCapability<Args, DatabankSearc
     _context: CapabilityContext
   ): Promise<CapabilityResult<DatabankSearchData>> {
     const bank = await loadBank();
-    const [lexical, meaning] = await Promise.all([
-      Promise.resolve(searchBankIn(bank, args.query, { kind: args.kind, limit: CANDIDATES })),
-      searchBankByMeaning(args.query, { kind: args.kind, limit: CANDIDATES }),
-    ]);
+    const meaningSearch = searchBankByMeaning(args.query, { kind: args.kind, limit: CANDIDATES });
+    const lexical = searchBankIn(bank, args.query, { kind: args.kind, limit: CANDIDATES });
+    const meaning = await meaningSearch;
     const data = fuseDatabankResults(documentsOf(bank), args.query, lexical, meaning, RESULTS);
     return this.success(
       data.results.length

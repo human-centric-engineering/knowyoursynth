@@ -266,8 +266,8 @@ and never replaces it.
   It is written only through Sunrise's document manager (upload and delete).
 - **The reconcile** is a pure code projection. A row is written only when its text's hash differs
   from its document's `fileHash`; only tagged documents are removed; a bank that reads empty
-  deletes nothing and logs a warning. A failed upload keeps the old document, and the run counts
-  it in `failed`.
+  deletes nothing and logs a warning. A failed upload keeps the old document (except under
+  `--force`, which deletes it first), and the run counts it in `failed`.
 - **An admin's edit to one of these documents on the Knowledge page is overwritten**, when its row
   next changes, or at once by `npm run bank:reindex -- --force`. Edit the databank, not the
   document.
