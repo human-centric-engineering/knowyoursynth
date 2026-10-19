@@ -34,11 +34,12 @@ export async function MySoundsCard({ userId }: { userId: string }) {
       <CardContent>
         {sounds.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            None yet. Open a synth from{' '}
+            You haven&apos;t saved a sound yet. Open a{' '}
             <Link href="/synths" className="underline underline-offset-2">
-              Synths
-            </Link>{' '}
-            and press Save, or Save a copy of a library sound.
+              synth
+            </Link>
+            , get it sounding the way you like and press <strong>Save</strong>. Or save a copy of a
+            library sound and change it from there.
           </p>
         ) : (
           <ul className="divide-y">

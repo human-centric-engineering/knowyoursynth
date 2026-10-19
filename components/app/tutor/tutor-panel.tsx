@@ -76,7 +76,7 @@ export function TutorPanel(props: TutorPanelProps) {
             <Link href={signInHref} className="text-(--kys-accent) underline underline-offset-2">
               Sign in
             </Link>{' '}
-            to ask it.
+            to ask it. It&apos;s free, with a daily allowance.
           </p>
         )}
       </section>
@@ -160,9 +160,9 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
       {chat.messages.length === 0 && !chat.busy && !chat.resuming && (
         <>
           <p className="text-[14px] text-(--kys-muted)">
-            Ask about the sound on the panel, or describe a sound and the tutor builds it on the{' '}
-            {def.name} with a step-by-step lesson. Every change can be undone. Treat what it
-            suggests as a starting point and trust your ears.
+            Ask about the sound on the panel, or describe one and the tutor builds it on the{' '}
+            {def.name} with a step-by-step lesson. You choose whether to apply each change, and
+            every change can be undone. It can be wrong, so trust your ears.
           </p>
           <div className="flex flex-wrap gap-1.5">
             {SUGGESTIONS.map((s) => (

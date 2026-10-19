@@ -134,7 +134,7 @@ describe('MySoundsCard', () => {
     vi.mocked(listUserSounds).mockResolvedValue([]);
     await renderCard();
     expect(screen.queryByRole('list')).toBeNull();
-    expect(screen.getByText(/None yet/)).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Synths' }).getAttribute('href')).toBe('/synths');
+    expect(screen.getByText(/^You haven't saved a sound yet\./)).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'synth' }).getAttribute('href')).toBe('/synths');
   });
 });

@@ -104,6 +104,8 @@ export function useMySounds(synthId: string, signedIn: boolean): MySounds {
 export interface MySoundsListProps {
   /** `null` while the session is still being read. */
   signedIn: boolean | null;
+  /** The synth's display name, for the empty list's line. */
+  synthName: string;
   /** Sign-in, coming back to this synth. */
   signInHref: string;
   sounds: UserSoundSummary[] | null;
@@ -118,6 +120,7 @@ export interface MySoundsListProps {
 
 export function MySoundsList({
   signedIn,
+  synthName,
   signInHref,
   sounds,
   failed,
@@ -153,7 +156,8 @@ export function MySoundsList({
         <p className="text-sm text-(--kys-faint)">Loading your sounds…</p>
       ) : !sounds.length ? (
         <p className="text-sm text-(--kys-muted)">
-          None on this synth yet. Save the panel, or save a copy of a sound below.
+          You haven&apos;t saved a sound on the {synthName} yet. Save the panel as it is, or save a
+          copy of a library sound below.
         </p>
       ) : (
         <ul className="kys-scroll -mr-1 flex max-h-[240px] flex-col gap-1.5 overflow-y-auto pr-1">

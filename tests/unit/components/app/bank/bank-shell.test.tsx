@@ -97,7 +97,9 @@ describe('BankShell', () => {
   it('says so when nothing matches', () => {
     setup();
     fireEvent.change(find(), { target: { value: 'zzqqxx' } });
-    expect(screen.getByText('Nothing matches “zzqqxx”.')).toBeTruthy();
+    expect(
+      screen.getByText(/^Nothing on this tab matches “zzqqxx”\. The counts on the other tabs/)
+    ).toBeTruthy();
     expect(tabLink(/^Artists/).textContent).toBe('Artists0');
   });
 

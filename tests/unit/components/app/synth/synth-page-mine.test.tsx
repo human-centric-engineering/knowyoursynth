@@ -254,7 +254,9 @@ describe('signed out', () => {
     expect(loadedName()).toBe('Fat bass');
     expect(screen.getByText('1 control moved')).toBeTruthy();
     await waitFor(() =>
-      expect(within(mySounds()).getByText(/None on this synth yet/)).toBeTruthy()
+      expect(
+        within(mySounds()).getByText(/^You haven't saved a sound on the Model D yet\./)
+      ).toBeTruthy()
     );
   });
 
@@ -688,7 +690,9 @@ describe('saving', () => {
       expect(api.delete).toHaveBeenCalledExactlyOnceWith('/api/v1/sounds/cmmine1')
     );
     await waitFor(() =>
-      expect(within(mySounds()).getByText(/None on this synth yet/)).toBeTruthy()
+      expect(
+        within(mySounds()).getByText(/^You haven't saved a sound on the Model D yet\./)
+      ).toBeTruthy()
     );
     expect(cutoff()).toBe('4');
     expect(screen.queryByText('mine')).toBeNull();

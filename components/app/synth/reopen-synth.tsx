@@ -34,7 +34,7 @@ export function ReopenSynth({ ids }: { ids: readonly string[] }) {
 
   return (
     <p role="status" className="px-4 py-16 text-center text-(--kys-muted)">
-      {empty ? 'No synths are listed yet.' : 'Opening your synth…'}
+      {empty ? 'No synths are listed at the moment.' : 'Opening your synth…'}
     </p>
   );
 }

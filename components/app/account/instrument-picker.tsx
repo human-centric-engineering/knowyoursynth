@@ -119,7 +119,10 @@ export function InstrumentPicker({ listed, onAdd, disabled }: InstrumentPickerPr
 
       {all && searched ? (
         matches.length === 0 ? (
-          <p className="text-muted-foreground text-sm">No synth in the databank matches that.</p>
+          <p className="text-muted-foreground text-sm">
+            No synth in the databank matches that. Try the maker&apos;s name, or part of the model
+            name.
+          </p>
         ) : (
           <ul aria-label="Matching synths" className="divide-border divide-y rounded-md border">
             {matches.slice(0, SHOWN).map((i) => {

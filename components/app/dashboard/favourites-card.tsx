@@ -38,7 +38,8 @@ export async function FavouritesCard({ userId }: { userId: string }) {
       <CardContent>
         {favourites.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            None yet. Press the star beside a synth&apos;s name, or beside a sound in its library.
+            No favourites yet. Press the star beside a synth&apos;s name, or beside a sound in its
+            library, and it will show up here.
           </p>
         ) : (
           <ul className="divide-y">

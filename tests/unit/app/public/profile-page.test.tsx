@@ -116,7 +116,7 @@ describe('/u/[username]', () => {
     });
     db.sounds = [];
     await renderPage('moog_fan');
-    expect(screen.getByText('Nothing else here yet.')).toBeInTheDocument();
+    expect(screen.getByText('Nothing shared here yet.')).toBeInTheDocument();
     expect(screen.queryByRole('list', { name: 'Where their music is' })).toBeNull();
   });
 
