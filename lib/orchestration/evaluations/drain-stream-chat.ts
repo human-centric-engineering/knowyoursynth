@@ -80,6 +80,11 @@ export async function drainStreamChat(request: ChatRequest): Promise<DrainResult
       case 'capability_result':
         if (event.trace) toolCalls.push(event.trace);
         break;
+      // FORK (Know Your Synth, t-61): a turn with several tool calls dispatches them in parallel and reports them in
+      // one `capability_results` frame; without this the graders saw no tool calls for that turn.
+      case 'capability_results':
+        for (const r of event.results) if (r.trace) toolCalls.push(r.trace);
+        break;
       case 'citations':
         if (Array.isArray(event.citations)) citations = event.citations;
         break;

@@ -17,6 +17,7 @@
  */
 import { z } from 'zod';
 import { SourcesPreviewSchema } from '@/lib/app/tutor/sources';
+import { tryParseJson } from '@/lib/orchestration/evaluations/parse-structured';
 import type {
   Grader,
   GraderInput,
@@ -42,12 +43,10 @@ const SEARCH_TOOLS = ['search_databank', 'web_search'];
 /** The links a successful search returned, or `null` for a call that refused or left no preview. */
 function linksOf(call: ToolCall): string[] | null {
   if (call.success !== true || !call.resultPreview) return null;
-  try {
-    const parsed = SourcesPreviewSchema.safeParse(JSON.parse(call.resultPreview));
-    return parsed.success ? parsed.data.links : null;
-  } catch {
-    return null;
-  }
+  return tryParseJson(
+    call.resultPreview,
+    (v) => SourcesPreviewSchema.safeParse(v).data?.links ?? null
+  );
 }
 
 function callsTo(input: GraderInput, slug: string): ToolCall[] {
@@ -56,12 +55,10 @@ function callsTo(input: GraderInput, slug: string): ToolCall[] {
 
 function expectationOf(input: GraderInput): TutorExpectation | null {
   if (!input.expectedOutput) return null;
-  try {
-    const parsed = TutorExpectationSchema.safeParse(JSON.parse(input.expectedOutput));
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
-  }
+  return tryParseJson(
+    input.expectedOutput,
+    (v) => TutorExpectationSchema.safeParse(v).data ?? null
+  );
 }
 
 const notApplicable = (reasoning: string): GraderResult => ({ score: null, reasoning });
@@ -123,7 +120,7 @@ export function gradeWebLinks(input: GraderInput): GraderResult {
  */
 // ['’]: a model writes either apostrophe.
 const DECLINE =
-  /outside (?:of )?(?:what I (?:do|cover|can help with)|my (?:area|remit|scope))|(?:not|n['’]t) something I (?:can )?(?:help|answer|cover)|I (?:can|could) only (?:help|answer|talk)|I(?:['’]m| am) (?:here|only able) to help with (?:music|sound|synth)/i;
+  /outside (?:of )?(?:what I (?:do|cover|can help with)|my (?:area|remit|scope))|(?:not|n['’]t) something I (?:can )?(?:help|answer|cover)|I (?:can|could) only (?:help|answer|talk)|I(?:['’]m| am) (?:only here|here|only able) to help with (?:music|sound|synth)/i;
 /** "Briefly": a decline with an answer to the question after it is not a decline. */
 export const DECLINE_MAX_CHARS = 500;
 

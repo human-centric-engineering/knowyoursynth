@@ -298,17 +298,21 @@ the same PR**, and each row names what deletes it.
 ### Eval graders see what each tool call returned
 
 - **Files:** `lib/orchestration/evaluations/run-worker.ts`,
-  `lib/orchestration/evaluations/graders/types.ts`
+  `lib/orchestration/evaluations/graders/types.ts`,
+  `lib/orchestration/evaluations/drain-stream-chat.ts`
 - **Change:** `GraderInput.toolCalls` items gain optional `success`, `errorCode` and
   `resultPreview`, and `processOneCase` fills them from each agent subject's tool-call trace, under
   `FORK` comments (`f-tutor-knowledge` t-61). The stored `subjectMetadata.toolCalls` keeps
-  `{ slug, args }` only.
+  `{ slug, args }` only. `drainStreamChat` also collects the traces of a `capability_results` frame
+  (a turn's parallel tool calls), which it dropped, so a turn that searched the databank and the
+  web at once reached the graders with no tool calls.
 - **Why:** the tutor's eval graders check what its searches found (owner ruling, 2026-10-19,
   journaled on `f-tutor-knowledge`), and core passed graders only each call's name and arguments.
   Behaviour-neutral at rest: nothing stored changes, and core's graders ignore the new fields.
   `tests/unit/lib/app/tutor/evals/worker-seam.test.ts` fails if the fields are dropped.
 - **On conflict:** take theirs, and re-apply the three fields where `processOneCase` maps the
-  trace, and the `{ slug, args }` map where it stores `subjectMetadata`. Keep the field names: the
+  trace, the `{ slug, args }` map where it stores `subjectMetadata`, and the `capability_results`
+  case in `drainStreamChat` unless upstream now handles it. Keep the field names: the
   graders read them.
 - **Upstream:** raised as
   [sunrise#1044](https://github.com/human-centric-engineering/sunrise/issues/1044).
