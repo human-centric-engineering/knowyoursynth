@@ -1,7 +1,10 @@
 import { z } from 'zod';
+import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { allowanceSpentMessage, readAllowance, WEB_SEARCH_TOOL } from '@/lib/app/tutor/allowance';
+import { prisma } from '@/lib/db/client';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logging';
+import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
 import { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
 import type {
   CapabilityContext,
@@ -9,7 +12,7 @@ import type {
   CapabilityResult,
 } from '@/lib/orchestration/capabilities/types';
 import { executeHttpRequest, HttpError } from '@/lib/orchestration/http';
-import { stripHtml } from '@/lib/security/sanitize';
+import { cleanInline, extractTextFromHtml } from '@/lib/orchestration/knowledge/parsers/dom-text';
 
 /** Brave's web search endpoint. Its host has to be in `ORCHESTRATION_ALLOWED_HOSTS`, as any outbound call's does. */
 export const BRAVE_SEARCH_URL = 'https://api.search.brave.com/res/v1/web/search';
@@ -22,6 +25,8 @@ const RESULTS = 5;
 const MAX_QUERY_LENGTH = 200;
 const MAX_TITLE_LENGTH = 150;
 const MAX_SNIPPET_LENGTH = 300;
+const FAILED =
+  "The web search didn't work just now. Answer from your own knowledge, saying so, or suggest asking again later.";
 /** Well inside the chat handler's per-tool timeout, so a slow Brave is our refusal, not the handler's. */
 const TIMEOUT_MS = 8_000;
 /** A page of five results is a few kilobytes; anything near this is not a search result. */
@@ -58,23 +63,26 @@ const braveResultSchema = z.object({
   description: z.string().optional(),
 });
 
-const ENTITIES: Record<string, string> = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&quot;': '"',
-  '&#39;': "'",
-  '&#x27;': "'",
-  '&nbsp;': ' ',
-};
-
-/** Plain text of a title or snippet: Brave's markup and the few entities it uses gone, whitespace collapsed, cut. */
+/**
+ * Plain text of a title or snippet: parsed as HTML, so Brave's markup goes and every entity is decoded once (an encoded
+ * `&amp;lt;` stays the text `&lt;`), whitespace collapsed, and cut by characters, never inside a surrogate pair.
+ */
 function plain(text: string, max: number): string {
-  const out = stripHtml(text)
-    .replace(/&(?:amp|lt|gt|quot|nbsp|#39|#x27);/g, (e) => ENTITIES[e] ?? e)
-    .replace(/\s+/g, ' ')
-    .trim();
-  return out.length > max ? `${out.slice(0, max - 1).trimEnd()}…` : out;
+  const chars = Array.from(cleanInline(extractTextFromHtml(text)));
+  return chars.length > max
+    ? `${chars
+        .slice(0, max - 1)
+        .join('')
+        .trimEnd()}…`
+    : chars.join('');
+}
+
+/** The tutor as the stream route loads it. The allowance counts only its conversations, so only it may search. */
+async function isTutor(agentId: string): Promise<boolean> {
+  const n = await prisma.aiAgent.count({
+    where: { id: agentId, slug: TUTOR_AGENT_SLUG, ...platformSlugWhere(TUTOR_AGENT_SLUG) },
+  });
+  return n > 0;
 }
 
 /** Brave's reply as at most `limit` results with their three fields, skipping any without a title or a web URL. Pure. */
@@ -104,9 +112,9 @@ export function trimBraveResults(body: unknown, limit = RESULTS): WebSearchResul
  *
  * It goes through Sunrise's outbound HTTP module, so the host allowlist and the per-host rate limit apply as they do to
  * `call_external_api`. Every way it can fail is a refusal with its reason, never a throw: no key, no user, no turns
- * left, a host not allowed, and Brave failing or timing out. Each search that comes back counts as one of the person's
- * turns for the day (`lib/app/tutor/allowance.ts`), so it reads the allowance first. That is the one thing it reads
- * about the caller.
+ * left, an agent other than the tutor, a host not allowed, the database or Brave failing, and Brave timing out. Each
+ * search that comes back counts as one of the person's turns for the day (`lib/app/tutor/allowance.ts`), and only the
+ * tutor's conversations are counted, so it checks the agent is the tutor and reads the allowance first.
  */
 export class WebSearchCapability extends BaseCapability<Args, WebSearchData> {
   readonly slug = WEB_SEARCH_TOOL;
@@ -147,7 +155,21 @@ export class WebSearchCapability extends BaseCapability<Args, WebSearchData> {
       );
     }
 
-    const allowance = await readAllowance(context.userId);
+    let allowance;
+    try {
+      if (!(await isTutor(context.agentId))) {
+        return this.error(
+          "Web search is the synth tutor's alone: its searches count against the learner's daily questions.",
+          'web_search_wrong_agent'
+        );
+      }
+      allowance = await readAllowance(context.userId);
+    } catch (err) {
+      logger.warn('Tutor web search: could not read the allowance', {
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return this.error(FAILED, 'web_search_failed');
+    }
     if (allowance.remaining === 0) {
       return this.error(
         `No questions are left today for a search. ${allowanceSpentMessage(allowance.limit)} Answer from your own knowledge, saying so.`,
@@ -173,33 +195,32 @@ export class WebSearchCapability extends BaseCapability<Args, WebSearchData> {
       body = response.body;
     } catch (err) {
       const code = err instanceof HttpError ? err.code : 'unknown';
-      logger.warn('Tutor web search failed', { code });
+      // The status tells a bad key (401/403) from Brave being down (5xx). The message is logged, not passed on.
+      logger.warn('Tutor web search failed', {
+        code,
+        status: err instanceof HttpError ? err.status : undefined,
+        error: err instanceof Error ? err.message : String(err),
+      });
       if (code === 'host_not_allowed') {
         return this.error(
           "Web search isn't set up on this app (its host is not allowed). Tell the learner, and answer from your own knowledge, saying so.",
           'web_search_not_configured'
         );
       }
-      return this.error(
-        "The web search didn't work just now. Answer from your own knowledge, saying so, or suggest asking again later.",
-        'web_search_failed'
-      );
+      return this.error(FAILED, 'web_search_failed');
     }
 
     const results = trimBraveResults(body);
     if (!results) {
       logger.warn('Tutor web search: unexpected reply from Brave');
-      return this.error(
-        "The web search didn't work just now. Answer from your own knowledge, saying so, or suggest asking again later.",
-        'web_search_failed'
-      );
+      return this.error(FAILED, 'web_search_failed');
     }
     return this.success(
       results.length
         ? { results }
         : {
             results,
-            note: 'Nothing on the web matched. Try other key words once; then answer from your own knowledge, saying so.',
+            note: 'Nothing on the web matched. Answer from your own knowledge, saying so.',
           }
     );
   }

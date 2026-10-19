@@ -171,6 +171,8 @@ hold: it is a cost cap, and the cost is per turn.
 - **A web search is a turn too** (D12): each `web_search` tool message whose saved result is a
   success (`metadata.result.success`). One refused before it reached Brave, or that Brave failed,
   costs nothing. A search with no turns left is refused, and the next question then gets the 429.
+  The question that asks is already counted when the tool reads the allowance, so on the day's
+  last question the tutor answers without searching: the search would be a turn past the cap.
 - **It counts once it is saved**, which `streamChat` does before the model answers. So a turn the
   provider fails still counts, and a learner who retries through an outage spends a turn on each
   try. Counting only answered turns would put the transcript's shape into the query; that is worth
@@ -276,12 +278,19 @@ call `search_databank` first, then `web_search` once, and keep to what it found.
   `call_external_api`. It is not a binding of that tool: there the model writes the URL and reads
   Brave's raw JSON; here it writes a query and reads five trimmed results.
 - **What reaches the model**: the title, the URL (http or https only) and the snippet of each, with
-  Brave's markup and entities gone, cut to 150 and 300 characters. Nothing else of Brave's reply.
+  Brave's markup gone and its entities decoded once by a real parse (core's `dom-text`), cut to 150
+  and 300 characters. Nothing else of Brave's reply. When nothing matched, a note says so and has
+  the tutor answer from its own knowledge, not search again.
+- **The tutor's alone.** The allowance counts only tutor conversations, so a search from any other
+  agent would be a paid request nobody counts. It checks the calling agent is the platform's tutor
+  and refuses otherwise (`web_search_wrong_agent`), sending nothing.
 - **Off without a key.** A platform agent's bindings are the code's, so the tool stays bound when
   search isn't set up. It refuses instead (`web_search_not_configured`), and the instructions have
   the tutor say search isn't set up and answer from its own knowledge, saying so. A host missing
   from the allowlist reads the same. Brave failing, timing out (8 seconds) or replying in a shape
-  it can't read is `web_search_failed`, and Brave's own message is logged, not passed on.
+  it can't read is `web_search_failed`, and so is the database failing while the allowance is
+  read. Brave's own message and HTTP status are logged, not passed on; the status tells a bad key
+  (401/403) from an outage.
 - **To turn it on**: set `BRAVE_SEARCH_API_KEY` and add `api.search.brave.com` to
   `ORCHESTRATION_ALLOWED_HOSTS`, then restart (the key is read at boot, with the other env vars). After the merge that brought
   the tool in, `db:seed` writes its capability row and binds it (`sunrise.mcp-reseed`).

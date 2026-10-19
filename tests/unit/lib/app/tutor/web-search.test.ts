@@ -26,11 +26,14 @@ const appEnv = vi.hoisted((): { TUTOR_DAILY_TURNS: number; BRAVE_SEARCH_API_KEY?
 vi.mock('@/lib/env', () => ({ env: appEnv }));
 
 const table = vi.hoisted(() => ({ current: null as ReturnType<typeof fakeMessageTable> | null }));
+/** How many agents match the tutor lookup: 1 for the tutor, 0 for any other agent. */
+const tutorAgentCount = vi.hoisted(() => vi.fn<(args: unknown) => Promise<number>>());
 vi.mock('@/lib/db/client', () => ({
   prisma: {
     get aiMessage() {
       return table.current;
     },
+    aiAgent: { count: tutorAgentCount },
   },
 }));
 
@@ -73,6 +76,8 @@ beforeEach(() => {
   appEnv.BRAVE_SEARCH_API_KEY = 'brave-key';
   appEnv.TUTOR_DAILY_TURNS = 30;
   withMessages([]);
+  tutorAgentCount.mockReset();
+  tutorAgentCount.mockResolvedValue(1);
   vi.stubEnv('ORCHESTRATION_ALLOWED_HOSTS', 'api.search.brave.com');
   resetAllowlistCache();
   mockFetch.mockReset();
@@ -147,6 +152,33 @@ describe('trimBraveResults', () => {
     expect(row.snippet.startsWith("It's the CS-80. x")).toBe(true);
     expect(row.snippet.length).toBe(300);
     expect(row.snippet.endsWith('…')).toBe(true);
+  });
+
+  it('decodes an entity once, so encoded markup stays text, and decodes entities beyond the basic few', () => {
+    const [row] =
+      trimBraveResults({
+        web: {
+          results: [
+            braveRow(1, {
+              title: 'Caf&eacute; &mdash; it&#8217;s',
+              description: '&amp;lt;img src=x onerror=alert(1)&amp;gt;',
+            }),
+          ],
+        },
+      }) ?? [];
+
+    expect(row.title).toBe('Café — it’s');
+    expect(row.snippet).toBe('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
+  it('cuts a long snippet between characters, never inside an emoji', () => {
+    const [row] =
+      trimBraveResults({
+        web: { results: [braveRow(1, { description: `${'x'.repeat(298)}🎹🎹🎹` })] },
+      }) ?? [];
+
+    expect(row.snippet).toBe(`${'x'.repeat(298)}🎹…`);
+    expect(row.snippet.isWellFormed()).toBe(true);
   });
 
   it('skips a result whose URL is not a web page, or that has no title, and fills from the rest', () => {
@@ -232,6 +264,27 @@ describe('refusals', () => {
     );
 
     expect(await search()).toMatchObject({ success: false, error: { code: 'web_search_failed' } });
+  });
+
+  it('refuses, sending nothing, when the agent calling it is not the tutor', async () => {
+    tutorAgentCount.mockResolvedValue(0);
+
+    const result = await search();
+
+    expect(result).toMatchObject({ success: false, error: { code: 'web_search_wrong_agent' } });
+    expect(tutorAgentCount).toHaveBeenCalledWith({
+      where: { id: 'agent-tutor', slug: 'synth-tutor', isSystem: true },
+    });
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it('turns a database failure while reading the allowance into a refusal, not a throw', async () => {
+    tutorAgentCount.mockRejectedValue(new Error('connection refused'));
+
+    const result = await search();
+
+    expect(result).toMatchObject({ success: false, error: { code: 'web_search_failed' } });
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('refuses a search with no signed-in learner to count it against', async () => {
