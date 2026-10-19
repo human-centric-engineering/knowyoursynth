@@ -335,6 +335,20 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** upstream stops counting the fork's graders there, or the fork registers no
   grader.
 
+### The home, about and contact pages, as thin shims
+
+- **Files:** `app/(public)/page.tsx`, `app/(public)/about/page.tsx`, `app/(public)/contact/page.tsx`
+- **Change:** each is a one-line re-export of `components/app/marketing/{home,about,contact}-page.tsx` (default
+  export and `metadata`) under an `app:shim` comment. The pages' content and copy (`.context/app/planning/site-copy.md`
+  §1–3) live in those modules. Contact still renders Sunrise's `<ContactForm>`, unchanged.
+- **Why:** `f-front-door` t-63. Sunrise's pages carry its own placeholder copy, and CUSTOMIZATION.md §6 documents the
+  thin-shim as the way to replace it: the App Router resolves `/`, `/about` and `/contact` from these paths, so the
+  route files must be touched, and a one-line shim is the smallest touch.
+- **On conflict:** keep ours, the one line each. If upstream changed the pages' behaviour rather than their copy (a new
+  metadata field, a change to how Contact uses the form), carry that into our module.
+- **Upstream:** CUSTOMIZATION.md §6 defers a marketing content seam until more forks need one.
+- **Delete when:** Sunrise ships that seam. Move the modules behind it and restore the route files.
+
 ### The footer tests, pinned to the not-affiliated notice
 
 - **Files:** `tests/unit/components/layouts/public-footer.test.tsx`,
