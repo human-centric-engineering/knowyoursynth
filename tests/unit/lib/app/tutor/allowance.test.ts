@@ -1,6 +1,7 @@
 /**
  * The tutor's daily allowance (D6). The count is what decides whether a turn is refused, so what matters is what it
- * counts: only the person's own messages, only to the tutor, only messages they sent, only today (UTC).
+ * counts: only the person's own messages, only to the tutor, only messages they sent and the web searches it ran for
+ * them, only today (UTC).
  *
  * The message table is in memory and applies the query's filters, so the count is computed, not stubbed.
  *
@@ -8,7 +9,12 @@
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fakeMessageTable, tutorTurns, type MessageRow } from '@/tests/helpers/tutor';
+import {
+  fakeMessageTable,
+  tutorSearches,
+  tutorTurns,
+  type MessageRow,
+} from '@/tests/helpers/tutor';
 
 const table = vi.hoisted(() => ({ current: null as ReturnType<typeof fakeMessageTable> | null }));
 const appEnv = vi.hoisted(() => ({ TUTOR_DAILY_TURNS: 30 }));
@@ -93,6 +99,23 @@ describe('readAllowance', () => {
 
     expect(a.used).toBe(32);
     expect(a.remaining).toBe(0);
+  });
+
+  it('counts each web search that came back as one more turn (D12)', async () => {
+    withMessages([...tutorTurns('user-1', 3, TODAY), ...tutorSearches('user-1', 2, TODAY)]);
+
+    expect(await readAllowance('user-1', NOW)).toMatchObject({ used: 5, remaining: 25 });
+  });
+
+  it("does not count a refused search, another tool's call, or another person's search", async () => {
+    withMessages([
+      ...tutorTurns('user-1', 3, TODAY),
+      ...tutorSearches('user-1', 4, TODAY, { succeeded: false }),
+      ...tutorSearches('user-1', 4, TODAY, { slug: 'search_databank' }),
+      ...tutorSearches('user-2', 4, TODAY),
+    ]);
+
+    expect((await readAllowance('user-1', NOW)).used).toBe(3);
   });
 
   it('takes its limit from TUTOR_DAILY_TURNS, so production can tune it without a release', async () => {

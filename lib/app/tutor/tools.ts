@@ -4,13 +4,15 @@
  * `functionDefinition`, so the row the model is shown and the class that runs cannot disagree.
  *
  * The panel tools read the panel the stream route passed as `entityContext` and only propose; `search_databank` reads
- * the databank. None writes anything, and none reads a user.
+ * the databank, and `web_search` asks Brave. None writes anything. Only `web_search` reads anything about the caller:
+ * their daily allowance, which each search counts against.
  */
 import { DescribeSynthCapability } from '@/lib/app/tutor/describe-synth';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { GetPanelCapability } from '@/lib/app/tutor/get-panel';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
 import { SearchDatabankCapability } from '@/lib/app/tutor/search-databank';
+import { WebSearchCapability } from '@/lib/app/tutor/web-search';
 
 export const TUTOR_TOOLS = [
   new GetPanelCapability(),
@@ -18,4 +20,5 @@ export const TUTOR_TOOLS = [
   new ProposePanelChangeCapability(),
   new DesignSoundCapability(),
   new SearchDatabankCapability(),
+  new WebSearchCapability(),
 ] as const;

@@ -9,7 +9,8 @@ and the learner applies. The model never writes to the panel.**
 t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance;
 t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sounds.md), _A
 sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)). `f-tutor-knowledge`
-grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its tool.
+grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its tool, t-58 its
+meaning-based layer, t-59 web search through Brave ([below](#web-search)).
 
 ## Anti-patterns first
 
@@ -19,10 +20,12 @@ grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its 
   platform baseline, `internal`, and `tests/unit/lib/app/tutor/chat-route.test.ts` runs that route
   against the tutor's row.
 - **Don't give a tool a user.** No tool takes a user id in its arguments (every schema is
-  `.strict()`, so an extra `userId` is refused), and none reads `CapabilityContext.userId`. A
-  panel is the same whoever sent it. `tools.test.ts` holds every registered tutor tool to both.
-- **Don't let a tool write.** The panel tools read and propose, and `search_databank` reads the
-  databank. A tool that changed stored state
+  `.strict()`, so an extra `userId` is refused), and none reads `CapabilityContext.userId` but
+  `web_search`, which reads the caller's daily allowance and nothing else about them, because each
+  search counts against it. A panel is the same whoever sent it. `tools.test.ts` holds every
+  registered tutor tool to both, and names the one exception.
+- **Don't let a tool write.** The panel tools read and propose, `search_databank` reads the
+  databank and `web_search` asks Brave. A tool that changed stored state
   would need BeatBuddy's workspace row and its retry-on-conflict; these need neither, and two
   proposals in one model step are both worked out against the panel that was sent.
 - **Don't repair a proposal.** `sanitizeSet` / `sanitizePreset` clamp and drop what they do not
@@ -58,23 +61,24 @@ grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its 
 
 ## Where things are
 
-| Piece                      | Location                                                                                                              |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                               |
-| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                     |
-| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`           |
-| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`  |
-| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                          |
-| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank}.ts`, listed in `tools.ts` |
-| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                            |
-| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)     |
-| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                  |
-| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                 |
-| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                           |
-| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                            |
-| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                   |
-| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                       |
-| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                      |
+| Piece                      | Location                                                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                                          |
+| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                                |
+| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`                      |
+| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`             |
+| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                     |
+| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank,web-search}.ts`, listed in `tools.ts` |
+| Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                        |
+| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                       |
+| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                |
+| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                             |
+| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                            |
+| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                                      |
+| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                                       |
+| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                              |
+| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                                  |
+| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                                 |
 
 ## One turn
 
@@ -163,7 +167,12 @@ hold: it is a cost cap, and the cost is per turn.
 
 - **A turn is a message the learner sent**: an `AiMessage` with `role: 'user'` in one of their
   conversations with the tutor (the platform's row, `isSystem`, as the route loads it). The tutor's
-  replies and tool messages are not turns.
+  replies and tool messages are not turns, except a web search's.
+- **A web search is a turn too** (D12): each `web_search` tool message whose saved result is a
+  success (`metadata.result.success`). One refused before it reached Brave, or that Brave failed,
+  costs nothing. A search with no turns left is refused, and the next question then gets the 429.
+  The question that asks is already counted when the tool reads the allowance, so on the day's
+  last question the tutor answers without searching: the search would be a turn past the cap.
 - **It counts once it is saved**, which `streamChat` does before the model answers. So a turn the
   provider fails still counts, and a learner who retries through an outage spends a turn on each
   try. Counting only answered turns would put the transcript's shape into the query; that is worth
@@ -177,7 +186,7 @@ hold: it is a cost cap, and the cost is per turn.
   `conversation-access`, and is declared to Sunrise's ownerless-surface guard in
   `appOwnerlessSurfaceExceptions` (`lib/app/ci.ts`) with that reason.
 - **A soft cap.** Turns sent together all read the count before any of them is saved, so all go
-  ahead. The per-user chat cap (10 a minute, per server process) bounds how many arrive together,
+  ahead, and so do searches the model asks for together in one step. The per-user chat cap (10 a minute, per server process) bounds how many arrive together,
   so a day's overshoot is at most that many on each server process.
 - **`TUTOR_DAILY_TURNS`**, through `lib/app/env.ts`: a whole number from 1 to 1,000, **30** when
   unset, as BeatBuddy's. An env setting so the number changes without a code change: set it and
@@ -196,7 +205,7 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 | Visibility         | `internal` (the baseline)                                            | the code's                      |
 | Temperature        | 0.4                                                                  | the code's                      |
 | Max tokens         | 8,192 (room for a designed sound, the longest reply; see `agent.ts`) | the code's                      |
-| Tools              | the four below                                                       | the code's                      |
+| Tools              | the six below                                                        | the code's                      |
 | Provider and model | none: inherits the org's default at run time                         | the admin's                     |
 | Per-turn cap       | **$0.20** to start (BeatBuddy's)                                     | the admin's, set once on create |
 | Monthly budget     | **$50** to start                                                     | the admin's, set once on create |
@@ -211,13 +220,14 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 
 ## The tools
 
-| Tool                   | Arguments                                                         | Returns                                                                                                                                         | Refuses with                                                 |
-| ---------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables, at most 100; the version                        | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel`  |
-| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                                       | the above, `unknown_section`, `unknown_prefix`               |
-| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                                          | the above, `empty_proposal`, `invalid_proposal`, `no_change` |
-| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                                                | the above, `invalid_design`                                  |
-| `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt, its links and `matchedBy`; `search`; a `note` when none match | a bad argument only (it reads no panel)                      |
+| Tool                   | Arguments                                                         | Returns                                                                                                                                         | Refuses with                                                                                         |
+| ---------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables, at most 100; the version                        | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel`                                          |
+| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                                       | the above, `unknown_section`, `unknown_prefix`                                                       |
+| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                                          | the above, `empty_proposal`, `invalid_proposal`, `no_change`                                         |
+| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                                                | the above, `invalid_design`                                                                          |
+| `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt, its links and `matchedBy`; `search`; a `note` when none match | a bad argument only (it reads no panel)                                                              |
+| `web_search`           | `query`                                                           | at most five web results, each its `title`, `url` and `snippet`; a `note` when none match                                                       | `web_search_not_configured`, `web_search_no_user`, `web_search_allowance_spent`, `web_search_failed` |
 
 - **`propose_panel_change`** runs `checkSettings` on `set` and `checkCables` on `addCables`, then
   checks against the panel: a cable to remove must be in, a cable to add must not be (nor listed
@@ -249,8 +259,41 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   how many more there are.
 - **No per-tool rate limit.** The dispatcher counts a capability's `rateLimit` per agent, and one
   tutor serves every learner, so any limit there would be a cap for the whole app. The rows leave
-  it `null` (unlimited); the tools are pure computation, and a learner's limit is the stream
-  route's daily allowance.
+  it `null` (unlimited). A learner's limit is the stream route's daily allowance, which
+  `web_search`, the one tool that costs per call, also counts against; Brave's host has Sunrise's
+  outbound per-host limit as well (60 a minute unless `ORCHESTRATION_OUTBOUND_RATE_LIMIT` says).
+
+## Web search
+
+`web_search` (t-59, D12) is for when the databank has no answer: the instructions have the tutor
+call `search_databank` first, then `web_search` once, and keep to what it found.
+
+- **Brave's Search API, for now** (owner ruling, 2026-10-19, journaled on `f-tutor-knowledge`).
+  The ruling prefers the provider's own web search, which Sunrise can't send: its provider layer
+  sends only function tools. That is asked of Sunrise in
+  [sunrise#1037](https://github.com/human-centric-engineering/sunrise/issues/1037). An admin switch
+  between the two routes waits until it lands.
+- **Through Sunrise's outbound HTTP module** (`executeHttpRequest`), so the host allowlist
+  (`ORCHESTRATION_ALLOWED_HOSTS`) and the per-host rate limit apply as they do to
+  `call_external_api`. It is not a binding of that tool: there the model writes the URL and reads
+  Brave's raw JSON; here it writes a query and reads five trimmed results.
+- **What reaches the model**: the title, the URL (http or https only) and the snippet of each, with
+  Brave's markup gone and its entities decoded once by a real parse (core's `dom-text`), cut to 150
+  and 300 characters. Nothing else of Brave's reply. When nothing matched, a note says so and has
+  the tutor answer from its own knowledge, not search again.
+- **The tutor's alone.** The allowance counts only tutor conversations, so a search from any other
+  agent would be a paid request nobody counts. It checks the calling agent is the platform's tutor
+  and refuses otherwise (`web_search_wrong_agent`), sending nothing.
+- **Off without a key.** A platform agent's bindings are the code's, so the tool stays bound when
+  search isn't set up. It refuses instead (`web_search_not_configured`), and the instructions have
+  the tutor say search isn't set up and answer from its own knowledge, saying so. A host missing
+  from the allowlist reads the same. Brave failing, timing out (8 seconds) or replying in a shape
+  it can't read is `web_search_failed`, and so is the database failing while the allowance is
+  read. Brave's own message and HTTP status are logged, not passed on; the status tells a bad key
+  (401/403) from an outage.
+- **To turn it on**: set `BRAVE_SEARCH_API_KEY` and add `api.search.brave.com` to
+  `ORCHESTRATION_ALLOWED_HOSTS`, then restart (the key is read at boot, with the other env vars). After the merge that brought
+  the tool in, `db:seed` writes its capability row and binds it (`sunrise.mcp-reseed`).
 
 ## The meaning-based layer
 
@@ -480,6 +523,8 @@ stream.
   other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
   panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
   would mean reading them back from the conversation's tool messages.
-- **The rest of the grounding** is `f-tutor-knowledge`: web search (t-59), sources shown under each answer and the full sourcing rules (t-60), and the
+- **The rest of the grounding** is `f-tutor-knowledge`: sources shown under each answer and the full sourcing rules (t-60), and the
   eval set (t-61). Until t-60 the panel shows the answer's text only; the tutor's links are in what
   it writes.
+- **The provider's own web search**, in place of Brave or beside it, waits on
+  [sunrise#1037](https://github.com/human-centric-engineering/sunrise/issues/1037).

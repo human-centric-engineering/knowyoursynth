@@ -16,8 +16,9 @@ import type { SeedUnit } from '@/prisma/runner';
  * writes, so each is idempotent.
  *
  * No per-tool rate limit (`rateLimit` null, unlimited). The dispatcher counts one per agent, and one tutor serves every
- * learner, so any limit here would be a cap for the whole app. The tools are pure computation; a learner's limit is the
- * stream route's daily allowance.
+ * learner, so any limit here would be a cap for the whole app. A learner's limit is the stream route's daily allowance,
+ * which `web_search`, the one tool that costs per call, counts against; Brave's host also has the outbound per-host
+ * limit.
  *
  * Then it reconciles the platform agents in the install org. Core's `021-platform-agents` runs before any app unit, so
  * on a fresh database the tutor is created there with no tools bound (a capability with no row is skipped with a
@@ -70,6 +71,12 @@ export const TUTOR_TOOL_ROWS: Record<
     description:
       "Searches the databank's artists, innovators, instruments and records by name and text, with each row's page and links. Read-only.",
     executionHandler: 'SearchDatabankCapability',
+  },
+  web_search: {
+    name: 'Tutor: search the web',
+    description:
+      "Searches the web through Brave's Search API and returns up to five results, each a title, URL and snippet. Off until BRAVE_SEARCH_API_KEY is set and api.search.brave.com is allowed. Each search counts as one of the learner's daily turns. Read-only.",
+    executionHandler: 'WebSearchCapability',
   },
 };
 

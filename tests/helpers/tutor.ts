@@ -48,17 +48,37 @@ export interface MessageRow {
   agentIsSystem?: boolean;
   role: 'user' | 'assistant' | 'tool';
   createdAt: Date;
+  /** A tool row's tool, and whether its result was a success (`metadata.result.success`). */
+  capabilitySlug?: string;
+  succeeded?: boolean;
 }
 
-interface MessageCountWhere {
+type RoleWhere = {
   role: string;
+  capabilitySlug?: string;
+  metadata?: { path: string[]; equals: unknown };
+};
+
+interface MessageCountWhere {
+  OR: RoleWhere[];
   createdAt: { gte: Date };
   conversation: { userId: string; agent: { slug: string; isSystem?: boolean } };
 }
 
+function matchesRole(m: MessageRow, w: RoleWhere): boolean {
+  if (m.role !== w.role) return false;
+  if (w.capabilitySlug !== undefined && m.capabilitySlug !== w.capabilitySlug) return false;
+  if (w.metadata) {
+    // The only metadata path the allowance reads.
+    if (w.metadata.path.join('.') !== 'result.success') return false;
+    if ((m.succeeded ?? false) !== w.metadata.equals) return false;
+  }
+  return true;
+}
+
 /**
  * An in-memory `prisma.aiMessage.count` that applies the allowance's filters the way the database would (owner, agent,
- * the agent's `isSystem` when asked, role and day), so a test that another person's turns, another agent's or
+ * the agent's `isSystem` when asked, role or tool and its outcome, and day), so a test that another person's turns, another agent's or
  * yesterday's are not counted fails if the filter goes.
  *
  * @see lib/app/tutor/allowance.ts
@@ -69,7 +89,7 @@ export function fakeMessageTable(rows: MessageRow[]) {
     count: async ({ where }: { where: MessageCountWhere }) =>
       rows.filter(
         (m) =>
-          m.role === where.role &&
+          where.OR.some((w) => matchesRole(m, w)) &&
           m.createdAt >= where.createdAt.gte &&
           m.userId === where.conversation.userId &&
           m.agentSlug === where.conversation.agent.slug &&
@@ -90,6 +110,23 @@ export function tutorTurns(
     userId,
     agentSlug,
     role: 'user' as const,
+    createdAt: new Date(from.getTime() + i * 60_000),
+  }));
+}
+
+/** `n` web searches the tutor ran for `userId`, as the tool rows `streamChat` saves; `succeeded: false` for refusals. */
+export function tutorSearches(
+  userId: string,
+  n: number,
+  from: Date,
+  { succeeded = true, slug = 'web_search' }: { succeeded?: boolean; slug?: string } = {}
+): MessageRow[] {
+  return Array.from({ length: n }, (_, i) => ({
+    userId,
+    agentSlug: 'synth-tutor',
+    role: 'tool' as const,
+    capabilitySlug: slug,
+    succeeded,
     createdAt: new Date(from.getTime() + i * 60_000),
   }));
 }

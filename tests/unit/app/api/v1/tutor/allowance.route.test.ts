@@ -31,7 +31,7 @@ vi.mock('@/lib/logging', () => ({ logger: mockLog }));
 
 import { GET } from '@/app/api/v1/tutor/allowance/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
-import { fakeMessageTable, tutorTurns } from '@/tests/helpers/tutor';
+import { fakeMessageTable, tutorSearches, tutorTurns } from '@/tests/helpers/tutor';
 
 const USER_ID = 'cmjbv4i3x00003wsloputgwul';
 const NOW = new Date('2026-10-18T15:30:00Z');
@@ -68,6 +68,18 @@ describe('GET /api/v1/tutor/allowance', () => {
       success: true,
       data: { limit: 30, used: 7, remaining: 23, resetsAt: '2026-10-19T00:00:00.000Z' },
     });
+  });
+
+  it("counts the tutor's web searches for the caller as turns (D12)", async () => {
+    mockPrisma.aiMessage = fakeMessageTable([
+      ...tutorTurns(USER_ID, 7, TODAY),
+      ...tutorSearches(USER_ID, 3, TODAY),
+      ...tutorSearches(USER_ID, 2, TODAY, { succeeded: false }),
+    ]);
+
+    const res = await get();
+
+    expect(await res.json()).toMatchObject({ data: { used: 10, remaining: 20 } });
   });
 
   it('refuses a caller with no session', async () => {
