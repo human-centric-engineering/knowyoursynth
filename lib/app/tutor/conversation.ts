@@ -10,6 +10,7 @@
  * still active. So the id this returns is one that route takes. The caller's own rows only (`userId` from the session),
  * which is why this file is declared to the ownerless-surface guard (`lib/app/ci.ts`).
  */
+import { z } from 'zod';
 import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { TUTOR_CONTEXT_TYPE } from '@/lib/app/tutor/context';
 import { prisma } from '@/lib/db/client';
@@ -32,6 +33,12 @@ export interface TutorTranscript {
 const isTranscriptRole = (role: string): role is TutorTranscriptMessage['role'] =>
   role === 'user' || role === 'assistant';
 
+/**
+ * The marker Sunrise saves in place of an answer that failed ("[An error occurred…]"), flagged in its metadata. Its own
+ * history read drops it, and so does this: the panel said what went wrong at the time, in the learner's words.
+ */
+const ErrorMarkerSchema = z.object({ error: z.literal(true) });
+
 /** The caller's latest active tutor conversation on `synthId`, with its last messages, or null when there is none. */
 export async function latestConversation(
   userId: string,
@@ -52,9 +59,10 @@ export async function latestConversation(
       id: true,
       messages: {
         where: { role: { in: ['user', 'assistant'] }, NOT: { content: '' } },
-        orderBy: { createdAt: 'desc' },
+        // `id` breaks a tie between rows saved in the same millisecond, as Sunrise's own history read does.
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: TRANSCRIPT_MESSAGES,
-        select: { role: true, content: true },
+        select: { role: true, content: true, metadata: true },
       },
     },
   });
@@ -62,7 +70,11 @@ export async function latestConversation(
   return {
     conversationId: conversation.id,
     messages: conversation.messages
-      .flatMap((m) => (isTranscriptRole(m.role) ? [{ role: m.role, content: m.content }] : []))
+      .flatMap((m) =>
+        isTranscriptRole(m.role) && !ErrorMarkerSchema.safeParse(m.metadata).success
+          ? [{ role: m.role, content: m.content }]
+          : []
+      )
       .reverse(),
   };
 }

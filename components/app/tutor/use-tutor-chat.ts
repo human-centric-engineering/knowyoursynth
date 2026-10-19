@@ -31,13 +31,12 @@ import {
   readDesign,
   readProposal,
   samePanel,
-  type PanelState,
   type Proposal,
   type TutorDesign,
 } from '@/components/app/tutor/apply';
 import { apiClient } from '@/lib/api/client';
 import type { SynthDef } from '@/lib/app/synths/contract';
-import { presetState } from '@/lib/app/synths/lib/patch';
+import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { logger } from '@/lib/logging';
 
 /** What the page lends the tutor: the panel as it is now, and the two ways the tutor may change it. */
@@ -77,6 +76,8 @@ export interface TutorMessage {
   /** `note` is the panel speaking: a conversation started again. */
   role: 'user' | 'assistant' | 'note';
   text: string;
+  /** The tutor is still answering: its proposal waits for the turn's last step before it can be applied. */
+  answering?: boolean;
   proposal?: ProposalChip;
   design?: DesignChip;
   error?: string;
@@ -177,12 +178,18 @@ export interface TutorChat {
   allowance: TutorAllowanceView | null;
   send: (text: string) => Promise<void>;
   stop: () => void;
-  /** Whether a proposal can go on the panel now: it is not on it, and the panel is still the one it was made for. */
+  /**
+   * Whether a proposal can go on the panel now: the turn has finished (a later step may replace it), it is not on the
+   * panel, and the panel is still the one it was made for.
+   */
   canApply: (m: TutorMessage) => boolean;
   apply: (m: TutorMessage) => void;
-  /** Whether the chip's Undo still means that change: the panel still shows it. */
-  canUndo: (m: TutorMessage) => boolean;
-  undo: (m: TutorMessage) => void;
+  /** Whether the proposal chip's Undo still means that change: the panel still shows it. */
+  canUndoProposal: (m: TutorMessage) => boolean;
+  undoProposal: (m: TutorMessage) => void;
+  /** Whether the design chip's Undo still means it: that design is open and the panel still shows it. */
+  canUndoDesign: (m: TutorMessage) => boolean;
+  undoDesign: (m: TutorMessage) => void;
 }
 
 /** For a signed-in learner only: the tutor is per person, so the panel does not run this without a session. */
@@ -276,6 +283,9 @@ export function useTutorChat(host: TutorHost): TutorChat {
         const design = readDesign(def, r.capabilitySlug, r.result);
         if (!design) continue;
         const undo = hostRef.current.openDesign(design);
+        // Another design on the panel: no earlier turn's Undo can mean anything now.
+        for (const id of [...undos.current.keys()])
+          if (id !== turn.assistantId) undos.current.delete(id);
         // One Undo goes back to before the turn's first design.
         if (!turn.undo) {
           turn.undo = undo;
@@ -368,6 +378,8 @@ export function useTutorChat(host: TutorHost): TutorChat {
               break;
             case 'done':
               ended = true;
+              // Stopped at the token cap: what arrived is a fragment (#594).
+              if (event.finishReason === 'length') fail(TUTOR_ERRORS.dropped);
               break;
             default:
               break;
@@ -391,7 +403,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
       setMessages((prev) => [
         ...prev,
         { id: newId(), role: 'user', text: message },
-        { id: turn.assistantId, role: 'assistant', text: '' },
+        { id: turn.assistantId, role: 'assistant', text: '', answering: true },
       ]);
       const controller = new AbortController();
       abort.current = controller;
@@ -419,6 +431,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
         }
       } finally {
         abort.current = null;
+        patch(turn.assistantId, (m) => ({ ...m, answering: false }));
         if (live.current) {
           setBusy(false);
           setStatus(null);
@@ -433,7 +446,10 @@ export function useTutorChat(host: TutorHost): TutorChat {
 
   const canApply = useCallback(
     (m: TutorMessage) =>
-      !!m.proposal && !m.proposal.applied && samePanel(host.panel, m.proposal.basis),
+      !m.answering &&
+      !!m.proposal &&
+      !m.proposal.applied &&
+      samePanel(host.panel, m.proposal.basis),
     [host.panel]
   );
 
@@ -441,7 +457,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
     (m: TutorMessage) => {
       const h = hostRef.current;
       const p = m.proposal;
-      if (!p || p.applied || !samePanel(h.panel, p.basis)) return;
+      if (m.answering || !p || p.applied || !samePanel(h.panel, p.basis)) return;
       // Checked when it arrived, and again against the synth as it is applied.
       const checked = checkProposal(h.def, p.change);
       if (!checked) return;
@@ -455,9 +471,23 @@ export function useTutorChat(host: TutorHost): TutorChat {
     [patch]
   );
 
-  const canUndo = useCallback(
+  const canUndoProposal = useCallback(
+    (m: TutorMessage) => !!m.proposal?.applied && samePanel(host.panel, m.proposal.applied.after),
+    [host.panel]
+  );
+
+  const undoProposal = useCallback(
     (m: TutorMessage) => {
-      if (m.proposal?.applied) return samePanel(host.panel, m.proposal.applied.after);
+      const applied = m.proposal?.applied;
+      if (!applied || !samePanel(hostRef.current.panel, applied.after)) return;
+      hostRef.current.setPanel(applied.before);
+      patch(m.id, (x) => (x.proposal ? { ...x, proposal: { ...x.proposal, applied: null } } : x));
+    },
+    [patch]
+  );
+
+  const canUndoDesign = useCallback(
+    (m: TutorMessage) => {
       const d = m.design;
       return (
         !!d &&
@@ -470,19 +500,14 @@ export function useTutorChat(host: TutorHost): TutorChat {
     [host.panel, host.designedId]
   );
 
-  const undo = useCallback(
+  const undoDesign = useCallback(
     (m: TutorMessage) => {
-      if (!canUndo(m)) return;
-      if (m.proposal?.applied) {
-        hostRef.current.setPanel(m.proposal.applied.before);
-        patch(m.id, (x) => (x.proposal ? { ...x, proposal: { ...x.proposal, applied: null } } : x));
-        return;
-      }
+      if (!canUndoDesign(m)) return;
       undos.current.get(m.id)?.();
       undos.current.delete(m.id);
       patch(m.id, (x) => (x.design ? { ...x, design: { ...x.design, undone: true } } : x));
     },
-    [canUndo, patch]
+    [canUndoDesign, patch]
   );
 
   return {
@@ -495,7 +520,9 @@ export function useTutorChat(host: TutorHost): TutorChat {
     stop,
     canApply,
     apply,
-    canUndo,
-    undo,
+    canUndoProposal,
+    undoProposal,
+    canUndoDesign,
+    undoDesign,
   };
 }

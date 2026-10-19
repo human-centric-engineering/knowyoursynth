@@ -14,13 +14,12 @@ import {
   readDesign,
   readProposal,
   samePanel,
-  type PanelState,
   type Proposal,
 } from '@/components/app/tutor/apply';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
 import type { CablePair, Control } from '@/lib/app/synths/contract';
-import { presetState } from '@/lib/app/synths/lib/patch';
+import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { darkBassDesign, manyCables, panelContext, synth } from '@/tests/helpers/tutor';
 
 const modelD = synth('model-d');

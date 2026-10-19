@@ -39,9 +39,11 @@ import { createMockAuthSession } from '@/tests/helpers/auth';
 const USER_ID = 'cmjbv4i3x00003wsloputgwul';
 
 interface Message {
+  id?: string;
   role: string;
   content: string;
   createdAt: Date;
+  metadata?: unknown;
 }
 interface Conversation {
   id: string;
@@ -82,7 +84,7 @@ interface FindFirstArgs {
   select: {
     messages: {
       where: { role: { in: string[] }; NOT: { content: string } };
-      orderBy: { createdAt: 'desc' };
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }];
       take: number;
     };
   };
@@ -107,13 +109,18 @@ function table(rows: Conversation[]) {
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
       if (!hit) return null;
       const m = select.messages;
+      expect(m.orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }]);
       return {
         id: hit.id,
         messages: hit.messages
           .filter((x) => m.where.role.in.includes(x.role) && x.content !== m.where.NOT.content)
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+          .sort(
+            (a, b) =>
+              b.createdAt.getTime() - a.createdAt.getTime() ||
+              (b.id ?? '').localeCompare(a.id ?? '')
+          )
           .slice(0, m.take)
-          .map(({ role, content }) => ({ role, content })),
+          .map(({ role, content, metadata }) => ({ role, content, metadata: metadata ?? null })),
       };
     },
   };
@@ -186,6 +193,43 @@ describe('GET /api/v1/tutor/conversation', () => {
     // the same table does answer for the synth one of them is on, so the nulls above are the filters'
     const other = await get('pro-1');
     expect((await other.json()).data.conversation.conversationId).toBe('other-synth');
+  });
+
+  it("leaves out Sunrise's marker for an answer that failed, and orders rows saved together by id", async () => {
+    mockPrisma.aiConversation = table([
+      conversation({
+        messages: [
+          { id: 'm1', role: 'user', content: 'Make it darker', createdAt: at(1) },
+          {
+            id: 'm2',
+            role: 'assistant',
+            content: '[An error occurred and the response could not be completed.]',
+            createdAt: at(2),
+            metadata: { error: true },
+          },
+          { id: 'm3', role: 'user', content: 'Try again?', createdAt: at(3) },
+          { id: 'm5', role: 'assistant', content: 'Second', createdAt: at(4) },
+          { id: 'm4', role: 'assistant', content: 'First', createdAt: at(4) },
+          {
+            id: 'm6',
+            role: 'assistant',
+            content: 'Kept',
+            createdAt: at(5),
+            metadata: { error: false },
+          },
+        ],
+      }),
+    ]);
+
+    const body = await (await get()).json();
+
+    expect(body.data.conversation.messages).toEqual([
+      { role: 'user', content: 'Make it darker' },
+      { role: 'user', content: 'Try again?' },
+      { role: 'assistant', content: 'First' },
+      { role: 'assistant', content: 'Second' },
+      { role: 'assistant', content: 'Kept' },
+    ]);
   });
 
   it(`returns the last ${TRANSCRIPT_MESSAGES} messages of a long conversation`, async () => {

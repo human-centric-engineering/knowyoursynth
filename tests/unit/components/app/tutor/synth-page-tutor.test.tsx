@@ -25,6 +25,7 @@ import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
 import { TUTOR_ERRORS } from '@/components/app/tutor/use-tutor-chat';
+import { MAX_TUTOR_MESSAGE_CHARS } from '@/lib/app/tutor/request';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
@@ -938,5 +939,113 @@ describe('the composer', () => {
     expect(await within(tutor()).findByText(TUTOR_ERRORS.stopped)).toBeTruthy();
     expect(within(tutor()).getByText('Turn the')).toBeTruthy();
     expect(within(tutor()).getByRole('button', { name: 'Ask' })).toBeTruthy();
+  });
+});
+
+// ── review round 1 ──────────────────────────────────────────────────────────
+
+describe('a turn still answering', () => {
+  it('holds Apply until the turn ends, so a later step can still replace the proposal', async () => {
+    const s = liveStream();
+    let sent: TurnBody | null = null;
+    fetchMock.mockImplementation(async (_url: string, init: { body: string }) => {
+      sent = JSON.parse(init.body) as TurnBody;
+      return okResponse(s.body);
+    });
+    page();
+    await ask();
+    await waitFor(() => expect(sent).not.toBeNull());
+    const body = sent!;
+
+    const first = await proposalFor(body, { set: { 'filter.cutoff': -3 } });
+    await act(async () =>
+      s.send(start, {
+        type: 'capability_result',
+        capabilitySlug: 'propose_panel_change',
+        result: first,
+      })
+    );
+    const held = await within(tutor()).findByRole('button', { name: 'Apply 1 change' });
+    expect(held).toBeDisabled();
+    // not called stale while it waits
+    expect(within(tutor()).queryByText(/The panel has changed since/)).toBeNull();
+    fireEvent.click(held);
+    expect(cutoff()).toBe('1');
+
+    const second = await proposalFor(body, { set: { 'filter.cutoff': -1 } });
+    await act(async () => {
+      s.send(
+        { type: 'capability_result', capabilitySlug: 'propose_panel_change', result: second },
+        done
+      );
+      s.close();
+    });
+    await waitFor(() =>
+      expect(within(tutor()).getByRole('button', { name: 'Apply 1 change' })).toBeEnabled()
+    );
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Apply 1 change' }));
+    expect(cutoff()).toBe('-1');
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Undo' }));
+    expect(cutoff()).toBe('1');
+  });
+
+  it("keeps a design's Undo its own when the same turn also proposed a change", async () => {
+    answer(async (body) => [
+      start,
+      {
+        type: 'capability_result',
+        capabilitySlug: 'propose_panel_change',
+        result: await proposalFor(body, { set: { 'filter.cutoff': -3 } }),
+      },
+      { type: 'capability_result', capabilitySlug: 'design_sound', result: await designFor(body) },
+      done,
+    ]);
+    page();
+    await ask('Design a dark round bass');
+    await waitFor(() => expect(loadedName()).toBe('Dark round bass'));
+
+    // the proposal was for the panel before the design opened
+    expect(await within(tutor()).findByText(/The panel has changed since/)).toBeTruthy();
+    const undo = within(tutor()).getByRole('button', { name: 'Undo' });
+    expect(undo).toBeEnabled();
+    fireEvent.click(undo);
+    expect(loadedName()).toBe('Open bass');
+    expect(cutoff()).toBe('1');
+    // back on the panel it was made for, so the proposal can go on now
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Apply 1 change' }));
+    expect(cutoff()).toBe('-3');
+  });
+
+  it('says when an answer stopped at the token cap', async () => {
+    answer(() => [
+      start,
+      { type: 'content', delta: 'Turn CUTOFF down and' },
+      { type: 'done', finishReason: 'length' },
+    ]);
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText(TUTOR_ERRORS.dropped)).toBeTruthy();
+    expect(within(tutor()).getByText('Turn CUTOFF down and')).toBeTruthy();
+  });
+});
+
+describe('asking the tutor from the library', () => {
+  it('keeps the category advice when a category is chosen, and fits the question to what the route takes', async () => {
+    page();
+    const tutorInput = within(tutor()).getByRole('textbox', { name: /Ask the tutor/ });
+    await waitFor(() => expect(tutorInput).toBeEnabled());
+    fireEvent.click(within(library()).getByRole('button', { name: 'bass' }));
+    fireEvent.change(within(library()).getByRole('searchbox'), {
+      target: { value: `lead ${'x'.repeat(5000)}` },
+    });
+
+    expect(within(library()).getByText(/pick another category/)).toBeTruthy();
+    fireEvent.click(within(library()).getByRole('button', { name: 'ask the tutor to design one' }));
+
+    expect((tutorInput as HTMLTextAreaElement).value).toHaveLength(MAX_TUTOR_MESSAGE_CHARS);
+    expect((tutorInput as HTMLTextAreaElement).value.startsWith('Design a sound: lead x')).toBe(
+      true
+    );
   });
 });

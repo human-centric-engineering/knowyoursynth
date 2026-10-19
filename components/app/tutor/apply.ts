@@ -27,24 +27,13 @@ import {
   displayName,
   formatValue,
   jackMap,
+  type PanelState,
 } from '@/lib/app/synths/lib/patch';
 import { CablePairSchema, checkCables, checkSettings } from '@/lib/app/synths/validate';
-import type {
-  CablePair,
-  ControlValues,
-  PatchCable,
-  Preset,
-  SynthDef,
-} from '@/lib/app/synths/contract';
+import type { CablePair, ControlValues, Preset, SynthDef } from '@/lib/app/synths/contract';
 
 export const PROPOSE_TOOL = 'propose_panel_change';
 export const DESIGN_TOOL = 'design_sound';
-
-/** The panel as the page holds it. */
-export interface PanelState {
-  values: ControlValues;
-  cables: PatchCable[];
-}
 
 /** A change to the panel: controls to set, cables to plug in and to take out. */
 export interface Proposal {

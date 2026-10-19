@@ -34,7 +34,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
+import { cablesToEngine, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
@@ -99,7 +99,7 @@ import {
 } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { Tour } from '@/components/app/synth/tour';
-import type { PanelState, TutorDesign } from '@/components/app/tutor/apply';
+import type { TutorDesign } from '@/components/app/tutor/apply';
 import { TutorPanel } from '@/components/app/tutor/tutor-panel';
 import { useMidi } from '@/components/app/synth/use-midi';
 import { withNotes } from '@/components/app/synth/with-notes';

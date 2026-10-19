@@ -14,12 +14,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 
-import {
-  proposalLabel,
-  proposalRows,
-  type PanelState,
-  type TutorDesign,
-} from '@/components/app/tutor/apply';
+import { proposalLabel, proposalRows, type TutorDesign } from '@/components/app/tutor/apply';
 import {
   useTutorChat,
   type TutorChat,
@@ -27,9 +22,9 @@ import {
 } from '@/components/app/tutor/use-tutor-chat';
 import { FieldHelp } from '@/components/ui/field-help';
 import type { SynthDef } from '@/lib/app/synths/contract';
+import type { PanelState } from '@/lib/app/synths/lib/patch';
+import { MAX_TUTOR_MESSAGE_CHARS } from '@/lib/app/tutor/request';
 
-/** As the stream route takes it (`MAX_TUTOR_MESSAGE_CHARS`). */
-const MAX_MESSAGE = 4000;
 /** The most rows a chip lists before "and n more". */
 const MAX_ROWS = 6;
 
@@ -99,7 +94,8 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   // against the day's allowance, so the learner sends it. The page has scrolled the panel into view.
   useEffect(() => {
     if (!ask?.text) return;
-    setDraft(ask.text);
+    // `maxLength` does not cut a value set from code, and the route refuses a longer question.
+    setDraft(ask.text.slice(0, MAX_TUTOR_MESSAGE_CHARS));
     input.current?.focus({ preventScroll: true });
   }, [ask]);
 
@@ -215,7 +211,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKey}
           rows={2}
-          maxLength={MAX_MESSAGE}
+          maxLength={MAX_TUTOR_MESSAGE_CHARS}
           disabled={closed}
           placeholder={chat.resuming ? 'Loading the conversation…' : 'Ask about this sound…'}
           className="min-w-0 resize-y rounded-md border border-(--kys-line) bg-(--kys-ground) px-3 py-2 text-sm text-(--kys-text) placeholder:text-(--kys-faint) disabled:opacity-60"
@@ -287,7 +283,9 @@ function ProposalChip({
   if (!p) return null;
   const rows = proposalRows(def, p.basis, p.change);
   const applied = !!p.applied;
-  const stale = !applied && !chat.canApply(m);
+  // A later step of the turn may still replace it, so it waits for the turn to finish.
+  const waiting = !!m.answering;
+  const stale = !applied && !waiting && !chat.canApply(m);
   return (
     <div className="mt-2 flex flex-col gap-1.5 rounded-md border border-(--kys-line) p-2">
       <ul className="font-mono text-[12px] text-(--kys-muted)">
@@ -309,7 +307,9 @@ function ProposalChip({
             <button
               type="button"
               onClick={() => chat.apply(m)}
-              className="rounded-md border border-(--kys-accent) px-2.5 py-1 text-[13px] font-semibold text-(--kys-accent) hover:bg-(--kys-accent) hover:text-(--kys-accent-ink)"
+              disabled={waiting}
+              title={waiting ? 'The tutor is still answering' : undefined}
+              className="rounded-md border border-(--kys-accent) px-2.5 py-1 text-[13px] font-semibold text-(--kys-accent) enabled:hover:bg-(--kys-accent) enabled:hover:text-(--kys-accent-ink) disabled:opacity-40"
             >
               {proposalLabel(p.change)}
             </button>
@@ -317,9 +317,13 @@ function ProposalChip({
           {applied && (
             <button
               type="button"
-              onClick={() => chat.undo(m)}
-              disabled={!chat.canUndo(m)}
-              title={chat.canUndo(m) ? undefined : 'The panel has moved on since this was applied'}
+              onClick={() => chat.undoProposal(m)}
+              disabled={!chat.canUndoProposal(m)}
+              title={
+                chat.canUndoProposal(m)
+                  ? undefined
+                  : 'The panel has moved on since this was applied'
+              }
               className={smallBtn}
             >
               Undo
@@ -344,9 +348,9 @@ function DesignChip({ message: m, chat }: { message: TutorMessage; chat: TutorCh
       {!d.undone && (
         <button
           type="button"
-          onClick={() => chat.undo(m)}
-          disabled={!chat.canUndo(m)}
-          title={chat.canUndo(m) ? undefined : 'The panel has moved on since it opened'}
+          onClick={() => chat.undoDesign(m)}
+          disabled={!chat.canUndoDesign(m)}
+          title={chat.canUndoDesign(m) ? undefined : 'The panel has moved on since it opened'}
           className={smallBtn}
         >
           Undo

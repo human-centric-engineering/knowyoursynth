@@ -166,7 +166,8 @@ export function Library({
           <li className="rounded-lg border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
             {onAskTutor && words.length ? (
               <>
-                No sounds match. Clear the search, or{' '}
+                No sounds match. Clear the search
+                {cat !== 'all' ? ', pick another category' : ''}, or{' '}
                 <button
                   type="button"
                   onClick={() => onAskTutor(q.trim())}

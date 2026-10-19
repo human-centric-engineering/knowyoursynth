@@ -137,7 +137,9 @@ resetsAt }` for the caller, for the panel's meter.
 
 **`GET /api/v1/tutor/conversation?synthId=`**, signed in (or a `chat`-scoped key): `{ conversation:
 { conversationId, messages } | null }`, the caller's latest active tutor conversation on that synth,
-with its last 40 questions and answers oldest first (tool calls and empty steps left out). Read as
+with its last 40 questions and answers oldest first. Tool calls, empty steps and the marker Sunrise
+saves for an answer that failed (`metadata.error`, which its own history read drops too) are left
+out, and rows saved in the same millisecond are ordered by id. Read as
 the stream route checks a conversation it carries on, so the id it returns is one that route takes.
 The app's own because Sunrise's consumer conversation routes serve only `public` and `invite_only`
 agents. Like the stream route, it is declared to the ownerless-surface guard.
@@ -365,9 +367,10 @@ above the number of synths.
   proposal of the turn, which would keep a control a correction meant to drop; and offering each as
   its own chip, where applying one makes the others stale.
 - **The chip** lists the change one line per control and cable, as the panel reads them
-  ("CUTOFF FREQUENCY: 1 · 1.3 kHz → −3 · 80 Hz"), and offers "Apply 3 changes + 1 cable". Apply is
-  offered only while the panel is still the one the turn sent. Otherwise the proposal is dropped and
-  the chip says the panel changed since, and to ask again.
+  ("CUTOFF FREQUENCY: 1 · 1.3 kHz → −3 · 80 Hz"), and offers "Apply 3 changes + 1 cable". Apply
+  waits for the turn to end, since a later step may still replace the proposal, and is then offered
+  only while the panel is still the one the turn sent. Otherwise the proposal is dropped and the chip
+  says the panel changed since, and to ask again.
 - **Apply** snapshots the panel, then sets the controls, takes the cables out and plugs the new ones
   in, as turning the controls would: the sound and the lesson step stay. **Undo** puts the snapshot
   back, and is enabled only while the panel still shows the change: BeatBuddy's chip rule. After
@@ -389,17 +392,17 @@ Every failure ends the turn with a line in the panel, and nothing else on the pa
 Sunrise's own copy is written for an admin ("Go to Admin → Providers"), so the panel words each one
 for the learner (`TUTOR_ERRORS`):
 
-| What happened                                                  | The line                                                                                   |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| A provider error, or any other `error` frame                   | The tutor could not answer just now. The synth and everything else on the page still work. |
-| A stream that closes with no `done`, or breaks                 | The tutor's answer was cut off. …                                                          |
-| 429 `RATE_LIMIT_EXCEEDED`                                      | Too many questions in a short time. Wait a moment, then ask again. (The prototype's.)      |
-| 429 `TUTOR_ALLOWANCE_SPENT`, 503 `TUTOR_UNAVAILABLE`, 413      | The route's own sentence, written for the learner                                          |
-| 400 (a panel the current definition refuses)                   | The tutor could not read the panel as it is. Reload the page, then ask again.              |
-| 401                                                            | Your session has ended. Sign in again to ask the tutor.                                    |
-| `output_blocked`, `input_blocked`                              | The tutor declined that one. Try asking it a different way. (The prototype's.)             |
-| `tool_loop_cap`, `budget_exceeded`, `budget_exceeded_per_turn` | Too many steps; the month's budget; an answer that cost more than a question is allowed    |
-| `conversation_cap_reached`                                     | The tutor can't start another conversation for your account. …                             |
+| What happened                                                                                     | The line                                                                                   |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| A provider error, or any other `error` frame                                                      | The tutor could not answer just now. The synth and everything else on the page still work. |
+| A stream that closes with no `done`, breaks, or stops at the token cap (`finishReason: 'length'`) | The tutor's answer was cut off. …                                                          |
+| 429 `RATE_LIMIT_EXCEEDED`                                                                         | Too many questions in a short time. Wait a moment, then ask again. (The prototype's.)      |
+| 429 `TUTOR_ALLOWANCE_SPENT`, 503 `TUTOR_UNAVAILABLE`, 413                                         | The route's own sentence, written for the learner                                          |
+| 400 (a panel the current definition refuses)                                                      | The tutor could not read the panel as it is. Reload the page, then ask again.              |
+| 401                                                                                               | Your session has ended. Sign in again to ask the tutor.                                    |
+| `output_blocked`, `input_blocked`                                                                 | The tutor declined that one. Try asking it a different way. (The prototype's.)             |
+| `tool_loop_cap`, `budget_exceeded`, `budget_exceeded_per_turn`                                    | Too many steps; the month's budget; an answer that cost more than a question is allowed    |
+| `conversation_cap_reached`                                                                        | The tutor can't start another conversation for your account. …                             |
 
 None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
 stream.
