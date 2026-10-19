@@ -62,13 +62,17 @@ export function loadCatalogueData(dir = CATALOGUE_DATA_DIR): CatalogueSeedData {
 }
 
 /**
- * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's folder is left out: it is
- * another unit's data (`bank-data.ts`), and hashing it here would re-run the catalogue for a databank edit.
+ * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's folder and the tutor's eval set
+ * are left out: they are other units' data (`bank-data.ts`, `004-tutor-evals.ts`), and hashing them here would re-run
+ * the catalogue for their edits.
  */
 export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
   const walk = (folder: string): string[] =>
     readdirSync(folder, { withFileTypes: true })
-      .filter((e) => !(folder === dir && e.isDirectory() && e.name === 'bank'))
+      .filter(
+        (e) =>
+          !(folder === dir && (e.isDirectory() ? e.name === 'bank' : e.name === 'tutor-evals.json'))
+      )
       .flatMap((e) => (e.isDirectory() ? walk(join(folder, e.name)) : [join(folder, e.name)]))
       .filter((f) => f.endsWith('.json'));
   return walk(dir)
