@@ -159,8 +159,9 @@ provider. `GET /api/v1/bank/search?q=&kind=&limit=` serves it publicly (`q` 1–
   It was planned as Postgres `ts_rank_cd`. Scoring here gives true BM25, needs no raw SQL (which
   `lib/app` may only use from the allowlist), and is tested over the committed data.
 - **What it misses**: a question that names nothing in the databank ("who pioneered modular
-  synthesis?"). That is the meaning-based layer's job (t-58), which the tutor's tool merges in; the
-  public route stays lexical, so it costs nothing per query.
+  synthesis?"). That is the meaning-based layer's job (t-58, `lib/app/bank/knowledge.ts`), which
+  the tutor's tool merges in ([`tutor.md`](./tutor.md#the-meaning-based-layer)); the public route
+  stays lexical, so it costs nothing per query.
 
 ## The pages
 

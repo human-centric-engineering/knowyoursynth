@@ -52,6 +52,7 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:embeddings": "tsx scripts/seed-embeddings.ts",
+    "bank:reindex": "tsx --env-file=.env.local scripts/app/bank-reindex.ts",
     "embeddings:reset": "tsx scripts/embeddings-reset.ts",
     "db:migrate:single-doc": "tsx --env-file=.env.local scripts/migrate-knowledge-to-single-doc.ts",
     "db:reset": "prisma migrate reset --force",

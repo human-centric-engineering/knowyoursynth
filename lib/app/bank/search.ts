@@ -14,7 +14,8 @@
  * no raw SQL, and keeps the ranking testable over the committed data. When the bank grows past where one read per
  * search is cheap, index it in a table instead.
  *
- * The meaning-based layer (t-58) is merged in by the tutor's tool, not here: this file never calls a model.
+ * The meaning-based layer (t-58, `lib/app/bank/knowledge.ts`) projects these same documents into the knowledge base, and
+ * the tutor's tool merges its results in: this file never calls a model.
  *
  * Tenancy posture: shared by decision. The one cached index is the databank's, which is global config
  * (`GLOBAL_CONFIG_MODELS`) and the same for every org; it would be wrong only if the bank became per-org.
@@ -118,11 +119,14 @@ function fold(t: string): string {
   return t;
 }
 
-interface Doc {
+/** One row of the bank as the search sees it. */
+export interface BankDoc {
   ref: BankRef;
   about: string;
   /** The text an excerpt is cut from. */
   prose: string;
+  /** All of the row's own text, as one string: what its text field is tokenised from. */
+  body: string;
   related: BankRef[];
   fields: Record<Field, string[]>;
   /** The name's every word, stop words kept, for the whole-name bonus. */
@@ -152,8 +156,8 @@ const songRefs = (songs: { id: string; title: string }[]): BankRef[] =>
   songs.map((s) => ({ kind: 'songs', id: s.id, name: s.title }));
 
 /** Every row of the bank as a document of three fields, with what a result shows of it. */
-function documents(bank: Bank): Doc[] {
-  const docs: Doc[] = [];
+function documents(bank: Bank): BankDoc[] {
+  const docs: BankDoc[] = [];
   const add = (
     ref: BankRef,
     about: string,
@@ -166,6 +170,7 @@ function documents(bank: Bank): Doc[] {
       ref,
       about,
       prose,
+      body: text,
       related: linked,
       fields: {
         name: tokens(ref.name),
@@ -248,9 +253,10 @@ function documents(bank: Bank): Doc[] {
 }
 
 /** The last bank's documents, by its content hash. */
-let built: { key: string; docs: Doc[] } | null = null;
+let built: { key: string; docs: BankDoc[] } | null = null;
 
-function documentsOf(bank: Bank): Doc[] {
+/** Every row of `bank` as a document, built once per content hash. */
+export function documentsOf(bank: Bank): BankDoc[] {
   const key = computeETag(bank);
   if (built?.key !== key) built = { key, docs: documents(bank) };
   return built.docs;
@@ -330,15 +336,19 @@ export function searchBankIn(
     .sort((a, b) => b.score - a.score || a.d.ref.name.localeCompare(b.d.ref.name))
     .slice(0, limit);
 
-  const querySet = new Set(unique);
-  return scored.map(({ d, score }) => ({
+  return scored.map(({ d, score }) => hitOf(d, query, score));
+}
+
+/** A row as a result: what the search returns, and what the tutor's tool returns for a row found by meaning. */
+export function hitOf(d: BankDoc, query: string, score: number): BankSearchHit {
+  return {
     ...d.ref,
     href: bankHref(d.ref.kind, d.ref.id),
     about: d.about,
-    excerpt: excerptOf(d.prose, querySet),
+    excerpt: excerptOf(d.prose, new Set(tokens(query))),
     related: d.related.slice(0, MAX_RELATED),
     score: Math.round(score * 100) / 100,
-  }));
+  };
 }
 
 /** Search the databank as it stands now. */

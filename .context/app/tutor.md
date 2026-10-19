@@ -67,6 +67,7 @@ grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its 
 | The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                          |
 | The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank}.ts`, listed in `tools.ts` |
 | The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                            |
+| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)     |
 | The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                  |
 | The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                 |
 | Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                           |
@@ -210,13 +211,13 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 
 ## The tools
 
-| Tool                   | Arguments                                                         | Returns                                                                                                                  | Refuses with                                                 |
-| ---------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables, at most 100; the version | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel`  |
-| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                | the above, `unknown_section`, `unknown_prefix`               |
-| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                   | the above, `empty_proposal`, `invalid_proposal`, `no_change` |
-| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                         | the above, `invalid_design`                                  |
-| `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt and its links; a `note` when none match | a bad argument only (it reads no panel)                      |
+| Tool                   | Arguments                                                         | Returns                                                                                                                                         | Refuses with                                                 |
+| ---------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `get_panel`            | none                                                              | the controls that differ from init (id, label, value, value as shown), at most 100; the cables, at most 100; the version                        | `no_panel`, `unknown_synth`, `stale_panel`, `invalid_panel`  |
+| `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                                       | the above, `unknown_section`, `unknown_prefix`               |
+| `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                                          | the above, `empty_proposal`, `invalid_proposal`, `no_change` |
+| `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                                                | the above, `invalid_design`                                  |
+| `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt, its links and `matchedBy`; `search`; a `note` when none match | a bad argument only (it reads no panel)                      |
 
 - **`propose_panel_change`** runs `checkSettings` on `set` and `checkCables` on `addCables`, then
   checks against the panel: a cable to remove must be in, a cable to add must not be (nor listed
@@ -240,6 +241,8 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   record or real instrument, keep to what it found, and say when it is going from memory. Six rows
   keep a search small in a tool loop that sends every result again on each later step. With no
   match it says so in `note`, so the model does not read an empty list as licence to guess.
+  When the meaning-based layer is on (below), its results are merged in: see
+  [The meaning-based layer](#the-meaning-based-layer).
 - Every tool's JSON schema says `additionalProperties: false`, as its Zod schema refuses any other
   key, so the model is told rather than refused.
 - A refusal lists up to twelve problems, each with its path (`steps.1.set.filter.drive`), then
@@ -248,6 +251,52 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   tutor serves every learner, so any limit there would be a cap for the whole app. The rows leave
   it `null` (unlimited); the tools are pure computation, and a learner's limit is the stream
   route's daily allowance.
+
+## The meaning-based layer
+
+`search_databank`'s second layer (`f-tutor-knowledge` t-58, `lib/app/bank/knowledge.ts`) finds
+rows by what a question means, for one that names nothing in the databank ("who pioneered
+modular synthesis?", "which bands used string machines?"). It sits on top of the lexical search
+and never replaces it.
+
+- **The projection.** Each bank row is one document in the install org's default knowledge base,
+  tagged `kys-databank`, named `Databank: <name>` with the file name
+  `kys-databank-<kind>-<id>.md`. It holds the row's name, the line that places it, its own text,
+  and the names of the rows it links to, so a rename also re-projects every row that names it.
+  It is written only through Sunrise's document manager (upload and delete).
+- **The reconcile** is a pure code projection. A row is written only when its text's hash differs
+  from its document's `fileHash`; only tagged documents are removed; a bank that reads empty
+  deletes nothing and logs a warning. A failed upload keeps the old document (except under
+  `--force`, which deletes it first), and the run counts it in `failed`.
+- **An admin's edit to one of these documents on the Knowledge page is overwritten**, when its row
+  next changes, or at once by `npm run bank:reindex -- --force`. Edit the databank, not the
+  document.
+- **When it runs**: on the maintenance tick, every 15 minutes (`app:project-databank` in
+  `lib/app/jobs.ts`, the install org only), and from `npm run bank:reindex`. Never on an admin's
+  save, which would then wait on an embedding call per row. With no usable embedding provider
+  (`resolveEmbeddingAvailability()`) it skips and logs.
+- **The merge.** The tool runs both layers at once, twelve candidates each: the lexical search,
+  and Sunrise's vector search (`searchKnowledgeWithEmbedding`) restricted to the tagged
+  documents' ids. It fuses them by reciprocal rank (`1 / (60 + rank)` summed over the layers that
+  found a row), one entry per row, so a row both found comes first; ties keep the lexical order.
+  Each result says `matchedBy` (`lexical`, `meaning`, or both), and the result says `search`:
+  `lexical+meaning`, or `lexical` when the layer is not set up, its provider is gone, or the
+  search failed (a stored vector of another dimension is refused before the query is embedded).
+  It does not turn on Sunrise's global hybrid switch, which would change the Pattern Advisor's
+  search too; if an admin turns it on, the vector search here follows it.
+- **The public `GET /api/v1/bank/search` stays lexical**, so it costs nothing per query.
+
+**Turning it on:**
+
+1. Add an OpenAI provider (Admin → Orchestration → Providers) with `OPENAI_API_KEY` in the
+   environment. Anthropic has no embedding model.
+2. Choose its embedding model as the active embedding model (orchestration settings). Changing it
+   later means `npm run embeddings:reset`, which empties the knowledge base, then step 3 again.
+3. Run `npm run bank:reindex`, or wait for the next tick. The first run makes one embedding call
+   per row, about 1,420; later runs write only rows that changed. It exits non-zero if any row
+   failed.
+
+The run with real embeddings is the owner's end-of-feature check (the feature's done-when).
 
 ## The lookup decision
 
@@ -431,7 +480,6 @@ stream.
   other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
   panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
   would mean reading them back from the conversation's tool messages.
-- **The rest of the grounding** is `f-tutor-knowledge`: the meaning-based databank layer (t-58),
-  web search (t-59), sources shown under each answer and the full sourcing rules (t-60), and the
+- **The rest of the grounding** is `f-tutor-knowledge`: web search (t-59), sources shown under each answer and the full sourcing rules (t-60), and the
   eval set (t-61). Until t-60 the panel shows the answer's text only; the tutor's links are in what
   it writes.

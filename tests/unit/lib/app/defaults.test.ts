@@ -489,9 +489,13 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     assert: () => {
       __resetAppJobsForTests();
       // getAppJobs() triggers the lazy init, so this exercises the REAL seam.
-      // FORK (Know Your Synth): pinned to the held-username prune (`f-profiles` r1) rather than deleted, so a stray
-      // second job still fails. Ledger: .context/app/divergences.md.
-      expect(getAppJobs().map((j) => j.name)).toEqual(['app:prune-held-usernames']);
+      // FORK (Know Your Synth): pinned to the held-username prune (`f-profiles` r1) and the databank's projection
+      // (`f-tutor-knowledge` t-58) rather than deleted, so a stray third job still fails. Ledger:
+      // .context/app/divergences.md.
+      expect(getAppJobs().map((j) => j.name)).toEqual([
+        'app:prune-held-usernames',
+        'app:project-databank',
+      ]);
     },
   },
   {
