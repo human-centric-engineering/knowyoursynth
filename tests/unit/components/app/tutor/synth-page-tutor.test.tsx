@@ -24,6 +24,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
+import { TUTOR_ERRORS } from '@/components/app/tutor/use-tutor-chat';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
@@ -169,6 +170,8 @@ function liveStream() {
   return {
     body,
     send: (...events: Event[]) => events.forEach((e) => ctl?.enqueue(enc.encode(frame(e)))),
+    /** Bytes as they are, for what `sseResponse` sends that is not an event (a keepalive). */
+    raw: (text: string) => ctl?.enqueue(enc.encode(text)),
     close: () => ctl?.close(),
     fail: () => ctl?.error(new TypeError('network error')),
   };
@@ -721,5 +724,219 @@ describe("the library's empty search", () => {
 
     expect(tutorInput).toHaveValue('Design a sound: glassy bell');
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+// ── what the learner is told ────────────────────────────────────────────────
+
+describe('what a failed turn tells the learner', () => {
+  // Sunrise's own messages are written for an admin; none of them reaches the learner.
+  const streamed: [string, Event, string][] = [
+    [
+      'an answer the content policy blocked',
+      {
+        type: 'error',
+        code: 'output_blocked',
+        message: 'Response blocked by content policy. Please rephrase your question.',
+      },
+      TUTOR_ERRORS.refused,
+    ],
+    [
+      'a turn out of tool steps',
+      { type: 'error', code: 'tool_loop_cap', message: 'Exceeded maximum tool iterations (5)' },
+      TUTOR_ERRORS.steps,
+    ],
+    [
+      "the tutor's monthly budget spent",
+      {
+        type: 'error',
+        code: 'budget_exceeded',
+        message:
+          'This agent has reached its monthly budget of $50.00. Contact an admin to increase the limit or switch to a local model.',
+      },
+      TUTOR_ERRORS.budget,
+    ],
+    [
+      'no more conversations for this account',
+      {
+        type: 'error',
+        code: 'conversation_cap_reached',
+        message: 'You have reached the maximum number of conversations (10) for this agent.',
+      },
+      TUTOR_ERRORS.conversations,
+    ],
+    [
+      'an answer over the per-turn cost cap',
+      {
+        type: 'budget_exceeded_per_turn',
+        code: 'budget_exceeded_per_turn',
+        message:
+          "This response cost $0.2500, which exceeded the agent's per-turn cost limit of $0.2000. Ask an admin to raise the cap or pick a cheaper model.",
+        usedUsd: 0.25,
+        limitUsd: 0.2,
+      },
+      TUTOR_ERRORS.turnCost,
+    ],
+  ];
+
+  it.each(streamed)('%s', async (_, event, line) => {
+    answer(() => [start, event]);
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText(line)).toBeTruthy();
+    expect(within(tutor()).queryByText(String(event.message))).toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  const refused: [string, number, { code: string; message: string }, string][] = [
+    [
+      'a session that has ended',
+      401,
+      { code: 'UNAUTHORIZED', message: 'Authentication required' },
+      TUTOR_ERRORS.signedOut,
+    ],
+    [
+      'a panel the synth refuses',
+      400,
+      { code: 'VALIDATION_ERROR', message: 'Invalid request body' },
+      TUTOR_ERRORS.badPanel,
+    ],
+    [
+      'the tutor switched off, in the route’s own words',
+      503,
+      {
+        code: 'TUTOR_UNAVAILABLE',
+        message:
+          "The tutor isn't available right now. The synth and everything else on the page still work.",
+      },
+      "The tutor isn't available right now. The synth and everything else on the page still work.",
+    ],
+    [
+      'anything else',
+      500,
+      { code: 'INTERNAL_ERROR', message: 'Database connection refused' },
+      TUTOR_ERRORS.generic,
+    ],
+  ];
+
+  it.each(refused)('%s', async (_, status, error, line) => {
+    fetchMock.mockResolvedValue(refusal(status, error));
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText(line)).toBeTruthy();
+    if (line !== error.message) expect(within(tutor()).queryByText(error.message)).toBeNull();
+  });
+});
+
+describe('the conversation', () => {
+  it('starts a new one, once, when the one it carried on is full, and carries that one on', async () => {
+    serve({ conversation: { conversationId: CONVERSATION_ID, messages: [] } });
+    const FRESH = 'cmconv0000000000000000002';
+    let turns = 0;
+    answer(() =>
+      turns++ === 0
+        ? [
+            {
+              type: 'error',
+              code: 'conversation_length_cap_reached',
+              message:
+                'This conversation has reached the maximum length (50 messages). Please start a new conversation.',
+            },
+          ]
+        : [{ ...start, conversationId: FRESH }, { type: 'content', delta: 'A fresh start.' }, done]
+    );
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText('A fresh start.')).toBeTruthy();
+    expect(within(tutor()).queryByRole('alert')).toBeNull();
+    expect(within(tutor()).getByText(/starts a new one/)).toBeTruthy();
+    const [first, second] = sentBodies();
+    expect(first.conversationId).toBe(CONVERSATION_ID);
+    expect(second).not.toHaveProperty('conversationId');
+
+    await ask('And then?');
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(3));
+    expect(sentBodies()[2].conversationId).toBe(FRESH);
+  });
+
+  it('opens the composer when the conversation cannot be read, and the first question starts one', async () => {
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/tutor/allowance') return ALLOWANCE;
+      if (path === '/api/v1/tutor/conversation') throw new Error('offline');
+      return [];
+    });
+    answer(() => [start, done]);
+    page();
+    await ask();
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(sentBodies()[0]).not.toHaveProperty('conversationId');
+  });
+});
+
+describe('the composer', () => {
+  it('starts from a suggested question, and Enter sends it', async () => {
+    answer(() => [start, done]);
+    page();
+    const input = within(tutor()).getByRole('textbox', { name: /Ask the tutor/ });
+    await waitFor(() => expect(input).toBeEnabled());
+
+    fireEvent.click(
+      within(tutor()).getByRole('button', { name: 'How do I make it darker and rounder?' })
+    );
+    expect(input).toHaveValue('How do I make it darker and rounder?');
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: 'Enter', shiftKey: true });
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(sentBodies()[0].message).toBe('How do I make it darker and rounder?');
+  });
+
+  it('shows what the tutor is doing while it works, and starts the answer again when told to', async () => {
+    const s = liveStream();
+    fetchMock.mockResolvedValue(okResponse(s.body));
+    page();
+    await ask();
+
+    await act(async () => s.send(start, { type: 'status', message: 'Looking up the filter…' }));
+    expect(await within(tutor()).findByText('Looking up the filter…')).toBeTruthy();
+    await act(async () => {
+      s.raw(': keepalive\n\n');
+      s.send(
+        { type: 'content', delta: 'First try' },
+        { type: 'content_reset' },
+        { type: 'content', delta: 'Second try' },
+        done
+      );
+      s.close();
+    });
+
+    expect(await within(tutor()).findByText('Second try')).toBeTruthy();
+    expect(within(tutor()).queryByText(/First try/)).toBeNull();
+    expect(within(tutor()).queryByText('Looking up the filter…')).toBeNull();
+    expect(within(tutor()).queryByRole('alert')).toBeNull();
+  });
+
+  it('stops a turn on Stop, and says so', async () => {
+    const s = liveStream();
+    fetchMock.mockImplementation(async (_url: string, init: { signal: AbortSignal }) => {
+      // as a real response body does, the stream breaks when its request is aborted
+      init.signal.addEventListener('abort', () => s.fail());
+      return okResponse(s.body);
+    });
+    page();
+    await ask();
+    await act(async () => s.send(start, { type: 'content', delta: 'Turn the' }));
+
+    fireEvent.click(await within(tutor()).findByRole('button', { name: 'Stop' }));
+
+    expect(await within(tutor()).findByText(TUTOR_ERRORS.stopped)).toBeTruthy();
+    expect(within(tutor()).getByText('Turn the')).toBeTruthy();
+    expect(within(tutor()).getByRole('button', { name: 'Ask' })).toBeTruthy();
   });
 });

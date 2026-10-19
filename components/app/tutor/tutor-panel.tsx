@@ -88,7 +88,7 @@ export function TutorPanel(props: TutorPanelProps) {
 }
 
 function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: TutorPanelProps) {
-  const chat = useTutorChat({ def, panel, designedId, setPanel, openDesign }, true);
+  const chat = useTutorChat({ def, panel, designedId, setPanel, openDesign });
   const [draft, setDraft] = useState('');
   const input = useRef<HTMLTextAreaElement>(null);
   const log = useRef<HTMLDivElement>(null);

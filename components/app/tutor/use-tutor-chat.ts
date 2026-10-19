@@ -185,10 +185,8 @@ export interface TutorChat {
   undo: (m: TutorMessage) => void;
 }
 
-/**
- * @param enabled Signed in: the tutor is per person, so nothing is read or sent without a session.
- */
-export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
+/** For a signed-in learner only: the tutor is per person, so the panel does not run this without a session. */
+export function useTutorChat(host: TutorHost): TutorChat {
   // The stream outlives renders: it reads the page through a ref, so every frame sees the panel as it is now.
   const hostRef = useRef(host);
   useEffect(() => {
@@ -197,7 +195,7 @@ export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
   const synthId = host.def.id;
 
   const [messages, setMessages] = useState<TutorMessage[]>([]);
-  const [resuming, setResuming] = useState(enabled);
+  const [resuming, setResuming] = useState(true);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [allowance, setAllowance] = useState<TutorAllowanceView | null>(null);
@@ -230,12 +228,8 @@ export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
 
   // On opening: the day's allowance, and the conversation to carry on.
   useEffect(() => {
-    if (!enabled) {
-      setResuming(false);
-      return;
-    }
     let current = true;
-    // Another synth, or another person: another conversation.
+    // Another synth: another conversation.
     conversationId.current = undefined;
     undos.current.clear();
     setMessages([]);
@@ -261,7 +255,7 @@ export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
     return () => {
       current = false;
     };
-  }, [enabled, synthId, refreshAllowance]);
+  }, [synthId, refreshAllowance]);
 
   /** A frame's tool results: the step's proposals combine and replace the turn's; each design opens. */
   const takeResults = useCallback(
@@ -389,7 +383,7 @@ export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
   const send = useCallback(
     async (text: string) => {
       const message = text.trim();
-      if (!message || busy || resuming || !enabled) return;
+      if (!message || busy || resuming) return;
       const host = hostRef.current;
       const turn: Turn = { assistantId: newId(), basis: host.panel, undo: null };
       setBusy(true);
@@ -432,7 +426,7 @@ export function useTutorChat(host: TutorHost, enabled: boolean): TutorChat {
         void refreshAllowance();
       }
     },
-    [busy, resuming, enabled, request, patch, refreshAllowance]
+    [busy, resuming, request, patch, refreshAllowance]
   );
 
   const stop = useCallback(() => abort.current?.abort(), []);
