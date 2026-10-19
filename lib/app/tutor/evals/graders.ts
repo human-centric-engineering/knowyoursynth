@@ -121,8 +121,9 @@ export function gradeWebLinks(input: GraderInput): GraderResult {
  * The instructions' wording is "say briefly that it is outside what you do". These are the ways a model words that;
  * a decline in other words fails, and the reasoning quotes the answer so a run shows which.
  */
+// ['’]: a model writes either apostrophe.
 const DECLINE =
-  /outside (?:of )?(?:what I (?:do|cover|can help with)|my (?:area|remit|scope))|(?:not|n't) something I (?:can )?(?:help|answer|cover)|I (?:can|could) only (?:help|answer|talk)|I(?:'m| am) (?:here|only able) to help with (?:music|sound|synth)/i;
+  /outside (?:of )?(?:what I (?:do|cover|can help with)|my (?:area|remit|scope))|(?:not|n['’]t) something I (?:can )?(?:help|answer|cover)|I (?:can|could) only (?:help|answer|talk)|I(?:['’]m| am) (?:here|only able) to help with (?:music|sound|synth)/i;
 /** "Briefly": a decline with an answer to the question after it is not a decline. */
 export const DECLINE_MAX_CHARS = 500;
 
