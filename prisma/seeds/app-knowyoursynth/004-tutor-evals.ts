@@ -38,27 +38,33 @@ const FileSchema = z
   })
   .strict();
 
+/** A case as Sunrise stores it: every one of ours has an expectation and a category. */
+export type TutorEvalCase = Required<Pick<ParsedDatasetCase, 'expectedOutput' | 'metadata'>> & {
+  input: string;
+};
+
 export interface TutorEvalSet {
   name: string;
   description: string;
-  cases: ParsedDatasetCase[];
+  cases: TutorEvalCase[];
 }
 
 /** The file as Sunrise's dataset cases, each passed through `datasetCaseSchema`. Throws on a case either refuses. */
 export function loadTutorEvals(file = TUTOR_EVALS_FILE): TutorEvalSet {
   const data = FileSchema.parse(JSON.parse(readFileSync(file, 'utf8')));
-  const cases = data.cases.map((c, i) => {
-    const parsed = datasetCaseSchema.safeParse({
+  const cases = data.cases.map((c, i): TutorEvalCase => {
+    const row = {
       input: c.input,
       expectedOutput: JSON.stringify(c.expect),
       metadata: { category: c.expect.kind },
-    });
+    };
+    const parsed = datasetCaseSchema.safeParse(row);
     if (!parsed.success) {
       throw new Error(
         `tutor-evals.json case ${i}: ${parsed.error.issues.map((x) => x.message).join('; ')}`
       );
     }
-    return parsed.data;
+    return row;
   });
   return { name: data.name, description: data.description, cases };
 }
@@ -99,10 +105,9 @@ const unit: SeedUnit = {
       });
       for (const [position, c] of set.cases.entries()) {
         const row = {
-          input: c.input as Prisma.InputJsonValue,
-          expectedOutput: c.expectedOutput ?? null,
-          metadata:
-            c.metadata !== undefined ? (c.metadata as Prisma.InputJsonValue) : Prisma.DbNull,
+          input: c.input,
+          expectedOutput: c.expectedOutput,
+          metadata: c.metadata as Prisma.InputJsonValue,
           referenceCitations: Prisma.DbNull,
         };
         await tx.aiDatasetCase.upsert({

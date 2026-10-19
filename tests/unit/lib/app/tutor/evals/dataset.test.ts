@@ -7,6 +7,9 @@
  * meaning-based layer can find it. The seed runs against a small stateful fake, so a second run is shown to write
  * nothing.
  */
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, it, expect, vi } from 'vitest';
 import { bankHref } from '@/components/app/bank/routes';
 import { documentsOf, searchBankIn } from '@/lib/app/bank/search';
@@ -172,5 +175,44 @@ describe('004-tutor-evals', () => {
     expect(stored.size).toBe(set.cases.length);
     expect(stored.get(0)?.input).toBe(set.cases[0]?.input);
     expect(datasets.get(TUTOR_EVALS_DATASET_ID)?.contentHash).toBe(hashParsedCases(set.cases));
+  });
+
+  it('rewrites a dataset an admin renamed, though its cases are unchanged', async () => {
+    const { ctx, datasets, writes } = fakeDb();
+    await seed.run(ctx);
+    datasets.set(TUTOR_EVALS_DATASET_ID, {
+      ...datasets.get(TUTOR_EVALS_DATASET_ID),
+      name: 'Renamed by an admin',
+    });
+    writes.length = 0;
+    await seed.run(ctx);
+    expect(writes).toContain('dataset');
+    expect(datasets.get(TUTOR_EVALS_DATASET_ID)?.name).toBe(set.name);
+  });
+});
+
+describe('loadTutorEvals', () => {
+  const fileWith = (data: unknown) => {
+    const file = join(mkdtempSync(join(tmpdir(), 'tutor-evals-')), 'tutor-evals.json');
+    writeFileSync(file, JSON.stringify(data));
+    return file;
+  };
+
+  it('refuses a case Sunrise’s case schema would refuse, naming it', () => {
+    const file = fileWith({
+      name: 'n',
+      description: 'd',
+      cases: [{ input: 'x'.repeat(50_001), expect: { kind: 'general' } }],
+    });
+    expect(() => loadTutorEvals(file)).toThrow(/case 0/);
+  });
+
+  it('refuses an expectation the graders could not read', () => {
+    const file = fileWith({
+      name: 'n',
+      description: 'd',
+      cases: [{ input: 'q', expect: { kind: 'databank', rows: ['not a page'] } }],
+    });
+    expect(() => loadTutorEvals(file)).toThrow();
   });
 });
