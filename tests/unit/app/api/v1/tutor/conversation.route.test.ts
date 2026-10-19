@@ -83,7 +83,10 @@ interface FindFirstArgs {
   orderBy: { createdAt: 'desc' };
   select: {
     messages: {
-      where: { role: { in: string[] }; NOT: { content: string } };
+      where: {
+        role: { in: string[] };
+        OR: [{ NOT: { content: string } }, { metadata: { path: [string]; equals: string } }];
+      };
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }];
       take: number;
     };
@@ -113,7 +116,15 @@ function table(rows: Conversation[]) {
       return {
         id: hit.id,
         messages: hit.messages
-          .filter((x) => m.where.role.in.includes(x.role) && x.content !== m.where.NOT.content)
+          .filter((x) => {
+            const [notEmpty, ended] = m.where.OR;
+            const meta = (x.metadata ?? {}) as Record<string, unknown>;
+            return (
+              m.where.role.in.includes(x.role) &&
+              (x.content !== notEmpty.NOT.content ||
+                meta[ended.metadata.path[0]] === ended.metadata.equals)
+            );
+          })
           .sort(
             (a, b) =>
               b.createdAt.getTime() - a.createdAt.getTime() ||
@@ -195,26 +206,53 @@ describe('GET /api/v1/tutor/conversation', () => {
     expect((await other.json()).data.conversation.conversationId).toBe('other-synth');
   });
 
-  it("returns an answer that failed as failed, without Sunrise's marker text, and orders rows saved together by id", async () => {
+  it("says how an answer that did not finish ended, without Sunrise's marker text, and orders rows saved together by id", async () => {
+    const MARKER = '[An error occurred and the response could not be completed.]';
     mockPrisma.aiConversation = table([
       conversation({
         messages: [
-          { id: 'm1', role: 'user', content: 'Make it darker', createdAt: at(1) },
+          { id: 'm01', role: 'user', content: 'Make it darker', createdAt: at(1) },
           {
-            id: 'm2',
+            id: 'm02',
             role: 'assistant',
-            content: '[An error occurred and the response could not be completed.]',
+            content: MARKER,
             createdAt: at(2),
-            metadata: { error: true },
+            metadata: { error: true, errorCode: 'http_500' },
           },
-          { id: 'm3', role: 'user', content: 'Try again?', createdAt: at(3) },
-          { id: 'm5', role: 'assistant', content: 'Second', createdAt: at(4) },
-          { id: 'm4', role: 'assistant', content: 'First', createdAt: at(4) },
+          { id: 'm03', role: 'user', content: 'Again?', createdAt: at(3) },
           {
-            id: 'm6',
+            id: 'm04',
+            role: 'assistant',
+            content: MARKER,
+            createdAt: at(4),
+            metadata: { error: true, errorCode: 'aborted' },
+          },
+          { id: 'm05', role: 'user', content: 'Design a dub bass', createdAt: at(5) },
+          // the cost cap stopped it before any text: kept, though empty
+          {
+            id: 'm06',
+            role: 'assistant',
+            content: '',
+            createdAt: at(6),
+            metadata: { endedReason: 'budget_exceeded' },
+          },
+          // an empty step with no marker is still left out
+          { id: 'm07', role: 'assistant', content: '', createdAt: at(7) },
+          { id: 'm08', role: 'user', content: 'Explain it', createdAt: at(8) },
+          {
+            id: 'm09',
+            role: 'assistant',
+            content: 'It starts with',
+            createdAt: at(9),
+            metadata: { endedReason: 'budget_exceeded' },
+          },
+          { id: 'm11', role: 'assistant', content: 'Second', createdAt: at(10) },
+          { id: 'm10', role: 'assistant', content: 'First', createdAt: at(10) },
+          {
+            id: 'm12',
             role: 'assistant',
             content: 'Kept',
-            createdAt: at(5),
+            createdAt: at(11),
             metadata: { error: false },
           },
         ],
@@ -225,8 +263,13 @@ describe('GET /api/v1/tutor/conversation', () => {
 
     expect(body.data.conversation.messages).toEqual([
       { role: 'user', content: 'Make it darker' },
-      { role: 'assistant', content: '', failed: true },
-      { role: 'user', content: 'Try again?' },
+      { role: 'assistant', content: '', ended: 'failed' },
+      { role: 'user', content: 'Again?' },
+      { role: 'assistant', content: '', ended: 'stopped' },
+      { role: 'user', content: 'Design a dub bass' },
+      { role: 'assistant', content: '', ended: 'cost' },
+      { role: 'user', content: 'Explain it' },
+      { role: 'assistant', content: 'It starts with', ended: 'cost' },
       { role: 'assistant', content: 'First' },
       { role: 'assistant', content: 'Second' },
       { role: 'assistant', content: 'Kept' },

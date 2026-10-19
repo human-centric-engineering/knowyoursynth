@@ -138,9 +138,13 @@ resetsAt }` for the caller, for the panel's meter.
 **`GET /api/v1/tutor/conversation?synthId=`**, signed in (or a `chat`-scoped key): `{ conversation:
 { conversationId, messages } | null }`, the caller's latest active tutor conversation on that synth,
 with its last 40 questions and answers oldest first. Tool calls and empty steps are left out, and
-rows saved in the same millisecond are ordered by id. The marker Sunrise saves for an answer that
-failed (`metadata.error`) comes back as `{ role: 'assistant', content: '', failed: true }`: its
-text is written for an admin, so the panel shows its own line in its place. Read as
+rows saved in the same millisecond are ordered by id. An answer that did not finish says how it
+ended, from the marker Sunrise saved in its metadata: `ended: 'failed'` for `error: true`,
+`'stopped'` for the same with `errorCode: 'aborted'` (the learner pressed Stop), and `'cost'` for
+`endedReason: 'budget_exceeded'` (the per-turn cap, mid-loop), which keeps what was written and is
+kept even when that is nothing. A failure marker's own text is written for an admin and is dropped.
+The panel shows the line it showed at the time ("The tutor could not answer this one." for a
+failure), not as an alert: it was said already. Read as
 the stream route checks a conversation it carries on, so the id it returns is one that route takes.
 The app's own because Sunrise's consumer conversation routes serve only `public` and `invite_only`
 agents. Like the stream route, it is declared to the ownerless-surface guard.
@@ -408,8 +412,8 @@ for the learner (`TUTOR_ERRORS`):
 | `tool_loop_cap`, `budget_exceeded`, `budget_exceeded_per_turn`                                    | Too many steps; the month's budget; an answer that cost more than a question is allowed    |
 | `conversation_cap_reached`                                                                        | The tutor can't start another conversation for your account. …                             |
 
-A turn gets one line, the first: a cost stop followed by a `done` at the token cap keeps the cost
-line. None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
+A turn gets one line, the first: a cost stop followed by a `done` at the token cap, a Stop or a
+broken stream keeps the cost line. None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
 stream.
 
 ## Not yet

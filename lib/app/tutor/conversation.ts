@@ -19,11 +19,17 @@ import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-gua
 /** The most messages the panel shows from a resumed conversation: the last twenty or so questions and answers. */
 export const TRANSCRIPT_MESSAGES = 40;
 
+/**
+ * How an answer ended when it did not end as an answer, as the panel said at the time: the learner pressed Stop, it
+ * failed, or it went over the per-turn cost cap.
+ */
+export type TutorAnswerEnd = 'stopped' | 'failed' | 'cost';
+
 export interface TutorTranscriptMessage {
   role: 'user' | 'assistant';
   content: string;
-  /** An answer that failed: the panel shows its own line for it, not Sunrise's marker text. */
-  failed?: true;
+  /** Not a whole answer: the panel shows its own line for how it ended. */
+  ended?: TutorAnswerEnd;
 }
 
 export interface TutorTranscript {
@@ -36,11 +42,20 @@ const isTranscriptRole = (role: string): role is TutorTranscriptMessage['role'] 
   role === 'user' || role === 'assistant';
 
 /**
- * The marker Sunrise saves in place of an answer that failed ("[An error occurred…]"), flagged in its metadata. It is
- * there so a client can show the failed turn rather than an unanswered question. Its text is written for an admin, so
- * this returns the turn as failed, without it, and the panel words it for the learner.
+ * The two markers Sunrise saves for an answer that did not finish, read from the message's metadata. They are there so
+ * a client can show the turn rather than an unanswered question.
+ *
+ * - **A failure** (`streaming-handler.ts`, `persistErrorMarker`): `{ error: true, errorCode }`, in place of the answer,
+ *   with text written for an admin ("[An error occurred…]"), which is dropped. A Stop is one too, `errorCode: 'aborted'`.
+ * - **The per-turn cost cap** mid-loop: `{ endedReason: 'budget_exceeded' }` on what the model had written so far,
+ *   which may be nothing.
  */
-const ErrorMarkerSchema = z.object({ error: z.literal(true) });
+const EndedSchema = z.union([
+  z
+    .object({ error: z.literal(true), errorCode: z.string().optional() })
+    .transform((m): TutorAnswerEnd => (m.errorCode === 'aborted' ? 'stopped' : 'failed')),
+  z.object({ endedReason: z.literal('budget_exceeded') }).transform((): TutorAnswerEnd => 'cost'),
+]);
 
 /** The caller's latest active tutor conversation on `synthId`, with its last messages, or null when there is none. */
 export async function latestConversation(
@@ -61,7 +76,14 @@ export async function latestConversation(
     select: {
       id: true,
       messages: {
-        where: { role: { in: ['user', 'assistant'] }, NOT: { content: '' } },
+        where: {
+          role: { in: ['user', 'assistant'] },
+          // An empty step is left out, unless it is where the cost cap stopped the answer.
+          OR: [
+            { NOT: { content: '' } },
+            { metadata: { path: ['endedReason'], equals: 'budget_exceeded' } },
+          ],
+        },
         // `id` breaks a tie between rows saved in the same millisecond, as Sunrise's own history read does.
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: TRANSCRIPT_MESSAGES,
@@ -75,9 +97,11 @@ export async function latestConversation(
     messages: conversation.messages
       .flatMap((m): TutorTranscriptMessage[] => {
         if (!isTranscriptRole(m.role)) return [];
-        return ErrorMarkerSchema.safeParse(m.metadata).success
-          ? [{ role: m.role, content: '', failed: true }]
-          : [{ role: m.role, content: m.content }];
+        const ended = EndedSchema.safeParse(m.metadata);
+        if (!ended.success) return [{ role: m.role, content: m.content }];
+        return [
+          { role: m.role, content: ended.data === 'cost' ? m.content : '', ended: ended.data },
+        ];
       })
       .reverse(),
   };

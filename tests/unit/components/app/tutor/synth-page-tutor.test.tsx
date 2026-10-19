@@ -244,7 +244,7 @@ function serve({
   allowance?: typeof ALLOWANCE;
   conversation?: {
     conversationId: string;
-    messages: { role: string; content: string; failed?: true }[];
+    messages: { role: string; content: string; ended?: 'stopped' | 'failed' | 'cost' }[];
   } | null;
 } = {}) {
   served.allowance = allowance;
@@ -1162,19 +1162,74 @@ describe('how a turn ended', () => {
     expect(within(tutor()).queryByText(TUTOR_ERRORS.dropped)).toBeNull();
   });
 
-  it('shows an answer that failed before as failed, when the conversation is carried on', async () => {
+  it('says how earlier answers ended, as it did at the time, without announcing them again', async () => {
     serve({
       conversation: {
         conversationId: CONVERSATION_ID,
         messages: [
           { role: 'user', content: 'Make it darker' },
-          { role: 'assistant', content: '', failed: true },
+          { role: 'assistant', content: '', ended: 'failed' },
+          { role: 'user', content: 'Again?' },
+          { role: 'assistant', content: '', ended: 'stopped' },
+          { role: 'user', content: 'Explain it' },
+          { role: 'assistant', content: 'It starts with', ended: 'cost' },
         ],
       },
     });
     page();
 
     expect(await within(tutor()).findByText('Make it darker')).toBeTruthy();
-    expect(within(tutor()).getByText(TUTOR_ERRORS.generic)).toBeTruthy();
+    expect(within(tutor()).getByText(TUTOR_ERRORS.pastFailed)).toBeTruthy();
+    expect(within(tutor()).getByText(TUTOR_ERRORS.stopped)).toBeTruthy();
+    expect(within(tutor()).getByText('It starts with')).toBeTruthy();
+    expect(within(tutor()).getByText(TUTOR_ERRORS.turnCost)).toBeTruthy();
+    expect(within(tutor()).queryByRole('alert')).toBeNull();
+  });
+
+  it('keeps the first line when the stream then breaks', async () => {
+    const s = liveStream();
+    fetchMock.mockResolvedValue(okResponse(s.body));
+    page();
+    await ask();
+    await act(async () =>
+      s.send(start, {
+        type: 'budget_exceeded_per_turn',
+        code: 'budget_exceeded_per_turn',
+        message: 'over the cap',
+        usedUsd: 0.25,
+        limitUsd: 0.2,
+      })
+    );
+    expect(await within(tutor()).findByText(TUTOR_ERRORS.turnCost)).toBeTruthy();
+
+    await act(async () => s.fail());
+
+    expect(await within(tutor()).findByRole('button', { name: 'Ask' })).toBeTruthy();
+    expect(within(tutor()).getByText(TUTOR_ERRORS.turnCost)).toBeTruthy();
+    expect(within(tutor()).queryByText(TUTOR_ERRORS.dropped)).toBeNull();
+  });
+
+  it('calls a proposal stale at once when the panel moved while the tutor still works', async () => {
+    const s = liveStream();
+    let sent: TurnBody | null = null;
+    fetchMock.mockImplementation(async (_url: string, init: { body: string }) => {
+      sent = JSON.parse(init.body) as TurnBody;
+      return okResponse(s.body);
+    });
+    page();
+    await ask();
+    await waitFor(() => expect(sent).not.toBeNull());
+    fireEvent.click(button('A-440'));
+    const result = await proposalFor(sent!, { set: { 'filter.cutoff': -3 } });
+    await act(async () =>
+      s.send(start, { type: 'capability_result', capabilitySlug: 'propose_panel_change', result })
+    );
+
+    expect(await within(tutor()).findByText(/The panel has changed since/)).toBeTruthy();
+    expect(within(tutor()).queryByText('Ready when the tutor has finished')).toBeNull();
+    await act(async () => {
+      s.send(done);
+      s.close();
+    });
   });
 });

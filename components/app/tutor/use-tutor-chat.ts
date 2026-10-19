@@ -76,6 +76,8 @@ export interface TutorMessage {
   /** `note` is the panel speaking: a conversation started again. */
   role: 'user' | 'assistant' | 'note';
   text: string;
+  /** From a conversation carried on: its line was said at the time, so it is shown but not announced again. */
+  past?: true;
   /** The tutor is still answering: its proposal waits for the turn's last step before it can be applied. */
   answering?: boolean;
   proposal?: ProposalChip;
@@ -99,7 +101,7 @@ const ConversationSchema = z.object({
         z.object({
           role: z.enum(['user', 'assistant']),
           content: z.string(),
-          failed: z.literal(true).optional(),
+          ended: z.enum(['stopped', 'failed', 'cost']).optional(),
         })
       ),
     })
@@ -127,6 +129,14 @@ export const TUTOR_ERRORS = {
   conversations:
     "The tutor can't start another conversation for your account. The synth and everything else on the page still work.",
   stopped: 'Stopped.',
+  pastFailed: 'The tutor could not answer this one.',
+} as const;
+
+/** How an answer from a conversation carried on ended, as the panel said it at the time. */
+const PAST = {
+  stopped: TUTOR_ERRORS.stopped,
+  failed: TUTOR_ERRORS.pastFailed,
+  cost: TUTOR_ERRORS.turnCost,
 } as const;
 
 /** An `error` frame's code, as a line for the learner. Sunrise's own copy is written for an admin. */
@@ -258,9 +268,9 @@ export function useTutorChat(host: TutorHost): TutorChat {
         if (!current || !conversation) return;
         conversationId.current = conversation.conversationId;
         setMessages(
-          conversation.messages.map((m) =>
-            m.failed
-              ? { id: newId(), role: 'assistant', text: '', error: TUTOR_ERRORS.generic }
+          conversation.messages.map((m): TutorMessage =>
+            m.ended
+              ? { id: newId(), role: m.role, text: m.content, error: PAST[m.ended], past: true }
               : { id: newId(), role: m.role, text: m.content }
           )
         );
@@ -441,12 +451,10 @@ export function useTutorChat(host: TutorHost): TutorChat {
           await request(turn, message, controller);
         }
       } catch (error) {
-        if (controller.signal.aborted) {
-          patch(turn.assistantId, (m) => ({ ...m, error: TUTOR_ERRORS.stopped }));
-        } else {
-          logger.warn('Tutor turn failed', { error });
-          patch(turn.assistantId, (m) => ({ ...m, error: TUTOR_ERRORS.dropped }));
-        }
+        // A turn keeps its first line: a Stop after a cost stop leaves the cost line.
+        const line = controller.signal.aborted ? TUTOR_ERRORS.stopped : TUTOR_ERRORS.dropped;
+        if (!controller.signal.aborted) logger.warn('Tutor turn failed', { error });
+        patch(turn.assistantId, (m) => (m.error ? m : { ...m, error: line }));
       } finally {
         abort.current = null;
         patch(turn.assistantId, (m) => ({ ...m, answering: false }));

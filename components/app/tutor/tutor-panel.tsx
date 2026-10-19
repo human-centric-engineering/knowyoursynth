@@ -94,8 +94,8 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   // against the day's allowance, so the learner sends it. The page has scrolled the panel into view.
   useEffect(() => {
     if (!ask?.text) return;
-    // `maxLength` does not cut a value set from code, and the route refuses a longer question. A cut through an emoji
-    // would leave half of it, so a lone high surrogate at the end goes too.
+    // `maxLength` does not cut a value set from code, and the route refuses a longer question. A cut through a
+    // surrogate pair would leave half a character, so a lone high surrogate at the end goes too.
     setDraft(ask.text.slice(0, MAX_TUTOR_MESSAGE_CHARS).replace(/[\uD800-\uDBFF]$/, ''));
     input.current?.focus({ preventScroll: true });
   }, [ask]);
@@ -263,7 +263,7 @@ function Message({
       {m.proposal && <ProposalChip message={m} chat={chat} def={def} />}
       {m.design && <DesignChip message={m} chat={chat} />}
       {m.error && (
-        <p role="alert" className="mt-2 text-[13.5px] text-(--kys-warn)">
+        <p role={m.past ? undefined : 'alert'} className="mt-2 text-[13.5px] text-(--kys-warn)">
           {m.error}
         </p>
       )}
@@ -286,7 +286,9 @@ function ProposalChip({
   const applied = !!p.applied;
   // A later step of the turn may still replace it, so it waits for the turn to finish.
   const waiting = !!m.answering;
-  const stale = !applied && !waiting && !chat.canApply(m);
+  // Whether the panel is still the one it was made for, the turn aside: if not, it will not become ready.
+  const fits = chat.canApply({ ...m, answering: false });
+  const stale = !applied && !fits;
   return (
     <div className="mt-2 flex flex-col gap-1.5 rounded-md border border-(--kys-line) p-2">
       <ul className="font-mono text-[12px] text-(--kys-muted)">
@@ -314,7 +316,7 @@ function ProposalChip({
               {proposalLabel(p.change)}
             </button>
           )}
-          {waiting && <WaitingNote />}
+          {waiting && !applied && <WaitingNote />}
           {applied && (
             <button
               type="button"
@@ -346,6 +348,8 @@ function WaitingNote() {
 function DesignChip({ message: m, chat }: { message: TutorMessage; chat: TutorChat }) {
   const d = m.design;
   if (!d) return null;
+  // Whether Undo would mean it, the turn aside: if not, waiting will not make it ready.
+  const fits = chat.canUndoDesign({ ...m, answering: false });
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2 rounded-md border border-(--kys-line) p-2 text-[13px]">
       <span className={d.undone ? 'text-(--kys-muted)' : 'text-(--kys-good)'}>
@@ -358,17 +362,13 @@ function DesignChip({ message: m, chat }: { message: TutorMessage; chat: TutorCh
           type="button"
           onClick={() => chat.undoDesign(m)}
           disabled={!chat.canUndoDesign(m)}
-          title={
-            chat.canUndoDesign(m) || m.answering
-              ? undefined
-              : 'The panel has moved on since it opened'
-          }
+          title={fits ? undefined : 'The panel has moved on since it opened'}
           className={smallBtn}
         >
           Undo
         </button>
       )}
-      {!d.undone && m.answering && <WaitingNote />}
+      {!d.undone && m.answering && fits && <WaitingNote />}
     </div>
   );
 }
