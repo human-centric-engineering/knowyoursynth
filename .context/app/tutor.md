@@ -70,6 +70,7 @@ meaning-based layer, t-59 web search through Brave ([below](#web-search)).
 | The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                     |
 | The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank,web-search}.ts`, listed in `tools.ts` |
 | Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                        |
+| An answer's sources        | `lib/app/tutor/sources.ts` (read from the searches' results), shown by `components/app/tutor/sources.tsx`                        |
 | The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                       |
 | Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                |
 | The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                             |
@@ -213,6 +214,24 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 Max tokens is the code's, so an admin cannot lower it, and nothing clamps it to the model's own
 output limit: a model that stops at 4,096 output tokens would refuse every tutor call. Choose one
 that allows at least 8,192, as Sunrise's provider auditors already need (they ask for 16,384).
+
+### The sourcing rules
+
+The instructions' last paragraph (t-60) sets where an answer comes from, in order:
+
+1. **The databank first**, for any person, band, record or real instrument, keeping each claim to
+   what it found.
+2. **Then the web**, once, when the databank found nothing, keeping each claim to what that found.
+3. **Then its own knowledge**, when neither found it or `web_search` refused, saying so in the
+   answer, and saying search isn't set up when that is the refusal.
+
+A question about the panel or how synthesis works needs no search, and each search costs one of the
+learner's questions. The tutor lists no links in its reply: the panel shows the sources under it.
+
+**Off-topic is declined by the instructions.** The tutor answers about music, sound and
+synthesisers, and says briefly that anything else is outside what it does, without searching for
+it. Sunrise's `topicBoundaries` is not used: it is a word blocklist, and no list of words tells a
+question about a record from one about anything else.
 
 The starting caps are placeholders for the admin to tune. The production provider, model and the
 learner's daily allowance are decided at `x4` and recorded against D6. Changing the instructions
@@ -495,6 +514,28 @@ above the number of synths.
   after it and sends its lesson with `fromTutor: true`; once saved, it is one of the user's, with its
   lesson ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)).
 
+### Sources
+
+Under each answer, what the turn's searches found (t-60), read by `lib/app/tutor/sources.ts` from
+each `search_databank` and `web_search` result as it arrives, a turn's searches added together, each
+source once.
+
+- **A databank row** links to its `/bank` page, with its tab ("databank, artists"). It counts only
+  with an href that is its own row's page (`/bank/<kind>/<id>`).
+- **A web result** links out, in a new tab, with `rel="noopener noreferrer nofollow"`, and names its
+  site. It counts only with an http or https URL, checked again here though `web_search` checks it
+  too, so no other scheme reaches an `<a>`.
+- **A turn with none** is labelled _From the tutor's own knowledge._: one that searched nothing, one
+  whose search found nothing, and one whose search refused. A refusal is read by its `success` flag.
+  The label waits for the answer to finish, and a turn that ended in a failure shows none.
+- **They are what the searches found**, not which of them the answer used: the instructions keep
+  each claim to its source, and the learner can follow any of them to check.
+- **A conversation carried on shows them too.** The conversation read takes the conversation's
+  stored `search_databank` and `web_search` tool messages since its oldest shown message, in a
+  second query so they do not use up the transcript's forty, and gives each answer the sources of
+  the searches before it in its turn as `sources`. A line written before the search ("Let me look
+  that up") gets none; the answer written after it does.
+
 ### When a turn fails
 
 Every failure ends the turn with a line in the panel, and nothing else on the page waits on a turn.
@@ -523,8 +564,6 @@ stream.
   other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
   panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
   would mean reading them back from the conversation's tool messages.
-- **The rest of the grounding** is `f-tutor-knowledge`: sources shown under each answer and the full sourcing rules (t-60), and the
-  eval set (t-61). Until t-60 the panel shows the answer's text only; the tutor's links are in what
-  it writes.
+- **The eval set** is the rest of `f-tutor-knowledge` (t-61).
 - **The provider's own web search**, in place of Brave or beside it, waits on
   [sunrise#1037](https://github.com/human-centric-engineering/sunrise/issues/1037).

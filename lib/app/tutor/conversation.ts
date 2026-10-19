@@ -13,7 +13,9 @@
 import { z } from 'zod';
 import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { TUTOR_CONTEXT_TYPE } from '@/lib/app/tutor/context';
+import { addSources, readSources, SOURCE_TOOLS, type TutorSource } from '@/lib/app/tutor/sources';
 import { prisma } from '@/lib/db/client';
+import { logger } from '@/lib/logging';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
 
 /** The most messages the panel shows from a resumed conversation: the last twenty or so questions and answers. */
@@ -30,11 +32,16 @@ export interface TutorTranscriptMessage {
   content: string;
   /** Not a whole answer: the panel shows its own line for how it ended. */
   ended?: TutorAnswerEnd;
+  /** An answer's sources: what the turn's searches found before it. Left out when there were none. */
+  sources?: TutorSource[];
 }
 
 export interface TutorTranscript {
   conversationId: string;
-  /** Oldest first: the learner's questions and the tutor's answers, without tool calls or empty steps. */
+  /**
+   * Oldest first: the learner's questions and the tutor's answers, without tool calls or empty steps. The searches'
+   * results are read into each answer's `sources`.
+   */
   messages: TutorTranscriptMessage[];
 }
 
@@ -87,22 +94,107 @@ export async function latestConversation(
         // `id` breaks a tie between rows saved in the same millisecond, as Sunrise's own history read does.
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         take: TRANSCRIPT_MESSAGES,
-        select: { role: true, content: true, metadata: true },
+        select: { id: true, role: true, content: true, metadata: true, createdAt: true },
       },
     },
   });
   if (!conversation) return null;
+  const shown = conversation.messages.reverse();
+  const searches = await searchesSince(conversation.id, shown[0]?.createdAt);
   return {
     conversationId: conversation.id,
-    messages: conversation.messages
-      .flatMap((m): TutorTranscriptMessage[] => {
-        if (!isTranscriptRole(m.role)) return [];
-        const ended = EndedSchema.safeParse(m.metadata);
-        if (!ended.success) return [{ role: m.role, content: m.content }];
-        return [
-          { role: m.role, content: ended.data === 'cost' ? m.content : '', ended: ended.data },
-        ];
-      })
-      .reverse(),
+    messages: withSources(shown, searches).flatMap((m): TutorTranscriptMessage[] => {
+      if (!isTranscriptRole(m.role)) return [];
+      const sources = m.sources.length ? { sources: m.sources } : {};
+      const ended = EndedSchema.safeParse(m.metadata);
+      if (!ended.success) return [{ role: m.role, content: m.content, ...sources }];
+      return [
+        {
+          role: m.role,
+          content: ended.data === 'cost' ? m.content : '',
+          ended: ended.data,
+          ...sources,
+        },
+      ];
+    }),
   };
+}
+
+interface Row {
+  id: string;
+  role: string;
+  content: string;
+  createdAt: Date;
+}
+
+/**
+ * The conversation's search results from `since` on, oldest first: the tool messages Sunrise saves, whose content is
+ * the result as JSON. Read apart from the transcript so they do not use up its `TRANSCRIPT_MESSAGES`.
+ */
+async function searchesSince(
+  conversationId: string,
+  since: Date | undefined
+): Promise<(Row & { capabilitySlug: string | null })[]> {
+  if (!since) return [];
+  return prisma.aiMessage.findMany({
+    where: {
+      conversationId,
+      role: 'tool',
+      capabilitySlug: { in: [...SOURCE_TOOLS] },
+      createdAt: { gte: since },
+    },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    // A turn has five steps, and the transcript about twenty turns.
+    take: TRANSCRIPT_MESSAGES * 5,
+    select: { id: true, role: true, content: true, createdAt: true, capabilitySlug: true },
+  });
+}
+
+/** Saved order: by time, then id, as Sunrise's history read orders rows saved in the same millisecond. */
+const before = (a: Row, b: Row) =>
+  a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
+/**
+ * Each answer with the sources its turn's searches found before it. A turn's searches go to its next answer: the one
+ * the model wrote after reading them. A line written before the search ("Let me look that up") gets none, and a
+ * search with no answer after it in the turn (the stream broke) is dropped at the next question.
+ */
+function withSources<M extends Row>(
+  shown: M[],
+  searches: (Row & { capabilitySlug: string | null })[]
+): (M & { sources: TutorSource[] })[] {
+  const rows = [...shown.map((m) => ({ shown: m })), ...searches.map((t) => ({ search: t }))].sort(
+    (a, b) => before('shown' in a ? a.shown : a.search, 'shown' in b ? b.shown : b.search)
+  );
+  let pending: TutorSource[] = [];
+  const out: (M & { sources: TutorSource[] })[] = [];
+  for (const row of rows) {
+    if ('search' in row) {
+      pending = addSources(
+        pending,
+        readSources(row.search.capabilitySlug ?? '', parse(row.search.content))
+      );
+      continue;
+    }
+    const m = row.shown;
+    if (m.role === 'user') {
+      pending = [];
+      out.push({ ...m, sources: [] });
+    } else {
+      out.push({ ...m, sources: pending });
+      pending = [];
+    }
+  }
+  return out;
+}
+
+function parse(json: string): unknown {
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    logger.warn('Tutor conversation: a stored search result is not JSON', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return null;
+  }
 }

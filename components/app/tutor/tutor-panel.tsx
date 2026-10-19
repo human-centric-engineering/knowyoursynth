@@ -3,7 +3,8 @@
 /**
  * The tutor panel on the synth page (`f-tutor` t-56), under the Inspector where the prototype's sat
  * (`prototype/src/ui/Tutor.jsx`): the conversation, suggested questions to start from, a chip under each answer that
- * proposed a change or designed a sound, and the day's allowance.
+ * proposed a change or designed a sound, the sources under each answer (`f-tutor-knowledge` t-60), and the day's
+ * allowance.
  *
  * The prototype had two modes, Ask and Design a sound, because each sent its own prompt. Here the tutor picks its tool
  * from the question, so there is one composer, and the suggestions carry both kinds. Its Claude-account and permission
@@ -15,6 +16,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 
 import { proposalLabel, proposalRows, type TutorDesign } from '@/components/app/tutor/apply';
+import { TutorSources } from '@/components/app/tutor/sources';
 import {
   useTutorChat,
   type TutorChat,
@@ -105,7 +107,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   useEffect(() => {
     const el = log.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.error]);
+  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.sources, last?.error]);
 
   const submit = () => {
     if (!draft.trim() || chat.busy || closed) return;
@@ -262,6 +264,10 @@ function Message({
       {m.text && <p className="whitespace-pre-wrap">{m.text}</p>}
       {m.proposal && <ProposalChip message={m} chat={chat} def={def} />}
       {m.design && <DesignChip message={m} chat={chat} />}
+      {/* Sources as they arrive; the own-knowledge label only on an answer that finished with none. */}
+      {(!!m.sources?.length || (!!m.text && !m.answering && !m.error)) && (
+        <TutorSources sources={m.sources ?? []} />
+      )}
       {m.error && (
         <p role={m.past ? undefined : 'alert'} className="mt-2 text-[13.5px] text-(--kys-warn)">
           {m.error}

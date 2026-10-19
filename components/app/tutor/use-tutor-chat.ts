@@ -15,6 +15,9 @@
  *   Sunrise's `conversation_length_cap_reached`, refuse a turn before its message is saved, so nothing has been
  *   counted. The turn is sent again, once, on a new conversation. Nothing else is retried: a turn counts against the
  *   allowance once its message is saved, even when the provider then fails (`tutor.md`, The allowance).
+ * - **An answer shows its sources**: the databank rows and web pages the turn's searches found (`f-tutor-knowledge`
+ *   t-60), read from each `search_databank` and `web_search` result as it arrives, and from a resumed conversation's
+ *   stored ones, which the conversation read attaches to their answer.
  * - **A failure stays in the panel.** Every error ends the turn with a line in the transcript, and nothing else on the
  *   page waits on a turn.
  */
@@ -37,6 +40,12 @@ import {
 import { apiClient } from '@/lib/api/client';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
+import {
+  addSources,
+  readSources,
+  TutorSourceSchema,
+  type TutorSource,
+} from '@/lib/app/tutor/sources';
 import { logger } from '@/lib/logging';
 
 /** What the page lends the tutor: the panel as it is now, and the two ways the tutor may change it. */
@@ -82,6 +91,8 @@ export interface TutorMessage {
   answering?: boolean;
   proposal?: ProposalChip;
   design?: DesignChip;
+  /** What the turn's searches found, in the order found. None means the answer is the tutor's own knowledge. */
+  sources?: TutorSource[];
   error?: string;
 }
 
@@ -102,6 +113,7 @@ const ConversationSchema = z.object({
           role: z.enum(['user', 'assistant']),
           content: z.string(),
           ended: z.enum(['stopped', 'failed', 'cost']).optional(),
+          sources: z.array(TutorSourceSchema).optional(),
         })
       ),
     })
@@ -268,11 +280,13 @@ export function useTutorChat(host: TutorHost): TutorChat {
         if (!current || !conversation) return;
         conversationId.current = conversation.conversationId;
         setMessages(
-          conversation.messages.map((m): TutorMessage =>
-            m.ended
-              ? { id: newId(), role: m.role, text: m.content, error: PAST[m.ended], past: true }
-              : { id: newId(), role: m.role, text: m.content }
-          )
+          conversation.messages.map((m): TutorMessage => ({
+            id: newId(),
+            role: m.role,
+            text: m.content,
+            ...(m.sources?.length ? { sources: m.sources } : {}),
+            ...(m.ended ? { error: PAST[m.ended], past: true } : {}),
+          }))
         );
       })
       .catch((error: unknown) => {
@@ -287,10 +301,16 @@ export function useTutorChat(host: TutorHost): TutorChat {
     };
   }, [synthId, refreshAllowance]);
 
-  /** A frame's tool results: the step's proposals combine and replace the turn's; each design opens. */
+  /**
+   * A frame's tool results: the step's proposals combine and replace the turn's; each design opens; the searches'
+   * sources add to the turn's.
+   */
   const takeResults = useCallback(
     (turn: Turn, results: { capabilitySlug: string; result: unknown }[]) => {
       const { def } = hostRef.current;
+      const found = results.flatMap((r) => readSources(r.capabilitySlug, r.result));
+      if (found.length)
+        patch(turn.assistantId, (m) => ({ ...m, sources: addSources(m.sources ?? [], found) }));
       const proposals = results.flatMap((r) => {
         const p = readProposal(def, r.capabilitySlug, r.result);
         return p ? [p] : [];

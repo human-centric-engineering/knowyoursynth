@@ -44,6 +44,7 @@ interface Message {
   content: string;
   createdAt: Date;
   metadata?: unknown;
+  capabilitySlug?: string;
 }
 interface Conversation {
   id: string;
@@ -131,10 +132,63 @@ function table(rows: Conversation[]) {
               (b.id ?? '').localeCompare(a.id ?? '')
           )
           .slice(0, m.take)
-          .map(({ role, content, metadata }) => ({ role, content, metadata: metadata ?? null })),
+          .map(({ id, role, content, metadata, createdAt }) => ({
+            id: id ?? '',
+            role,
+            content,
+            metadata: metadata ?? null,
+            createdAt,
+          })),
       };
     },
   };
+}
+
+interface FindManyArgs {
+  where: {
+    conversationId: string;
+    role: string;
+    capabilitySlug: { in: string[] };
+    createdAt: { gte: Date };
+  };
+  orderBy: [{ createdAt: 'asc' }, { id: 'asc' }];
+  take: number;
+}
+
+/** `prisma.aiMessage.findMany` over the same conversations' messages, applying its filters and order. */
+function messages(rows: Conversation[]) {
+  return {
+    findMany: async ({ where, orderBy, take }: FindManyArgs) => {
+      expect(orderBy).toEqual([{ createdAt: 'asc' }, { id: 'asc' }]);
+      return rows
+        .filter((c) => c.id === where.conversationId)
+        .flatMap((c) => c.messages)
+        .filter(
+          (x) =>
+            x.role === where.role &&
+            where.capabilitySlug.in.includes(x.capabilitySlug ?? '') &&
+            x.createdAt.getTime() >= where.createdAt.gte.getTime()
+        )
+        .sort(
+          (a, b) =>
+            a.createdAt.getTime() - b.createdAt.getTime() || (a.id ?? '').localeCompare(b.id ?? '')
+        )
+        .slice(0, take)
+        .map(({ id, role, content, createdAt, capabilitySlug }) => ({
+          id: id ?? '',
+          role,
+          content,
+          createdAt,
+          capabilitySlug: capabilitySlug ?? null,
+        }));
+    },
+  };
+}
+
+/** Both reads, over the same conversations. */
+function serve(rows: Conversation[]) {
+  mockPrisma.aiConversation = table(rows);
+  mockPrisma.aiMessage = messages(rows);
 }
 
 const get = (synthId = 'model-d') =>
@@ -152,12 +206,12 @@ beforeEach(() => {
     session: { ...base.session, activeOrgId: INSTALL_ORG_ID, userId: USER_ID },
     user: { ...base.user, id: USER_ID, role: 'USER' },
   });
-  mockPrisma.aiConversation = table([]);
+  serve([]);
 });
 
 describe('GET /api/v1/tutor/conversation', () => {
   it("returns the caller's latest conversation on the synth, its questions and answers oldest first", async () => {
-    mockPrisma.aiConversation = table([
+    serve([
       conversation({ id: 'conv-older', createdAt: at(0) }),
       conversation({
         id: 'conv-latest',
@@ -189,7 +243,7 @@ describe('GET /api/v1/tutor/conversation', () => {
   });
 
   it("returns none of another person's, another synth's, another agent's or an archived one", async () => {
-    mockPrisma.aiConversation = table([
+    serve([
       conversation({ id: 'theirs', userId: 'someone-else' }),
       conversation({ id: 'other-synth', contextId: 'pro-1' }),
       conversation({ id: 'other-agent', agent: { ...TUTOR, slug: 'beatbuddy' } }),
@@ -208,7 +262,7 @@ describe('GET /api/v1/tutor/conversation', () => {
 
   it("says how an answer that did not finish ended, without Sunrise's marker text, and orders rows saved together by id", async () => {
     const MARKER = '[An error occurred and the response could not be completed.]';
-    mockPrisma.aiConversation = table([
+    serve([
       conversation({
         messages: [
           { id: 'm01', role: 'user', content: 'Make it darker', createdAt: at(1) },
@@ -276,13 +330,88 @@ describe('GET /api/v1/tutor/conversation', () => {
     ]);
   });
 
+  it("puts each turn's search results under the answer that followed them", async () => {
+    const databank = {
+      success: true,
+      data: {
+        results: [
+          {
+            kind: 'artists',
+            id: 'vangelis',
+            name: 'Vangelis',
+            href: '/bank/artists/vangelis',
+            about: 'composer',
+            excerpt: 'Blade Runner.',
+            related: [],
+            matchedBy: ['lexical'],
+          },
+          // not a databank page: dropped
+          { kind: 'artists', id: 'x', name: 'X', href: 'javascript:alert(1)' },
+        ],
+        search: 'lexical',
+      },
+    };
+    const webResult = {
+      success: true,
+      data: { results: [{ title: 'CS-80', url: 'https://example.com/cs80', snippet: '' }] },
+    };
+    const failed = { success: false, error: { code: 'web_search_failed', message: 'No.' } };
+    const tool = (id: string, minute: number, capabilitySlug: string, result: unknown) => ({
+      id,
+      role: 'tool',
+      content: JSON.stringify(result),
+      createdAt: at(minute),
+      capabilitySlug,
+    });
+    serve([
+      conversation({
+        messages: [
+          { id: 'm01', role: 'user', content: 'Who played the CS-80?', createdAt: at(1) },
+          { id: 'm02', role: 'assistant', content: 'Let me look.', createdAt: at(2) },
+          tool('m03', 3, 'search_databank', databank),
+          tool('m04', 4, 'web_search', webResult),
+          // another tool's result is not a source
+          tool('m05', 4, 'describe_synth', databank),
+          { id: 'm06', role: 'assistant', content: 'Vangelis did.', createdAt: at(5) },
+          { id: 'm07', role: 'user', content: 'And who else?', createdAt: at(6) },
+          tool('m08', 7, 'web_search', failed),
+          { id: 'm09', role: 'assistant', content: 'From what I know…', createdAt: at(8) },
+          { id: 'm10', role: 'user', content: 'What does CUTOFF do?', createdAt: at(9) },
+          { id: 'm11', role: 'assistant', content: 'It darkens.', createdAt: at(10) },
+          // stored as something that is not JSON: read as no result
+          { ...tool('m12', 11, 'web_search', null), content: '{not json' },
+        ],
+      }),
+    ]);
+
+    const body = await (await get()).json();
+
+    expect(body.data.conversation.messages).toEqual([
+      { role: 'user', content: 'Who played the CS-80?' },
+      { role: 'assistant', content: 'Let me look.' },
+      {
+        role: 'assistant',
+        content: 'Vangelis did.',
+        sources: [
+          { type: 'databank', kind: 'artists', name: 'Vangelis', href: '/bank/artists/vangelis' },
+          { type: 'web', title: 'CS-80', url: 'https://example.com/cs80' },
+        ],
+      },
+      { role: 'user', content: 'And who else?' },
+      // the search failed: no sources
+      { role: 'assistant', content: 'From what I know…' },
+      { role: 'user', content: 'What does CUTOFF do?' },
+      { role: 'assistant', content: 'It darkens.' },
+    ]);
+  });
+
   it(`returns the last ${TRANSCRIPT_MESSAGES} messages of a long conversation`, async () => {
     const messages = Array.from({ length: TRANSCRIPT_MESSAGES + 10 }, (_, i) => ({
       role: i % 2 ? 'assistant' : 'user',
       content: `message ${i}`,
       createdAt: at(i),
     }));
-    mockPrisma.aiConversation = table([conversation({ messages })]);
+    serve([conversation({ messages })]);
 
     const body = await (await get()).json();
 
