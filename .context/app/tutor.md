@@ -137,9 +137,10 @@ resetsAt }` for the caller, for the panel's meter.
 
 **`GET /api/v1/tutor/conversation?synthId=`**, signed in (or a `chat`-scoped key): `{ conversation:
 { conversationId, messages } | null }`, the caller's latest active tutor conversation on that synth,
-with its last 40 questions and answers oldest first. Tool calls, empty steps and the marker Sunrise
-saves for an answer that failed (`metadata.error`, which its own history read drops too) are left
-out, and rows saved in the same millisecond are ordered by id. Read as
+with its last 40 questions and answers oldest first. Tool calls and empty steps are left out, and
+rows saved in the same millisecond are ordered by id. The marker Sunrise saves for an answer that
+failed (`metadata.error`) comes back as `{ role: 'assistant', content: '', failed: true }`: its
+text is written for an admin, so the panel shows its own line in its place. Read as
 the stream route checks a conversation it carries on, so the id it returns is one that route takes.
 The app's own because Sunrise's consumer conversation routes serve only `public` and `invite_only`
 agents. Like the stream route, it is declared to the ownerless-surface guard.
@@ -327,7 +328,9 @@ as it arrives, and a designed sound opens as it arrives, as the prototype's did.
 - **The meter** reads the allowance when the panel opens and after every turn. At zero, or on a 429
   `TUTOR_ALLOWANCE_SPENT` (whose `details` it takes), the composer closes.
 - **The library's empty search** offers "ask the tutor to design one", which scrolls to the panel and
-  puts "Design a sound: _the search_" in the composer. It does not send it: each question counts.
+  puts "Design a sound: _the search_" in the composer, cut to the 4,000 characters the route takes.
+  It does not send it: each question counts. With a category chosen and the search matching sounds
+  in another, it says to pick another category too.
 
 ### Which conversation
 
@@ -379,9 +382,10 @@ above the number of synths.
   sound, the Lesson panel shows its lesson (_Designed by the AI tutor_, _AI designed · check by ear_),
   "Loaded:" names it _from the tutor_, and no library sound is current. Stepping through its lesson
   keeps it open, and Restore builds it again. The chip's Undo puts back everything that was on the
-  panel before: the sound, the step, one of the user's sounds or a shared one. It is enabled while
-  that design is open and the panel still shows it. A turn that designs two opens each in turn, and
-  one Undo goes back to before the first.
+  panel before: the sound, the step, one of the user's sounds or a shared one. It is enabled once
+  the turn has ended, while that design is open and the panel still shows it. A turn that designs
+  two opens each in turn, and one Undo goes back to before the first. Undoing a later turn's design
+  opens the earlier one again, so its Undo comes back: designs undo in the order they opened.
 - **Save keeps the lesson and the mark.** With a designed sound open, Save… makes a new sound named
   after it and sends its lesson with `fromTutor: true`; once saved, it is one of the user's, with its
   lesson ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)).
@@ -400,11 +404,12 @@ for the learner (`TUTOR_ERRORS`):
 | 429 `TUTOR_ALLOWANCE_SPENT`, 503 `TUTOR_UNAVAILABLE`, 413                                         | The route's own sentence, written for the learner                                          |
 | 400 (a panel the current definition refuses)                                                      | The tutor could not read the panel as it is. Reload the page, then ask again.              |
 | 401                                                                                               | Your session has ended. Sign in again to ask the tutor.                                    |
-| `output_blocked`, `input_blocked`                                                                 | The tutor declined that one. Try asking it a different way. (The prototype's.)             |
+| `output_blocked`, `input_blocked`, or `done` with `finishReason: 'error'` (a refusal or a filter) | The tutor declined that one. Try asking it a different way. (The prototype's.)             |
 | `tool_loop_cap`, `budget_exceeded`, `budget_exceeded_per_turn`                                    | Too many steps; the month's budget; an answer that cost more than a question is allowed    |
 | `conversation_cap_reached`                                                                        | The tutor can't start another conversation for your account. …                             |
 
-None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
+A turn gets one line, the first: a cost stop followed by a `done` at the token cap keeps the cost
+line. None is retried (the anti-patterns above): the learner asks again if they want to. Stop aborts the
 stream.
 
 ## Not yet

@@ -22,6 +22,8 @@ export const TRANSCRIPT_MESSAGES = 40;
 export interface TutorTranscriptMessage {
   role: 'user' | 'assistant';
   content: string;
+  /** An answer that failed: the panel shows its own line for it, not Sunrise's marker text. */
+  failed?: true;
 }
 
 export interface TutorTranscript {
@@ -34,8 +36,9 @@ const isTranscriptRole = (role: string): role is TutorTranscriptMessage['role'] 
   role === 'user' || role === 'assistant';
 
 /**
- * The marker Sunrise saves in place of an answer that failed ("[An error occurred…]"), flagged in its metadata. Its own
- * history read drops it, and so does this: the panel said what went wrong at the time, in the learner's words.
+ * The marker Sunrise saves in place of an answer that failed ("[An error occurred…]"), flagged in its metadata. It is
+ * there so a client can show the failed turn rather than an unanswered question. Its text is written for an admin, so
+ * this returns the turn as failed, without it, and the panel words it for the learner.
  */
 const ErrorMarkerSchema = z.object({ error: z.literal(true) });
 
@@ -70,11 +73,12 @@ export async function latestConversation(
   return {
     conversationId: conversation.id,
     messages: conversation.messages
-      .flatMap((m) =>
-        isTranscriptRole(m.role) && !ErrorMarkerSchema.safeParse(m.metadata).success
-          ? [{ role: m.role, content: m.content }]
-          : []
-      )
+      .flatMap((m): TutorTranscriptMessage[] => {
+        if (!isTranscriptRole(m.role)) return [];
+        return ErrorMarkerSchema.safeParse(m.metadata).success
+          ? [{ role: m.role, content: '', failed: true }]
+          : [{ role: m.role, content: m.content }];
+      })
       .reverse(),
   };
 }

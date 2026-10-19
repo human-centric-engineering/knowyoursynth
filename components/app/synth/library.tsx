@@ -74,12 +74,14 @@ export function Library({
     [presets]
   );
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-  const shown = presets.filter((p) => {
-    if (cat !== 'all' && p.tags[0] !== cat) return false;
+  const matches = (p: Preset) => {
     if (!words.length) return true;
     const hay = `${p.name} ${p.ref} ${p.artist} ${p.tags.join(' ')} ${p.blurb}`.toLowerCase();
     return words.every((w) => hay.includes(w));
-  });
+  };
+  const shown = presets.filter((p) => (cat === 'all' || p.tags[0] === cat) && matches(p));
+  // Another category has what the search names: the way to it is there, not the tutor's.
+  const elsewhere = cat !== 'all' && presets.some(matches);
   return (
     <section aria-labelledby="lib-h" className="flex min-h-0 flex-col gap-3">
       <div className="flex items-baseline justify-between">
@@ -167,7 +169,7 @@ export function Library({
             {onAskTutor && words.length ? (
               <>
                 No sounds match. Clear the search
-                {cat !== 'all' ? ', pick another category' : ''}, or{' '}
+                {elsewhere ? ', pick another category' : ''}, or{' '}
                 <button
                   type="button"
                   onClick={() => onAskTutor(q.trim())}

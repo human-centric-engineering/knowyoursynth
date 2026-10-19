@@ -94,8 +94,9 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   // against the day's allowance, so the learner sends it. The page has scrolled the panel into view.
   useEffect(() => {
     if (!ask?.text) return;
-    // `maxLength` does not cut a value set from code, and the route refuses a longer question.
-    setDraft(ask.text.slice(0, MAX_TUTOR_MESSAGE_CHARS));
+    // `maxLength` does not cut a value set from code, and the route refuses a longer question. A cut through an emoji
+    // would leave half of it, so a lone high surrogate at the end goes too.
+    setDraft(ask.text.slice(0, MAX_TUTOR_MESSAGE_CHARS).replace(/[\uD800-\uDBFF]$/, ''));
     input.current?.focus({ preventScroll: true });
   }, [ask]);
 
@@ -104,7 +105,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   useEffect(() => {
     const el = log.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [chat.messages.length, last?.text, last?.proposal, last?.design]);
+  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.error]);
 
   const submit = () => {
     if (!draft.trim() || chat.busy || closed) return;
@@ -308,12 +309,12 @@ function ProposalChip({
               type="button"
               onClick={() => chat.apply(m)}
               disabled={waiting}
-              title={waiting ? 'The tutor is still answering' : undefined}
               className="rounded-md border border-(--kys-accent) px-2.5 py-1 text-[13px] font-semibold text-(--kys-accent) enabled:hover:bg-(--kys-accent) enabled:hover:text-(--kys-accent-ink) disabled:opacity-40"
             >
               {proposalLabel(p.change)}
             </button>
           )}
+          {waiting && <WaitingNote />}
           {applied && (
             <button
               type="button"
@@ -335,6 +336,13 @@ function ProposalChip({
   );
 }
 
+/** Said beside a held button, where a disabled button's own tooltip would not reach a keyboard or touch. */
+function WaitingNote() {
+  return (
+    <span className="text-[12.5px] text-(--kys-faint)">Ready when the tutor has finished</span>
+  );
+}
+
 function DesignChip({ message: m, chat }: { message: TutorMessage; chat: TutorChat }) {
   const d = m.design;
   if (!d) return null;
@@ -350,12 +358,17 @@ function DesignChip({ message: m, chat }: { message: TutorMessage; chat: TutorCh
           type="button"
           onClick={() => chat.undoDesign(m)}
           disabled={!chat.canUndoDesign(m)}
-          title={chat.canUndoDesign(m) ? undefined : 'The panel has moved on since it opened'}
+          title={
+            chat.canUndoDesign(m) || m.answering
+              ? undefined
+              : 'The panel has moved on since it opened'
+          }
           className={smallBtn}
         >
           Undo
         </button>
       )}
+      {!d.undone && m.answering && <WaitingNote />}
     </div>
   );
 }

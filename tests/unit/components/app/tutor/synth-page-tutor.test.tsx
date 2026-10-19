@@ -120,6 +120,7 @@ const OPEN_BASS = sound({
 const WOBBLE = sound({
   id: 'wobble',
   name: 'Wobble lead',
+  tags: ['lead'],
   steps: [{ title: 'Open it', module: 'filter', why: 'Bright.', set: { 'filter.cutoff': 4 } }],
 });
 
@@ -241,7 +242,10 @@ function serve({
   conversation = null,
 }: {
   allowance?: typeof ALLOWANCE;
-  conversation?: { conversationId: string; messages: { role: string; content: string }[] } | null;
+  conversation?: {
+    conversationId: string;
+    messages: { role: string; content: string; failed?: true }[];
+  } | null;
 } = {}) {
   served.allowance = allowance;
   api.get.mockImplementation(async (path: string) => {
@@ -1031,21 +1035,146 @@ describe('a turn still answering', () => {
 });
 
 describe('asking the tutor from the library', () => {
-  it('keeps the category advice when a category is chosen, and fits the question to what the route takes', async () => {
+  it('offers another category only when another category has what the search names', async () => {
+    page();
+    fireEvent.click(within(library()).getByRole('button', { name: 'bass' }));
+    const search = within(library()).getByRole('searchbox');
+
+    fireEvent.change(search, { target: { value: 'wobble' } });
+    expect(within(library()).getByText(/pick another category/)).toBeTruthy();
+    fireEvent.change(search, { target: { value: 'glassy bell' } });
+    expect(within(library()).queryByText(/pick another category/)).toBeNull();
+    expect(
+      within(library()).getByRole('button', { name: 'ask the tutor to design one' })
+    ).toBeTruthy();
+  });
+
+  it('fits the question to what the route takes, without leaving half an emoji', async () => {
     page();
     const tutorInput = within(tutor()).getByRole('textbox', { name: /Ask the tutor/ });
     await waitFor(() => expect(tutorInput).toBeEnabled());
-    fireEvent.click(within(library()).getByRole('button', { name: 'bass' }));
-    fireEvent.change(within(library()).getByRole('searchbox'), {
-      target: { value: `lead ${'x'.repeat(5000)}` },
-    });
+    const prefix = 'Design a sound: ';
+    // the emoji's first half lands on the last character the route takes
+    const query = `${'x'.repeat(MAX_TUTOR_MESSAGE_CHARS - prefix.length - 1)}🎹${'y'.repeat(50)}`;
+    fireEvent.change(within(library()).getByRole('searchbox'), { target: { value: query } });
 
-    expect(within(library()).getByText(/pick another category/)).toBeTruthy();
     fireEvent.click(within(library()).getByRole('button', { name: 'ask the tutor to design one' }));
 
-    expect((tutorInput as HTMLTextAreaElement).value).toHaveLength(MAX_TUTOR_MESSAGE_CHARS);
-    expect((tutorInput as HTMLTextAreaElement).value.startsWith('Design a sound: lead x')).toBe(
-      true
+    const draft = (tutorInput as HTMLTextAreaElement).value;
+    expect(draft.startsWith(`${prefix}xxx`)).toBe(true);
+    expect(draft).toHaveLength(MAX_TUTOR_MESSAGE_CHARS - 1);
+    expect(draft.endsWith('x')).toBe(true);
+  });
+});
+
+// ── review round 2 ──────────────────────────────────────────────────────────
+
+describe('designs over more than one turn', () => {
+  /** Each turn designs the dark bass afresh, under a new id, as the tool does. */
+  const designs = () =>
+    answer(async (body) => [
+      start,
+      { type: 'capability_result', capabilitySlug: 'design_sound', result: await designFor(body) },
+      done,
+    ]);
+  const undoButtons = () => within(tutor()).getAllByRole('button', { name: 'Undo' });
+
+  it('undoes back through each design to what was there before the first', async () => {
+    designs();
+    page();
+    await ask('Design a dark round bass');
+    await waitFor(() => expect(loadedName()).toBe('Dark round bass'));
+    await ask('Another one');
+    await waitFor(() => expect(undoButtons()).toHaveLength(2));
+    const [first, second] = undoButtons();
+    // only the design on the panel can be undone
+    expect(first).toBeDisabled();
+    expect(second).toBeEnabled();
+
+    fireEvent.click(second);
+    // the first design is open again, as it was, so its Undo means something again
+    expect(loadedName()).toBe('Dark round bass');
+    await waitFor(() => expect(undoButtons()[0]).toBeEnabled());
+    fireEvent.click(undoButtons()[0]);
+    expect(loadedName()).toBe('Open bass');
+    expect(cutoff()).toBe('1');
+  });
+
+  it('holds a design’s Undo until the turn ends, then takes back every design it opened', async () => {
+    const s = liveStream();
+    let sent: TurnBody | null = null;
+    fetchMock.mockImplementation(async (_url: string, init: { body: string }) => {
+      sent = JSON.parse(init.body) as TurnBody;
+      return okResponse(s.body);
+    });
+    page();
+    await ask('Design two basses');
+    await waitFor(() => expect(sent).not.toBeNull());
+    const body = sent!;
+
+    const one = await designFor(body);
+    await act(async () =>
+      s.send(start, { type: 'capability_result', capabilitySlug: 'design_sound', result: one })
     );
+    await waitFor(() => expect(loadedName()).toBe('Dark round bass'));
+    expect(undoButtons()[0]).toBeDisabled();
+    expect(within(tutor()).getByText('Ready when the tutor has finished')).toBeTruthy();
+
+    const two = await designFor(body);
+    await act(async () => {
+      s.send({ type: 'capability_result', capabilitySlug: 'design_sound', result: two }, done);
+      s.close();
+    });
+    expect(await within(tutor()).findByText(/the last of 2/)).toBeTruthy();
+    await waitFor(() => expect(undoButtons()[0]).toBeEnabled());
+    fireEvent.click(undoButtons()[0]);
+    expect(loadedName()).toBe('Open bass');
+    expect(cutoff()).toBe('1');
+  });
+});
+
+describe('how a turn ended', () => {
+  it('says the tutor declined when the provider refused or filtered the answer', async () => {
+    answer(() => [start, { type: 'content', delta: 'I' }, { type: 'done', finishReason: 'error' }]);
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText(TUTOR_ERRORS.refused)).toBeTruthy();
+  });
+
+  it('keeps the cost line when the same answer then stops at the token cap', async () => {
+    answer(() => [
+      start,
+      { type: 'content', delta: 'Turn CUTOFF' },
+      {
+        type: 'budget_exceeded_per_turn',
+        code: 'budget_exceeded_per_turn',
+        message: 'over the cap',
+        usedUsd: 0.25,
+        limitUsd: 0.2,
+      },
+      { type: 'done', finishReason: 'length' },
+    ]);
+    page();
+    await ask();
+
+    expect(await within(tutor()).findByText(TUTOR_ERRORS.turnCost)).toBeTruthy();
+    expect(within(tutor()).queryByText(TUTOR_ERRORS.dropped)).toBeNull();
+  });
+
+  it('shows an answer that failed before as failed, when the conversation is carried on', async () => {
+    serve({
+      conversation: {
+        conversationId: CONVERSATION_ID,
+        messages: [
+          { role: 'user', content: 'Make it darker' },
+          { role: 'assistant', content: '', failed: true },
+        ],
+      },
+    });
+    page();
+
+    expect(await within(tutor()).findByText('Make it darker')).toBeTruthy();
+    expect(within(tutor()).getByText(TUTOR_ERRORS.generic)).toBeTruthy();
   });
 });

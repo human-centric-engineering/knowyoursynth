@@ -95,7 +95,13 @@ const ConversationSchema = z.object({
   conversation: z
     .object({
       conversationId: z.string(),
-      messages: z.array(z.object({ role: z.enum(['user', 'assistant']), content: z.string() })),
+      messages: z.array(
+        z.object({
+          role: z.enum(['user', 'assistant']),
+          content: z.string(),
+          failed: z.literal(true).optional(),
+        })
+      ),
     })
     .nullable(),
 });
@@ -187,7 +193,10 @@ export interface TutorChat {
   /** Whether the proposal chip's Undo still means that change: the panel still shows it. */
   canUndoProposal: (m: TutorMessage) => boolean;
   undoProposal: (m: TutorMessage) => void;
-  /** Whether the design chip's Undo still means it: that design is open and the panel still shows it. */
+  /**
+   * Whether the design chip's Undo still means it: the turn has finished (a later step may open another design, which
+   * the same Undo takes back too), that design is open and the panel still shows it.
+   */
   canUndoDesign: (m: TutorMessage) => boolean;
   undoDesign: (m: TutorMessage) => void;
 }
@@ -249,7 +258,11 @@ export function useTutorChat(host: TutorHost): TutorChat {
         if (!current || !conversation) return;
         conversationId.current = conversation.conversationId;
         setMessages(
-          conversation.messages.map((m) => ({ id: newId(), role: m.role, text: m.content }))
+          conversation.messages.map((m) =>
+            m.failed
+              ? { id: newId(), role: 'assistant', text: '', error: TUTOR_ERRORS.generic }
+              : { id: newId(), role: m.role, text: m.content }
+          )
         );
       })
       .catch((error: unknown) => {
@@ -283,9 +296,6 @@ export function useTutorChat(host: TutorHost): TutorChat {
         const design = readDesign(def, r.capabilitySlug, r.result);
         if (!design) continue;
         const undo = hostRef.current.openDesign(design);
-        // Another design on the panel: no earlier turn's Undo can mean anything now.
-        for (const id of [...undos.current.keys()])
-          if (id !== turn.assistantId) undos.current.delete(id);
         // One Undo goes back to before the turn's first design.
         if (!turn.undo) {
           turn.undo = undo;
@@ -305,7 +315,13 @@ export function useTutorChat(host: TutorHost): TutorChat {
   /** One request for one turn. Resolves how it ended, so a dead conversation can be replaced once. */
   const request = useCallback(
     async (turn: Turn, message: string, controller: AbortController): Promise<Sent> => {
-      const fail = (error: string) => patch(turn.assistantId, (m) => ({ ...m, error }));
+      // The turn's first line stands: a later frame (a `done` after a cost stop) does not replace it.
+      let said = false;
+      const fail = (error: string) => {
+        if (said) return;
+        said = true;
+        patch(turn.assistantId, (m) => ({ ...m, error }));
+      };
       const res = await fetch('/api/v1/tutor/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -378,8 +394,10 @@ export function useTutorChat(host: TutorHost): TutorChat {
               break;
             case 'done':
               ended = true;
-              // Stopped at the token cap: what arrived is a fragment (#594).
+              // Stopped at the token cap, what arrived is a fragment (#594); `error` is a provider's refusal or
+              // content filter.
               if (event.finishReason === 'length') fail(TUTOR_ERRORS.dropped);
+              else if (event.finishReason === 'error') fail(TUTOR_ERRORS.refused);
               break;
             default:
               break;
@@ -490,6 +508,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
     (m: TutorMessage) => {
       const d = m.design;
       return (
+        !m.answering &&
         !!d &&
         !d.undone &&
         host.designedId === d.design.id &&

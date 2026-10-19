@@ -195,7 +195,7 @@ describe('GET /api/v1/tutor/conversation', () => {
     expect((await other.json()).data.conversation.conversationId).toBe('other-synth');
   });
 
-  it("leaves out Sunrise's marker for an answer that failed, and orders rows saved together by id", async () => {
+  it("returns an answer that failed as failed, without Sunrise's marker text, and orders rows saved together by id", async () => {
     mockPrisma.aiConversation = table([
       conversation({
         messages: [
@@ -225,6 +225,7 @@ describe('GET /api/v1/tutor/conversation', () => {
 
     expect(body.data.conversation.messages).toEqual([
       { role: 'user', content: 'Make it darker' },
+      { role: 'assistant', content: '', failed: true },
       { role: 'user', content: 'Try again?' },
       { role: 'assistant', content: 'First' },
       { role: 'assistant', content: 'Second' },
