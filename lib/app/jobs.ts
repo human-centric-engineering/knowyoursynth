@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/db/client';
+import { reconcileBankKnowledge } from '@/lib/app/bank/knowledge';
 import { registerAppJob } from '@/lib/orchestration/maintenance/app-jobs';
+import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
+import { requireOrgId } from '@/lib/tenancy/context';
 
 /**
  * App recurring-job registrations.
@@ -51,5 +54,17 @@ export function initAppJobs(): void {
       });
       return { pruned: count };
     },
+  });
+
+  /* The databank's rows as knowledge documents, for search_databank's meaning-based layer (`f-tutor-knowledge` t-58).
+     Here rather than on an admin's save, which would then wait on an embedding call per row. Idempotent, and a no-op
+     with no embedding provider. The install org's only: the databank is the install's, and so is the tutor. */
+  registerAppJob({
+    name: 'app:project-databank',
+    intervalMs: 15 * 60 * 1000,
+    run: async () =>
+      requireOrgId() === INSTALL_ORG_ID
+        ? reconcileBankKnowledge()
+        : { status: 'skipped', reason: 'not the install org' },
   });
 }

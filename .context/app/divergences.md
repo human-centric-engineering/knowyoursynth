@@ -32,7 +32,7 @@ the same PR**, and each row names what deletes it.
 - **Change:**
   - `package.json`: renamed to `knowyoursynth@0.1.0`, with its own description, keywords and
     repository URLs. Adds the `predev`, `prebuild`, `build:audio-workers`, `build:panel-renderer`,
-    `check:synths`, `smoke:sounds`, `smoke:profile` and `smoke:tutor` scripts, `esbuild` as a devDependency, and
+    `check:synths`, `smoke:sounds`, `smoke:profile`, `smoke:tutor` and `bank:reindex` scripts, `esbuild` as a devDependency, and
     the five `@fontsource/*` packages and `@resvg/resvg-js` as dependencies.
   - `package-lock.json`: carries the package rename, plus the transitive patches from
     `npm audit fix` (undici, engine.io, brace-expansion, source-map-js; #8).
@@ -330,7 +330,8 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/auth-landing.ts` (the label only), `lib/app/data-export.ts` (synth suggestions exported;
   the catalogue and databank tables excluded), `lib/app/db-drift.ts` (the suggestion FK's probe) and
   `lib/app/admin-nav.ts` (the "Synths" admin section) and `lib/app/account-sections.ts` (the synth
-  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames),
+  profile and the synths owned and wanted, on settings only), `lib/app/jobs.ts` (the prune of lapsed held usernames, and the databank's projection into
+  the knowledge base, `f-tutor-knowledge` t-58),
   `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
