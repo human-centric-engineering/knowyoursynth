@@ -8,7 +8,8 @@ and the learner applies. The model never writes to the panel.**
 
 t-53 built the agent, its tools and its context; t-54 the stream route and the daily allowance;
 t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sounds.md), _A
-sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)).
+sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)). `f-tutor-knowledge`
+grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its tool.
 
 ## Anti-patterns first
 
@@ -20,7 +21,8 @@ sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)).
 - **Don't give a tool a user.** No tool takes a user id in its arguments (every schema is
   `.strict()`, so an extra `userId` is refused), and none reads `CapabilityContext.userId`. A
   panel is the same whoever sent it. `tools.test.ts` holds every registered tutor tool to both.
-- **Don't let a tool write.** The four tools read and propose. A tool that changed stored state
+- **Don't let a tool write.** The panel tools read and propose, and `search_databank` reads the
+  databank. A tool that changed stored state
   would need BeatBuddy's workspace row and its retry-on-conflict; these need neither, and two
   proposals in one model step are both worked out against the panel that was sent.
 - **Don't repair a proposal.** `sanitizeSet` / `sanitizePreset` clamp and drop what they do not
@@ -56,21 +58,22 @@ sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)).
 
 ## Where things are
 
-| Piece                      | Location                                                                                                             |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                              |
-| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                    |
-| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`          |
-| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts` |
-| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                         |
-| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound}.ts`, listed in `tools.ts`                |
-| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                 |
-| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                |
-| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                          |
-| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                           |
-| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                  |
-| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                      |
-| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                     |
+| Piece                      | Location                                                                                                              |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                               |
+| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                     |
+| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`           |
+| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`  |
+| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                          |
+| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank}.ts`, listed in `tools.ts` |
+| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                            |
+| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                  |
+| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                 |
+| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                           |
+| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                            |
+| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                   |
+| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                       |
+| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                      |
 
 ## One turn
 
@@ -213,6 +216,7 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 | `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                | the above, `unknown_section`, `unknown_prefix`               |
 | `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                   | the above, `empty_proposal`, `invalid_proposal`, `no_change` |
 | `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                         | the above, `invalid_design`                                  |
+| `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt and its links; a `note` when none match | a bad argument only (it reads no panel)                      |
 
 - **`propose_panel_change`** runs `checkSettings` on `set` and `checkCables` on `addCables`, then
   checks against the panel: a cable to remove must be in, a cable to add must not be (nor listed
@@ -231,6 +235,11 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   `{ blurb, level, category, how, steps, context, tweaks, phrase: { bpm, steps } }` as `lesson`,
   with `fromTutor: true`; the `Preset` the tool returns has the category as its first tag and a
   phrase with `loop`.
+- **`search_databank`** is the databank search in [`bank.md`](./bank.md#searching): by name and
+  text, no AI provider. The instructions tell the tutor to call it first for any person, band,
+  record or real instrument, keep to what it found, and say when it is going from memory. Six rows
+  keep a search small in a tool loop that sends every result again on each later step. With no
+  match it says so in `note`, so the model does not read an empty list as licence to guess.
 - Every tool's JSON schema says `additionalProperties: false`, as its Zod schema refuses any other
   key, so the model is told rather than refused.
 - A refusal lists up to twelve problems, each with its path (`steps.1.set.filter.drive`), then
@@ -422,6 +431,7 @@ stream.
   other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
   panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
   would mean reading them back from the conversation's tool messages.
-- **Grounding** in the databank and the web, the sourcing rules and the topic boundary are
-  `f-tutor-knowledge`. Until then the instructions let the tutor answer general questions about
-  synths from its own knowledge, and decline others in one line.
+- **The rest of the grounding** is `f-tutor-knowledge`: the meaning-based databank layer (t-58),
+  web search (t-59), sources shown under each answer and the full sourcing rules (t-60), and the
+  eval set (t-61). Until t-60 the panel shows the answer's text only; the tutor's links are in what
+  it writes.

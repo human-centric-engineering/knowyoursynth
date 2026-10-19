@@ -133,6 +133,33 @@ Public, the section rate limit, ETags. These two read the whole databank once pe
 join in memory, as the prototype did. When the compiled list (b4) or more records make that slow,
 give the slow join its own query, as `getHeardOn` has.
 
+## Searching
+
+`lib/app/bank/search.ts` (`f-tutor-knowledge` t-57) finds rows by name and text, and calls no AI
+provider. `GET /api/v1/bank/search?q=&kind=&limit=` serves it publicly (`q` 1–200 characters,
+`limit` 1–20, default 10), and the tutor's `search_databank` tool uses it
+([`tutor.md`](./tutor.md#the-tools)).
+
+- **BM25 over three fields of each row**, weighted 3 : 1 : 0.5: its name; its own text (an
+  artist's or maker's summary, story, innovations; an instrument's text and maker; a record's
+  parts, album and credit); and the names of the rows it links to. The last is what lets "who
+  played a Minimoog" reach artists whose rows only link to it, without outranking the instrument.
+- **A query that holds a row's whole name lifts that row** above rows that mention it or add to
+  its name: "Tom Oberheim" finds the maker before the Tom Oberheim SEM, and "Minimoog Model D" the
+  original before its 2016 reissue.
+- **Words are compared loosely**: case and accents off, stop words out, plain plurals folded
+  ("synths" → "synth"). A word with a digit is kept whole, so "DX7s" is not a plural of "DX7".
+- **Each result** carries its kind, id, name, page (`bankHref`), a line that places it ("Moog Music
+  · 1970 · mono"), the sentence of its text that best matches, and up to eight rows it links to.
+- **In memory, cached by content.** Building the documents (each row's joins) takes some 150 ms;
+  the index is kept while the bank's content hashes the same, so a search costs the read layer's
+  four queries, the hash and a few milliseconds, and an admin's edit shows on the next search.
+  It was planned as Postgres `ts_rank_cd`. Scoring here gives true BM25, needs no raw SQL (which
+  `lib/app` may only use from the allowlist), and is tested over the committed data.
+- **What it misses**: a question that names nothing in the databank ("who pioneered modular
+  synthesis?"). That is the meaning-based layer's job (t-58), which the tutor's tool merges in; the
+  public route stays lexical, so it costs nothing per query.
+
 ## The pages
 
 `/bank` and `/bank/[tab]/[id]`, in `(public)`, transliterated from the prototype's `Bank.jsx`
