@@ -3,9 +3,10 @@
  * reasons hold here: it is a cost cap, and the cost is per turn.
  *
  * Sunrise has no per-user daily cap, so the app counts. A turn is one message the person sent to the tutor: an
- * `AiMessage` with `role: 'user'` in one of their tutor conversations. Nothing else is stored, because the count is read
- * from the transcript. So deleting a conversation gives its turns back, which is fine for a cost cap and not worth a
- * table.
+ * `AiMessage` with `role: 'user'` in one of their tutor conversations. A web search counts as one more (D12, t-59): the
+ * tool row `streamChat` saves for each `web_search` that came back with results, so a search refused before it reached
+ * Brave costs nothing. Nothing else is stored, because the count is read from the transcript. So deleting a
+ * conversation gives its turns back, which is fine for a cost cap and not worth a table.
  *
  * The day is the UTC day. One boundary for everybody is simple to state ("back at midnight UTC") and needs nothing
  * from the browser.
@@ -14,6 +15,9 @@ import { TUTOR_AGENT_SLUG } from '@/lib/app/tutor/agent';
 import { prisma } from '@/lib/db/client';
 import { env } from '@/lib/env';
 import { platformSlugWhere } from '@/lib/orchestration/agents/platform-agent-guard';
+
+/** The tool whose calls count against the allowance as turns do: each one is a paid Brave request. */
+export const WEB_SEARCH_TOOL = 'web_search';
 
 /** 30 turns a day by default, as BeatBuddy's. Tuned through `TUTOR_DAILY_TURNS`; the production number is f-launch x4's. */
 export function tutorDailyTurns(): number {
@@ -35,7 +39,8 @@ function startOfUtcDay(now: Date): Date {
 /**
  * The person's allowance as it stands. `userId` comes from the session.
  *
- * A soft cap: turns sent together all read the count before any of them is saved, so all go ahead. The stream route's
+ * A soft cap: turns sent together all read the count before any of them is saved, so all go ahead, and so do searches
+ * the model asks for together in one step. The stream route's
  * per-minute chat cap (10 by default, per server process) bounds how many can arrive together, so a day's overshoot is
  * at most that many on each server process. That is fine for a cost limit; Sunrise's conversation cap makes the same
  * trade.
@@ -48,7 +53,15 @@ export async function readAllowance(userId: string, now = new Date()): Promise<T
   const dayStart = startOfUtcDay(now);
   const used = await prisma.aiMessage.count({
     where: {
-      role: 'user',
+      OR: [
+        { role: 'user' },
+        // `streamChat` stores each tool result on its row's metadata as `{ toolCall, result }`.
+        {
+          role: 'tool',
+          capabilitySlug: WEB_SEARCH_TOOL,
+          metadata: { path: ['result', 'success'], equals: true },
+        },
+      ],
       createdAt: { gte: dayStart },
       // The tutor as the route loads it: the platform's row, never an org's own agent under the same slug.
       conversation: {

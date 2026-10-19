@@ -3,7 +3,8 @@
  * which values do: an unset or blank one takes the default, and a nonsensical one is refused.
  *
  * FORK NOTE — this reads the real `lib/app/env.ts` on purpose: it is Know Your Synth's own variables under test, not
- * the seam's default. A fork of this app that drops or renames `TUTOR_DAILY_TURNS` should change this file with it.
+ * the seam's default. A fork of this app that drops or renames `TUTOR_DAILY_TURNS` or `BRAVE_SEARCH_API_KEY` should change
+ * this file with it.
  *
  * @see lib/app/env.ts
  */
@@ -30,5 +31,25 @@ describe('TUTOR_DAILY_TURNS', () => {
 
   it('refuses zero, a fraction, too many and a word', () => {
     for (const value of ['0', '2.5', '1001', 'thirty']) expect(parse(value).success).toBe(false);
+  });
+});
+
+describe('BRAVE_SEARCH_API_KEY', () => {
+  const parse = (value: string | undefined) =>
+    appEnvSchema.safeParse(value === undefined ? {} : { BRAVE_SEARCH_API_KEY: value });
+
+  it('is optional: unset or blank, the server boots with web search off', () => {
+    for (const value of [undefined, '']) {
+      const result = parse(value);
+      expect(result.success).toBe(true);
+      expect(result.data?.BRAVE_SEARCH_API_KEY).toBeUndefined();
+    }
+  });
+
+  it('is kept as it is when set', () => {
+    expect(parse('brave-key')).toMatchObject({
+      success: true,
+      data: { BRAVE_SEARCH_API_KEY: 'brave-key' },
+    });
   });
 });

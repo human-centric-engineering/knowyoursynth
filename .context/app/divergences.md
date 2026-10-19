@@ -335,7 +335,8 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
-  `TUTOR_DAILY_TURNS`, t-54): fork-owned scaffolds, filled.
+  `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59): fork-owned scaffolds,
+  filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,

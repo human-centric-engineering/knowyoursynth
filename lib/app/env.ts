@@ -51,4 +51,11 @@ export const appEnvSchema = z.object({
     (value) => (value === '' ? undefined : value),
     z.coerce.number().int().min(1).max(1000).default(30)
   ),
+  /* Know Your Synth: the tutor's web search, through Brave's Search API (`f-tutor-knowledge` t-59, D12). Optional: with
+     none, `web_search` refuses and the tutor says search isn't set up. Blank means unset, as above. Search also needs
+     `api.search.brave.com` in ORCHESTRATION_ALLOWED_HOSTS. See .context/app/tutor.md. */
+  BRAVE_SEARCH_API_KEY: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.string().min(1).optional()
+  ),
 });
