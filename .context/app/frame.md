@@ -97,3 +97,17 @@ module in `components/app/marketing/`, and each has a divergence row. The words 
 - **Owner facts** (the origin story on About, the contact address) show as `[OWNER: …]` through
   `components/app/legal/owner-field.tsx` until they are filled. `grep -rn "OwnerField"
 components/app` lists what is left.
+
+## The legal pages
+
+`/privacy` and `/terms` are thin shims too, onto `components/app/legal/{privacy,terms}-page.tsx`, in
+the About page's frame (`legal-page.tsx`). Each has a divergence row.
+
+- **The policy is written from the code, not a template.** Its "Everything in your download" list
+  is rendered from the export manifests (`exportedSources()`, `attributionSources()` and
+  `getAppSubjectSources()`), so a source added to the export appears with nothing else to edit. The
+  prose above it is by hand: a new kind of data, or a new service that receives any, needs a
+  sentence there, and "Who else handles it" names every outside service the code sends to.
+- **The owner's facts** (the entity, the age, the providers chosen at launch, the retention and
+  liability wording) are `OwnerField`s for the f-launch legal review.
+- **Bump `PRIVACY_UPDATED` or `TERMS_UPDATED`** with any change to what a page says.
