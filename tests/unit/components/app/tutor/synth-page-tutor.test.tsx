@@ -1299,7 +1299,7 @@ describe("an answer's sources", () => {
     expect(cs80.getAttribute('href')).toBe('https://www.example.com/cs80');
     expect(cs80.getAttribute('rel')).toBe('noopener noreferrer nofollow');
     expect(cs80.getAttribute('target')).toBe('_blank');
-    expect(within(list).getByText(/example\.com/)).toBeTruthy();
+    expect(within(list).getByText('· example.com')).toBeTruthy();
 
     expect(within(list).getAllByRole('link')).toHaveLength(2);
     expect(within(tutor()).queryByText('Click me')).toBeNull();
