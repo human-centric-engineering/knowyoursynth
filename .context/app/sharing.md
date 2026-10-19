@@ -208,8 +208,10 @@ serve are all the segment's `not-found.tsx`: "This sound isn't shared any more".
     and `build`, and the output is gitignored; its type is the committed `.d.mts`. The entry imports
     `react-dom/server.browser`, not `react-dom/server`: the Node build `require`s `async_hooks`,
     `stream` and others at run time, and the route's bundler refuses a dynamic `require`.
-  - `panel-image.ts` renders the SVG through it, checking values and cables as the page's
-    `fitPanel` does.
+  - `panel-svg.ts` renders the SVG through it, checking values and cables as the page's
+    `fitPanel` does, and `panel-image.ts` rasterises that. They are two modules so a page can draw
+    a panel without loading resvg, whose native binding a page's server layer cannot resolve (the
+    home page's picture, `frame.md`).
   - `@resvg/resvg-js` rasterises the SVG. It is native, so it is a server external in
     `next.config.js` (a divergence row).
   - `card-fonts.ts` unpacks the panel's `@fontsource` WOFFs to TrueType, renaming each to its
