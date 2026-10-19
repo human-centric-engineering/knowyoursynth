@@ -108,7 +108,7 @@ describe('Library', () => {
     setup();
     fireEvent.change(search(), { target: { value: 'zzzz-no-such-sound' } });
     expect(screen.getByText('0 of 99')).toBeTruthy();
-    const empty = screen.getByText(/No sounds match/);
+    const empty = screen.getByText(/No library sound matches that/);
     expect(empty.textContent).not.toMatch(/tutor/i);
   });
 });

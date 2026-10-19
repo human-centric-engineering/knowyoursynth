@@ -44,11 +44,13 @@ describe('PanelFooter', () => {
       'href',
       '/terms'
     );
-    // tests/setup.ts pins the brand seam to "unconfigured", so read the name it resolves to.
-    const { BRAND } = await import('@/lib/brand');
+    // The not-affiliated notice `lib/app/footer.ts` carries (`f-front-door` t-63), verbatim and with no year.
     expect(
-      screen.getByText(`© ${new Date().getFullYear()} ${BRAND.legalName}`)
+      screen.getByText(
+        'Independent. Not affiliated with any synth maker. Product names are trademarks of their owners.'
+      )
     ).toBeInTheDocument();
+    expect(screen.queryByText(/©/)).not.toBeInTheDocument();
   });
 
   it('opens the consent preferences from Cookie Preferences', async () => {

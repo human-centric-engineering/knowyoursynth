@@ -48,7 +48,7 @@ export function PublicProfileView({ profile }: { profile: PublicProfile }) {
       )}
       {owned && <SynthList title="Synths they own" synths={owned} />}
       {wishlist && <SynthList title="On their wishlist" synths={wishlist} />}
-      {empty && <p className="mt-6 text-[15px] text-(--kys-muted)">Nothing else here yet.</p>}
+      {empty && <p className="mt-6 text-[15px] text-(--kys-muted)">Nothing shared here yet.</p>}
     </article>
   );
 }

@@ -39,6 +39,10 @@ vi.mock('@/lib/app/brand', () => ({
   appBrandDescription: null,
 }));
 
+// FORK (Know Your Synth): `lib/app/footer.ts` carries the not-affiliated notice, which names no entity. The
+// copyright cases below are about the platform default's wiring, so they read it with the seam unset.
+vi.mock('@/lib/app/footer', () => ({ footerCopyright: null }));
+
 // The footers render a Cookie Preferences control, which needs consent context.
 // Unrelated to brand; stubbed so these cases can render the real components.
 vi.mock('@/lib/consent', () => ({ useConsent: () => ({ openPreferences: vi.fn() }) }));

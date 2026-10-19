@@ -58,7 +58,12 @@ describe('PublicFooter', () => {
       'href',
       '/terms'
     );
-    expect(screen.getByText(/^©/)).toHaveTextContent('Sunrise');
+    // FORK (Know Your Synth): pinned to the not-affiliated notice `lib/app/footer.ts` carries (`f-front-door` t-63).
+    expect(
+      screen.getByText(
+        'Independent. Not affiliated with any synth maker. Product names are trademarks of their owners.'
+      )
+    ).toBeInTheDocument();
     // Cookie Preferences control is present out of the box.
     expect(screen.getByRole('button', { name: 'Cookie Preferences' })).toBeInTheDocument();
   });
@@ -100,7 +105,8 @@ describe('PublicFooter', () => {
     const { PublicFooter } = await import('@/components/layouts/public-footer');
     const { container } = render(React.createElement(PublicFooter));
 
-    const copyright = screen.getByText(/^©/);
+    // FORK (Know Your Synth): pinned to the notice `lib/app/footer.ts` carries.
+    const copyright = screen.getByText(/^Independent\. Not affiliated/);
     const navAbout = screen.getByRole('link', { name: 'About' });
     expect(copyright.parentElement).toBe(navAbout.closest('nav')?.parentElement);
     expect(container.querySelector('.mt-6.text-center')).toBeNull();

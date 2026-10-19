@@ -80,6 +80,6 @@ describe('LessonsCard', () => {
     vi.mocked(listProgress).mockResolvedValue([]);
     await renderCard();
     expect(screen.queryByRole('list')).toBeNull();
-    expect(screen.getByText(/None yet/)).toBeTruthy();
+    expect(screen.getByText(/^No lessons started yet\./)).toBeTruthy();
   });
 });

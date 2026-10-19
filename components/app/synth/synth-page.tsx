@@ -1398,6 +1398,7 @@ function Synth({
         <div className="flex min-h-0 flex-col gap-5">
           <MySoundsList
             signedIn={authPending ? null : signedIn}
+            synthName={def.name}
             signInHref={signInHref}
             sounds={mine.sounds}
             failed={mine.failed}
@@ -1425,7 +1426,10 @@ function Synth({
             mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
           />
         ) : (
-          <p className="text-sm text-(--kys-muted)">This synth has no sounds yet.</p>
+          <p className="text-sm text-(--kys-muted)">
+            There are no library sounds for the {def.name} yet, so there&apos;s no lesson to show.
+            The panel still plays.
+          </p>
         )}
         <aside className="flex flex-col gap-4 lg:col-span-2 xl:col-span-1">
           <Inspector

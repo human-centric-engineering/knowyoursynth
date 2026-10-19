@@ -93,7 +93,32 @@ describe('/explore', () => {
       applied: query,
     }));
     await renderPage({ tag: 'bass' });
-    expect(screen.getByText('No published sounds match these filters.')).toBeInTheDocument();
+    expect(screen.getByText('No published sound matches these filters. Take one away, or try another synth.')).toBeInTheDocument();
+  });
+
+  it('says when nothing is published, and where to start', async () => {
+    vi.mocked(listPublishedSounds).mockImplementation(async (query) => ({
+      sounds: [],
+      total: 0,
+      applied: query,
+    }));
+    await renderPage();
+    expect(screen.getByText(/^Nobody has published a sound yet\./)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'synth' })).toHaveAttribute('href', '/synths');
+  });
+
+  it('links back to the first page, keeping the filters, from a page past the end', async () => {
+    vi.mocked(listPublishedSounds).mockImplementation(async (query) => ({
+      sounds: [],
+      total: 3,
+      applied: query,
+    }));
+    await renderPage({ tag: 'bass', page: '9' });
+    expect(screen.getByText(/^There aren't that many pages\./)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to the first page' })).toHaveAttribute(
+      'href',
+      '/explore?tag=bass'
+    );
   });
 
   it('pages, keeping the filters in each link', async () => {

@@ -1,12 +1,7 @@
 import { renderAsync } from '@resvg/resvg-js';
 
 import { CARD_DEFAULT_FAMILY, cardFontFiles } from '@/components/app/sharing/card-fonts';
-import { renderPanel } from '@/components/app/sharing/panel-render';
-import type { SynthDesign } from '@/lib/app/catalogue/designs';
-import { modularDef } from '@/lib/app/synths/lib/layout';
-import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
-import type { SynthDef } from '@/lib/app/synths/contract';
+import { panelSvg, type PanelSvgInput } from '@/components/app/sharing/panel-svg';
 
 /**
  * A shared sound's panel as a picture, for its social card (t-50): the synth page's own faceplate (`SynthPanel`), drawn
@@ -22,47 +17,9 @@ import type { SynthDef } from '@/lib/app/synths/contract';
  * native, so it is a server external (`next.config.js`, a divergence row).
  */
 
-export interface PanelImageInput {
-  def: SynthDef;
-  /** The sound's panel as stored: checked against `def` here, as the page checks it (`fitPanel`). */
-  values: unknown;
-  cables: unknown;
-  design: SynthDesign;
+export interface PanelImageInput extends PanelSvgInput {
   /** The box the picture must fit inside, in pixels; it keeps the panel's own proportions. */
   box: { width: number; height: number };
-}
-
-const noop = () => undefined;
-
-/** The panel's SVG, standalone: namespaced, and sized at its own view so a rasteriser can scale it. */
-export function panelSvg({ def, values, cables, design }: Omit<PanelImageInput, 'box'>): {
-  svg: string;
-  width: number;
-  height: number;
-} {
-  const shown = def.modular ? modularDef(def) : def;
-  const markup = renderPanel({
-    def: shown,
-    values: { ...def.init, ...sanitizeSet(def, values) },
-    cables: sanitizeCables(def, cables).map(([from, to], i) => ({
-      from,
-      to,
-      color: CABLE_COLORS[i % CABLE_COLORS.length],
-    })),
-    design,
-    onChange: noop,
-    onConnect: noop,
-    onRemoveCable: noop,
-  });
-  const { w, h } = shown.view;
-  return {
-    svg: markup.replace(
-      /^<svg /,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" `
-    ),
-    width: w,
-    height: h,
-  };
 }
 
 /**

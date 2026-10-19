@@ -335,6 +335,37 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** upstream stops counting the fork's graders there, or the fork registers no
   grader.
 
+### The home, about and contact pages, as thin shims
+
+- **Files:** `app/(public)/page.tsx`, `app/(public)/about/page.tsx`, `app/(public)/contact/page.tsx`
+- **Change:** each is a one-line re-export of `components/app/marketing/{home,about,contact}-page.tsx` (default
+  export and `metadata`) under an `app:shim` comment. The pages' content and copy (`.context/app/planning/site-copy.md`
+  §1–3) live in those modules. Contact still renders Sunrise's `<ContactForm>`, unchanged.
+- **Why:** `f-front-door` t-63. Sunrise's pages carry its own placeholder copy, and CUSTOMIZATION.md §6 documents the
+  thin-shim as the way to replace it: the App Router resolves `/`, `/about` and `/contact` from these paths, so the
+  route files must be touched, and a one-line shim is the smallest touch.
+- **On conflict:** keep ours, the one line each. If upstream changed the pages' behaviour rather than their copy (a new
+  metadata field, a change to how Contact uses the form), carry that into our module.
+- **Upstream:** CUSTOMIZATION.md §6 defers a marketing content seam until more forks need one.
+- **Delete when:** Sunrise ships that seam. Move the modules behind it and restore the route files.
+
+### The footer tests, pinned to the not-affiliated notice
+
+- **Files:** `tests/unit/components/layouts/public-footer.test.tsx`,
+  `tests/unit/components/layouts/protected-footer.test.tsx`, `tests/unit/brand-fork-surfaces.test.tsx`
+- **Change:**
+  - `public-footer.test.tsx` and `protected-footer.test.tsx`: the default cases, which render whatever
+    `lib/app/footer.ts` exports, look for the notice rather than `© {year} Sunrise`. Each pin has a `FORK` comment.
+  - `brand-fork-surfaces.test.tsx`: mocks `lib/app/footer.ts` to `null`, hoisted, with a `FORK` comment. Its
+    copyright cases test that the platform default names the legal entity, which the notice does not.
+- **Why:** `lib/app/footer.ts` is filled with the not-affiliated notice (`f-front-door` t-63). Both footer tests'
+  FORK NOTEs say to pin the fork's value rather than delete the cases (`HB2`), which keeps the `false` and
+  verbatim-string cases and the Cookie Preferences guard.
+- **On conflict:** take theirs, then re-apply the pins to whichever cases render the unmocked seam, and the hoisted
+  mock beside the brand-fork file's other mocks.
+- **Upstream:** the FORK NOTEs point at sunrise#636, the sweep that would make the files seam-independent.
+- **Delete when:** #636 lands, or `footerCopyright` goes back to `null`.
+
 ## New files in platform directories
 
 These aren't rows. A new file can't conflict until Sunrise adds a file at the same path, which
@@ -376,13 +407,14 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
   `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59), and
-  `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61): fork-owned scaffolds,
+  `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61), and `lib/app/footer.ts` (the
+  not-affiliated notice, `f-front-door` t-63): fork-owned scaffolds,
   filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`, `env`, `evaluations`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `platform-agents`, `env`, `evaluations`, `footer`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

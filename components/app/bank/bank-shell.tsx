@@ -165,7 +165,10 @@ export function BankShell({ lists, children }: BankShellProps) {
             </div>
           )}
           {!list.length && (
-            <p className="px-2 text-sm text-(--kys-faint)">Nothing matches “{q}”.</p>
+            <p className="px-2 text-sm text-(--kys-faint)">
+              Nothing on this tab matches “{q}”. The counts on the other tabs show where it does
+              turn up.
+            </p>
           )}
           {groups.map(([g, rows]) => (
             <div key={g ?? 'all'} className="mb-2">

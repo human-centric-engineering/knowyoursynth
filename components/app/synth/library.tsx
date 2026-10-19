@@ -168,7 +168,7 @@ export function Library({
           <li className="rounded-lg border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
             {onAskTutor && words.length ? (
               <>
-                No sounds match. Clear the search
+                No library sound matches that. Clear the search
                 {elsewhere ? ', pick another category' : ''}, or{' '}
                 <button
                   type="button"
@@ -180,7 +180,7 @@ export function Library({
                 .
               </>
             ) : (
-              'No sounds match. Clear the search or pick another category.'
+              'No library sound matches that. Clear the search or pick another category.'
             )}
           </li>
         )}

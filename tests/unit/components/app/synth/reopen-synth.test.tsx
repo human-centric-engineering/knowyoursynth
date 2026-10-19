@@ -81,7 +81,7 @@ describe('ReopenSynth', () => {
 
   it('says so, and goes nowhere, when no synths are listed', () => {
     render(<ReopenSynth ids={[]} />);
-    expect(screen.getByRole('status').textContent).toBe('No synths are listed yet.');
+    expect(screen.getByRole('status').textContent).toBe('No synths are listed at the moment.');
     expect(replace).not.toHaveBeenCalled();
   });
 });

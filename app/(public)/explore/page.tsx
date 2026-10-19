@@ -128,11 +128,28 @@ export default async function ExploreRoute({ searchParams }: Props) {
       <section className="mt-6" aria-label="Sounds">
         {sounds.length === 0 ? (
           <p className="text-[15px] text-(--kys-muted)">
-            {total > 0
-              ? 'There are not that many pages.'
-              : filtered
-                ? 'No published sounds match these filters.'
-                : 'Nothing published yet.'}
+            {applied.page > pages ? (
+              <>
+                There aren&apos;t that many pages.{' '}
+                <Link
+                  href={exploreHref({ ...applied, page: 1 })}
+                  className="underline hover:text-(--kys-accent)"
+                >
+                  Back to the first page
+                </Link>
+                .
+              </>
+            ) : filtered ? (
+              'No published sound matches these filters. Take one away, or try another synth.'
+            ) : (
+              <>
+                Nobody has published a sound yet. Open a{' '}
+                <Link href="/synths" className="underline hover:text-(--kys-accent)">
+                  synth
+                </Link>
+                , make something you like, save it, and publish it from its sharing options.
+              </>
+            )}
           </p>
         ) : (
           <SoundCards sounds={sounds} />

@@ -68,8 +68,32 @@ upstream does.
 
 - `lib/app/protected-nav.ts`: Sunrise's four links, with `/dashboard` called **My synths**.
 - `lib/app/auth-landing.ts`: the label only. The landing stays `/dashboard`.
-- `lib/app/public-nav.ts` and `lib/app/footer.ts` stay `null`. Their defaults are what the site
-  has today, and a filled copy of a default stops tracking upstream.
+- `lib/app/public-nav.ts`: the header list only (Home, Explore, About, Contact). The footer lists
+  stay `null`: their defaults are what the site has today, and a filled copy of a default stops
+  tracking upstream.
+- `lib/app/footer.ts`: the not-affiliated notice, verbatim and with no year (`f-front-door` t-63,
+  `planning/site-copy.md` §4). The public, protected and panel footers all read it through
+  `resolveFooterCopyright`. About carries the notice in full.
 
 **A nav link joins when its route exists.** `/synths`, `/bank` and `/explore` (plan §4, route
 map) are added by the features that build them. A link to a 404 is worse than none.
+
+## The marketing pages
+
+`/`, `/about` and `/contact` are thin shims (CUSTOMIZATION.md §6): each route file re-exports a
+module in `components/app/marketing/`, and each has a divergence row. The words are
+[`planning/site-copy.md`](./planning/site-copy.md)'s.
+
+- **Type.** The pages sit in Sunrise's `(public)` layout, so each imports `faces.ts` itself, as
+  Explore does: the Fontsource faces, `panel-frame.css` (`kys-frame`) and `synth.css`
+  (`kys-display`, `kys-label`).
+- **Home reads the catalogue** (`listSynths`): the play link and the picture are the first listed
+  synth, and the synth list is every listed one. Nothing on the page counts anything.
+- **The picture** is that synth's panel at its starting values, in its catalogue design, drawn on
+  the server by `panelSvg` (`components/app/sharing/panel-svg.ts`, the social card's renderer) and
+  written into the page as SVG (`hero-panel.tsx`). It is kept per synth, definition version and
+  design. A drawing that fails is logged and left out, and tried again on the next visit. The SVG
+  is about 180 KB, carried twice (HTML and the RSC payload); the page is about 46 KB gzipped.
+- **Owner facts** (the origin story on About, the contact address) show as `[OWNER: …]` through
+  `components/app/legal/owner-field.tsx` until they are filled. `grep -rn "OwnerField"
+components/app` lists what is left.

@@ -123,7 +123,11 @@ describe('SynthLists', () => {
     const user = userEvent.setup();
     render(<SynthLists initial={EMPTY} />);
     await user.type(screen.getByRole('searchbox'), 'theremin');
-    expect(await screen.findByText('No synth in the databank matches that.')).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "No synth in the databank matches that. Try the maker's name, or part of the model name."
+      )
+    ).toBeInTheDocument();
   });
 
   it('offers a retry when the databank does not load', async () => {

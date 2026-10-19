@@ -39,4 +39,7 @@
  * an embedded widget — where naming the platform operator at the foot of the
  * page is a leak rather than a credit.
  */
-export const footerCopyright: string | false | null = null;
+// Know Your Synth: the not-affiliated notice (`f-front-door` t-63, `.context/app/planning/site-copy.md` §4). About
+// carries it in full; this is the one line every frame's footer shows.
+export const footerCopyright: string | false | null =
+  'Independent. Not affiliated with any synth maker. Product names are trademarks of their owners.';

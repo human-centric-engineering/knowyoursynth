@@ -36,12 +36,19 @@ afterEach(() => {
 });
 
 describe('ProtectedFooter', () => {
-  it('renders the default copyright with the platform name when unset', async () => {
+  // FORK (Know Your Synth): `lib/app/footer.ts` carries the not-affiliated notice (`f-front-door` t-63), so this
+  // case is pinned to it rather than to the platform's "© {year} Sunrise" (HB2).
+  it('renders the attribution line the footer seam exports', async () => {
     vi.resetModules();
     const { ProtectedFooter } = await import('@/components/layouts/protected-footer');
     render(React.createElement(ProtectedFooter));
 
-    expect(screen.getByText(/©/)).toHaveTextContent('Sunrise');
+    expect(
+      screen.getByText(
+        'Independent. Not affiliated with any synth maker. Product names are trademarks of their owners.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/©/)).not.toBeInTheDocument();
   });
 
   // Fork-brand cases live in tests/unit/brand-fork-surfaces.test.tsx, which

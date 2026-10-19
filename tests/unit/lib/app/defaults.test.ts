@@ -328,7 +328,11 @@ const SEAM_DEFAULTS: SeamDefault[] = [
   {
     seam: 'lib/app/footer.ts',
     risk: 'a stray value would rewrite — or silently remove — the attribution line on every install, on both the public and authenticated footers',
-    assert: () => expect(footerCopyright).toBeNull(),
+    // Know Your Synth fills this seam: pinned to the not-affiliated notice (`f-front-door` t-63).
+    assert: () =>
+      expect(footerCopyright).toBe(
+        'Independent. Not affiliated with any synth maker. Product names are trademarks of their owners.'
+      ),
   },
   {
     seam: 'lib/app/emails.ts',
