@@ -40,23 +40,15 @@ and it doesn't pretend to be.
   sound built step by step), the **panel**, the **databank**, **My synths** (the dashboard),
   **Explore**.
 
-### Every number, and where it was read from
+### No counts
 
-Read on 2026-10-19 from `main` at `3ecf6a64`. t-63 derives each one at render rather than typing it,
-so the copy cannot go stale; the column says from what.
+**The copy quotes no counts** (owner, 2026-10-19): not how many synths, sounds, lessons,
+instruments, artists or records, and not the tutor's daily allowance. The catalogue and the
+databank keep growing, so a count is out of date the day a synth is added. Say what is there
+("every synth", "a library of sounds", "the databank") and let the pages show how much. The same
+goes for counting kinds ("three modular systems") and for the oldest or newest synth.
 
-| Number | What                                        | Read from                                                                                       | t-63 derives it from                                                  |
-| ------ | ------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| 25     | playable synths, all listed                 | `lib/app/synths/defs/index.ts` (`SYNTH_DEFS`); `data/synths.json`, 25 entries, every one listed | `listSynths().length` (`lib/app/catalogue/read.ts`): listed rows only |
-| 1,061  | library sounds, every one with a lesson     | `data/sounds/*.json`: 1,061 sounds, 1,061 with `steps`                                          | a count of served `SynthSound` rows                                   |
-| 941    | instruments in the databank                 | `data/bank/instruments.json` (86) + `data/bank/reference.json` (855)                            | a count of `BankInstrument` rows, less `BankRemoval`                  |
-| 184    | artists in the databank                     | `data/bank/artists.json`                                                                        | a count of `BankArtist` rows                                          |
-| 248    | songs, albums and scores in the databank    | `data/bank/songs.json`                                                                          | a count of `BankSong` rows                                            |
-| 30     | tutor questions a day, per person (default) | `TUTOR_DAILY_TURNS` default in `lib/app/env.ts`                                                 | not quoted; the copy says "a daily allowance" (below)                 |
-
-`data/` is `prisma/seeds/app-knowyoursynth/data/`. Numbers under 10 are words; 10 and over are
-figures with a thousands comma. The daily allowance is deliberately not quoted: it is an env var an
-operator changes, and the tutor panel's meter already shows the live figure.
+A fact about one instrument is not a count: "Roland's Jupiter-8, 1981" is fine.
 
 ---
 
@@ -73,21 +65,21 @@ through its sounds one step at a time. Free to use.
 > Play the panel in your browser. Point at any control to find out what it does. Then build the sounds
 > one step at a time, until you could make them on the hardware without the app.
 >
-> **[Play the {first synth}]** · [See all {25} synths]
+> **[Play the {first synth}]** · [See all the synths]
 
 - `{first synth}` is the first listed synth by name (the Model D today), linking to
   `/synths/{id}`. A signed-out visitor can play it, so the hero goes straight there, not to sign-up.
-- "See all {25} synths" jumps to the synth list on the same page (below).
+- "See all the synths" jumps to the synth list on the same page (below).
 - Beside or under the hero: that synth's panel, drawn by the app itself (`panel-image.ts`, the
   social card's renderer), in its catalogue design. No stock photo, no illustration of a keyboard.
 
 ### The synths
 
-> ## {25} synths, panel by panel
+> ## The synths, panel by panel
 >
-> Monosynths, polysynths, semi-modulars and three full modular systems, from the 1969 VCS3 to
-> instruments still in the shops. Each one is laid out like the hardware, with the same controls in
-> the same places.
+> Monosynths, polysynths, semi-modulars and modular systems, from early classics to instruments
+> still in the shops. Each one is laid out like the hardware, with the same controls in the same
+> places. More are added as they are ready.
 
 Then the list: every listed synth's name, maker and year, each linking to its page, in the
 catalogue's order. The heritage line from the catalogue goes under each name ("Modelled on the 1970
@@ -109,8 +101,7 @@ Five short sections. Each heading links somewhere real.
 
 > ### Learn the sounds one step at a time
 >
-> Each synth comes with a library of sounds, {1,061} in all, and every one is a lesson. Start from
-> a basic patch and add one change at a time, with a line on why, until you have the whole sound.
+> Each synth comes with a library of sounds, and every one is a lesson. Start from a basic patch and add one change at a time, with a line on why, until you have the whole sound.
 > Then the lesson suggests what to try next to make it your own.
 >
 > [Open a synth →](/synths)
@@ -129,7 +120,7 @@ Five short sections. Each heading links somewhere real.
 
 > ### Look things up in the databank
 >
-> {941} instruments, {184} artists and {248} records, joined up. Find out who played what on which
+> Instruments, artists and records, joined up. Find out who played what on which
 > record, which synths came from which designers, and which modern instruments are modelled on older
 > ones. From a record, load a sound in its style on the synth that played it.
 >
@@ -360,13 +351,14 @@ inventing a second look for the marketing pages.
   synth's catalogue design. Nothing else on the marketing pages is a picture: no stock photography,
   no illustrated keyboards, no gradient blobs.
 - **Type from the frame.** Michroma for the wordmark only, Instrument Sans for text, JetBrains Mono
-  for figures (the counts, years). Section labels in the panel's `kys-label` style, so headings read
+  for figures (years, values). Section labels in the panel's `kys-label` style, so headings read
   like the legends printed on a faceplate. The marketing pages import the `(panel)` faces' CSS
   (`frame.md`, "The faces").
 - **Colour from `--kys-*`.** The ground and surface roles, with the accent kept for links and the
   one primary button per screen. Light and dark both, through Sunrise's toggle.
 - **The synth list reads like a rack**, not a grid of cards: one line per synth, name, maker, year
-  and heritage, with the year in the mono face, so 25 of them scan as a reference list.
+  and heritage, with the year in the mono face, so the whole list scans as a
+  reference, however long it grows.
 - **Motion is minimal.** At most a single staggered reveal on the home page, off under
   `prefers-reduced-motion`. Nothing animates on scroll.
 - **One primary action per screen**: play a synth. Sign-up is a link, not a banner.
