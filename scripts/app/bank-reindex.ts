@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
-dotenv.config({ path: '.env' });
 import { reconcileBankKnowledge } from '@/lib/app/bank/knowledge';
 import { logger } from '@/lib/logging';
 import { INSTALL_ORG_ID } from '@/lib/tenancy/constants';
