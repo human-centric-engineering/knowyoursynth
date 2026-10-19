@@ -527,17 +527,18 @@ source once.
   too, so no other scheme reaches an `<a>`.
 - **A turn with none** is labelled _From the tutor's own knowledge._: one that searched nothing, one
   whose search found nothing, and one whose search refused. A refusal is read by its `success` flag.
-  The label waits for the answer to finish. It is left off a turn that ended in a failure, an
-  answer about a proposal or a designed sound (the chip is what it is about), and a carried-on
-  line the tutor wrote before it searched, which is saved as an answer of its own.
+  The label waits for the answer to finish. It is left off a turn that ended in a failure, and
+  off a carried-on line the tutor wrote before it searched, which is saved as an answer of its own.
 - **They are what the searches found**, not which of them the answer used: the instructions keep
   each claim to its source, and the learner can follow any of them to check.
 - **A conversation carried on shows them too.** The conversation read takes the conversation's
   stored `search_databank` and `web_search` tool messages from the turn of its oldest shown
   message (from its question, when the transcript opens on an answer), newest first up to 200, in
-  a second query so they do not use up the transcript's forty, and gives each answer the sources of
-  the searches before it in its turn as `sources`. A line written before the search ("Let me look
-  that up") gets none; the answer written after it does.
+  a second query so they do not use up the transcript's forty, and gives a turn's sources to its last
+  shown answer as `sources`, as the live panel shows them under the turn's one bubble. Sunrise
+  saves each step's text as its own row, so a line written before a search ("Let me look that
+  up") is a row of its own, and gets none. Each source is checked again on the panel, one at a
+  time, so one it would not take is left out rather than the conversation.
 
 ### When a turn fails
 

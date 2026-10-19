@@ -127,6 +127,8 @@ interface Row {
   createdAt: Date;
 }
 
+type SearchRow = Row & { capabilitySlug: string | null };
+
 /**
  * About twenty turns of five steps, with up to two searches a step. Read newest first, so if a conversation ever has
  * more, it is the oldest answers that lose their sources.
@@ -139,10 +141,7 @@ const MAX_SEARCHES = TRANSCRIPT_MESSAGES * 5;
  * `TRANSCRIPT_MESSAGES`. When the transcript opens on an answer, its question was cut off, and that answer's searches
  * were saved before it: they are read from that question on.
  */
-async function searchesSince(
-  conversationId: string,
-  first: Row
-): Promise<(Row & { capabilitySlug: string | null })[]> {
+async function searchesSince(conversationId: string, first: Row): Promise<SearchRow[]> {
   const question =
     first.role === 'user'
       ? first
@@ -170,35 +169,32 @@ const before = (a: Row, b: Row) =>
   a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 /**
- * Each answer with the sources its turn's searches found before it. A turn's searches go to its next answer: the one
- * the model wrote after reading them. A line written before the search ("Let me look that up") gets none, and a
- * search with no answer after it in the turn (the stream broke) is dropped at the next question.
+ * Each answer with the sources its turn's searches found. Sunrise saves each step's text as a row of its own, so a turn
+ * can show more than one: a line written before a search ("Let me look that up"), then the answer. The turn's sources
+ * all go to its last shown row, as the live panel shows them under the one bubble the turn has.
  */
 function withSources<M extends Row>(
   shown: M[],
-  searches: (Row & { capabilitySlug: string | null })[]
+  searches: SearchRow[]
 ): (M & { sources: TutorSource[] })[] {
-  const rows = [...shown.map((m) => ({ shown: m })), ...searches.map((t) => ({ search: t }))].sort(
-    (a, b) => before('shown' in a ? a.shown : a.search, 'shown' in b ? b.shown : b.search)
-  );
-  let pending: TutorSource[] = [];
-  const out: (M & { sources: TutorSource[] })[] = [];
-  for (const row of rows) {
-    if ('search' in row) {
-      pending = addSources(
-        pending,
-        readSources(row.search.capabilitySlug ?? '', parse(row.search.content))
+  const out: (M & { sources: TutorSource[] })[] = shown.map((m) => ({ ...m, sources: [] }));
+  let s = 0;
+  let turnStart = 0;
+  for (let i = 0; i <= out.length; i++) {
+    const m = out[i];
+    if (m && m.role !== 'user') continue;
+    // A turn ends before the next question, or at the end: its searches are those saved before that question.
+    let found: TutorSource[] = [];
+    while (s < searches.length && (!m || before(searches[s], m) < 0)) {
+      found = addSources(
+        found,
+        readSources(searches[s].capabilitySlug ?? '', parse(searches[s].content))
       );
-      continue;
+      s++;
     }
-    const m = row.shown;
-    if (m.role === 'user') {
-      pending = [];
-      out.push({ ...m, sources: [] });
-    } else {
-      out.push({ ...m, sources: pending });
-      pending = [];
-    }
+    const last = i - 1;
+    if (last >= turnStart && out[last].role !== 'user') out[last].sources = found;
+    turnStart = i + 1;
   }
   return out;
 }

@@ -113,7 +113,16 @@ const ConversationSchema = z.object({
           role: z.enum(['user', 'assistant']),
           content: z.string(),
           ended: z.enum(['stopped', 'failed', 'cost']).optional(),
-          sources: z.array(TutorSourceSchema).optional(),
+          // Each source on its own: one this build would not take is left out, not the conversation.
+          sources: z
+            .array(z.unknown())
+            .optional()
+            .transform((all) =>
+              (all ?? []).flatMap((x) => {
+                const source = TutorSourceSchema.safeParse(x);
+                return source.success ? [source.data] : [];
+              })
+            ),
         })
       ),
     })
@@ -284,7 +293,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
             id: newId(),
             role: m.role,
             text: m.content,
-            ...(m.sources?.length ? { sources: m.sources } : {}),
+            ...(m.sources.length ? { sources: m.sources } : {}),
             ...(m.ended ? { error: PAST[m.ended], past: true } : {}),
           }))
         );
@@ -458,7 +467,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
       try {
         if ((await request(turn, message, controller)) === 'new-conversation') {
           conversationId.current = undefined;
-          patch(turn.assistantId, (m) => ({ ...m, text: '' }));
+          patch(turn.assistantId, (m) => ({ ...m, text: '', sources: undefined }));
           setMessages((prev) => {
             const at = prev.findIndex((m) => m.id === turn.assistantId);
             const note: TutorMessage = {

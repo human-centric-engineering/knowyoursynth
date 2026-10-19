@@ -381,6 +381,8 @@ describe('GET /api/v1/tutor/conversation', () => {
           { id: 'm01', role: 'user', content: 'Who played the CS-80?', createdAt: at(1) },
           { id: 'm02', role: 'assistant', content: 'Let me look.', createdAt: at(2) },
           tool('m03', 3, 'search_databank', databank),
+          // a second step's line, then its search: the turn's sources all go to its last answer
+          { id: 'm03b', role: 'assistant', content: 'Now the web.', createdAt: at(3) },
           tool('m04', 4, 'web_search', webResult),
           // another tool's result is not a source
           tool('m05', 4, 'describe_synth', databank),
@@ -392,6 +394,10 @@ describe('GET /api/v1/tutor/conversation', () => {
           { id: 'm11', role: 'assistant', content: 'It darkens.', createdAt: at(10) },
           // stored as something that is not JSON: read as no result
           { ...tool('m12', 11, 'web_search', null), content: '{not json' },
+          // a turn the stream broke after its search: the line it did write keeps the sources
+          { id: 'm13', role: 'user', content: 'Who made it?', createdAt: at(12) },
+          { id: 'm14', role: 'assistant', content: 'Let me check.', createdAt: at(13) },
+          tool('m15', 14, 'web_search', webResult),
         ],
       }),
     ]);
@@ -401,6 +407,7 @@ describe('GET /api/v1/tutor/conversation', () => {
     expect(body.data.conversation.messages).toEqual([
       { role: 'user', content: 'Who played the CS-80?' },
       { role: 'assistant', content: 'Let me look.' },
+      { role: 'assistant', content: 'Now the web.' },
       {
         role: 'assistant',
         content: 'Vangelis did.',
@@ -414,6 +421,12 @@ describe('GET /api/v1/tutor/conversation', () => {
       { role: 'assistant', content: 'From what I know…' },
       { role: 'user', content: 'What does CUTOFF do?' },
       { role: 'assistant', content: 'It darkens.' },
+      { role: 'user', content: 'Who made it?' },
+      {
+        role: 'assistant',
+        content: 'Let me check.',
+        sources: [{ type: 'web', title: 'CS-80', url: 'https://example.com/cs80' }],
+      },
     ]);
   });
 

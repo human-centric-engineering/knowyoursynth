@@ -1356,6 +1356,8 @@ describe("an answer's sources", () => {
                 href: '/bank/artists/vangelis',
               },
               { type: 'web', title: 'Yamaha CS-80', url: 'https://example.com/cs80' },
+              // one this build would not take: left out, and the conversation still carried on
+              { type: 'web', title: 'Click me', url: 'javascript:alert(1)' },
             ],
           },
           { role: 'user', content: 'What does CUTOFF do?' },
@@ -1371,6 +1373,8 @@ describe("an answer's sources", () => {
     expect(within(list).getByRole('link', { name: 'Vangelis' }).getAttribute('href')).toBe(
       '/bank/artists/vangelis'
     );
+    expect(within(list).getAllByRole('link')).toHaveLength(2);
+    expect(within(tutor()).queryByText('Click me')).toBeNull();
     const web = within(list).getByRole('link', { name: 'Yamaha CS-80' });
     expect(web.getAttribute('rel')).toBe('noopener noreferrer nofollow');
     // the later answer used none
@@ -1394,24 +1398,5 @@ describe("an answer's sources", () => {
     const labels = within(tutor()).getAllByText(OWN_KNOWLEDGE);
     expect(labels).toHaveLength(1);
     expect(labels[0].closest('div')?.textContent).toContain('From what I know, Vangelis.');
-  });
-
-  it('does not label an answer about a sound it designed', async () => {
-    answer(async (body) => [
-      start,
-      { type: 'capability_result', capabilitySlug: 'design_sound', result: await designFor(body) },
-      { type: 'content', delta: 'Here is a dark bass.' },
-      done,
-    ]);
-    page();
-    await ask('Design a dark bass');
-
-    expect(await within(tutor()).findByText('Here is a dark bass.')).toBeTruthy();
-    expect(within(tutor()).getByText(/Opened on the panel/)).toBeTruthy();
-    // Undo is held while the turn answers, so once it is offered the turn has finished
-    await waitFor(() =>
-      expect(within(tutor()).getByRole('button', { name: 'Undo' })).toBeEnabled()
-    );
-    expect(within(tutor()).queryByText(OWN_KNOWLEDGE)).toBeNull();
   });
 });

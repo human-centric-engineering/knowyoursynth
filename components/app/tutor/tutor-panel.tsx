@@ -264,9 +264,8 @@ function Message({
    */
   endsTurn: boolean;
 }) {
-  // The own-knowledge label goes under a finished answer that searched nothing. Not under a proposal or a design, whose
-  // chip is what the answer is about.
-  const ownKnowledge = endsTurn && !!m.text && !m.answering && !m.error && !m.proposal && !m.design;
+  // The own-knowledge label goes under a finished answer whose turn found no source.
+  const ownKnowledge = endsTurn && !!m.text && !m.answering && !m.error;
   if (m.role === 'note') return <p className="text-[13px] text-(--kys-faint)">{m.text}</p>;
   if (m.role === 'user')
     return (
