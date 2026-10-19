@@ -21,11 +21,10 @@ interface StoredDoc {
   tags: Set<string>;
 }
 
-const state = vi.hoisted(() => ({
-  db: {},
-  docs: new Map<string, StoredDoc>(),
-  nextId: 0,
-}));
+const state = vi.hoisted(() => {
+  const db: Record<string, unknown> = {};
+  return { db, docs: new Map<string, StoredDoc>(), nextId: 0 };
+});
 
 const mocks = vi.hoisted(() => ({
   availability: vi.fn(),
