@@ -254,7 +254,7 @@ model. Independent, and not affiliated with any synth maker.
 >
 > ## Who makes it
 >
-> Know Your Synth is made by _[OWNER: confirm: Human-Centric Engineering]_. [Get in touch](/contact).
+> Know Your Synth is made by HCE Studio. [Get in touch](/contact).
 
 **Notes for t-63.**
 
