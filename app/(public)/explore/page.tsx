@@ -128,7 +128,7 @@ export default async function ExploreRoute({ searchParams }: Props) {
       <section className="mt-6" aria-label="Sounds">
         {sounds.length === 0 ? (
           <p className="text-[15px] text-(--kys-muted)">
-            {total > 0 ? (
+            {applied.page > pages ? (
               <>
                 There aren&apos;t that many pages.{' '}
                 <Link

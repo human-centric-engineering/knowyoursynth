@@ -1,9 +1,7 @@
 import { renderAsync } from '@resvg/resvg-js';
 
 import { CARD_DEFAULT_FAMILY, cardFontFiles } from '@/components/app/sharing/card-fonts';
-import type { SynthDesign } from '@/lib/app/catalogue/designs';
-import { panelSvg } from '@/components/app/sharing/panel-svg';
-import type { SynthDef } from '@/lib/app/synths/contract';
+import { panelSvg, type PanelSvgInput } from '@/components/app/sharing/panel-svg';
 
 /**
  * A shared sound's panel as a picture, for its social card (t-50): the synth page's own faceplate (`SynthPanel`), drawn
@@ -19,12 +17,7 @@ import type { SynthDef } from '@/lib/app/synths/contract';
  * native, so it is a server external (`next.config.js`, a divergence row).
  */
 
-export interface PanelImageInput {
-  def: SynthDef;
-  /** The sound's panel as stored: checked against `def` here, as the page checks it (`fitPanel`). */
-  values: unknown;
-  cables: unknown;
-  design: SynthDesign;
+export interface PanelImageInput extends PanelSvgInput {
   /** The box the picture must fit inside, in pixels; it keeps the panel's own proportions. */
   box: { width: number; height: number };
 }

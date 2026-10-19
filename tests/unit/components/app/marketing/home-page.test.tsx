@@ -10,13 +10,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 
-vi.mock('@/lib/app/catalogue/read', () => ({ listSynths: vi.fn() }));
-vi.mock('@/components/app/sharing/panel-svg', () => ({ panelSvg: vi.fn() }));
+// Hoisted, so the same fakes survive the module reset before each case.
+const { listSynths, panelSvg } = vi.hoisted(() => ({ listSynths: vi.fn(), panelSvg: vi.fn() }));
+vi.mock('@/lib/app/catalogue/read', () => ({ listSynths }));
+vi.mock('@/components/app/sharing/panel-svg', () => ({ panelSvg }));
 
 import HomeRoute, { metadata as routeMetadata } from '@/app/(public)/page';
 import HomePage, { metadata } from '@/components/app/marketing/home-page';
-import { panelSvg } from '@/components/app/sharing/panel-svg';
-import { listSynths, type CatalogueSynth } from '@/lib/app/catalogue/read';
+import type { CatalogueSynth } from '@/lib/app/catalogue/read';
 
 const synth = (over: Partial<CatalogueSynth>): CatalogueSynth => ({
   id: 'model-d',
@@ -33,7 +34,9 @@ const synth = (over: Partial<CatalogueSynth>): CatalogueSynth => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(listSynths).mockResolvedValue([
+  // `drawHeroPanel` keeps what it drew for the life of the module: a fresh module per case, so no case sees another's.
+  vi.resetModules();
+  listSynths.mockResolvedValue([
     synth({}),
     synth({
       id: 'jupiter-4',
@@ -43,7 +46,7 @@ beforeEach(() => {
       heritage: 'Roland, 1978',
     }),
   ]);
-  vi.mocked(panelSvg).mockReturnValue({
+  panelSvg.mockReturnValue({
     svg: '<svg data-testid="panel-svg"></svg>',
     width: 1200,
     height: 400,
@@ -51,7 +54,8 @@ beforeEach(() => {
 });
 
 async function renderPage() {
-  return render(await HomePage());
+  const { default: Page } = await import('@/components/app/marketing/home-page');
+  return render(await Page());
 }
 
 describe('home page', () => {
@@ -82,7 +86,7 @@ describe('home page', () => {
   });
 
   it("draws the first synth's panel in its catalogue design", async () => {
-    vi.mocked(listSynths).mockResolvedValue([synth({ design: 'faithful' })]);
+    listSynths.mockResolvedValue([synth({ design: 'faithful' })]);
     await renderPage();
     expect(panelSvg).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -109,7 +113,7 @@ describe('home page', () => {
   });
 
   it('falls back to opening the synths, with no panel, when nothing is listed', async () => {
-    vi.mocked(listSynths).mockResolvedValue([]);
+    listSynths.mockResolvedValue([]);
     await renderPage();
     for (const link of screen.getAllByRole('link', { name: 'Open a synth' })) {
       expect(link).toHaveAttribute('href', '/synths');
@@ -119,13 +123,13 @@ describe('home page', () => {
   });
 
   it('shows the page without the picture when the panel cannot be drawn', async () => {
-    vi.mocked(listSynths).mockResolvedValue([synth({ id: 'jupiter-4', name: 'Jupiter-4' })]);
-    vi.mocked(panelSvg).mockImplementation(() => {
+    listSynths.mockResolvedValue([synth({})]);
+    panelSvg.mockImplementation(() => {
       throw new Error('renderer missing');
     });
     await renderPage();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Play the Jupiter-4' })[0]).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'Play the Model D' })[0]).toBeInTheDocument();
   });
 
   it('quotes no counts', async () => {
@@ -136,15 +140,13 @@ describe('home page', () => {
   });
 
   it('tries the drawing again on the next visit after one fails', async () => {
-    vi.mocked(listSynths).mockResolvedValue([
-      synth({ id: 'jupiter-4', name: 'Jupiter-4', design: 'faithful' }),
-    ]);
-    vi.mocked(panelSvg).mockImplementationOnce(() => {
+    listSynths.mockResolvedValue([synth({})]);
+    panelSvg.mockImplementationOnce(() => {
       throw new Error('renderer missing');
     });
     await renderPage();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     await renderPage();
-    expect(screen.getByRole('img', { name: 'The Jupiter-4 panel' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'The Model D panel' })).toBeInTheDocument();
   });
 });

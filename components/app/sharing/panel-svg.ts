@@ -16,19 +16,17 @@ import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 
 const noop = () => undefined;
 
-/** The panel's SVG, standalone: namespaced, and sized at its own view so a rasteriser can scale it. */
-export function panelSvg({
-  def,
-  values,
-  cables,
-  design,
-}: {
+/** What a panel is drawn from. */
+export interface PanelSvgInput {
   def: SynthDef;
   /** The panel as stored: checked against `def` here, as the page checks it (`fitPanel`). */
   values: unknown;
   cables: unknown;
   design: SynthDesign;
-}): {
+}
+
+/** The panel's SVG, standalone: namespaced, and sized at its own view so a rasteriser can scale it. */
+export function panelSvg({ def, values, cables, design }: PanelSvgInput): {
   svg: string;
   width: number;
   height: number;
