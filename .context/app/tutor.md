@@ -527,12 +527,15 @@ source once.
   too, so no other scheme reaches an `<a>`.
 - **A turn with none** is labelled _From the tutor's own knowledge._: one that searched nothing, one
   whose search found nothing, and one whose search refused. A refusal is read by its `success` flag.
-  The label waits for the answer to finish, and a turn that ended in a failure shows none.
+  The label waits for the answer to finish. It is left off a turn that ended in a failure, an
+  answer about a proposal or a designed sound (the chip is what it is about), and a carried-on
+  line the tutor wrote before it searched, which is saved as an answer of its own.
 - **They are what the searches found**, not which of them the answer used: the instructions keep
   each claim to its source, and the learner can follow any of them to check.
 - **A conversation carried on shows them too.** The conversation read takes the conversation's
-  stored `search_databank` and `web_search` tool messages since its oldest shown message, in a
-  second query so they do not use up the transcript's forty, and gives each answer the sources of
+  stored `search_databank` and `web_search` tool messages from the turn of its oldest shown
+  message (from its question, when the transcript opens on an answer), newest first up to 200, in
+  a second query so they do not use up the transcript's forty, and gives each answer the sources of
   the searches before it in its turn as `sources`. A line written before the search ("Let me look
   that up") gets none; the answer written after it does.
 

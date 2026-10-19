@@ -1376,4 +1376,42 @@ describe("an answer's sources", () => {
     // the later answer used none
     expect(within(tutor()).getAllByText(OWN_KNOWLEDGE)).toHaveLength(1);
   });
+
+  it('labels only the answer of a carried-on turn, not the line written before its search', async () => {
+    serve({
+      conversation: {
+        conversationId: CONVERSATION_ID,
+        messages: [
+          { role: 'user', content: 'Who played the CS-80?' },
+          { role: 'assistant', content: 'Let me look that up.' },
+          { role: 'assistant', content: 'From what I know, Vangelis.' },
+        ],
+      },
+    });
+    page();
+
+    expect(await within(tutor()).findByText('Let me look that up.')).toBeTruthy();
+    const labels = within(tutor()).getAllByText(OWN_KNOWLEDGE);
+    expect(labels).toHaveLength(1);
+    expect(labels[0].closest('div')?.textContent).toContain('From what I know, Vangelis.');
+  });
+
+  it('does not label an answer about a sound it designed', async () => {
+    answer(async (body) => [
+      start,
+      { type: 'capability_result', capabilitySlug: 'design_sound', result: await designFor(body) },
+      { type: 'content', delta: 'Here is a dark bass.' },
+      done,
+    ]);
+    page();
+    await ask('Design a dark bass');
+
+    expect(await within(tutor()).findByText('Here is a dark bass.')).toBeTruthy();
+    expect(within(tutor()).getByText(/Opened on the panel/)).toBeTruthy();
+    // Undo is held while the turn answers, so once it is offered the turn has finished
+    await waitFor(() =>
+      expect(within(tutor()).getByRole('button', { name: 'Undo' })).toBeEnabled()
+    );
+    expect(within(tutor()).queryByText(OWN_KNOWLEDGE)).toBeNull();
+  });
 });

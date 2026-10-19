@@ -149,30 +149,42 @@ interface FindManyArgs {
     conversationId: string;
     role: string;
     capabilitySlug: { in: string[] };
-    createdAt: { gte: Date };
+    createdAt?: { gte: Date };
   };
-  orderBy: [{ createdAt: 'asc' }, { id: 'asc' }];
+  orderBy: [{ createdAt: 'desc' }, { id: 'desc' }];
   take: number;
 }
+interface FindFirstMessageArgs {
+  where: { conversationId: string; role: string; createdAt: { lte: Date } };
+  orderBy: [{ createdAt: 'desc' }, { id: 'desc' }];
+}
 
-/** `prisma.aiMessage.findMany` over the same conversations' messages, applying its filters and order. */
+const newestFirst = (a: Message, b: Message) =>
+  b.createdAt.getTime() - a.createdAt.getTime() || (b.id ?? '').localeCompare(a.id ?? '');
+
+/** `prisma.aiMessage` over the same conversations' messages, applying the reads' filters and order. */
 function messages(rows: Conversation[]) {
+  const of = (id: string) => rows.filter((c) => c.id === id).flatMap((c) => c.messages);
   return {
+    findFirst: async ({ where, orderBy }: FindFirstMessageArgs) => {
+      expect(orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }]);
+      const hit = of(where.conversationId)
+        .filter(
+          (x) => x.role === where.role && x.createdAt.getTime() <= where.createdAt.lte.getTime()
+        )
+        .sort(newestFirst)[0];
+      return hit ? { createdAt: hit.createdAt } : null;
+    },
     findMany: async ({ where, orderBy, take }: FindManyArgs) => {
-      expect(orderBy).toEqual([{ createdAt: 'asc' }, { id: 'asc' }]);
-      return rows
-        .filter((c) => c.id === where.conversationId)
-        .flatMap((c) => c.messages)
+      expect(orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }]);
+      return of(where.conversationId)
         .filter(
           (x) =>
             x.role === where.role &&
             where.capabilitySlug.in.includes(x.capabilitySlug ?? '') &&
-            x.createdAt.getTime() >= where.createdAt.gte.getTime()
+            (!where.createdAt || x.createdAt.getTime() >= where.createdAt.gte.getTime())
         )
-        .sort(
-          (a, b) =>
-            a.createdAt.getTime() - b.createdAt.getTime() || (a.id ?? '').localeCompare(b.id ?? '')
-        )
+        .sort(newestFirst)
         .slice(0, take)
         .map(({ id, role, content, createdAt, capabilitySlug }) => ({
           id: id ?? '',
@@ -403,6 +415,45 @@ describe('GET /api/v1/tutor/conversation', () => {
       { role: 'user', content: 'What does CUTOFF do?' },
       { role: 'assistant', content: 'It darkens.' },
     ]);
+  });
+
+  it("keeps an answer's sources when the transcript opens on it, its question cut off", async () => {
+    const found = {
+      success: true,
+      data: { results: [{ title: 'CS-80', url: 'https://example.com/cs80', snippet: '' }] },
+    };
+    // An answer, then enough questions and answers after it that only it and they fit.
+    const later = Array.from({ length: TRANSCRIPT_MESSAGES - 1 }, (_, i) => ({
+      id: `m${String(i + 10).padStart(3, '0')}`,
+      role: i % 2 ? 'assistant' : 'user',
+      content: `later ${i}`,
+      createdAt: at(10 + i),
+    }));
+    serve([
+      conversation({
+        messages: [
+          { id: 'm001', role: 'user', content: 'Who played the CS-80?', createdAt: at(1) },
+          {
+            id: 'm002',
+            role: 'tool',
+            content: JSON.stringify(found),
+            createdAt: at(2),
+            capabilitySlug: 'web_search',
+          },
+          { id: 'm003', role: 'assistant', content: 'Vangelis did.', createdAt: at(3) },
+          ...later,
+        ],
+      }),
+    ]);
+
+    const body = await (await get()).json();
+
+    const [first] = body.data.conversation.messages;
+    expect(first).toEqual({
+      role: 'assistant',
+      content: 'Vangelis did.',
+      sources: [{ type: 'web', title: 'CS-80', url: 'https://example.com/cs80' }],
+    });
   });
 
   it(`returns the last ${TRANSCRIPT_MESSAGES} messages of a long conversation`, async () => {

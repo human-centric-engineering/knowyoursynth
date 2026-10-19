@@ -100,7 +100,7 @@ export async function latestConversation(
   });
   if (!conversation) return null;
   const shown = conversation.messages.reverse();
-  const searches = await searchesSince(conversation.id, shown[0]?.createdAt);
+  const searches = shown[0] ? await searchesSince(conversation.id, shown[0]) : [];
   return {
     conversationId: conversation.id,
     messages: withSources(shown, searches).flatMap((m): TutorTranscriptMessage[] => {
@@ -128,26 +128,41 @@ interface Row {
 }
 
 /**
- * The conversation's search results from `since` on, oldest first: the tool messages Sunrise saves, whose content is
- * the result as JSON. Read apart from the transcript so they do not use up its `TRANSCRIPT_MESSAGES`.
+ * About twenty turns of five steps, with up to two searches a step. Read newest first, so if a conversation ever has
+ * more, it is the oldest answers that lose their sources.
+ */
+const MAX_SEARCHES = TRANSCRIPT_MESSAGES * 5;
+
+/**
+ * The conversation's search results from the turn of its first shown message on, oldest first: the tool messages
+ * Sunrise saves, whose content is the result as JSON. Read apart from the transcript so they do not use up its
+ * `TRANSCRIPT_MESSAGES`. When the transcript opens on an answer, its question was cut off, and that answer's searches
+ * were saved before it: they are read from that question on.
  */
 async function searchesSince(
   conversationId: string,
-  since: Date | undefined
+  first: Row
 ): Promise<(Row & { capabilitySlug: string | null })[]> {
-  if (!since) return [];
-  return prisma.aiMessage.findMany({
+  const question =
+    first.role === 'user'
+      ? first
+      : await prisma.aiMessage.findFirst({
+          where: { conversationId, role: 'user', createdAt: { lte: first.createdAt } },
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+          select: { createdAt: true },
+        });
+  const rows = await prisma.aiMessage.findMany({
     where: {
       conversationId,
       role: 'tool',
       capabilitySlug: { in: [...SOURCE_TOOLS] },
-      createdAt: { gte: since },
+      ...(question ? { createdAt: { gte: question.createdAt } } : {}),
     },
-    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-    // A turn has five steps, and the transcript about twenty turns.
-    take: TRANSCRIPT_MESSAGES * 5,
+    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+    take: MAX_SEARCHES,
     select: { id: true, role: true, content: true, createdAt: true, capabilitySlug: true },
   });
+  return rows.reverse();
 }
 
 /** Saved order: by time, then id, as Sunrise's history read orders rows saved in the same millisecond. */

@@ -142,8 +142,14 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
           aria-label="Conversation with the tutor"
           className="kys-scroll flex max-h-[380px] flex-col gap-2.5 overflow-y-auto pr-1"
         >
-          {chat.messages.map((m) => (
-            <Message key={m.id} message={m} chat={chat} def={def} />
+          {chat.messages.map((m, i) => (
+            <Message
+              key={m.id}
+              message={m}
+              chat={chat}
+              def={def}
+              endsTurn={chat.messages[i + 1]?.role !== 'assistant'}
+            />
           ))}
           {chat.busy && (
             <p className="text-[13px] text-(--kys-faint)">{chat.status ?? 'Thinking…'}</p>
@@ -247,11 +253,20 @@ function Message({
   message: m,
   chat,
   def,
+  endsTurn,
 }: {
   message: TutorMessage;
   chat: TutorChat;
   def: SynthDef;
+  /**
+   * The turn's last answer. A carried-on turn can show two: a line the tutor wrote before it searched ("Let me look
+   * that up") is saved as its own, and is no answer to label.
+   */
+  endsTurn: boolean;
 }) {
+  // The own-knowledge label goes under a finished answer that searched nothing. Not under a proposal or a design, whose
+  // chip is what the answer is about.
+  const ownKnowledge = endsTurn && !!m.text && !m.answering && !m.error && !m.proposal && !m.design;
   if (m.role === 'note') return <p className="text-[13px] text-(--kys-faint)">{m.text}</p>;
   if (m.role === 'user')
     return (
@@ -264,10 +279,7 @@ function Message({
       {m.text && <p className="whitespace-pre-wrap">{m.text}</p>}
       {m.proposal && <ProposalChip message={m} chat={chat} def={def} />}
       {m.design && <DesignChip message={m} chat={chat} />}
-      {/* Sources as they arrive; the own-knowledge label only on an answer that finished with none. */}
-      {(!!m.sources?.length || (!!m.text && !m.answering && !m.error)) && (
-        <TutorSources sources={m.sources ?? []} />
-      )}
+      {(!!m.sources?.length || ownKnowledge) && <TutorSources sources={m.sources ?? []} />}
       {m.error && (
         <p role={m.past ? undefined : 'alert'} className="mt-2 text-[13.5px] text-(--kys-warn)">
           {m.error}

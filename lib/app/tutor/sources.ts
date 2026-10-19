@@ -52,7 +52,7 @@ const WebRowSchema = z
 
 /** The sources in one tool result, or none: another tool, a refusal, or rows that do not parse. */
 export function readSources(capabilitySlug: string, result: unknown): TutorSource[] {
-  if (capabilitySlug !== 'search_databank' && capabilitySlug !== 'web_search') return [];
+  if (!SOURCE_TOOLS.some((t) => t === capabilitySlug)) return [];
   const parsed = ResultSchema.safeParse(result);
   if (!parsed.success) return [];
   const row = capabilitySlug === 'search_databank' ? DatabankRowSchema : WebRowSchema;
