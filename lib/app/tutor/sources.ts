@@ -75,3 +75,21 @@ export function addSources(prev: TutorSource[], next: TutorSource[]): TutorSourc
   });
   return added.length ? [...prev, ...added] : prev;
 }
+
+/**
+ * A search's trace preview (`f-tutor-knowledge` t-61): the links the panel would show for its result, as JSON, in place
+ * of the default's first 480 characters of the result, which cut a page of rows off mid-row. The eval graders read it
+ * (`lib/app/tutor/evals/graders.ts`), and so does an admin reading a conversation's trace. A refusal keeps the default.
+ */
+export const SourcesPreviewSchema = z.object({
+  success: z.literal(true),
+  links: z.array(z.string()),
+});
+
+export function sourcesPreview(capabilitySlug: string, result: unknown): string {
+  const preview: z.infer<typeof SourcesPreviewSchema> = {
+    success: true,
+    links: readSources(capabilitySlug, result).map(keyOf),
+  };
+  return JSON.stringify(preview);
+}

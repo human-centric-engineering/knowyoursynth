@@ -10,7 +10,8 @@ t-53 built the agent, its tools and its context; t-54 the stream route and the d
 t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sounds.md), _A
 sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)). `f-tutor-knowledge`
 grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its tool, t-58 its
-meaning-based layer, t-59 web search through Brave ([below](#web-search)).
+meaning-based layer, t-59 web search through Brave ([below](#web-search)), t-60 the sources under each answer, t-61
+the eval set ([below](#the-eval-set)).
 
 ## Anti-patterns first
 
@@ -61,25 +62,26 @@ meaning-based layer, t-59 web search through Brave ([below](#web-search)).
 
 ## Where things are
 
-| Piece                      | Location                                                                                                                         |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                                          |
-| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                                |
-| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`                      |
-| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`             |
-| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                     |
-| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank,web-search}.ts`, listed in `tools.ts` |
-| Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                        |
-| An answer's sources        | `lib/app/tutor/sources.ts` (read from the searches' results), shown by `components/app/tutor/sources.tsx`                        |
-| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                       |
-| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                |
-| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                             |
-| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                            |
-| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                                      |
-| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                                       |
-| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                              |
-| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                                  |
-| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                                 |
+| Piece                      | Location                                                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                                              |
+| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                                    |
+| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`                          |
+| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`                 |
+| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                         |
+| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank,web-search}.ts`, listed in `tools.ts`     |
+| Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                            |
+| An answer's sources        | `lib/app/tutor/sources.ts` (read from the searches' results), shown by `components/app/tutor/sources.tsx`                            |
+| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                           |
+| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                    |
+| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                                 |
+| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                                |
+| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                                          |
+| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                                           |
+| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                                  |
+| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                                      |
+| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                                     |
+| The eval set               | `prisma/seeds/app-knowyoursynth/data/tutor-evals.json`, seeded by `004-tutor-evals.ts`; its graders `lib/app/tutor/evals/graders.ts` |
 
 ## One turn
 
@@ -437,6 +439,66 @@ through the route, and deferred again by the owner (2026-10-18). Record each run
 | Date | Provider and model | Turn | Tools called | Cost |
 | ---- | ------------------ | ---- | ------------ | ---- |
 
+## The eval set
+
+`f-tutor-knowledge` t-61. A Sunrise dataset, **Tutor: sourcing and scope**, and four graders that score whether the
+tutor sources its answers and stays on topic, so a change to its instructions or its model that sets it inventing
+again shows as a lower number.
+
+- **The questions** are in `prisma/seeds/app-knowyoursynth/data/tutor-evals.json`, five kinds: people, records and
+  instruments in the databank (`databank`), questions only the meaning-based layer finds (`meaning`), music questions
+  the databank can't answer (`web`), general sound design (`general`), and off-topic (`off_topic`). A case's
+  expectation is its `expect`, written to the case's `expectedOutput` as JSON, because that is the only field of a
+  case Sunrise passes a grader. Its kind is also `metadata.category`.
+- **`004-tutor-evals` writes it** into the install org under the id `kys-tutor-evals`, checked against Sunrise's
+  case schema and pinned with Sunrise's hash. It is the file's: edit the file, not the dataset, and a later seed
+  rewrites the cases by position. Removing a case fails while a run's results point at it; replace it instead.
+- **`dataset.test.ts` checks the file against the databank**: each row a case names exists; a `databank` case's row is
+  in the lexical search's top six for the question; a `meaning` case's row is not, so only the meaning-based layer can
+  find it. A rewording that breaks either fails there.
+- **The graders** (`lib/app/tutor/evals/graders.ts`, registered from `lib/app/evaluations.ts`) are deterministic, not
+  judge agents: a judge adds its own variance to a number read for regressions. Each scores null on a case it does
+  not cover, so the run's pass rate for it counts only its own cases.
+
+| Grader                     | Covers                                               | Passes when                                                                    |
+| -------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `tutor_databank_found`     | `databank`, `meaning`                                | a `search_databank` call found one of the case's rows, so the panel links it   |
+| `tutor_web_links`          | `web`, and any case where `web_search` ran           | a `web_search` call returned a link; null when every call refused (not set up) |
+| `tutor_declined_off_topic` | `off_topic`                                          | the answer declines in under 500 characters, and nothing was searched          |
+| `tutor_own_knowledge`      | a turn no search sourced, unless it needed no search | the answer says it is from the tutor's own knowledge                           |
+
+**What a search found reaches the graders through a seam.** Sunrise's eval worker passed a grader only each tool
+call's name and arguments. Know Your Synth carries an edit that passes its `success`, `errorCode` and
+`resultPreview` too (owner ruling, 2026-10-19, journaled on `f-tutor-knowledge`; the row is in
+[`divergences.md`](./divergences.md)). `search_databank` and `web_search` write their preview as the links the panel
+would show (`sourcesPreview` in `sources.ts`), in place of the default's first 480 characters of the result, which
+cut a page of rows off mid-row. The same preview is what an admin reads in a conversation's trace.
+
+**Panel changes are not in this set.** Sunrise's batch eval sends each case as a bare message, with no synth context,
+so `get_panel` and the tools after it refuse with `no_panel`. Those stay with the tool tests and `smoke:tutor`.
+
+### Running it
+
+1. `npm run db:seed` (the dataset), an active provider with a default chat model (as for [the smoke run](#smoke-run)),
+   and, for the `meaning` cases, [the meaning-based layer](#the-meaning-based-layer) turned on. Without it they fail
+   `tutor_databank_found`, which is the point: they are what the layer is for.
+2. For the `web` cases, web search turned on ([Web search](#web-search)). Without it `tutor_web_links` scores them
+   null, and `tutor_own_knowledge` checks the tutor said so.
+3. **Raise the allowance for the run.** Each case is a tutor turn for the admin who queues it, and each web search one
+   more, so 41 cases pass the default 30 a day and `web_search` starts refusing partway. Set `TUTOR_DAILY_TURNS=200`
+   for the run, then put it back.
+4. Admin → Orchestration → Evaluations: a new run with subject the agent **Synth Tutor**, dataset **Tutor: sourcing
+   and scope**, and the four `tutor_*` metrics. The worker drains it on the maintenance tick.
+5. Read each grader's pass rate, and the reasoning on each failed case: a grader quotes what the tutor said or found.
+   A run costs 41 tutor turns: at most about $8 at the $0.20 per-turn cap, and usually far less.
+
+**The first run, and the pass threshold it sets, are the owner's end-of-feature check** (the feature's done-when),
+since they need a provider. Record each run here. A case that fails the first run may be the case that is wrong, not
+the tutor: read its reasoning before reading it as a regression.
+
+| Date | Provider and model | Databank found | Web links | Declined | Own knowledge |
+| ---- | ------------------ | -------------- | --------- | -------- | ------------- |
+
 ## The panel
 
 `components/app/tutor/`, in the synth page's aside under the Inspector, where the prototype's sat.
@@ -568,6 +630,5 @@ stream.
   other, but the sound and its lesson are held in the page: a reload, or another synth, leaves the
   panel with the library's lesson. Saving it is what keeps it. Keeping designs across a reload
   would mean reading them back from the conversation's tool messages.
-- **The eval set** is the rest of `f-tutor-knowledge` (t-61).
 - **The provider's own web search**, in place of Brave or beside it, waits on
   [sunrise#1037](https://github.com/human-centric-engineering/sunrise/issues/1037).

@@ -206,6 +206,38 @@ describe('drainStreamChat', () => {
     expect(result.toolCalls[0]).toEqual(trace);
   });
 
+  // FORK (Know Your Synth, t-61): parallel tool calls arrive in one `capability_results` frame.
+  it('accumulates the traces of a parallel capability_results batch, in order', async () => {
+    const first: ToolCallTrace = {
+      slug: 'search_databank',
+      arguments: {},
+      latencyMs: 5,
+      success: true,
+    };
+    const second: ToolCallTrace = {
+      slug: 'web_search',
+      arguments: {},
+      latencyMs: 5,
+      success: false,
+    };
+
+    mockedStreamChat.mockReturnValueOnce(
+      fromEvents([
+        {
+          type: 'capability_results',
+          results: [
+            { capabilitySlug: 'search_databank', result: {}, trace: first },
+            { capabilitySlug: 'x', result: {} },
+            { capabilitySlug: 'web_search', result: {}, trace: second },
+          ],
+        },
+      ])
+    );
+
+    const result = await drainStreamChat(baseRequest);
+    expect(result.toolCalls).toEqual([first, second]);
+  });
+
   it('captures tokenUsage and costUsd from the `done` event', async () => {
     mockedStreamChat.mockReturnValueOnce(
       fromEvents([

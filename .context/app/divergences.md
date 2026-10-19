@@ -295,6 +295,46 @@ the same PR**, and each row names what deletes it.
   server externals (`next/dist/lib/server-external-packages.jsonc`), or Sunrise gains a seam for
   app server externals.
 
+### Eval graders see what each tool call returned
+
+- **Files:** `lib/orchestration/evaluations/run-worker.ts`,
+  `lib/orchestration/evaluations/graders/types.ts`,
+  `lib/orchestration/evaluations/drain-stream-chat.ts`
+- **Change:** `GraderInput.toolCalls` items gain optional `success`, `errorCode` and
+  `resultPreview`, and `processOneCase` fills them from each agent subject's tool-call trace, under
+  `FORK` comments (`f-tutor-knowledge` t-61). The stored `subjectMetadata.toolCalls` keeps
+  `{ slug, args }` only. `drainStreamChat` also collects the traces of a `capability_results` frame
+  (a turn's parallel tool calls), which it dropped, so a turn that searched the databank and the
+  web at once reached the graders with no tool calls.
+- **Why:** the tutor's eval graders check what its searches found (owner ruling, 2026-10-19,
+  journaled on `f-tutor-knowledge`), and core passed graders only each call's name and arguments.
+  Behaviour-neutral at rest: nothing stored changes, and core's graders ignore the new fields.
+  `tests/unit/lib/app/tutor/evals/worker-seam.test.ts` fails if the fields are dropped.
+- **On conflict:** take theirs, and re-apply the three fields where `processOneCase` maps the
+  trace, the `{ slug, args }` map where it stores `subjectMetadata`, and the `capability_results`
+  case in `drainStreamChat` unless upstream now handles it. Keep the field names: the
+  graders read them.
+- **Upstream:** raised as
+  [sunrise#1044](https://github.com/human-centric-engineering/sunrise/issues/1044).
+- **Delete when:** upstream passes graders each call's result (switch the graders to its field
+  names if they differ), or the fork drops its tutor graders.
+
+### The grader parity test, leaving out our graders
+
+- **Files:** `tests/unit/lib/orchestration/evaluations/graders/registry-parity.test.ts`
+- **Change:** the tutor's grader slugs are left out of the test's `extra`, under a `FORK` comment
+  (`f-tutor-knowledge` t-61).
+- **Why:** the test reads the registry, which runs the fork's `initAppGraders()`, so filling
+  `lib/app/evaluations.ts` necessarily adds slugs `KNOWN_GRADER_SLUGS` doesn't list (`HB2`). The
+  graders are pinned in `defaults.test.ts`, so a stray one still fails there.
+- **On conflict:** take theirs, and re-apply the exclusion to whichever check counts the registry's
+  extra slugs.
+- **Upstream:** raised as
+  [sunrise#1045](https://github.com/human-centric-engineering/sunrise/issues/1045), the same shape
+  as sunrise#1032.
+- **Delete when:** upstream stops counting the fork's graders there, or the fork registers no
+  grader.
+
 ## New files in platform directories
 
 These aren't rows. A new file can't conflict until Sunrise adds a file at the same path, which
@@ -335,13 +375,14 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   `lib/app/eslint.config.mjs` (one ignore, for the social card's generated panel renderer, t-50), and
   `lib/app/capabilities.ts`, `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
-  `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59): fork-owned scaffolds,
+  `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59), and
+  `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61): fork-owned scaffolds,
   filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`, `env`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `platform-agents`, `env`, `evaluations`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

@@ -9,7 +9,11 @@ import {
   type BankDoc,
   type BankSearchHit,
 } from '@/lib/app/bank/search';
-import { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
+import {
+  BaseCapability,
+  type ProvenanceRedaction,
+} from '@/lib/orchestration/capabilities/base-capability';
+import { sourcesPreview } from '@/lib/app/tutor/sources';
 import type {
   CapabilityContext,
   CapabilityFunctionDefinition,
@@ -136,6 +140,12 @@ export class SearchDatabankCapability extends BaseCapability<Args, DatabankSearc
       required: ['query'],
     },
   };
+
+  /** The links the panel would show, so the trace (and the eval graders, t-61) can read what the search found. */
+  redactProvenance(args: Args, result: CapabilityResult<DatabankSearchData>): ProvenanceRedaction {
+    if (!result.success) return super.redactProvenance(args, result);
+    return { args, resultPreview: sourcesPreview(this.slug, result) };
+  }
 
   async execute(
     args: Args,

@@ -108,6 +108,8 @@ import {
 } from '@/lib/orchestration/agents/platform-agents';
 // FORK (Know Your Synth): the tutor fills the capability, context-contributor and platform-agent seams (`f-tutor` t-53).
 import { TUTOR_AGENT } from '@/lib/app/tutor/agent';
+// FORK (Know Your Synth): the tutor's graders fill the evaluations seam (`f-tutor-knowledge` t-61).
+import { TUTOR_GRADERS } from '@/lib/app/tutor/evals/graders';
 import { TUTOR_CONTEXT_TYPE, synthContext } from '@/lib/app/tutor/context';
 import { TUTOR_TOOLS } from '@/lib/app/tutor/tools';
 import {
@@ -558,7 +560,10 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       // came from the seam. The read triggers the lazy init, so this exercises
       // the REAL file.
       __resetGraderRegistryForTests();
-      expect(listGraders()).toEqual([]);
+      // FORK (Know Your Synth): pinned to the tutor's four graders (`f-tutor-knowledge` t-61), the same entries in the
+      // same order, so a stray one still fails.
+      expect(listGraders()).toEqual([...TUTOR_GRADERS]);
+      listGraders().forEach((grader, i) => expect(grader).toBe(TUTOR_GRADERS[i]));
     },
   },
   {
