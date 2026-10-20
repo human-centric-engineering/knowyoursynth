@@ -60,7 +60,7 @@ describe('screenBox', () => {
   it('boxes the controls and jacks named, through the panel’s transform, with room round them', () => {
     const c = controlMap(def)['filter.cutoff'];
     const j = jackMap(def)['j.cutCv'];
-    expect(c && j).toBeTruthy();
+    if (!c || !j) throw new Error('the Model D has no filter.cutoff or j.cutCv');
     const box = screenBox(svgWith(CTM), def, ['filter.cutoff', 'j.cutCv', 'not-a-control']);
     const xs = [c.x, j.x].map((x) => x * 0.5 + 10);
     const ys = [c.y, j.y].map((y) => y * 0.5 + 500);
@@ -84,6 +84,7 @@ describe('revealOnPanel', () => {
     // the scroller shows only its first 100 px across
     scroller.getBoundingClientRect = () => ({ left: 0, right: 100 }) as DOMRect;
     const c = controlMap(def)['filter.cutoff'];
+    if (!c) throw new Error('the Model D has no filter.cutoff');
     const y = c.y * 0.5 + 500;
     const x = c.x * 0.5 + 10;
 
