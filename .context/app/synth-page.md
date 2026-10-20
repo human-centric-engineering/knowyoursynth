@@ -103,9 +103,14 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
 - **Each finger on the keyboard holds its own note**, so chords play on the polys. A mono synth
   gets last-note priority from the engine. Under `lg`, the keys are 44 px wide, and the octave
   buttons, Hold and the wheel are 44 px. The keys scroll sideways, and a sideways swipe on them
-  scrolls rather than sliding from key to key. A tap still plays.
+  scrolls rather than sliding from key to key. A tap still plays. Under `sm`, the octave buttons and Hold go under the keys,
+  so more keys show.
 - **The two rows of buttons over the panel scroll sideways on one line** under `sm`, with the
   zoom group first, instead of wrapping into a wall.
+- **Nothing may make the page wider than the screen.** A grid item grows to its content's width
+  unless it has `min-w-0` or a `minmax(0, …)` track, so the keyboard (whose keys scroll) and the
+  regions under the panel carry one. Anything new that scrolls sideways inside a grid needs the
+  same.
 - The knobs, sliders, switches, jacks and cables needed no change for touch. They were already
   pointer events, and patching by tapping one jack and then another already worked.
 
