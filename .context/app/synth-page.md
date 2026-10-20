@@ -5,27 +5,29 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 
 ## Where things are
 
-| File                                    | What it is                                                                |
-| --------------------------------------- | ------------------------------------------------------------------------- |
-| `app/(panel)/synths/[id]/page.tsx`      | The route: 404s an id the registry lacks, reads the API, renders the page |
-| `app/(panel)/synths/page.tsx`           | `/synths`: reopens the last synth opened, or the first listed             |
-| `components/app/synth/synth-page.tsx`   | Holds the page state (`App.jsx`'s) and lays out the regions               |
-| `components/app/synth/synth.css`        | The instrument's classes: `kys-label`, `kys-stage`, `kys-pulse`, …        |
-| `components/app/synth/engine.ts`        | One audio engine for the visit                                            |
-| `components/app/synth/storage.ts`       | What a signed-out visitor's browser keeps                                 |
-| `components/app/synth/routes.ts`        | `?view=`, `?sound=` and the prototype's hash links                        |
-| `components/app/synth/my-sounds.tsx`    | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
-| `components/app/synth/with-notes.ts`    | Puts the API's "Unusual on…" notes back on the definition                 |
-| `components/app/synth/library.tsx`      | The sound library: search, categories, the loaded sound                   |
-| `components/app/tutor/tutor-panel.tsx`  | The tutor, under the Inspector ([`tutor.md`](./tutor.md#the-panel))       |
-| `components/app/synth/lesson.tsx`       | The lesson: how it works, build it step by step, make it yours            |
-| `components/app/synth/tour.tsx`         | The orientation tour, docked under the panel                              |
-| `components/app/synth/lineage.tsx`      | The lineage dialog (History)                                              |
-| `components/app/synth/limits.tsx`       | The "What is not modelled" dialog                                         |
-| `components/app/synth/use-dialog.ts`    | Opens and closes a native `<dialog>` from an `open` prop                  |
-| `components/app/synth/scope.tsx`        | The scope strip, the harmonics strip and the big scope view               |
-| `components/app/synth/sound-map.tsx`    | The sound map's legend, its "why is it dark?" line and its card note      |
-| `components/app/synth/*.tsx` (the rest) | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
+| File                                     | What it is                                                                |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| `app/(panel)/synths/[id]/page.tsx`       | The route: 404s an id the registry lacks, reads the API, renders the page |
+| `app/(panel)/synths/page.tsx`            | `/synths`: reopens the last synth opened, or the first listed             |
+| `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
+| `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-stage`, `kys-pulse`, …        |
+| `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
+| `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
+| `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
+| `components/app/synth/my-sounds.tsx`     | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
+| `components/app/synth/with-notes.ts`     | Puts the API's "Unusual on…" notes back on the definition                 |
+| `components/app/synth/library.tsx`       | The sound library: search, categories, the loaded sound                   |
+| `components/app/tutor/tutor-panel.tsx`   | The tutor, under the Inspector ([`tutor.md`](./tutor.md#the-panel))       |
+| `components/app/synth/lesson.tsx`        | The lesson: how it works, build it step by step, make it yours            |
+| `components/app/synth/tour.tsx`          | The orientation tour, docked under the panel                              |
+| `components/app/synth/lineage.tsx`       | The lineage dialog (History)                                              |
+| `components/app/synth/limits.tsx`        | The "What is not modelled" dialog                                         |
+| `components/app/synth/use-dialog.ts`     | Opens and closes a native `<dialog>` from an `open` prop                  |
+| `components/app/synth/scope.tsx`         | The scope strip, the harmonics strip and the big scope view               |
+| `components/app/synth/sound-map.tsx`     | The sound map's legend, its "why is it dark?" line and its card note      |
+| `components/app/synth/panel-zoom.tsx`    | The panel's size: Fit, and zoom in its scroller                           |
+| `components/app/synth/rotate-prompt.tsx` | The note on a small screen that the panel wants a bigger one              |
+| `components/app/synth/*.tsx` (the rest)  | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
 
 ## Rules that are not obvious from the code
 
@@ -82,6 +84,31 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **A search the library has nothing for** offers the tutor, which puts the request in its
   composer.
 
+## On phones and tablets
+
+D10: playing the full panel needs a landscape tablet or a computer. Everything else works on a
+phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
+
+- **The panel fits the page by default, at every width.** There is no minimum width any more. The
+  zoom group (−, Fit, +) lays the panel out at 1.5×, 2× or 3× the fitted width inside its
+  horizontal scroller, and keeps the middle of the view in the middle. The panel is drawn bigger,
+  not magnified, so every control still works, and a drag on bare panel scrolls the page. Only the
+  controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
+  kept. A synth with its own layout is still capped at a width that fits 82% of the screen's
+  height.
+- **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
+  least 600 px wide) to turn sideways. Anything else under 1024 px is told the panel is made for a
+  landscape tablet or a bigger screen. It is a notice, not a block. OK hides it for good in that
+  browser (`kys.rotateSeen`).
+- **Each finger on the keyboard holds its own note**, so chords play on the polys. A mono synth
+  gets last-note priority from the engine. Under `lg`, the keys are 44 px wide, and the octave
+  buttons, Hold and the wheel are 44 px. The keys scroll sideways, and a sideways swipe on them
+  scrolls rather than sliding from key to key. A tap still plays.
+- **The two rows of buttons over the panel scroll sideways on one line** under `sm`, with the
+  zoom group first, instead of wrapping into a wall.
+- The knobs, sliders, switches, jacks and cables needed no change for touch. They were already
+  pointer events, and patching by tapping one jack and then another already worked.
+
 ## The URL
 
 - `?view=outline`, `?view=long` or `?view=long,outline`. The last choice is kept in browser
@@ -117,5 +144,6 @@ in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 | `kys.midi`             | Reconnect MIDI on the next visit                                                                                                                                                                                                                                   |
 | `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                                                                                   |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
+| `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |
 | `kys.settingsBy`       | Who was signed in when the settings were last changed (`null` for no one), so another user's are not filled into an account                                                                                                                                        |
 | `kys.settingsAt`       | When the settings were last changed (ms), weighed against the account's copy                                                                                                                                                                                       |
