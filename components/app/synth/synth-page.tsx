@@ -54,7 +54,16 @@ import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
-import { AudioWaveform, EyeOff, Flame, Piano, ScanSearch, Shapes, Sparkles } from 'lucide-react';
+import {
+  AudioWaveform,
+  EyeOff,
+  Flame,
+  Piano,
+  ScanSearch,
+  Shapes,
+  SlidersHorizontal,
+  Sparkles,
+} from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -463,7 +472,8 @@ function Synth({
   };
   // A lesson section from the strip: the card from `lg` up, the Lesson sheet below it.
   const openSection = (id: CardId) => {
-    if (small) return openSheet(id === 'inspector' ? 'inspector' : 'lesson');
+    if (small)
+      return id === 'fx' ? undefined : openSheet(id === 'inspector' ? 'inspector' : 'lesson');
     setCard((c) => (c === id && id !== 'build' ? null : id));
   };
 
@@ -1625,6 +1635,16 @@ function Synth({
                       title="Show the wave and the harmonics of this patch over the keyboard, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
                       onClick={() => setHarmOn(!harmOn)}
                     />
+                    {!small && (
+                      <LayerToggle
+                        label="Effects"
+                        short={fx.on ? 'Effects on' : 'Effects'}
+                        icon={<SlidersHorizontal size={17} aria-hidden="true" />}
+                        on={card === 'fx'}
+                        title="Open the effects rack over the panel: drive, chorus, delay and reverb after the synth."
+                        onClick={() => openSection('fx')}
+                      />
+                    )}
                     <MidiStatus midi={midi} onConnect={connectMidi} />
                     <HelpButton title="How to play" items={PLAY_HELP} />
                     <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
@@ -1675,7 +1695,7 @@ function Synth({
                     />
                   </div>
                 </div>
-                <FxRack fx={fx} onChange={setFx} />
+                {small && <FxRack fx={fx} onChange={setFx} />}
               </div>
             </div>
 
@@ -1691,6 +1711,7 @@ function Synth({
                 side={cardSide}
                 onSide={() => setCardSide(cardSide === 'right' ? 'left' : 'right')}
                 inspector={inspector}
+                effects={<FxRack fx={fx} onChange={setFx} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
               />
             )}

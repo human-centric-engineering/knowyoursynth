@@ -5,7 +5,7 @@
  * Sound Design strip's chips. It does not block the panel, because the card tells you to turn knobs, and the knobs are
  * under it. What a step moves is listed as ①②③, and the panel carries the same numbers (`badgeStore`, drawn by
  * `LessonBadges`), so the card and the panel can be read together. The inspector opens in the same place from the
- * player bar, so there is one card at a time.
+ * player bar, and so do the effects, so there is one card at a time.
  *
  * Below `lg` the lesson stays in its bottom sheet (`lesson.tsx`), and this is not drawn.
  */
@@ -21,8 +21,8 @@ import { StepText } from '@/components/app/synth/lesson';
 import { markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
 
-/** What the card is showing: a lesson section, or the inspector. */
-export type CardId = 'how' | 'build' | 'tweaks' | 'inspector';
+/** What the card is showing: a lesson section, the inspector or the effects. */
+export type CardId = 'how' | 'build' | 'tweaks' | 'inspector' | 'fx';
 
 /** The controls a step moves, then the input end of each cable it patches: the order the card numbers them in. */
 export const stepBadges = (s: PresetStep): string[] => [
@@ -57,6 +57,8 @@ export interface LessonCardProps {
   onSide: () => void;
   /** The inspector, kept by the page so it keeps its state while the card shows the lesson. */
   inspector: ReactNode;
+  /** The effects rack. */
+  effects: ReactNode;
   mark?: LessonMark | null;
 }
 
@@ -71,6 +73,7 @@ export function LessonCard({
   side,
   onSide,
   inspector,
+  effects,
   mark = null,
 }: LessonCardProps) {
   const ref = useRef<HTMLElement | null>(null);
@@ -110,7 +113,11 @@ export function LessonCard({
   let body: ReactNode;
   let foot: ReactNode = null;
 
-  if (section === 'inspector') {
+  if (section === 'fx') {
+    eyebrow = <span className="text-(--kys-accent)">Effects</span>;
+    title = 'Pedals after the synth';
+    body = effects;
+  } else if (section === 'inspector') {
     eyebrow = <span className="text-(--kys-accent)">Inspector</span>;
     title = 'What is under the pointer';
     body = inspector;

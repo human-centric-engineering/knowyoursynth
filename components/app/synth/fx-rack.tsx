@@ -117,40 +117,63 @@ function Slider({
 
 const OpenSchema = z.boolean();
 
-export function FxRack({ fx, onChange }: { fx: RackFx; onChange: (fx: RackFx) => void }) {
-  const [open, setOpen] = useStoredPref(STORAGE_KEYS.fxOpen, OpenSchema, false);
+/**
+ * The rack. `inCard` is the rack as the lesson card shows it from `lg` up (t-74): opening the card is what unfolds it,
+ * so it has no fold of its own, and the cards are two to a row to fit the card.
+ */
+export function FxRack({
+  fx,
+  onChange,
+  inCard = false,
+}: {
+  fx: RackFx;
+  onChange: (fx: RackFx) => void;
+  inCard?: boolean;
+}) {
+  const [stored, setOpen] = useStoredPref(STORAGE_KEYS.fxOpen, OpenSchema, false);
+  const open = inCard || stored;
   const setUnit = (id: Unit, patch: Record<string, number | boolean>) =>
     onChange({ ...fx, [id]: { ...fx[id], ...patch } });
   const active = UNITS.filter((u) => fx[u.id].on).map((u) => u.name);
   return (
     <section
       aria-labelledby="fx-h"
-      className="mt-4 rounded-xl border border-(--kys-line) bg-(--kys-surface) p-3"
+      className={inCard ? '' : 'mt-4 rounded-xl border border-(--kys-line) bg-(--kys-surface) p-3'}
     >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <div className="min-w-0 flex-1">
-          <h2 id="fx-h" className="kys-label">
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-controls="fx-units"
-              onClick={() => setOpen(!open)}
-              className="flex items-baseline gap-2 text-left text-(--kys-muted) uppercase hover:text-(--kys-text)"
-            >
-              <span
-                aria-hidden="true"
-                className={`inline-block transition-transform ${open ? 'rotate-90' : ''}`}
-              >
-                ▸
-              </span>
+          {inCard ? (
+            <h3 id="fx-h" className="sr-only">
               Effects rack
-              {!open && (
-                <span className="text-xs tracking-normal text-(--kys-faint) normal-case">
-                  {fx.on ? (active.length ? active.join(' · ') : 'no effects switched on') : 'off'}
+            </h3>
+          ) : (
+            <h2 id="fx-h" className="kys-label">
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls="fx-units"
+                onClick={() => setOpen(!open)}
+                className="flex items-baseline gap-2 text-left text-(--kys-muted) uppercase hover:text-(--kys-text)"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`inline-block transition-transform ${open ? 'rotate-90' : ''}`}
+                >
+                  ▸
                 </span>
-              )}
-            </button>
-          </h2>
+                Effects rack
+                {!open && (
+                  <span className="text-xs tracking-normal text-(--kys-faint) normal-case">
+                    {fx.on
+                      ? active.length
+                        ? active.join(' · ')
+                        : 'no effects switched on'
+                      : 'off'}
+                  </span>
+                )}
+              </button>
+            </h2>
+          )}
           {open && (
             <p className="text-xs text-(--kys-faint)">
               Pedals after the synth. Your hardware does not have these, so the panel settings still
@@ -175,7 +198,10 @@ export function FxRack({ fx, onChange }: { fx: RackFx; onChange: (fx: RackFx) =>
         </button>
       </div>
       {open && (
-        <div id="fx-units" className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div
+          id="fx-units"
+          className={`mt-3 grid gap-3 ${inCard ? 'grid-cols-2' : 'sm:grid-cols-2 xl:grid-cols-4'}`}
+        >
           {UNITS.map((u) => {
             const s = fx[u.id];
             const live = fx.on && s.on;
