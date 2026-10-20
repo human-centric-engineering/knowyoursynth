@@ -1358,10 +1358,19 @@ describe('SynthPage player', () => {
       fireEvent.click(button('Leave full screen'));
       expect(exit).toHaveBeenCalledTimes(1);
     } finally {
-      Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+      // Own properties shadow jsdom's, so removing them puts its defaults back.
+      Reflect.deleteProperty(document, 'fullscreenElement');
+      Reflect.deleteProperty(document, 'fullscreenEnabled');
+      Reflect.deleteProperty(document, 'exitFullscreen');
       HTMLElement.prototype.requestFullscreen = was;
-      Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: false });
     }
+  });
+
+  it('opens the tour inside the player, so it shows with the player full screen', () => {
+    page();
+    fireEvent.click(button(/Orientation tour/));
+    const tour = screen.getByRole('dialog', { name: 'Orientation tour of the Model D' });
+    expect(player().contains(tour)).toBe(true);
   });
 });
 

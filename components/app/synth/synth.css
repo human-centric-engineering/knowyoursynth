@@ -126,7 +126,6 @@ svg .kys-hit:focus-visible {
   box-shadow:
     0 0 0 1px rgb(0 0 0 / 0.4),
     0 40px 80px -40px rgb(0 0 0 / 0.7);
-  isolation: isolate;
 }
 .kys-player:fullscreen {
   overflow-y: auto;
@@ -139,6 +138,10 @@ svg .kys-hit:focus-visible {
 .kys-player-stage {
   position: relative;
   border-radius: 20px 20px 0 0;
+  /* Keeps the light (z-index -1) under the stage, not under the page. On the stage
+     rather than the player, so the info cards and the tour, which sit in the player
+     to show full screen, still stack against the page (over its bottom nav). */
+  isolation: isolate;
 }
 .kys-player-stage::before {
   content: '';

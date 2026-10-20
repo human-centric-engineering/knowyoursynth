@@ -21,6 +21,7 @@ import { moduleOf } from '@/lib/app/synths/lib/modules';
 import type { PresetStep } from '@/lib/app/synths/contract';
 import { StepText, stepIds } from '@/components/app/synth/lesson';
 import { highlightStore } from '@/components/app/synth/stores';
+import { logger } from '@/lib/logging';
 
 /** The app's name over the panel. The LED is the sound's: lit while it is on. */
 export function Wordmark({ lit }: { lit: boolean }) {
@@ -183,7 +184,8 @@ function useIsFullscreen(target: RefObject<HTMLElement | null>): boolean {
 
 /**
  * The player full screen. Not drawn where the browser has no element full screen (an iPhone's Safari), rather than
- * drawn and doing nothing. A refusal (no user gesture, a frame that does not allow it) leaves the page as it was.
+ * drawn and doing nothing. A refusal (no user gesture, a frame that does not allow it) leaves the page as it was, and
+ * is logged.
  */
 export function FullscreenButton({ target }: { target: RefObject<HTMLElement | null> }) {
   const full = useIsFullscreen(target);
@@ -191,8 +193,10 @@ export function FullscreenButton({ target }: { target: RefObject<HTMLElement | n
   useEffect(() => setAble(typeof document !== 'undefined' && document.fullscreenEnabled), []);
   if (!able) return null;
   const toggle = () => {
-    if (full) void document.exitFullscreen().catch(() => undefined);
-    else void target.current?.requestFullscreen().catch(() => undefined);
+    const refused = (err: unknown) =>
+      logger.warn('synth page: full screen refused', { leaving: full, err: String(err) });
+    if (full) void document.exitFullscreen().catch(refused);
+    else void target.current?.requestFullscreen().catch(refused);
   };
   return (
     <button

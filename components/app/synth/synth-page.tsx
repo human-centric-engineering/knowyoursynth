@@ -1465,14 +1465,14 @@ function Synth({
                     : 'Turn sound on'}
             </button>
             <p className="min-w-[12ch] flex-1 truncate font-mono text-[12.5px] text-(--kys-muted)">
-              {current && currentModule ? (
+              {current && currentModule && step != null ? (
                 <>
                   <span style={{ color: currentModule.color }}>
-                    Step {step == null ? 0 : step + 1}/{steps.length}
+                    Step {step + 1}/{steps.length}
                   </span>{' '}
                   <span className="text-(--kys-text)">{current.title}</span>
                 </>
-              ) : steps.length > 0 ? (
+              ) : steps.length > 0 && described ? (
                 <>
                   <span className="text-(--kys-text)">The finished sound</span> · built in{' '}
                   {steps.length} step{steps.length === 1 ? '' : 's'}
@@ -1500,7 +1500,7 @@ function Synth({
               value={view.outline}
               onChange={(outline) => setView({ ...view, outline })}
             />
-            <PanelZoom scale={scale} onScale={setScale} />
+            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
             <div
               className="flex items-center rounded-md border border-(--kys-line) bg-(--kys-surface) p-0.5"
               role="group"
@@ -1569,7 +1569,7 @@ function Synth({
           <FxRack fx={fx} onChange={setFx} />
         </div>
 
-        {/* Inside the player, so the cards still show with the player full screen. */}
+        {/* Inside the player, so the cards and the tour still show with the player full screen. */}
         <Tooltip
           enabled={tipsOn && !(small && coarse)}
           def={def}
@@ -1578,6 +1578,7 @@ function Synth({
           preset={shown ?? null}
           cables={sess.cables}
         />
+        {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
       </section>
 
       {/* Under the player, as under a video: what is on it, what you can do with it, and what it is. */}
@@ -1749,7 +1750,6 @@ function Synth({
         </div>
       )}
 
-      {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
       {detail.lineage && (
         <Lineage
           synth={detail.synth}
