@@ -11,14 +11,16 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `app/(panel)/synths/page.tsx`            | `/synths`: reopens the last synth opened, or the first listed             |
 | `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
 | `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
-| `components/app/synth/player.tsx`        | The player's pieces: wordmark, chapters, step transport, captions         |
+| `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, play, full screen  |
+| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and its ⚙ settings menu                           |
+| `components/app/synth/drawers.tsx`       | The tab strip and drawer beside the player from `lg` up                   |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
 | `components/app/synth/my-sounds.tsx`     | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
 | `components/app/synth/with-notes.ts`     | Puts the API's "Unusual on…" notes back on the definition                 |
 | `components/app/synth/library.tsx`       | The sound library: search, categories, the loaded sound                   |
-| `components/app/tutor/tutor-panel.tsx`   | The tutor, under the Inspector ([`tutor.md`](./tutor.md#the-panel))       |
+| `components/app/tutor/tutor-panel.tsx`   | The tutor, in its drawer ([`tutor.md`](./tutor.md#the-panel))             |
 | `components/app/synth/lesson.tsx`        | The lesson: how it works, build it step by step, make it yours            |
 | `components/app/synth/tour.tsx`          | The orientation tour, docked under the panel                              |
 | `components/app/synth/lineage.tsx`       | The lineage dialog (History)                                              |
@@ -95,43 +97,61 @@ playing, choosing and learning are gathered round it as a video player gathers i
 BeatBreaker's drummer player is the precedent (`components/app/studio/player/` there).
 
 ```
-┌ the player (`section`, "<synth> panel") ───────────────────────────────────┐
-│ ● KNOW YOUR SYNTH                              [Find a control…]   [?]     │
-│ BEHRINGER                                                                  │
-│ Model D ▾          ☆      [Tour][Sections][Dim][Sensitive][Harmonics][Cards]│
-│ heritage · HISTORY › · WHAT IS NOT MODELLED ›                              │
-│                     ┌──────────── the panel ────────────┐                  │
-│                     └───────────────────────────────────┘                  │
-│ map legend · why is it dark? · engine error                                │
-│ Step 2 of 5 · FILTER  Close the filter — what to listen for   (captions)   │
-├────────────────────────────────────────────────────────────────────────────┤
-│ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ✓                                    (chapters)   │
-│ (▶ Play riff) ⏮ ⏭ ● Sound on  Step 2/5 Close…   [Hardware|Outline] [−Fit+] │
-│                                                  [Magnify Off 2× 3×] [⛶]   │
-├────────────────────────────────────────────────────────────────────────────┤
-│ harmonics strip · keyboard │ scope · MIDI · effects rack          (deck)   │
-└────────────────────────────────────────────────────────────────────────────┘
-Loaded: <sound name> [mine] [step 2 of 5] 3 controls moved   [Restore][Blank][Unplug all]
-Save / Save as / Rename / Share …
-┌ the sound: "In the style of…", blurb ┐ ┌ About this <synth>, lineage, limits ┐
+┌ the page from `lg` up ─────────────────────────────────────────────────────────────────────┐
+│ ┌ the player (`section`, "<synth> panel") ─────────────────────┐ ┌ drawer ───────┐ ┌rail┐ │
+│ │ ● KNOW YOUR SYNTH                 [Find a control…][Tour][?]  │ │ SOUNDS      ✕ │ │Snds│ │
+│ │ BEHRINGER · Model D ▾ ☆ · heritage · HISTORY › · NOT MODELLED │ │ My sounds     │ │Lssn│ │
+│ │               ┌──────────── the panel ────────────┐           │ │ Sound library │ │Insp│ │
+│ │               └───────────────────────────────────┘           │ │  …            │ │Tutr│ │
+│ │ map legend · why is it dark? · engine error                   │ │               │ └────┘ │
+│ ├───────────────────────────────────────────────────────────────┤ │               │        │
+│ │ ✦ SOUND DESIGN  How this sound is built…   [SOUND <name> ▾]   │ │               │        │
+│ │ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬ (chapters)                     │ │               │        │
+│ │ ①OSCILLATORS ②FILTER ③ENVELOPES ④AMPLIFIER ✓FINISHED          │ │               │        │
+│ │ step title    step title  …                 The whole sound   │ │               │        │
+│ │   (‹ Previous)  ┌ Step 2 of 4 · FILTER ──────┐  (Next step ›)  │ │               │        │
+│ │                 │ title · why, ≤68ch          │                 │ │               │        │
+│ ├───────────────────────────────────────────────────────────────┤ │               │        │
+│ │ (▶ Play riff) ● Sound on       [▦ Sections][◌ Dim][🔥 Sensitive]│ │               │        │
+│ │                                         [−Fit+] [⚙] [⛶]       │ │               │        │
+│ ├───────────────────────────────────────────────────────────────┤ │               │        │
+│ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
+│ └───────────────────────────────────────────────────────────────┘ │               │        │
+│ Loaded: <name> [mine] [step 2 of 4] 3 controls moved [Restore]…   │               │        │
+│ Save / Save as / Rename / Share …                                 └───────────────┘        │
+│ ┌ the sound: "In the style of…", blurb ┐ ┌ About this <synth> ┐                             │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - **The stage is dark in both themes.** `.kys-player` redeclares the `--kys-*` roles to the dark
   palette's values for its subtree, so everything inside (switches, keyboard, scope, the picker's
   list) reads them as anywhere else. Change a value in `app/brand-theme.css`'s dark block and the
   same value here. Nothing that holds the panel may carry `transform`, `filter` (other than the
-  faceplate's own shadow) or `backdrop-filter`: the info cards and the magnifier are `fixed`.
+  faceplate's own shadow) or `backdrop-filter`: the info cards, the magnifier and the ⚙ menu are
+  `fixed`.
 - **The caption is the synth.** The wordmark's LED is lit while the sound is on. The synth's name
   is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
-  picker shows the name.
-- **The lesson's steps are the chapters**, one segment per step in its module's colour and a last
-  one for the finished sound. A segment moves the panel to that step, through the same `setStep`
-  as the Lesson region, so progress, the open sound's own lesson and shared sounds behave alike.
-  ⏮ ⏭ step back and on. With the finished sound on, ⏭ starts the lesson; from the last step it
-  finishes. Their names differ from the Lesson region's own arrows ("Previous lesson step",
-  "Next lesson step", "Lesson step 1: …") so both can be on the page.
-- **Captions** show the step the panel is at under the panel while a lesson is walked: its number,
-  module, title and `why`.
+  picker shows the name. Tour, the one switch that starts something, is beside the search.
+- **The Sound Design strip teaches the sound** (t-71), between the picture and the bar, where a
+  video's chapters and subtitles are (`SoundDesign` in `player.tsx`). Its heading says it walks you
+  through how the sound is built. The sound's name in it is the sound picker: it opens the Sounds
+  drawer (or the Library sheet below `lg`) and puts focus in its search.
+- **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
+  its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
+  from `lg` up; under `sm`, the number alone. The last is a labelled stop for the finished sound.
+  A chapter moves the panel to that step, through the same `setStep` as the Lesson region, so
+  progress, the open sound's own lesson and shared sounds behave alike.
+- **The step card** is the step the panel is at, in a column no wider than 68ch in the middle of
+  the strip, between Previous and Next. With the finished sound on, it says so and Next is "Start
+  at step 1"; from the last step Next finishes. Their names ("Previous lesson step", "Next lesson
+  step", "Start the lesson", "Finish the lesson", "Lesson step 1: …") differ from the Lesson
+  region's own arrows so both can be on the page.
+- **The bar carries the layers and a ⚙ menu** (t-72, `player-tools.tsx`). Sections, Dim unused and
+  Sensitive are toggles on the bar, as a video player carries CC: an icon, with its word from `xl`
+  up, and the full name as the accessible name. How the panel is drawn (Hardware or Outline,
+  Modular or Long), the magnifier and the hover cards (the card that pops up when you point at a
+  control; `kys.tips`) are in the ⚙ menu, a Radix popover that is not portalled, so it opens
+  inside the player and works full screen. Harmonics is in the deck, beside the scope it extends.
 - **Full screen** is the whole player, and is drawn only where the browser has element full
   screen. The info cards and the tour are rendered inside the player so they still show there.
   The stage, not the player, isolates its stacking, so they still stack over the page's bottom
@@ -140,6 +160,15 @@ Save / Save as / Rename / Share …
   Blank patch and Unplug all, then the save actions. The description card describes the sound on
   the panel. It does not show a library sound's words under one of the user's own sounds, or a
   shared sound, that has no lesson of its own.
+- **Beside the player, from `lg` up, is a drawer** (t-70, `drawers.tsx`), as a video page keeps
+  its side panel: a labelled tab strip down the right-hand edge (Sounds, Lesson, Inspect, Tutor)
+  opens one region at a time beside the player. It pushes rather than covers: the player narrows
+  and the panel refits. Sounds is open on a first visit; the drawer open (or none) is kept in this
+  browser (`kys.side`). Every region is rendered all the time, the closed ones `hidden`, so a
+  closed one keeps its state (the tutor streams on, the lesson keeps its step) and is out of the
+  accessibility tree. The tab, the drawer's ✕ and Escape inside it close it; the last two hand
+  focus back to the tab. Asking the tutor from the library opens the Tutor drawer. Below `lg` none
+  of this is drawn and the bottom sheets (below) are used instead.
 
 ## On phones and tablets
 
@@ -172,8 +201,8 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   regions under the panel carry one. Anything new that scrolls sideways inside a grid needs the
   same.
 - **Under `lg`, the regions beside the panel open as bottom sheets** (t-66). A bar of four
-  buttons under the page opens the Library, Lesson, Inspector and Tutor; at `lg` and up the grid
-  is unchanged. The Library and Tutor are modal: the page dims, focus stays inside, and a press
+  buttons under the page opens the Library, Lesson, Inspector and Tutor; at `lg` and up they are
+  the drawer beside the player instead (above). The Library and Tutor are modal: the page dims, focus stays inside, and a press
   outside closes them. The Lesson and Inspector are docked at half height with the panel still
   live above them, so a press outside does not close them and focus is not held in them. Either
   can be dragged to full height. Closing a sheet hands focus back to the bar button that opened
