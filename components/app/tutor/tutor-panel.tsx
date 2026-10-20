@@ -52,6 +52,8 @@ export interface TutorPanelProps {
   openDesign: (design: TutorDesign) => () => void;
   /** A question to put in the composer (the library's "ask the tutor"); `n` makes the same text ask again. */
   ask?: { text: string; n: number } | null;
+  /** In a bottom sheet (`f-phone-and-tablet` t-66): fill it, the conversation taking the room the composer leaves. */
+  fill?: boolean;
 }
 
 const panelClass =
@@ -84,7 +86,15 @@ export function TutorPanel(props: TutorPanelProps) {
   return <SignedInTutor {...props} />;
 }
 
-function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: TutorPanelProps) {
+function SignedInTutor({
+  def,
+  panel,
+  designedId,
+  setPanel,
+  openDesign,
+  ask,
+  fill = false,
+}: TutorPanelProps) {
   const chat = useTutorChat({ def, panel, designedId, setPanel, openDesign });
   const [draft, setDraft] = useState('');
   const input = useRef<HTMLTextAreaElement>(null);
@@ -122,7 +132,11 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
   };
 
   return (
-    <section id="tutor" aria-labelledby="tutor-h" className={panelClass}>
+    <section
+      id="tutor"
+      aria-labelledby="tutor-h"
+      className={`${panelClass} ${fill ? 'h-full min-h-0' : ''}`}
+    >
       <div className="flex items-baseline justify-between gap-2">
         <h2 id="tutor-h" className="kys-label text-(--kys-muted)">
           AI tutor
@@ -140,7 +154,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
           role="log"
           aria-live="polite"
           aria-label="Conversation with the tutor"
-          className="kys-scroll flex max-h-[380px] flex-col gap-2.5 overflow-y-auto pr-1"
+          className={`kys-scroll flex flex-col gap-2.5 overflow-y-auto pr-1 ${fill ? 'min-h-0 flex-1' : 'max-h-[380px]'}`}
         >
           {chat.messages.map((m, i) => (
             <Message
@@ -223,7 +237,7 @@ function SignedInTutor({ def, panel, designedId, setPanel, openDesign, ask }: Tu
           maxLength={MAX_TUTOR_MESSAGE_CHARS}
           disabled={closed}
           placeholder={chat.resuming ? 'Loading the conversation…' : 'Ask about this sound…'}
-          className="min-w-0 resize-y rounded-md border border-(--kys-line) bg-(--kys-ground) px-3 py-2 text-sm text-(--kys-text) placeholder:text-(--kys-faint) disabled:opacity-60"
+          className="min-w-0 resize-y rounded-md border border-(--kys-line) bg-(--kys-ground) px-3 py-2 text-sm text-(--kys-text) placeholder:text-(--kys-faint) disabled:opacity-60 pointer-coarse:resize-none"
         />
         <div className="flex justify-end">
           {chat.busy ? (

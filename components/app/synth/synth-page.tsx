@@ -22,11 +22,18 @@
  * - On a phone or a tablet held upright (`f-phone-and-tablet`), a note above the panel says it wants a landscape tablet
  *   or a bigger screen (`rotate-prompt.tsx`). The panel fits the page and zooms in its scroller (`panel-zoom.tsx`), and
  *   the two rows of buttons over it each scroll sideways on one line.
+ * - Below `lg` the library, lesson, inspector and tutor are not stacked under the panel: a bar of buttons opens each as
+ *   a bottom sheet (`components/app/ui/bottom-sheet.tsx`, t-66). The library and the tutor are modal. The lesson and the
+ *   inspector are docked at half height with the panel live above them: a tap on the panel opens the inspector on what
+ *   was tapped, and a lesson step scrolls its controls into the band above the sheet (`reveal.ts`). Each stays mounted
+ *   while its sheet is closed (`kept.tsx`), so the tutor's answer keeps streaming and the step stays lit.
  *
  * The theme switch is Sunrise's, in the header.
  */
 
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
@@ -56,12 +63,15 @@ import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
-import { Lesson } from '@/components/app/synth/lesson';
+import { Lesson, stepIds } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
-import { RotatePrompt } from '@/components/app/synth/rotate-prompt';
+import { RotatePrompt, SMALL_QUERY, useMediaQuery } from '@/components/app/synth/rotate-prompt';
+import { revealOnPanel } from '@/components/app/synth/reveal';
+import { BottomSheet, type SheetSnap } from '@/components/app/ui/bottom-sheet';
+import { KeptSlot, useKeptNode } from '@/components/app/ui/kept';
 import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { useLessonProgress } from '@/components/app/synth/progress';
@@ -146,6 +156,17 @@ const PLAY_HELP = [
 ] as const;
 
 type AudioState = 'off' | 'starting' | 'on' | 'error';
+
+/** The side regions, each a bottom sheet below `lg`. */
+type SheetId = 'library' | 'lesson' | 'inspector' | 'tutor';
+const SHEETS: [SheetId, string][] = [
+  ['library', 'Library'],
+  ['lesson', 'Lesson'],
+  ['inspector', 'Inspector'],
+  ['tutor', 'Tutor'],
+];
+/** How far a press may move and still be a tap, in px. */
+const TAP_SLOP = 10;
 
 /** What a copy is called when the shared sound it was of has gone, and its name with it (t-52). The visitor renames it. */
 const UNNAMED_COPY = 'Untitled sound';
@@ -389,6 +410,21 @@ function Synth({
   const [heatOn, setHeatOn] = settings.heat;
   const [harmOn, setHarmOn] = settings.harm;
   const [fx, setFx] = settings.fx;
+
+  // ── below `lg`: the side regions as bottom sheets ──
+  const small = useMediaQuery(SMALL_QUERY);
+  const coarse = useMediaQuery('(pointer: coarse)');
+  const [sheet, setSheet] = useState<SheetId | null>(null);
+  const [dockSnap, setDockSnap] = useState<SheetSnap>('half');
+  const libraryNode = useKeptNode();
+  const lessonNode = useKeptNode();
+  const inspectorNode = useKeptNode();
+  const tutorNode = useKeptNode();
+  const frameRef = useRef<HTMLDivElement>(null);
+  const openSheet = (id: SheetId | null) => {
+    setSheet(id);
+    setDockSnap('half');
+  };
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
@@ -636,8 +672,10 @@ function Synth({
       (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable);
     // A modal dialog (lineage, limits) leaves the panel behind it inert, so its keys do not play. The scope's big view
     // has a keyboard of its own and says its keys play (`data-plays`).
+    // A modal bottom sheet does the same; a docked one leaves the panel live, and its keys with it.
     const inModal = (e: KeyboardEvent) =>
-      e.target instanceof Element && !!e.target.closest('dialog:not([data-plays])');
+      e.target instanceof Element &&
+      !!e.target.closest('dialog:not([data-plays]), [data-kys-sheet="modal"]');
     const kd = (e: KeyboardEvent) => {
       if (typing(e) || inModal(e) || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
       const k = e.key.toLowerCase();
@@ -771,7 +809,8 @@ function Synth({
   const [tutorAsk, setTutorAsk] = useState<{ text: string; n: number } | null>(null);
   const askTutor = (query: string) => {
     setTutorAsk((a) => ({ text: `Design a sound: ${query}`, n: (a?.n ?? 0) + 1 }));
-    document.getElementById('tutor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (small) openSheet('tutor');
+    else document.getElementById('tutor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
@@ -983,6 +1022,8 @@ function Synth({
   // The open sound's own lesson is the exception: the sound stays open (its lesson goes with it), and nothing is
   // recorded, since progress is kept for the library's lessons.
   const setStep = (k: number | null) => {
+    // A full-height Lesson sheet would cover the step's controls: it drops to half, and they scroll into view above it.
+    if (small && sheet === 'lesson') setDockSnap('half');
     if (ownLesson) {
       openSeq.current++;
       patch((s) => ({ ...s, step: k, ...presetState(synthDef, ownLesson, k) }));
@@ -1004,6 +1045,50 @@ function Synth({
       };
     });
   };
+  // With the Lesson sheet open, the step's controls are scrolled into the band above it: on opening, on each step, and
+  // when the sheet drops back to half height.
+  const stepKey = shown && step != null ? stepIds(shown.steps[step]).join('|') : '';
+  useEffect(() => {
+    if (!small || sheet !== 'lesson' || !stepKey) return undefined;
+    const t = requestAnimationFrame(() => {
+      const svg = frameRef.current?.querySelector('svg');
+      const top = document.querySelector('[data-kys-sheet]')?.getBoundingClientRect().top;
+      if (svg)
+        revealOnPanel({
+          svg,
+          scroller: scrollerRef.current,
+          def,
+          ids: stepKey.split('|'),
+          sheetTop: top ?? window.innerHeight,
+        });
+    });
+    return () => cancelAnimationFrame(t);
+  }, [small, sheet, dockSnap, stepKey, def, scrollerRef]);
+
+  // On a small touch screen a tap on the panel opens the Inspector on what was tapped, in place of the floating card.
+  // Not while another sheet is up, and not on the first tap of a cable being plugged in, which the second tap needs.
+  const tapRef = useRef<{ x: number; y: number } | null>(null);
+  const panelTaps = small
+    ? {
+        onPointerDownCapture: (e: ReactPointerEvent) => {
+          tapRef.current = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY };
+        },
+        onPointerCancelCapture: () => {
+          tapRef.current = null;
+        },
+        onPointerUpCapture: (e: ReactPointerEvent) => {
+          const t = tapRef.current;
+          tapRef.current = null;
+          if (!t || Math.hypot(e.clientX - t.x, e.clientY - t.y) > TAP_SLOP) return;
+          // after the press's own click, which may be what sets the focus
+          setTimeout(() => {
+            if (pendingStore.get() || !focusStore.get()) return;
+            setSheet((s) => (s === null || s === 'inspector' ? 'inspector' : s));
+          });
+        },
+      }
+    : {};
+
   const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
     if (id === synthId) return;
@@ -1024,6 +1109,101 @@ function Synth({
       notesStore.set([]);
     } else void ensureAudio();
   };
+
+  // The regions beside the panel: in the grid at `lg` and up, each in a bottom sheet below it.
+  const library = (
+    <div className="flex min-h-0 flex-col gap-5">
+      <MySoundsList
+        signedIn={authPending ? null : signedIn}
+        synthName={def.name}
+        signInHref={signInHref}
+        sounds={mine.sounds}
+        failed={mine.failed}
+        currentId={openSound?.id ?? null}
+        onOpen={(id) => {
+          if (small) openSheet(null);
+          void openMine(id);
+        }}
+        isStarred={(id) => favourites.isOn({ kind: 'mine', soundId: id })}
+        onStar={(id) => favourites.toggle({ kind: 'mine', soundId: id })}
+      />
+      <Library
+        presets={sounds}
+        currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
+        onSelect={(id) => {
+          if (small) openSheet(null);
+          selectPreset(id);
+        }}
+        marks={progress.marks}
+        isStarred={(slug) => favourites.isOn({ kind: 'sound', synthId, slug })}
+        onStar={(slug) => favourites.toggle({ kind: 'sound', synthId, slug })}
+        onAskTutor={askTutor}
+      />
+    </div>
+  );
+  const lesson = shown ? (
+    <Lesson
+      def={def}
+      preset={shown}
+      step={step}
+      onStep={setStep}
+      mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
+    />
+  ) : (
+    <p className="text-sm text-(--kys-muted)">
+      There are no library sounds for the {def.name} yet, so there&apos;s no lesson to show. The
+      panel still plays.
+    </p>
+  );
+  const inspector = (
+    <div className="flex flex-col gap-4">
+      <Inspector
+        def={def}
+        values={sess.values}
+        target={step == null ? target : null}
+        preset={shown ?? null}
+        cables={sess.cables}
+        onChange={onChange}
+        onConnect={onConnect}
+        onUnplug={onUnplug}
+      />
+    </div>
+  );
+  const tutor = (
+    <TutorPanel
+      def={synthDef}
+      panel={tutorPanel}
+      designedId={designed && !openSound ? designed.id : null}
+      signedIn={authPending ? null : signedIn}
+      signInHref={signInHref}
+      setPanel={setTutorPanel}
+      openDesign={openDesign}
+      ask={tutorAsk}
+      fill={small}
+    />
+  );
+  const about = (
+    <section className="rounded-xl border border-(--kys-line) p-4 text-sm text-(--kys-muted)">
+      <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>
+      <p>{detail.synth.summary}</p>
+      {detail.lineage && (
+        <button
+          type="button"
+          onClick={() => setLineageOpen(true)}
+          className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
+        >
+          Where it comes from: the {detail.synth.name}’s lineage
+        </button>
+      )}
+      <button
+        type="button"
+        onClick={() => setLimitsOpen(true)}
+        className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
+      >
+        What this app does not model on the {detail.synth.name}
+      </button>
+    </section>
+  );
 
   const linkBtn = 'kys-label text-(--kys-accent) underline-offset-2 hover:underline';
   const smallBtn =
@@ -1314,8 +1494,9 @@ function Synth({
             </div>
           </div>
         </div>
-        <div ref={scrollerRef} className="kys-scroll overflow-x-auto pb-2">
+        <div ref={scrollerRef} className="kys-scroll overflow-x-auto pb-2" {...panelTaps}>
           <div
+            ref={frameRef}
             data-testid="panel-frame"
             className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
             style={panelFrameStyle(def.layout ? def.view : null, scale)}
@@ -1415,86 +1596,75 @@ function Synth({
         </div>
       </section>
 
-      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
-        <div className="flex min-h-0 flex-col gap-5">
-          <MySoundsList
-            signedIn={authPending ? null : signedIn}
-            synthName={def.name}
-            signInHref={signInHref}
-            sounds={mine.sounds}
-            failed={mine.failed}
-            currentId={openSound?.id ?? null}
-            onOpen={(id) => void openMine(id)}
-            isStarred={(id) => favourites.isOn({ kind: 'mine', soundId: id })}
-            onStar={(id) => favourites.toggle({ kind: 'mine', soundId: id })}
-          />
-          <Library
-            presets={sounds}
-            currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
-            onSelect={selectPreset}
-            marks={progress.marks}
-            isStarred={(slug) => favourites.isOn({ kind: 'sound', synthId, slug })}
-            onStar={(slug) => favourites.toggle({ kind: 'sound', synthId, slug })}
-            onAskTutor={askTutor}
-          />
-        </div>
-        {shown ? (
-          <Lesson
-            def={def}
-            preset={shown}
-            step={step}
-            onStep={setStep}
-            mark={ownLesson ? null : (progress.marks?.get(shown.id) ?? null)}
-          />
-        ) : (
-          <p className="text-sm text-(--kys-muted)">
-            There are no library sounds for the {def.name} yet, so there&apos;s no lesson to show.
-            The panel still plays.
-          </p>
-        )}
-        <aside className="flex flex-col gap-4 lg:col-span-2 xl:col-span-1">
-          <Inspector
-            def={def}
-            values={sess.values}
-            target={step == null ? target : null}
-            preset={shown ?? null}
-            cables={sess.cables}
-            onChange={onChange}
-            onConnect={onConnect}
-            onUnplug={onUnplug}
-          />
-          <TutorPanel
-            def={synthDef}
-            panel={tutorPanel}
-            designedId={designed && !openSound ? designed.id : null}
-            signedIn={authPending ? null : signedIn}
-            signInHref={signInHref}
-            setPanel={setTutorPanel}
-            openDesign={openDesign}
-            ask={tutorAsk}
-          />
-          <section className="rounded-xl border border-(--kys-line) p-4 text-sm text-(--kys-muted)">
-            <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>
-            <p>{detail.synth.summary}</p>
-            {detail.lineage && (
+      {small ? (
+        <>
+          {about}
+          <nav
+            aria-label="Beside the panel"
+            className="sticky bottom-0 z-40 -mx-4 grid grid-cols-4 gap-1 border-t border-(--kys-line) bg-(--kys-ground) px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] sm:-mx-6"
+          >
+            {SHEETS.map(([id, label]) => (
               <button
+                key={id}
                 type="button"
-                onClick={() => setLineageOpen(true)}
-                className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
+                aria-expanded={sheet === id}
+                onClick={() => openSheet(sheet === id ? null : id)}
+                className={`kys-label h-11 rounded-md ${sheet === id ? 'bg-(--kys-text) text-(--kys-ground)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
               >
-                Where it comes from: the {detail.synth.name}’s lineage
+                {label}
               </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setLimitsOpen(true)}
-              className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
-            >
-              What this app does not model on the {detail.synth.name}
-            </button>
-          </section>
-        </aside>
-      </div>
+            ))}
+          </nav>
+          {libraryNode && createPortal(library, libraryNode)}
+          {lessonNode && createPortal(lesson, lessonNode)}
+          {inspectorNode && createPortal(inspector, inspectorNode)}
+          {tutorNode && createPortal(tutor, tutorNode)}
+          <BottomSheet
+            title="Library"
+            open={sheet === 'library'}
+            onOpenChange={(o) => openSheet(o ? 'library' : null)}
+          >
+            <KeptSlot node={libraryNode} />
+          </BottomSheet>
+          <BottomSheet
+            title="Lesson"
+            docked
+            snap={dockSnap}
+            onSnap={setDockSnap}
+            open={sheet === 'lesson'}
+            onOpenChange={(o) => openSheet(o ? 'lesson' : null)}
+          >
+            <KeptSlot node={lessonNode} />
+          </BottomSheet>
+          <BottomSheet
+            title="Inspector"
+            docked
+            snap={dockSnap}
+            onSnap={setDockSnap}
+            open={sheet === 'inspector'}
+            onOpenChange={(o) => openSheet(o ? 'inspector' : null)}
+          >
+            <KeptSlot node={inspectorNode} />
+          </BottomSheet>
+          <BottomSheet
+            title="Tutor"
+            open={sheet === 'tutor'}
+            onOpenChange={(o) => openSheet(o ? 'tutor' : null)}
+          >
+            <KeptSlot node={tutorNode} className="h-full" />
+          </BottomSheet>
+        </>
+      ) : (
+        <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+          {library}
+          {lesson}
+          <aside className="flex flex-col gap-4 lg:col-span-2 xl:col-span-1">
+            {inspector}
+            {tutor}
+            {about}
+          </aside>
+        </div>
+      )}
 
       {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
       {detail.lineage && (
@@ -1540,7 +1710,7 @@ function Synth({
       />
 
       <Tooltip
-        enabled={tipsOn}
+        enabled={tipsOn && !(small && coarse)}
         def={def}
         values={sess.values}
         target={step == null ? target : null}
