@@ -349,6 +349,21 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** CUSTOMIZATION.md §6 defers a marketing content seam until more forks need one.
 - **Delete when:** Sunrise ships that seam. Move the modules behind it and restore the route files.
 
+### The privacy policy and terms pages, as thin shims
+
+- **Files:** `app/(public)/privacy/page.tsx`, `app/(public)/terms/page.tsx`
+- **Change:** each is a one-line re-export of `components/app/legal/{privacy,terms}-page.tsx` (default export and
+  `metadata`) under an `app:shim` comment. The text is the app's own, written from what it stores and sends; the
+  policy's list of what an account holds is rendered from the export manifests.
+- **Why:** `f-front-door` t-64. Sunrise's pages are placeholders that tell the reader to replace them, and the cookie
+  banner links to the first. As with the marketing pages above, the App Router resolves `/privacy` and `/terms` from
+  these paths, and a one-line shim is the smallest touch (CUSTOMIZATION.md §6).
+- **On conflict:** keep ours, the one line each. If upstream changed the pages' behaviour rather than their text (a new
+  metadata field), carry that into our module.
+- **Upstream:** the same deferred marketing content seam as the row above.
+- **Delete when:** Sunrise ships a seam for the legal pages' content. Move the modules behind it and restore the route
+  files.
+
 ### The footer tests, pinned to the not-affiliated notice
 
 - **Files:** `tests/unit/components/layouts/public-footer.test.tsx`,
