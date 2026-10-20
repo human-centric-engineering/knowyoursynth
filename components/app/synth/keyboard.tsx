@@ -3,7 +3,10 @@
 /**
  * The on-screen keyboard: three octaves and a top C, the mod wheel, octave shift and hold.
  *
- * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3).
+ * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3). What changed (`f-phone-and-tablet`):
+ * - Each pointer holds its own note, so several fingers play a chord.
+ * - Under `lg` the keys and buttons are finger-sized (44 px), so the keys scroll sideways, and a sideways swipe on
+ *   them scrolls instead of sliding from key to key. A tap still plays.
  */
 
 import { useEffect, useRef } from 'react';
@@ -60,7 +63,7 @@ function ModWheel({ value, onChange }: { value: number; onChange: (v: number) =>
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
-        className={`relative h-24 w-9 touch-none overflow-hidden rounded-md border bg-(--kys-desk) ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
+        className={`relative h-24 w-11 touch-none overflow-hidden rounded-md border bg-(--kys-desk) lg:w-9 ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
           set(e);
@@ -111,18 +114,24 @@ export function Keyboard({
   noteOff,
 }: KeyboardProps) {
   const active = useStore(notesStore);
-  const down = useRef<number | null>(null);
+  // One note per finger (or mouse), so a chord holds on a poly. A mono still gets last-note priority from the engine.
+  const down = useRef(new Map<number, number>());
   const base = 36 + octave * 12;
   const whites: number[] = [];
   for (let o = 0; o < 3; o++) WHITE.forEach((s) => whites.push(base + o * 12 + s));
   whites.push(base + 36);
 
+  /** Whether a pointer other than `id` is holding note `n`: then that note keeps sounding. */
+  const heldByOther = (n: number, id: number) =>
+    [...down.current].some(([p, held]) => p !== id && held === n);
+
   useEffect(() => {
-    const up = () => {
-      if (down.current != null) {
-        noteOff(down.current);
-        down.current = null;
-      }
+    const held = down.current;
+    const up = (e: globalThis.PointerEvent) => {
+      const n = held.get(e.pointerId);
+      if (n == null) return;
+      held.delete(e.pointerId);
+      if (![...held.values()].includes(n)) noteOff(n);
     };
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
@@ -132,24 +141,27 @@ export function Keyboard({
     };
   }, [noteOff]);
 
-  const press = (n: number) => {
-    if (down.current === n) return;
-    if (down.current != null) noteOff(down.current);
-    down.current = n;
-    noteOn(n);
+  const press = (id: number, n: number) => {
+    const prev = down.current.get(id);
+    if (prev === n) return;
+    if (prev != null && !heldByOther(prev, id)) noteOff(prev);
+    const sounding = heldByOther(n, id);
+    down.current.set(id, n);
+    if (!sounding) noteOn(n);
   };
   const keyProps = (n: number) => ({
     onPointerDown: (e: PointerEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      // Touch captures the pointer to the first key; releasing it lets a finger slide onto the next one.
       try {
         e.currentTarget.releasePointerCapture(e.pointerId);
       } catch {
         /* not captured */
       }
-      press(n);
+      press(e.pointerId, n);
     },
     onPointerEnter: (e: PointerEvent<HTMLButtonElement>) => {
-      if (e.buttons && down.current != null) press(n);
+      if (e.buttons && down.current.has(e.pointerId)) press(e.pointerId, n);
     },
   });
   const qLabel = (n: number) => QWERTY_LABEL[n - (base + 12)];
@@ -158,7 +170,7 @@ export function Keyboard({
     <div className="flex items-stretch gap-3">
       <ModWheel value={wheel} onChange={onWheel} />
       <div className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
-        <div className="relative flex h-28 min-w-[620px] touch-none rounded-md border border-(--kys-line) bg-(--kys-desk) p-1 select-none">
+        <div className="relative flex h-28 min-w-[980px] touch-pan-x rounded-md border border-(--kys-line) bg-(--kys-desk) p-1 select-none lg:min-w-[620px] lg:touch-none">
           {whites.map((n, i) => {
             const on = active.includes(n);
             const sharp = HAS_SHARP[(n - base) % 12] && i < whites.length - 1 ? n + 1 : null;
@@ -187,11 +199,11 @@ export function Keyboard({
           })}
         </div>
       </div>
-      <div className="flex w-[74px] shrink-0 flex-col justify-between gap-1">
+      <div className="flex w-32 shrink-0 flex-col justify-between gap-1 lg:w-[74px]">
         <div className="flex items-center justify-between rounded-md border border-(--kys-line) bg-(--kys-surface)">
           <button
             type="button"
-            className="px-2 py-1 text-(--kys-muted) hover:text-(--kys-text)"
+            className="h-11 w-11 text-(--kys-muted) hover:text-(--kys-text) lg:h-auto lg:w-auto lg:px-2 lg:py-1"
             aria-label="Octave down"
             onClick={() => onOctave(Math.max(OCTAVE_MIN, octave - 1))}
           >
@@ -202,7 +214,7 @@ export function Keyboard({
           </span>
           <button
             type="button"
-            className="px-2 py-1 text-(--kys-muted) hover:text-(--kys-text)"
+            className="h-11 w-11 text-(--kys-muted) hover:text-(--kys-text) lg:h-auto lg:w-auto lg:px-2 lg:py-1"
             aria-label="Octave up"
             onClick={() => onOctave(Math.min(OCTAVE_MAX, octave + 1))}
           >
@@ -214,7 +226,7 @@ export function Keyboard({
           type="button"
           aria-pressed={hold}
           onClick={() => onHold(!hold)}
-          className={`kys-label rounded-md border px-2 py-1.5 ${hold ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-muted) hover:text-(--kys-text)'}`}
+          className={`kys-label h-11 rounded-md border px-2 lg:h-auto lg:py-1.5 ${hold ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-muted) hover:text-(--kys-text)'}`}
         >
           Hold
         </button>

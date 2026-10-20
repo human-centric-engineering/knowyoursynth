@@ -19,6 +19,10 @@
  *   page: a proposal the learner applies, and a sound it designs, which opens here with its lesson (`designed`). Either
  *   is undone back to what was on the panel before.
  *
+ * - On a phone or a tablet held upright (`f-phone-and-tablet`), a note above the panel says it wants a landscape tablet
+ *   or a bigger screen (`rotate-prompt.tsx`). The panel fits the page and zooms in its scroller (`panel-zoom.tsx`), and
+ *   the two rows of buttons over it each scroll sideways on one line.
+ *
  * The theme switch is Sunrise's, in the header.
  */
 
@@ -55,6 +59,9 @@ import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth
 import { Lesson } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
+import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
+import type { PanelScale } from '@/components/app/synth/panel-zoom';
+import { RotatePrompt } from '@/components/app/synth/rotate-prompt';
 import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { useLessonProgress } from '@/components/app/synth/progress';
@@ -369,6 +376,8 @@ function Synth({
   const [hold, setHold] = useState(false);
   const [engineError, setEngineError] = useState('');
   const [zoom, setZoom] = useState(0); // magnifier: 0 = off, else the enlargement
+  const [scale, setScale] = useState<PanelScale>(1); // the panel's size: 1 fits the page
+  const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
   const [lineageOpen, setLineageOpen] = useState(false);
@@ -1030,6 +1039,7 @@ function Synth({
         </button>
       </div>
 
+      <RotatePrompt />
       {shared && (
         <SharedSoundStrip
           sound={shared}
@@ -1119,7 +1129,7 @@ function Synth({
               />
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
+          <div className="kys-scroll flex max-w-full items-center gap-2 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap [&>*]:shrink-0">
             {sharedPanel && changed > 0 ? (
               <button
                 type="button"
@@ -1203,7 +1213,8 @@ function Synth({
         </div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <Search def={def} />
-          <div className="flex flex-wrap items-center gap-1.5 text-sm sm:gap-2">
+          <div className="kys-scroll flex max-w-full items-center gap-1.5 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap sm:gap-2 [&>*]:shrink-0">
+            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
             <PanelSwitch
               label="Orientation tour"
               short="Tour"
@@ -1263,10 +1274,7 @@ function Synth({
               role="group"
               aria-label="Magnifier"
             >
-              <span className="px-1.5 text-(--kys-muted) sm:px-2">
-                <span className="xl:hidden">Zoom</span>
-                <span className="hidden xl:inline">Magnify</span>
-              </span>
+              <span className="px-1.5 text-(--kys-muted) sm:px-2">Magnify</span>
               {(
                 [
                   [0, 'Off'],
@@ -1287,17 +1295,11 @@ function Synth({
             </div>
           </div>
         </div>
-        <div className="kys-scroll overflow-x-auto pb-2">
+        <div ref={scrollerRef} className="kys-scroll overflow-x-auto pb-2">
           <div
-            className={`mx-auto max-w-[1560px] ${def.layout ? '' : 'min-w-[920px]'} ${view.outline ? '' : 'kys-synth-shadow'}`}
-            style={
-              def.layout
-                ? {
-                    minWidth: Math.min(920, Math.round(def.view.w * 0.2)),
-                    maxWidth: `min(1560px, ${((82 * def.view.w) / def.view.h).toFixed(1)}vh)`,
-                  }
-                : undefined
-            }
+            data-testid="panel-frame"
+            className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
+            style={panelFrameStyle(def.layout ? def.view : null, scale)}
           >
             <SynthPanel
               def={def}
