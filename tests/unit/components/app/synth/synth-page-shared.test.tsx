@@ -346,6 +346,7 @@ describe('signed out', () => {
 
   it('keeps the shared address when the view changes', () => {
     shared();
+    fireEvent.click(button('Panel settings'));
     fireEvent.click(button(/Outline/));
     expect(window.location.pathname).toBe(SHARED_PATH);
     expect(window.location.search).toContain('view=');

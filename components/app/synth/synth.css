@@ -566,6 +566,65 @@ svg .kys-hit:focus-visible {
   animation: kys-pulse 1.3s ease-in-out infinite;
 }
 
+/* The learning layers on the bar: lit in the accent while they are over the panel. */
+.kys-layer {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  min-width: 36px;
+  justify-content: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.kys-layer:hover {
+  color: var(--kys-text);
+  background: rgb(255 255 255 / 0.07);
+}
+.kys-layer.is-on {
+  color: var(--kys-accent);
+  background: rgb(246 166 58 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.45);
+}
+
+/* The settings menu, opened above the bar's ⚙. */
+.kys-menu {
+  z-index: 60;
+  width: min(360px, calc(100vw - 24px));
+  padding: 12px;
+  border-radius: 14px;
+  color: var(--kys-text);
+  background: rgb(20 22 28 / 0.97);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 48px -16px rgb(0 0 0 / 0.8);
+  animation: kys-fade 0.15s ease-out;
+}
+.kys-menu-title {
+  margin: 0 0 6px;
+  padding: 0 4px;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--kys-muted);
+}
+.kys-menu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 4px;
+  border-top: 1px solid rgb(255 255 255 / 0.06);
+  font-size: 13px;
+}
+
 /* The deck: the keyboard and the scope, under the bar. */
 .kys-player-deck {
   border-top: 1px solid rgb(255 255 255 / 0.05);
@@ -575,12 +634,14 @@ svg .kys-hit:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .kys-captions,
+  .kys-menu,
   .kys-play.is-playing .kys-play-dot {
     animation: none;
   }
   .kys-chapter-track,
   .kys-sound-pick,
   .kys-step-btn,
+  .kys-layer,
   .kys-led {
     transition: none;
   }

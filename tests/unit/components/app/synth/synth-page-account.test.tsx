@@ -22,7 +22,7 @@
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import {
   ACCOUNT_WRITE_DELAY_MS,
@@ -370,7 +370,9 @@ describe('signed in, opening a synth', () => {
     page();
     await waitFor(() => expect(pressed('Show harmonics')).toBe('true'));
     expect(pressed('Dim unused parts')).toBe('false');
-    expect(pressed('Info cards: off')).toBe('false');
+    fireEvent.click(screen.getByRole('button', { name: 'Panel settings' }));
+    const cards = within(screen.getByRole('group', { name: 'Hover cards' }));
+    expect(cards.getByRole('button', { name: 'Off' }).getAttribute('aria-pressed')).toBe('true');
   });
 
   it("fills what the account has no value for from the browser's, once", async () => {

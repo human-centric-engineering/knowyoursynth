@@ -225,6 +225,7 @@ describe.each(MODULAR)('the %s page’s panel layout', (id) => {
     expect(modules).not.toBe(long);
     const panel = () => frontPanel(def);
     const first = detail.sounds[0];
+    fireEvent.click(screen.getByRole('button', { name: 'Panel settings' }));
     const layout = within(screen.getByRole('group', { name: 'Panel layout' }));
     const pressed = (name: string) =>
       layout.getByRole('button', { name }).getAttribute('aria-pressed');

@@ -185,6 +185,13 @@ function page(over: Partial<SynthPageProps> = {}) {
 const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** A control in the player's ⚙ menu (t-72), opening the menu first if it is shut. */
+const setting = (name: string | RegExp) => {
+  if (!screen.queryByRole('dialog', { name: 'Panel settings' })) {
+    fireEvent.click(button('Panel settings'));
+  }
+  return button(name);
+};
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const paramsSent = () =>
@@ -641,10 +648,13 @@ describe('SynthPage patch', () => {
     expect(focusStore.get()).toBeNull();
   });
 
-  it('turns info cards off and on, and remembers it', () => {
+  it('turns hover cards off and on, and remembers it', () => {
     page();
-    fireEvent.click(button(/Info cards: on/));
-    expect(button(/Info cards: off/).getAttribute('aria-pressed')).toBe('false');
+    const cards = () => within(screen.getByRole('group', { name: 'Hover cards' }));
+    setting('Panel settings');
+    expect(cards().getByRole('button', { name: 'On' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(cards().getByRole('button', { name: 'Off' }));
+    expect(cards().getByRole('button', { name: 'Off' }).getAttribute('aria-pressed')).toBe('true');
     expect(readStored('kys.tips')).toBe(false);
 
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 5, y: 5, tip: true }));
@@ -655,7 +665,7 @@ describe('SynthPage patch', () => {
 // ── the view ────────────────────────────────────────────────────────────────
 
 describe('SynthPage view', () => {
-  const outline = () => screen.getByRole('button', { name: 'Outline' });
+  const outline = () => setting('Outline');
 
   it('starts in the hardware view', () => {
     const replace = vi.spyOn(window.history, 'replaceState');
@@ -680,7 +690,7 @@ describe('SynthPage view', () => {
   it('switching back to Hardware drops the query', () => {
     const replace = vi.spyOn(window.history, 'replaceState');
     page({ viewParam: 'outline' });
-    fireEvent.click(screen.getByRole('button', { name: 'Hardware' }));
+    fireEvent.click(setting('Hardware'));
     expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d');
     expect(readStored('kys.view')).toEqual({ outline: false, long: false });
   });
@@ -744,9 +754,7 @@ describe('SynthPage navigation', () => {
     window.location.hash = '#model-d/outline';
     page();
     expect(router.replace).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Outline' }).getAttribute('aria-pressed')).toBe(
-      'true'
-    );
+    expect(setting('Outline').getAttribute('aria-pressed')).toBe('true');
     expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/model-d?view=outline');
     expect(readStored('kys.synth')).toBe('model-d');
   });
@@ -1681,8 +1689,6 @@ describe('SynthPage patch edge cases', () => {
     const replace = vi.spyOn(window.history, 'replaceState');
     page();
     expect(replace).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Outline' }).getAttribute('aria-pressed')).toBe(
-      'false'
-    );
+    expect(setting('Outline').getAttribute('aria-pressed')).toBe('false');
   });
 });

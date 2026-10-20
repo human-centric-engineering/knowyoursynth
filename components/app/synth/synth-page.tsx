@@ -52,12 +52,8 @@ import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
-import {
-  HelpButton,
-  MidiStatus,
-  PanelSwitch,
-  Segmented,
-} from '@/components/app/synth/bar-controls';
+import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
+import { AudioWaveform, EyeOff, Flame, Shapes } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -67,6 +63,7 @@ import { Lesson, stepIds } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
+import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
 import { FullscreenButton, PlayButton, SoundDesign, Wordmark } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
 import { RotatePrompt, SMALL_QUERY, useMediaQuery } from '@/components/app/synth/rotate-prompt';
@@ -397,7 +394,7 @@ function Synth({
   const [octave, setOctave] = useState(0);
   const [hold, setHold] = useState(false);
   const [engineError, setEngineError] = useState('');
-  const [zoom, setZoom] = useState(0); // magnifier: 0 = off, else the enlargement
+  const [zoom, setZoom] = useState<number>(0); // magnifier: 0 = off, else the enlargement
   const [scale, setScale] = useState<PanelScale>(1); // the panel's size: 1 fits the page
   const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
@@ -1320,9 +1317,6 @@ function Synth({
             <div className="flex min-w-[min(100%,340px)] flex-1 flex-col items-end gap-2.5 max-sm:items-stretch">
               <div className="flex items-center gap-2 max-sm:[&>:first-child]:flex-1">
                 <Search def={def} />
-                <HelpButton title="How to use the panel" items={PANEL_HELP} />
-              </div>
-              <div className="kys-scroll flex max-w-full items-center gap-1.5 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap sm:justify-end [&>*]:shrink-0">
                 <PanelSwitch
                   label="Orientation tour"
                   short="Tour"
@@ -1335,47 +1329,7 @@ function Synth({
                     findStore.set(null);
                   }}
                 />
-                <PanelSwitch
-                  label="Explain sections"
-                  short="Sections"
-                  on={areasOn}
-                  title="Colour in every named part of the panel, and explain what it does when you point at it."
-                  onClick={() => {
-                    setAreasOn(!areasOn);
-                    setTourOn(false);
-                    findStore.set(null);
-                    focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                  }}
-                />
-                <PanelSwitch
-                  label="Dim unused parts"
-                  short="Dim unused"
-                  on={dimOn}
-                  title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
-                  onClick={() => setDimOn(!dimOn)}
-                />
-                <PanelSwitch
-                  label="Show sensitive controls"
-                  short="Sensitive"
-                  on={heatOn}
-                  title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                  onClick={() => setHeatOn(!heatOn)}
-                />
-                <PanelSwitch
-                  label="Show harmonics"
-                  short="Harmonics"
-                  on={harmOn}
-                  title="Show the wave and the harmonics of this patch under the panel, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
-                  onClick={() => setHarmOn(!harmOn)}
-                />
-                <PanelSwitch
-                  label={`Info cards: ${tipsOn ? 'on' : 'off'}`}
-                  short={`Cards: ${tipsOn ? 'on' : 'off'}`}
-                  tone="quiet"
-                  on={tipsOn}
-                  title="Show or hide the pop-up card when you point at a knob, switch, jack or cable. The inspector always explains it."
-                  onClick={() => setTipsOn(!tipsOn)}
-                />
+                <HelpButton title="How to use the panel" items={PANEL_HELP} />
               </div>
             </div>
           </header>
@@ -1471,52 +1425,51 @@ function Synth({
                     : 'Turn sound on'}
             </button>
             <span className="flex-1" />
-            {synthDef.modular && (
-              <Segmented
-                label="Panel layout"
-                title="Modular: the sections stacked as modules, easier to read on a small screen. Long: the faceplate as it is on the keyboard."
-                options={[
-                  [false, 'Modular'],
-                  [true, 'Long'],
-                ]}
-                value={view.long}
-                onChange={(long) => setView({ ...view, long })}
-              />
-            )}
-            <Segmented
-              label="Panel view"
-              options={[
-                [false, 'Hardware'],
-                [true, 'Outline'],
-              ]}
-              value={view.outline}
-              onChange={(outline) => setView({ ...view, outline })}
-            />
-            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
             <div
-              className="flex items-center rounded-md border border-(--kys-line) bg-(--kys-surface) p-0.5"
               role="group"
-              aria-label="Magnifier"
+              aria-label="Layers over the panel"
+              className="flex items-center gap-1"
             >
-              <span className="px-1.5 text-(--kys-muted) sm:px-2">Magnify</span>
-              {(
-                [
-                  [0, 'Off'],
-                  [2, '2×'],
-                  [3, '3×'],
-                ] as const
-              ).map(([z, l]) => (
-                <button
-                  key={l}
-                  type="button"
-                  aria-pressed={zoom === z}
-                  onClick={() => setZoom(z)}
-                  className={`rounded px-2 py-1 font-semibold sm:px-2.5 ${zoom === z ? 'bg-(--kys-text) text-(--kys-ground)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
-                >
-                  {l}
-                </button>
-              ))}
+              <LayerToggle
+                label="Explain sections"
+                short="Sections"
+                icon={<Shapes size={17} aria-hidden="true" />}
+                on={areasOn}
+                title="Colour in every named part of the panel, and explain what it does when you point at it."
+                onClick={() => {
+                  setAreasOn(!areasOn);
+                  setTourOn(false);
+                  findStore.set(null);
+                  focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                }}
+              />
+              <LayerToggle
+                label="Dim unused parts"
+                short="Dim unused"
+                icon={<EyeOff size={17} aria-hidden="true" />}
+                on={dimOn}
+                title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
+                onClick={() => setDimOn(!dimOn)}
+              />
+              <LayerToggle
+                label="Show sensitive controls"
+                short="Sensitive"
+                icon={<Flame size={17} aria-hidden="true" />}
+                on={heatOn}
+                title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                onClick={() => setHeatOn(!heatOn)}
+              />
             </div>
+            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
+            <PlayerSettings
+              view={view}
+              onView={setView}
+              modular={!!synthDef.modular}
+              zoom={zoom}
+              onZoom={setZoom}
+              tipsOn={tipsOn}
+              onTips={setTipsOn}
+            />
             <FullscreenButton target={playerRef} />
           </div>
         </div>
@@ -1555,6 +1508,17 @@ function Synth({
             </div>
           </div>
           <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
+            <button
+              type="button"
+              aria-pressed={harmOn}
+              aria-label="Show harmonics"
+              title="Show the wave and the harmonics of this patch over the keyboard, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
+              onClick={() => setHarmOn(!harmOn)}
+              className={`mr-auto flex items-center gap-2 rounded-md border px-2.5 py-1 text-xs font-semibold ${harmOn ? 'border-(--kys-accent) text-(--kys-accent)' : 'border-(--kys-line) text-(--kys-muted) hover:text-(--kys-text)'}`}
+            >
+              <AudioWaveform size={14} aria-hidden="true" />
+              Harmonics {harmOn ? 'shown' : 'hidden'}
+            </button>
             <MidiStatus midi={midi} onConnect={connectMidi} />
             <HelpButton title="How to play" items={PLAY_HELP} />
           </div>
