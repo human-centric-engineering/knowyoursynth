@@ -1215,6 +1215,126 @@ describe('SynthPage regions', () => {
   });
 });
 
+// ── the player (`f-player` t-69) ────────────────────────────────────────────
+
+describe('SynthPage player', () => {
+  const TWO_STEPS = sound({
+    id: 'two-steps',
+    name: 'Two steps',
+    ref: 'In the style of two people',
+    blurb: 'A sound in two moves.',
+    steps: [
+      { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+      { title: 'Close the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -2 } },
+    ],
+  });
+  const twoSteps = () => page({ detail: { ...detail, sounds: [TWO_STEPS] } });
+  const cutoff = () =>
+    screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
+  const player = () => screen.getByRole('region', { name: 'Model D panel' });
+
+  it('names the synth in the page heading and puts its picker on the stage', () => {
+    page();
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+      'Behringer Model D · Modelled on the 1970 Minimoog Model D'
+    );
+    expect(within(player()).getByRole('button', { name: /Synth\s*Model D/ })).toBeTruthy();
+  });
+
+  it('draws one chapter per lesson step and one for the finished sound, and goes to the one clicked', () => {
+    twoSteps();
+    const chapters = within(player()).getByRole('list', { name: 'Lesson steps' });
+    expect(
+      within(chapters)
+        .getAllByRole('button')
+        .map((b) => b.getAttribute('aria-label'))
+    ).toEqual([
+      'Lesson step 1: Open the mixer',
+      'Lesson step 2: Close the filter',
+      'The finished sound',
+    ]);
+    // The finished sound is where it opens.
+    expect(button('The finished sound').getAttribute('aria-current')).toBe('step');
+
+    // The finished sound has the second step's cutoff on the panel.
+    expect(cutoff()).toBe('-2');
+
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(button('Lesson step 1: Open the mixer').getAttribute('aria-current')).toBe('step');
+    expect(button('The finished sound').getAttribute('aria-current')).toBeNull();
+    // The panel is at the first step: the cutoff the second step sets is not on it yet.
+    expect(cutoff()).not.toBe('-2');
+
+    fireEvent.click(button('The finished sound'));
+    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
+    expect(cutoff()).toBe('-2');
+  });
+
+  it('says the step the panel is at under the panel, as captions, only while walking', () => {
+    twoSteps();
+    expect(within(player()).queryByText('Loud.')).toBeNull();
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    const captions = within(player()).getByText('Loud.').closest('[aria-live]');
+    expect(captions?.textContent).toMatch(/Step 1 of 2/);
+    expect(captions?.textContent).toMatch(/Open the mixer/);
+  });
+
+  it('starts, steps through and finishes the lesson from the transport', () => {
+    twoSteps();
+    expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(button('Start the lesson'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(button('Next lesson step'));
+    expect(screen.getByText('step 2 of 2')).toBeTruthy();
+
+    fireEvent.click(button('Previous lesson step'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+
+    fireEvent.click(button('Next lesson step'));
+    fireEvent.click(button('Finish the lesson'));
+    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
+    expect(button('Start the lesson')).toBeTruthy();
+  });
+
+  it('has no chapters or step buttons for a sound with no steps', () => {
+    page({ detail: { ...detail, sounds: [{ ...FAT_BASS, steps: [] }] } });
+    expect(screen.queryByRole('list', { name: 'Lesson steps' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Start the lesson' })).toBeNull();
+    expect(button('Play riff')).toBeTruthy();
+  });
+
+  it('describes the library sound on the panel under the player', () => {
+    twoSteps();
+    const about = screen.getByRole('region', { name: 'About the sound' });
+    expect(within(about).getByText('In the style of two people')).toBeTruthy();
+    expect(within(about).getByText('A sound in two moves.')).toBeTruthy();
+  });
+
+  it('puts the player full screen where the browser can, and draws no button where it cannot', () => {
+    const { unmount } = page();
+    expect(screen.queryByRole('button', { name: 'Full screen' })).toBeNull();
+    unmount();
+
+    Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+    const request = vi.fn().mockResolvedValue(undefined);
+    const was = HTMLElement.prototype.requestFullscreen;
+    HTMLElement.prototype.requestFullscreen = request;
+    try {
+      page();
+      fireEvent.click(button('Full screen'));
+      expect(request).toHaveBeenCalledTimes(1);
+      expect(request.mock.contexts[0]).toBe(player());
+    } finally {
+      HTMLElement.prototype.requestFullscreen = was;
+      Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: false });
+    }
+  });
+});
+
 // ── edge behaviours ─────────────────────────────────────────────────────────
 
 describe('SynthPage riff and engine events', () => {

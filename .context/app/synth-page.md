@@ -10,7 +10,8 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `app/(panel)/synths/[id]/page.tsx`       | The route: 404s an id the registry lacks, reads the API, renders the page |
 | `app/(panel)/synths/page.tsx`            | `/synths`: reopens the last synth opened, or the first listed             |
 | `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
-| `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-stage`, `kys-pulse`, …        |
+| `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
+| `components/app/synth/player.tsx`        | The player's pieces: wordmark, chapters, step transport, captions         |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
@@ -87,6 +88,57 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 - **A search the library has nothing for** offers the tutor, which puts the request in its
   composer.
 
+## The player
+
+`f-player` (owner's ask, 2026-10-20): the panel is the thing you came to watch and play, so
+playing, choosing and learning are gathered round it as a video player gathers its controls.
+BeatBreaker's drummer player is the precedent (`components/app/studio/player/` there).
+
+```
+┌ the player (`section`, "<synth> panel") ───────────────────────────────────┐
+│ ● KNOW YOUR SYNTH                              [Find a control…]   [?]     │
+│ BEHRINGER                                                                  │
+│ Model D ▾          ☆      [Tour][Sections][Dim][Sensitive][Harmonics][Cards]│
+│ heritage · HISTORY › · WHAT IS NOT MODELLED ›                              │
+│                     ┌──────────── the panel ────────────┐                  │
+│                     └───────────────────────────────────┘                  │
+│ map legend · why is it dark? · engine error                                │
+│ Step 2 of 5 · FILTER  Close the filter — what to listen for   (captions)   │
+├────────────────────────────────────────────────────────────────────────────┤
+│ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ▬▬▬▬ ✓                                    (chapters)   │
+│ (▶ Play riff) ⏮ ⏭ ● Sound on  Step 2/5 Close…   [Hardware|Outline] [−Fit+] │
+│                                                  [Magnify Off 2× 3×] [⛶]   │
+├────────────────────────────────────────────────────────────────────────────┤
+│ harmonics strip · keyboard │ scope · MIDI · effects rack          (deck)   │
+└────────────────────────────────────────────────────────────────────────────┘
+Loaded: <sound name> [mine] [step 2 of 5] 3 controls moved   [Restore][Blank][Unplug all]
+Save / Save as / Rename / Share …
+┌ the sound: "In the style of…", blurb ┐ ┌ About this <synth>, lineage, limits ┐
+```
+
+- **The stage is dark in both themes.** `.kys-player` redeclares the `--kys-*` roles to the dark
+  palette's values for its subtree, so everything inside (switches, keyboard, scope, the picker's
+  list) reads them as anywhere else. Change a value in `app/brand-theme.css`'s dark block and the
+  same value here. Nothing that holds the panel may carry `transform`, `filter` (other than the
+  faceplate's own shadow) or `backdrop-filter`: the info cards and the magnifier are `fixed`.
+- **The caption is the synth.** The wordmark's LED is lit while the sound is on. The synth's name
+  is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
+  picker shows the name.
+- **The lesson's steps are the chapters**, one segment per step in its module's colour and a last
+  one for the finished sound. A segment moves the panel to that step, through the same `setStep`
+  as the Lesson region, so progress, the open sound's own lesson and shared sounds behave alike.
+  ⏮ ⏭ step back and on. With the finished sound on, ⏭ starts the lesson; from the last step it
+  finishes. Their names differ from the Lesson region's own arrows ("Previous lesson step",
+  "Next lesson step", "Lesson step 1: …") so both can be on the page.
+- **Captions** show the step the panel is at under the panel while a lesson is walked: its number,
+  module, title and `why`.
+- **Full screen** is the whole player, and is drawn only where the browser has element full
+  screen. The info cards are rendered inside the player so they still show there.
+- **Under the player** is the title row, as under a video: the loaded sound, its marks, Restore,
+  Blank patch and Unplug all, then the save actions. The description card describes the sound on
+  the panel. It does not show a library sound's words under one of the user's own sounds, or a
+  shared sound, that has no lesson of its own.
+
 ## On phones and tablets
 
 D10: playing the full panel needs a landscape tablet or a computer. Everything else works on a
@@ -111,8 +163,8 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   chord. A finger the keyboard will not hear let go (the window loses focus, or the keyboard is
   closed) has its note let go at once. Under `sm`, the octave buttons and Hold go under the keys,
   so more keys show.
-- **The two rows of buttons over the panel scroll sideways on one line** under `sm`, with the
-  zoom group first, instead of wrapping into a wall.
+- **The lens switches over the panel and the player's bar scroll sideways on one line** under
+  `sm`, instead of wrapping into a wall.
 - **Nothing may make the page wider than the screen.** A grid item grows to its content's width
   unless it has `min-w-0` or a `minmax(0, …)` track, so the keyboard (whose keys scroll) and the
   regions under the panel carry one. Anything new that scrolls sideways inside a grid needs the

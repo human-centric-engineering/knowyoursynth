@@ -1317,8 +1317,11 @@ function Synth({
                 </button>
               </p>
             </div>
-            <div className="flex max-w-full min-w-0 flex-col items-end gap-2 max-sm:w-full max-sm:items-stretch">
-              <Search def={def} />
+            <div className="flex min-w-[min(100%,340px)] flex-1 flex-col items-end gap-2.5 max-sm:items-stretch">
+              <div className="flex items-center gap-2 max-sm:[&>:first-child]:flex-1">
+                <Search def={def} />
+                <HelpButton title="How to use the panel" items={PANEL_HELP} />
+              </div>
               <div className="kys-scroll flex max-w-full items-center gap-1.5 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap sm:justify-end [&>*]:shrink-0">
                 <PanelSwitch
                   label="Orientation tour"
@@ -1373,7 +1376,6 @@ function Synth({
                   title="Show or hide the pop-up card when you point at a knob, switch, jack or cable. The inspector always explains it."
                   onClick={() => setTipsOn(!tipsOn)}
                 />
-                <HelpButton title="How to use the panel" items={PANEL_HELP} />
               </div>
             </div>
           </header>
@@ -1656,7 +1658,7 @@ function Synth({
             buttonClass={smallBtn}
           />
         )}
-        <div className="grid gap-3 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <div className="grid items-start gap-3 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           {described ? (
             <section
               aria-label="About the sound"
