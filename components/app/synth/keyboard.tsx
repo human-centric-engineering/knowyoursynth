@@ -167,7 +167,8 @@ export function Keyboard({
   const qLabel = (n: number) => QWERTY_LABEL[n - (base + 12)];
 
   return (
-    <div className="flex items-stretch gap-3">
+    // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
+    <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
       <ModWheel value={wheel} onChange={onWheel} />
       <div className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="relative flex h-28 min-w-[980px] touch-pan-x rounded-md border border-(--kys-line) bg-(--kys-desk) p-1 select-none lg:min-w-[620px] lg:touch-none">
@@ -199,7 +200,7 @@ export function Keyboard({
           })}
         </div>
       </div>
-      <div className="flex w-32 shrink-0 flex-col justify-between gap-1 lg:w-[74px]">
+      <div className="flex shrink-0 justify-between gap-1 max-sm:order-last max-sm:w-full max-sm:items-center max-sm:gap-3 sm:w-32 sm:flex-col lg:w-[74px]">
         <div className="flex items-center justify-between rounded-md border border-(--kys-line) bg-(--kys-surface)">
           <button
             type="button"
@@ -221,7 +222,7 @@ export function Keyboard({
             +
           </button>
         </div>
-        <span className="kys-label text-center text-(--kys-faint)">Octave</span>
+        <span className="kys-label text-center text-(--kys-faint) max-sm:mr-auto">Octave</span>
         <button
           type="button"
           aria-pressed={hold}

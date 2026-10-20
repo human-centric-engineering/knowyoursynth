@@ -1396,7 +1396,7 @@ function Synth({
         </div>
       </section>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
         <div className="flex min-h-0 flex-col gap-5">
           <MySoundsList
             signedIn={authPending ? null : signedIn}
