@@ -1,8 +1,8 @@
 'use client';
 
 /**
- * Outboard effects between the synth and the speakers: a master switch, then one card per effect. The cards fold
- * away independently of the switch.
+ * Outboard effects between the synth and the speakers: a master switch, then one card per effect. The switch folds
+ * the cards with it (on unfolds, off folds), and the header folds them on its own.
  *
  * Transliterated from the prototype file `prototype/src/ui/FxRack.jsx` (decision D3). Whether the rack is unfolded
  * is kept in browser storage, read after mount so the server and the first client render agree.
@@ -162,7 +162,8 @@ export function FxRack({ fx, onChange }: { fx: RackFx; onChange: (fx: RackFx) =>
           type="button"
           aria-pressed={fx.on}
           onClick={() => {
-            if (!fx.on) setOpen(true);
+            // The cards go with the switch: on unfolds them, off folds them away.
+            setOpen(!fx.on);
             onChange({ ...fx, on: !fx.on });
           }}
           className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm font-semibold ${fx.on ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) text-(--kys-muted) hover:text-(--kys-text)'}`}
