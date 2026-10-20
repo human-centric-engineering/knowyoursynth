@@ -31,9 +31,9 @@ export default function TermsOfServicePage() {
     <LegalPage title="Terms of service" updated={TERMS_UPDATED}>
       <LegalSection title="Who these are with">
         <p>
-          These terms are between you and{' '}
-          <OwnerField>legal entity name and registered address</OwnerField>, which runs {BRAND.name}
-          . By making an account you agree to them. You must be at least{' '}
+          These terms are between you and {BRAND.legalName}, of{' '}
+          <OwnerField>legal entity&apos;s registered address</OwnerField>, which runs {BRAND.name}.
+          By making an account you agree to them. You must be at least{' '}
           <OwnerField>minimum age</OwnerField> to make one. Our{' '}
           <Link href="/privacy" className={legalLink}>
             privacy policy
@@ -45,7 +45,11 @@ export default function TermsOfServicePage() {
       <LegalSection title="Your account">
         <p>
           Keep your password to yourself: you are responsible for what is done with your account.
-          You can delete it at any time from Settings, and everything in it goes with it.
+          You can delete it at any time from Settings, and what is in it goes with it, as the{' '}
+          <Link href="/privacy" className={legalLink}>
+            privacy policy
+          </Link>{' '}
+          describes.
         </p>
       </LegalSection>
 

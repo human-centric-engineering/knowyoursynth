@@ -39,17 +39,22 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPolicyPage() {
-  const app = getAppSubjectSources();
+  const appSources = getAppSubjectSources();
+  const app = appSources.filter((source) => source.disposition === 'export');
   const platform = exportedSources();
-  const attribution = attributionSources();
+  const attribution = [
+    ...attributionSources(),
+    ...appSources.filter((source) => source.disposition === 'attribution'),
+  ];
 
   return (
     <LegalPage title="Privacy policy" updated={PRIVACY_UPDATED}>
       <LegalSection title="Who we are">
         <p>
-          {BRAND.name} is run by <OwnerField>legal entity name and registered address</OwnerField>,
-          which is the controller of your personal data. For anything about this policy or your
-          data, write to <OwnerField>privacy contact email</OwnerField>.
+          {BRAND.name} is run by {BRAND.legalName}, of{' '}
+          <OwnerField>legal entity&apos;s registered address</OwnerField>, which is the controller
+          of your personal data. For anything about this policy or your data, write to{' '}
+          <OwnerField>privacy contact email</OwnerField>.
         </p>
         <p>
           You must be at least <OwnerField>minimum age</OwnerField> to make an account. You can play
@@ -74,7 +79,7 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>Analytics run only if you accept optional cookies.</li>
           <li>
-            You can download everything we hold about you, and delete your account and all of it.
+            You can download what we hold about you, and delete your account and what is in it.
           </li>
           <li>We do not sell your data, and we do not show adverts.</li>
         </ul>
@@ -172,10 +177,8 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           We keep your conversations with the tutor, so it can follow what you said earlier and you
-          can pick one up again, until you delete your account.{' '}
-          <OwnerField>
-            whether tutor conversations should be deleted after a set time instead
-          </OwnerField>
+          can pick one up again, until you delete your account or, if one is set, for{' '}
+          <OwnerField>the retention period set on the tutor, or that none is set</OwnerField>.
         </p>
         <p>
           The tutor can be wrong. Check what it tells you, especially about people and records, and
@@ -242,15 +245,28 @@ export default function PrivacyPolicyPage() {
           it, the transfer is covered by <OwnerField>transfer mechanism</OwnerField>.
         </p>
         <p>
-          We do not sell your data or share it with anyone else, except where the law requires us
-          to.
+          We do not sell your data, and we share it with nobody beyond the services above, except
+          where the law requires us to.
         </p>
       </LegalSection>
 
       <LegalSection title="How long we keep it">
         <ul>
           <li>Your account and what you made: until you delete them, or your account.</li>
-          <li>Tutor conversations: until you delete your account.</li>
+          <li>
+            Tutor conversations: until you delete your account, or for the tutor&apos;s retention
+            period if one is set.
+          </li>
+          <li>
+            What each tutor turn cost: kept after you delete your account, without your name, for{' '}
+            <OwnerField>cost record retention period</OwnerField>, so we can account for what the
+            tutor costs to run.
+          </li>
+          <li>
+            Messages you send through the contact form: until you delete your account, if you
+            confirmed your email address. If you never confirmed it, we cannot tell they are yours,
+            so they are deleted on request to <OwnerField>privacy contact email</OwnerField>.
+          </li>
           <li>A username you give up: held for 30 days.</li>
           <li>
             Reports and synth suggestions: kept after you delete your account, without your name, so
@@ -278,10 +294,12 @@ export default function PrivacyPolicyPage() {
           <Link href="/settings" className={legalLink}>
             Settings
           </Link>
-          , deletes your account and everything in it, published sounds included. Copies other
-          people saved of your sounds are theirs and stay with them, without the credit that named
-          you. A report you filed, or a synth you suggested, is kept but no longer says who sent it.
-          Nobody you report is ever told who reported them.
+          , deletes your account and what is in it, published sounds included. Copies other people
+          saved of your sounds are theirs and stay with them, without the credit that named you. A
+          report you filed, a synth you suggested, and the record of what each tutor turn cost are
+          kept but no longer say who they came from. Contact messages go too, unless you never
+          confirmed your email address (see <em>How long we keep it</em>). Nobody you report is ever
+          told who reported them.
         </p>
         <p>
           <strong>Correct it.</strong> You can change your name, email address, username, links and
@@ -296,8 +314,11 @@ export default function PrivacyPolicyPage() {
 
       <LegalSection title="Everything in your download">
         <p>
-          This is the complete list of what we hold about a person, part by part, as your download
-          names it. Most of the platform parts stay empty unless you run the site.
+          These are the parts of your download, as it names them. Most of the platform parts stay
+          empty unless you run the site. The download also lists, with a reason, what it leaves out:
+          short-lived sign-in and reset codes, search vectors made from messages it already
+          includes, held usernames (which record nobody), and the synth databank, which is about
+          synths rather than people.
         </p>
         <h3 className="pt-2 font-semibold text-(--kys-text)">{BRAND.name}</h3>
         <ul data-testid="sources-app">

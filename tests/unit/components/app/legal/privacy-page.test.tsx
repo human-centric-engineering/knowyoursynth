@@ -90,7 +90,7 @@ describe('privacy page', () => {
 describe('every part of the export is named', () => {
   it('lists each of the app’s sections with its description', () => {
     render(<PrivacyPolicyPage />);
-    const sources = getAppSubjectSources();
+    const sources = getAppSubjectSources().filter((source) => source.disposition === 'export');
     expect(sources.length).toBeGreaterThan(5);
     const app = list('sources-app');
     for (const source of sources) {
@@ -158,7 +158,7 @@ describe('what a reader relies on', () => {
     );
     expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute('href', '/settings');
     const text = (document.body.textContent ?? '').replace(/\s+/g, ' ');
-    expect(text).toMatch(/deletes your account and everything in it, published sounds included/);
-    expect(text).toMatch(/is kept but no longer says who sent it/);
+    expect(text).toMatch(/deletes your account and what is in it, published sounds included/);
+    expect(text).toMatch(/kept but no longer say who they came from/);
   });
 });
