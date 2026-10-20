@@ -1069,43 +1069,35 @@ function Synth({
   // On a small touch screen a tap on the panel opens the Inspector on what was tapped, in place of the floating card.
   // Not while another sheet is up, and not on the first tap of a cable being plugged in, which the second tap needs.
   // Only a tap that pointed at something: the focus stays on the last thing touched, so a tap on bare panel would
-  // otherwise open it on that. And not a finger of a gesture that used more than one.
+  // otherwise open it on that. So the focus is taken as the finger arrives, before the part under it sets its own, and
+  // the tap counts only if it changed. And not a finger of a gesture that used more than one: a second finger is not
+  // the primary pointer, and its arrival ends the first one's tap.
   const tapRef = useRef<{ x: number; y: number } | null>(null);
-  const fingers = useRef(0);
-  const tapFocused = useRef(false);
-  useEffect(
-    () =>
-      focusStore.subscribe(() => {
-        tapFocused.current = true;
-      }),
-    []
-  );
+  const focusBefore = useRef<ReturnType<typeof focusStore.get>>(null);
   const panelTaps = small
     ? {
-        // before the part under the finger sets the focus, on its pointerenter
         onPointerOverCapture: (e: ReactPointerEvent) => {
-          if (e.pointerType !== 'mouse' && fingers.current === 0) tapFocused.current = false;
+          if (e.pointerType !== 'mouse' && e.isPrimary !== false)
+            focusBefore.current = focusStore.get();
         },
         onPointerDownCapture: (e: ReactPointerEvent) => {
-          if (e.pointerType === 'mouse') {
-            tapRef.current = null;
-            return;
-          }
-          fingers.current++;
-          tapRef.current = fingers.current === 1 ? { x: e.clientX, y: e.clientY } : null;
+          tapRef.current =
+            e.pointerType === 'mouse' || e.isPrimary === false
+              ? null
+              : { x: e.clientX, y: e.clientY };
         },
-        onPointerCancelCapture: (e: ReactPointerEvent) => {
-          if (e.pointerType !== 'mouse') fingers.current = Math.max(0, fingers.current - 1);
+        onPointerCancelCapture: () => {
           tapRef.current = null;
         },
         onPointerUpCapture: (e: ReactPointerEvent) => {
-          if (e.pointerType !== 'mouse') fingers.current = Math.max(0, fingers.current - 1);
+          if (e.isPrimary === false) return;
           const t = tapRef.current;
           tapRef.current = null;
           if (!t || Math.hypot(e.clientX - t.x, e.clientY - t.y) > TAP_SLOP) return;
           // after the press's own click, which may be what sets the focus
           setTimeout(() => {
-            if (pendingStore.get() || !focusStore.get() || !tapFocused.current) return;
+            const focus = focusStore.get();
+            if (pendingStore.get() || !focus || focus === focusBefore.current) return;
             setSheet((s) => (s === null || s === 'inspector' ? 'inspector' : s));
           });
         },

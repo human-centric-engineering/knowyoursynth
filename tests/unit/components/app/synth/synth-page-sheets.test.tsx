@@ -226,9 +226,9 @@ const sheet = (name: string) => screen.getByRole('dialog', { name });
 const cutoffKnob = () => screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
 const notesOn = () =>
   engine.send.mock.calls.filter((c) => (c[0] as { type: string }).type === 'noteOn');
-/** A tap on the panel, as a finger makes one: over the part, then down and up in the same place. */
+/** A tap on the panel, as a first finger makes one: over the part, then down and up in the same place. */
 function tap(el: Element) {
-  const at = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' };
+  const at = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch', isPrimary: true };
   fireEvent.pointerOver(el, at);
   fireEvent.pointerDown(el, at);
   fireEvent.pointerUp(el, at);
@@ -331,8 +331,20 @@ describe('below lg', () => {
       phone();
       page();
       const knob = cutoffKnob();
-      fireEvent.pointerDown(knob, { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' });
-      fireEvent.pointerUp(knob, { clientX: 50, clientY: 90, pointerId: 1, pointerType: 'touch' });
+      fireEvent.pointerDown(knob, {
+        clientX: 50,
+        clientY: 50,
+        pointerId: 1,
+        pointerType: 'touch',
+        isPrimary: true,
+      });
+      fireEvent.pointerUp(knob, {
+        clientX: 50,
+        clientY: 90,
+        pointerId: 1,
+        pointerType: 'touch',
+        isPrimary: true,
+      });
       await act(() => new Promise((r) => setTimeout(r, 0)));
       expect(screen.queryByRole('dialog')).toBeNull();
     });
@@ -373,8 +385,14 @@ describe('below lg', () => {
       phone();
       page();
       const knob = cutoffKnob();
-      const one = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' };
-      const two = { clientX: 120, clientY: 50, pointerId: 2, pointerType: 'touch' };
+      const one = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch', isPrimary: true };
+      const two = {
+        clientX: 120,
+        clientY: 50,
+        pointerId: 2,
+        pointerType: 'touch',
+        isPrimary: false,
+      };
       fireEvent.pointerOver(knob, one);
       fireEvent.pointerDown(knob, one);
       fireEvent.pointerDown(knob, two);
@@ -437,7 +455,8 @@ describe('below lg', () => {
 
       fireEvent.click(within(lesson).getByRole('button', { name: 'Make Lesson taller' }));
       expect(lesson.getAttribute('data-snap')).toBe('full');
-      await act(() => new Promise((r) => setTimeout(r, 20)));
+      // the frame a reveal would be scrolled in has been and gone
+      await act(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
       expect(scrollBy).not.toHaveBeenCalled();
     });
 

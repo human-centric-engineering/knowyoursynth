@@ -18,7 +18,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 
 export type SheetSnap = 'half' | 'full';
 
-/** A half-height docked sheet's share of the screen: the `h-[45dvh]` it is drawn at. */
+/** A half-height docked sheet's share of the screen, which it is drawn at. */
 export const HALF_HEIGHT = 0.45;
 
 /** How far a drag on the handle must go to count, in px. */
@@ -70,7 +70,7 @@ export function BottomSheet({
   // A drag ends in a click too, which the handle's button must not read as a press.
   const dragged = useRef(false);
   const [pull, setPull] = useState(0);
-  const height = docked && snap === 'half' ? 'h-[45dvh]' : 'h-[85dvh]';
+  const height = `${Math.round((docked && snap === 'half' ? HALF_HEIGHT : 0.85) * 100)}dvh`;
 
   const onDown = (e: PointerEvent<HTMLElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -119,8 +119,8 @@ export function BottomSheet({
           aria-describedby={undefined}
           data-kys-sheet={docked ? 'docked' : 'modal'}
           data-snap={docked ? snap : 'full'}
-          className={`kys-synth fixed inset-x-0 bottom-0 z-50 flex ${height} flex-col rounded-t-2xl border-t border-(--kys-line) bg-(--kys-ground) pb-[env(safe-area-inset-bottom)] text-(--kys-text) shadow-2xl transition-[height] outline-none`}
-          style={pull ? { transform: `translateY(${pull}px)` } : undefined}
+          className={`kys-synth fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-2xl border-t border-(--kys-line) bg-(--kys-ground) pb-[env(safe-area-inset-bottom)] text-(--kys-text) shadow-2xl transition-[height] outline-none`}
+          style={{ height, transform: pull ? `translateY(${pull}px)` : undefined }}
           // Docked: a press on the page is the panel being used, and Escape there (dropping a cable) is the panel's.
           onInteractOutside={docked ? (e) => e.preventDefault() : undefined}
           onEscapeKeyDown={
@@ -146,6 +146,11 @@ export function BottomSheet({
           onCloseAutoFocus={(e) => {
             e.preventDefault();
             const now = document.activeElement;
+            // Another sheet opened as this one closed, and has the focus now.
+            if (now?.closest('[data-kys-sheet]') && !content.current?.contains(now)) {
+              returnTo.current = null;
+              return;
+            }
             const lost = !now || now === document.body || !!content.current?.contains(now);
             // A sheet opened from inside another (the library's "ask the tutor") was opened by a button that went with
             // that sheet.

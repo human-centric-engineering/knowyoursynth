@@ -134,6 +134,45 @@ describe('a modal sheet', () => {
     );
   });
 
+  it('gives focus to its fallback when what opened it has left the page since', async () => {
+    // the opener is there when the sheet opens, and gone by the time it closes
+    function Later() {
+      const [open, setOpen] = useState(false);
+      const [gone, setGone] = useState(false);
+      return (
+        <>
+          {!gone && (
+            <button type="button" onClick={() => setOpen(true)}>
+              Open
+            </button>
+          )}
+          <button type="button">Tutor in the bar</button>
+          <BottomSheet
+            title="Tutor"
+            open={open}
+            onOpenChange={setOpen}
+            fallbackFocus={() =>
+              screen.getByRole('button', { name: 'Tutor in the bar', hidden: true })
+            }
+          >
+            <button type="button" onClick={() => setGone(true)}>
+              Remove the opener
+            </button>
+          </BottomSheet>
+        </>
+      );
+    }
+    render(<Later />);
+    open();
+    fireEvent.click(screen.getByRole('button', { name: 'Remove the opener' }));
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Tutor in the bar' }))
+    );
+  });
+
   it('closes on Escape and gives focus back to what opened it', async () => {
     render(<Harness />);
     open();
