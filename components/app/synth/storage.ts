@@ -39,12 +39,15 @@ export const STORAGE_KEYS = {
   heat: 'kys.heat',
   /** The harmonics strip under the panel. */
   harm: 'kys.harm',
-  /** The note that the full panel wants a landscape tablet or a bigger screen has been put away. */
-  rotateSeen: 'kys.rotateSeen',
   /** Who was signed in when the settings above were last changed: no one's (`null`) or a user id. */
   settingsBy: 'kys.settingsBy',
   /** When the settings above were last changed (ms since the epoch), to weigh against the account's copy. */
   settingsAt: 'kys.settingsAt',
+  /**
+   * The note that the full panel wants a landscape tablet or a bigger screen has been put away. Not one of the settings
+   * above: it is kept in this browser only, never stamped or kept in the account.
+   */
+  rotateSeen: 'kys.rotateSeen',
 } as const;
 
 /** One synth's panel, as it was left. */

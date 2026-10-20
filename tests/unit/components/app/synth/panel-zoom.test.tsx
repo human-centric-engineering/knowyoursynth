@@ -104,10 +104,50 @@ describe('useKeepCentre', () => {
     const scrollTo = vi.fn();
     el.scrollTo = scrollTo as typeof el.scrollTo;
     el.scrollLeft = 100; // the middle of the view is at 300
+    fireEvent.scroll(el);
 
     act(() => rerender(<Scroller scale={2} />));
     // At twice the size that point is at 600, so the view starts 200 to its left.
     expect(scrollTo).toHaveBeenCalledExactlyOnceWith({ left: 400 });
+  });
+
+  it('measures the middle from the frame when it is centred in a wider scroller', () => {
+    function Framed({ scale }: { scale: PanelScale }) {
+      const ref = useKeepCentre(scale);
+      return (
+        <div ref={ref} data-testid="scroller">
+          <div data-testid="frame" />
+        </div>
+      );
+    }
+    const { rerender } = render(<Framed scale={1} />);
+    const el = screen.getByTestId('scroller');
+    Object.defineProperty(el, 'clientWidth', { value: 1400 });
+    // Fitted, the frame is 900 wide with 250 either side; at 2x it is 1800, wider than the scroller.
+    Object.defineProperty(screen.getByTestId('frame'), 'offsetWidth', { value: 1800 });
+    const scrollTo = vi.fn();
+    el.scrollTo = scrollTo as typeof el.scrollTo;
+    el.scrollLeft = 0; // in view: the frame's middle, 450 along it
+    fireEvent.scroll(el);
+
+    act(() => rerender(<Framed scale={2} />));
+    // That point is now 900 along the frame, so the view starts 700 to its left.
+    expect(scrollTo).toHaveBeenCalledExactlyOnceWith({ left: 200 });
+  });
+
+  it('keeps the middle from before the zoom, though zooming out has already pulled the view in', () => {
+    const { rerender } = render(<Scroller scale={3} />);
+    const el = screen.getByTestId('scroller');
+    Object.defineProperty(el, 'clientWidth', { value: 400 });
+    const scrollTo = vi.fn();
+    el.scrollTo = scrollTo as typeof el.scrollTo;
+    el.scrollLeft = 1100; // at 3x, the middle of the view is at 1300
+    fireEvent.scroll(el);
+    el.scrollLeft = 600; // the browser pulls it in when the panel shrinks, before the zoom is handled
+
+    act(() => rerender(<Scroller scale={2} />));
+    // At 2x that point is at 866.7, so the view starts 200 to its left.
+    expect(scrollTo).toHaveBeenCalledExactlyOnceWith({ left: 2600 / 3 - 200 });
   });
 
   it('does not scroll before the left edge when zooming out', () => {

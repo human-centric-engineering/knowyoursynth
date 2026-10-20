@@ -536,15 +536,22 @@ function Synth({
   }, [mapOn, synthDef, sess.values, sess.cables, wheel, probeLow, probeHigh, soundKey]);
 
   const heldRef = useRef(new Set<number>());
+  // The keys down now, held or not, as presses per note (a MIDI key and a computer key can both be on one note): under
+  // Hold, a note pressed while another is down joins the chord.
+  const downRef = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
       if (!engine) return;
       void ensureAudio();
       if (hold) {
-        heldRef.current.forEach((h) => engine.send({ type: 'noteOff', n: h }));
-        heldRef.current.clear();
+        // A fresh press, with every key up, replaces what is held.
+        if (downRef.current.size === 0) {
+          heldRef.current.forEach((h) => engine.send({ type: 'noteOff', n: h }));
+          heldRef.current.clear();
+        }
         heldRef.current.add(n);
       }
+      downRef.current.set(n, (downRef.current.get(n) ?? 0) + 1);
       engine.send({ type: 'noteOn', n, v });
     },
     [engine, ensureAudio, hold]
@@ -552,6 +559,9 @@ function Synth({
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
     (n: number) => {
+      const presses = (downRef.current.get(n) ?? 0) - 1;
+      if (presses > 0) downRef.current.set(n, presses);
+      else downRef.current.delete(n);
       if (!hold || !heldRef.current.has(n)) engine?.send({ type: 'noteOff', n });
     },
     [engine, hold]
@@ -559,8 +569,13 @@ function Synth({
   const setHoldMode = (h: boolean) => {
     setHold(h);
     if (!h) {
-      heldRef.current.forEach((n) => engine?.send({ type: 'noteOff', n }));
+      // A note whose key is still down keeps sounding, and stops when it is let go.
+      heldRef.current.forEach((n) => {
+        if (!downRef.current.has(n)) engine?.send({ type: 'noteOff', n });
+      });
       heldRef.current.clear();
+      // And a release that never arrived (a key let go outside the window) is forgotten, so Hold starts clean.
+      downRef.current.clear();
     }
   };
 

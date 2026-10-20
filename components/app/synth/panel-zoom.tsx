@@ -9,7 +9,7 @@
  * the pointer without moving the page.
  */
 
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { CSSProperties, RefObject } from 'react';
 
 /** The sizes, as multiples of the fitted width. The first is "Fit". */
@@ -37,13 +37,33 @@ export function panelFrameStyle(
 export function useKeepCentre(scale: PanelScale): RefObject<HTMLDivElement | null> {
   const scroller = useRef<HTMLDivElement>(null);
   const last = useRef(scale);
+  // Where the view was scrolled to at the old scale. Read from scroll events, not at the change: by then the panel has
+  // been laid out at the new size, and zooming out has already pulled a view near the right edge back in.
+  const left = useRef(0);
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return undefined;
+    left.current = el.scrollLeft;
+    const onScroll = () => {
+      left.current = el.scrollLeft;
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
   useLayoutEffect(() => {
     const el = scroller.current;
     const from = last.current;
     last.current = scale;
     if (!el || from === scale) return;
-    const mid = el.scrollLeft + el.clientWidth / 2;
-    el.scrollTo({ left: Math.max(0, (mid * scale) / from - el.clientWidth / 2) });
+    // The frame is centred while it is narrower than the scroller, so the middle is measured from its left edge. It
+    // has already been laid out at the new scale; its width is in proportion, so the old one follows.
+    const frame = el.firstElementChild;
+    const width = frame instanceof HTMLElement ? frame.offsetWidth : null;
+    const gap = (w: number | null) => (w === null ? 0 : Math.max(0, (el.clientWidth - w) / 2));
+    const was = width === null ? null : (width * from) / scale;
+    const mid = left.current + el.clientWidth / 2 - gap(was);
+    left.current = Math.max(0, gap(width) + (mid * scale) / from - el.clientWidth / 2);
+    el.scrollTo({ left: left.current });
   }, [scale]);
   return scroller;
 }

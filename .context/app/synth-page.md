@@ -97,13 +97,16 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   kept. A synth with its own layout is still capped at a width that fits 82% of the screen's
   height.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
-  least 600 px wide) to turn sideways. Anything else under 1024 px is told the panel is made for a
+  least 600 px wide, with a touch screen) to turn sideways. Anything else under 1024 px is told the panel is made for a
   landscape tablet or a bigger screen. It is a notice, not a block. OK hides it for good in that
   browser (`kys.rotateSeen`).
 - **Each finger on the keyboard holds its own note**, so chords play on the polys. A mono synth
   gets last-note priority from the engine. Under `lg`, the keys are 44 px wide, and the octave
-  buttons, Hold and the wheel are 44 px. The keys scroll sideways, and a sideways swipe on them
-  scrolls rather than sliding from key to key. A tap still plays. Under `sm`, the octave buttons and Hold go under the keys,
+  buttons, Hold and the wheel are 44 px. The keys scroll sideways by a strip above them ("Drag here
+  to scroll the keys", `touch-action: pan-x`). A swipe on the keys themselves plays rather than
+  scrolls (`touch-action: none`): a browser pan would cancel the pointer and cut a held note or a
+  chord. A finger the keyboard will not hear let go (the window loses focus, or the keyboard is
+  closed) has its note let go at once. Under `sm`, the octave buttons and Hold go under the keys,
   so more keys show.
 - **The two rows of buttons over the panel scroll sideways on one line** under `sm`, with the
   zoom group first, instead of wrapping into a wall.

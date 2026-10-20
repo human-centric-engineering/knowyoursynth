@@ -5,8 +5,9 @@
  *
  * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3). What changed (`f-phone-and-tablet`):
  * - Each pointer holds its own note, so several fingers play a chord.
- * - Under `lg` the keys and buttons are finger-sized (44 px), so the keys scroll sideways, and a sideways swipe on
- *   them scrolls instead of sliding from key to key. A tap still plays.
+ * - Under `lg` the keys and buttons are finger-sized (44 px), so the keys scroll sideways, by a strip above them. A
+ *   swipe on the keys themselves plays rather than scrolls: a browser pan would cancel the pointer and cut a held
+ *   note.
  */
 
 import { useEffect, useRef } from 'react';
@@ -125,21 +126,34 @@ export function Keyboard({
   const heldByOther = (n: number, id: number) =>
     [...down.current].some(([p, held]) => p !== id && held === n);
 
+  // The latest `noteOff`, so the listeners below are not swapped (and the fingers let go) each time Hold changes it.
+  const noteOffRef = useRef(noteOff);
+  useEffect(() => {
+    noteOffRef.current = noteOff;
+  });
   useEffect(() => {
     const held = down.current;
     const up = (e: globalThis.PointerEvent) => {
       const n = held.get(e.pointerId);
       if (n == null) return;
       held.delete(e.pointerId);
-      if (![...held.values()].includes(n)) noteOff(n);
+      if (![...held.values()].includes(n)) noteOffRef.current(n);
+    };
+    // A release the keyboard will not hear (outside the window, or after it is gone) lets every finger go now.
+    const letGo = () => {
+      new Set(held.values()).forEach((n) => noteOffRef.current(n));
+      held.clear();
     };
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
+    window.addEventListener('blur', letGo);
     return () => {
       window.removeEventListener('pointerup', up);
       window.removeEventListener('pointercancel', up);
+      window.removeEventListener('blur', letGo);
+      letGo();
     };
-  }, [noteOff]);
+  }, []);
 
   const press = (id: number, n: number) => {
     const prev = down.current.get(id);
@@ -171,33 +185,45 @@ export function Keyboard({
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
       <ModWheel value={wheel} onChange={onWheel} />
       <div className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
-        <div className="relative flex h-28 min-w-[980px] touch-pan-x rounded-md border border-(--kys-line) bg-(--kys-desk) p-1 select-none lg:min-w-[620px] lg:touch-none">
-          {whites.map((n, i) => {
-            const on = active.includes(n);
-            const sharp = HAS_SHARP[(n - base) % 12] && i < whites.length - 1 ? n + 1 : null;
-            return (
-              <div key={n} className="relative flex-1">
-                <button
-                  type="button"
-                  aria-label={`Note ${n}`}
-                  {...keyProps(n)}
-                  className={`flex h-full w-full items-end justify-center rounded-b-[5px] border border-black/25 pb-1 font-mono text-[10px] ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'bg-[#f1efe9] text-black/40'}`}
-                >
-                  {(n - base) % 12 === 0 ? `C${Math.floor(n / 12) - 1}` : qLabel(n) || ''}
-                </button>
-                {sharp != null && (
+        <div className="min-w-[980px] lg:min-w-[620px]">
+          {/* What a finger drags to scroll the keys, since a drag on the keys plays them. */}
+          <div
+            aria-hidden="true"
+            data-testid="key-scroll-strip"
+            className="mb-1 flex h-7 touch-pan-x items-center rounded-md border border-(--kys-line) bg-[repeating-linear-gradient(90deg,var(--kys-line)_0_1px,transparent_1px_10px)] select-none lg:hidden"
+          >
+            <span className="kys-label sticky left-2 rounded bg-(--kys-surface) px-1.5 text-(--kys-faint)">
+              Drag here to scroll the keys
+            </span>
+          </div>
+          <div className="relative flex h-28 touch-none rounded-md border border-(--kys-line) bg-(--kys-desk) p-1 select-none">
+            {whites.map((n, i) => {
+              const on = active.includes(n);
+              const sharp = HAS_SHARP[(n - base) % 12] && i < whites.length - 1 ? n + 1 : null;
+              return (
+                <div key={n} className="relative flex-1">
                   <button
                     type="button"
-                    aria-label={`Note ${sharp}`}
-                    {...keyProps(sharp)}
-                    className={`absolute top-0 right-0 z-10 flex h-[60%] w-[62%] translate-x-1/2 items-end justify-center rounded-b-[4px] border border-black pb-1 font-mono text-[9px] ${active.includes(sharp) ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'bg-[#16171a] text-white/35'}`}
+                    aria-label={`Note ${n}`}
+                    {...keyProps(n)}
+                    className={`flex h-full w-full items-end justify-center rounded-b-[5px] border border-black/25 pb-1 font-mono text-[10px] ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'bg-[#f1efe9] text-black/40'}`}
                   >
-                    {qLabel(sharp) || ''}
+                    {(n - base) % 12 === 0 ? `C${Math.floor(n / 12) - 1}` : qLabel(n) || ''}
                   </button>
-                )}
-              </div>
-            );
-          })}
+                  {sharp != null && (
+                    <button
+                      type="button"
+                      aria-label={`Note ${sharp}`}
+                      {...keyProps(sharp)}
+                      className={`absolute top-0 right-0 z-10 flex h-[60%] w-[62%] translate-x-1/2 items-end justify-center rounded-b-[4px] border border-black pb-1 font-mono text-[9px] ${active.includes(sharp) ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'bg-[#16171a] text-white/35'}`}
+                    >
+                      {qLabel(sharp) || ''}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <div className="flex shrink-0 justify-between gap-1 max-sm:order-last max-sm:w-full max-sm:items-center max-sm:gap-3 sm:w-32 sm:flex-col lg:w-[74px]">

@@ -151,12 +151,40 @@ describe('Keyboard keys', () => {
     expect(key(49).textContent).toBe('W');
   });
 
-  it('stops listening for pointer up when it unmounts', () => {
+  it('lets a held note go when it unmounts, and stops listening for pointer up', () => {
     const { props, unmount } = setup();
     fireEvent.pointerDown(key(36));
     unmount();
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(36);
     fireEvent.pointerUp(window);
+    expect(props.noteOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets every held note go when the window loses focus, since their releases go elsewhere', () => {
+    const { props } = setup();
+    fireEvent.pointerDown(key(36), { pointerId: 1 });
+    fireEvent.pointerDown(key(40), { pointerId: 2 });
+    fireEvent(window, new Event('blur'));
+    expect(vi.mocked(props.noteOff).mock.calls).toEqual([[36], [40]]);
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps a held note sounding when Hold changes noteOff, and releases it through the new one', () => {
+    const { props, rerender } = setup();
+    fireEvent.pointerDown(key(36));
+    const next = vi.fn();
+    rerender(<Keyboard {...props} hold noteOff={next} />);
     expect(props.noteOff).not.toHaveBeenCalled();
+    fireEvent.pointerUp(window);
+    expect(next).toHaveBeenCalledExactlyOnceWith(36);
+  });
+
+  it('scrolls by a strip above the keys, while the keys themselves play rather than pan', () => {
+    setup();
+    expect(screen.getByTestId('key-scroll-strip').className).toContain('touch-pan-x');
+    expect(key(36).closest('.touch-none')).not.toBeNull();
+    expect(key(36).closest('.touch-pan-x')).toBeNull();
   });
 });
 
