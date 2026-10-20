@@ -22,6 +22,7 @@ import {
   pendingStore,
 } from '@/components/app/synth/stores';
 import { revealDelta, screenBox } from '@/components/app/synth/reveal';
+import { HALF_HEIGHT } from '@/components/app/ui/bottom-sheet';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
@@ -225,10 +226,12 @@ const sheet = (name: string) => screen.getByRole('dialog', { name });
 const cutoffKnob = () => screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
 const notesOn = () =>
   engine.send.mock.calls.filter((c) => (c[0] as { type: string }).type === 'noteOn');
-/** A tap on the panel, as a finger makes one: down and up in the same place. */
+/** A tap on the panel, as a finger makes one: over the part, then down and up in the same place. */
 function tap(el: Element) {
-  fireEvent.pointerDown(el, { clientX: 50, clientY: 50, pointerId: 1 });
-  fireEvent.pointerUp(el, { clientX: 50, clientY: 50, pointerId: 1 });
+  const at = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' };
+  fireEvent.pointerOver(el, at);
+  fireEvent.pointerDown(el, at);
+  fireEvent.pointerUp(el, at);
 }
 
 describe('at lg and up', () => {
@@ -328,8 +331,8 @@ describe('below lg', () => {
       phone();
       page();
       const knob = cutoffKnob();
-      fireEvent.pointerDown(knob, { clientX: 50, clientY: 50, pointerId: 1 });
-      fireEvent.pointerUp(knob, { clientX: 50, clientY: 90, pointerId: 1 });
+      fireEvent.pointerDown(knob, { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' });
+      fireEvent.pointerUp(knob, { clientX: 50, clientY: 90, pointerId: 1, pointerType: 'touch' });
       await act(() => new Promise((r) => setTimeout(r, 0)));
       expect(screen.queryByRole('dialog')).toBeNull();
     });
@@ -350,6 +353,37 @@ describe('below lg', () => {
       expect(screen.queryByRole('dialog')).toBeNull();
     });
 
+    it('opens nothing on a tap on bare panel, though the control touched before is still in focus', async () => {
+      phone();
+      page();
+      tap(cutoffKnob());
+      fireEvent.click(
+        within(await screen.findByRole('dialog', { name: 'Inspector' })).getByRole('button', {
+          name: 'Close Inspector',
+        })
+      );
+      const bare = screen.getByTestId('panel-frame').querySelector('svg');
+      expect(bare).not.toBeNull();
+      if (bare) tap(bare);
+      await act(() => new Promise((r) => setTimeout(r, 0)));
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
+    it('opens nothing for a finger of a two-finger gesture, though it lifts where it landed', async () => {
+      phone();
+      page();
+      const knob = cutoffKnob();
+      const one = { clientX: 50, clientY: 50, pointerId: 1, pointerType: 'touch' };
+      const two = { clientX: 120, clientY: 50, pointerId: 2, pointerType: 'touch' };
+      fireEvent.pointerOver(knob, one);
+      fireEvent.pointerDown(knob, one);
+      fireEvent.pointerDown(knob, two);
+      fireEvent.pointerUp(knob, two);
+      fireEvent.pointerUp(knob, { ...one, clientY: 120 });
+      await act(() => new Promise((r) => setTimeout(r, 0)));
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
     it('leaves the Lesson open rather than swapping it for the Inspector', async () => {
       phone();
       page();
@@ -364,16 +398,9 @@ describe('below lg', () => {
   describe('the Lesson sheet', () => {
     it('drops from full to half height on a new step, and scrolls the step’s controls above it', async () => {
       phone();
+      // a short screen: the band above the half-height sheet ends 55 px down, above the step's controls
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(100);
       const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => undefined);
-      // the sheet's top edge 50 px down the screen, so the step's controls are under it
-      const rect = Element.prototype.getBoundingClientRect;
-      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
-        this: Element
-      ) {
-        return this.hasAttribute('data-kys-sheet')
-          ? ({ top: 50, bottom: 844, left: 0, right: 390 } as DOMRect)
-          : rect.call(this);
-      });
       page();
       fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
       const lesson = sheet('Lesson');
@@ -385,13 +412,33 @@ describe('below lg', () => {
       fireEvent.click(within(lesson).getByRole('button', { name: 'Build it step by step' }));
 
       expect(sheet('Lesson').getAttribute('data-snap')).toBe('half');
-      // Fat bass's first step sets CUTOFF and OSC 1's level: the box round both, brought into the band above the sheet
+      // Fat bass's first step sets CUTOFF and OSC 1's level: the box round both, brought into the band above the
+      // half-height sheet, which is worked out rather than measured while the sheet is still shrinking
       const svg = screen.getByTestId('panel-frame').querySelector('svg');
       const box = svg && screenBox(svg, def, ['filter.cutoff', 'mix.osc1']);
       expect(box).not.toBeNull();
-      const dy = box ? revealDelta(box.y, { start: 0, end: 50 }) : 0;
+      const band = { start: 0, end: window.innerHeight * (1 - HALF_HEIGHT) };
+      const dy = box ? revealDelta(box.y, band) : 0;
       expect(dy).not.toBe(0);
       await waitFor(() => expect(scrollBy).toHaveBeenCalledWith({ top: dy, behavior: 'smooth' }));
+    });
+
+    it('scrolls nothing when the Lesson sheet is made full height, which covers the panel', async () => {
+      phone();
+      // a short screen: the band above the half-height sheet ends 55 px down, above the step's controls
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(100);
+      const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => undefined);
+      page();
+      fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
+      const lesson = sheet('Lesson');
+      fireEvent.click(within(lesson).getByRole('button', { name: 'Build it step by step' }));
+      await waitFor(() => expect(scrollBy).toHaveBeenCalled());
+      scrollBy.mockClear();
+
+      fireEvent.click(within(lesson).getByRole('button', { name: 'Make Lesson taller' }));
+      expect(lesson.getAttribute('data-snap')).toBe('full');
+      await act(() => new Promise((r) => setTimeout(r, 20)));
+      expect(scrollBy).not.toHaveBeenCalled();
     });
 
     it('scrolls nothing for a step with the sheet closed', async () => {

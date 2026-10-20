@@ -70,7 +70,7 @@ import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synt
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
 import { RotatePrompt, SMALL_QUERY, useMediaQuery } from '@/components/app/synth/rotate-prompt';
 import { revealOnPanel } from '@/components/app/synth/reveal';
-import { BottomSheet, type SheetSnap } from '@/components/app/ui/bottom-sheet';
+import { BottomSheet, HALF_HEIGHT, type SheetSnap } from '@/components/app/ui/bottom-sheet';
 import { KeptSlot, useKeptNode } from '@/components/app/ui/kept';
 import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
@@ -421,6 +421,7 @@ function Synth({
   const inspectorNode = useKeptNode();
   const tutorNode = useKeptNode();
   const frameRef = useRef<HTMLDivElement>(null);
+  const barRefs = useRef<Partial<Record<SheetId, HTMLButtonElement | null>>>({});
   const openSheet = (id: SheetId | null) => {
     setSheet(id);
     setDockSnap('half');
@@ -1045,21 +1046,21 @@ function Synth({
       };
     });
   };
-  // With the Lesson sheet open, the step's controls are scrolled into the band above it: on opening, on each step, and
-  // when the sheet drops back to half height.
+  // With the Lesson sheet open at half height, the step's controls are scrolled into the band above it: on opening, on
+  // each step, and when the sheet drops back to half. Full height covers the panel, so there is nothing to scroll to.
+  // The band is worked out from the half height rather than measured: dropping from full, the sheet is still shrinking.
   const stepKey = shown && step != null ? stepIds(shown.steps[step]).join('|') : '';
   useEffect(() => {
-    if (!small || sheet !== 'lesson' || !stepKey) return undefined;
+    if (!small || sheet !== 'lesson' || dockSnap !== 'half' || !stepKey) return undefined;
     const t = requestAnimationFrame(() => {
       const svg = frameRef.current?.querySelector('svg');
-      const top = document.querySelector('[data-kys-sheet]')?.getBoundingClientRect().top;
       if (svg)
         revealOnPanel({
           svg,
           scroller: scrollerRef.current,
           def,
           ids: stepKey.split('|'),
-          sheetTop: top ?? window.innerHeight,
+          sheetTop: window.innerHeight * (1 - HALF_HEIGHT),
         });
     });
     return () => cancelAnimationFrame(t);
@@ -1067,22 +1068,44 @@ function Synth({
 
   // On a small touch screen a tap on the panel opens the Inspector on what was tapped, in place of the floating card.
   // Not while another sheet is up, and not on the first tap of a cable being plugged in, which the second tap needs.
+  // Only a tap that pointed at something: the focus stays on the last thing touched, so a tap on bare panel would
+  // otherwise open it on that. And not a finger of a gesture that used more than one.
   const tapRef = useRef<{ x: number; y: number } | null>(null);
+  const fingers = useRef(0);
+  const tapFocused = useRef(false);
+  useEffect(
+    () =>
+      focusStore.subscribe(() => {
+        tapFocused.current = true;
+      }),
+    []
+  );
   const panelTaps = small
     ? {
-        onPointerDownCapture: (e: ReactPointerEvent) => {
-          tapRef.current = e.pointerType === 'mouse' ? null : { x: e.clientX, y: e.clientY };
+        // before the part under the finger sets the focus, on its pointerenter
+        onPointerOverCapture: (e: ReactPointerEvent) => {
+          if (e.pointerType !== 'mouse' && fingers.current === 0) tapFocused.current = false;
         },
-        onPointerCancelCapture: () => {
+        onPointerDownCapture: (e: ReactPointerEvent) => {
+          if (e.pointerType === 'mouse') {
+            tapRef.current = null;
+            return;
+          }
+          fingers.current++;
+          tapRef.current = fingers.current === 1 ? { x: e.clientX, y: e.clientY } : null;
+        },
+        onPointerCancelCapture: (e: ReactPointerEvent) => {
+          if (e.pointerType !== 'mouse') fingers.current = Math.max(0, fingers.current - 1);
           tapRef.current = null;
         },
         onPointerUpCapture: (e: ReactPointerEvent) => {
+          if (e.pointerType !== 'mouse') fingers.current = Math.max(0, fingers.current - 1);
           const t = tapRef.current;
           tapRef.current = null;
           if (!t || Math.hypot(e.clientX - t.x, e.clientY - t.y) > TAP_SLOP) return;
           // after the press's own click, which may be what sets the focus
           setTimeout(() => {
-            if (pendingStore.get() || !focusStore.get()) return;
+            if (pendingStore.get() || !focusStore.get() || !tapFocused.current) return;
             setSheet((s) => (s === null || s === 'inspector' ? 'inspector' : s));
           });
         },
@@ -1607,6 +1630,9 @@ function Synth({
               <button
                 key={id}
                 type="button"
+                ref={(el) => {
+                  barRefs.current[id] = el;
+                }}
                 aria-expanded={sheet === id}
                 onClick={() => openSheet(sheet === id ? null : id)}
                 className={`kys-label h-11 rounded-md ${sheet === id ? 'bg-(--kys-text) text-(--kys-ground)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
@@ -1622,6 +1648,7 @@ function Synth({
           <BottomSheet
             title="Library"
             open={sheet === 'library'}
+            fallbackFocus={() => barRefs.current.library ?? null}
             onOpenChange={(o) => openSheet(o ? 'library' : null)}
           >
             <KeptSlot node={libraryNode} />
@@ -1632,6 +1659,7 @@ function Synth({
             snap={dockSnap}
             onSnap={setDockSnap}
             open={sheet === 'lesson'}
+            fallbackFocus={() => barRefs.current.lesson ?? null}
             onOpenChange={(o) => openSheet(o ? 'lesson' : null)}
           >
             <KeptSlot node={lessonNode} />
@@ -1642,6 +1670,7 @@ function Synth({
             snap={dockSnap}
             onSnap={setDockSnap}
             open={sheet === 'inspector'}
+            fallbackFocus={() => barRefs.current.inspector ?? null}
             onOpenChange={(o) => openSheet(o ? 'inspector' : null)}
           >
             <KeptSlot node={inspectorNode} />
@@ -1649,6 +1678,7 @@ function Synth({
           <BottomSheet
             title="Tutor"
             open={sheet === 'tutor'}
+            fallbackFocus={() => barRefs.current.tutor ?? null}
             onOpenChange={(o) => openSheet(o ? 'tutor' : null)}
           >
             <KeptSlot node={tutorNode} className="h-full" />

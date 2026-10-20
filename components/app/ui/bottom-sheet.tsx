@@ -18,6 +18,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 
 export type SheetSnap = 'half' | 'full';
 
+/** A half-height docked sheet's share of the screen: the `h-[45dvh]` it is drawn at. */
+export const HALF_HEIGHT = 0.45;
+
 /** How far a drag on the handle must go to count, in px. */
 const DRAG = 60;
 
@@ -45,6 +48,8 @@ export interface BottomSheetProps {
   /** A docked sheet's height. */
   snap?: SheetSnap;
   onSnap?: (snap: SheetSnap) => void;
+  /** Where focus goes back to on closing when what had it on opening has left the page. */
+  fallbackFocus?: () => HTMLElement | null;
   children: ReactNode;
 }
 
@@ -55,6 +60,7 @@ export function BottomSheet({
   docked = false,
   snap = 'half',
   onSnap,
+  fallbackFocus,
   children,
 }: BottomSheetProps) {
   const content = useRef<HTMLDivElement>(null);
@@ -125,8 +131,9 @@ export function BottomSheet({
               : undefined
           }
           onOpenAutoFocus={(e) => {
-            returnTo.current =
-              document.activeElement instanceof HTMLElement ? document.activeElement : null;
+            const from = document.activeElement;
+            // The body, when what was pressed left the page in the same render.
+            returnTo.current = from instanceof HTMLElement && from !== document.body ? from : null;
             // Docked, focus goes to the sheet itself rather than its first button, so opening it from a tap on the
             // panel starts nothing.
             if (docked) {
@@ -140,7 +147,10 @@ export function BottomSheet({
             e.preventDefault();
             const now = document.activeElement;
             const lost = !now || now === document.body || !!content.current?.contains(now);
-            if (lost || !docked) returnTo.current?.focus({ preventScroll: true });
+            // A sheet opened from inside another (the library's "ask the tutor") was opened by a button that went with
+            // that sheet.
+            const back = returnTo.current?.isConnected ? returnTo.current : fallbackFocus?.();
+            if (lost || !docked) back?.focus({ preventScroll: true });
             returnTo.current = null;
           }}
         >
