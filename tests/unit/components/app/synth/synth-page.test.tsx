@@ -41,6 +41,8 @@ const { router, engine, events } = vi.hoisted(() => ({
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
+// Signed out. The real client's session-refresh timer can fire after jsdom tears down ("window is not defined").
+vi.mock('@/lib/auth/client', () => ({ useSession: () => ({ data: null, isPending: false }) }));
 vi.mock('@/components/app/synth/engine', () => ({
   getEngine: () => engine,
   listen: (f: (e: { type: string }) => void) => {
