@@ -27,6 +27,9 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/sound-map.tsx`     | The sound map's legend, its "why is it dark?" line and its card note      |
 | `components/app/synth/panel-zoom.tsx`    | The panel's size: Fit, and zoom in its scroller                           |
 | `components/app/synth/rotate-prompt.tsx` | The note on a small screen that the panel wants a bigger one              |
+| `components/app/synth/reveal.ts`         | Scrolls a lesson step's controls into view above the Lesson sheet         |
+| `components/app/ui/bottom-sheet.tsx`     | The bottom sheet the regions beside the panel open in under `lg`          |
+| `components/app/ui/kept.tsx`             | Keeps a region mounted while its sheet is closed                          |
 | `components/app/synth/*.tsx` (the rest)  | Picker, search, inspector and info cards, keyboard, effects rack, bar     |
 
 ## Rules that are not obvious from the code
@@ -114,6 +117,24 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   unless it has `min-w-0` or a `minmax(0, …)` track, so the keyboard (whose keys scroll) and the
   regions under the panel carry one. Anything new that scrolls sideways inside a grid needs the
   same.
+- **Under `lg`, the regions beside the panel open as bottom sheets** (t-66). A bar of four
+  buttons under the page opens the Library, Lesson, Inspector and Tutor; at `lg` and up the grid
+  is unchanged. The Library and Tutor are modal: the page dims, focus stays inside, and a press
+  outside closes them. The Lesson and Inspector are docked at half height with the panel still
+  live above them, so a press outside does not close them and focus is not held in them. Either
+  can be dragged to full height. Closing a sheet hands focus back to the bar button that opened
+  it, which Radix does only for its own trigger.
+- **Each region stays mounted while its sheet is closed** (`kept.tsx`). It renders once into a node
+  of its own, and the open sheet holds that node. Unmounting would cut off a tutor answer
+  mid-stream and drop the lesson's highlight. Crossing `lg` (turning a tablet) still remounts the
+  four regions: the tutor's conversation comes back from the server, an unsent draft does not.
+- **A new lesson step drops a full Lesson sheet back to half** and scrolls the step's controls
+  into the band above it, and into the panel's own scroller when it is zoomed (`reveal.ts`). The
+  band comes from the half height (`HALF_HEIGHT`), not a measurement, since the sheet is still
+  shrinking. At full height the panel is covered, so nothing scrolls.
+- **On a small touch screen a tap on the panel opens the Inspector** on what was tapped, in place
+  of the floating card. A tap on bare panel, a drag, a finger of a two-finger gesture, the first
+  tap of a cable being patched, or an open Lesson sheet does not. In a sheet, the tutor's conversation fills it and its composer cannot be resized.
 - The knobs, sliders, switches, jacks and cables needed no change for touch. They were already
   pointer events, and patching by tapping one jack and then another already worked.
 
