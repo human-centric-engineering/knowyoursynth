@@ -168,7 +168,7 @@ describe('Keyboard with several pointers', () => {
     down(36, 1);
     down(40, 2);
     down(43, 3);
-    expect(props.noteOn.mock.calls).toEqual([[36], [40], [43]]);
+    expect(vi.mocked(props.noteOn).mock.calls).toEqual([[36], [40], [43]]);
     expect(props.noteOff).not.toHaveBeenCalled();
   });
 
@@ -188,7 +188,7 @@ describe('Keyboard with several pointers', () => {
     expect(props.noteOff).toHaveBeenCalledTimes(2);
 
     fireEvent.pointerUp(window, { pointerId: 3 });
-    expect(props.noteOff.mock.calls).toEqual([[40], [36], [43]]);
+    expect(vi.mocked(props.noteOff).mock.calls).toEqual([[40], [36], [43]]);
   });
 
   it('slides one finger to another key without touching the others', () => {
@@ -210,7 +210,7 @@ describe('Keyboard with several pointers', () => {
     fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // pointer 2 never pressed: ignored
     down(38, 2);
     fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // slides onto the note pointer 1 holds
-    expect(props.noteOn.mock.calls).toEqual([[36], [38]]);
+    expect(vi.mocked(props.noteOn).mock.calls).toEqual([[36], [38]]);
     expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(38);
 
     fireEvent.pointerUp(window, { pointerId: 1 });
