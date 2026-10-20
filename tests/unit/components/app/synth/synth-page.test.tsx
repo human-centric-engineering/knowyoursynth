@@ -15,6 +15,7 @@ import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
   findStore,
   focusStore,
+  highlightStore,
   meterStore,
   notesStore,
   pendingStore,
@@ -1300,6 +1301,21 @@ describe('SynthPage player', () => {
     expect(button('Start the lesson')).toBeTruthy();
   });
 
+  it('lights a chapter’s controls on the panel while it is pointed at, but not while a lesson is walked', () => {
+    twoSteps();
+    fireEvent.pointerEnter(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual(['filter.cutoff']);
+    fireEvent.pointerLeave(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual([]);
+
+    // Walking, the lesson lights the step the panel is at, and pointing at another chapter leaves it lit.
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    const lit = highlightStore.get();
+    fireEvent.pointerEnter(button('Lesson step 2: Close the filter'));
+    fireEvent.pointerLeave(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual(lit);
+  });
+
   it('has no chapters or step buttons for a sound with no steps', () => {
     page({ detail: { ...detail, sounds: [{ ...FAT_BASS, steps: [] }] } });
     expect(screen.queryByRole('list', { name: 'Lesson steps' })).toBeNull();
@@ -1321,6 +1337,8 @@ describe('SynthPage player', () => {
 
     Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
     const request = vi.fn().mockResolvedValue(undefined);
+    const exit = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exit });
     const was = HTMLElement.prototype.requestFullscreen;
     HTMLElement.prototype.requestFullscreen = request;
     try {
@@ -1328,7 +1346,19 @@ describe('SynthPage player', () => {
       fireEvent.click(button('Full screen'));
       expect(request).toHaveBeenCalledTimes(1);
       expect(request.mock.contexts[0]).toBe(player());
+
+      // The browser says the player is full screen: the button leaves it.
+      Object.defineProperty(document, 'fullscreenElement', {
+        configurable: true,
+        value: player(),
+      });
+      act(() => {
+        document.dispatchEvent(new Event('fullscreenchange'));
+      });
+      fireEvent.click(button('Leave full screen'));
+      expect(exit).toHaveBeenCalledTimes(1);
     } finally {
+      Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
       HTMLElement.prototype.requestFullscreen = was;
       Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: false });
     }
