@@ -1003,6 +1003,16 @@ describe('SynthPage computer keyboard', () => {
     expect(notes().filter((m) => m.type === 'noteOff')).toEqual([]);
   });
 
+  it('keeps a note two inputs press sounding until both let go', () => {
+    page();
+    fireEvent.keyDown(window, { key: 'k' }); // 60 from the computer keys
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 60' }), { pointerId: 1 });
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(notes().filter((m) => m.type === 'noteOff')).toEqual([]);
+    fireEvent.keyUp(window, { key: 'k' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 60 });
+  });
+
   it('releases the note a key started, even after the octave moved while it was held', () => {
     page();
     fireEvent.keyDown(window, { key: 'a' });

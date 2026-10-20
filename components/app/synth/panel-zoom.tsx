@@ -62,8 +62,10 @@ export function useKeepCentre(scale: PanelScale): RefObject<HTMLDivElement | nul
     const gap = (w: number | null) => (w === null ? 0 : Math.max(0, (el.clientWidth - w) / 2));
     const was = width === null ? null : (width * from) / scale;
     const mid = left.current + el.clientWidth / 2 - gap(was);
-    left.current = Math.max(0, gap(width) + (mid * scale) / from - el.clientWidth / 2);
-    el.scrollTo({ left: left.current });
+    const to = Math.max(0, gap(width) + (mid * scale) / from - el.clientWidth / 2);
+    el.scrollTo({ left: to });
+    // Where the browser will stop, not past it: a scroll that ends where it already was sends no event to correct it.
+    left.current = Math.min(to, Math.max(0, el.scrollWidth - el.clientWidth));
   }, [scale]);
   return scroller;
 }

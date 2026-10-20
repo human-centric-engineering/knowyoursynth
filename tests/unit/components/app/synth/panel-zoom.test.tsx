@@ -150,6 +150,22 @@ describe('useKeepCentre', () => {
     expect(scrollTo).toHaveBeenCalledExactlyOnceWith({ left: 2600 / 3 - 200 });
   });
 
+  it('remembers where the browser stops, not a target past the end, for the next zoom', () => {
+    const { rerender } = render(<Scroller scale={1} />);
+    const el = screen.getByTestId('scroller');
+    Object.defineProperty(el, 'clientWidth', { value: 400 });
+    Object.defineProperty(el, 'scrollWidth', { value: 900, configurable: true });
+    const scrollTo = vi.fn();
+    el.scrollTo = scrollTo as typeof el.scrollTo;
+    el.scrollLeft = 300;
+    fireEvent.scroll(el);
+
+    act(() => rerender(<Scroller scale={2} />)); // aims at 800, but the view can only go to 500
+    expect(scrollTo).toHaveBeenLastCalledWith({ left: 800 });
+    act(() => rerender(<Scroller scale={1} />)); // from 500 at 2x: the middle at 700, so 350 at 1x
+    expect(scrollTo).toHaveBeenLastCalledWith({ left: 150 });
+  });
+
   it('does not scroll before the left edge when zooming out', () => {
     const { rerender } = render(<Scroller scale={3} />);
     const el = screen.getByTestId('scroller');

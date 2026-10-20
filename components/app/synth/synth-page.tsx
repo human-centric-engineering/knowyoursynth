@@ -560,8 +560,12 @@ function Synth({
   const noteOff = useCallback(
     (n: number) => {
       const presses = (downRef.current.get(n) ?? 0) - 1;
-      if (presses > 0) downRef.current.set(n, presses);
-      else downRef.current.delete(n);
+      // Another input still pressing this note keeps it sounding.
+      if (presses > 0) {
+        downRef.current.set(n, presses);
+        return;
+      }
+      downRef.current.delete(n);
       if (!hold || !heldRef.current.has(n)) engine?.send({ type: 'noteOff', n });
     },
     [engine, hold]
