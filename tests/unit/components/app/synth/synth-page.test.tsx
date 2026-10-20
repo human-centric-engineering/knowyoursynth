@@ -293,6 +293,44 @@ describe('SynthPage layout', () => {
     );
   });
 
+  it('fits the panel to the page, and zooms it in its scroller with the controls still live', () => {
+    page();
+    const frame = screen.getByTestId('panel-frame');
+    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+    expect(frame.className).not.toContain('min-w-');
+
+    fireEvent.click(button('Zoom in'));
+    fireEvent.click(button('Zoom in'));
+    expect(frame.style.width).toBe('calc(2 * min(100%, 1560px))');
+
+    // Laid out bigger, not magnified: a knob still turns from the keyboard.
+    const cutoff = screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
+    const before = cutoff.getAttribute('aria-valuenow');
+    fireEvent.keyDown(cutoff, { key: 'ArrowUp' });
+    expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
+
+    fireEvent.click(button('Fit the panel to the page'));
+    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+  });
+
+  it('puts the rotate note above the panel on a small screen, and not on a wide one', () => {
+    const { unmount } = page();
+    expect(screen.queryByRole('note')).toBeNull();
+    unmount();
+
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    expect(screen.getByRole('note').textContent).toMatch(/a landscape tablet or a bigger screen/);
+  });
+
   it('does not offer a modular layout switch for a synth with no modular spec', () => {
     page();
     expect(screen.queryByRole('group', { name: 'Panel layout' })).toBeNull();

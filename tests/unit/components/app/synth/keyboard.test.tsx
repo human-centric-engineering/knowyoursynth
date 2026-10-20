@@ -160,6 +160,68 @@ describe('Keyboard keys', () => {
   });
 });
 
+describe('Keyboard with several pointers', () => {
+  const down = (n: number, pointerId: number) => fireEvent.pointerDown(key(n), { pointerId });
+
+  it('holds a chord: each finger sounds its own note and none cuts another off', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+    down(43, 3);
+    expect(props.noteOn.mock.calls).toEqual([[36], [40], [43]]);
+    expect(props.noteOff).not.toHaveBeenCalled();
+  });
+
+  it('releases each note on its own pointer up or cancel, and leaves the rest sounding', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+    down(43, 3);
+
+    fireEvent.pointerUp(window, { pointerId: 2 });
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(40);
+
+    fireEvent.pointerCancel(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+
+    fireEvent.pointerUp(window, { pointerId: 9 }); // a pointer that never pressed a key
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
+
+    fireEvent.pointerUp(window, { pointerId: 3 });
+    expect(props.noteOff.mock.calls).toEqual([[40], [36], [43]]);
+  });
+
+  it('slides one finger to another key without touching the others', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+
+    fireEvent.pointerEnter(key(41), { pointerId: 2, buttons: 1 });
+
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(40);
+    expect(props.noteOn).toHaveBeenLastCalledWith(41);
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+  });
+
+  it('sounds a note two fingers share once, and stops it only when the last lets go', () => {
+    const { props } = setup();
+    down(36, 1);
+    fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // pointer 2 never pressed: ignored
+    down(38, 2);
+    fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // slides onto the note pointer 1 holds
+    expect(props.noteOn.mock.calls).toEqual([[36], [38]]);
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(38);
+
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenCalledTimes(1); // pointer 2 still holds 36
+
+    fireEvent.pointerUp(window, { pointerId: 2 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
+  });
+});
+
 describe('Keyboard octave and hold', () => {
   it('shifts the octave by one each way', () => {
     const { props } = setup({ octave: 0 });
