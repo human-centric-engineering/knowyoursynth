@@ -32,7 +32,14 @@ export const stepIds = (s: PresetStep): string[] => [
 // ("CUTOFF 3:", "Listen for:") is set in bold so the eye can find each control.
 type Block = { list: true; items: string[] } | { list: false; text: string };
 
-function StepText({ text }: { text: string }) {
+/** A step's `why`, set as the lesson sets it. The player's captions show the step on the panel with it. */
+export function StepText({
+  text,
+  className = 'mt-2 max-w-[68ch] pl-9 text-[14.5px]',
+}: {
+  text: string;
+  className?: string;
+}) {
   const blocks: Block[] = [];
   for (const raw of String(text || '').split('\n')) {
     const line = raw.trim();
@@ -54,7 +61,7 @@ function StepText({ text }: { text: string }) {
     );
   };
   return (
-    <div className="mt-2 max-w-[68ch] space-y-1.5 pl-9 text-[14.5px] leading-relaxed text-(--kys-text)/90">
+    <div className={`space-y-1.5 leading-relaxed text-(--kys-text)/90 ${className}`}>
       {blocks.map((b, i) =>
         b.list ? (
           <ul key={i} className="list-disc space-y-1 pl-4 marker:text-(--kys-muted)">
