@@ -22,7 +22,7 @@ import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
-import { openSide, startWithSide } from '@/tests/helpers/synth-side';
+import { openSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -836,7 +836,6 @@ describe('a reload with one of theirs open', () => {
 
 describe('a sound saved with its lesson', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('lesson'));
 
   const LESSON: SoundLesson = {
     blurb: 'A dark, round bass the tutor built.',

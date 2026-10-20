@@ -1,26 +1,34 @@
 /**
- * The synth page's drawers beside the player (`f-player` t-70), for page tests at `lg` and up, where only the open
- * drawer's region is in the accessibility tree.
+ * What opens over the synth page's panel from `lg` up (`f-player` t-74), for page tests: the sounds from the Sound
+ * Design strip's picker, the inspector and the tutor from the player bar, and the lesson card from the strip. Only
+ * what is open is in the accessibility tree.
  *
- * @see components/app/synth/drawers.tsx
+ * @see components/app/synth/synth-page.tsx
  */
 
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
 export type SideTab = 'Sounds' | 'Lesson' | 'Inspect' | 'Tutor';
 
+const pressed = (b: HTMLElement, attr: 'aria-expanded' | 'aria-pressed') =>
+  b.getAttribute(attr) === 'true';
+
 /**
- * Opens a drawer from its tab, leaving it open if it already is. Below `lg` there are no drawers, only sheets, and it
- * does nothing, so a helper shared by tests at both widths can call it.
+ * Opens one, leaving it open if it already is. Below `lg` these are sheets opened from the bottom bar instead, and it
+ * does nothing, so a helper shared by tests at both widths can call it. `Lesson` opens the card at How it works.
  */
 export function openSide(tab: SideTab): void {
-  const nav = screen.queryByRole('navigation', { name: 'Side panels' });
-  if (!nav) return;
-  const button = within(nav).getByRole('button', { name: tab });
-  if (button.getAttribute('aria-expanded') !== 'true') fireEvent.click(button);
-}
-
-/** Opens a drawer before the page renders, as a returning visitor's browser would. */
-export function startWithSide(id: 'library' | 'lesson' | 'inspector' | 'tutor'): void {
-  window.localStorage.setItem('kys.side', JSON.stringify(id));
+  if (screen.queryByRole('navigation', { name: 'Beside the panel' })) return;
+  if (tab === 'Sounds') {
+    const b = screen.getByRole('button', { name: /^Choose a sound/ });
+    if (!pressed(b, 'aria-expanded')) fireEvent.click(b);
+    return;
+  }
+  if (tab === 'Lesson') {
+    const b = screen.queryByRole('button', { name: 'How it works' });
+    if (b && !pressed(b, 'aria-pressed')) fireEvent.click(b);
+    return;
+  }
+  const b = screen.getByRole('button', { name: tab === 'Inspect' ? 'Inspector' : 'Tutor' });
+  if (!pressed(b, 'aria-pressed')) fireEvent.click(b);
 }

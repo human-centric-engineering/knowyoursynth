@@ -189,13 +189,12 @@ svg .kys-hit:focus-visible {
     0 0 14px 2px rgb(255 166 58 / 0.35);
 }
 
-/* The Sound Design strip: between the picture and the bar, where a video's chapters
-   and subtitles are. A lower-third: a hairline of the accent along its top, the
-   heading set in the wordmark's face, and the step in a reading column in the
-   middle rather than run across the whole player. */
+/* The Sound Design strip: the top row of the dock, where a video's chapters are.
+   One row, the same height whatever is open: the sound picker, then the lesson's
+   sections. A hairline of the accent along its top. */
 .kys-design {
   position: relative;
-  padding: 14px 16px 16px;
+  padding: 8px 12px;
   border-top: 1px solid rgb(255 255 255 / 0.06);
   background:
     radial-gradient(70% 140% at 50% 0%, rgb(246 166 58 / 0.07), transparent 70%),
@@ -208,40 +207,65 @@ svg .kys-hit:focus-visible {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgb(246 166 58 / 0.55), transparent);
 }
-@media (min-width: 640px) {
-  .kys-design {
-    padding: 16px 24px 18px;
-  }
-}
-.kys-design-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px 24px;
-  margin-bottom: 14px;
-}
-.kys-design-title {
+.kys-design-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--kys-text);
+  gap: 12px;
 }
-.kys-design-title svg {
-  width: 13px;
-  height: 13px;
-  color: var(--kys-accent);
+@media (max-width: 1023px) {
+  .kys-design-row {
+    flex-wrap: wrap;
+  }
+  .kys-design-row > * {
+    flex: 1 1 100%;
+  }
 }
 .kys-design-sub {
-  margin: 4px 0 0;
-  max-width: 62ch;
-  font-size: 13.5px;
+  margin: 0;
+  font-size: 13px;
   color: var(--kys-muted);
+}
+
+/* The lesson's sections: How it works and Make it yours as pills either side of
+   the steps. Pressed while the card shows them. */
+.kys-sections {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.kys-section-btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--kys-muted);
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.09);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.kys-section-btn:hover {
+  color: var(--kys-text);
+  background: rgb(255 255 255 / 0.08);
+}
+.kys-section-btn[aria-pressed='true'] {
+  color: var(--kys-accent);
+  background: rgb(246 166 58 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.45);
+}
+.kys-section-count {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--kys-faint);
 }
 
 /* The sound picker: the sound's name as a button, as a video's title opens its list. */
@@ -250,9 +274,9 @@ svg .kys-hit:focus-visible {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 12px;
-  min-width: min(100%, 260px);
-  max-width: 100%;
-  padding: 7px 12px 8px 14px;
+  min-width: min(100%, 200px);
+  max-width: min(100%, 300px);
+  padding: 4px 10px 5px 12px;
   border-radius: 12px;
   text-align: left;
   background: rgb(255 255 255 / 0.04);
@@ -277,7 +301,7 @@ svg .kys-hit:focus-visible {
 .kys-sound-pick-name {
   grid-column: 1;
   overflow: hidden;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.25;
   white-space: nowrap;
@@ -287,7 +311,7 @@ svg .kys-hit:focus-visible {
 .kys-sound-pick-ref {
   grid-column: 1;
   overflow: hidden;
-  font-size: 12.5px;
+  font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--kys-muted);
@@ -300,6 +324,8 @@ svg .kys-hit:focus-visible {
 
 /* The chapters: one labelled segment per step, filled to where the panel is. */
 .kys-chapters {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   align-items: stretch;
   gap: 4px;
@@ -439,20 +465,7 @@ svg .kys-hit:focus-visible {
   box-shadow: none;
 }
 
-/* The step card: Previous, the step in a reading column, Next. */
-.kys-step-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 68ch) auto;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 12px;
-}
-@media (min-width: 1024px) {
-  .kys-step-card {
-    gap: 28px;
-  }
-}
+/* The lesson card's Previous and Next. */
 .kys-step-btn {
   display: inline-flex;
   align-items: center;
@@ -489,30 +502,6 @@ svg .kys-hit:focus-visible {
     padding: 0;
   }
 }
-.kys-captions {
-  min-height: 84px;
-  padding: 12px 18px 14px;
-  border-radius: 12px;
-  background: rgb(0 0 0 / 0.35);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
-  animation: kys-fade 0.35s ease-out;
-}
-.kys-captions-eyebrow {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.kys-captions-title {
-  margin: 2px 0 0;
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--kys-text);
-  text-wrap: balance;
-}
-
 /* The bar under the picture. */
 .kys-player-bar {
   border-top: 1px solid rgb(255 255 255 / 0.06);
@@ -633,7 +622,8 @@ svg .kys-hit:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .kys-captions,
+  .kys-card,
+  .kys-sounds-pop,
   .kys-menu,
   .kys-play.is-playing .kys-play-dot {
     animation: none;
@@ -641,6 +631,8 @@ svg .kys-hit:focus-visible {
   .kys-chapter-track,
   .kys-sound-pick,
   .kys-step-btn,
+  .kys-section-btn,
+  .kys-autohide,
   .kys-layer,
   .kys-led {
     transition: none;
@@ -648,41 +640,174 @@ svg .kys-hit:focus-visible {
 }
 
 /* ==========================================================================
- * Beside the player (`f-player` t-70)
+ * The dock and what floats over the panel (`f-player` t-74)
  * ==========================================================================
- * From `lg` up the page is a watch page: the player and what is under it on the
- * left, the open drawer beside it, and the tab strip down the right-hand edge.
- * The drawer pushes the player narrower rather than covering it, so the panel
- * refits and nothing on it is hidden. Both the drawer and the strip stay in view
- * as the page scrolls. They are outside the player, so they take the page's
- * theme rather than the stage's night.
+ * From `lg` up the strip, the bar and the deck are pinned to the bottom of the
+ * screen, as a video's controls are, and the page keeps room under it to scroll
+ * past (`--kys-dock-h`, set by the page). What opens from it floats over the
+ * panel rather than pushing anything: the lesson card, the sounds over the
+ * strip, and the tutor's drawer. Below `lg` the dock is in the page's flow and
+ * the regions are bottom sheets.
  */
 @media (min-width: 1024px) {
-  .kys-theatre {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: start;
+  .kys-synth {
+    padding-bottom: calc(var(--kys-dock-h, 0px) + 24px);
   }
-  .kys-theatre[data-side='open'] > :first-child {
-    margin-right: 16px;
+  .kys-player-stage {
+    border-radius: 20px;
   }
-  .kys-theatre[data-side='closed'] > :first-child {
-    margin-right: 12px;
+  .kys-dock {
+    position: fixed;
+    z-index: 30;
+    bottom: 0;
+    left: 24px;
+    right: 24px;
+    max-width: 1672px;
+    margin-inline: auto;
+    border-radius: 18px 18px 0 0;
+    background: var(--kys-desk);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.07),
+      0 -24px 48px -24px rgb(0 0 0 / 0.85);
+  }
+  .kys-dock .kys-design {
+    border-top: 0;
+    border-radius: 18px 18px 0 0;
+  }
+  .kys-dock .kys-player-deck {
+    border-radius: 0;
   }
 }
 
-.kys-drawer {
-  position: sticky;
-  top: 16px;
+/* The sounds: the library, opened over the strip from the sound picker. */
+.kys-sounds-pop {
+  position: absolute;
+  z-index: 50;
+  left: 0;
+  bottom: calc(100% + 12px);
+  width: min(560px, calc(100vw - 48px));
+  max-height: calc(100vh - var(--kys-dock-h, 0px) - 48px);
+  overflow-y: auto;
+  padding: 16px 18px 20px;
+  border-radius: 16px;
+  background: var(--kys-surface);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 60px -16px rgb(0 0 0 / 0.85);
+  animation: kys-fade 0.15s ease-out;
+}
+.kys-sounds-pop[hidden] {
+  display: none;
+}
+
+/* The lesson card: over one side of the panel, above the dock. It does not block
+   the panel, so the controls it numbers can be turned while it is open. */
+.kys-card {
+  position: fixed;
+  z-index: 35;
+  right: 40px;
+  bottom: calc(var(--kys-dock-h, 0px) + 16px);
   display: flex;
   flex-direction: column;
-  width: clamp(320px, 27vw, 420px);
-  height: calc(100dvh - 32px);
+  width: min(400px, 34vw);
+  max-height: calc(100vh - var(--kys-dock-h, 0px) - 120px);
+  border-radius: 16px;
+  color: var(--kys-text);
+  background: rgb(20 22 28 / 0.96);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.09),
+    0 30px 60px -20px rgb(0 0 0 / 0.85);
+  animation: kys-fade 0.2s ease-out;
+}
+.kys-card[data-side='left'] {
+  right: auto;
+  left: 40px;
+}
+.kys-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 6px 10px 16px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.07);
+}
+.kys-card-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.kys-card-title {
+  margin: 2px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.kys-card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 16px 14px;
+  font-size: 14.5px;
+}
+.kys-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid rgb(255 255 255 / 0.07);
+}
+.kys-card-foot .kys-step-btn {
+  height: 38px;
+}
+/* A move's number: the same amber disc as the badge on the panel. */
+.kys-card-num {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+}
+.kys-card-move {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 13.5px;
+}
+.kys-card-move:hover {
+  background: rgb(255 255 255 / 0.05);
+}
+
+/* The tutor's drawer: slides in over the right of the panel, down to the dock. */
+.kys-drawer {
+  position: fixed;
+  z-index: 45;
+  top: 16px;
+  right: 16px;
+  bottom: calc(var(--kys-dock-h, 0px) + 16px);
+  display: flex;
+  flex-direction: column;
+  width: clamp(340px, 30vw, 440px);
   border: 1px solid var(--kys-line);
-  border-right: 0;
-  border-radius: 16px 0 0 16px;
+  border-radius: 16px;
+  color: var(--kys-text);
   background: var(--kys-surface);
-  animation: kys-drawer-in 0.2s ease-out;
+  box-shadow: -24px 0 60px -20px rgb(0 0 0 / 0.8);
+  animation: kys-drawer-in 0.22s ease-out;
 }
 .kys-drawer[hidden] {
   display: none;
@@ -690,7 +815,7 @@ svg .kys-hit:focus-visible {
 @keyframes kys-drawer-in {
   from {
     opacity: 0;
-    translate: 12px 0;
+    translate: 32px 0;
   }
 }
 .kys-drawer-head {
@@ -709,73 +834,32 @@ svg .kys-hit:focus-visible {
   text-transform: uppercase;
   color: var(--kys-muted);
 }
-.kys-drawer .kys-pbtn:hover {
-  color: var(--kys-text);
-  background: var(--kys-raised);
-}
 .kys-drawer-body {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px 18px 20px;
 }
-.kys-drawer-body.is-fill {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.kys-drawer-body[hidden] {
-  display: none;
-}
 
-/* The tab strip: each tab a word under its icon. The open tab joins the drawer:
-   same surface, and it covers the line between them. */
-.kys-rail {
-  position: sticky;
-  top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 68px;
-  padding: 6px;
-  border: 1px solid var(--kys-line);
-  border-radius: 16px;
-  background: var(--kys-ground);
+/* The video feel: with the pointer at rest, the secondary controls fade until it
+   moves again, or while it is over the dock. Only where there is a pointer to
+   rest: a touch screen has no hover to bring them back. */
+.kys-autohide {
+  transition: opacity 0.35s ease;
 }
-.kys-theatre[data-side='open'] .kys-rail {
-  border-radius: 0 16px 16px 0;
-  background: var(--kys-surface);
-}
-.kys-rail > button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--kys-muted);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-.kys-rail > button:hover {
-  color: var(--kys-text);
-  background: var(--kys-raised);
-}
-.kys-rail > button.is-open {
-  color: var(--kys-accent);
-  background: color-mix(in oklab, var(--kys-accent) 14%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--kys-accent) 45%, transparent);
+@media (hover: hover) and (min-width: 1024px) {
+  .kys-synth[data-idle] .kys-autohide:not(:focus-within) {
+    opacity: 0;
+  }
+  .kys-synth[data-idle] .kys-dock:hover .kys-autohide {
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .kys-drawer {
     animation: none;
-  }
-  .kys-rail > button {
-    transition: none;
   }
 }

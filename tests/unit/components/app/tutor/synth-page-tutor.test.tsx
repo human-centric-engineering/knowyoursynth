@@ -34,7 +34,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import { darkBassDesign, panelContext } from '@/tests/helpers/tutor';
-import { openSide, startWithSide } from '@/tests/helpers/synth-side';
+import { openSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -286,7 +286,6 @@ async function ask(text = 'Make this sound darker') {
 
 beforeEach(() => {
   window.localStorage.clear();
-  startWithSide('tutor');
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = true;
   auth.pending = false;

@@ -24,7 +24,7 @@ import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/stora
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
-import { openSide, startWithSide } from '@/tests/helpers/synth-side';
+import { openSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -461,7 +461,6 @@ describe('SynthPage engine', () => {
 
 describe('SynthPage patch', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('inspector'));
 
   it('counts the controls moved off the sound, and restores the sound', () => {
     page();
@@ -1091,7 +1090,6 @@ describe('SynthPage computer keyboard', () => {
 
 describe('SynthPage session', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('inspector'));
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
@@ -1345,14 +1343,16 @@ describe('SynthPage player', () => {
     expect(card?.textContent).toMatch(/Loud\./);
   });
 
-  it('opens the library from the sound’s name in the strip, whichever drawer was open', async () => {
-    startWithSide('lesson');
+  it('opens the library over the strip from the sound’s name, and closes it from there again', async () => {
     twoSteps();
     const pick = within(player()).getByRole('button', { name: 'Choose a sound (now: Two steps)' });
     expect(pick.textContent).toContain('In the style of two people');
     expect(screen.queryByRole('searchbox')).toBeNull();
     fireEvent.click(pick);
+    expect(pick.getAttribute('aria-expanded')).toBe('true');
     await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('searchbox')));
+    fireEvent.click(pick);
+    expect(screen.queryByRole('searchbox')).toBeNull();
   });
 
   it('lights a chapter’s controls on the panel while it is pointed at, but not while a lesson is walked', () => {
@@ -1525,7 +1525,6 @@ describe('SynthPage engine errors', () => {
 
 describe('SynthPage sounds', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('inspector'));
 
   const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 
@@ -1579,7 +1578,6 @@ describe('SynthPage sounds', () => {
 
 describe('SynthPage patch edge cases', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('inspector'));
 
   const focusLfoCable = () =>
     act(() =>

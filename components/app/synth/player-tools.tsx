@@ -15,7 +15,7 @@
 
 import * as Popover from '@radix-ui/react-popover';
 import { Settings } from 'lucide-react';
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { Segmented } from '@/components/app/synth/bar-controls';
 
 export function LayerToggle({
@@ -25,6 +25,7 @@ export function LayerToggle({
   icon,
   on,
   onClick,
+  ref,
 }: {
   /** The accessible name, which the page's tests and a screen reader use. */
   label: string;
@@ -34,9 +35,12 @@ export function LayerToggle({
   icon: ReactNode;
   on: boolean;
   onClick: () => void;
+  /** For a toggle that something else hands focus back to when it closes. */
+  ref?: Ref<HTMLButtonElement>;
 }) {
   return (
     <button
+      ref={ref}
       type="button"
       aria-pressed={on}
       aria-label={label}

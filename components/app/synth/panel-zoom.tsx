@@ -22,13 +22,16 @@ const MAX_FIT_PX = 1560;
 /**
  * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px; a synth with its own layout
  * is also kept short enough to fit the screen's height. Zoomed, it is that width times the scale.
+ *
+ * The height it fits is the screen's less `--kys-fit-chrome`, which the page sets from `lg` up to what is above the
+ * panel and the dock pinned under it (t-74). Without it, the panel may take 82% of the screen's height.
  */
 export function panelFrameStyle(
   view: { w: number; h: number } | null,
   scale: PanelScale
 ): CSSProperties {
   const cap = view
-    ? `min(${MAX_FIT_PX}px, ${((82 * view.w) / view.h).toFixed(1)}vh)`
+    ? `min(${MAX_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${(view.w / view.h).toFixed(4)}))`
     : `${MAX_FIT_PX}px`;
   return { width: `calc(${scale} * min(100%, ${cap}))` };
 }

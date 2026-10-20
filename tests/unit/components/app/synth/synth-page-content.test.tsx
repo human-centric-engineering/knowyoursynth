@@ -19,7 +19,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
-import { openSide, startWithSide } from '@/tests/helpers/synth-side';
+import { openSide } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -121,7 +121,6 @@ describe('the library on the page', () => {
 
 describe('the lesson on the page', () => {
   // At `lg` and up the region these use is in its drawer (t-70).
-  beforeEach(() => startWithSide('lesson'));
 
   const pickSound = () => {
     const p = detail.sounds.find((s) => s.steps.length > 2);
