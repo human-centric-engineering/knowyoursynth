@@ -58,6 +58,8 @@ export function BottomSheet({
   children,
 }: BottomSheetProps) {
   const content = useRef<HTMLDivElement>(null);
+  /** What had focus when the sheet opened, to give it back to. */
+  const returnTo = useRef<HTMLElement | null>(null);
   const drag = useRef<{ y: number; moved: boolean } | null>(null);
   // A drag ends in a click too, which the handle's button must not read as a press.
   const dragged = useRef(false);
@@ -122,16 +124,25 @@ export function BottomSheet({
                 }
               : undefined
           }
-          // Docked, focus goes to the sheet itself rather than its first button, so opening it from a tap on the panel
-          // starts nothing.
-          onOpenAutoFocus={
-            docked
-              ? (e) => {
-                  e.preventDefault();
-                  content.current?.focus({ preventScroll: true });
-                }
-              : undefined
-          }
+          onOpenAutoFocus={(e) => {
+            returnTo.current =
+              document.activeElement instanceof HTMLElement ? document.activeElement : null;
+            // Docked, focus goes to the sheet itself rather than its first button, so opening it from a tap on the
+            // panel starts nothing.
+            if (docked) {
+              e.preventDefault();
+              content.current?.focus({ preventScroll: true });
+            }
+          }}
+          // Radix gives focus back only to a `Dialog.Trigger`, and what opens a sheet is the page's own button. Docked,
+          // focus already moved out to the page stays where it went.
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            const now = document.activeElement;
+            const lost = !now || now === document.body || !!content.current?.contains(now);
+            if (lost || !docked) returnTo.current?.focus({ preventScroll: true });
+            returnTo.current = null;
+          }}
         >
           {docked ? (
             <button
