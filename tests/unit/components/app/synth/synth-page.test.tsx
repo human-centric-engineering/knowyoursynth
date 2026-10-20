@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { Suspense } from 'react';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
@@ -24,6 +24,7 @@ import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/stora
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import { openSide, startWithSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -459,6 +460,9 @@ describe('SynthPage engine', () => {
 // ── editing the patch ───────────────────────────────────────────────────────
 
 describe('SynthPage patch', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('inspector'));
+
   it('counts the controls moved off the sound, and restores the sound', () => {
     page();
     fireEvent.click(button('A-440'));
@@ -500,6 +504,7 @@ describe('SynthPage patch', () => {
     page();
     expect(loadedName()).toBe('Fat bass');
     expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    openSide('Lesson');
     expect(screen.getByRole('tab', { name: /Build it/ }).textContent).toContain('1 steps');
   });
 
@@ -1085,6 +1090,9 @@ describe('SynthPage computer keyboard', () => {
 // ── remembering the panel ───────────────────────────────────────────────────
 
 describe('SynthPage session', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('inspector'));
+
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   });
@@ -1217,8 +1225,9 @@ describe('SynthPage effects', () => {
 
 // The regions the page lays out.
 describe('SynthPage regions', () => {
-  it('has the Keyboard, the rack and the inspector in the one section', () => {
+  it('has the Keyboard and the rack in the player, and the inspector in its drawer', () => {
     page();
+    openSide('Inspect');
     const stage = screen.getByRole('region', { name: 'Model D panel' });
     expect(within(stage).getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
     expect(within(stage).getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
@@ -1336,12 +1345,14 @@ describe('SynthPage player', () => {
     expect(card?.textContent).toMatch(/Loud\./);
   });
 
-  it('opens the library from the sound’s name in the strip', () => {
+  it('opens the library from the sound’s name in the strip, whichever drawer was open', async () => {
+    startWithSide('lesson');
     twoSteps();
     const pick = within(player()).getByRole('button', { name: 'Choose a sound (now: Two steps)' });
     expect(pick.textContent).toContain('In the style of two people');
+    expect(screen.queryByRole('searchbox')).toBeNull();
     fireEvent.click(pick);
-    expect(document.activeElement).toBe(screen.getByRole('searchbox'));
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('searchbox')));
   });
 
   it('lights a chapter’s controls on the panel while it is pointed at, but not while a lesson is walked', () => {
@@ -1513,6 +1524,9 @@ describe('SynthPage engine errors', () => {
 });
 
 describe('SynthPage sounds', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('inspector'));
+
   const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 
   it('with no sounds it opens on a blank patch with nothing to restore or play', () => {
@@ -1564,6 +1578,9 @@ describe('SynthPage sounds', () => {
 });
 
 describe('SynthPage patch edge cases', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('inspector'));
+
   const focusLfoCable = () =>
     act(() =>
       focusStore.set({

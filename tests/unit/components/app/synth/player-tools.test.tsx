@@ -10,20 +10,26 @@ import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
 
-function settings(over: Partial<Parameters<typeof PlayerSettings>[0]> = {}) {
-  const props = {
-    view: { outline: false, long: false },
-    onView: vi.fn(),
-    modular: false,
-    zoom: 0,
-    onZoom: vi.fn(),
-    tipsOn: true,
-    onTips: vi.fn(),
-    ...over,
-  };
-  render(<PlayerSettings {...props} />);
+function settings(
+  over: { modular?: boolean; zoom?: number; view?: { outline: boolean; long: boolean } } = {}
+) {
+  const onView = vi.fn();
+  const onZoom = vi.fn();
+  const onTips = vi.fn();
+  render(
+    <PlayerSettings
+      view={over.view ?? { outline: false, long: false }}
+      onView={onView}
+      modular={over.modular ?? false}
+      zoom={over.zoom ?? 0}
+      onZoom={onZoom}
+      tipsOn
+      onTips={onTips}
+    />
+  );
   fireEvent.click(screen.getByRole('button', { name: 'Panel settings' }));
-  return { ...props, menu: within(screen.getByRole('dialog', { name: 'Panel settings' })) };
+  const menu = within(screen.getByRole('dialog', { name: 'Panel settings' }));
+  return { onView, onZoom, onTips, menu };
 }
 
 describe('PlayerSettings', () => {

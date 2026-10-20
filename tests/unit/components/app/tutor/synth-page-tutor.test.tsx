@@ -34,6 +34,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import { darkBassDesign, panelContext } from '@/tests/helpers/tutor';
+import { openSide, startWithSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -230,12 +231,22 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-const tutor = () => screen.getByRole('region', { name: 'AI tutor' });
+const tutor = () => {
+  openSide('Tutor');
+  return screen.getByRole('region', { name: 'AI tutor' });
+};
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
-const lessonPanel = () => screen.getByRole('article', { name: /./ });
-const library = () => screen.getByRole('region', { name: 'Sound library' });
+// At `lg` and up the lesson and the library are in their drawers (t-70): each helper opens the one it reads.
+const lessonPanel = () => {
+  openSide('Lesson');
+  return screen.getByRole('article', { name: /./ });
+};
+const library = () => {
+  openSide('Sounds');
+  return screen.getByRole('region', { name: 'Sound library' });
+};
 
 /** What the allowance route answers now: a test spends the day's turns by changing it. */
 const served = { allowance: ALLOWANCE };
@@ -275,6 +286,7 @@ async function ask(text = 'Make this sound darker') {
 
 beforeEach(() => {
   window.localStorage.clear();
+  startWithSide('tutor');
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = true;
   auth.pending = false;
@@ -542,6 +554,7 @@ describe('a designed sound', () => {
     await ask('Design a dark round bass');
     await waitFor(() => expect(loadedName()).toBe('Dark round bass'));
 
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
     expect(screen.getByText('step 1 of 3')).toBeTruthy();
     expect(loadedName()).toBe('Dark round bass');

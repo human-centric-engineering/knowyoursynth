@@ -237,14 +237,65 @@ function tap(el: Element) {
 }
 
 describe('at lg and up', () => {
-  it('lays the regions out beside the panel as before, with no bar and no sheets', () => {
+  it('puts the regions in a drawer beside the player, opened from a tab strip, with no bar and no sheets', () => {
     page();
     expect(screen.queryByRole('navigation', { name: 'Beside the panel' })).toBeNull();
     expect(screen.queryByRole('dialog')).toBeNull();
+    const rail = within(screen.getByRole('navigation', { name: 'Side panels' }));
+    expect(rail.getAllByRole('button').map((b) => b.textContent)).toEqual([
+      'Sounds',
+      'Lesson',
+      'Inspect',
+      'Tutor',
+    ]);
+    // Sounds is open on a first visit; the rest are out of the accessibility tree.
+    expect(rail.getByRole('button', { name: 'Sounds' }).getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('complementary', { name: 'Sounds drawer' })).toBeTruthy();
     expect(screen.getByRole('region', { name: 'Sound library' })).toBeTruthy();
-    expect(screen.getByRole('article', { name: /Fat bass/ })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Control inspector' })).toBeNull();
     expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+
+    // One drawer at a time, and the choice is kept for the next visit.
+    fireEvent.click(rail.getByRole('button', { name: 'Inspect' }));
+    expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+    expect(screen.queryByRole('region', { name: 'Sound library' })).toBeNull();
+    expect(rail.getByRole('button', { name: 'Sounds' }).getAttribute('aria-expanded')).toBe(
+      'false'
+    );
+    expect(window.localStorage.getItem('kys.side')).toBe('"inspector"');
+  });
+
+  it('closes the drawer from its tab, its close button or Escape, handing focus back to the tab', () => {
+    page();
+    const rail = within(screen.getByRole('navigation', { name: 'Side panels' }));
+    const lessonTab = rail.getByRole('button', { name: 'Lesson' });
+
+    fireEvent.click(lessonTab);
+    fireEvent.click(lessonTab);
+    expect(screen.queryByRole('complementary')).toBeNull();
+    expect(window.localStorage.getItem('kys.side')).toBe('null');
+
+    fireEvent.click(lessonTab);
+    fireEvent.click(screen.getByRole('button', { name: 'Close the Lesson drawer' }));
+    expect(screen.queryByRole('complementary')).toBeNull();
+    expect(document.activeElement).toBe(lessonTab);
+
+    fireEvent.click(lessonTab);
+    const drawer = screen.getByRole('complementary', { name: 'Lesson drawer' });
+    fireEvent.keyDown(within(drawer).getByRole('button', { name: 'Close the Lesson drawer' }), {
+      key: 'Escape',
+    });
+    expect(screen.queryByRole('complementary')).toBeNull();
+    expect(document.activeElement).toBe(lessonTab);
+  });
+
+  it('keeps a closed drawer’s region mounted, so the lesson’s place survives a look at the library', () => {
+    window.localStorage.setItem('kys.side', '"lesson"');
+    page();
+    const article = screen.getByRole('article', { name: /Fat bass/ });
+    fireEvent.click(screen.getByRole('button', { name: 'Sounds' }));
+    expect(article.isConnected).toBe(true);
+    expect(article.closest('[hidden]')).not.toBeNull();
   });
 
   it('opens no Inspector sheet on a tap, and leaves the floating cards on', () => {

@@ -29,6 +29,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundSummary } from '@/lib/app/sounds/data';
+import { openSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -179,12 +180,20 @@ const entry = (slug: string, furthestStep: number, completedAt: string | null = 
 const page = () => render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />);
 /** The walkthrough's own button by its text: the step bar's arrows carry the same labels. */
 const walk = (text: string) => {
+  openSide('Lesson');
   const b = screen.getAllByRole('button').find((el) => el.textContent === text);
   if (!b) throw new Error(`no ${text} button`);
   return b;
 };
-const library = () => screen.getByRole('region', { name: 'Sound library' });
-const lesson = () => screen.getByRole('article', { name: 'Fat bass' });
+// At `lg` and up the library and the lesson are in their drawers (t-70): each helper opens the one it reads.
+const library = () => {
+  openSide('Sounds');
+  return screen.getByRole('region', { name: 'Sound library' });
+};
+const lesson = () => {
+  openSide('Lesson');
+  return screen.getByRole('article', { name: 'Fat bass' });
+};
 
 /** The API's answers: the user's sounds, their progress and their favourites. */
 function serve({

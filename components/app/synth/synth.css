@@ -646,3 +646,136 @@ svg .kys-hit:focus-visible {
     transition: none;
   }
 }
+
+/* ==========================================================================
+ * Beside the player (`f-player` t-70)
+ * ==========================================================================
+ * From `lg` up the page is a watch page: the player and what is under it on the
+ * left, the open drawer beside it, and the tab strip down the right-hand edge.
+ * The drawer pushes the player narrower rather than covering it, so the panel
+ * refits and nothing on it is hidden. Both the drawer and the strip stay in view
+ * as the page scrolls. They are outside the player, so they take the page's
+ * theme rather than the stage's night.
+ */
+@media (min-width: 1024px) {
+  .kys-theatre {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: start;
+  }
+  .kys-theatre[data-side='open'] > :first-child {
+    margin-right: 16px;
+  }
+  .kys-theatre[data-side='closed'] > :first-child {
+    margin-right: 12px;
+  }
+}
+
+.kys-drawer {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  width: clamp(320px, 27vw, 420px);
+  height: calc(100dvh - 32px);
+  border: 1px solid var(--kys-line);
+  border-right: 0;
+  border-radius: 16px 0 0 16px;
+  background: var(--kys-surface);
+  animation: kys-drawer-in 0.2s ease-out;
+}
+.kys-drawer[hidden] {
+  display: none;
+}
+@keyframes kys-drawer-in {
+  from {
+    opacity: 0;
+    translate: 12px 0;
+  }
+}
+.kys-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 8px 8px 18px;
+  border-bottom: 1px solid var(--kys-line);
+}
+.kys-drawer-title {
+  margin: 0;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--kys-muted);
+}
+.kys-drawer .kys-pbtn:hover {
+  color: var(--kys-text);
+  background: var(--kys-raised);
+}
+.kys-drawer-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 18px 20px;
+}
+.kys-drawer-body.is-fill {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.kys-drawer-body[hidden] {
+  display: none;
+}
+
+/* The tab strip: each tab a word under its icon. The open tab joins the drawer:
+   same surface, and it covers the line between them. */
+.kys-rail {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 68px;
+  padding: 6px;
+  border: 1px solid var(--kys-line);
+  border-radius: 16px;
+  background: var(--kys-ground);
+}
+.kys-theatre[data-side='open'] .kys-rail {
+  border-radius: 0 16px 16px 0;
+  background: var(--kys-surface);
+}
+.kys-rail > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--kys-muted);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.kys-rail > button:hover {
+  color: var(--kys-text);
+  background: var(--kys-raised);
+}
+.kys-rail > button.is-open {
+  color: var(--kys-accent);
+  background: color-mix(in oklab, var(--kys-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--kys-accent) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kys-drawer {
+    animation: none;
+  }
+  .kys-rail > button {
+    transition: none;
+  }
+}

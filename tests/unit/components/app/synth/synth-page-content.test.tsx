@@ -19,6 +19,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
+import { openSide, startWithSide } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -92,6 +93,7 @@ function page() {
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const library = () => {
+  openSide('Sounds');
   const section = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
   if (!section) throw new Error('no library');
   return section;
@@ -110,7 +112,7 @@ describe('the library on the page', () => {
       fireEvent.click(row);
       expect(loadedName()).toBe(p.name);
       expect(row.getAttribute('aria-current')).toBe('true');
-      expect(screen.getByRole('heading', { level: 2, name: p.name })).toBeTruthy();
+      expect(screen.getByRole('button', { name: `Choose a sound (now: ${p.name})` })).toBeTruthy();
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
     // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.
@@ -118,6 +120,9 @@ describe('the library on the page', () => {
 });
 
 describe('the lesson on the page', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('lesson'));
+
   const pickSound = () => {
     const p = detail.sounds.find((s) => s.steps.length > 2);
     if (!p) throw new Error('no sound with several steps');
@@ -135,6 +140,7 @@ describe('the lesson on the page', () => {
     page();
     const p = pickSound();
     open(p);
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
     expect(screen.getByText(`step 1 of ${p.steps.length}`)).toBeTruthy();
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
@@ -156,6 +162,7 @@ describe('the lesson on the page', () => {
     page();
     const p = pickSound();
     open(p);
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
     const other = detail.sounds.find((s) => s.id !== p.id);
     if (!other) throw new Error('only one sound');

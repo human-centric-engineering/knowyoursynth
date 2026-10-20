@@ -33,6 +33,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import type { PublicSound, UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
 import { APIClientError } from '@/lib/api/client';
+import { startWithSide } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -530,6 +531,9 @@ describe('signed in', () => {
 });
 
 describe("a shared sound's lesson (f-tutor t-55)", () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+  beforeEach(() => startWithSide('lesson'));
+
   const LESSON: SoundLesson = {
     blurb: 'A glassy pluck the tutor built.',
     level: 1,
