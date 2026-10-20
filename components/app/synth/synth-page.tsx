@@ -19,6 +19,10 @@
  *   page: a proposal the learner applies, and a sound it designs, which opens here with its lesson (`designed`). Either
  *   is undone back to what was on the panel before.
  *
+ * - On a phone or a tablet held upright (`f-phone-and-tablet`), a note above the panel says it wants a landscape tablet
+ *   or a bigger screen (`rotate-prompt.tsx`). The panel fits the page and zooms in its scroller (`panel-zoom.tsx`), and
+ *   the two rows of buttons over it each scroll sideways on one line.
+ *
  * The theme switch is Sunrise's, in the header.
  */
 
@@ -55,6 +59,9 @@ import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth
 import { Lesson } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
+import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
+import type { PanelScale } from '@/components/app/synth/panel-zoom';
+import { RotatePrompt } from '@/components/app/synth/rotate-prompt';
 import { Lineage } from '@/components/app/synth/lineage';
 import { MySoundsList, SoundActions, useMySounds } from '@/components/app/synth/my-sounds';
 import { useLessonProgress } from '@/components/app/synth/progress';
@@ -369,6 +376,8 @@ function Synth({
   const [hold, setHold] = useState(false);
   const [engineError, setEngineError] = useState('');
   const [zoom, setZoom] = useState(0); // magnifier: 0 = off, else the enlargement
+  const [scale, setScale] = useState<PanelScale>(1); // the panel's size: 1 fits the page
+  const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
   const [lineageOpen, setLineageOpen] = useState(false);
@@ -527,15 +536,22 @@ function Synth({
   }, [mapOn, synthDef, sess.values, sess.cables, wheel, probeLow, probeHigh, soundKey]);
 
   const heldRef = useRef(new Set<number>());
+  // The keys down now, held or not, as presses per note (a MIDI key and a computer key can both be on one note): under
+  // Hold, a note pressed while another is down joins the chord.
+  const downRef = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
       if (!engine) return;
       void ensureAudio();
       if (hold) {
-        heldRef.current.forEach((h) => engine.send({ type: 'noteOff', n: h }));
-        heldRef.current.clear();
+        // A fresh press, with every key up, replaces what is held.
+        if (downRef.current.size === 0) {
+          heldRef.current.forEach((h) => engine.send({ type: 'noteOff', n: h }));
+          heldRef.current.clear();
+        }
         heldRef.current.add(n);
       }
+      downRef.current.set(n, (downRef.current.get(n) ?? 0) + 1);
       engine.send({ type: 'noteOn', n, v });
     },
     [engine, ensureAudio, hold]
@@ -543,6 +559,13 @@ function Synth({
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
     (n: number) => {
+      const presses = (downRef.current.get(n) ?? 0) - 1;
+      // Another input still pressing this note keeps it sounding.
+      if (presses > 0) {
+        downRef.current.set(n, presses);
+        return;
+      }
+      downRef.current.delete(n);
       if (!hold || !heldRef.current.has(n)) engine?.send({ type: 'noteOff', n });
     },
     [engine, hold]
@@ -550,8 +573,13 @@ function Synth({
   const setHoldMode = (h: boolean) => {
     setHold(h);
     if (!h) {
-      heldRef.current.forEach((n) => engine?.send({ type: 'noteOff', n }));
+      // A note whose key is still down keeps sounding, and stops when it is let go.
+      heldRef.current.forEach((n) => {
+        if (!downRef.current.has(n)) engine?.send({ type: 'noteOff', n });
+      });
       heldRef.current.clear();
+      // And a release that never arrived (a key let go outside the window) is forgotten, so Hold starts clean.
+      downRef.current.clear();
     }
   };
 
@@ -1030,6 +1058,7 @@ function Synth({
         </button>
       </div>
 
+      <RotatePrompt />
       {shared && (
         <SharedSoundStrip
           sound={shared}
@@ -1119,7 +1148,7 @@ function Synth({
               />
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
+          <div className="kys-scroll flex max-w-full items-center gap-2 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap [&>*]:shrink-0">
             {sharedPanel && changed > 0 ? (
               <button
                 type="button"
@@ -1203,7 +1232,8 @@ function Synth({
         </div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <Search def={def} />
-          <div className="flex flex-wrap items-center gap-1.5 text-sm sm:gap-2">
+          <div className="kys-scroll flex max-w-full items-center gap-1.5 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap sm:gap-2 [&>*]:shrink-0">
+            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
             <PanelSwitch
               label="Orientation tour"
               short="Tour"
@@ -1263,10 +1293,7 @@ function Synth({
               role="group"
               aria-label="Magnifier"
             >
-              <span className="px-1.5 text-(--kys-muted) sm:px-2">
-                <span className="xl:hidden">Zoom</span>
-                <span className="hidden xl:inline">Magnify</span>
-              </span>
+              <span className="px-1.5 text-(--kys-muted) sm:px-2">Magnify</span>
               {(
                 [
                   [0, 'Off'],
@@ -1287,17 +1314,11 @@ function Synth({
             </div>
           </div>
         </div>
-        <div className="kys-scroll overflow-x-auto pb-2">
+        <div ref={scrollerRef} className="kys-scroll overflow-x-auto pb-2">
           <div
-            className={`mx-auto max-w-[1560px] ${def.layout ? '' : 'min-w-[920px]'} ${view.outline ? '' : 'kys-synth-shadow'}`}
-            style={
-              def.layout
-                ? {
-                    minWidth: Math.min(920, Math.round(def.view.w * 0.2)),
-                    maxWidth: `min(1560px, ${((82 * def.view.w) / def.view.h).toFixed(1)}vh)`,
-                  }
-                : undefined
-            }
+            data-testid="panel-frame"
+            className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
+            style={panelFrameStyle(def.layout ? def.view : null, scale)}
           >
             <SynthPanel
               def={def}
@@ -1394,7 +1415,7 @@ function Synth({
         </div>
       </section>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
         <div className="flex min-h-0 flex-col gap-5">
           <MySoundsList
             signedIn={authPending ? null : signedIn}

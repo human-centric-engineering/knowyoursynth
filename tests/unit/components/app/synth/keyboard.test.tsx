@@ -151,12 +151,102 @@ describe('Keyboard keys', () => {
     expect(key(49).textContent).toBe('W');
   });
 
-  it('stops listening for pointer up when it unmounts', () => {
+  it('lets a held note go when it unmounts, and stops listening for pointer up', () => {
     const { props, unmount } = setup();
     fireEvent.pointerDown(key(36));
     unmount();
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(36);
     fireEvent.pointerUp(window);
+    expect(props.noteOff).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets every held note go when the window loses focus, since their releases go elsewhere', () => {
+    const { props } = setup();
+    fireEvent.pointerDown(key(36), { pointerId: 1 });
+    fireEvent.pointerDown(key(40), { pointerId: 2 });
+    fireEvent(window, new Event('blur'));
+    expect(vi.mocked(props.noteOff).mock.calls).toEqual([[36], [40]]);
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps a held note sounding when Hold changes noteOff, and releases it through the new one', () => {
+    const { props, rerender } = setup();
+    fireEvent.pointerDown(key(36));
+    const next = vi.fn();
+    rerender(<Keyboard {...props} hold noteOff={next} />);
     expect(props.noteOff).not.toHaveBeenCalled();
+    fireEvent.pointerUp(window);
+    expect(next).toHaveBeenCalledExactlyOnceWith(36);
+  });
+
+  it('scrolls by a strip above the keys, while the keys themselves play rather than pan', () => {
+    setup();
+    expect(screen.getByTestId('key-scroll-strip').className).toContain('touch-pan-x');
+    expect(key(36).closest('.touch-none')).not.toBeNull();
+    expect(key(36).closest('.touch-pan-x')).toBeNull();
+  });
+});
+
+describe('Keyboard with several pointers', () => {
+  const down = (n: number, pointerId: number) => fireEvent.pointerDown(key(n), { pointerId });
+
+  it('holds a chord: each finger sounds its own note and none cuts another off', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+    down(43, 3);
+    expect(vi.mocked(props.noteOn).mock.calls).toEqual([[36], [40], [43]]);
+    expect(props.noteOff).not.toHaveBeenCalled();
+  });
+
+  it('releases each note on its own pointer up or cancel, and leaves the rest sounding', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+    down(43, 3);
+
+    fireEvent.pointerUp(window, { pointerId: 2 });
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(40);
+
+    fireEvent.pointerCancel(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+
+    fireEvent.pointerUp(window, { pointerId: 9 }); // a pointer that never pressed a key
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
+
+    fireEvent.pointerUp(window, { pointerId: 3 });
+    expect(vi.mocked(props.noteOff).mock.calls).toEqual([[40], [36], [43]]);
+  });
+
+  it('slides one finger to another key without touching the others', () => {
+    const { props } = setup();
+    down(36, 1);
+    down(40, 2);
+
+    fireEvent.pointerEnter(key(41), { pointerId: 2, buttons: 1 });
+
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(40);
+    expect(props.noteOn).toHaveBeenLastCalledWith(41);
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+  });
+
+  it('sounds a note two fingers share once, and stops it only when the last lets go', () => {
+    const { props } = setup();
+    down(36, 1);
+    fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // pointer 2 never pressed: ignored
+    down(38, 2);
+    fireEvent.pointerEnter(key(36), { pointerId: 2, buttons: 1 }); // slides onto the note pointer 1 holds
+    expect(vi.mocked(props.noteOn).mock.calls).toEqual([[36], [38]]);
+    expect(props.noteOff).toHaveBeenCalledExactlyOnceWith(38);
+
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(props.noteOff).toHaveBeenCalledTimes(1); // pointer 2 still holds 36
+
+    fireEvent.pointerUp(window, { pointerId: 2 });
+    expect(props.noteOff).toHaveBeenLastCalledWith(36);
+    expect(props.noteOff).toHaveBeenCalledTimes(2);
   });
 });
 

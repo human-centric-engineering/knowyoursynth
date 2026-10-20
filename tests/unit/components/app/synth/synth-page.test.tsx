@@ -293,6 +293,44 @@ describe('SynthPage layout', () => {
     );
   });
 
+  it('fits the panel to the page, and zooms it in its scroller with the controls still live', () => {
+    page();
+    const frame = screen.getByTestId('panel-frame');
+    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+    expect(frame.className).not.toContain('min-w-');
+
+    fireEvent.click(button('Zoom in'));
+    fireEvent.click(button('Zoom in'));
+    expect(frame.style.width).toBe('calc(2 * min(100%, 1560px))');
+
+    // Laid out bigger, not magnified: a knob still turns from the keyboard.
+    const cutoff = screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
+    const before = cutoff.getAttribute('aria-valuenow');
+    fireEvent.keyDown(cutoff, { key: 'ArrowUp' });
+    expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
+
+    fireEvent.click(button('Fit the panel to the page'));
+    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+  });
+
+  it('puts the rotate note above the panel on a small screen, and not on a wide one', () => {
+    const { unmount } = page();
+    expect(screen.queryByRole('note')).toBeNull();
+    unmount();
+
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    expect(screen.getByRole('note').textContent).toMatch(/a landscape tablet or a bigger screen/);
+  });
+
   it('does not offer a modular layout switch for a synth with no modular spec', () => {
     page();
     expect(screen.queryByRole('group', { name: 'Panel layout' })).toBeNull();
@@ -886,9 +924,93 @@ describe('SynthPage computer keyboard', () => {
       { type: 'noteOff', n: 48 },
       { type: 'noteOn', n: 50, v: 0.85 },
     ]);
+    fireEvent.keyUp(window, { key: 's' });
 
     fireEvent.click(button('Hold')); // switching hold off lets the held note go
     expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 50 });
+  });
+
+  it('holds a chord with Hold: keys pressed together all stay, the next fresh press replaces them all', () => {
+    page();
+    fireEvent.click(button('Hold'));
+
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.keyDown(window, { key: 'd' });
+    fireEvent.keyUp(window, { key: 'a' });
+    fireEvent.keyUp(window, { key: 'd' });
+    expect(notes()).toEqual([
+      { type: 'noteOn', n: 48, v: 0.85 },
+      { type: 'noteOn', n: 52, v: 0.85 },
+    ]);
+
+    fireEvent.keyDown(window, { key: 's' });
+    expect(notes().slice(2)).toEqual([
+      { type: 'noteOff', n: 48 },
+      { type: 'noteOff', n: 52 },
+      { type: 'noteOn', n: 50, v: 0.85 },
+    ]);
+  });
+
+  it('holds a chord played with two fingers on the on-screen keys', () => {
+    page();
+    fireEvent.click(button('Hold'));
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 60' }), { pointerId: 1 });
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 64' }), { pointerId: 2 });
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    fireEvent.pointerUp(window, { pointerId: 2 });
+    expect(notes()).toEqual([
+      { type: 'noteOn', n: 60, v: 0.85 },
+      { type: 'noteOn', n: 64, v: 0.85 },
+    ]);
+  });
+
+  it('keeps a note whose key is still down when Hold goes off, and stops it on release', () => {
+    page();
+    fireEvent.click(button('Hold'));
+    fireEvent.keyDown(window, { key: 'a' }); // still down
+    fireEvent.keyDown(window, { key: 's' });
+    fireEvent.keyUp(window, { key: 's' }); // held by Hold alone
+
+    fireEvent.click(button('Hold'));
+    expect(notes().slice(2)).toEqual([{ type: 'noteOff', n: 50 }]);
+    fireEvent.keyUp(window, { key: 'a' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 48 });
+  });
+
+  it('starts Hold clean after a release that never arrived: the next press replaces, not joins', () => {
+    page();
+    fireEvent.click(button('Hold'));
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 60' }), { pointerId: 1 });
+    // Released outside the window: no pointer up, and turning Hold off and on forgets it.
+    fireEvent.click(button('Hold'));
+    fireEvent.click(button('Hold'));
+    fireEvent.keyDown(window, { key: 'a' });
+    fireEvent.keyUp(window, { key: 'a' });
+    fireEvent.keyDown(window, { key: 's' });
+    expect(notes().slice(-2)).toEqual([
+      { type: 'noteOff', n: 48 },
+      { type: 'noteOn', n: 50, v: 0.85 },
+    ]);
+  });
+
+  it('under Hold, a note two inputs press stays down until both let go', () => {
+    page();
+    fireEvent.click(button('Hold'));
+    fireEvent.keyDown(window, { key: 'k' }); // 60 from the computer keys
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 60' }), { pointerId: 1 });
+    fireEvent.keyUp(window, { key: 'k' }); // the finger still holds 60
+    fireEvent.keyDown(window, { key: 'l' }); // joins the chord rather than replacing it
+    expect(notes().filter((m) => m.type === 'noteOff')).toEqual([]);
+  });
+
+  it('keeps a note two inputs press sounding until both let go', () => {
+    page();
+    fireEvent.keyDown(window, { key: 'k' }); // 60 from the computer keys
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Note 60' }), { pointerId: 1 });
+    fireEvent.pointerUp(window, { pointerId: 1 });
+    expect(notes().filter((m) => m.type === 'noteOff')).toEqual([]);
+    fireEvent.keyUp(window, { key: 'k' });
+    expect(notes().at(-1)).toEqual({ type: 'noteOff', n: 60 });
   });
 
   it('releases the note a key started, even after the octave moved while it was held', () => {
