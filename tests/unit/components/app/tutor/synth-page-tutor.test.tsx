@@ -1400,3 +1400,103 @@ describe("an answer's sources", () => {
     expect(labels[0].closest('div')?.textContent).toContain('From what I know, Vangelis.');
   });
 });
+
+// ── in a bottom sheet (`f-phone-and-tablet` t-66) ───────────────────────────
+
+describe('in a bottom sheet, below lg', () => {
+  beforeEach(() => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)' || query === '(pointer: coarse)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+  });
+
+  const openTutor = () =>
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: 'Beside the panel' })).getByRole('button', {
+        name: 'Tutor',
+      })
+    );
+  const tutorSheet = () => screen.getByRole('dialog', { name: 'Tutor' });
+  /** The panel behind the modal sheet, hidden from a screen reader while it is up. */
+  const cutoffBehind = () =>
+    screen
+      .getAllByRole('slider', { name: /CUTOFF/, hidden: true })[0]
+      .getAttribute('aria-valuenow');
+
+  it('sends, streams, applies and undoes from inside the sheet, which the conversation fills', async () => {
+    answer(async (body) => [
+      start,
+      { type: 'content', delta: 'Close the filter a little.' },
+      {
+        type: 'capability_result',
+        capabilitySlug: 'propose_panel_change',
+        result: await proposalFor(body, { set: { 'filter.cutoff': -3 } }),
+      },
+      done,
+    ]);
+    page();
+    openTutor();
+    expect(tutorSheet().contains(tutor())).toBe(true);
+    await ask();
+
+    await waitFor(() =>
+      expect(within(tutor()).getByText('Close the filter a little.')).toBeTruthy()
+    );
+    const log = within(tutor()).getByRole('log');
+    expect(log.className).toContain('flex-1');
+    expect(log.className).not.toContain('max-h-[380px]');
+    // a finger cannot use the corner grip, so the composer does not offer one
+    expect(within(tutor()).getByRole('textbox').className).toContain('pointer-coarse:resize-none');
+
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Apply 1 change' }));
+    expect(cutoffBehind()).toBe('-3');
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Undo' }));
+    expect(cutoffBehind()).toBe('1');
+  });
+
+  it('keeps streaming with its sheet closed, and shows the whole answer when it opens again', async () => {
+    const s = liveStream();
+    fetchMock.mockResolvedValue(okResponse(s.body));
+    page();
+    openTutor();
+    await ask();
+    await act(async () => s.send(start, { type: 'content', delta: 'Turn CUTOFF ' }));
+    await waitFor(() => expect(within(tutor()).getByText('Turn CUTOFF')).toBeTruthy());
+
+    fireEvent.click(within(tutorSheet()).getByRole('button', { name: 'Close Tutor' }));
+    expect(screen.queryByRole('region', { name: 'AI tutor' })).toBeNull();
+    await act(async () => {
+      s.send({ type: 'content', delta: 'down.' }, done);
+      s.close();
+    });
+
+    openTutor();
+    await waitFor(() => expect(within(tutor()).getByText('Turn CUTOFF down.')).toBeTruthy());
+    expect(within(tutor()).queryByText(TUTOR_ERRORS.stopped)).toBeNull();
+  });
+
+  it("opens from the library's empty search with the question in the composer", async () => {
+    page();
+    fireEvent.click(
+      within(screen.getByRole('navigation', { name: 'Beside the panel' })).getByRole('button', {
+        name: 'Library',
+      })
+    );
+    fireEvent.change(within(library()).getByRole('searchbox'), {
+      target: { value: 'glassy bell' },
+    });
+    fireEvent.click(within(library()).getByRole('button', { name: 'ask the tutor to design one' }));
+
+    expect(screen.queryByRole('dialog', { name: 'Library' })).toBeNull();
+    expect(within(tutorSheet()).getByRole('textbox', { name: /Ask the tutor/ })).toHaveValue(
+      'Design a sound: glassy bell'
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
