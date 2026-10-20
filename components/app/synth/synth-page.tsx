@@ -44,7 +44,7 @@ import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
-import { CABLE_COLORS, moduleOf } from '@/lib/app/synths/lib/modules';
+import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { cablesToEngine, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
@@ -67,14 +67,7 @@ import { Lesson, stepIds } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
-import {
-  Captions,
-  Chapters,
-  FullscreenButton,
-  PlayButton,
-  StepTransport,
-  Wordmark,
-} from '@/components/app/synth/player';
+import { FullscreenButton, PlayButton, SoundDesign, Wordmark } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
 import { RotatePrompt, SMALL_QUERY, useMediaQuery } from '@/components/app/synth/rotate-prompt';
 import { revealOnPanel } from '@/components/app/synth/reveal';
@@ -434,6 +427,15 @@ function Synth({
   const openSheet = (id: SheetId | null) => {
     setSheet(id);
     setDockSnap('half');
+  };
+  // The Sound Design strip's sound picker: the library, wherever it is at this width.
+  const libraryRef = useRef<HTMLDivElement | null>(null);
+  const chooseSound = () => {
+    if (small) return openSheet('library');
+    libraryRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    libraryRef.current
+      ?.querySelector<HTMLInputElement>('input[type="search"]')
+      ?.focus({ preventScroll: true });
   };
 
   // ── audio ──
@@ -1136,7 +1138,7 @@ function Synth({
 
   // The regions beside the panel: in the grid at `lg` and up, each in a bottom sheet below it.
   const library = (
-    <div className="flex min-h-0 flex-col gap-5">
+    <div ref={libraryRef} className="flex min-h-0 flex-col gap-5">
       <MySoundsList
         signedIn={authPending ? null : signedIn}
         synthName={def.name}
@@ -1269,8 +1271,6 @@ function Synth({
       patch((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }));
     else if (restoreFrom === 'library' && preset) selectPreset(preset.id);
   };
-  const current = shown && step != null ? shown.steps[step] : undefined;
-  const currentModule = current ? moduleOf(current.module) : null;
 
   return (
     <div className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6">
@@ -1434,19 +1434,25 @@ function Synth({
               Knobs and jacks are locked until you turn it off.
             </p>
           )}
-          {shown && step != null && <Captions steps={shown.steps} step={step} />}
         </div>
 
-        <div className="kys-player-bar pt-1 pb-2.5">
-          {steps.length > 0 && <Chapters steps={steps} step={step} onStep={setStep} />}
-          <div className="kys-scroll flex items-center gap-2 overflow-x-auto px-3 pt-1 text-sm sm:px-4 [&>*]:shrink-0">
+        <SoundDesign
+          steps={steps}
+          step={step}
+          onStep={setStep}
+          soundName={loadedName}
+          soundRef={described?.ref ?? null}
+          onChooseSound={chooseSound}
+        />
+
+        <div className="kys-player-bar py-2">
+          <div className="kys-scroll flex items-center gap-2 overflow-x-auto px-3 text-sm sm:px-4 [&>*]:shrink-0">
             {shown && (
               <PlayButton
                 playing={playing}
                 onClick={() => (playing ? stopRiff() : void playRiff(shown.phrase))}
               />
             )}
-            {steps.length > 0 && <StepTransport n={steps.length} step={step} onStep={setStep} />}
             <button
               type="button"
               onClick={() => void toggleAudio()}
@@ -1464,21 +1470,7 @@ function Synth({
                     ? 'Sound unavailable'
                     : 'Turn sound on'}
             </button>
-            <p className="min-w-[12ch] flex-1 truncate font-mono text-[12.5px] text-(--kys-muted)">
-              {current && currentModule && step != null ? (
-                <>
-                  <span style={{ color: currentModule.color }}>
-                    Step {step + 1}/{steps.length}
-                  </span>{' '}
-                  <span className="text-(--kys-text)">{current.title}</span>
-                </>
-              ) : steps.length > 0 && described ? (
-                <>
-                  <span className="text-(--kys-text)">The finished sound</span> · built in{' '}
-                  {steps.length} step{steps.length === 1 ? '' : 's'}
-                </>
-              ) : null}
-            </p>
+            <span className="flex-1" />
             {synthDef.modular && (
               <Segmented
                 label="Panel layout"

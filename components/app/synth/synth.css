@@ -189,36 +189,142 @@ svg .kys-hit:focus-visible {
     0 0 14px 2px rgb(255 166 58 / 0.35);
 }
 
-/* Under the panel while a step is walked: the step, as subtitles. */
-.kys-captions {
-  margin: 0 auto;
-  padding: 10px 16px 12px;
+/* The Sound Design strip: between the picture and the bar, where a video's chapters
+   and subtitles are. A lower-third: a hairline of the accent along its top, the
+   heading set in the wordmark's face, and the step in a reading column in the
+   middle rather than run across the whole player. */
+.kys-design {
+  position: relative;
+  padding: 14px 16px 16px;
   border-top: 1px solid rgb(255 255 255 / 0.06);
-  background: linear-gradient(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55));
-  animation: kys-fade 0.35s ease-out;
+  background:
+    radial-gradient(70% 140% at 50% 0%, rgb(246 166 58 / 0.07), transparent 70%),
+    linear-gradient(#0d0e13, #0b0c10);
 }
-
-/* The chapters: one segment per step, filled to where the panel is. */
-.kys-chapters {
+.kys-design::before {
+  content: '';
+  position: absolute;
+  inset: -1px 18% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(246 166 58 / 0.55), transparent);
+}
+@media (min-width: 640px) {
+  .kys-design {
+    padding: 16px 24px 18px;
+  }
+}
+.kys-design-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 14px;
+}
+.kys-design-title {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
   margin: 0;
-  padding: 0 14px;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--kys-text);
+}
+.kys-design-title svg {
+  width: 13px;
+  height: 13px;
+  color: var(--kys-accent);
+}
+.kys-design-sub {
+  margin: 4px 0 0;
+  max-width: 62ch;
+  font-size: 13.5px;
+  color: var(--kys-muted);
+}
+
+/* The sound picker: the sound's name as a button, as a video's title opens its list. */
+.kys-sound-pick {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  min-width: min(100%, 260px);
+  max-width: 100%;
+  padding: 7px 12px 8px 14px;
+  border-radius: 12px;
+  text-align: left;
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.09);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.kys-sound-pick:hover,
+.kys-sound-pick:focus-visible {
+  background: rgb(246 166 58 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+}
+.kys-sound-pick-eyebrow {
+  grid-column: 1;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kys-accent);
+}
+.kys-sound-pick-name {
+  grid-column: 1;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--kys-text);
+}
+.kys-sound-pick-ref {
+  grid-column: 1;
+  overflow: hidden;
+  font-size: 12.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--kys-muted);
+}
+.kys-sound-pick-caret {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  color: var(--kys-muted);
+}
+
+/* The chapters: one labelled segment per step, filled to where the panel is. */
+.kys-chapters {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 .kys-chapter {
-  flex-basis: 0;
-  min-width: 10px;
+  flex: 1 1 0;
+  min-width: 0;
 }
 .kys-chapter > button {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 7px;
   width: 100%;
-  height: 18px;
-  padding: 0;
+  padding: 4px 2px 6px;
+  border-radius: 6px;
+  text-align: left;
   background: none;
   border: 0;
+}
+.kys-chapter > button:hover,
+.kys-chapter > button:focus-visible {
+  background: rgb(255 255 255 / 0.04);
 }
 .kys-chapter-track {
   display: block;
@@ -240,28 +346,171 @@ svg .kys-hit:focus-visible {
 }
 .kys-chapter > button:hover .kys-chapter-track,
 .kys-chapter > button:focus-visible .kys-chapter-track {
-  height: 8px;
   background: var(--chapter);
 }
-.kys-chapter-end {
-  flex: none;
-}
-.kys-chapter-end > button {
-  justify-content: center;
-  width: 22px;
-  height: 18px;
-  border-radius: 5px;
+.kys-chapter-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-left: 1px;
+  line-height: 1.2;
   color: var(--kys-faint);
 }
-.kys-chapter-end[data-state='now'] > button {
-  color: var(--kys-accent-ink);
-  background: var(--kys-accent);
+.kys-chapter-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-.kys-chapter-end > button:hover {
+.kys-chapter-num {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+.kys-chapter-module {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.kys-chapter-name {
+  overflow: hidden;
+  font-size: 12.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* The area in its module's colour once the walk has reached it, or always with the finished sound on. */
+.kys-chapter[data-state='done'] .kys-chapter-area,
+.kys-chapter[data-state='now'] .kys-chapter-area {
+  color: color-mix(in oklab, var(--chapter) 85%, white);
+}
+.kys-chapter[data-state='done'] .kys-chapter-name {
+  color: var(--kys-muted);
+}
+.kys-chapter[data-state='now'] .kys-chapter-name {
   color: var(--kys-text);
 }
-.kys-chapter-end[data-state='now'] > button:hover {
+.kys-chapter[data-state='now'] .kys-chapter-num {
   color: var(--kys-accent-ink);
+  background: var(--chapter);
+  box-shadow: none;
+}
+.kys-chapter > button:hover .kys-chapter-label {
+  color: var(--kys-text);
+}
+/* The titles want room: under `lg` the area alone, under `sm` the number alone. */
+@media (max-width: 1023px) {
+  .kys-chapter-name {
+    display: none;
+  }
+}
+@media (max-width: 639px) {
+  .kys-chapter-module {
+    display: none;
+  }
+  .kys-chapter-area {
+    justify-content: center;
+  }
+}
+/* The finished sound: a narrower stop at the end, in the accent while it is on. */
+.kys-chapter-end {
+  flex: 0 0 auto;
+  min-width: 110px;
+  --chapter: var(--kys-accent);
+}
+@media (max-width: 639px) {
+  .kys-chapter-end {
+    min-width: 32px;
+  }
+}
+.kys-chapter-end .kys-chapter-num {
+  box-shadow: none;
+}
+
+/* The step card: Previous, the step in a reading column, Next. */
+.kys-step-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 68ch) auto;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+@media (min-width: 1024px) {
+  .kys-step-card {
+    gap: 28px;
+  }
+}
+.kys-step-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--kys-text);
+  background: rgb(255 255 255 / 0.05);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  transition: background-color 0.15s ease;
+}
+.kys-step-btn:hover:enabled {
+  background: rgb(255 255 255 / 0.1);
+}
+.kys-step-btn:disabled {
+  opacity: 0.3;
+}
+.kys-step-btn.is-primary {
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+  box-shadow: 0 6px 18px -8px rgb(246 166 58 / 0.8);
+}
+.kys-step-btn.is-primary:hover {
+  background: #ffb547;
+}
+@media (max-width: 639px) {
+  .kys-step-btn {
+    padding: 0;
+  }
+}
+.kys-captions {
+  min-height: 84px;
+  padding: 12px 18px 14px;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.35);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+  animation: kys-fade 0.35s ease-out;
+}
+.kys-captions-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.kys-captions-title {
+  margin: 2px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--kys-text);
+  text-wrap: balance;
 }
 
 /* The bar under the picture. */
@@ -330,6 +579,8 @@ svg .kys-hit:focus-visible {
     animation: none;
   }
   .kys-chapter-track,
+  .kys-sound-pick,
+  .kys-step-btn,
   .kys-led {
     transition: none;
   }

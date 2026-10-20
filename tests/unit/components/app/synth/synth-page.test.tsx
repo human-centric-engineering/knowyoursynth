@@ -1303,6 +1303,39 @@ describe('SynthPage player', () => {
     expect(button('Start the lesson')).toBeTruthy();
   });
 
+  it('heads the steps as Sound design and labels each with the part of the synth it works on', () => {
+    twoSteps();
+    const strip = within(player()).getByRole('region', { name: 'Sound design' });
+    const chapters = within(strip).getByRole('list', { name: 'Lesson steps' });
+    const labels = within(chapters)
+      .getAllByRole('listitem')
+      .map((li) => li.textContent);
+    expect(labels).toEqual([
+      '1MixerOpen the mixer',
+      '2FilterClose the filter',
+      'FinishedThe whole sound',
+    ]);
+    expect(within(strip).getByText(/How this sound is built, in 2 steps/)).toBeTruthy();
+  });
+
+  it('keeps the step in a card between Previous and Next, and invites a start with the finished sound on', () => {
+    twoSteps();
+    const strip = within(player()).getByRole('region', { name: 'Sound design' });
+    const card = within(strip).getByText('Everything is on the panel.').closest('[aria-live]');
+    expect(card).toBeTruthy();
+    fireEvent.click(button('Start the lesson'));
+    expect(card?.textContent).toMatch(/Step 1 of 2 · Mixer/);
+    expect(card?.textContent).toMatch(/Loud\./);
+  });
+
+  it('opens the library from the sound’s name in the strip', () => {
+    twoSteps();
+    const pick = within(player()).getByRole('button', { name: 'Choose a sound (now: Two steps)' });
+    expect(pick.textContent).toContain('In the style of two people');
+    fireEvent.click(pick);
+    expect(document.activeElement).toBe(screen.getByRole('searchbox'));
+  });
+
   it('lights a chapter’s controls on the panel while it is pointed at, but not while a lesson is walked', () => {
     twoSteps();
     fireEvent.pointerEnter(button('Lesson step 2: Close the filter'));
