@@ -24,9 +24,18 @@ export interface SynthPickerProps {
   /** Whether a synth is starred; `null` when no star shows (signed out, or still loading). */
   isStarred?: (id: string) => boolean | null;
   onStar?: (id: string) => void;
+  /** `caption`: the player's caption, where the synth's name is the title over the panel and opens the list. */
+  variant?: 'button' | 'caption';
 }
 
-export function SynthPicker({ synths, synthId, onSelect, isStarred, onStar }: SynthPickerProps) {
+export function SynthPicker({
+  synths,
+  synthId,
+  onSelect,
+  isStarred,
+  onStar,
+  variant = 'button',
+}: SynthPickerProps) {
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLDivElement>(null);
@@ -95,16 +104,35 @@ export function SynthPicker({ synths, synthId, onSelect, isStarred, onStar }: Sy
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2.5 rounded-lg border border-(--kys-line) bg-(--kys-surface) py-1.5 pr-2.5 pl-3 text-left hover:border-(--kys-muted)"
+        className={
+          variant === 'caption'
+            ? 'group flex items-end gap-2.5 rounded-lg text-left'
+            : 'flex items-center gap-2.5 rounded-lg border border-(--kys-line) bg-(--kys-surface) py-1.5 pr-2.5 pl-3 text-left hover:border-(--kys-muted)'
+        }
       >
-        <span className="kys-label text-(--kys-faint)">Synth</span>
-        <span className="text-sm font-semibold">{current.name}</span>
+        {variant === 'caption' ? (
+          <span className="flex flex-col">
+            {/* The maker is the page heading's; the button keeps the name it has as a plain button. */}
+            <span aria-hidden="true" className="kys-label text-(--kys-faint)">
+              {current.maker}
+            </span>
+            <span className="kys-display text-[clamp(20px,2.2vw,30px)] leading-[1.05] text-(--kys-text) group-hover:text-(--kys-accent)">
+              <span className="sr-only">Synth </span>
+              {current.name}
+            </span>
+          </span>
+        ) : (
+          <>
+            <span className="kys-label text-(--kys-faint)">Synth</span>
+            <span className="text-sm font-semibold">{current.name}</span>
+          </>
+        )}
         <svg
           width="10"
           height="7"
           viewBox="0 0 10 7"
           aria-hidden="true"
-          className={`text-(--kys-muted) transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`text-(--kys-muted) transition-transform ${variant === 'caption' ? 'mb-2' : ''} ${open ? 'rotate-180' : ''}`}
         >
           <path
             d="M1 1.5 5 5.5 9 1.5"

@@ -484,6 +484,12 @@ describe('geometry helpers', () => {
     expect(y).toBeCloseTo(0);
   });
 
+  it('polar rounds to 1/1000 so server and browser trig render the same attribute', () => {
+    const [x, y] = polar(806, 210, 53, -60);
+    expect(x).toBe(760.101);
+    expect(y).toBe(183.5);
+  });
+
   it('optionIndex falls back to the first option', () => {
     expect(optionIndex({ options: [{ v: 'a', label: 'A' }] }, 'zzz')).toBe(0);
   });

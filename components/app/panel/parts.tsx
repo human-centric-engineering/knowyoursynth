@@ -98,9 +98,13 @@ type SwitchControl = SlideControl | RockerControl | ButtonControl | ToggleContro
 
 const num = (v: ControlValue | null | undefined): number => (typeof v === 'number' ? v : Number(v));
 
+/** Rounded to 1/1000 of a unit: Node and the browser disagree on `Math.sin`/`cos` in the last bit,
+ *  and an unrounded coordinate in an SVG attribute is a hydration mismatch. */
+const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
 export const polar = (cx: number, cy: number, r: number, deg: number): [number, number] => {
   const a = (deg * Math.PI) / 180;
-  return [cx + Math.sin(a) * r, cy - Math.cos(a) * r];
+  return [round3(cx + Math.sin(a) * r), round3(cy - Math.cos(a) * r)];
 };
 
 export function optionIndex(c: { options: ControlOption[] }, v: ControlValue | null | undefined) {

@@ -90,3 +90,247 @@ svg .kys-hit:focus-visible {
     animation: none;
   }
 }
+
+/* ==========================================================================
+ * The player (`f-player`)
+ * ==========================================================================
+ * The panel on a stage at night, whichever theme the site is in: a faceplate reads
+ * best lit against the dark, as a video does. Dark by redeclaring the `--kys-*`
+ * roles to the dark palette's values for the player's subtree (the values in
+ * `app/brand-theme.css`'s dark block), so every control inside it, the bar's
+ * switches, the keyboard and the scope, reads them as it would anywhere else.
+ * BeatBreaker's player does the same with its own tokens.
+ *
+ * No `transform`, `filter` or `backdrop-filter` on the player or anything that holds
+ * the panel: either makes an element the containing block of its fixed
+ * descendants, and the info cards and the magnifier are positioned `fixed`.
+ */
+
+.kys-player {
+  --kys-ground: #111318;
+  --kys-desk: #08090c;
+  --kys-surface: #171a21;
+  --kys-raised: #20242d;
+  --kys-line: #2c323e;
+  --kys-text: #ece9e2;
+  --kys-muted: #a2a8b5;
+  --kys-faint: #6d7688;
+  --kys-accent: #f6a63a;
+  --kys-accent-ink: #1b1204;
+  --kys-good: #7ed267;
+  --kys-warn: #ff7d54;
+  position: relative;
+  color: var(--kys-text);
+  background: var(--kys-desk);
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 40px 80px -40px rgb(0 0 0 / 0.7);
+}
+.kys-player:fullscreen {
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+/* The stage: a warm spotlight from above, falling off into the room, over a faint
+   floor grid. Painted on a layer under the content so nothing it holds is
+   re-rasterised when the light changes. */
+.kys-player-stage {
+  position: relative;
+  border-radius: 20px 20px 0 0;
+  /* Keeps the light (z-index -1) under the stage, not under the page. On the stage
+     rather than the player, so the info cards and the tour, which sit in the player
+     to show full screen, still stack against the page (over its bottom nav). */
+  isolation: isolate;
+}
+.kys-player-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(62% 58% at 50% 46%, rgb(246 166 58 / 0.11), transparent 70%),
+    radial-gradient(90% 70% at 50% 0%, rgb(255 255 255 / 0.05), transparent 60%),
+    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.55)),
+    linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px) 0 0 / 100% 28px,
+    linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px) 0 0 / 28px 100%,
+    #0b0c10;
+}
+
+/* The wordmark in the corner: a broadcast bug with an LED in it. */
+.kys-player-mark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--kys-accent);
+  white-space: nowrap;
+}
+.kys-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #3a2a14;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.kys-led.is-lit {
+  background: #ffb547;
+  box-shadow:
+    0 0 6px 1px rgb(255 166 58 / 0.75),
+    0 0 14px 2px rgb(255 166 58 / 0.35);
+}
+
+/* Under the panel while a step is walked: the step, as subtitles. */
+.kys-captions {
+  margin: 0 auto;
+  padding: 10px 16px 12px;
+  border-top: 1px solid rgb(255 255 255 / 0.06);
+  background: linear-gradient(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55));
+  animation: kys-fade 0.35s ease-out;
+}
+
+/* The chapters: one segment per step, filled to where the panel is. */
+.kys-chapters {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+  padding: 0 14px;
+  list-style: none;
+}
+.kys-chapter {
+  flex-basis: 0;
+  min-width: 10px;
+}
+.kys-chapter > button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 18px;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+.kys-chapter-track {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.14);
+  transition:
+    height 0.15s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.kys-chapter[data-state='done'] .kys-chapter-track {
+  background: color-mix(in oklab, var(--chapter) 70%, #0b0c10);
+}
+.kys-chapter[data-state='now'] .kys-chapter-track {
+  background: var(--chapter);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--chapter) 70%, transparent);
+}
+.kys-chapter > button:hover .kys-chapter-track,
+.kys-chapter > button:focus-visible .kys-chapter-track {
+  height: 8px;
+  background: var(--chapter);
+}
+.kys-chapter-end {
+  flex: none;
+}
+.kys-chapter-end > button {
+  justify-content: center;
+  width: 22px;
+  height: 18px;
+  border-radius: 5px;
+  color: var(--kys-faint);
+}
+.kys-chapter-end[data-state='now'] > button {
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+}
+.kys-chapter-end > button:hover {
+  color: var(--kys-text);
+}
+.kys-chapter-end[data-state='now'] > button:hover {
+  color: var(--kys-accent-ink);
+}
+
+/* The bar under the picture. */
+.kys-player-bar {
+  border-top: 1px solid rgb(255 255 255 / 0.06);
+  background: linear-gradient(#0e1015, #0b0c10);
+}
+.kys-pbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 999px;
+  color: var(--kys-muted);
+}
+.kys-pbtn:hover:enabled {
+  color: var(--kys-text);
+  background: rgb(255 255 255 / 0.07);
+}
+.kys-pbtn:disabled {
+  opacity: 0.35;
+}
+.kys-play {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 16px 4px 4px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--kys-text);
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+.kys-play:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.kys-play-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+  box-shadow: 0 4px 16px -4px rgb(246 166 58 / 0.7);
+}
+.kys-play.is-playing .kys-play-dot {
+  animation: kys-pulse 1.3s ease-in-out infinite;
+}
+
+/* The deck: the keyboard and the scope, under the bar. */
+.kys-player-deck {
+  border-top: 1px solid rgb(255 255 255 / 0.05);
+  border-radius: 0 0 20px 20px;
+  background: linear-gradient(#0d0f13, #111318);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kys-captions,
+  .kys-play.is-playing .kys-play-dot {
+    animation: none;
+  }
+  .kys-chapter-track,
+  .kys-led {
+    transition: none;
+  }
+}

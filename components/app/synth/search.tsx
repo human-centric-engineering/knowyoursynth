@@ -129,7 +129,7 @@ export function Search({ def }: { def: SynthDef }) {
           id="kys-find-list"
           role="listbox"
           aria-label="Matches"
-          className="kys-scroll absolute top-full left-0 z-40 mt-1 max-h-[380px] w-full overflow-y-auto rounded-lg border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl sm:w-[460px]"
+          className="kys-scroll absolute top-full left-0 z-40 mt-1 max-h-[380px] w-full overflow-y-auto rounded-lg border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl sm:right-0 sm:left-auto sm:w-[460px]"
         >
           {results.length === 0 && (
             <li className="px-2.5 py-2 text-sm text-(--kys-muted)">

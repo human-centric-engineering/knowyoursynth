@@ -15,6 +15,7 @@ import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
   findStore,
   focusStore,
+  highlightStore,
   meterStore,
   notesStore,
   pendingStore,
@@ -40,6 +41,8 @@ const { router, engine, events } = vi.hoisted(() => ({
 }));
 
 vi.mock('next/navigation', () => ({ useRouter: () => router }));
+// Signed out. The real client's session-refresh timer can fire after jsdom tears down ("window is not defined").
+vi.mock('@/lib/auth/client', () => ({ useSession: () => ({ data: null, isPending: false }) }));
 vi.mock('@/components/app/synth/engine', () => ({
   getEngine: () => engine,
   listen: (f: (e: { type: string }) => void) => {
@@ -1212,6 +1215,164 @@ describe('SynthPage regions', () => {
     expect(within(stage).getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
     expect(within(stage).getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+  });
+});
+
+// ── the player (`f-player` t-69) ────────────────────────────────────────────
+
+describe('SynthPage player', () => {
+  const TWO_STEPS = sound({
+    id: 'two-steps',
+    name: 'Two steps',
+    ref: 'In the style of two people',
+    blurb: 'A sound in two moves.',
+    steps: [
+      { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+      { title: 'Close the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -2 } },
+    ],
+  });
+  const twoSteps = () => page({ detail: { ...detail, sounds: [TWO_STEPS] } });
+  const cutoff = () =>
+    screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
+  const player = () => screen.getByRole('region', { name: 'Model D panel' });
+
+  it('names the synth in the page heading and puts its picker on the stage', () => {
+    page();
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+      'Behringer Model D · Modelled on the 1970 Minimoog Model D'
+    );
+    expect(within(player()).getByRole('button', { name: /Synth\s*Model D/ })).toBeTruthy();
+  });
+
+  it('draws one chapter per lesson step and one for the finished sound, and goes to the one clicked', () => {
+    twoSteps();
+    const chapters = within(player()).getByRole('list', { name: 'Lesson steps' });
+    expect(
+      within(chapters)
+        .getAllByRole('button')
+        .map((b) => b.getAttribute('aria-label'))
+    ).toEqual([
+      'Lesson step 1: Open the mixer',
+      'Lesson step 2: Close the filter',
+      'The finished sound',
+    ]);
+    // The finished sound is where it opens.
+    expect(button('The finished sound').getAttribute('aria-current')).toBe('step');
+
+    // The finished sound has the second step's cutoff on the panel.
+    expect(cutoff()).toBe('-2');
+
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(button('Lesson step 1: Open the mixer').getAttribute('aria-current')).toBe('step');
+    expect(button('The finished sound').getAttribute('aria-current')).toBeNull();
+    // The panel is at the first step: the cutoff the second step sets is not on it yet.
+    expect(cutoff()).not.toBe('-2');
+
+    fireEvent.click(button('The finished sound'));
+    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
+    expect(cutoff()).toBe('-2');
+  });
+
+  it('says the step the panel is at under the panel, as captions, only while walking', () => {
+    twoSteps();
+    expect(within(player()).queryByText('Loud.')).toBeNull();
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    const captions = within(player()).getByText('Loud.').closest('[aria-live]');
+    expect(captions?.textContent).toMatch(/Step 1 of 2/);
+    expect(captions?.textContent).toMatch(/Open the mixer/);
+  });
+
+  it('starts, steps through and finishes the lesson from the transport', () => {
+    twoSteps();
+    expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(button('Start the lesson'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(button('Next lesson step'));
+    expect(screen.getByText('step 2 of 2')).toBeTruthy();
+
+    fireEvent.click(button('Previous lesson step'));
+    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+
+    fireEvent.click(button('Next lesson step'));
+    fireEvent.click(button('Finish the lesson'));
+    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
+    expect(button('Start the lesson')).toBeTruthy();
+  });
+
+  it('lights a chapter’s controls on the panel while it is pointed at, but not while a lesson is walked', () => {
+    twoSteps();
+    fireEvent.pointerEnter(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual(['filter.cutoff']);
+    fireEvent.pointerLeave(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual([]);
+
+    // Walking, the lesson lights the step the panel is at, and pointing at another chapter leaves it lit.
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    const lit = highlightStore.get();
+    fireEvent.pointerEnter(button('Lesson step 2: Close the filter'));
+    fireEvent.pointerLeave(button('Lesson step 2: Close the filter'));
+    expect(highlightStore.get()).toEqual(lit);
+  });
+
+  it('has no chapters or step buttons for a sound with no steps', () => {
+    page({ detail: { ...detail, sounds: [{ ...FAT_BASS, steps: [] }] } });
+    expect(screen.queryByRole('list', { name: 'Lesson steps' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Start the lesson' })).toBeNull();
+    expect(button('Play riff')).toBeTruthy();
+  });
+
+  it('describes the library sound on the panel under the player', () => {
+    twoSteps();
+    const about = screen.getByRole('region', { name: 'About the sound' });
+    expect(within(about).getByText('In the style of two people')).toBeTruthy();
+    expect(within(about).getByText('A sound in two moves.')).toBeTruthy();
+  });
+
+  it('puts the player full screen where the browser can, and draws no button where it cannot', () => {
+    const { unmount } = page();
+    expect(screen.queryByRole('button', { name: 'Full screen' })).toBeNull();
+    unmount();
+
+    Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+    const request = vi.fn().mockResolvedValue(undefined);
+    const exit = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exit });
+    const was = HTMLElement.prototype.requestFullscreen;
+    HTMLElement.prototype.requestFullscreen = request;
+    try {
+      page();
+      fireEvent.click(button('Full screen'));
+      expect(request).toHaveBeenCalledTimes(1);
+      expect(request.mock.contexts[0]).toBe(player());
+
+      // The browser says the player is full screen: the button leaves it.
+      Object.defineProperty(document, 'fullscreenElement', {
+        configurable: true,
+        value: player(),
+      });
+      act(() => {
+        document.dispatchEvent(new Event('fullscreenchange'));
+      });
+      fireEvent.click(button('Leave full screen'));
+      expect(exit).toHaveBeenCalledTimes(1);
+    } finally {
+      // Own properties shadow jsdom's, so removing them puts its defaults back.
+      Reflect.deleteProperty(document, 'fullscreenElement');
+      Reflect.deleteProperty(document, 'fullscreenEnabled');
+      Reflect.deleteProperty(document, 'exitFullscreen');
+      HTMLElement.prototype.requestFullscreen = was;
+    }
+  });
+
+  it('opens the tour inside the player, so it shows with the player full screen', () => {
+    page();
+    fireEvent.click(button(/Orientation tour/));
+    const tour = screen.getByRole('dialog', { name: 'Orientation tour of the Model D' });
+    expect(player().contains(tour)).toBe(true);
   });
 });
 
