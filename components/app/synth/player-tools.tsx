@@ -1,22 +1,21 @@
 'use client';
 
 /**
- * The player bar's tools (`f-player` t-72): the learning layers as toggles on the bar, as a video player carries its
- * captions button, and how the panel is drawn behind a settings menu, as a video player keeps its quality and speed.
+ * The player's tools (`f-player` t-72): the learning layers as toggles over the panel, as a video player carries its
+ * captions button, and how the panel is drawn, as switches under it.
  *
- * - `LayerToggle`: one layer over the panel (Sections, Dim unused, Sensitive). An icon, with its word from `xl` up;
- *   the full name is the accessible name and the tooltip at every width.
- * - `PlayerSettings`: Hardware or Outline, Modular or Long, the magnifier and the hover cards, in a popover. Not
- *   portalled, so it opens inside the player and comes with it into full screen. Nothing that holds it may carry a
- *   `transform` (see `synth.css`), so its fixed positioning still escapes the bar's scroller.
+ * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect, Tutor over it; Piano,
+ *   Harmonics, Effects on the bar). An icon, with its word from `xl` up; the full name is the
+ *   accessible name and the tooltip at every width.
+ * - `PlayerSettings`: under the panel, by the search. Hardware or Outline, Modular or Long, the magnifier and the
+ *   hover help, all on show as a row of switches, each named, with what it does on hover.
  *
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import * as Popover from '@radix-ui/react-popover';
-import { Settings } from 'lucide-react';
 import type { ReactNode, Ref } from 'react';
 import { Segmented } from '@/components/app/synth/bar-controls';
+import { PlayerTip } from '@/components/app/synth/player-tip';
 
 export function LayerToggle({
   label,
@@ -24,6 +23,7 @@ export function LayerToggle({
   title,
   icon,
   on,
+  filled = false,
   onClick,
   ref,
 }: {
@@ -31,26 +31,30 @@ export function LayerToggle({
   label: string;
   /** The word on the bar from `xl` up. */
   short: string;
+  /** What it does, in its tooltip. */
   title: string;
   icon: ReactNode;
   on: boolean;
+  /** What it controls is switched on (the effects, say), whether or not it is open: the button is filled. */
+  filled?: boolean;
   onClick: () => void;
   /** For a toggle that something else hands focus back to when it closes. */
   ref?: Ref<HTMLButtonElement>;
 }) {
   return (
-    <button
-      ref={ref}
-      type="button"
-      aria-pressed={on}
-      aria-label={label}
-      title={title}
-      onClick={onClick}
-      className={`kys-layer ${on ? 'is-on' : ''}`}
-    >
-      {icon}
-      <span className="max-xl:hidden">{short}</span>
-    </button>
+    <PlayerTip name={label} help={title}>
+      <button
+        ref={ref}
+        type="button"
+        aria-pressed={on}
+        aria-label={label}
+        onClick={onClick}
+        className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''}`}
+      >
+        {icon}
+        <span className="max-xl:hidden">{short}</span>
+      </button>
+    </PlayerTip>
   );
 }
 
@@ -78,94 +82,74 @@ export function PlayerSettings({
   onTips: (on: boolean) => void;
 }) {
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild>
-        <button
-          type="button"
-          className="kys-pbtn"
-          aria-label="Panel settings"
-          title="Panel settings"
-        >
-          <Settings size={18} aria-hidden="true" />
-        </button>
-      </Popover.Trigger>
-      <Popover.Content
-        side="top"
-        align="end"
-        sideOffset={10}
-        collisionPadding={12}
-        aria-label="Panel settings"
-        className="kys-menu"
+    <div role="group" aria-label="Panel settings" className="kys-settings">
+      <Setting
+        name="Drawn as"
+        help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
       >
-        <p className="kys-menu-title">Panel settings</p>
-        <Row
-          name="Drawn as"
-          help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
+        <Segmented
+          label="Panel view"
+          options={[
+            [false, 'Hardware'],
+            [true, 'Outline'],
+          ]}
+          value={view.outline}
+          onChange={(outline) => onView({ ...view, outline })}
+        />
+      </Setting>
+      {modular && (
+        <Setting
+          name="Layout"
+          help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
         >
           <Segmented
-            label="Panel view"
+            label="Panel layout"
             options={[
-              [false, 'Hardware'],
-              [true, 'Outline'],
+              [false, 'Modular'],
+              [true, 'Long'],
             ]}
-            value={view.outline}
-            onChange={(outline) => onView({ ...view, outline })}
+            value={view.long}
+            onChange={(long) => onView({ ...view, long })}
           />
-        </Row>
-        {modular && (
-          <Row
-            name="Layout"
-            help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
-          >
-            <Segmented
-              label="Panel layout"
-              options={[
-                [false, 'Modular'],
-                [true, 'Long'],
-              ]}
-              value={view.long}
-              onChange={(long) => onView({ ...view, long })}
-            />
-          </Row>
-        )}
-        <Row name="Magnifier" help="A lens that follows the pointer over the panel.">
-          <Segmented
-            label="Magnifier"
-            options={[
-              [0, 'Off'],
-              [2, '2×'],
-              [3, '3×'],
-            ]}
-            value={zoom}
-            onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
-          />
-        </Row>
-        <Row
-          name="Hover cards"
-          help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
-        >
-          <Segmented
-            label="Hover cards"
-            options={[
-              [true, 'On'],
-              [false, 'Off'],
-            ]}
-            value={tipsOn}
-            onChange={onTips}
-          />
-        </Row>
-      </Popover.Content>
-    </Popover.Root>
+        </Setting>
+      )}
+      <Setting name="Magnifier" help="A lens that follows the pointer over the panel.">
+        <Segmented
+          label="Magnifier"
+          options={[
+            [0, 'Off'],
+            [2, '2×'],
+            [3, '3×'],
+          ]}
+          value={zoom}
+          onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
+        />
+      </Setting>
+      <Setting
+        name="Hover help"
+        help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
+      >
+        <Segmented
+          label="Hover help"
+          options={[
+            [true, 'On'],
+            [false, 'Off'],
+          ]}
+          value={tipsOn}
+          onChange={onTips}
+        />
+      </Setting>
+    </div>
   );
 }
 
-function Row({ name, help, children }: { name: string; help: string; children: ReactNode }) {
+/** One setting: its name, which explains it on hover, over its switch. */
+function Setting({ name, help, children }: { name: string; help: string; children: ReactNode }) {
   return (
-    <div className="kys-menu-row">
-      <div className="min-w-0">
-        <p className="text-[13px] font-semibold text-(--kys-text)">{name}</p>
-        <p className="text-xs leading-snug text-(--kys-faint)">{help}</p>
-      </div>
+    <div className="kys-setting">
+      <PlayerTip name={name} help={help}>
+        <span className="kys-setting-name">{name}</span>
+      </PlayerTip>
       {children}
     </div>
   );

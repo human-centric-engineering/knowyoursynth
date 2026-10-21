@@ -22,6 +22,7 @@ import { modularDef } from '@/lib/app/synths/lib/layout';
 import { isShown, presetState } from '@/lib/app/synths/lib/patch';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
+import { openSide, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -80,12 +81,15 @@ afterEach(() => new Promise<void>((r) => setTimeout(r)));
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   window.history.replaceState(null, '', window.location.pathname);
   engine.send.mockReset();
 });
 
+// The library opens over the bar from the sound picker (t-74).
 const library = () => {
+  openSide('Sounds');
   const section = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
   if (!section) throw new Error('no library');
   return section;
@@ -145,7 +149,9 @@ describe.each(LISTED)('the %s page', (id) => {
 
   it('opens with every sound in the library and every control and jack on the panel', () => {
     const { container } = page();
-    expect(screen.getByRole('heading', { name: `About this ${def.name}` })).toBeTruthy();
+    expect(
+      screen.getByRole('heading', { name: `About this ${def.name}`, hidden: true })
+    ).toBeTruthy();
     expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual(
       detail.sounds.map((s) => s.name)
     );
@@ -225,7 +231,6 @@ describe.each(MODULAR)('the %s page’s panel layout', (id) => {
     expect(modules).not.toBe(long);
     const panel = () => frontPanel(def);
     const first = detail.sounds[0];
-    fireEvent.click(screen.getByRole('button', { name: 'Panel settings' }));
     const layout = within(screen.getByRole('group', { name: 'Panel layout' }));
     const pressed = (name: string) =>
       layout.getByRole('button', { name }).getAttribute('aria-pressed');

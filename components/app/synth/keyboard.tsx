@@ -208,7 +208,7 @@ export function Keyboard({
                     {...keyProps(n)}
                     className={`flex h-full w-full items-end justify-center rounded-b-[5px] border border-black/25 pb-1 font-mono text-[10px] ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'bg-[#f1efe9] text-black/40'}`}
                   >
-                    {(n - base) % 12 === 0 ? `C${Math.floor(n / 12) - 1}` : qLabel(n) || ''}
+                    {qLabel(n) || ''}
                   </button>
                   {sharp != null && (
                     <button
@@ -223,6 +223,17 @@ export function Keyboard({
                 </div>
               );
             })}
+          </div>
+          {/* The octaves' Cs, under their keys, so the keys keep the letters that play them. */}
+          <div aria-hidden="true" className="flex px-1 pt-1">
+            {whites.map((n) => (
+              <span
+                key={n}
+                className="flex-1 text-center font-mono text-[10px] leading-none text-(--kys-faint)"
+              >
+                {(n - base) % 12 === 0 ? `C${Math.floor(n / 12) - 1}` : ''}
+              </span>
+            ))}
           </div>
         </div>
       </div>

@@ -116,7 +116,7 @@ export function SynthPicker({
             <span aria-hidden="true" className="kys-label text-(--kys-faint)">
               {current.maker}
             </span>
-            <span className="kys-display text-[clamp(20px,2.2vw,30px)] leading-[1.05] text-(--kys-text) group-hover:text-(--kys-accent)">
+            <span className="kys-display text-[clamp(20px,1.8vw,26px)] leading-[1.05] whitespace-nowrap text-(--kys-text) group-hover:text-(--kys-accent)">
               <span className="sr-only">Synth </span>
               {current.name}
             </span>

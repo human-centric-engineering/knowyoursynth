@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { FieldHelp } from '@/components/ui/field-help';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import { StarButton } from '@/components/app/synth/favourites';
+import { PlayerTip } from '@/components/app/synth/player-tip';
 import { sharedSoundHref, synthHref } from '@/components/app/synth/routes';
 import { SoundSharing } from '@/components/app/sharing/sound-sharing';
 import { soundStateLabel } from '@/components/app/sharing/visibility';
@@ -285,12 +286,19 @@ export function SoundActions({
   }, [openId]);
 
   const newLabel = credit && !open ? 'Save a copy' : 'Save';
+  // What the button is for, in its tooltip: a library sound is never changed, so keeping it means a copy of one's own.
+  const newHelp =
+    credit && !open
+      ? `Keep this sound, as the panel has it now, in My sounds as your own: rename it, change it and come back to it. ${credit.name} in the library stays as it is.`
+      : 'Keep the panel as it is now as a new sound in My sounds, to rename, change and come back to.';
 
   if (!signedIn)
     return (
-      <Link href={signInHref} className={buttonClass} title="Sign in to keep this sound">
-        {newLabel}…
-      </Link>
+      <PlayerTip name={newLabel} help={`Sign in first. ${newHelp}`}>
+        <Link href={signInHref} className={buttonClass}>
+          {newLabel}…
+        </Link>
+      </PlayerTip>
     );
 
   const run = async (doing: string, fn: () => Promise<void>, existing = true) => {
@@ -367,7 +375,7 @@ export function SoundActions({
   };
 
   return (
-    <div className="mt-2 flex flex-col items-start gap-2 text-sm">
+    <div className="flex flex-col items-start gap-2 text-sm">
       <div className="flex flex-wrap items-center gap-2">
         {open ? (
           <>
@@ -414,14 +422,16 @@ export function SoundActions({
             </button>
           </>
         ) : (
-          <button
-            type="button"
-            aria-expanded={form === 'new'}
-            onClick={() => toggle('new')}
-            className={buttonClass}
-          >
-            {newLabel}…
-          </button>
+          <PlayerTip name={newLabel} help={newHelp}>
+            <button
+              type="button"
+              aria-expanded={form === 'new'}
+              onClick={() => toggle('new')}
+              className={buttonClass}
+            >
+              {newLabel}…
+            </button>
+          </PlayerTip>
         )}
       </div>
       {confirmDelete && open && (

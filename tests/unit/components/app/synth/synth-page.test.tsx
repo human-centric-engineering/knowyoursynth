@@ -24,7 +24,7 @@ import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/stora
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
-import { openSide } from '@/tests/helpers/synth-side';
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -186,13 +186,9 @@ function page(over: Partial<SynthPageProps> = {}) {
 const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-/** A control in the player's ⚙ menu (t-72), opening the menu first if it is shut. */
-const setting = (name: string | RegExp) => {
-  if (!screen.queryByRole('dialog', { name: 'Panel settings' })) {
-    fireEvent.click(button('Panel settings'));
-  }
-  return button(name);
-};
+/** A control in the panel settings under the panel (t-72). */
+const setting = (name: string | RegExp) =>
+  within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const paramsSent = () =>
@@ -202,6 +198,7 @@ const paramsSent = () =>
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
   engine.setFx.mockReset();
@@ -261,14 +258,14 @@ describe('SynthPage layout', () => {
     expect(freshLoaded('model-d')).toBeDefined();
   });
 
-  it('shows the synth heading, the loaded sound and the About summary', () => {
+  it('shows the synth heading, the loaded sound, and About › for the summary', () => {
     page();
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
     expect(loadedName()).toBe('Fat bass');
     expect(screen.getByText('Loaded:')).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
   });
 
@@ -307,12 +304,13 @@ describe('SynthPage layout', () => {
   it('fits the panel to the page, and zooms it in its scroller with the controls still live', () => {
     page();
     const frame = screen.getByTestId('panel-frame');
-    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+    // The width the screen gives it, capped at 1560px and by the screen's height (see `panelFrameStyle`), times the scale.
+    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(1560px, /);
     expect(frame.className).not.toContain('min-w-');
 
     fireEvent.click(button('Zoom in'));
     fireEvent.click(button('Zoom in'));
-    expect(frame.style.width).toBe('calc(2 * min(100%, 1560px))');
+    expect(frame.style.width).toMatch(/^calc\(1\.2 \* min\(100%, min\(1560px, /);
 
     // Laid out bigger, not magnified: a knob still turns from the keyboard.
     const cutoff = screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
@@ -321,7 +319,7 @@ describe('SynthPage layout', () => {
     expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
 
     fireEvent.click(button('Fit the panel to the page'));
-    expect(frame.style.width).toBe('calc(1 * min(100%, 1560px))');
+    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(1560px, /);
   });
 
   it('puts the rotate note above the panel on a small screen, and not on a wide one', () => {
@@ -375,15 +373,15 @@ describe('SynthPage engine', () => {
     expect(after).not.toEqual(before);
   });
 
-  it('starts the audio on "Turn sound on", then reads "Sound on"', async () => {
+  it('starts the audio on "Unmute", then offers "Mute"', async () => {
     page();
     await act(async () => {
-      fireEvent.click(button('Turn sound on'));
+      fireEvent.click(button('Unmute'));
     });
     // `resume` starts the engine the first time (Engine.resume); the page does not choose.
     expect(engine.resume).toHaveBeenCalledTimes(1);
-    const on = button('Sound on');
-    expect(on.getAttribute('aria-pressed')).toBe('true');
+    expect(button('Mute')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Unmute' })).toBeNull();
     expect(meterStore.get().power).toBe(true);
   });
 
@@ -391,7 +389,7 @@ describe('SynthPage engine', () => {
     engine.resume.mockRejectedValue(new Error('no audio'));
     page();
     await act(async () => {
-      fireEvent.click(button('Turn sound on'));
+      fireEvent.click(button('Unmute'));
     });
     expect(button('Sound unavailable')).toBeTruthy();
   });
@@ -399,7 +397,7 @@ describe('SynthPage engine', () => {
   it('opens already on when the engine was left running by another synth', () => {
     engine.running = true;
     page();
-    expect(button('Sound on').getAttribute('aria-pressed')).toBe('true');
+    expect(button('Mute')).toBeTruthy();
   });
 
   it('suspends the engine and clears the held notes when sound is turned off', async () => {
@@ -408,11 +406,11 @@ describe('SynthPage engine', () => {
     act(() => notesStore.set([60]));
 
     await act(async () => {
-      fireEvent.click(button('Sound on'));
+      fireEvent.click(button('Mute'));
     });
 
     expect(engine.suspend).toHaveBeenCalledTimes(1);
-    expect(button('Turn sound on')).toBeTruthy();
+    expect(button('Unmute')).toBeTruthy();
     expect(notesStore.get()).toEqual([]);
     expect(meterStore.get().power).toBe(false);
   });
@@ -481,6 +479,7 @@ describe('SynthPage patch', () => {
 
   it('puts one control back from the inspector with "Put it back"', () => {
     page();
+    openSide('Inspect');
     fireEvent.click(button('A-440'));
     act(() => focusStore.set({ kind: 'control', id: 'out.a440', x: 0, y: 0, tip: false }));
 
@@ -492,6 +491,7 @@ describe('SynthPage patch', () => {
   it('offers no "Put it back" during a lesson step, as the panel and the card do not', () => {
     storeSession({ presetId: 'fat-bass', step: 0, values: { 'filter.cutoff': 5 }, cables: [] });
     page();
+    openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
     expect(screen.getByText(UNUSUAL)).toBeTruthy(); // the inspector is showing the control
     expect(screen.queryByRole('button', { name: 'Put it back' })).toBeNull();
@@ -502,9 +502,11 @@ describe('SynthPage patch', () => {
     storeSession({ presetId: 'fat-bass', step: 3, values: {}, cables: [] });
     page();
     expect(loadedName()).toBe('Fat bass');
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(stepShown()).toBeNull();
     openSide('Lesson');
-    expect(screen.getByRole('tab', { name: /Build it/ }).textContent).toContain('1 steps');
+    const card = screen.getByTestId('lesson-card');
+    expect(card.textContent).toContain('The finished sound');
+    expect(within(card).getByRole('button', { name: /Build it step by step/ })).toBeTruthy();
   });
 
   it('keeps an unsaved move when the route re-renders with an equal synth', () => {
@@ -533,6 +535,7 @@ describe('SynthPage patch', () => {
 
   it('shows the inspector note the catalogue attached to a control', () => {
     page();
+    openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
     expect(screen.getByText(UNUSUAL)).toBeTruthy();
     expect(screen.getByText('Almost shut for a dull thud.')).toBeTruthy();
@@ -571,6 +574,7 @@ describe('SynthPage patch', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
+    openSide('Inspect');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
 
     fireEvent.click(button('Unplug all'));
@@ -582,6 +586,7 @@ describe('SynthPage patch', () => {
 
   it('plugs a cable in from the inspector and lists it', () => {
     page();
+    openSide('Inspect');
     act(() =>
       focusStore.set({
         kind: 'cable',
@@ -603,6 +608,7 @@ describe('SynthPage patch', () => {
 
   it('plugs the same cable in only once', () => {
     page();
+    openSide('Inspect');
     const focusCable = () =>
       act(() =>
         focusStore.set({
@@ -633,6 +639,7 @@ describe('SynthPage patch', () => {
       ],
     });
     page();
+    openSide('Inspect');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 2' })).toBeTruthy();
 
     fireEvent.click(button('Unplug LFO (triangle) → CUT CV'));
@@ -654,8 +661,7 @@ describe('SynthPage patch', () => {
 
   it('turns hover cards off and on, and remembers it', () => {
     page();
-    const cards = () => within(screen.getByRole('group', { name: 'Hover cards' }));
-    setting('Panel settings');
+    const cards = () => within(screen.getByRole('group', { name: 'Hover help' }));
     expect(cards().getByRole('button', { name: 'On' }).getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(cards().getByRole('button', { name: 'Off' }));
     expect(cards().getByRole('button', { name: 'Off' }).getAttribute('aria-pressed')).toBe('true');
@@ -1135,6 +1141,7 @@ describe('SynthPage session', () => {
 
   it('writes cables as [from, to] pairs', () => {
     page();
+    openSide('Inspect');
     act(() =>
       focusStore.set({
         kind: 'cable',
@@ -1175,6 +1182,7 @@ describe('SynthPage session', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
+    openSide('Inspect');
     expect(loadedName()).toBe('Wobble lead');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
     expect(screen.getByText('1 control moved')).toBeTruthy(); // mix.osc1 is 3, the sound leaves it at 8
@@ -1211,9 +1219,28 @@ describe('SynthPage session', () => {
 
 // ── the effects rack on the page ────────────────────────────────────────────
 
+describe('SynthPage piano', () => {
+  it('has the piano out on a tall screen and put away on a short one, until the Piano button says otherwise', () => {
+    const { unmount } = page();
+    expect(screen.getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
+    unmount();
+
+    tallScreen(800);
+    page();
+    expect(screen.queryByRole('slider', { name: 'Mod wheel' })).toBeNull();
+    expect(button('Piano').getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(button('Piano'));
+    expect(screen.getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
+    // The choice is kept, and wins over the screen's height from then on.
+    expect(readStored('kys.deck')).toBe(true);
+  });
+});
+
 describe('SynthPage effects', () => {
   it('sends a rack change to the engine and stores it', () => {
     page();
+    // The rack opens in the card over the panel from the player bar (t-74).
+    fireEvent.click(button('Effects'));
     fireEvent.click(screen.getByRole('button', { name: /^Effects off$/ }));
 
     expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: true }));
@@ -1223,13 +1250,15 @@ describe('SynthPage effects', () => {
 
 // The regions the page lays out.
 describe('SynthPage regions', () => {
-  it('has the Keyboard and the rack in the player, and the inspector in its drawer', () => {
+  it('has the keyboard in the player, and the rack and the inspector in its card, one at a time', () => {
     page();
-    openSide('Inspect');
     const stage = screen.getByRole('region', { name: 'Model D panel' });
     expect(within(stage).getByRole('slider', { name: 'Mod wheel' })).toBeTruthy();
+    fireEvent.click(button('Effects'));
     expect(within(stage).getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+    openSide('Inspect');
+    expect(within(stage).getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
+    expect(within(stage).queryByRole('heading', { name: /Effects rack/ })).toBeNull();
   });
 });
 
@@ -1278,49 +1307,49 @@ describe('SynthPage player', () => {
     expect(cutoff()).toBe('-2');
 
     fireEvent.click(button('Lesson step 1: Open the mixer'));
-    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 2');
     expect(button('Lesson step 1: Open the mixer').getAttribute('aria-current')).toBe('step');
     expect(button('The finished sound').getAttribute('aria-current')).toBeNull();
     // The panel is at the first step: the cutoff the second step sets is not on it yet.
     expect(cutoff()).not.toBe('-2');
 
     fireEvent.click(button('The finished sound'));
-    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
+    expect(stepShown()).toBeNull();
     expect(cutoff()).toBe('-2');
   });
 
-  it('says the step the panel is at under the panel, as captions, only while walking', () => {
+  it('opens a chapter in the card over the panel, saying which step it is, only while walking', () => {
     twoSteps();
     expect(within(player()).queryByText('Loud.')).toBeNull();
     fireEvent.click(button('Lesson step 1: Open the mixer'));
-    const captions = within(player()).getByText('Loud.').closest('[aria-live]');
-    expect(captions?.textContent).toMatch(/Step 1 of 2/);
-    expect(captions?.textContent).toMatch(/Open the mixer/);
+    const card = within(player()).getByTestId('lesson-card');
+    expect(card.textContent).toMatch(/Step 1 of 2 · Mixer/);
+    expect(card.textContent).toMatch(/Open the mixer/);
+    expect(within(card).getByText('Loud.')).toBeTruthy();
   });
 
-  it('starts, steps through and finishes the lesson from the transport', () => {
+  it('starts, steps through and finishes the lesson from the card', () => {
     twoSteps();
-    expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
-
-    fireEvent.click(button('Start the lesson'));
-    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    fireEvent.click(button('The finished sound'));
+    fireEvent.click(button('Build it step by step'));
+    expect(stepShown()).toBe('step 1 of 2');
     expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
 
     fireEvent.click(button('Next lesson step'));
-    expect(screen.getByText('step 2 of 2')).toBeTruthy();
+    expect(stepShown()).toBe('step 2 of 2');
 
     fireEvent.click(button('Previous lesson step'));
-    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 2');
 
     fireEvent.click(button('Next lesson step'));
     fireEvent.click(button('Finish the lesson'));
-    expect(screen.queryByText(/^step \d of 2$/)).toBeNull();
-    expect(button('Start the lesson')).toBeTruthy();
+    expect(stepShown()).toBeNull();
+    expect(button('Build it step by step')).toBeTruthy();
   });
 
   it('heads the steps as Sound design and labels each with the part of the synth it works on', () => {
     twoSteps();
-    const strip = within(player()).getByRole('region', { name: 'Sound design' });
+    const strip = within(player()).getByRole('region', { name: 'Learn sound design' });
     const chapters = within(strip).getByRole('list', { name: 'Lesson steps' });
     const labels = within(chapters)
       .getAllByRole('listitem')
@@ -1328,25 +1357,26 @@ describe('SynthPage player', () => {
     expect(labels).toEqual([
       '1MixerOpen the mixer',
       '2FilterClose the filter',
-      'FinishedThe whole sound',
+      'FinishedHow it works',
     ]);
-    expect(within(strip).getByText(/How this sound is built, in 2 steps/)).toBeTruthy();
   });
 
   it('keeps the step in a card between Previous and Next, and invites a start with the finished sound on', () => {
     twoSteps();
-    const strip = within(player()).getByRole('region', { name: 'Sound design' });
-    const card = within(strip).getByText('Everything is on the panel.').closest('[aria-live]');
-    expect(card).toBeTruthy();
-    fireEvent.click(button('Start the lesson'));
-    expect(card?.textContent).toMatch(/Step 1 of 2 · Mixer/);
-    expect(card?.textContent).toMatch(/Loud\./);
+    fireEvent.click(button('The finished sound'));
+    const card = within(player()).getByTestId('lesson-card');
+    expect(card.textContent).toMatch(/The finished sound/);
+    fireEvent.click(within(card).getByRole('button', { name: /Build it step by step/ }));
+    expect(card.textContent).toMatch(/Step 1 of 2 · Mixer/);
+    expect(card.textContent).toMatch(/Loud\./);
+    expect(within(card).getByRole('button', { name: 'Previous lesson step' })).toBeTruthy();
+    expect(within(card).getByRole('button', { name: 'Next lesson step' })).toBeTruthy();
   });
 
-  it('opens the library over the strip from the sound’s name, and closes it from there again', async () => {
+  it('opens the library over the bar from the sound’s name, and closes it from there again', async () => {
     twoSteps();
     const pick = within(player()).getByRole('button', { name: 'Choose a sound (now: Two steps)' });
-    expect(pick.textContent).toContain('In the style of two people');
+    expect(pick.getAttribute('title')).toContain('In the style of two people');
     expect(screen.queryByRole('searchbox')).toBeNull();
     fireEvent.click(pick);
     expect(pick.getAttribute('aria-expanded')).toBe('true');
@@ -1566,6 +1596,7 @@ describe('SynthPage sounds', () => {
   it("puts a control back to the first sound's value when the stored sound is unknown", () => {
     storeSession({ presetId: 'gone', step: null, values: { 'filter.cutoff': 3 }, cables: [] });
     page();
+    openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: 'filter.cutoff', x: 0, y: 0, tip: false }));
 
     fireEvent.click(button('Put it back'));
@@ -1594,6 +1625,7 @@ describe('SynthPage patch edge cases', () => {
 
   it('does not duplicate a cable plugged in twice in one go', () => {
     page();
+    openSide('Inspect');
     focusLfoCable();
     const plug = button('Plug it in');
 
@@ -1646,6 +1678,7 @@ describe('SynthPage patch edge cases', () => {
         cables: [['j.lfoTri', 'j.cutCv']],
       });
       page();
+      openSide('Inspect');
 
       drag(plugs()[0], 'j.lfoTri', 'j.mix');
 
@@ -1665,6 +1698,7 @@ describe('SynthPage patch edge cases', () => {
         ],
       });
       page();
+      openSide('Inspect');
       expect(plugs()).toHaveLength(4);
 
       drag(plugs()[2], 'j.lfoSq', 'j.lfoTri'); // the second cable's source onto the first's

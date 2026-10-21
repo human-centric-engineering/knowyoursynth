@@ -141,12 +141,15 @@ describe('Keyboard keys', () => {
     expect(key(40).className).toBe(plain);
   });
 
-  it('labels the C keys and the computer-key mapping', () => {
+  it('labels the computer-key mapping on the keys, and the Cs under them', () => {
     setup({ octave: 0 });
-    // The first key is C2 (note 36 = C2 in the C-1 convention).
-    expect(key(36).textContent).toBe('C2');
-    // The QWERTY row starts on the second octave's C: 'A' is note 48.
-    expect(key(48).textContent).toBe('C3');
+    // The first key is C2 (note 36 = C2 in the C-1 convention): not a computer key, so blank, with C2 under it.
+    expect(key(36).textContent).toBe('');
+    // The QWERTY row starts on the second octave's C: 'A' is note 48, and keeps its letter.
+    expect(key(48).textContent).toBe('A');
+    expect(screen.getByText('C2')).toBeInTheDocument();
+    expect(screen.getByText('C3')).toBeInTheDocument();
+    expect(screen.getByText('C5')).toBeInTheDocument();
     expect(key(50).textContent).toBe('S');
     expect(key(49).textContent).toBe('W');
   });

@@ -14,7 +14,17 @@ import type { SearchRow } from '@/lib/app/synths/lib/areas';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { findStore, focusStore } from '@/components/app/synth/stores';
 
-export function Search({ def }: { def: SynthDef }) {
+export function Search({
+  def,
+  up = false,
+  className = 'w-full min-w-0 sm:w-[380px] lg:w-[240px] xl:w-[300px]',
+}: {
+  def: SynthDef;
+  /** Open the matches above the box, for a search at the foot of the screen (the player bar). */
+  up?: boolean;
+  /** The box's width. */
+  className?: string;
+}) {
   const [q, setQ] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -73,7 +83,7 @@ export function Search({ def }: { def: SynthDef }) {
   };
 
   return (
-    <div className="relative w-full min-w-0 sm:w-[380px]">
+    <div className={`relative ${className}`}>
       <label htmlFor="kys-find" className="sr-only">
         Find a knob, jack or section on the {def.name}
       </label>
@@ -129,7 +139,7 @@ export function Search({ def }: { def: SynthDef }) {
           id="kys-find-list"
           role="listbox"
           aria-label="Matches"
-          className="kys-scroll absolute top-full left-0 z-40 mt-1 max-h-[380px] w-full overflow-y-auto rounded-lg border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl sm:right-0 sm:left-auto sm:w-[460px]"
+          className={`kys-scroll absolute left-0 z-40 max-h-[min(380px,60vh)] w-full overflow-y-auto rounded-lg border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl sm:right-0 sm:left-auto sm:w-[460px] ${up ? 'bottom-full mb-1' : 'top-full mt-1'}`}
         >
           {results.length === 0 && (
             <li className="px-2.5 py-2 text-sm text-(--kys-muted)">

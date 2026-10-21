@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * The player bar's tools: a layer toggle, and the ⚙ menu that holds how the panel is drawn.
+ * The player bar's tools: a layer toggle, and the panel settings, on show under the panel.
  *
  * @see components/app/synth/player-tools.tsx
  */
@@ -27,26 +27,17 @@ function settings(
       onTips={onTips}
     />
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Panel settings' }));
-  const menu = within(screen.getByRole('dialog', { name: 'Panel settings' }));
+  const menu = within(screen.getByRole('group', { name: 'Panel settings' }));
   return { onView, onZoom, onTips, menu };
 }
 
 describe('PlayerSettings', () => {
-  it('is shut until its button is pressed', () => {
-    render(
-      <PlayerSettings
-        view={{ outline: false, long: false }}
-        onView={vi.fn()}
-        modular={false}
-        zoom={0}
-        onZoom={vi.fn()}
-        tipsOn
-        onTips={vi.fn()}
-      />
-    );
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Outline' })).toBeNull();
+  it('shows every setting at once, with no button to open them', () => {
+    const { menu } = settings({ modular: true });
+    expect(screen.queryByRole('button', { name: 'Panel settings' })).toBeNull();
+    for (const name of ['Panel view', 'Panel layout', 'Magnifier', 'Hover help']) {
+      expect(menu.getByRole('group', { name })).toBeTruthy();
+    }
   });
 
   it('sends the magnifier choice, and Off as 0', () => {
@@ -75,7 +66,7 @@ describe('PlayerSettings', () => {
   it('turns the hover cards off', () => {
     const { menu, onTips } = settings();
     fireEvent.click(
-      within(menu.getByRole('group', { name: 'Hover cards' })).getByRole('button', { name: 'Off' })
+      within(menu.getByRole('group', { name: 'Hover help' })).getByRole('button', { name: 'Off' })
     );
     expect(onTips).toHaveBeenCalledExactlyOnceWith(false);
   });

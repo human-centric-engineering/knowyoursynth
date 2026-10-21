@@ -34,7 +34,7 @@ import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/cata
 import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import { darkBassDesign, panelContext } from '@/tests/helpers/tutor';
-import { openSide } from '@/tests/helpers/synth-side';
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -238,10 +238,10 @@ const tutor = () => {
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
-// At `lg` and up the lesson and the library are in their drawers (t-70): each helper opens the one it reads.
+// At `lg` and up the lesson and the library open over the panel (t-74): each helper opens the one it reads.
 const lessonPanel = () => {
   openSide('Lesson');
-  return screen.getByRole('article', { name: /./ });
+  return screen.getByTestId('lesson-card');
 };
 const library = () => {
   openSide('Sounds');
@@ -286,6 +286,7 @@ async function ask(text = 'Make this sound darker') {
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = true;
   auth.pending = false;
@@ -535,8 +536,13 @@ describe('a designed sound', () => {
     const lesson = lessonPanel();
     expect(within(lesson).getByRole('heading', { level: 2 }).textContent).toBe('Dark round bass');
     expect(within(lesson).getByText('AI designed · check by ear')).toBeTruthy();
-    expect(within(lesson).getByText(darkBassDesign().blurb)).toBeTruthy();
-    expect(within(lesson).getByRole('tab', { name: /Build it/ }).textContent).toContain('3 steps');
+    expect(within(lesson).getByText(darkBassDesign().how)).toBeTruthy();
+    expect(within(lesson).getByRole('button', { name: /Build it step by step/ })).toBeTruthy();
+    expect(
+      within(screen.getByRole('region', { name: 'About the sound' })).getByText(
+        darkBassDesign().blurb
+      )
+    ).toBeTruthy();
     expect(within(library()).queryAllByRole('button', { current: true })).toHaveLength(0);
     expect(within(tutor()).getByText(/Opened on the panel/)).toBeTruthy();
 
@@ -555,15 +561,15 @@ describe('a designed sound', () => {
 
     openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
-    expect(screen.getByText('step 1 of 3')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 3');
     expect(loadedName()).toBe('Dark round bass');
     expect(cutoff()).not.toBe('-2'); // the filter is the second step
     // the header's Next step, not the step bar's arrow of the same name
     const next = () => screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
     fireEvent.click(next()!);
     fireEvent.click(next()!);
-    expect(screen.getByText('step 3 of 3')).toBeTruthy();
-    fireEvent.click(button('Finish'));
+    expect(stepShown()).toBe('step 3 of 3');
+    fireEvent.click(button('Finish the lesson'));
     expect(cutoff()).toBe('-2');
     fireEvent.click(button('A-440'));
     fireEvent.click(button('Restore sound'));
@@ -634,7 +640,7 @@ describe('a designed sound', () => {
     // it is one of theirs now, and its lesson is the one it was saved with
     await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
     expect(screen.queryByText('from the tutor')).toBeNull();
-    expect(within(lessonPanel()).getByText(darkBassDesign().blurb)).toBeTruthy();
+    expect(within(lessonPanel()).getByText(darkBassDesign().how)).toBeTruthy();
     expect(saved).not.toBeNull();
   });
 });

@@ -12,7 +12,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
 | `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
 | `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, play, full screen  |
-| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and its ⚙ settings menu                           |
+| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings under the panel            |
 | `components/app/synth/drawers.tsx`       | The tab strip and drawer beside the player from `lg` up                   |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
@@ -25,10 +25,11 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/tour.tsx`          | The orientation tour, docked under the panel                              |
 | `components/app/synth/lineage.tsx`       | The lineage dialog (History)                                              |
 | `components/app/synth/limits.tsx`        | The "What is not modelled" dialog                                         |
+| `components/app/synth/about.tsx`         | The About dialog: the synth's summary                                     |
 | `components/app/synth/use-dialog.ts`     | Opens and closes a native `<dialog>` from an `open` prop                  |
 | `components/app/synth/scope.tsx`         | The scope strip, the harmonics strip and the big scope view               |
 | `components/app/synth/sound-map.tsx`     | The sound map's legend, its "why is it dark?" line and its card note      |
-| `components/app/synth/panel-zoom.tsx`    | The panel's size: Fit, and zoom in its scroller                           |
+| `components/app/synth/panel-zoom.tsx`    | The panel's size: 90% to 200%, zoomed in its scroller                     |
 | `components/app/synth/rotate-prompt.tsx` | The note on a small screen that the panel wants a bigger one              |
 | `components/app/synth/reveal.ts`         | Scrolls a lesson step's controls into view above the Lesson sheet         |
 | `components/app/ui/bottom-sheet.tsx`     | The bottom sheet the regions beside the panel open in under `lg`          |
@@ -100,26 +101,27 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 ┌ the page from `lg` up ─────────────────────────────────────────────────────────────────────┐
 │ ┌ the player (`section`, "<synth> panel") ─────────────────────┐ ┌ drawer ───────┐ ┌rail┐ │
 │ │ ● KNOW YOUR SYNTH                 [Find a control…][Tour][?]  │ │ SOUNDS      ✕ │ │Snds│ │
-│ │ BEHRINGER · Model D ▾ ☆ · heritage · HISTORY › · NOT MODELLED │ │ My sounds     │ │Lssn│ │
+│ │ BEHRINGER · Model D ▾ ☆ · heritage · ABOUT › · HISTORY › · …  │ │ My sounds     │ │Lssn│ │
 │ │               ┌──────────── the panel ────────────┐           │ │ Sound library │ │Insp│ │
 │ │               └───────────────────────────────────┘           │ │  …            │ │Tutr│ │
-│ │ map legend · why is it dark? · engine error                   │ │               │ └────┘ │
+│ │ ● KNOW YOUR SYNTH  DRAWN AS·MAGNIFIER·HOVER HELP [🔍 Find…]    │ │               │ └────┘ │
+│ │ map legend · why is it dark? · engine error                   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
-│ │ ✦ SOUND DESIGN  How this sound is built…   [SOUND <name> ▾]   │ │               │        │
-│ │ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬ (chapters)                     │ │               │        │
+│ │ LEARN SOUND DESIGN              (chapters, shown on approach)  │
+│ │ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬▬▬▬ ▬▬▬                                │ │               │        │
 │ │ ①OSCILLATORS ②FILTER ③ENVELOPES ④AMPLIFIER ✓FINISHED          │ │               │        │
 │ │ step title    step title  …                 The whole sound   │ │               │        │
 │ │   (‹ Previous)  ┌ Step 2 of 4 · FILTER ──────┐  (Next step ›)  │ │               │        │
 │ │                 │ title · why, ≤68ch          │                 │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
-│ │ (▶ Play riff) ● Sound on       [▦ Sections][◌ Dim][🔥 Sensitive]│ │               │        │
-│ │                                         [−Fit+] [⚙] [⛶]       │ │               │        │
+│ │ [SOUND <name> ▾] (▶ Play riff) [🔊 Mute] [Restore] [Blank]     │ │               │        │
+│ │         [Piano] [Harmonics] [Effects] MIDI [?] [−Zoom+] [⛶]   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
 │ └───────────────────────────────────────────────────────────────┘ │               │        │
-│ Loaded: <name> [mine] [step 2 of 4] 3 controls moved [Restore]…   │               │        │
+│ <name> [mine] 3 controls moved                       [Unplug all] │
+│ IN THE STYLE OF… · blurb                                          │               │        │
 │ Save / Save as / Rename / Share …                                 └───────────────┘        │
-│ ┌ the sound: "In the style of…", blurb ┐ ┌ About this <synth> ┐                             │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -127,37 +129,61 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   palette's values for its subtree, so everything inside (switches, keyboard, scope, the picker's
   list) reads them as anywhere else. Change a value in `app/brand-theme.css`'s dark block and the
   same value here. Nothing that holds the panel may carry `transform`, `filter` (other than the
-  faceplate's own shadow) or `backdrop-filter`: the info cards, the magnifier and the ⚙ menu are
-  `fixed`.
+  faceplate's own shadow) or `backdrop-filter`: the info cards, the magnifier and the
+  tooltips are `fixed`.
 - **The caption is the synth.** The wordmark's LED is lit while the sound is on. The synth's name
   is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
-  picker shows the name. Tour, the one switch that starts something, is beside the search.
-- **The Sound Design strip teaches the sound** (t-71), between the picture and the bar, where a
-  video's chapters and subtitles are (`SoundDesign` in `player.tsx`). Its heading says it walks you
-  through how the sound is built. The sound's name in it is the sound picker: it opens the Sounds
-  drawer (or the Library sheet below `lg`) and puts focus in its search.
+  picker shows the name, on one line. Beside it the description (up to two lines from `lg`), with
+  About (the synth's summary, in a dialog), History and What is not modelled under it. On the right of the header are the layers (Sections,
+  Dim unused, Sensitive), Inspect and Tutor, icons with their words from `xl`, then Tour, the one
+  switch that starts something. Under the panel, on the stage, is the sound on it (see below) on the
+  left, its top level with the settings' names, then the panel settings and the search (its matches
+  open upward). The wordmark is at the far right of the Sound Design strip's heading.
+- **The Sound Design strip teaches the sound** (t-71), over the bar, where a video's chapters are
+  (`SoundDesign` in `player.tsx`). From `lg` up with a pointer it floats over the foot of the panel
+  and shows only while the pointer is within `STRIP_REACH` px of the dock (`data-near` on the dock,
+  set without a render) or focus is in it; it is headed "Learn sound design"; it is hidden by opacity, so Tab still reaches it. On
+  touch and below `lg` it sits in the dock's flow.
+- **The sound picker opens the bar** (`SoundPicker`), next to Play riff, with Restore sound and
+  Blank patch: the sound's name opens the library over the bar (or the Library sheet below `lg`)
+  and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
-  from `lg` up; under `sm`, the number alone. The last is a labelled stop for the finished sound.
+  from `lg` up; under `sm`, the number alone. The last is the finished sound, labelled "How it works".
+  There are no separate How it works or Make it yours buttons: the finished sound's card is the
+  overview, with how the sound works, the parts it uses in order, and its ways to make it yours
+  (numbered on the panel), so the lesson starts and ends on it.
   A chapter moves the panel to that step, through the same `setStep` as the Lesson region, so
   progress, the open sound's own lesson and shared sounds behave alike.
 - **The step card** is the step the panel is at, in a column no wider than 68ch in the middle of
-  the strip, between Previous and Next. With the finished sound on, it says so and Next is "Start
-  at step 1"; from the last step Next finishes. Their names ("Previous lesson step", "Next lesson
-  step", "Start the lesson", "Finish the lesson", "Lesson step 1: …") differ from the Lesson
+  the strip, between Previous and Next. With the finished sound on, it is the overview above and
+  its button is "Build it step by step"; from the last step Next finishes. Their names ("Previous
+  lesson step", "Next lesson step", "Finish the lesson", "Lesson step 1: …") differ from the Lesson
   region's own arrows so both can be on the page.
-- **The bar carries the layers and a ⚙ menu** (t-72, `player-tools.tsx`). Sections, Dim unused and
-  Sensitive are toggles on the bar, as a video player carries CC: an icon, with its word from `xl`
-  up, and the full name as the accessible name. How the panel is drawn (Hardware or Outline,
-  Modular or Long), the magnifier and the hover cards (the card that pops up when you point at a
-  control; `kys.tips`) are in the ⚙ menu, a Radix popover that is not portalled, so it opens
-  inside the player and works full screen. Harmonics is in the deck, beside the scope it extends.
+- **The layers and the panel settings** (t-72, `player-tools.tsx`). Sections, Dim unused and Sensitive are
+  toggles over the panel, as a video player carries CC: an icon, with its word from `xl` up, and
+  the full name as the accessible name. How the panel is drawn (Hardware or Outline,
+  Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
+  control; `kys.tips`) are all on show under the panel, each switch under its name, which explains
+  it on hover. Harmonics is in the deck, beside the scope it extends.
+- **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
+  name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
+  is a Radix popup that is not portalled, so it works full screen.
 - **Full screen** is the whole player, and is drawn only where the browser has element full
   screen. The info cards and the tour are rendered inside the player so they still show there.
   The stage, not the player, isolates its stacking, so they still stack over the page's bottom
   nav, and they read the player's dark roles.
-- **Under the player** is the title row, as under a video: the loaded sound, its marks, Restore,
-  Blank patch and Unplug all, then the save actions. The description card describes the sound on
+- **Under the panel, on the stage,** is the title row, as under a video: the loaded sound, its
+  marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug all on one
+  line, with the sound's "In the style of…" and blurb under its name as a video's description is
+  under its title. From `2xl` the description sits beside the settings; below it, it runs the whole
+  width under them.
+- **The piano is out by default on a tall screen** (`min-height: 900px`) and put away on a short
+  one, until the Piano button says otherwise (stored as `kys.deck`). Harmonics show in the deck
+  with the piano put away. **In the light theme the stage is light** (the player's tokens follow
+  the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
+  dialog with the status, Connect / Try again / Stop, and how to connect a keyboard. The step the panel is at is not repeated here: the
+  chapters and the card show it. The description is of the sound on
   the panel. It does not show a library sound's words under one of the user's own sounds, or a
   shared sound, that has no lesson of its own.
 - **Beside the player, from `lg` up, is a drawer** (t-70, `drawers.tsx`), as a video page keeps
@@ -176,12 +202,15 @@ D10: playing the full panel needs a landscape tablet or a computer. Everything e
 phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
 
 - **The panel fits the page by default, at every width.** There is no minimum width any more. The
-  zoom group (−, Fit, +) lays the panel out at 1.5×, 2× or 3× the fitted width inside its
+  zoom group (−, Zoom, +) draws the panel at 90% of the fitted width, or up from it in tenths to
+  200%, inside its
   horizontal scroller, and keeps the middle of the view in the middle. The panel is drawn bigger,
   not magnified, so every control still works, and a drag on bare panel scrolls the page. Only the
   controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
-  kept. A synth with its own layout is still capped at a width that fits 82% of the screen's
-  height.
+  kept. A synth with its own layout is capped at a width that fits the height left between the
+  header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
+  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. From
+  `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
   least 600 px wide, with a touch screen) to turn sideways. Anything else under 1024 px is told the panel is made for a
   landscape tablet or a bigger screen. It is a notice, not a block. OK hides it for good in that

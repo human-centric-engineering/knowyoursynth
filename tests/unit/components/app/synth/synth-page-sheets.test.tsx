@@ -10,6 +10,7 @@
  * @see components/app/ui/bottom-sheet.tsx
  */
 
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
@@ -185,6 +186,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
   engine.setFx.mockReset();
@@ -237,65 +239,53 @@ function tap(el: Element) {
 }
 
 describe('at lg and up', () => {
-  it('puts the regions in a drawer beside the player, opened from a tab strip, with no bar and no sheets', () => {
+  it('opens what is beside the panel over it, from the bar and the strip, with no bottom bar and no sheets', () => {
     page();
     expect(screen.queryByRole('navigation', { name: 'Beside the panel' })).toBeNull();
     expect(screen.queryByRole('dialog')).toBeNull();
-    const rail = within(screen.getByRole('navigation', { name: 'Side panels' }));
-    expect(rail.getAllByRole('button').map((b) => b.textContent)).toEqual([
-      'Sounds',
-      'Lesson',
-      'Inspect',
-      'Tutor',
-    ]);
-    // Sounds is open on a first visit; the rest are out of the accessibility tree.
-    expect(rail.getByRole('button', { name: 'Sounds' }).getAttribute('aria-expanded')).toBe('true');
-    expect(screen.getByRole('complementary', { name: 'Sounds drawer' })).toBeTruthy();
-    expect(screen.getByRole('region', { name: 'Sound library' })).toBeTruthy();
-    expect(screen.queryByRole('heading', { name: 'Control inspector' })).toBeNull();
-    expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+    // Nothing is open on a first visit: the library waits behind the sound picker, and there is no card.
+    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
+    expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
 
-    // One drawer at a time, and the choice is kept for the next visit.
-    fireEvent.click(rail.getByRole('button', { name: 'Inspect' }));
+    openSide('Sounds');
+    expect(screen.getByRole('heading', { name: 'Sound library' })).toBeTruthy();
+
+    // One card at a time over the panel: the inspector, then the effects in its place.
+    openSide('Inspect');
     expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
-    expect(screen.queryByRole('region', { name: 'Sound library' })).toBeNull();
-    expect(rail.getByRole('button', { name: 'Sounds' }).getAttribute('aria-expanded')).toBe(
+    fireEvent.click(screen.getByRole('button', { name: 'Effects' }));
+    expect(screen.queryByRole('heading', { name: 'Control inspector' })).toBeNull();
+    expect(screen.getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
+  });
+
+  it('closes the card from its close button or from Escape inside it', () => {
+    page();
+    openSide('Inspect');
+    fireEvent.click(screen.getByRole('button', { name: 'Close the card' }));
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Inspector' }).getAttribute('aria-pressed')).toBe(
       'false'
     );
-    expect(window.localStorage.getItem('kys.side')).toBe('"inspector"');
+
+    openSide('Inspect');
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Close the card' }), { key: 'Escape' });
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
   });
 
-  it('closes the drawer from its tab, its close button or Escape, handing focus back to the tab', () => {
+  it('keeps the lesson’s place while the library is looked at', () => {
     page();
-    const rail = within(screen.getByRole('navigation', { name: 'Side panels' }));
-    const lessonTab = rail.getByRole('button', { name: 'Lesson' });
-
-    fireEvent.click(lessonTab);
-    fireEvent.click(lessonTab);
-    expect(screen.queryByRole('complementary')).toBeNull();
-    expect(window.localStorage.getItem('kys.side')).toBe('null');
-
-    fireEvent.click(lessonTab);
-    fireEvent.click(screen.getByRole('button', { name: 'Close the Lesson drawer' }));
-    expect(screen.queryByRole('complementary')).toBeNull();
-    expect(document.activeElement).toBe(lessonTab);
-
-    fireEvent.click(lessonTab);
-    const drawer = screen.getByRole('complementary', { name: 'Lesson drawer' });
-    fireEvent.keyDown(within(drawer).getByRole('button', { name: 'Close the Lesson drawer' }), {
-      key: 'Escape',
-    });
-    expect(screen.queryByRole('complementary')).toBeNull();
-    expect(document.activeElement).toBe(lessonTab);
-  });
-
-  it('keeps a closed drawer’s region mounted, so the lesson’s place survives a look at the library', () => {
-    window.localStorage.setItem('kys.side', '"lesson"');
-    page();
-    const article = screen.getByRole('article', { name: /Fat bass/ });
-    fireEvent.click(screen.getByRole('button', { name: 'Sounds' }));
-    expect(article.isConnected).toBe(true);
-    expect(article.closest('[hidden]')).not.toBeNull();
+    const first = screen
+      .getByRole('list', { name: 'Lesson steps' })
+      .querySelector<HTMLButtonElement>('button');
+    if (!first) throw new Error('no chapter');
+    fireEvent.click(first);
+    expect(stepShown()).toBe('step 1 of 1');
+    openSide('Sounds');
+    fireEvent.click(screen.getByRole('button', { name: /^Choose a sound/ }));
+    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    expect(stepShown()).toBe('step 1 of 1');
+    expect(screen.getByTestId('lesson-card').textContent).toContain('Step 1 of 1');
   });
 
   it('opens no Inspector sheet on a tap, and leaves the floating cards on', () => {
@@ -316,7 +306,7 @@ describe('below lg', () => {
     ).toEqual(['Library', 'Lesson', 'Inspector', 'Tutor']);
     expect(screen.queryByRole('region', { name: 'Sound library' })).toBeNull();
     expect(screen.queryByRole('article', { name: /Fat bass/ })).toBeNull();
-    expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
 
     fireEvent.click(within(bar()).getByRole('button', { name: 'Library' }));
     expect(within(sheet('Library')).getByRole('region', { name: 'Sound library' })).toBeTruthy();
@@ -524,7 +514,7 @@ describe('below lg', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Close Lesson' }));
       scrollBy.mockClear();
       // the lesson stays mounted while its sheet is closed, so the step is still lit on the panel
-      expect(screen.getByText('step 1 of 1')).toBeTruthy();
+      expect(stepShown()).toBe('step 1 of 1');
       await act(() => new Promise((r) => setTimeout(r, 20)));
       expect(scrollBy).not.toHaveBeenCalled();
     });
