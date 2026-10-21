@@ -80,7 +80,7 @@ import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { About } from '@/components/app/synth/about';
 import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
-import { PlayerTip } from '@/components/app/synth/player-tip';
+import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
 import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
 import { TutorDrawer } from '@/components/app/synth/drawers';
 import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
@@ -267,7 +267,12 @@ export function SynthPage(props: SynthPageProps) {
   const id = props.detail.synth.id;
   const loading = loadSynthDef(id);
   const baseDef = loadedSynthDef(id) ?? (loading ? use(loading) : null);
-  return baseDef ? <Synth baseDef={baseDef} {...props} /> : null;
+  // One provider for the player's tips, so moving along the bar opens each at once.
+  return baseDef ? (
+    <PlayerTips>
+      <Synth baseDef={baseDef} {...props} />
+    </PlayerTips>
+  ) : null;
 }
 
 function Synth({
@@ -554,16 +559,27 @@ function Synth({
   useEffect(() => {
     const dock = dockRef.current;
     if (small || !dock) return undefined;
+    // The dock's top, read when it or the window changes size rather than on every move: a move can come while a
+    // knob or cable drag is re-rendering the panel, and reading layout then forces it.
+    let top = dock.getBoundingClientRect().top;
+    const remeasure = () => {
+      top = dock.getBoundingClientRect().top;
+    };
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(dock);
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
-      const near = e.clientY >= dock.getBoundingClientRect().top - STRIP_REACH;
+      const near = e.clientY >= top - STRIP_REACH;
       if (near !== dock.hasAttribute('data-near')) dock.toggleAttribute('data-near', near);
     };
     const onLeave = () => dock.removeAttribute('data-near');
     window.addEventListener('pointermove', onMove);
+    window.addEventListener('resize', remeasure);
     document.documentElement.addEventListener('pointerleave', onLeave);
     return () => {
+      ro.disconnect();
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('resize', remeasure);
       document.documentElement.removeEventListener('pointerleave', onLeave);
       dock.removeAttribute('data-near');
     };
@@ -1227,6 +1243,8 @@ function Synth({
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
   // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
   const litKey = litFor === synthId ? stepKey : '';
+  // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit.
+  const chapterLit = small ? stepKey : litKey;
   useEffect(() => {
     if (small) return undefined;
     highlightStore.set(litKey ? litKey.split('|') : []);
@@ -1760,7 +1778,7 @@ function Synth({
                 }}
                 hasLesson={!!shown}
                 mark={<Wordmark lit={audio === 'on'} />}
-                lit={!small && litKey ? litKey.split('|') : []}
+                lit={chapterLit ? chapterLit.split('|') : []}
               />
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">

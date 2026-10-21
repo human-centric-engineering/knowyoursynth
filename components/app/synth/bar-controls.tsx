@@ -124,18 +124,22 @@ export function Segmented<T extends string | number | boolean>({
   options,
   value,
   onChange,
+  describedBy,
 }: {
   label: string;
   title?: string;
   options: readonly (readonly [value: T, text: string])[];
   value: T;
   onChange: (v: T) => void;
+  /** The id of what explains the choice, read out with the group's name. */
+  describedBy?: string;
 }) {
   return (
     <div
       className="flex rounded-md border border-(--kys-line) bg-(--kys-surface) p-1"
       role="group"
       aria-label={label}
+      aria-describedby={describedBy}
       title={title}
     >
       {options.map(([v, l]) => (

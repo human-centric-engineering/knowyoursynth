@@ -40,6 +40,12 @@ describe('PlayerSettings', () => {
     }
   });
 
+  it('describes each setting by what it does, for a keyboard that cannot reach its name', () => {
+    const { menu } = settings();
+    const lens = menu.getByRole('group', { name: 'Magnifier' });
+    expect(lens).toHaveAccessibleDescription('A lens that follows the pointer over the panel.');
+  });
+
   it('sends the magnifier choice, and Off as 0', () => {
     const { menu, onZoom } = settings({ zoom: 2 });
     const lens = within(menu.getByRole('group', { name: 'Magnifier' }));

@@ -18,6 +18,7 @@ import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
   findStore,
   focusStore,
+  highlightStore,
   meterStore,
   notesStore,
   pendingStore,
@@ -330,6 +331,28 @@ describe('below lg', () => {
     fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
     fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('puts back the step the Lesson has lit when a pointed-at chapter is left', () => {
+    phone();
+    const twoSteps = sound({
+      id: 'two-steps',
+      name: 'Two steps',
+      steps: [
+        { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+        { title: 'Close the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -2 } },
+      ],
+    });
+    page({ detail: { ...detail, sounds: [twoSteps] } });
+    const chapters = within(screen.getByRole('list', { name: 'Lesson steps' }));
+    const [first, second] = chapters.getAllByRole('button', { name: /^Lesson step / });
+    fireEvent.click(first);
+    const lit = highlightStore.get();
+    expect(lit.length).toBeGreaterThan(0);
+    fireEvent.pointerEnter(second);
+    expect(highlightStore.get()).not.toEqual(lit);
+    fireEvent.pointerLeave(second);
+    expect(highlightStore.get()).toEqual(lit);
   });
 
   it('closes the Library sheet when a sound is chosen from it, with the sound on the panel', () => {

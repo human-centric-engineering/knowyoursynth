@@ -28,10 +28,12 @@ import type { LessonMark } from '@/components/app/synth/progress';
 /** What the card is showing: a lesson section, the inspector or the effects. */
 export type CardId = 'build' | 'inspector' | 'fx';
 
-/** The controls a step moves, then the input end of each cable it patches: the order the card numbers them in. */
+/**
+ * The controls a step moves, then the input end of each cable it patches, once each (two cables can share an input):
+ * the order the card numbers them in.
+ */
 export const stepBadges = (s: PresetStep): string[] => [
-  ...Object.keys(s.set || {}),
-  ...(s.cables || []).map(([, to]) => to),
+  ...new Set([...Object.keys(s.set || {}), ...(s.cables || []).map(([, to]) => to)]),
 ];
 
 /** The controls a sound's tweaks are about, once each, in their order. */
@@ -431,7 +433,12 @@ export function LessonCard({
           </button>
         </div>
       </header>
-      <div className="kys-card-body kys-scroll" aria-live="polite">
+      {/* The lesson is announced as it moves on; the inspector and the effects change on every hover and drag, and
+      are not. */}
+      <div
+        className="kys-card-body kys-scroll"
+        aria-live={section === 'build' ? 'polite' : undefined}
+      >
         {body}
       </div>
       {foot && <footer className="kys-card-foot">{foot}</footer>}

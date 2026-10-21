@@ -29,8 +29,8 @@ const MIN_FIT_PX = 1100;
 
 /**
  * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px (or `--kys-fit-max`: the
- * whole width, full screen); a synth with its own layout
- * is also kept short enough to fit the screen's height. Zoomed, it is that width times the scale.
+ * whole width, full screen), and kept short enough to fit the screen's height. Zoomed, it is that width times the
+ * scale.
  *
  * The height it fits is the screen's less `--kys-fit-chrome`, which the page sets from `lg` up to what is above the
  * panel and the dock pinned under it (t-74). Without it, the panel may take 82% of the screen's height. Fitting to the

@@ -8,7 +8,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { LessonCard } from '@/components/app/synth/lesson-card';
+import { LessonCard, stepBadges } from '@/components/app/synth/lesson-card';
 import { getSynthDef } from '@/lib/app/synths/defs';
 
 const found = getSynthDef('model-d');
@@ -89,5 +89,52 @@ describe('LessonCard dragging', () => {
     expect(onSide).toHaveBeenCalledTimes(1);
     expect(card).not.toHaveAttribute('data-detached');
     expect(card.style.left).toBe('');
+  });
+});
+
+describe('stepBadges', () => {
+  it('numbers each control or jack once, though two cables share an input', () => {
+    const step = {
+      title: 'Patch it',
+      module: 'mixer' as const,
+      why: '',
+      set: { 'mix.osc1': 9 },
+      cables: [
+        ['osc1.out', 'vcf.in'],
+        ['osc2.out', 'vcf.in'],
+        ['lfo.out', 'vca.cv'],
+      ] as [string, string][],
+    };
+    expect(stepBadges(step)).toEqual(['mix.osc1', 'vcf.in', 'vca.cv']);
+  });
+});
+
+describe('LessonCard live region', () => {
+  const card = (section: 'build' | 'inspector' | 'fx') =>
+    render(
+      <LessonCard
+        def={def}
+        preset={null}
+        step={null}
+        onStep={vi.fn()}
+        section={section}
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={<p>inspector</p>}
+        effects={<p>rack</p>}
+      />
+    );
+
+  it('announces the lesson as it moves on, and not the inspector or the effects', () => {
+    const body = () => screen.getByTestId('lesson-card').querySelector('.kys-card-body');
+    const { unmount } = card('build');
+    expect(body()).toHaveAttribute('aria-live', 'polite');
+    unmount();
+    for (const section of ['inspector', 'fx'] as const) {
+      const view = card(section);
+      expect(body()).not.toHaveAttribute('aria-live');
+      view.unmount();
+    }
   });
 });

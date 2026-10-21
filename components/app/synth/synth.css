@@ -831,6 +831,16 @@ svg .kys-hit:focus-visible {
     border-radius: 0;
   }
 }
+/* The strip up, or the sounds open, rise into the band the lesson card and the
+   tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
+   the chapters or the library. */
+@media (min-width: 1024px) {
+  .kys-dock[data-near],
+  .kys-dock:has(.kys-design:focus-within),
+  .kys-dock:has(.kys-sounds-pop) {
+    z-index: 46;
+  }
+}
 
 /* The sounds: the library, opened over the strip from the sound picker. */
 .kys-sounds-pop {
@@ -1007,7 +1017,7 @@ svg .kys-hit:focus-visible {
 }
 
 /* The video feel: with the pointer at rest, the secondary controls fade until it
-   moves again, or while it is over the dock. Only where there is a pointer to
+   moves again, or while it is over the dock or over them. Only where there is a pointer to
    rest: a touch screen has no hover to bring them back. */
 .kys-autohide {
   transition: opacity 0.35s ease;
@@ -1016,7 +1026,8 @@ svg .kys-hit:focus-visible {
   .kys-synth[data-idle] .kys-autohide:not(:focus-within) {
     opacity: 0;
   }
-  .kys-synth[data-idle] .kys-dock:hover .kys-autohide {
+  .kys-synth[data-idle] .kys-dock:hover .kys-autohide,
+  .kys-synth[data-idle] .kys-autohide:hover {
     opacity: 1;
   }
 }

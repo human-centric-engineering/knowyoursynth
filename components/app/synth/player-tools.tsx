@@ -13,6 +13,7 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
+import { useId } from 'react';
 import type { ReactNode, Ref } from 'react';
 import { Segmented } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
@@ -93,70 +94,97 @@ export function PlayerSettings({
         name="Drawn as"
         help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
       >
-        <Segmented
-          label="Panel view"
-          options={[
-            [false, 'Hardware'],
-            [true, 'Outline'],
-          ]}
-          value={view.outline}
-          onChange={(outline) => onView({ ...view, outline })}
-        />
+        {(d) => (
+          <Segmented
+            describedBy={d}
+            label="Panel view"
+            options={[
+              [false, 'Hardware'],
+              [true, 'Outline'],
+            ]}
+            value={view.outline}
+            onChange={(outline) => onView({ ...view, outline })}
+          />
+        )}
       </Setting>
       {modular && (
         <Setting
           name="Layout"
           help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
         >
-          <Segmented
-            label="Panel layout"
-            options={[
-              [false, 'Modular'],
-              [true, 'Long'],
-            ]}
-            value={view.long}
-            onChange={(long) => onView({ ...view, long })}
-          />
+          {(d) => (
+            <Segmented
+              describedBy={d}
+              label="Panel layout"
+              options={[
+                [false, 'Modular'],
+                [true, 'Long'],
+              ]}
+              value={view.long}
+              onChange={(long) => onView({ ...view, long })}
+            />
+          )}
         </Setting>
       )}
       <Setting name="Magnifier" help="A lens that follows the pointer over the panel.">
-        <Segmented
-          label="Magnifier"
-          options={[
-            [0, 'Off'],
-            [2, '2×'],
-            [3, '3×'],
-          ]}
-          value={zoom}
-          onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
-        />
+        {(d) => (
+          <Segmented
+            describedBy={d}
+            label="Magnifier"
+            options={[
+              [0, 'Off'],
+              [2, '2×'],
+              [3, '3×'],
+            ]}
+            value={zoom}
+            onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
+          />
+        )}
       </Setting>
       <Setting
         name="Hover help"
         help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
       >
-        <Segmented
-          label="Hover help"
-          options={[
-            [true, 'On'],
-            [false, 'Off'],
-          ]}
-          value={tipsOn}
-          onChange={onTips}
-        />
+        {(d) => (
+          <Segmented
+            describedBy={d}
+            label="Hover help"
+            options={[
+              [true, 'On'],
+              [false, 'Off'],
+            ]}
+            value={tipsOn}
+            onChange={onTips}
+          />
+        )}
       </Setting>
     </div>
   );
 }
 
-/** One setting: its name, which explains it on hover, over its switch. */
-function Setting({ name, help, children }: { name: string; help: string; children: ReactNode }) {
+/**
+ * One setting: its name, which explains it on hover, over its switch. The name cannot take focus, so what it says is
+ * also the switch's description (`describedBy`), for a keyboard or screen reader.
+ */
+function Setting({
+  name,
+  help,
+  children,
+}: {
+  name: string;
+  help: string;
+  children: (describedBy: string) => ReactNode;
+}) {
+  const id = useId();
   return (
     <div className="kys-setting">
       <PlayerTip name={name} help={help}>
         <span className="kys-setting-name">{name}</span>
       </PlayerTip>
-      {children}
+      <span id={id} className="sr-only">
+        {help}
+      </span>
+      {children(id)}
     </div>
   );
 }
