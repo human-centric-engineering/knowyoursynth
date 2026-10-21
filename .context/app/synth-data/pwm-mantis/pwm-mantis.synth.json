@@ -1,0 +1,4091 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "pwm-mantis",
+    "manufacturer": "PWM (Paul Whittington Group)",
+    "model": "Mantis Hybrid-Analogue Synthesiser",
+    "category": "hybrid-analogue duophonic/quad synthesizer, 37 semi-weighted keys with channel aftertouch, dual OSCar-style filter",
+    "based_on": "Last design concept of Chris Huggett (EDP Wasp, OSCar), completed by Paul Whittington and team (UK, 2023); 'Wasp' engine with an 'OSCar' dual filter.",
+    "sources": [
+      {
+        "id": "guide",
+        "title": "PWM Mantis Getting Started Guide v1.4",
+        "kind": "quick_start_guide",
+        "file": "PWM_Mantis_GSG_v1_4.pdf",
+        "pages": 12,
+        "note": "Overview, power, outputs, patches, init/random, mod routes, USB-MIDI, channel select, local off, resets, top panel image (all control labels read from it)."
+      },
+      {
+        "id": "patch_sheet",
+        "title": "PWM Mantis patch sheet v1.0",
+        "kind": "other",
+        "file": "PWM_Mantis_Patch_Sheet_v1_0.pdf",
+        "pages": 2,
+        "note": "Factory patches A00-A99 with designer credits."
+      },
+      {
+        "id": "specs",
+        "title": "PWM, 'Mantis Specifications'",
+        "kind": "spec_sheet",
+        "file": "https://www.1pwm.com/mantisspecifications",
+        "note": "Full feature list: oscillators (incl. 9 OSCar wavetables), filters, LFOs, envelopes, mixer, mod routes, voicing modes, effects, connections, dimensions, price."
+      },
+      {
+        "id": "midiguide",
+        "title": "midi.guide, 'PWM Mantis MIDI CCs and NRPNs' (April 2026)",
+        "kind": "other",
+        "file": "https://midi.guide/d/pwm/mantis/",
+        "note": "92 parameters: CCs (14-bit pairs for shape and cutoff) and NRPNs, including the six mod routes' source and scale."
+      },
+      {
+        "id": "modwiggler",
+        "title": "Mod Wiggler 'PWM Mantis' thread",
+        "kind": "other",
+        "file": "https://www.modwiggler.com/forum/viewtopic.php?t=273834",
+        "note": "Filters built on SSI2164 VCA chips, run simultaneously in series or parallel with an OSCar-like width control."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 4,
+    "polyphony_mode": "two analogue signal paths: Mono, Duophonic (one voice per path, each with its own filter in the 12 dB modes) or Quad (four voices; can combine with dual filters); voice spread across the stereo filters",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "200 patches in RAM: Bank A 100 factory (A00-A99, protectable), Bank B 100 user (initial patch); compare, init, randomise.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 37,
+      "patch_buttons": 20
+    },
+    "summary": "Per path: Oscillator 1 and 2, mathematically generated (sine, triangle, saw, pulse, organ or a wavetable: the 7-segment Mantis special or nine 256-byte OSCar tables) with shape, shape mod and pitch mod depths and octave; an Osc 1 sub an octave down; Osc 2 with semitone, cent and a density (detune) oscillator; drift; noise with decimation; ring mod. A three-stage balance mixer (Osc 1/2, oscillators/noise, then against ring mod). A dual state-variable filter on SSI2164 VCAs: LP/BP/HP at 12 dB (one filter per voice, duophonic) or 24 dB, plus wide band (series) and wide notch (parallel) with WIDTH, drive, key track and cutoff/width modulation. Analogue VCAs under Env 1. Two envelopes (sustain fall, repeat, bipolar velocity), two LFOs (fade in/out, sync, one-shot). Six mod routes multiply a SOURCE by a SCALE into a CONTROL. Chorus and reverb, arpeggiator, joystick."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard, joystick and voicing",
+      "panel_section": "KEYBOARD / VOICING / TRIGGERING",
+      "scope": "common",
+      "description": "37 semi-weighted velocity keys with channel aftertouch; octave shift; Mono, Duophonic or Quad; glide (auto); joystick bend, vibrato, hold.",
+      "properties": {
+        "keys": 37
+      },
+      "inputs": ["kbd.midi_in", "kbd.sustain", "kbd.pedal_in"],
+      "outputs": [
+        "kbd.pitch",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.joy_x",
+        "kbd.joy_y",
+        "kbd.pedal"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR 1",
+      "scope": "per_voice",
+      "description": "Mathematically generated oscillator (Huggett): sine, triangle, saw, pulse, organ or wavetable; SHAPE (harmonics, slope or pulse width); shape and pitch modulation depths; octave -3 to +2.",
+      "properties": {
+        "wavetables": "Mantis special (7-segment) + 9 OSCar 256-byte 8-bit tables"
+      },
+      "inputs": ["osc1.pitch_cv", "osc1.shape_cv"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATOR 2",
+      "scope": "per_voice",
+      "description": "Mathematically generated oscillator (Huggett): sine, triangle, saw, pulse, organ or wavetable; SHAPE (harmonics, slope or pulse width); shape and pitch modulation depths; octave -3 to +2. With semitone, cent and a density oscillator.",
+      "properties": {
+        "wavetables": "Mantis special (7-segment) + 9 OSCar 256-byte 8-bit tables"
+      },
+      "inputs": ["osc2.pitch_cv", "osc2.shape_cv"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Osc 1 sub",
+      "panel_section": "OSC 1 SUB",
+      "scope": "per_voice",
+      "description": "Follows Oscillator 1's settings one octave below.",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIX",
+      "scope": "per_voice",
+      "description": "Noise with a decimation (density) control for complexity.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "ring",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "MIX",
+      "scope": "per_voice",
+      "description": "Ring modulation of the oscillators.",
+      "inputs": ["ring.a", "ring.b"],
+      "outputs": ["ring.out"]
+    },
+    {
+      "id": "mix",
+      "type": "mixer",
+      "name": "Mixer (three balance stages)",
+      "panel_section": "MIX",
+      "scope": "per_voice",
+      "description": "Osc balance (1 against 2, sub added), noise balance (oscillators against noise), ring mod balance (oscillators + noise against ring mod).",
+      "inputs": ["mix.osc1", "mix.osc2", "mix.sub", "mix.noise", "mix.ring"],
+      "outputs": ["mix.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Dual filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Two multimode state-variable filters on SSI2164 VCAs per path: LP12, BP12, HP12 (duophonic: one per voice path), LP24, BP24, HP24, wide band (series), wide notch (parallel); WIDTH sets their spread; drive; key track.",
+      "properties": {
+        "modes": ["LP12", "BP12", "HP12", "LP24", "BP24", "HP24", "wide_band", "wide_notch"],
+        "vca_chip": "SSI2164"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv", "vcf.width_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "AMPLITUDE",
+      "scope": "per_voice",
+      "description": "Multi-stage analogue VCAs; Env 1 normalised to amplitude.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "Envelope 1",
+      "panel_section": "ENVELOPE 1",
+      "scope": "per_voice",
+      "description": "ADSR with SUST FALL (sustain slopes during key-down), REPEAT (looping), bipolar VELOCITY, legato option. Normalised to amplitude.",
+      "inputs": ["env1.gate", "env1.velocity"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO 1",
+      "scope": "common",
+      "description": "LFO with FADE (in or out), wave, SYNC (free, sync, one shot) and RATE; key trigger option.",
+      "inputs": ["lfo1.reset"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "Envelope 2",
+      "panel_section": "ENVELOPE 2",
+      "scope": "per_voice",
+      "description": "ADSR with SUST FALL (sustain slopes during key-down), REPEAT (looping), bipolar VELOCITY, legato option.",
+      "inputs": ["env2.gate", "env2.velocity"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "LFO 2",
+      "scope": "common",
+      "description": "LFO with FADE (in or out), wave, SYNC (free, sync, one shot) and RATE; key trigger option.",
+      "inputs": ["lfo2.reset"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Chorus and reverb",
+      "panel_section": "CHORUS / REVERB",
+      "scope": "common",
+      "description": "Digital chorus (level, four types) and reverb (level, time, LPF and HPF switches).",
+      "inputs": ["fx.in_l", "fx.in_r"],
+      "outputs": ["fx.out_l", "fx.out_r"]
+    },
+    {
+      "id": "arp",
+      "type": "sequencer",
+      "name": "Arpeggiator",
+      "panel_section": "ARP / TEMPO",
+      "scope": "common",
+      "description": "Up, down, up/down 1 and 2, played, random over 1-6 octaves; swing (±); sync 2nds to 32nds; tap tempo; auto MIDI/USB clock sync; latch via joystick hold.",
+      "inputs": [],
+      "outputs": ["arp.notes"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / rear panel",
+      "scope": "common",
+      "description": "Stereo line outs (L/mono, R) and headphones; VOLUME; MASTER TUNE.",
+      "inputs": ["out.l", "out.r"],
+      "outputs": ["out.line_l", "out.line_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.wave",
+      "module": "osc1",
+      "label": "OSC 1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        },
+        {
+          "value": "organ"
+        },
+        {
+          "value": "wavetable"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 14"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc1.shape",
+      "module": "osc1",
+      "label": "OSC 1 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12/44 (14-bit)"
+        }
+      ],
+      "function": "Sine/organ: adds harmonics (and lifts the fundamental); pulse: width (square at centre); other waves: shape."
+    },
+    {
+      "id": "osc1.shape_mod",
+      "module": "osc1",
+      "label": "OSC 1 SHAPE MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 21"
+        }
+      ],
+      "function": "Bipolar depth of the Osc shape mod route."
+    },
+    {
+      "id": "osc1.pitch_mod",
+      "module": "osc1",
+      "label": "OSC 1 PITCH MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 22"
+        }
+      ],
+      "function": "Bipolar depth of the Osc pitch mod route."
+    },
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OSC 1 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-3"
+        },
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 24"
+        }
+      ],
+      "function": "Octave."
+    },
+    {
+      "id": "osc2.wave",
+      "module": "osc2",
+      "label": "OSC 2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        },
+        {
+          "value": "organ"
+        },
+        {
+          "value": "wavetable"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 23"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc2.shape",
+      "module": "osc2",
+      "label": "OSC 2 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19/51 (14-bit)"
+        }
+      ],
+      "function": "Sine/organ: adds harmonics (and lifts the fundamental); pulse: width (square at centre); other waves: shape."
+    },
+    {
+      "id": "osc2.shape_mod",
+      "module": "osc2",
+      "label": "OSC 2 SHAPE MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 30"
+        }
+      ],
+      "function": "Bipolar depth of the Osc shape mod route."
+    },
+    {
+      "id": "osc2.pitch_mod",
+      "module": "osc2",
+      "label": "OSC 2 PITCH MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 31"
+        }
+      ],
+      "function": "Bipolar depth of the Osc pitch mod route."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OSC 2 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-3"
+        },
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 32"
+        }
+      ],
+      "function": "Octave."
+    },
+    {
+      "id": "sub.level",
+      "module": "sub",
+      "label": "OSC 1 SUB LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "Sub oscillator level."
+    },
+    {
+      "id": "osc2.density",
+      "module": "osc2",
+      "label": "DENSITY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 26"
+        }
+      ],
+      "function": "Level of the density (detune) oscillator thickening Osc 2."
+    },
+    {
+      "id": "osc2.density_rate",
+      "module": "osc2",
+      "label": "DENSITY RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 27"
+        }
+      ],
+      "function": "Detune / beating rate of the density oscillator."
+    },
+    {
+      "id": "osc2.semitone",
+      "module": "osc2",
+      "label": "SEMITONE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 28"
+        }
+      ],
+      "function": "Osc 2 ±12 semitones."
+    },
+    {
+      "id": "osc2.cent",
+      "module": "osc2",
+      "label": "CENT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 29"
+        }
+      ],
+      "function": "Osc 2 fine tune."
+    },
+    {
+      "id": "drift.amount",
+      "module": "osc1",
+      "label": "OSC DRIFT AMOUNT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 10"
+        }
+      ],
+      "function": "Random pitch variations between oscillators."
+    },
+    {
+      "id": "mix.osc_balance",
+      "module": "mix",
+      "label": "OSC BALANCE (1 - 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Osc 1 against Osc 2."
+    },
+    {
+      "id": "mix.noise_balance",
+      "module": "mix",
+      "label": "NOISE BALANCE (O - N)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "Oscillators against noise."
+    },
+    {
+      "id": "mix.ring_balance",
+      "module": "mix",
+      "label": "RM BALANCE (O+N - RM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        }
+      ],
+      "function": "Oscillators + noise against ring mod."
+    },
+    {
+      "id": "noise.density",
+      "module": "noise",
+      "label": "Noise density (decimation)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "midi",
+          "message": "NRPN 123"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 123"
+        }
+      ],
+      "function": "Noise complexity.",
+      "confidence": "inferred",
+      "note": "Panel access not shown on the top panel image."
+    },
+    {
+      "id": "mix.trim",
+      "module": "mix",
+      "label": "Oscillator level trim",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 7"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Patch level trim."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUT OFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74 or 29/61"
+        }
+      ],
+      "function": "Cutoff (CC 74, or 14-bit 29/61)."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        }
+      ],
+      "function": "Resonance."
+    },
+    {
+      "id": "vcf.width",
+      "module": "vcf",
+      "label": "WIDTH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        }
+      ],
+      "function": "Spread between the two filters (wide band / wide notch, stereo duophonic)."
+    },
+    {
+      "id": "vcf.drive",
+      "module": "vcf",
+      "label": "DRIVE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Filter overdrive."
+    },
+    {
+      "id": "vcf.keytrack",
+      "module": "vcf",
+      "label": "KEY TRACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 48"
+        }
+      ],
+      "function": "Cutoff key tracking."
+    },
+    {
+      "id": "vcf.cutoff_mod",
+      "module": "vcf",
+      "label": "CUT OFF MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 49"
+        }
+      ],
+      "function": "Bipolar depth of the cutoff mod route."
+    },
+    {
+      "id": "vcf.width_mod",
+      "module": "vcf",
+      "label": "WIDTH MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 50"
+        }
+      ],
+      "function": "Bipolar depth of the width mod route."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LP12"
+        },
+        {
+          "value": "BP12"
+        },
+        {
+          "value": "HP12"
+        },
+        {
+          "value": "LP24"
+        },
+        {
+          "value": "BP24"
+        },
+        {
+          "value": "HP24"
+        },
+        {
+          "value": "wide_band"
+        },
+        {
+          "value": "wide_notch"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 46"
+        }
+      ],
+      "function": "Filter type (LEDs)."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "ENV 1 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Attack."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "ENV 1 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Decay."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "ENV 1 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        }
+      ],
+      "function": "Sustain."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "ENV 1 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Release."
+    },
+    {
+      "id": "env1.sust_fall",
+      "module": "env1",
+      "label": "ENV 1 SUST FALL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 57"
+        }
+      ],
+      "function": "Sustain falls during key-down."
+    },
+    {
+      "id": "env1.velocity",
+      "module": "env1",
+      "label": "ENV 1 VELOCITY (AMPLITUDE)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 55"
+        }
+      ],
+      "function": "Bipolar velocity amount."
+    },
+    {
+      "id": "env1.repeat",
+      "module": "env1",
+      "label": "ENV 1 REPEAT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 25"
+        }
+      ],
+      "function": "Looping envelope."
+    },
+    {
+      "id": "env1.legato",
+      "module": "env1",
+      "label": "ENV 1 LEGATO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 56"
+        }
+      ],
+      "function": "No retrigger on legato notes (TRIGGERING)."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "ENV 2 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Attack."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "ENV 2 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "Decay."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "ENV 2 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        }
+      ],
+      "function": "Sustain."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "ENV 2 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "Release."
+    },
+    {
+      "id": "env2.sust_fall",
+      "module": "env2",
+      "label": "ENV 2 SUST FALL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 62"
+        }
+      ],
+      "function": "Sustain falls during key-down."
+    },
+    {
+      "id": "env2.velocity",
+      "module": "env2",
+      "label": "ENV 2 VELOCITY (AMPLITUDE)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 60"
+        }
+      ],
+      "function": "Bipolar velocity amount."
+    },
+    {
+      "id": "env2.repeat",
+      "module": "env2",
+      "label": "ENV 2 REPEAT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 33"
+        }
+      ],
+      "function": "Looping envelope."
+    },
+    {
+      "id": "env2.legato",
+      "module": "env2",
+      "label": "ENV 2 LEGATO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 61"
+        }
+      ],
+      "function": "No retrigger on legato notes (TRIGGERING)."
+    },
+    {
+      "id": "lfo1.wave",
+      "module": "lfo1",
+      "label": "LFO 1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw_down"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 69"
+        }
+      ],
+      "function": "LFO waveform (six positions).",
+      "confidence": "inferred",
+      "note": "Six positions per MIDI (0-5) and panel icons; the specifications say four waveshapes. Order from the icons."
+    },
+    {
+      "id": "lfo1.sync",
+      "module": "lfo1",
+      "label": "LFO 1 SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "sync"
+        },
+        {
+          "value": "one_shot"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 68"
+        }
+      ],
+      "function": "Free, synced or one shot."
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "LFO 1 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 70 (free) / 71 (sync)"
+        }
+      ],
+      "function": "Rate (or division when synced)."
+    },
+    {
+      "id": "lfo1.fade",
+      "module": "lfo1",
+      "label": "LFO 1 FADE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 67"
+        }
+      ],
+      "function": "Fade in (one way) or out (the other)."
+    },
+    {
+      "id": "lfo1.keytrig",
+      "module": "lfo1",
+      "label": "LFO 1 KEYTRIG",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 74"
+        }
+      ],
+      "function": "Restart on each note (TRIGGERING)."
+    },
+    {
+      "id": "lfo2.wave",
+      "module": "lfo2",
+      "label": "LFO 2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw_down"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 78"
+        }
+      ],
+      "function": "LFO waveform (six positions).",
+      "confidence": "inferred",
+      "note": "Six positions per MIDI (0-5) and panel icons; the specifications say four waveshapes. Order from the icons."
+    },
+    {
+      "id": "lfo2.sync",
+      "module": "lfo2",
+      "label": "LFO 2 SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "sync"
+        },
+        {
+          "value": "one_shot"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 77"
+        }
+      ],
+      "function": "Free, synced or one shot."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "LFO 2 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 79 (free) / 80 (sync)"
+        }
+      ],
+      "function": "Rate (or division when synced)."
+    },
+    {
+      "id": "lfo2.fade",
+      "module": "lfo2",
+      "label": "LFO 2 FADE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 76"
+        }
+      ],
+      "function": "Fade in (one way) or out (the other)."
+    },
+    {
+      "id": "lfo2.keytrig",
+      "module": "lfo2",
+      "label": "LFO 2 KEYTRIG",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 83"
+        }
+      ],
+      "function": "Restart on each note (TRIGGERING)."
+    },
+    {
+      "id": "route.osc1_shape.source",
+      "module": "kbd",
+      "label": "Osc1 Shape SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc1 Shape', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 1 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.osc1_shape.scale",
+      "module": "kbd",
+      "label": "Osc1 Shape SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc1 Shape', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 1 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "route.osc2_shape.source",
+      "module": "kbd",
+      "label": "Osc2 Shape SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc2 Shape', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 2 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.osc2_shape.scale",
+      "module": "kbd",
+      "label": "Osc2 Shape SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc2 Shape', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 2 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "route.osc1_pitch.source",
+      "module": "kbd",
+      "label": "Osc1 Pitch SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc1 Pitch', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 3 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.osc1_pitch.scale",
+      "module": "kbd",
+      "label": "Osc1 Pitch SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc1 Pitch', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 3 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "route.osc2_pitch.source",
+      "module": "kbd",
+      "label": "Osc2 Pitch SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc2 Pitch', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 4 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.osc2_pitch.scale",
+      "module": "kbd",
+      "label": "Osc2 Pitch SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Osc2 Pitch', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 4 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "route.cutoff.source",
+      "module": "kbd",
+      "label": "Filter Cut Off SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Filter Cut Off', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 5 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.cutoff.scale",
+      "module": "kbd",
+      "label": "Filter Cut Off SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Filter Cut Off', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 5 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "route.width.source",
+      "module": "kbd",
+      "label": "Filter Width SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "note"
+        },
+        {
+          "value": "env2"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Filter Width', then a SOURCE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 6 LSB 0"
+        }
+      ],
+      "function": "Modulation source for this control."
+    },
+    {
+      "id": "route.width.scale",
+      "module": "kbd",
+      "label": "Filter Width SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "joystick_x"
+        },
+        {
+          "value": "joystick_y"
+        },
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "pedal"
+        },
+        {
+          "value": "full_on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press CONTROL 'Filter Width', then a SCALE button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN MSB 6 LSB 1"
+        }
+      ],
+      "function": "Scaling controller multiplied with the source ('Full On' for none)."
+    },
+    {
+      "id": "kbd.glide",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Glide amount."
+    },
+    {
+      "id": "kbd.glide_auto",
+      "module": "kbd",
+      "label": "GLIDE AUTO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 35"
+        }
+      ],
+      "function": "Glide only on legato notes."
+    },
+    {
+      "id": "kbd.voicing",
+      "module": "kbd",
+      "label": "VOICING (DUOPHONIC / QUAD)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mono"
+        },
+        {
+          "value": "duophonic"
+        },
+        {
+          "value": "quad"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 66"
+        }
+      ],
+      "function": "Mono (both off), Duophonic or Quad."
+    },
+    {
+      "id": "kbd.voice_spread",
+      "module": "kbd",
+      "label": "VOICE SPREAD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 51"
+        }
+      ],
+      "function": "Stereo width across the dual filters."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "Keyboard octave",
+      "kind": "integer",
+      "range": {
+        "min": -4,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 5"
+        }
+      ],
+      "function": "Octave shift.",
+      "confidence": "inferred",
+      "note": "NRPN range 60-67 centred."
+    },
+    {
+      "id": "kbd.joystick",
+      "module": "kbd",
+      "label": "JOYSTICK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "X bend; Y vibrato and modulation scale; hold/latch."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARP",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 121"
+        }
+      ],
+      "function": "Arpeggiator on."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "ARP MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "updown1"
+        },
+        {
+          "value": "updown2"
+        },
+        {
+          "value": "play"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 117"
+        }
+      ],
+      "function": "Order."
+    },
+    {
+      "id": "arp.octaves",
+      "module": "arp",
+      "label": "OCTAVES",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 119"
+        }
+      ],
+      "function": "Range."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "SWING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 120"
+        }
+      ],
+      "function": "Negative or positive swing."
+    },
+    {
+      "id": "arp.sync",
+      "module": "arp",
+      "label": "SYNC",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 116"
+        }
+      ],
+      "function": "2nds to 32nds."
+    },
+    {
+      "id": "arp.bpm",
+      "module": "arp",
+      "label": "BPM (TEMPO)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tempo (LED)."
+    },
+    {
+      "id": "arp.tap",
+      "module": "arp",
+      "label": "TAP TEMPO",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tap tempo."
+    },
+    {
+      "id": "fx.reverb_level",
+      "module": "fx",
+      "label": "REVERB LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Reverb amount."
+    },
+    {
+      "id": "fx.reverb_time",
+      "module": "fx",
+      "label": "REVERB TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 103"
+        }
+      ],
+      "function": "Decay."
+    },
+    {
+      "id": "fx.reverb_type",
+      "module": "fx",
+      "label": "REVERB LPF / HPF",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "none"
+        },
+        {
+          "value": "lpf"
+        },
+        {
+          "value": "hpf"
+        },
+        {
+          "value": "lpf_hpf"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 102"
+        }
+      ],
+      "function": "Reverb filter switches (with type, 0-7 over MIDI).",
+      "confidence": "inferred",
+      "note": "MIDI 'Reverb type' runs 0-7 for the two filter buttons; mapping not documented."
+    },
+    {
+      "id": "fx.chorus_level",
+      "module": "fx",
+      "label": "CHORUS LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Chorus amount."
+    },
+    {
+      "id": "fx.chorus_type",
+      "module": "fx",
+      "label": "CHORUS MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 111"
+        }
+      ],
+      "function": "Four types (LEDs 1-4)."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master volume."
+    },
+    {
+      "id": "out.tune",
+      "module": "out",
+      "label": "MASTER TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tuning."
+    },
+    {
+      "id": "ui.patch",
+      "module": "kbd",
+      "label": "PATCH 0-9 / 0-9",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tens and ones."
+    },
+    {
+      "id": "ui.bank",
+      "module": "kbd",
+      "label": "BANK A / B",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bank; SHIFT toggles protection."
+    },
+    {
+      "id": "ui.save",
+      "module": "kbd",
+      "label": "SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Save to bank, tens, ones, then SAVE."
+    },
+    {
+      "id": "ui.init",
+      "module": "kbd",
+      "label": "INIT [SET PARAMS]",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Initial patch (single saw)."
+    },
+    {
+      "id": "ui.compare",
+      "module": "kbd",
+      "label": "COMPARE [RANDOM]",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Compare; SHIFT randomises every parameter."
+    },
+    {
+      "id": "ui.shift",
+      "module": "kbd",
+      "label": "CANCEL / SHIFT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions."
+    },
+    {
+      "id": "sys.midi_ch",
+      "module": "kbd",
+      "label": "MIDI channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold a key while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold a key at power-up (lowest C = 1, highest D = 16); remembered."
+    },
+    {
+      "id": "sys.local_off",
+      "module": "kbd",
+      "label": "Local Off",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold ARP while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold ARP at power-up (not saved)."
+    },
+    {
+      "id": "sys.reset",
+      "module": "kbd",
+      "label": "Reset",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold top C while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold top C at power-up: MIDI channel, bend range, hold mode."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out_l",
+      "label": "LINE OUT L/MONO",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line_l",
+      "function": "Left / mono."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "LINE OUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line_r",
+      "function": "Right."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones."
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Sustain switch."
+    },
+    {
+      "id": "jack.pedal",
+      "label": "PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "kbd.pedal_in",
+      "function": "Continuous pedal (SCALE source)."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB-C",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-C",
+      "node": null,
+      "function": "Class-compliant USB MIDI; bus power."
+    },
+    {
+      "id": "jack.power",
+      "label": "DC 9V",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "9 V DC 600 mA."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "arp.notes",
+      "to": "kbd.midi_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.pitch",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.joy_x",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Pitch bend."
+    },
+    {
+      "id": "c06",
+      "from": "kbd.joy_x",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "osc1.out",
+      "to": "mix.osc1",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "osc2.out",
+      "to": "mix.osc2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "sub.out",
+      "to": "mix.sub",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "sub.level"
+    },
+    {
+      "id": "c10",
+      "from": "noise.out",
+      "to": "mix.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.noise_balance"
+    },
+    {
+      "id": "c11",
+      "from": "osc1.out",
+      "to": "ring.a",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "osc2.out",
+      "to": "ring.b",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "ring.out",
+      "to": "mix.ring",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.ring_balance"
+    },
+    {
+      "id": "c14",
+      "from": "mix.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vcf.drive"
+    },
+    {
+      "id": "c15",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.keytrack"
+    },
+    {
+      "id": "c16",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "env1.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Env 1 normalised to amplitude."
+    },
+    {
+      "id": "c18",
+      "from": "kbd.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "kbd.velocity",
+      "to": "env1.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env1.velocity"
+    },
+    {
+      "id": "c20",
+      "from": "kbd.gate",
+      "to": "lfo1.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.keytrig",
+        "equals": true
+      }
+    },
+    {
+      "id": "c21",
+      "from": "kbd.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "kbd.velocity",
+      "to": "env2.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env2.velocity"
+    },
+    {
+      "id": "c23",
+      "from": "kbd.gate",
+      "to": "lfo2.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.keytrig",
+        "equals": true
+      }
+    },
+    {
+      "id": "c24",
+      "from": "env1.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_shape.source",
+        "equals": "env1"
+      },
+      "amount_expr": "osc1.shape_mod * scale(route.osc1_shape.scale)",
+      "note": "Osc1 Shape route."
+    },
+    {
+      "id": "c25",
+      "from": "lfo1.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_shape.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "osc1.shape_mod * scale(route.osc1_shape.scale)",
+      "note": "Osc1 Shape route."
+    },
+    {
+      "id": "c26",
+      "from": "kbd.pitch",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_shape.source",
+        "equals": "note"
+      },
+      "amount_expr": "osc1.shape_mod * scale(route.osc1_shape.scale)",
+      "note": "Osc1 Shape route."
+    },
+    {
+      "id": "c27",
+      "from": "env2.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_shape.source",
+        "equals": "env2"
+      },
+      "amount_expr": "osc1.shape_mod * scale(route.osc1_shape.scale)",
+      "note": "Osc1 Shape route."
+    },
+    {
+      "id": "c28",
+      "from": "lfo2.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_shape.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "osc1.shape_mod * scale(route.osc1_shape.scale)",
+      "note": "Osc1 Shape route."
+    },
+    {
+      "id": "c29",
+      "from": "env1.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_shape.source",
+        "equals": "env1"
+      },
+      "amount_expr": "osc2.shape_mod * scale(route.osc2_shape.scale)",
+      "note": "Osc2 Shape route."
+    },
+    {
+      "id": "c30",
+      "from": "lfo1.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_shape.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "osc2.shape_mod * scale(route.osc2_shape.scale)",
+      "note": "Osc2 Shape route."
+    },
+    {
+      "id": "c31",
+      "from": "kbd.pitch",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_shape.source",
+        "equals": "note"
+      },
+      "amount_expr": "osc2.shape_mod * scale(route.osc2_shape.scale)",
+      "note": "Osc2 Shape route."
+    },
+    {
+      "id": "c32",
+      "from": "env2.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_shape.source",
+        "equals": "env2"
+      },
+      "amount_expr": "osc2.shape_mod * scale(route.osc2_shape.scale)",
+      "note": "Osc2 Shape route."
+    },
+    {
+      "id": "c33",
+      "from": "lfo2.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_shape.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "osc2.shape_mod * scale(route.osc2_shape.scale)",
+      "note": "Osc2 Shape route."
+    },
+    {
+      "id": "c34",
+      "from": "env1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_pitch.source",
+        "equals": "env1"
+      },
+      "amount_expr": "osc1.pitch_mod * scale(route.osc1_pitch.scale)",
+      "note": "Osc1 Pitch route."
+    },
+    {
+      "id": "c35",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_pitch.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "osc1.pitch_mod * scale(route.osc1_pitch.scale)",
+      "note": "Osc1 Pitch route."
+    },
+    {
+      "id": "c36",
+      "from": "kbd.pitch",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_pitch.source",
+        "equals": "note"
+      },
+      "amount_expr": "osc1.pitch_mod * scale(route.osc1_pitch.scale)",
+      "note": "Osc1 Pitch route."
+    },
+    {
+      "id": "c37",
+      "from": "env2.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_pitch.source",
+        "equals": "env2"
+      },
+      "amount_expr": "osc1.pitch_mod * scale(route.osc1_pitch.scale)",
+      "note": "Osc1 Pitch route."
+    },
+    {
+      "id": "c38",
+      "from": "lfo2.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc1_pitch.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "osc1.pitch_mod * scale(route.osc1_pitch.scale)",
+      "note": "Osc1 Pitch route."
+    },
+    {
+      "id": "c39",
+      "from": "env1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_pitch.source",
+        "equals": "env1"
+      },
+      "amount_expr": "osc2.pitch_mod * scale(route.osc2_pitch.scale)",
+      "note": "Osc2 Pitch route."
+    },
+    {
+      "id": "c40",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_pitch.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "osc2.pitch_mod * scale(route.osc2_pitch.scale)",
+      "note": "Osc2 Pitch route."
+    },
+    {
+      "id": "c41",
+      "from": "kbd.pitch",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_pitch.source",
+        "equals": "note"
+      },
+      "amount_expr": "osc2.pitch_mod * scale(route.osc2_pitch.scale)",
+      "note": "Osc2 Pitch route."
+    },
+    {
+      "id": "c42",
+      "from": "env2.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_pitch.source",
+        "equals": "env2"
+      },
+      "amount_expr": "osc2.pitch_mod * scale(route.osc2_pitch.scale)",
+      "note": "Osc2 Pitch route."
+    },
+    {
+      "id": "c43",
+      "from": "lfo2.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.osc2_pitch.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "osc2.pitch_mod * scale(route.osc2_pitch.scale)",
+      "note": "Osc2 Pitch route."
+    },
+    {
+      "id": "c44",
+      "from": "env1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.cutoff.source",
+        "equals": "env1"
+      },
+      "amount_expr": "vcf.cutoff_mod * scale(route.cutoff.scale)",
+      "note": "Filter Cut Off route."
+    },
+    {
+      "id": "c45",
+      "from": "lfo1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.cutoff.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "vcf.cutoff_mod * scale(route.cutoff.scale)",
+      "note": "Filter Cut Off route."
+    },
+    {
+      "id": "c46",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.cutoff.source",
+        "equals": "note"
+      },
+      "amount_expr": "vcf.cutoff_mod * scale(route.cutoff.scale)",
+      "note": "Filter Cut Off route."
+    },
+    {
+      "id": "c47",
+      "from": "env2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.cutoff.source",
+        "equals": "env2"
+      },
+      "amount_expr": "vcf.cutoff_mod * scale(route.cutoff.scale)",
+      "note": "Filter Cut Off route."
+    },
+    {
+      "id": "c48",
+      "from": "lfo2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.cutoff.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "vcf.cutoff_mod * scale(route.cutoff.scale)",
+      "note": "Filter Cut Off route."
+    },
+    {
+      "id": "c49",
+      "from": "env1.out",
+      "to": "vcf.width_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.width.source",
+        "equals": "env1"
+      },
+      "amount_expr": "vcf.width_mod * scale(route.width.scale)",
+      "note": "Filter Width route."
+    },
+    {
+      "id": "c50",
+      "from": "lfo1.out",
+      "to": "vcf.width_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.width.source",
+        "equals": "lfo1"
+      },
+      "amount_expr": "vcf.width_mod * scale(route.width.scale)",
+      "note": "Filter Width route."
+    },
+    {
+      "id": "c51",
+      "from": "kbd.pitch",
+      "to": "vcf.width_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.width.source",
+        "equals": "note"
+      },
+      "amount_expr": "vcf.width_mod * scale(route.width.scale)",
+      "note": "Filter Width route."
+    },
+    {
+      "id": "c52",
+      "from": "env2.out",
+      "to": "vcf.width_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.width.source",
+        "equals": "env2"
+      },
+      "amount_expr": "vcf.width_mod * scale(route.width.scale)",
+      "note": "Filter Width route."
+    },
+    {
+      "id": "c53",
+      "from": "lfo2.out",
+      "to": "vcf.width_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "route.width.source",
+        "equals": "lfo2"
+      },
+      "amount_expr": "vcf.width_mod * scale(route.width.scale)",
+      "note": "Filter Width route."
+    },
+    {
+      "id": "c54",
+      "from": "vca.out",
+      "to": "fx.in_l",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Paths/voices spread across L/R by VOICE SPREAD."
+    },
+    {
+      "id": "c55",
+      "from": "vca.out",
+      "to": "fx.in_r",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c56",
+      "from": "fx.out_l",
+      "to": "out.l",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c57",
+      "from": "fx.out_r",
+      "to": "out.r",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "mod_matrix": {
+    "name": "Mod routes (CONTROL x SOURCE x SCALE)",
+    "module": "kbd",
+    "slots": 6,
+    "combine": "multiply",
+    "slot_parameters": [
+      {
+        "slot": 1,
+        "source": "route.osc1_shape.source",
+        "source_b": "route.osc1_shape.scale",
+        "destination": "osc1.shape_mod",
+        "depth": "osc1.shape_mod"
+      },
+      {
+        "slot": 2,
+        "source": "route.osc2_shape.source",
+        "source_b": "route.osc2_shape.scale",
+        "destination": "osc2.shape_mod",
+        "depth": "osc2.shape_mod"
+      },
+      {
+        "slot": 3,
+        "source": "route.osc1_pitch.source",
+        "source_b": "route.osc1_pitch.scale",
+        "destination": "osc1.pitch_mod",
+        "depth": "osc1.pitch_mod"
+      },
+      {
+        "slot": 4,
+        "source": "route.osc2_pitch.source",
+        "source_b": "route.osc2_pitch.scale",
+        "destination": "osc2.pitch_mod",
+        "depth": "osc2.pitch_mod"
+      },
+      {
+        "slot": 5,
+        "source": "route.cutoff.source",
+        "source_b": "route.cutoff.scale",
+        "destination": "vcf.cutoff_mod",
+        "depth": "vcf.cutoff_mod"
+      },
+      {
+        "slot": 6,
+        "source": "route.width.source",
+        "source_b": "route.width.scale",
+        "destination": "vcf.width_mod",
+        "depth": "vcf.width_mod"
+      }
+    ],
+    "sources": [
+      {
+        "id": 0,
+        "name": "Env 1",
+        "node": "env1.out",
+        "per_voice": true
+      },
+      {
+        "id": 1,
+        "name": "LFO 1",
+        "node": "lfo1.out",
+        "per_voice": false
+      },
+      {
+        "id": 2,
+        "name": "Note",
+        "node": "kbd.pitch",
+        "per_voice": true
+      },
+      {
+        "id": 3,
+        "name": "Env 2",
+        "node": "env2.out",
+        "per_voice": true
+      },
+      {
+        "id": 4,
+        "name": "LFO 2",
+        "node": "lfo2.out",
+        "per_voice": false
+      },
+      {
+        "id": 5,
+        "name": "Full On",
+        "per_voice": false
+      },
+      {
+        "id": 6,
+        "name": "SCALE: Joystick X",
+        "node": "kbd.joy_x",
+        "per_voice": false
+      },
+      {
+        "id": 7,
+        "name": "SCALE: Joystick Y",
+        "node": "kbd.joy_y",
+        "per_voice": false
+      },
+      {
+        "id": 8,
+        "name": "SCALE: Aftertouch",
+        "node": "kbd.aftertouch",
+        "per_voice": false
+      },
+      {
+        "id": 9,
+        "name": "SCALE: Velocity",
+        "node": "kbd.velocity",
+        "per_voice": true
+      },
+      {
+        "id": 10,
+        "name": "SCALE: Pedal",
+        "node": "kbd.pedal",
+        "per_voice": false
+      },
+      {
+        "id": 11,
+        "name": "SCALE: Full On",
+        "per_voice": false
+      }
+    ],
+    "destinations": [
+      {
+        "id": 0,
+        "name": "Osc1 Shape",
+        "parameter": "osc1.shape_mod",
+        "description": "CONTROL button; depth from the panel's osc1.shape_mod knob"
+      },
+      {
+        "id": 1,
+        "name": "Osc2 Shape",
+        "parameter": "osc2.shape_mod",
+        "description": "CONTROL button; depth from the panel's osc2.shape_mod knob"
+      },
+      {
+        "id": 2,
+        "name": "Osc1 Pitch",
+        "parameter": "osc1.pitch_mod",
+        "description": "CONTROL button; depth from the panel's osc1.pitch_mod knob"
+      },
+      {
+        "id": 3,
+        "name": "Osc2 Pitch",
+        "parameter": "osc2.pitch_mod",
+        "description": "CONTROL button; depth from the panel's osc2.pitch_mod knob"
+      },
+      {
+        "id": 4,
+        "name": "Filter Cut Off",
+        "parameter": "vcf.cutoff_mod",
+        "description": "CONTROL button; depth from the panel's vcf.cutoff_mod knob"
+      },
+      {
+        "id": 5,
+        "name": "Filter Width",
+        "parameter": "vcf.width_mod",
+        "description": "CONTROL button; depth from the panel's vcf.width_mod knob"
+      }
+    ],
+    "depth_range": {
+      "min": -64,
+      "max": 63
+    },
+    "note": "Each CONTROL has one route: SOURCE (Env 1, LFO 1, Note, Env 2, LFO 2, Full On) multiplied by SCALE (Joystick X, Joystick Y, Aftertouch, Velocity, Pedal, Full On), at the depth of that control's bipolar MOD knob. Route source and scale are NRPN MSB 1-6, LSB 0/1. Source ids 0-5 are SOURCE choices; 6-11 are the SCALE choices (Joystick X ... Full On, scale values 0-5)."
+  },
+  "indicators": [
+    {
+      "id": "voice_leds",
+      "module": "kbd",
+      "label": "VOICE 1 / 2 LEDs",
+      "kind": "led",
+      "function": "Voice path activity."
+    },
+    {
+      "id": "kb_led",
+      "module": "kbd",
+      "label": "KEYBOARD LED",
+      "kind": "led",
+      "function": "Keyboard activity."
+    },
+    {
+      "id": "filter_leds",
+      "module": "vcf",
+      "label": "filter mode LEDs",
+      "kind": "led",
+      "function": "LP12 ... Wide Notch."
+    },
+    {
+      "id": "rate_leds",
+      "module": "lfo1",
+      "label": "LFO 1/2 and BPM LEDs",
+      "kind": "led",
+      "function": "Rates."
+    },
+    {
+      "id": "chorus_leds",
+      "module": "fx",
+      "label": "chorus LEDs 1-4",
+      "kind": "led",
+      "function": "Chorus type."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["osc1", "osc2", "mix", "vcf", "vca", "fx"],
+      "rule": "Per path: Osc 1 (+ sub) and Osc 2 (+ density) balanced, then against noise, then against ring mod, into the dual filter with drive, then multi-stage analogue VCAs under Env 1; paths spread in stereo, then chorus and reverb."
+    },
+    {
+      "id": "b02",
+      "name": "Dual filter",
+      "applies_to": ["vcf"],
+      "rule": "OSCar-style: two state-variable filters per path on SSI2164 VCAs. 12 dB modes give one simple filter per voice path (duophonic split); 24 dB modes cascade; Wide Band runs LP and HP in series and Wide Notch in parallel, with WIDTH setting the gap."
+    },
+    {
+      "id": "b03",
+      "name": "Mod routes",
+      "applies_to": ["kbd"],
+      "rule": "Press a CONTROL (Osc 1/2 shape or pitch, cutoff, width), then a SOURCE, then a SCALE (Full On for none): the source times the scale modulates the control at its MOD knob's depth."
+    },
+    {
+      "id": "b04",
+      "name": "Envelopes and LFOs",
+      "applies_to": ["env1", "env2", "lfo1", "lfo2"],
+      "rule": "ADSR with SUST FALL and REPEAT (looping), bipolar velocity, legato triggering; LFOs with fade in/out, sync or one-shot, and key trigger."
+    },
+    {
+      "id": "b05",
+      "name": "Voicing",
+      "applies_to": ["kbd"],
+      "rule": "Mono, Duophonic (two notes, one per signal path, each with its own 12 dB filter) or Quad (four voices across the paths); VOICE SPREAD widens the stereo image; GLIDE with auto (legato) mode."
+    },
+    {
+      "id": "b06",
+      "name": "Patches",
+      "applies_to": ["kbd"],
+      "rule": "200 locations: bank, tens, ones. INIT gives a single saw; SHIFT + COMPARE randomises; SAVE, location, SAVE stores; SHIFT + bank toggles protection."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "note": "community chart: 1 (joystick Y), 5 glide, 7 trim, 11 expression (pedal), 64, 71, 74 or 29/61, 75, 80, 82-89, 91, 93, 12/44 and 19/51 (14-bit shapes), 23, 24, 26, 27, 35, 122"
+      },
+      {
+        "message": "nrpn",
+        "note": "remaining parameters and mod routes (see parameter access)"
+      },
+      {
+        "message": "clock",
+        "note": "arpeggiator auto-sync"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on",
+        "note": "polyphonic as a controller"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "control_change",
+        "note": "all knobs and joystick"
+      },
+      {
+        "message": "nrpn"
+      }
+    ],
+    "channel_note": "Channel 1-16 chosen at power-up (default 1).",
+    "note": "Numbers from midi.guide; PWM's guide confirms knobs and joystick send and receive MIDI."
+  },
+  "specifications": {
+    "voices": "4 (Quad), 2 (Duophonic) or 1",
+    "signal_paths": 2,
+    "oscillators": "2 + sub + density per voice; 6 wave types incl. Mantis and 9 OSCar wavetables",
+    "filters": "dual SVF per path, 8 modes",
+    "envelopes": 2,
+    "lfos": 2,
+    "mod_routes": 6,
+    "effects": "chorus (4 types), reverb",
+    "keyboard": "37 semi-weighted keys, velocity, channel aftertouch",
+    "patches": "200 (100 factory, 100 user)",
+    "connections": {
+      "outputs": "L/mono, R 1/4\"",
+      "phones": "1/4\" TRS",
+      "pedals": "sustain, continuous pedal",
+      "midi": "in, out, thru; USB-C"
+    },
+    "power": "9 V DC 600 mA or USB bus power",
+    "dimensions_mm": {
+      "w": 618,
+      "d": 320,
+      "h": 112
+    },
+    "weight_kg": 5.34,
+    "price": "USD 1,499 / EUR 1,599 / GBP 1,349",
+    "factory_patches": {
+      "A00": {
+        "name": "Talky AT",
+        "designer": "PW"
+      },
+      "A01": {
+        "name": "3 Oh 3",
+        "designer": "KK"
+      },
+      "A02": {
+        "name": "Wasp King",
+        "designer": "DF"
+      },
+      "A03": {
+        "name": "Crystal Organ",
+        "designer": "DF"
+      },
+      "A04": {
+        "name": "Razor Pad",
+        "designer": "DF"
+      },
+      "A05": {
+        "name": "Two Forty Two",
+        "designer": "BR"
+      },
+      "A06": {
+        "name": "Gravitas Lead",
+        "designer": "DF"
+      },
+      "A07": {
+        "name": "Stereo Sheen",
+        "designer": "DF"
+      },
+      "A08": {
+        "name": "Space Roulette",
+        "designer": "DF"
+      },
+      "A09": {
+        "name": "Beach Dazed",
+        "designer": "KK"
+      },
+      "A10": {
+        "name": "HAL8999",
+        "designer": "PW"
+      },
+      "A11": {
+        "name": "Instability",
+        "designer": "DF"
+      },
+      "A12": {
+        "name": "A Calm Respite",
+        "designer": "BR"
+      },
+      "A13": {
+        "name": "Talking Growler",
+        "designer": "KK"
+      },
+      "A14": {
+        "name": "Highpass Ripper",
+        "designer": "KK"
+      },
+      "A15": {
+        "name": "Anomaly",
+        "designer": "VT"
+      },
+      "A16": {
+        "name": "Le Violon",
+        "designer": "PW"
+      },
+      "A17": {
+        "name": "Poor Mouse",
+        "designer": "PW"
+      },
+      "A18": {
+        "name": "Reflecting Pools",
+        "designer": "PW"
+      },
+      "A19": {
+        "name": "Trippy Arpy",
+        "designer": "PW"
+      },
+      "A20": {
+        "name": "Hollow Knocker Bass",
+        "designer": "KK"
+      },
+      "A21": {
+        "name": "Bandpass OD",
+        "designer": "KK"
+      },
+      "A22": {
+        "name": "Proggy Lead",
+        "designer": "KK"
+      },
+      "A23": {
+        "name": "Moog Over",
+        "designer": "KK"
+      },
+      "A24": {
+        "name": "Filter to X+-",
+        "designer": "KK"
+      },
+      "A25": {
+        "name": "Noisy Stabber",
+        "designer": "KK"
+      },
+      "A26": {
+        "name": "Aftertouch Filter",
+        "designer": "KK"
+      },
+      "A27": {
+        "name": "All ur Saws",
+        "designer": "KK"
+      },
+      "A28": {
+        "name": "Hooverish",
+        "designer": "KK"
+      },
+      "A29": {
+        "name": "Repeater",
+        "designer": "KK"
+      },
+      "A30": {
+        "name": "Kairos",
+        "designer": "VT"
+      },
+      "A31": {
+        "name": "Ananke",
+        "designer": "VT"
+      },
+      "A32": {
+        "name": "Iterations",
+        "designer": "VT"
+      },
+      "A33": {
+        "name": "Flicker",
+        "designer": "VT"
+      },
+      "A34": {
+        "name": "Kinetics",
+        "designer": "VT"
+      },
+      "A35": {
+        "name": "Carbon",
+        "designer": "VT"
+      },
+      "A36": {
+        "name": "Antimatter",
+        "designer": "VT"
+      },
+      "A37": {
+        "name": "Mobius",
+        "designer": "VT"
+      },
+      "A38": {
+        "name": "Reckoning",
+        "designer": "VT"
+      },
+      "A39": {
+        "name": "Hawkins",
+        "designer": "VT"
+      },
+      "A40": {
+        "name": "Just Foolin’",
+        "designer": "DF"
+      },
+      "A41": {
+        "name": "Boomer Bass",
+        "designer": "DF"
+      },
+      "A42": {
+        "name": "Crazy Touch",
+        "designer": "DF"
+      },
+      "A43": {
+        "name": "Pressure Scream",
+        "designer": "DF"
+      },
+      "A44": {
+        "name": "Sweeping Legend",
+        "designer": "DF"
+      },
+      "A45": {
+        "name": "Funky Mantis",
+        "designer": "DF"
+      },
+      "A46": {
+        "name": "Metallic Perc",
+        "designer": "DF"
+      },
+      "A47": {
+        "name": "Dirty Polly",
+        "designer": "DF"
+      },
+      "A48": {
+        "name": "Jedi Gnat",
+        "designer": "DF"
+      },
+      "A49": {
+        "name": "Lacking Patience",
+        "designer": "BR"
+      },
+      "A50": {
+        "name": "TrentSetTable",
+        "designer": "TQ"
+      },
+      "A51": {
+        "name": "Adjusting Pieces",
+        "designer": "TQ"
+      },
+      "A52": {
+        "name": "Gogh on a bike",
+        "designer": "TQ"
+      },
+      "A53": {
+        "name": "Morph",
+        "designer": "TQ"
+      },
+      "A54": {
+        "name": "Strangest Thing",
+        "designer": "TQ"
+      },
+      "A55": {
+        "name": "Portisneck",
+        "designer": "TQ"
+      },
+      "A56": {
+        "name": "CitrusNightMare",
+        "designer": "TQ"
+      },
+      "A57": {
+        "name": "ONE",
+        "designer": "PH"
+      },
+      "A58": {
+        "name": "TWO",
+        "designer": "PH"
+      },
+      "A59": {
+        "name": "THREE",
+        "designer": "PH"
+      },
+      "A60": {
+        "name": "Big Rez",
+        "designer": "TW"
+      },
+      "A61": {
+        "name": "S&H Shredder",
+        "designer": "TW"
+      },
+      "A62": {
+        "name": "Punchy Bass",
+        "designer": "TW"
+      },
+      "A63": {
+        "name": "Bandpass Arpeg",
+        "designer": "TW"
+      },
+      "A64": {
+        "name": "Stereo Bounce",
+        "designer": "TW"
+      },
+      "A65": {
+        "name": "Ear Bleed Lead",
+        "designer": "TW"
+      },
+      "A66": {
+        "name": "Notch lead",
+        "designer": "TW"
+      },
+      "A67": {
+        "name": "Not For Use",
+        "designer": "TW"
+      },
+      "A68": {
+        "name": "Wakeman",
+        "designer": "MP"
+      },
+      "A69": {
+        "name": "WT",
+        "designer": "MP"
+      },
+      "A70": {
+        "name": "BIG LEAD",
+        "designer": "DM"
+      },
+      "A71": {
+        "name": "FLUTE",
+        "designer": "DM"
+      },
+      "A72": {
+        "name": "6TH POLY",
+        "designer": "DM"
+      },
+      "A73": {
+        "name": "POLYSYNTH",
+        "designer": "DM"
+      },
+      "A74": {
+        "name": "FAT BASS",
+        "designer": "DM"
+      },
+      "A75": {
+        "name": "SQUARE LEAD",
+        "designer": "DM"
+      },
+      "A76": {
+        "name": "SYNTH BASS",
+        "designer": "DM"
+      },
+      "A77": {
+        "name": "Vangelis",
+        "designer": "MP"
+      },
+      "A78": {
+        "name": "Pulse",
+        "designer": "MP"
+      },
+      "A79": {
+        "name": "VocalDingAT",
+        "designer": "MP"
+      },
+      "A80": {
+        "name": "Arping Madness",
+        "designer": "PW"
+      },
+      "A81": {
+        "name": "Big Sympth",
+        "designer": "PW"
+      },
+      "A82": {
+        "name": "Saw Me In Half",
+        "designer": "PW"
+      },
+      "A83": {
+        "name": "Bass In Time",
+        "designer": "PW"
+      },
+      "A84": {
+        "name": "Big Slide",
+        "designer": "PW"
+      },
+      "A85": {
+        "name": "Saw Ring",
+        "designer": "PW"
+      },
+      "A86": {
+        "name": "Glassy Lead",
+        "designer": "PW"
+      },
+      "A87": {
+        "name": "Large Organ",
+        "designer": "PW"
+      },
+      "A88": {
+        "name": "Rave Fifths",
+        "designer": "PW"
+      },
+      "A89": {
+        "name": "Metal",
+        "designer": "MP"
+      },
+      "A90": {
+        "name": "Random",
+        "designer": "MP"
+      },
+      "A91": {
+        "name": "Spaceship",
+        "designer": "MP"
+      },
+      "A92": {
+        "name": "Underwater Love",
+        "designer": "PW"
+      },
+      "A93": {
+        "name": "Yoi Yoi",
+        "designer": "PW"
+      },
+      "A94": {
+        "name": "Twin Filter OSC",
+        "designer": "PW"
+      },
+      "A95": {
+        "name": "COPTER",
+        "designer": "DM"
+      },
+      "A96": {
+        "name": "BROKEN ROBOT",
+        "designer": "DM"
+      },
+      "A97": {
+        "name": "Fractalized",
+        "designer": "BR"
+      },
+      "A98": {
+        "name": "Further Fractals",
+        "designer": "BR"
+      },
+      "A99": {
+        "name": "Empty Machinery",
+        "designer": "BR"
+      }
+    }
+  },
+  "omitted_from_source": ["box contents and safety", "late-breaking information sheet"],
+  "not_in_source": [
+    "full user guide (promised, not yet published)",
+    "how the WT position chooses among the Mantis and OSCar wavetables",
+    "envelope and LFO time ranges",
+    "reverb type 0-7 mapping"
+  ],
+  "source_inconsistencies": [
+    "The getting started guide calls Mantis 'a sophisticated Duophonic' synth; the specifications say 'Four Voice Polyphonic' with Quad, Duophonic and Mono modes (Quad probably added in firmware).",
+    "The specifications list 4 LFO waveshapes; the panel shows more icons and the MIDI chart gives six values.",
+    "The specifications list 'LFO Keytrig' twice and leave the Tri and Saw shape descriptions blank.",
+    "The patch sheet credits 'DM' for A70-A76 but DM is not in its list of designers.",
+    "The specifications describe a 'detune oscillator per voice'; the panel and MIDI chart place Density, Density Rate, Semitone and Cent with Oscillator 2."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Documentation",
+      "detail": "Only a getting started guide exists; controls come from its top panel image, behaviour from the specifications, numbers from the community MIDI chart."
+    },
+    {
+      "topic": "Signal paths",
+      "detail": "The two analogue paths are modelled once (per_voice); voicing modes are behaviours."
+    },
+    {
+      "topic": "Mod routes",
+      "detail": "Six routes with a source and a scale each (schema source_b with multiply); route connections are drawn per source with a scale expression."
+    }
+  ]
+}

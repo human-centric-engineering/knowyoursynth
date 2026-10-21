@@ -1,0 +1,2193 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "dreadbox-nymphes",
+    "manufacturer": "Dreadbox",
+    "model": "Nymphes",
+    "category": "6-voice analogue polyphonic desktop synthesizer with digital reverb, USB powered",
+    "based_on": "Original design (Greece, 2021), inspired by the simplicity of the Sequential Six-Trak.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Dreadbox Nymphes Owner's Manual V2.0",
+        "kind": "user_manual",
+        "file": "Nymphes_User_Manual.pdf",
+        "pages": 23,
+        "note": "Features, power, quick start, every slider parameter, presets, menu (modes, chords, LFO 2, reverb, mod sources, MIDI/MPE), global settings, SysEx, preset list, CC list (image, read by OCR and checked)."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 6,
+    "polyphony_mode": "POLY (6 voices), UNI A (6 per note), UNI B (4 per note), TRI (3 notes x 2), DUO (2 notes x 3), MONO; chords in the unison-type modes; MPE",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "49 user and 49 factory presets in banks A-G, 1-7 (each location holds both); chords, mod routings and reverb stored per preset.",
+    "semi_modular": false,
+    "panel_counts": {
+      "sliders": 14,
+      "slider_parameters": 28,
+      "buttons": 4,
+      "rotary_switch": 1,
+      "keys": 0
+    },
+    "summary": "Per voice: an analogue oscillator whose WAVE morphs saw, square and triangle (with pulse width), a square sub an octave down, white noise, a 24 dB resonant low-pass filter (32.7 Hz-16.7 kHz, self-oscillating), a filter ADSR (also to pitch), an amp ADSR and a polyphonic LFO 1 to pitch and cutoff. The six voices pass a 6 dB high-pass and a digital reverb. LFO 2 (monophonic) and mod wheel, velocity and aftertouch reach most slider parameters. Glide, detune and chord sliders; six play modes."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "MIDI and voice assigner",
+      "panel_section": "MENU: MODE / MIDI C",
+      "scope": "common",
+      "description": "Receives MIDI over 3.5 mm TRS or USB (no keyboard); assigns six voices per play mode, plays programmed chords, glide (fixed rate, polyphonic), detune; MPE.",
+      "inputs": ["kbd.midi_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.velocity", "kbd.aftertouch", "kbd.modwheel"]
+    },
+    {
+      "id": "osc",
+      "type": "oscillator",
+      "name": "Oscillator",
+      "panel_section": "OSCILLATOR",
+      "scope": "per_voice",
+      "description": "Analogue VCO with WAVE morphing saw > square > triangle; pulse width on the pulse part.",
+      "inputs": ["osc.pitch_cv"],
+      "outputs": ["osc.out"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "OSCILLATOR",
+      "scope": "per_voice",
+      "description": "Square one octave below the oscillator.",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "OSCILLATOR",
+      "scope": "per_voice",
+      "description": "White noise.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Source mix",
+      "panel_section": "OSCILLATOR",
+      "scope": "per_voice",
+      "description": "LVL, SUB and NOISE levels.",
+      "inputs": ["mixer.osc", "mixer.sub", "mixer.noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "lpf",
+      "type": "filter",
+      "name": "Low-pass filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "24 dB/oct resonant low-pass, 32.7 Hz-16.7 kHz, self-oscillates at maximum resonance; tracks 1:1 at full TRACK.",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [32.7, 16744]
+      },
+      "inputs": ["lpf.in", "lpf.cutoff_cv"],
+      "outputs": ["lpf.out"]
+    },
+    {
+      "id": "env_f",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR to filter cutoff (EG) and oscillator pitch (oscillator EG); unipolar.",
+      "inputs": ["env_f.gate"],
+      "outputs": ["env_f.out"]
+    },
+    {
+      "id": "env_a",
+      "type": "envelope",
+      "name": "Amp envelope",
+      "panel_section": "ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR on the voice VCA.",
+      "inputs": ["env_a.gate"],
+      "outputs": ["env_a.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPE",
+      "scope": "per_voice",
+      "description": "Voice amplitude under the amp envelope.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO",
+      "scope": "per_voice",
+      "description": "Polyphonic, bipolar: triangle, saw down, saw up, square, random; low, high, track or BPM rate; delay and fade (one-shot with delay 0, fade full); key sync. Fixed to pitch and cutoff.",
+      "inputs": ["lfo1.key_sync"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "MENU: LFO 2",
+      "scope": "common",
+      "description": "Monophonic, bipolar, same controls as LFO 1; assignable to the first 12 sliders' 24 parameters.",
+      "inputs": [],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "High-pass filter",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "6 dB/oct non-resonant high-pass on the summed voices (with the low-pass, a band-pass).",
+      "properties": {
+        "slope_db_per_oct": 6
+      },
+      "inputs": ["hpf.in"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverb",
+      "panel_section": "MENU: REVERB",
+      "scope": "common",
+      "description": "Digital reverb: size, decay, low-pass filter, mix; the only digital stage.",
+      "inputs": ["reverb.in"],
+      "outputs": ["reverb.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "rear panel",
+      "scope": "common",
+      "description": "Volume to the line output and headphones.",
+      "inputs": ["out.in"],
+      "outputs": ["out.line", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc.wave",
+      "module": "osc",
+      "label": "WAVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 1,
+          "note": "slider 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        }
+      ],
+      "function": "Morph saw > square > triangle."
+    },
+    {
+      "id": "osc.pw",
+      "module": "osc",
+      "label": "PW",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 1,
+          "note": "slider 1 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        }
+      ],
+      "function": "Pulse width of the pulse part of the wave."
+    },
+    {
+      "id": "osc.level",
+      "module": "mixer",
+      "label": "LVL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 2,
+          "note": "slider 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9"
+        }
+      ],
+      "function": "Oscillator level."
+    },
+    {
+      "id": "kbd.glide",
+      "module": "kbd",
+      "label": "GLD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 2,
+          "note": "slider 2 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Glide (fixed rate, polyphonic)."
+    },
+    {
+      "id": "sub.level",
+      "module": "mixer",
+      "label": "SUB",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 3,
+          "note": "slider 3"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        }
+      ],
+      "function": "Sub oscillator level."
+    },
+    {
+      "id": "kbd.detune",
+      "module": "kbd",
+      "label": "DTN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 3,
+          "note": "slider 3 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15"
+        }
+      ],
+      "function": "Detune between stacked voices."
+    },
+    {
+      "id": "noise.level",
+      "module": "mixer",
+      "label": "NOISE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 4,
+          "note": "slider 4"
+        },
+        {
+          "type": "midi",
+          "message": "CC 11"
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "kbd.chord",
+      "module": "kbd",
+      "label": "CHORD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 4,
+          "note": "slider 4 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        }
+      ],
+      "function": "Selects chord 1-7 (0 = off); no effect in POLY and MONO."
+    },
+    {
+      "id": "osc.lfo_depth",
+      "module": "osc",
+      "label": "LFO (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 5,
+          "note": "slider 5"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        }
+      ],
+      "function": "LFO 1 depth on pitch."
+    },
+    {
+      "id": "osc.eg_depth",
+      "module": "osc",
+      "label": "EG (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 5,
+          "note": "slider 5 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        }
+      ],
+      "function": "Filter envelope depth on pitch (unipolar)."
+    },
+    {
+      "id": "lpf.cutoff",
+      "module": "lpf",
+      "label": "CUT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 6,
+          "note": "slider 6"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74"
+        }
+      ],
+      "function": "Low-pass cutoff, 32.7 Hz-16.7 kHz."
+    },
+    {
+      "id": "hpf.cutoff",
+      "module": "hpf",
+      "label": "HPF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 6,
+          "note": "slider 6 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "High-pass cutoff."
+    },
+    {
+      "id": "lpf.resonance",
+      "module": "lpf",
+      "label": "RES",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 7,
+          "note": "slider 7"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        }
+      ],
+      "function": "Resonance; self-oscillates at maximum."
+    },
+    {
+      "id": "lpf.tracking",
+      "module": "lpf",
+      "label": "TRACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 7,
+          "note": "slider 7 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 4"
+        }
+      ],
+      "function": "Key tracking, 1:1 at maximum."
+    },
+    {
+      "id": "lpf.eg_depth",
+      "module": "lpf",
+      "label": "EG (filter)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 8,
+          "note": "slider 8"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3"
+        }
+      ],
+      "function": "Filter envelope depth on cutoff."
+    },
+    {
+      "id": "lpf.lfo_depth",
+      "module": "lpf",
+      "label": "LFO (filter)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 8,
+          "note": "slider 8 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8"
+        }
+      ],
+      "function": "LFO 1 depth on cutoff."
+    },
+    {
+      "id": "env_f.attack",
+      "module": "env_f",
+      "label": "A (filter EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 9,
+          "note": "slider 9"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        }
+      ],
+      "function": "Filter envelope attack."
+    },
+    {
+      "id": "env_a.attack",
+      "module": "env_a",
+      "label": "A (amp EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 9,
+          "note": "slider 9 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        }
+      ],
+      "function": "Amp envelope attack."
+    },
+    {
+      "id": "env_f.decay",
+      "module": "env_f",
+      "label": "D (filter EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 10,
+          "note": "slider 10"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Filter envelope decay."
+    },
+    {
+      "id": "env_a.decay",
+      "module": "env_a",
+      "label": "D (amp EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 10,
+          "note": "slider 10 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        }
+      ],
+      "function": "Amp envelope decay."
+    },
+    {
+      "id": "env_f.sustain",
+      "module": "env_f",
+      "label": "S (filter EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 11,
+          "note": "slider 11"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Filter envelope sustain."
+    },
+    {
+      "id": "env_a.sustain",
+      "module": "env_a",
+      "label": "S (amp EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 11,
+          "note": "slider 11 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Amp envelope sustain."
+    },
+    {
+      "id": "env_f.release",
+      "module": "env_f",
+      "label": "R (filter EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 12,
+          "note": "slider 12"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Filter envelope release."
+    },
+    {
+      "id": "env_a.release",
+      "module": "env_a",
+      "label": "R (amp EG)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 12,
+          "note": "slider 12 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        }
+      ],
+      "function": "Amp envelope release."
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 13,
+          "note": "slider 13"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        }
+      ],
+      "function": "LFO 1 rate."
+    },
+    {
+      "id": "lfo1.delay",
+      "module": "lfo1",
+      "label": "DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 13,
+          "note": "slider 13 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        }
+      ],
+      "function": "Delay before LFO 1 amplitude rises."
+    },
+    {
+      "id": "lfo1.wave",
+      "module": "lfo1",
+      "label": "WAVE (LFO)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 14,
+          "note": "slider 14"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        }
+      ],
+      "function": "Triangle, saw down, saw up, square, random."
+    },
+    {
+      "id": "lfo1.fade",
+      "module": "lfo1",
+      "label": "FADE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "slider": 14,
+          "note": "slider 14 with SHIFT lit"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        }
+      ],
+      "function": "Time before LFO 1 fades out (0 = constant)."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "LFO 2 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 2 (LFO 2), slider 13"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "LFO 2 rate."
+    },
+    {
+      "id": "lfo2.wave",
+      "module": "lfo2",
+      "label": "LFO 2 WAVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 2 (LFO 2), slider 14"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        }
+      ],
+      "function": "LFO 2 waveform (five shapes)."
+    },
+    {
+      "id": "lfo2.delay",
+      "module": "lfo2",
+      "label": "LFO 2 DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 2 (LFO 2), slider 13 with SHIFT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        }
+      ],
+      "function": "LFO 2 delay."
+    },
+    {
+      "id": "lfo2.fade",
+      "module": "lfo2",
+      "label": "LFO 2 FADE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 2 (LFO 2), slider 14 with SHIFT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "LFO 2 fade."
+    },
+    {
+      "id": "lfo1.type",
+      "module": "lfo1",
+      "label": "LFO1 rate type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bpm"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "track"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU (LFO type and key sync, see menu map)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        }
+      ],
+      "function": "BPM (MIDI clock; low if no clock), low, high or key track."
+    },
+    {
+      "id": "lfo1.key_sync",
+      "module": "lfo1",
+      "label": "LFO1 key sync",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU (LFO type and key sync, see menu map)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Restarts the LFO on each note."
+    },
+    {
+      "id": "lfo2.type",
+      "module": "lfo2",
+      "label": "LFO2 rate type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bpm"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "track"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU (LFO type and key sync, see menu map)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        }
+      ],
+      "function": "BPM (MIDI clock; low if no clock), low, high or key track."
+    },
+    {
+      "id": "lfo2.key_sync",
+      "module": "lfo2",
+      "label": "LFO2 key sync",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU (LFO type and key sync, see menu map)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "Restarts the LFO on each note."
+    },
+    {
+      "id": "kbd.mode",
+      "module": "kbd",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "uni_a"
+        },
+        {
+          "value": "uni_b"
+        },
+        {
+          "value": "tri"
+        },
+        {
+          "value": "duo"
+        },
+        {
+          "value": "mono"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 1 (MODE), then MENU and rotary 1-6"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        }
+      ],
+      "function": "Play mode."
+    },
+    {
+      "id": "kbd.chords",
+      "module": "kbd",
+      "label": "CHORD EDIT 1-7",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "chord 1"
+        },
+        {
+          "value": "chord 2"
+        },
+        {
+          "value": "chord 3"
+        },
+        {
+          "value": "chord 4"
+        },
+        {
+          "value": "chord 5"
+        },
+        {
+          "value": "chord 6"
+        },
+        {
+          "value": "chord 7"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 1, MENU, rotary 7 (CHORD), MENU, then select EDIT 1-7 and play"
+        }
+      ],
+      "function": "Seven chords per preset, programmed by playing them."
+    },
+    {
+      "id": "kbd.legato",
+      "module": "kbd",
+      "label": "Legato",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU (see menu map)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 68"
+        }
+      ],
+      "function": "Glide only on legato notes."
+    },
+    {
+      "id": "reverb.size",
+      "module": "reverb",
+      "label": "REVERB SIZE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 3 (REVERB), slider 9"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        }
+      ],
+      "function": "Reverb space."
+    },
+    {
+      "id": "reverb.decay",
+      "module": "reverb",
+      "label": "REVERB DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 3 (REVERB), slider 10"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        }
+      ],
+      "function": "Reverb decay."
+    },
+    {
+      "id": "reverb.filter",
+      "module": "reverb",
+      "label": "REVERB FILTER",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 3 (REVERB), slider 11"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "Reverb low-pass."
+    },
+    {
+      "id": "reverb.mix",
+      "module": "reverb",
+      "label": "REVERB MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 3 (REVERB), slider 12"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        }
+      ],
+      "function": "Dry/wet."
+    },
+    {
+      "id": "out.amp_level",
+      "module": "out",
+      "label": "AMP level",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Patch output level."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output and headphone volume.",
+      "confidence": "inferred",
+      "note": "Mentioned in troubleshooting ('set the volume knob all the way up'); not described elsewhere."
+    },
+    {
+      "id": "mod.source",
+      "module": "kbd",
+      "label": "Mod source select",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "modwheel"
+        },
+        {
+          "value": "velocity"
+        },
+        {
+          "value": "aftertouch"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 2 (LFO 2), 4 (MOD W), 5 (VELO) or 6 (AFTER); hold MENU 1 s to clear a source"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        }
+      ],
+      "function": "Which assignable source the menu (or CCs 31-63, 86-89) edits."
+    },
+    {
+      "id": "ui.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold, or double-click to latch: sliders control the top-row parameters."
+    },
+    {
+      "id": "ui.menu",
+      "module": "kbd",
+      "label": "MENU",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Numeric menu 1-7 with the rotary switch; MENU + LOAD (1 s) auto-tunes."
+    },
+    {
+      "id": "ui.load",
+      "module": "kbd",
+      "label": "LOAD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Load: click for user, hold for factory; double-click reloads."
+    },
+    {
+      "id": "ui.save",
+      "module": "kbd",
+      "label": "SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "SHIFT + SAVE, choose, SAVE."
+    },
+    {
+      "id": "ui.rotary",
+      "module": "kbd",
+      "label": "Rotary switch",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Bank (with SHIFT) and preset 1-7, menu and submenu items."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "MIDI C",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 7, MENU, then send MIDI or turn rotary"
+        }
+      ],
+      "function": "MIDI channel (learned from incoming MIDI, or 1-7 on the rotary); omni while the page is open."
+    },
+    {
+      "id": "sys.mpe",
+      "module": "kbd",
+      "label": "MPE",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU 7, MENU, hold SHIFT 1 s"
+        }
+      ],
+      "function": "MPE on or off (hold SHIFT 1 s on the MIDI C page)."
+    },
+    {
+      "id": "sys.bend_range",
+      "module": "kbd",
+      "label": "PITCH WHEEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 48
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Bend range 0-12 semitones (0-48 with MPE)."
+    },
+    {
+      "id": "sys.fine_tune",
+      "module": "kbd",
+      "label": "FINE TUNE",
+      "kind": "continuous",
+      "physical": {
+        "min": -4,
+        "max": 4,
+        "unit": "semitones"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Global tuning ±4 semitones."
+    },
+    {
+      "id": "sys.sliders",
+      "module": "kbd",
+      "label": "SLIDERS",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "jump"
+        },
+        {
+          "value": "catch"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Jump or catch."
+    },
+    {
+      "id": "sys.load_preview",
+      "module": "kbd",
+      "label": "LOAD PREVIEW",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Preview a stored patch before loading."
+    },
+    {
+      "id": "sys.cc_in",
+      "module": "kbd",
+      "label": "CC IN",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Respond to CCs."
+    },
+    {
+      "id": "sys.cc_out",
+      "module": "kbd",
+      "label": "CC OUT",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Send CCs."
+    },
+    {
+      "id": "sys.pc_in",
+      "module": "kbd",
+      "label": "PROGRAM CHANGE IN",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Respond to program changes."
+    },
+    {
+      "id": "sys.pc_out",
+      "module": "kbd",
+      "label": "PROGRAM CHANGE OUT",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MENU, rotary 7, SHIFT + MENU (global menu), rotary 1-6, then slider 13 or 14"
+        }
+      ],
+      "function": "Send program changes."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "3.5 mm TRS",
+      "node": "kbd.midi_in",
+      "function": "MIDI in on a 3.5 mm TRS (MIDI.org / Korg wiring; DIN adapter included)."
+    },
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line",
+      "function": "Mono line output.",
+      "confidence": "inferred",
+      "note": "Size not stated; drawn as a large jack."
+    },
+    {
+      "id": "jack.phones",
+      "label": "Headphones",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "Headphone output.",
+      "confidence": "inferred",
+      "note": "Size not stated."
+    },
+    {
+      "id": "jack.usb",
+      "label": "POWER (USB)",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB",
+      "node": null,
+      "function": "USB power (1 A minimum) and USB MIDI in/out; firmware and SysEx.",
+      "note": "Connector type not stated."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.pitch",
+      "to": "osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch",
+      "to": "lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lpf.tracking"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.gate",
+      "to": "env_f.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.gate",
+      "to": "env_a.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "kbd.gate",
+      "to": "lfo1.key_sync",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.key_sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c07",
+      "from": "lfo1.out",
+      "to": "osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.lfo_depth"
+    },
+    {
+      "id": "c08",
+      "from": "lfo1.out",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.lfo_depth",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c09",
+      "from": "env_f.out",
+      "to": "osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.eg_depth"
+    },
+    {
+      "id": "c10",
+      "from": "osc.out",
+      "to": "mixer.osc",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "osc.level"
+    },
+    {
+      "id": "c11",
+      "from": "sub.out",
+      "to": "mixer.sub",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "sub.level"
+    },
+    {
+      "id": "c12",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "noise.level"
+    },
+    {
+      "id": "c13",
+      "from": "mixer.out",
+      "to": "lpf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "env_f.out",
+      "to": "lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lpf.eg_depth"
+    },
+    {
+      "id": "c15",
+      "from": "lfo1.out",
+      "to": "lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lpf.lfo_depth"
+    },
+    {
+      "id": "c16",
+      "from": "lpf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "env_a.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "vca.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Six voices summed, then the high-pass (per the block diagram)."
+    },
+    {
+      "id": "c19",
+      "from": "hpf.out",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c20",
+      "from": "reverb.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.amp_level"
+    }
+  ],
+  "mod_matrix": {
+    "name": "Assignable modulation (LFO 2, mod wheel, velocity, aftertouch)",
+    "module": "kbd",
+    "slots": 144,
+    "combine": "single",
+    "sources": [
+      {
+        "id": 0,
+        "name": "LFO 2",
+        "node": "lfo2.out",
+        "per_voice": false,
+        "midi": "CC 30 = 0"
+      },
+      {
+        "id": 1,
+        "name": "Mod wheel",
+        "node": "kbd.modwheel",
+        "per_voice": false,
+        "midi": "CC 30 = 1"
+      },
+      {
+        "id": 2,
+        "name": "Velocity",
+        "node": "kbd.velocity",
+        "per_voice": true,
+        "midi": "CC 30 = 2"
+      },
+      {
+        "id": 3,
+        "name": "Aftertouch",
+        "node": "kbd.aftertouch",
+        "per_voice": true,
+        "midi": "CC 30 = 3"
+      }
+    ],
+    "destinations": [
+      {
+        "id": 31,
+        "name": "OSC wave",
+        "parameter": "osc.wave",
+        "description": "Depth CC 31 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 32,
+        "name": "OSC level",
+        "parameter": "osc.level",
+        "description": "Depth CC 32 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 33,
+        "name": "Sub level",
+        "parameter": "sub.level",
+        "description": "Depth CC 33 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 34,
+        "name": "Noise level",
+        "parameter": "noise.level",
+        "description": "Depth CC 34 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 35,
+        "name": "LFO pitch depth",
+        "parameter": "osc.lfo_depth",
+        "description": "Depth CC 35 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 36,
+        "name": "Pulse width",
+        "parameter": "osc.pw",
+        "description": "Depth CC 36 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 37,
+        "name": "Glide",
+        "parameter": "kbd.glide",
+        "description": "Depth CC 37 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 39,
+        "name": "Detune",
+        "parameter": "kbd.detune",
+        "description": "Depth CC 39 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 40,
+        "name": "Chord selector",
+        "parameter": "kbd.chord",
+        "description": "Depth CC 40 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 41,
+        "name": "EG pitch depth",
+        "parameter": "osc.eg_depth",
+        "description": "Depth CC 41 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 42,
+        "name": "LPF cutoff",
+        "parameter": "lpf.cutoff",
+        "description": "Depth CC 42 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 43,
+        "name": "Resonance",
+        "parameter": "lpf.resonance",
+        "description": "Depth CC 43 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 44,
+        "name": "LPF EG depth",
+        "parameter": "lpf.eg_depth",
+        "description": "Depth CC 44 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 45,
+        "name": "HPF cutoff",
+        "parameter": "hpf.cutoff",
+        "description": "Depth CC 45 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 46,
+        "name": "LPF tracking",
+        "parameter": "lpf.tracking",
+        "description": "Depth CC 46 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 47,
+        "name": "LPF cutoff LFO depth",
+        "parameter": "lpf.lfo_depth",
+        "description": "Depth CC 47 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 48,
+        "name": "Filter EG attack",
+        "parameter": "env_f.attack",
+        "description": "Depth CC 48 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 49,
+        "name": "Filter EG decay",
+        "parameter": "env_f.decay",
+        "description": "Depth CC 49 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 50,
+        "name": "Filter EG sustain",
+        "parameter": "env_f.sustain",
+        "description": "Depth CC 50 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 51,
+        "name": "Filter EG release",
+        "parameter": "env_f.release",
+        "description": "Depth CC 51 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 52,
+        "name": "Amp EG attack",
+        "parameter": "env_a.attack",
+        "description": "Depth CC 52 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 53,
+        "name": "Amp EG decay",
+        "parameter": "env_a.decay",
+        "description": "Depth CC 53 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 54,
+        "name": "Amp EG sustain",
+        "parameter": "env_a.sustain",
+        "description": "Depth CC 54 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 55,
+        "name": "Amp EG release",
+        "parameter": "env_a.release",
+        "description": "Depth CC 55 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 56,
+        "name": "LFO 1 rate",
+        "parameter": "lfo1.rate",
+        "description": "Depth CC 56 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 57,
+        "name": "LFO 1 wave",
+        "parameter": "lfo1.wave",
+        "description": "Depth CC 57 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 58,
+        "name": "LFO 1 delay",
+        "parameter": "lfo1.delay",
+        "description": "Depth CC 58 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 59,
+        "name": "LFO 1 fade",
+        "parameter": "lfo1.fade",
+        "description": "Depth CC 59 (for the source chosen by CC 30); polyphonic with aftertouch/MPE",
+        "common_to_all_voices": false
+      },
+      {
+        "id": 60,
+        "name": "LFO 2 rate",
+        "parameter": "lfo2.rate",
+        "description": "Depth CC 60 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 61,
+        "name": "LFO 2 wave",
+        "parameter": "lfo2.wave",
+        "description": "Depth CC 61 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 62,
+        "name": "LFO 2 delay",
+        "parameter": "lfo2.delay",
+        "description": "Depth CC 62 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 63,
+        "name": "LFO 2 fade",
+        "parameter": "lfo2.fade",
+        "description": "Depth CC 63 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 86,
+        "name": "Reverb size",
+        "parameter": "reverb.size",
+        "description": "Depth CC 86 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 87,
+        "name": "Reverb decay",
+        "parameter": "reverb.decay",
+        "description": "Depth CC 87 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 88,
+        "name": "Reverb filter",
+        "parameter": "reverb.filter",
+        "description": "Depth CC 88 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      },
+      {
+        "id": 89,
+        "name": "Reverb mix",
+        "parameter": "reverb.mix",
+        "description": "Depth CC 89 (for the source chosen by CC 30)",
+        "common_to_all_voices": true
+      }
+    ],
+    "depth_range": {
+      "min": 0,
+      "max": 127
+    },
+    "note": "Each source has its own depth for every destination, set by moving the slider with the source's menu page open (slider position = depth). Mod wheel, velocity and aftertouch add to the slider value (clipping at the top); LFO 2 mixes in, so at full depth the slider value no longer matters. LFO 2 cannot modulate LFO 1 or LFO 2 parameters (24 destinations). Destination IDs are the depth CC numbers (CC 38 is unused). Reverb destinations are reachable by CC; the manual's text lists 28 slider destinations."
+  },
+  "indicators": [
+    {
+      "id": "button_leds",
+      "module": "kbd",
+      "label": "SHIFT, MENU, LOAD and SAVE LEDs",
+      "kind": "led",
+      "function": "SHIFT state, menu and submenu (blinking speed), load and save (blink patterns), MPE state on the MIDI page."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "SHIFT",
+      "applies_to": ["kbd"],
+      "rule": "14 sliders control 28 parameters: bottom labels normally, top labels while SHIFT is held or latched (double-click)."
+    },
+    {
+      "id": "b02",
+      "name": "Signal path",
+      "applies_to": ["osc", "mixer", "lpf", "vca", "hpf", "reverb"],
+      "rule": "Per voice: oscillator, sub and noise mixed into the 24 dB low-pass, then the VCA. Voices summed into the 6 dB high-pass (band-pass with the low-pass) and the digital reverb."
+    },
+    {
+      "id": "b03",
+      "name": "Fixed modulation",
+      "applies_to": ["lfo1", "env_f"],
+      "rule": "LFO 1 (polyphonic) only reaches pitch and cutoff; the filter envelope only reaches cutoff and pitch (unipolar). One-shot LFO: DELAY 0 and FADE full."
+    },
+    {
+      "id": "b04",
+      "name": "Assignable modulation",
+      "applies_to": ["kbd", "lfo2"],
+      "rule": "Open MENU 2, 4, 5 or 6 and move sliders: each slider position sets that source's depth on that parameter. Hold MENU 1 s on a source page to clear it. Polyphonic aftertouch and MPE reach the listed per-voice targets."
+    },
+    {
+      "id": "b05",
+      "name": "Play modes and chords",
+      "applies_to": ["kbd"],
+      "rule": "POLY 6 notes; UNI A 6 voices per note; UNI B 4; TRI 3 notes x 2 voices; DUO 2 notes x 3; MONO 1. In UNI A, UNI B, TRI and DUO the CHORD slider picks one of seven chords programmed by playing them; CHORD can be modulated."
+    },
+    {
+      "id": "b06",
+      "name": "Presets",
+      "applies_to": ["kbd"],
+      "rule": "LOAD, choose bank (SHIFT on) and preset (SHIFT off), then click for the user preset or hold for the factory preset. SHIFT + SAVE, choose, SAVE. Loading sends the preset as SysEx; a full dump sends user then factory presets."
+    },
+    {
+      "id": "b07",
+      "name": "Tuning and power",
+      "applies_to": ["osc"],
+      "rule": "Warm up 5-10 minutes, then auto-tune with MENU + LOAD (about a minute, audible). Use a good 1 A USB supply on the same mains as the audio gear; poor supplies cause noise, wobbly oscillators or no boot."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "poly_pressure"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "note": "every slider parameter, play mode, LFO types, mod source and depths, reverb, legato, sustain (CC 64)"
+      },
+      {
+        "message": "clock",
+        "note": "LFO BPM mode"
+      },
+      {
+        "message": "mpe"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 21 35 00 06",
+        "note": "preset import (write flag, page, bank, preset, Protobuf data)"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "control_change",
+        "note": "with CC out on"
+      },
+      {
+        "message": "program_change",
+        "note": "with PC out on"
+      },
+      {
+        "message": "sysex",
+        "note": "current preset on load; current or full dump"
+      }
+    ],
+    "channel_note": "One channel 1-16 (learned or set on MENU 7), or MPE.",
+    "note": "MIDI in on 3.5 mm TRS or USB; MIDI out over USB."
+  },
+  "specifications": {
+    "voices": 6,
+    "oscillators_per_voice": "1 + sub + noise",
+    "filters": {
+      "lpf": "24 dB/oct resonant, 32.7 Hz-16.7 kHz",
+      "hpf": "6 dB/oct non-resonant"
+    },
+    "envelopes": "12 (2 per voice)",
+    "lfos": "7 (1 per voice + 1 global)",
+    "play_modes": 6,
+    "effects": "digital reverb",
+    "presets": "98 (49 user, 49 factory)",
+    "connections": {
+      "midi_in": "3.5 mm TRS",
+      "audio_out": "line out and headphones",
+      "usb": "power and MIDI"
+    },
+    "power": "USB, at least 1 A (about 55 hours from a 20,000 mAh power bank)",
+    "factory_presets": "A1 Long Pad 1 ... G7 (listed in the manual)"
+  },
+  "omitted_from_source": [
+    "the introduction story",
+    "synthesis basics",
+    "menu map graphic (read where the text repeats it)",
+    "the factory preset list with LFO settings"
+  ],
+  "not_in_source": [
+    "envelope and LFO times",
+    "audio jack sizes and output level",
+    "USB connector type",
+    "dimensions and weight",
+    "where the menu sets LFO type and legato (menu map image)",
+    "SysEx Protobuf layout"
+  ],
+  "source_inconsistencies": [
+    "Key features say 'MIDI in/out over USB or via MIDI out via DIN5', but the panel has a 3.5 mm MIDI IN and the supplied cable is a DIN-to-3.5 mm input adapter.",
+    "The filter text says the high-pass follows the low-pass in series per voice; the block diagram places it after the six voices are summed.",
+    "Section 5.9 says each of mod wheel, velocity and aftertouch reaches 28 slider destinations; the CC list adds four reverb destinations (CC 86-89) and LFO 2 delay/fade.",
+    "The CC list has no CC 38; destination depths run 31-37 and 39-63.",
+    "The CC list labels the amp envelope depth rows 'Mod Source Filter AMP Attack Depth' etc."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Per-voice modules",
+      "detail": "Voice modules are modelled once (per_voice); LFO 2, high-pass, reverb and output are common."
+    },
+    {
+      "topic": "Assignable modulation",
+      "detail": "Each of four sources has a depth for each of 36 destinations; modelled as a dense matrix keyed by depth CC."
+    },
+    {
+      "topic": "Menu map",
+      "detail": "The menu map is an image; LFO type, key sync and legato are placed in the menu by inference."
+    }
+  ]
+}

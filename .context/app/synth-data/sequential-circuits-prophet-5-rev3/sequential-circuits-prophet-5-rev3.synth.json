@@ -1,0 +1,1861 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "sequential-circuits-prophet-5-rev3",
+    "manufacturer": "Sequential Circuits",
+    "model": "Prophet-5 (Model 1000), Revision 3.3",
+    "category": "5-voice programmable polyphonic analogue synthesizer, 61 keys",
+    "based_on": "Original design, January 1978 (Dave Smith and John Bowen); Rev 3.3 (serial 4064 up) has 120 programs in three files.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Prophet-5 Synthesizer Operation Manual, Revision 3.3 (CM1000D, February 1982), by Stanley Jungleib",
+        "kind": "user_manual",
+        "file": "Prophet-5_Owner_s_Manual.pdf",
+        "pages": 94,
+        "note": "Internet Archive scan with an imperfect OCR layer. Basic operation, front and back panel, cassette, Scale Mode, system interface (with the 24-byte program format), factory programs. Panel figures are images."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 5,
+    "polyphony_mode": "5-voice polyphonic, last-note priority (same key reuses its voice); UNISON stacks all five on the lowest key",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "120 programs as three files of 40 (five banks of eight); one file active at a time, in non-volatile RAM. Each location holds a patch or a Scale program. Files and banks save to cassette.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 61,
+      "programmable_knobs": 24,
+      "programmable_switches": 22
+    },
+    "summary": "Each of five voices has OSC A (saw and/or pulse, sync to B), OSC B (saw, triangle and/or pulse, fine tune, low-frequency and keyboard switches), white noise, a mixer, a resonant 24 dB/oct low-pass filter with its own ADSR and keyboard tracking, and a VCA with ADSR. One panel patches all five. Poly-Mod sends the filter envelope and OSC B, per voice, to OSC A frequency, OSC A pulse width and the filter. Wheel-Mod sends a mix of the LFO (saw, triangle, square) and pink noise, scaled by the mod wheel, to either oscillator's frequency or pulse width and the filter. Microcomputer tuning, 120 programs, Scale Mode for alternative tunings."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice assigner",
+      "panel_section": "KEYBOARD / MISCELLANEOUS",
+      "scope": "common",
+      "description": "61 keys (C0-C5) under microcomputer scanning; assigns five voices, or all five to the lowest key in UNISON (with GLIDE). Voice 5 can be handed to the sequencer interface.",
+      "properties": {
+        "keys": 61,
+        "range": "C0-C5"
+      },
+      "inputs": ["kbd.ext_cv", "kbd.ext_gate", "kbd.release_fs", "kbd.digital_in"],
+      "outputs": ["kbd.cv", "kbd.gate", "kbd.cv_out", "kbd.gate_out"]
+    },
+    {
+      "id": "wheels",
+      "type": "manual_controller",
+      "name": "Pitch and mod wheels",
+      "panel_section": "LEFT OF KEYBOARD",
+      "scope": "common",
+      "description": "Pitch wheel (centre detent, about a fifth either way) and mod wheel (sets Wheel-Mod depth). Remote CVs via the ANALOG jack.",
+      "inputs": ["wheels.pitch_cv_in", "wheels.mod_cv_in"],
+      "outputs": ["wheels.pitch", "wheels.mod"]
+    },
+    {
+      "id": "osc_a",
+      "type": "oscillator",
+      "name": "Oscillator A",
+      "panel_section": "OSCILLATOR A",
+      "scope": "per_voice",
+      "description": "Audio VCO always on the keyboard: frequency stepped in semitones over four octaves, sawtooth and/or pulse (width about 1-99%), hard sync to OSC B.",
+      "inputs": ["osc_a.pitch_cv", "osc_a.pw_cv", "osc_a.sync_in"],
+      "outputs": ["osc_a.out"]
+    },
+    {
+      "id": "osc_b",
+      "type": "oscillator",
+      "name": "Oscillator B",
+      "panel_section": "OSCILLATOR B",
+      "scope": "per_voice",
+      "description": "VCO with sawtooth, triangle (centred on ground) and/or pulse; FINE (up a semitone); LO FREQ (about 0.4-30 Hz); keyboard control on or off (drone).",
+      "properties": {
+        "lo_freq_hz": [0.4, 30]
+      },
+      "inputs": ["osc_b.pitch_cv", "osc_b.pw_cv"],
+      "outputs": ["osc_b.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "White noise",
+      "panel_section": "MIXER",
+      "scope": "common",
+      "description": "White noise source for the voice mixer.",
+      "properties": {
+        "note": "Whether one source feeds all voices is not stated."
+      },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "OSC A, OSC B and noise levels into the filter; also used to balance program volumes.",
+      "inputs": ["mixer.a", "mixer.b", "mixer.noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Resonant 24 dB/oct (4-pole) low-pass; self-oscillates as a sine above resonance 7; keyboard tracking on or off.",
+      "properties": {
+        "slope_db_per_oct": 24
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env_f",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "ADSR, about 1 ms-30 s per stage (exponential knob response: 5 is about 0.5 s); also a Poly-Mod source.",
+      "properties": {
+        "time_s": [0.001, 30]
+      },
+      "inputs": ["env_f.gate"],
+      "outputs": ["env_f.out"]
+    },
+    {
+      "id": "env_a",
+      "type": "envelope",
+      "name": "Amplifier envelope",
+      "panel_section": "AMPLIFIER",
+      "scope": "per_voice",
+      "description": "ADSR, about 1 ms-30 s per stage.",
+      "properties": {
+        "time_s": [0.001, 30]
+      },
+      "inputs": ["env_a.gate"],
+      "outputs": ["env_a.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "AMPLIFIER",
+      "scope": "per_voice",
+      "description": "Shapes each voice with the amplifier envelope.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "pmod",
+      "type": "modulation_bus",
+      "name": "Poly-Mod",
+      "panel_section": "POLY-MOD",
+      "scope": "per_voice",
+      "description": "Per-voice: filter envelope (FILT ENV amount) plus OSC B (OSC B amount) to OSC A frequency, OSC A pulse width and/or filter, by switch. Different in each voice, so effects vary note to note.",
+      "inputs": ["pmod.env", "pmod.osc_b"],
+      "outputs": ["pmod.out"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "scope": "common",
+      "description": "Single LFO, about 0.04-20 Hz, sawtooth, triangle and/or square.",
+      "properties": {
+        "rate_hz": [0.04, 20]
+      },
+      "inputs": [],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "pink",
+      "type": "noise",
+      "name": "Pink noise (modulation)",
+      "panel_section": "WHEEL-MOD",
+      "scope": "common",
+      "description": "Pink noise as a Wheel-Mod source.",
+      "inputs": [],
+      "outputs": ["pink.out"]
+    },
+    {
+      "id": "wmod",
+      "type": "modulation_bus",
+      "name": "Wheel-Mod",
+      "panel_section": "WHEEL-MOD",
+      "scope": "common",
+      "description": "SOURCE MIX blends LFO (0) and pink noise (10); the mod wheel sets depth; switches send it to OSC A/B frequency, OSC A/B pulse width and the filter, the same for every voice.",
+      "inputs": ["wmod.lfo", "wmod.noise", "wmod.wheel"],
+      "outputs": ["wmod.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / back panel",
+      "scope": "common",
+      "description": "Five voices summed; VOLUME and the AMPLIFIER CV input set the level.",
+      "inputs": ["out.in", "out.cv"],
+      "outputs": ["out.audio"]
+    },
+    {
+      "id": "programmer",
+      "type": "cv_source_selector",
+      "name": "Programmer",
+      "panel_section": "PROGRAMMER",
+      "scope": "common",
+      "description": "Preset/manual, record, bank and program select, three files, tune, A-440 reference, cassette save/load, Scale Mode.",
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc_a.frequency",
+      "module": "osc_a",
+      "label": "OSC A FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 48,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pitch in semitone steps over four octaves."
+    },
+    {
+      "id": "osc_a.saw",
+      "module": "osc_a",
+      "label": "OSC A SAWTOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Full-level sawtooth on."
+    },
+    {
+      "id": "osc_a.pulse",
+      "module": "osc_a",
+      "label": "OSC A PULSE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Full-level pulse on."
+    },
+    {
+      "id": "osc_a.pw",
+      "module": "osc_a",
+      "label": "OSC A PULSE WIDTH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Duty cycle about 1-99%; about 5 is square; extremes thin to nothing."
+    },
+    {
+      "id": "osc_a.sync",
+      "module": "osc_a",
+      "label": "OSC A SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hard-syncs OSC A to OSC B."
+    },
+    {
+      "id": "osc_b.frequency",
+      "module": "osc_b",
+      "label": "OSC B FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 48,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pitch in semitone steps over four octaves."
+    },
+    {
+      "id": "osc_b.fine",
+      "module": "osc_b",
+      "label": "OSC B FINE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Raises pitch continuously by up to a semitone; 0 for no detune."
+    },
+    {
+      "id": "osc_b.saw",
+      "module": "osc_b",
+      "label": "OSC B SAWTOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sawtooth on."
+    },
+    {
+      "id": "osc_b.tri",
+      "module": "osc_b",
+      "label": "OSC B TRIANGLE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Triangle on."
+    },
+    {
+      "id": "osc_b.pulse",
+      "module": "osc_b",
+      "label": "OSC B PULSE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Pulse on."
+    },
+    {
+      "id": "osc_b.pw",
+      "module": "osc_b",
+      "label": "OSC B PULSE WIDTH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Duty cycle about 1-99%."
+    },
+    {
+      "id": "osc_b.lo_freq",
+      "module": "osc_b",
+      "label": "OSC B LO FREQ",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Low-frequency range, about 0.4-30 Hz."
+    },
+    {
+      "id": "osc_b.keyboard",
+      "module": "osc_b",
+      "label": "OSC B KEYBOARD",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard control of OSC B (off: drone)."
+    },
+    {
+      "id": "mixer.osc_a",
+      "module": "mixer",
+      "label": "MIXER OSC A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC A level."
+    },
+    {
+      "id": "mixer.osc_b",
+      "module": "mixer",
+      "label": "MIXER OSC B",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC B level."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "MIXER NOISE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "White noise level."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "FILTER CUTOFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff frequency."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "FILTER RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis; self-oscillation above about 7."
+    },
+    {
+      "id": "vcf.env_amount",
+      "module": "vcf",
+      "label": "FILTER ENVELOPE AMOUNT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the filter envelope."
+    },
+    {
+      "id": "vcf.keyboard",
+      "module": "vcf",
+      "label": "FILTER KEYBOARD",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff on or off."
+    },
+    {
+      "id": "env_f.attack",
+      "module": "env_f",
+      "label": "FILTER ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack about 1 ms-30 s (5 is about 0.5 s)."
+    },
+    {
+      "id": "env_f.decay",
+      "module": "env_f",
+      "label": "FILTER DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay to sustain."
+    },
+    {
+      "id": "env_f.sustain",
+      "module": "env_f",
+      "label": "FILTER SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_f.release",
+      "module": "env_f",
+      "label": "FILTER RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time."
+    },
+    {
+      "id": "env_a.attack",
+      "module": "env_a",
+      "label": "AMPLIFIER ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack about 1 ms-30 s (5 is about 0.5 s)."
+    },
+    {
+      "id": "env_a.decay",
+      "module": "env_a",
+      "label": "AMPLIFIER DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay to sustain."
+    },
+    {
+      "id": "env_a.sustain",
+      "module": "env_a",
+      "label": "AMPLIFIER SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_a.release",
+      "module": "env_a",
+      "label": "AMPLIFIER RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time."
+    },
+    {
+      "id": "kbd.release",
+      "module": "env_a",
+      "label": "RELEASE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Off: filter and amplifier release set to minimum (and the release footswitch then works)."
+    },
+    {
+      "id": "kbd.unison",
+      "module": "kbd",
+      "label": "UNISON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "All five voices on the lowest key held (four with the sequencer interface)."
+    },
+    {
+      "id": "kbd.glide",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Portamento time, in UNISON only."
+    },
+    {
+      "id": "pmod.filt_env",
+      "module": "pmod",
+      "label": "POLY-MOD FILT ENV",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of filter envelope in Poly-Mod."
+    },
+    {
+      "id": "pmod.osc_b",
+      "module": "pmod",
+      "label": "POLY-MOD OSC B",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of OSC B in Poly-Mod."
+    },
+    {
+      "id": "pmod.freq_a",
+      "module": "pmod",
+      "label": "POLY-MOD FREQ A",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Poly-Mod to OSC A frequency."
+    },
+    {
+      "id": "pmod.pw_a",
+      "module": "pmod",
+      "label": "POLY-MOD PW A",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Poly-Mod to OSC A pulse width."
+    },
+    {
+      "id": "pmod.filter",
+      "module": "pmod",
+      "label": "POLY-MOD FILTER",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Poly-Mod to filter cutoff."
+    },
+    {
+      "id": "lfo.frequency",
+      "module": "lfo",
+      "label": "LFO FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.04,
+        "max": 20,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rate about 0.04-20 Hz."
+    },
+    {
+      "id": "lfo.saw",
+      "module": "lfo",
+      "label": "LFO SAWTOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sawtooth on."
+    },
+    {
+      "id": "lfo.tri",
+      "module": "lfo",
+      "label": "LFO TRIANGLE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Triangle on."
+    },
+    {
+      "id": "lfo.square",
+      "module": "lfo",
+      "label": "LFO SQUARE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Square on."
+    },
+    {
+      "id": "wmod.source_mix",
+      "module": "wmod",
+      "label": "WHEEL-MOD SOURCE MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "0 all LFO, 10 all pink noise."
+    },
+    {
+      "id": "wmod.freq_a",
+      "module": "wmod",
+      "label": "WHEEL-MOD FREQ A",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Wheel-Mod to OSC A frequency."
+    },
+    {
+      "id": "wmod.freq_b",
+      "module": "wmod",
+      "label": "WHEEL-MOD FREQ B",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Wheel-Mod to OSC B frequency."
+    },
+    {
+      "id": "wmod.pw_a",
+      "module": "wmod",
+      "label": "WHEEL-MOD PW A",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Wheel-Mod to OSC A pulse width."
+    },
+    {
+      "id": "wmod.pw_b",
+      "module": "wmod",
+      "label": "WHEEL-MOD PW B",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Wheel-Mod to OSC B pulse width."
+    },
+    {
+      "id": "wmod.filter",
+      "module": "wmod",
+      "label": "WHEEL-MOD FILTER",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Wheel-Mod to filter cutoff."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall level (silver knob)."
+    },
+    {
+      "id": "kbd.master_tune",
+      "module": "kbd",
+      "label": "MASTER TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Exact pitch of all oscillators (silver knob)."
+    },
+    {
+      "id": "wheels.pitch",
+      "module": "wheels",
+      "label": "PITCH wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Bend of all voices, about a fifth either way; centre detent."
+    },
+    {
+      "id": "wheels.mod",
+      "module": "wheels",
+      "label": "MOD wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Wheel-Mod depth."
+    },
+    {
+      "id": "programmer.preset",
+      "module": "programmer",
+      "label": "PRESET",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Preset mode (programs) or manual mode (panel as set)."
+    },
+    {
+      "id": "programmer.record",
+      "module": "programmer",
+      "label": "RECORD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Records the current patch: then choose file, bank and program (needs the back-panel switch at ENABLE)."
+    },
+    {
+      "id": "programmer.bank",
+      "module": "programmer",
+      "label": "BANK SELECT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps through banks 1-5; held with PROGRAM SELECT 1-3 selects the file."
+    },
+    {
+      "id": "programmer.program",
+      "module": "programmer",
+      "label": "PROGRAM SELECT 1-8",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Selects a program in the bank."
+    },
+    {
+      "id": "programmer.tune",
+      "module": "programmer",
+      "label": "TUNE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Microcomputer retunes the oscillators (2-8 s, panel dark)."
+    },
+    {
+      "id": "programmer.a440",
+      "module": "programmer",
+      "label": "A-440",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Crystal-referenced A-440 Hz tone for tuning."
+    },
+    {
+      "id": "programmer.save_tape",
+      "module": "programmer",
+      "label": "SAVE TO TAPE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "With RECORD held: saves the file (or bank, with BANK held) to cassette."
+    },
+    {
+      "id": "programmer.load_tape",
+      "module": "programmer",
+      "label": "LOAD FROM TAPE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "With RECORD held: loads a file or bank; on its own, verifies a save."
+    },
+    {
+      "id": "programmer.file",
+      "module": "programmer",
+      "label": "Program file",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold BANK and press PROGRAM SELECT 1, 2 or 3",
+          "when": "any_time"
+        }
+      ],
+      "function": "Active 40-program file (display decimal points show 2 or 3)."
+    },
+    {
+      "id": "programmer.scale_mode",
+      "module": "programmer",
+      "label": "Scale Mode",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold a PROGRAM SELECT and press TUNE (toggles Patch and Scale Mode)",
+          "when": "any_time"
+        }
+      ],
+      "function": "Turns the twelve middle-row knobs into ±half-semitone adjusters for C to B; scale programs live in program locations."
+    },
+    {
+      "id": "programmer.voice_defeat",
+      "module": "kbd",
+      "label": "Voice defeat",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold the key the voice is playing, hold PROGRAM SELECT 1 and press PROGRAM SELECT 8",
+          "when": "any_time"
+        }
+      ],
+      "function": "Removes a faulty voice from assignment until power-off."
+    },
+    {
+      "id": "programmer.record_enable",
+      "module": "programmer",
+      "label": "RECORD ENABLE/DISABLE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "enable"
+        },
+        {
+          "value": "disable"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Back-panel memory protect; DISABLE for saving to tape, ENABLE for recording or loading."
+    },
+    {
+      "id": "sys.line_voltage",
+      "module": "out",
+      "label": "Line voltage selector",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "115V"
+        },
+        {
+          "value": "230V"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "115 or 230 V AC (change the fuse too)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.audio_out",
+      "label": "AUDIO OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.audio",
+      "function": "Mono audio output."
+    },
+    {
+      "id": "jack.release_fs",
+      "label": "RELEASE FOOTSWITCH",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.release_fs",
+      "function": "Supplied footswitch: acts as the RELEASE switch when RELEASE is programmed off (like a sustain pedal)."
+    },
+    {
+      "id": "jack.amp_cv",
+      "label": "AMPLIFIER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "out.cv",
+      "function": "Volume control voltage up to +10 V (e.g. Model 840 pedal); VOLUME still works."
+    },
+    {
+      "id": "jack.filter_cv",
+      "label": "FILTER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "vcf.cutoff_cv",
+      "function": "Added to CUTOFF, up to +10 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.seq_voltage_in",
+      "label": "VOLTAGE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "kbd.ext_cv",
+      "function": "1 V/oct to voice 5 (digitised on each new gate, so no glide)."
+    },
+    {
+      "id": "jack.seq_voltage_out",
+      "label": "VOLTAGE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "kbd.cv_out",
+      "function": "1 V/oct of each note played, for the Model 800 sequencer or other synths."
+    },
+    {
+      "id": "jack.seq_gate_in",
+      "label": "GATE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.ext_gate",
+      "function": "Gate above +3.5 V; any plug here takes voice 5 off the keyboard."
+    },
+    {
+      "id": "jack.seq_trigger_out",
+      "label": "TRIGGER OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.gate_out",
+      "function": "Actually a +15 V gate."
+    },
+    {
+      "id": "jack.analog",
+      "label": "ANALOG",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "5-pin Switchcraft SL-17-5F",
+      "node": "wheels.pitch_cv_in",
+      "function": "5-pin connector: pitch wheel CV (pin 4, ± about 0 V for A-440), mod wheel CV (pin 2, 0 to +10 V), ±22 V supplies; for the Model 1001 remote keyboard."
+    },
+    {
+      "id": "jack.analog_mod",
+      "label": "ANALOG (mod wheel pin)",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "5-pin Switchcraft SL-17-5F",
+      "node": "wheels.mod_cv_in",
+      "function": "Pin 2 of the ANALOG connector: mod wheel CV, 0 to +10 V; never negative."
+    },
+    {
+      "id": "jack.digital",
+      "label": "DIGITAL",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "4-pin Switchcraft SL-17-4F",
+      "node": "kbd.digital_in",
+      "function": "SCI serial interface, 5 V TTL, up to 625 kbaud, for the Model 1005 polyphonic sequencer: keyboard, program, transpose and program-file transfer. Not RS-232, not MIDI."
+    },
+    {
+      "id": "jack.cassette_out",
+      "label": "CASSETTE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": null,
+      "function": "To a recorder's MIC or LINE input.",
+      "confidence": "inferred",
+      "note": "Connector size not stated."
+    },
+    {
+      "id": "jack.cassette_in",
+      "label": "CASSETTE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": null,
+      "function": "From a recorder's EAR or MONITOR output.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.power",
+      "label": "AC power",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC or captive cord",
+      "node": null,
+      "function": "115/230 V AC, three-prong grounded; fuse 3A slow-blow (115 V) or 1/2 A slow-blow (230 V).",
+      "confidence": "inferred",
+      "note": "Connector type not stated."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv",
+      "to": "osc_a.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Includes GLIDE in unison."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.cv",
+      "to": "osc_b.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc_b.keyboard",
+        "equals": true
+      }
+    },
+    {
+      "id": "c03",
+      "from": "kbd.cv",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.keyboard",
+        "equals": true
+      }
+    },
+    {
+      "id": "c04",
+      "from": "wheels.pitch",
+      "to": "osc_a.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "wheels.pitch",
+      "to": "osc_b.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "kbd.gate",
+      "to": "env_f.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "kbd.gate",
+      "to": "env_a.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "osc_b.out",
+      "to": "osc_a.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc_a.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c09",
+      "from": "osc_a.out",
+      "to": "mixer.a",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.osc_a"
+    },
+    {
+      "id": "c10",
+      "from": "osc_b.out",
+      "to": "mixer.b",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.osc_b"
+    },
+    {
+      "id": "c11",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c12",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "env_f.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amount"
+    },
+    {
+      "id": "c14",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "env_a.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "env_f.out",
+      "to": "pmod.env",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pmod.filt_env"
+    },
+    {
+      "id": "c17",
+      "from": "osc_b.out",
+      "to": "pmod.osc_b",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pmod.osc_b"
+    },
+    {
+      "id": "c18",
+      "from": "pmod.out",
+      "to": "osc_a.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pmod.freq_a",
+        "equals": true
+      }
+    },
+    {
+      "id": "c19",
+      "from": "pmod.out",
+      "to": "osc_a.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pmod.pw_a",
+        "equals": true
+      }
+    },
+    {
+      "id": "c20",
+      "from": "pmod.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pmod.filter",
+        "equals": true
+      }
+    },
+    {
+      "id": "c21",
+      "from": "lfo.out",
+      "to": "wmod.lfo",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "pink.out",
+      "to": "wmod.noise",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "wheels.mod",
+      "to": "wmod.wheel",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Depth from 0 (wheel down) to maximum."
+    },
+    {
+      "id": "c24",
+      "from": "wmod.out",
+      "to": "osc_a.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "wmod.freq_a",
+        "equals": true
+      }
+    },
+    {
+      "id": "c25",
+      "from": "wmod.out",
+      "to": "osc_b.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "wmod.freq_b",
+        "equals": true
+      }
+    },
+    {
+      "id": "c26",
+      "from": "wmod.out",
+      "to": "osc_a.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "wmod.pw_a",
+        "equals": true
+      }
+    },
+    {
+      "id": "c27",
+      "from": "wmod.out",
+      "to": "osc_b.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "wmod.pw_b",
+        "equals": true
+      }
+    },
+    {
+      "id": "c28",
+      "from": "wmod.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "wmod.filter",
+        "equals": true
+      }
+    },
+    {
+      "id": "c29",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.volume",
+      "note": "All five voices summed."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "display",
+      "module": "programmer",
+      "label": "numeric display",
+      "kind": "display",
+      "function": "Bank and program; decimal points show file 2 (after bank) or 3 (after program)."
+    },
+    {
+      "id": "switch_leds",
+      "module": "programmer",
+      "label": "switch LEDs",
+      "kind": "led",
+      "function": "Programmed switch states; program select and record status; cassette status (LOAD FROM TAPE blinks on error)."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Preset, manual and edit",
+      "applies_to": ["programmer"],
+      "rule": "PRESET plays stored programs; moving a knob takes that parameter live (others keep the program's values, so knob positions do not show the program). Pressing the program again restores it. MANUAL plays the panel exactly as set. Black controls are programmable; silver knobs and grey switches are not."
+    },
+    {
+      "id": "b02",
+      "name": "Recording programs",
+      "applies_to": ["programmer"],
+      "rule": "Back-panel switch to ENABLE, press RECORD, choose file and bank if needed, then press a PROGRAM SELECT to store; RECORD off cancels."
+    },
+    {
+      "id": "b03",
+      "name": "Voice assignment",
+      "applies_to": ["kbd"],
+      "rule": "Last-note priority: a sixth key steals the earliest-used voice; a repeated key reuses its voice. UNISON puts all five voices on the lowest key (four with the sequencer interface), with GLIDE. A plug in GATE IN takes voice 5 for the sequencer."
+    },
+    {
+      "id": "b04",
+      "name": "Poly-Mod",
+      "applies_to": ["pmod", "osc_a", "osc_b", "env_f"],
+      "rule": "Within each voice, the filter envelope and OSC B (often in LO FREQ) modulate OSC A frequency, OSC A pulse width and/or the filter. Small differences between voices make each note slightly different; audio-rate OSC B gives bells, clangs and ring-mod-like sounds."
+    },
+    {
+      "id": "b05",
+      "name": "Wheel-Mod",
+      "applies_to": ["wmod", "lfo", "pink"],
+      "rule": "SOURCE MIX blends LFO and pink noise; the mod wheel sets the amount, the same for every voice, to any of OSC A frequency, OSC B frequency, OSC A pulse width, OSC B pulse width and filter."
+    },
+    {
+      "id": "b06",
+      "name": "Tuning",
+      "applies_to": ["kbd", "osc_a", "osc_b"],
+      "rule": "The microcomputer tunes all oscillators at power-on and when TUNE is pressed; allow about 20 minutes to stabilise. A-440 gives a crystal reference. Extreme oscillator FREQUENCY settings are quantised in semitones; MASTER TUNE sets exact pitch."
+    },
+    {
+      "id": "b07",
+      "name": "Program files",
+      "applies_to": ["programmer"],
+      "rule": "120 programs in three files of 40 (banks 1-5 x programs 1-8); one file at a time. Hold BANK and press PROGRAM SELECT 1-3 to change file. Files or single banks save to and load from cassette (about 40 s, with verification)."
+    },
+    {
+      "id": "b08",
+      "name": "Scale Mode",
+      "applies_to": ["programmer"],
+      "rule": "Hold a PROGRAM SELECT and press TUNE: the twelve middle-row knobs (LFO FREQ to AMP RELEASE) retune C to B by up to half a semitone each; the result is stored as a Scale program in an ordinary location. Select an equal-tempered Scale program before returning to Patch Mode."
+    },
+    {
+      "id": "b09",
+      "name": "Release footswitch",
+      "applies_to": ["env_a"],
+      "rule": "With RELEASE programmed off, the footswitch turns the programmed release on while held, like a sustain pedal."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "No MIDI (pre-dates it). The SCI DIGITAL interface (synchronous serial, odd parity, up to 625 kHz) answers 13 status bytes from a sequencer: send or receive the 61-key keyboard map plus bank/program, transpose, and program-file transfer (40 programs x 24 bytes).",
+    "program_format": {
+      "bytes_per_program": 24,
+      "file_bytes": 960,
+      "pots_7bit": [
+        "FILT ATK",
+        "FILT DEC",
+        "FILT SUS",
+        "FILT REL",
+        "AMP ATK",
+        "AMP DEC",
+        "AMP SUS",
+        "AMP REL",
+        "FILTER CUTOFF",
+        "FILT ENV AMT",
+        "MIX OSC B",
+        "OSC B PW",
+        "MIX OSC A",
+        "OSC A PW",
+        "MIX NOISE",
+        "FILT RESONANCE",
+        "GLIDE",
+        "LFO FREQ",
+        "W-MOD SOURCE MIX",
+        "P-MOD OSC B",
+        "P-MOD FILT ENV",
+        "OSC A FREQ",
+        "OSC B FREQ",
+        "OSC B FINE"
+      ],
+      "switch_bits": [
+        "OSC A PULSE",
+        "OSC A SAW",
+        "OSC A SYNC",
+        "OSC B SAW",
+        "OSC B TRI",
+        "OSC B PULSE",
+        "OSC B KBD",
+        "UNISON",
+        "POLY-MOD FREQ A",
+        "POLY-MOD PW A",
+        "POLY-MOD FILT",
+        "LFO SAW",
+        "LFO TRI",
+        "LFO SQUARE",
+        "FILT KBD",
+        "RELEASE",
+        "W-MOD FREQ A",
+        "W-MOD FREQ B",
+        "W-MOD PW A",
+        "W-MOD PW B",
+        "W-MOD FILT",
+        "OSC B LO FREQ"
+      ],
+      "note": "Each byte holds one pot value (bits 0-6) and one switch (bit 7); the exact byte pairing is in the manual's table, partly garbled by OCR, so the lists are given in order."
+    }
+  },
+  "specifications": {
+    "voices": 5,
+    "keyboard": "61 keys, C0-C5",
+    "oscillators_per_voice": 2,
+    "filter": "24 dB/oct resonant low-pass",
+    "envelopes": "2 x ADSR per voice, about 1 ms-30 s",
+    "lfo_hz": [0.04, 20],
+    "osc_b_lo_freq_hz": [0.4, 30],
+    "pitch_wheel": "about a fifth either way",
+    "programs": "120 (3 files x 40)",
+    "inputs": [
+      "release footswitch",
+      "amplifier CV (to +10 V)",
+      "filter CV (to +10 V)",
+      "sequencer voltage in and gate in (+3.5 V)",
+      "ANALOG (pitch and mod wheel CVs)",
+      "DIGITAL",
+      "cassette in"
+    ],
+    "outputs": [
+      "audio out",
+      "sequencer voltage out (1 V/oct) and trigger out (+15 V gate)",
+      "cassette out"
+    ],
+    "power": "115/230 V AC selectable; fuse 3A slow-blow or 1/2 A slow-blow"
+  },
+  "omitted_from_source": [
+    "bibliography",
+    "panel blanks",
+    "factory program diagrams (images)",
+    "cassette troubleshooting beyond the procedure",
+    "keyboard intonation history"
+  ],
+  "not_in_source": [
+    "voice chips and circuit revisions",
+    "dimensions and weight",
+    "audio output level",
+    "whether noise is generated per voice",
+    "factory program names (images in the scan)",
+    "Wheel-Mod and Poly-Mod panel labels (taken from the program format, as the panel figures are images)"
+  ],
+  "source_inconsistencies": [
+    "Voice defeat cross-references 'paragraph 18' for the sequencer interface; the manual numbers it 1-8.",
+    "The bank-save procedure says to select the bank before the one to save, and 'to record BANK 1, select BANK 5', relying on wrap-around.",
+    "The loading procedure's step 7 says 'if saving a bank only' in a loading section.",
+    "OSC A SYNC: the text says OSC A follows OSC B; in a sync patch OSC A is the one heard, so OSC B sets the pitch range."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "OCR quality",
+      "detail": "The scan's text layer is rough; values are taken where legible, and the program byte table is listed in order rather than byte by byte."
+    },
+    {
+      "topic": "Later revisions",
+      "detail": "Rev 1 and 2 (40 programs, SSM chips) and the 2020 Rev 4 differ; this file models Rev 3.3 as the manual describes."
+    },
+    {
+      "topic": "Scale Mode",
+      "detail": "Scale programs reuse twelve knob values as tuning offsets; modelled as a mode, not separate parameters."
+    }
+  ]
+}

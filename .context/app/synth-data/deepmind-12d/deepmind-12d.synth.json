@@ -1,0 +1,6089 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-deepmind-12d",
+    "manufacturer": "Behringer",
+    "model": "DeepMind 12D",
+    "category": "12-voice analogue polyphonic synthesizer, desktop, digitally controlled",
+    "based_on": "Original design. The voice architecture (two oscillators, 4-pole VCF, common HPF) is in the Roland Juno tradition, but the manual makes no such claim.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "DeepMind 12D User Manual",
+        "kind": "user_manual",
+        "file": "DeepMind_12D.pdf",
+        "pages": 162,
+        "firmware_basis": "v1.0 MIDI chart, September 2016",
+        "note": "Full manual: 28 chapters. Used here: Controls (3), Signal Path (6), Programming (8), Block Diagram (13), Specifications (15), MIDI and NRPN tables (16, 17). Not used: Effects Reference (9), Menu System (7), Poly Chord appendix, SysEx (19)."
+      },
+      {
+        "id": "panel",
+        "title": "DeepMind 12D front panel photograph",
+        "kind": "measurement",
+        "file": "DeepMind_12D.jpg",
+        "note": "Used to confirm the fader groups, switch colours and LED layout."
+      }
+    ]
+  },
+  "effects_ref": {
+    "file": "behringer-deepmind.fx.json",
+    "schema": "synth-effects.schema.json",
+    "module": "fx"
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "signal_path_note": "fully analogue voice under digital control; the DSP effects on the master bus can be hard-bypassed for an all-analogue path",
+    "voices": 12,
+    "polyphony_mode": "12-voice polyphonic with unison, mono and reduced-polyphony modes; poly chain across units",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "semi_modular": false,
+    "panel_counts": {
+      "faders": 26,
+      "switches": 33,
+      "rotary": 1,
+      "knobs": 2
+    },
+    "summary": "Twelve identical analogue voices. Each has OSC1 (sawtooth and pulse, both switchable on, with pulse width modulation), OSC2 (square with tone modulation, independent pitch and level, syncable to OSC1), a white noise source, a 4-pole low-pass VCF switchable to 2-pole with resonance, envelope, LFO and keyboard tracking inputs, and a VCA. The voices sum into a common 6 dB/octave high-pass filter with a +12 dB bass boost, then an optional four-slot DSP effects engine, then volume and the stereo outputs. Every parameter is a digital value (mostly 0 to 255) controlling analogue circuitry, so every setting is stored in one of 1024 program memories and reachable over MIDI CC or NRPN. Modulation comes from two per-voice LFOs, three per-voice ADSR envelopes (VCA, VCF, MOD) with per-stage curves and looping or LFO triggering, and an 8-slot modulation matrix with 24 sources and about 130 destinations. Voice allocation offers poly, unison of 2 to 12 voices, mono with stacked voices, and limited polyphony, with selectable note priority, envelope trigger mode and vintage-style drift. An arpeggiator, a 32-step control sequencer, and chord and poly-chord memories sit on a master BPM clock."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI input",
+      "panel_section": "REAR / MIDI",
+      "scope": "common",
+      "description": "All notes arrive over MIDI (DIN, USB or Wi-Fi). Produces note number, velocity, release velocity, channel aftertouch, pitch bend, mod wheel and the pedal and controller values that feed the modulation matrix. There is no keyboard on the 12D.",
+      "inputs": [],
+      "outputs": [
+        "kbd.note",
+        "kbd.velocity",
+        "kbd.gate",
+        "kbd.bend",
+        "kbd.mod_wheel",
+        "kbd.aftertouch",
+        "kbd.controllers"
+      ]
+    },
+    {
+      "id": "voices",
+      "type": "voice_allocator",
+      "name": "Voice allocation",
+      "panel_section": "POLY",
+      "scope": "common",
+      "description": "Decides how the twelve voices are handed out to incoming notes: one per note, several per note in unison, one shared voice in mono, or a reduced pool. Sets note priority when voices run out, the envelope trigger rule for overlapping notes, and the drift generators that imitate vintage instability. Also holds pitch bend range, transpose and poly chain settings. Each voice gets its own independent drift.",
+      "properties": {
+        "voice_count": 12
+      },
+      "inputs": ["voices.note_in", "voices.gate_in"],
+      "outputs": ["voices.pitch", "voices.gate", "voices.voice_number", "voices.unison_voice"]
+    },
+    {
+      "id": "portamento",
+      "type": "pitch_control",
+      "name": "Portamento",
+      "panel_section": "PORTAMENTO",
+      "scope": "per_voice",
+      "description": "Glides pitch between notes. Time 0 to 10 s, with fourteen modes covering fingered (legato-only), fixed-rate, exponential and fixed-interval variants, and a balance control that lets one oscillator glide while the other jumps.",
+      "inputs": ["portamento.in"],
+      "outputs": ["portamento.out"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "OSC 1",
+      "panel_section": "OSC 1&2",
+      "scope": "per_voice",
+      "description": "Dual-waveform analogue oscillator: sawtooth and pulse, each switchable on or off independently, so both can sound together. Pulse width from 50% (square) to 99%, modulated by a selectable source. Pitch modulation depth up to 36 semitones from a selectable source, with aftertouch and mod wheel depths on top. Three ranges.",
+      "properties": {
+        "waveforms": ["sawtooth", "pulse"],
+        "simultaneous_outputs": true,
+        "ranges": ["16'", "8'", "4'"]
+      },
+      "inputs": ["osc1.pitch_in", "osc1.pitch_mod_in", "osc1.pwm_in"],
+      "outputs": ["osc1.out", "osc1.sync_out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "OSC 2",
+      "panel_section": "OSC 1&2",
+      "scope": "per_voice",
+      "description": "Single-waveform analogue oscillator producing a square wave, with TONE MOD, which interrupts the pulse to change its harmonic content, from a selectable source. Independent pitch offset of plus or minus 12 semitones, its own level, optional hard sync to OSC1, and optional phase reset on key-down.",
+      "properties": {
+        "waveforms": ["square"],
+        "ranges": ["16'", "8'", "4'"]
+      },
+      "inputs": ["osc2.pitch_in", "osc2.pitch_mod_in", "osc2.tone_mod_in", "osc2.sync_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "OSC 1&2",
+      "scope": "per_voice",
+      "description": "White noise source mixed with the oscillators. Per voice by inference: the level is a program parameter that the parameter drift acts on, and the manual describes the noise generator alongside the oscillators.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Voice mixer",
+      "panel_section": "OSC 1&2",
+      "scope": "per_voice",
+      "description": "Sums OSC1, OSC2 and noise before the filter. OSC1 has no level control of its own; balance is set with OSC2 LEVEL and NOISE LEVEL against a fixed OSC1.",
+      "inputs": ["mixer.in_osc1", "mixer.in_osc2", "mixer.in_noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "Voltage-controlled low-pass filter, 4-pole by default and switchable to 2-pole. Resonance, envelope depth with polarity invert, LFO depth from a selectable LFO, keyboard tracking, velocity sensitivity and pitch bend to cutoff. A bass boost is also listed in its edit menu.",
+      "properties": {
+        "slope_db_per_octave": [24, 12],
+        "poles": [4, 2],
+        "modes": ["lowpass"],
+        "cutoff_hz": {
+          "min": 50,
+          "max": 20000
+        }
+      },
+      "inputs": [
+        "vcf.in",
+        "vcf.env_in",
+        "vcf.lfo_in",
+        "vcf.kbd_in",
+        "vcf.velocity_in",
+        "vcf.bend_in"
+      ],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "scope": "per_voice",
+      "description": "Per-voice amplifier, driven by the VCA envelope with adjustable depth and velocity sensitivity. Level from -12 dB to +6 dB. PAN SPREAD places each voice at a different position in the stereo field. A VCA-MODE switch chooses between a hotter and a cleaner characteristic.",
+      "inputs": ["vca.in", "vca.env_in", "vca.velocity_in"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "HPF",
+      "panel_section": "HPF",
+      "scope": "common",
+      "description": "6 dB/octave high-pass filter common to all voices, applied after the voices sum. 20 Hz to 2 kHz. Also carries the BOOST switch, a +12 dB bass boost on the signal path.",
+      "properties": {
+        "slope_db_per_octave": 6,
+        "modes": ["highpass"],
+        "cutoff_hz": {
+          "min": 20,
+          "max": 2000
+        }
+      },
+      "inputs": ["hpf.in"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "env_vca",
+      "type": "envelope",
+      "name": "VCA envelope",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "ADSR envelope that controls the VCA. Each stage has a time or level and a separately adjustable curve. Trigger mode selects key, LFO1, LFO2, loop or control sequencer; in the looping modes the sustain stage is skipped.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "per_stage_curves": true,
+        "trigger_modes": ["key", "lfo1", "lfo2", "loop", "seq"]
+      },
+      "inputs": ["env_vca.gate_in"],
+      "outputs": ["env_vca.out"]
+    },
+    {
+      "id": "env_vcf",
+      "type": "envelope",
+      "name": "VCF envelope",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "ADSR envelope that controls filter cutoff. Each stage has a time or level and a separately adjustable curve. Trigger mode selects key, LFO1, LFO2, loop or control sequencer; in the looping modes the sustain stage is skipped.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "per_stage_curves": true,
+        "trigger_modes": ["key", "lfo1", "lfo2", "loop", "seq"]
+      },
+      "inputs": ["env_vcf.gate_in"],
+      "outputs": ["env_vcf.out"]
+    },
+    {
+      "id": "env_mod",
+      "type": "envelope",
+      "name": "MOD envelope",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "ADSR envelope that is a general-purpose modulation source for the matrix and the oscillators. Each stage has a time or level and a separately adjustable curve. Trigger mode selects key, LFO1, LFO2, loop or control sequencer; in the looping modes the sustain stage is skipped.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "per_stage_curves": true,
+        "trigger_modes": ["key", "lfo1", "lfo2", "loop", "seq"]
+      },
+      "inputs": ["env_mod.gate_in"],
+      "outputs": ["env_mod.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO 1&2",
+      "scope": "per_voice",
+      "description": "Low-frequency oscillator with seven shapes, rate from 0.041 Hz into the audio range at 65.4 Hz (1280 Hz when driven from the matrix), a delay with fade-in, key sync, sync to the master BPM with a clock divider, a slew control and a PHASE setting: POLY gives every voice its own free LFO, MONO shares one, SPREAD offsets each voice's LFO by a chosen number of degrees.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.041,
+          "max": 65.4,
+          "max_via_matrix": 1280
+        },
+        "shapes": [
+          "sine",
+          "triangle",
+          "square",
+          "ramp_up",
+          "ramp_down",
+          "sample_hold",
+          "sample_glide"
+        ]
+      },
+      "inputs": [],
+      "outputs": ["lfo1.out", "lfo1.unipolar_out", "lfo1.fade_out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "LFO 1&2",
+      "scope": "per_voice",
+      "description": "Low-frequency oscillator with seven shapes, rate from 0.041 Hz into the audio range at 65.4 Hz (1280 Hz when driven from the matrix), a delay with fade-in, key sync, sync to the master BPM with a clock divider, a slew control and a PHASE setting: POLY gives every voice its own free LFO, MONO shares one, SPREAD offsets each voice's LFO by a chosen number of degrees.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.041,
+          "max": 65.4,
+          "max_via_matrix": 1280
+        },
+        "shapes": [
+          "sine",
+          "triangle",
+          "square",
+          "ramp_up",
+          "ramp_down",
+          "sample_hold",
+          "sample_glide"
+        ]
+      },
+      "inputs": [],
+      "outputs": ["lfo2.out", "lfo2.unipolar_out", "lfo2.fade_out"]
+    },
+    {
+      "id": "mod_matrix",
+      "type": "modulation_bus",
+      "name": "Mod matrix",
+      "panel_section": "MOD",
+      "scope": "per_voice",
+      "description": "Eight slots, each with a source, a destination and a bipolar depth. Sources include performance controllers, the LFOs and envelopes in several polarities, note number and velocity, the control sequencer and the voice number. Destinations are parameters rather than signal nodes, from oscillator pitch through every envelope stage and curve to effects levels. Some destinations are common to all voices. The table is stored with the program.",
+      "properties": {
+        "slots": 8
+      },
+      "inputs": [
+        "mod_matrix.lfo1_in",
+        "mod_matrix.lfo2_in",
+        "mod_matrix.env_vca_in",
+        "mod_matrix.env_vcf_in",
+        "mod_matrix.env_mod_in",
+        "mod_matrix.seq_in",
+        "mod_matrix.kbd_in",
+        "mod_matrix.voice_in"
+      ],
+      "outputs": []
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "ARP / SEQ",
+      "scope": "common",
+      "description": "Arpeggiates held notes over 1 to 6 octaves in eleven orders, at the master BPM with a clock divider, gate time, swing and hold. CHORD maps one recorded chord across the keyboard from a single key; POLY CHORD maps different chords to individual keys.",
+      "properties": {
+        "octaves": {
+          "min": 1,
+          "max": 6
+        },
+        "bpm": {
+          "min": 20,
+          "max": 275
+        }
+      },
+      "inputs": ["arp.notes_in"],
+      "outputs": ["arp.notes_out", "arp.clock_out"]
+    },
+    {
+      "id": "ctrl_seq",
+      "type": "sequencer",
+      "name": "Control sequencer",
+      "panel_section": "ARP / SEQ",
+      "scope": "common",
+      "description": "A 32-step sequencer of values rather than notes. Its output is a modulation source in the matrix and can also trigger the envelopes. Clock divider, length, swing, key sync and loop, and slew between steps.",
+      "properties": {
+        "steps": 32,
+        "value_range": [0, 255]
+      },
+      "inputs": ["ctrl_seq.clock_in"],
+      "outputs": ["ctrl_seq.out"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Effects engine",
+      "panel_section": "FX",
+      "scope": "common",
+      "description": "Four-slot DSP effects engine (35 algorithms, ten routing modes) on the master bus, with a true analogue bypass. Deliberately not modelled in this iteration: it is treated as a pass-through so the analogue path stays complete. Its parameters do appear in the CC map and as matrix destinations.",
+      "inputs": ["fx.in"],
+      "outputs": ["fx.out"]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME",
+      "scope": "common",
+      "description": "Master volume, balanced stereo outputs and a headphone output that follows the main output.",
+      "inputs": ["output.in"],
+      "outputs": ["output.left", "output.right", "output.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.pitch_mod",
+      "module": "osc1",
+      "label": "PITCH MOD",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 36,
+        "unit": "semitones",
+        "note": "0.00 cents to 36.0 semitones"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 20
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 21
+        }
+      ],
+      "function": "Depth of pitch modulation on OSC1 from the selected source."
+    },
+    {
+      "id": "osc1.pwm",
+      "module": "osc1",
+      "label": "PWM",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "physical": {
+        "min": 50,
+        "max": 99,
+        "unit": "% duty"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 21
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 25
+        }
+      ],
+      "function": "Pulse width of the OSC1 pulse when PWM-SRC is Manual, or the depth of modulation when a source is selected."
+    },
+    {
+      "id": "osc1.saw_on",
+      "module": "osc1",
+      "label": "SAWTOOTH",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 19
+        }
+      ],
+      "function": "Turns the OSC1 sawtooth output on or off."
+    },
+    {
+      "id": "osc1.pulse_on",
+      "module": "osc1",
+      "label": "SQUARE",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 18
+        }
+      ],
+      "function": "Turns the OSC1 pulse output on or off."
+    },
+    {
+      "id": "osc1.range",
+      "module": "osc1",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        }
+      ],
+      "default": "8'",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 14
+        }
+      ],
+      "function": "Base pitch range of OSC1."
+    },
+    {
+      "id": "osc1.pitch_mod_source",
+      "module": "osc1",
+      "label": "P.MOD-SRC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo1",
+          "label": "LFO 1",
+          "meaning": "bipolar"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO 2",
+          "meaning": "bipolar"
+        },
+        {
+          "value": "env_vca",
+          "label": "VCA Env",
+          "meaning": "unipolar on OSC1, bipolar on OSC2"
+        },
+        {
+          "value": "env_vcf",
+          "label": "VCF Env"
+        },
+        {
+          "value": "env_mod",
+          "label": "Mod Env"
+        },
+        {
+          "value": "lfo1_uni",
+          "label": "LFO 1 Unipolar"
+        },
+        {
+          "value": "lfo2_uni",
+          "label": "LFO 2 Unipolar"
+        }
+      ],
+      "default": "lfo1",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 22
+        }
+      ],
+      "function": "Source for OSC1 pitch modulation."
+    },
+    {
+      "id": "osc1.pitch_mod_mode",
+      "module": "osc1",
+      "label": "P.MOD-MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "osc1_2",
+          "label": "OSC1+2"
+        },
+        {
+          "value": "osc1",
+          "label": "OSC1 only"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 38
+        }
+      ],
+      "function": "Whether OSC1's pitch modulation setting applies to both oscillators or to OSC1 only."
+    },
+    {
+      "id": "osc1.aft_pitch_mod",
+      "module": "osc1",
+      "label": "AFT>P.MOD",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 23
+        }
+      ],
+      "function": "Aftertouch to OSC1 pitch modulation depth."
+    },
+    {
+      "id": "osc1.mw_pitch_mod",
+      "module": "osc1",
+      "label": "MW>P.MOD",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 24
+        }
+      ],
+      "function": "Mod wheel to OSC1 pitch modulation depth."
+    },
+    {
+      "id": "osc1.pwm_source",
+      "module": "osc1",
+      "label": "PWM-SRC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "manual",
+          "label": "Manual"
+        },
+        {
+          "value": "lfo1",
+          "label": "LFO 1"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO 2"
+        },
+        {
+          "value": "env_vca",
+          "label": "VCA Env"
+        },
+        {
+          "value": "env_vcf",
+          "label": "VCF Env"
+        },
+        {
+          "value": "env_mod",
+          "label": "Mod Env"
+        }
+      ],
+      "default": "manual",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 16
+        }
+      ],
+      "function": "Source for OSC1 pulse width modulation. Manual makes the PWM fader set the width directly."
+    },
+    {
+      "id": "osc2.pitch_mod",
+      "module": "osc2",
+      "label": "PITCH MOD",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 36,
+        "unit": "semitones"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 23
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 29
+        }
+      ],
+      "function": "Depth of pitch modulation on OSC2 from the selected source."
+    },
+    {
+      "id": "osc2.tone_mod",
+      "module": "osc2",
+      "label": "TONE MOD",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "physical": {
+        "min": 50,
+        "max": 100,
+        "unit": "%"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 24
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 28
+        }
+      ],
+      "function": "Interrupts the OSC2 pulse within each half cycle to change its harmonic content; manual amount or depth from a source. 50% is a symmetrical square, 100% interrupts 60% of the half cycle."
+    },
+    {
+      "id": "osc2.pitch",
+      "module": "osc2",
+      "label": "PITCH",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "physical": {
+        "min": -12,
+        "max": 12,
+        "unit": "semitones"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 25
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 27
+        }
+      ],
+      "function": "OSC2 pitch offset relative to OSC1."
+    },
+    {
+      "id": "osc2.level",
+      "module": "osc2",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "physical": {
+        "min": -48,
+        "max": 0,
+        "unit": "dB"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 26
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 26
+        }
+      ],
+      "function": "OSC2 level into the voice mixer. Off, then -48 dB to 0 dB."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 20
+        }
+      ],
+      "function": "Hard-syncs OSC2 to OSC1."
+    },
+    {
+      "id": "osc2.range",
+      "module": "osc2",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        }
+      ],
+      "default": "8'",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 15
+        }
+      ],
+      "function": "Base pitch range of OSC2."
+    },
+    {
+      "id": "osc2.pitch_mod_source",
+      "module": "osc2",
+      "label": "P.MOD-SRC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo1",
+          "label": "LFO 1",
+          "meaning": "bipolar"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO 2",
+          "meaning": "bipolar"
+        },
+        {
+          "value": "env_vca",
+          "label": "VCA Env",
+          "meaning": "unipolar on OSC1, bipolar on OSC2"
+        },
+        {
+          "value": "env_vcf",
+          "label": "VCF Env"
+        },
+        {
+          "value": "env_mod",
+          "label": "Mod Env"
+        },
+        {
+          "value": "lfo1_uni",
+          "label": "LFO 1 Unipolar"
+        },
+        {
+          "value": "lfo2_uni",
+          "label": "LFO 2 Unipolar"
+        }
+      ],
+      "default": "lfo1",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 32
+        }
+      ],
+      "function": "Source for OSC2 pitch modulation."
+    },
+    {
+      "id": "osc2.tone_mod_source",
+      "module": "osc2",
+      "label": "TMOD-SRC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "manual",
+          "label": "Manual"
+        },
+        {
+          "value": "lfo1",
+          "label": "LFO 1"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO 2"
+        },
+        {
+          "value": "env_vca",
+          "label": "VCA Env"
+        },
+        {
+          "value": "env_vcf",
+          "label": "VCF Env"
+        },
+        {
+          "value": "env_mod",
+          "label": "Mod Env"
+        }
+      ],
+      "default": "manual",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 17
+        }
+      ],
+      "function": "Source for OSC2 tone modulation."
+    },
+    {
+      "id": "osc2.aft_pitch_mod",
+      "module": "osc2",
+      "label": "AFT>P.MOD",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 30
+        }
+      ],
+      "function": "Aftertouch to OSC2 pitch modulation depth."
+    },
+    {
+      "id": "osc2.mw_pitch_mod",
+      "module": "osc2",
+      "label": "MW>P.MOD",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 31
+        }
+      ],
+      "function": "Mod wheel to OSC2 pitch modulation depth."
+    },
+    {
+      "id": "osc2.key_down_reset",
+      "module": "osc2",
+      "label": "KEY-DN-RESET",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 92
+        }
+      ],
+      "function": "Resets the oscillator phase on every key-down, so every note starts identically. Listed under OSC2's edit menu; the NRPN name is OSC Key Down Reset."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "NOISE LEVEL",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "physical": {
+        "min": -48.1,
+        "max": 0,
+        "unit": "dB"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 27
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 33
+        }
+      ],
+      "function": "White noise level into the voice mixer. Off, then -48.1 dB to 0 dB."
+    },
+    {
+      "id": "vcf.freq",
+      "module": "vcf",
+      "label": "FREQ",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": 50,
+        "max": 20000,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 29
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 39
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "vcf.res",
+      "module": "vcf",
+      "label": "RES",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 30
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 41
+        }
+      ],
+      "function": "Resonance at the cutoff point."
+    },
+    {
+      "id": "vcf.env",
+      "module": "vcf",
+      "label": "ENV",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 31
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 42
+        }
+      ],
+      "function": "Depth of the VCF envelope on cutoff."
+    },
+    {
+      "id": "vcf.lfo",
+      "module": "vcf",
+      "label": "LFO",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 33
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 45
+        }
+      ],
+      "function": "Depth of the selected LFO on cutoff."
+    },
+    {
+      "id": "vcf.kybd",
+      "module": "vcf",
+      "label": "KYBD",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 34
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 49
+        }
+      ],
+      "function": "Keyboard tracking of cutoff."
+    },
+    {
+      "id": "vcf.two_pole",
+      "module": "vcf",
+      "label": "2 POLE",
+      "manual_ref": 9,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 51
+        }
+      ],
+      "function": "Switches the filter from 4-pole (24 dB/oct) to 2-pole (12 dB/oct)."
+    },
+    {
+      "id": "vcf.invert",
+      "module": "vcf",
+      "label": "INVERT",
+      "manual_ref": 9,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 50
+        }
+      ],
+      "function": "Inverts the polarity of the VCF envelope."
+    },
+    {
+      "id": "vcf.velocity_sens",
+      "module": "vcf",
+      "label": "VELOCITY-SENS",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 128,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 43
+        }
+      ],
+      "function": "How much note velocity affects cutoff."
+    },
+    {
+      "id": "vcf.bend_freq",
+      "module": "vcf",
+      "label": "P.BEND-FREQ",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 128,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 44
+        }
+      ],
+      "function": "How much pitch bend affects cutoff."
+    },
+    {
+      "id": "vcf.lfo_select",
+      "module": "vcf",
+      "label": "LFO-SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo1",
+          "label": "LFO 1"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO 2"
+        }
+      ],
+      "default": "lfo2",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 46
+        }
+      ],
+      "function": "Which LFO feeds the VCF LFO fader. Default LFO2, leaving LFO1 for the oscillators."
+    },
+    {
+      "id": "vcf.aft_lfo",
+      "module": "vcf",
+      "label": "AFT-LFO-DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 47
+        }
+      ],
+      "function": "Aftertouch to VCF LFO depth."
+    },
+    {
+      "id": "vcf.mw_lfo",
+      "module": "vcf",
+      "label": "MW-LFO-DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 48
+        }
+      ],
+      "function": "Mod wheel to VCF LFO depth."
+    },
+    {
+      "id": "vca.level",
+      "module": "vca",
+      "label": "LEVEL",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "physical": {
+        "min": -12,
+        "max": 6,
+        "unit": "dB"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 36
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 80
+        }
+      ],
+      "function": "VCA output level."
+    },
+    {
+      "id": "vca.env_depth",
+      "module": "vca",
+      "label": "ENVELOPE-DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 255,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 81
+        }
+      ],
+      "function": "How much the VCA envelope opens the VCA."
+    },
+    {
+      "id": "vca.velocity_sens",
+      "module": "vca",
+      "label": "VELOCITY-SENS",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 128,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 82
+        }
+      ],
+      "function": "How much note velocity affects level."
+    },
+    {
+      "id": "vca.pan_spread",
+      "module": "vca",
+      "label": "PAN-SPREAD",
+      "kind": "continuous",
+      "physical": {
+        "min": -128,
+        "max": 127,
+        "unit": "unspecified"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 83
+        }
+      ],
+      "function": "Spreads the voices across the stereo field."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "VCA-MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ballsy",
+          "label": "BALLSY"
+        },
+        {
+          "value": "transparent",
+          "label": "TRANSPARENT"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        }
+      ],
+      "function": "Two VCA characteristics: the manual calls them BALLSY and TRANSPARENT, the latter with reduced level.",
+      "note": "No NRPN number is listed for this parameter."
+    },
+    {
+      "id": "hpf.freq",
+      "module": "hpf",
+      "label": "FREQ",
+      "manual_ref": 8,
+      "kind": "continuous",
+      "physical": {
+        "min": 20,
+        "max": 2000,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 35
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 40
+        }
+      ],
+      "function": "High-pass cutoff, common to all voices."
+    },
+    {
+      "id": "hpf.boost",
+      "module": "hpf",
+      "label": "BOOST",
+      "manual_ref": 8,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 52
+        }
+      ],
+      "function": "+12 dB bass boost on the signal path. Its NRPN is listed as VCF Bass Boost."
+    },
+    {
+      "id": "env_vca.attack",
+      "module": "env_vca",
+      "label": "A",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 37
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 53
+        }
+      ],
+      "function": "Attack time of the VCA envelope. Seconds not stated."
+    },
+    {
+      "id": "env_vca.decay",
+      "module": "env_vca",
+      "label": "D",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 39
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 54
+        }
+      ],
+      "function": "Decay time of the VCA envelope."
+    },
+    {
+      "id": "env_vca.sustain",
+      "module": "env_vca",
+      "label": "S",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 40
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 55
+        }
+      ],
+      "function": "Sustain level of the VCA envelope."
+    },
+    {
+      "id": "env_vca.release",
+      "module": "env_vca",
+      "label": "R",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 41
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 56
+        }
+      ],
+      "function": "Release time of the VCA envelope."
+    },
+    {
+      "id": "env_vca.attack_curve",
+      "module": "env_vca",
+      "label": "CURV ATT",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 50
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 58
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 50
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 58
+        }
+      ],
+      "function": "Curve of the attack stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vca.decay_curve",
+      "module": "env_vca",
+      "label": "CURV DEC",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 51
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 59
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 51
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 59
+        }
+      ],
+      "function": "Curve of the decay stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vca.sustain_curve",
+      "module": "env_vca",
+      "label": "CURV SUS",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 52
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 60
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 52
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 60
+        }
+      ],
+      "function": "Curve of the sustain stage (slope). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vca.release_curve",
+      "module": "env_vca",
+      "label": "CURV REL",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 53
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 61
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 53
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 61
+        }
+      ],
+      "function": "Curve of the release stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vca.trigger",
+      "module": "env_vca",
+      "label": "VCA-ENV-TRIG",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "key",
+          "label": "Key"
+        },
+        {
+          "value": "lfo1",
+          "label": "LFO-1",
+          "meaning": "retriggers on each LFO1 cycle"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO-2"
+        },
+        {
+          "value": "loop",
+          "label": "Loop",
+          "meaning": "retriggers at the end of release"
+        },
+        {
+          "value": "seq",
+          "label": "Seq",
+          "meaning": "retriggers on every control sequencer step"
+        }
+      ],
+      "default": "key",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 57
+        }
+      ],
+      "function": "What retriggers the VCA envelope."
+    },
+    {
+      "id": "env_vcf.attack",
+      "module": "env_vcf",
+      "label": "A",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 42
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 62
+        }
+      ],
+      "function": "Attack time of the VCF envelope. Seconds not stated."
+    },
+    {
+      "id": "env_vcf.decay",
+      "module": "env_vcf",
+      "label": "D",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 43
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 63
+        }
+      ],
+      "function": "Decay time of the VCF envelope."
+    },
+    {
+      "id": "env_vcf.sustain",
+      "module": "env_vcf",
+      "label": "S",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 44
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 64
+        }
+      ],
+      "function": "Sustain level of the VCF envelope."
+    },
+    {
+      "id": "env_vcf.release",
+      "module": "env_vcf",
+      "label": "R",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 45
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 65
+        }
+      ],
+      "function": "Release time of the VCF envelope."
+    },
+    {
+      "id": "env_vcf.attack_curve",
+      "module": "env_vcf",
+      "label": "CURV ATT",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 54
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 67
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 54
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 67
+        }
+      ],
+      "function": "Curve of the attack stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vcf.decay_curve",
+      "module": "env_vcf",
+      "label": "CURV DEC",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 55
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 68
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 55
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 68
+        }
+      ],
+      "function": "Curve of the decay stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vcf.sustain_curve",
+      "module": "env_vcf",
+      "label": "CURV SUS",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 56
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 69
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 56
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 69
+        }
+      ],
+      "function": "Curve of the sustain stage (slope). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vcf.release_curve",
+      "module": "env_vcf",
+      "label": "CURV REL",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 57
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 70
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 57
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 70
+        }
+      ],
+      "function": "Curve of the release stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_vcf.trigger",
+      "module": "env_vcf",
+      "label": "VCF-ENV-TRIG",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "key",
+          "label": "Key"
+        },
+        {
+          "value": "lfo1",
+          "label": "LFO-1",
+          "meaning": "retriggers on each LFO1 cycle"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO-2"
+        },
+        {
+          "value": "loop",
+          "label": "Loop",
+          "meaning": "retriggers at the end of release"
+        },
+        {
+          "value": "seq",
+          "label": "Seq",
+          "meaning": "retriggers on every control sequencer step"
+        }
+      ],
+      "default": "key",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 66
+        }
+      ],
+      "function": "What retriggers the VCF envelope."
+    },
+    {
+      "id": "env_mod.attack",
+      "module": "env_mod",
+      "label": "A",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 46
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 71
+        }
+      ],
+      "function": "Attack time of the MOD envelope. Seconds not stated."
+    },
+    {
+      "id": "env_mod.decay",
+      "module": "env_mod",
+      "label": "D",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 47
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 72
+        }
+      ],
+      "function": "Decay time of the MOD envelope."
+    },
+    {
+      "id": "env_mod.sustain",
+      "module": "env_mod",
+      "label": "S",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 48
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 73
+        }
+      ],
+      "function": "Sustain level of the MOD envelope."
+    },
+    {
+      "id": "env_mod.release",
+      "module": "env_mod",
+      "label": "R",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 49
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 74
+        }
+      ],
+      "function": "Release time of the MOD envelope."
+    },
+    {
+      "id": "env_mod.attack_curve",
+      "module": "env_mod",
+      "label": "CURV ATT",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 58
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 76
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 58
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 76
+        }
+      ],
+      "function": "Curve of the attack stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_mod.decay_curve",
+      "module": "env_mod",
+      "label": "CURV DEC",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 59
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 77
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 59
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 77
+        }
+      ],
+      "function": "Curve of the decay stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_mod.sustain_curve",
+      "module": "env_mod",
+      "label": "CURV SUS",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 60
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 78
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 60
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 78
+        }
+      ],
+      "function": "Curve of the sustain stage (slope). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_mod.release_curve",
+      "module": "env_mod",
+      "label": "CURV REL",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "same fader, CURVES switch on"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 61
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 79
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 61
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 79
+        }
+      ],
+      "function": "Curve of the release stage (shape). Reached by the same fader with CURVES engaged."
+    },
+    {
+      "id": "env_mod.trigger",
+      "module": "env_mod",
+      "label": "MOD-ENV-TRIG",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "key",
+          "label": "Key"
+        },
+        {
+          "value": "lfo1",
+          "label": "LFO-1",
+          "meaning": "retriggers on each LFO1 cycle"
+        },
+        {
+          "value": "lfo2",
+          "label": "LFO-2"
+        },
+        {
+          "value": "loop",
+          "label": "Loop",
+          "meaning": "retriggers at the end of release"
+        },
+        {
+          "value": "seq",
+          "label": "Seq",
+          "meaning": "retriggers on every control sequencer step"
+        }
+      ],
+      "default": "key",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 75
+        }
+      ],
+      "function": "What retriggers the MOD envelope."
+    },
+    {
+      "id": "env_vca.curves_mode",
+      "module": "env_vca",
+      "label": "CURVES",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Switches the four envelope faders from stage times to stage curves for whichever envelope is selected. A panel mode, not a program parameter.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "RATE",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "physical": {
+        "min": 0.041,
+        "max": 65.4,
+        "unit": "Hz",
+        "taper": "unknown",
+        "note": "the manual gives 0.041 Hz in one place and 0.05371 Hz in another for value 0"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 16
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 0
+        }
+      ],
+      "function": "LFO 1 rate."
+    },
+    {
+      "id": "lfo1.delay",
+      "module": "lfo1",
+      "label": "DELAY TIME",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 6.59,
+        "unit": "s"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 17
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 1
+        }
+      ],
+      "function": "Delay before LFO 1 starts. 40% of the time is silence and 60% is a fade-in."
+    },
+    {
+      "id": "lfo1.shape",
+      "module": "lfo1",
+      "label": "SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "ramp_up"
+        },
+        {
+          "value": "ramp_down"
+        },
+        {
+          "value": "sample_hold",
+          "label": "Smp&Hold"
+        },
+        {
+          "value": "sample_glide",
+          "label": "Smp&Glide"
+        }
+      ],
+      "default": "triangle",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 2
+        }
+      ],
+      "function": "LFO 1 waveform."
+    },
+    {
+      "id": "lfo1.key_sync",
+      "module": "lfo1",
+      "label": "KEY SYNC",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 3
+        }
+      ],
+      "function": "Resets the LFO on each key strike; otherwise free-running."
+    },
+    {
+      "id": "lfo1.arp_sync",
+      "module": "lfo1",
+      "label": "ARP SYNC",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 4
+        }
+      ],
+      "function": "Locks the LFO to the master BPM; the RATE fader then picks a clock division."
+    },
+    {
+      "id": "lfo1.phase",
+      "module": "lfo1",
+      "label": "PHASE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "mono"
+        },
+        {
+          "value": "spread",
+          "meaning": "1 to 254 degrees"
+        }
+      ],
+      "default": "poly",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 5
+        }
+      ],
+      "function": "POLY: each voice has its own LFO. MONO: all voices share one. SPREAD: each voice's LFO is offset by 1 to 254 degrees from the last."
+    },
+    {
+      "id": "lfo1.slew",
+      "module": "lfo1",
+      "label": "SLEW-RATE",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 6
+        }
+      ],
+      "function": "Smooths the transitions of the LFO waveform."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "RATE",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "physical": {
+        "min": 0.041,
+        "max": 65.4,
+        "unit": "Hz",
+        "taper": "unknown",
+        "note": "the manual gives 0.041 Hz in one place and 0.05371 Hz in another for value 0"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 18
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 7
+        }
+      ],
+      "function": "LFO 2 rate."
+    },
+    {
+      "id": "lfo2.delay",
+      "module": "lfo2",
+      "label": "DELAY TIME",
+      "manual_ref": 6,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 6.59,
+        "unit": "s"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 19
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 8
+        }
+      ],
+      "function": "Delay before LFO 2 starts. 40% of the time is silence and 60% is a fade-in."
+    },
+    {
+      "id": "lfo2.shape",
+      "module": "lfo2",
+      "label": "SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "ramp_up"
+        },
+        {
+          "value": "ramp_down"
+        },
+        {
+          "value": "sample_hold",
+          "label": "Smp&Hold"
+        },
+        {
+          "value": "sample_glide",
+          "label": "Smp&Glide"
+        }
+      ],
+      "default": "triangle",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 9
+        }
+      ],
+      "function": "LFO 2 waveform."
+    },
+    {
+      "id": "lfo2.key_sync",
+      "module": "lfo2",
+      "label": "KEY SYNC",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 10
+        }
+      ],
+      "function": "Resets the LFO on each key strike; otherwise free-running."
+    },
+    {
+      "id": "lfo2.arp_sync",
+      "module": "lfo2",
+      "label": "ARP SYNC",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 11
+        }
+      ],
+      "function": "Locks the LFO to the master BPM; the RATE fader then picks a clock division."
+    },
+    {
+      "id": "lfo2.phase",
+      "module": "lfo2",
+      "label": "PHASE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "mono"
+        },
+        {
+          "value": "spread",
+          "meaning": "1 to 254 degrees"
+        }
+      ],
+      "default": "poly",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 12
+        }
+      ],
+      "function": "POLY: each voice has its own LFO. MONO: all voices share one. SPREAD: each voice's LFO is offset by 1 to 254 degrees from the last."
+    },
+    {
+      "id": "lfo2.slew",
+      "module": "lfo2",
+      "label": "SLEW-RATE",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 13
+        }
+      ],
+      "function": "Smooths the transitions of the LFO waveform."
+    },
+    {
+      "id": "voices.unison_detune",
+      "module": "voices",
+      "label": "UNISON DETUNE",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 50,
+        "unit": "cents, plus and minus"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 28
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 87
+        }
+      ],
+      "function": "Detune between stacked voices in unison or mono modes."
+    },
+    {
+      "id": "voices.polyphony",
+      "module": "voices",
+      "label": "POLYPHONY",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly",
+          "meaning": "one voice per note, up to 12"
+        },
+        {
+          "value": "unison_2"
+        },
+        {
+          "value": "unison_3"
+        },
+        {
+          "value": "unison_4"
+        },
+        {
+          "value": "unison_6"
+        },
+        {
+          "value": "unison_12",
+          "meaning": "all 12 voices on every note"
+        },
+        {
+          "value": "mono",
+          "meaning": "one voice, one note"
+        },
+        {
+          "value": "mono_2"
+        },
+        {
+          "value": "mono_3"
+        },
+        {
+          "value": "mono_4"
+        },
+        {
+          "value": "mono_6"
+        },
+        {
+          "value": "poly_6",
+          "meaning": "one voice per note, limited to 6"
+        },
+        {
+          "value": "poly_8",
+          "meaning": "one voice per note, limited to 8"
+        }
+      ],
+      "default": "poly",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 85
+        }
+      ],
+      "function": "How the twelve voices are allocated. Even-numbered unison and mono stacks spread the voices around the root without playing it; odd-numbered ones keep one voice on the root."
+    },
+    {
+      "id": "voices.priority",
+      "module": "voices",
+      "label": "PRIORITY",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lowest"
+        },
+        {
+          "value": "highest"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "default": "last",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 84
+        }
+      ],
+      "function": "Which note wins when there are more notes than voices. Not available in poly chain."
+    },
+    {
+      "id": "voices.env_trigger",
+      "module": "voices",
+      "label": "ENV-TRIGGER",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mono"
+        },
+        {
+          "value": "retrigger"
+        },
+        {
+          "value": "legato"
+        },
+        {
+          "value": "one_shot"
+        }
+      ],
+      "default": "mono",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 86
+        }
+      ],
+      "function": "How envelopes start on a new note: from the current level (Mono), from zero (Retrigger), not at all while a note is held (Legato), or from zero with no sustain stage (One-shot)."
+    },
+    {
+      "id": "voices.osc_drift",
+      "module": "voices",
+      "label": "OSC-DRIFT",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 88
+        }
+      ],
+      "function": "Slow random pitch modulation on both oscillators, per voice, imitating vintage drift."
+    },
+    {
+      "id": "voices.param_drift",
+      "module": "voices",
+      "label": "PARAM-DRIFT",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 89
+        }
+      ],
+      "function": "Slow random drift of ten parameters: OSC pitch mod and PWM/tone mod depths, VCF freq, res, env and LFO depths, VCA env depth, MOD env depth."
+    },
+    {
+      "id": "voices.drift_rate",
+      "module": "voices",
+      "label": "DRIFT-RATE",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.025,
+        "max": 5,
+        "unit": "s per drift cycle"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 90
+        }
+      ],
+      "function": "Rate of both drifts, from 25 to 50 ms at 0 to 2.5 to 5 s at 255."
+    },
+    {
+      "id": "voices.transpose",
+      "module": "voices",
+      "label": "TRANSPOSE",
+      "kind": "integer",
+      "range": {
+        "min": -48,
+        "max": 48
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        }
+      ],
+      "function": "Transposes incoming notes."
+    },
+    {
+      "id": "voices.bend_up",
+      "module": "voices",
+      "label": "P.BEND RANGE+",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 2,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 36
+        }
+      ],
+      "function": "Pitch bend range upward, in semitones."
+    },
+    {
+      "id": "voices.bend_down",
+      "module": "voices",
+      "label": "P.BEND RANGE-",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 2,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 37
+        }
+      ],
+      "function": "Pitch bend range downward, in semitones."
+    },
+    {
+      "id": "voices.poly_chain",
+      "module": "voices",
+      "label": "POLY-CHAIN",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "default": false,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        }
+      ],
+      "function": "Passes excess notes to further DeepMind units over MIDI THRU."
+    },
+    {
+      "id": "portamento.time",
+      "module": "portamento",
+      "label": "PORTAMENTO",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 5
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 34
+        }
+      ],
+      "function": "Glide time between notes."
+    },
+    {
+      "id": "portamento.mode",
+      "module": "portamento",
+      "label": "PORTA-MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "fingered"
+        },
+        {
+          "value": "fixed_rate"
+        },
+        {
+          "value": "fixed_rate_fingered"
+        },
+        {
+          "value": "exponential"
+        },
+        {
+          "value": "exponential_fingered"
+        },
+        {
+          "value": "fixed_+2"
+        },
+        {
+          "value": "fixed_-2"
+        },
+        {
+          "value": "fixed_+5"
+        },
+        {
+          "value": "fixed_-5"
+        },
+        {
+          "value": "fixed_+12"
+        },
+        {
+          "value": "fixed_-12"
+        },
+        {
+          "value": "fixed_+24"
+        },
+        {
+          "value": "fixed_-24"
+        }
+      ],
+      "default": "normal",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 35
+        }
+      ],
+      "function": "Fourteen glide behaviours: normal or fingered (legato only), fixed rate, exponential, and fixed intervals of 2, 5, 12 or 24 semitones up or down."
+    },
+    {
+      "id": "portamento.osc_balance",
+      "module": "portamento",
+      "label": "PORTA-OSC-BAL",
+      "kind": "continuous",
+      "physical": {
+        "min": -128,
+        "max": 127,
+        "unit": "unspecified"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "default": 0,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 91
+        }
+      ],
+      "function": "Balances how much glide each oscillator gets."
+    },
+    {
+      "id": "mod_matrix.slot1_source",
+      "module": "mod_matrix",
+      "label": "MOD 1 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 93
+        }
+      ],
+      "function": "Source for matrix slot 1; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot1_destination",
+      "module": "mod_matrix",
+      "label": "MOD 1 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 94
+        }
+      ],
+      "function": "Destination for matrix slot 1; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot1_depth",
+      "module": "mod_matrix",
+      "label": "MOD 1 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 95
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 1."
+    },
+    {
+      "id": "mod_matrix.slot2_source",
+      "module": "mod_matrix",
+      "label": "MOD 2 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 96
+        }
+      ],
+      "function": "Source for matrix slot 2; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot2_destination",
+      "module": "mod_matrix",
+      "label": "MOD 2 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 97
+        }
+      ],
+      "function": "Destination for matrix slot 2; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot2_depth",
+      "module": "mod_matrix",
+      "label": "MOD 2 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 98
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 2."
+    },
+    {
+      "id": "mod_matrix.slot3_source",
+      "module": "mod_matrix",
+      "label": "MOD 3 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 99
+        }
+      ],
+      "function": "Source for matrix slot 3; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot3_destination",
+      "module": "mod_matrix",
+      "label": "MOD 3 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 100
+        }
+      ],
+      "function": "Destination for matrix slot 3; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot3_depth",
+      "module": "mod_matrix",
+      "label": "MOD 3 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 101
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 3."
+    },
+    {
+      "id": "mod_matrix.slot4_source",
+      "module": "mod_matrix",
+      "label": "MOD 4 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 102
+        }
+      ],
+      "function": "Source for matrix slot 4; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot4_destination",
+      "module": "mod_matrix",
+      "label": "MOD 4 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 103
+        }
+      ],
+      "function": "Destination for matrix slot 4; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot4_depth",
+      "module": "mod_matrix",
+      "label": "MOD 4 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 104
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 4."
+    },
+    {
+      "id": "mod_matrix.slot5_source",
+      "module": "mod_matrix",
+      "label": "MOD 5 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 105
+        }
+      ],
+      "function": "Source for matrix slot 5; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot5_destination",
+      "module": "mod_matrix",
+      "label": "MOD 5 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 106
+        }
+      ],
+      "function": "Destination for matrix slot 5; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot5_depth",
+      "module": "mod_matrix",
+      "label": "MOD 5 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 107
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 5."
+    },
+    {
+      "id": "mod_matrix.slot6_source",
+      "module": "mod_matrix",
+      "label": "MOD 6 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 108
+        }
+      ],
+      "function": "Source for matrix slot 6; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot6_destination",
+      "module": "mod_matrix",
+      "label": "MOD 6 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 109
+        }
+      ],
+      "function": "Destination for matrix slot 6; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot6_depth",
+      "module": "mod_matrix",
+      "label": "MOD 6 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 110
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 6."
+    },
+    {
+      "id": "mod_matrix.slot7_source",
+      "module": "mod_matrix",
+      "label": "MOD 7 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 111
+        }
+      ],
+      "function": "Source for matrix slot 7; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot7_destination",
+      "module": "mod_matrix",
+      "label": "MOD 7 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 112
+        }
+      ],
+      "function": "Destination for matrix slot 7; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot7_depth",
+      "module": "mod_matrix",
+      "label": "MOD 7 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 113
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 7."
+    },
+    {
+      "id": "mod_matrix.slot8_source",
+      "module": "mod_matrix",
+      "label": "MOD 8 SOURCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 22
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 114
+        }
+      ],
+      "function": "Source for matrix slot 8; see mod_matrix.sources."
+    },
+    {
+      "id": "mod_matrix.slot8_destination",
+      "module": "mod_matrix",
+      "label": "MOD 8 DESTINATION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 129
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 115
+        }
+      ],
+      "function": "Destination for matrix slot 8; see mod_matrix.destinations."
+    },
+    {
+      "id": "mod_matrix.slot8_depth",
+      "module": "mod_matrix",
+      "label": "MOD 8 DEPTH",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 116
+        }
+      ],
+      "function": "Bipolar depth of matrix slot 8."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ON/OFF",
+      "manual_ref": 5,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 155
+        }
+      ],
+      "function": "Arpeggiator on or off.",
+      "led_colour": "white"
+    },
+    {
+      "id": "arp.rate",
+      "module": "arp",
+      "label": "RATE",
+      "manual_ref": 5,
+      "kind": "continuous",
+      "physical": {
+        "min": 20,
+        "max": 275,
+        "unit": "BPM"
+      },
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 120,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 12
+        }
+      ],
+      "function": "Master BPM, shared by the arpeggiator, sequencer and any BPM-synced LFO."
+    },
+    {
+      "id": "arp.gate_time",
+      "module": "arp",
+      "label": "GATE TIME",
+      "manual_ref": 5,
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 13
+        }
+      ],
+      "function": "Note length as a proportion of the step, 0 being no note."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "up_inv"
+        },
+        {
+          "value": "down_inv"
+        },
+        {
+          "value": "up_down_inv"
+        },
+        {
+          "value": "up_alt"
+        },
+        {
+          "value": "down_alt"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "as_played"
+        },
+        {
+          "value": "chord"
+        }
+      ],
+      "default": "up",
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 156
+        }
+      ],
+      "function": "Note order.",
+      "confidence": "inferred",
+      "note": "Eleven modes match NRPN range 0 to 10; the exact order and two of the names are read from the mode diagrams."
+    },
+    {
+      "id": "arp.octaves",
+      "module": "arp",
+      "label": "OCT",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 6
+      },
+      "default": 2,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        }
+      ],
+      "function": "Octaves the arpeggio cycles through."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "SWING",
+      "kind": "continuous",
+      "physical": {
+        "min": 50,
+        "max": 75,
+        "unit": "%"
+      },
+      "range": {
+        "min": 50,
+        "max": 75
+      },
+      "default": 50,
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        }
+      ],
+      "function": "Groove applied to alternate steps."
+    },
+    {
+      "id": "arp.hold",
+      "module": "arp",
+      "label": "TAP/HOLD",
+      "manual_ref": 5,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Tap to set the tempo; hold to latch the arpeggio.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "arp.chord",
+      "module": "arp",
+      "label": "CHORD",
+      "manual_ref": 5,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Plays a recorded chord from any single key, transposed.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "arp.poly_chord",
+      "module": "arp",
+      "label": "POLY CHORD",
+      "manual_ref": 5,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Plays different recorded chords from individual keys.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "ctrl_seq.enable",
+      "module": "ctrl_seq",
+      "label": "SEQ ENABLE",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 117
+        }
+      ],
+      "function": "Turns the control sequencer on. Only from its edit page."
+    },
+    {
+      "id": "ctrl_seq.clock_div",
+      "module": "ctrl_seq",
+      "label": "CLOCK DIVIDER",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 15
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 118
+        }
+      ],
+      "function": "Division of the master BPM per step."
+    },
+    {
+      "id": "ctrl_seq.length",
+      "module": "ctrl_seq",
+      "label": "LENGTH",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 119
+        }
+      ],
+      "function": "Number of steps, 1 to 32."
+    },
+    {
+      "id": "ctrl_seq.swing",
+      "module": "ctrl_seq",
+      "label": "SWING",
+      "kind": "continuous",
+      "range": {
+        "min": 50,
+        "max": 75
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 120
+        }
+      ],
+      "function": "Groove applied to alternate steps."
+    },
+    {
+      "id": "ctrl_seq.key_sync_loop",
+      "module": "ctrl_seq",
+      "label": "KEY SYNC & LOOP",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 0
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        }
+      ],
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 121
+        }
+      ],
+      "function": "Whether the sequence restarts on key-down and whether it loops.",
+      "note": "The three values are not spelled out in the NRPN table."
+    },
+    {
+      "id": "ctrl_seq.slew",
+      "module": "ctrl_seq",
+      "label": "SLEW RATE",
+      "kind": "continuous",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu",
+          "note": "edit menu on the display"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": 122
+        }
+      ],
+      "function": "Glide between step values."
+    },
+    {
+      "id": "ctrl_seq.steps",
+      "module": "ctrl_seq",
+      "label": "STEP VALUES 1-32",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "access": [
+        {
+          "type": "menu"
+        },
+        {
+          "type": "midi",
+          "message": "nrpn",
+          "number": "123-154"
+        }
+      ],
+      "function": "The 32 step values, NRPN 123 to 154, one per step."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 15,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "cc",
+          "number": 7
+        }
+      ],
+      "function": "Master output level."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 16,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Mains switch on the rear."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "voices.voice_leds",
+      "module": "voices",
+      "label": "VOICES 1-12",
+      "kind": "led",
+      "led_colour": "amber",
+      "manual_ref": 13,
+      "function": "Twelve LEDs showing which voices are sounding as notes are played."
+    },
+    {
+      "id": "lfo1.shape_leds",
+      "module": "lfo1",
+      "label": "LFO 1 waveform",
+      "kind": "led",
+      "led_colour": "amber",
+      "manual_ref": 6,
+      "function": "Seven LEDs, one per shape. The active shape's LED is lit; full brightness while the LFO is running, half during the fade-in, off during the delay."
+    },
+    {
+      "id": "lfo2.shape_leds",
+      "module": "lfo2",
+      "label": "LFO 2 waveform",
+      "kind": "led",
+      "led_colour": "amber",
+      "manual_ref": 6,
+      "function": "As LFO 1."
+    },
+    {
+      "id": "output.display",
+      "module": "output",
+      "label": "DISPLAY",
+      "kind": "display",
+      "manual_ref": 1,
+      "function": "Backlit LCD showing program, the parameter being adjusted with its fader position, current value and stored value, the three envelopes, and the five main menus."
+    }
+  ],
+  "led_legend": {
+    "rule": "Switch backlights are coloured by role rather than by signal: EDIT switches that open a menu are amber, performance-mode switches (CHORD, POLY CHORD, TAP/HOLD, MOD, CURVES) are blue, and on/off switches for signal elements (waveforms, SYNC, 2 POLE, INVERT, BOOST, envelope select, ARP ON/OFF) are white. The LFO shape LEDs use brightness rather than colour: full while running, half during fade-in, off during delay.",
+    "colours": [
+      {
+        "colour": "amber",
+        "meaning": "opens an edit menu on the display (EDIT, PROG, FX, GLOBAL, COMPARE, WRITE)"
+      },
+      {
+        "colour": "blue",
+        "meaning": "a performance or panel mode (CHORD, POLY CHORD, TAP/HOLD, MOD, CURVES)"
+      },
+      {
+        "colour": "white",
+        "meaning": "an on/off element in the signal path or an envelope selector"
+      }
+    ],
+    "confidence": "inferred",
+    "note": "Read from the panel photograph. The manual documents the LFO brightness rule but not the switch colours."
+  },
+  "ports": [
+    {
+      "id": "jack.out_l",
+      "label": "OUTPUT L",
+      "manual_ref": 18,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS balanced",
+      "node": "output.left",
+      "electrical": {
+        "max_level_dbu": 18
+      },
+      "function": "Main left output."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "OUTPUT R",
+      "manual_ref": 18,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS balanced",
+      "node": "output.right",
+      "electrical": {
+        "max_level_dbu": 18
+      },
+      "function": "Main right output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 19,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_level_dbu": 21
+      },
+      "function": "Headphones, following the main output."
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "manual_ref": 20,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": null,
+      "function": "Sustain pedal, normally-open switch. Behaviour set in GLOBAL / PEDAL SETTINGS."
+    },
+    {
+      "id": "jack.pedal_cv",
+      "label": "PEDAL/CV",
+      "manual_ref": 21,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": null,
+      "function": "Expression pedal or CV. Behaviour set in GLOBAL / PEDAL SETTINGS; reaches the matrix as Expression or Foot Ctrl."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 22,
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from a keyboard, sequencer or computer."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "manual_ref": 23,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI to external gear: panel movements as CC or NRPN, and clock when set to Internal."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 24,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Passes through MIDI IN. Used for poly chain."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 25,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI in and out; Windows, macOS, iOS and Android."
+    },
+    {
+      "id": "jack.mains",
+      "label": "POWER INPUT",
+      "manual_ref": 17,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "IEC mains inlet, internal auto-ranging 100 to 240 V supply, 55 W maximum."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "voices.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "arp.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.on",
+        "equals": true
+      },
+      "note": "With the arpeggiator on, its note stream replaces the played notes."
+    },
+    {
+      "id": "c04",
+      "from": "kbd.note",
+      "to": "arp.notes_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "voices.pitch",
+      "to": "portamento.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "portamento.time"
+    },
+    {
+      "id": "c06",
+      "from": "portamento.out",
+      "to": "osc1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "portamento.out",
+      "to": "osc2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.pitch"
+    },
+    {
+      "id": "c08",
+      "from": "voices.gate",
+      "to": "env_vca.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env_vca.trigger",
+        "equals": "key"
+      }
+    },
+    {
+      "id": "c09",
+      "from": "voices.gate",
+      "to": "env_vcf.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env_vcf.trigger",
+        "equals": "key"
+      }
+    },
+    {
+      "id": "c10",
+      "from": "voices.gate",
+      "to": "env_mod.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env_mod.trigger",
+        "equals": "key"
+      }
+    },
+    {
+      "id": "c11",
+      "from": "lfo1.out",
+      "to": "env_vca.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env_vca.trigger",
+        "equals": "lfo1"
+      }
+    },
+    {
+      "id": "c12",
+      "from": "ctrl_seq.out",
+      "to": "env_vca.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env_vca.trigger",
+        "equals": "seq"
+      },
+      "note": "One example of the LFO and sequencer trigger routes; the same pattern applies to all three envelopes and both LFOs."
+    },
+    {
+      "id": "c21o1",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pitch_mod_source",
+        "equals": "lfo1"
+      },
+      "amount": "osc1.pitch_mod"
+    },
+    {
+      "id": "c21o2",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.pitch_mod_source",
+        "equals": "lfo1"
+      },
+      "amount": "osc2.pitch_mod"
+    },
+    {
+      "id": "c21pw",
+      "from": "lfo1.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pwm_source",
+        "equals": "lfo1"
+      },
+      "amount": "osc1.pwm"
+    },
+    {
+      "id": "c21tm",
+      "from": "lfo1.out",
+      "to": "osc2.tone_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.tone_mod_source",
+        "equals": "lfo1"
+      },
+      "amount": "osc2.tone_mod"
+    },
+    {
+      "id": "c22o1",
+      "from": "lfo2.out",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pitch_mod_source",
+        "equals": "lfo2"
+      },
+      "amount": "osc1.pitch_mod"
+    },
+    {
+      "id": "c22o2",
+      "from": "lfo2.out",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.pitch_mod_source",
+        "equals": "lfo2"
+      },
+      "amount": "osc2.pitch_mod"
+    },
+    {
+      "id": "c22pw",
+      "from": "lfo2.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pwm_source",
+        "equals": "lfo2"
+      },
+      "amount": "osc1.pwm"
+    },
+    {
+      "id": "c22tm",
+      "from": "lfo2.out",
+      "to": "osc2.tone_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.tone_mod_source",
+        "equals": "lfo2"
+      },
+      "amount": "osc2.tone_mod"
+    },
+    {
+      "id": "c2vo1",
+      "from": "env_vca.out",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pitch_mod_source",
+        "equals": "env_vca"
+      },
+      "amount": "osc1.pitch_mod"
+    },
+    {
+      "id": "c2vo2",
+      "from": "env_vca.out",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.pitch_mod_source",
+        "equals": "env_vca"
+      },
+      "amount": "osc2.pitch_mod"
+    },
+    {
+      "id": "c2vpw",
+      "from": "env_vca.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pwm_source",
+        "equals": "env_vca"
+      },
+      "amount": "osc1.pwm"
+    },
+    {
+      "id": "c2vtm",
+      "from": "env_vca.out",
+      "to": "osc2.tone_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.tone_mod_source",
+        "equals": "env_vca"
+      },
+      "amount": "osc2.tone_mod"
+    },
+    {
+      "id": "c2vo1",
+      "from": "env_vcf.out",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pitch_mod_source",
+        "equals": "env_vcf"
+      },
+      "amount": "osc1.pitch_mod"
+    },
+    {
+      "id": "c2vo2",
+      "from": "env_vcf.out",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.pitch_mod_source",
+        "equals": "env_vcf"
+      },
+      "amount": "osc2.pitch_mod"
+    },
+    {
+      "id": "c2vpw",
+      "from": "env_vcf.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pwm_source",
+        "equals": "env_vcf"
+      },
+      "amount": "osc1.pwm"
+    },
+    {
+      "id": "c2vtm",
+      "from": "env_vcf.out",
+      "to": "osc2.tone_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.tone_mod_source",
+        "equals": "env_vcf"
+      },
+      "amount": "osc2.tone_mod"
+    },
+    {
+      "id": "c2mo1",
+      "from": "env_mod.out",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pitch_mod_source",
+        "equals": "env_mod"
+      },
+      "amount": "osc1.pitch_mod"
+    },
+    {
+      "id": "c2mo2",
+      "from": "env_mod.out",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.pitch_mod_source",
+        "equals": "env_mod"
+      },
+      "amount": "osc2.pitch_mod"
+    },
+    {
+      "id": "c2mpw",
+      "from": "env_mod.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.pwm_source",
+        "equals": "env_mod"
+      },
+      "amount": "osc1.pwm"
+    },
+    {
+      "id": "c2mtm",
+      "from": "env_mod.out",
+      "to": "osc2.tone_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.tone_mod_source",
+        "equals": "env_mod"
+      },
+      "amount": "osc2.tone_mod"
+    },
+    {
+      "id": "c26",
+      "from": "kbd.aftertouch",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.aft_pitch_mod"
+    },
+    {
+      "id": "c27",
+      "from": "kbd.aftertouch",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.aft_pitch_mod"
+    },
+    {
+      "id": "c28",
+      "from": "kbd.mod_wheel",
+      "to": "osc1.pitch_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.mw_pitch_mod"
+    },
+    {
+      "id": "c29",
+      "from": "kbd.mod_wheel",
+      "to": "osc2.pitch_mod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.mw_pitch_mod",
+      "note": "Aftertouch and mod wheel add pitch modulation on top of the selected source. The VCF's AFT-LFO-DEPTH and MW-LFO-DEPTH scale a depth parameter and so are not wired."
+    },
+    {
+      "id": "c30",
+      "from": "osc1.sync_out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c40",
+      "from": "osc1.out",
+      "to": "mixer.in_osc1",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "OSC1 has no level control; its level is fixed."
+    },
+    {
+      "id": "c41",
+      "from": "osc2.out",
+      "to": "mixer.in_osc2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "osc2.level"
+    },
+    {
+      "id": "c42",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "noise.level"
+    },
+    {
+      "id": "c43",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c44",
+      "from": "env_vcf.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env",
+      "note": "Polarity flipped by vcf.invert."
+    },
+    {
+      "id": "c45",
+      "from": "lfo1.out",
+      "to": "vcf.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.lfo_select",
+        "equals": "lfo1"
+      },
+      "amount": "vcf.lfo"
+    },
+    {
+      "id": "c46",
+      "from": "lfo2.out",
+      "to": "vcf.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.lfo_select",
+        "equals": "lfo2"
+      },
+      "amount": "vcf.lfo"
+    },
+    {
+      "id": "c47",
+      "from": "portamento.out",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.kybd"
+    },
+    {
+      "id": "c48",
+      "from": "kbd.velocity",
+      "to": "vcf.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.velocity_sens"
+    },
+    {
+      "id": "c49",
+      "from": "kbd.bend",
+      "to": "vcf.bend_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.bend_freq"
+    },
+    {
+      "id": "c50",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c51",
+      "from": "env_vca.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.env_depth"
+    },
+    {
+      "id": "c52",
+      "from": "kbd.velocity",
+      "to": "vca.velocity_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.velocity_sens"
+    },
+    {
+      "id": "c53",
+      "from": "vca.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "All twelve voices sum here; the HPF and everything after it is common."
+    },
+    {
+      "id": "c54",
+      "from": "hpf.out",
+      "to": "fx.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Or the analogue bypass, which is the same signal."
+    },
+    {
+      "id": "c55",
+      "from": "fx.out",
+      "to": "output.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "output.volume"
+    },
+    {
+      "id": "c60",
+      "from": "lfo1.out",
+      "to": "mod_matrix.lfo1_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c61",
+      "from": "lfo2.out",
+      "to": "mod_matrix.lfo2_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c62",
+      "from": "env_vca.out",
+      "to": "mod_matrix.env_vca_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c63",
+      "from": "env_vcf.out",
+      "to": "mod_matrix.env_vcf_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c64",
+      "from": "env_mod.out",
+      "to": "mod_matrix.env_mod_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c65",
+      "from": "ctrl_seq.out",
+      "to": "mod_matrix.seq_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c66",
+      "from": "kbd.controllers",
+      "to": "mod_matrix.kbd_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Pitch bend, mod wheel, foot, breath, aftertouch, expression, note number, velocity, release velocity and CC 115 to 117."
+    },
+    {
+      "id": "c67",
+      "from": "voices.voice_number",
+      "to": "mod_matrix.voice_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c68",
+      "from": "arp.clock_out",
+      "to": "ctrl_seq.clock_in",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "Master BPM drives the sequencer through its clock divider."
+    }
+  ],
+  "mod_matrix": {
+    "module": "mod_matrix",
+    "slots": 8,
+    "slot_parameters": [
+      {
+        "slot": 1,
+        "source": "mod_matrix.slot1_source",
+        "destination": "mod_matrix.slot1_destination",
+        "depth": "mod_matrix.slot1_depth"
+      },
+      {
+        "slot": 2,
+        "source": "mod_matrix.slot2_source",
+        "destination": "mod_matrix.slot2_destination",
+        "depth": "mod_matrix.slot2_depth"
+      },
+      {
+        "slot": 3,
+        "source": "mod_matrix.slot3_source",
+        "destination": "mod_matrix.slot3_destination",
+        "depth": "mod_matrix.slot3_depth"
+      },
+      {
+        "slot": 4,
+        "source": "mod_matrix.slot4_source",
+        "destination": "mod_matrix.slot4_destination",
+        "depth": "mod_matrix.slot4_depth"
+      },
+      {
+        "slot": 5,
+        "source": "mod_matrix.slot5_source",
+        "destination": "mod_matrix.slot5_destination",
+        "depth": "mod_matrix.slot5_depth"
+      },
+      {
+        "slot": 6,
+        "source": "mod_matrix.slot6_source",
+        "destination": "mod_matrix.slot6_destination",
+        "depth": "mod_matrix.slot6_depth"
+      },
+      {
+        "slot": 7,
+        "source": "mod_matrix.slot7_source",
+        "destination": "mod_matrix.slot7_destination",
+        "depth": "mod_matrix.slot7_depth"
+      },
+      {
+        "slot": 8,
+        "source": "mod_matrix.slot8_source",
+        "destination": "mod_matrix.slot8_destination",
+        "depth": "mod_matrix.slot8_depth"
+      }
+    ],
+    "sources": [
+      {
+        "id": 0,
+        "name": "Pitch Bend",
+        "midi": "Pitch Bend"
+      },
+      {
+        "id": 1,
+        "name": "Mod Wheel",
+        "midi": "Mod Wheel"
+      },
+      {
+        "id": 2,
+        "name": "Foot Ctrl",
+        "midi": "Foot Ctrl"
+      },
+      {
+        "id": 3,
+        "name": "Breath Ctrl",
+        "midi": "Breath Ctrl"
+      },
+      {
+        "id": 4,
+        "name": "Pressure",
+        "midi": "Pressure"
+      },
+      {
+        "id": 5,
+        "name": "Expression",
+        "midi": "Expression"
+      },
+      {
+        "id": 6,
+        "name": "LFO1",
+        "node": "lfo1.out"
+      },
+      {
+        "id": 7,
+        "name": "LFO2",
+        "node": "lfo2.out"
+      },
+      {
+        "id": 8,
+        "name": "Env 1 (VCA)",
+        "node": "env_vca.out"
+      },
+      {
+        "id": 9,
+        "name": "Env 2 (VCF)",
+        "node": "env_vcf.out"
+      },
+      {
+        "id": 10,
+        "name": "Env 3 (Mod)",
+        "node": "env_mod.out"
+      },
+      {
+        "id": 11,
+        "name": "Note Num",
+        "midi": "Note Num"
+      },
+      {
+        "id": 12,
+        "name": "Note Vel",
+        "midi": "Note Vel"
+      },
+      {
+        "id": 13,
+        "name": "Note Off Vel",
+        "midi": "Note Off Vel"
+      },
+      {
+        "id": 14,
+        "name": "Ctrl Seq",
+        "node": "ctrl_seq.out"
+      },
+      {
+        "id": 15,
+        "name": "LFO1 (Uni)",
+        "node": "lfo1.unipolar_out"
+      },
+      {
+        "id": 16,
+        "name": "LFO2 (Uni)",
+        "node": "lfo2.unipolar_out"
+      },
+      {
+        "id": 17,
+        "name": "LFO1 (Fade)",
+        "node": "lfo1.fade_out"
+      },
+      {
+        "id": 18,
+        "name": "LFO2 (Fade)",
+        "node": "lfo2.fade_out"
+      },
+      {
+        "id": 19,
+        "name": "Voice Num",
+        "node": "voices.voice_number"
+      },
+      {
+        "id": 20,
+        "name": "Uni Voice",
+        "node": "voices.unison_voice"
+      },
+      {
+        "id": 21,
+        "name": "CC X (115)",
+        "midi": "CC X (115)"
+      },
+      {
+        "id": 22,
+        "name": "CC Y (116)",
+        "midi": "CC Y (116)"
+      },
+      {
+        "id": 23,
+        "name": "CC Z (117)",
+        "midi": "CC Z (117)"
+      }
+    ],
+    "destinations": [
+      {
+        "id": 0,
+        "name": "LFO1 Rate",
+        "parameter": "lfo1.rate",
+        "modelled": true
+      },
+      {
+        "id": 1,
+        "name": "LFO1 Delay",
+        "parameter": "lfo1.delay",
+        "modelled": true
+      },
+      {
+        "id": 2,
+        "name": "LFO1 Slew",
+        "parameter": "lfo1.slew",
+        "modelled": true
+      },
+      {
+        "id": 3,
+        "name": "LFO1 Shape",
+        "parameter": "lfo1.shape",
+        "modelled": true
+      },
+      {
+        "id": 4,
+        "name": "LFO2 Rate",
+        "parameter": "lfo2.rate",
+        "modelled": true
+      },
+      {
+        "id": 5,
+        "name": "LFO2 Delay",
+        "parameter": "lfo2.delay",
+        "modelled": true
+      },
+      {
+        "id": 6,
+        "name": "LFO2 Slew",
+        "parameter": "lfo2.slew",
+        "modelled": true
+      },
+      {
+        "id": 7,
+        "name": "LFO2 Shape",
+        "parameter": "lfo2.shape",
+        "modelled": true
+      },
+      {
+        "id": 8,
+        "name": "OSC1+2 Pitch",
+        "modelled": false
+      },
+      {
+        "id": 9,
+        "name": "OSC1+2 Fine",
+        "modelled": false
+      },
+      {
+        "id": 10,
+        "name": "OSC1 Pitch",
+        "modelled": false
+      },
+      {
+        "id": 11,
+        "name": "OSC1 Fine",
+        "modelled": false
+      },
+      {
+        "id": 12,
+        "name": "OSC2 Pitch",
+        "parameter": "osc2.pitch",
+        "modelled": true
+      },
+      {
+        "id": 13,
+        "name": "OSC2 Fine",
+        "modelled": false
+      },
+      {
+        "id": 14,
+        "name": "OSC1 PM Depth",
+        "parameter": "osc1.pitch_mod",
+        "modelled": true
+      },
+      {
+        "id": 15,
+        "name": "PWM Depth",
+        "parameter": "osc1.pwm",
+        "modelled": true
+      },
+      {
+        "id": 16,
+        "name": "TMod Depth",
+        "parameter": "osc2.tone_mod",
+        "modelled": true
+      },
+      {
+        "id": 17,
+        "name": "OSC2 PM Depth",
+        "parameter": "osc2.pitch_mod",
+        "modelled": true
+      },
+      {
+        "id": 18,
+        "name": "Porta Time",
+        "parameter": "portamento.time",
+        "modelled": true
+      },
+      {
+        "id": 19,
+        "name": "VCF Freq",
+        "parameter": "vcf.freq",
+        "modelled": true
+      },
+      {
+        "id": 20,
+        "name": "VCF Res",
+        "parameter": "vcf.res",
+        "modelled": true
+      },
+      {
+        "id": 21,
+        "name": "VCF Env",
+        "parameter": "vcf.env",
+        "modelled": true
+      },
+      {
+        "id": 22,
+        "name": "VCF LFO",
+        "parameter": "vcf.lfo",
+        "modelled": true
+      },
+      {
+        "id": 23,
+        "name": "Env Rates (all)",
+        "modelled": false
+      },
+      {
+        "id": 24,
+        "name": "All Attack",
+        "modelled": false
+      },
+      {
+        "id": 25,
+        "name": "All Decay",
+        "modelled": false
+      },
+      {
+        "id": 26,
+        "name": "All Sus",
+        "modelled": false
+      },
+      {
+        "id": 27,
+        "name": "All Rel",
+        "modelled": false
+      },
+      {
+        "id": 28,
+        "name": "Env1/2/3 Rates",
+        "modelled": false
+      },
+      {
+        "id": 29,
+        "name": "Env1/2/3 Curves",
+        "modelled": false
+      },
+      {
+        "id": 30,
+        "name": "Env1 Attack",
+        "parameter": "env_vca.attack",
+        "modelled": true
+      },
+      {
+        "id": 31,
+        "name": "Env1 Decay",
+        "parameter": "env_vca.decay",
+        "modelled": true
+      },
+      {
+        "id": 32,
+        "name": "Env1 Sus",
+        "parameter": "env_vca.sustain",
+        "modelled": true
+      },
+      {
+        "id": 33,
+        "name": "Env1 Rel",
+        "parameter": "env_vca.release",
+        "modelled": true
+      },
+      {
+        "id": 34,
+        "name": "Env1 curves (4)",
+        "modelled": false
+      },
+      {
+        "id": 35,
+        "name": "Env2 Attack",
+        "parameter": "env_vcf.attack",
+        "modelled": true
+      },
+      {
+        "id": 36,
+        "name": "Env2 Decay",
+        "parameter": "env_vcf.decay",
+        "modelled": true
+      },
+      {
+        "id": 37,
+        "name": "Env2 Sus",
+        "parameter": "env_vcf.sustain",
+        "modelled": true
+      },
+      {
+        "id": 38,
+        "name": "Env2 Rel",
+        "parameter": "env_vcf.release",
+        "modelled": true
+      },
+      {
+        "id": 39,
+        "name": "Env2 curves (4)",
+        "modelled": false
+      },
+      {
+        "id": 40,
+        "name": "Env3 Attack",
+        "parameter": "env_mod.attack",
+        "modelled": true
+      },
+      {
+        "id": 41,
+        "name": "Env3 Decay",
+        "parameter": "env_mod.decay",
+        "modelled": true
+      },
+      {
+        "id": 42,
+        "name": "Env3 Sus",
+        "parameter": "env_mod.sustain",
+        "modelled": true
+      },
+      {
+        "id": 43,
+        "name": "Env3 Rel",
+        "parameter": "env_mod.release",
+        "modelled": true
+      },
+      {
+        "id": 44,
+        "name": "Env3 curves (4)",
+        "modelled": false
+      },
+      {
+        "id": 45,
+        "name": "VCA Level",
+        "parameter": "vca.level",
+        "modelled": true
+      },
+      {
+        "id": 46,
+        "name": "VCA Pan Spread",
+        "parameter": "vca.pan_spread",
+        "modelled": true
+      },
+      {
+        "id": 47,
+        "name": "HPF Freq",
+        "parameter": "hpf.freq",
+        "modelled": true
+      },
+      {
+        "id": 48,
+        "name": "Unison Detune",
+        "parameter": "voices.unison_detune",
+        "modelled": true
+      },
+      {
+        "id": 49,
+        "name": "Mod 1-8 Depth",
+        "modelled": false
+      },
+      {
+        "id": 50,
+        "name": "Fx 1-4 Params",
+        "modelled": false
+      },
+      {
+        "id": 51,
+        "name": "Fx 1-4 Level",
+        "modelled": false
+      }
+    ],
+    "depth_range": {
+      "nrpn": [0, 255],
+      "bipolar": true
+    },
+    "note": "Destinations are listed as families rather than all 130 entries; ids here are positions in this list, not the instrument's NRPN destination numbers, which run 0 to 129 in the order of manual section 8.9.2. Effects destinations are listed but not modelled. The manual gives 22, 24 and 23 (NRPN 0 to 22) as the source count and 130, 132 and 130 (NRPN 0 to 129) as the destination count."
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Twelve voices, per-voice and common blocks",
+      "applies_to": ["voices", "hpf", "fx", "output"],
+      "rule": "Every module marked per_voice exists twelve times, once per voice, with identical settings from the program and independent state (envelope position, LFO phase, drift). The voices sum after the VCA and everything from the HPF onward is single: one HPF, one bass boost, one effects engine, one volume."
+    },
+    {
+      "id": "b02",
+      "name": "Digital control of an analogue voice",
+      "applies_to": ["voices"],
+      "rule": "Every parameter is a stored digital value, mostly 0 to 255, driving analogue circuitry. A fader move updates the value; the display shows fader position, current value and stored value side by side. Everything is stored per program in 8 banks of 128, and reachable over CC (the panel faders) or NRPN (everything, at 8-bit resolution)."
+    },
+    {
+      "id": "b03",
+      "name": "Voice allocation modes",
+      "applies_to": ["voices"],
+      "rule": "Poly: one voice per note, twelve notes. Unison-N: N voices per note, spread by UNISON DETUNE; 12/N notes. Mono-N: N stacked voices, one note. Poly-6 and Poly-8: one voice per note, pool limited. When an even number of voices are stacked they are spread symmetrically around the root and the root itself is not sounded; with an odd number one voice sits on the root."
+    },
+    {
+      "id": "b04",
+      "name": "Note priority and voice stealing",
+      "applies_to": ["voices"],
+      "rule": "When notes exceed voices, PRIORITY decides: Lowest steals the highest-sounding voice for a lower note, Highest the reverse, Last steals the least recently played. Not available in poly chain because excess notes go to the next unit instead."
+    },
+    {
+      "id": "b05",
+      "name": "Envelope triggering on overlapping notes",
+      "applies_to": ["voices", "env_vca", "env_vcf", "env_mod"],
+      "rule": "ENV-TRIGGER sets what a new note does to an already-running envelope: Mono starts the attack from the current level, Retrigger resets to zero, Legato does not retrigger until all notes are released, One-shot resets and skips sustain, jumping from decay straight to release."
+    },
+    {
+      "id": "b06",
+      "name": "Envelope shapes and curves",
+      "applies_to": ["env_vca", "env_vcf", "env_mod"],
+      "rule": "Each of attack, decay, sustain and release has a time or level and a separate curve value; the same four faders set either, switched by CURVES. Sustain's curve is a slope, letting the sustain stage rise or fall rather than hold. Times in seconds are not given for any stage."
+    },
+    {
+      "id": "b07",
+      "name": "Envelopes as oscillators",
+      "applies_to": ["env_vca", "env_vcf", "env_mod", "lfo1", "lfo2", "ctrl_seq"],
+      "rule": "Each envelope's trigger mode can be Key, LFO-1, LFO-2, Loop or Seq. In LFO modes the envelope fires on every LFO cycle; in Loop it refires at the end of its own release; in Seq on every control sequencer step. In all looping modes the sustain stage is skipped."
+    },
+    {
+      "id": "b08",
+      "name": "Per-voice LFOs and phase",
+      "applies_to": ["lfo1", "lfo2"],
+      "rule": "Each voice has its own two LFOs. PHASE selects POLY (independent and free), MONO (one LFO shared by all voices, so a chord wobbles together) or SPREAD (each voice offset by 1 to 254 degrees from the last, giving rotating or cascading modulation across a chord). LFO rate reaches 65.4 Hz from the fader and 1280 Hz from the matrix, so it can be used as an audio-rate modulator."
+    },
+    {
+      "id": "b09",
+      "name": "LFO delay and fade",
+      "applies_to": ["lfo1", "lfo2"],
+      "rule": "DELAY TIME is split 40/60: no output for the first 40% of the set time, then a fade-in over the remaining 60% to full depth. The fade envelope is itself a matrix source. The shape LED reflects the phase: off, half, full."
+    },
+    {
+      "id": "b10",
+      "name": "OSC1 dual waveform and PWM",
+      "applies_to": ["osc1"],
+      "rule": "Sawtooth and pulse are independently switchable and sum when both are on. The PWM fader sets pulse width directly (50% square to 99% narrow) when PWM-SRC is Manual, or the modulation depth when a source is chosen. There is no separate manual width when a source is in use."
+    },
+    {
+      "id": "b11",
+      "name": "OSC2 tone modulation",
+      "applies_to": ["osc2"],
+      "rule": "TONE MOD interrupts the OSC2 square wave within each half cycle, from none at 50% to an interrupt covering 60% of the half cycle at 100%. This is a form of pulse-width shaping with a different harmonic result from OSC1's PWM. Source selectable in the same way."
+    },
+    {
+      "id": "b12",
+      "name": "Oscillator sync",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "SYNC forces OSC2 to restart on each OSC1 cycle. The manual shows three cases: OSC2 below OSC1, above, and below half, each producing a different sync timbre as OSC2 PITCH is swept."
+    },
+    {
+      "id": "b13",
+      "name": "Filter modulation sum",
+      "applies_to": ["vcf"],
+      "rule": "Effective cutoff = FREQ + VCF envelope x ENV (inverted by INVERT) + selected LFO x LFO (plus aftertouch and mod wheel depths) + keyboard x KYBD + velocity x VELOCITY-SENS + pitch bend x P.BEND-FREQ + any matrix routes to VCF Freq. Summation law not stated; exponential domain assumed.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b14",
+      "name": "Drift",
+      "applies_to": ["voices"],
+      "rule": "OSC-DRIFT applies slow random pitch modulation to both oscillators; PARAM-DRIFT does the same to ten named modulation and filter parameters. Each voice has independent random generators for both, at a rate set by DRIFT-RATE from 25 to 50 ms at 0 to 2.5 to 5 s at 255, so voices drift apart rather than together."
+    },
+    {
+      "id": "b15",
+      "name": "Master BPM",
+      "applies_to": ["arp", "ctrl_seq", "lfo1", "lfo2"],
+      "rule": "One clock, 20 to 275 BPM, from the RATE fader, TAP, or external MIDI clock on the interface chosen by CLOCK. The arpeggiator, the control sequencer and any LFO with ARP SYNC on divide it with their own clock dividers. When an LFO is synced its RATE fader picks a division instead of a frequency."
+    },
+    {
+      "id": "b16",
+      "name": "Control sequencer",
+      "applies_to": ["ctrl_seq"],
+      "rule": "Thirty-two step values, not notes. The output is a matrix source, and can trigger envelopes. Length, clock divider, swing, key sync and looping, and a slew between steps. Turned on only from its edit page."
+    },
+    {
+      "id": "b17",
+      "name": "Effects engine",
+      "applies_to": ["fx"],
+      "rule": "Out of scope for this iteration. Four slots, 35 algorithms, ten routing modes, 24-bit 48 kHz, true analogue bypass. Its parameters occupy CC 62 to 114 and the last matrix destinations. Treated as unity pass-through here."
+    },
+    {
+      "id": "b18",
+      "name": "Program memory",
+      "applies_to": ["voices"],
+      "rule": "1024 programs in 8 banks of 128, selected by bank select LSB 0 to 7 plus program change. COMPARE shows the difference between panel and stored values; WRITE saves with a name and category."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "release_velocity",
+      "channel_aftertouch",
+      "pitch_bend",
+      "program_change",
+      "bank_select",
+      "cc (see cc_map)",
+      "nrpn (every parameter)",
+      "midi_clock",
+      "start_stop_continue",
+      "sysex"
+    ],
+    "transmits": [
+      "note data from the arpeggiator, chord and control sequencer",
+      "cc or nrpn from every panel move (fader mode CC, NRPN or off)",
+      "midi_clock when CLOCK is Internal",
+      "sysex program dumps"
+    ],
+    "channel": {
+      "range": [1, 16],
+      "set_by": "GLOBAL menu, separately per interface (DIN, USB, Wi-Fi)"
+    },
+    "poly_aftertouch": false,
+    "cc_map": {
+      "0": "Bank Select (MSB)",
+      "1": "Modulation Wheel",
+      "2": "Breath Controller",
+      "4": "Foot Controller",
+      "5": "Portamento Time",
+      "6": "Data Entry (MSB)",
+      "7": "Channel Volume",
+      "8": "Balance",
+      "10": "Pan",
+      "11": "Expression",
+      "12": "Arpeggiator Rate",
+      "13": "Arpeggiator Gate Time",
+      "16": "LFO 1 Rate",
+      "17": "LFO 1 Delay Time",
+      "18": "LFO 2 Rate",
+      "19": "LFO 2 Delay Time",
+      "20": "OSC1 Pitch Modulation",
+      "21": "OSC1 Pulse Width Modulation",
+      "23": "OSC 2 Pitch Modulation",
+      "24": "OSC 2 Tone Modulation",
+      "25": "OSC 2 Pitch",
+      "26": "OSC 2 Level",
+      "27": "Noise Level",
+      "28": "Unison Detune",
+      "29": "VCF Frequency",
+      "30": "VCF Resonance",
+      "31": "VCF Envelope Modulation",
+      "32": "Bank Select (LSB)",
+      "33": "VCF LFO Modulation",
+      "34": "VCF Keyboard Modulation",
+      "35": "HPF Frequency",
+      "36": "VCA Level",
+      "37": "VCA Envelope Attack",
+      "38": "Data Entry (LSB)",
+      "39": "VCA Envelope Decay",
+      "40": "VCA Envelope Sustain",
+      "41": "VCA Envelope Release",
+      "42": "VCF Envelope Attack",
+      "43": "VCF Envelope Decay",
+      "44": "VCF Envelope Sustain (printed as VCA)",
+      "45": "VCF Envelope Release",
+      "46": "MOD Envelope Attack",
+      "47": "MOD Envelope Decay",
+      "48": "MOD Envelope Sustain",
+      "49": "MOD Envelope Release",
+      "50": "VCA Envelope Attack Curve",
+      "51": "VCA Envelope Decay Curve",
+      "52": "VCA Envelope Sustain Curve",
+      "53": "VCA Envelope Release Curve",
+      "54": "VCF Envelope Attack Curve",
+      "55": "VCF Envelope Decay Curve",
+      "56": "VCF Envelope Sustain Curve (printed as VCA)",
+      "57": "VCF Envelope Release Curve",
+      "58": "MOD Envelope Attack Curve",
+      "59": "MOD Envelope Decay Curve",
+      "60": "MOD Envelope Sustain Curve",
+      "61": "MOD Envelope Release Curve",
+      "64": "Sustain Pedal",
+      "96": "Data Increment",
+      "97": "Data Decrement",
+      "98": "NRPN LSB",
+      "99": "NRPN MSB",
+      "100": "RPN LSB",
+      "101": "RPN MSB",
+      "113": "Analog Thru",
+      "114": "Effects Mode",
+      "115": "3D Controller X",
+      "116": "3D Controller Y",
+      "117": "3D Controller Z",
+      "120": "All Sound Off",
+      "121": "Reset All Controllers",
+      "122": "Local Control",
+      "123": "All Notes Off",
+      "124": "Omni Off",
+      "125": "Omni On",
+      "126": "Poly Off",
+      "127": "Poly On"
+    },
+    "cc_map_effects": "CC 62, 63, 65 to 95 and 102 to 112 address effects slot parameters, types and gains; omitted from cc_map as out of scope",
+    "nrpn": {
+      "range": "0 to 156 covers the voice, matrix, sequencer and arpeggiator; effects and further arpeggiator parameters follow",
+      "resolution": "8-bit via Data Entry LSB, MSB optional for ranges under 128",
+      "note": "NRPN numbers are recorded on each parameter's access list"
+    },
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows 7+, macOS 10.6.8+, iOS 8+, Android 6+"
+    },
+    "wifi": "built-in access point for the editor app; also a MIDI interface with its own channel and thru settings",
+    "sysex": "supported: device inquiry, program dumps; not modelled",
+    "clock": "receives from the interface selected by CLOCK; sends when Internal"
+  },
+  "specifications": {
+    "voices": {
+      "count": 12,
+      "type": "analogue"
+    },
+    "per_voice": {
+      "oscillators": 2,
+      "lfos": 2,
+      "envelopes": 3,
+      "vcf": "2-pole / 4-pole low-pass"
+    },
+    "common": {
+      "hpf": "6 dB/octave",
+      "effects": "4 slots, 35 algorithms, 32/40-bit float at 48 kHz, 24-bit A/D-D/A, 114 dB dynamic range"
+    },
+    "mod_matrix": {
+      "slots": 8,
+      "sources": 24,
+      "destinations": "about 130"
+    },
+    "programs": {
+      "banks": 8,
+      "per_bank": 128
+    },
+    "controls": {
+      "faders": 26,
+      "switches": 33,
+      "encoders": 1
+    },
+    "outputs": {
+      "main": "2 x 1/4-inch TRS balanced, max +18 dBu",
+      "phones": "1/4-inch TRS, max +21 dBu"
+    },
+    "midi": "In, Out, Thru on DIN; USB 2.0 type B; Wi-Fi 802.11 b/g/n access point",
+    "power": {
+      "mains": "IEC, auto-ranging 100 to 240 V",
+      "consumption_w_max": 55,
+      "fuse": "T3.15AH250V"
+    },
+    "dimensions_mm": {
+      "h": 116,
+      "w": 461,
+      "d": 224,
+      "note": "packaged"
+    },
+    "weight_kg": 5.0,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 40
+    }
+  },
+  "omitted_from_source": [
+    "the Effects Reference Guide (chapter 9): modelled separately in behringer-deepmind.fx.json, see effects_ref",
+    "the Menu System chapter (7) and the GLOBAL menu: display, panel, pedal and connectivity settings",
+    "poly chord programming (appendix 2), the default program listing (appendix 3) and revert-to-panel (appendix 4)",
+    "SysEx format (chapter 19), firmware update, bootloader, troubleshooting, rack mounting",
+    "chord and poly-chord voicing rules, and the arpeggiator's clock division table",
+    "safety and legal text, hook-up diagrams, DAW configuration"
+  ],
+  "not_in_source": [
+    "envelope stage times in seconds: attack, decay and release are 0 to 255 with no time scale anywhere in the manual",
+    "what BALLSY and TRANSPARENT VCA modes do electrically",
+    "the summation law for the filter's six cutoff modulation inputs",
+    "the taper of the VCF FREQ fader between 50 Hz and 20 kHz",
+    "the level of OSC1, which has no control, relative to the OSC2 and noise scales",
+    "how many DeepMind units a poly chain supports",
+    "the three values of the control sequencer's KEY SYNC & LOOP parameter",
+    "an NRPN number for VCA-MODE"
+  ],
+  "source_inconsistencies": [
+    "The LFO RATE range at value 0 is given as 0.041 Hz (24.1 s) in 8.2.1 and 0.05371 Hz in 8.2.4.",
+    "CC 44 is printed as VCA Envelope Sustain and CC 56 as VCA Envelope Sustain Curve; both are in the VCF block and duplicate CC 40 and 52. Read as VCF.",
+    "NRPN 61 and 70 and 79 are each printed as an Attack Curve, duplicating 58, 67 and 76; by position they are the Release Curves.",
+    "LFO 1 Mono Mode is NRPN range 0 to 1 while LFO 2 Mono Mode is 0 to 255, although the notes column gives both the same Poly / Mono / Spread 1 to 254 encoding.",
+    "The number of matrix sources is given as 22 (signal path chapter), 24 (specifications) and 23 (NRPN 0 to 22); the printed list has 24.",
+    "The number of matrix destinations is given as 130 (signal path chapter and NRPN 0 to 129) and 132 (specifications and 8.9).",
+    "Section 3.1's numbered control list assigns descriptions to the wrong numbers in several places (OSC and VCA controls appear under item 10, 11 and 12 interchangeably); the manual_ref values here follow the section headings.",
+    "OSC2's KEY-DN-RESET is described in the OSC2 edit menu but its NRPN is named OSC Key Down Reset, implying both oscillators.",
+    "BOOST is a panel switch in the HPF block and a BASS-BOOST option in the VCF edit menu, and its NRPN is named VCF Bass Boost."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Envelope times",
+      "detail": "The largest gap. Every envelope stage is 0 to 255 and no time in seconds is given at any value, for any of the three envelopes. Curves are likewise 0 to 255 with only qualitative pictures. A web search on 21 September 2026 found nothing published either: Behringer's product pages and reviews repeat the manual; a Gearspace summary of the 2016 Amazona preview quotes the designers as claiming attack times in the hundreds of microseconds rather than the usual 5 ms, and the open-source deepmind-midi project states explicitly that every time and frequency on the instrument is a byte whose curve has not been measured. The only route left is measurement of a unit."
+    },
+    {
+      "topic": "Fader tapers",
+      "detail": "Physical end points are given for oscillator pitch mod, PWM, OSC2 pitch and level, noise, VCF and HPF frequency, LFO rate and delay, drift rate and portamento; the mapping from 0 to 255 to those end points is not."
+    },
+    {
+      "topic": "Filter character",
+      "detail": "No resonance law, no self-oscillation statement, no account of the 2-pole response beyond the slope. The VCF is the sound of the instrument and the manual describes only its controls."
+    },
+    {
+      "topic": "VCA modes",
+      "detail": "BALLSY versus TRANSPARENT is named and not explained."
+    },
+    {
+      "topic": "OSC1 level",
+      "detail": "Fixed and unspecified, so the mixer balance cannot be computed in absolute terms."
+    },
+    {
+      "topic": "Voice-to-voice variation",
+      "detail": "Twelve analogue voices will not be identical. The drift parameters model deliberate variation; inherent unit-to-unit and voice-to-voice tolerance is not documented and would need measurement."
+    },
+    {
+      "topic": "Mod matrix destinations",
+      "detail": "Recorded as families with the instrument's numbering explained rather than as all 130 rows. Expanding to the full list is mechanical from section 8.9.2 when needed."
+    },
+    {
+      "topic": "Effects",
+      "detail": "Excluded by design. The hooks are in place: fx module, CC ranges, matrix destinations."
+    },
+    {
+      "topic": "Control sequencer and arpeggiator timing",
+      "detail": "Clock divider tables and the swing law are in appendix 1, not transcribed here."
+    },
+    {
+      "topic": "Aftertouch and wheel depths",
+      "detail": "Six extra depth controls (aftertouch and mod wheel into each oscillator's pitch mod and into the VCF LFO) are recorded as parameters but their interaction with the main depth is not stated."
+    }
+  ]
+}

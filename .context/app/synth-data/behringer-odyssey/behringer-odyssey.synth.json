@@ -1,0 +1,3002 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "behringer-odyssey",
+    "manufacturer": "Behringer",
+    "model": "ODYSSEY",
+    "category": "duophonic analogue synthesizer, 37 keys, with sequencer, arpeggiator and effects",
+    "based_on": "ARP Odyssey (1972-81), including its three filter revisions (4023, 4035, 4075).",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer ODYSSEY Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_Odyssey.pdf",
+        "pages": 57,
+        "note": "Multilingual; English controls (68 callouts), getting started, sequencer, parameter set, SysEx, MIDI, effects and specifications used."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "signal_path_note": "analogue voice; digital Klark Teknik effects",
+    "voices": 1,
+    "polyphony_mode": "duophonic: VCO-1 plays the lowest held note, VCO-2 the highest",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory; 64 sequencer patterns (8 banks of 8), up to 32 steps each.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 37,
+      "fx_programs": 32
+    },
+    "summary": "Two VCOs (sawtooth and pulse) with sync, a ring modulator, white or pink noise, and a sample and hold fed by its own two-channel mixer. A low-pass filter switchable between the ARP 4023 (2-pole), 4035 and 4075 (4-pole), a high-pass filter and drive, an ADSR and an AR envelope, and a VCA. Modulation is set by paired faders and source switches throughout, ARP style. Adds proportional pitch pads, a 32-step sequencer with 64 patterns, an eight-mode arpeggiator, 32 Klark Teknik effects, MIDI, USB and CV/gate/trigger."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard",
+      "panel_section": "KEYBOARD / CONTROLLER",
+      "description": "37 semi-weighted keys with velocity; duophonic: low note to VCO-1, high note to VCO-2. Transpose ±2 octaves, portamento.",
+      "properties": {
+        "keys": 37,
+        "note_priority": {
+          "vco1": "lowest",
+          "vco2": "highest"
+        }
+      },
+      "inputs": ["kbd.cv_in", "kbd.gate_in", "kbd.trig_in", "kbd.seq_in", "kbd.porta_fs"],
+      "outputs": ["kbd.cv_low", "kbd.cv_high", "kbd.gate", "kbd.trig"]
+    },
+    {
+      "id": "ppc",
+      "type": "manual_controller",
+      "name": "Proportional pitch control",
+      "panel_section": "CONTROLLER",
+      "description": "Three pressure-sensitive pads: pitch down, pitch up, and LFO modulation; harder pressure, more effect.",
+      "inputs": [],
+      "outputs": ["ppc.bend", "ppc.vibrato"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer and arpeggiator",
+      "panel_section": "SEQUENCER",
+      "description": "32-step sequencer (64 patterns in 8 banks) with keyboard and step modes, ratchet, accent, swing and gate length; eight-mode arpeggiator.",
+      "properties": {
+        "steps": 32,
+        "patterns": 64,
+        "banks": 8
+      },
+      "inputs": [],
+      "outputs": ["seq.notes"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI",
+      "panel_section": "(rear panel)",
+      "description": "MIDI and USB MIDI notes, pitch bend and clock.",
+      "inputs": [],
+      "outputs": ["midi.notes"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO AND S/H",
+      "description": "Sine and square outputs; also clocks the S/H and the LFO repeat.",
+      "inputs": [],
+      "outputs": ["lfo.sine", "lfo.square"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO-1",
+      "panel_section": "VCO-1",
+      "description": "Sawtooth and pulse; coarse and fine frequency; can drop to a low, keyboard-independent frequency (LF KYBD OFF).",
+      "inputs": ["vco1.pitch_cv", "vco1.fm", "vco1.pwm"],
+      "outputs": ["vco1.saw", "vco1.pulse"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO-2",
+      "panel_section": "VCO-2",
+      "description": "Sawtooth and pulse; coarse and fine frequency; hard sync to VCO-1.",
+      "inputs": ["vco2.pitch_cv", "vco2.fm", "vco2.pwm", "vco2.sync_in"],
+      "outputs": ["vco2.saw", "vco2.pulse"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "LFO AND S/H",
+      "description": "White or pink noise.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "ring",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "AUDIO MIXER",
+      "description": "Ring modulation of the two VCOs; turn sync off when using it.",
+      "inputs": ["ring.a", "ring.b"],
+      "outputs": ["ring.out"]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "LFO AND S/H",
+      "description": "Two-channel S/H mixer (VCO-1 saw or pulse; noise or VCO-2 pulse) sampled on LFO or keyboard triggers, with output lag. The S/H mixer output is also a modulation source in its own right.",
+      "inputs": ["snh.in1", "snh.in2", "snh.clock"],
+      "outputs": ["snh.out", "snh.mix_out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Audio mixer",
+      "panel_section": "AUDIO MIXER",
+      "description": "Three faders: noise or ring mod, VCO-1 saw or pulse, VCO-2 saw or pulse.",
+      "inputs": ["mixer.in1", "mixer.in2", "mixer.in3", "mixer.ext"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "description": "Resonant low-pass in three modes: 2-pole 4023 (12 dB/oct), 4-pole 4035 and 4-pole 4075 (24 dB/oct).",
+      "properties": {
+        "modes": {
+          "4023": "2-pole, 12 dB/oct",
+          "4035": "4-pole, 24 dB/oct",
+          "4075": "4-pole, 24 dB/oct"
+        }
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "HPF",
+      "panel_section": "VCF",
+      "description": "High-pass filter after the VCF.",
+      "inputs": ["hpf.in"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "drive",
+      "type": "overdrive",
+      "name": "Drive",
+      "panel_section": "VCA",
+      "description": "Switchable drive stage.",
+      "properties": {
+        "confidence_note": "position in the chain inferred"
+      },
+      "inputs": ["drive.in"],
+      "outputs": ["drive.out"]
+    },
+    {
+      "id": "adsr",
+      "type": "envelope",
+      "name": "ADSR",
+      "panel_section": "ADSR",
+      "description": "Attack 5 ms-5 s, decay 10 ms-10 s, sustain 0-100%, release 15 ms-10 s.",
+      "inputs": ["adsr.gate"],
+      "outputs": ["adsr.out"]
+    },
+    {
+      "id": "ar",
+      "type": "envelope",
+      "name": "AR",
+      "panel_section": "AR",
+      "description": "Attack 5 ms-5 s, release 10 ms-10 s; like the ADSR with decay at zero and sustain at maximum.",
+      "inputs": ["ar.gate"],
+      "outputs": ["ar.out"]
+    },
+    {
+      "id": "repeat",
+      "type": "gate_logic",
+      "name": "Keyboard/LFO repeat",
+      "panel_section": "KYBD/LFO REPEAT",
+      "description": "Lets either envelope be gated by the keyboard or retriggered at the LFO rate, on key press or continuously.",
+      "inputs": ["repeat.kbd_gate", "repeat.lfo"],
+      "outputs": ["repeat.adsr_gate", "repeat.ar_gate"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "description": "Amplitude from the ADSR or AR envelope, plus a GAIN fader for a level not triggered by the keyboard.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Klark Teknik effects",
+      "panel_section": "FX",
+      "description": "32 programs (reverbs, delays, echo, chorus, flanger, phaser, pan/tremolo, detune and more), three parameters each, tap tempo, FX SEND level.",
+      "properties": {
+        "programs": 32
+      },
+      "inputs": ["fx.in"],
+      "outputs": ["fx.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "(rear panel)",
+      "description": "Main outputs (high and low level) and headphones.",
+      "inputs": ["out.in"],
+      "outputs": ["out.main", "out.phones"]
+    },
+    {
+      "id": "pedal",
+      "type": "manual_controller",
+      "name": "Pedal input",
+      "panel_section": "(rear panel)",
+      "description": "Optional volume pedal as a modulation source for VCO-2 FM and the VCF.",
+      "inputs": ["pedal.in"],
+      "outputs": ["pedal.out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "seq.tempo",
+      "module": "seq",
+      "label": "TEMPO/GATE LENGTH",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sequencer and arpeggiator tempo (internal clock); gate length while step editing; with SHIFT, swing or arpeggio gate length."
+    },
+    {
+      "id": "kbd.portamento",
+      "module": "kbd",
+      "label": "PORTAMENTO",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Glide time; with SHIFT during step editing, splits the step into 1-4 ratchets."
+    },
+    {
+      "id": "kbd.porta_mode",
+      "module": "kbd",
+      "label": "MODE (recessed)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Pressed: portamento also applies to TRANSPOSE changes."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSE",
+      "kind": "enum",
+      "manual_ref": 8,
+      "values": [
+        {
+          "value": "down_2"
+        },
+        {
+          "value": "normal"
+        },
+        {
+          "value": "up_2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard range up or down two octaves."
+    },
+    {
+      "id": "ppc.down",
+      "module": "ppc",
+      "label": "PROPORTIONAL PITCH (down)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "pad"
+        }
+      ],
+      "function": "Lowers pitch with pressure."
+    },
+    {
+      "id": "ppc.up",
+      "module": "ppc",
+      "label": "PROPORTIONAL PITCH (up)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "pad"
+        }
+      ],
+      "function": "Raises pitch with pressure."
+    },
+    {
+      "id": "ppc.lfo",
+      "module": "ppc",
+      "label": "PROPORTIONAL PITCH (lfo)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "pad"
+        }
+      ],
+      "function": "Adds LFO modulation with pressure."
+    },
+    {
+      "id": "vco1.coarse",
+      "module": "vco1",
+      "label": "FREQUENCY COARSE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Wide-range VCO-1 frequency."
+    },
+    {
+      "id": "vco1.fine",
+      "module": "vco1",
+      "label": "FREQUENCY FINE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Fine VCO-1 frequency."
+    },
+    {
+      "id": "vco1.kybd",
+      "module": "vco1",
+      "label": "AUDIO KYBD ON / LF KYBD OFF",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio_kybd_on"
+        },
+        {
+          "value": "lf_kybd_off"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Normal, or a low frequency unaffected by the keyboard."
+    },
+    {
+      "id": "vco1.fm1",
+      "module": "vco1",
+      "label": "FM (LFO)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of LFO FM on VCO-1."
+    },
+    {
+      "id": "vco1.fm1_src",
+      "module": "vco1",
+      "label": "FM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo_sine"
+        },
+        {
+          "value": "lfo_square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO waveform for FM."
+    },
+    {
+      "id": "vco1.fm2",
+      "module": "vco1",
+      "label": "FM (S/H or ADSR)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of S/H or ADSR FM on VCO-1."
+    },
+    {
+      "id": "vco1.fm2_src",
+      "module": "vco1",
+      "label": "FM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "snh"
+        },
+        {
+          "value": "adsr"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "S/H or ADSR."
+    },
+    {
+      "id": "vco1.pw",
+      "module": "vco1",
+      "label": "PULSE WIDTH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pulse width from square (50%) to minimum."
+    },
+    {
+      "id": "vco1.pwm",
+      "module": "vco1",
+      "label": "PULSE WIDTH MODULATION",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of pulse width modulation."
+    },
+    {
+      "id": "vco1.pwm_src",
+      "module": "vco1",
+      "label": "PWM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo_sine"
+        },
+        {
+          "value": "adsr"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO sine or ADSR."
+    },
+    {
+      "id": "vco2.coarse",
+      "module": "vco2",
+      "label": "FREQUENCY COARSE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Wide-range VCO-2 frequency."
+    },
+    {
+      "id": "vco2.fine",
+      "module": "vco2",
+      "label": "FREQUENCY FINE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Fine VCO-2 frequency."
+    },
+    {
+      "id": "vco2.sync",
+      "module": "vco2",
+      "label": "SYNC ON/OFF",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Syncs VCO-2 to VCO-1; turn off for ring modulation."
+    },
+    {
+      "id": "vco2.fm1",
+      "module": "vco2",
+      "label": "FM (LFO / S/H mixer / pedal)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of FM on VCO-2 from the selected source."
+    },
+    {
+      "id": "vco2.fm1_src",
+      "module": "vco2",
+      "label": "FM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo_sine"
+        },
+        {
+          "value": "snh_mixer"
+        },
+        {
+          "value": "pedal"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO sine, S/H mixer, or pedal."
+    },
+    {
+      "id": "vco2.fm2",
+      "module": "vco2",
+      "label": "FM (S/H or ADSR)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of S/H or ADSR FM on VCO-2."
+    },
+    {
+      "id": "vco2.fm2_src",
+      "module": "vco2",
+      "label": "FM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "snh"
+        },
+        {
+          "value": "adsr"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "S/H or ADSR."
+    },
+    {
+      "id": "vco2.pw",
+      "module": "vco2",
+      "label": "PULSE WIDTH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pulse width from square (50%) to minimum."
+    },
+    {
+      "id": "vco2.pwm",
+      "module": "vco2",
+      "label": "PULSE WIDTH MODULATION",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of pulse width modulation."
+    },
+    {
+      "id": "vco2.pwm_src",
+      "module": "vco2",
+      "label": "PWM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo_sine"
+        },
+        {
+          "value": "adsr"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO sine or ADSR."
+    },
+    {
+      "id": "lfo.freq",
+      "module": "lfo",
+      "label": "LFO FREQ",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "LFO rate; also the repeat rate."
+    },
+    {
+      "id": "snh.mix1",
+      "module": "snh",
+      "label": "S/H MIXER (VCO-1)",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of the first S/H mixer input."
+    },
+    {
+      "id": "snh.mix1_src",
+      "module": "snh",
+      "label": "S/H source 1",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "vco1_saw"
+        },
+        {
+          "value": "vco1_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "VCO-1 sawtooth or pulse."
+    },
+    {
+      "id": "snh.mix2",
+      "module": "snh",
+      "label": "S/H MIXER (noise/VCO-2)",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of the second S/H mixer input."
+    },
+    {
+      "id": "snh.mix2_src",
+      "module": "snh",
+      "label": "S/H source 2",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "noise"
+        },
+        {
+          "value": "vco2_pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Noise or VCO-2 pulse."
+    },
+    {
+      "id": "snh.trigger",
+      "module": "snh",
+      "label": "S/H TRIGGER",
+      "kind": "enum",
+      "manual_ref": 30,
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "kybd"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sampled at the LFO rate or on each key."
+    },
+    {
+      "id": "noise.colour",
+      "module": "noise",
+      "label": "NOISE GEN",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "white"
+        },
+        {
+          "value": "pink"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "White or pink."
+    },
+    {
+      "id": "snh.lag",
+      "module": "snh",
+      "label": "OUTPUT LAG",
+      "kind": "continuous",
+      "manual_ref": 32,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Slews the S/H output."
+    },
+    {
+      "id": "vcf.freq",
+      "module": "vcf",
+      "label": "VCF FREQ",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "VCF RESONANCE",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Emphasis at cutoff."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "VCF MODE",
+      "kind": "enum",
+      "manual_ref": 35,
+      "values": [
+        {
+          "value": "4023",
+          "meaning": "2-pole, 12 dB/oct"
+        },
+        {
+          "value": "4035",
+          "meaning": "4-pole, 24 dB/oct"
+        },
+        {
+          "value": "4075",
+          "meaning": "4-pole, 24 dB/oct"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Filter type."
+    },
+    {
+      "id": "hpf.cutoff",
+      "module": "hpf",
+      "label": "HPF CUTOFF FREQ",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass cutoff."
+    },
+    {
+      "id": "drive.on",
+      "module": "drive",
+      "label": "DRIVE ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 37,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Drive on or off."
+    },
+    {
+      "id": "vca.gain",
+      "module": "vca",
+      "label": "VCA GAIN",
+      "kind": "continuous",
+      "manual_ref": 38,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Base level, not triggered by the keyboard."
+    },
+    {
+      "id": "mixer.noise_ring",
+      "module": "mixer",
+      "label": "NOISE/RING MOD",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of noise or ring mod."
+    },
+    {
+      "id": "mixer.noise_ring_src",
+      "module": "mixer",
+      "label": "noise/ring switch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "noise"
+        },
+        {
+          "value": "ring_mod"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Noise or ring modulator."
+    },
+    {
+      "id": "mixer.vco1",
+      "module": "mixer",
+      "label": "VCO-1",
+      "kind": "continuous",
+      "manual_ref": 40,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO-1."
+    },
+    {
+      "id": "mixer.vco1_src",
+      "module": "mixer",
+      "label": "VCO-1 wave",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sawtooth or pulse."
+    },
+    {
+      "id": "mixer.vco2",
+      "module": "mixer",
+      "label": "VCO-2",
+      "kind": "continuous",
+      "manual_ref": 41,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level of VCO-2."
+    },
+    {
+      "id": "mixer.vco2_src",
+      "module": "mixer",
+      "label": "VCO-2 wave",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sawtooth or pulse."
+    },
+    {
+      "id": "vcf.mod1",
+      "module": "vcf",
+      "label": "KYBD CV / S/H MIXER / PEDAL",
+      "kind": "continuous",
+      "manual_ref": 42,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of the selected source on cutoff."
+    },
+    {
+      "id": "vcf.mod1_src",
+      "module": "vcf",
+      "label": "VCF source 1",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "kybd_cv"
+        },
+        {
+          "value": "snh_mixer"
+        },
+        {
+          "value": "pedal"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard CV, S/H mixer, or pedal."
+    },
+    {
+      "id": "vcf.mod2",
+      "module": "vcf",
+      "label": "S/H or LFO",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of S/H or LFO on cutoff."
+    },
+    {
+      "id": "vcf.mod2_src",
+      "module": "vcf",
+      "label": "VCF source 2",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "snh"
+        },
+        {
+          "value": "lfo_sine"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "S/H or LFO sine."
+    },
+    {
+      "id": "vcf.env",
+      "module": "vcf",
+      "label": "ADSR or AR",
+      "kind": "continuous",
+      "manual_ref": 44,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Envelope depth on cutoff."
+    },
+    {
+      "id": "vcf.env_src",
+      "module": "vcf",
+      "label": "VCF envelope",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "adsr"
+        },
+        {
+          "value": "ar"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "ADSR or AR."
+    },
+    {
+      "id": "vca.env",
+      "module": "vca",
+      "label": "AR or ADSR",
+      "kind": "continuous",
+      "manual_ref": 45,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Envelope level on the VCA."
+    },
+    {
+      "id": "vca.env_src",
+      "module": "vca",
+      "label": "VCA envelope",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ar"
+        },
+        {
+          "value": "adsr"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "AR or ADSR."
+    },
+    {
+      "id": "ar.attack",
+      "module": "ar",
+      "label": "A-ATTACK",
+      "kind": "continuous",
+      "manual_ref": 46,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.005,
+        "max": 5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "AR attack."
+    },
+    {
+      "id": "ar.release",
+      "module": "ar",
+      "label": "R-RELEASE",
+      "kind": "continuous",
+      "manual_ref": 47,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.01,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "AR release."
+    },
+    {
+      "id": "adsr.attack",
+      "module": "adsr",
+      "label": "A-ATTACK",
+      "kind": "continuous",
+      "manual_ref": 48,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.005,
+        "max": 5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR attack."
+    },
+    {
+      "id": "adsr.decay",
+      "module": "adsr",
+      "label": "D-DECAY",
+      "kind": "continuous",
+      "manual_ref": 49,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.01,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR decay."
+    },
+    {
+      "id": "adsr.sustain",
+      "module": "adsr",
+      "label": "S-SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 50,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR sustain level."
+    },
+    {
+      "id": "adsr.release",
+      "module": "adsr",
+      "label": "R-RELEASE",
+      "kind": "continuous",
+      "manual_ref": 51,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.015,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "ADSR release."
+    },
+    {
+      "id": "repeat.adsr",
+      "module": "repeat",
+      "label": "ADSR KYBD GATE / LFO REPEAT",
+      "kind": "enum",
+      "manual_ref": 52,
+      "values": [
+        {
+          "value": "kybd_gate"
+        },
+        {
+          "value": "lfo_repeat"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard gate, or retriggered at the LFO rate."
+    },
+    {
+      "id": "repeat.mode",
+      "module": "repeat",
+      "label": "KYBD REPEAT / AUTO REPEAT",
+      "kind": "enum",
+      "manual_ref": 53,
+      "values": [
+        {
+          "value": "kybd_repeat"
+        },
+        {
+          "value": "auto_repeat"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Repeats while a key is held, or continuously."
+    },
+    {
+      "id": "repeat.ar",
+      "module": "repeat",
+      "label": "AR KYBD GATE / LFO REPEAT",
+      "kind": "enum",
+      "manual_ref": 54,
+      "values": [
+        {
+          "value": "kybd_gate"
+        },
+        {
+          "value": "lfo_repeat"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keyboard gate, or retriggered at the LFO rate."
+    },
+    {
+      "id": "fx.on",
+      "module": "fx",
+      "label": "FX ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 2,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Engages the effects."
+    },
+    {
+      "id": "fx.program",
+      "module": "fx",
+      "label": "PROGRAM/VALUE",
+      "kind": "integer",
+      "manual_ref": 7,
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Selects one of 32 programs (press to load) and sets parameter values."
+    },
+    {
+      "id": "fx.param12",
+      "module": "fx",
+      "label": "PARAMETER 1/2",
+      "kind": "boolean",
+      "manual_ref": 3,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shows parameter 1, then 2, for editing."
+    },
+    {
+      "id": "fx.param3",
+      "module": "fx",
+      "label": "PARAMETER 3 (TAP)",
+      "kind": "boolean",
+      "manual_ref": 4,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shows parameter 3; taps tempo for tempo parameters."
+    },
+    {
+      "id": "fx.send",
+      "module": "fx",
+      "label": "FX SEND",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of effect."
+    },
+    {
+      "id": "seq.hold_rest",
+      "module": "seq",
+      "label": "HOLD/REST",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Holds a note or step; enters a rest in step editing; with ARP, latches the arpeggio."
+    },
+    {
+      "id": "seq.reset_accent",
+      "module": "seq",
+      "label": "RESET/ACCENT",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Resets to step 1; adds an accent in step editing; on the keyboard, holds accent."
+    },
+    {
+      "id": "seq.arp_set_end",
+      "module": "seq",
+      "label": "ARP/SET/END",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts the arpeggiator (twice to latch); with SHIFT and a step, sets the pattern end."
+    },
+    {
+      "id": "seq.pattern_bank",
+      "module": "seq",
+      "label": "PATTERN/BANK",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shows or selects pattern 1-8; with SHIFT, bank 1-8."
+    },
+    {
+      "id": "seq.shift",
+      "module": "seq",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions."
+    },
+    {
+      "id": "seq.page",
+      "module": "seq",
+      "label": "PAGE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps through the four 8-step pages."
+    },
+    {
+      "id": "seq.play_stop",
+      "module": "seq",
+      "label": "PLAY/STOP",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts or stops; with SHIFT, begins saving."
+    },
+    {
+      "id": "seq.rec",
+      "module": "seq",
+      "label": "REC",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Records a new pattern; with SHIFT, saves."
+    },
+    {
+      "id": "seq.kybd",
+      "module": "seq",
+      "label": "KYBD",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "<KYBD: with SHIFT, keyboard mode; decrements values."
+    },
+    {
+      "id": "seq.step",
+      "module": "seq",
+      "label": "STEP",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "STEP>: with SHIFT, step mode; increments values."
+    },
+    {
+      "id": "seq.step_switches",
+      "module": "seq",
+      "label": "STEP 1-8",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Select steps, patterns, banks and setting values."
+    },
+    {
+      "id": "seq.arp_mode",
+      "module": "seq",
+      "label": "Arpeggio order",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "down_up"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "up_plus_1oct"
+        },
+        {
+          "value": "down_plus_1oct"
+        },
+        {
+          "value": "up_minus_1oct"
+        },
+        {
+          "value": "down_minus_1oct"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggio pattern, changed with <KYBD/STEP> while playing."
+    },
+    {
+      "id": "out.led_brightness",
+      "module": "out",
+      "label": "LED",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fader LED brightness, bright to off."
+    },
+    {
+      "id": "out.phones",
+      "module": "out",
+      "label": "PHONES VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level."
+    },
+    {
+      "id": "sys.midi_in",
+      "module": "midi",
+      "label": "MIDI input channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 13
+        },
+        {
+          "value": 14
+        },
+        {
+          "value": 15
+        },
+        {
+          "value": 16
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + HOLD/REST + 8, then page with <KYBD/STEP>, value with STEP 1-8 (SHIFT for 9-16)",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex"
+        },
+        {
+          "type": "app",
+          "note": "SynthTool"
+        }
+      ],
+      "function": "MIDI input channel."
+    },
+    {
+      "id": "sys.midi_out",
+      "module": "midi",
+      "label": "MIDI output channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        },
+        {
+          "value": 9
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 11
+        },
+        {
+          "value": 12
+        },
+        {
+          "value": 13
+        },
+        {
+          "value": 14
+        },
+        {
+          "value": 15
+        },
+        {
+          "value": 16
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + HOLD/REST + 8, then page with <KYBD/STEP>, value with STEP 1-8 (SHIFT for 9-16)",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex"
+        },
+        {
+          "type": "app",
+          "note": "SynthTool"
+        }
+      ],
+      "function": "MIDI output channel."
+    },
+    {
+      "id": "sys.clock",
+      "module": "midi",
+      "label": "Clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "midi_din"
+        },
+        {
+          "value": "midi_usb"
+        },
+        {
+          "value": "auto"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + HOLD/REST + 8, then page with <KYBD/STEP>, value with STEP 1-8 (SHIFT for 9-16)",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex"
+        },
+        {
+          "type": "app",
+          "note": "SynthTool"
+        }
+      ],
+      "function": "Clock source; AUTO priority is USB, then DIN, then internal."
+    },
+    {
+      "id": "sys.accent_threshold",
+      "module": "midi",
+      "label": "Accent velocity threshold",
+      "kind": "integer",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTool"
+        },
+        {
+          "type": "sysex"
+        }
+      ],
+      "function": "Velocity above which keyboard notes are accented; can be disabled."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.cv_in",
+      "label": "CV IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv_in",
+      "function": "Pitch CV in, 1 V/oct.",
+      "confidence": "inferred",
+      "note": "The guide groups CV/GATE/TRIGGER inputs and outputs without listing each jack."
+    },
+    {
+      "id": "jack.cv_out",
+      "label": "CV OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv_high",
+      "function": "Pitch CV out, 1 V/oct.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.gate_in",
+      "label": "GATE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.gate_in",
+      "function": "Gate in, +3 V minimum.",
+      "confidence": "inferred",
+      "note": "The guide groups CV/GATE/TRIGGER inputs and outputs without listing each jack."
+    },
+    {
+      "id": "jack.gate_out",
+      "label": "GATE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.gate",
+      "function": "Gate out, +10 V.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.trig_in",
+      "label": "TRIG IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.trig_in",
+      "function": "Trigger in, +3 V pulse minimum.",
+      "confidence": "inferred",
+      "note": "The guide groups CV/GATE/TRIGGER inputs and outputs without listing each jack."
+    },
+    {
+      "id": "jack.trig_out",
+      "label": "TRIG OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.trig",
+      "function": "Trigger out, +10 V pulse.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.ext_audio",
+      "label": "EXT AUDIO INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "mixer.ext",
+      "function": "Line-level audio, max -10 dBu; sounds when notes or the sequencer play."
+    },
+    {
+      "id": "jack.pedal",
+      "label": "PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "pedal.in",
+      "function": "Volume pedal for VCO-2 FM and the VCF when their switches are at PEDAL."
+    },
+    {
+      "id": "jack.porta_fs",
+      "label": "PORTAMENTO",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.porta_fs",
+      "function": "Footswitch to engage or disengage portamento."
+    },
+    {
+      "id": "jack.out_low",
+      "label": "MAIN OUTPUT LOW",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.main",
+      "function": "Low level, unbalanced, max -20 dBu."
+    },
+    {
+      "id": "jack.out_high",
+      "label": "MAIN OUTPUT HIGH",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "XLR",
+      "node": "out.main",
+      "function": "Line level, balanced, max +4 dBu."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Headphones, 50 mW + 50 mW."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB 2.0 type B",
+      "node": null,
+      "function": "Class-compliant USB MIDI; SynthTool; firmware."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "9 V DC supply."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "midi.notes",
+      "to": "kbd.seq_in",
+      "signal": "midi",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "seq.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Sequencer and arpeggiator notes play the voice."
+    },
+    {
+      "id": "c03",
+      "from": "kbd.cv_low",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.kybd",
+        "equals": "audio_kybd_on"
+      }
+    },
+    {
+      "id": "c04",
+      "from": "kbd.cv_high",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "ppc.bend",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "ppc.bend",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "ppc.vibrato",
+      "to": "vco1.fm",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "LFO depth set by pad pressure.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c08",
+      "from": "ppc.vibrato",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c09",
+      "from": "vco1.saw",
+      "to": "vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c10",
+      "from": "lfo.sine",
+      "to": "vco1.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.fm1_src",
+        "equals": "lfo_sine"
+      },
+      "amount": "vco1.fm1"
+    },
+    {
+      "id": "c11",
+      "from": "snh.out",
+      "to": "vco1.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.fm2_src",
+        "equals": "snh"
+      },
+      "amount": "vco1.fm2"
+    },
+    {
+      "id": "c12",
+      "from": "adsr.out",
+      "to": "vco1.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.fm2_src",
+        "equals": "adsr"
+      },
+      "amount": "vco1.fm2"
+    },
+    {
+      "id": "c13",
+      "from": "lfo.sine",
+      "to": "vco1.pwm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.pwm_src",
+        "equals": "lfo_sine"
+      },
+      "amount": "vco1.pwm"
+    },
+    {
+      "id": "c14",
+      "from": "adsr.out",
+      "to": "vco1.pwm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.pwm_src",
+        "equals": "adsr"
+      },
+      "amount": "vco1.pwm"
+    },
+    {
+      "id": "c15",
+      "from": "lfo.sine",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.fm1_src",
+        "equals": "lfo_sine"
+      },
+      "amount": "vco2.fm1"
+    },
+    {
+      "id": "c16",
+      "from": "snh.out",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.fm2_src",
+        "equals": "snh"
+      },
+      "amount": "vco2.fm2"
+    },
+    {
+      "id": "c17",
+      "from": "adsr.out",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.fm2_src",
+        "equals": "adsr"
+      },
+      "amount": "vco2.fm2"
+    },
+    {
+      "id": "c18",
+      "from": "lfo.sine",
+      "to": "vco2.pwm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.pwm_src",
+        "equals": "lfo_sine"
+      },
+      "amount": "vco2.pwm"
+    },
+    {
+      "id": "c19",
+      "from": "adsr.out",
+      "to": "vco2.pwm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.pwm_src",
+        "equals": "adsr"
+      },
+      "amount": "vco2.pwm"
+    },
+    {
+      "id": "c20",
+      "from": "lfo.square",
+      "to": "vco1.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco1.fm1_src",
+        "equals": "lfo_square"
+      },
+      "amount": "vco1.fm1"
+    },
+    {
+      "id": "c21",
+      "from": "snh.mix_out",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.fm1_src",
+        "equals": "snh_mixer"
+      },
+      "amount": "vco2.fm1"
+    },
+    {
+      "id": "c22",
+      "from": "pedal.out",
+      "to": "vco2.fm",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.fm1_src",
+        "equals": "pedal"
+      },
+      "amount": "vco2.fm1"
+    },
+    {
+      "id": "c23",
+      "from": "vco1.pulse",
+      "to": "ring.a",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Ring mod inputs not stated; the VCO pulse waves as on the ARP Odyssey."
+    },
+    {
+      "id": "c24",
+      "from": "vco2.pulse",
+      "to": "ring.b",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c25",
+      "from": "vco1.saw",
+      "to": "snh.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.mix1_src",
+        "equals": "vco1_saw"
+      },
+      "amount": "snh.mix1"
+    },
+    {
+      "id": "c26",
+      "from": "vco1.pulse",
+      "to": "snh.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.mix1_src",
+        "equals": "vco1_pulse"
+      },
+      "amount": "snh.mix1"
+    },
+    {
+      "id": "c27",
+      "from": "noise.out",
+      "to": "snh.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.mix2_src",
+        "equals": "noise"
+      },
+      "amount": "snh.mix2"
+    },
+    {
+      "id": "c28",
+      "from": "vco2.pulse",
+      "to": "snh.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.mix2_src",
+        "equals": "vco2_pulse"
+      },
+      "amount": "snh.mix2"
+    },
+    {
+      "id": "c29",
+      "from": "lfo.square",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.trigger",
+        "equals": "lfo"
+      }
+    },
+    {
+      "id": "c30",
+      "from": "kbd.trig",
+      "to": "snh.clock",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.trigger",
+        "equals": "kybd"
+      }
+    },
+    {
+      "id": "c31",
+      "from": "noise.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.noise_ring_src",
+        "equals": "noise"
+      },
+      "amount": "mixer.noise_ring"
+    },
+    {
+      "id": "c32",
+      "from": "ring.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.noise_ring_src",
+        "equals": "ring_mod"
+      },
+      "amount": "mixer.noise_ring"
+    },
+    {
+      "id": "c33",
+      "from": "vco1.saw",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.vco1_src",
+        "equals": "saw"
+      },
+      "amount": "mixer.vco1"
+    },
+    {
+      "id": "c34",
+      "from": "vco1.pulse",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.vco1_src",
+        "equals": "pulse"
+      },
+      "amount": "mixer.vco1"
+    },
+    {
+      "id": "c35",
+      "from": "vco2.saw",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.vco2_src",
+        "equals": "saw"
+      },
+      "amount": "mixer.vco2"
+    },
+    {
+      "id": "c36",
+      "from": "vco2.pulse",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.vco2_src",
+        "equals": "pulse"
+      },
+      "amount": "mixer.vco2"
+    },
+    {
+      "id": "c37",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c38",
+      "from": "kbd.cv_high",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_src",
+        "equals": "kybd_cv"
+      },
+      "amount": "vcf.mod1",
+      "confidence": "inferred",
+      "note": "Which of the duophonic CVs tracks the filter is not stated."
+    },
+    {
+      "id": "c39",
+      "from": "snh.mix_out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_src",
+        "equals": "snh_mixer"
+      },
+      "amount": "vcf.mod1"
+    },
+    {
+      "id": "c40",
+      "from": "pedal.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod1_src",
+        "equals": "pedal"
+      },
+      "amount": "vcf.mod1"
+    },
+    {
+      "id": "c41",
+      "from": "snh.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod2_src",
+        "equals": "snh"
+      },
+      "amount": "vcf.mod2"
+    },
+    {
+      "id": "c42",
+      "from": "lfo.sine",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.mod2_src",
+        "equals": "lfo_sine"
+      },
+      "amount": "vcf.mod2"
+    },
+    {
+      "id": "c43",
+      "from": "adsr.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.env_src",
+        "equals": "adsr"
+      },
+      "amount": "vcf.env"
+    },
+    {
+      "id": "c44",
+      "from": "ar.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.env_src",
+        "equals": "ar"
+      },
+      "amount": "vcf.env"
+    },
+    {
+      "id": "c45",
+      "from": "vcf.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c46",
+      "from": "hpf.out",
+      "to": "drive.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c47",
+      "from": "drive.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c48",
+      "from": "adsr.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.env_src",
+        "equals": "adsr"
+      },
+      "amount": "vca.env"
+    },
+    {
+      "id": "c49",
+      "from": "ar.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.env_src",
+        "equals": "ar"
+      },
+      "amount": "vca.env"
+    },
+    {
+      "id": "c50",
+      "from": "kbd.gate",
+      "to": "repeat.kbd_gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c51",
+      "from": "lfo.square",
+      "to": "repeat.lfo",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c52",
+      "from": "repeat.adsr_gate",
+      "to": "adsr.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c53",
+      "from": "repeat.ar_gate",
+      "to": "ar.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c54",
+      "from": "vca.out",
+      "to": "fx.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Dry signal passes; FX SEND sets the effect amount.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c55",
+      "from": "fx.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lfo.rate_led",
+      "module": "lfo",
+      "label": "RATE LED",
+      "kind": "led",
+      "function": "Flashes at the LFO rate.",
+      "manual_ref": 26
+    },
+    {
+      "id": "fx.display",
+      "module": "fx",
+      "label": "FX DISPLAY",
+      "kind": "display",
+      "function": "LCD: program, parameters, values and level bars with an OL overload segment. Hold PARAMETER 1/2 and tap PARAMETER 3 for contrast."
+    },
+    {
+      "id": "seq.location_leds",
+      "module": "seq",
+      "label": "LOCATION LEDs",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Pattern, bank, page, ratchet, gate length and setting values; green keyboard mode, yellow step mode, red values 9-16."
+    },
+    {
+      "id": "seq.step_leds",
+      "module": "seq",
+      "label": "STEP LEDs",
+      "kind": "led",
+      "function": "Active steps solid red; current step flashes."
+    },
+    {
+      "id": "out.fader_leds",
+      "module": "out",
+      "label": "fader LEDs",
+      "kind": "led",
+      "function": "Lit faders; brightness on the rear LED knob."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Duophonic voicing",
+      "applies_to": ["kbd", "vco1", "vco2"],
+      "rule": "With one key held both VCOs play it. With two or more, VCO-1 takes the lowest note and VCO-2 the highest. LF KYBD OFF frees VCO-1 from the keyboard as a low-frequency source."
+    },
+    {
+      "id": "b02",
+      "name": "Fader-and-switch modulation",
+      "applies_to": ["vco1", "vco2", "vcf", "vca"],
+      "rule": "Each modulation fader sets a depth and its switch picks the source, as on the ARP Odyssey: VCO FM from the LFO, S/H, ADSR, S/H mixer or pedal; PWM from the LFO or ADSR; VCF from keyboard CV, S/H mixer, pedal, S/H, LFO, ADSR or AR; VCA from the ADSR or AR. VCF and VCA can use different envelopes."
+    },
+    {
+      "id": "b03",
+      "name": "Sample and hold",
+      "applies_to": ["snh"],
+      "rule": "Two mixer channels (VCO-1 saw or pulse; noise or VCO-2 pulse) are summed and sampled on each LFO cycle or key. The unsampled S/H mixer output is a separate modulation source. OUTPUT LAG slews the steps."
+    },
+    {
+      "id": "b04",
+      "name": "Repeat",
+      "applies_to": ["repeat", "adsr", "ar"],
+      "rule": "Either envelope can be gated by the keyboard or retriggered at the LFO rate. KYBD REPEAT retriggers only while a key is held; AUTO REPEAT runs continuously."
+    },
+    {
+      "id": "b05",
+      "name": "Filter modes",
+      "applies_to": ["vcf"],
+      "rule": "The three ARP Odyssey filter revisions: 4023 (2-pole, 12 dB/oct, Mk I), 4035 (4-pole, 24 dB/oct, Mk II) and 4075 (4-pole, 24 dB/oct, Mk III)."
+    },
+    {
+      "id": "b06",
+      "name": "Arpeggiator",
+      "applies_to": ["seq"],
+      "rule": "ARP once plays while keys are held; twice, or with HOLD, latches. Eight orders: up, down, down and up, random, and up or down with one octave added above or below, changed with <KYBD/STEP>."
+    },
+    {
+      "id": "b07",
+      "name": "Sequencer",
+      "applies_to": ["seq"],
+      "rule": "Up to 32 steps over four pages; 64 patterns in 8 banks. Keyboard mode records from the keys (REC); step mode edits steps freely (SHIFT + step). Steps take notes, rests, accents, gate length, portamento and ratchets (1-4). Live: SHIFT + PORTAMENTO ratchets all steps, SHIFT + TEMPO adds swing, SHIFT + HOLD/REST mutes, SHIFT + RESET/ACCENT accents all, TRANSPOSE shifts octave. Save with SHIFT + PLAY/STOP (two seconds), choose pattern and bank, then SHIFT + REC."
+    },
+    {
+      "id": "b08",
+      "name": "Accent",
+      "applies_to": ["kbd", "seq"],
+      "rule": "On the keyboard, velocity above a threshold (set or disabled in SynthTool) triggers accent; holding RESET/ACCENT forces it, a double press latches it."
+    },
+    {
+      "id": "b09",
+      "name": "No sound check",
+      "applies_to": ["seq", "kbd"],
+      "rule": "If the keyboard is silent, SHIFT + <KYBD returns to keyboard mode (step mode ignores the keys), and REC should be off."
+    },
+    {
+      "id": "b10",
+      "name": "Warm-up",
+      "applies_to": ["vco1", "vco2", "vcf"],
+      "rule": "Allow 15 minutes or more, longer from cold."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "range": [0, 120]
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "all_notes_off",
+        "status": "Bn 7B 00"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "continue"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 20 32 00 01 03",
+        "commands": {
+          "0E": "MIDI channels",
+          "10": "velocity",
+          "11": "pitch bend range",
+          "17": "MIDI clock",
+          "1B": "clock source",
+          "1C": "accent threshold",
+          "1D": "sequencer",
+          "76": "configuration parameters",
+          "78": "sequencer data"
+        }
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "clock"
+      }
+    ],
+    "channel_note": "Separate input and output channels, 1-16; set on the panel, by SysEx or in SynthTool.",
+    "note": "No control changes are listed: the panel faders are not on MIDI."
+  },
+  "specifications": {
+    "keyboard": "37 semi-weighted full-size keys, velocity",
+    "polyphony": "duophonic",
+    "filters": {
+      "vcf": "4023 12 dB/oct; 4035 and 4075 24 dB/oct",
+      "hpf": "yes"
+    },
+    "envelopes": {
+      "adsr": {
+        "attack_s": [0.005, 5],
+        "decay_s": [0.01, 10],
+        "sustain_pct": [0, 100],
+        "release_s": [0.015, 10]
+      },
+      "ar": {
+        "attack_s": [0.005, 5],
+        "release_s": [0.01, 10]
+      }
+    },
+    "sequencer": {
+      "steps": 32,
+      "patterns": 64,
+      "banks": 8
+    },
+    "effects": "32 Klark Teknik programs",
+    "cv_gate": {
+      "inputs": "3.5 mm TS: CV 1 V/oct, gate +3 V min, trigger +3 V pulse min",
+      "outputs": "3.5 mm TS: CV 1 V/oct, gate +10 V, trigger +10 V pulse"
+    },
+    "audio": {
+      "main_low": "1/4\" TS, max -20 dBu",
+      "main_high": "XLR balanced, max +4 dBu",
+      "phones": "1/4\" TRS, 50 mW + 50 mW",
+      "ext_in": "1/4\" TS, max -10 dBu"
+    },
+    "connectivity": {
+      "midi": "5-pin DIN in and out, 16 channels",
+      "usb": "USB 2.0 type B, class compliant"
+    },
+    "power": {
+      "adaptor": "9 V DC, 1700 mA (also given as 1300 mA)",
+      "consumption_w": 12
+    },
+    "dimensions_mm": {
+      "h": 133,
+      "w": 589,
+      "d": 409
+    },
+    "weight_kg": 8.1
+  },
+  "omitted_from_source": [
+    "safety and warranty text",
+    "hook-up diagrams",
+    "non-English translations",
+    "the full FX parameter table (program names and three parameters each)",
+    "SysEx data byte layouts"
+  ],
+  "not_in_source": [
+    "LFO and VCO frequency ranges",
+    "the individual rear CV/gate/trigger jacks",
+    "ring modulator inputs",
+    "where drive and the effects sit in the chain",
+    "which duophonic CV the filter tracks",
+    "the arpeggiator's clock divisions"
+  ],
+  "source_inconsistencies": [
+    "The power adaptor is 9 V DC 1700 mA in one specifications table and 9 V DC 1300 mA in another.",
+    "The specifications call the pulse waveforms 'square wave' in the mixer and S/H lists; the controls call them pulse.",
+    "VCO-1's first FM switch is labelled 'LFO sine or square' in the controls and 'LFO sinewave, LFO square wave' in the specifications; VCO-2's equivalent adds S/H mixer and pedal."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Thin source",
+      "detail": "A quick start guide; signal order after the filter and the CV jack list are inferred."
+    },
+    {
+      "topic": "Effects",
+      "detail": "32 programs are recorded by count; their algorithms are not modelled."
+    },
+    {
+      "topic": "Original",
+      "detail": "The ARP Odyssey itself is not modelled; an original manual would allow a TB-303/TD-3 style pair."
+    }
+  ]
+}

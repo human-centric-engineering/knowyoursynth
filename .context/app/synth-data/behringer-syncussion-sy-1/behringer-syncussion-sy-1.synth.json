@@ -1,0 +1,1993 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "behringer-syncussion-sy-1",
+    "manufacturer": "Behringer",
+    "model": "SYNCUSSION SY-1",
+    "category": "two-channel analogue percussion synthesizer, desktop or 80 HP Eurorack",
+    "based_on": "Pearl Syncussion SY-1 (1979).",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer SYNCUSSION SY-1 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_SYNCUSSION-SY-1.pdf",
+        "pages": 40,
+        "note": "Multilingual; English controls (46 callouts), MIDI operation, calibration, Eurorack installation and specifications used. Patch sheets are blank."
+      },
+      {
+        "id": "pearl",
+        "title": "Pearl Syncussion-1 brochure and operating guide (1979)",
+        "kind": "user_manual",
+        "file": "Syncussion_2_1979.pdf",
+        "pages": 4,
+        "note": "Original control descriptions (TUNE sets both oscillators and the filter; WIDTH sets the filter sweep range; LFO and S&H move pitch), mode character, specifications."
+      },
+      {
+        "id": "bergfotron",
+        "title": "Bergfotron, 'Super Syncussion' (from the original schematics)",
+        "kind": "other",
+        "file": "http://bergfotron.synth.net/Percussion/super%20syncussion.html",
+        "note": "Per-voice structure (two VCOs, LPF, decay EG on the VCA, sweep EG, noise, LFO, S&H), fixed oscillator interval, mode routing for B, C and D."
+      },
+      {
+        "id": "alyjames",
+        "title": "AlyJamesLab, SY-4X technical overview of the original",
+        "kind": "other",
+        "file": "https://www.alyjameslab.com/alyjameslabsy4x.html",
+        "note": "Two envelopes per voice; envelope 2 drives VCA, filter and (by mode) tuning; trigger strength sets envelope level."
+      },
+      {
+        "id": "sy05",
+        "title": "Mod Wiggler, 'Sy0.5 10HP Syncussion clone'",
+        "kind": "other",
+        "file": "https://www.modwiggler.com/forum/viewtopic.php?t=207564",
+        "note": "Original oscillators calibrated at 440 and 450 Hz."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 2,
+    "polyphony_mode": "two independent monophonic channels",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": false,
+    "panel_counts": {
+      "channels": 2,
+      "eurorack_hp": 80
+    },
+    "summary": "Two identical channels. Each has two oscillators set by a six-position mode switch (single, FM, mix, velocity-swept mix, FM plus noise, noise only), a pitch sweep up or down with speed and range, an LFO (square or triangle, 0.4-50 Hz) with sample and hold, a low-pass filter (WIDTH), a decay from 6 ms to 2.5 s and an output level. Triggered by pads or pulses at the rear, the panel buttons, or MIDI in two modes."
+  },
+  "modules": [
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI",
+      "panel_section": "(rear panel)",
+      "description": "Mode 1: notes 36 and 38 trigger channels 1 and 2 on one channel. Mode 2: each channel on its own MIDI channel, pitched by notes 21-84. CC 80/81 set decay.",
+      "inputs": [],
+      "outputs": [
+        "midi.trig1",
+        "midi.trig2",
+        "midi.pitch1",
+        "midi.pitch2",
+        "midi.decay1",
+        "midi.decay2"
+      ]
+    },
+    {
+      "id": "mute",
+      "type": "gate_logic",
+      "name": "Mute",
+      "panel_section": "(top panel)",
+      "description": "Footswitch input that cuts off the decay on both channels.",
+      "inputs": ["mute.in"],
+      "outputs": ["mute.out"]
+    },
+    {
+      "id": "ch1_trig",
+      "type": "envelope_follower",
+      "name": "Channel 1 trigger",
+      "panel_section": "CHANNEL 1",
+      "description": "Trigger from the TRIGGER jack (with SENSE threshold), the panel button, or MIDI; also measures trigger strength.",
+      "inputs": ["ch1_trig.ext", "ch1_trig.midi"],
+      "outputs": ["ch1_trig.gate", "ch1_trig.strength"]
+    },
+    {
+      "id": "ch1_noise",
+      "type": "noise",
+      "name": "Channel 1 noise",
+      "panel_section": "CHANNEL 1",
+      "description": "White noise for modes E and F (the original's is fairly soft).",
+      "inputs": [],
+      "outputs": ["ch1_noise.out"]
+    },
+    {
+      "id": "ch1_tune",
+      "type": "pitch_control",
+      "name": "Channel 1 tune",
+      "panel_section": "CHANNEL 1",
+      "description": "TUNE fader and fine knob plus the TUNE jack and MIDI pitch: sets both oscillators and the filter cutoff together.",
+      "inputs": ["ch1_tune.ext", "ch1_tune.midi"],
+      "outputs": ["ch1_tune.cv"]
+    },
+    {
+      "id": "ch1_osc1",
+      "type": "oscillator",
+      "name": "Channel 1 oscillator 1",
+      "panel_section": "CHANNEL 1",
+      "description": "Oscillator 1: heard alone in mode A, mixed in C and D, and the FM modulator in B and E.",
+      "properties": {
+        "calibration_hz": 440
+      },
+      "inputs": ["ch1_osc1.pitch_cv"],
+      "outputs": ["ch1_osc1.out"]
+    },
+    {
+      "id": "ch1_osc2",
+      "type": "oscillator",
+      "name": "Channel 1 oscillator 2",
+      "panel_section": "CHANNEL 1",
+      "description": "Oscillator 2: the frequency-modulated output in B and E, mixed in C and D. Its interval to oscillator 1 is fixed by an internal trimmer.",
+      "properties": {
+        "calibration_hz": 450,
+        "interval": "fixed by trimmer; not user adjustable on the original"
+      },
+      "inputs": ["ch1_osc2.pitch_cv", "ch1_osc2.fm"],
+      "outputs": ["ch1_osc2.out"]
+    },
+    {
+      "id": "ch1_mix",
+      "type": "mixer",
+      "name": "Channel 1 source mix",
+      "panel_section": "CHANNEL 1",
+      "description": "Combines oscillators and noise according to OSC MODE.",
+      "inputs": ["ch1_mix.osc1", "ch1_mix.osc2", "ch1_mix.noise"],
+      "outputs": ["ch1_mix.out"]
+    },
+    {
+      "id": "ch1_sweep",
+      "type": "envelope",
+      "name": "Channel 1 sweep",
+      "panel_section": "CHANNEL 1",
+      "description": "Pitch sweep on each trigger, up or down, at SWEEP SPEED over SWEEP RANGE; in mode D its depth follows trigger strength.",
+      "inputs": ["ch1_sweep.gate", "ch1_sweep.depth_cv"],
+      "outputs": ["ch1_sweep.out"]
+    },
+    {
+      "id": "ch1_lfo",
+      "type": "lfo",
+      "name": "Channel 1 LFO",
+      "panel_section": "CHANNEL 1",
+      "description": "Square or triangle LFO, 0.4-50 Hz, or off; also clocks the sample and hold.",
+      "properties": {
+        "rate_hz": [0.4, 50]
+      },
+      "inputs": [],
+      "outputs": ["ch1_lfo.out", "ch1_lfo.clock"]
+    },
+    {
+      "id": "ch1_snh",
+      "type": "sample_hold",
+      "name": "Channel 1 sample and hold",
+      "panel_section": "CHANNEL 1",
+      "description": "Random steps on pitch at the LFO rate, even with the LFO wave switched off.",
+      "inputs": ["ch1_snh.in", "ch1_snh.clock"],
+      "outputs": ["ch1_snh.out"]
+    },
+    {
+      "id": "ch1_vcf",
+      "type": "filter",
+      "name": "Channel 1 filter",
+      "panel_section": "CHANNEL 1",
+      "description": "Low-pass filter. Cutoff follows TUNE; the decay envelope sweeps it down from high, over a range set by WIDTH.",
+      "inputs": ["ch1_vcf.in", "ch1_vcf.cutoff_cv"],
+      "outputs": ["ch1_vcf.out"]
+    },
+    {
+      "id": "ch1_env",
+      "type": "envelope",
+      "name": "Channel 1 decay",
+      "panel_section": "CHANNEL 1",
+      "description": "Decay-only envelope (envelope 2 on the original), 6 ms to 2.5 s depending on tuning; its level follows trigger strength. Drives the VCA, the filter and, in mode D, oscillator 2's pitch.",
+      "properties": {
+        "decay_s": [0.006, 2.5]
+      },
+      "inputs": ["ch1_env.gate", "ch1_env.mute", "ch1_env.level_cv", "ch1_env.decay_cv"],
+      "outputs": ["ch1_env.out"]
+    },
+    {
+      "id": "ch1_vca",
+      "type": "vca",
+      "name": "Channel 1 VCA",
+      "panel_section": "CHANNEL 1",
+      "description": "Shapes the channel with its decay; OUTPUT sets the level.",
+      "inputs": ["ch1_vca.in", "ch1_vca.cv"],
+      "outputs": ["ch1_vca.out"]
+    },
+    {
+      "id": "ch2_trig",
+      "type": "envelope_follower",
+      "name": "Channel 2 trigger",
+      "panel_section": "CHANNEL 2",
+      "description": "Trigger from the TRIGGER jack (with SENSE threshold), the panel button, or MIDI; also measures trigger strength.",
+      "inputs": ["ch2_trig.ext", "ch2_trig.midi"],
+      "outputs": ["ch2_trig.gate", "ch2_trig.strength"]
+    },
+    {
+      "id": "ch2_noise",
+      "type": "noise",
+      "name": "Channel 2 noise",
+      "panel_section": "CHANNEL 2",
+      "description": "White noise for modes E and F (the original's is fairly soft).",
+      "inputs": [],
+      "outputs": ["ch2_noise.out"]
+    },
+    {
+      "id": "ch2_tune",
+      "type": "pitch_control",
+      "name": "Channel 2 tune",
+      "panel_section": "CHANNEL 2",
+      "description": "TUNE fader and fine knob plus the TUNE jack and MIDI pitch: sets both oscillators and the filter cutoff together.",
+      "inputs": ["ch2_tune.ext", "ch2_tune.midi"],
+      "outputs": ["ch2_tune.cv"]
+    },
+    {
+      "id": "ch2_osc1",
+      "type": "oscillator",
+      "name": "Channel 2 oscillator 1",
+      "panel_section": "CHANNEL 2",
+      "description": "Oscillator 1: heard alone in mode A, mixed in C and D, and the FM modulator in B and E.",
+      "properties": {
+        "calibration_hz": 440
+      },
+      "inputs": ["ch2_osc1.pitch_cv"],
+      "outputs": ["ch2_osc1.out"]
+    },
+    {
+      "id": "ch2_osc2",
+      "type": "oscillator",
+      "name": "Channel 2 oscillator 2",
+      "panel_section": "CHANNEL 2",
+      "description": "Oscillator 2: the frequency-modulated output in B and E, mixed in C and D. Its interval to oscillator 1 is fixed by an internal trimmer.",
+      "properties": {
+        "calibration_hz": 450,
+        "interval": "fixed by trimmer; not user adjustable on the original"
+      },
+      "inputs": ["ch2_osc2.pitch_cv", "ch2_osc2.fm"],
+      "outputs": ["ch2_osc2.out"]
+    },
+    {
+      "id": "ch2_mix",
+      "type": "mixer",
+      "name": "Channel 2 source mix",
+      "panel_section": "CHANNEL 2",
+      "description": "Combines oscillators and noise according to OSC MODE.",
+      "inputs": ["ch2_mix.osc1", "ch2_mix.osc2", "ch2_mix.noise"],
+      "outputs": ["ch2_mix.out"]
+    },
+    {
+      "id": "ch2_sweep",
+      "type": "envelope",
+      "name": "Channel 2 sweep",
+      "panel_section": "CHANNEL 2",
+      "description": "Pitch sweep on each trigger, up or down, at SWEEP SPEED over SWEEP RANGE; in mode D its depth follows trigger strength.",
+      "inputs": ["ch2_sweep.gate", "ch2_sweep.depth_cv"],
+      "outputs": ["ch2_sweep.out"]
+    },
+    {
+      "id": "ch2_lfo",
+      "type": "lfo",
+      "name": "Channel 2 LFO",
+      "panel_section": "CHANNEL 2",
+      "description": "Square or triangle LFO, 0.4-50 Hz, or off; also clocks the sample and hold.",
+      "properties": {
+        "rate_hz": [0.4, 50]
+      },
+      "inputs": [],
+      "outputs": ["ch2_lfo.out", "ch2_lfo.clock"]
+    },
+    {
+      "id": "ch2_snh",
+      "type": "sample_hold",
+      "name": "Channel 2 sample and hold",
+      "panel_section": "CHANNEL 2",
+      "description": "Random steps on pitch at the LFO rate, even with the LFO wave switched off.",
+      "inputs": ["ch2_snh.in", "ch2_snh.clock"],
+      "outputs": ["ch2_snh.out"]
+    },
+    {
+      "id": "ch2_vcf",
+      "type": "filter",
+      "name": "Channel 2 filter",
+      "panel_section": "CHANNEL 2",
+      "description": "Low-pass filter. Cutoff follows TUNE; the decay envelope sweeps it down from high, over a range set by WIDTH.",
+      "inputs": ["ch2_vcf.in", "ch2_vcf.cutoff_cv"],
+      "outputs": ["ch2_vcf.out"]
+    },
+    {
+      "id": "ch2_env",
+      "type": "envelope",
+      "name": "Channel 2 decay",
+      "panel_section": "CHANNEL 2",
+      "description": "Decay-only envelope (envelope 2 on the original), 6 ms to 2.5 s depending on tuning; its level follows trigger strength. Drives the VCA, the filter and, in mode D, oscillator 2's pitch.",
+      "properties": {
+        "decay_s": [0.006, 2.5]
+      },
+      "inputs": ["ch2_env.gate", "ch2_env.mute", "ch2_env.level_cv", "ch2_env.decay_cv"],
+      "outputs": ["ch2_env.out"]
+    },
+    {
+      "id": "ch2_vca",
+      "type": "vca",
+      "name": "Channel 2 VCA",
+      "panel_section": "CHANNEL 2",
+      "description": "Shapes the channel with its decay; OUTPUT sets the level.",
+      "inputs": ["ch2_vca.in", "ch2_vca.cv"],
+      "outputs": ["ch2_vca.out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "ch1.mode",
+      "module": "ch1_osc1",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "manual_ref": 12,
+      "values": [
+        {
+          "value": "A",
+          "meaning": "single oscillator"
+        },
+        {
+          "value": "B",
+          "meaning": "two-oscillator FM: metallic"
+        },
+        {
+          "value": "C",
+          "meaning": "two-oscillator mix: vibraphone-like"
+        },
+        {
+          "value": "D",
+          "meaning": "two-oscillator mix, sweep depth from trigger strength"
+        },
+        {
+          "value": "E",
+          "meaning": "two-oscillator FM plus white noise: struck thin metal"
+        },
+        {
+          "value": "F",
+          "meaning": "white noise only"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator structure."
+    },
+    {
+      "id": "ch1.trigger",
+      "module": "ch1_trig",
+      "label": "TRIGGER",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Triggers the channel; its LED shows any trigger."
+    },
+    {
+      "id": "ch1.tune",
+      "module": "ch1_tune",
+      "label": "TUNE (coarse)",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse tuning of both oscillators and the filter cutoff."
+    },
+    {
+      "id": "ch1.tune_fine",
+      "module": "ch1_tune",
+      "label": "TUNE (fine)",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning."
+    },
+    {
+      "id": "ch1.decay",
+      "module": "ch1_env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 15,
+      "physical": {
+        "min": 0.006,
+        "max": 2.5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Decay time; also set by MIDI CC."
+    },
+    {
+      "id": "ch1.width",
+      "module": "ch1_vcf",
+      "label": "WIDTH",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Range of the filter sweep: wide starts bright and falls; narrow stays near the TUNE cutoff."
+    },
+    {
+      "id": "ch1.sweep_speed",
+      "module": "ch1_sweep",
+      "label": "SWEEP SPEED",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rate of travel from the struck pitch to the final pitch."
+    },
+    {
+      "id": "ch1.sweep_dir",
+      "module": "ch1_sweep",
+      "label": "SWEEP",
+      "kind": "enum",
+      "manual_ref": 18,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sweep up, down or off."
+    },
+    {
+      "id": "ch1.sweep_range",
+      "module": "ch1_sweep",
+      "label": "SWEEP RANGE",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Final pitch the sweep reaches; tracks TUNE."
+    },
+    {
+      "id": "ch1.lfo_speed",
+      "module": "ch1_lfo",
+      "label": "LFO SPEED",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "physical": {
+        "min": 0.4,
+        "max": 50,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO and S&H rate."
+    },
+    {
+      "id": "ch1.lfo_wave",
+      "module": "ch1_lfo",
+      "label": "LFO WAVE",
+      "kind": "enum",
+      "manual_ref": 21,
+      "values": [
+        {
+          "value": "square"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "triangle"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Square, triangle or off."
+    },
+    {
+      "id": "ch1.lfo_depth",
+      "module": "ch1_lfo",
+      "label": "LFO DEPTH",
+      "kind": "continuous",
+      "manual_ref": 23,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of LFO pitch movement (vibrato)."
+    },
+    {
+      "id": "ch1.snh",
+      "module": "ch1_snh",
+      "label": "S&H",
+      "kind": "boolean",
+      "manual_ref": 24,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Random pitch on each hit, sampled at the LFO SPEED rate; works with the LFO off."
+    },
+    {
+      "id": "ch1.output",
+      "module": "ch1_vca",
+      "label": "OUTPUT",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel output level."
+    },
+    {
+      "id": "ch1.sense",
+      "module": "ch1_trig",
+      "label": "SENSE",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger input sensitivity, to prevent mis-triggering."
+    },
+    {
+      "id": "ch2.mode",
+      "module": "ch2_osc1",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "manual_ref": 26,
+      "values": [
+        {
+          "value": "A",
+          "meaning": "single oscillator"
+        },
+        {
+          "value": "B",
+          "meaning": "two-oscillator FM: metallic"
+        },
+        {
+          "value": "C",
+          "meaning": "two-oscillator mix: vibraphone-like"
+        },
+        {
+          "value": "D",
+          "meaning": "two-oscillator mix, sweep depth from trigger strength"
+        },
+        {
+          "value": "E",
+          "meaning": "two-oscillator FM plus white noise: struck thin metal"
+        },
+        {
+          "value": "F",
+          "meaning": "white noise only"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Oscillator structure."
+    },
+    {
+      "id": "ch2.trigger",
+      "module": "ch2_trig",
+      "label": "TRIGGER",
+      "kind": "boolean",
+      "manual_ref": 27,
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Triggers the channel; its LED shows any trigger."
+    },
+    {
+      "id": "ch2.tune",
+      "module": "ch2_tune",
+      "label": "TUNE (coarse)",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse tuning of both oscillators and the filter cutoff."
+    },
+    {
+      "id": "ch2.tune_fine",
+      "module": "ch2_tune",
+      "label": "TUNE (fine)",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning."
+    },
+    {
+      "id": "ch2.decay",
+      "module": "ch2_env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "physical": {
+        "min": 0.006,
+        "max": 2.5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "Decay time; also set by MIDI CC."
+    },
+    {
+      "id": "ch2.width",
+      "module": "ch2_vcf",
+      "label": "WIDTH",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Range of the filter sweep: wide starts bright and falls; narrow stays near the TUNE cutoff."
+    },
+    {
+      "id": "ch2.sweep_speed",
+      "module": "ch2_sweep",
+      "label": "SWEEP SPEED",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rate of travel from the struck pitch to the final pitch."
+    },
+    {
+      "id": "ch2.sweep_dir",
+      "module": "ch2_sweep",
+      "label": "SWEEP",
+      "kind": "enum",
+      "manual_ref": 32,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sweep up, down or off."
+    },
+    {
+      "id": "ch2.sweep_range",
+      "module": "ch2_sweep",
+      "label": "SWEEP RANGE",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Final pitch the sweep reaches; tracks TUNE."
+    },
+    {
+      "id": "ch2.lfo_speed",
+      "module": "ch2_lfo",
+      "label": "LFO SPEED",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "physical": {
+        "min": 0.4,
+        "max": 50,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO and S&H rate."
+    },
+    {
+      "id": "ch2.lfo_wave",
+      "module": "ch2_lfo",
+      "label": "LFO WAVE",
+      "kind": "enum",
+      "manual_ref": 35,
+      "values": [
+        {
+          "value": "square"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "triangle"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Square, triangle or off."
+    },
+    {
+      "id": "ch2.lfo_depth",
+      "module": "ch2_lfo",
+      "label": "LFO DEPTH",
+      "kind": "continuous",
+      "manual_ref": 37,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of LFO pitch movement (vibrato)."
+    },
+    {
+      "id": "ch2.snh",
+      "module": "ch2_snh",
+      "label": "S&H",
+      "kind": "boolean",
+      "manual_ref": 38,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Random pitch on each hit, sampled at the LFO SPEED rate; works with the LFO off."
+    },
+    {
+      "id": "ch2.output",
+      "module": "ch2_vca",
+      "label": "OUTPUT",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel output level."
+    },
+    {
+      "id": "ch2.sense",
+      "module": "ch2_trig",
+      "label": "SENSE",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger input sensitivity, to prevent mis-triggering."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "midi",
+      "label": "MIDI CHANNEL",
+      "kind": "integer",
+      "manual_ref": 42,
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "MIDI channel 1-16 (mode 2: channel 2 listens one higher, or 15 if set to 16)."
+    },
+    {
+      "id": "sys.midi_mode",
+      "module": "midi",
+      "label": "MIDI mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        }
+      ],
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe; remembered at power-off"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold CH 1 TRIG (mode 1) or CH 2 TRIG (mode 2) while powering up",
+          "when": "power_on"
+        }
+      ],
+      "function": "Mode 1: one channel, fixed notes 36/38, no pitch. Mode 2: one channel per voice, pitch by note."
+    },
+    {
+      "id": "sys.calibrate",
+      "module": "midi",
+      "label": "Calibration / DFU",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "calibrate"
+        },
+        {
+          "value": "dfu"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold CH 1 + CH 2 TRIG at power-up, then press CH 1 or CH 2 TRIG",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold both TRIG buttons at power-up, then CH 1 TRIG to calibrate the oscillators or CH 2 TRIG for DFU firmware mode."
+    },
+    {
+      "id": "sys.power",
+      "module": "mute",
+      "label": "POWER",
+      "kind": "boolean",
+      "manual_ref": 45,
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Power switch (cased use)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.ch1_out_mini",
+      "label": "CH 1 OUTPUT",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS (unbalanced)",
+      "node": "ch1_vca.out",
+      "function": "Channel 1 output.",
+      "manual_ref": 1
+    },
+    {
+      "id": "jack.ch1_tune",
+      "label": "CH 1 TUNE",
+      "location": "top",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "ch1_tune.ext",
+      "function": "Tuning from an external device such as a pedal (the original's TP-01); the jack supplies no voltage.",
+      "manual_ref": 2,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.ch1_trig",
+      "label": "CH 1 TRIGGER",
+      "location": "top",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "ch1_trig.ext",
+      "function": "External trigger (pad, drum trigger, pulse).",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.ch1_out",
+      "label": "CHANNEL 1 OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "ch1_vca.out",
+      "function": "Channel 1 output, unbalanced; same as the top-panel socket.",
+      "manual_ref": 40
+    },
+    {
+      "id": "jack.ch2_out_mini",
+      "label": "CH 2 OUTPUT",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS (unbalanced)",
+      "node": "ch2_vca.out",
+      "function": "Channel 2 output.",
+      "manual_ref": 5
+    },
+    {
+      "id": "jack.ch2_tune",
+      "label": "CH 2 TUNE",
+      "location": "top",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "ch2_tune.ext",
+      "function": "Tuning from an external device such as a pedal (the original's TP-01); the jack supplies no voltage.",
+      "manual_ref": 6,
+      "combine": "sum"
+    },
+    {
+      "id": "jack.ch2_trig",
+      "label": "CH 2 TRIGGER",
+      "location": "top",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "ch2_trig.ext",
+      "function": "External trigger (pad, drum trigger, pulse).",
+      "manual_ref": 7
+    },
+    {
+      "id": "jack.ch2_out",
+      "label": "CHANNEL 2 OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "ch2_vca.out",
+      "function": "Channel 2 output, unbalanced; same as the top-panel socket.",
+      "manual_ref": 41
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": null,
+      "function": "Headphones, stereo, 5 mW into 32 ohm; channel panning not stated.",
+      "manual_ref": 9
+    },
+    {
+      "id": "jack.mute",
+      "label": "MUTE",
+      "location": "top",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "mute.in",
+      "function": "Footswitch to cut off the decay.",
+      "manual_ref": 10,
+      "confidence": "inferred",
+      "note": "Connector size not stated."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in.",
+      "manual_ref": 11
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Passes MIDI IN on.",
+      "manual_ref": 43
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB 2.0 type B",
+      "node": null,
+      "function": "USB MIDI, SynthTribe and firmware.",
+      "manual_ref": 44
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC, 1000 mA, cased use.",
+      "manual_ref": 46
+    },
+    {
+      "id": "jack.eurorack",
+      "label": "Eurorack power",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "10-pin IDC header",
+      "node": null,
+      "function": "10-pin header with a 10-to-16-pin ribbon; 1 A at 12 V.",
+      "manual_ref": 46
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "midi.trig1",
+      "to": "ch1_trig.midi",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "midi.pitch1",
+      "to": "ch1_tune.midi",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sys.midi_mode",
+        "equals": 2
+      },
+      "note": "Mode 2 only: notes 21-84; outside that range they clamp."
+    },
+    {
+      "id": "c03",
+      "from": "ch1_tune.cv",
+      "to": "ch1_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "ch1_tune.cv",
+      "to": "ch1_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Fixed interval: original calibrated 440 / 450 Hz."
+    },
+    {
+      "id": "c05",
+      "from": "ch1_tune.cv",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "ch1_env.out",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.width"
+    },
+    {
+      "id": "c07",
+      "from": "ch1_trig.strength",
+      "to": "ch1_env.level_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Harder hits give a louder, brighter note."
+    },
+    {
+      "id": "c08",
+      "from": "ch1_env.out",
+      "to": "ch1_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.mode",
+        "equals": "D"
+      },
+      "note": "Mode D: the decay envelope moves oscillator 2 while the sweep moves oscillator 1."
+    },
+    {
+      "id": "c09",
+      "from": "midi.decay1",
+      "to": "ch1_env.decay_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "CC 80; set the DECAY fader to midway for best results."
+    },
+    {
+      "id": "c10",
+      "from": "mute.out",
+      "to": "ch1_env.mute",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "ch1_trig.gate",
+      "to": "ch1_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "ch1_trig.gate",
+      "to": "ch1_sweep.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "ch1_trig.strength",
+      "to": "ch1_sweep.depth_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.mode",
+        "equals": "D"
+      },
+      "note": "In mode D the sweep depth follows how hard the channel is hit."
+    },
+    {
+      "id": "c14",
+      "from": "ch1_sweep.out",
+      "to": "ch1_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.sweep_dir",
+        "not_equals": "off"
+      },
+      "amount": "ch1.sweep_range"
+    },
+    {
+      "id": "c15",
+      "from": "ch1_sweep.out",
+      "to": "ch1_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "ch1.sweep_dir",
+            "not_equals": "off"
+          },
+          {
+            "param": "ch1.mode",
+            "not_equals": "D"
+          }
+        ]
+      },
+      "amount": "ch1.sweep_range"
+    },
+    {
+      "id": "c16",
+      "from": "ch1_lfo.out",
+      "to": "ch1_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.lfo_wave",
+        "not_equals": "off"
+      },
+      "amount": "ch1.lfo_depth"
+    },
+    {
+      "id": "c17",
+      "from": "ch1_snh.out",
+      "to": "ch1_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.snh",
+        "equals": true
+      }
+    },
+    {
+      "id": "c18",
+      "from": "ch1_lfo.out",
+      "to": "ch1_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.lfo_wave",
+        "not_equals": "off"
+      },
+      "amount": "ch1.lfo_depth"
+    },
+    {
+      "id": "c19",
+      "from": "ch1_snh.out",
+      "to": "ch1_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.snh",
+        "equals": true
+      }
+    },
+    {
+      "id": "c20",
+      "from": "ch1_lfo.clock",
+      "to": "ch1_snh.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "ch1_noise.out",
+      "to": "ch1_snh.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Sample source not stated in either manual."
+    },
+    {
+      "id": "c22",
+      "from": "ch1_osc1.out",
+      "to": "ch1_osc2.fm",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch1.mode",
+            "equals": "B"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "E"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c23",
+      "from": "ch1_osc1.out",
+      "to": "ch1_mix.osc1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch1.mode",
+            "equals": "A"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "C"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "D"
+          }
+        ]
+      },
+      "note": "In mode C oscillator 1 is mixed at a reduced level."
+    },
+    {
+      "id": "c24",
+      "from": "ch1_osc2.out",
+      "to": "ch1_mix.osc2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch1.mode",
+            "equals": "B"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "C"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "D"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "E"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c25",
+      "from": "ch1_noise.out",
+      "to": "ch1_mix.noise",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch1.mode",
+            "equals": "E"
+          },
+          {
+            "param": "ch1.mode",
+            "equals": "F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c26",
+      "from": "ch1_mix.out",
+      "to": "ch1_vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c27",
+      "from": "ch1_vcf.out",
+      "to": "ch1_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c28",
+      "from": "ch1_env.out",
+      "to": "ch1_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.output"
+    },
+    {
+      "id": "c29",
+      "from": "midi.trig2",
+      "to": "ch2_trig.midi",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "midi.pitch2",
+      "to": "ch2_tune.midi",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sys.midi_mode",
+        "equals": 2
+      },
+      "note": "Mode 2 only: notes 21-84; outside that range they clamp."
+    },
+    {
+      "id": "c31",
+      "from": "ch2_tune.cv",
+      "to": "ch2_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c32",
+      "from": "ch2_tune.cv",
+      "to": "ch2_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Fixed interval: original calibrated 440 / 450 Hz."
+    },
+    {
+      "id": "c33",
+      "from": "ch2_tune.cv",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c34",
+      "from": "ch2_env.out",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.width"
+    },
+    {
+      "id": "c35",
+      "from": "ch2_trig.strength",
+      "to": "ch2_env.level_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Harder hits give a louder, brighter note."
+    },
+    {
+      "id": "c36",
+      "from": "ch2_env.out",
+      "to": "ch2_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.mode",
+        "equals": "D"
+      },
+      "note": "Mode D: the decay envelope moves oscillator 2 while the sweep moves oscillator 1."
+    },
+    {
+      "id": "c37",
+      "from": "midi.decay2",
+      "to": "ch2_env.decay_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "CC 81; set the DECAY fader to midway for best results."
+    },
+    {
+      "id": "c38",
+      "from": "mute.out",
+      "to": "ch2_env.mute",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c39",
+      "from": "ch2_trig.gate",
+      "to": "ch2_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c40",
+      "from": "ch2_trig.gate",
+      "to": "ch2_sweep.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "ch2_trig.strength",
+      "to": "ch2_sweep.depth_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.mode",
+        "equals": "D"
+      },
+      "note": "In mode D the sweep depth follows how hard the channel is hit."
+    },
+    {
+      "id": "c42",
+      "from": "ch2_sweep.out",
+      "to": "ch2_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.sweep_dir",
+        "not_equals": "off"
+      },
+      "amount": "ch2.sweep_range"
+    },
+    {
+      "id": "c43",
+      "from": "ch2_sweep.out",
+      "to": "ch2_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "ch2.sweep_dir",
+            "not_equals": "off"
+          },
+          {
+            "param": "ch2.mode",
+            "not_equals": "D"
+          }
+        ]
+      },
+      "amount": "ch2.sweep_range"
+    },
+    {
+      "id": "c44",
+      "from": "ch2_lfo.out",
+      "to": "ch2_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.lfo_wave",
+        "not_equals": "off"
+      },
+      "amount": "ch2.lfo_depth"
+    },
+    {
+      "id": "c45",
+      "from": "ch2_snh.out",
+      "to": "ch2_osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.snh",
+        "equals": true
+      }
+    },
+    {
+      "id": "c46",
+      "from": "ch2_lfo.out",
+      "to": "ch2_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.lfo_wave",
+        "not_equals": "off"
+      },
+      "amount": "ch2.lfo_depth"
+    },
+    {
+      "id": "c47",
+      "from": "ch2_snh.out",
+      "to": "ch2_osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.snh",
+        "equals": true
+      }
+    },
+    {
+      "id": "c48",
+      "from": "ch2_lfo.clock",
+      "to": "ch2_snh.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c49",
+      "from": "ch2_noise.out",
+      "to": "ch2_snh.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Sample source not stated in either manual."
+    },
+    {
+      "id": "c50",
+      "from": "ch2_osc1.out",
+      "to": "ch2_osc2.fm",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch2.mode",
+            "equals": "B"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "E"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c51",
+      "from": "ch2_osc1.out",
+      "to": "ch2_mix.osc1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch2.mode",
+            "equals": "A"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "C"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "D"
+          }
+        ]
+      },
+      "note": "In mode C oscillator 1 is mixed at a reduced level."
+    },
+    {
+      "id": "c52",
+      "from": "ch2_osc2.out",
+      "to": "ch2_mix.osc2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch2.mode",
+            "equals": "B"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "C"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "D"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "E"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c53",
+      "from": "ch2_noise.out",
+      "to": "ch2_mix.noise",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "ch2.mode",
+            "equals": "E"
+          },
+          {
+            "param": "ch2.mode",
+            "equals": "F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c54",
+      "from": "ch2_mix.out",
+      "to": "ch2_vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c55",
+      "from": "ch2_vcf.out",
+      "to": "ch2_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c56",
+      "from": "ch2_env.out",
+      "to": "ch2_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.output"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "ch1.trig_led",
+      "module": "ch1_trig",
+      "label": "CH 1 TRIGGER LED",
+      "kind": "led",
+      "function": "Lights on any trigger; flashes during calibration."
+    },
+    {
+      "id": "ch2.trig_led",
+      "module": "ch2_trig",
+      "label": "CH 2 TRIGGER LED",
+      "kind": "led",
+      "function": "Lights on any trigger; flashes during calibration."
+    },
+    {
+      "id": "ch1.lfo_led",
+      "module": "ch1_lfo",
+      "label": "CH 1 LFO LED",
+      "kind": "led",
+      "function": "Flashes at the LFO rate.",
+      "manual_ref": 22
+    },
+    {
+      "id": "ch2.lfo_led",
+      "module": "ch2_lfo",
+      "label": "CH 2 LFO LED",
+      "kind": "led",
+      "function": "Flashes at the LFO rate.",
+      "manual_ref": 36
+    },
+    {
+      "id": "power_led",
+      "module": "mute",
+      "label": "POWER LED",
+      "kind": "led",
+      "function": "Power on."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Oscillator modes",
+      "applies_to": ["ch1_osc1", "ch2_osc1"],
+      "rule": "A: oscillator 1 alone, the classic drum-synth sweep. B: oscillator 1 frequency-modulates oscillator 2, which is heard; metallic. C: both mixed, oscillator 1 lower; vibraphone-like. D: both mixed; soft or hard hits sweep low to high, independent of SWEEP SPEED and RANGE (the sweep moves oscillator 1, the decay envelope oscillator 2). E: FM as B plus noise; struck thin metal. F: noise only. Both channels at once (A plus F) give an 808-style snare."
+    },
+    {
+      "id": "b02",
+      "name": "Pitch sweep",
+      "applies_to": ["ch1_sweep", "ch2_sweep"],
+      "rule": "Each trigger sweeps the pitch up or down at SWEEP SPEED over SWEEP RANGE: the classic synth-tom and laser sounds. OFF holds the tuned pitch."
+    },
+    {
+      "id": "b03",
+      "name": "LFO and sample and hold",
+      "applies_to": ["ch1_lfo", "ch2_lfo", "ch1_snh", "ch2_snh"],
+      "rule": "The LFO (square or triangle) modulates at LFO DEPTH. S&H adds random steps at the LFO SPEED rate, and keeps working with the LFO wave switched off."
+    },
+    {
+      "id": "b04",
+      "name": "Decay, filter and dynamics",
+      "applies_to": ["ch1_env", "ch2_env", "ch1_vcf", "ch2_vcf"],
+      "rule": "One decay envelope shapes the VCA and sweeps the filter down from high over the WIDTH range; TUNE moves the oscillators and filter cutoff together. Trigger strength sets the envelope level, so hard hits are louder and brighter. Decay runs from 6 ms to 2.5 s depending on tuning; MUTE cuts it off."
+    },
+    {
+      "id": "b07",
+      "name": "Fixed oscillator interval",
+      "applies_to": ["ch1_osc2", "ch2_osc2"],
+      "rule": "The interval between the two oscillators is set by an internal trimmer (originally 440 and 450 Hz), not by a panel control."
+    },
+    {
+      "id": "b05",
+      "name": "MIDI modes",
+      "applies_to": ["midi"],
+      "rule": "Mode 1: one MIDI channel; note 36 triggers channel 1, note 38 channel 2; pitch from the panel only. Mode 2: channel 1 on the set MIDI channel, channel 2 on the next one up; notes 21-84 set pitch (clamped outside). Both modes: CC 80 and 81 set decay. Chosen in SynthTribe or by holding a TRIG button at power-up; remembered."
+    },
+    {
+      "id": "b06",
+      "name": "Trigger sensitivity",
+      "applies_to": ["ch1_trig", "ch2_trig"],
+      "rule": "SENSE sets the trigger threshold for pads and other external sources to avoid false triggers."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "mode_1": {
+          "36": "channel 1",
+          "38": "channel 2"
+        },
+        "mode_2": "notes 21-84 pitch and trigger each channel"
+      },
+      {
+        "message": "control_change",
+        "cc": 80,
+        "parameter": "ch1.decay"
+      },
+      {
+        "message": "control_change",
+        "cc": 81,
+        "parameter": "ch2.decay"
+      }
+    ],
+    "transmits": [],
+    "channel_note": "Base channel 1-16 by rear DIP switches; in mode 2, channel 2 uses the next channel up (15 when set to 16).",
+    "note": "MIDI THRU and USB MIDI; settings via SynthTribe."
+  },
+  "specifications": {
+    "voices": 2,
+    "type": "analogue",
+    "oscillators": "2 VCO",
+    "lfos": 2,
+    "filters": "2 LPF",
+    "envelopes": "decay only",
+    "lfo_rate_hz": [0.4, 50],
+    "decay_s": [0.006, 2.5],
+    "connectivity": {
+      "midi": "5-pin DIN in and thru, 16 channels",
+      "usb": "USB 2.0 type B, class compliant",
+      "phones": "3.5 mm TRS stereo, 5 mW into 32 ohm",
+      "outputs": "2 x 3.5 mm (top) and 2 x 6.35 mm (rear), unbalanced",
+      "inputs": "trigger x 2, tune x 2, mute"
+    },
+    "power": {
+      "adaptor": "12 V DC, 1000 mA",
+      "eurorack": "1 A at 12 V"
+    },
+    "eurorack_hp": 80,
+    "dimensions_mm": {
+      "h": 95,
+      "w": 424,
+      "d": 136
+    },
+    "weight_kg": 1.9
+  },
+  "omitted_from_source": [
+    "safety and warranty text",
+    "hook-up diagrams",
+    "non-English translations",
+    "Eurorack installation steps beyond power",
+    "blank patch sheets"
+  ],
+  "not_in_source": [
+    "the sample and hold's source (noise assumed)",
+    "filter slope",
+    "how the headphone output pans the channels",
+    "sweep speed and range values",
+    "whether Behringer kept the original 440/450 Hz oscillator interval"
+  ],
+  "source_inconsistencies": [
+    "The Behringer specifications list '2 VCO' for two channels; the Pearl manual and schematic-based sources confirm two oscillators per channel (four in all).",
+    "The Behringer guide says WIDTH sets filter cutoff; the Pearl manual says it sets the range of a falling filter sweep, with cutoff following TUNE.",
+    "The Pearl text says the sweep's 'DEPTH control tracks the TUNE control'; there is no sweep DEPTH, so this means RANGE.",
+    "Mode B is described in both manuals as one oscillator modulating the other; the schematic-based Bergfotron notes give oscillator 1 modulating oscillator 2, which is heard.",
+    "The MIDI CHANNEL dipswitch is callout 42, but the MIDI operation text calls it 'dipswitch 43' (MIDI THRU).",
+    "Mode 2's channel rule says channel 2 follows on the next MIDI channel up, yet at 16 it drops to 15."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Behringer versus Pearl",
+      "detail": "Routing follows the Pearl manual and schematic-based notes; the Behringer guide does not contradict it, but a hands-on check would confirm Behringer kept it."
+    },
+    {
+      "topic": "Pair",
+      "detail": "The Pearl original is modelled in pearl-syncussion-sy-1_synth.json from the same base."
+    }
+  ]
+}

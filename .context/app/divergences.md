@@ -80,17 +80,23 @@ the same PR**, and each row names what deletes it.
     `scripts/build-audio-workers.ts`, and `components/app/sharing/generated/panel-render.mjs`, the
     output of `scripts/build-panel-renderer.ts`.
   - `.prettierignore`, ESLint's `ignores` and `tsconfig.json`'s `exclude` each gain `prototype`.
+  - `.gitignore` and `.prettierignore` each gain `.context/app/synth-data/*/raw`: the owner's manuals,
+    photos and older spec versions, kept beside each synth's spec on the owner's machine only.
 - **Why:**
   - `prototype/` is the original single-file artefact, kept verbatim as the source to port from
     (D3). It is plain JS/JSX on its own `@/` alias. Formatting, linting or type-checking it as app
     code would fail, or would rewrite the reference.
   - The worklet bundles are build products, and their source is `lib/app/synths/audio/`.
+  - The repo is public and the manuals and photos are the makers' copyright, so they are never pushed;
+    and at about 500 MB they would also bloat every clone.
 - **On conflict:** take theirs and re-add our one line or entry in each file.
 - **Upstream:** app-specific, never going upstream.
 - **Delete when:**
   - the `prototype` entries: when `prototype/` is removed (f-launch x5, D13);
   - the `public/worklets/` line: when the worklet and worker stop being built into `public/`;
   - the `panel-render.mjs` line: when the social card stops drawing the panel from a bundle.
+  - the `synth-data/*/raw` lines: if the raw data moves out of the repo, or the repo goes private and
+    the owner chooses to commit it.
 
 ### CLAUDE.md: the Hub block
 

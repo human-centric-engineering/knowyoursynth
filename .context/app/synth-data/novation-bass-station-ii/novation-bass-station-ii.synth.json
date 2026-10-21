@@ -1,0 +1,3704 @@
+{
+  "schema_version": "0.11.0",
+  "device": {
+    "id": "novation-bass-station-ii",
+    "manufacturer": "Novation",
+    "model": "Bass Station II",
+    "category": "digitally controlled analogue monosynth (paraphonic option), 25 keys, with arpeggiator, sequencer and patch memory",
+    "based_on": "Successor to the 1993 Novation Bass Station; released 2013, extended by firmware (AFX Station and Swifty editions share it).",
+    "sources": [
+      {
+        "id": "guide_intro",
+        "title": "Novation, 'Introduction to the Bass Station II' (user guide v5.0)",
+        "kind": "user_manual",
+        "file": "https://userguides.novationmusic.com/hc/en-gb/articles/25494285871890-Introduction-to-the-Bass-Station-II",
+        "note": "Features, hardware overview (top and rear panel callouts), power."
+      },
+      {
+        "id": "guide_detail",
+        "title": "Novation, 'Bass Station II in detail'",
+        "kind": "user_manual",
+        "file": "https://userguides.novationmusic.com/hc/en-gb/articles/25494313827986-Bass-Station-II-in-detail",
+        "note": "Every section, firmware additions (paraphonic, oscillator error, sub tuning, filter tracking, envelope retrigger and fixed duration, glide divergence), AFX mode and on-key functions."
+      },
+      {
+        "id": "guide_appendix",
+        "title": "Novation, 'Bass Station II appendix'",
+        "kind": "user_manual",
+        "file": "https://userguides.novationmusic.com/hc/en-gb/articles/25494271270930-Bass-Station-II-appendix",
+        "note": "LFO sync values, init patch table, settings kept at power-off, full CC/NRPN list, AFX SysEx, micro-tuning, greeting message."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 1,
+    "polyphony_mode": "monophonic; paraphonic mode gives two notes (one per oscillator) through the shared filter and VCA",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "128 patches: 0-63 factory, 64-127 user (initially Init patches). Four global 32-step sequences; the selected one is stored in the patch. Eight banks of 25 AFX overlays, the selected bank stored in the patch. Nine tuning tables.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 25,
+      "knobs": 18,
+      "faders": 4,
+      "wheels": 2,
+      "display_characters": 3
+    },
+    "summary": "Analogue signal path under digital control. Two oscillators (sine, triangle, saw, pulse) share one set of controls via OSC SELECT; a sub oscillator locks to Osc 1. Noise, ring mod (Osc 1 x Osc 2) and an external input share a fourth mixer level. Overdrive feeds a Classic multimode filter (LP/BP/HP, 12 or 24 dB) or an Acid 24 dB diode ladder; distortion follows the filter, then the VCA and limiter. Two ADSRs (Amp and Mod) share four faders; two LFOs have dedicated routings. Mod wheel, aftertouch and velocity reach set destinations via on-key functions. Arpeggiator, 4 x 32-step sequencer, AFX per-key overlays and micro-tuning."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice control",
+      "panel_section": "KEYBOARD / OCTAVE / TRANSPOSE",
+      "description": "25 velocity-sensitive keys with aftertouch, octave shift -5/+4, transpose ±12 semitones, portamento with glide divergence, paraphonic mode, micro-tuning tables.",
+      "properties": {
+        "keys": 25,
+        "octave_shift": [-5, 4]
+      },
+      "inputs": ["kbd.midi_in", "kbd.sustain", "kbd.seq_in"],
+      "outputs": ["kbd.pitch1", "kbd.pitch2", "kbd.gate", "kbd.velocity", "kbd.aftertouch"]
+    },
+    {
+      "id": "wheels",
+      "type": "manual_controller",
+      "name": "Pitch and Mod wheels",
+      "panel_section": "LEFT OF KEYBOARD",
+      "description": "Spring-centred pitch wheel and mod wheel, both lit.",
+      "inputs": [],
+      "outputs": ["wheels.bend", "wheels.mod"]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator and sequencer",
+      "panel_section": "ARPEGGIATOR",
+      "description": "Arpeggiator with 32 rhythms, 6 note orders and 1-4 octaves, 40-240 BPM or MIDI clock; also records and plays four 32-step sequences.",
+      "properties": {
+        "rhythms": 32,
+        "sequences": 4,
+        "sequence_steps": 32,
+        "tempo_bpm": [40, 240]
+      },
+      "inputs": [],
+      "outputs": ["arp.notes"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR",
+      "description": "Analogue oscillator: sine, triangle, rising saw or pulse; range 16'-2', coarse ±12 semitones, fine ±100 cents; pulse width manual or modulated.",
+      "inputs": ["osc1.pitch_cv", "osc1.pwm_cv"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATOR",
+      "description": "Analogue oscillator: sine, triangle, rising saw or pulse; range 16'-2', coarse ±12 semitones, fine ±100 cents; pulse width manual or modulated. Can be hard-synced to Osc 1, and can modulate the filter at audio rate (Osc Filter Mod).",
+      "inputs": ["osc2.pitch_cv", "osc2.pwm_cv", "osc2.sync_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "OSCILLATOR",
+      "description": "One or two octaves below Osc 1 (and detunable from it); sine, narrow pulse or square.",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "description": "White noise.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "ring",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "MIXER",
+      "description": "Ring modulation of Osc 1 and Osc 2.",
+      "inputs": ["ring.a", "ring.b"],
+      "outputs": ["ring.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Six sources into one: Osc 1, Osc 2 and Sub with their own knobs; Noise, Ring and Ext share the fourth knob, chosen by switch, each keeping its own level.",
+      "inputs": ["mixer.osc1", "mixer.osc2", "mixer.sub", "mixer.noise", "mixer.ring", "mixer.ext"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "drive",
+      "type": "overdrive",
+      "name": "Overdrive",
+      "panel_section": "FILTER",
+      "description": "Pre-filter overdrive.",
+      "inputs": ["drive.in"],
+      "outputs": ["drive.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "description": "Classic: variable LP, BP or HP at 12 or 24 dB/oct. Acid: fixed 4-pole (24 dB/oct) low-pass diode ladder, after early-1980s designs; Shape and Slope inactive.",
+      "properties": {
+        "modes": {
+          "classic": ["LP", "BP", "HP"],
+          "classic_slopes_db": [12, 24],
+          "acid": "24 dB/oct diode ladder LP"
+        }
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "dist",
+      "type": "overdrive",
+      "name": "Distortion",
+      "panel_section": "EFFECTS",
+      "description": "Post-filter, pre-VCA distortion, so its character does not change with the amplitude envelope.",
+      "inputs": ["dist.in"],
+      "outputs": ["dist.out"]
+    },
+    {
+      "id": "env_amp",
+      "type": "envelope",
+      "name": "Amp Env",
+      "panel_section": "ENVELOPES",
+      "description": "ADSR always routed to the VCA; velocity sensitivity, triggering mode, optional retrigger loop and fixed-duration sustain.",
+      "properties": {
+        "attack_s_max": 5,
+        "release_s_max": 10
+      },
+      "inputs": ["env_amp.gate", "env_amp.velocity"],
+      "outputs": ["env_amp.out"]
+    },
+    {
+      "id": "env_mod",
+      "type": "envelope",
+      "name": "Mod Env",
+      "panel_section": "ENVELOPES",
+      "description": "ADSR for oscillator pitch, pulse width and filter frequency; same options as Amp Env.",
+      "properties": {
+        "attack_s_max": 5,
+        "release_s_max": 10
+      },
+      "inputs": ["env_mod.gate", "env_mod.velocity"],
+      "outputs": ["env_mod.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO",
+      "description": "Triangle, falling saw, square or sample and hold; 0 to about 190 Hz or synced; delay, slew and key sync. Routed to oscillator pitch.",
+      "properties": {
+        "rate_hz": [0, 190],
+        "sync_values": 35
+      },
+      "inputs": ["lfo1.key_sync"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "LFO",
+      "description": "Triangle, falling saw, square or sample and hold; 0 to about 190 Hz or synced; delay, slew and key sync. Routed to pulse width and filter frequency; aftertouch can change its speed.",
+      "properties": {
+        "rate_hz": [0, 190],
+        "sync_values": 35
+      },
+      "inputs": ["lfo2.key_sync", "lfo2.rate_cv"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "OUTPUT",
+      "description": "Driven by Amp Env (scaled by velocity); includes a simple limiter.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MASTER",
+      "description": "VOLUME sets line and headphone level; output is mono.",
+      "inputs": ["out.in"],
+      "outputs": ["out.line", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.range",
+      "module": "osc1",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "default": "8'",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        }
+      ],
+      "function": "Footage; 8' is concert pitch."
+    },
+    {
+      "id": "osc1.waveform",
+      "module": "osc1",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "default": "saw",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:72"
+        }
+      ],
+      "function": "Oscillator waveform."
+    },
+    {
+      "id": "osc1.coarse",
+      "module": "osc1",
+      "label": "COARSE",
+      "kind": "continuous",
+      "physical": {
+        "min": -12,
+        "max": 12,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27:59"
+        }
+      ],
+      "function": "Pitch over ±1 octave."
+    },
+    {
+      "id": "osc1.fine",
+      "module": "osc1",
+      "label": "FINE",
+      "kind": "continuous",
+      "physical": {
+        "min": -100,
+        "max": 100,
+        "unit": "cents"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26:58"
+        }
+      ],
+      "function": "Pitch over ±1 semitone."
+    },
+    {
+      "id": "osc1.modenv_depth",
+      "module": "osc1",
+      "label": "MOD ENV DEPTH (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        }
+      ],
+      "function": "Mod Env on pitch; 8 = one octave at full envelope, maximum eight octaves; negative inverts."
+    },
+    {
+      "id": "osc1.lfo1_depth",
+      "module": "osc1",
+      "label": "LFO 1 DEPTH (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28:60"
+        }
+      ],
+      "function": "LFO 1 on pitch, finer near zero: 6 semitone, 12 tone, 22 fifth, 32 octave, 56 two octaves, 80 three."
+    },
+    {
+      "id": "osc1.pw_source",
+      "module": "osc1",
+      "label": "PULSE WIDTH source switch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mod_env"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "manual"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "with OSC SELECT at 1"
+        }
+      ],
+      "function": "Which source the PULSE WIDTH knob sets: manual width, Mod Env depth or LFO 2 depth (all three can be active at once).",
+      "note": "A panel routing switch; the three amounts it reveals are stored."
+    },
+    {
+      "id": "osc1.pw_manual",
+      "module": "osc1",
+      "label": "PULSE WIDTH (manual)",
+      "kind": "integer",
+      "range": {
+        "min": 5,
+        "max": 95
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1, source MANUAL"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74"
+        }
+      ],
+      "function": "Duty cycle; 50 is square."
+    },
+    {
+      "id": "osc1.pw_modenv",
+      "module": "osc1",
+      "label": "PULSE WIDTH (Mod Env depth)",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1, source MOD ENV"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        }
+      ],
+      "function": "Mod Env on pulse width."
+    },
+    {
+      "id": "osc1.pw_lfo2",
+      "module": "osc1",
+      "label": "PULSE WIDTH (LFO 2 depth)",
+      "kind": "integer",
+      "range": {
+        "min": -90,
+        "max": 90
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 1, source LFO 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        }
+      ],
+      "function": "LFO 2 on pulse width."
+    },
+    {
+      "id": "osc2.range",
+      "module": "osc2",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "default": "8'",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        }
+      ],
+      "function": "Footage; 8' is concert pitch."
+    },
+    {
+      "id": "osc2.waveform",
+      "module": "osc2",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "default": "saw",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:82"
+        }
+      ],
+      "function": "Oscillator waveform."
+    },
+    {
+      "id": "osc2.coarse",
+      "module": "osc2",
+      "label": "COARSE",
+      "kind": "continuous",
+      "physical": {
+        "min": -12,
+        "max": 12,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30:62"
+        }
+      ],
+      "function": "Pitch over ±1 octave."
+    },
+    {
+      "id": "osc2.fine",
+      "module": "osc2",
+      "label": "FINE",
+      "kind": "continuous",
+      "physical": {
+        "min": -100,
+        "max": 100,
+        "unit": "cents"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29:61"
+        }
+      ],
+      "function": "Pitch over ±1 semitone."
+    },
+    {
+      "id": "osc2.modenv_depth",
+      "module": "osc2",
+      "label": "MOD ENV DEPTH (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        }
+      ],
+      "function": "Mod Env on pitch; 8 = one octave at full envelope, maximum eight octaves; negative inverts."
+    },
+    {
+      "id": "osc2.lfo1_depth",
+      "module": "osc2",
+      "label": "LFO 1 DEPTH (pitch)",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31:63"
+        }
+      ],
+      "function": "LFO 1 on pitch, finer near zero: 6 semitone, 12 tone, 22 fifth, 32 octave, 56 two octaves, 80 three."
+    },
+    {
+      "id": "osc2.pw_source",
+      "module": "osc2",
+      "label": "PULSE WIDTH source switch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mod_env"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "manual"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "with OSC SELECT at 2"
+        }
+      ],
+      "function": "Which source the PULSE WIDTH knob sets: manual width, Mod Env depth or LFO 2 depth (all three can be active at once).",
+      "note": "A panel routing switch; the three amounts it reveals are stored."
+    },
+    {
+      "id": "osc2.pw_manual",
+      "module": "osc2",
+      "label": "PULSE WIDTH (manual)",
+      "kind": "integer",
+      "range": {
+        "min": 5,
+        "max": 95
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2, source MANUAL"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        }
+      ],
+      "function": "Duty cycle; 50 is square."
+    },
+    {
+      "id": "osc2.pw_modenv",
+      "module": "osc2",
+      "label": "PULSE WIDTH (Mod Env depth)",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2, source MOD ENV"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "Mod Env on pulse width."
+    },
+    {
+      "id": "osc2.pw_lfo2",
+      "module": "osc2",
+      "label": "PULSE WIDTH (LFO 2 depth)",
+      "kind": "integer",
+      "range": {
+        "min": -90,
+        "max": 90
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "with OSC SELECT at 2, source LFO 2"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        }
+      ],
+      "function": "LFO 2 on pulse width."
+    },
+    {
+      "id": "osc.select",
+      "module": "osc1",
+      "label": "OSC SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which oscillator the shared controls adjust."
+    },
+    {
+      "id": "sub.octave",
+      "module": "sub",
+      "label": "SUB OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-1"
+        },
+        {
+          "value": "-2"
+        }
+      ],
+      "default": "-1",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "Sub pitch below Osc 1."
+    },
+    {
+      "id": "sub.wave",
+      "module": "sub",
+      "label": "SUB WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "narrow_pulse"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "default": "sine",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Sub waveform."
+    },
+    {
+      "id": "sub.coarse",
+      "module": "sub",
+      "label": "Sub coarse detune",
+      "kind": "continuous",
+      "physical": {
+        "min": -12,
+        "max": 12,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and turn COARSE",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:84"
+        }
+      ],
+      "function": "Detunes the sub from Osc 1 (0 follows Osc 1)."
+    },
+    {
+      "id": "sub.fine",
+      "module": "sub",
+      "label": "Sub fine detune",
+      "kind": "continuous",
+      "physical": {
+        "min": -100,
+        "max": 100,
+        "unit": "cents"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and turn FINE",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:77"
+        }
+      ],
+      "function": "Fine detune of the sub."
+    },
+    {
+      "id": "osc.sync",
+      "module": "osc2",
+      "label": "Osc 1-2 sync",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper D, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 110"
+        }
+      ],
+      "function": "Osc 1 resets Osc 2's cycle; lights SYNC 1-2."
+    },
+    {
+      "id": "osc.paraphonic",
+      "module": "kbd",
+      "label": "Paraphonic mode",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper D (Osc 1-2 sync) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:107"
+        }
+      ],
+      "function": "Two keys play the two oscillators separately through the shared filter and VCA."
+    },
+    {
+      "id": "osc.error",
+      "module": "kbd",
+      "label": "Oscillator error",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper C# (Pitch Bend Range) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:111"
+        }
+      ],
+      "function": "Random detune per key press, up to about a semitone at 7."
+    },
+    {
+      "id": "osc.bend_range",
+      "module": "wheels",
+      "label": "Pitch Bend Range",
+      "kind": "integer",
+      "range": {
+        "min": -24,
+        "max": 24
+      },
+      "default": 12,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper C#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 107"
+        }
+      ],
+      "function": "Pitch wheel range in semitones; negative reverses the wheel.",
+      "note": "The MIDI chart gives 1 to 12."
+    },
+    {
+      "id": "mixer.osc1",
+      "module": "mixer",
+      "label": "OSC 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 255,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20:52"
+        }
+      ],
+      "function": "Level of OSC 1."
+    },
+    {
+      "id": "mixer.osc2",
+      "module": "mixer",
+      "label": "OSC 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21:53"
+        }
+      ],
+      "function": "Level of OSC 2."
+    },
+    {
+      "id": "mixer.sub",
+      "module": "mixer",
+      "label": "SUB",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22:54"
+        }
+      ],
+      "function": "Level of SUB."
+    },
+    {
+      "id": "mixer.select",
+      "module": "mixer",
+      "label": "NOISE/RING/EXT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "noise"
+        },
+        {
+          "value": "ring"
+        },
+        {
+          "value": "ext"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Assigns the fourth level knob."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE level",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "NOISE/RING/EXT at NOISE"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23:55"
+        }
+      ],
+      "function": "Level of noise; set with the shared knob when the switch is at NOISE."
+    },
+    {
+      "id": "mixer.ring",
+      "module": "mixer",
+      "label": "RING level",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "NOISE/RING/EXT at RING"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24:56"
+        }
+      ],
+      "function": "Level of ring; set with the shared knob when the switch is at RING."
+    },
+    {
+      "id": "mixer.ext",
+      "module": "mixer",
+      "label": "EXT level",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "NOISE/RING/EXT at EXT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25:57"
+        }
+      ],
+      "function": "Level of ext; set with the shared knob when the switch is at EXT."
+    },
+    {
+      "id": "vcf.type",
+      "module": "vcf",
+      "label": "TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "classic"
+        },
+        {
+          "value": "acid"
+        }
+      ],
+      "default": "classic",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Classic multimode or Acid diode ladder."
+    },
+    {
+      "id": "vcf.shape",
+      "module": "vcf",
+      "label": "SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LP"
+        },
+        {
+          "value": "BP"
+        },
+        {
+          "value": "HP"
+        }
+      ],
+      "default": "LP",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        }
+      ],
+      "function": "Classic only."
+    },
+    {
+      "id": "vcf.slope",
+      "module": "vcf",
+      "label": "SLOPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "12"
+        },
+        {
+          "value": "24"
+        }
+      ],
+      "default": "24",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 106"
+        }
+      ],
+      "function": "Classic only: dB per octave."
+    },
+    {
+      "id": "vcf.frequency",
+      "module": "vcf",
+      "label": "FREQUENCY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 255,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16:48"
+        }
+      ],
+      "function": "Cutoff (LP/HP) or centre (BP)."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Emphasis at the frequency."
+    },
+    {
+      "id": "drive.amount",
+      "module": "drive",
+      "label": "OVERDRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 114"
+        }
+      ],
+      "function": "Pre-filter overdrive."
+    },
+    {
+      "id": "vcf.modenv_depth",
+      "module": "vcf",
+      "label": "MOD ENV DEPTH (filter)",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Mod Env on frequency, up to eight octaves; negative sweeps the other way."
+    },
+    {
+      "id": "vcf.lfo2_depth",
+      "module": "vcf",
+      "label": "LFO 2 DEPTH (filter)",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17:49"
+        }
+      ],
+      "function": "LFO 2 on frequency (16 = one octave)."
+    },
+    {
+      "id": "vcf.tracking",
+      "module": "vcf",
+      "label": "Filter tracking",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Filter Freq key 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:108"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff: 0 full, 7 none."
+    },
+    {
+      "id": "env.select",
+      "module": "env_amp",
+      "label": "ENV SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "amp"
+        },
+        {
+          "value": "mod"
+        },
+        {
+          "value": "amp_and_mod"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which envelope the four faders and TRIGGERING adjust."
+    },
+    {
+      "id": "env_amp.attack",
+      "module": "env_amp",
+      "label": "ATTACK (AMP)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at AMP or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 90"
+        }
+      ],
+      "function": "Attack: instant to over 5 s (about 250 ms at mid-travel)."
+    },
+    {
+      "id": "env_amp.decay",
+      "module": "env_amp",
+      "label": "DECAY (AMP)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at AMP or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Decay to sustain (about 150 ms at mid-travel); in fixed-duration mode, sets the sustain duration."
+    },
+    {
+      "id": "env_amp.sustain",
+      "module": "env_amp",
+      "label": "SUSTAIN (AMP)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 127,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at AMP or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_amp.release",
+      "module": "env_amp",
+      "label": "RELEASE (AMP)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at AMP or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Release: up to over 10 s (about 360 ms at mid-travel), non-linear."
+    },
+    {
+      "id": "env_amp.triggering",
+      "module": "env_amp",
+      "label": "TRIGGERING (AMP)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "multi"
+        },
+        {
+          "value": "autoglide"
+        }
+      ],
+      "default": "multi",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "ENV SELECT at AMP or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:73"
+        }
+      ],
+      "function": "Single: no retrigger on legato. Multi: always retrigger. Autoglide: as Single, glide only on legato."
+    },
+    {
+      "id": "env_amp.retrigger",
+      "module": "env_amp",
+      "label": "AMP Env retrigger",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Amp Env key 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:109"
+        }
+      ],
+      "function": "Loops the envelope after decay."
+    },
+    {
+      "id": "env_amp.retrigger_count",
+      "module": "env_amp",
+      "label": "AMP Env retrigger count",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Amp Env key 3 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:117"
+        }
+      ],
+      "function": "Loops; 0 loops forever (needs retrigger on)."
+    },
+    {
+      "id": "env_amp.fixed_duration",
+      "module": "env_amp",
+      "label": "AMP Env fixed-duration sustain",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Amp Env key 4 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:114"
+        }
+      ],
+      "function": "Moves to release a set time after sustain starts, held key or not; removes decay; overrides retrigger."
+    },
+    {
+      "id": "env_mod.attack",
+      "module": "env_mod",
+      "label": "ATTACK (MOD)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at MOD or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 102"
+        }
+      ],
+      "function": "Attack: instant to over 5 s (about 250 ms at mid-travel)."
+    },
+    {
+      "id": "env_mod.decay",
+      "module": "env_mod",
+      "label": "DECAY (MOD)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at MOD or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103"
+        }
+      ],
+      "function": "Decay to sustain (about 150 ms at mid-travel); in fixed-duration mode, sets the sustain duration."
+    },
+    {
+      "id": "env_mod.sustain",
+      "module": "env_mod",
+      "label": "SUSTAIN (MOD)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 127,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at MOD or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 104"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env_mod.release",
+      "module": "env_mod",
+      "label": "RELEASE (MOD)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "ENV SELECT at MOD or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "Release: up to over 10 s (about 360 ms at mid-travel), non-linear."
+    },
+    {
+      "id": "env_mod.triggering",
+      "module": "env_mod",
+      "label": "TRIGGERING (MOD)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "multi"
+        },
+        {
+          "value": "autoglide"
+        }
+      ],
+      "default": "multi",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch",
+          "note": "ENV SELECT at MOD or AMP+MOD"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:105"
+        }
+      ],
+      "function": "Single: no retrigger on legato. Multi: always retrigger. Autoglide: as Single, glide only on legato."
+    },
+    {
+      "id": "env_mod.retrigger",
+      "module": "env_mod",
+      "label": "MOD Env retrigger",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Mod Env key 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:110"
+        }
+      ],
+      "function": "Loops the envelope after decay."
+    },
+    {
+      "id": "env_mod.retrigger_count",
+      "module": "env_mod",
+      "label": "MOD Env retrigger count",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Mod Env key 3 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:118"
+        }
+      ],
+      "function": "Loops; 0 loops forever (needs retrigger on)."
+    },
+    {
+      "id": "env_mod.fixed_duration",
+      "module": "env_mod",
+      "label": "MOD Env fixed-duration sustain",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press Mod Env key 4 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:115"
+        }
+      ],
+      "function": "Moves to release a set time after sustain starts, held key or not; removes decay; overrides retrigger."
+    },
+    {
+      "id": "env_amp.velocity",
+      "module": "env_amp",
+      "label": "Velocity: Amp Env",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper D#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 112"
+        }
+      ],
+      "function": "Velocity sensitivity of volume; about +40 feels natural."
+    },
+    {
+      "id": "env_mod.velocity",
+      "module": "env_mod",
+      "label": "Velocity: Mod Env",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper E, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 113"
+        }
+      ],
+      "function": "Velocity sensitivity of Mod Env effects."
+    },
+    {
+      "id": "lfo.delay_speed",
+      "module": "lfo1",
+      "label": "LFO DELAY/SPEED",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "delay"
+        },
+        {
+          "value": "speed"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Whether the two LFO knobs set speed or delay."
+    },
+    {
+      "id": "lfo1.speed",
+      "module": "lfo1",
+      "label": "LFO 1 SPEED",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 75,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "LFO DELAY/SPEED at SPEED"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18:50"
+        }
+      ],
+      "function": "Rate, 0 to about 190 Hz (init 75 = 7.9 Hz for LFO 1, 52 = 3 Hz for LFO 2); in sync mode, picks one of 35 note values."
+    },
+    {
+      "id": "lfo1.delay",
+      "module": "lfo1",
+      "label": "LFO 1 DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "LFO DELAY/SPEED at DELAY"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Fade-in time after a key."
+    },
+    {
+      "id": "lfo1.wave",
+      "module": "lfo1",
+      "label": "LFO 1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw_down"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "default": "triangle",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo1.speed_sync",
+      "module": "lfo1",
+      "label": "Speed/Sync LFO 1",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "speed"
+        },
+        {
+          "value": "sync"
+        }
+      ],
+      "default": "speed",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower A, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:87"
+        }
+      ],
+      "function": "Free speed or sync to internal/MIDI clock."
+    },
+    {
+      "id": "lfo1.keysync",
+      "module": "lfo1",
+      "label": "Keysync LFO 1",
+      "kind": "boolean",
+      "default": false,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower G, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:89"
+        }
+      ],
+      "function": "Restarts the LFO on each key."
+    },
+    {
+      "id": "lfo1.slew",
+      "module": "lfo1",
+      "label": "Slew LFO 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower B, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:86"
+        }
+      ],
+      "function": "Rounds the waveform's edges."
+    },
+    {
+      "id": "lfo2.speed",
+      "module": "lfo2",
+      "label": "LFO 2 SPEED",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "default": 52,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "LFO DELAY/SPEED at SPEED"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19:51"
+        }
+      ],
+      "function": "Rate, 0 to about 190 Hz (init 75 = 7.9 Hz for LFO 1, 52 = 3 Hz for LFO 2); in sync mode, picks one of 35 note values."
+    },
+    {
+      "id": "lfo2.delay",
+      "module": "lfo2",
+      "label": "LFO 2 DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "LFO DELAY/SPEED at DELAY"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "Fade-in time after a key."
+    },
+    {
+      "id": "lfo2.wave",
+      "module": "lfo2",
+      "label": "LFO 2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw_down"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "default": "triangle",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo2.speed_sync",
+      "module": "lfo2",
+      "label": "Speed/Sync LFO 2",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "speed"
+        },
+        {
+          "value": "sync"
+        }
+      ],
+      "default": "speed",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower A#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:91"
+        }
+      ],
+      "function": "Free speed or sync to internal/MIDI clock."
+    },
+    {
+      "id": "lfo2.keysync",
+      "module": "lfo2",
+      "label": "Keysync LFO 2",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower G#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:93"
+        }
+      ],
+      "function": "Restarts the LFO on each key."
+    },
+    {
+      "id": "lfo2.slew",
+      "module": "lfo2",
+      "label": "Slew LFO 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press middle C, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:90"
+        }
+      ],
+      "function": "Rounds the waveform's edges."
+    },
+    {
+      "id": "ctl.mw_filter",
+      "module": "wheels",
+      "label": "Mod Wh: Filter Freq",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press bottom C, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Mod wheel directly on filter frequency.",
+      "note": "No MIDI address listed for this on-key function."
+    },
+    {
+      "id": "ctl.mw_lfo1_pitch",
+      "module": "wheels",
+      "label": "Mod Wh: LFO 1 to Osc Pitch",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 10,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower C#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:70"
+        }
+      ],
+      "function": "Mod wheel brings in LFO 1 on both oscillators' pitch (up to 8 octaves)."
+    },
+    {
+      "id": "ctl.mw_lfo2_filter",
+      "module": "wheels",
+      "label": "Mod Wh: LFO 2 to Filter Freq",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower D, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:71"
+        }
+      ],
+      "function": "Mod wheel brings in LFO 2 on filter frequency."
+    },
+    {
+      "id": "ctl.mw_osc2_pitch",
+      "module": "wheels",
+      "label": "Mod Wh: Osc 2 Pitch",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower D#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:78"
+        }
+      ],
+      "function": "Mod wheel on Osc 2 pitch (up to 8 octaves)."
+    },
+    {
+      "id": "ctl.at_filter",
+      "module": "kbd",
+      "label": "Aftertouch: Filter Freq",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 10,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower E, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:74"
+        }
+      ],
+      "function": "Aftertouch on filter frequency."
+    },
+    {
+      "id": "ctl.at_lfo1_pitch",
+      "module": "kbd",
+      "label": "Aftertouch: LFO 1 to Osc Pitch",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower F, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:75"
+        }
+      ],
+      "function": "Aftertouch brings in LFO 1 on oscillator pitch."
+    },
+    {
+      "id": "ctl.at_lfo2_speed",
+      "module": "kbd",
+      "label": "Aftertouch: LFO 2 Speed",
+      "kind": "integer",
+      "range": {
+        "min": -63,
+        "max": 63
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press lower F#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:76"
+        }
+      ],
+      "function": "Aftertouch changes LFO 2 speed."
+    },
+    {
+      "id": "dist.amount",
+      "module": "dist",
+      "label": "DISTORTION",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Post-filter distortion."
+    },
+    {
+      "id": "fx.osc_filter_mod",
+      "module": "vcf",
+      "label": "OSC FILTER MOD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 115"
+        }
+      ],
+      "function": "Osc 2 modulates filter frequency directly (audio-rate FM of the filter)."
+    },
+    {
+      "id": "vca.limiter",
+      "module": "vca",
+      "label": "VCA: Limiter",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper F, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        }
+      ],
+      "function": "Output limiting; higher is more compressed and quieter."
+    },
+    {
+      "id": "kbd.glide_time",
+      "module": "kbd",
+      "label": "GLIDE TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Portamento time; fully anticlockwise is off."
+    },
+    {
+      "id": "kbd.glide_divergence",
+      "module": "kbd",
+      "label": "Glide divergence",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 15
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper B (Input Gain) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:113"
+        }
+      ],
+      "function": "How much slower Osc 2 glides than Osc 1."
+    },
+    {
+      "id": "out.patch_volume",
+      "module": "out",
+      "label": "Patch volume",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 100,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Stored patch level."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Line and headphone level."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ON (LEGATO)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 108"
+        }
+      ],
+      "function": "Arpeggiator on; in sequence record, ties/legatos the step."
+    },
+    {
+      "id": "arp.latch",
+      "module": "arp",
+      "label": "LATCH (REST)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 109"
+        }
+      ],
+      "function": "Latches the arpeggio; key hold when the arp is off; in sequence record, enters a rest."
+    },
+    {
+      "id": "arp.tempo",
+      "module": "arp",
+      "label": "TEMPO",
+      "kind": "integer",
+      "range": {
+        "min": 40,
+        "max": 240
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "40-240 BPM; disabled while external MIDI clock is detected."
+    },
+    {
+      "id": "arp.rhythm",
+      "module": "arp",
+      "label": "RHYTHM",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "default": 32,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 119"
+        }
+      ],
+      "function": "One of 32 rhythms, from crotchets to semiquaver patterns; also sets sequence rhythm."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "ARP MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "updn"
+        },
+        {
+          "value": "updn2"
+        },
+        {
+          "value": "played"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "record"
+        },
+        {
+          "value": "play"
+        }
+      ],
+      "default": "up",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 118"
+        }
+      ],
+      "function": "Note order, or sequencer Record and Play."
+    },
+    {
+      "id": "arp.octaves",
+      "module": "arp",
+      "label": "ARP OCTAVES / SEQ",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "default": 1,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 111"
+        }
+      ],
+      "function": "Octaves for the arpeggio; in Record/Play, selects sequence 1-4."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "Arp: Swing",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 99
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper F#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 116"
+        }
+      ],
+      "function": "Swing; 50 is straight."
+    },
+    {
+      "id": "arp.seq_retrig",
+      "module": "arp",
+      "label": "Arp: Seq Retrig",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper G, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 106"
+        }
+      ],
+      "function": "Restarts the sequence every two bars to match the rhythm."
+    },
+    {
+      "id": "afx.bank",
+      "module": "kbd",
+      "label": "AFX overlay bank",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 8
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper F# (Arp Swing) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:112"
+        }
+      ],
+      "function": "0 = no overlays, 1-8 = bank of 25 per-key overlays loaded on top of the patch."
+    },
+    {
+      "id": "afx.protect",
+      "module": "kbd",
+      "label": "AFX overlay write-protect",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper G (Seq Retrig) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:116"
+        }
+      ],
+      "function": "Prevents overlay changes while performing."
+    },
+    {
+      "id": "kbd.tuning_table",
+      "module": "kbd",
+      "label": "Tuning table",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 8
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper A# (Tune) 2 times, then PATCH/VALUE buttons",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 3 (tuning program change)"
+        }
+      ],
+      "function": "0 standard, 1-8 stored tables; morphs live with glide."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "Global: MIDI Channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "default": 1,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper G#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Send and receive channel; kept at power-off."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Global: Local",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper A, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Keyboard plays the synth; resets to On at power-up."
+    },
+    {
+      "id": "sys.tune",
+      "module": "kbd",
+      "label": "Global: Tune",
+      "kind": "integer",
+      "range": {
+        "min": -50,
+        "max": 50
+      },
+      "default": 0,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper A#, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Master tuning; kept at power-off.",
+      "note": "Cents."
+    },
+    {
+      "id": "sys.input_gain",
+      "module": "mixer",
+      "label": "Global: Input Gain",
+      "kind": "integer",
+      "range": {
+        "min": -10,
+        "max": 60
+      },
+      "default": 0,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press upper B, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Gain of EXT IN; kept at power-off.",
+      "note": "dB."
+    },
+    {
+      "id": "util.dump",
+      "module": "kbd",
+      "label": "Global: Dump",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "one"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold FUNCTION/EXIT and press top C, then PATCH/VALUE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Sends the current patch or all 128 as SysEx over USB and MIDI OUT."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "OCTAVE",
+      "kind": "integer",
+      "range": {
+        "min": -5,
+        "max": 4
+      },
+      "default": 0,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard octave shift."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSE",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "default": 0,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Semitone transpose."
+    },
+    {
+      "id": "wheels.bend",
+      "module": "wheels",
+      "label": "PITCH wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "pitch bend"
+        }
+      ],
+      "function": "Spring-centred bend."
+    },
+    {
+      "id": "wheels.mod",
+      "module": "wheels",
+      "label": "MOD wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1"
+        }
+      ],
+      "function": "Mod wheel, routed by the Mod Wh on-key functions.",
+      "note": "The guide's MIDI chart lists mod as CC 0; standard mod wheel is CC 1."
+    },
+    {
+      "id": "util.patch",
+      "module": "kbd",
+      "label": "PATCH/VALUE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "program change"
+        }
+      ],
+      "function": "Selects patch 0-127; sets on-key values."
+    },
+    {
+      "id": "util.save",
+      "module": "kbd",
+      "label": "SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Saves the patch (or overlay bank, or tuning table, on their pages)."
+    },
+    {
+      "id": "util.function",
+      "module": "kbd",
+      "label": "FUNCTION/EXIT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold with a key for on-key functions."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "Power switch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "usb"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "ext_dc"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Off, external DC or USB power."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.power",
+      "label": "POWER IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "9 V DC 500 mA, centre positive."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "USB 1.1 (2.0 compatible), class compliant: MIDI, patch dump, power."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out, including patch dumps."
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Sustain pedal, N/O or N/C (sensed at power-up)."
+    },
+    {
+      "id": "jack.ext_in",
+      "label": "EXT IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "mixer.ext",
+      "function": "Mic, instrument or line into the mixer (unbalanced); gain -10 to +60 dB."
+    },
+    {
+      "id": "jack.line_out",
+      "label": "LINE OUTPUT (MONO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line",
+      "function": "Unbalanced mono output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones (mono signal), level from VOLUME."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "arp.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Arpeggio or sequence notes, transposed from the keyboard."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch1",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch2",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Same note as Osc 1 unless paraphonic mode splits them."
+    },
+    {
+      "id": "c04",
+      "from": "kbd.pitch1",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Locked to Osc 1, one or two octaves down."
+    },
+    {
+      "id": "c05",
+      "from": "wheels.bend",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.bend_range"
+    },
+    {
+      "id": "c06",
+      "from": "wheels.bend",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.bend_range"
+    },
+    {
+      "id": "c07",
+      "from": "wheels.bend",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.bend_range"
+    },
+    {
+      "id": "c08",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.lfo1_depth"
+    },
+    {
+      "id": "c09",
+      "from": "env_mod.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.modenv_depth"
+    },
+    {
+      "id": "c10",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "ctl.mw_lfo1_pitch * wheels.mod"
+    },
+    {
+      "id": "c11",
+      "from": "lfo1.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "ctl.at_lfo1_pitch * kbd.aftertouch"
+    },
+    {
+      "id": "c12",
+      "from": "env_mod.out",
+      "to": "osc1.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.pw_modenv"
+    },
+    {
+      "id": "c13",
+      "from": "lfo2.out",
+      "to": "osc1.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.pw_lfo2"
+    },
+    {
+      "id": "c14",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.lfo1_depth"
+    },
+    {
+      "id": "c15",
+      "from": "env_mod.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.modenv_depth"
+    },
+    {
+      "id": "c16",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "ctl.mw_lfo1_pitch * wheels.mod"
+    },
+    {
+      "id": "c17",
+      "from": "lfo1.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "ctl.at_lfo1_pitch * kbd.aftertouch"
+    },
+    {
+      "id": "c18",
+      "from": "env_mod.out",
+      "to": "osc2.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.pw_modenv"
+    },
+    {
+      "id": "c19",
+      "from": "lfo2.out",
+      "to": "osc2.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.pw_lfo2"
+    },
+    {
+      "id": "c20",
+      "from": "wheels.mod",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctl.mw_osc2_pitch"
+    },
+    {
+      "id": "c21",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c22",
+      "from": "osc1.out",
+      "to": "ring.a",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "osc2.out",
+      "to": "ring.b",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c24",
+      "from": "osc1.out",
+      "to": "mixer.osc1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.osc1"
+    },
+    {
+      "id": "c25",
+      "from": "osc2.out",
+      "to": "mixer.osc2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.osc2"
+    },
+    {
+      "id": "c26",
+      "from": "sub.out",
+      "to": "mixer.sub",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.sub"
+    },
+    {
+      "id": "c27",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c28",
+      "from": "ring.out",
+      "to": "mixer.ring",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.ring"
+    },
+    {
+      "id": "c29",
+      "from": "mixer.out",
+      "to": "drive.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "drive.amount"
+    },
+    {
+      "id": "c30",
+      "from": "drive.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c31",
+      "from": "env_mod.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.modenv_depth"
+    },
+    {
+      "id": "c32",
+      "from": "lfo2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo2_depth"
+    },
+    {
+      "id": "c33",
+      "from": "lfo2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "ctl.mw_lfo2_filter * wheels.mod"
+    },
+    {
+      "id": "c34",
+      "from": "wheels.mod",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctl.mw_filter"
+    },
+    {
+      "id": "c35",
+      "from": "kbd.aftertouch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctl.at_filter"
+    },
+    {
+      "id": "c36",
+      "from": "kbd.pitch1",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.tracking",
+      "note": "Tracking scale is inverted: 0 full, 7 none."
+    },
+    {
+      "id": "c37",
+      "from": "osc2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "fx.osc_filter_mod"
+    },
+    {
+      "id": "c38",
+      "from": "kbd.aftertouch",
+      "to": "lfo2.rate_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ctl.at_lfo2_speed"
+    },
+    {
+      "id": "c39",
+      "from": "vcf.out",
+      "to": "dist.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c40",
+      "from": "dist.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "dist.amount"
+    },
+    {
+      "id": "c41",
+      "from": "kbd.gate",
+      "to": "env_amp.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c42",
+      "from": "kbd.gate",
+      "to": "env_mod.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c43",
+      "from": "kbd.velocity",
+      "to": "env_amp.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env_amp.velocity"
+    },
+    {
+      "id": "c44",
+      "from": "kbd.velocity",
+      "to": "env_mod.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env_mod.velocity"
+    },
+    {
+      "id": "c45",
+      "from": "env_amp.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c46",
+      "from": "kbd.gate",
+      "to": "lfo1.key_sync",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.keysync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c47",
+      "from": "kbd.gate",
+      "to": "lfo2.key_sync",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.keysync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c48",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.patch_volume"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "display",
+      "module": "kbd",
+      "label": "LED display",
+      "kind": "display",
+      "function": "Three characters: patch number, parameter values, octave, tempo, on-key codes (P-, E-, F-, r-, c-, d-, g-, o-, t-)."
+    },
+    {
+      "id": "org_value",
+      "module": "kbd",
+      "label": "ORG. VALUE LEDs",
+      "kind": "led",
+      "function": "Show which way to turn a control to return to its stored value."
+    },
+    {
+      "id": "sync_led",
+      "module": "osc2",
+      "label": "SYNC 1-2",
+      "kind": "led",
+      "function": "Lit when Osc 1-2 sync is on."
+    },
+    {
+      "id": "lfo_leds",
+      "module": "lfo1",
+      "label": "LFO LEDs",
+      "kind": "led",
+      "function": "Show each LFO's waveform and speed."
+    },
+    {
+      "id": "section_leds",
+      "module": "osc1",
+      "label": "range, waveform and sub LEDs",
+      "kind": "led",
+      "function": "Confirm the selected setting of each stepping control."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Shared controls",
+      "applies_to": ["osc1", "osc2", "env_amp", "env_mod", "lfo1", "lfo2", "mixer"],
+      "rule": "OSC SELECT points the oscillator controls at Osc 1 or Osc 2 without changing the other. ENV SELECT points the faders and TRIGGERING at Amp, Mod or both. LFO DELAY/SPEED points the two LFO knobs at speed or delay. NOISE/RING/EXT points the fourth mixer knob at one of three sources, each keeping its level. The PULSE WIDTH switch picks whether the knob sets manual width, Mod Env depth or LFO 2 depth; all three act together."
+    },
+    {
+      "id": "b02",
+      "name": "Signal path",
+      "applies_to": ["mixer", "drive", "vcf", "dist", "vca"],
+      "rule": "Mixer, overdrive (before the filter), filter, distortion (after the filter, before the VCA, so it does not change with the envelope), VCA with limiter, VOLUME."
+    },
+    {
+      "id": "b03",
+      "name": "Filter types",
+      "applies_to": ["vcf"],
+      "rule": "Classic: LP, BP or HP at 12 or 24 dB/oct, FREQUENCY being cutoff or band centre. Acid: 24 dB/oct diode-ladder low-pass; SHAPE and SLOPE do nothing."
+    },
+    {
+      "id": "b04",
+      "name": "Modulation routing",
+      "applies_to": ["lfo1", "lfo2", "env_mod", "wheels"],
+      "rule": "LFO 1 only reaches oscillator pitch; LFO 2 reaches pulse width and filter frequency; Mod Env reaches pitch, pulse width and filter. The mod wheel and aftertouch reach their destinations by on-key amounts (-63 to +63); velocity scales Amp and Mod Env."
+    },
+    {
+      "id": "b05",
+      "name": "Envelope triggering",
+      "applies_to": ["env_amp", "env_mod", "kbd"],
+      "rule": "Single: retriggers only on detached notes, glide on every note if GLIDE TIME is up. Multi: retriggers on every note. Autoglide: as Single but glides only on legato notes. Optional looping after decay (1-16 times or forever) and fixed-duration sustain for drum sounds."
+    },
+    {
+      "id": "b06",
+      "name": "Paraphonic mode",
+      "applies_to": ["kbd", "osc1", "osc2"],
+      "rule": "Two held keys play Osc 1 and Osc 2 separately through one filter and VCA. Oscillator error then differs per oscillator."
+    },
+    {
+      "id": "b07",
+      "name": "Arpeggiator and sequencer",
+      "applies_to": ["arp"],
+      "rule": "Held notes play in the chosen order over 1-4 octaves to one of 32 rhythms; LATCH holds them. In RECORD, notes, rests (LATCH/REST) and ties/legato (ON/LEGATO) fill up to 32 steps in one of four sequences (lengths not recorded: RHYTHM sets the rhythm). In PLAY, the first key played sets the transposition. SEQ RETRIG restarts the sequence every two bars. Follows incoming MIDI clock automatically."
+    },
+    {
+      "id": "b08",
+      "name": "AFX mode",
+      "applies_to": ["kbd"],
+      "rule": "An overlay bank gives each of the 25 home-octave keys its own set of parameter changes, recalled when the key plays: a different patch per key. Hold a key and move controls to edit its overlay; save the bank on its page. Eight banks (1-4 preset); FUNCTION + TRANSPOSE copies overlays between keys. Arpeggiator and global settings are not in overlays."
+    },
+    {
+      "id": "b09",
+      "name": "On-key functions",
+      "applies_to": ["kbd"],
+      "rule": "Hold FUNCTION/EXIT and press a key (some keys pressed 2-4 times for extended functions), release, set with PATCH/VALUE, then FUNCTION/EXIT or a 10-second timeout. The keyboard keeps playing meanwhile."
+    },
+    {
+      "id": "b10",
+      "name": "Memory",
+      "applies_to": ["kbd"],
+      "rule": "Edits are lost on patch change unless saved. MIDI channel, master tune and input gain are kept at power-off; Local resets to On; the synth starts on patch 0. A single patch received by SysEx loads into the edit buffer."
+    },
+    {
+      "id": "b11",
+      "name": "Micro-tuning",
+      "applies_to": ["kbd"],
+      "rule": "Nine tuning tables (0 standard, 1-8 saved: prime, harmonic series, Indian shruti, Ptolemy, Bianzhong, Turkish, slendro/pelog, Carlos super just), editable by MIDI Tuning Standard SysEx; switching tables with glide up morphs between them."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change",
+        "range": [0, 127]
+      },
+      {
+        "message": "control_change",
+        "note": "every panel control and many on-key functions; see parameter access entries"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "sustain"
+      },
+      {
+        "message": "nrpn",
+        "note": "waveforms, triggering, retrigger, fixed duration, LFO sync/keysync/slew, mod wheel and aftertouch amounts, paraphonic, error, glide divergence, sub tuning, filter tracking, overlays"
+      },
+      {
+        "message": "rpn",
+        "number": 3,
+        "parameter": "tuning program (table select)"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 20 29 00 33 00",
+        "commands": {
+          "47": "greeting message",
+          "48": "save tuning tables",
+          "49": "clear overlay bank",
+          "4A": "save overlay bank",
+          "4B": "copy overlay",
+          "4C": "clear overlay",
+          "4D": "move overlay",
+          "4E": "import overlay",
+          "4F": "export overlay request"
+        }
+      },
+      {
+        "message": "sysex",
+        "header": "F0 7F id 08 02",
+        "note": "MIDI Tuning Standard note change"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "sysex",
+        "note": "patch dumps (one or all 128), overlay exports"
+      }
+    ],
+    "channel_note": "One channel 1-16 (upper G# on-key), kept at power-off.",
+    "high_resolution": "Paired CCs (e.g. 16:48 for filter frequency) give 8-bit values (0-255) for oscillator, mixer, filter and LFO speed controls.",
+    "note": "Novation Components (web or desktop) manages patches, overlays, tuning tables, the greeting message and firmware."
+  },
+  "specifications": {
+    "keyboard": "25 keys, velocity and aftertouch",
+    "polyphony": "mono, paraphonic option (2 notes)",
+    "oscillators": "2 + sub",
+    "lfos": 2,
+    "envelopes": 2,
+    "filter": {
+      "classic": "LP/BP/HP, 12 or 24 dB/oct",
+      "acid": "24 dB/oct diode ladder LP"
+    },
+    "lfo_rate_hz": [0, 190],
+    "envelope_times_s": {
+      "attack_max": 5,
+      "release_max": 10
+    },
+    "patches": {
+      "factory": 64,
+      "user": 64
+    },
+    "sequencer": "4 x 32 steps",
+    "arp_rhythms": 32,
+    "afx_overlay_banks": 8,
+    "tuning_tables": 9,
+    "connections": {
+      "midi": "5-pin DIN in and out",
+      "usb": "type B, USB 1.1 (2.0 compatible), class compliant, bus power",
+      "audio": "1/4\" mono line out, 1/4\" stereo headphones, 1/4\" external input",
+      "sustain": "1/4\", N/O or N/C"
+    },
+    "power": {
+      "adaptor": "9 V DC 500 mA, centre positive, 100-240 V AC",
+      "alternative": "USB bus power"
+    }
+  },
+  "omitted_from_source": [
+    "the synthesis tutorial",
+    "block diagram images (signal path taken from the text)",
+    "Novation notices",
+    "getting started steps beyond patch save/load",
+    "the per-character mapping for greeting messages"
+  ],
+  "not_in_source": [
+    "dimensions and weight",
+    "output level and impedance",
+    "filter and oscillator circuit details",
+    "the tempo control's MIDI address",
+    "SysEx patch dump format"
+  ],
+  "source_inconsistencies": [
+    "The box contents list a 12 V DC PSU; the power section and supplied PSU are 9 V DC 500 mA.",
+    "The envelope section says Mod Env reaches filter frequency 'when the filter is in Classic mode'; the filter section applies Mod Env depth to both types.",
+    "Aftertouch LFO 1 to Osc Pitch gives a maximum of 95 semitones 'or 8 octaves'; the mod wheel version gives 96.",
+    "Pitch Bend Range runs -24 to +24 on the panel but 1 to 12 in the MIDI chart.",
+    "The MIDI chart lists the mod wheel as CC 0 (bank select) rather than CC 1.",
+    "The init patch table has LFO 2 sync value 'on' but Speed/Sync LFO 2 'speed'.",
+    "Osc 2 manual pulse width runs 5 to 94.3 in the MIDI chart; Osc 1 runs 5 to 95.",
+    "Oscillators use a rising sawtooth; the LFOs use a falling one."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "AFX overlays",
+      "detail": "Overlay contents (per-key parameter sets) are described, not modelled; the overlay parameter list is in the guide's appendix."
+    },
+    {
+      "topic": "Shared panel controls",
+      "detail": "Each oscillator and envelope parameter is modelled separately, with the selector switch noted in its access."
+    },
+    {
+      "topic": "Sequences",
+      "detail": "Four global sequences of up to 32 steps are described in behaviours; their step data is not modelled as parameters."
+    }
+  ]
+}

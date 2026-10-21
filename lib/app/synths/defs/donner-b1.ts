@@ -1,7 +1,7 @@
 /**
  * Donner Essential B1 (sold as the Donner Syn Bass): the definition (D1). Positions are measured on the 1500×683 product
- * photo (`donner-b1.png`, kept with the owner's spec `donner-b1_synth.json` outside the repo) and scaled by 1.5 into
- * view units: X() and Y() take photo pixels.
+ * photo (`.context/app/synth-data/donner-b1/raw/donner-b1.png`, local only) and scaled by 1.5 into view units: X() and Y()
+ * take photo pixels. The owner's spec is `.context/app/synth-data/donner-b1/donner-b1.synth.json`.
  *
  * The first synth written straight into the app, with no prototype version to transliterate (`f-donner-b1`). Its voice
  * follows the spec: one VCO, a resonant low-pass, one decay envelope to the filter (DEPTH) and the VCA, accent, then

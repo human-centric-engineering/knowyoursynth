@@ -1,0 +1,7408 @@
+{
+  "schema_version": "0.11.0",
+  "device": {
+    "id": "yamaha-dx7",
+    "manufacturer": "Yamaha",
+    "model": "DX7 Digital Programmable Algorithm Synthesizer",
+    "category": "16-voice digital FM synthesizer, 61 keys with velocity and aftertouch",
+    "based_on": "Original design, 1983, using John Chowning's FM synthesis licensed from Stanford; two custom chips (YM21280 OPS, YM21290 EGS).",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Yamaha DX7 Operation Manual",
+        "kind": "user_manual",
+        "file": "Yamaha_DX-7_Manual.pdf",
+        "pages": 72,
+        "note": "Controls, all EDIT and FUNCTION parameters with ranges, programming tutorial, memory, MIDI (in general terms) and specifications. Shows only a few algorithms (3 to 6); the voice data list page is blank in this scan."
+      },
+      {
+        "id": "righto",
+        "title": "Ken Shirriff, 'Yamaha DX7 chip reverse-engineering, part 4: how algorithms are implemented'",
+        "kind": "other",
+        "file": "http://www.righto.com/2021/12/yamaha-dx7-chip-reverse-engineering.html",
+        "note": "Full algorithm ROM: per-operator modulation source, feedback register and output count (COM). Used to confirm all 32 routings, carriers and feedback loops, and the output level compensation."
+      },
+      {
+        "id": "sysex",
+        "title": "DX7 MIDI data format (DX7 data sheet and Keyboard, Jan 1987), as transcribed on YamahaMusicians.com",
+        "kind": "other",
+        "file": "https://yamahamusicians.com/forum/viewtopic.php?t=7759",
+        "note": "Single-voice and 32-voice bulk dump headers, 155-byte voice layout, function parameter numbers 64-77."
+      },
+      {
+        "id": "rom1a",
+        "title": "DX7 Librarian voice list and ROM 1 cartridge listing",
+        "kind": "other",
+        "file": "https://dx7.roundsquare.net/voice-list",
+        "note": "Names and order of the 32 ROM 1A voices."
+      },
+      {
+        "id": "dx7ii_chart",
+        "title": "Yamaha DX7 II FD MIDI implementation chart",
+        "kind": "other",
+        "file": "https://www.manualslib.com/manual/802737/Yamaha-Dx7-Ii-Fd.html?page=88",
+        "note": "Comparable controller numbers; the original DX7 manual gives none."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "fm",
+    "signal_path": "digital",
+    "voices": 16,
+    "polyphony_mode": "16-note polyphonic or monophonic",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "32 internal voices (battery-backed RAM), 32 on a RAM cartridge, 64 on a ROM cartridge (two banks of 32). Function settings are global, not per voice.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 61,
+      "voice_select_buttons": 32,
+      "data_entry_sliders": 1,
+      "data_entry_buttons": 2,
+      "lcd_lines": 2,
+      "lcd_characters": 16
+    },
+    "summary": "Each of 16 voices has six sine-wave operators, each with its own frequency (ratio to the key or fixed in Hz), detune, eight-stage rate/level envelope, output level, keyboard level and rate scaling, velocity and amplitude-modulation sensitivity. One of 32 algorithms decides which operators are heard (carriers) and which modulate others, with one adjustable feedback loop. A pitch envelope moves all six together. One LFO (six waves) gives pitch and amplitude modulation, scaled by the mod wheel, foot and breath controllers and aftertouch, which can also bias the envelopes. All programming runs through 32 multi-function buttons and one data entry slider."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice assigner",
+      "panel_section": "KEYBOARD",
+      "scope": "common",
+      "description": "61 keys (C1-C6) with initial (velocity) and after (pressure) touch; 16-note poly or mono, portamento or glissando, key transpose.",
+      "properties": {
+        "keys": 61,
+        "range": "C1-C6"
+      },
+      "inputs": ["kbd.sustain", "kbd.porta_sw", "kbd.midi_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.velocity", "kbd.aftertouch"]
+    },
+    {
+      "id": "wheels",
+      "type": "manual_controller",
+      "name": "Pitch and modulation wheels",
+      "panel_section": "LEFT OF KEYBOARD",
+      "scope": "common",
+      "description": "Spring-return pitch wheel and modulation wheel.",
+      "inputs": [],
+      "outputs": ["wheels.bend", "wheels.mod"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "EDIT: LFO",
+      "scope": "common",
+      "description": "One LFO: triangle, saw down, saw up, square, sine or sample and hold; speed, delay, pitch and amplitude depths, key sync.",
+      "properties": {
+        "waveforms": ["triangle", "saw_down", "saw_up", "square", "sine", "sample_hold"]
+      },
+      "inputs": ["lfo.key_sync"],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "modbus",
+      "type": "modulation_bus",
+      "name": "Modulation controllers",
+      "panel_section": "FUNCTION: MODULATION",
+      "scope": "common",
+      "description": "Combines the LFO's programmed depths (PMD, AMD) with the mod wheel, foot controller, breath controller and aftertouch. Each controller has a RANGE and switches for PITCH (adds LFO pitch modulation), AMPLITUDE (adds LFO amplitude modulation) and EG BIAS (lowers operator levels directly, without the LFO).",
+      "inputs": ["modbus.lfo", "modbus.wheel", "modbus.foot", "modbus.breath", "modbus.aftertouch"],
+      "outputs": ["modbus.pitch_mod", "modbus.amp_mod", "modbus.eg_bias"]
+    },
+    {
+      "id": "peg",
+      "type": "envelope",
+      "name": "Pitch EG",
+      "panel_section": "EDIT: PITCH EG",
+      "scope": "per_voice",
+      "description": "Four-rate, four-level pitch envelope moving all six operators equally, ±4 octaves (level 50 is no change).",
+      "properties": {
+        "range_octaves": [-4, 4]
+      },
+      "inputs": ["peg.gate"],
+      "outputs": ["peg.out"]
+    },
+    {
+      "id": "op1",
+      "type": "operator",
+      "name": "Operator 1",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op1.pitch", "op1.gate", "op1.velocity", "op1.amp_mod"],
+      "outputs": ["op1.out"]
+    },
+    {
+      "id": "op2",
+      "type": "operator",
+      "name": "Operator 2",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op2.pitch", "op2.gate", "op2.velocity", "op2.amp_mod"],
+      "outputs": ["op2.out"]
+    },
+    {
+      "id": "op3",
+      "type": "operator",
+      "name": "Operator 3",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op3.pitch", "op3.gate", "op3.velocity", "op3.amp_mod"],
+      "outputs": ["op3.out"]
+    },
+    {
+      "id": "op4",
+      "type": "operator",
+      "name": "Operator 4",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op4.pitch", "op4.gate", "op4.velocity", "op4.amp_mod"],
+      "outputs": ["op4.out"]
+    },
+    {
+      "id": "op5",
+      "type": "operator",
+      "name": "Operator 5",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op5.pitch", "op5.gate", "op5.velocity", "op5.amp_mod"],
+      "outputs": ["op5.out"]
+    },
+    {
+      "id": "op6",
+      "type": "operator",
+      "name": "Operator 6",
+      "panel_section": "EDIT: OSCILLATOR / EG / KEYBOARD SCALING / OPERATOR",
+      "scope": "per_voice",
+      "description": "Sine oscillator with its own frequency, envelope and level. Carrier or modulator by algorithm; modulation links are in the algorithms section.",
+      "properties": {
+        "frequency_ratio": [0.5, 61.69],
+        "fixed_hz": [1, 9772],
+        "eg": "4 rates, 4 levels"
+      },
+      "inputs": ["op6.pitch", "op6.gate", "op6.velocity", "op6.amp_mod"],
+      "outputs": ["op6.out"]
+    },
+    {
+      "id": "sum",
+      "type": "summer",
+      "name": "Carrier sum",
+      "panel_section": "(internal)",
+      "scope": "per_voice",
+      "description": "Sums the carriers of the current algorithm, each scaled down by the number of carriers so all algorithms play at similar volume.",
+      "inputs": ["sum.in1", "sum.in2", "sum.in3", "sum.in4", "sum.in5", "sum.in6"],
+      "outputs": ["sum.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / rear panel",
+      "scope": "common",
+      "description": "DAC and VOLUME slider to the line output and headphones; the VOLUME foot controller jack scales the level.",
+      "inputs": ["out.in", "out.foot_volume"],
+      "outputs": ["out.line", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "voice.algorithm",
+      "module": "sum",
+      "label": "ALGORITHM",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 7,
+          "note": "EDIT, button 7, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 134
+        }
+      ],
+      "function": "Selects one of 32 operator arrangements; see algorithms."
+    },
+    {
+      "id": "voice.feedback",
+      "module": "sum",
+      "label": "FEEDBACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 8,
+          "note": "EDIT, button 8, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 135
+        }
+      ],
+      "function": "Depth of the algorithm's feedback loop."
+    },
+    {
+      "id": "lfo.wave",
+      "module": "lfo",
+      "label": "LFO WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw_down"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 9,
+          "note": "EDIT, button 9, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 142
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.speed",
+      "module": "lfo",
+      "label": "LFO SPEED",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 10,
+          "note": "EDIT, button 10, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 137
+        }
+      ],
+      "function": "LFO rate, 0 slowest to 99 fastest."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "LFO DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 11,
+          "note": "EDIT, button 11, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 138
+        }
+      ],
+      "function": "Delay before LFO modulation starts after a key."
+    },
+    {
+      "id": "lfo.pmd",
+      "module": "lfo",
+      "label": "LFO PMD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 12,
+          "note": "EDIT, button 12, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 139
+        }
+      ],
+      "function": "Programmed pitch modulation depth (needs pitch mod sensitivity above 0)."
+    },
+    {
+      "id": "lfo.amd",
+      "module": "lfo",
+      "label": "LFO AMD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 13,
+          "note": "EDIT, button 13, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 140
+        }
+      ],
+      "function": "Programmed amplitude modulation depth (needs operator amplitude sensitivity above 0)."
+    },
+    {
+      "id": "lfo.sync",
+      "module": "lfo",
+      "label": "LFO SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 14,
+          "note": "EDIT, button 14, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 141
+        }
+      ],
+      "function": "Restarts the LFO waveform on each key."
+    },
+    {
+      "id": "voice.pms",
+      "module": "modbus",
+      "label": "MOD SENSITIVITY PITCH",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 15,
+          "note": "EDIT, button 15, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 143
+        }
+      ],
+      "function": "Voice's sensitivity to LFO pitch modulation."
+    },
+    {
+      "id": "voice.osc_sync",
+      "module": "sum",
+      "label": "OSC KEY SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press twice: SYNC), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 136
+        }
+      ],
+      "function": "Starts every operator at the beginning of its sine cycle on each key.",
+      "note": "The panel reaches it per operator, but the voice data stores a single value for all six."
+    },
+    {
+      "id": "peg.rate1",
+      "module": "peg",
+      "label": "PITCH EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 29,
+          "note": "EDIT, button 29 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 126
+        }
+      ],
+      "function": "Pitch EG rate 1."
+    },
+    {
+      "id": "peg.rate2",
+      "module": "peg",
+      "label": "PITCH EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 29,
+          "note": "EDIT, button 29 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 127
+        }
+      ],
+      "function": "Pitch EG rate 2."
+    },
+    {
+      "id": "peg.rate3",
+      "module": "peg",
+      "label": "PITCH EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 29,
+          "note": "EDIT, button 29 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 128
+        }
+      ],
+      "function": "Pitch EG rate 3."
+    },
+    {
+      "id": "peg.rate4",
+      "module": "peg",
+      "label": "PITCH EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 29,
+          "note": "EDIT, button 29 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 129
+        }
+      ],
+      "function": "Pitch EG rate 4."
+    },
+    {
+      "id": "peg.level1",
+      "module": "peg",
+      "label": "PITCH EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 30,
+          "note": "EDIT, button 30 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 130
+        }
+      ],
+      "function": "Pitch EG level 1; 50 is no change, 0 is 4 octaves down, 99 is 4 octaves up."
+    },
+    {
+      "id": "peg.level2",
+      "module": "peg",
+      "label": "PITCH EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 30,
+          "note": "EDIT, button 30 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 131
+        }
+      ],
+      "function": "Pitch EG level 2; 50 is no change, 0 is 4 octaves down, 99 is 4 octaves up."
+    },
+    {
+      "id": "peg.level3",
+      "module": "peg",
+      "label": "PITCH EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 30,
+          "note": "EDIT, button 30 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 132
+        }
+      ],
+      "function": "Pitch EG level 3; 50 is no change, 0 is 4 octaves down, 99 is 4 octaves up."
+    },
+    {
+      "id": "peg.level4",
+      "module": "peg",
+      "label": "PITCH EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 30,
+          "note": "EDIT, button 30 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 133
+        }
+      ],
+      "function": "Pitch EG level 4; 50 is no change, 0 is 4 octaves down, 99 is 4 octaves up."
+    },
+    {
+      "id": "voice.transpose",
+      "module": "kbd",
+      "label": "KEY TRANSPOSE",
+      "kind": "integer",
+      "range": {
+        "min": -24,
+        "max": 24
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 31,
+          "note": "EDIT, button 31, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 144
+        }
+      ],
+      "function": "Pitch heard from middle C, set by pressing a key: up to 2 octaves either way.",
+      "note": "Stored as 0-48 with 24 = no transpose (C3)."
+    },
+    {
+      "id": "op1.on",
+      "module": "op1",
+      "label": "OPERATOR ON-OFF 1",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 1,
+          "note": "EDIT, button 1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op1.osc_mode",
+      "module": "op1",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 122
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op1.freq_coarse",
+      "module": "op1",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 123
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op1.freq_fine",
+      "module": "op1",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 124
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op1.detune",
+      "module": "op1",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 125
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op1.eg_rate1",
+      "module": "op1",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 105
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op1.eg_rate2",
+      "module": "op1",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 106
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op1.eg_rate3",
+      "module": "op1",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 107
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op1.eg_rate4",
+      "module": "op1",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 108
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op1.eg_level1",
+      "module": "op1",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 109
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op1.eg_level2",
+      "module": "op1",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 110
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op1.eg_level3",
+      "module": "op1",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 111
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op1.eg_level4",
+      "module": "op1",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 112
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op1.break_point",
+      "module": "op1",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 113
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op1.curve_left",
+      "module": "op1",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 116
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op1.curve_right",
+      "module": "op1",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 117
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op1.depth_left",
+      "module": "op1",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 114
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op1.depth_right",
+      "module": "op1",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 115
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op1.rate_scaling",
+      "module": "op1",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 118
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op1.ams",
+      "module": "op1",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 119
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op1.velocity_sens",
+      "module": "op1",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 120
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op1.output_level",
+      "module": "op1",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 121
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "op2.on",
+      "module": "op2",
+      "label": "OPERATOR ON-OFF 2",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 2,
+          "note": "EDIT, button 2"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op2.osc_mode",
+      "module": "op2",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 101
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op2.freq_coarse",
+      "module": "op2",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 102
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op2.freq_fine",
+      "module": "op2",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 103
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op2.detune",
+      "module": "op2",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 104
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op2.eg_rate1",
+      "module": "op2",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 84
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op2.eg_rate2",
+      "module": "op2",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 85
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op2.eg_rate3",
+      "module": "op2",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 86
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op2.eg_rate4",
+      "module": "op2",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 87
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op2.eg_level1",
+      "module": "op2",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 88
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op2.eg_level2",
+      "module": "op2",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 89
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op2.eg_level3",
+      "module": "op2",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 90
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op2.eg_level4",
+      "module": "op2",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 91
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op2.break_point",
+      "module": "op2",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 92
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op2.curve_left",
+      "module": "op2",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 95
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op2.curve_right",
+      "module": "op2",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 96
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op2.depth_left",
+      "module": "op2",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 93
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op2.depth_right",
+      "module": "op2",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 94
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op2.rate_scaling",
+      "module": "op2",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 97
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op2.ams",
+      "module": "op2",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 98
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op2.velocity_sens",
+      "module": "op2",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 99
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op2.output_level",
+      "module": "op2",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 100
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "op3.on",
+      "module": "op3",
+      "label": "OPERATOR ON-OFF 3",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 3,
+          "note": "EDIT, button 3"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op3.osc_mode",
+      "module": "op3",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 80
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op3.freq_coarse",
+      "module": "op3",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 81
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op3.freq_fine",
+      "module": "op3",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 82
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op3.detune",
+      "module": "op3",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 83
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op3.eg_rate1",
+      "module": "op3",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 63
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op3.eg_rate2",
+      "module": "op3",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 64
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op3.eg_rate3",
+      "module": "op3",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 65
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op3.eg_rate4",
+      "module": "op3",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 66
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op3.eg_level1",
+      "module": "op3",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 67
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op3.eg_level2",
+      "module": "op3",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 68
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op3.eg_level3",
+      "module": "op3",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 69
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op3.eg_level4",
+      "module": "op3",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 70
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op3.break_point",
+      "module": "op3",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 71
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op3.curve_left",
+      "module": "op3",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 74
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op3.curve_right",
+      "module": "op3",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 75
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op3.depth_left",
+      "module": "op3",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 72
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op3.depth_right",
+      "module": "op3",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 73
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op3.rate_scaling",
+      "module": "op3",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 76
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op3.ams",
+      "module": "op3",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 77
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op3.velocity_sens",
+      "module": "op3",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 78
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op3.output_level",
+      "module": "op3",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 79
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "op4.on",
+      "module": "op4",
+      "label": "OPERATOR ON-OFF 4",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 4,
+          "note": "EDIT, button 4"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op4.osc_mode",
+      "module": "op4",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 59
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op4.freq_coarse",
+      "module": "op4",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 60
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op4.freq_fine",
+      "module": "op4",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 61
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op4.detune",
+      "module": "op4",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 62
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op4.eg_rate1",
+      "module": "op4",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 42
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op4.eg_rate2",
+      "module": "op4",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 43
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op4.eg_rate3",
+      "module": "op4",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 44
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op4.eg_rate4",
+      "module": "op4",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 45
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op4.eg_level1",
+      "module": "op4",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 46
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op4.eg_level2",
+      "module": "op4",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 47
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op4.eg_level3",
+      "module": "op4",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 48
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op4.eg_level4",
+      "module": "op4",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 49
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op4.break_point",
+      "module": "op4",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 50
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op4.curve_left",
+      "module": "op4",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 53
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op4.curve_right",
+      "module": "op4",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 54
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op4.depth_left",
+      "module": "op4",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 51
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op4.depth_right",
+      "module": "op4",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 52
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op4.rate_scaling",
+      "module": "op4",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 55
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op4.ams",
+      "module": "op4",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 56
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op4.velocity_sens",
+      "module": "op4",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 57
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op4.output_level",
+      "module": "op4",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 58
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "op5.on",
+      "module": "op5",
+      "label": "OPERATOR ON-OFF 5",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 5,
+          "note": "EDIT, button 5"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op5.osc_mode",
+      "module": "op5",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 38
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op5.freq_coarse",
+      "module": "op5",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 39
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op5.freq_fine",
+      "module": "op5",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 40
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op5.detune",
+      "module": "op5",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 41
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op5.eg_rate1",
+      "module": "op5",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 21
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op5.eg_rate2",
+      "module": "op5",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 22
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op5.eg_rate3",
+      "module": "op5",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 23
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op5.eg_rate4",
+      "module": "op5",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 24
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op5.eg_level1",
+      "module": "op5",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 25
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op5.eg_level2",
+      "module": "op5",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 26
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op5.eg_level3",
+      "module": "op5",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 27
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op5.eg_level4",
+      "module": "op5",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 28
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op5.break_point",
+      "module": "op5",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 29
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op5.curve_left",
+      "module": "op5",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 32
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op5.curve_right",
+      "module": "op5",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 33
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op5.depth_left",
+      "module": "op5",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 30
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op5.depth_right",
+      "module": "op5",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 31
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op5.rate_scaling",
+      "module": "op5",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 34
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op5.ams",
+      "module": "op5",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 35
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op5.velocity_sens",
+      "module": "op5",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 36
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op5.output_level",
+      "module": "op5",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 37
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "op6.on",
+      "module": "op6",
+      "label": "OPERATOR ON-OFF 6",
+      "kind": "boolean",
+      "default": true,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 6,
+          "note": "EDIT, button 6"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 155
+        }
+      ],
+      "function": "Mutes the operator while editing; not stored (set output level to 0 to keep it off)."
+    },
+    {
+      "id": "op6.osc_mode",
+      "module": "op6",
+      "label": "OSC MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratio"
+        },
+        {
+          "value": "fixed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 17,
+          "note": "EDIT, button 17 (press once: MODE), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 17
+        }
+      ],
+      "function": "Ratio: frequency follows the key. Fixed: a set frequency in Hz regardless of key."
+    },
+    {
+      "id": "op6.freq_coarse",
+      "module": "op6",
+      "label": "FREQUENCY COARSE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 18,
+          "note": "EDIT, button 18, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 18
+        }
+      ],
+      "function": "Ratio 0.50, 1.00, then whole numbers to 31; fixed 1, 10, 100 or 1000 Hz."
+    },
+    {
+      "id": "op6.freq_fine",
+      "module": "op6",
+      "label": "FREQUENCY FINE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 19,
+          "note": "EDIT, button 19, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 19
+        }
+      ],
+      "function": "Raises the frequency up to just under twice the coarse value (1.00-1.99 x)."
+    },
+    {
+      "id": "op6.detune",
+      "module": "op6",
+      "label": "DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 20,
+          "note": "EDIT, button 20, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 20
+        }
+      ],
+      "function": "Very fine tuning for beating between operators."
+    },
+    {
+      "id": "op6.eg_rate1",
+      "module": "op6",
+      "label": "EG RATE 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 0
+        }
+      ],
+      "function": "Envelope rate 1 (99 fastest)."
+    },
+    {
+      "id": "op6.eg_rate2",
+      "module": "op6",
+      "label": "EG RATE 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 1
+        }
+      ],
+      "function": "Envelope rate 2 (99 fastest)."
+    },
+    {
+      "id": "op6.eg_rate3",
+      "module": "op6",
+      "label": "EG RATE 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 2
+        }
+      ],
+      "function": "Envelope rate 3 (99 fastest)."
+    },
+    {
+      "id": "op6.eg_rate4",
+      "module": "op6",
+      "label": "EG RATE 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 21,
+          "note": "EDIT, button 21 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 3
+        }
+      ],
+      "function": "Envelope rate 4 (99 fastest)."
+    },
+    {
+      "id": "op6.eg_level1",
+      "module": "op6",
+      "label": "EG LEVEL 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 1 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 4
+        }
+      ],
+      "function": "Envelope level 1."
+    },
+    {
+      "id": "op6.eg_level2",
+      "module": "op6",
+      "label": "EG LEVEL 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 2 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 5
+        }
+      ],
+      "function": "Envelope level 2."
+    },
+    {
+      "id": "op6.eg_level3",
+      "module": "op6",
+      "label": "EG LEVEL 3",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 3 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 6
+        }
+      ],
+      "function": "Envelope level 3."
+    },
+    {
+      "id": "op6.eg_level4",
+      "module": "op6",
+      "label": "EG LEVEL 4",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 22,
+          "note": "EDIT, button 22 (press 4 times), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 7
+        }
+      ],
+      "function": "Envelope level 4."
+    },
+    {
+      "id": "op6.break_point",
+      "module": "op6",
+      "label": "BREAK POINT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 23,
+          "note": "EDIT, button 23, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 8
+        }
+      ],
+      "function": "Key where level scaling pivots, A-1 to C8.",
+      "note": "0 = A-1, 39 = C3."
+    },
+    {
+      "id": "op6.curve_left",
+      "module": "op6",
+      "label": "CURVE (L)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 11
+        }
+      ],
+      "function": "Scaling curve left of the break point."
+    },
+    {
+      "id": "op6.curve_right",
+      "module": "op6",
+      "label": "CURVE (R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-LIN"
+        },
+        {
+          "value": "-EXP"
+        },
+        {
+          "value": "+EXP"
+        },
+        {
+          "value": "+LIN"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 24,
+          "note": "EDIT, button 24 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 12
+        }
+      ],
+      "function": "Scaling curve right of the break point."
+    },
+    {
+      "id": "op6.depth_left",
+      "module": "op6",
+      "label": "DEPTH (L)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press once: L), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 9
+        }
+      ],
+      "function": "Scaling depth left of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op6.depth_right",
+      "module": "op6",
+      "label": "DEPTH (R)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 25,
+          "note": "EDIT, button 25 (press twice: R), then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 10
+        }
+      ],
+      "function": "Scaling depth right of the break point; -LIN at 99 rolls off 22 dB/oct."
+    },
+    {
+      "id": "op6.rate_scaling",
+      "module": "op6",
+      "label": "KEYBOARD RATE SCALING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 26,
+          "note": "EDIT, button 26, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 13
+        }
+      ],
+      "function": "Speeds up envelope rates on higher keys."
+    },
+    {
+      "id": "op6.ams",
+      "module": "op6",
+      "label": "MOD SENSITIVITY AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 3
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 16,
+          "note": "EDIT, button 16, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 14
+        }
+      ],
+      "function": "Operator's sensitivity to amplitude modulation and EG bias."
+    },
+    {
+      "id": "op6.velocity_sens",
+      "module": "op6",
+      "label": "KEY VELOCITY SENSITIVITY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 28,
+          "note": "EDIT, button 28, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 15
+        }
+      ],
+      "function": "How much key speed raises this operator's level (louder on a carrier, brighter on a modulator)."
+    },
+    {
+      "id": "op6.output_level",
+      "module": "op6",
+      "label": "OPERATOR OUTPUT LEVEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "edit",
+          "button": 27,
+          "note": "EDIT, button 27, then DATA ENTRY slider or -1/+1"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 0",
+          "parameter_number": 16
+        }
+      ],
+      "function": "Operator level; roughly logarithmic, so 50 is far less than half of 99."
+    },
+    {
+      "id": "sys.master_tune",
+      "module": "kbd",
+      "label": "MASTER TUNE ADJ",
+      "kind": "continuous",
+      "physical": {
+        "min": -75,
+        "max": 75,
+        "unit": "cents"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 1,
+          "note": "FUNCTION, button 1, then DATA ENTRY slider"
+        }
+      ],
+      "function": "Overall tuning, ±75 cents (slider only)."
+    },
+    {
+      "id": "sys.poly_mono",
+      "module": "kbd",
+      "label": "POLY/MONO",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "mono"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 2,
+          "note": "FUNCTION, button 2, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 64
+        }
+      ],
+      "function": "16-note poly or one-note mono."
+    },
+    {
+      "id": "sys.pb_range",
+      "module": "wheels",
+      "label": "PITCH BEND RANGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 3,
+          "note": "FUNCTION, button 3, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 65
+        }
+      ],
+      "function": "Pitch wheel range in semitones each way; fixed at 12 when STEP is above 0."
+    },
+    {
+      "id": "sys.pb_step",
+      "module": "wheels",
+      "label": "PITCH BEND STEP",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 4,
+          "note": "FUNCTION, button 4, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 66
+        }
+      ],
+      "function": "0 is smooth; otherwise the bend jumps in steps of this many semitones."
+    },
+    {
+      "id": "sys.porta_mode",
+      "module": "kbd",
+      "label": "PORTAMENTO MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "retain_or_fingered"
+        },
+        {
+          "value": "follow_or_full_time"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 5,
+          "note": "FUNCTION, button 5, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 67
+        }
+      ],
+      "function": "Poly: sustain-key pitch retain or follow. Mono: fingered or full time."
+    },
+    {
+      "id": "sys.glissando",
+      "module": "kbd",
+      "label": "PORTAMENTO GLISSANDO",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 6,
+          "note": "FUNCTION, button 6, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 68
+        }
+      ],
+      "function": "Stepped (semitone) glide instead of smooth."
+    },
+    {
+      "id": "sys.porta_time",
+      "module": "kbd",
+      "label": "PORTAMENTO TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 7,
+          "note": "FUNCTION, button 7, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 69
+        }
+      ],
+      "function": "Glide time; 0 is off, 99 slowest."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CH",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 8,
+          "note": "FUNCTION, button 8 (press until MIDI CH), then DATA ENTRY"
+        }
+      ],
+      "function": "MIDI channel for sending and receiving."
+    },
+    {
+      "id": "sys.sys_info",
+      "module": "kbd",
+      "label": "SYS INFO AVAIL",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 8,
+          "note": "FUNCTION, button 8 (press until SYS INFO), then ON/OFF"
+        }
+      ],
+      "function": "Whether voice and function data are sent and received as SysEx."
+    },
+    {
+      "id": "sys.wheel_range",
+      "module": "modbus",
+      "label": "MODULATION WHEEL RANGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 17,
+          "note": "FUNCTION, button 17, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 70
+        }
+      ],
+      "function": "Maximum modulation from the modulation wheel."
+    },
+    {
+      "id": "sys.wheel_pitch",
+      "module": "modbus",
+      "label": "MODULATION WHEEL PITCH",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 18,
+          "note": "FUNCTION, button 18, then ON/OFF; sent over SysEx as one assign value (parameter 71)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 71
+        }
+      ],
+      "function": "Controller adds LFO pitch modulation."
+    },
+    {
+      "id": "sys.wheel_amplitude",
+      "module": "modbus",
+      "label": "MODULATION WHEEL AMPLITUDE",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 19,
+          "note": "FUNCTION, button 19, then ON/OFF; sent over SysEx as one assign value (parameter 71)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 71
+        }
+      ],
+      "function": "Controller adds LFO amplitude modulation."
+    },
+    {
+      "id": "sys.wheel_eg_bias",
+      "module": "modbus",
+      "label": "MODULATION WHEEL EG BIAS",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 20,
+          "note": "FUNCTION, button 20, then ON/OFF; sent over SysEx as one assign value (parameter 71)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 71
+        }
+      ],
+      "function": "Controller lowers operator levels directly (no LFO), by each operator's amplitude sensitivity."
+    },
+    {
+      "id": "sys.foot_range",
+      "module": "modbus",
+      "label": "FOOT CONTROL RANGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 21,
+          "note": "FUNCTION, button 21, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 72
+        }
+      ],
+      "function": "Maximum modulation from the foot control."
+    },
+    {
+      "id": "sys.foot_pitch",
+      "module": "modbus",
+      "label": "FOOT CONTROL PITCH",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 22,
+          "note": "FUNCTION, button 22, then ON/OFF; sent over SysEx as one assign value (parameter 73)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 73
+        }
+      ],
+      "function": "Controller adds LFO pitch modulation."
+    },
+    {
+      "id": "sys.foot_amplitude",
+      "module": "modbus",
+      "label": "FOOT CONTROL AMPLITUDE",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 23,
+          "note": "FUNCTION, button 23, then ON/OFF; sent over SysEx as one assign value (parameter 73)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 73
+        }
+      ],
+      "function": "Controller adds LFO amplitude modulation."
+    },
+    {
+      "id": "sys.foot_eg_bias",
+      "module": "modbus",
+      "label": "FOOT CONTROL EG BIAS",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 24,
+          "note": "FUNCTION, button 24, then ON/OFF; sent over SysEx as one assign value (parameter 73)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 73
+        }
+      ],
+      "function": "Controller lowers operator levels directly (no LFO), by each operator's amplitude sensitivity."
+    },
+    {
+      "id": "sys.breath_range",
+      "module": "modbus",
+      "label": "BREATH CONTROL RANGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 25,
+          "note": "FUNCTION, button 25, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 74
+        }
+      ],
+      "function": "Maximum modulation from the breath control."
+    },
+    {
+      "id": "sys.breath_pitch",
+      "module": "modbus",
+      "label": "BREATH CONTROL PITCH",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 26,
+          "note": "FUNCTION, button 26, then ON/OFF; sent over SysEx as one assign value (parameter 75)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 75
+        }
+      ],
+      "function": "Controller adds LFO pitch modulation."
+    },
+    {
+      "id": "sys.breath_amplitude",
+      "module": "modbus",
+      "label": "BREATH CONTROL AMPLITUDE",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 27,
+          "note": "FUNCTION, button 27, then ON/OFF; sent over SysEx as one assign value (parameter 75)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 75
+        }
+      ],
+      "function": "Controller adds LFO amplitude modulation."
+    },
+    {
+      "id": "sys.breath_eg_bias",
+      "module": "modbus",
+      "label": "BREATH CONTROL EG BIAS",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 28,
+          "note": "FUNCTION, button 28, then ON/OFF; sent over SysEx as one assign value (parameter 75)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 75
+        }
+      ],
+      "function": "Controller lowers operator levels directly (no LFO), by each operator's amplitude sensitivity."
+    },
+    {
+      "id": "sys.aftertouch_range",
+      "module": "modbus",
+      "label": "AFTER TOUCH RANGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 29,
+          "note": "FUNCTION, button 29, then DATA ENTRY"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 76
+        }
+      ],
+      "function": "Maximum modulation from the after touch."
+    },
+    {
+      "id": "sys.aftertouch_pitch",
+      "module": "modbus",
+      "label": "AFTER TOUCH PITCH",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 30,
+          "note": "FUNCTION, button 30, then ON/OFF; sent over SysEx as one assign value (parameter 77)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 77
+        }
+      ],
+      "function": "Controller adds LFO pitch modulation."
+    },
+    {
+      "id": "sys.aftertouch_amplitude",
+      "module": "modbus",
+      "label": "AFTER TOUCH AMPLITUDE",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 31,
+          "note": "FUNCTION, button 31, then ON/OFF; sent over SysEx as one assign value (parameter 77)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 77
+        }
+      ],
+      "function": "Controller adds LFO amplitude modulation."
+    },
+    {
+      "id": "sys.aftertouch_eg_bias",
+      "module": "modbus",
+      "label": "AFTER TOUCH EG BIAS",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 32,
+          "note": "FUNCTION, button 32, then ON/OFF; sent over SysEx as one assign value (parameter 77)"
+        },
+        {
+          "type": "sysex",
+          "message": "parameter change, group 2",
+          "parameter_number": 77
+        }
+      ],
+      "function": "Controller lowers operator levels directly (no LFO), by each operator's amplitude sensitivity."
+    },
+    {
+      "id": "sys.memory_protect_int",
+      "module": "kbd",
+      "label": "MEMORY PROTECT INTERNAL",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "then ON/OFF"
+        }
+      ],
+      "function": "Blocks writing to the internal memory."
+    },
+    {
+      "id": "sys.memory_protect_cart",
+      "module": "kbd",
+      "label": "MEMORY PROTECT CARTRIDGE",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "then ON/OFF"
+        }
+      ],
+      "function": "Blocks writing to a RAM cartridge (which also has its own switch)."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Output and headphone level."
+    },
+    {
+      "id": "data.slider",
+      "module": "kbd",
+      "label": "DATA ENTRY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 6",
+          "confidence": "inferred"
+        }
+      ],
+      "function": "Sets whichever parameter was last selected; also keeps adjusting the last FUNCTION parameter in play mode."
+    },
+    {
+      "id": "data.dec_inc",
+      "module": "kbd",
+      "label": "DATA ENTRY -1/+1 (NO/YES, OFF/ON, </>)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "minus"
+        },
+        {
+          "value": "plus"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps the current value, answers prompts, switches functions, moves the name cursor."
+    },
+    {
+      "id": "wheels.bend",
+      "module": "wheels",
+      "label": "PITCH wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "pitch bend"
+        }
+      ],
+      "function": "Spring-return pitch bend."
+    },
+    {
+      "id": "wheels.mod",
+      "module": "wheels",
+      "label": "MODULATION wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1"
+        }
+      ],
+      "function": "Modulation as set in FUNCTION mode."
+    },
+    {
+      "id": "sys.memory_select",
+      "module": "kbd",
+      "label": "MEMORY SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "cartridge"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "program change"
+        }
+      ],
+      "function": "Plays internal or cartridge voices; the 32 VOICE SELECT buttons pick the voice."
+    },
+    {
+      "id": "sys.voice_select",
+      "module": "kbd",
+      "label": "VOICE SELECT 1-32",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "program change"
+        }
+      ],
+      "function": "Selects a voice in play mode."
+    },
+    {
+      "id": "util.edit_recall",
+      "module": "kbd",
+      "label": "EDIT RECALL",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 9,
+          "note": "FUNCTION, button 9, then YES"
+        }
+      ],
+      "function": "Recovers the edit buffer after leaving EDIT by mistake. Asks for YES twice where it overwrites."
+    },
+    {
+      "id": "util.voice_init",
+      "module": "kbd",
+      "label": "VOICE INIT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 10,
+          "note": "FUNCTION, button 10, then YES"
+        }
+      ],
+      "function": "Initialises the edit buffer: algorithm 1, operator 1 at 99, others off, square envelopes, ratios 1.00. Asks for YES twice where it overwrites."
+    },
+    {
+      "id": "util.cart_format",
+      "module": "kbd",
+      "label": "CART FORM",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 13,
+          "note": "FUNCTION, button 13, then YES"
+        }
+      ],
+      "function": "Initialises every voice on a RAM cartridge. Asks for YES twice where it overwrites.",
+      "confidence": "inferred",
+      "note": "Button number inferred: the manual names the function but not its button."
+    },
+    {
+      "id": "util.battery_check",
+      "module": "kbd",
+      "label": "BATTERY CHECK",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 14,
+          "note": "FUNCTION, button 14, then YES"
+        }
+      ],
+      "function": "Shows the backup battery voltage (2.3-3.5 V acceptable). Asks for YES twice where it overwrites.",
+      "confidence": "inferred",
+      "note": "Button number inferred: the manual names the function but not its button."
+    },
+    {
+      "id": "util.save",
+      "module": "kbd",
+      "label": "CARTRIDGE SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 15,
+          "note": "FUNCTION, button 15, then YES"
+        }
+      ],
+      "function": "Writes all 32 internal voices to a RAM cartridge (about 20 seconds). Asks for YES twice where it overwrites."
+    },
+    {
+      "id": "util.load",
+      "module": "kbd",
+      "label": "CARTRIDGE LOAD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 16,
+          "note": "FUNCTION, button 16, then YES"
+        }
+      ],
+      "function": "Loads 32 voices from a RAM or ROM cartridge into internal memory. Asks for YES twice where it overwrites."
+    },
+    {
+      "id": "util.midi_transmit",
+      "module": "kbd",
+      "label": "MIDI TRANSMIT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "control": "push_button",
+          "mode": "function",
+          "button": 8,
+          "note": "FUNCTION, button 8 (press until MIDI TRANSMIT?), then YES"
+        }
+      ],
+      "function": "Sends all 32 internal voices as a SysEx bulk dump (SYS INFO AVAIL must be on)."
+    },
+    {
+      "id": "util.store",
+      "module": "kbd",
+      "label": "STORE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Stores the edit buffer to an internal or RAM cartridge slot; with EG COPY, copies an envelope between operators."
+    },
+    {
+      "id": "util.operator_select",
+      "module": "kbd",
+      "label": "OPERATOR SELECT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Chooses the operator being edited."
+    },
+    {
+      "id": "util.edit_compare",
+      "module": "kbd",
+      "label": "EDIT/COMPARE (CHARACTER)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters EDIT mode; compares the edit with the stored voice; in VOICE NAME, enters characters."
+    },
+    {
+      "id": "util.function",
+      "module": "kbd",
+      "label": "FUNCTION",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters FUNCTION mode."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line",
+      "function": "Line output, unbalanced, -10 dBm, 600 ohm.",
+      "electrical": {
+        "level_dbm": -10,
+        "impedance_ohm": 600
+      }
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "front",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.phones",
+      "function": "Mono or stereo headphones, 8-150 ohm."
+    },
+    {
+      "id": "jack.breath",
+      "label": "BREATH CONTROLLER",
+      "location": "front",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TRS",
+      "node": "modbus.breath",
+      "function": "Yamaha BC-1 breath controller."
+    },
+    {
+      "id": "jack.fs_sustain",
+      "label": "FOOT SWITCH SUSTAIN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "FC-4 or FC-5 sustain switch."
+    },
+    {
+      "id": "jack.fs_porta",
+      "label": "FOOT SWITCH PORTAMENTO",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.porta_sw",
+      "function": "FC-4 or FC-5: switches portamento on."
+    },
+    {
+      "id": "jack.fc_volume",
+      "label": "FOOT CONTROL VOLUME",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "out.foot_volume",
+      "function": "FC-3A pedal on volume (0 to maximum)."
+    },
+    {
+      "id": "jack.fc_mod",
+      "label": "FOOT CONTROL MODULATION",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "modbus.foot",
+      "function": "FC-3A pedal as a modulation source (FUNCTION foot control settings)."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "Notes, controllers, program change and SysEx."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Keyboard, controllers, program change, SysEx voice and function data."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Copy of MIDI IN."
+    },
+    {
+      "id": "jack.power",
+      "label": "AC power",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "mains cord",
+      "node": null,
+      "function": "Mains, with rear power switch."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.pitch",
+      "to": "op1.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op1.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c02",
+      "from": "peg.out",
+      "to": "op1.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c03",
+      "from": "wheels.bend",
+      "to": "op1.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c04",
+      "from": "modbus.pitch_mod",
+      "to": "op1.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c05",
+      "from": "modbus.amp_mod",
+      "to": "op1.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op1.ams"
+    },
+    {
+      "id": "c06",
+      "from": "modbus.eg_bias",
+      "to": "op1.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op1.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c07",
+      "from": "kbd.gate",
+      "to": "op1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "kbd.velocity",
+      "to": "op1.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op1.velocity_sens"
+    },
+    {
+      "id": "c09",
+      "from": "op1.out",
+      "to": "sum.in1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 1
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 2
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 3
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 4
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 5
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 6
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 7
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 8
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 9
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 10
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 11
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 12
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 13
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 14
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 15
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 16
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 17
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 18
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 19
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 20
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 21
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 22
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 23
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 24
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 25
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 26
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 27
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 28
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 29
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 30
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 31
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 1 is a carrier in 32 of 32 algorithms."
+    },
+    {
+      "id": "c10",
+      "from": "kbd.pitch",
+      "to": "op2.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op2.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c11",
+      "from": "peg.out",
+      "to": "op2.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c12",
+      "from": "wheels.bend",
+      "to": "op2.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c13",
+      "from": "modbus.pitch_mod",
+      "to": "op2.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c14",
+      "from": "modbus.amp_mod",
+      "to": "op2.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op2.ams"
+    },
+    {
+      "id": "c15",
+      "from": "modbus.eg_bias",
+      "to": "op2.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op2.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c16",
+      "from": "kbd.gate",
+      "to": "op2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "kbd.velocity",
+      "to": "op2.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op2.velocity_sens"
+    },
+    {
+      "id": "c18",
+      "from": "op2.out",
+      "to": "sum.in2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 20
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 21
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 23
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 24
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 25
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 26
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 27
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 29
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 30
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 31
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 2 is a carrier in 11 of 32 algorithms."
+    },
+    {
+      "id": "c19",
+      "from": "kbd.pitch",
+      "to": "op3.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op3.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c20",
+      "from": "peg.out",
+      "to": "op3.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c21",
+      "from": "wheels.bend",
+      "to": "op3.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c22",
+      "from": "modbus.pitch_mod",
+      "to": "op3.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c23",
+      "from": "modbus.amp_mod",
+      "to": "op3.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op3.ams"
+    },
+    {
+      "id": "c24",
+      "from": "modbus.eg_bias",
+      "to": "op3.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op3.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c25",
+      "from": "kbd.gate",
+      "to": "op3.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c26",
+      "from": "kbd.velocity",
+      "to": "op3.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op3.velocity_sens"
+    },
+    {
+      "id": "c27",
+      "from": "op3.out",
+      "to": "sum.in3",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 1
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 2
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 5
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 6
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 7
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 8
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 9
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 12
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 13
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 14
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 15
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 22
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 24
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 25
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 28
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 29
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 30
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 31
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 3 is a carrier in 19 of 32 algorithms."
+    },
+    {
+      "id": "c28",
+      "from": "kbd.pitch",
+      "to": "op4.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op4.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c29",
+      "from": "peg.out",
+      "to": "op4.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c30",
+      "from": "wheels.bend",
+      "to": "op4.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c31",
+      "from": "modbus.pitch_mod",
+      "to": "op4.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c32",
+      "from": "modbus.amp_mod",
+      "to": "op4.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op4.ams"
+    },
+    {
+      "id": "c33",
+      "from": "modbus.eg_bias",
+      "to": "op4.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op4.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c34",
+      "from": "kbd.gate",
+      "to": "op4.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c35",
+      "from": "kbd.velocity",
+      "to": "op4.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op4.velocity_sens"
+    },
+    {
+      "id": "c36",
+      "from": "op4.out",
+      "to": "sum.in4",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 3
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 4
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 10
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 11
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 19
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 20
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 21
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 22
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 23
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 24
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 25
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 26
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 27
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 31
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 4 is a carrier in 15 of 32 algorithms."
+    },
+    {
+      "id": "c37",
+      "from": "kbd.pitch",
+      "to": "op5.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op5.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c38",
+      "from": "peg.out",
+      "to": "op5.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c39",
+      "from": "wheels.bend",
+      "to": "op5.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c40",
+      "from": "modbus.pitch_mod",
+      "to": "op5.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c41",
+      "from": "modbus.amp_mod",
+      "to": "op5.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op5.ams"
+    },
+    {
+      "id": "c42",
+      "from": "modbus.eg_bias",
+      "to": "op5.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op5.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c43",
+      "from": "kbd.gate",
+      "to": "op5.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c44",
+      "from": "kbd.velocity",
+      "to": "op5.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op5.velocity_sens"
+    },
+    {
+      "id": "c45",
+      "from": "op5.out",
+      "to": "sum.in5",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 5
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 6
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 19
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 21
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 22
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 23
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 24
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 25
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 29
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 31
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 5 is a carrier in 11 of 32 algorithms."
+    },
+    {
+      "id": "c46",
+      "from": "kbd.pitch",
+      "to": "op6.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "op6.osc_mode",
+        "equals": "ratio"
+      },
+      "note": "Fixed-frequency operators ignore the key."
+    },
+    {
+      "id": "c47",
+      "from": "peg.out",
+      "to": "op6.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The pitch EG moves all six operators equally."
+    },
+    {
+      "id": "c48",
+      "from": "wheels.bend",
+      "to": "op6.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.pb_range"
+    },
+    {
+      "id": "c49",
+      "from": "modbus.pitch_mod",
+      "to": "op6.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "voice.pms"
+    },
+    {
+      "id": "c50",
+      "from": "modbus.amp_mod",
+      "to": "op6.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op6.ams"
+    },
+    {
+      "id": "c51",
+      "from": "modbus.eg_bias",
+      "to": "op6.amp_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op6.ams",
+      "note": "EG bias lowers the level directly, scaled by amplitude sensitivity."
+    },
+    {
+      "id": "c52",
+      "from": "kbd.gate",
+      "to": "op6.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c53",
+      "from": "kbd.velocity",
+      "to": "op6.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "op6.velocity_sens"
+    },
+    {
+      "id": "c54",
+      "from": "op6.out",
+      "to": "sum.in6",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "voice.algorithm",
+            "equals": 28
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 30
+          },
+          {
+            "param": "voice.algorithm",
+            "equals": 32
+          }
+        ]
+      },
+      "note": "Operator 6 is a carrier in 3 of 32 algorithms."
+    },
+    {
+      "id": "c55",
+      "from": "kbd.gate",
+      "to": "peg.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c56",
+      "from": "kbd.gate",
+      "to": "lfo.key_sync",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c57",
+      "from": "lfo.out",
+      "to": "modbus.lfo",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c58",
+      "from": "wheels.mod",
+      "to": "modbus.wheel",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.wheel_range"
+    },
+    {
+      "id": "c59",
+      "from": "kbd.aftertouch",
+      "to": "modbus.aftertouch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.aftertouch_range"
+    },
+    {
+      "id": "c60",
+      "from": "sum.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "voice_led",
+      "module": "kbd",
+      "label": "voice number LED",
+      "kind": "display",
+      "function": "Two-digit voice number; a decimal point means the voice is being edited; blinks during EDIT/COMPARE."
+    },
+    {
+      "id": "lcd",
+      "module": "kbd",
+      "label": "LCD",
+      "kind": "display",
+      "function": "16 x 2 characters: voice name and source, or the current EDIT/FUNCTION parameter, the operator on/off pattern and the current operator."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Modes",
+      "applies_to": ["kbd"],
+      "rule": "PLAY (MEMORY SELECT INTERNAL or CARTRIDGE, then VOICE SELECT 1-32), EDIT (violet labels: voice parameters, DATA ENTRY sets the selected one) and FUNCTION (brown labels: global settings and utilities). Each of the 32 buttons has up to five labels. In EDIT, OPERATOR SELECT chooses which operator per-operator parameters apply to."
+    },
+    {
+      "id": "b02",
+      "name": "Carriers and modulators",
+      "applies_to": ["op1", "op2", "op3", "op4", "op5", "op6"],
+      "rule": "In each algorithm, carriers are heard and modulators change their timbre. Raising a modulator's level or envelope brightens the carrier it feeds; key velocity on a modulator changes tone, on a carrier changes volume. Changing algorithm swaps which operators are carriers, so a voice can change completely."
+    },
+    {
+      "id": "b03",
+      "name": "Operator frequency",
+      "applies_to": ["op1", "op2", "op3", "op4", "op5", "op6"],
+      "rule": "Ratio mode: frequency = key pitch x (coarse, 0.50 or 1-31) x (1 + fine/100), plus detune ±7. Fixed mode: coarse picks 1, 10, 100 or 1000 Hz and fine multiplies it, ignoring the key. Whole-number ratios give harmonic tones; non-integer ratios give bell-like inharmonic ones."
+    },
+    {
+      "id": "b04",
+      "name": "Envelopes",
+      "applies_to": ["op1", "op2", "op3", "op4", "op5", "op6", "peg"],
+      "rule": "Each envelope moves to level 1 at rate 1, then level 2 at rate 2, then level 3 at rate 3 and holds there while the key is down; on release it moves to level 4 at rate 4. Rates run 0 (slowest) to 99 (fastest). With all levels at 99 except level 4 at 0 and all rates at 99 the envelope is a square gate. Keyboard rate scaling speeds rates on higher keys."
+    },
+    {
+      "id": "b05",
+      "name": "Keyboard level scaling",
+      "applies_to": ["op1", "op2", "op3", "op4", "op5", "op6"],
+      "rule": "Either side of the break point, an operator's level can fall or rise along a linear or exponential curve of set depth: realistic tone changes across the range, or split effects. A boost needs headroom below output level 99."
+    },
+    {
+      "id": "b06",
+      "name": "Modulation controllers",
+      "applies_to": ["modbus", "lfo"],
+      "rule": "LFO pitch modulation = PMD plus any controller set to PITCH, scaled by the voice's pitch sensitivity; amplitude modulation likewise with AMD, AMPLITUDE and each operator's amplitude sensitivity. EG BIAS lets a controller lower operator levels directly. With zero sensitivity in the voice, the controllers do nothing; with EG BIAS or AMPLITUDE on and a low RANGE, some voices go silent."
+    },
+    {
+      "id": "b07",
+      "name": "Memory",
+      "applies_to": ["kbd"],
+      "rule": "Voices are edited in a buffer and kept only after STORE to an internal or RAM cartridge slot (memory protect off). ROM cartridges hold 64 voices in two banks of 32. Function settings are global and stay when voices change. The internal memory is battery-backed (lithium, 3-5 years)."
+    },
+    {
+      "id": "b08",
+      "name": "Voice name",
+      "applies_to": ["kbd"],
+      "rule": "Up to 10 characters, entered with VOICE NAME (button 32): hold CHARACTER and press the buttons carrying the letters. Stored in voice data bytes 145-154.",
+      "note": "Not modelled as a parameter: the schema has no text parameter kind."
+    },
+    {
+      "id": "b09",
+      "name": "MIDI",
+      "applies_to": ["kbd"],
+      "rule": "Notes with velocity, pitch bend, controllers and program changes are always sent and received on the MIDI channel. Voice and function data travel as SysEx only with SYS INFO AVAIL on; MIDI TRANSMIT sends all 32 voices. A second DX7 or a DX9 can be played and programmed from the first."
+    }
+  ],
+  "algorithms": {
+    "selector_param": "voice.algorithm",
+    "feedback_param": "voice.feedback",
+    "operators": ["op1", "op2", "op3", "op4", "op5", "op6"],
+    "entries": [
+      {
+        "number": 1,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 2,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op2"]
+        }
+      },
+      {
+        "number": 3,
+        "carriers": ["op1", "op4"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 4,
+        "carriers": ["op1", "op4"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6", "op5", "op4"],
+          "note": "Feedback returns from the bottom of the stack to its top modulator."
+        }
+      },
+      {
+        "number": 5,
+        "carriers": ["op1", "op3", "op5"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 6,
+        "carriers": ["op1", "op3", "op5"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6", "op5"],
+          "note": "Feedback returns from the bottom of the stack to its top modulator."
+        }
+      },
+      {
+        "number": 7,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 8,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op4"]
+        }
+      },
+      {
+        "number": 9,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op2"]
+        }
+      },
+      {
+        "number": 10,
+        "carriers": ["op1", "op4"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op3"]
+        }
+      },
+      {
+        "number": 11,
+        "carriers": ["op1", "op4"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 12,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op3"
+          }
+        ],
+        "feedback": {
+          "loop": ["op2"]
+        }
+      },
+      {
+        "number": 13,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op3"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 14,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 15,
+        "carriers": ["op1", "op3"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op2"]
+        }
+      },
+      {
+        "number": 16,
+        "carriers": ["op1"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op1"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 17,
+        "carriers": ["op1"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op1"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op2"]
+        }
+      },
+      {
+        "number": 18,
+        "carriers": ["op1"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op1"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op3"]
+        }
+      },
+      {
+        "number": 19,
+        "carriers": ["op1", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 20,
+        "carriers": ["op1", "op2", "op4"],
+        "modulation": [
+          {
+            "from": "op3",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op3"]
+        }
+      },
+      {
+        "number": 21,
+        "carriers": ["op1", "op2", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op3",
+            "to": "op1"
+          },
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op3"]
+        }
+      },
+      {
+        "number": 22,
+        "carriers": ["op1", "op3", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op6",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 23,
+        "carriers": ["op1", "op2", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 24,
+        "carriers": ["op1", "op2", "op3", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op6",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 25,
+        "carriers": ["op1", "op2", "op3", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op6",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 26,
+        "carriers": ["op1", "op2", "op4"],
+        "modulation": [
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 27,
+        "carriers": ["op1", "op2", "op4"],
+        "modulation": [
+          {
+            "from": "op3",
+            "to": "op2"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          },
+          {
+            "from": "op6",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op3"]
+        }
+      },
+      {
+        "number": 28,
+        "carriers": ["op1", "op3", "op6"],
+        "modulation": [
+          {
+            "from": "op2",
+            "to": "op1"
+          },
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op5"]
+        }
+      },
+      {
+        "number": 29,
+        "carriers": ["op1", "op2", "op3", "op5"],
+        "modulation": [
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 30,
+        "carriers": ["op1", "op2", "op3", "op6"],
+        "modulation": [
+          {
+            "from": "op4",
+            "to": "op3"
+          },
+          {
+            "from": "op5",
+            "to": "op4"
+          }
+        ],
+        "feedback": {
+          "loop": ["op5"]
+        }
+      },
+      {
+        "number": 31,
+        "carriers": ["op1", "op2", "op3", "op4", "op5"],
+        "modulation": [
+          {
+            "from": "op6",
+            "to": "op5"
+          }
+        ],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      },
+      {
+        "number": 32,
+        "carriers": ["op1", "op2", "op3", "op4", "op5", "op6"],
+        "modulation": [],
+        "feedback": {
+          "loop": ["op6"]
+        }
+      }
+    ],
+    "source": "Routings from the DX7 panel chart, cross-checked against the algorithm ROM decoded by Ken Shirriff (modulation source, feedback register and output count per operator).",
+    "note": "Operators are only modulated by higher-numbered operators, and every algorithm has exactly one feedback loop. Carrier outputs are scaled by 1/number of carriers.",
+    "confidence": "stated"
+  },
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "velocity": true
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change",
+        "range": [0, 31]
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "mod wheel",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 2,
+        "parameter": "breath",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 4,
+        "parameter": "foot controller",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 5,
+        "parameter": "portamento time",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 6,
+        "parameter": "data entry",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "sustain",
+        "confidence": "inferred"
+      },
+      {
+        "message": "control_change",
+        "cc": 65,
+        "parameter": "portamento on/off",
+        "confidence": "inferred"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 43 1n",
+        "note": "parameter change: group 0 voice (0-155), group 2 function (64-77); needs SYS INFO AVAIL"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 43 0n 00 01 1B",
+        "note": "single voice dump: 155 bytes + checksum + F7"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 43 0n 09 20 00",
+        "note": "32-voice bulk dump: 4096 packed bytes + checksum + F7"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "note": "wheel, breath, foot, sustain, portamento, data entry (inferred)"
+      },
+      {
+        "message": "sysex",
+        "note": "voice, bulk and function data"
+      }
+    ],
+    "channel_note": "One channel 1-16 (FUNCTION, button 8).",
+    "voice_data_layout": "Per operator (operator 6 first, 21 bytes each): rates 1-4, levels 1-4, break point, left depth, right depth, left curve, right curve, rate scaling, amplitude sensitivity, velocity sensitivity, output level, osc mode, coarse, fine, detune. Then pitch EG rates 1-4 and levels 1-4, algorithm, feedback, osc key sync, LFO speed, delay, PMD, AMD, sync, wave, pitch mod sensitivity, transpose, name (10).",
+    "note": "The manual describes MIDI in general terms only; controller numbers follow the DX7 II implementation chart and the original data sheet."
+  },
+  "specifications": {
+    "keyboard": "61 keys, C1-C6, velocity and aftertouch",
+    "polyphony": 16,
+    "sound_source": "6 operators, 32 algorithms",
+    "lfo_waves": 6,
+    "memory": {
+      "internal": "32 voices, battery-backed RAM",
+      "ram_cartridge": "32 voices, EEPROM",
+      "rom_cartridge": "64 voices (2 x 32)"
+    },
+    "displays": {
+      "lcd": "16 x 2 characters",
+      "led": "2 digits with decimal point"
+    },
+    "master_tune_cents": [-75, 75],
+    "pitch_bend_semitones": [0, 12],
+    "outputs": {
+      "line": "6.35 mm TS, -10 dBm, 600 ohm",
+      "phones": "6.35 mm, 8-150 ohm"
+    },
+    "control_inputs": [
+      "foot switch: sustain, portamento",
+      "foot control: volume, modulation",
+      "breath controller (BC-1)"
+    ],
+    "midi": ["in", "out", "thru"],
+    "dimensions_mm": {
+      "w": 1012,
+      "d": 329,
+      "h": 102
+    },
+    "weight_kg": 14.2,
+    "operating_temp_c": [0, 40],
+    "internal": {
+      "sample_rate_khz": 49.096,
+      "chips": ["YM21280 OPS", "YM21290 EGS"]
+    },
+    "factory_voices": {
+      "bank": "ROM 1A (also the factory internal memory outside the USA)",
+      "voices": [
+        {
+          "number": 1,
+          "name": "BRASS 1"
+        },
+        {
+          "number": 2,
+          "name": "BRASS 2"
+        },
+        {
+          "number": 3,
+          "name": "BRASS 3"
+        },
+        {
+          "number": 4,
+          "name": "STRINGS 1"
+        },
+        {
+          "number": 5,
+          "name": "STRINGS 2"
+        },
+        {
+          "number": 6,
+          "name": "STRINGS 3"
+        },
+        {
+          "number": 7,
+          "name": "ORCHESTRA"
+        },
+        {
+          "number": 8,
+          "name": "PIANO 1"
+        },
+        {
+          "number": 9,
+          "name": "PIANO 2"
+        },
+        {
+          "number": 10,
+          "name": "PIANO 3"
+        },
+        {
+          "number": 11,
+          "name": "E.PIANO 1"
+        },
+        {
+          "number": 12,
+          "name": "GUITAR 1"
+        },
+        {
+          "number": 13,
+          "name": "GUITAR 2"
+        },
+        {
+          "number": 14,
+          "name": "SYN-LEAD 1"
+        },
+        {
+          "number": 15,
+          "name": "BASS 1"
+        },
+        {
+          "number": 16,
+          "name": "BASS 2"
+        },
+        {
+          "number": 17,
+          "name": "E.ORGAN 1"
+        },
+        {
+          "number": 18,
+          "name": "PIPES 1"
+        },
+        {
+          "number": 19,
+          "name": "HARPSICH 1"
+        },
+        {
+          "number": 20,
+          "name": "CLAV 1"
+        },
+        {
+          "number": 21,
+          "name": "VIBE 1"
+        },
+        {
+          "number": 22,
+          "name": "MARIMBA"
+        },
+        {
+          "number": 23,
+          "name": "KOTO"
+        },
+        {
+          "number": 24,
+          "name": "FLUTE 1"
+        },
+        {
+          "number": 25,
+          "name": "ORCH-CHIME"
+        },
+        {
+          "number": 26,
+          "name": "TUB BELLS"
+        },
+        {
+          "number": 27,
+          "name": "STEEL DRUM"
+        },
+        {
+          "number": 28,
+          "name": "TIMPANI"
+        },
+        {
+          "number": 29,
+          "name": "REFS WHISL"
+        },
+        {
+          "number": 30,
+          "name": "VOICE 1"
+        },
+        {
+          "number": 31,
+          "name": "TRAIN"
+        },
+        {
+          "number": 32,
+          "name": "TAKE OFF"
+        }
+      ],
+      "note": "Names and order from online voice lists; parameter values are not in this source, so they are not example patches."
+    }
+  },
+  "omitted_from_source": [
+    "the step-by-step programming tutorial, beyond the facts it establishes",
+    "setup and connection diagrams",
+    "maintenance and troubleshooting",
+    "the glossary"
+  ],
+  "not_in_source": [
+    "the full 32-algorithm chart (taken from the panel chart via the reverse-engineered algorithm ROM)",
+    "the factory voice list and voice parameter values (names from online lists; values not modelled)",
+    "the SysEx data format and controller numbers (taken from the data sheet transcription and the DX7 II chart)",
+    "envelope rates in seconds and LFO speed in Hz",
+    "the panel numbers of CART FORM and BATTERY CHECK"
+  ],
+  "source_inconsistencies": [
+    "The manual describes OSC KEY SYNC per operator under MODE/SYNC, but the voice data holds one sync value for the whole voice.",
+    "The manual says feedback returns to the same operator 'except in algorithms 4 and 6'; the algorithm ROM shows those loops run through three and two operators respectively.",
+    "The feature summary gives Key Transpose 'over a 4 octave range'; the specifications say ±2 octaves. Both describe the same span."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Voice name",
+      "detail": "Ten characters per voice; the schema has no text parameter kind, so it is described in behaviours."
+    },
+    {
+      "topic": "Factory voice values",
+      "detail": "ROM 1A voices are listed by name only; their 155 values would come from the factory SysEx bank."
+    },
+    {
+      "topic": "Timing and response curves",
+      "detail": "Rate-to-time and level-to-dB curves are nonlinear and undocumented here; values stay on the instrument's 0-99 scales."
+    },
+    {
+      "topic": "Cartridge slot",
+      "detail": "Not a signal port; described under memory rather than ports."
+    }
+  ]
+}

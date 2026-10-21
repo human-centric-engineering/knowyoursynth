@@ -1,0 +1,1714 @@
+{
+  "schema_version": "0.11.0",
+  "device": {
+    "id": "donner-b1",
+    "manufacturer": "Donner",
+    "model": "Essential B1 Analog Bass Sequencer",
+    "category": "monophonic analogue bass synthesizer with 16-step sequencer, arpeggiator, saturation and delay",
+    "based_on": "Inspired by the Roland TB-303 (modelled separately as roland-tb-303), with a redesigned sequencer and keyboard; released 2022.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Donner B1 Analog Bass Sequencer User Manual (Rev 2.0)",
+        "kind": "user_manual",
+        "file": "Donner_B1_User_Manual.pdf",
+        "pages": 112,
+        "note": "Multilingual; English pages 1-18: panel, octave and tempo, pattern creation, playback, step edit, arpeggiator, MIDI, sync, power-on commands, app, SysEx table, specifications."
+      },
+      {
+        "id": "sos",
+        "title": "Sound On Sound, 'Donner Essential B1' review",
+        "kind": "other",
+        "file": "https://www.soundonsound.com/reviews/donner-essential-b1",
+        "note": "One VCO, low-pass VCF, VCA with a simple decay envelope that runs filter and VCA; delay up to about half a second."
+      },
+      {
+        "id": "musicradar",
+        "title": "MusicRadar, 'Donner B1 Analog Bass Sequencer review'",
+        "kind": "other",
+        "file": "https://www.musicradar.com/reviews/donner-b1-analog-bass-sequencer",
+        "note": "Filter and resonance behave like a TB-303's; the delay is a tape delay emulation."
+      },
+      {
+        "id": "hilowitz",
+        "title": "David Hilowitz review (transcript on Donner's site)",
+        "kind": "other",
+        "file": "https://uk.donnermusic.com/blogs/buying-guide/donner-b1-synthesizer-review-by-david-hilowitz-an-impressive-bass-synth",
+        "note": "Four-octave note range; MIDI notes above velocity 96 play accented; class-compliant USB MIDI, not USB powered."
+      },
+      {
+        "id": "donner_reviews",
+        "title": "Customer reviews on Donner's product pages",
+        "kind": "other",
+        "file": "https://us.donnermusic.com/products/donner-synthesizer-and-sequencer-analog-bass-b1",
+        "note": "Panel knobs send and receive no MIDI CCs."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 1,
+    "polyphony_mode": "monophonic; key priority low, high or last",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "128 patterns store the sequence: per-step note, gate length, accent, slide and ratchet, plus tempo, length and transpose. Knob settings are not stored.",
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 12,
+      "switches": 3,
+      "buttons": 15,
+      "keys": 26,
+      "step_keys": 16,
+      "display_digits": 3
+    },
+    "summary": "An analogue TB-303-style voice: one VCO (saw or square) with a ±fifth pitch knob, a resonant low-pass VCF, one decay envelope to the filter (DEPTH) and VCA, and accent. After it, a saturation stage (drive, tone) and a delay (level, time, feedback), each switchable, then MASTER. An AUX input mixes with the output. A 26-key touch keyboard plays it directly, drives an eight-mode arpeggiator, or enters patterns into a 16-step sequencer with gate length, accent, slide and ratchet per step; the 16 white keys are also the step buttons."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and note control",
+      "panel_section": "KEYBOARD",
+      "description": "26 touch keys (B1-C4) with octave shift; plays the voice, transposes the sequencer live (C3 centre, ±12) and feeds the arpeggiator. Mono with key priority and multi-trigger, slide or legato.",
+      "properties": {
+        "keys": 26,
+        "note_range_octaves": 4
+      },
+      "inputs": ["kbd.midi_in", "kbd.seq_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.accent"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer and arpeggiator",
+      "panel_section": "SEQUENCER",
+      "description": "16-step sequencer, 128 patterns, with per-step note, gate length (0-8 eighths), accent, slide and ratchet (1-4); live accent, slide, ratchet, gate and mute while playing. Eight-mode arpeggiator. Clock internal, MIDI, USB, sync input, or automatic.",
+      "properties": {
+        "steps": 16,
+        "patterns": 128,
+        "tempo_bpm": [40, 240]
+      },
+      "inputs": ["seq.clock_in"],
+      "outputs": ["seq.notes", "seq.clock_out"]
+    },
+    {
+      "id": "vco",
+      "type": "oscillator",
+      "name": "VCO",
+      "panel_section": "VOICE",
+      "description": "One analogue oscillator, sawtooth or square, with a centre-detented PITCH knob spanning a fifth either way.",
+      "inputs": ["vco.pitch_cv"],
+      "outputs": ["vco.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VOICE",
+      "description": "Resonant analogue low-pass filter with TB-303-like character; the envelope sweeps it by DEPTH and accent brightens it.",
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "VOICE",
+      "description": "One decay envelope, retriggered by each note, driving the filter (by DEPTH) and the VCA; no release stage.",
+      "inputs": ["env.gate"],
+      "outputs": ["env.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VOICE",
+      "description": "Shapes each note with the envelope; accented steps play louder.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "sat",
+      "type": "overdrive",
+      "name": "Saturation",
+      "panel_section": "EFFECTS",
+      "description": "Switchable distortion with DRIVE (gain) and TONE (brightness).",
+      "inputs": ["sat.in"],
+      "outputs": ["sat.out"]
+    },
+    {
+      "id": "dly",
+      "type": "delay",
+      "name": "Delay",
+      "panel_section": "EFFECTS",
+      "description": "Switchable delay with LEVEL, TIME (up to about 0.5 s) and FEEDBACK (one repeat at minimum).",
+      "properties": {
+        "type": "digital, tape-style (MusicRadar)",
+        "time_s_max": 0.5
+      },
+      "inputs": ["dly.in"],
+      "outputs": ["dly.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MASTER",
+      "description": "MASTER sets the level at MAIN OUT and PHONES; the AUX input is mixed in.",
+      "inputs": ["out.in", "out.aux"],
+      "outputs": ["out.main", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco.wave",
+      "module": "vco",
+      "label": "WAVE",
+      "kind": "enum",
+      "manual_ref": 5,
+      "values": [
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sawtooth or square."
+    },
+    {
+      "id": "vco.pitch",
+      "module": "vco",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "physical": {
+        "min": -7,
+        "max": 7,
+        "unit": "semitones"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Oscillator tuning, up to a fifth down (left) or up (right); centre detent."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis at cutoff."
+    },
+    {
+      "id": "vcf.depth",
+      "module": "vcf",
+      "label": "DEPTH",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope depth on cutoff."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay time."
+    },
+    {
+      "id": "vca.accent",
+      "module": "vca",
+      "label": "ACCENT",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Strength of accent on accented notes (volume and brightness)."
+    },
+    {
+      "id": "sat.on",
+      "module": "sat",
+      "label": "SATURATION",
+      "kind": "boolean",
+      "manual_ref": 12,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Saturation on or off."
+    },
+    {
+      "id": "sat.drive",
+      "module": "sat",
+      "label": "DRIVE",
+      "kind": "continuous",
+      "manual_ref": 13,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Distortion gain."
+    },
+    {
+      "id": "sat.tone",
+      "module": "sat",
+      "label": "TONE",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Distortion brightness."
+    },
+    {
+      "id": "dly.on",
+      "module": "dly",
+      "label": "DELAY",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Delay on or off."
+    },
+    {
+      "id": "dly.level",
+      "module": "dly",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Delay level."
+    },
+    {
+      "id": "dly.time",
+      "module": "dly",
+      "label": "TIME",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Delay time."
+    },
+    {
+      "id": "dly.feedback",
+      "module": "dly",
+      "label": "FEEDBACK",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Number of repeats; one at minimum."
+    },
+    {
+      "id": "out.master",
+      "module": "out",
+      "label": "MASTER",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output and headphone level."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "manual_ref": 6,
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "OCT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters octave mode; ▲/▼ shift the keyboard range."
+    },
+    {
+      "id": "seq.tap",
+      "module": "seq",
+      "label": "TEMPO TAP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tap 2-4 times for tempo, or press once and set 40-240 BPM with ▲/▼."
+    },
+    {
+      "id": "seq.up",
+      "module": "seq",
+      "label": "▲",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Raises the value being set; otherwise steps to the next step."
+    },
+    {
+      "id": "seq.down",
+      "module": "seq",
+      "label": "▼",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Lowers the value being set; otherwise steps to the previous step."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard: holds the note. Sequencer: repeats the current step while held. Arpeggiator: latches."
+    },
+    {
+      "id": "seq.rec_edit",
+      "module": "seq",
+      "label": "REC/EDIT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Record mode (step-write); hold with a step key for step edit."
+    },
+    {
+      "id": "seq.clear_rest",
+      "module": "seq",
+      "label": "CLEAR/REST",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters a rest; hold 2 s to initialise the pattern; hold while playing to mute."
+    },
+    {
+      "id": "seq.play_stop",
+      "module": "seq",
+      "label": "PLAY/STOP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts or stops the sequencer."
+    },
+    {
+      "id": "seq.pattern",
+      "module": "seq",
+      "label": "PATTERN",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Pattern select, 1-128; hold 2 s to reload the current pattern."
+    },
+    {
+      "id": "seq.save",
+      "module": "seq",
+      "label": "SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Saves the pattern to the current or a chosen slot (press SAVE twice); hold 2 s to cancel."
+    },
+    {
+      "id": "seq.arp",
+      "module": "seq",
+      "label": "ARP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggiator on or off; ▲/▼ choose the mode."
+    },
+    {
+      "id": "kbd.accent_btn",
+      "module": "kbd",
+      "label": "ACCENT (button)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard: accent on played notes. Record: accent on the step. Playback: hold for live accent. Arpeggiator: accent on every step."
+    },
+    {
+      "id": "seq.slide_btn",
+      "module": "seq",
+      "label": "SLIDE (button)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Record: slide from this step to the next. Playback: hold for live slide."
+    },
+    {
+      "id": "seq.gate_btn",
+      "module": "seq",
+      "label": "GATE LENGTH (button)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Opens gate length setting; hold while playing for live gate length."
+    },
+    {
+      "id": "seq.ratchet_btn",
+      "module": "seq",
+      "label": "RATCHET (button)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Opens ratchet setting; hold while playing for live ratchet."
+    },
+    {
+      "id": "seq.arp_mode",
+      "module": "seq",
+      "label": "Arpeggio order",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "down_up"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "up_plus_1oct"
+        },
+        {
+          "value": "down_plus_1oct"
+        },
+        {
+          "value": "up_minus_1oct"
+        },
+        {
+          "value": "down_minus_1oct"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "ARP, then ▲/▼"
+        }
+      ],
+      "function": "Arpeggiator pattern.",
+      "note": "The manual labels the last four UP 2 (+1 Oct), DOWN 2 (+1 Oct), UP 3 (-1 Oct), DOWN 3 (-1 Oct)."
+    },
+    {
+      "id": "seq.arp_gate",
+      "module": "seq",
+      "label": "Arpeggio gate length",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "GATE LENGTH, then ▲/▼"
+        }
+      ],
+      "function": "Gate length for arpeggio notes, 1/8 to 8/8."
+    },
+    {
+      "id": "seq.step_note",
+      "module": "seq",
+      "label": "Step note",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "REC/EDIT, then per step"
+        }
+      ],
+      "function": "Note of each step, entered from the keyboard (step-write advances automatically).",
+      "note": "One value per step, 16 steps."
+    },
+    {
+      "id": "seq.step_gate",
+      "module": "seq",
+      "label": "Step gate length",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 8
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "REC/EDIT, then per step"
+        }
+      ],
+      "function": "Gate length per step in eighths: 0 = rest, 8 = tie (legato into the next step)."
+    },
+    {
+      "id": "seq.step_accent",
+      "module": "seq",
+      "label": "Step accent",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "REC/EDIT, then per step"
+        }
+      ],
+      "function": "Accent on the step."
+    },
+    {
+      "id": "seq.step_slide",
+      "module": "seq",
+      "label": "Step slide",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "REC/EDIT, then per step"
+        }
+      ],
+      "function": "Slide from this step's pitch into the next."
+    },
+    {
+      "id": "seq.step_ratchet",
+      "module": "seq",
+      "label": "Step ratchet",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "REC/EDIT, then per step"
+        }
+      ],
+      "function": "Repeats within the step; ignored on slide or tie steps."
+    },
+    {
+      "id": "seq.tempo",
+      "module": "seq",
+      "label": "Tempo",
+      "kind": "integer",
+      "range": {
+        "min": 40,
+        "max": 240
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "TEMPO TAP"
+        },
+        {
+          "type": "app"
+        }
+      ],
+      "function": "Pattern tempo."
+    },
+    {
+      "id": "seq.length",
+      "module": "seq",
+      "label": "Sequence length",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "app",
+          "note": "SEQ length"
+        }
+      ],
+      "function": "Pattern length in steps."
+    },
+    {
+      "id": "seq.transpose",
+      "module": "seq",
+      "label": "Pattern transpose",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "app"
+        }
+      ],
+      "function": "Stored transpose for the pattern (live transpose from the keyboard is not saved)."
+    },
+    {
+      "id": "sys.midi_tx",
+      "module": "kbd",
+      "label": "MIDI OUT channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 0E",
+          "header": "F0 00 60 50 00 00 05 DID"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold step key 1-16 while powering on (sets in and out)",
+          "when": "power_on"
+        }
+      ],
+      "function": "Transmit channel."
+    },
+    {
+      "id": "sys.midi_rx",
+      "module": "kbd",
+      "label": "MIDI IN channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 0E",
+          "header": "F0 00 60 50 00 00 05 DID"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold step key 1-16 while powering on (sets in and out)",
+          "when": "power_on"
+        }
+      ],
+      "function": "Receive channel (16 in SysEx = all channels)."
+    },
+    {
+      "id": "sys.midi_in_transpose",
+      "module": "kbd",
+      "label": "MIDI IN transpose",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 0F",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Transposes incoming notes."
+    },
+    {
+      "id": "sys.key_priority",
+      "module": "kbd",
+      "label": "Key priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 12",
+          "header": "F0 00 60 50 00 00 05 DID"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold F#3 (low), G#3 (high) or A#3 (last) while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Which held key sounds."
+    },
+    {
+      "id": "sys.multi_trigger",
+      "module": "kbd",
+      "label": "Multi trigger",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off_slide"
+        },
+        {
+          "value": "on"
+        },
+        {
+          "value": "off_legato"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 14",
+          "header": "F0 00 60 50 00 00 05 DID"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold F#2 (slide), G#2 (on) or A#2 (legato) while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Overlapping notes retrigger (on), glide (off, slide) or play legato (off, legato)."
+    },
+    {
+      "id": "sys.forwarding",
+      "module": "kbd",
+      "label": "MIDI forwarding",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "din"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "both"
+        }
+      ],
+      "default": "both",
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 17",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Where keyboard, sequencer, arpeggiator and real-time (clock) messages are sent; set separately for each."
+    },
+    {
+      "id": "sys.sync_polarity",
+      "module": "seq",
+      "label": "Sync polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fall"
+        },
+        {
+          "value": "rise"
+        }
+      ],
+      "default": "rise",
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 19",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Edge used at SYNC IN and SYNC OUT."
+    },
+    {
+      "id": "sys.sync_rate",
+      "module": "seq",
+      "label": "Sync rate",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1PPS"
+        },
+        {
+          "value": "2PPQ"
+        },
+        {
+          "value": "24PPQ"
+        },
+        {
+          "value": "48PPQ"
+        }
+      ],
+      "default": "24PPQ",
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 1A",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Pulses per step or quarter note at SYNC IN/OUT."
+    },
+    {
+      "id": "sys.clock_source",
+      "module": "seq",
+      "label": "Clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "trig"
+        },
+        {
+          "value": "automatic"
+        }
+      ],
+      "default": "automatic",
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 1B",
+          "header": "F0 00 60 50 00 00 05 DID"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold C#2 (internal), D#2 (DIN), C#3 (USB) or D#3 (TRG) while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Internal, MIDI DIN, USB, SYNC IN (TRG) or automatic."
+    },
+    {
+      "id": "sys.accent_threshold",
+      "module": "kbd",
+      "label": "Accent velocity threshold",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 96,
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 1C",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Incoming notes above this velocity play accented; 127 disables."
+    },
+    {
+      "id": "sys.soft_thru",
+      "module": "kbd",
+      "label": "MIDI soft through",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "din_to_usb"
+        },
+        {
+          "value": "din_to_din"
+        },
+        {
+          "value": "usb_to_din"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 28",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Forwarding of incoming MIDI between ports (each enabled separately)."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local control",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "din"
+        },
+        {
+          "value": "usb"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 2F",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "Whether the keyboard, DIN input and USB input play the internal voice (each enabled separately)."
+    },
+    {
+      "id": "sys.pattern_wait",
+      "module": "seq",
+      "label": "Pattern waiting",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "Donner / Rantion MIDI Center app"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 32",
+          "header": "F0 00 60 50 00 00 05 DID"
+        }
+      ],
+      "function": "A newly chosen pattern waits for the current one to finish."
+    },
+    {
+      "id": "sys.device_id",
+      "module": "kbd",
+      "label": "SysEx device ID",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "app"
+        }
+      ],
+      "function": "Device ID in SysEx messages; 0 addresses all."
+    },
+    {
+      "id": "util.factory_reset",
+      "module": "kbd",
+      "label": "Factory reset",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "settings"
+        },
+        {
+          "value": "settings_and_patterns"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold B1, C2, D2 and E2 while powering on (settings only)",
+          "when": "power_on"
+        },
+        {
+          "type": "gesture",
+          "gesture": "hold G3, A3 and C4 while powering on (settings and all patterns)",
+          "when": "power_on"
+        },
+        {
+          "type": "sysex",
+          "message": "packet 7D (settings)"
+        },
+        {
+          "type": "app"
+        }
+      ],
+      "function": "Resets settings, optionally erasing all patterns."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.main_out",
+      "label": "MAIN OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.main",
+      "function": "Line output, unbalanced, max +16 dBu, 1.5 kohm."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "front",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "Headphones, max 125 mW into 32 ohm."
+    },
+    {
+      "id": "jack.aux_in",
+      "label": "AUX IN",
+      "location": "front",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.aux",
+      "function": "External audio mixed with the B1 at the outputs; max +5 dBu."
+    },
+    {
+      "id": "jack.sync_in",
+      "label": "SYNC IN",
+      "location": "front",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "seq.clock_in",
+      "function": "Clock or start/stop pulses, above 2.5 V; needs clock source TRG or AUTO."
+    },
+    {
+      "id": "jack.sync_out",
+      "label": "SYNC OUT",
+      "location": "front",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "seq.clock_out",
+      "function": "Clock pulses, always on."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "Notes, clock and SysEx."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Keyboard, sequencer and arpeggiator notes and clock."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB-C",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-C",
+      "node": null,
+      "function": "Class-compliant USB MIDI and firmware updates; does not power the unit."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "9 V DC 500 mA, centre positive."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "seq.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Sequencer or arpeggiator notes, transposed live from the keyboard."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Slide steps and multi-trigger off (slide) glide between pitches."
+    },
+    {
+      "id": "c03",
+      "from": "kbd.gate",
+      "to": "env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "env.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.depth"
+    },
+    {
+      "id": "c05",
+      "from": "env.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Sound On Sound: the envelope runs the filter and VCA."
+    },
+    {
+      "id": "c06",
+      "from": "kbd.accent",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.accent",
+      "note": "Accent adds brightness."
+    },
+    {
+      "id": "c07",
+      "from": "kbd.accent",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.accent",
+      "note": "Accent adds volume."
+    },
+    {
+      "id": "c08",
+      "from": "vco.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c10",
+      "from": "vca.out",
+      "to": "sat.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Passes unchanged with SATURATION off.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c11",
+      "from": "sat.out",
+      "to": "dly.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Passes dry with DELAY off.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c12",
+      "from": "dly.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.master",
+      "confidence": "inferred"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "display",
+      "module": "seq",
+      "label": "LED display",
+      "kind": "display",
+      "function": "Tempo, pattern, octave, gate length, ratchet and arpeggio mode."
+    },
+    {
+      "id": "step_leds",
+      "module": "seq",
+      "label": "step LEDs 1-16",
+      "kind": "led",
+      "function": "Current step flashes; dark steps are rests."
+    },
+    {
+      "id": "button_leds",
+      "module": "seq",
+      "label": "button indicators",
+      "kind": "led",
+      "function": "Lit or flashing on OCT, TEMPO TAP, ACCENT, HOLD, REC/EDIT, GATE LENGTH, SLIDE, RATCHET, SAVE, PATTERN, PLAY/STOP and ARP."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Voice",
+      "applies_to": ["vco", "vcf", "env", "vca"],
+      "rule": "One VCO (saw or square) into a resonant low-pass filter and VCA. One decay envelope opens the filter by DEPTH and shapes the VCA; there is no release. Accented notes are louder and brighter by ACCENT. The filter passes some mid-range even at its lowest cutoff, as on a TB-303 (MusicRadar)."
+    },
+    {
+      "id": "b02",
+      "name": "Pattern entry (step-write)",
+      "applies_to": ["seq"],
+      "rule": "REC/EDIT, then each key enters a note and advances; CLEAR/REST enters a rest. Before each note set GATE LENGTH (0 rest to 8 tie), ACCENT, SLIDE (into the next step) or RATCHET (1-4 repeats). A new note takes the previous step's gate length. Hold REC/EDIT with a step key to edit one step, playing or not."
+    },
+    {
+      "id": "b03",
+      "name": "Playback",
+      "applies_to": ["seq", "kbd"],
+      "rule": "PLAY/STOP loops the pattern. Keys transpose live (C3 centre, ±12, notes out of range muted). Holding HOLD repeats the step; holding ACCENT, SLIDE, RATCHET or GATE LENGTH applies that to every step; holding CLEAR/REST mutes. Holding a step key 2 s toggles its rest. None of the live changes are saved."
+    },
+    {
+      "id": "b04",
+      "name": "Saving and loading",
+      "applies_to": ["seq"],
+      "rule": "Edits are lost unless saved: SAVE, choose 1-128 with ▲/▼, SAVE again. The last pattern loads at power-on. A pattern chosen while playing starts after the current one ends, unless pattern waiting is off."
+    },
+    {
+      "id": "b05",
+      "name": "Arpeggiator",
+      "applies_to": ["seq"],
+      "rule": "ARP on: held keys play in one of eight orders at the set tempo and octave; HOLD latches, GATE LENGTH sets note length (1-8), ACCENT accents every step."
+    },
+    {
+      "id": "b06",
+      "name": "Sync",
+      "applies_to": ["seq"],
+      "rule": "SYNC OUT always sends clock. SYNC IN needs clock source TRG or AUTO. Rate 1PPS (one step per pulse), 2PPQ (Korg), 24PPQ or 48PPQ; polarity rise or fall."
+    },
+    {
+      "id": "b07",
+      "name": "MIDI",
+      "applies_to": ["kbd"],
+      "rule": "Notes in play the voice; above the accent threshold (default 96) they are accented. Keyboard, sequencer and arpeggiator notes and clock are sent to DIN, USB or both. Local control can disconnect the keyboard or either input from the voice. Panel knobs send and receive no MIDI."
+    },
+    {
+      "id": "b08",
+      "name": "Effects order",
+      "applies_to": ["sat", "dly", "out"],
+      "rule": "Saturation then delay, each switchable, then MASTER; AUX IN is mixed at the output.",
+      "confidence": "inferred",
+      "note": "The manual does not state the order; it follows the panel layout."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "velocity above the accent threshold sets accent"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "clock",
+        "note": "when clock source is MIDI, USB or automatic"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 60 50 00 00 05 DID",
+        "packets": {
+          "0E": "MIDI channels",
+          "0F": "MIDI in transpose",
+          "12": "key priority",
+          "14": "multi trigger",
+          "17": "MIDI forwarding",
+          "19": "sync polarity",
+          "1A": "sync rate",
+          "1B": "clock source",
+          "1C": "accent threshold",
+          "28": "soft through",
+          "2F": "local control",
+          "32": "pattern waiting",
+          "7D": "factory reset"
+        }
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "clock"
+      }
+    ],
+    "channel_note": "Separate in and out channels 1-16; set in the app, by SysEx, or with a step key at power-on.",
+    "note": "No control changes: the panel is not on MIDI. Start/stop handling is assumed from the clock source options; the manual lists no MIDI implementation chart."
+  },
+  "specifications": {
+    "voices": 1,
+    "type": "analogue",
+    "oscillators": 1,
+    "vcf": "1 low-pass",
+    "envelopes": 1,
+    "keyboard": "26 touch keys, B1-C4, 4-octave range with octave shift",
+    "sequencer": {
+      "steps": 16,
+      "patterns": 128,
+      "tempo_bpm": [40, 240],
+      "gate_eighths": [0, 8],
+      "ratchet": [1, 4]
+    },
+    "arpeggiator_modes": 8,
+    "outputs": {
+      "line": "1/4\", unbalanced, max +16 dBu, 1.5 kohm",
+      "phones": "3.5 mm TRS, max 125 mW into 32 ohm, 10 ohm"
+    },
+    "inputs": {
+      "aux": "3.5 mm TS, max +5 dBu",
+      "sync_in": "3.5 mm TS, above 2.5 V"
+    },
+    "connectivity": {
+      "midi": "5-pin DIN in and out",
+      "usb": "USB 2.0 type C, class compliant"
+    },
+    "power": {
+      "adaptor": "9 V DC 500 mA, centre positive",
+      "consumption_w": 2.25
+    },
+    "dimensions_mm": {
+      "h": 54,
+      "w": 323,
+      "d": 130
+    },
+    "weight_kg": 0.66
+  },
+  "omitted_from_source": [
+    "safety, FCC and warranty text",
+    "non-English translations",
+    "app screenshots beyond the settings they show"
+  ],
+  "not_in_source": [
+    "filter slope and circuit",
+    "VCO frequency range and the pitch range the keyboard covers in Hz",
+    "envelope and delay times (delay about 0.5 s per Sound On Sound)",
+    "whether the delay is analogue or digital (reviewers say digital, tape-style)",
+    "effects order",
+    "MIDI start/stop and song position handling",
+    "the per-step data layout"
+  ],
+  "source_inconsistencies": [
+    "MAIN OUT is a 1/4\" TS mono connector in the panel description but '1/4\" TRS, unbalanced' in the specifications.",
+    "The arpeggiator gate length runs 1-8, the sequencer step gate length 0-8 (0 being a rest).",
+    "The live gate length note says 'Live ratchet will not be saved', a copy of the line above it.",
+    "The spec sheet lists the power switch as a slide switch; the panel description just says power on/off."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Per-step data",
+      "detail": "Step note, gate, accent, slide and ratchet are modelled as one parameter each, standing for 16 values per pattern."
+    },
+    {
+      "topic": "Settings with several flags",
+      "detail": "MIDI forwarding, soft through and local control hold one value per port or source; modelled as single enums with notes."
+    },
+    {
+      "topic": "TB-303 comparison",
+      "detail": "Not a circuit copy: the sequencer, keyboard and effects are Donner's own; reviewers find the filter close to a TB-303's."
+    }
+  ]
+}

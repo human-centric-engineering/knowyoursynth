@@ -1,0 +1,3561 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "behringer-system-15",
+    "manufacturer": "Behringer",
+    "model": "System 15",
+    "category": "complete modular synthesizer, 16 Eurorack modules, MIDI-to-CV converter included",
+    "based_on": "Moog System 15 (1973), recreated with Behringer 900-series modules.",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer System 15 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_SYSTEM_15.pdf",
+        "note": "Module layout and example patches; module details deferred to each module's own guide."
+      },
+      {
+        "id": "module_guides",
+        "title": "Behringer quick start guides for the 921, 921A, 921B, 902, 904A, 904B, 911, 911A, 914, 923, 903A, 960, 961, 962, 992, CM1A, CP3A-M, CP3A-O and CP35",
+        "kind": "user_manual",
+        "file": "https://notebook.zoeblade.com/900_Series_Behringer.html",
+        "note": "Module controls, jacks and specifications. Read from Zoe Blade's mirror; the 962, 992 and 903A partly from search extracts. The 995 guide was not read."
+      },
+      {
+        "id": "zoeblade",
+        "title": "Zoe Blade, '900 Series (Behringer)' notes",
+        "kind": "other",
+        "file": "https://notebook.zoeblade.com/900_Series_Behringer.html",
+        "note": "Module HP list, VCO drift and recalibration, labelled 902 polarities, recommended modifications."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic as patched (CM1A can run duophonic)",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": false,
+    "routing": "fully patched: no internal connections between modules",
+    "panel_counts": {
+      "modules": 16,
+      "rows": 2,
+      "jacks": 158,
+      "controls": 65
+    },
+    "summary": "Behringer's recreation of a Moog System 15 in Eurorack modules: top row: 914, 923, 904B, 904A, 902, 902, 911, 911. bottom row: 921A, 921B, 921B, 921, CP3A-M, CP35, 961, CM1A. Every connection is a patch cord."
+  },
+  "modules": [
+    {
+      "id": "m914",
+      "type": "filter",
+      "name": "914 Fixed Filter Bank",
+      "panel_section": "top row, position 1",
+      "description": "Fourteen parallel fixed filters: a low-pass, twelve high-Q band-pass filters from 125 Hz to 5.6 kHz, and a high-pass, each with a level knob.",
+      "properties": {
+        "model": "914",
+        "hp": 28,
+        "row": "top",
+        "position": 1,
+        "bands_hz": [125, 175, 250, 350, 500, 700, 1000, 1400, 2000, 2800, 4000, 5600]
+      },
+      "inputs": ["m914.in"],
+      "outputs": ["m914.out"]
+    },
+    {
+      "id": "m923",
+      "type": "filter",
+      "name": "923 Filters (and noise)",
+      "panel_section": "top row, position 2",
+      "description": "A 6 dB/oct low-pass and a 6 dB/oct high-pass filter (10 Hz-10 kHz each), usable in series as a band-pass, plus white and pink noise.",
+      "properties": {
+        "model": "923",
+        "hp": 8,
+        "row": "top",
+        "position": 2,
+        "slope_db_per_oct": 6
+      },
+      "inputs": ["m923.lp_in", "m923.hp_in"],
+      "outputs": ["m923.lp_out", "m923.hp_out", "m923.white", "m923.pink"]
+    },
+    {
+      "id": "m904b",
+      "type": "filter",
+      "name": "904B Voltage Controlled High Pass Filter",
+      "panel_section": "top row, position 3",
+      "description": "24 dB/oct high-pass filter. FIXED CONTROL VOLTAGE sets the cutoff within the FREQUENCY RANGE; three summed control inputs at 1 V/oct.",
+      "properties": {
+        "model": "904B",
+        "hp": 8,
+        "row": "top",
+        "position": 3,
+        "slope_db_per_oct": 24,
+        "type": "high-pass"
+      },
+      "inputs": ["m904b.sig_in", "m904b.cv"],
+      "outputs": ["m904b.sig_out"]
+    },
+    {
+      "id": "m904a",
+      "type": "filter",
+      "name": "904A Voltage Controlled Low Pass Filter",
+      "panel_section": "top row, position 4",
+      "description": "24 dB/oct low-pass ladder with REGENERATION (resonance to self-oscillation). FIXED CONTROL VOLTAGE sets the cutoff within the FREQUENCY RANGE; three summed control inputs at 1 V/oct.",
+      "properties": {
+        "model": "904A",
+        "hp": 8,
+        "row": "top",
+        "position": 4,
+        "slope_db_per_oct": 24,
+        "type": "low-pass"
+      },
+      "inputs": ["m904a.sig_in", "m904a.cv"],
+      "outputs": ["m904a.sig_out"]
+    },
+    {
+      "id": "m902_1",
+      "type": "vca",
+      "name": "902 Voltage Controlled Amplifier (1)",
+      "panel_section": "top row, position 5",
+      "description": "VCA with linear or exponential response and a fixed control voltage. Two signal inputs and two outputs, labelled positive and negative.",
+      "properties": {
+        "model": "902",
+        "hp": 8,
+        "row": "top",
+        "position": 5,
+        "current_ma": [50, 45],
+        "polarity_note": "Behringer labels the inputs and outputs + and - (Zoe Blade); the quick start guide only says 'dual'"
+      },
+      "inputs": ["m902_1.sig_in_pos", "m902_1.sig_in_neg", "m902_1.cv"],
+      "outputs": ["m902_1.out_pos", "m902_1.out_neg"]
+    },
+    {
+      "id": "m902_2",
+      "type": "vca",
+      "name": "902 Voltage Controlled Amplifier (2)",
+      "panel_section": "top row, position 6",
+      "description": "VCA with linear or exponential response and a fixed control voltage. Two signal inputs and two outputs, labelled positive and negative.",
+      "properties": {
+        "model": "902",
+        "hp": 8,
+        "row": "top",
+        "position": 6,
+        "current_ma": [50, 45],
+        "polarity_note": "Behringer labels the inputs and outputs + and - (Zoe Blade); the quick start guide only says 'dual'"
+      },
+      "inputs": ["m902_2.sig_in_pos", "m902_2.sig_in_neg", "m902_2.cv"],
+      "outputs": ["m902_2.out_pos", "m902_2.out_neg"]
+    },
+    {
+      "id": "m911_1",
+      "type": "envelope",
+      "name": "911 Envelope Generator (1)",
+      "panel_section": "top row, position 7",
+      "description": "Three-time-constant envelope: T1 attack, T2 initial decay, T3 final decay after release, with sustain level E SUS. Fired and held by an S-trigger (active low).",
+      "properties": {
+        "model": "911",
+        "hp": 8,
+        "row": "top",
+        "position": 7,
+        "current_ma": [30, 30]
+      },
+      "inputs": ["m911_1.strig"],
+      "outputs": ["m911_1.out"]
+    },
+    {
+      "id": "m911_2",
+      "type": "envelope",
+      "name": "911 Envelope Generator (2)",
+      "panel_section": "top row, position 8",
+      "description": "Three-time-constant envelope: T1 attack, T2 initial decay, T3 final decay after release, with sustain level E SUS. Fired and held by an S-trigger (active low).",
+      "properties": {
+        "model": "911",
+        "hp": 8,
+        "row": "top",
+        "position": 8,
+        "current_ma": [30, 30]
+      },
+      "inputs": ["m911_2.strig"],
+      "outputs": ["m911_2.out"]
+    },
+    {
+      "id": "m921a_1",
+      "type": "pitch_control",
+      "name": "921A Oscillator Driver (1)",
+      "panel_section": "bottom row, position 1",
+      "description": "Master controller for up to twelve 921Bs. FREQUENCY (±6 octaves or ±12 semitones, by the rocker) and WIDTH (10-90%) are summed with two CV inputs each and sent as high-current frequency and width link outputs.",
+      "properties": {
+        "model": "921A",
+        "hp": 8,
+        "row": "bottom",
+        "position": 1,
+        "drives_921b": 12,
+        "current_ma": [15, 15]
+      },
+      "inputs": ["m921a_1.freq_in", "m921a_1.width_in"],
+      "outputs": ["m921a_1.freq_out", "m921a_1.width_out"]
+    },
+    {
+      "id": "m921b_1",
+      "type": "oscillator",
+      "name": "921B Oscillator (1)",
+      "panel_section": "bottom row, position 2",
+      "description": "VCO driven from a 921A over the frequency and width link jacks. RANGE sets the octave (LO for sub-audio), FREQUENCY offsets it in semitones. Sine, triangle, sawtooth and rectangular outputs; hard sync from SYNC IN; AC and DC frequency modulation inputs.",
+      "properties": {
+        "model": "921B",
+        "hp": 8,
+        "row": "bottom",
+        "position": 2,
+        "frequency_hz": [1, 40000],
+        "width_pct": [10, 90],
+        "tuning": "2' = 640 Hz, 32' = 40 Hz, 1 V/oct",
+        "current_ma": [45, 45]
+      },
+      "inputs": [
+        "m921b_1.freq_link",
+        "m921b_1.width_link",
+        "m921b_1.sync_in",
+        "m921b_1.ac_mod",
+        "m921b_1.dc_mod"
+      ],
+      "outputs": [
+        "m921b_1.freq_thru",
+        "m921b_1.width_thru",
+        "m921b_1.sine",
+        "m921b_1.triangle",
+        "m921b_1.sawtooth",
+        "m921b_1.rectangular"
+      ]
+    },
+    {
+      "id": "m921b_2",
+      "type": "oscillator",
+      "name": "921B Oscillator (2)",
+      "panel_section": "bottom row, position 3",
+      "description": "VCO driven from a 921A over the frequency and width link jacks. RANGE sets the octave (LO for sub-audio), FREQUENCY offsets it in semitones. Sine, triangle, sawtooth and rectangular outputs; hard sync from SYNC IN; AC and DC frequency modulation inputs.",
+      "properties": {
+        "model": "921B",
+        "hp": 8,
+        "row": "bottom",
+        "position": 3,
+        "frequency_hz": [1, 40000],
+        "width_pct": [10, 90],
+        "tuning": "2' = 640 Hz, 32' = 40 Hz, 1 V/oct",
+        "current_ma": [45, 45]
+      },
+      "inputs": [
+        "m921b_2.freq_link",
+        "m921b_2.width_link",
+        "m921b_2.sync_in",
+        "m921b_2.ac_mod",
+        "m921b_2.dc_mod"
+      ],
+      "outputs": [
+        "m921b_2.freq_thru",
+        "m921b_2.width_thru",
+        "m921b_2.sine",
+        "m921b_2.triangle",
+        "m921b_2.sawtooth",
+        "m921b_2.rectangular"
+      ]
+    },
+    {
+      "id": "m921",
+      "type": "oscillator",
+      "name": "921 Voltage Controlled Oscillator",
+      "panel_section": "bottom row, position 4",
+      "description": "Stand-alone VCO that doubles as an LFO (COARSE RNG sub-audio, typically 0.01-800 Hz; audio 1 Hz-80 kHz). Rectangular width with CV, a clamping point that resets the waveform from a V- or S-trigger, and an AUX output whose waveform and level are selectable.",
+      "properties": {
+        "model": "921",
+        "hp": 14,
+        "row": "bottom",
+        "position": 4,
+        "frequency_hz": {
+          "sub": [0.01, 800],
+          "audio": [1, 80000]
+        },
+        "current_ma": [50, 50]
+      },
+      "inputs": ["m921.freq_cv", "m921.width_cv", "m921.trig_v", "m921.trig_s"],
+      "outputs": ["m921.sine", "m921.triangle", "m921.sawtooth", "m921.rectangular", "m921.aux"]
+    },
+    {
+      "id": "cp3am_1",
+      "type": "mixer",
+      "name": "CP3A-M Mixer (1)",
+      "panel_section": "bottom row, position 5",
+      "description": "Four-channel mixer with a master gain and positive and negative outputs, plus two passive four-jack multiples. Handles audio and CV.",
+      "properties": {
+        "model": "CP3A-M",
+        "hp": 14,
+        "row": "bottom",
+        "position": 5
+      },
+      "inputs": [
+        "cp3am_1.in1",
+        "cp3am_1.in2",
+        "cp3am_1.in3",
+        "cp3am_1.in4",
+        "cp3am_1.mult_a",
+        "cp3am_1.mult_b"
+      ],
+      "outputs": ["cp3am_1.out_pos", "cp3am_1.out_neg", "cp3am_1.mult_a_out", "cp3am_1.mult_b_out"]
+    },
+    {
+      "id": "cp35",
+      "type": "attenuator",
+      "name": "CP35 Attenuators / Voltage Source / Multiple",
+      "panel_section": "bottom row, position 6",
+      "description": "Four passive attenuators with half-normalled inputs (input 1 feeds all four until later inputs are patched), +6 V and -6 V references, and two four-jack multiples.",
+      "properties": {
+        "model": "CP35",
+        "hp": 21,
+        "row": "bottom",
+        "position": 6
+      },
+      "inputs": [
+        "cp35.att_in1",
+        "cp35.att_in2",
+        "cp35.att_in3",
+        "cp35.att_in4",
+        "cp35.mult_a",
+        "cp35.mult_b"
+      ],
+      "outputs": [
+        "cp35.att_out1",
+        "cp35.att_out2",
+        "cp35.att_out3",
+        "cp35.att_out4",
+        "cp35.pos6",
+        "cp35.neg6",
+        "cp35.mult_a_out",
+        "cp35.mult_b_out"
+      ]
+    },
+    {
+      "id": "m961",
+      "type": "gate_logic",
+      "name": "961 Interface",
+      "panel_section": "bottom row, position 7",
+      "description": "Trigger converter: audio to V-trigger (with SENSITIVITY), two S-to-V converters, and two V-to-S converters, each taking six direct (A) and six timed (B, SWITCH-ON TIME 40 ms-4 s) V-trigger inputs.",
+      "properties": {
+        "model": "961",
+        "hp": 21,
+        "row": "bottom",
+        "position": 7
+      },
+      "inputs": [
+        "m961.audio_in",
+        "m961.strig_in_l",
+        "m961.strig_in_r",
+        "m961.vtrig_a_l",
+        "m961.vtrig_b_l",
+        "m961.vtrig_a_r",
+        "m961.vtrig_b_r"
+      ],
+      "outputs": [
+        "m961.vtrig_audio",
+        "m961.vtrig_out_l",
+        "m961.vtrig_out_r",
+        "m961.strig_out_l",
+        "m961.strig_out_r"
+      ]
+    },
+    {
+      "id": "cm1a",
+      "type": "midi_to_cv",
+      "name": "CM1A MIDI to CV Converter",
+      "panel_section": "bottom row, position 8",
+      "description": "MIDI and USB to CV and trigger. CV range switchable for System 15/35/55 (-5.3 to +4.7 V) or System 100/2500; mono or duophonic. TRIG MODE gives V-trig, S-trig, or one of each.",
+      "properties": {
+        "model": "CM1A",
+        "hp": 6,
+        "row": "bottom",
+        "position": 8,
+        "cv_range_v": {
+          "system_55": [-5.3, 4.7],
+          "system_100": [-1, 9]
+        },
+        "note_range": "C0 to C9"
+      },
+      "inputs": [],
+      "outputs": ["cm1a.cv_1", "cm1a.cv_2", "cm1a.trig_upper", "cm1a.trig_lower"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "m914.band_low_pass",
+      "module": "m914",
+      "label": "LOW PASS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the low pass filter."
+    },
+    {
+      "id": "m914.band_125",
+      "module": "m914",
+      "label": "125 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 125 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_175",
+      "module": "m914",
+      "label": "175 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 175 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_250",
+      "module": "m914",
+      "label": "250 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 250 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_350",
+      "module": "m914",
+      "label": "350 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 350 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_500",
+      "module": "m914",
+      "label": "500 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 500 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_700",
+      "module": "m914",
+      "label": "700 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 700 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_1000",
+      "module": "m914",
+      "label": "1000 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 1000 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_1400",
+      "module": "m914",
+      "label": "1400 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 1400 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_2000",
+      "module": "m914",
+      "label": "2000 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 2000 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_2800",
+      "module": "m914",
+      "label": "2800 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 2800 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_4000",
+      "module": "m914",
+      "label": "4000 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 4000 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_5600",
+      "module": "m914",
+      "label": "5600 Hz",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the 5600 Hz band-pass filter."
+    },
+    {
+      "id": "m914.band_high_pass",
+      "module": "m914",
+      "label": "HIGH PASS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the high pass filter."
+    },
+    {
+      "id": "m923.lp",
+      "module": "m923",
+      "label": "LOW PASS",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 10000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Low-pass cutoff, 10 Hz-10 kHz."
+    },
+    {
+      "id": "m923.hp",
+      "module": "m923",
+      "label": "HIGH PASS",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 10000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "High-pass cutoff, 10 Hz-10 kHz."
+    },
+    {
+      "id": "m904b.fixed_cv",
+      "module": "m904b",
+      "label": "FIXED CONTROL VOLTAGE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -6,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Manual cutoff, ±6 V summed with the control inputs."
+    },
+    {
+      "id": "m904b.range",
+      "module": "m904b",
+      "label": "FREQUENCY RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low",
+          "meaning": "4 Hz-20 kHz"
+        },
+        {
+          "value": "high",
+          "meaning": "10 Hz-50 kHz"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Band in which the fixed control voltage acts."
+    },
+    {
+      "id": "m904a.fixed_cv",
+      "module": "m904a",
+      "label": "FIXED CONTROL VOLTAGE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -6,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Manual cutoff, ±6 V summed with the control inputs."
+    },
+    {
+      "id": "m904a.range",
+      "module": "m904a",
+      "label": "FREQUENCY RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1,
+          "meaning": "1 Hz-5 kHz"
+        },
+        {
+          "value": 2,
+          "meaning": "4 Hz-20 kHz"
+        },
+        {
+          "value": 3,
+          "meaning": "16 Hz-80 kHz"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Band in which the fixed control voltage acts."
+    },
+    {
+      "id": "m904a.regeneration",
+      "module": "m904a",
+      "label": "REGENERATION",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Feedback to a resonant peak; self-oscillates at high settings."
+    },
+    {
+      "id": "m902_1.mode",
+      "module": "m902_1",
+      "label": "CONTROL MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lin"
+        },
+        {
+          "value": "exp"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Linear or exponential response."
+    },
+    {
+      "id": "m902_1.fixed_cv",
+      "module": "m902_1",
+      "label": "FIXED CONTROL VOLTAGE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Manual gain offset, 0 to 6 V."
+    },
+    {
+      "id": "m902_2.mode",
+      "module": "m902_2",
+      "label": "CONTROL MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lin"
+        },
+        {
+          "value": "exp"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Linear or exponential response."
+    },
+    {
+      "id": "m902_2.fixed_cv",
+      "module": "m902_2",
+      "label": "FIXED CONTROL VOLTAGE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Manual gain offset, 0 to 6 V."
+    },
+    {
+      "id": "m911_1.t1",
+      "module": "m911_1",
+      "label": "T1 (attack)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "m911_1.t2",
+      "module": "m911_1",
+      "label": "T2 (decay)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "m911_1.t3",
+      "module": "m911_1",
+      "label": "T3 (release)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time after the trigger ends."
+    },
+    {
+      "id": "m911_1.esus",
+      "module": "m911_1",
+      "label": "E SUS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5.5,
+        "unit": "V"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level, 0 to +5.5 V."
+    },
+    {
+      "id": "m911_2.t1",
+      "module": "m911_2",
+      "label": "T1 (attack)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "m911_2.t2",
+      "module": "m911_2",
+      "label": "T2 (decay)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "m911_2.t3",
+      "module": "m911_2",
+      "label": "T3 (release)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time after the trigger ends."
+    },
+    {
+      "id": "m911_2.esus",
+      "module": "m911_2",
+      "label": "E SUS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5.5,
+        "unit": "V"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level, 0 to +5.5 V."
+    },
+    {
+      "id": "m921a_1.frequency",
+      "module": "m921a_1",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -6,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Frequency offset for all linked 921Bs."
+    },
+    {
+      "id": "m921a_1.scale",
+      "module": "m921a_1",
+      "label": "SEMITONE/OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "semitone"
+        },
+        {
+          "value": "octave"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "FREQUENCY spans ±12 semitones or ±6 octaves."
+    },
+    {
+      "id": "m921a_1.width",
+      "module": "m921a_1",
+      "label": "WIDTH OF RECTANGULAR WAVE",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width for linked 921Bs."
+    },
+    {
+      "id": "m921b_1.frequency",
+      "module": "m921b_1",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -12,
+        "max": 12
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Semitone offset, ±12."
+    },
+    {
+      "id": "m921b_1.range",
+      "module": "m921b_1",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LO"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave range in organ footages; LO for sub-audio."
+    },
+    {
+      "id": "m921b_1.sync",
+      "module": "m921b_1",
+      "label": "SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "weak"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "strong"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "How closely the oscillator follows SYNC IN."
+    },
+    {
+      "id": "m921b_2.frequency",
+      "module": "m921b_2",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -12,
+        "max": 12
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Semitone offset, ±12."
+    },
+    {
+      "id": "m921b_2.range",
+      "module": "m921b_2",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LO"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave range in organ footages; LO for sub-audio."
+    },
+    {
+      "id": "m921b_2.sync",
+      "module": "m921b_2",
+      "label": "SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "weak"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "strong"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "How closely the oscillator follows SYNC IN."
+    },
+    {
+      "id": "m921.frequency",
+      "module": "m921",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -6,
+        "max": 6
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Frequency within RANGE, scaled by SCALE."
+    },
+    {
+      "id": "m921.range",
+      "module": "m921",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        },
+        {
+          "value": "1'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave range."
+    },
+    {
+      "id": "m921.scale",
+      "module": "m921",
+      "label": "SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "octave"
+        },
+        {
+          "value": "semitone"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "FREQUENCY spans ±6 octaves or ±12 semitones."
+    },
+    {
+      "id": "m921.coarse",
+      "module": "m921",
+      "label": "COARSE RNG",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio"
+        },
+        {
+          "value": "sub"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Audio range or sub-audio (LFO) range."
+    },
+    {
+      "id": "m921.width",
+      "module": "m921",
+      "label": "RECTANGULAR WIDTH",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Default rectangular width."
+    },
+    {
+      "id": "m921.clamp",
+      "module": "m921",
+      "label": "CLAMPING POINT",
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Point in the cycle where a trigger resets the waveform."
+    },
+    {
+      "id": "m921.aux_wave",
+      "module": "m921",
+      "label": "AUX OUT WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "inverted_sawtooth"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "rectangular"
+        },
+        {
+          "value": "inverted_rectangular"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform at the AUX output."
+    },
+    {
+      "id": "m921.aux_level",
+      "module": "m921",
+      "label": "AUX OUT LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "AUX output level, off to +10 dBu."
+    },
+    {
+      "id": "cp3am_1.gain1",
+      "module": "cp3am_1",
+      "label": "CHANNEL GAIN 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of input 1."
+    },
+    {
+      "id": "cp3am_1.gain2",
+      "module": "cp3am_1",
+      "label": "CHANNEL GAIN 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of input 2."
+    },
+    {
+      "id": "cp3am_1.gain3",
+      "module": "cp3am_1",
+      "label": "CHANNEL GAIN 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of input 3."
+    },
+    {
+      "id": "cp3am_1.gain4",
+      "module": "cp3am_1",
+      "label": "CHANNEL GAIN 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of input 4."
+    },
+    {
+      "id": "cp3am_1.master",
+      "module": "cp3am_1",
+      "label": "MASTER GAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level."
+    },
+    {
+      "id": "cp35.att1",
+      "module": "cp35",
+      "label": "ATTENUATOR 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuator 1, -inf to unity."
+    },
+    {
+      "id": "cp35.att2",
+      "module": "cp35",
+      "label": "ATTENUATOR 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuator 2, -inf to unity."
+    },
+    {
+      "id": "cp35.att3",
+      "module": "cp35",
+      "label": "ATTENUATOR 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuator 3, -inf to unity."
+    },
+    {
+      "id": "cp35.att4",
+      "module": "cp35",
+      "label": "ATTENUATOR 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attenuator 4, -inf to unity."
+    },
+    {
+      "id": "m961.sensitivity",
+      "module": "m961",
+      "label": "SENSITIVITY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gain of AUDIO IN before conversion."
+    },
+    {
+      "id": "m961.on_time_l",
+      "module": "m961",
+      "label": "SWITCH-ON TIME (left)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.04,
+        "max": 4,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "On time for V-TRIG IN B (left)."
+    },
+    {
+      "id": "m961.on_time_r",
+      "module": "m961",
+      "label": "SWITCH-ON TIME (right)",
+      "kind": "continuous",
+      "physical": {
+        "min": 0.04,
+        "max": 4,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "On time for V-TRIG IN B (right)."
+    },
+    {
+      "id": "cm1a.trig_mode",
+      "module": "cm1a",
+      "label": "TRIG MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "v_trig"
+        },
+        {
+          "value": "both"
+        },
+        {
+          "value": "s_trig"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Trigger type at the TRIG outputs; centre makes the upper S-trig and the lower V-trig."
+    },
+    {
+      "id": "cm1a.mode",
+      "module": "cm1a",
+      "label": "MODE SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "s55_mono",
+          "meaning": "System 15/35/55 range, mono (red/red)"
+        },
+        {
+          "value": "s100_mono",
+          "meaning": "System 100/2500 range, mono (green/red)"
+        },
+        {
+          "value": "s55_duo",
+          "meaning": "System 15/35/55 range, duophonic (red/green)"
+        },
+        {
+          "value": "s100_duo",
+          "meaning": "System 100/2500 range, duophonic (green/green)"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rear button: short press switches CV range, long press mono/duophonic."
+    },
+    {
+      "id": "cm1a.midi_channel",
+      "module": "cm1a",
+      "label": "MIDI channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "MIDI channel 1-16, set in SynthTribe."
+    }
+  ],
+  "ports": [
+    {
+      "id": "m914.in_1",
+      "label": "INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m914.in",
+      "function": "Signal input (parallel jacks).",
+      "combine": "sum"
+    },
+    {
+      "id": "m914.in_2",
+      "label": "INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m914.in",
+      "function": "Signal input (parallel jacks).",
+      "combine": "sum"
+    },
+    {
+      "id": "m914.out_1",
+      "label": "OUTPUT 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m914.out",
+      "function": "Filtered output."
+    },
+    {
+      "id": "m914.out_2",
+      "label": "OUTPUT 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m914.out",
+      "function": "Filtered output."
+    },
+    {
+      "id": "m923.lp_in",
+      "label": "LOW PASS IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.lp_in",
+      "function": "Low-pass input."
+    },
+    {
+      "id": "m923.lp_out",
+      "label": "LOW PASS OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.lp_out",
+      "function": "Low-pass output."
+    },
+    {
+      "id": "m923.hp_in",
+      "label": "HIGH PASS IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.hp_in",
+      "function": "High-pass input."
+    },
+    {
+      "id": "m923.hp_out",
+      "label": "HIGH PASS OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.hp_out",
+      "function": "High-pass output."
+    },
+    {
+      "id": "m923.white_1",
+      "label": "NOISE WHITE 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.white",
+      "function": "White noise, 0 dBu."
+    },
+    {
+      "id": "m923.white_2",
+      "label": "NOISE WHITE 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.white",
+      "function": "White noise, 0 dBu."
+    },
+    {
+      "id": "m923.pink_1",
+      "label": "NOISE PINK 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.pink",
+      "function": "Pink noise, +4 dBu."
+    },
+    {
+      "id": "m923.pink_2",
+      "label": "NOISE PINK 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m923.pink",
+      "function": "Pink noise, +4 dBu."
+    },
+    {
+      "id": "m904b.sig_in",
+      "label": "SIGNAL INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m904b.sig_in",
+      "function": "Signal in, DC coupled."
+    },
+    {
+      "id": "m904b.sig_out",
+      "label": "SIGNAL OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m904b.sig_out",
+      "function": "Filtered output."
+    },
+    {
+      "id": "m904b.cv_1",
+      "label": "CONTROL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904b.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m904b.cv_2",
+      "label": "CONTROL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904b.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m904b.cv_3",
+      "label": "CONTROL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904b.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m904a.sig_in",
+      "label": "SIGNAL INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m904a.sig_in",
+      "function": "Signal in, DC coupled."
+    },
+    {
+      "id": "m904a.sig_out",
+      "label": "SIGNAL OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m904a.sig_out",
+      "function": "Filtered output."
+    },
+    {
+      "id": "m904a.cv_1",
+      "label": "CONTROL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904a.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m904a.cv_2",
+      "label": "CONTROL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904a.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m904a.cv_3",
+      "label": "CONTROL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m904a.cv",
+      "function": "Cutoff CV, summed, 1 V/oct over 12 octaves.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_1.sig_in_pos",
+      "label": "SIG IN (+)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.sig_in_pos",
+      "function": "Signal input."
+    },
+    {
+      "id": "m902_1.sig_in_neg",
+      "label": "SIG IN (-)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.sig_in_neg",
+      "function": "Signal input, inverted."
+    },
+    {
+      "id": "m902_1.out_pos",
+      "label": "SIG OUT (+)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.out_pos",
+      "function": "Output."
+    },
+    {
+      "id": "m902_1.out_neg",
+      "label": "SIG OUT (-)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.out_neg",
+      "function": "Inverted output."
+    },
+    {
+      "id": "m902_1.cv_1",
+      "label": "CONTROL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_1.cv_2",
+      "label": "CONTROL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_1.cv_3",
+      "label": "CONTROL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_1.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_2.sig_in_pos",
+      "label": "SIG IN (+)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.sig_in_pos",
+      "function": "Signal input."
+    },
+    {
+      "id": "m902_2.sig_in_neg",
+      "label": "SIG IN (-)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.sig_in_neg",
+      "function": "Signal input, inverted."
+    },
+    {
+      "id": "m902_2.out_pos",
+      "label": "SIG OUT (+)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.out_pos",
+      "function": "Output."
+    },
+    {
+      "id": "m902_2.out_neg",
+      "label": "SIG OUT (-)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.out_neg",
+      "function": "Inverted output."
+    },
+    {
+      "id": "m902_2.cv_1",
+      "label": "CONTROL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_2.cv_2",
+      "label": "CONTROL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m902_2.cv_3",
+      "label": "CONTROL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m902_2.cv",
+      "function": "Gain CV, summed, -6 to +6 V.",
+      "combine": "sum"
+    },
+    {
+      "id": "m911_1.strig",
+      "label": "S-TRIG IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m911_1.strig",
+      "function": "S-trigger: hold low for the note."
+    },
+    {
+      "id": "m911_1.out",
+      "label": "OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m911_1.out",
+      "function": "Envelope, 0 to +6 V."
+    },
+    {
+      "id": "m911_2.strig",
+      "label": "S-TRIG IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m911_2.strig",
+      "function": "S-trigger: hold low for the note."
+    },
+    {
+      "id": "m911_2.out",
+      "label": "OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m911_2.out",
+      "function": "Envelope, 0 to +6 V."
+    },
+    {
+      "id": "m921a_1.freq_in_1",
+      "label": "CONTROL INPUT FREQUENCY 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.freq_in",
+      "function": "Frequency CV, summed with the knob.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921a_1.freq_in_2",
+      "label": "CONTROL INPUT FREQUENCY 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.freq_in",
+      "function": "Frequency CV, summed with the knob.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921a_1.width_in_1",
+      "label": "CONTROL INPUT WIDTH 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.width_in",
+      "function": "Width CV, summed with the knob.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921a_1.width_in_2",
+      "label": "CONTROL INPUT WIDTH 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.width_in",
+      "function": "Width CV, summed with the knob.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921a_1.freq_out",
+      "label": "OUTPUT TO 921B FREQ",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.freq_out",
+      "function": "Frequency link to 921Bs, 1 V/oct."
+    },
+    {
+      "id": "m921a_1.width_out",
+      "label": "OUTPUT TO 921B WIDTH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921a_1.width_out",
+      "function": "Width link to 921Bs, 1 V/16%."
+    },
+    {
+      "id": "m921b_1.freq_link",
+      "label": "921AB LINK FREQ",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.freq_link",
+      "function": "Frequency CV from a 921A, 1 V/oct."
+    },
+    {
+      "id": "m921b_1.freq_link_thru",
+      "label": "921AB LINK FREQ (parallel)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.freq_thru",
+      "function": "Parallel jack passing the frequency link on to the next 921B."
+    },
+    {
+      "id": "m921b_1.width_link",
+      "label": "921AB LINK WIDTH",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.width_link",
+      "function": "Pulse width CV from a 921A, 1 V/16%, 0 to +6 V."
+    },
+    {
+      "id": "m921b_1.width_link_thru",
+      "label": "921AB LINK WIDTH (parallel)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.width_thru",
+      "function": "Parallel jack passing the width link on."
+    },
+    {
+      "id": "m921b_1.sync",
+      "label": "SYNC IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "sync",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.sync_in",
+      "function": "Sync source, sawtooth recommended; locks within ±6 semitones."
+    },
+    {
+      "id": "m921b_1.ac_mod",
+      "label": "AC MOD",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.ac_mod",
+      "function": "AC-coupled frequency modulation input."
+    },
+    {
+      "id": "m921b_1.dc_mod",
+      "label": "DC MOD",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.dc_mod",
+      "function": "DC-coupled frequency modulation input."
+    },
+    {
+      "id": "m921b_1.sine",
+      "label": "SINE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.sine",
+      "function": "Sine output."
+    },
+    {
+      "id": "m921b_1.triangle",
+      "label": "TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.triangle",
+      "function": "Triangle output."
+    },
+    {
+      "id": "m921b_1.sawtooth",
+      "label": "SAWTOOTH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.sawtooth",
+      "function": "Sawtooth output."
+    },
+    {
+      "id": "m921b_1.rectangular",
+      "label": "RECTANGULAR",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_1.rectangular",
+      "function": "Rectangular output, width from the link."
+    },
+    {
+      "id": "m921b_2.freq_link",
+      "label": "921AB LINK FREQ",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.freq_link",
+      "function": "Frequency CV from a 921A, 1 V/oct."
+    },
+    {
+      "id": "m921b_2.freq_link_thru",
+      "label": "921AB LINK FREQ (parallel)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.freq_thru",
+      "function": "Parallel jack passing the frequency link on to the next 921B."
+    },
+    {
+      "id": "m921b_2.width_link",
+      "label": "921AB LINK WIDTH",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.width_link",
+      "function": "Pulse width CV from a 921A, 1 V/16%, 0 to +6 V."
+    },
+    {
+      "id": "m921b_2.width_link_thru",
+      "label": "921AB LINK WIDTH (parallel)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.width_thru",
+      "function": "Parallel jack passing the width link on."
+    },
+    {
+      "id": "m921b_2.sync",
+      "label": "SYNC IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "sync",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.sync_in",
+      "function": "Sync source, sawtooth recommended; locks within ±6 semitones."
+    },
+    {
+      "id": "m921b_2.ac_mod",
+      "label": "AC MOD",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.ac_mod",
+      "function": "AC-coupled frequency modulation input."
+    },
+    {
+      "id": "m921b_2.dc_mod",
+      "label": "DC MOD",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.dc_mod",
+      "function": "DC-coupled frequency modulation input."
+    },
+    {
+      "id": "m921b_2.sine",
+      "label": "SINE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.sine",
+      "function": "Sine output."
+    },
+    {
+      "id": "m921b_2.triangle",
+      "label": "TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.triangle",
+      "function": "Triangle output."
+    },
+    {
+      "id": "m921b_2.sawtooth",
+      "label": "SAWTOOTH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.sawtooth",
+      "function": "Sawtooth output."
+    },
+    {
+      "id": "m921b_2.rectangular",
+      "label": "RECTANGULAR",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m921b_2.rectangular",
+      "function": "Rectangular output, width from the link."
+    },
+    {
+      "id": "m921.freq_cv_1",
+      "label": "FREQUENCY CONTROL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921.freq_cv",
+      "function": "Frequency CV, summed, 1 V/oct.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921.freq_cv_2",
+      "label": "FREQUENCY CONTROL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921.freq_cv",
+      "function": "Frequency CV, summed, 1 V/oct.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921.freq_cv_3",
+      "label": "FREQUENCY CONTROL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921.freq_cv",
+      "function": "Frequency CV, summed, 1 V/oct.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921.width_cv_1",
+      "label": "CNTRL IN (width) 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921.width_cv",
+      "function": "Width CV, summed, 1 V/15%.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921.width_cv_2",
+      "label": "CNTRL IN (width) 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "m921.width_cv",
+      "function": "Width CV, summed, 1 V/15%.",
+      "combine": "sum"
+    },
+    {
+      "id": "m921.trig_v",
+      "label": "TRIG V",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m921.trig_v",
+      "function": "V-trigger to the clamping point."
+    },
+    {
+      "id": "m921.trig_s",
+      "label": "TRIG S",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m921.trig_s",
+      "function": "S-trigger to the clamping point."
+    },
+    {
+      "id": "m921.sine",
+      "label": "SINE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921.sine",
+      "function": "Sine output."
+    },
+    {
+      "id": "m921.triangle",
+      "label": "TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921.triangle",
+      "function": "Triangle output."
+    },
+    {
+      "id": "m921.sawtooth",
+      "label": "SAWTOOTH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921.sawtooth",
+      "function": "Sawtooth output."
+    },
+    {
+      "id": "m921.rectangular",
+      "label": "RECTANGULAR",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921.rectangular",
+      "function": "Rectangular output."
+    },
+    {
+      "id": "m921.aux",
+      "label": "AUXILIARY OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "m921.aux",
+      "function": "Selected waveform at AUX LEVEL, up to +10 dBu."
+    },
+    {
+      "id": "cp3am_1.in1",
+      "label": "CHANNEL INPUT 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.in1",
+      "function": "Mixer input 1."
+    },
+    {
+      "id": "cp3am_1.in2",
+      "label": "CHANNEL INPUT 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.in2",
+      "function": "Mixer input 2."
+    },
+    {
+      "id": "cp3am_1.in3",
+      "label": "CHANNEL INPUT 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.in3",
+      "function": "Mixer input 3."
+    },
+    {
+      "id": "cp3am_1.in4",
+      "label": "CHANNEL INPUT 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.in4",
+      "function": "Mixer input 4."
+    },
+    {
+      "id": "cp3am_1.out_pos_1",
+      "label": "OUTPUT (+) 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.out_pos",
+      "function": "Mixed output."
+    },
+    {
+      "id": "cp3am_1.out_pos_2",
+      "label": "OUTPUT (+) 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.out_pos",
+      "function": "Mixed output."
+    },
+    {
+      "id": "cp3am_1.out_neg_1",
+      "label": "OUTPUT (-) 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.out_neg",
+      "function": "Inverted mixed output."
+    },
+    {
+      "id": "cp3am_1.out_neg_2",
+      "label": "OUTPUT (-) 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.out_neg",
+      "function": "Inverted mixed output."
+    },
+    {
+      "id": "cp3am_1.mult_a",
+      "label": "MULTIPLE A",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_a",
+      "function": "First jack of multiple A; all four jacks are one passive bus."
+    },
+    {
+      "id": "cp3am_1.mult_a_out_1",
+      "label": "MULTIPLE A 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp3am_1.mult_a_out_2",
+      "label": "MULTIPLE A 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp3am_1.mult_a_out_3",
+      "label": "MULTIPLE A 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp3am_1.mult_b",
+      "label": "MULTIPLE B",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_b",
+      "function": "First jack of multiple B."
+    },
+    {
+      "id": "cp3am_1.mult_b_out_1",
+      "label": "MULTIPLE B 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "cp3am_1.mult_b_out_2",
+      "label": "MULTIPLE B 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "cp3am_1.mult_b_out_3",
+      "label": "MULTIPLE B 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp3am_1.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "cp35.att_in1",
+      "label": "IN 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_in1",
+      "function": "Attenuator input; feeds all four attenuators while the others are empty."
+    },
+    {
+      "id": "cp35.att_in2",
+      "label": "IN 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_in2",
+      "function": "Attenuator input; breaks the normal from the input above."
+    },
+    {
+      "id": "cp35.att_in3",
+      "label": "IN 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_in3",
+      "function": "Attenuator input; breaks the normal from the input above."
+    },
+    {
+      "id": "cp35.att_in4",
+      "label": "IN 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_in4",
+      "function": "Attenuator input; breaks the normal from the input above."
+    },
+    {
+      "id": "cp35.att_out1",
+      "label": "OUT 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_out1",
+      "function": "Attenuator 1 output."
+    },
+    {
+      "id": "cp35.att_out2",
+      "label": "OUT 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_out2",
+      "function": "Attenuator 2 output."
+    },
+    {
+      "id": "cp35.att_out3",
+      "label": "OUT 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_out3",
+      "function": "Attenuator 3 output."
+    },
+    {
+      "id": "cp35.att_out4",
+      "label": "OUT 4",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.att_out4",
+      "function": "Attenuator 4 output."
+    },
+    {
+      "id": "cp35.pos6_1",
+      "label": "+6 V 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cp35.pos6",
+      "function": "+6 V reference."
+    },
+    {
+      "id": "cp35.pos6_2",
+      "label": "+6 V 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cp35.pos6",
+      "function": "+6 V reference."
+    },
+    {
+      "id": "cp35.neg6_1",
+      "label": "-6 V 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cp35.neg6",
+      "function": "-6 V reference."
+    },
+    {
+      "id": "cp35.neg6_2",
+      "label": "-6 V 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cp35.neg6",
+      "function": "-6 V reference."
+    },
+    {
+      "id": "cp35.mult_a",
+      "label": "MULTIPLE A",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_a",
+      "function": "First jack of multiple A; all four jacks are one passive bus."
+    },
+    {
+      "id": "cp35.mult_a_out_1",
+      "label": "MULTIPLE A 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp35.mult_a_out_2",
+      "label": "MULTIPLE A 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp35.mult_a_out_3",
+      "label": "MULTIPLE A 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_a_out",
+      "function": "Copies of multiple A."
+    },
+    {
+      "id": "cp35.mult_b",
+      "label": "MULTIPLE B",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_b",
+      "function": "First jack of multiple B."
+    },
+    {
+      "id": "cp35.mult_b_out_1",
+      "label": "MULTIPLE B 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "cp35.mult_b_out_2",
+      "label": "MULTIPLE B 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "cp35.mult_b_out_3",
+      "label": "MULTIPLE B 3",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "cp35.mult_b_out",
+      "function": "Copies of multiple B."
+    },
+    {
+      "id": "m961.audio_in",
+      "label": "AUDIO IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "m961.audio_in",
+      "function": "Audio to convert to a V-trigger."
+    },
+    {
+      "id": "m961.vtrig_audio_1",
+      "label": "V-TRIG OUT (audio) 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_audio",
+      "function": "V-trigger from AUDIO IN."
+    },
+    {
+      "id": "m961.vtrig_audio_2",
+      "label": "V-TRIG OUT (audio) 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_audio",
+      "function": "V-trigger from AUDIO IN."
+    },
+    {
+      "id": "m961.strig_in_l",
+      "label": "S-TRIG IN (left)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.strig_in_l",
+      "function": "S-trigger to convert to V-trigger."
+    },
+    {
+      "id": "m961.vtrig_out_l_1",
+      "label": "V-TRIG OUT (left) 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_out_l",
+      "function": "Converted V-trigger, +5 V."
+    },
+    {
+      "id": "m961.vtrig_out_l_2",
+      "label": "V-TRIG OUT (left) 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_out_l",
+      "function": "Converted V-trigger, +5 V."
+    },
+    {
+      "id": "m961.vtrig_a_l_1",
+      "label": "V-TRIG IN A (left) 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_l_2",
+      "label": "V-TRIG IN A (left) 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_l_3",
+      "label": "V-TRIG IN A (left) 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_l_4",
+      "label": "V-TRIG IN A (left) 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_l_5",
+      "label": "V-TRIG IN A (left) 5",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_l_6",
+      "label": "V-TRIG IN A (left) 6",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_l",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_1",
+      "label": "V-TRIG IN B (left) 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_2",
+      "label": "V-TRIG IN B (left) 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_3",
+      "label": "V-TRIG IN B (left) 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_4",
+      "label": "V-TRIG IN B (left) 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_5",
+      "label": "V-TRIG IN B (left) 5",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_l_6",
+      "label": "V-TRIG IN B (left) 6",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_l",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.strig_out_l",
+      "label": "S-TRIG OUT (left)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.strig_out_l",
+      "function": "S-trigger from the V-trigger inputs."
+    },
+    {
+      "id": "m961.strig_in_r",
+      "label": "S-TRIG IN (right)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.strig_in_r",
+      "function": "S-trigger to convert to V-trigger."
+    },
+    {
+      "id": "m961.vtrig_out_r_1",
+      "label": "V-TRIG OUT (right) 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_out_r",
+      "function": "Converted V-trigger, +5 V."
+    },
+    {
+      "id": "m961.vtrig_out_r_2",
+      "label": "V-TRIG OUT (right) 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_out_r",
+      "function": "Converted V-trigger, +5 V."
+    },
+    {
+      "id": "m961.vtrig_a_r_1",
+      "label": "V-TRIG IN A (right) 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_r_2",
+      "label": "V-TRIG IN A (right) 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_r_3",
+      "label": "V-TRIG IN A (right) 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_r_4",
+      "label": "V-TRIG IN A (right) 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_r_5",
+      "label": "V-TRIG IN A (right) 5",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_a_r_6",
+      "label": "V-TRIG IN A (right) 6",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_a_r",
+      "function": "Direct V-trigger inputs.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_1",
+      "label": "V-TRIG IN B (right) 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_2",
+      "label": "V-TRIG IN B (right) 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_3",
+      "label": "V-TRIG IN B (right) 3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_4",
+      "label": "V-TRIG IN B (right) 4",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_5",
+      "label": "V-TRIG IN B (right) 5",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.vtrig_b_r_6",
+      "label": "V-TRIG IN B (right) 6",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.vtrig_b_r",
+      "function": "V-trigger inputs timed by SWITCH-ON TIME.",
+      "combine": "sum"
+    },
+    {
+      "id": "m961.strig_out_r",
+      "label": "S-TRIG OUT (right)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "m961.strig_out_r",
+      "function": "S-trigger from the V-trigger inputs."
+    },
+    {
+      "id": "cm1a.cv_1",
+      "label": "CV 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cm1a.cv_1",
+      "function": "Pitch CV, 1 V/oct."
+    },
+    {
+      "id": "cm1a.cv_2",
+      "label": "CV 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cm1a.cv_2",
+      "function": "Second CV (duophonic)."
+    },
+    {
+      "id": "cm1a.trig_upper",
+      "label": "TRIG (upper)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "cm1a.trig_upper",
+      "function": "Trigger; S-trig in the centre TRIG MODE position."
+    },
+    {
+      "id": "cm1a.trig_lower",
+      "label": "TRIG (lower)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "cm1a.trig_lower",
+      "function": "Trigger; V-trig in the centre TRIG MODE position."
+    },
+    {
+      "id": "cm1a.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in, 5-pin DIN."
+    },
+    {
+      "id": "cm1a.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru, 5-pin DIN."
+    },
+    {
+      "id": "cm1a.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "USB MIDI, SynthTribe, firmware."
+    }
+  ],
+  "connections": [],
+  "indicators": [
+    {
+      "id": "cm1a.mode_leds",
+      "module": "cm1a",
+      "label": "mode LEDs (underside)",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Red/red System 55 mono; green/red System 100 mono; red/green System 55 duophonic; green/green System 100 duophonic."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "921B Oscillator",
+      "applies_to": ["m921b_1", "m921b_2"],
+      "rule": "Pitch is the 921A link voltage plus RANGE and FREQUENCY, at 1 V/oct; pulse width follows the width link (0 to +6 V; outside that the rectangular output stops). Linked 921Bs track together and can be detuned with their own FREQUENCY knobs. LO turns a 921B into a sweep source."
+    },
+    {
+      "id": "b02",
+      "name": "921A Oscillator Driver",
+      "applies_to": ["m921a_1"],
+      "rule": "One 921A sets the pitch and pulse width of every 921B daisy-chained from it; with SEMITONE/OCTAVE at octave the FREQUENCY knob moves all of them by octaves."
+    },
+    {
+      "id": "b03",
+      "name": "921 Voltage Controlled Oscillator",
+      "applies_to": ["m921"],
+      "rule": "Set COARSE RNG to sub for LFO duty ('Sub' in the patches). The clamping point resets the waveform on a trigger, for sync-like or key-synced LFOs. AUX gives any waveform, inverted if wanted, at a set level."
+    },
+    {
+      "id": "b04",
+      "name": "904A Voltage Controlled Low Pass Filter",
+      "applies_to": ["m904a"],
+      "rule": "Cutoff = FIXED CONTROL VOLTAGE plus the three control inputs, 1 V per octave within the selected range. REGENERATION at 9-10 makes it self-oscillate, as in Space Rock."
+    },
+    {
+      "id": "b05",
+      "name": "904B Voltage Controlled High Pass Filter",
+      "applies_to": ["m904b"],
+      "rule": "Cutoff = FIXED CONTROL VOLTAGE plus the three control inputs, 1 V per octave, within LOW or HIGH range."
+    },
+    {
+      "id": "b06",
+      "name": "902 Voltage Controlled Amplifier",
+      "applies_to": ["m902_1", "m902_2"],
+      "rule": "Gain = FIXED CONTROL VOLTAGE plus the control inputs, linear or exponential. Equally happy with audio or CV, so a 902 fed with an LFO and an envelope makes delayed vibrato."
+    },
+    {
+      "id": "b07",
+      "name": "911 Envelope Generator",
+      "applies_to": ["m911_1", "m911_2"],
+      "rule": "S-trigger held low starts T1, then T2 to E SUS while held; release starts T3. Times 2 ms to 10 s."
+    },
+    {
+      "id": "b08",
+      "name": "914 Fixed Filter Bank",
+      "applies_to": ["m914"],
+      "rule": "All fourteen filters run in parallel; their levels shape a fixed formant, independent of pitch."
+    },
+    {
+      "id": "b09",
+      "name": "923 Filters (and noise)",
+      "applies_to": ["m923"],
+      "rule": "Low-pass then high-pass in series gives a band-pass; both are gentle 6 dB/oct."
+    },
+    {
+      "id": "b10",
+      "name": "CP3A-M Mixer",
+      "applies_to": ["cp3am_1"],
+      "rule": "Four inputs summed through MASTER to + and - outputs. The multiples are passive and separate from the mixer."
+    },
+    {
+      "id": "b11",
+      "name": "CP35 Attenuators / Voltage Source / Multiple",
+      "applies_to": ["cp35"],
+      "rule": "Attenuator inputs are half-normalled: input 1 feeds all four outputs until a lower input is patched, which takes over from there down. The multiples are passive buses."
+    },
+    {
+      "id": "b12",
+      "name": "961 Interface",
+      "applies_to": ["m961"],
+      "rule": "Converts between Moog S-triggers (switch to ground) and V-triggers (+5 V), and from audio to V-triggers. Not needed with the CM1A in S-trig mode."
+    },
+    {
+      "id": "b13",
+      "name": "CM1A MIDI to CV Converter",
+      "applies_to": ["cm1a"],
+      "rule": "Select S-trig for the 911s. In System 55 range the pitch CV runs -5.3 to +4.7 V. MIDI channel, bend range and note range are set in SynthTribe."
+    },
+    {
+      "id": "b14",
+      "name": "Triggers",
+      "applies_to": ["m911_1", "m911_2", "m921a_1", "m921b_1", "m921b_2", "m921", "m961", "cm1a"],
+      "rule": "The system uses Moog S-triggers (switch to ground, held for the note) for the 911 envelopes and 911A. The CM1A can output S-triggers directly; the 961 converts V-triggers (from the 960 or other gear) to S-triggers and back."
+    },
+    {
+      "id": "b15",
+      "name": "Pitch",
+      "applies_to": ["m911_1", "m911_2", "m921a_1", "m921b_1", "m921b_2", "m921", "m961", "cm1a"],
+      "rule": "1 V/oct throughout. A 921A drives any number of 921Bs through daisy-chained link jacks; set the CM1A to System 15/35/55 CV range."
+    },
+    {
+      "id": "b16",
+      "name": "Warm-up and drift",
+      "applies_to": ["m911_1", "m911_2", "m921a_1", "m921b_1", "m921b_2", "m921", "m961", "cm1a"],
+      "rule": "Allow 30 minutes or more before playing. The oscillators are not temperature compensated, so offset and scaling drift until warm (Zoe Blade)."
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "expressive_lead_1",
+      "name": "Expressive Lead #1",
+      "description": "Two 921Bs through the CP3A-M and 904A to a 902 under the first 911. A delayed vibrato fades in on held notes: the 921 LFO runs through the second 902, opened by the second 911 (long attack, full sustain), into both 921Bs' DC MOD inputs. Legato playing keeps it out. Note: The guide lists 'three of four' 921B waveforms, copied from the System 35 text; with two 921Bs one waveform each (sawtooth) is assumed.",
+      "cords": [
+        ["cm1a.cv_1", "m921a_1.freq_in_1"],
+        ["m921a_1.freq_out", "m921b_1.freq_link"],
+        ["m921b_1.freq_link_thru", "m921b_2.freq_link"],
+        ["m921b_1.sawtooth", "cp3am_1.in1"],
+        ["m921b_2.sawtooth", "cp3am_1.in2"],
+        ["cp3am_1.out_pos_1", "m904a.sig_in"],
+        ["m904a.sig_out", "m902_1.sig_in_pos"],
+        ["cm1a.trig_upper", "cp35.mult_a"],
+        ["cp35.mult_a_out_1", "m911_1.strig"],
+        ["cp35.mult_a_out_2", "m911_2.strig"],
+        ["m911_1.out", "m902_1.cv_1"],
+        ["m921.aux", "m902_2.sig_in_pos"],
+        ["m902_2.out_pos", "cp35.mult_b"],
+        ["cp35.mult_b_out_1", "m921b_1.dc_mod"],
+        ["cp35.mult_b_out_2", "m921b_2.dc_mod"],
+        ["m911_2.out", "m902_2.cv_1"]
+      ],
+      "settings": {
+        "cm1a.trig_mode": "s_trig",
+        "cm1a.mode": "s55_mono",
+        "m921.coarse": "sub",
+        "m921.aux_wave": "sine",
+        "m911_2.t1": 3,
+        "m911_2.esus": 10
+      },
+      "source": "quick start guide",
+      "confidence": "inferred"
+    },
+    {
+      "id": "expressive_lead_2",
+      "name": "Expressive Lead #2",
+      "description": "Pulse width modulation of two 921Bs (one slightly detuned) from a 921 sine, through the 904A with the second 911 on cutoff and the first 911 on the 902.",
+      "cords": [
+        ["cm1a.cv_1", "m921a_1.freq_in_1"],
+        ["m921a_1.freq_out", "m921b_1.freq_link"],
+        ["m921b_1.freq_link_thru", "m921b_2.freq_link"],
+        ["m921a_1.width_out", "m921b_1.width_link"],
+        ["m921b_1.width_link_thru", "m921b_2.width_link"],
+        ["m921b_1.rectangular", "cp3am_1.in1"],
+        ["m921b_2.rectangular", "cp3am_1.in2"],
+        ["cm1a.trig_upper", "cp35.mult_a"],
+        ["cp35.mult_a_out_1", "m911_1.strig"],
+        ["cp35.mult_a_out_2", "m911_2.strig"],
+        ["m921.sine", "m921a_1.width_in_1"],
+        ["cp3am_1.out_pos_1", "m904a.sig_in"],
+        ["m904a.sig_out", "m902_1.sig_in_pos"],
+        ["m911_1.out", "m902_1.cv_1"],
+        ["m911_2.out", "m904a.cv_1"]
+      ],
+      "settings": {
+        "cm1a.trig_mode": "s_trig",
+        "cm1a.mode": "s55_mono",
+        "m921.coarse": "sub"
+      },
+      "source": "quick start guide",
+      "confidence": "stated"
+    },
+    {
+      "id": "space_rock",
+      "name": "Space Rock",
+      "description": "Two classic space rock sounds mixed: a self-oscillating 904A swept by a slow 921 sine and the first 921B (LO), and pink noise through the 904B swept by the second 921B for wind. Both benefit from lots of echo.",
+      "cords": [
+        ["m921.sine", "m904a.cv_1"],
+        ["m921a_1.freq_out", "m921b_1.freq_link"],
+        ["m921b_1.freq_link_thru", "m921b_2.freq_link"],
+        ["m921b_1.sine", "m904a.cv_2"],
+        ["m921b_2.sine", "m904b.cv_1"],
+        ["m923.pink_1", "m904b.sig_in"],
+        ["m904a.sig_out", "cp3am_1.in1"],
+        ["m904b.sig_out", "cp3am_1.in2"]
+      ],
+      "settings": {
+        "m904a.regeneration": 9.5,
+        "m921a_1.scale": "octave",
+        "m921a_1.frequency": -6,
+        "m921b_1.range": "LO",
+        "m921b_2.range": "LO",
+        "m921.coarse": "sub"
+      },
+      "source": "quick start guide",
+      "confidence": "stated"
+    },
+    {
+      "id": "percussive_lead",
+      "name": "Percussive Lead",
+      "description": "Two 921Bs (triangle and sawtooth, one slightly detuned) into the 904A and a 902; a hard envelope front and filter movement from a slow 921 sine and a second 911. Suits melodic sequencing. Note: The guide gives E SUS in seconds ('4 seconds') for the first 911 and as 9 for the second; E SUS is a level.",
+      "cords": [
+        ["cm1a.cv_1", "m921a_1.freq_in_1"],
+        ["m921a_1.freq_out", "m921b_1.freq_link"],
+        ["m921b_1.freq_link_thru", "m921b_2.freq_link"],
+        ["m921b_1.triangle", "cp3am_1.in1"],
+        ["m921b_2.sawtooth", "cp3am_1.in2"],
+        ["cp3am_1.out_pos_1", "m904a.sig_in"],
+        ["m904a.sig_out", "m902_1.sig_in_pos"],
+        ["cm1a.trig_upper", "cp35.mult_a"],
+        ["cp35.mult_a_out_1", "m911_1.strig"],
+        ["cp35.mult_a_out_2", "m911_2.strig"],
+        ["m911_1.out", "m902_1.cv_1"],
+        ["m921.sine", "m904a.cv_1"],
+        ["m911_2.out", "m904a.cv_2"]
+      ],
+      "settings": {
+        "cm1a.trig_mode": "s_trig",
+        "cm1a.mode": "s55_mono",
+        "m911_1.t1": 0.002,
+        "m911_1.t2": 0.2,
+        "m911_1.t3": 0.2,
+        "m911_1.esus": 4,
+        "m911_2.t1": 1,
+        "m911_2.t2": 0.05,
+        "m911_2.t3": 4,
+        "m911_2.esus": 9,
+        "m921.coarse": "sub"
+      },
+      "source": "quick start guide",
+      "confidence": "stated"
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "range set in SynthTribe"
+      }
+    ],
+    "transmits": [],
+    "note": "Via the CM1A module only; channel set in SynthTribe. MIDI THRU on the CM1A."
+  },
+  "specifications": {
+    "modules": 16,
+    "warm_up_min": 30,
+    "power": "not stated in the quick start guide"
+  },
+  "omitted_from_source": [
+    "safety and warranty text",
+    "non-English translations",
+    "module power connection and installation steps",
+    "module tuning procedures, beyond the reference frequencies"
+  ],
+  "not_in_source": [
+    "power supply and consumption",
+    "case and dimensions",
+    "how many patch cables are supplied"
+  ],
+  "source_inconsistencies": [
+    "The Expressive Lead #1 audio list says 'three of four' 921B waveforms, but the System 15 has two 921Bs; the line is copied from the System 35 guide.",
+    "The 911's E SUS is a sustain level (0 to +5.5 V), but its guide calls it a sustain time and the system guides give it in seconds.",
+    "The system guides say the 921 should be in 'Sub' mode; the 921's switch is labelled COARSE RNG with sub-audio and audio positions."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Module internals",
+      "detail": "Each module is modelled as one block whose jacks expose its nodes; internal circuits are described, not wired."
+    },
+    {
+      "topic": "Multiples and normals",
+      "detail": "Passive multiples are modelled as one input jack and three output jacks on a shared bus; the CP35's half-normalled inputs are a behaviour."
+    }
+  ]
+}

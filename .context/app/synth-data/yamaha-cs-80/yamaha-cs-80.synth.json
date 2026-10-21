@@ -1,0 +1,3027 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "yamaha-cs-80",
+    "manufacturer": "Yamaha",
+    "model": "CS-80 Polyphonic Synthesizer",
+    "category": "8-note polyphonic analogue synthesizer, 61 keys with velocity and per-key aftertouch, two channels per note, ribbon controller",
+    "based_on": "Original design, 1977; Yamaha's flagship of the CS series (CS-50, CS-60, CS-80) after the GX-1.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Yamaha CS-80 Polyphonic Synthesizer Instruction Manual",
+        "kind": "user_manual",
+        "file": "Yamaha_CS-80_Owner_s_Manual.pdf",
+        "pages": 56,
+        "note": "Scanned with a rough OCR layer; Section IV (technical control descriptions, controls [1]-[46]), block diagrams text, specifications and ribbon section read."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 8,
+    "polyphony_mode": "8 notes; each note drives channel I and channel II together (16 VCOs, VCFs, VCAs and EG sets), blended by the MIX lever",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No electronic memory. Each channel offers 11 fixed presets, two memories and one programmable panel; the four memories are miniature physical copies of the panel controls under a cover, so 'storing' means setting tiny sliders by hand.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 61,
+      "programmable_panels": 2,
+      "memory_panels": 4,
+      "tone_selector_rows": 2
+    },
+    "summary": "Two channels per note. Each channel: a sawtooth VCO whose wave shape converter gives square (with PWM from its own sub oscillator), sawtooth and sine, plus white noise; a high-pass and a low-pass filter in series with separate resonance, moved by an IL/AL/A/D/R envelope; the sine bypasses the filter into the VCA, which has an ADSR. Velocity (INITIAL) and per-key pressure (AFTER) raise brilliance and level. Shared controls blend the channels, detune channel II, offset brilliance and resonance, scale brightness and level across the keyboard, add velocity pitchbend and pressure-controlled sub-oscillator modulation, plus a global sub oscillator, ring modulator, sustain, portamento/glissando, tremolo/chorus (rotary-speaker-like in stereo) and a ribbon controller."
+  },
+  "modules": [
+    {
+      "id": "ch1_vco",
+      "type": "oscillator",
+      "name": "Channel I VCO",
+      "panel_section": "PROGRAMMABLE PANEL I VCO",
+      "scope": "per_voice",
+      "description": "Sawtooth VCO with wave shape converter: square (variable PW, PWM), sawtooth, sine; FEET sets the range.",
+      "inputs": ["ch1_vco.pitch_cv", "ch1_vco.pwm_cv"],
+      "outputs": ["ch1_vco.square", "ch1_vco.saw", "ch1_vco.sine"]
+    },
+    {
+      "id": "ch1_pwm",
+      "type": "lfo",
+      "name": "Channel I PWM oscillator",
+      "panel_section": "PROGRAMMABLE PANEL I VCO",
+      "scope": "per_voice",
+      "description": "Pulse-width modulation oscillator (SPEED, PWM depth).",
+      "inputs": [],
+      "outputs": ["ch1_pwm.out"]
+    },
+    {
+      "id": "ch1_noise",
+      "type": "noise",
+      "name": "Channel I noise",
+      "panel_section": "PROGRAMMABLE PANEL I VCO",
+      "scope": "per_voice",
+      "description": "White noise into the VCO mix.",
+      "inputs": [],
+      "outputs": ["ch1_noise.out"]
+    },
+    {
+      "id": "ch1_mix",
+      "type": "mixer",
+      "name": "Channel I VCO mix",
+      "panel_section": "PROGRAMMABLE PANEL I VCO",
+      "scope": "per_voice",
+      "description": "Square and sawtooth (switched on/off) plus noise level into the filters.",
+      "inputs": ["ch1_mix.square", "ch1_mix.saw", "ch1_mix.noise"],
+      "outputs": ["ch1_mix.out"]
+    },
+    {
+      "id": "ch1_vcf",
+      "type": "filter",
+      "name": "Channel I VCF (HPF + LPF)",
+      "panel_section": "PROGRAMMABLE PANEL I VCF",
+      "scope": "per_voice",
+      "description": "High-pass then low-pass filter, each with cutoff and resonance (RES H, RES L); cutoffs moved together by the filter EG, brilliance and touch.",
+      "properties": {
+        "stages": ["HPF", "LPF"]
+      },
+      "inputs": ["ch1_vcf.in", "ch1_vcf.cutoff_cv", "ch1_vcf.res_cv"],
+      "outputs": ["ch1_vcf.out"]
+    },
+    {
+      "id": "ch1_fenv",
+      "type": "envelope",
+      "name": "Channel I filter EG (IL-AL-A-D-R)",
+      "panel_section": "PROGRAMMABLE PANEL I VCF",
+      "scope": "per_voice",
+      "description": "Starts from IL (below the set cutoffs), rises over A to AL (above), decays over D to the set cutoffs, releases over R back to IL. Attack 1 ms-1 s; decay and release 10 ms-10 s.",
+      "properties": {
+        "attack_s": [0.001, 1],
+        "decay_s": [0.01, 10],
+        "release_s": [0.01, 10]
+      },
+      "inputs": ["ch1_fenv.gate"],
+      "outputs": ["ch1_fenv.out"]
+    },
+    {
+      "id": "ch1_vca",
+      "type": "vca",
+      "name": "Channel I VCA",
+      "panel_section": "PROGRAMMABLE PANEL I VCA",
+      "scope": "per_voice",
+      "description": "Mixes the filtered signal (VCF LEVEL) with the unfiltered sine (SINE WAVE LEVEL); ADSR envelope; LEVEL sets the maximum.",
+      "inputs": ["ch1_vca.filtered", "ch1_vca.sine", "ch1_vca.cv"],
+      "outputs": ["ch1_vca.out"]
+    },
+    {
+      "id": "ch1_aenv",
+      "type": "envelope",
+      "name": "Channel I VCA EG (ADSR)",
+      "panel_section": "PROGRAMMABLE PANEL I VCA",
+      "scope": "per_voice",
+      "description": "Attack 1 ms-1 s, decay and release 10 ms-10 s, sustain level.",
+      "properties": {
+        "attack_s": [0.001, 1],
+        "decay_s": [0.01, 10],
+        "release_s": [0.01, 10]
+      },
+      "inputs": ["ch1_aenv.gate", "ch1_aenv.touch"],
+      "outputs": ["ch1_aenv.out"]
+    },
+    {
+      "id": "ch2_vco",
+      "type": "oscillator",
+      "name": "Channel II VCO",
+      "panel_section": "PROGRAMMABLE PANEL II VCO",
+      "scope": "per_voice",
+      "description": "Sawtooth VCO with wave shape converter: square (variable PW, PWM), sawtooth, sine; FEET sets the range.",
+      "inputs": ["ch2_vco.pitch_cv", "ch2_vco.pwm_cv"],
+      "outputs": ["ch2_vco.square", "ch2_vco.saw", "ch2_vco.sine"]
+    },
+    {
+      "id": "ch2_pwm",
+      "type": "lfo",
+      "name": "Channel II PWM oscillator",
+      "panel_section": "PROGRAMMABLE PANEL II VCO",
+      "scope": "per_voice",
+      "description": "Pulse-width modulation oscillator (SPEED, PWM depth).",
+      "inputs": [],
+      "outputs": ["ch2_pwm.out"]
+    },
+    {
+      "id": "ch2_noise",
+      "type": "noise",
+      "name": "Channel II noise",
+      "panel_section": "PROGRAMMABLE PANEL II VCO",
+      "scope": "per_voice",
+      "description": "White noise into the VCO mix.",
+      "inputs": [],
+      "outputs": ["ch2_noise.out"]
+    },
+    {
+      "id": "ch2_mix",
+      "type": "mixer",
+      "name": "Channel II VCO mix",
+      "panel_section": "PROGRAMMABLE PANEL II VCO",
+      "scope": "per_voice",
+      "description": "Square and sawtooth (switched on/off) plus noise level into the filters.",
+      "inputs": ["ch2_mix.square", "ch2_mix.saw", "ch2_mix.noise"],
+      "outputs": ["ch2_mix.out"]
+    },
+    {
+      "id": "ch2_vcf",
+      "type": "filter",
+      "name": "Channel II VCF (HPF + LPF)",
+      "panel_section": "PROGRAMMABLE PANEL II VCF",
+      "scope": "per_voice",
+      "description": "High-pass then low-pass filter, each with cutoff and resonance (RES H, RES L); cutoffs moved together by the filter EG, brilliance and touch.",
+      "properties": {
+        "stages": ["HPF", "LPF"]
+      },
+      "inputs": ["ch2_vcf.in", "ch2_vcf.cutoff_cv", "ch2_vcf.res_cv"],
+      "outputs": ["ch2_vcf.out"]
+    },
+    {
+      "id": "ch2_fenv",
+      "type": "envelope",
+      "name": "Channel II filter EG (IL-AL-A-D-R)",
+      "panel_section": "PROGRAMMABLE PANEL II VCF",
+      "scope": "per_voice",
+      "description": "Starts from IL (below the set cutoffs), rises over A to AL (above), decays over D to the set cutoffs, releases over R back to IL. Attack 1 ms-1 s; decay and release 10 ms-10 s.",
+      "properties": {
+        "attack_s": [0.001, 1],
+        "decay_s": [0.01, 10],
+        "release_s": [0.01, 10]
+      },
+      "inputs": ["ch2_fenv.gate"],
+      "outputs": ["ch2_fenv.out"]
+    },
+    {
+      "id": "ch2_vca",
+      "type": "vca",
+      "name": "Channel II VCA",
+      "panel_section": "PROGRAMMABLE PANEL II VCA",
+      "scope": "per_voice",
+      "description": "Mixes the filtered signal (VCF LEVEL) with the unfiltered sine (SINE WAVE LEVEL); ADSR envelope; LEVEL sets the maximum.",
+      "inputs": ["ch2_vca.filtered", "ch2_vca.sine", "ch2_vca.cv"],
+      "outputs": ["ch2_vca.out"]
+    },
+    {
+      "id": "ch2_aenv",
+      "type": "envelope",
+      "name": "Channel II VCA EG (ADSR)",
+      "panel_section": "PROGRAMMABLE PANEL II VCA",
+      "scope": "per_voice",
+      "description": "Attack 1 ms-1 s, decay and release 10 ms-10 s, sustain level.",
+      "properties": {
+        "attack_s": [0.001, 1],
+        "decay_s": [0.01, 10],
+        "release_s": [0.01, 10]
+      },
+      "inputs": ["ch2_aenv.gate", "ch2_aenv.touch"],
+      "outputs": ["ch2_aenv.out"]
+    },
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and note assigner",
+      "panel_section": "KEYBOARD",
+      "scope": "common",
+      "description": "61 keys with velocity (INITIAL) and individual key pressure (AFTER); digital assignment of 8 notes to the voice boards; sustain and portamento/glissando.",
+      "properties": {
+        "keys": 61
+      },
+      "inputs": ["kbd.sustain_fs"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.velocity", "kbd.pressure"]
+    },
+    {
+      "id": "ribbon",
+      "type": "manual_controller",
+      "name": "Ribbon controller",
+      "panel_section": "above the keyboard",
+      "scope": "common",
+      "description": "Touch anywhere as the reference and slide: up to about an octave sharp to the right, far wider downward (into sub-audio).",
+      "inputs": [],
+      "outputs": ["ribbon.out"]
+    },
+    {
+      "id": "chmix",
+      "type": "mixer",
+      "name": "Channel MIX",
+      "panel_section": "MIX lever [4]",
+      "scope": "per_voice",
+      "description": "Blends channel I and II for each note into the shared processing.",
+      "inputs": ["chmix.ch1", "chmix.ch2"],
+      "outputs": ["chmix.out"]
+    },
+    {
+      "id": "subosc",
+      "type": "lfo",
+      "name": "Sub oscillator",
+      "panel_section": "SUB OSCILLATOR [11]",
+      "scope": "common",
+      "description": "Sine, sawtooth, inverted sawtooth, square, white noise or external input, applied equally to all voices' VCO, VCF and VCA by depth levers.",
+      "inputs": ["subosc.ext", "subosc.rate_cv"],
+      "outputs": ["subosc.out"]
+    },
+    {
+      "id": "ringmod",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "RING MODULATOR [16]",
+      "scope": "common",
+      "description": "Sine-wave ring modulation of both channels and all notes; SPEED, MODULATION depth, and an attack/decay envelope (DEPTH) on the speed.",
+      "inputs": ["ringmod.in"],
+      "outputs": ["ringmod.out"]
+    },
+    {
+      "id": "tremolo",
+      "type": "chorus",
+      "name": "Tremolo / chorus",
+      "panel_section": "TREMOLO [15]",
+      "scope": "common",
+      "description": "Amplitude and phase modulation: TREMOLO, or slower CHORUS; with the L and R outputs, a rotary-speaker-like effect.",
+      "inputs": ["tremolo.in"],
+      "outputs": ["tremolo.out_l", "tremolo.out_r"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Outputs",
+      "panel_section": "VOLUME [2] / rear panel",
+      "scope": "common",
+      "description": "VOLUME and foot controller (expression or expression/wah); LEFT, RIGHT and GENERAL (mono) outputs, headphones; HIGH/LOW level switch.",
+      "inputs": ["out.l", "out.r", "out.exp"],
+      "outputs": ["out.left", "out.right", "out.general", "out.phones"]
+    },
+    {
+      "id": "pedal",
+      "type": "manual_controller",
+      "name": "Foot controller",
+      "panel_section": "FOOT PEDAL SELECTOR [17]",
+      "scope": "common",
+      "description": "Expression pedal: volume (EXP), or volume plus a resonant HPF/LPF sweep (EXP/WAH).",
+      "inputs": ["pedal.in"],
+      "outputs": ["pedal.out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "ch1.pwm_speed",
+      "module": "ch1_pwm",
+      "label": "SPEED (PWM) I",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "PWM rate."
+    },
+    {
+      "id": "ch1.pwm_depth",
+      "module": "ch1_pwm",
+      "label": "PWM I",
+      "kind": "continuous",
+      "manual_ref": 21,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "PWM depth; 0 none."
+    },
+    {
+      "id": "ch1.pw",
+      "module": "ch1_vco",
+      "label": "PW I",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 50,
+        "max": 90,
+        "unit": "%"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Square duty cycle, 50% to a 90% pulse."
+    },
+    {
+      "id": "ch1.square",
+      "module": "ch1_vco",
+      "label": "SQUARE WAVE I",
+      "kind": "boolean",
+      "manual_ref": 23,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Square wave on."
+    },
+    {
+      "id": "ch1.saw",
+      "module": "ch1_vco",
+      "label": "SAWTOOTH WAVE I",
+      "kind": "boolean",
+      "manual_ref": 24,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sawtooth on."
+    },
+    {
+      "id": "ch1.noise",
+      "module": "ch1_noise",
+      "label": "NOISE I",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "White noise level."
+    },
+    {
+      "id": "ch1.hpf",
+      "module": "ch1_vcf",
+      "label": "HPF I",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass cutoff (LOW = wide open)."
+    },
+    {
+      "id": "ch1.res_h",
+      "module": "ch1_vcf",
+      "label": "RES H I",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass resonance."
+    },
+    {
+      "id": "ch1.lpf",
+      "module": "ch1_vcf",
+      "label": "LPF I",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Low-pass cutoff (HIGH = wide open)."
+    },
+    {
+      "id": "ch1.res_l",
+      "module": "ch1_vcf",
+      "label": "RES L I",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Low-pass resonance."
+    },
+    {
+      "id": "ch1.fenv_il",
+      "module": "ch1_fenv",
+      "label": "IL I",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": -5,
+        "max": 0
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Initial level: how far below the set cutoffs the filters start."
+    },
+    {
+      "id": "ch1.fenv_al",
+      "module": "ch1_fenv",
+      "label": "AL I",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "panel_scale": {
+        "min": 0,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack level: how far above the set cutoffs the filters rise."
+    },
+    {
+      "id": "ch1.fenv_a",
+      "module": "ch1_fenv",
+      "label": "A (VCF) I",
+      "kind": "continuous",
+      "manual_ref": 32,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter attack time."
+    },
+    {
+      "id": "ch1.fenv_d",
+      "module": "ch1_fenv",
+      "label": "D (VCF) I",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter decay time."
+    },
+    {
+      "id": "ch1.fenv_r",
+      "module": "ch1_fenv",
+      "label": "R (VCF) I",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter release time."
+    },
+    {
+      "id": "ch1.vcf_level",
+      "module": "ch1_vca",
+      "label": "VCF LEVEL I",
+      "kind": "continuous",
+      "manual_ref": 35,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filtered square/saw/noise into the VCA."
+    },
+    {
+      "id": "ch1.sine_level",
+      "module": "ch1_vca",
+      "label": "SINE WAVE LEVEL I",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Unfiltered sine into the VCA."
+    },
+    {
+      "id": "ch1.aenv_a",
+      "module": "ch1_aenv",
+      "label": "A (VCA) I",
+      "kind": "continuous",
+      "manual_ref": 37,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude attack."
+    },
+    {
+      "id": "ch1.aenv_d",
+      "module": "ch1_aenv",
+      "label": "D (VCA) I",
+      "kind": "continuous",
+      "manual_ref": 38,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude decay."
+    },
+    {
+      "id": "ch1.aenv_s",
+      "module": "ch1_aenv",
+      "label": "S (VCA) I",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "ch1.aenv_r",
+      "module": "ch1_aenv",
+      "label": "R (VCA) I",
+      "kind": "continuous",
+      "manual_ref": 40,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude release."
+    },
+    {
+      "id": "ch1.level",
+      "module": "ch1_vca",
+      "label": "LEVEL I",
+      "kind": "continuous",
+      "manual_ref": 41,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Maximum VCA level (master for the channel)."
+    },
+    {
+      "id": "ch1.init_brill",
+      "module": "ch1_vcf",
+      "label": "INITIAL-BRILLIANCE I",
+      "kind": "continuous",
+      "manual_ref": 42,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Velocity raises the filter cutoffs."
+    },
+    {
+      "id": "ch1.init_level",
+      "module": "ch1_vca",
+      "label": "INITIAL-LEVEL I",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Velocity raises the level."
+    },
+    {
+      "id": "ch1.after_brill",
+      "module": "ch1_vcf",
+      "label": "AFTER-BRILLIANCE I",
+      "kind": "continuous",
+      "manual_ref": 44,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Key pressure raises the filter cutoffs."
+    },
+    {
+      "id": "ch1.after_level",
+      "module": "ch1_vca",
+      "label": "AFTER-LEVEL I",
+      "kind": "continuous",
+      "manual_ref": 45,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Key pressure raises the level."
+    },
+    {
+      "id": "ch1.tone",
+      "module": "ch1_vco",
+      "label": "TONE SELECTOR I",
+      "kind": "enum",
+      "manual_ref": 3,
+      "values": [
+        {
+          "value": "STRING 1"
+        },
+        {
+          "value": "STRING 2"
+        },
+        {
+          "value": "STRING 3"
+        },
+        {
+          "value": "STRING 4"
+        },
+        {
+          "value": "BRASS 1"
+        },
+        {
+          "value": "BRASS 2"
+        },
+        {
+          "value": "BRASS 3"
+        },
+        {
+          "value": "FLUTE"
+        },
+        {
+          "value": "ELECTRIC PIANO"
+        },
+        {
+          "value": "BASS"
+        },
+        {
+          "value": "CLAVICHORD"
+        },
+        {
+          "value": "HARPSICHORD 1"
+        },
+        {
+          "value": "HARPSICHORD 2"
+        },
+        {
+          "value": "ORGAN 1"
+        },
+        {
+          "value": "ORGAN 2"
+        },
+        {
+          "value": "GUITAR 1"
+        },
+        {
+          "value": "GUITAR 2"
+        },
+        {
+          "value": "FUNKY 1"
+        },
+        {
+          "value": "FUNKY 2"
+        },
+        {
+          "value": "FUNKY 3"
+        },
+        {
+          "value": "FUNKY 4"
+        },
+        {
+          "value": "MEMORY (2 per channel)"
+        },
+        {
+          "value": "PANEL"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Selects the channel's voice: a preset, a memory or the programmable panel (lit button; one per row).",
+      "note": "21 preset names across both rows; 11 presets per row per the specifications."
+    },
+    {
+      "id": "ch1.feet",
+      "module": "ch1_vco",
+      "label": "FEET I",
+      "kind": "enum",
+      "manual_ref": 5,
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "5 1/3'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2 2/3'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Keyboard range: 16' to 2'.",
+      "confidence": "inferred",
+      "note": "Range 16'-2' from the specifications; intermediate footages (e.g. 5-1/3') are mentioned."
+    },
+    {
+      "id": "ch2.pwm_speed",
+      "module": "ch2_pwm",
+      "label": "SPEED (PWM) II",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "PWM rate."
+    },
+    {
+      "id": "ch2.pwm_depth",
+      "module": "ch2_pwm",
+      "label": "PWM II",
+      "kind": "continuous",
+      "manual_ref": 21,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "PWM depth; 0 none."
+    },
+    {
+      "id": "ch2.pw",
+      "module": "ch2_vco",
+      "label": "PW II",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 50,
+        "max": 90,
+        "unit": "%"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Square duty cycle, 50% to a 90% pulse."
+    },
+    {
+      "id": "ch2.square",
+      "module": "ch2_vco",
+      "label": "SQUARE WAVE II",
+      "kind": "boolean",
+      "manual_ref": 23,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Square wave on."
+    },
+    {
+      "id": "ch2.saw",
+      "module": "ch2_vco",
+      "label": "SAWTOOTH WAVE II",
+      "kind": "boolean",
+      "manual_ref": 24,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sawtooth on."
+    },
+    {
+      "id": "ch2.noise",
+      "module": "ch2_noise",
+      "label": "NOISE II",
+      "kind": "continuous",
+      "manual_ref": 25,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "White noise level."
+    },
+    {
+      "id": "ch2.hpf",
+      "module": "ch2_vcf",
+      "label": "HPF II",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass cutoff (LOW = wide open)."
+    },
+    {
+      "id": "ch2.res_h",
+      "module": "ch2_vcf",
+      "label": "RES H II",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass resonance."
+    },
+    {
+      "id": "ch2.lpf",
+      "module": "ch2_vcf",
+      "label": "LPF II",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Low-pass cutoff (HIGH = wide open)."
+    },
+    {
+      "id": "ch2.res_l",
+      "module": "ch2_vcf",
+      "label": "RES L II",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Low-pass resonance."
+    },
+    {
+      "id": "ch2.fenv_il",
+      "module": "ch2_fenv",
+      "label": "IL II",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": -5,
+        "max": 0
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Initial level: how far below the set cutoffs the filters start."
+    },
+    {
+      "id": "ch2.fenv_al",
+      "module": "ch2_fenv",
+      "label": "AL II",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "panel_scale": {
+        "min": 0,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack level: how far above the set cutoffs the filters rise."
+    },
+    {
+      "id": "ch2.fenv_a",
+      "module": "ch2_fenv",
+      "label": "A (VCF) II",
+      "kind": "continuous",
+      "manual_ref": 32,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter attack time."
+    },
+    {
+      "id": "ch2.fenv_d",
+      "module": "ch2_fenv",
+      "label": "D (VCF) II",
+      "kind": "continuous",
+      "manual_ref": 33,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter decay time."
+    },
+    {
+      "id": "ch2.fenv_r",
+      "module": "ch2_fenv",
+      "label": "R (VCF) II",
+      "kind": "continuous",
+      "manual_ref": 34,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter release time."
+    },
+    {
+      "id": "ch2.vcf_level",
+      "module": "ch2_vca",
+      "label": "VCF LEVEL II",
+      "kind": "continuous",
+      "manual_ref": 35,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filtered square/saw/noise into the VCA."
+    },
+    {
+      "id": "ch2.sine_level",
+      "module": "ch2_vca",
+      "label": "SINE WAVE LEVEL II",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Unfiltered sine into the VCA."
+    },
+    {
+      "id": "ch2.aenv_a",
+      "module": "ch2_aenv",
+      "label": "A (VCA) II",
+      "kind": "continuous",
+      "manual_ref": 37,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude attack."
+    },
+    {
+      "id": "ch2.aenv_d",
+      "module": "ch2_aenv",
+      "label": "D (VCA) II",
+      "kind": "continuous",
+      "manual_ref": 38,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude decay."
+    },
+    {
+      "id": "ch2.aenv_s",
+      "module": "ch2_aenv",
+      "label": "S (VCA) II",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "ch2.aenv_r",
+      "module": "ch2_aenv",
+      "label": "R (VCA) II",
+      "kind": "continuous",
+      "manual_ref": 40,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amplitude release."
+    },
+    {
+      "id": "ch2.level",
+      "module": "ch2_vca",
+      "label": "LEVEL II",
+      "kind": "continuous",
+      "manual_ref": 41,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Maximum VCA level (master for the channel)."
+    },
+    {
+      "id": "ch2.init_brill",
+      "module": "ch2_vcf",
+      "label": "INITIAL-BRILLIANCE II",
+      "kind": "continuous",
+      "manual_ref": 42,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Velocity raises the filter cutoffs."
+    },
+    {
+      "id": "ch2.init_level",
+      "module": "ch2_vca",
+      "label": "INITIAL-LEVEL II",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Velocity raises the level."
+    },
+    {
+      "id": "ch2.after_brill",
+      "module": "ch2_vcf",
+      "label": "AFTER-BRILLIANCE II",
+      "kind": "continuous",
+      "manual_ref": 44,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Key pressure raises the filter cutoffs."
+    },
+    {
+      "id": "ch2.after_level",
+      "module": "ch2_vca",
+      "label": "AFTER-LEVEL II",
+      "kind": "continuous",
+      "manual_ref": 45,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Key pressure raises the level."
+    },
+    {
+      "id": "ch2.tone",
+      "module": "ch2_vco",
+      "label": "TONE SELECTOR II",
+      "kind": "enum",
+      "manual_ref": 3,
+      "values": [
+        {
+          "value": "STRING 1"
+        },
+        {
+          "value": "STRING 2"
+        },
+        {
+          "value": "STRING 3"
+        },
+        {
+          "value": "STRING 4"
+        },
+        {
+          "value": "BRASS 1"
+        },
+        {
+          "value": "BRASS 2"
+        },
+        {
+          "value": "BRASS 3"
+        },
+        {
+          "value": "FLUTE"
+        },
+        {
+          "value": "ELECTRIC PIANO"
+        },
+        {
+          "value": "BASS"
+        },
+        {
+          "value": "CLAVICHORD"
+        },
+        {
+          "value": "HARPSICHORD 1"
+        },
+        {
+          "value": "HARPSICHORD 2"
+        },
+        {
+          "value": "ORGAN 1"
+        },
+        {
+          "value": "ORGAN 2"
+        },
+        {
+          "value": "GUITAR 1"
+        },
+        {
+          "value": "GUITAR 2"
+        },
+        {
+          "value": "FUNKY 1"
+        },
+        {
+          "value": "FUNKY 2"
+        },
+        {
+          "value": "FUNKY 3"
+        },
+        {
+          "value": "FUNKY 4"
+        },
+        {
+          "value": "MEMORY (2 per channel)"
+        },
+        {
+          "value": "PANEL"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Selects the channel's voice: a preset, a memory or the programmable panel (lit button; one per row).",
+      "note": "21 preset names across both rows; 11 presets per row per the specifications."
+    },
+    {
+      "id": "ch2.feet",
+      "module": "ch2_vco",
+      "label": "FEET II",
+      "kind": "enum",
+      "manual_ref": 5,
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "5 1/3'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2 2/3'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Keyboard range: 16' to 2'.",
+      "confidence": "inferred",
+      "note": "Range 16'-2' from the specifications; intermediate footages (e.g. 5-1/3') are mentioned."
+    },
+    {
+      "id": "chmix.mix",
+      "module": "chmix",
+      "label": "MIX I - II",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Channel I only, a blend, or channel II only."
+    },
+    {
+      "id": "tune.detune_ch2",
+      "module": "ch2_vco",
+      "label": "DETUNE CH II",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "physical": {
+        "min": -100,
+        "max": 100,
+        "unit": "cents"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Detunes channel II by about ±1 semitone against channel I."
+    },
+    {
+      "id": "global.brilliance",
+      "module": "ch1_vcf",
+      "label": "BRILLIANCE",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Offsets both filters' cutoffs for all voices (pull down = brighter)."
+    },
+    {
+      "id": "global.resonance",
+      "module": "ch1_vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Adds resonance to both filters (pull down = more)."
+    },
+    {
+      "id": "kbdctl.brill_low",
+      "module": "kbd",
+      "label": "KEYBOARD CONTROL BRILL LOW",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gradually brightens or darkens the lower end of the keyboard."
+    },
+    {
+      "id": "kbdctl.brill_high",
+      "module": "kbd",
+      "label": "KEYBOARD CONTROL BRILL HIGH",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gradually brightens or darkens the upper end of the keyboard."
+    },
+    {
+      "id": "kbdctl.level_low",
+      "module": "kbd",
+      "label": "KEYBOARD CONTROL LEVEL LOW",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gradually raises or lowers the level of the lower end of the keyboard."
+    },
+    {
+      "id": "kbdctl.level_high",
+      "module": "kbd",
+      "label": "KEYBOARD CONTROL LEVEL HIGH",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gradually raises or lowers the level of the upper end of the keyboard."
+    },
+    {
+      "id": "touch.pitchbend",
+      "module": "kbd",
+      "label": "TOUCH RESPONSE PITCHBEND",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Velocity-sensitive: notes start flat and slide up to pitch; harder playing bends more."
+    },
+    {
+      "id": "touch.after_speed",
+      "module": "subosc",
+      "label": "TOUCH RESPONSE SPEED (after)",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pressure raises the sub oscillator speed."
+    },
+    {
+      "id": "touch.after_vco",
+      "module": "subosc",
+      "label": "TOUCH RESPONSE VCO (after)",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pressure adds sub-oscillator modulation to the VCOs (vibrato)."
+    },
+    {
+      "id": "touch.after_vcf",
+      "module": "subosc",
+      "label": "TOUCH RESPONSE VCF (after)",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pressure adds sub-oscillator modulation to the filters."
+    },
+    {
+      "id": "subosc.function",
+      "module": "subosc",
+      "label": "SUB OSCILLATOR FUNCTION",
+      "kind": "enum",
+      "manual_ref": 11,
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "inverted_sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "white_noise"
+        },
+        {
+          "value": "ext"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Modulation source."
+    },
+    {
+      "id": "subosc.speed",
+      "module": "subosc",
+      "label": "SUB OSCILLATOR SPEED",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Rate of the sine, saw or square."
+    },
+    {
+      "id": "subosc.vco",
+      "module": "subosc",
+      "label": "SUB OSCILLATOR VCO",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Modulation depth to the VCOs (vibrato, wah, tremolo)."
+    },
+    {
+      "id": "subosc.vcf",
+      "module": "subosc",
+      "label": "SUB OSCILLATOR VCF",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Modulation depth to the VCFs (vibrato, wah, tremolo)."
+    },
+    {
+      "id": "subosc.vca",
+      "module": "subosc",
+      "label": "SUB OSCILLATOR VCA",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Modulation depth to the VCAs (vibrato, wah, tremolo)."
+    },
+    {
+      "id": "ringmod.modulation",
+      "module": "ringmod",
+      "label": "RING MODULATOR MODULATION",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Ring modulation depth."
+    },
+    {
+      "id": "ringmod.speed",
+      "module": "ringmod",
+      "label": "RING MODULATOR SPEED",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Ring modulator frequency."
+    },
+    {
+      "id": "ringmod.attack",
+      "module": "ringmod",
+      "label": "RING MODULATOR ATTACK",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Speed envelope attack."
+    },
+    {
+      "id": "ringmod.decay",
+      "module": "ringmod",
+      "label": "RING MODULATOR DECAY",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Speed envelope decay."
+    },
+    {
+      "id": "ringmod.depth",
+      "module": "ringmod",
+      "label": "RING MODULATOR DEPTH",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Amount of envelope on the speed."
+    },
+    {
+      "id": "sustain.time",
+      "module": "kbd",
+      "label": "SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 13,
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Die-away after release, up to about 10 s."
+    },
+    {
+      "id": "sustain.fs_assign",
+      "module": "kbd",
+      "label": "SUSTAIN FOOT SWITCH",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "On: the foot switch turns sustain on/off; off: sustain always on."
+    },
+    {
+      "id": "sustain.mode",
+      "module": "kbd",
+      "label": "SUSTAIN I - II",
+      "kind": "enum",
+      "manual_ref": 13,
+      "values": [
+        {
+          "value": "I"
+        },
+        {
+          "value": "II"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "I: each note sustains independently; II: a new note or chord ends the previous sustain.",
+      "confidence": "inferred",
+      "note": "The manual's description of modes I and II is partly illegible in the scan."
+    },
+    {
+      "id": "porta.time",
+      "module": "kbd",
+      "label": "PORTAMENTO / GLISSANDO",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Glide time, up to 10 s across the keyboard."
+    },
+    {
+      "id": "porta.fs_assign",
+      "module": "kbd",
+      "label": "P/G FOOT SWITCH",
+      "kind": "boolean",
+      "manual_ref": 14,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "On: the foot switch turns the effect on/off; off: always on."
+    },
+    {
+      "id": "porta.mode",
+      "module": "kbd",
+      "label": "PORTAMENTO / GLISSANDO mode",
+      "kind": "enum",
+      "manual_ref": 14,
+      "values": [
+        {
+          "value": "portamento"
+        },
+        {
+          "value": "glissando"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Continuous slide or semitone steps."
+    },
+    {
+      "id": "tremolo.on",
+      "module": "tremolo",
+      "label": "TREMOLO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Effect on (output drops slightly)."
+    },
+    {
+      "id": "tremolo.mode",
+      "module": "tremolo",
+      "label": "TREMOLO / CHORUS",
+      "kind": "enum",
+      "manual_ref": 15,
+      "values": [
+        {
+          "value": "tremolo"
+        },
+        {
+          "value": "chorus"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Tremolo or slower chorus."
+    },
+    {
+      "id": "tremolo.speed",
+      "module": "tremolo",
+      "label": "TREMOLO SPEED",
+      "kind": "continuous",
+      "manual_ref": 15,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Rate."
+    },
+    {
+      "id": "tremolo.depth",
+      "module": "tremolo",
+      "label": "TREMOLO DEPTH",
+      "kind": "continuous",
+      "manual_ref": 15,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth."
+    },
+    {
+      "id": "pedal.select",
+      "module": "pedal",
+      "label": "FOOT PEDAL SELECTOR",
+      "kind": "enum",
+      "manual_ref": 17,
+      "values": [
+        {
+          "value": "exp"
+        },
+        {
+          "value": "exp_wah"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "EXP (volume) or EXP/WAH (volume plus resonant filter sweep)."
+    },
+    {
+      "id": "tune.pitch_coarse",
+      "module": "kbd",
+      "label": "PITCH (outer ring)",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "physical": {
+        "min": -500,
+        "max": 700,
+        "unit": "cents"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning, about -500 to +700 cents."
+    },
+    {
+      "id": "tune.pitch_fine",
+      "module": "kbd",
+      "label": "PITCH (inner ring)",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "physical": {
+        "min": -30,
+        "max": 30,
+        "unit": "cents"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning, about ±30 cents."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "manual_ref": 2,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of all three outputs."
+    },
+    {
+      "id": "out.level_switch",
+      "module": "out",
+      "label": "HIGH / LOW",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "high"
+        },
+        {
+          "value": "low"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Output level: 0 dBm or -20 dBm."
+    },
+    {
+      "id": "ribbon.position",
+      "module": "ribbon",
+      "label": "RIBBON CONTROLLER",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "ribbon"
+        }
+      ],
+      "function": "Pitch bend for all notes while held.",
+      "confidence": "inferred",
+      "note": "Callout number not legible in the scan."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "manual_ref": 1,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "AC power, red indicator."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.left",
+      "label": "OUTPUT LEFT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.left",
+      "function": "Left output, 600 ohm, 0 / -20 dBm."
+    },
+    {
+      "id": "jack.right",
+      "label": "OUTPUT RIGHT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.right",
+      "function": "Right output."
+    },
+    {
+      "id": "jack.general",
+      "label": "OUTPUT GENERAL",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.general",
+      "function": "Mono output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "front",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones, 250 mV; physically on the bottom panel."
+    },
+    {
+      "id": "jack.ext_in",
+      "label": "EXT IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "subosc.ext",
+      "function": "External signal as the sub-oscillator source (50 kohm, 10 mV rms nominal), with level control."
+    },
+    {
+      "id": "jack.foot_switch",
+      "label": "FOOT SWITCH",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain_fs",
+      "function": "Sustain and/or portamento on/off (per the assigners).",
+      "confidence": "inferred",
+      "note": "Connector type not stated."
+    },
+    {
+      "id": "jack.foot_controller",
+      "label": "FOOT CONTROLLER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "pedal.in",
+      "function": "Expression / wah pedal.",
+      "confidence": "inferred",
+      "note": "Connector type not stated."
+    },
+    {
+      "id": "jack.power",
+      "label": "AC",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "captive cord",
+      "node": null,
+      "function": "AC 50/60 Hz, 180 W; cord stored under the instrument."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.pitch",
+      "to": "ch1_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "ribbon.out",
+      "to": "ch1_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.velocity",
+      "to": "ch1_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "touch.pitchbend",
+      "note": "Velocity pitchbend: start flat, slide to pitch."
+    },
+    {
+      "id": "c04",
+      "from": "subosc.out",
+      "to": "ch1_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vco"
+    },
+    {
+      "id": "c05",
+      "from": "subosc.out",
+      "to": "ch1_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "touch.after_vco * kbd.pressure",
+      "note": "Pressure-controlled vibrato."
+    },
+    {
+      "id": "c06",
+      "from": "ch1_pwm.out",
+      "to": "ch1_vco.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.pwm_depth"
+    },
+    {
+      "id": "c07",
+      "from": "ch1_vco.square",
+      "to": "ch1_mix.square",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.square",
+        "equals": true
+      }
+    },
+    {
+      "id": "c08",
+      "from": "ch1_vco.saw",
+      "to": "ch1_mix.saw",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.saw",
+        "equals": true
+      }
+    },
+    {
+      "id": "c09",
+      "from": "ch1_noise.out",
+      "to": "ch1_mix.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch1.noise"
+    },
+    {
+      "id": "c10",
+      "from": "ch1_mix.out",
+      "to": "ch1_vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "kbd.gate",
+      "to": "ch1_fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "ch1_fenv.out",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Moves HPF and LPF together."
+    },
+    {
+      "id": "c13",
+      "from": "kbd.velocity",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.init_brill"
+    },
+    {
+      "id": "c14",
+      "from": "kbd.pressure",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.after_brill"
+    },
+    {
+      "id": "c15",
+      "from": "subosc.out",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vcf"
+    },
+    {
+      "id": "c16",
+      "from": "subosc.out",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "touch.after_vcf * kbd.pressure"
+    },
+    {
+      "id": "c17",
+      "from": "kbd.pitch",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Keyboard control brilliance tilts the cutoffs across the keyboard.",
+      "amount": "kbdctl.brill_high"
+    },
+    {
+      "id": "c18",
+      "from": "pedal.out",
+      "to": "ch1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pedal.select",
+        "equals": "exp_wah"
+      },
+      "note": "Wah: sweeps HPF and LPF and adds resonance."
+    },
+    {
+      "id": "c19",
+      "from": "pedal.out",
+      "to": "ch1_vcf.res_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pedal.select",
+        "equals": "exp_wah"
+      }
+    },
+    {
+      "id": "c20",
+      "from": "ch1_vcf.out",
+      "to": "ch1_vca.filtered",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch1.vcf_level"
+    },
+    {
+      "id": "c21",
+      "from": "ch1_vco.sine",
+      "to": "ch1_vca.sine",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch1.sine_level",
+      "note": "The sine bypasses the filters."
+    },
+    {
+      "id": "c22",
+      "from": "kbd.gate",
+      "to": "ch1_aenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "kbd.velocity",
+      "to": "ch1_aenv.touch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.init_level"
+    },
+    {
+      "id": "c24",
+      "from": "kbd.pressure",
+      "to": "ch1_aenv.touch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.after_level"
+    },
+    {
+      "id": "c25",
+      "from": "ch1_aenv.out",
+      "to": "ch1_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.level"
+    },
+    {
+      "id": "c26",
+      "from": "subosc.out",
+      "to": "ch1_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vca"
+    },
+    {
+      "id": "c27",
+      "from": "ch1_vca.out",
+      "to": "chmix.ch1",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c28",
+      "from": "kbd.pitch",
+      "to": "ch2_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "ribbon.out",
+      "to": "ch2_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "kbd.velocity",
+      "to": "ch2_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "touch.pitchbend",
+      "note": "Velocity pitchbend: start flat, slide to pitch."
+    },
+    {
+      "id": "c31",
+      "from": "subosc.out",
+      "to": "ch2_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vco"
+    },
+    {
+      "id": "c32",
+      "from": "subosc.out",
+      "to": "ch2_vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "touch.after_vco * kbd.pressure",
+      "note": "Pressure-controlled vibrato."
+    },
+    {
+      "id": "c33",
+      "from": "ch2_pwm.out",
+      "to": "ch2_vco.pwm_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.pwm_depth"
+    },
+    {
+      "id": "c34",
+      "from": "ch2_vco.square",
+      "to": "ch2_mix.square",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.square",
+        "equals": true
+      }
+    },
+    {
+      "id": "c35",
+      "from": "ch2_vco.saw",
+      "to": "ch2_mix.saw",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.saw",
+        "equals": true
+      }
+    },
+    {
+      "id": "c36",
+      "from": "ch2_noise.out",
+      "to": "ch2_mix.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch2.noise"
+    },
+    {
+      "id": "c37",
+      "from": "ch2_mix.out",
+      "to": "ch2_vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c38",
+      "from": "kbd.gate",
+      "to": "ch2_fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c39",
+      "from": "ch2_fenv.out",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Moves HPF and LPF together."
+    },
+    {
+      "id": "c40",
+      "from": "kbd.velocity",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.init_brill"
+    },
+    {
+      "id": "c41",
+      "from": "kbd.pressure",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.after_brill"
+    },
+    {
+      "id": "c42",
+      "from": "subosc.out",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vcf"
+    },
+    {
+      "id": "c43",
+      "from": "subosc.out",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "touch.after_vcf * kbd.pressure"
+    },
+    {
+      "id": "c44",
+      "from": "kbd.pitch",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Keyboard control brilliance tilts the cutoffs across the keyboard.",
+      "amount": "kbdctl.brill_high"
+    },
+    {
+      "id": "c45",
+      "from": "pedal.out",
+      "to": "ch2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pedal.select",
+        "equals": "exp_wah"
+      },
+      "note": "Wah: sweeps HPF and LPF and adds resonance."
+    },
+    {
+      "id": "c46",
+      "from": "pedal.out",
+      "to": "ch2_vcf.res_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pedal.select",
+        "equals": "exp_wah"
+      }
+    },
+    {
+      "id": "c47",
+      "from": "ch2_vcf.out",
+      "to": "ch2_vca.filtered",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch2.vcf_level"
+    },
+    {
+      "id": "c48",
+      "from": "ch2_vco.sine",
+      "to": "ch2_vca.sine",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ch2.sine_level",
+      "note": "The sine bypasses the filters."
+    },
+    {
+      "id": "c49",
+      "from": "kbd.gate",
+      "to": "ch2_aenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c50",
+      "from": "kbd.velocity",
+      "to": "ch2_aenv.touch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.init_level"
+    },
+    {
+      "id": "c51",
+      "from": "kbd.pressure",
+      "to": "ch2_aenv.touch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.after_level"
+    },
+    {
+      "id": "c52",
+      "from": "ch2_aenv.out",
+      "to": "ch2_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.level"
+    },
+    {
+      "id": "c53",
+      "from": "subosc.out",
+      "to": "ch2_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "subosc.vca"
+    },
+    {
+      "id": "c54",
+      "from": "ch2_vca.out",
+      "to": "chmix.ch2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c55",
+      "from": "kbd.pressure",
+      "to": "subosc.rate_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "touch.after_speed",
+      "note": "Pressure raises the sub-oscillator speed."
+    },
+    {
+      "id": "c56",
+      "from": "chmix.out",
+      "to": "ringmod.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "chmix.mix",
+      "note": "Eight notes summed."
+    },
+    {
+      "id": "c57",
+      "from": "ringmod.out",
+      "to": "tremolo.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c58",
+      "from": "tremolo.out_l",
+      "to": "out.l",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c59",
+      "from": "tremolo.out_r",
+      "to": "out.r",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c60",
+      "from": "pedal.out",
+      "to": "out.exp",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Expression (volume) in both pedal modes."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "tone_lamps",
+      "module": "kbd",
+      "label": "TONE SELECTOR lamps",
+      "kind": "lamp",
+      "function": "Show the selected voice in each row."
+    },
+    {
+      "id": "power_lamp",
+      "module": "out",
+      "label": "POWER lamp",
+      "kind": "lamp",
+      "function": "Power on."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Two channels per note",
+      "applies_to": ["chmix", "kbd"],
+      "rule": "Every key sounds channel I and channel II (each a full VCO-VCF-VCA voice) on its own voice board; up to 8 notes and 16 voices. Each channel picks a preset, memory or the panel; MIX balances them; DETUNE CH II thickens them."
+    },
+    {
+      "id": "b02",
+      "name": "Filter envelope",
+      "applies_to": ["ch1_fenv", "ch2_fenv"],
+      "rule": "IL-AL-A-D-R: on a key the HPF and LPF start IL below their set cutoffs, move over the attack time to AL above, decay to the set cutoffs and, on release, move back to IL over the release time. With IL and AL at zero the envelope does nothing."
+    },
+    {
+      "id": "b03",
+      "name": "Sine bypass",
+      "applies_to": ["ch1_vca", "ch2_vca"],
+      "rule": "Square, sawtooth and noise pass the filters (VCF LEVEL); the sine goes straight to the VCA (SINE WAVE LEVEL), so pure fundamentals can be mixed with filtered tones."
+    },
+    {
+      "id": "b04",
+      "name": "Touch response",
+      "applies_to": ["kbd"],
+      "rule": "Per channel: velocity (INITIAL) and per-key pressure (AFTER) raise brilliance and level. Shared: velocity pitchbend (notes slide up into pitch), and pressure raising the sub-oscillator speed or its modulation of the VCOs and VCFs, note by note."
+    },
+    {
+      "id": "b05",
+      "name": "Ribbon controller",
+      "applies_to": ["ribbon"],
+      "rule": "Touch anywhere as the reference and slide: about an octave sharp at most, but much further flat (down to sub-audio). In sustain mode II the ribbon also bends sustaining notes after release."
+    },
+    {
+      "id": "b06",
+      "name": "Sustain and portamento",
+      "applies_to": ["kbd"],
+      "rule": "Sustain up to about 10 s; portamento or semitone glissando up to 10 s across the keyboard. Foot-switch assigners decide which the switch controls (or leave them always on)."
+    },
+    {
+      "id": "b07",
+      "name": "Memories",
+      "applies_to": ["kbd"],
+      "rule": "No electronic memory: four miniature control panels (two per channel) under the memory cover duplicate the programmable panel's controls; patches are copied by eye and fine-tuned by ear."
+    },
+    {
+      "id": "b08",
+      "name": "Global effects",
+      "applies_to": ["subosc", "ringmod", "tremolo"],
+      "rule": "The sub oscillator (sine, saw, inverted saw, square, noise or external input) modulates all voices' VCO, VCF and VCA; the ring modulator processes the summed output with an envelope on its speed; tremolo/chorus adds amplitude and phase modulation, rotary-like in stereo."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "None: the CS-80 predates MIDI (retrofits exist)."
+  },
+  "specifications": {
+    "keyboard": "61 keys, C-C, velocity and polyphonic pressure",
+    "polyphony": "8 notes x 2 channels (16 voices)",
+    "frequency_range_hz": [32, 8000],
+    "extended_range_hz": [2, 11000],
+    "pitch": {
+      "coarse_cents": [-500, 700],
+      "fine_cents": [-30, 30],
+      "detune_ch2": "±1 semitone"
+    },
+    "envelopes": "attack 1 ms-1 s, decay/release 10 ms-10 s",
+    "glide_s_max": 10,
+    "presets": "11 per channel (STRING 1-4, BRASS 1-3, FLUTE, ELECTRIC PIANO, BASS, CLAVICHORD, HARPSICHORD 1-2, ORGAN 1-2, GUITAR 1-2, FUNKY 1-4)",
+    "outputs": {
+      "left_right_general": "1/4\", 600 ohm, 0 dBm or -20 dBm",
+      "phones": "1/4\" TRS, 250 mV"
+    },
+    "ext_in": "1/4\", 50 kohm, 10 mV rms nominal",
+    "power": "AC 50/60 Hz, 180 W",
+    "dimensions_cm": {
+      "w": 120.5,
+      "h_case": 30.4,
+      "d": 70.2,
+      "h_assembled": 96.5
+    },
+    "weight_kg": 100
+  },
+  "omitted_from_source": [
+    "Section II/III non-technical descriptions",
+    "Section V synthesis primer (beyond the block diagram facts)",
+    "patch charts and appendix",
+    "setup, care and transport"
+  ],
+  "not_in_source": [
+    "clear text for some callout numbers (OCR)",
+    "exact FEET positions",
+    "the keyboard control's exact scaling law",
+    "connector types for the foot pedals"
+  ],
+  "source_inconsistencies": [
+    "The specifications say each channel has 11 presets (22 in all) but the legible list gives 21 names; a stray '(1 & 2)' in the scan suggests one name was lost to OCR.",
+    "The specifications say 'Each channel is provided with 11 different preset patches, two memory-programmable patches', while the memory section describes 'Memories 1-4'; these are two per channel.",
+    "The overview says the CS-80 has 16 sets of VCO/VCF/VCA/EG; the block diagram labels the voice boards M1-M8 (one board per note carrying both channels)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "OCR quality",
+      "detail": "The scan's text layer is rough; values are taken where legible and some callout numbers are inferred."
+    },
+    {
+      "topic": "Memories",
+      "detail": "Memory panels are physical miniature controls; modelled as a tone-selector choice, not as stored parameters."
+    },
+    {
+      "topic": "Per-voice modules",
+      "detail": "Channel I and II voice modules are per_voice (one per note); MIX, sub oscillator, ring mod, tremolo and outputs are common."
+    }
+  ]
+}

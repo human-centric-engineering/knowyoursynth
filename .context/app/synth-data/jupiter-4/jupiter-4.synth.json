@@ -1,0 +1,1888 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "roland-jupiter-4",
+    "manufacturer": "Roland",
+    "model": "Jupiter-4 Compuphonic (JP-4)",
+    "category": "4-voice polyphonic analogue synthesizer with microprocessor-controlled memory and arpeggiator",
+    "based_on": "Original design, 1978-81. Roland's first self-contained polyphonic synthesizer.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Roland Jupiter-4 Owner's Manual (JP-4 OWNER'S MANUAL '82 AUG.)",
+        "kind": "user_manual",
+        "file": "Roland_Jupiter_4_Manual.pdf",
+        "pages": 42,
+        "note": "Internet Archive scan with an imperfect OCR layer. Front panel, programmable, modifier and controller sections, assign modes, arpeggio, memory, connections and specifications. Sample sound charts are drawings and not read."
+      },
+      {
+        "id": "plugout",
+        "title": "Roland JUPITER-4 PLUG-OUT Software Synthesizer Owner's Manual (2022)",
+        "kind": "other",
+        "file": "Jupiter-4_Manual.pdf",
+        "pages": 15,
+        "note": "A software recreation with extra features. Used to confirm assign mode and portamento behaviour; its additions are listed in modelling_gaps."
+      },
+      {
+        "id": "wikipedia",
+        "title": "Wikipedia, 'Roland Jupiter-4'",
+        "kind": "other",
+        "file": "https://en.wikipedia.org/wiki/Roland_Jupiter-4",
+        "note": "Two ADSRs per voice, LFO reaching audio rate, voice card revisions (BA662 and IR3109 filters), MN3004-based ensemble, unmemorised master volume and portamento."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 4,
+    "polyphony_mode": "polyphonic, 4 voices; unison modes",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "8 user memories (COMPU-MEMORY) plus 10 fixed presets, battery backed. The modifier and controller sections are not memorised.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 49,
+      "user_memories": 8,
+      "presets": 10
+    },
+    "summary": "Four voice cards, each with one VCO plus a sub-oscillator, noise, a high-pass filter, a resonant low-pass VCF with its own ADSR, and a VCA with a second ADSR. One LFO, an arpeggiator and four voice assign modes run on two microcontrollers, which also store 8 patches beside 10 presets. A modifier section adds a trigger generator for the arpeggio and a noise sample-and-hold on the filter, LFO delay and a live LFO rate offset. A stereo ensemble chorus feeds two outputs."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard, assigner and arpeggio",
+      "panel_section": "ARPEGGIO / KEY ASSIGNMENT / CONTROLLER",
+      "scope": "common",
+      "description": "49-key keyboard with four assign modes, an up/down/up+down/random arpeggio over up to four octaves, hold, polyphonic portamento, transpose and master tuning. Sends pitch CV and gates to the four voices.",
+      "properties": {
+        "keys": 49,
+        "range_octaves_with_transpose": 7
+      },
+      "inputs": ["kbd.clock_in", "kbd.hold_in"],
+      "outputs": ["kbd.cv", "kbd.gate"]
+    },
+    {
+      "id": "trig",
+      "type": "gate_logic",
+      "name": "Trigger generator",
+      "panel_section": "MODIFIER: TRIGGER",
+      "scope": "common",
+      "description": "Internal clock for the arpeggio and the filter sample-and-hold, with an external clock input as the alternative source for either.",
+      "properties": {
+        "rate_hz": [null, 25]
+      },
+      "inputs": ["trig.ext_in"],
+      "outputs": ["trig.int", "trig.ext"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "PROGRAMMABLE: LFO",
+      "scope": "common",
+      "description": "One LFO shared by all voices, 0.1 to 80 Hz, so it reaches audio rate for crude FM and AM. Its rate is memorised; the modifier section's LFO BEND slider offsets it live, and DELAY TIME fades it in on each new key.",
+      "properties": {
+        "rate_hz": [0.1, 80],
+        "waveforms": ["sine (triangle)", "square", "sawtooth", "reverse sawtooth"]
+      },
+      "inputs": [],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "PROGRAMMABLE: NOISE",
+      "scope": "common",
+      "description": "Noise source for the voices and for the filter sample-and-hold.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "VCF sample and hold",
+      "panel_section": "MODIFIER: VCF",
+      "scope": "common",
+      "description": "Samples noise at the trigger rate (or an external clock) to step the filter cutoff randomly.",
+      "inputs": ["snh.in", "snh.clock"],
+      "outputs": ["snh.out"]
+    },
+    {
+      "id": "vco",
+      "type": "oscillator",
+      "name": "VCO",
+      "panel_section": "PROGRAMMABLE: VCO",
+      "scope": "per_voice",
+      "description": "One VCO per voice: off, sawtooth, square or pulse, at 16', 8' or 4'. Pulse width is set to one of four widths or modulated by the LFO. A sub-oscillator adds a square one octave down.",
+      "properties": {
+        "ranges": ["16'", "8'", "4'"],
+        "pulse_widths_pct": [50, 40, 20, 10]
+      },
+      "inputs": ["vco.pitch_cv", "vco.pw_cv"],
+      "outputs": ["vco.wave", "vco.sub"]
+    },
+    {
+      "id": "mix",
+      "type": "mixer",
+      "name": "Voice source mix",
+      "panel_section": "PROGRAMMABLE",
+      "scope": "per_voice",
+      "description": "Combines the VCO waveform, sub-oscillator and noise as switched on.",
+      "inputs": ["mix.wave", "mix.sub", "mix.noise"],
+      "outputs": ["mix.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "HPF",
+      "panel_section": "PROGRAMMABLE: VCF",
+      "scope": "per_voice",
+      "description": "High-pass filter ahead of the low-pass VCF; at minimum it passes everything.",
+      "properties": {
+        "cutoff_hz": [40, 5000]
+      },
+      "inputs": ["hpf.in"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF (low-pass)",
+      "panel_section": "PROGRAMMABLE: VCF",
+      "scope": "per_voice",
+      "description": "Resonant low-pass filter, self-oscillating at full resonance, with keyboard follow, LFO and envelope modulation.",
+      "properties": {
+        "self_oscillates": true,
+        "chip": "BA662 on early B/C/D voice cards, IR3109 on later E cards (Wikipedia)"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env_f",
+      "type": "envelope",
+      "name": "VCF envelope (ADSR)",
+      "panel_section": "PROGRAMMABLE: ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR for the filter, with a polarity switch.",
+      "inputs": ["env_f.gate"],
+      "outputs": ["env_f.out"]
+    },
+    {
+      "id": "env_a",
+      "type": "envelope",
+      "name": "VCA envelope (ADSR)",
+      "panel_section": "PROGRAMMABLE: ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADSR for the VCA.",
+      "inputs": ["env_a.gate"],
+      "outputs": ["env_a.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "PROGRAMMABLE: VCA",
+      "scope": "per_voice",
+      "description": "Shapes each voice with its envelope; LEVEL sets the memorised output, with an overload lamp.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "bend",
+      "type": "manual_controller",
+      "name": "Bend / modulation lever",
+      "panel_section": "CONTROLLER: BEND / MODULATION",
+      "scope": "common",
+      "description": "Spring-loaded left-right lever. For each of VCO, VCF and VCA a switch picks BEND, OFF or LFO: BEND moves that destination by BEND SENS, LFO makes the lever set the depth of LFO modulation up to LFO MOD.",
+      "inputs": [],
+      "outputs": ["bend.cv"]
+    },
+    {
+      "id": "ens",
+      "type": "chorus",
+      "name": "Ensemble",
+      "panel_section": "ENSEMBLE",
+      "scope": "common",
+      "description": "Stereo chorus on the summed voices (two MN3004 bucket brigades, per Wikipedia).",
+      "inputs": ["ens.in"],
+      "outputs": ["ens.out_a", "ens.out_b"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / connection jacks",
+      "scope": "common",
+      "description": "Master VOLUME (not memorised), expression pedal, mono and stereo outputs, headphones.",
+      "inputs": ["out.in_a", "out.in_b", "out.exp_cv"],
+      "outputs": ["out.mono", "out.stereo", "out.phones"]
+    },
+    {
+      "id": "memory",
+      "type": "cv_source_selector",
+      "name": "COMPU-MEMORY and presets",
+      "panel_section": "MEMORY",
+      "scope": "common",
+      "description": "Selects the programmable panel (MANUAL), one of 8 user memories or one of 10 presets.",
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco.range",
+      "module": "vco",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave of the VCO."
+    },
+    {
+      "id": "vco.waveform",
+      "module": "vco",
+      "label": "WAVE FORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "VCO output waveform."
+    },
+    {
+      "id": "vco.pw",
+      "module": "vco",
+      "label": "PW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "With PW at MANUAL, steps the pulse width through 50, 40, 20 and 10%; at MOD, sets the depth of LFO pulse width modulation."
+    },
+    {
+      "id": "vco.pw_mode",
+      "module": "vco",
+      "label": "PW switch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "manual"
+        },
+        {
+          "value": "mod"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Manual pulse width or LFO modulation."
+    },
+    {
+      "id": "vco.lfo_mod",
+      "module": "vco",
+      "label": "MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of LFO pitch modulation (vibrato)."
+    },
+    {
+      "id": "vco.sub",
+      "module": "vco",
+      "label": "SUB",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Adds a square wave one octave below."
+    },
+    {
+      "id": "noise.on",
+      "module": "noise",
+      "label": "NOISE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Adds noise to the voice."
+    },
+    {
+      "id": "hpf.cutoff",
+      "module": "hpf",
+      "label": "HPF CUTOFF FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 40,
+        "max": 5000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "High-pass cutoff; minimum passes everything.",
+      "note": "Upper limit read from a poor OCR scan."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "LPF CUTOFF FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Low-pass cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Emphasis at the cutoff, to self-oscillation. Raising it lowers the volume."
+    },
+    {
+      "id": "vcf.kybd_follow",
+      "module": "vcf",
+      "label": "KYBD FOLLOW",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 10
+        },
+        {
+          "value": 40
+        },
+        {
+          "value": 70
+        },
+        {
+          "value": 100
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "How much keyboard pitch moves the cutoff.",
+      "note": "Values are percentages."
+    },
+    {
+      "id": "vcf.lfo_mod",
+      "module": "vcf",
+      "label": "LFO MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of LFO cutoff modulation (growl)."
+    },
+    {
+      "id": "vcf.env_mod",
+      "module": "vcf",
+      "label": "ENV MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of the filter envelope on cutoff."
+    },
+    {
+      "id": "env_f.polarity",
+      "module": "env_f",
+      "label": "POLARITY",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "inverted"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Normal or inverted filter envelope."
+    },
+    {
+      "id": "env_f.attack",
+      "module": "env_f",
+      "label": "VCF A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.0006,
+        "max": 3,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env_f.decay",
+      "module": "env_f",
+      "label": "VCF D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "env_f.sustain",
+      "module": "env_f",
+      "label": "VCF S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level while the key is held."
+    },
+    {
+      "id": "env_f.release",
+      "module": "env_f",
+      "label": "VCF R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Release time after the key is let go."
+    },
+    {
+      "id": "env_a.attack",
+      "module": "env_a",
+      "label": "VCA A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.0006,
+        "max": 3,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env_a.decay",
+      "module": "env_a",
+      "label": "VCA D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "env_a.sustain",
+      "module": "env_a",
+      "label": "VCA S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level while the key is held."
+    },
+    {
+      "id": "env_a.release",
+      "module": "env_a",
+      "label": "VCA R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Release time after the key is let go."
+    },
+    {
+      "id": "vca.level",
+      "module": "vca",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Memorised output level of the programmable section; too high distorts and lights OVERLOAD."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.1,
+        "max": 80,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "LFO rate, memorised."
+    },
+    {
+      "id": "lfo.waveform",
+      "module": "lfo",
+      "label": "WAVE FORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "reverse_sawtooth"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "trig.rate",
+      "module": "trig",
+      "label": "TRIGGER RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "max": 25,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Rate of the internal trigger generator: arpeggio speed and sample-and-hold rate."
+    },
+    {
+      "id": "trig.arp_clock",
+      "module": "trig",
+      "label": "ARPEGGIO INT/EXT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "ext"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Arpeggio clock source."
+    },
+    {
+      "id": "trig.snh_clock",
+      "module": "trig",
+      "label": "VCF INT/EXT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "ext"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Clock for the filter sample-and-hold."
+    },
+    {
+      "id": "trig.vcf_mod",
+      "module": "snh",
+      "label": "VCF MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of the noise sample-and-hold on filter cutoff."
+    },
+    {
+      "id": "lfo.bend_rate",
+      "module": "lfo",
+      "label": "LFO BEND",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Live offset to the memorised LFO rate; centre (0) leaves it unchanged."
+    },
+    {
+      "id": "lfo.bend_width",
+      "module": "lfo",
+      "label": "NORMAL/WIDE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "wide"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Range of the LFO BEND slider."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "DELAY TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Time before LFO modulation starts after a key; only on the first note of a legato phrase."
+    },
+    {
+      "id": "kbd.portamento",
+      "module": "kbd",
+      "label": "PORTAMENTO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Glide time between notes, up to about 1 s per octave. Not memorised."
+    },
+    {
+      "id": "kbd.portamento_on",
+      "module": "kbd",
+      "label": "PORTAMENTO SWITCH",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Turns portamento on or off."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "1_oct_down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Normal or one octave down."
+    },
+    {
+      "id": "bend.lfo_mod",
+      "module": "bend",
+      "label": "LFO MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum LFO depth reached with the lever on destinations set to LFO."
+    },
+    {
+      "id": "bend.sens",
+      "module": "bend",
+      "label": "BEND SENS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum bend on destinations set to BEND: over +1 oct (VCO), +2 oct (VCF), +12 dB (VCA)."
+    },
+    {
+      "id": "bend.vco_select",
+      "module": "bend",
+      "label": "BEND/LFO VCO",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "bend"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What the lever does to the VCO."
+    },
+    {
+      "id": "bend.vcf_select",
+      "module": "bend",
+      "label": "BEND/LFO VCF",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "bend"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What the lever does to the VCF."
+    },
+    {
+      "id": "bend.vca_select",
+      "module": "bend",
+      "label": "BEND/LFO VCA",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "bend"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "What the lever does to the VCA."
+    },
+    {
+      "id": "bend.lever",
+      "module": "bend",
+      "label": "BEND / MOD lever",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick",
+          "note": "left-right lever"
+        }
+      ],
+      "function": "Spring-loaded lever, centre at rest."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master volume. Not memorised."
+    },
+    {
+      "id": "kbd.tuning",
+      "module": "kbd",
+      "label": "TUNING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tuning, about ±50 cents; centred gives A = 442 Hz."
+    },
+    {
+      "id": "ens.on",
+      "module": "ens",
+      "label": "ENSEMBLE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Ensemble chorus on or off."
+    },
+    {
+      "id": "kbd.arp_mode",
+      "module": "kbd",
+      "label": "ARPEGGIO",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Arpeggio pattern.",
+      "confidence": "inferred",
+      "note": "The manual lists four patterns; an off position is assumed, as the arpeggio can be stopped."
+    },
+    {
+      "id": "kbd.assign",
+      "module": "kbd",
+      "label": "KEY ASSIGNMENT MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "unison_1"
+        },
+        {
+          "value": "unison_2"
+        },
+        {
+          "value": "poly_1"
+        },
+        {
+          "value": "poly_2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "How keys are given to the four voices."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Holds notes at the VCA sustain level after release."
+    },
+    {
+      "id": "memory.manual",
+      "module": "memory",
+      "label": "MANUAL",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Plays the programmable panel; switched off by choosing a preset."
+    },
+    {
+      "id": "memory.compu",
+      "module": "memory",
+      "label": "COMPU-MEMORY 1-8",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Recalls a user memory."
+    },
+    {
+      "id": "memory.preset",
+      "module": "memory",
+      "label": "PRE-SET",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bass"
+        },
+        {
+          "value": "strings"
+        },
+        {
+          "value": "clavichord"
+        },
+        {
+          "value": "piano"
+        },
+        {
+          "value": "voice"
+        },
+        {
+          "value": "trombone"
+        },
+        {
+          "value": "sax"
+        },
+        {
+          "value": "trumpet"
+        },
+        {
+          "value": "synth"
+        },
+        {
+          "value": "the_force"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Recalls a fixed preset."
+    },
+    {
+      "id": "memory.write",
+      "module": "memory",
+      "label": "MEMORY WRITE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Stores the programmable panel in the selected memory, pressed with PROTECTION."
+    },
+    {
+      "id": "memory.protect",
+      "module": "memory",
+      "label": "PROTECTION",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Must be held with WRITE, so a memory cannot be overwritten by accident."
+    },
+    {
+      "id": "out.level_select",
+      "module": "out",
+      "label": "OUTPUT LEVEL",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "L"
+        },
+        {
+          "value": "M"
+        },
+        {
+          "value": "H"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Output level to suit the amplifier."
+    },
+    {
+      "id": "out.phones_level",
+      "module": "out",
+      "label": "HEADPHONE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.output_mono",
+      "label": "OUTPUT (MONO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm jack",
+      "node": "out.mono",
+      "function": "Main output.",
+      "electrical": {
+        "level_db": 0
+      }
+    },
+    {
+      "id": "jack.output_stereo",
+      "label": "OUTPUT (STEREO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm jack",
+      "node": "out.stereo",
+      "function": "Second output; with MONO gives the ensemble's stereo image."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm stereo jack",
+      "node": "out.phones",
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.ext_clock",
+      "label": "EXT CLOCK IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "6.35 mm jack",
+      "node": "trig.ext_in",
+      "function": "External clock (CR-68, sequencer, gate) for the arpeggio or filter sample-and-hold.",
+      "combine": "replace",
+      "electrical": {
+        "off_v": 0,
+        "on_v_min": 1
+      }
+    },
+    {
+      "id": "jack.damper",
+      "label": "DAMPER PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm jack",
+      "node": "kbd.hold_in",
+      "function": "Pedal switch (DP-1, DP-2) for hold."
+    },
+    {
+      "id": "jack.vcf_pedal",
+      "label": "VCF CONT PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm jack",
+      "node": "vcf.cutoff_cv",
+      "function": "Foot pedal (FV-20) on cutoff; with resonance, a wah.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.exp_pedal",
+      "label": "EXP PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm jack",
+      "node": "out.exp_cv",
+      "function": "Foot volume (FV-20), 0 to -30 dB.",
+      "electrical": {
+        "range_db": [-30, 0]
+      }
+    },
+    {
+      "id": "jack.power",
+      "label": "AC power",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "mains cord",
+      "node": null,
+      "function": "Mains power, 30 W."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Includes portamento and transpose."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "env_f.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.gate",
+      "to": "env_a.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "trig.int",
+      "to": "kbd.clock_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "trig.arp_clock",
+        "equals": "int"
+      }
+    },
+    {
+      "id": "c05",
+      "from": "trig.ext",
+      "to": "kbd.clock_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "trig.arp_clock",
+        "equals": "ext"
+      }
+    },
+    {
+      "id": "c06",
+      "from": "trig.int",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "trig.snh_clock",
+        "equals": "int"
+      }
+    },
+    {
+      "id": "c07",
+      "from": "trig.ext",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "trig.snh_clock",
+        "equals": "ext"
+      }
+    },
+    {
+      "id": "c08",
+      "from": "noise.out",
+      "to": "snh.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "snh.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "trig.vcf_mod"
+    },
+    {
+      "id": "c10",
+      "from": "lfo.out",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco.lfo_mod",
+      "note": "Faded in by DELAY TIME."
+    },
+    {
+      "id": "c11",
+      "from": "lfo.out",
+      "to": "vco.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco.pw_mode",
+        "equals": "mod"
+      },
+      "amount": "vco.pw"
+    },
+    {
+      "id": "c12",
+      "from": "vco.wave",
+      "to": "mix.wave",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco.waveform",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c13",
+      "from": "vco.sub",
+      "to": "mix.sub",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco.sub",
+        "equals": true
+      }
+    },
+    {
+      "id": "c14",
+      "from": "noise.out",
+      "to": "mix.noise",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "noise.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c15",
+      "from": "mix.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "hpf.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "HPF before LPF, as the panel groups them."
+    },
+    {
+      "id": "c17",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo_mod"
+    },
+    {
+      "id": "c18",
+      "from": "env_f.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_mod"
+    },
+    {
+      "id": "c19",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c20",
+      "from": "env_a.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "bend.cv",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vco_select",
+        "equals": "bend"
+      },
+      "amount": "bend.sens",
+      "note": "over +1 octave"
+    },
+    {
+      "id": "c22",
+      "from": "lfo.out",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vco_select",
+        "equals": "lfo"
+      },
+      "amount_expr": "bend.lfo_mod * bend.lever"
+    },
+    {
+      "id": "c23",
+      "from": "bend.cv",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vcf_select",
+        "equals": "bend"
+      },
+      "amount": "bend.sens",
+      "note": "over +2 octaves"
+    },
+    {
+      "id": "c24",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vcf_select",
+        "equals": "lfo"
+      },
+      "amount_expr": "bend.lfo_mod * bend.lever"
+    },
+    {
+      "id": "c25",
+      "from": "bend.cv",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vca_select",
+        "equals": "bend"
+      },
+      "amount": "bend.sens",
+      "note": "over +12 dB"
+    },
+    {
+      "id": "c26",
+      "from": "lfo.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vca_select",
+        "equals": "lfo"
+      },
+      "amount_expr": "bend.lfo_mod * bend.lever"
+    },
+    {
+      "id": "c27",
+      "from": "vca.out",
+      "to": "ens.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vca.level"
+    },
+    {
+      "id": "c28",
+      "from": "ens.out_a",
+      "to": "out.in_a",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "ens.out_b",
+      "to": "out.in_b",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "out.overload",
+      "module": "vca",
+      "label": "OVERLOAD",
+      "kind": "lamp",
+      "function": "Lights when the programmable section's level distorts."
+    },
+    {
+      "id": "lfo.rate_led",
+      "module": "lfo",
+      "label": "LFO RATE indicator",
+      "kind": "led",
+      "function": "Flashes at the LFO rate."
+    },
+    {
+      "id": "memory.write_led",
+      "module": "memory",
+      "label": "WRITE indicators",
+      "kind": "led",
+      "function": "Confirm a memory write."
+    },
+    {
+      "id": "out.pilot",
+      "module": "out",
+      "label": "pilot lamp",
+      "kind": "lamp",
+      "function": "Power on."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Assign modes",
+      "applies_to": ["kbd"],
+      "rule": "UNISON 1: all four voices play the lowest held key. UNISON 2: one key gets four voices, two keys two each, three or four keys one each. POLY 1: voices rotate in the order keys are played; suits arpeggios. POLY 2: a key reuses the same voice, so after a chord a single note keeps only its own release; suits portamento."
+    },
+    {
+      "id": "b02",
+      "name": "Arpeggio",
+      "applies_to": ["kbd", "trig"],
+      "rule": "Arpeggiates held keys up to four octaves above the first note, in UP, DOWN, UP + DOWN or RANDOM. The order follows the order keys were played, except RANDOM. Speed is the trigger RATE, or an external clock."
+    },
+    {
+      "id": "b03",
+      "name": "Memory and presets",
+      "applies_to": ["memory"],
+      "rule": "MANUAL plays the programmable panel. COMPU-MEMORY 1-8 recall user patches; 10 presets are fixed. Writing needs MEMORY WRITE pressed together with PROTECTION. The modifier and controller sections, master volume and portamento always act live and are not stored. A rechargeable battery keeps memory; power the unit every six months."
+    },
+    {
+      "id": "b04",
+      "name": "Modifier section",
+      "applies_to": ["trig", "snh", "lfo"],
+      "rule": "Always live, even over memories. The trigger generator clocks the arpeggio and a noise sample-and-hold on the filter. LFO BEND offsets the memorised LFO rate (WIDE extends its range). DELAY TIME fades LFO modulation in after each new key, but only the first note of a legato phrase. Reset these to their normal positions when not in use."
+    },
+    {
+      "id": "b05",
+      "name": "Lever",
+      "applies_to": ["bend"],
+      "rule": "Each of VCO, VCF and VCA is set to BEND, OFF or LFO. BEND destinations move with the lever by up to BEND SENS; LFO destinations get LFO modulation whose depth follows the lever up to LFO MOD."
+    },
+    {
+      "id": "b06",
+      "name": "Keyboard range",
+      "applies_to": ["kbd", "vco"],
+      "rule": "49 keys; VCO RANGE (16', 8', 4') and TRANSPOSE extend the playable range to seven octaves. At 8' with TRANSPOSE off, the second C from the left is middle C."
+    },
+    {
+      "id": "b07",
+      "name": "Envelopes",
+      "applies_to": ["env_f", "env_a"],
+      "rule": "Separate ADSRs for filter and amplifier. With all four sliders at 0 the envelope is a click. With S high, D has little effect. The filter envelope can be inverted for special effects."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "None. External control is an arpeggio/sample-and-hold clock input and pedals."
+  },
+  "specifications": {
+    "voices": 4,
+    "keyboard": "49 keys, C to C",
+    "vco": {
+      "ranges": ["16'", "8'", "4'"],
+      "waveforms": ["sawtooth", "square", "pulse"],
+      "pulse_width_pct": [50, 40, 20, 10],
+      "sub_oscillator": "1 octave down"
+    },
+    "hpf_cutoff_hz": [40, 5000],
+    "lpf_resonance": "0 to self-oscillation",
+    "kybd_follow_pct": [10, 40, 70, 100],
+    "envelopes": {
+      "count_per_voice": 2,
+      "attack_s": [0.0006, 3],
+      "decay_s": [0.014, 10],
+      "sustain_pct": [0, 100],
+      "release_s": [0.014, 10]
+    },
+    "lfo": {
+      "rate_hz": [0.1, 80],
+      "delay_s": [0, 10]
+    },
+    "trigger_rate_hz_max": 25,
+    "portamento": "up to 1 s per octave",
+    "bend": {
+      "vco": "over +1 oct",
+      "vcf": "over +2 oct",
+      "vca": "over +12 dB"
+    },
+    "tuning": "±50 cents (A = 442 Hz at centre)",
+    "memory": {
+      "user": 8,
+      "presets": 10,
+      "backup": "rechargeable battery"
+    },
+    "connections": [
+      "OUTPUT mono",
+      "OUTPUT stereo",
+      "OUTPUT LEVEL L/M/H",
+      "HEADPHONES",
+      "DAMPER (DP-1, DP-2)",
+      "VCF pedal (FV-20)",
+      "EXP pedal (FV-20, 0 to -30 dB)",
+      "EXT CLOCK IN (off 0 V, on at least +1 V)"
+    ],
+    "power_w": 30,
+    "dimensions_mm": {
+      "w": 946,
+      "d": 410,
+      "h": 179
+    },
+    "weight_kg": 19
+  },
+  "omitted_from_source": [
+    "the synthesizer basics chapter",
+    "the hook-up diagrams",
+    "the sample sound and setting example charts (drawings)",
+    "the block diagram, beyond its use in confirming the signal path"
+  ],
+  "not_in_source": [
+    "filter slopes for the HPF and LPF",
+    "the trigger generator's lowest rate (unreadable in the scan)",
+    "whether noise is per voice or shared",
+    "how the ARPEGGIO selector turns the arpeggio off",
+    "the HPF's exact position in the signal path"
+  ],
+  "source_inconsistencies": [
+    "The manual calls the LFO's first waveform a sine; Wikipedia lists triangle, square, sawtooth and reverse sawtooth.",
+    "The manual tunes A to 442 Hz at the centre of TUNING, where most later Roland instruments use 440 Hz.",
+    "The PLUG-OUT manual describes separate VCF and VCA ADSRs, LFO random and sine waves, a CHORD arpeggio mode and PWM from either envelope; the original manual and specifications show neither the extra waveforms, the CHORD mode nor envelope PWM."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "PLUG-OUT additions",
+      "detail": "Not modelled: velocity to VCF and VCA, effects (effect, delay, reverb), tempo sync, CONDITION and CIRCUIT MOD, arpeggio CHORD mode and step length, LFO key trigger and range switch, saw+square waveforms, envelope PWM, VCA LFO MOD and TONE, octave shift, key hold, bend gain and separate bend/mod sensitivities."
+    },
+    {
+      "topic": "Voice card revisions",
+      "detail": "Early cards use a BA662-based filter and later E cards an IR3109; the two sound different."
+    },
+    {
+      "topic": "Filter response",
+      "detail": "Slope and resonance behaviour are not documented."
+    }
+  ]
+}

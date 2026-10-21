@@ -1,0 +1,5479 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "sequential-take-5",
+    "manufacturer": "Sequential",
+    "model": "Take 5",
+    "category": "5-voice analogue polyphonic synthesizer, 44-key keyboard, with digital effects",
+    "based_on": "Compact sibling of the Prophet-5 Rev 4 (released 2021); shares its platform and front-panel layout with the Oberheim TEO-5 (modelled separately).",
+    "sources": [
+      {
+        "id": "guide",
+        "title": "Sequential Take 5 User's Guide, version 1.1",
+        "kind": "user_manual",
+        "file": "Take_5_User_s_Guide_1_1.pdf",
+        "pages": 119,
+        "note": "Rear panel, globals, every section, mod matrix (Appendix A sources, B destinations), unison, effects, arpeggiator, sequencer, tunings."
+      },
+      {
+        "id": "midi_impl",
+        "title": "Sequential, 'Take 5 MIDI Implementation' V2 (July 2025)",
+        "kind": "spec_sheet",
+        "file": "https://sequential.com/wp-content/uploads/2025/07/Take-5-MIDI-Implementation_V2.pdf",
+        "note": "Official CC table, program NRPNs 0-171, global NRPNs 4096-4122, sequencer NRPNs 4198-4199, SysEx."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 5,
+    "polyphony_mode": "5-voice polyphonic; unison 1-5 voices with key priority, or chord memory",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "256 programs: 128 user and 128 factory (8 banks of 16 each); sequences, chord memory and effects saved per program.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 44,
+      "program_select_buttons": 16
+    },
+    "summary": "Per voice: Osc 1 and Osc 2 with octave (5 ranges), pitch (±7 semitones) and SHAPE morphing sine to saw to pulse (pulse width); Osc 2 can frequency-modulate Osc 1 (amount from its level) and Osc 1 can sync to Osc 2; a sub oscillator from Osc 1; bipolar noise (white one way, pink the other). A resonant low-pass filter with drive and key tracking, which self-oscillates. Two DADSR envelopes on fixed routings (filter, amp, aux). LFO 1 global and LFO 2 per voice, each with a direct destination. 16-slot matrix. Overdrive, vintage, one of 11 digital effects plus reverb. Arpeggiator, 64-step polyphonic sequencer, low split."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice assigner",
+      "panel_section": "KEYBOARD / UNISON / TRANSPOSE",
+      "scope": "common",
+      "description": "44-key keyboard with velocity and aftertouch or MIDI; 5 voices, unison with key mode, chord memory, latch/hold, per-oscillator glide, transpose, low split.",
+      "properties": {
+        "keys": 44
+      },
+      "inputs": ["kbd.midi_in", "kbd.sustain", "kbd.pedal", "kbd.seq_in"],
+      "outputs": [
+        "kbd.pitch",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.modwheel",
+        "kbd.bend",
+        "kbd.pedal_out"
+      ]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Analogue VCO: SHAPE morphs sine, saw and pulse (pulse width); octave and pitch; key follow switchable; FM from Osc 2 and sync to Osc 2.",
+      "inputs": ["osc1.pitch_cv", "osc1.fm", "osc1.sync_in"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Analogue VCO with the same controls; FM source for Osc 1.",
+      "inputs": ["osc2.pitch_cv"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "Sub oscillator from Osc 1.",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "White (knob clockwise) or pink (counter-clockwise) noise.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "OSC 1, OSC 1 SUB, OSC 2 (or FM amount when FM 2-1 is on) and NOISE levels.",
+      "inputs": ["mixer.osc1", "mixer.sub", "mixer.osc2", "mixer.noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Resonant low-pass with drive and key tracking; self-oscillates at high resonance.",
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "Voice amplifier with pan.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "Envelope 1",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "DADSR: filter envelope or auxiliary (direct destination or matrix) per ENV ROUTING; bipolar amount, velocity.",
+      "inputs": ["env1.gate", "env1.velocity"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "Envelope 2",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "DADSR: amp; filter + amp; or filter + gated amp, per ENV ROUTING.",
+      "inputs": ["env2.gate", "env2.velocity"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1 (global)",
+      "panel_section": "LFO",
+      "scope": "common",
+      "description": "Monophonic LFO: triangle, saw, reverse saw, square, S&H; clock sync; amount to a direct destination; note reset.",
+      "inputs": ["lfo1.reset"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2 (per voice)",
+      "panel_section": "LFO",
+      "scope": "per_voice",
+      "description": "Per-voice LFO with the same controls.",
+      "inputs": ["lfo2.reset"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "drive",
+      "type": "overdrive",
+      "name": "Overdrive",
+      "panel_section": "OVERDRIVE",
+      "scope": "common",
+      "description": "Overdrive on the voice sum, separate from the digital effects.",
+      "inputs": ["drive.in"],
+      "outputs": ["drive.out"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Effect",
+      "panel_section": "EFFECT",
+      "scope": "common",
+      "description": "One digital effect: stereo delay, BBD, tape delay 1/2, chorus, flanger, phaser, HP filter, distortion, ring mod, rotating speaker; delays sync to the clock.",
+      "inputs": ["fx.in"],
+      "outputs": ["fx.out"]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverb",
+      "panel_section": "REVERB",
+      "scope": "common",
+      "description": "Plate reverb: mix, decay, pre-delay, tone, damping.",
+      "inputs": ["reverb.in"],
+      "outputs": ["reverb.out"]
+    },
+    {
+      "id": "arp",
+      "type": "sequencer",
+      "name": "Arpeggiator and sequencer",
+      "panel_section": "ARPEGGIATOR / STEP SEQ / CLOCK",
+      "scope": "common",
+      "description": "Arpeggiator (up, down, up+down, random, assign; 1-3 octaves; repeats; relatch) and 64-step polyphonic sequencer; 30-250 BPM, tap tempo, MIDI clock.",
+      "properties": {
+        "steps": 64
+      },
+      "inputs": [],
+      "outputs": ["arp.notes"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / rear panel",
+      "scope": "common",
+      "description": "Stereo outputs (or mono), headphones; master and program volume.",
+      "inputs": ["out.in"],
+      "outputs": ["out.left", "out.right", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OSC 1 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 8"
+        }
+      ],
+      "function": "5-octave range."
+    },
+    {
+      "id": "osc1.pitch",
+      "module": "osc1",
+      "label": "OSC 1 PITCH",
+      "kind": "integer",
+      "physical": {
+        "min": -700,
+        "max": 700,
+        "unit": "cents"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 9"
+        }
+      ],
+      "function": "±7 semitones (NRPN ±700 cents); centre detent."
+    },
+    {
+      "id": "osc1.shape",
+      "module": "osc1",
+      "label": "OSC 1 SHAPE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 10"
+        }
+      ],
+      "function": "Sine to saw to pulse, then narrowing pulse width."
+    },
+    {
+      "id": "osc1.key_follow",
+      "module": "osc1",
+      "label": "Osc 1 Key Follow",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 7"
+        }
+      ],
+      "function": "Tracks the keyboard."
+    },
+    {
+      "id": "osc1.glide",
+      "module": "osc1",
+      "label": "Osc 1 Glide",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 65"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 2"
+        }
+      ],
+      "function": "Glide amount."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OSC 2 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 13"
+        }
+      ],
+      "function": "5-octave range."
+    },
+    {
+      "id": "osc2.pitch",
+      "module": "osc2",
+      "label": "OSC 2 PITCH",
+      "kind": "integer",
+      "physical": {
+        "min": -700,
+        "max": 700,
+        "unit": "cents"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 14"
+        }
+      ],
+      "function": "±7 semitones (NRPN ±700 cents); centre detent."
+    },
+    {
+      "id": "osc2.shape",
+      "module": "osc2",
+      "label": "OSC 2 SHAPE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 15"
+        }
+      ],
+      "function": "Sine to saw to pulse, then narrowing pulse width."
+    },
+    {
+      "id": "osc2.key_follow",
+      "module": "osc2",
+      "label": "Osc 2 Key Follow",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 12"
+        }
+      ],
+      "function": "Tracks the keyboard."
+    },
+    {
+      "id": "osc2.glide",
+      "module": "osc2",
+      "label": "Osc 2 Glide",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 66"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 3"
+        }
+      ],
+      "function": "Glide amount."
+    },
+    {
+      "id": "osc1.sync",
+      "module": "osc1",
+      "label": "SYNC 2-1",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 39"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 6"
+        }
+      ],
+      "function": "Osc 1 hard-synced to Osc 2."
+    },
+    {
+      "id": "osc.fm",
+      "module": "osc1",
+      "label": "FM 2-1",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 44"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 11"
+        }
+      ],
+      "function": "Osc 2 frequency-modulates Osc 1; the OSC 2 level knob sets the amount."
+    },
+    {
+      "id": "mixer.osc1",
+      "module": "mixer",
+      "label": "OSC 1",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 40"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 36"
+        }
+      ],
+      "function": "OSC 1 level."
+    },
+    {
+      "id": "mixer.sub",
+      "module": "mixer",
+      "label": "OSC 1 SUB",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 42"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 38"
+        }
+      ],
+      "function": "OSC 1 SUB level."
+    },
+    {
+      "id": "mixer.osc2",
+      "module": "mixer",
+      "label": "OSC 2",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 41"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 37"
+        }
+      ],
+      "function": "OSC 2 level."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE",
+      "kind": "integer",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 43"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 39"
+        }
+      ],
+      "function": "Bipolar: clockwise white, counter-clockwise pink."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 33"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 29"
+        }
+      ],
+      "function": "Cutoff (NRPN 0-1023)."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 34"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 31"
+        }
+      ],
+      "function": "Emphasis; self-oscillates."
+    },
+    {
+      "id": "vcf.drive",
+      "module": "vcf",
+      "label": "DRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 35"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 32"
+        }
+      ],
+      "function": "Filter input level and saturation."
+    },
+    {
+      "id": "vcf.key_amt",
+      "module": "vcf",
+      "label": "Key>LPF Freq",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 36"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 33"
+        }
+      ],
+      "function": "Key tracking (127 = semitone tracking)."
+    },
+    {
+      "id": "env1.delay",
+      "module": "env1",
+      "label": "ENV 1 Delay",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 45"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 41"
+        }
+      ],
+      "function": "Delay before the attack."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "ENV 1 ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 46"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 42"
+        }
+      ],
+      "function": "Attack."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "ENV 1 DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 47"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 43"
+        }
+      ],
+      "function": "Decay."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "ENV 1 SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 48"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 44"
+        }
+      ],
+      "function": "Sustain."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "ENV 1 RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 49"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 45"
+        }
+      ],
+      "function": "Release."
+    },
+    {
+      "id": "env1.amount",
+      "module": "env1",
+      "label": "ENV 1 AMOUNT",
+      "kind": "integer",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 50"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 46"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "env1.vel",
+      "module": "env1",
+      "label": "ENV 1 VELOCITY",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 51"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 47"
+        }
+      ],
+      "function": "Velocity on/off."
+    },
+    {
+      "id": "env2.delay",
+      "module": "env2",
+      "label": "ENV 2 Delay",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 52"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 48"
+        }
+      ],
+      "function": "Delay before the attack."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "ENV 2 ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 53"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 49"
+        }
+      ],
+      "function": "Attack."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "ENV 2 DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 54"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 50"
+        }
+      ],
+      "function": "Decay."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "ENV 2 SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 55"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 51"
+        }
+      ],
+      "function": "Sustain."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "ENV 2 RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 56"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 52"
+        }
+      ],
+      "function": "Release."
+    },
+    {
+      "id": "env2.amount",
+      "module": "env2",
+      "label": "ENV 2 AMOUNT",
+      "kind": "integer",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 57"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 53"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "env2.vel",
+      "module": "env2",
+      "label": "ENV 2 VELOCITY",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 58"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 54"
+        }
+      ],
+      "function": "Velocity on/off."
+    },
+    {
+      "id": "env.routing",
+      "module": "env1",
+      "label": "ENV ROUTING",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1_filter__env2_amp"
+        },
+        {
+          "value": "env1_aux__env2_filter_amp"
+        },
+        {
+          "value": "env1_aux__env2_filter_gate"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 69"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 55"
+        }
+      ],
+      "function": "Env 1 filter + Env 2 amp; Env 1 aux + Env 2 filter+amp; Env 1 aux + Env 2 filter+gate."
+    },
+    {
+      "id": "env1.aux_dest",
+      "module": "env1",
+      "label": "Env 1 aux destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "destinations 0-54"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 40"
+        }
+      ],
+      "function": "Direct destination when Env 1 is aux."
+    },
+    {
+      "id": "lfo1.freq",
+      "module": "lfo1",
+      "label": "LFO 1 FREQUENCY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 61"
+        }
+      ],
+      "function": "Rate, or division when synced."
+    },
+    {
+      "id": "lfo1.amt",
+      "module": "lfo1",
+      "label": "LFO 1 AMOUNT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 62"
+        }
+      ],
+      "function": "Amount to the direct destination (NRPN 0-255)."
+    },
+    {
+      "id": "lfo1.shape",
+      "module": "lfo1",
+      "label": "LFO 1 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "reverse_saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 63"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "lfo1.sync",
+      "module": "lfo1",
+      "label": "LFO 1 CLK SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 64"
+        }
+      ],
+      "function": "Clock sync."
+    },
+    {
+      "id": "lfo1.note_reset",
+      "module": "lfo1",
+      "label": "LFO 1 Note Reset",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 66"
+        }
+      ],
+      "function": "Restart on new notes."
+    },
+    {
+      "id": "lfo1.freq_sync",
+      "module": "lfo1",
+      "label": "LFO 1 Freq Sync",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 15
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 65"
+        }
+      ],
+      "function": "Division index."
+    },
+    {
+      "id": "lfo1.dest",
+      "module": "lfo1",
+      "label": "LFO 1 DEST",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "destinations 0-54"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Direct destination (display)."
+    },
+    {
+      "id": "lfo2.freq",
+      "module": "lfo2",
+      "label": "LFO 2 FREQUENCY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 68"
+        }
+      ],
+      "function": "Rate, or division when synced."
+    },
+    {
+      "id": "lfo2.amt",
+      "module": "lfo2",
+      "label": "LFO 2 AMOUNT",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 69"
+        }
+      ],
+      "function": "Amount to the direct destination (NRPN 0-255)."
+    },
+    {
+      "id": "lfo2.shape",
+      "module": "lfo2",
+      "label": "LFO 2 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "reverse_saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "sample_hold"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 70"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "lfo2.sync",
+      "module": "lfo2",
+      "label": "LFO 2 CLK SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 71"
+        }
+      ],
+      "function": "Clock sync."
+    },
+    {
+      "id": "lfo2.note_reset",
+      "module": "lfo2",
+      "label": "LFO 2 Note Reset",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 73"
+        }
+      ],
+      "function": "Restart on new notes."
+    },
+    {
+      "id": "lfo2.freq_sync",
+      "module": "lfo2",
+      "label": "LFO 2 Freq Sync",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 15
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 72"
+        }
+      ],
+      "function": "Division index."
+    },
+    {
+      "id": "lfo2.dest",
+      "module": "lfo2",
+      "label": "LFO 2 DEST",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "destinations 0-54"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Direct destination (display)."
+    },
+    {
+      "id": "mm.1.source",
+      "module": "kbd",
+      "label": "Mod 1 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 77"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.1.amount",
+      "module": "kbd",
+      "label": "Mod 1 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 93"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.1.dest",
+      "module": "kbd",
+      "label": "Mod 1 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 109"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.2.source",
+      "module": "kbd",
+      "label": "Mod 2 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 78"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.2.amount",
+      "module": "kbd",
+      "label": "Mod 2 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 94"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.2.dest",
+      "module": "kbd",
+      "label": "Mod 2 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 110"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.3.source",
+      "module": "kbd",
+      "label": "Mod 3 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 79"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.3.amount",
+      "module": "kbd",
+      "label": "Mod 3 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 95"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.3.dest",
+      "module": "kbd",
+      "label": "Mod 3 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 111"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.4.source",
+      "module": "kbd",
+      "label": "Mod 4 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 80"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.4.amount",
+      "module": "kbd",
+      "label": "Mod 4 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 96"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.4.dest",
+      "module": "kbd",
+      "label": "Mod 4 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 112"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.5.source",
+      "module": "kbd",
+      "label": "Mod 5 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 81"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.5.amount",
+      "module": "kbd",
+      "label": "Mod 5 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 97"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.5.dest",
+      "module": "kbd",
+      "label": "Mod 5 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 113"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.6.source",
+      "module": "kbd",
+      "label": "Mod 6 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 82"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.6.amount",
+      "module": "kbd",
+      "label": "Mod 6 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 98"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.6.dest",
+      "module": "kbd",
+      "label": "Mod 6 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 114"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.7.source",
+      "module": "kbd",
+      "label": "Mod 7 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 83"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.7.amount",
+      "module": "kbd",
+      "label": "Mod 7 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 99"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.7.dest",
+      "module": "kbd",
+      "label": "Mod 7 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 115"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.8.source",
+      "module": "kbd",
+      "label": "Mod 8 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 84"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.8.amount",
+      "module": "kbd",
+      "label": "Mod 8 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 100"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.8.dest",
+      "module": "kbd",
+      "label": "Mod 8 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 116"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.9.source",
+      "module": "kbd",
+      "label": "Mod 9 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 85"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.9.amount",
+      "module": "kbd",
+      "label": "Mod 9 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 101"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.9.dest",
+      "module": "kbd",
+      "label": "Mod 9 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 117"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.10.source",
+      "module": "kbd",
+      "label": "Mod 10 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 86"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.10.amount",
+      "module": "kbd",
+      "label": "Mod 10 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 102"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.10.dest",
+      "module": "kbd",
+      "label": "Mod 10 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 118"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.11.source",
+      "module": "kbd",
+      "label": "Mod 11 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 87"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.11.amount",
+      "module": "kbd",
+      "label": "Mod 11 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 103"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.11.dest",
+      "module": "kbd",
+      "label": "Mod 11 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 119"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.12.source",
+      "module": "kbd",
+      "label": "Mod 12 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 88"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.12.amount",
+      "module": "kbd",
+      "label": "Mod 12 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 104"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.12.dest",
+      "module": "kbd",
+      "label": "Mod 12 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 120"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.13.source",
+      "module": "kbd",
+      "label": "Mod 13 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 89"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.13.amount",
+      "module": "kbd",
+      "label": "Mod 13 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 105"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.13.dest",
+      "module": "kbd",
+      "label": "Mod 13 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 121"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.14.source",
+      "module": "kbd",
+      "label": "Mod 14 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 90"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.14.amount",
+      "module": "kbd",
+      "label": "Mod 14 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 106"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.14.dest",
+      "module": "kbd",
+      "label": "Mod 14 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 122"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.15.source",
+      "module": "kbd",
+      "label": "Mod 15 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 91"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.15.amount",
+      "module": "kbd",
+      "label": "Mod 15 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 107"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.15.dest",
+      "module": "kbd",
+      "label": "Mod 15 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 123"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "mm.16.source",
+      "module": "kbd",
+      "label": "Mod 16 source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix sources"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: slot, source"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 92"
+        }
+      ],
+      "function": "Source (0 none, 1-19)."
+    },
+    {
+      "id": "mm.16.amount",
+      "module": "kbd",
+      "label": "Mod 16 amount",
+      "kind": "integer",
+      "range": {
+        "min": -127,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: amount"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 108"
+        }
+      ],
+      "function": "Bipolar amount (NRPN 0-255)."
+    },
+    {
+      "id": "mm.16.dest",
+      "module": "kbd",
+      "label": "Mod 16 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "see mod_matrix destinations"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD: destination"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 124"
+        }
+      ],
+      "function": "Destination (0 none, 1-54)."
+    },
+    {
+      "id": "drive.amount",
+      "module": "drive",
+      "label": "OVERDRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 67"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 35"
+        }
+      ],
+      "function": "Overdrive."
+    },
+    {
+      "id": "vintage",
+      "module": "kbd",
+      "label": "VINTAGE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 37"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 34"
+        }
+      ],
+      "function": "Voice-to-voice variation."
+    },
+    {
+      "id": "fx.on",
+      "module": "fx",
+      "label": "EFFECT ON/OFF",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 16"
+        }
+      ],
+      "function": "Effect on."
+    },
+    {
+      "id": "fx.type",
+      "module": "fx",
+      "label": "TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "stereo_delay"
+        },
+        {
+          "value": "bbd"
+        },
+        {
+          "value": "tape_delay_1"
+        },
+        {
+          "value": "tape_delay_2"
+        },
+        {
+          "value": "chorus"
+        },
+        {
+          "value": "flanger"
+        },
+        {
+          "value": "phaser"
+        },
+        {
+          "value": "hp_filter"
+        },
+        {
+          "value": "distortion"
+        },
+        {
+          "value": "ring_mod"
+        },
+        {
+          "value": "rotating_speaker"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 17"
+        }
+      ],
+      "function": "Effect type.",
+      "note": "CC/NRPN range 0-8 in the MIDI document, for 11 listed types."
+    },
+    {
+      "id": "fx.time",
+      "module": "fx",
+      "label": "TIME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 19"
+        }
+      ],
+      "function": "Time, rate, frequency, gain, carrier or speed (per type)."
+    },
+    {
+      "id": "fx.mix",
+      "module": "fx",
+      "label": "DEPTH/MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 18"
+        }
+      ],
+      "function": "Mix or depth (per type)."
+    },
+    {
+      "id": "fx.misc",
+      "module": "fx",
+      "label": "FBACK/MISC",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 20"
+        }
+      ],
+      "function": "Feedback, LPF, resonance, tone, pitch track or mic distance (per type)."
+    },
+    {
+      "id": "fx.sync",
+      "module": "fx",
+      "label": "FX Clock Sync",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 21"
+        }
+      ],
+      "function": "Sync delays to the clock."
+    },
+    {
+      "id": "fx.sync_rate",
+      "module": "fx",
+      "label": "FX Clock Sync Rate",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 22"
+        }
+      ],
+      "function": "Division index."
+    },
+    {
+      "id": "reverb.on",
+      "module": "reverb",
+      "label": "REVERB ON/OFF",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 23"
+        }
+      ],
+      "function": "Reverb on."
+    },
+    {
+      "id": "reverb.mix",
+      "module": "reverb",
+      "label": "REVERB MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 24"
+        }
+      ],
+      "function": "Reverb mix."
+    },
+    {
+      "id": "reverb.damping",
+      "module": "reverb",
+      "label": "REVERB DAMPING (Size in MIDI)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 25"
+        }
+      ],
+      "function": "Reverb damping."
+    },
+    {
+      "id": "reverb.predelay",
+      "module": "reverb",
+      "label": "REVERB PRE-DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 26"
+        }
+      ],
+      "function": "Reverb predelay."
+    },
+    {
+      "id": "reverb.decay",
+      "module": "reverb",
+      "label": "REVERB DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 27"
+        }
+      ],
+      "function": "Reverb decay."
+    },
+    {
+      "id": "reverb.tone",
+      "module": "reverb",
+      "label": "REVERB TONE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 28"
+        }
+      ],
+      "function": "Reverb tone."
+    },
+    {
+      "id": "kbd.unison",
+      "module": "kbd",
+      "label": "UNISON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 56"
+        }
+      ],
+      "function": "Unison or chord memory."
+    },
+    {
+      "id": "kbd.unison_voices",
+      "module": "kbd",
+      "label": "Unison voices",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "hold UNISON and turn VALUE"
+        },
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 57"
+        }
+      ],
+      "function": "Voices stacked (hold UNISON, turn VALUE)."
+    },
+    {
+      "id": "kbd.unison_detune",
+      "module": "kbd",
+      "label": "Unison Detune",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 58"
+        }
+      ],
+      "function": "0-7."
+    },
+    {
+      "id": "kbd.key_mode",
+      "module": "kbd",
+      "label": "Unison Key Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 59"
+        }
+      ],
+      "function": "Note priority."
+    },
+    {
+      "id": "kbd.unison_retrig",
+      "module": "kbd",
+      "label": "Unison Env Retrig",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 60"
+        }
+      ],
+      "function": "Retrigger on legato notes."
+    },
+    {
+      "id": "kbd.glide_on",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 68"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4"
+        }
+      ],
+      "function": "Glide on."
+    },
+    {
+      "id": "kbd.glide_mode",
+      "module": "kbd",
+      "label": "Glide Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fixed_rate"
+        },
+        {
+          "value": "fixed_rate_a"
+        },
+        {
+          "value": "fixed_time"
+        },
+        {
+          "value": "fixed_time_a"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 5"
+        }
+      ],
+      "function": "Fixed rate, fixed rate A, fixed time, fixed time A."
+    },
+    {
+      "id": "kbd.bend_up",
+      "module": "kbd",
+      "label": "Pitch Bend Up",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 75"
+        }
+      ],
+      "function": "0-12 semitones."
+    },
+    {
+      "id": "kbd.bend_down",
+      "module": "kbd",
+      "label": "Pitch Bend Down",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 76"
+        }
+      ],
+      "function": "0-24 semitones."
+    },
+    {
+      "id": "out.prog_volume",
+      "module": "out",
+      "label": "Program Volume",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1"
+        }
+      ],
+      "function": "Program level."
+    },
+    {
+      "id": "kbd.split1",
+      "module": "kbd",
+      "label": "LOW SPLIT -1 OCT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 169"
+        }
+      ],
+      "function": "Notes below the split an octave lower."
+    },
+    {
+      "id": "kbd.split2",
+      "module": "kbd",
+      "label": "LOW SPLIT -2 OCT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 171"
+        }
+      ],
+      "function": "Two octaves lower."
+    },
+    {
+      "id": "kbd.split_note",
+      "module": "kbd",
+      "label": "Key Split Note",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 44
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 170"
+        }
+      ],
+      "function": "Split point."
+    },
+    {
+      "id": "kbd.latch",
+      "module": "kbd",
+      "label": "LATCH / HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Holds notes; latches the arpeggio."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARPEGGIATOR ON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 59"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 163"
+        }
+      ],
+      "function": "Arpeggiator on."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "assign"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 60"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 164"
+        }
+      ],
+      "function": "Note order.",
+      "note": "MIDI range 0-2 for five modes."
+    },
+    {
+      "id": "arp.octave",
+      "module": "arp",
+      "label": "OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 61"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 165"
+        }
+      ],
+      "function": "1-3 octaves."
+    },
+    {
+      "id": "arp.repeat",
+      "module": "arp",
+      "label": "REPEAT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 62"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 166"
+        }
+      ],
+      "function": "Repeats per note."
+    },
+    {
+      "id": "arp.relatch",
+      "module": "arp",
+      "label": "Arp Relatch",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "PROGRAM menu"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 168"
+        }
+      ],
+      "function": "New notes restart the held arpeggio."
+    },
+    {
+      "id": "arp.bpm",
+      "module": "arp",
+      "label": "BPM / TAP TEMPO",
+      "kind": "integer",
+      "range": {
+        "min": 30,
+        "max": 250
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0"
+        }
+      ],
+      "function": "30-250 BPM."
+    },
+    {
+      "id": "arp.divide",
+      "module": "arp",
+      "label": "CLK DIVIDE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1/2"
+        },
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/16T"
+        },
+        {
+          "value": "1/32"
+        },
+        {
+          "value": "1/64"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 63"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 167"
+        }
+      ],
+      "function": "Note value."
+    },
+    {
+      "id": "seq.play",
+      "module": "arp",
+      "label": "STEP SEQ PLAY",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4198"
+        }
+      ],
+      "function": "Sequencer play/stop."
+    },
+    {
+      "id": "seq.record",
+      "module": "arp",
+      "label": "STEP SEQ RECORD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4199"
+        }
+      ],
+      "function": "Step recording (rests, ties); hold with a key to transpose."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Master and headphone volume."
+    },
+    {
+      "id": "kbd.pitch_wheel",
+      "module": "kbd",
+      "label": "PITCH wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "pitch bend"
+        }
+      ],
+      "function": "Bend."
+    },
+    {
+      "id": "kbd.mod_wheel",
+      "module": "kbd",
+      "label": "MOD wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1"
+        }
+      ],
+      "function": "Matrix source."
+    },
+    {
+      "id": "ui.factory",
+      "module": "kbd",
+      "label": "FACTORY",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Factory set on/off."
+    },
+    {
+      "id": "ui.bank",
+      "module": "kbd",
+      "label": "BANK",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bank select."
+    },
+    {
+      "id": "ui.prog",
+      "module": "kbd",
+      "label": "PROGRAM 1-16",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Program select."
+    },
+    {
+      "id": "ui.preset",
+      "module": "kbd",
+      "label": "PRESET",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Preset/live panel."
+    },
+    {
+      "id": "ui.write",
+      "module": "kbd",
+      "label": "WRITE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Save."
+    },
+    {
+      "id": "ui.global",
+      "module": "kbd",
+      "label": "GLOBAL",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Global menu."
+    },
+    {
+      "id": "ui.program",
+      "module": "kbd",
+      "label": "PROGRAM (settings)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Program menu."
+    },
+    {
+      "id": "ui.select",
+      "module": "kbd",
+      "label": "SELECT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Scroll."
+    },
+    {
+      "id": "ui.value",
+      "module": "kbd",
+      "label": "VALUE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Set values."
+    },
+    {
+      "id": "sys.coarse",
+      "module": "kbd",
+      "label": "Master Coarse",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 1"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4096"
+        }
+      ],
+      "function": "±12 semitones."
+    },
+    {
+      "id": "sys.fine",
+      "module": "kbd",
+      "label": "Master Fine",
+      "kind": "integer",
+      "range": {
+        "min": -50,
+        "max": 50
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 2"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4097"
+        }
+      ],
+      "function": "±50 cents."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local Control",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "all_off"
+        },
+        {
+          "value": "keys_wheels_off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 3"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4111"
+        }
+      ],
+      "function": "All off, keys/wheels off, on."
+    },
+    {
+      "id": "sys.mono",
+      "module": "kbd",
+      "label": "Mono/Stereo",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "stereo"
+        },
+        {
+          "value": "mono"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 4"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4112"
+        }
+      ],
+      "function": "Mono defeats pan."
+    },
+    {
+      "id": "sys.pot_mode",
+      "module": "kbd",
+      "label": "Pot Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "relative"
+        },
+        {
+          "value": "passthru"
+        },
+        {
+          "value": "jump"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 5"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4113"
+        }
+      ],
+      "function": "Relative, passthru, jump."
+    },
+    {
+      "id": "sys.foot_function",
+      "module": "kbd",
+      "label": "Foot Function",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sustain"
+        },
+        {
+          "value": "arp_hold"
+        },
+        {
+          "value": "arp_hold_mom"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 6"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4116"
+        }
+      ],
+      "function": "Sustain, arp hold, arp hold momentary."
+    },
+    {
+      "id": "sys.pedal_polarity",
+      "module": "kbd",
+      "label": "Pedal Polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "reversed"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 7"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4115"
+        }
+      ],
+      "function": "Normal or reversed."
+    },
+    {
+      "id": "sys.pedal_function",
+      "module": "kbd",
+      "label": "Pedal Function",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "breath_cc2"
+        },
+        {
+          "value": "foot_cc4"
+        },
+        {
+          "value": "exp_cc11"
+        },
+        {
+          "value": "lpf_full"
+        },
+        {
+          "value": "lpf_half"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 8"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4114"
+        }
+      ],
+      "function": "Expression pedal role."
+    },
+    {
+      "id": "sys.at_on",
+      "module": "kbd",
+      "label": "Aftertouch On",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 9"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4118"
+        }
+      ],
+      "function": "Aftertouch on/off."
+    },
+    {
+      "id": "sys.at_curve",
+      "module": "kbd",
+      "label": "Aftertouch Curve",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 10"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4119"
+        }
+      ],
+      "function": "Curve."
+    },
+    {
+      "id": "sys.vel_curve",
+      "module": "kbd",
+      "label": "Velocity Curve",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 6
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 11"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4120"
+        }
+      ],
+      "function": "Curve."
+    },
+    {
+      "id": "sys.scale",
+      "module": "kbd",
+      "label": "Scale (Alt Tuning)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "equal_temperament"
+        },
+        {
+          "value": "alternative tunings"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 12"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4117"
+        }
+      ],
+      "function": "Equal temperament or alternative tunings."
+    },
+    {
+      "id": "sys.screensaver",
+      "module": "kbd",
+      "label": "Screen Saver",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 13"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4121"
+        }
+      ],
+      "function": "Display saver."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "MIDI Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "all"
+        },
+        {
+          "value": "1..16"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 14"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4098"
+        }
+      ],
+      "function": "All or 1-16."
+    },
+    {
+      "id": "sys.clock_mode",
+      "module": "kbd",
+      "label": "Clock Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "out"
+        },
+        {
+          "value": "out_no_ss"
+        },
+        {
+          "value": "in"
+        },
+        {
+          "value": "in_thru"
+        },
+        {
+          "value": "in_no_ss"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 15"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4099"
+        }
+      ],
+      "function": "Off, out, out no S/S, in, in thru, in no S/S."
+    },
+    {
+      "id": "sys.param_send",
+      "module": "kbd",
+      "label": "MIDI Param Send",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "nrpn"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 18"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4102"
+        }
+      ],
+      "function": "Off, CC, NRPN."
+    },
+    {
+      "id": "sys.param_rcv",
+      "module": "kbd",
+      "label": "MIDI Param Receive",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "nrpn"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 19"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4103"
+        }
+      ],
+      "function": "Off, CC, NRPN."
+    },
+    {
+      "id": "sys.arp_notes",
+      "module": "kbd",
+      "label": "MIDI Arp Notes",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 26"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4110"
+        }
+      ],
+      "function": "Arp/seq notes out."
+    },
+    {
+      "id": "sys.arp_beat_sync",
+      "module": "kbd",
+      "label": "Arp Beat Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "quantize"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 27"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 4122"
+        }
+      ],
+      "function": "Off or quantize."
+    },
+    {
+      "id": "util.basic",
+      "module": "kbd",
+      "label": "Basic Program",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 28"
+        }
+      ],
+      "function": "Loads the Basic Program (also TRANSPOSE down + LATCH)."
+    },
+    {
+      "id": "util.cal_wheels",
+      "module": "kbd",
+      "label": "Cal Wheels",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 29"
+        }
+      ],
+      "function": "Calibrates the wheels."
+    },
+    {
+      "id": "util.cal_voices",
+      "module": "kbd",
+      "label": "Cal Voices",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 30"
+        }
+      ],
+      "function": "Calibrates VCOs and filters."
+    },
+    {
+      "id": "util.reset",
+      "module": "kbd",
+      "label": "Reset Globals",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "GLOBAL menu, 31"
+        }
+      ],
+      "function": "Factory globals."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out_l",
+      "label": "AUDIO OUT LEFT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.left",
+      "function": "Unbalanced TS."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "AUDIO OUT RIGHT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.right",
+      "function": "Unbalanced TS."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones."
+    },
+    {
+      "id": "jack.footswitch",
+      "label": "FOOTSWITCH",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Sustain or arp hold."
+    },
+    {
+      "id": "jack.pedal",
+      "label": "PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "kbd.pedal",
+      "function": "Expression pedal (TRS)."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "Class-compliant USB MIDI."
+    },
+    {
+      "id": "jack.power",
+      "label": "AC POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "IEC mains, universal supply."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "arp.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.key_follow",
+        "equals": true
+      }
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.key_follow",
+        "equals": true
+      }
+    },
+    {
+      "id": "c04",
+      "from": "kbd.pitch",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.key_follow",
+        "equals": true
+      }
+    },
+    {
+      "id": "c05",
+      "from": "kbd.bend",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "kbd.bend_up"
+    },
+    {
+      "id": "c06",
+      "from": "kbd.bend",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "kbd.bend_up"
+    },
+    {
+      "id": "c07",
+      "from": "osc2.out",
+      "to": "osc1.fm",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.fm",
+        "equals": true
+      },
+      "amount": "mixer.osc2",
+      "note": "FM amount from the Osc 2 level knob."
+    },
+    {
+      "id": "c08",
+      "from": "osc2.out",
+      "to": "osc1.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc1.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c09",
+      "from": "osc1.out",
+      "to": "mixer.osc1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.osc1"
+    },
+    {
+      "id": "c10",
+      "from": "sub.out",
+      "to": "mixer.sub",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.sub"
+    },
+    {
+      "id": "c11",
+      "from": "osc2.out",
+      "to": "mixer.osc2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc.fm",
+        "equals": false
+      },
+      "amount": "mixer.osc2",
+      "note": "With FM on, the OSC 2 knob sets FM depth instead."
+    },
+    {
+      "id": "c12",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c13",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vcf.drive"
+    },
+    {
+      "id": "c14",
+      "from": "env1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env.routing",
+        "equals": "env1_filter__env2_amp"
+      },
+      "amount": "env1.amount"
+    },
+    {
+      "id": "c15",
+      "from": "env2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "env.routing",
+            "equals": "env1_aux__env2_filter_amp"
+          },
+          {
+            "param": "env.routing",
+            "equals": "env1_aux__env2_filter_gate"
+          }
+        ]
+      },
+      "amount": "env2.amount"
+    },
+    {
+      "id": "c16",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.key_amt"
+    },
+    {
+      "id": "c17",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "env2.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "env.routing",
+            "equals": "env1_filter__env2_amp"
+          },
+          {
+            "param": "env.routing",
+            "equals": "env1_aux__env2_filter_amp"
+          }
+        ]
+      },
+      "amount": "env2.amount"
+    },
+    {
+      "id": "c19",
+      "from": "kbd.gate",
+      "to": "vca.cv",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env.routing",
+        "equals": "env1_aux__env2_filter_gate"
+      }
+    },
+    {
+      "id": "c20",
+      "from": "kbd.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "kbd.velocity",
+      "to": "env1.velocity",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env1.vel",
+        "equals": true
+      }
+    },
+    {
+      "id": "c22",
+      "from": "kbd.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "kbd.velocity",
+      "to": "env2.velocity",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env2.vel",
+        "equals": true
+      }
+    },
+    {
+      "id": "c24",
+      "from": "kbd.gate",
+      "to": "lfo1.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.note_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c25",
+      "from": "kbd.gate",
+      "to": "lfo2.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.note_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c26",
+      "from": "vca.out",
+      "to": "drive.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Five voices summed, panned in stereo."
+    },
+    {
+      "id": "c27",
+      "from": "drive.out",
+      "to": "fx.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "drive.amount"
+    },
+    {
+      "id": "c28",
+      "from": "fx.out",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "reverb.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.prog_volume"
+    }
+  ],
+  "mod_matrix": {
+    "name": "Modulation matrix",
+    "module": "kbd",
+    "slots": 16,
+    "combine": "single",
+    "slot_parameters": [
+      {
+        "slot": 1,
+        "source": "mm.1.source",
+        "destination": "mm.1.dest",
+        "depth": "mm.1.amount"
+      },
+      {
+        "slot": 2,
+        "source": "mm.2.source",
+        "destination": "mm.2.dest",
+        "depth": "mm.2.amount"
+      },
+      {
+        "slot": 3,
+        "source": "mm.3.source",
+        "destination": "mm.3.dest",
+        "depth": "mm.3.amount"
+      },
+      {
+        "slot": 4,
+        "source": "mm.4.source",
+        "destination": "mm.4.dest",
+        "depth": "mm.4.amount"
+      },
+      {
+        "slot": 5,
+        "source": "mm.5.source",
+        "destination": "mm.5.dest",
+        "depth": "mm.5.amount"
+      },
+      {
+        "slot": 6,
+        "source": "mm.6.source",
+        "destination": "mm.6.dest",
+        "depth": "mm.6.amount"
+      },
+      {
+        "slot": 7,
+        "source": "mm.7.source",
+        "destination": "mm.7.dest",
+        "depth": "mm.7.amount"
+      },
+      {
+        "slot": 8,
+        "source": "mm.8.source",
+        "destination": "mm.8.dest",
+        "depth": "mm.8.amount"
+      },
+      {
+        "slot": 9,
+        "source": "mm.9.source",
+        "destination": "mm.9.dest",
+        "depth": "mm.9.amount"
+      },
+      {
+        "slot": 10,
+        "source": "mm.10.source",
+        "destination": "mm.10.dest",
+        "depth": "mm.10.amount"
+      },
+      {
+        "slot": 11,
+        "source": "mm.11.source",
+        "destination": "mm.11.dest",
+        "depth": "mm.11.amount"
+      },
+      {
+        "slot": 12,
+        "source": "mm.12.source",
+        "destination": "mm.12.dest",
+        "depth": "mm.12.amount"
+      },
+      {
+        "slot": 13,
+        "source": "mm.13.source",
+        "destination": "mm.13.dest",
+        "depth": "mm.13.amount"
+      },
+      {
+        "slot": 14,
+        "source": "mm.14.source",
+        "destination": "mm.14.dest",
+        "depth": "mm.14.amount"
+      },
+      {
+        "slot": 15,
+        "source": "mm.15.source",
+        "destination": "mm.15.dest",
+        "depth": "mm.15.amount"
+      },
+      {
+        "slot": 16,
+        "source": "mm.16.source",
+        "destination": "mm.16.dest",
+        "depth": "mm.16.amount"
+      }
+    ],
+    "sources": [
+      {
+        "id": 0,
+        "name": "No Source",
+        "per_voice": true
+      },
+      {
+        "id": 1,
+        "name": "Osc 2",
+        "node": "osc2.out",
+        "per_voice": true
+      },
+      {
+        "id": 2,
+        "name": "Noise",
+        "node": "noise.out",
+        "per_voice": true
+      },
+      {
+        "id": 3,
+        "name": "LFO 1",
+        "node": "lfo1.out",
+        "per_voice": false
+      },
+      {
+        "id": 4,
+        "name": "LFO 2",
+        "node": "lfo2.out",
+        "per_voice": true
+      },
+      {
+        "id": 5,
+        "name": "Env 1",
+        "node": "env1.out",
+        "per_voice": true
+      },
+      {
+        "id": 6,
+        "name": "Env 2",
+        "node": "env2.out",
+        "per_voice": true
+      },
+      {
+        "id": 7,
+        "name": "Voice Spread",
+        "per_voice": true
+      },
+      {
+        "id": 8,
+        "name": "Pitch Bend",
+        "node": "kbd.bend",
+        "per_voice": false
+      },
+      {
+        "id": 9,
+        "name": "Mod Wheel",
+        "node": "kbd.modwheel",
+        "per_voice": false
+      },
+      {
+        "id": 10,
+        "name": "Pressure",
+        "node": "kbd.aftertouch",
+        "per_voice": false
+      },
+      {
+        "id": 11,
+        "name": "Breath",
+        "per_voice": false
+      },
+      {
+        "id": 12,
+        "name": "Foot Pedal",
+        "per_voice": false
+      },
+      {
+        "id": 13,
+        "name": "Expression Pedal",
+        "node": "kbd.pedal_out",
+        "per_voice": false
+      },
+      {
+        "id": 14,
+        "name": "Velocity",
+        "node": "kbd.velocity",
+        "per_voice": true
+      },
+      {
+        "id": 15,
+        "name": "Note Number",
+        "node": "kbd.pitch",
+        "per_voice": true
+      },
+      {
+        "id": 16,
+        "name": "Filter Out",
+        "node": "vcf.out",
+        "per_voice": true
+      },
+      {
+        "id": 17,
+        "name": "Random",
+        "per_voice": true
+      },
+      {
+        "id": 18,
+        "name": "DC",
+        "per_voice": false
+      },
+      {
+        "id": 19,
+        "name": "Audio Out",
+        "node": "out.left",
+        "per_voice": false
+      }
+    ],
+    "destinations": [
+      {
+        "id": 0,
+        "name": "No Dest"
+      },
+      {
+        "id": 1,
+        "name": "Osc 1 Octave",
+        "parameter": "osc1.octave"
+      },
+      {
+        "id": 2,
+        "name": "Osc 2 Octave",
+        "parameter": "osc2.octave"
+      },
+      {
+        "id": 3,
+        "name": "Osc 1 Fine Freq",
+        "parameter": "osc1.pitch"
+      },
+      {
+        "id": 4,
+        "name": "Osc 2 Fine Freq",
+        "parameter": "osc2.pitch"
+      },
+      {
+        "id": 5,
+        "name": "Osc All Fine Freq"
+      },
+      {
+        "id": 6,
+        "name": "Osc 1 Shape",
+        "parameter": "osc1.shape"
+      },
+      {
+        "id": 7,
+        "name": "Osc 2 Shape",
+        "parameter": "osc2.shape"
+      },
+      {
+        "id": 8,
+        "name": "Osc All Shape"
+      },
+      {
+        "id": 9,
+        "name": "Osc 1 Level",
+        "parameter": "mixer.osc1"
+      },
+      {
+        "id": 10,
+        "name": "Osc 2 Level",
+        "parameter": "mixer.osc2"
+      },
+      {
+        "id": 11,
+        "name": "Osc FM Level"
+      },
+      {
+        "id": 12,
+        "name": "Sub Level",
+        "parameter": "mixer.sub"
+      },
+      {
+        "id": 13,
+        "name": "Noise",
+        "parameter": "mixer.noise"
+      },
+      {
+        "id": 14,
+        "name": "Drive",
+        "parameter": "vcf.drive"
+      },
+      {
+        "id": 15,
+        "name": "Cutoff",
+        "parameter": "vcf.cutoff"
+      },
+      {
+        "id": 16,
+        "name": "Resonance",
+        "parameter": "vcf.resonance"
+      },
+      {
+        "id": 17,
+        "name": "Overdrive",
+        "parameter": "drive.amount"
+      },
+      {
+        "id": 18,
+        "name": "Panning"
+      },
+      {
+        "id": 19,
+        "name": "FX Mix",
+        "parameter": "fx.mix"
+      },
+      {
+        "id": 20,
+        "name": "FX Time",
+        "parameter": "fx.time"
+      },
+      {
+        "id": 21,
+        "name": "FX Misc",
+        "parameter": "fx.misc"
+      },
+      {
+        "id": 22,
+        "name": "Reverb Mix",
+        "parameter": "reverb.mix"
+      },
+      {
+        "id": 23,
+        "name": "Reverb Size",
+        "parameter": "reverb.damping"
+      },
+      {
+        "id": 24,
+        "name": "Reverb PreDelay",
+        "parameter": "reverb.predelay"
+      },
+      {
+        "id": 25,
+        "name": "Reverb Decay",
+        "parameter": "reverb.decay"
+      },
+      {
+        "id": 26,
+        "name": "Reverb Tone",
+        "parameter": "reverb.tone"
+      },
+      {
+        "id": 27,
+        "name": "LFO 1 Freq",
+        "parameter": "lfo1.freq"
+      },
+      {
+        "id": 28,
+        "name": "LFO 2 Freq",
+        "parameter": "lfo2.freq"
+      },
+      {
+        "id": 29,
+        "name": "LFO All Freq"
+      },
+      {
+        "id": 30,
+        "name": "LFO 1 Amt",
+        "parameter": "lfo1.amt"
+      },
+      {
+        "id": 31,
+        "name": "LFO 2 Amt",
+        "parameter": "lfo2.amt"
+      },
+      {
+        "id": 32,
+        "name": "LFO All Amt"
+      },
+      {
+        "id": 33,
+        "name": "Env 1 Amt",
+        "parameter": "env1.amount"
+      },
+      {
+        "id": 34,
+        "name": "Env 2 Amt",
+        "parameter": "env2.amount"
+      },
+      {
+        "id": 35,
+        "name": "Env 1 Attack",
+        "parameter": "env1.attack"
+      },
+      {
+        "id": 36,
+        "name": "Env 2 Attack",
+        "parameter": "env2.attack"
+      },
+      {
+        "id": 37,
+        "name": "Env 1 Decay",
+        "parameter": "env1.decay"
+      },
+      {
+        "id": 38,
+        "name": "Env 2 Decay",
+        "parameter": "env2.decay"
+      },
+      {
+        "id": 39,
+        "name": "Env 1 Release",
+        "parameter": "env1.release"
+      },
+      {
+        "id": 40,
+        "name": "Env 2 Release",
+        "parameter": "env2.release"
+      },
+      {
+        "id": 41,
+        "name": "Mod 1 Amount",
+        "parameter": "mm.1.amount"
+      },
+      {
+        "id": 42,
+        "name": "Mod 2 Amount",
+        "parameter": "mm.2.amount"
+      },
+      {
+        "id": 43,
+        "name": "Mod 3 Amount",
+        "parameter": "mm.3.amount"
+      },
+      {
+        "id": 44,
+        "name": "Mod 4 Amount",
+        "parameter": "mm.4.amount"
+      },
+      {
+        "id": 45,
+        "name": "Mod 5 Amount",
+        "parameter": "mm.5.amount"
+      },
+      {
+        "id": 46,
+        "name": "Mod 6 Amount",
+        "parameter": "mm.6.amount"
+      },
+      {
+        "id": 47,
+        "name": "Mod 7 Amount",
+        "parameter": "mm.7.amount"
+      },
+      {
+        "id": 48,
+        "name": "Mod 8 Amount",
+        "parameter": "mm.8.amount"
+      },
+      {
+        "id": 49,
+        "name": "Mod 9 Amount",
+        "parameter": "mm.9.amount"
+      },
+      {
+        "id": 50,
+        "name": "Mod 10 Amount",
+        "parameter": "mm.10.amount"
+      },
+      {
+        "id": 51,
+        "name": "Mod 11 Amount",
+        "parameter": "mm.11.amount"
+      },
+      {
+        "id": 52,
+        "name": "Mod 12 Amount",
+        "parameter": "mm.12.amount"
+      },
+      {
+        "id": 53,
+        "name": "Mod 13 Amount",
+        "parameter": "mm.13.amount"
+      },
+      {
+        "id": 54,
+        "name": "Mod 14 Amount",
+        "parameter": "mm.14.amount"
+      },
+      {
+        "id": 55,
+        "name": "Mod 15 Amount",
+        "parameter": "mm.15.amount"
+      },
+      {
+        "id": 56,
+        "name": "Mod 16 Amount",
+        "parameter": "mm.16.amount"
+      }
+    ],
+    "depth_range": {
+      "min": -127,
+      "max": 127
+    },
+    "note": "16 slots, 19 sources (plus none), 57 destination entries listed (No Dest plus 56); the MIDI document gives destination range 0-54 (55 values). Display marks mono (M) and poly (P) entries."
+  },
+  "indicators": [
+    {
+      "id": "oled",
+      "module": "kbd",
+      "label": "display",
+      "kind": "display",
+      "function": "Program, mod slots, menus, effect name, clock division, sequencer step."
+    },
+    {
+      "id": "led_tap",
+      "module": "arp",
+      "label": "TAP TEMPO LED",
+      "kind": "led",
+      "function": "Flashes at the BPM."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["osc1", "osc2", "mixer", "vcf", "vca", "drive", "fx", "reverb"],
+      "rule": "Per voice: oscillators, sub and noise into the driven low-pass filter, then the VCA and pan. Voices summed into overdrive, one digital effect and the reverb, then stereo out."
+    },
+    {
+      "id": "b02",
+      "name": "Oscillator shape and FM",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "SHAPE morphs sine, saw and pulse continuously, narrowing the pulse beyond. FM 2-1 lets Osc 2 frequency-modulate Osc 1, with the OSC 2 mixer knob as the FM amount; SYNC 2-1 resets Osc 1 from Osc 2."
+    },
+    {
+      "id": "b03",
+      "name": "Envelope routing",
+      "applies_to": ["env1", "env2"],
+      "rule": "ENV ROUTING cycles Env 1 filter / Env 2 amp; Env 1 aux / Env 2 filter + amp; Env 1 aux / Env 2 filter with gated amp."
+    },
+    {
+      "id": "b04",
+      "name": "Global and per-voice LFOs",
+      "applies_to": ["lfo1", "lfo2"],
+      "rule": "LFO 1 is one modulator for all voices; LFO 2 runs per voice. Each has a direct destination and amount; the matrix adds more."
+    },
+    {
+      "id": "b05",
+      "name": "Unison and chord memory",
+      "applies_to": ["kbd"],
+      "rule": "Unison stacks 1-5 voices (detune 0-7, low/high/last priority); a held chord pressed with UNISON is memorised and transposed by single keys."
+    },
+    {
+      "id": "b06",
+      "name": "Sequencer and arpeggiator",
+      "applies_to": ["arp"],
+      "rule": "64-step polyphonic step sequencer (notes, chords, rests, ties) saved per program; arpeggiator with five orders, 1-3 octaves, repeats and relatch; clock 30-250 BPM or MIDI."
+    },
+    {
+      "id": "b07",
+      "name": "Programs",
+      "applies_to": ["kbd"],
+      "rule": "256 programs: 128 user and 128 factory in 8 banks of 16. Basic Program: TRANSPOSE down + LATCH."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "poly_pressure"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "program_change",
+        "note": "programs 1-16 of the selected bank"
+      },
+      {
+        "message": "control_change",
+        "note": "official CC table (see parameter access); 32 bank select 0-7 user, 8-15 factory; 64 damper; 74 brightness"
+      },
+      {
+        "message": "nrpn",
+        "note": "program parameters 0-171, globals 4096-4122, sequencer 4198-4199"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "sysex",
+        "note": "device inquiry; program, edit buffer and global dump requests; packed program dumps"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "sysex"
+      }
+    ],
+    "sysex_id": "DSI/Sequential 01, Take 5 35",
+    "channel_note": "One channel or all.",
+    "note": "From Sequential's Take 5 MIDI Implementation V2."
+  },
+  "specifications": {
+    "voices": 5,
+    "keyboard": "44 keys, velocity and aftertouch",
+    "oscillators": "2 VCOs + sub per voice",
+    "filter": "resonant low-pass with drive",
+    "envelopes": "2 DADSR",
+    "lfos": "LFO 1 global, LFO 2 per voice",
+    "mod_matrix": "16 slots",
+    "effects": "1 of 11 types + reverb; overdrive",
+    "programs": "256 (128 user, 128 factory)",
+    "sequencer_steps": 64,
+    "connections": {
+      "outputs": "L/R 1/4\" unbalanced",
+      "phones": "1/4\" stereo",
+      "pedals": "footswitch, expression",
+      "midi": "DIN in, out, thru; USB"
+    }
+  },
+  "omitted_from_source": [
+    "Chapter 3 tutorials",
+    "alternative tuning descriptions",
+    "calibration and import/export procedures",
+    "safety text"
+  ],
+  "not_in_source": [
+    "filter slope and circuit (retailers describe a Prophet-5-style 4-pole low-pass)",
+    "envelope and LFO times",
+    "dimensions and weight",
+    "keyboard action"
+  ],
+  "source_inconsistencies": [
+    "The reverb section describes a DAMPING knob; the matrix destinations and MIDI tables call the same control 'Reverb Size'.",
+    "The MIDI document gives FX Type 0-8 for 11 listed effects, Arp Mode 0-2 for five modes, and Mod 16 Amount as 0-54 (other amounts 0-255).",
+    "The global dump lists Take 5 ID 0011 0001 (31) where every other message uses 35, and '27 nibbles for 32 Global parameters'.",
+    "Program parameters 0-171 sit under a 'Control NRPN Data' heading said to be 'not saved as part of a program'.",
+    "The guide says transpose settings are global and not saved, then that they can be saved per patch.",
+    "Arp Repeat is described as '1, 2, 3' then explained from 'off'.",
+    "The destination list has 57 entries (No Dest plus 56); the MIDI document gives 0-54 (55 values)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Shared platform",
+      "detail": "Structure mirrors the Oberheim TEO-5 file (same platform) with the Take 5's oscillators, FM, noise, filter, reverb and program count."
+    },
+    {
+      "topic": "Direct destinations",
+      "detail": "LFO 1, LFO 2 and Env 1 (aux) destinations are parameters, not drawn connections."
+    },
+    {
+      "topic": "Per-voice modules",
+      "detail": "Voice modules per_voice; LFO 1, overdrive, effects and sequencer common."
+    }
+  ]
+}

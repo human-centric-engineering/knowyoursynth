@@ -1,0 +1,3244 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "behringer-wave",
+    "manufacturer": "Behringer",
+    "model": "WAVE Legendary 8-Voice Multi-Timbral Hybrid Synthesizer",
+    "category": "8-voice bi-timbral hybrid wavetable synthesizer, 49 keys with velocity and channel aftertouch",
+    "based_on": "PPG Wave 2.2 / 2.3 (Wolfgang Palm, 1982-84); released 2024 after four years in development (announced as the 'BBG Wave').",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer WAVE Quick Start Guide (firmware 1.0.11, April 2025)",
+        "kind": "quick_start_guide",
+        "file": "Behringer_Wave.pdf",
+        "pages": 92,
+        "note": "Multilingual; English pages 16-21: controls (57 callouts), menu shortcuts for the Program, Sequencer, Digital and Tuning menus, getting started."
+      },
+      {
+        "id": "manual",
+        "title": "Behringer WAVE User Manual V1.0 (firmware 1.0.11, April 2025)",
+        "kind": "user_manual",
+        "file": "https://www.behringerwave.com/downloads/Manual_BE_0722-ABD_WAVE.pdf",
+        "note": "Read via the community-hosted PDF (to page 29) and the ManualsLib HTML edition (later sections: rear panel, calibration, MIDI, SysEx, troubleshooting, glossary). CC and NRPN tables are images; only their text summaries were readable."
+      },
+      {
+        "id": "manual_2022",
+        "title": "Behringer WAVE User Manual (July 2022 edition, supplied)",
+        "kind": "user_manual",
+        "file": "Behringer_WAVE_Manual_July_2022.pdf",
+        "pages": 52,
+        "note": "MIDI CC table (page 34), NRPN table 0-46 (pages 35-36) and SysEx preset map as text."
+      },
+      {
+        "id": "lm",
+        "title": "Long & McQuade WAVE specifications",
+        "kind": "other",
+        "file": "https://www.long-mcquade.com/415649/Keyboards/Synthesizers-Drum-Machines/Behringer/Wave-Legendary-8-Voice-Multi-Timbral-Hybrid-Synthesizer.htm",
+        "note": "Connector types: sync TRS, CV and gate 1/4\" TS, expression TRS (voltage on tip), sustain TS."
+      },
+      {
+        "id": "press",
+        "title": "Gearnews, Audiofanzine, MusicRadar, Synth Anatomy reviews; Music Store, B&H, Perfect Circuit specifications",
+        "kind": "other",
+        "file": "https://www.gearnews.com/behringer-wave-review-synthesizer/",
+        "note": "49 keys with channel aftertouch; V2044A (SSM2044 clone) 24 dB filter; 30 factory wavetables of 64 waves; 64 user wavetables (23 filled); 32 transients; dimensions and weight."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "wavetable",
+    "signal_path": "hybrid",
+    "voices": 8,
+    "polyphony_mode": "two sounds per program (groups A and B); ten keyboard modes: Poly 8, Quad (4 x A+B layered), Duo, Mono unison, Quad A/B split, mono/quad/poly split combinations, and A poly with B mono on CV/gate",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "200 programs (2 banks of 100), each with group A and B sounds and a sequence; 64 user wavetables and 32 transients loaded via SynthTribe.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 49,
+      "knobs": 24,
+      "voice_outputs": 8
+    },
+    "summary": "Per voice: a MAIN and a SUB digital oscillator reading the same wavetable (64 waves; WAVES OSC and WAVES SUB set positions; the last four waves of PPG tables are saw, pulse, square and triangle), or a transient (short sample, 128/2048/8192 samples). The sub can follow the main, use its own waves, be off, sync or ring-modulate the main, or become noise. The summed digital signal feeds an analogue 24 dB resonant low-pass (V2044A) and an analogue VCA. EG 1 (ADSR) sweeps the filter and the wavetable, EG 2 (ADSR) is loudness, EG 3 (attack/decay with attenuation) bends pitch or sweeps waves. One LFO (four shapes, 0.2-12 Hz, delay). Behaviour is set in PPG-style numeric menus (Digital, Tuning). Stereo BASIS spread, eight individual voice outputs, polyphonic sequencer, two arpeggiators."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard, groups and keyboard modes",
+      "panel_section": "GROUP / PROGRAM menu",
+      "scope": "common",
+      "description": "49 keys (velocity, channel aftertouch), octave -2..+1; groups A/B; ten keyboard modes and split point; CV/gate drive group B monophonically in mode 9.",
+      "properties": {
+        "keys": 49
+      },
+      "inputs": [
+        "kbd.midi_in",
+        "kbd.cv_in",
+        "kbd.gate_in",
+        "kbd.sustain",
+        "kbd.pedal_in",
+        "kbd.seq_in"
+      ],
+      "outputs": [
+        "kbd.pitch",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.modwheel",
+        "kbd.bend",
+        "kbd.pedal"
+      ]
+    },
+    {
+      "id": "osc_main",
+      "type": "oscillator",
+      "name": "Main oscillator",
+      "panel_section": "MODIFIERS / DIGITAL",
+      "scope": "per_voice",
+      "description": "Digital wavetable oscillator: position 00-63 in the selected wavetable (or transient start point); 8-bit (2.2) or enhanced (2.3) quality; keyboard, EG 1, EG 3, LFO, wheel, aftertouch and bend can move the position.",
+      "properties": {
+        "factory_wavetables": 30,
+        "user_wavetables": 64,
+        "user_transients": 32,
+        "waves_per_table": 64
+      },
+      "inputs": ["osc_main.pitch_cv", "osc_main.wave_cv", "osc_main.sync_in"],
+      "outputs": ["osc_main.out"]
+    },
+    {
+      "id": "osc_sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "MODIFIERS / DIGITAL",
+      "scope": "per_voice",
+      "description": "Second digital oscillator on the same wavetable: follows the main waves, uses its own WAVES SUB position, swaps EG 1 for EG 3, off, sync source for the main, ring modulator, or noise.",
+      "inputs": ["osc_sub.pitch_cv", "osc_sub.wave_cv"],
+      "outputs": ["osc_sub.out"]
+    },
+    {
+      "id": "dac",
+      "type": "summer",
+      "name": "Digital sum / DAC",
+      "panel_section": "(internal)",
+      "scope": "per_voice",
+      "description": "Main and sub summed digitally and converted to analogue, without level controls (apart from the noise mode).",
+      "inputs": ["dac.main", "dac.sub"],
+      "outputs": ["dac.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "MODIFIERS",
+      "scope": "per_voice",
+      "description": "Analogue 4-pole 24 dB/oct resonant low-pass (Cool Audio V2044A, SSM2044 clone).",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "chip": "V2044A"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv", "vcf.res_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPE GENERATOR 2",
+      "scope": "per_voice",
+      "description": "Analogue VCA under EG 2; ENV 2 LOUDNESS sets the group's level.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "EG 1 (filter / waves)",
+      "panel_section": "ENVELOPE GENERATOR 1",
+      "scope": "per_voice",
+      "description": "ADSR to filter cutoff (ENV 1 VCF) and wavetable position (ENV 1 WAVES); attack above 47 completes even if the key is released.",
+      "inputs": ["env1.gate"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "EG 2 (loudness)",
+      "panel_section": "ENVELOPE GENERATOR 2",
+      "scope": "per_voice",
+      "description": "ADSR on the VCA (same attack-completion behaviour above 47).",
+      "inputs": ["env2.gate"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "env3",
+      "type": "envelope",
+      "name": "EG 3 (pitch / waves)",
+      "panel_section": "ENVELOPE GENERATOR 3",
+      "scope": "per_voice",
+      "description": "Attack/decay with attenuation: bipolar on pitch (5 = none), or 0-63 wave steps added to WAVES SUB.",
+      "inputs": ["env3.gate"],
+      "outputs": ["env3.out"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LOW FREQUENCY OSCILLATOR",
+      "scope": "common",
+      "description": "Triangle, ramp, sawtooth or square, 0.2-12 Hz, with delay (up to 10 s); to waves, filter, loudness and pitch per the menus.",
+      "properties": {
+        "rate_hz": [0.2, 12]
+      },
+      "inputs": ["lfo.depth_cv"],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer and arpeggiators",
+      "panel_section": "SEQUENCER BUTTONS / Sequencer menu",
+      "scope": "common",
+      "description": "Polyphonic step sequencer (record, rest/tie, append, clear last, overdub, transpose) and two arpeggiators (up, down, up/down, random, moving); 40-240 BPM or MIDI/USB/analogue clock.",
+      "properties": {
+        "tempo_bpm": [40, 240]
+      },
+      "inputs": ["seq.sync_in"],
+      "outputs": ["seq.notes", "seq.sync_out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Outputs",
+      "panel_section": "MASTER / rear panel",
+      "scope": "common",
+      "description": "BASIS spreads notes between channel 1 and 2 (alternating at maximum, mono at minimum); MASTER VOLUME; eight individual voice outputs also keep feeding the mains; headphones.",
+      "inputs": ["out.in"],
+      "outputs": ["out.ch1", "out.ch2", "out.voice", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "out.basis",
+      "module": "out",
+      "label": "BASIS",
+      "kind": "continuous",
+      "manual_ref": 1,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Stereo spread: minimum mono to both outputs, maximum alternates notes between outputs.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "MASTER VOLUME",
+      "kind": "continuous",
+      "manual_ref": 2,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Output level (MIDI CC 7).",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "LFO DELAY",
+      "kind": "continuous",
+      "manual_ref": 3,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Delay before modulation, up to 10 s.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "lfo.wave",
+      "module": "lfo",
+      "label": "WAVESHAPE (LFO)",
+      "kind": "enum",
+      "manual_ref": 4,
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE (LFO)",
+      "kind": "continuous",
+      "manual_ref": 5,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.2,
+        "max": 12,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "0.2-12 Hz.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "EG 1 ATTACK",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Filter envelope attack (above 47 it completes regardless of key release).",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "EG 1 DECAY",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Decay.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "EG 1 SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Sustain level.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "EG 1 RELEASE",
+      "kind": "continuous",
+      "manual_ref": 9,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Release.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "VCF CUTOFF",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Low-pass cutoff.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "vcf.emphasis",
+      "module": "vcf",
+      "label": "VCF EMPHASIS",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Resonance.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "osc_main.waves",
+      "module": "osc_main",
+      "label": "WAVES OSC",
+      "kind": "integer",
+      "manual_ref": 12,
+      "range": {
+        "min": 0,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Main oscillator wave 00-63 in the wavetable (or transient start)."
+    },
+    {
+      "id": "osc_sub.waves",
+      "module": "osc_sub",
+      "label": "WAVES SUB",
+      "kind": "integer",
+      "manual_ref": 13,
+      "range": {
+        "min": 0,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Sub oscillator wave 00-63 (or transient start)."
+    },
+    {
+      "id": "env3.attack",
+      "module": "env3",
+      "label": "EG 3 ATTACK",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Attack.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env3.decay",
+      "module": "env3",
+      "label": "EG 3 DECAY",
+      "kind": "continuous",
+      "manual_ref": 15,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Decay.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env3.attenuation",
+      "module": "env3",
+      "label": "EG 3 ATTENUATION",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Pitch: 5 = none, below negative, above positive. Waves: 0 none to 10 = 63 steps.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "EG 2 ATTACK",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Loudness attack (above 47 it completes).",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "EG 2 DECAY",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Decay.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "EG 2 SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Sustain level.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "EG 2 RELEASE",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Release.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "kbd.group",
+      "module": "kbd",
+      "label": "GROUP",
+      "kind": "enum",
+      "manual_ref": 21,
+      "values": [
+        {
+          "value": "A"
+        },
+        {
+          "value": "B"
+        },
+        {
+          "value": "A_and_B"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Which sound (A, B or both) the panel and menus edit."
+    },
+    {
+      "id": "vcf.env1",
+      "module": "vcf",
+      "label": "ENV 1 VCF",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Filter envelope amount.",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "vca.level",
+      "module": "vca",
+      "label": "ENV 2 LOUDNESS",
+      "kind": "continuous",
+      "manual_ref": 23,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Group output level (balances A and B).",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "osc_main.env1",
+      "module": "osc_main",
+      "label": "ENV 1 WAVES",
+      "kind": "continuous",
+      "manual_ref": 24,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "EG 1 sweep through the wavetable (or transient loop point).",
+      "note": "Stored as 00-63 (ANALOG menu); editable there by keypad or data control."
+    },
+    {
+      "id": "ui.data",
+      "module": "kbd",
+      "label": "DATA CONTROL",
+      "kind": "boolean",
+      "manual_ref": 25,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Encoder: push and turn to enter values."
+    },
+    {
+      "id": "ui.keypad",
+      "module": "kbd",
+      "label": "NUMERIC KEYPAD",
+      "kind": "boolean",
+      "manual_ref": 28,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Numbers and cursor."
+    },
+    {
+      "id": "ui.program",
+      "module": "kbd",
+      "label": "PROGRAM (twice: USER)",
+      "kind": "boolean",
+      "manual_ref": 29,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Program menu (default); twice for the User menu."
+    },
+    {
+      "id": "ui.digital",
+      "module": "kbd",
+      "label": "DIGITAL",
+      "kind": "boolean",
+      "manual_ref": 30,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Digital menu."
+    },
+    {
+      "id": "ui.tuning",
+      "module": "kbd",
+      "label": "TUNING",
+      "kind": "boolean",
+      "manual_ref": 31,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tuning menu."
+    },
+    {
+      "id": "ui.analog",
+      "module": "kbd",
+      "label": "ANALOG",
+      "kind": "boolean",
+      "manual_ref": 32,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Analog menu (panel values)."
+    },
+    {
+      "id": "ui.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "manual_ref": 34,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shifted sequencer functions."
+    },
+    {
+      "id": "seq.rest_tie",
+      "module": "seq",
+      "label": "REST/TIE (SHIFT: SETTINGS)",
+      "kind": "boolean",
+      "manual_ref": 35,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Rest, tie; sequencer settings."
+    },
+    {
+      "id": "seq.record",
+      "module": "seq",
+      "label": "RECORD (SHIFT: APPEND)",
+      "kind": "boolean",
+      "manual_ref": 36,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Record; append to a step."
+    },
+    {
+      "id": "seq.stop",
+      "module": "seq",
+      "label": "STOP (SHIFT: CLR LST)",
+      "kind": "boolean",
+      "manual_ref": 37,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Stop and reset; clear last step(s)."
+    },
+    {
+      "id": "seq.play",
+      "module": "seq",
+      "label": "PLAY/PAUSE (SHIFT: RESTART)",
+      "kind": "boolean",
+      "manual_ref": 38,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Play, pause, resume; restart."
+    },
+    {
+      "id": "kbd.bend_wheel",
+      "module": "kbd",
+      "label": "PITCH WHEEL",
+      "kind": "continuous",
+      "manual_ref": 39,
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        }
+      ],
+      "function": "Assignable via BD; springs to centre."
+    },
+    {
+      "id": "kbd.mod_wheel",
+      "module": "kbd",
+      "label": "MODULATION WHEEL",
+      "kind": "continuous",
+      "manual_ref": 40,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "Modulation per MW/MF/ML/TM settings; position stored per preset and group."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "OCTAVE DOWN/UP",
+      "kind": "integer",
+      "manual_ref": 41,
+      "range": {
+        "min": -2,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard transpose -2 to +1 octaves."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER SWITCH",
+      "kind": "boolean",
+      "manual_ref": 42,
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power."
+    },
+    {
+      "id": "prog.bank",
+      "module": "kbd",
+      "label": "BANK: Bank",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, BANK"
+        }
+      ],
+      "function": "Bank 0 or 1."
+    },
+    {
+      "id": "prog.number",
+      "module": "kbd",
+      "label": "PROG: Program",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, PROG"
+        }
+      ],
+      "function": "Program 00-99."
+    },
+    {
+      "id": "prog.wavetable",
+      "module": "osc_main",
+      "label": "WAVE: Wavetable",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, WAVE"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:0",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Wavetable 00-127 (factory, user, transients)."
+    },
+    {
+      "id": "prog.split",
+      "module": "kbd",
+      "label": "SPLT: Split point",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, SPLT"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:1",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Keyboard split point."
+    },
+    {
+      "id": "prog.keyb",
+      "module": "kbd",
+      "label": "KEYB: Keyboard mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0_poly8"
+        },
+        {
+          "value": "1_quad_AB"
+        },
+        {
+          "value": "2_duo"
+        },
+        {
+          "value": "3_mono_unison"
+        },
+        {
+          "value": "4_quad_split_AB"
+        },
+        {
+          "value": "5_A_mono_B_quad"
+        },
+        {
+          "value": "6_A_mono_B_poly"
+        },
+        {
+          "value": "7_A_poly_B_mono"
+        },
+        {
+          "value": "8_A_mono_B_mono"
+        },
+        {
+          "value": "9_A_poly_B_mono_cv_in"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, KEYB"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:2",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Voice and group allocation."
+    },
+    {
+      "id": "prog.dtf",
+      "module": "kbd",
+      "label": "DTF: Data transfer function",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, DTF"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:3",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Copy edit buffers, initialise (keeps user wavetables) or store (9)."
+    },
+    {
+      "id": "sys.midi",
+      "module": "kbd",
+      "label": "MIDI: MIDI channel",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, MIDI"
+        }
+      ],
+      "function": "00 (off) to 16."
+    },
+    {
+      "id": "sys.tune",
+      "module": "kbd",
+      "label": "TUNE: Tuning",
+      "kind": "integer",
+      "range": {
+        "min": 400,
+        "max": 499
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, TUNE"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:4",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "A = 400-499 Hz (default 440)."
+    },
+    {
+      "id": "sys.sysex",
+      "module": "kbd",
+      "label": "SYSEX: SysEx dump",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, SYSEX"
+        }
+      ],
+      "function": "Send edit buffer, program, bank or sequencer data."
+    },
+    {
+      "id": "sys.exp_ped",
+      "module": "kbd",
+      "label": "EXP-PED: Expression pedal",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "disabled"
+        },
+        {
+          "value": "loudness"
+        },
+        {
+          "value": "filter_frequency"
+        },
+        {
+          "value": "filter_emphasis"
+        },
+        {
+          "value": "wave"
+        },
+        {
+          "value": "modulation"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, EXP-PED"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:5",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Pedal destination."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "LOC: Local control",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Program menu, LOC"
+        },
+        {
+          "type": "midi",
+          "message": "CC 122",
+          "note": "when PAR-COM = 1 (tx), 2 (rx) or 3"
+        }
+      ],
+      "function": "0 off, 1 on."
+    },
+    {
+      "id": "sys.touch",
+      "module": "kbd",
+      "label": "TOUCH: Channel aftertouch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "disabled"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "tx_rx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, TOUCH"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:6",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Disabled, transmit, receive, both."
+    },
+    {
+      "id": "sys.par_com",
+      "module": "kbd",
+      "label": "PAR-COM: MIDI CC parameters",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "disabled"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "tx_rx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, PAR-COM"
+        }
+      ],
+      "function": "Disabled, transmit, receive, both."
+    },
+    {
+      "id": "sys.firm",
+      "module": "env1",
+      "label": "FIRM: Firmware emulation",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "original"
+        },
+        {
+          "value": "linear_envelopes"
+        },
+        {
+          "value": "exponential_envelopes"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, FIRM"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:9",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Original, or enhanced with linear or exponential envelopes."
+    },
+    {
+      "id": "sys.osc",
+      "module": "osc_main",
+      "label": "OSC: Oscillator quality",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "original"
+        },
+        {
+          "value": "enhanced"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, OSC"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:10",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Original or enhanced."
+    },
+    {
+      "id": "sys.lfo",
+      "module": "lfo",
+      "label": "LFO: LFO precision",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "original"
+        },
+        {
+          "value": "improved"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, LFO"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:11",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Original or improved."
+    },
+    {
+      "id": "sys.brt",
+      "module": "kbd",
+      "label": "BRT: LCD brightness",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, BRT"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:7",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "00-99."
+    },
+    {
+      "id": "dig.uw",
+      "module": "osc_main",
+      "label": "UW: Upper wavetable",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, UW"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:12",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Wavetable: wrap, best-of tables 1-30, no wrap. Transient: 128, 2048 or 8192 samples."
+    },
+    {
+      "id": "dig.sw",
+      "module": "osc_sub",
+      "label": "SW: Sub-oscillator wave",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0_main_waves"
+        },
+        {
+          "value": "1_own_waves"
+        },
+        {
+          "value": "2_swap_env1_env3"
+        },
+        {
+          "value": "3_off"
+        },
+        {
+          "value": "4_sync_main"
+        },
+        {
+          "value": "5_ring_mod"
+        },
+        {
+          "value": "6_noise"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, SW"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:13",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Sub role."
+    },
+    {
+      "id": "dig.kw",
+      "module": "osc_main",
+      "label": "KW: Keyboard control of wavetable",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, KW"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:14",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off; higher notes take higher waves; own wave per note (with skips)."
+    },
+    {
+      "id": "dig.kf",
+      "module": "vcf",
+      "label": "KF: Keyboard filter tracking",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, KF"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:15",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "0 none, 3 about 100%, 7 about 200%."
+    },
+    {
+      "id": "dig.kl",
+      "module": "vca",
+      "label": "KL: Keyboard loudness tracking",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, KL"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:16",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "0-3 higher louder, 4 equal, 5-7 lower louder."
+    },
+    {
+      "id": "dig.mw",
+      "module": "osc_main",
+      "label": "MW: Wavetable modulation",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 9
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, MW"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:17",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off; LFO via wheel; wheel sweeps waves; LFO sweeps waves (3-9)."
+    },
+    {
+      "id": "dig.mf",
+      "module": "vcf",
+      "label": "MF: Filter modulation",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 9
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, MF"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:18",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off; LFO via wheel; wheel to frequency; wheel to emphasis; LFO depths (4-9)."
+    },
+    {
+      "id": "dig.ml",
+      "module": "vca",
+      "label": "ML: Loudness modulation",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, ML"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:19",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "LFO tremolo off/on."
+    },
+    {
+      "id": "dig.bd",
+      "module": "kbd",
+      "label": "BD: Pitch bend destination",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, BD"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:20",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, oscillators, filter, wavetable, sub only, and combinations."
+    },
+    {
+      "id": "dig.bi",
+      "module": "kbd",
+      "label": "BI: Pitch bend range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "2_semitones"
+        },
+        {
+          "value": "major_third"
+        },
+        {
+          "value": "fifth"
+        },
+        {
+          "value": "octave"
+        },
+        {
+          "value": "two_octaves"
+        },
+        {
+          "value": "octave_stepped"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, BI"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:21",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "2 semitones, major third, fifth, octave, two octaves, octave stepped."
+    },
+    {
+      "id": "tun.mo",
+      "module": "osc_main",
+      "label": "MO: Main oscillator pitch modulation",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, MO"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:29",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "LFO vibrato on the main oscillator (via the mod wheel) off/on."
+    },
+    {
+      "id": "dig.tw",
+      "module": "osc_main",
+      "label": "TW: Aftertouch to waves",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "sweep"
+        },
+        {
+          "value": "lfo_mod"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, TW"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:22",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, wavetable sweep, LFO waveform modulation."
+    },
+    {
+      "id": "dig.tf",
+      "module": "vcf",
+      "label": "TF: Aftertouch to filter",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "frequency"
+        },
+        {
+          "value": "lfo_mod"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, TF"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:23",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, frequency, LFO modulation of frequency."
+    },
+    {
+      "id": "dig.tl",
+      "module": "vca",
+      "label": "TL: Aftertouch to loudness",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "loudness"
+        },
+        {
+          "value": "lfo_mod"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, TL"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:24",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, loudness, LFO modulation of loudness."
+    },
+    {
+      "id": "dig.tm",
+      "module": "kbd",
+      "label": "TM: Aftertouch as mod wheel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, TM"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:25",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off/on."
+    },
+    {
+      "id": "dig.vf",
+      "module": "vcf",
+      "label": "VF: Velocity to filter",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "medium"
+        },
+        {
+          "value": "high"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, VF"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:26",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, low, medium, high."
+    },
+    {
+      "id": "dig.vl",
+      "module": "vca",
+      "label": "VL: Velocity to loudness",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "medium"
+        },
+        {
+          "value": "high"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Digital menu, VL"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:27",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off, low, medium, high."
+    },
+    {
+      "id": "tun.detu",
+      "module": "osc_sub",
+      "label": "DETU: Sub detune",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 9
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, DETU"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:28",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "0 none, 1-4 slight to strong, 5 +5 semitones, 6 +1 octave, 7 +2 octaves, 8 -1 octave, 9 -2 octaves."
+    },
+    {
+      "id": "tun.ms",
+      "module": "osc_sub",
+      "label": "MS: Sub pitch modulation",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, MS"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:30",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "LFO vibrato on the sub off/on."
+    },
+    {
+      "id": "tun.eo",
+      "module": "osc_main",
+      "label": "EO: EG 3 to main pitch",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 9
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, EO"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:31",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "0 off, 1 on, 2-9 polyphonic portamento with increasing glide time."
+    },
+    {
+      "id": "tun.es",
+      "module": "osc_sub",
+      "label": "ES: EG 3 to sub pitch",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, ES"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:32",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Off/on."
+    },
+    {
+      "id": "tun.semit",
+      "module": "osc_main",
+      "label": "SEMIT: Voice semitone detune",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 63
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Tuning menu, SEMIT"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:33-40 (voices 1-8)",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Upward semitone offset per voice (eight values): 0-63 entered manually, or 0-48 from the keyboard; used e.g. to put group B an octave or two above A."
+    },
+    {
+      "id": "seq.clk",
+      "module": "seq",
+      "label": "CLK: Clock source and rate",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 33
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, CLK"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:43",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Internal, DIN, USB or analogue; 1 pulse per step, 2, 24 or 48 ppqn."
+    },
+    {
+      "id": "seq.gat",
+      "module": "seq",
+      "label": "GAT: Gate duration",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 99
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, GAT"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:44",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "1-99."
+    },
+    {
+      "id": "seq.div",
+      "module": "seq",
+      "label": "DIV: Clock division",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/32"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16T"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, DIV"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:45",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "1/4, 1/8, 1/16, 1/32, triplets."
+    },
+    {
+      "id": "seq.bpm",
+      "module": "seq",
+      "label": "BPM: Tempo",
+      "kind": "integer",
+      "range": {
+        "min": 40,
+        "max": 240
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, BPM"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:46",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "40-240 BPM."
+    },
+    {
+      "id": "seq.mtn",
+      "module": "seq",
+      "label": "MTN: Metronome",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, MTN"
+        }
+      ],
+      "function": "Off/on."
+    },
+    {
+      "id": "seq.ovp",
+      "module": "seq",
+      "label": "OVP: Overdub / transposition",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 11
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, OVP"
+        }
+      ],
+      "function": "Overdub on/off; transpose sequence or keyboard independent."
+    },
+    {
+      "id": "seq.mod",
+      "module": "seq",
+      "label": "MOD: Mode",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 25
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Sequencer menu, MOD"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:42",
+          "note": "Bn 63 00, Bn 62 ParNum, Bn 06 Value"
+        }
+      ],
+      "function": "Sequencer, arpeggiator 1 or 2; up, down, up/down, random, moving."
+    },
+    {
+      "id": "seq.state",
+      "module": "seq",
+      "label": "Sequencer state",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "stop"
+        },
+        {
+          "value": "play"
+        },
+        {
+          "value": "rec"
+        },
+        {
+          "value": "overdub"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "midi",
+          "message": "NRPN 0:41"
+        }
+      ],
+      "function": "Stop, play, record, overdub."
+    },
+    {
+      "id": "sys.cnt",
+      "module": "kbd",
+      "label": "CNT: LCD contrast",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 99
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "User menu, CNT"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:8"
+        }
+      ],
+      "function": "00-99."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.ch1",
+      "label": "CHANNEL 1 OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.ch1",
+      "function": "Left (or mono with BASIS at minimum).",
+      "manual_ref": 48
+    },
+    {
+      "id": "jack.ch2",
+      "label": "CHANNEL 2 OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.ch2",
+      "function": "Right; duplicates channel 1 in mono.",
+      "manual_ref": 49
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones.",
+      "manual_ref": 50
+    },
+    {
+      "id": "jack.voice_outs",
+      "label": "CHANNEL OUTPUTS 1-8",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.voice",
+      "function": "Individual voice outputs (voices still feed the mains).",
+      "manual_ref": 51,
+      "note": "Eight jacks, modelled as one port."
+    },
+    {
+      "id": "jack.sync_in",
+      "label": "SYNC IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "6.35 mm TRS",
+      "node": "seq.sync_in",
+      "function": "Clock (tip) and start/stop (ring) for sequencer/arpeggiator.",
+      "manual_ref": 52
+    },
+    {
+      "id": "jack.sync_out",
+      "label": "SYNC OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "6.35 mm TRS",
+      "node": "seq.sync_out",
+      "function": "Clock (tip) and start/stop (ring).",
+      "manual_ref": 53
+    },
+    {
+      "id": "jack.cv_in",
+      "label": "CV IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TS",
+      "node": "kbd.cv_in",
+      "function": "1 V/oct, -5 to +5 V; plays group B monophonically in keyboard mode 9 (calibratable).",
+      "manual_ref": 54
+    },
+    {
+      "id": "jack.gate_in",
+      "label": "GATE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.gate_in",
+      "function": "Gate for the envelopes in keyboard mode 9.",
+      "manual_ref": 55
+    },
+    {
+      "id": "jack.exp",
+      "label": "EXPRESSION PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "kbd.pedal_in",
+      "function": "Expression pedal (e.g. FC600), voltage on tip; per EXP-PED.",
+      "manual_ref": 56
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Holds notes at EG 2 sustain.",
+      "manual_ref": 57
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in.",
+      "manual_ref": 45
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out.",
+      "manual_ref": 46
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru.",
+      "manual_ref": 47
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "Class-compliant MIDI; firmware, wavetables and transients via SynthTribe.",
+      "manual_ref": 44
+    },
+    {
+      "id": "jack.power",
+      "label": "IEC POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "100-240 V AC.",
+      "manual_ref": 43
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "seq.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "osc_main.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch",
+      "to": "osc_sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.bend",
+      "to": "osc_main.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dig.bd",
+            "equals": 1
+          },
+          {
+            "param": "dig.bd",
+            "equals": 5
+          },
+          {
+            "param": "dig.bd",
+            "equals": 6
+          }
+        ]
+      },
+      "note": "Per BD."
+    },
+    {
+      "id": "c05",
+      "from": "lfo.out",
+      "to": "osc_main.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "tun.mo",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c06",
+      "from": "lfo.out",
+      "to": "osc_sub.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "tun.ms",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c07",
+      "from": "env3.out",
+      "to": "osc_main.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "tun.eo",
+        "not_equals": 0
+      },
+      "amount": "env3.attenuation"
+    },
+    {
+      "id": "c08",
+      "from": "env3.out",
+      "to": "osc_sub.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "tun.es",
+        "equals": "on"
+      },
+      "amount": "env3.attenuation"
+    },
+    {
+      "id": "c09",
+      "from": "env1.out",
+      "to": "osc_main.wave_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc_main.env1"
+    },
+    {
+      "id": "c10",
+      "from": "env3.out",
+      "to": "osc_sub.wave_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env3.attenuation",
+      "note": "EG 3 adds 0-63 wave steps to WAVES SUB."
+    },
+    {
+      "id": "c11",
+      "from": "lfo.out",
+      "to": "osc_main.wave_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.mw",
+        "not_equals": 0
+      },
+      "note": "Per MW (wheel- or LFO-swept)."
+    },
+    {
+      "id": "c12",
+      "from": "kbd.pitch",
+      "to": "osc_main.wave_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.kw",
+        "not_equals": 0
+      },
+      "note": "Keyboard wavetable control."
+    },
+    {
+      "id": "c13",
+      "from": "kbd.aftertouch",
+      "to": "osc_main.wave_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.tw",
+        "equals": "sweep"
+      }
+    },
+    {
+      "id": "c14",
+      "from": "osc_sub.out",
+      "to": "osc_main.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.sw",
+        "equals": "4_sync_main"
+      }
+    },
+    {
+      "id": "c15",
+      "from": "osc_main.out",
+      "to": "dac.main",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "osc_sub.out",
+      "to": "dac.sub",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.sw",
+        "not_equals": "3_off"
+      },
+      "note": "Ring mod and noise modes also arrive here."
+    },
+    {
+      "id": "c17",
+      "from": "dac.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "env1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env1"
+    },
+    {
+      "id": "c19",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.kf",
+        "not_equals": 0
+      }
+    },
+    {
+      "id": "c20",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.mf",
+        "not_equals": 0
+      }
+    },
+    {
+      "id": "c21",
+      "from": "kbd.aftertouch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.tf",
+        "equals": "frequency"
+      }
+    },
+    {
+      "id": "c22",
+      "from": "kbd.velocity",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.vf",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c23",
+      "from": "kbd.modwheel",
+      "to": "vcf.res_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.mf",
+        "equals": 3
+      }
+    },
+    {
+      "id": "c24",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c25",
+      "from": "env2.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.level"
+    },
+    {
+      "id": "c26",
+      "from": "lfo.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.ml",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c27",
+      "from": "kbd.velocity",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.vl",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c28",
+      "from": "kbd.modwheel",
+      "to": "lfo.depth_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dig.mw",
+        "equals": 1
+      }
+    },
+    {
+      "id": "c29",
+      "from": "kbd.pedal",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "sys.exp_ped",
+        "equals": "loudness"
+      }
+    },
+    {
+      "id": "c30",
+      "from": "kbd.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c31",
+      "from": "kbd.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c32",
+      "from": "kbd.gate",
+      "to": "env3.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c33",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Eight voices, spread by BASIS; each also to its own output."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lcd",
+      "module": "kbd",
+      "label": "LCD DISPLAY",
+      "kind": "display",
+      "function": "2 x 40 characters: program, menus and values."
+    },
+    {
+      "id": "oled",
+      "module": "out",
+      "label": "OLED DISPLAY",
+      "kind": "display",
+      "function": "Oscilloscope of the output; calibration; wavetable/transient names; SynthTribe transfer confirmation."
+    },
+    {
+      "id": "group_leds",
+      "module": "kbd",
+      "label": "GROUP LEDs",
+      "kind": "led",
+      "function": "Group A, B or both."
+    },
+    {
+      "id": "octave_leds",
+      "module": "kbd",
+      "label": "octave LEDs",
+      "kind": "led",
+      "function": "Octave transpose."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["osc_main", "osc_sub", "dac", "vcf", "vca"],
+      "rule": "Per voice: main and sub wavetable oscillators summed digitally, converted to analogue, into the V2044A 24 dB low-pass and analogue VCA; eight voices spread by BASIS and available at individual outputs."
+    },
+    {
+      "id": "b02",
+      "name": "Wavetables and transients",
+      "applies_to": ["osc_main", "osc_sub"],
+      "rule": "Each wavetable has 64 waves (PPG tables end with saw, pulse, square, triangle); WAVES OSC/SUB pick positions and EG 1, EG 3, keyboard, LFO, wheel, aftertouch, bend or pedal move them. With a transient, WAVES set start points and ENV 1 WAVES the loop point; UW sets 128, 2048 or 8192 samples."
+    },
+    {
+      "id": "b03",
+      "name": "Sub oscillator roles",
+      "applies_to": ["osc_sub"],
+      "rule": "SW: follow the main's waves, own waves, swap EG 1 for EG 3, off, sync source for the main, ring modulator, or noise generator."
+    },
+    {
+      "id": "b04",
+      "name": "Groups and keyboard modes",
+      "applies_to": ["kbd"],
+      "rule": "Every program holds sounds A and B. KEYB 0 plays one group with 8 voices; 1 layers A and B with 4 voices; 2 duo; 3 mono unison; 4 splits A (right) and B (left) at SPLT; 5-8 mix mono/quad/poly per side; 9 plays A polyphonically and B monophonically from CV/gate. GROUP chooses what the panel edits (both when both LEDs are lit)."
+    },
+    {
+      "id": "b05",
+      "name": "Envelopes",
+      "applies_to": ["env1", "env2", "env3"],
+      "rule": "EG 1 and EG 2 are ADSR; attack above 47 completes even after key release (for sweeps). EG 3 is attack/decay with attenuation (bipolar for pitch). FIRM chooses original or enhanced linear/exponential envelopes."
+    },
+    {
+      "id": "b06",
+      "name": "Sequencer and arpeggiators",
+      "applies_to": ["seq"],
+      "rule": "Polyphonic step recording with rest/tie, append, clear last, overdub and transpose; arpeggiator 1 or 2 with up, down, up/down, random, moving; clock internal 40-240 BPM, DIN, USB or analogue (1 per step to 48 ppqn); saved with the program."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure",
+        "note": "per TOUCH"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "cc": 0,
+        "parameter": "bank select MSB"
+      },
+      {
+        "message": "control_change",
+        "cc": 32,
+        "parameter": "bank select LSB: bank 0 or 1"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "mod wheel"
+      },
+      {
+        "message": "control_change",
+        "cc": 7,
+        "parameter": "master volume"
+      },
+      {
+        "message": "control_change",
+        "cc": 8,
+        "parameter": "BASIS (balance)"
+      },
+      {
+        "message": "control_change",
+        "cc": 11,
+        "parameter": "expression pedal"
+      },
+      {
+        "message": "control_change",
+        "note": "panel: 12-14 LFO, 15-17 EG 3, 18-21 EG 1, 22-25 EG 2, 26/27 waves osc/sub, 28 ENV 1 VCF, 29 ENV 2 loudness, 30 ENV 1 waves, 31 group, 71 emphasis, 74 cutoff (per PAR-COM)"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "sustain"
+      },
+      {
+        "message": "control_change",
+        "cc": 122,
+        "parameter": "local control"
+      },
+      {
+        "message": "control_change",
+        "note": "120 all sound off, 121 reset controllers, 123 all notes off"
+      },
+      {
+        "message": "nrpn",
+        "note": "MSB 0, LSB 0-46: program, user, digital and tuning menu parameters, per-voice SEMIT (33-40), arp/seq state, mode, clock, gate, division, BPM"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 20 32 00 01 39 00",
+        "note": "preset (121 values), edit buffer, sequencer (578 values), global (20 values) dumps; calibration; user wavetable/transient transfer (16-byte name + 128 x 16-bit PCM, 7-bit packed to 309 bytes); slot name list"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on",
+        "note": "including arpeggiator/sequencer notes"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "control_change",
+        "note": "per PAR-COM"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "sysex"
+      }
+    ],
+    "channel_note": "Channel 1-16 (MIDI mode 3) or 0 (off).",
+    "note": "From the manual's MIDI CC and NRPN tables (pages 34-36). Panel controls use CCs; menu parameters use NRPNs."
+  },
+  "specifications": {
+    "voices": 8,
+    "timbres": 2,
+    "oscillators": "2 digital wavetable oscillators per voice",
+    "wavetables": "30 factory (64 waves each), 64 user (23 preloaded), 32 user transients",
+    "filter": "analogue 24 dB/oct resonant low-pass (V2044A)",
+    "envelopes": "3 per voice",
+    "lfo_hz": [0.2, 12],
+    "keyboard": "49 keys, velocity, channel aftertouch",
+    "programs": 200,
+    "displays": {
+      "lcd": "2 x 40 characters",
+      "oled": "oscilloscope"
+    },
+    "outputs": "channel 1/2, 8 voice outputs, phones",
+    "power": "100-240 V AC, internal",
+    "dimensions_mm": {
+      "w": 796,
+      "d": 257,
+      "h": 112
+    },
+    "weight_kg": 7.26,
+    "firmware": "1.0.11 (April 2025)",
+    "wavetable_slots": {
+      "0-29": "factory PPG wavetables",
+      "30": "upper wavetable",
+      "31": "preset transient",
+      "32-63": "user transients (32-48 preloaded)",
+      "64-127": "user wavetables (64-86 preloaded)"
+    },
+    "factory_wavetables": [
+      "Harmonic Bliss",
+      "Harmonic Bliss2",
+      "Bells",
+      "WindSweep ResoFlute",
+      "Churchy",
+      "Harmonic MixBlend",
+      "WoodwindSweep ResoVibe",
+      "SylvanSweep ResoWind",
+      "PercuStrings",
+      "VoxEnsemble",
+      "Reso",
+      "Chiaroscuro",
+      "SweepingHigh",
+      "HarmonicStrike",
+      "OrganicRegisters",
+      "HarmonicSaw Accordionizer",
+      "SweepFrenzy",
+      "Spectrum Shift",
+      "Harmonic Sweep Oscillation",
+      "ElectricP",
+      "Robotic",
+      "StrongHrm",
+      "EchoScape Spectrum",
+      "HighHarmonic Emphasis",
+      "Organic Ascend Sweep",
+      "EchoColor Spectrum Shift",
+      "BrassForm SawVariants",
+      "VoxForm",
+      "PhaseString Ensemble",
+      "PulseShift Modulation"
+    ],
+    "preloaded_user_wavetables": [
+      "Pipes Xfade",
+      "PD_Saw PWM",
+      "DX_Tubular",
+      "DX_E.Guitar",
+      "DX_FullTine",
+      "Vibe-rant",
+      "DX_Bass",
+      "StratoSweep",
+      "FormantPad",
+      "FairVox",
+      "SpaceSweep",
+      "SoundTrack",
+      "PWMstringer",
+      "Hoover",
+      "PD_Saw",
+      "PD_SQU",
+      "PD_TPL",
+      "PD_DBL",
+      "PD_SPL",
+      "PD_RES",
+      "Wurli Wave",
+      "Rhodos",
+      "Vorcode"
+    ],
+    "preset_transients": [
+      "PanFlute",
+      "Pizzi",
+      "Steel Guitar",
+      "Elec. Cello",
+      "Xylophon",
+      "Harp",
+      "Pizzagogo",
+      "Soft Bell EP",
+      "Medium EP",
+      "Trumpet",
+      "Mute Trumpet",
+      "Duuhh",
+      "Pipe Brass",
+      "Hammer Harp",
+      "Cath. Choir",
+      "ChoirVerse",
+      "Breathy Vox"
+    ],
+    "wavetable_format": "64 waves x 128 samples; imported as 8- or 16-bit via SynthTribe",
+    "sequencer": "64 steps, up to 8 notes per step, per program",
+    "calibration": [
+      "VCA/VCF (hold ANALOG + GROUP at power-up, about 200 s)",
+      "CV input",
+      "mod wheel",
+      "pitch wheel"
+    ]
+  },
+  "omitted_from_source": ["non-English translations", "safety and hook-up pages"],
+  "not_in_source": ["envelope time ranges"],
+  "source_inconsistencies": [
+    "The BD (pitch bend destination) list repeats options 6 and 7 with meanings ('one octave detune', 'two octave detune') that belong with the detune settings.",
+    "Keyboard modes 7 and 9 are both 'A poly, B mono' (9 adds CV in).",
+    "TUNE is given as 'A 400 - A499'.",
+    "The DIV list includes '1/18 note triplet', presumably 1/8.",
+    "Retailers give 8- and 16-bit resolution; Gearspace and MusicRadar say 8- and 12-bit (Wave 2.2 and 2.3 modes).",
+    "The cover calls it 'Multi-Timbral'; it is bi-timbral (groups A and B).",
+    "The full manual's BD list is correct (0-7); the repeated 6/7 detune entries are a quick start guide error.",
+    "Transient slots: the panel text says 'transient (31-63)'; the program menu says 31 is a preset transient and 32-63 are user transients. The preloaded wavetables are said to be in 'slots 64-83' but the list runs to 86.",
+    "The ManualsLib edition says the transient loop size is fixed at 128 samples; firmware 1.0.11 adds 128, 2048 and 8192.",
+    "Troubleshooting says 'make sure ENV1->Loudness is not zero' (it is ENV 2) and refers to MO/SO/EO/ES 'in the Digital menu' (they are in Tuning, and SO is MS); it also calls master volume control (1) rather than (2).",
+    "The filter modulation list gives aftertouch as 'Option TL' (filter aftertouch is TF).",
+    "The glossary describes '64 128 bit waveshapes' (128-sample waves).",
+    "The NRPN notes say 'ParNum = 0 - 37' but the table runs to 46 (SEMIT V1-V8 33-40, then arp/seq 41-46).",
+    "The MIDI tables call MW, MF and ML 'Mod Wheel ->' modulation; the menu text defines M as LFO modulation (with the wheel as one option). ES is labelled 'Env3 -> Main Sub Pitch'.",
+    "The DIV range in the sequencer is labelled 'Sequencer Time' and BPM 'Speed (MSB/LSB)', though its 40-240 range exceeds a single 7-bit value.",
+    "SynthTribe offers 8- or 16-bit import, matching retailers' '8- and 16-bit'; the '12-bit' figure appears only in press coverage."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Groups",
+      "detail": "Panel and menu parameters apply to the selected group (A, B or both); modelled once with group selection as a parameter."
+    },
+    {
+      "topic": "Menu-driven routings",
+      "detail": "PPG-style numeric menus set many routings; connections show their main effects."
+    },
+    {
+      "topic": "MIDI tables",
+      "detail": "CC and NRPN numbers come from the July 2022 manual; later firmware (1.0.11) may add parameters not in these tables (e.g. FIRM option 2)."
+    }
+  ]
+}

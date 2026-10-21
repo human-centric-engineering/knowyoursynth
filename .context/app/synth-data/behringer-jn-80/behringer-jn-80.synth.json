@@ -1,0 +1,3330 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "behringer-jn-80",
+    "manufacturer": "Behringer",
+    "model": "JN-80 Classic Analog 8-Voice Programmable Polyphonic Synth",
+    "category": "8-voice analogue polyphonic synthesizer, 49 keys, with BBD chorus, arpeggiator and patch memory",
+    "based_on": "Roland Juno-60 (1982), extended to eight voices; announced February 2026 (begun as the 'Phat-12' project in 2010).",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer JN-80 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_JN-80_User_Guide.pdf",
+        "pages": 57,
+        "note": "Multilingual; English pages: hook-up, controls (61 callouts), shift-function menus, MIDI CC and NRPN charts, specifications."
+      },
+      {
+        "id": "sonicstate",
+        "title": "Sonicstate, 'Behringer Releases The JN-80' (5 February 2026)",
+        "kind": "other",
+        "file": "https://sonicstate.com/news/2026/02/05/-behringer-releases-the-jn-80-/",
+        "note": "3109 VCFs, BBD chorus, poly/unison/dual modes, 200 presets (100 by Ultimate Patches in banks A-E), up to 400 user presets."
+      },
+      {
+        "id": "musicradar",
+        "title": "MusicRadar, 'Behringer's supercharged Roland Juno-60 clone is now available for pre-order'",
+        "kind": "other",
+        "file": "https://www.musicradar.com/music-tech/behringer-officially-releases-its-supercharged-roland-juno-60-clone-the-jn-80",
+        "note": "Eight voices, 49 velocity keys with channel aftertouch, five voice modes (poly, mono, unison, quad, duo), tempo-synced LFO, polyphonic portamento; $569 / £479."
+      },
+      {
+        "id": "bh",
+        "title": "B&H and Alto Music product listings",
+        "kind": "other",
+        "file": "https://www.bhphotovideo.com/c/product/1950174-REG/behringer_0722_aap86_us1_analog_8_voice_programmable_polyphonic.html",
+        "note": "3109 VCF and 662 VCA designs; one listing gives 256 user program memories."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 8,
+    "polyphony_mode": "poly, duo, unison, quad or mono voice assignment; panel selector cycles poly, duo, unison",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "400 user slots (banks A-T, 20 per bank by inference) and 200 factory presets, 100 by Ultimate Patches in banks A-E; four assignable preset recall buttons; compare and match.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 49,
+      "lcd_lines": 2,
+      "lcd_characters": 16
+    },
+    "summary": "Juno-60 layout: per voice one DCO with sawtooth and pulse (PWM from the LFO, the envelope or manual), a square sub an octave down and noise; a 24 dB/oct resonant 3109-type low-pass VCF with envelope (invertible), LFO and keyboard modulation; a 662-type VCA under the envelope or gated. One ADSR, one LFO (with delay and manual trigger) and a high-pass filter. Two-level BBD chorus. Arpeggiator, hold, transpose, portamento, bender to DCO and VCF; velocity, aftertouch, mod wheel and pedal modulation."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice assigner",
+      "panel_section": "FUNCTIONS / KEYBOARD",
+      "scope": "common",
+      "description": "49 keys with velocity and aftertouch; voice modes, note priority, transpose, octave, hold, portamento (polyphonic), unison detune, voice spread, voice kill.",
+      "properties": {
+        "keys": 49
+      },
+      "inputs": ["kbd.midi_in", "kbd.sustain", "kbd.arp_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.velocity", "kbd.aftertouch", "kbd.modwheel"]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "ARPEGGIATOR",
+      "scope": "common",
+      "description": "Seven modes, eight divisions, 1-3 octaves, note length, swing; 10-265 BPM, MIDI, USB or SYNC input.",
+      "properties": {
+        "tempo_bpm": [10, 265]
+      },
+      "inputs": ["arp.sync_in"],
+      "outputs": ["arp.notes"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "scope": "common",
+      "description": "Global LFO: 0.3-22 Hz, delay 0-6 s (auto) or fade-in (manual trigger); shapes triangle, pulse, ramp, saw, sine; sync to the arpeggiator clock.",
+      "properties": {
+        "rate_hz": [0.3, 22],
+        "delay_s": [0, 6]
+      },
+      "inputs": ["lfo.trig", "lfo.rate_cv"],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "dco",
+      "type": "oscillator",
+      "name": "DCO",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "Digitally controlled oscillator: sawtooth and pulse (each on/off), PWM from LFO, envelope or manual.",
+      "inputs": ["dco.pitch_cv", "dco.pwm_cv"],
+      "outputs": ["dco.saw", "dco.pulse"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "Square one octave below the DCO, on/off with level.",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "White noise with level.",
+      "properties": {
+        "note": "Described as a global noise source in the announcement."
+      },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Source mix",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "Saw and pulse (switched), sub and noise (levels).",
+      "inputs": ["mixer.saw", "mixer.pulse", "mixer.sub", "mixer.noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "4-pole 24 dB/oct resonant low-pass (3109 design), about 10 Hz-16 kHz, self-oscillating; envelope (normal or inverted), LFO and keyboard modulation (centred on C4).",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [10, 16000],
+        "chip": "3109 design"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "ENV",
+      "scope": "per_voice",
+      "description": "One ADSR per voice for VCF, VCA and PWM: attack to ~3 s, decay and release to 12 s; exponential or linear decay/release.",
+      "properties": {
+        "attack_s_max": 3,
+        "decay_s_max": 12,
+        "release_s_max": 12
+      },
+      "inputs": ["env.gate", "env.velocity"],
+      "outputs": ["env.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "scope": "per_voice",
+      "description": "662-design VCA under the envelope or gate; LEVEL sets the voice level.",
+      "properties": {
+        "chip": "662 design"
+      },
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "HPF",
+      "panel_section": "HPF",
+      "scope": "common",
+      "description": "High-pass filter (band-pass with the VCF); placed after the voice sum as on the Juno-60.",
+      "inputs": ["hpf.in"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "chorus",
+      "type": "chorus",
+      "name": "Chorus",
+      "panel_section": "CHORUS",
+      "scope": "common",
+      "description": "Analogue BBD chorus, off, I or II (a third setting appears in the CC chart).",
+      "inputs": ["chorus.in"],
+      "outputs": ["chorus.out_l", "chorus.out_r"]
+    },
+    {
+      "id": "bender",
+      "type": "manual_controller",
+      "name": "Bender and pedal",
+      "panel_section": "OUTPUT AND MODULATION",
+      "scope": "common",
+      "description": "Bender to DCO and/or VCF by its level controls; pedal CV and expression as modulation sources.",
+      "inputs": ["bender.pedal_in"],
+      "outputs": ["bender.out", "bender.pedal"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / rear panel",
+      "scope": "common",
+      "description": "Stereo main outputs (chorus), headphones; VOLUME not stored.",
+      "inputs": ["out.l", "out.r"],
+      "outputs": ["out.main_l", "out.main_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "kbd.assign",
+      "module": "kbd",
+      "label": "POLY / DUO / UNISON",
+      "kind": "enum",
+      "manual_ref": 1,
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "duo"
+        },
+        {
+          "value": "unison"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 47"
+        }
+      ],
+      "function": "Voice mode selector (quad and mono via the VOICE menu).",
+      "note": "CC 47: 0 poly, 32 duo, 64 uni, 96 quad, 127 mono."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSITION",
+      "kind": "boolean",
+      "manual_ref": 2,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        }
+      ],
+      "function": "Press then a key to transpose (C or a second press resets)."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD",
+      "kind": "boolean",
+      "manual_ref": 3,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Holds notes at sustain, or the arpeggio, after release."
+    },
+    {
+      "id": "arp.set",
+      "module": "arp",
+      "label": "ARP SET",
+      "kind": "boolean",
+      "manual_ref": 4,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps through arpeggiator settings (chosen with SELECT)."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARP ON",
+      "kind": "boolean",
+      "manual_ref": 5,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 51"
+        }
+      ],
+      "function": "Arpeggiator on/off."
+    },
+    {
+      "id": "arp.rate",
+      "module": "arp",
+      "label": "ARP RATE",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 10,
+        "max": 265,
+        "unit": "BPM"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:15 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "10-265 BPM (disabled when SYNC is patched)."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "LFO RATE",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.3,
+        "max": 22,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:8 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "0.3-22 Hz."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "DELAY TIME",
+      "kind": "continuous",
+      "manual_ref": 8,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 6,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:9 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Auto: delay before the LFO acts; manual: fade-in time. 0-6 s."
+    },
+    {
+      "id": "lfo.trig_mode",
+      "module": "lfo",
+      "label": "TRIG MODE",
+      "kind": "enum",
+      "manual_ref": 9,
+      "values": [
+        {
+          "value": "auto"
+        },
+        {
+          "value": "manual"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 39"
+        }
+      ],
+      "function": "Auto (keys trigger) or manual (LFO TRIG button)."
+    },
+    {
+      "id": "dco.lfo",
+      "module": "dco",
+      "label": "LFO (DCO)",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 12,
+        "unit": "semitones"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:10 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "LFO depth on pitch, 0-12 semitones."
+    },
+    {
+      "id": "dco.pwm",
+      "module": "dco",
+      "label": "PWM",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:12 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Pulse width (manual, about 50-95%) or PWM depth."
+    },
+    {
+      "id": "dco.pwm_source",
+      "module": "dco",
+      "label": "PWM MODULATION SOURCE",
+      "kind": "enum",
+      "manual_ref": 12,
+      "values": [
+        {
+          "value": "env"
+        },
+        {
+          "value": "manual"
+        },
+        {
+          "value": "lfo"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 45"
+        }
+      ],
+      "function": "Envelope, manual or LFO.",
+      "note": "CC 45: 0 LFO, 64 manual, 127 envelope."
+    },
+    {
+      "id": "dco.sub_on",
+      "module": "sub",
+      "label": "SUB",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 42"
+        }
+      ],
+      "function": "Sub oscillator on/off."
+    },
+    {
+      "id": "dco.saw",
+      "module": "dco",
+      "label": "SAWTOOTH",
+      "kind": "boolean",
+      "manual_ref": 14,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 41"
+        }
+      ],
+      "function": "Sawtooth on/off."
+    },
+    {
+      "id": "dco.pulse",
+      "module": "dco",
+      "label": "PULSE",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 40"
+        }
+      ],
+      "function": "Pulse on/off."
+    },
+    {
+      "id": "sub.level",
+      "module": "sub",
+      "label": "SUB OSC",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:13 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Sub level."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "NOISE",
+      "kind": "continuous",
+      "manual_ref": 17,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:14 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "hpf.freq",
+      "module": "hpf",
+      "label": "HPF FREQ",
+      "kind": "continuous",
+      "manual_ref": 18,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:26 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "High-pass cutoff."
+    },
+    {
+      "id": "vcf.freq",
+      "module": "vcf",
+      "label": "VCF FREQ",
+      "kind": "continuous",
+      "manual_ref": 19,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 10,
+        "max": 16000,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:25 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Cutoff, about 10 Hz-16 kHz."
+    },
+    {
+      "id": "vcf.res",
+      "module": "vcf",
+      "label": "RES",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:16 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Resonance; self-oscillates at high settings."
+    },
+    {
+      "id": "vcf.env_invert",
+      "module": "vcf",
+      "label": "ENV INVERT",
+      "kind": "enum",
+      "manual_ref": 21,
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "inverted"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 43"
+        }
+      ],
+      "function": "Normal or inverted envelope to the VCF."
+    },
+    {
+      "id": "vcf.env",
+      "module": "vcf",
+      "label": "ENV (VCF)",
+      "kind": "continuous",
+      "manual_ref": 22,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:17 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Envelope depth on cutoff."
+    },
+    {
+      "id": "vcf.lfo",
+      "module": "vcf",
+      "label": "LFO (VCF)",
+      "kind": "continuous",
+      "manual_ref": 23,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:18 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "LFO depth on cutoff."
+    },
+    {
+      "id": "vcf.kybd",
+      "module": "vcf",
+      "label": "KYBD",
+      "kind": "continuous",
+      "manual_ref": 24,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:19 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Keyboard tracking (opens above C4, closes below)."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "VCA SWITCH",
+      "kind": "enum",
+      "manual_ref": 25,
+      "values": [
+        {
+          "value": "env"
+        },
+        {
+          "value": "gate"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 44"
+        }
+      ],
+      "function": "Envelope or gate (on at LEVEL)."
+    },
+    {
+      "id": "vca.level",
+      "module": "vca",
+      "label": "VCA LEVEL",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:20 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Voice level."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "ATTACK",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 3,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:21 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Near instant to about 3 s."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "manual_ref": 28,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 12,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:22 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "To 12 s."
+    },
+    {
+      "id": "env.sustain",
+      "module": "env",
+      "label": "SUSTAIN",
+      "kind": "continuous",
+      "manual_ref": 29,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:23 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env.release",
+      "module": "env",
+      "label": "RELEASE",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 12,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:24 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "To 12 s."
+    },
+    {
+      "id": "chorus.mode",
+      "module": "chorus",
+      "label": "CHORUS",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "I"
+        },
+        {
+          "value": "II"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 46"
+        }
+      ],
+      "function": "Off, I or II.",
+      "note": "CC 46 also lists III."
+    },
+    {
+      "id": "ui.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "manual_ref": 32,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Shift functions of buttons 33-42 (menus)."
+    },
+    {
+      "id": "ui.compare",
+      "module": "kbd",
+      "label": "COMPARE",
+      "kind": "boolean",
+      "manual_ref": 33,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Edited versus stored program."
+    },
+    {
+      "id": "ui.manual",
+      "module": "kbd",
+      "label": "MANUAL",
+      "kind": "boolean",
+      "manual_ref": 34,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sound from the panel as set."
+    },
+    {
+      "id": "ui.write",
+      "module": "kbd",
+      "label": "WRITE",
+      "kind": "boolean",
+      "manual_ref": 35,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Store to a bank and slot."
+    },
+    {
+      "id": "ui.recall",
+      "module": "kbd",
+      "label": "ASSIGNABLE PRESET RECALL 1-4",
+      "kind": "boolean",
+      "manual_ref": 36,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Instant recall of four patches (per RECALL MODE)."
+    },
+    {
+      "id": "ui.select",
+      "module": "kbd",
+      "label": "SELECT",
+      "kind": "boolean",
+      "manual_ref": 40,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Encoder: programs, menus; press to enter."
+    },
+    {
+      "id": "ui.minus",
+      "module": "kbd",
+      "label": "PRESET/VALUE -",
+      "kind": "boolean",
+      "manual_ref": 41,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step down (Shift: bank/page down)."
+    },
+    {
+      "id": "ui.plus",
+      "module": "kbd",
+      "label": "PRESET/VALUE +",
+      "kind": "boolean",
+      "manual_ref": 42,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step up (Shift: bank/page up)."
+    },
+    {
+      "id": "lfo.trig",
+      "module": "lfo",
+      "label": "LFO TRIG",
+      "kind": "boolean",
+      "manual_ref": 48,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Triggers the LFO in manual mode."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "manual_ref": 43,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level (not stored)."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "OCTAVE TRANSPOSE",
+      "kind": "enum",
+      "manual_ref": 44,
+      "values": [
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Keyboard ±1 octave (stored)."
+    },
+    {
+      "id": "kbd.porta",
+      "module": "kbd",
+      "label": "PORTA",
+      "kind": "enum",
+      "manual_ref": 45,
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "auto"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 50"
+        }
+      ],
+      "function": "Portamento off, auto (legato) or on."
+    },
+    {
+      "id": "bender.dco",
+      "module": "bender",
+      "label": "DCO (bend)",
+      "kind": "continuous",
+      "manual_ref": 46,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 34"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:34 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Bender depth to pitch."
+    },
+    {
+      "id": "bender.vcf",
+      "module": "bender",
+      "label": "VCF (bend)",
+      "kind": "continuous",
+      "manual_ref": 47,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 35"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 0:35 (14-bit, 0-4095)"
+        }
+      ],
+      "function": "Bender depth to cutoff."
+    },
+    {
+      "id": "bender.lever",
+      "module": "bender",
+      "label": "BENDER",
+      "kind": "continuous",
+      "manual_ref": 49,
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "Raises or lowers pitch and/or cutoff."
+    },
+    {
+      "id": "kbd.tune",
+      "module": "kbd",
+      "label": "TUNE",
+      "kind": "continuous",
+      "manual_ref": 61,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master tuning (rear)."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "manual_ref": 50,
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "Arpeggio Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "up_down_excl"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "down_up"
+        },
+        {
+          "value": "down_up_excl"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 52"
+        }
+      ],
+      "function": "Note order."
+    },
+    {
+      "id": "arp.division",
+      "module": "arp",
+      "label": "Sub Division",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/16T"
+        },
+        {
+          "value": "1/32"
+        },
+        {
+          "value": "1/32T"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 54"
+        }
+      ],
+      "function": "Step length."
+    },
+    {
+      "id": "arp.range",
+      "module": "arp",
+      "label": "Range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "held"
+        },
+        {
+          "value": "1_oct"
+        },
+        {
+          "value": "2_oct"
+        },
+        {
+          "value": "3_oct"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 53"
+        }
+      ],
+      "function": "Held notes or 1-3 octaves up."
+    },
+    {
+      "id": "arp.note_length",
+      "module": "arp",
+      "label": "Note Length",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 32"
+        }
+      ],
+      "function": "0-100."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "Swing",
+      "kind": "integer",
+      "range": {
+        "min": 50,
+        "max": 75
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        },
+        {
+          "type": "midi",
+          "message": "CC 33"
+        }
+      ],
+      "function": "50-75%."
+    },
+    {
+      "id": "arp.sync_source",
+      "module": "arp",
+      "label": "Sync Source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "sync_in"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        }
+      ],
+      "function": "Clock source."
+    },
+    {
+      "id": "arp.sync_in",
+      "module": "arp",
+      "label": "Sync In",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1PPS"
+        },
+        {
+          "value": "1PPQN"
+        },
+        {
+          "value": "2PPQN"
+        },
+        {
+          "value": "4PPQN"
+        },
+        {
+          "value": "24PPQN"
+        },
+        {
+          "value": "48PPQN"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        }
+      ],
+      "function": "Pulses per step or quarter."
+    },
+    {
+      "id": "arp.sync_polarity",
+      "module": "arp",
+      "label": "Sync Polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "rising"
+        },
+        {
+          "value": "falling"
+        },
+        {
+          "value": "both"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        }
+      ],
+      "function": "Edge."
+    },
+    {
+      "id": "arp.start_stop",
+      "module": "arp",
+      "label": "Start/Stop",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ARP SET, then SELECT"
+        }
+      ],
+      "function": "Follow start/stop."
+    },
+    {
+      "id": "kbd.voice_assign",
+      "module": "kbd",
+      "label": "Voice Assign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly"
+        },
+        {
+          "value": "duo"
+        },
+        {
+          "value": "uni"
+        },
+        {
+          "value": "quad"
+        },
+        {
+          "value": "mono"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 47"
+        }
+      ],
+      "function": "Voice mode.",
+      "note": "The guide's menu lists Poly, Duo, Uni, Mono; the CC chart adds Quad."
+    },
+    {
+      "id": "kbd.note_priority",
+      "module": "kbd",
+      "label": "Note Priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "high"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "new"
+        },
+        {
+          "value": "old"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "High, low, new or old."
+    },
+    {
+      "id": "kbd.unison_detune",
+      "module": "kbd",
+      "label": "Unison Detune",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 55"
+        }
+      ],
+      "function": "0-100 (% of 0.2 note)."
+    },
+    {
+      "id": "kbd.voice_spread",
+      "module": "kbd",
+      "label": "Voice Spread",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 62"
+        }
+      ],
+      "function": "Random per-voice detune, 0-100 (% of 0.2 note)."
+    },
+    {
+      "id": "kbd.note_reassign",
+      "module": "kbd",
+      "label": "Note Reassign",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "same_voice"
+        },
+        {
+          "value": "next_voice"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Same voice or next voice for a repeated note."
+    },
+    {
+      "id": "kbd.voice_kill",
+      "module": "kbd",
+      "label": "Voice Setup",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "killed"
+        },
+        {
+          "value": "not_killed"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VOICE (button 38)"
+        }
+      ],
+      "function": "Kill or restore individual voices."
+    },
+    {
+      "id": "kbd.legato_threshold",
+      "module": "kbd",
+      "label": "AUTO Legato Time Threshold",
+      "kind": "integer",
+      "range": {
+        "min": 50,
+        "max": 250
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + PORTA (button 34)"
+        }
+      ],
+      "function": "50-250 ms."
+    },
+    {
+      "id": "kbd.glide_mode",
+      "module": "kbd",
+      "label": "Glide Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "time"
+        },
+        {
+          "value": "speed"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + PORTA (button 34)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 56"
+        }
+      ],
+      "function": "Fixed time or fixed speed."
+    },
+    {
+      "id": "kbd.glide_time",
+      "module": "kbd",
+      "label": "Glide Time / Speed",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + PORTA (button 34)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 37"
+        }
+      ],
+      "function": "0-5 s (fixed time) or semitones per second."
+    },
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "LFO Shape",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "pulse"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "sine"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 49"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.delay_ramp",
+      "module": "lfo",
+      "label": "LFO Delay Ramp speed",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "0%: full depth after the delay; 100%: fade in over the delay time."
+    },
+    {
+      "id": "lfo.retrigger",
+      "module": "lfo",
+      "label": "LFO Retrigger",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "Restart the LFO on a new key or LFO TRIG."
+    },
+    {
+      "id": "lfo.sync",
+      "module": "lfo",
+      "label": "LFO Sync",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "12/16"
+        },
+        {
+          "value": "8/16"
+        },
+        {
+          "value": "4/16"
+        },
+        {
+          "value": "2/16"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/3"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 48"
+        }
+      ],
+      "function": "Sync to the arpeggiator clock."
+    },
+    {
+      "id": "env.curve",
+      "module": "env",
+      "label": "Envelope Decay/Release Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "exponential"
+        },
+        {
+          "value": "linear"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "Exponential or linear."
+    },
+    {
+      "id": "env.retrigger",
+      "module": "env",
+      "label": "Envelope Retrigger",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (by CC)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Retrigger the envelope on legato notes.",
+      "confidence": "inferred",
+      "note": "Listed in the CC chart only."
+    },
+    {
+      "id": "mod.vel_vca",
+      "module": "kbd",
+      "label": "Velocity to VCA",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 90"
+        }
+      ],
+      "function": "Velocity to VCA depth, 0-100%."
+    },
+    {
+      "id": "mod.vel_vcf",
+      "module": "kbd",
+      "label": "Velocity to VCF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 58"
+        }
+      ],
+      "function": "Velocity to VCF depth, 0-100%."
+    },
+    {
+      "id": "mod.vel_env",
+      "module": "kbd",
+      "label": "Velocity to envelope",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        }
+      ],
+      "function": "Velocity to envelope depth, 0-100%."
+    },
+    {
+      "id": "mod.at_vcf",
+      "module": "kbd",
+      "label": "After Touch to VCF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 57"
+        }
+      ],
+      "function": "After Touch to VCF depth, 0-100%."
+    },
+    {
+      "id": "mod.at_vca",
+      "module": "kbd",
+      "label": "After Touch to VCA",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        }
+      ],
+      "function": "After Touch to VCA depth, 0-100%."
+    },
+    {
+      "id": "mod.at_pwm",
+      "module": "kbd",
+      "label": "After Touch to PWM",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        }
+      ],
+      "function": "After Touch to PWM depth, 0-100%."
+    },
+    {
+      "id": "mod.at_lfo_dco",
+      "module": "kbd",
+      "label": "After Touch to LFO > DCO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        }
+      ],
+      "function": "After Touch to LFO > DCO depth, 0-100%."
+    },
+    {
+      "id": "mod.at_lfo_vcf",
+      "module": "kbd",
+      "label": "After Touch to LFO > VCF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 59"
+        }
+      ],
+      "function": "After Touch to LFO > VCF depth, 0-100%."
+    },
+    {
+      "id": "mod.at_lfo_rate",
+      "module": "kbd",
+      "label": "After Touch to LFO Rate",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31"
+        }
+      ],
+      "function": "After Touch to LFO Rate depth, 0-100%."
+    },
+    {
+      "id": "mod.at_lfo_pwm",
+      "module": "kbd",
+      "label": "After Touch to LFO > PWM",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 63"
+        }
+      ],
+      "function": "After Touch to LFO > PWM depth, 0-100%."
+    },
+    {
+      "id": "mod.at_env",
+      "module": "kbd",
+      "label": "After Touch to envelope",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + VEL/AFT (button 37)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "After Touch to envelope depth, 0-100%."
+    },
+    {
+      "id": "mod.mw_lfo_dco",
+      "module": "kbd",
+      "label": "Mod Wheel LFO > DCO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 60"
+        }
+      ],
+      "function": "Mod Wheel LFO > DCO depth, 0-100%."
+    },
+    {
+      "id": "mod.mw_lfo_vcf",
+      "module": "kbd",
+      "label": "Mod Wheel LFO > VCF",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 61"
+        }
+      ],
+      "function": "Mod Wheel LFO > VCF depth, 0-100%."
+    },
+    {
+      "id": "mod.pedal_vcf",
+      "module": "kbd",
+      "label": "Pedal/CV to VCF amount",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Pedal/CV to VCF amount depth, 0-100%."
+    },
+    {
+      "id": "mod.pedal_vca",
+      "module": "kbd",
+      "label": "Pedal/CV to VCA amount",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        }
+      ],
+      "function": "Pedal/CV to VCA amount depth, 0-100%."
+    },
+    {
+      "id": "mod.pedal_env",
+      "module": "kbd",
+      "label": "Expression to envelope",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + MOD (button 39)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        }
+      ],
+      "function": "Expression to envelope depth, 0-100%."
+    },
+    {
+      "id": "sys.param_update",
+      "module": "kbd",
+      "label": "Parameter Update",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "join"
+        },
+        {
+          "value": "immediate"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Parameter Update."
+    },
+    {
+      "id": "sys.recall_mode",
+      "module": "kbd",
+      "label": "Recall Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "global"
+        },
+        {
+          "value": "per_bank"
+        },
+        {
+          "value": "first_4"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Recall Mode."
+    },
+    {
+      "id": "sys.fan",
+      "module": "kbd",
+      "label": "Fan Speed",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "auto"
+        },
+        {
+          "value": "slow"
+        },
+        {
+          "value": "mid"
+        },
+        {
+          "value": "fast"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Fan Speed."
+    },
+    {
+      "id": "sys.pedal_polarity",
+      "module": "kbd",
+      "label": "Pedal Polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "active_high"
+        },
+        {
+          "value": "active_low"
+        },
+        {
+          "value": "auto"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Pedal Polarity."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local Enable",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Local Enable."
+    },
+    {
+      "id": "sys.soft_thru",
+      "module": "kbd",
+      "label": "Soft Thru",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Soft Thru."
+    },
+    {
+      "id": "sys.hold_mode",
+      "module": "kbd",
+      "label": "Hold Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "refresh"
+        },
+        {
+          "value": "add"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Hold Mode."
+    },
+    {
+      "id": "sys.at_sensitivity",
+      "module": "kbd",
+      "label": "Aftertouch Sensitivity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "very_low"
+        },
+        {
+          "value": "low"
+        },
+        {
+          "value": "medium"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "very_high"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Aftertouch Sensitivity."
+    },
+    {
+      "id": "sys.key_hardness",
+      "module": "kbd",
+      "label": "Key bed hardness",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + GLOBAL (button 33)"
+        }
+      ],
+      "function": "Velocity response, 0-100%."
+    },
+    {
+      "id": "sys.midi_rx",
+      "module": "kbd",
+      "label": "Receive channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "all"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + USB/MIDI (button 36)"
+        }
+      ],
+      "function": "1-16 or all."
+    },
+    {
+      "id": "sys.midi_tx",
+      "module": "kbd",
+      "label": "Transmit channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1..16"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + USB/MIDI (button 36)"
+        }
+      ],
+      "function": "1-16 or off."
+    },
+    {
+      "id": "sys.cc_mode",
+      "module": "kbd",
+      "label": "CC Settings",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx_tx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + USB/MIDI (button 36)"
+        }
+      ],
+      "function": "CC receive/transmit."
+    },
+    {
+      "id": "sys.pc_mode",
+      "module": "kbd",
+      "label": "Program Change Settings",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "rx"
+        },
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx_tx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + USB/MIDI (button 36)"
+        }
+      ],
+      "function": "Program change receive/transmit."
+    },
+    {
+      "id": "sys.kbd_forward",
+      "module": "kbd",
+      "label": "Keyboard Forward",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "usb_midi"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT + USB/MIDI (button 36)"
+        }
+      ],
+      "function": "Where keyboard notes are sent."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI over 5-pin DIN.",
+      "manual_ref": 53
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI from the JN-80.",
+      "manual_ref": 54
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Mirrors MIDI IN and USB.",
+      "manual_ref": 55
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB 2.0 type B",
+      "node": null,
+      "function": "Class-compliant USB MIDI; SysEx dumps; firmware via SynthTribe.",
+      "manual_ref": 52
+    },
+    {
+      "id": "jack.pedal_cv",
+      "label": "PEDAL CV",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "bender.pedal_in",
+      "function": "Expression pedal or CV to the Mod menu destinations (tip supplies voltage).",
+      "manual_ref": 56
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Footswitch duplicating HOLD.",
+      "manual_ref": 57
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones.",
+      "manual_ref": 58
+    },
+    {
+      "id": "jack.out_l",
+      "label": "MAIN OUT L (MONO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_l",
+      "function": "Main left / mono.",
+      "manual_ref": 59
+    },
+    {
+      "id": "jack.out_r",
+      "label": "MAIN OUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_r",
+      "function": "Main right.",
+      "manual_ref": 59
+    },
+    {
+      "id": "jack.sync",
+      "label": "SYNC",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "6.35 mm TS",
+      "node": "arp.sync_in",
+      "function": "External arpeggiator clock (overrides RATE).",
+      "manual_ref": 60
+    },
+    {
+      "id": "jack.ac",
+      "label": "AC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "100-240 V, 50/60 Hz, IEC.",
+      "manual_ref": 51
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "arp.notes",
+      "to": "kbd.arp_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Arpeggiated notes."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "dco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.pitch",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.gate",
+      "to": "env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "kbd.velocity",
+      "to": "env.velocity",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mod.vel_env"
+    },
+    {
+      "id": "c06",
+      "from": "kbd.gate",
+      "to": "lfo.trig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo.trig_mode",
+        "equals": "auto"
+      }
+    },
+    {
+      "id": "c07",
+      "from": "lfo.out",
+      "to": "dco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "dco.lfo"
+    },
+    {
+      "id": "c08",
+      "from": "lfo.out",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "dco.lfo",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c09",
+      "from": "lfo.out",
+      "to": "dco.pwm_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.pwm_source",
+        "equals": "lfo"
+      },
+      "amount": "dco.pwm"
+    },
+    {
+      "id": "c10",
+      "from": "env.out",
+      "to": "dco.pwm_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.pwm_source",
+        "equals": "env"
+      },
+      "amount": "dco.pwm"
+    },
+    {
+      "id": "c11",
+      "from": "bender.out",
+      "to": "dco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "bender.dco"
+    },
+    {
+      "id": "c12",
+      "from": "bender.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "bender.vcf"
+    },
+    {
+      "id": "c13",
+      "from": "kbd.modwheel",
+      "to": "lfo.rate_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mod.mw_lfo_dco",
+      "note": "Mod wheel brings in LFO depth to DCO/VCF; modelled on the LFO.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c14",
+      "from": "kbd.aftertouch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mod.at_vcf"
+    },
+    {
+      "id": "c15",
+      "from": "bender.pedal",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mod.pedal_vcf"
+    },
+    {
+      "id": "c16",
+      "from": "dco.saw",
+      "to": "mixer.saw",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.saw",
+        "equals": true
+      }
+    },
+    {
+      "id": "c17",
+      "from": "dco.pulse",
+      "to": "mixer.pulse",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.pulse",
+        "equals": true
+      }
+    },
+    {
+      "id": "c18",
+      "from": "sub.out",
+      "to": "mixer.sub",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.sub_on",
+        "equals": true
+      },
+      "amount": "sub.level"
+    },
+    {
+      "id": "c19",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "noise.level"
+    },
+    {
+      "id": "c20",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "env.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env",
+      "note": "Polarity per ENV INVERT; velocity to VCF scales it."
+    },
+    {
+      "id": "c22",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo"
+    },
+    {
+      "id": "c23",
+      "from": "kbd.pitch",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.kybd"
+    },
+    {
+      "id": "c24",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c25",
+      "from": "env.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "env"
+      },
+      "amount": "vca.level"
+    },
+    {
+      "id": "c26",
+      "from": "kbd.gate",
+      "to": "vca.cv",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "gate"
+      },
+      "amount": "vca.level"
+    },
+    {
+      "id": "c27",
+      "from": "kbd.velocity",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mod.vel_vca"
+    },
+    {
+      "id": "c28",
+      "from": "vca.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Eight voices summed."
+    },
+    {
+      "id": "c29",
+      "from": "hpf.out",
+      "to": "chorus.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "chorus.out_l",
+      "to": "out.l",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c31",
+      "from": "chorus.out_r",
+      "to": "out.r",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "lcd",
+      "module": "kbd",
+      "label": "LCD display",
+      "kind": "display",
+      "function": "2 x 16 characters: patch name, arpeggiator settings, menus, compare and match."
+    },
+    {
+      "id": "button_leds",
+      "module": "kbd",
+      "label": "button LEDs",
+      "kind": "led",
+      "function": "Voice mode, transpose (flashes), hold, arp, sub/saw/pulse, chorus level, portamento, recall."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["dco", "mixer", "vcf", "vca", "hpf", "chorus"],
+      "rule": "Per voice: DCO sawtooth and pulse (switched), sub and noise into the 24 dB VCF and the VCA. Voices summed into the high-pass filter and BBD chorus, then stereo out."
+    },
+    {
+      "id": "b02",
+      "name": "One envelope",
+      "applies_to": ["env", "vcf", "vca", "dco"],
+      "rule": "A single ADSR drives the VCF (normal or inverted), the VCA (unless gated) and, if selected, PWM; decay/release can be exponential or linear."
+    },
+    {
+      "id": "b03",
+      "name": "LFO",
+      "applies_to": ["lfo"],
+      "rule": "One global LFO to pitch, PWM and cutoff. AUTO: starts after DELAY TIME on key press; MANUAL: fades in over DELAY TIME when LFO TRIG is pressed. Five shapes and tempo sync in the MOD menu; mod wheel and aftertouch can add depth."
+    },
+    {
+      "id": "b04",
+      "name": "Voice modes",
+      "applies_to": ["kbd"],
+      "rule": "Poly (8), duo, unison (with detune), quad and mono; note priority, same/next voice reassignment, voice spread and voice kill in the VOICE menu. Portamento is polyphonic (off, auto/legato, on)."
+    },
+    {
+      "id": "b05",
+      "name": "Arpeggiator",
+      "applies_to": ["arp", "kbd"],
+      "rule": "Seven modes, eight divisions, held notes or 1-3 octaves, note length, swing; internal 10-265 BPM, MIDI, USB or SYNC (1 PPS to 48 PPQN). HOLD latches."
+    },
+    {
+      "id": "b06",
+      "name": "Programs",
+      "applies_to": ["kbd"],
+      "rule": "WRITE to a bank and slot; COMPARE switches between edited and stored versions (compare and match aligns panel controls); MANUAL plays the panel. Four recall buttons by recall mode. Factory presets restorable in the INITIAL menu; presets dump as SysEx."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "cc": 0,
+        "parameter": "bank select (0-19 = banks A-T)"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "mod wheel"
+      },
+      {
+        "message": "control_change",
+        "cc": 11,
+        "parameter": "expression"
+      },
+      {
+        "message": "control_change",
+        "cc": 64,
+        "parameter": "sustain"
+      },
+      {
+        "message": "control_change",
+        "cc": 66,
+        "parameter": "sostenuto"
+      },
+      {
+        "message": "control_change",
+        "note": "full panel and menu set: see parameter access entries"
+      },
+      {
+        "message": "nrpn",
+        "note": "14-bit (0-4095) for continuous controls; data entry CC 6/38, inc/dec 96/97"
+      },
+      {
+        "message": "control_change",
+        "cc": 120,
+        "parameter": "all sounds off"
+      },
+      {
+        "message": "control_change",
+        "cc": 123,
+        "parameter": "all notes off"
+      },
+      {
+        "message": "clock"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "sysex",
+        "note": "preset dump"
+      }
+    ],
+    "channel_note": "Receive 1-16 or all; transmit 1-16 or off; DIN and USB.",
+    "note": "CCs work when enabled in the USB/MIDI menu."
+  },
+  "specifications": {
+    "voices": 8,
+    "oscillators": "1 DCO per voice + sub + noise",
+    "vcf": "4-pole 24 dB/oct low-pass (3109 design)",
+    "vca": "662 design",
+    "hpf": 1,
+    "envelopes": "1 ADSR per voice",
+    "lfo": 1,
+    "keyboard": "49 full-size keys, velocity and aftertouch",
+    "presets": {
+      "factory": 200,
+      "user": 400
+    },
+    "lcd": "2 x 16 characters",
+    "connectivity": {
+      "midi": "DIN in, out, thru",
+      "usb": "USB 2.0 type B, class compliant",
+      "main_out": "2 x 6.35 mm TRS balanced, max +22 dBu, 50 ohm",
+      "phones": "6.35 mm TRS, 25 mW, 25 ohm",
+      "pedal_cv": "6.35 mm TS/TRS",
+      "sustain": "6.35 mm TS",
+      "sync": "6.35 mm TS"
+    },
+    "power": "internal PSU 100-240 V, 36 W",
+    "dimensions_mm": {
+      "h": 108.7,
+      "w": 826.3,
+      "d": 261.1
+    },
+    "weight_kg": 7.28,
+    "price": "USD 569 / GBP 479 (launch)"
+  },
+  "omitted_from_source": [
+    "safety and legal text",
+    "non-English translations",
+    "hook-up diagrams",
+    "calibration and LCD sub-menus beyond their names"
+  ],
+  "not_in_source": [
+    "programs per bank (20 inferred from 400 slots in banks A-T)",
+    "the HPF's position in the signal path (after the voice sum, as on the Juno-60)",
+    "LFO and envelope curve detail",
+    "chorus III behaviour",
+    "SysEx format"
+  ],
+  "source_inconsistencies": [
+    "MAIN OUT is 'unbalanced 6.35 mm TS' in the controls list but 'TRS, balanced' in the specifications.",
+    "Chorus has 'two levels' on the panel but the CC chart lists off, I, II and III.",
+    "LFO rate is 0.3-22 Hz on the panel and about 0.3-20 Hz in the NRPN chart; LFO delay is 0-6 s on the panel and 0-8 s in the NRPN chart.",
+    "The Voice Assign menu lists Poly, Duo, Uni, Mono; the CC chart (and launch coverage) add Quad.",
+    "Voice Setup steps through voices 1-7 on an 8-voice synth.",
+    "The specifications say polyphonic aftertouch; MusicRadar reports channel aftertouch.",
+    "Retailers give 400 user presets and, in one listing, 256 user program memories.",
+    "The CC chart repeats hex 23 for CC 35 and 36 (CC 36 should be 24), and lists CC 64 and 69 both as 'Sustain pedal'."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Per-voice modules",
+      "detail": "Voice modules are modelled once (per_voice); LFO, HPF, chorus and arpeggiator are common, as on the Juno-60."
+    },
+    {
+      "topic": "Modulation menus",
+      "detail": "Velocity, aftertouch, mod wheel and pedal depths are modelled as parameters; only the main routes are drawn as connections."
+    },
+    {
+      "topic": "Original",
+      "detail": "The Roland Juno-60 itself is not modelled; its service notes would allow a TB-303/TD-3 style pair."
+    }
+  ]
+}

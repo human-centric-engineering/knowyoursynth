@@ -1,0 +1,1986 @@
+{
+  "schema_version": "0.9.0",
+  "device": {
+    "id": "ems-vcs3",
+    "manufacturer": "EMS (Electronic Music Studios, London)",
+    "model": "VCS3 Mk 1 (Voltage Controlled Studio Mk 3)",
+    "category": "self-contained analogue 'compact electronic music studio': three oscillators, treatments, pin-matrix patching, joystick, speakers",
+    "based_on": "Original design by David Cockerell for EMS, introduced 1969; the source of the Synthi A and AKS.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "VCS3 Compact Electronic Music Studio Users Manual (EMS)",
+        "kind": "user_manual",
+        "file": "EMS_VCS3_Manual.pdf",
+        "pages": 48,
+        "note": "Scanned; read by OCR at 300 dpi. Full specification with dial calibration tables and control sensitivities, a matrix tutorial with labelled matrix diagram, a description of every device, external equipment and maintenance sections, 15 specimen patch sheets (knob settings drawn as dials, not readable by OCR) and a glossary. The matrix layout (separate rows for each Osc 1 and Osc 2 waveform) is the Mk 1's."
+      },
+      {
+        "id": "sos",
+        "title": "Sound On Sound: 'All About EMS: Part 1' and 'EMS VCS3 [Retrozone]'",
+        "kind": "other",
+        "file": "https://www.soundonsound.com/music-business/all-about-ems-part-1",
+        "note": "Pin colours and tolerances, the DK1 keyboard connection and its control voltage scaling, a worked matrix patch."
+      },
+      {
+        "id": "musicradar",
+        "title": "MusicRadar, 'Vintage music tech icons: EMS VCS3'",
+        "kind": "other",
+        "file": "https://www.musicradar.com/news/vintage-music-tech-icons-EMS-VCS3",
+        "note": "Filter as a diode ladder; Mk 1 against Mk 2 oscillator outputs; the unbuffered matrix's interactions."
+      },
+      {
+        "id": "forums",
+        "title": "Mod Wiggler EMS pin threads; Hinton Instruments EMS modifications; synthi.co.uk CV interface manual",
+        "kind": "other",
+        "file": "https://modwiggler.com/forum/viewtopic.php?t=123313",
+        "note": "Pin resistor values (white and red 2.7 kohm, green 68 kohm attenuating), Mk 1 and Mk 2 Jones socket differences, common modifications."
+      },
+      {
+        "id": "digitana",
+        "title": "Digitana Electronics, Synthi VCS3 CV & Gate Interface instruction manual (2010)",
+        "kind": "other",
+        "file": "https://www.synthi.co.uk/wp-content/uploads/sites/5/2017/01/VCS3_CV_unit_Manual.pdf",
+        "note": "Jones socket pinout; envelope trigger voltage; inverting input amplifiers and negative-going pitch control; Mk 1 has no sequencer input on row 16."
+      },
+      {
+        "id": "portabella",
+        "title": "Portabella (portabellabz.be), PCBs for Synthi, VCS3, DK1, Cricklewood",
+        "kind": "other",
+        "file": "https://www.portabellabz.be/synthipcbs.html",
+        "note": "Meter on matrix column A on Mk 1 and new Cornwall units, column B on Mk 2."
+      },
+      {
+        "id": "modwiggler_mk",
+        "title": "Mod Wiggler, 'VCS3 or synthi?' and 'Ems vcs3 sonic differences mk1 to mk2'",
+        "kind": "other",
+        "file": "https://modwiggler.com/forum/viewtopic.php?t=7935&start=30",
+        "note": "Mk 1 matrix has separate Osc 1 and 2 waveform rows and no output channel rows; Mk 2 the reverse. Yellow pins as standard 2.7 kohm. Mk 1 power amplifier IC and reverb tank."
+      },
+      {
+        "id": "sos_xils",
+        "title": "Sound On Sound, review of XILS Lab XILS 3",
+        "kind": "other",
+        "file": "https://www.soundonsound.com/reviews/xils-lab-xils-3",
+        "note": "Filter slope change in 1974; output filter low-pass below 5 and high-pass above 5."
+      },
+      {
+        "id": "rlmusic",
+        "title": "RL Music, EMS VCS3 Mk2 sales listing (EMS-modified unit, 1972)",
+        "kind": "other",
+        "file": "https://www.rlmusic.co.uk/rlm3/ems-vcs3-mk2-3/",
+        "note": "List of EMS factory modifications; used only to identify controls that are not part of a stock Mk 1."
+      },
+      {
+        "id": "photos",
+        "title": "Photographs supplied by the user: a Mk 2 matrix, and a modified Mk 2 with its matrix rewired to Mk 1 rows",
+        "kind": "other",
+        "file": "EMS_VCS3_Mk_II_Routing_Matrix.jpg; EMS_VCS3_II.jpg",
+        "note": "Panel legends tying each level knob to its matrix row and each control knob to its matrix column; Mk 2 matrix layout for comparison."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "synthesis_note": "subtractive at heart, with ring modulation and FM by patching audio into control inputs",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "none as such: three free-running oscillators that can sound together as a chord; no keyboard (EMS DK1 or DK2 optional)",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": false,
+    "routing": "pin matrix",
+    "panel_counts": {
+      "knobs": 30,
+      "slow_motion_dials": 3,
+      "switches": 4,
+      "joystick": 1,
+      "push_button": 1,
+      "matrix_points": 256
+    },
+    "summary": "Not a keyboard synthesizer but a small studio. Nothing is connected until pins are placed in a 16 x 16 matrix: rows are the outputs of every device (three oscillators' waveforms, noise, two input amplifiers, filter, envelope trapezoid and signal, ring modulator, reverb, joystick X and Y) and columns are inputs, signal inputs on the left (meter, two output amplifiers, envelope, ring modulator A and B, reverb, filter) and control inputs on the right (three oscillator frequencies, envelope decay, reverb mix, filter frequency, two output amplifier levels). Each pin holds a 2.7 kohm resistor, so several pins in one column mix, and any output can drive any input, signal or control. Oscillator 1 gives sine (with a shape control) and ramp; Oscillators 2 and 3 give square/pulse and triangle/ramp from one shape control; Oscillator 3 runs from about one cycle a minute to 500 Hz and is the main control source. The filter doubles as a sine oscillator. The envelope shaper is a self-repeating trapezoid generator with its own VCA. Two output amplifiers with voltage-controlled level, tone and pan feed internal speakers and rear outputs. A joystick gives two control voltages."
+  },
+  "modules": [
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR 1",
+      "description": "Sine and ramp outputs, each with its own level, on rows 1 and 2. The shape control acts on the sine output only: at its centre point it is a pure sine, either side it distorts towards a rectified shape. 1 Hz to 10 kHz on the slow-motion dial, 1.5 octaves per major division. Frequency control on column I.",
+      "properties": {
+        "frequency_hz": {
+          "min": 1,
+          "max": 10000
+        },
+        "dial_calibration_hz": {
+          "0": 0.6,
+          "1": 1.7,
+          "2": 4.4,
+          "3": 11.6,
+          "4": 32.7,
+          "5": 92.5,
+          "6": 261.6,
+          "7": 740,
+          "8": 2093,
+          "9": 5920,
+          "10": 16750
+        },
+        "octaves_per_division": 1.5,
+        "cv_sensitivity_v_per_octave": 0.32,
+        "max_output_vpp": {
+          "sine": 3,
+          "ramp": 4
+        }
+      },
+      "inputs": ["osc1.freq_cv"],
+      "outputs": ["osc1.sine", "osc1.ramp"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATOR 2",
+      "description": "Square and triangle outputs, each with its own level, on rows 3 and 4. One shape control acts on both: off centre the triangle becomes a ramp and the square a pulse, so changing one changes the other. At the extremes the pulse vanishes and the output is effectively DC. Same range as Oscillator 1. Frequency control on column J.",
+      "properties": {
+        "frequency_hz": {
+          "min": 1,
+          "max": 10000
+        },
+        "dial_calibration_hz": {
+          "0": 0.6,
+          "1": 1.7,
+          "2": 4.4,
+          "3": 11.6,
+          "4": 32.7,
+          "5": 92.5,
+          "6": 261.6,
+          "7": 740,
+          "8": 2093,
+          "9": 5920,
+          "10": 16750
+        },
+        "octaves_per_division": 1.5,
+        "cv_sensitivity_v_per_octave": 0.32,
+        "max_output_vpp": {
+          "square": 4,
+          "triangle": 3,
+          "triangle_as_ramp": 6
+        }
+      },
+      "inputs": ["osc2.freq_cv"],
+      "outputs": ["osc2.square", "osc2.triangle"]
+    },
+    {
+      "id": "osc3",
+      "type": "oscillator",
+      "name": "Oscillator 3",
+      "panel_section": "OSCILLATOR 3",
+      "description": "As Oscillator 2 but about 20 times slower: from more than 40 seconds per cycle to 500 Hz. Intended mainly as a control source (the role an LFO plays elsewhere), audible only at the top of its range, roughly dial 7 to 10. Rows 5 and 6; frequency control on column K.",
+      "properties": {
+        "role": "control (LFO) and low audio",
+        "frequency_hz": {
+          "min": 0.015,
+          "max": 500
+        },
+        "dial_calibration_hz": {
+          "0": 0.015,
+          "1": 0.043,
+          "2": 0.122,
+          "3": 0.344,
+          "4": 0.975,
+          "5": 2.76,
+          "6": 7.82,
+          "7": 22.2,
+          "8": 62.5,
+          "9": 177,
+          "10": 500
+        },
+        "cv_sensitivity_v_per_octave": 0.26,
+        "max_output_vpp": {
+          "square": 4,
+          "triangle": 3,
+          "triangle_as_ramp": 6
+        }
+      },
+      "inputs": ["osc3.freq_cv"],
+      "outputs": ["osc3.square", "osc3.triangle"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise Generator",
+      "panel_section": "NOISE GENERATOR",
+      "description": "Not voltage controlled. Colour control from dark (low-pass) through white (centre) to light (high-pass), and a level, on row 7. Takes 20 to 30 seconds to start after power-on.",
+      "properties": {
+        "max_output_vpp": 3,
+        "warm_up_s": [20, 30],
+        "colour_circuit": "passive balance between a low-pass and a high-pass network of the same turnover frequency (inferred from a DIY circuit described as derived from the VCS3)"
+      },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "in_amp1",
+      "type": "preamp",
+      "name": "Input Amplifier 1",
+      "panel_section": "INPUT AMPLIFIERS",
+      "description": "Brings an external signal or control voltage onto row 8. Fed by the MIC 1 jack, the HI LEVEL INPUT 1 jack (DC coupled, so usable for control voltages) or a low-level DC input on the KEYBOARD socket, one at a time. Voltage gain of 2, inverting.",
+      "properties": {
+        "voltage_gain": -2,
+        "inverting": true,
+        "inverting_source": "Digitana"
+      },
+      "inputs": ["in_amp1.in"],
+      "outputs": ["in_amp1.out"]
+    },
+    {
+      "id": "in_amp2",
+      "type": "preamp",
+      "name": "Input Amplifier 2",
+      "panel_section": "INPUT AMPLIFIERS",
+      "description": "Brings an external signal or control voltage onto row 9. Fed by the MIC 2 jack, the HI LEVEL INPUT 2 jack (DC coupled, so usable for control voltages) or a low-level DC input on the KEYBOARD socket, one at a time. Voltage gain of 2, inverting.",
+      "properties": {
+        "voltage_gain": -2,
+        "inverting": true,
+        "inverting_source": "Digitana"
+      },
+      "inputs": ["in_amp2.in"],
+      "outputs": ["in_amp2.out"]
+    },
+    {
+      "id": "ring_mod",
+      "type": "ring_modulator",
+      "name": "Ring Modulator",
+      "panel_section": "RING MODULATOR",
+      "description": "Transformerless IC ring modulator: output only when both inputs (columns E and F) carry signal, sum and difference frequencies with the inputs suppressed. AC coupled, so slow inputs are differentiated and DC has no effect. One output level control, row 13.",
+      "properties": {
+        "max_input_vpp_undistorted": 1.5,
+        "max_output_vpp": 6,
+        "breakthrough_db": -60,
+        "coupling": "AC"
+      },
+      "inputs": ["ring_mod.in_a", "ring_mod.in_b"],
+      "outputs": ["ring_mod.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter/Oscillator",
+      "panel_section": "FILTER/OSCILLATOR",
+      "description": "Low-pass filter whose RESPONSE control narrows it into a resonant peak (high-Q at about 5 to 6) and then, a little beyond, into a low-distortion sine oscillator, the purest sine in the instrument. Cut-off falls at 12 dB in the first octave and 18 dB per octave beyond. 5 Hz to 10 kHz. Signal in on column H, frequency control on column N, output on row 10.",
+      "properties": {
+        "modes": ["lowpass", "resonator", "sine oscillator"],
+        "slope": "12 dB first octave, then 18 dB/octave",
+        "cutoff_hz": {
+          "min": 5,
+          "max": 10000
+        },
+        "max_stable_q": 20,
+        "cv_sensitivity_v_per_octave": 0.2,
+        "topology": "diode ladder (MusicRadar)",
+        "self_oscillates": true,
+        "version_note": "12/18 dB slope applies to units sold 1969 to 1974; EMS changed the filter to 24 dB/octave in 1974 (Sound On Sound)"
+      },
+      "inputs": ["vcf.in", "vcf.freq_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope Shaper",
+      "panel_section": "ENVELOPE SHAPER",
+      "description": "A trapezoid generator with its own amplifier. Four times (attack, on, decay, off) form a cycle that repeats on its own, up to about 60 Hz with all times at minimum and down to about 20 seconds per cycle; with OFF turned past about 5 to 7 the cycle stops after each decay and waits for the ATTACK button or a keyboard trigger. Signal in on column D comes out shaped on row 12; the control shape itself is on row 11 (the trapezoid). Decay time is voltage controlled from column L, which also changes the repetition rate. A lamp shows bright for attack and on, dim for decay and off.",
+      "properties": {
+        "stages": ["attack", "on", "decay", "off"],
+        "attack_s": [0.002, 1],
+        "on_s": [0, 2.5],
+        "decay_s": [0.003, 15],
+        "off_s": [0.01, 5],
+        "max_repetition_hz": 60,
+        "decay_cv_v_per_doubling": 0.4,
+        "trapezoid_v": {
+          "on": -3,
+          "off": 3
+        },
+        "trigger": {
+          "source": "ATTACK button or Jones socket pin 5",
+          "polarity": "positive",
+          "threshold_v": [4, 5],
+          "source_ref": "Digitana"
+        }
+      },
+      "inputs": ["env.signal_in", "env.decay_cv", "env.trigger_in"],
+      "outputs": ["env.trapezoid", "env.signal_out"]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverberation Unit",
+      "panel_section": "REVERBERATION UNIT",
+      "description": "Twin spring line (25 and 30 ms delays, over 2 seconds' reverberation) with a MIX control from dry to almost all spring, voltage controlled from column M (-2 V dry, +2 V full). Signal in on column G, output on row 14. Sensitive to knocks and to acoustic feedback from the internal speakers.",
+      "properties": {
+        "spring_delays_ms": [25, 30],
+        "reverb_time_s_min": 2,
+        "mix_cv_v": {
+          "dry": -2,
+          "full": 2
+        }
+      },
+      "inputs": ["reverb.in", "reverb.mix_cv"],
+      "outputs": ["reverb.out"]
+    },
+    {
+      "id": "joystick",
+      "type": "manual_controller",
+      "name": "Joystick",
+      "panel_section": "JOYSTICK (lower panel)",
+      "description": "Two potentiometers at right angles, moved in a square. Each axis has a RANGE control; output is 0 V at centre, negative down and left, positive up and right, up to plus or minus 2 V. Horizontal on row 15, vertical on row 16. Effective on control columns; on signal columns only the ring modulator 'bowing' trick uses it.",
+      "properties": {
+        "range_v": [-2, 2]
+      },
+      "inputs": [],
+      "outputs": ["joystick.x", "joystick.y"]
+    },
+    {
+      "id": "meter",
+      "type": "meter",
+      "name": "Meter and scope tap",
+      "panel_section": "METER",
+      "description": "1 mA moving-coil meter on column A. CONTROL VOLTAGES: centre-zero DC, plus or minus 1 V. SIGNAL LEVELS: left-zero AC, 4 V p-p full scale. The SCOPE jack is connected to the same column, so column A is also a third route out of the matrix.",
+      "inputs": ["meter.in"],
+      "outputs": ["meter.scope"]
+    },
+    {
+      "id": "out_amp1",
+      "type": "vca",
+      "name": "Output Amplifier 1",
+      "panel_section": "OUTPUT AMPLIFIERS",
+      "description": "Voltage-controlled output amplifier: signal in on column B, level control on column O. The large level knob is itself a control voltage, so with nothing on the control column the signal only appears at about half travel, and added control can make the signal impossible to cut. Bass and treble roll-off filter, flat at 5. Feeds the internal speaker (through its muting switch), the headphones and, through its PAN control, the signal outputs. The CONTROL OUTPUT 1 jack taps column B before the amplifier, DC coupled.",
+      "inputs": ["out_amp1.in", "out_amp1.level_cv"],
+      "outputs": ["out_amp1.out", "out_amp1.control_tap"]
+    },
+    {
+      "id": "out_amp2",
+      "type": "vca",
+      "name": "Output Amplifier 2",
+      "panel_section": "OUTPUT AMPLIFIERS",
+      "description": "Voltage-controlled output amplifier: signal in on column C, level control on column P. The large level knob is itself a control voltage, so with nothing on the control column the signal only appears at about half travel, and added control can make the signal impossible to cut. Bass and treble roll-off filter, flat at 5. Feeds the internal speaker (through its muting switch), the headphones and, through its PAN control, the signal outputs. The CONTROL OUTPUT 2 jack taps column C before the amplifier, DC coupled.",
+      "inputs": ["out_amp2.in", "out_amp2.level_cv"],
+      "outputs": ["out_amp2.out", "out_amp2.control_tap"]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Outputs and speakers",
+      "panel_section": "OUTPUTS",
+      "description": "Two 1 W amplifiers and 5-inch internal speakers (non-panning), the stereo headphone socket (non-panning, high level), and the L and R signal outputs (panned).",
+      "inputs": ["output.in1", "output.in2"],
+      "outputs": ["output.signal_l", "output.signal_r", "output.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.frequency",
+      "module": "osc1",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 1,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "exponential, 1.5 octaves per division",
+        "note": "calibration table on the module; extremes (0.6 Hz, 16.75 kHz) may be outside tolerance"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "slow_motion_dial"
+        }
+      ],
+      "function": "Slow-motion dial; numbers are for logging, not Hz. 1.5 octaves per major division."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 1,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "exponential, 1.5 octaves per division",
+        "note": "calibration table on the module; extremes (0.6 Hz, 16.75 kHz) may be outside tolerance"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "slow_motion_dial"
+        }
+      ],
+      "function": "Slow-motion dial; numbers are for logging, not Hz. 1.5 octaves per major division."
+    },
+    {
+      "id": "osc3.frequency",
+      "module": "osc3",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.015,
+        "max": 500,
+        "unit": "Hz",
+        "taper": "exponential",
+        "note": "calibration table on the module"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "slow_motion_dial"
+        }
+      ],
+      "function": "Slow-motion dial, about 20 times slower than Oscillators 1 and 2 at the same setting."
+    },
+    {
+      "id": "osc1.shape",
+      "module": "osc1",
+      "label": "SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Applies to the sine output only. Centre: pure sine. Either side: progressively rectified and asymmetric."
+    },
+    {
+      "id": "osc1.sine_level",
+      "module": "osc1",
+      "label": "SINE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of sine at row 1."
+    },
+    {
+      "id": "osc1.ramp_level",
+      "module": "osc1",
+      "label": "RAMP LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of ramp at row 2. In phase with the sine, so the two can be mixed with two pins."
+    },
+    {
+      "id": "osc2.shape",
+      "module": "osc2",
+      "label": "SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Acts on both outputs: centre is square and triangle; off centre gives pulse and ramp. At the extremes the pulse disappears."
+    },
+    {
+      "id": "osc2.square_level",
+      "module": "osc2",
+      "label": "SQUARE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of square or pulse at row 3."
+    },
+    {
+      "id": "osc2.triangle_level",
+      "module": "osc2",
+      "label": "TRIANGLE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of triangle or ramp at row 4."
+    },
+    {
+      "id": "osc3.shape",
+      "module": "osc3",
+      "label": "SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Acts on both outputs: centre is square and triangle; off centre gives pulse and ramp. At the extremes the pulse disappears."
+    },
+    {
+      "id": "osc3.square_level",
+      "module": "osc3",
+      "label": "SQUARE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of square or pulse at row 5."
+    },
+    {
+      "id": "osc3.triangle_level",
+      "module": "osc3",
+      "label": "TRIANGLE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of triangle or ramp at row 6."
+    },
+    {
+      "id": "noise.colour",
+      "module": "noise",
+      "label": "COLOUR",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "dark to light"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Left dark (low-pass), centre white, right light (high-pass)."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of noise at row 7."
+    },
+    {
+      "id": "in_amp1.level",
+      "module": "in_amp1",
+      "label": "INPUT LEVEL CHANNEL 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gain of input channel 1 onto row 8. Start at zero with unknown inputs."
+    },
+    {
+      "id": "in_amp2.level",
+      "module": "in_amp2",
+      "label": "INPUT LEVEL CHANNEL 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gain of input channel 2 onto row 9. Start at zero with unknown inputs."
+    },
+    {
+      "id": "ring_mod.level",
+      "module": "ring_mod",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Ring modulator output at row 13."
+    },
+    {
+      "id": "vcf.frequency",
+      "module": "vcf",
+      "label": "FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 5,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "exponential"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Large knob: cut-off, centre or oscillator frequency across the audio range."
+    },
+    {
+      "id": "vcf.response",
+      "module": "vcf",
+      "label": "RESPONSE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "low pass to oscillation"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "0: low-pass. About 5 to 6: high-Q resonator. A little beyond, and higher: oscillates as a sine source."
+    },
+    {
+      "id": "vcf.level",
+      "module": "vcf",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter output at row 10."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 1,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rise time, 2 ms to 1 s. Interacts slightly with ON: if attack exceeds on, decay begins before attack ends."
+    },
+    {
+      "id": "env.on",
+      "module": "env",
+      "label": "ON",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 2.5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Hold time at full, 0 to 2.5 s."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.003,
+        "max": 15,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fall time, 3 ms to 15 s. Voltage controlled from column L at 0.4 V per doubling; also changes the repeat rate."
+    },
+    {
+      "id": "env.off",
+      "module": "env",
+      "label": "OFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.01,
+        "max": 5,
+        "unit": "s",
+        "note": "beyond about 5 to 7 on the dial: manual (triggered) mode"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "First half: off time 10 ms to about 5 s, auto-repeating. Somewhere between 5 and 7 (later if decay is long) the cycle stops and waits for a trigger."
+    },
+    {
+      "id": "env.signal_level",
+      "module": "env",
+      "label": "SIGNAL LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the shaped signal at row 12."
+    },
+    {
+      "id": "env.trapezoid_level",
+      "module": "env",
+      "label": "TRAPEZOID LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of the trapezoid control shape at row 11."
+    },
+    {
+      "id": "env.attack_button",
+      "module": "env",
+      "label": "ATTACK BUTTON",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "lower panel, right of the joystick"
+        }
+      ],
+      "function": "Starts the cycle in manual mode; ON lasts as long as it is held, then decay runs."
+    },
+    {
+      "id": "reverb.mix",
+      "module": "reverb",
+      "label": "MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Direct to reverberated. Left: dry (an amplifier). Right: nearly all spring."
+    },
+    {
+      "id": "reverb.level",
+      "module": "reverb",
+      "label": "LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Reverb unit output at row 14."
+    },
+    {
+      "id": "joystick.x",
+      "module": "joystick",
+      "label": "JOYSTICK (horizontal)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "Left-right position."
+    },
+    {
+      "id": "joystick.y",
+      "module": "joystick",
+      "label": "JOYSTICK (vertical)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "Up-down position."
+    },
+    {
+      "id": "joystick.range_x",
+      "module": "joystick",
+      "label": "RANGE (horizontal)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 2,
+        "unit": "V peak"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the horizontal axis: 0 none, 10 plus or minus 2 V."
+    },
+    {
+      "id": "joystick.range_y",
+      "module": "joystick",
+      "label": "RANGE (vertical)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 2,
+        "unit": "V peak"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the vertical axis."
+    },
+    {
+      "id": "meter.mode",
+      "module": "meter",
+      "label": "METER",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "control_voltages",
+          "meaning": "centre-zero DC, plus or minus 1 V; 0.5 on the scale is 0 V"
+        },
+        {
+          "value": "signal_levels",
+          "meaning": "left-zero AC, 4 V p-p full scale"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Meter range."
+    },
+    {
+      "id": "out_amp1.level",
+      "module": "out_amp1",
+      "label": "OUTPUT LEVEL CHANNEL 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Large knob on the lower panel. Sets the amplifier's control voltage, so the signal appears only at about half travel unless column O carries control; added control can make the signal impossible to cut."
+    },
+    {
+      "id": "out_amp1.filter",
+      "module": "out_amp1",
+      "label": "OUTPUT FILTER CHANNEL 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "treble cut to bass cut"
+      },
+      "default": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone: 5 flat, left cuts treble, right cuts bass. Reset to 5 for each new patch."
+    },
+    {
+      "id": "out_amp1.pan",
+      "module": "out_amp1",
+      "label": "PAN CHANNEL 1 (EXT)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "L to R"
+      },
+      "default": 0,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Position between the L and R signal outputs. Does not affect the internal speakers or headphones."
+    },
+    {
+      "id": "out_amp1.mute",
+      "module": "out_amp1",
+      "label": "MUTING SWITCH CHANNEL 1",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: internal speaker on."
+    },
+    {
+      "id": "out_amp2.level",
+      "module": "out_amp2",
+      "label": "OUTPUT LEVEL CHANNEL 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Large knob on the lower panel. Sets the amplifier's control voltage, so the signal appears only at about half travel unless column P carries control; added control can make the signal impossible to cut."
+    },
+    {
+      "id": "out_amp2.filter",
+      "module": "out_amp2",
+      "label": "OUTPUT FILTER CHANNEL 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "treble cut to bass cut"
+      },
+      "default": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone: 5 flat, left cuts treble, right cuts bass. Reset to 5 for each new patch."
+    },
+    {
+      "id": "out_amp2.pan",
+      "module": "out_amp2",
+      "label": "PAN CHANNEL 2 (EXT)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "L to R"
+      },
+      "default": 10,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Position between the L and R signal outputs. Does not affect the internal speakers or headphones."
+    },
+    {
+      "id": "out_amp2.mute",
+      "module": "out_amp2",
+      "label": "MUTING SWITCH CHANNEL 2",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Up: internal speaker on."
+    },
+    {
+      "id": "output.mains",
+      "module": "output",
+      "label": "MAINS ON/OFF",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power. The red neon beside it lights."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.mic1",
+      "label": "MIC INPUT 1",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "in_amp1.in",
+      "combine": "replace",
+      "electrical": {
+        "sensitivity_mv": 5,
+        "impedance_ohm": 600
+      },
+      "function": "Microphone into input channel 1: 5 mV into 600 ohms.",
+      "note": "Only one input per channel at a time."
+    },
+    {
+      "id": "jack.hi1",
+      "label": "HI LEVEL INPUT 1",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "in_amp1.in",
+      "combine": "replace",
+      "electrical": {
+        "max_vac_rms": 1.8,
+        "max_vdc": 2.5,
+        "impedance_ohm": 50000
+      },
+      "function": "Line or DC control input to channel 1: 1.8 V AC rms or plus or minus 2.5 V DC into 50 kohm; DC coupled."
+    },
+    {
+      "id": "jack.control_out1",
+      "label": "CONTROL OUTPUT 1",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "out_amp1.control_tap",
+      "electrical": {
+        "load_ohm_optimum": 10000,
+        "load_ohm_min": 2000
+      },
+      "function": "DC output taken from column B at the output amplifier's input. Best load 10 kohm, not below 2 kohm."
+    },
+    {
+      "id": "jack.mic2",
+      "label": "MIC INPUT 2",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "in_amp2.in",
+      "combine": "replace",
+      "electrical": {
+        "sensitivity_mv": 5,
+        "impedance_ohm": 600
+      },
+      "function": "Microphone into input channel 2: 5 mV into 600 ohms.",
+      "note": "Only one input per channel at a time."
+    },
+    {
+      "id": "jack.hi2",
+      "label": "HI LEVEL INPUT 2",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "in_amp2.in",
+      "combine": "replace",
+      "electrical": {
+        "max_vac_rms": 1.8,
+        "max_vdc": 2.5,
+        "impedance_ohm": 50000
+      },
+      "function": "Line or DC control input to channel 2: 1.8 V AC rms or plus or minus 2.5 V DC into 50 kohm; DC coupled."
+    },
+    {
+      "id": "jack.control_out2",
+      "label": "CONTROL OUTPUT 2",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "out_amp2.control_tap",
+      "electrical": {
+        "load_ohm_optimum": 10000,
+        "load_ohm_min": 2000
+      },
+      "function": "DC output taken from column C at the output amplifier's input. Best load 10 kohm, not below 2 kohm."
+    },
+    {
+      "id": "jack.signal_l",
+      "label": "SIGNAL OUTPUT L",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "output.signal_l",
+      "electrical": {
+        "max_vpp": 2,
+        "load_ohm": 600
+      },
+      "function": "Panned line output, 2 V p-p into 600 ohms."
+    },
+    {
+      "id": "jack.signal_r",
+      "label": "SIGNAL OUTPUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "output.signal_r",
+      "electrical": {
+        "max_vpp": 2,
+        "load_ohm": 600
+      },
+      "function": "Panned line output, 2 V p-p into 600 ohms."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES (STEREO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS (3-way)",
+      "node": "output.phones",
+      "electrical": {
+        "max_vpp": 10,
+        "load_ohm": 50
+      },
+      "function": "High-level non-panning stereo output, 10 V p-p into 50 ohms. Tip left, ring right; a 2-way plug shorts one side."
+    },
+    {
+      "id": "jack.scope",
+      "label": "SCOPE",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "6.35mm TS (2-way)",
+      "node": "meter.scope",
+      "function": "Connected to matrix column A, so it carries whatever is pinned to the meter. Usable for an oscilloscope or to feed a signal back in through an input amplifier."
+    },
+    {
+      "id": "jack.keyboard",
+      "label": "KEYBOARD (Jones socket)",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "Jones 8-pin",
+      "node": "env.trigger_in",
+      "function": "8-pin socket for EMS devices such as the DK1 and DK2 keyboards: two low-level DC inputs (to the input channels), a trigger for the envelope shaper, stabilised supplies and a meter connection. Supplies must not be shorted.",
+      "note": "Pinout (Digitana, written for the Mk 2): 1 input channel 1, 2 -9 V, 3 ground, 4 +12 V, 5 envelope shaper trigger (positive, about 4 to 5 V), 6 input channel 2, 7 meter, 8 matrix row 16 on the Mk 2 only. On the Mk 1 pin 8 is not connected to the matrix. The low-level DC inputs on pins 1 and 6 (150 uA into 500 ohm) reach in_amp1 and in_amp2.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.mains",
+      "label": "MAINS INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "3-pin mains",
+      "node": null,
+      "function": "Miniature 3-pin mains input, 220 to 245 V or 105 to 115 V AC by internal tapping; 1 A fuse beside it."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "out_amp1.out",
+      "to": "output.in1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out_amp1.level",
+      "note": "To speaker 1 (via mute), headphone left and, panned, the signal outputs."
+    },
+    {
+      "id": "c02",
+      "from": "out_amp2.out",
+      "to": "output.in2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out_amp2.level",
+      "note": "To speaker 2 (via mute), headphone right and, panned, the signal outputs."
+    }
+  ],
+  "patch_matrix": {
+    "kind": "resistive_pin",
+    "size": "16 x 16 (256 points)",
+    "rows": [
+      {
+        "id": "1",
+        "label": "Osc 1 sine",
+        "node": "osc1.sine",
+        "level_param": "osc1.sine_level"
+      },
+      {
+        "id": "2",
+        "label": "Osc 1 ramp",
+        "node": "osc1.ramp",
+        "level_param": "osc1.ramp_level"
+      },
+      {
+        "id": "3",
+        "label": "Osc 2 square",
+        "node": "osc2.square",
+        "level_param": "osc2.square_level"
+      },
+      {
+        "id": "4",
+        "label": "Osc 2 triangle",
+        "node": "osc2.triangle",
+        "level_param": "osc2.triangle_level"
+      },
+      {
+        "id": "5",
+        "label": "Osc 3 square",
+        "node": "osc3.square",
+        "level_param": "osc3.square_level"
+      },
+      {
+        "id": "6",
+        "label": "Osc 3 triangle",
+        "node": "osc3.triangle",
+        "level_param": "osc3.triangle_level"
+      },
+      {
+        "id": "7",
+        "label": "Noise",
+        "node": "noise.out",
+        "level_param": "noise.level"
+      },
+      {
+        "id": "8",
+        "label": "Input amp 1",
+        "node": "in_amp1.out",
+        "level_param": "in_amp1.level"
+      },
+      {
+        "id": "9",
+        "label": "Input amp 2",
+        "node": "in_amp2.out",
+        "level_param": "in_amp2.level"
+      },
+      {
+        "id": "10",
+        "label": "Filter",
+        "node": "vcf.out",
+        "level_param": "vcf.level"
+      },
+      {
+        "id": "11",
+        "label": "Trapezoid",
+        "node": "env.trapezoid",
+        "level_param": "env.trapezoid_level"
+      },
+      {
+        "id": "12",
+        "label": "Envelope signal",
+        "node": "env.signal_out",
+        "level_param": "env.signal_level"
+      },
+      {
+        "id": "13",
+        "label": "Ring modulator",
+        "node": "ring_mod.out",
+        "level_param": "ring_mod.level"
+      },
+      {
+        "id": "14",
+        "label": "Reverb",
+        "node": "reverb.out",
+        "level_param": "reverb.level"
+      },
+      {
+        "id": "15",
+        "label": "Joystick horizontal",
+        "node": "joystick.x",
+        "level_param": "joystick.range_x"
+      },
+      {
+        "id": "16",
+        "label": "Joystick vertical",
+        "node": "joystick.y",
+        "level_param": "joystick.range_y"
+      }
+    ],
+    "columns": [
+      {
+        "id": "A",
+        "label": "Meter (and SCOPE)",
+        "node": "meter.in",
+        "class": "monitor"
+      },
+      {
+        "id": "B",
+        "label": "Output amp 1",
+        "node": "out_amp1.in",
+        "class": "signal"
+      },
+      {
+        "id": "C",
+        "label": "Output amp 2",
+        "node": "out_amp2.in",
+        "class": "signal"
+      },
+      {
+        "id": "D",
+        "label": "Envelope shaper in",
+        "node": "env.signal_in",
+        "class": "signal"
+      },
+      {
+        "id": "E",
+        "label": "Ring mod input A",
+        "node": "ring_mod.in_a",
+        "class": "signal"
+      },
+      {
+        "id": "F",
+        "label": "Ring mod input B",
+        "node": "ring_mod.in_b",
+        "class": "signal"
+      },
+      {
+        "id": "G",
+        "label": "Reverb in",
+        "node": "reverb.in",
+        "class": "signal"
+      },
+      {
+        "id": "H",
+        "label": "Filter in",
+        "node": "vcf.in",
+        "class": "signal"
+      },
+      {
+        "id": "I",
+        "label": "Osc 1 frequency",
+        "node": "osc1.freq_cv",
+        "class": "control",
+        "offset_param": "osc1.frequency"
+      },
+      {
+        "id": "J",
+        "label": "Osc 2 frequency",
+        "node": "osc2.freq_cv",
+        "class": "control",
+        "offset_param": "osc2.frequency"
+      },
+      {
+        "id": "K",
+        "label": "Osc 3 frequency",
+        "node": "osc3.freq_cv",
+        "class": "control",
+        "offset_param": "osc3.frequency"
+      },
+      {
+        "id": "L",
+        "label": "Envelope decay",
+        "node": "env.decay_cv",
+        "class": "control",
+        "offset_param": "env.decay"
+      },
+      {
+        "id": "M",
+        "label": "Reverb mix",
+        "node": "reverb.mix_cv",
+        "class": "control",
+        "offset_param": "reverb.mix"
+      },
+      {
+        "id": "N",
+        "label": "Filter frequency",
+        "node": "vcf.freq_cv",
+        "class": "control",
+        "offset_param": "vcf.frequency"
+      },
+      {
+        "id": "O",
+        "label": "Output amp 1 level",
+        "node": "out_amp1.level_cv",
+        "class": "control",
+        "offset_param": "out_amp1.level"
+      },
+      {
+        "id": "P",
+        "label": "Output amp 2 level",
+        "node": "out_amp2.level_cv",
+        "class": "control",
+        "offset_param": "out_amp2.level"
+      }
+    ],
+    "pins": [
+      {
+        "name": "white",
+        "resistance_ohm": 2700,
+        "tolerance_pct": 5,
+        "purpose": "standard pin for any connection",
+        "source": "manual (2.7 kohm); tolerance from Sound On Sound"
+      },
+      {
+        "name": "red",
+        "resistance_ohm": 2700,
+        "tolerance_pct": 2,
+        "purpose": "precision pin for oscillator pitch control, so two oscillators track together",
+        "confidence": "inferred",
+        "source": "Sound On Sound and Hinton Instruments; Mod Wiggler posters say 1%"
+      },
+      {
+        "name": "green",
+        "resistance_ohm": 68000,
+        "tolerance_pct": null,
+        "purpose": "attenuating pin, roughly halving or less a signal's effect",
+        "confidence": "inferred",
+        "source": "Mod Wiggler; not in the manual"
+      },
+      {
+        "name": "yellow",
+        "resistance_ohm": 2700,
+        "tolerance_pct": null,
+        "purpose": "standard pin, used like white",
+        "confidence": "inferred",
+        "source": "Mod Wiggler; Digitana groups yellow with white as standard pins"
+      }
+    ],
+    "combine": "sum",
+    "electrical": {
+      "input_impedance_ohm": 10000,
+      "pin_resistor_ohm": 2700,
+      "input_sensitivity_vpp_full_range": 1.5,
+      "output_impedance_ohm": [300, 3000],
+      "typical_output_vpp": 2,
+      "inter_row_capacitance_pf": 50,
+      "crosstalk_note": "small HF crosstalk to open inputs, about 12 dB less once an input is in use"
+    },
+    "note": "Rows carry device outputs and columns device inputs; the manual marks signal inputs with round boxes and control inputs with square boxes. Pins in the same column sum; pins in the same row distribute one output to several inputs. The matrix is unbuffered, so adding pins or changing output levels alters other connections. Any row can go to any column: audio into control columns gives FM or AM, and control into signal columns is mostly ineffective except at the AC-coupled ring modulator. Each row's level_param is the knob that scales that output before it reaches the matrix, and each control column's offset_param is the manual knob the pinned voltages add to; the panel prints the row number or column letter beside each one. Signal columns have no offset; their module's panel heading carries the column letter (D envelope, E and F ring modulator, G reverb, H filter). This is the Mk 1 layout: separate rows for each Osc 1 and Osc 2 waveform, no output channel rows, meter on column A (confirmed by Portabella), and row 16 is the joystick only."
+  },
+  "example_patches": [
+    {
+      "id": "swept_noise",
+      "name": "Swept coloured noise (Specimen Patch 1)",
+      "source": "manual Section III and Section VII sheet 1",
+      "pins": ["H7", "D10", "B12", "C12", "L2", "L4", "N6", "O16", "P15"],
+      "description": "Noise through the filter and envelope shaper to both outputs. Osc 1 ramp and Osc 2 triangle, tuned close to beat, modulate the envelope decay; Osc 3 triangle sweeps the filter; the joystick controls both output levels. Variants: L1, L3, N5.",
+      "confidence": "stated"
+    },
+    {
+      "id": "ring_octave",
+      "name": "Ring modulator octave",
+      "source": "manual, Ring Modulator",
+      "pins": ["E1", "F10", "B13"],
+      "settings": {
+        "osc1.frequency": 6,
+        "vcf.frequency": 5,
+        "vcf.level": 10,
+        "vcf.response": 7
+      },
+      "description": "Osc 1 sine and the self-oscillating filter, tuned to unison, into the ring modulator: an octave above. Retuning Osc 1 an octave down gives one note an octave below and its twelfth.",
+      "confidence": "stated"
+    },
+    {
+      "id": "bowing",
+      "name": "Joystick 'bowing'",
+      "source": "manual, Ring Modulator",
+      "pins": ["E1", "E4", "I15", "J15", "F16", "B13"],
+      "settings": {
+        "joystick.range_x": 6,
+        "joystick.range_y": 6
+      },
+      "description": "Oscillators 1 and 2 into ring mod input A and the joystick's vertical axis into input B. Because the modulator is AC coupled, sound appears only while the stick moves: bow up and down, change pitch left and right.",
+      "confidence": "stated"
+    },
+    {
+      "id": "bells",
+      "name": "Bell tones",
+      "source": "manual, Ring Modulator",
+      "pins": ["E1", "F3", "F4", "I16", "J15", "H13", "D10", "G10", "C12", "B14"],
+      "settings": {
+        "osc1.frequency": 7.5,
+        "osc2.frequency": 7.5,
+        "joystick.range_x": 4,
+        "joystick.range_y": 4,
+        "vcf.frequency": 7,
+        "vcf.response": 0,
+        "vcf.level": 10,
+        "env.attack": 0,
+        "env.on": 0,
+        "env.decay": 6,
+        "env.off": 3,
+        "reverb.mix": 5,
+        "reverb.level": 10
+      },
+      "description": "Rich ring modulation filtered, struck by the envelope shaper and reverberated; the joystick retunes both oscillators.",
+      "confidence": "stated"
+    },
+    {
+      "id": "harmonic_series",
+      "name": "Filter extracts harmonics",
+      "source": "manual, Filter/Oscillator",
+      "pins": ["H2", "B10", "N6"],
+      "description": "A low Osc 1 ramp through the filter while an Osc 3 rising ramp sweeps cut-off; the harmonics sound one by one.",
+      "confidence": "stated"
+    },
+    {
+      "id": "stereo_swing",
+      "name": "Amplitude swing between channels",
+      "source": "manual, Output Amplifiers",
+      "pins": ["B1", "B2", "C1", "C2", "O4", "P6"],
+      "description": "Osc 1 to both outputs, with Osc 2 and Osc 3, both slow and slightly out of step, on the two output amplifier levels.",
+      "confidence": "stated"
+    },
+    {
+      "id": "clangs",
+      "name": "Ring-modulated clangs",
+      "source": "manual, Reverberation Unit",
+      "pins": ["E2", "F4", "D13", "G12", "B14", "I15", "J16"],
+      "settings": {
+        "reverb.mix": 5
+      },
+      "description": "Ring modulator into the repeating envelope shaper, then reverb; the joystick changes the clang. The manual prints the envelope pin as B13; read as D13.",
+      "confidence": "inferred"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "output.mains_lamp",
+      "module": "output",
+      "label": "MAINS",
+      "kind": "lamp",
+      "led_colour": "red",
+      "function": "Red neon, lit when mains is on."
+    },
+    {
+      "id": "env.lamp",
+      "module": "env",
+      "label": "Envelope lamp",
+      "kind": "lamp",
+      "led_colour": "red",
+      "function": "Bright during attack and on, dim during decay and off. May glow or flicker at switch-on."
+    },
+    {
+      "id": "meter.meter",
+      "module": "meter",
+      "label": "METER",
+      "kind": "meter",
+      "function": "Moving-coil meter on matrix column A; DC centre-zero or AC left-zero by switch."
+    }
+  ],
+  "led_legend": {
+    "rule": "Two red lamps. The envelope lamp's brightness, not colour, shows the cycle: bright for attack and on, dim for decay and off.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "mains on; envelope cycle state by brightness"
+      }
+    ],
+    "confidence": "stated"
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Nothing sounds until pinned",
+      "applies_to": ["out_amp1", "out_amp2"],
+      "rule": "There is no default patch. Every route is a pin, and every patch must end at column B or C (or both) to be heard. Many settings produce silence: a sub- or supersonic oscillator, a level at zero, an output level below half way, a muted speaker."
+    },
+    {
+      "id": "b02",
+      "name": "Resistive, unbuffered matrix",
+      "applies_to": ["out_amp1", "vcf", "env", "osc1"],
+      "rule": "Each pin is a 2.7 kohm resistor into a 10 kohm input, so pins in one column sum, and every extra pin or level change slightly alters the others. Pin tolerance matters: two white pins carrying the same pitch voltage to two oscillators can make them track differently, which is what the red precision pins are for. Several pins in column A join their signals together."
+    },
+    {
+      "id": "b03",
+      "name": "Signal and control are the same thing",
+      "applies_to": ["osc1", "osc2", "osc3", "vcf", "out_amp1", "out_amp2", "env", "reverb"],
+      "rule": "Any row can feed any column. Audio into a control column gives FM (oscillators, filter) or AM (output amplifiers); slow sources into control columns give vibrato, sweeps and pan. The manual's own idioms: Osc 3 ramp on Osc 1 frequency for rising note patterns, Osc 2 and Osc 3 ramps summed into a staircase for scales, circular modulation between oscillators for pseudo-random patterns."
+    },
+    {
+      "id": "b04",
+      "name": "Control voltage scaling",
+      "applies_to": ["osc1", "osc2", "osc3", "vcf", "env", "reverb", "in_amp1", "in_amp2"],
+      "rule": "Not 1 V/octave. Through a pin: Osc 1 and 2 at 0.32 V/octave, Osc 3 at 0.26 V/octave, the filter at 0.2 V/octave, envelope decay doubles per 0.4 V. Through an input amplifier (gain 2) an external voltage needs half as much: 0.16 V/octave for Osc 1 and 2. Reverb mix runs from -2 V (dry) to +2 V (full). Joystick and range controls set intervals by ear, and an interval set at one pitch should hold at others. The input amplifiers invert, and the oscillators rise in pitch as their control voltage goes negative, so a conventional positive-going pitch voltage plays the right way round through an input amplifier but backwards if pinned in directly (Digitana)."
+    },
+    {
+      "id": "b05",
+      "name": "Envelope shaper cycle",
+      "applies_to": ["env"],
+      "rule": "Attack, on, decay and off run in a loop. With all four at minimum it buzzes at about 50 to 60 Hz; with attack, on and decay at 10 and off at half it repeats about every 20 seconds. Turning OFF past roughly 5 to 7 stops it after each decay, waiting for the ATTACK button (which holds ON while pressed) or a keyboard trigger. Attack longer than on makes decay start early, for gentle undulation. Decay control voltage (column L) changes both note length and repetition rate."
+    },
+    {
+      "id": "b06",
+      "name": "Inverted trapezoid",
+      "applies_to": ["env", "out_amp1", "out_amp2"],
+      "rule": "The trapezoid runs from -3 V when ON to +3 V when OFF. Applied to an output amplifier level it therefore fades the signal during attack and restores it during decay: an inverted envelope. Applied to an oscillator it bends pitch through the note."
+    },
+    {
+      "id": "b07",
+      "name": "Filter as oscillator",
+      "applies_to": ["vcf"],
+      "rule": "RESPONSE 0 is low-pass; about 5 to 6 is a sharp resonator; a little further it oscillates as a pure sine, and continues to oscillate to the right. The oscillation point varies with frequency. While oscillating it still filters, so a noise input gives howling wind. Its frequency control then works like an oscillator's."
+    },
+    {
+      "id": "b08",
+      "name": "AC-coupled ring modulator",
+      "applies_to": ["ring_mod"],
+      "rule": "Output exists only when both inputs carry signal, and DC is ignored: slow inputs pass only their changes. That makes it a switch (remove one input), an octave doubler (same sine into both inputs), and with the joystick on one input a 'bow' that sounds only while the stick moves."
+    },
+    {
+      "id": "b09",
+      "name": "Output amplifier level is a control voltage",
+      "applies_to": ["out_amp1", "out_amp2"],
+      "rule": "The large level knob biases a VCA rather than attenuating. With nothing on its control column the signal appears around half travel; with control pinned, the knob's lower half backs the control off, and some settings cannot be silenced."
+    },
+    {
+      "id": "b10",
+      "name": "Three ways out of the matrix",
+      "applies_to": ["meter", "out_amp1", "out_amp2"],
+      "rule": "CONTROL OUTPUTS 1 and 2 tap columns B and C before the output amplifiers, DC coupled, and SCOPE taps column A. Pinning a control source to B or C is how a control voltage leaves the VCS3; SCOPE can feed a signal back in through an input amplifier."
+    },
+    {
+      "id": "b11",
+      "name": "Noise warm-up",
+      "applies_to": ["noise"],
+      "rule": "The noise generator does not start for 20 to 30 seconds after power-on."
+    },
+    {
+      "id": "b12",
+      "name": "Reverb overload and feedback",
+      "applies_to": ["reverb"],
+      "rule": "The springs' output varies 10 to 1 with frequency, so peaks can overload even at modest average levels, especially with slowly swept tones. Acoustic feedback can occur through the internal speakers; reduce MIX slightly. Knocking the cabinet excites the springs."
+    },
+    {
+      "id": "b13",
+      "name": "Panel legends map knobs to the matrix",
+      "applies_to": [
+        "osc1",
+        "osc2",
+        "osc3",
+        "noise",
+        "in_amp1",
+        "in_amp2",
+        "vcf",
+        "env",
+        "ring_mod",
+        "reverb",
+        "joystick",
+        "out_amp1",
+        "out_amp2"
+      ],
+      "rule": "Every source has a level knob numbered with its matrix row (1 to 14; the joystick RANGE knobs are 15 and 16), and every control column has a manual knob lettered with its column (I to P). Turning a numbered knob to 0 removes that row from every pin in it. The lettered knob sets the starting point that pinned voltages move up or down; with nothing pinned it is the whole setting. patch_matrix records both links as level_param and offset_param.",
+      "confidence": "inferred"
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "No MIDI and no digital control of any kind. External control is by voltages through the HI LEVEL inputs and the KEYBOARD socket."
+  },
+  "specifications": {
+    "oscillators": {
+      "osc1_osc2_hz": [1, 10000],
+      "osc3_hz": [0.025, 500],
+      "cv_v_per_octave": {
+        "osc1_osc2": 0.32,
+        "osc3": 0.26
+      }
+    },
+    "filter": {
+      "range_hz": [5, 10000],
+      "slope": "12 dB first octave, 18 dB/octave after",
+      "max_q": 20,
+      "cv_v_per_octave": 0.2
+    },
+    "envelope": {
+      "attack_s": [0.002, 1],
+      "on_s": [0, 2.5],
+      "decay_s": [0.003, 15],
+      "off_s": [0.01, 5],
+      "max_rate_hz": 60
+    },
+    "reverb": {
+      "delays_ms": [25, 30],
+      "time_s": ">2"
+    },
+    "ring_modulator": {
+      "max_input_vpp": 1.5,
+      "max_output_vpp": 6,
+      "breakthrough_db": -60
+    },
+    "inputs": {
+      "mic": "2 x 5 mV into 600 ohms",
+      "hi_level": "2 x 1.8 V AC rms or 2.5 V DC into 50 kohms",
+      "low_level": "2 x 150 uA into 500 ohms (keyboard socket)"
+    },
+    "outputs": {
+      "signal": "2 x 2 V p-p into 600 ohms (panned)",
+      "headphones": "stereo 10 V p-p into 50 ohms",
+      "control": "2 x DC, load 10 kohm"
+    },
+    "matrix": "16 x 16 pin board, 2.7 kohm pins, 10 kohm inputs",
+    "meter": "1 mA movement: plus or minus 1 V DC centre-zero, or 4 V p-p AC full scale",
+    "joystick_v": [-2, 2],
+    "speakers": "2 x 5-inch, 1 W amplifiers",
+    "power": {
+      "mains": "220 to 245 V or 105 to 115 V AC, 50 or 60 Hz",
+      "fuse_a": 1
+    },
+    "dimensions_mm": {
+      "h": 438,
+      "w": 444,
+      "d": 419
+    },
+    "weight_kg": 10.2,
+    "cabinet": "solid afrormosia wood, aluminium panels"
+  },
+  "omitted_from_source": [
+    "the general introduction to sources, treatments and voltage control, and the glossary",
+    "soldering, jack-plug and earth-loop advice, external studio set-ups and mixer suggestions",
+    "maintenance, faultfinding, the ring modulator balance and oscillator calibration procedures, and the printed circuit board layouts",
+    "the knob settings on the 15 specimen patch sheets, which are drawn as dials and not readable from the scan"
+  ],
+  "not_in_source": [
+    "the Jones socket pinout (the scan is partly unreadable); now taken from Digitana's interface manual, written for the Mk 2",
+    "pin colours other than the 2.7 kohm standard; red, green and yellow pins come from later sources",
+    "envelope trigger voltage and polarity; now taken from Digitana (positive, about 4 to 5 V)",
+    "the panel legends linking knobs to matrix rows and columns; taken from a photograph of a later unit whose matrix was rewired to Mk 1 rows",
+    "the pulse width at each SHAPE setting on Oscillators 2 and 3",
+    "the shape of the Osc 1 sine shaper's distortion, beyond 'rectified' sketches",
+    "noise colour filter slopes",
+    "output amplifier tone control slopes and turnover frequencies",
+    "a filter topology; MusicRadar describes it as a diode ladder"
+  ],
+  "source_inconsistencies": [
+    "Maximum envelope repetition rate is 60 Hz in the specification and 'about 50 Hz' in the Envelope Shaper text.",
+    "Osc 3's lower limit is 0.025 Hz (40 s) in the text and 0.015 Hz (65 s) at dial 0 in the calibration table, which notes the extreme varies. A later panel prints 0.05 Hz.",
+    "Osc 1 and 2 are 1 Hz to 10 kHz in the text; the calibration table runs 0.6 Hz to 16.75 kHz at the dial ends, marked as possibly outside tolerance.",
+    "The matrix walkthrough lists a pin as B10 where its diagram shows D10 (filter into envelope shaper); the reverb example prints B13 where D13 is meant.",
+    "Wikipedia and several retailers call the filter 24 dB/octave; the manual specifies 12 dB in the first octave and 18 dB/octave beyond. Not a contradiction: Sound On Sound reports that EMS changed the filter to 24 dB/octave in 1974, after the Mk 1.",
+    "A Mk 2 matrix legend prints Output ch1, meter, Output ch2 across columns A to C, while the Mk 1 manual and panel put the meter on A and the outputs on B and C. Portabella confirms the meter moved to column B on the Mk 2; this file keeps the Mk 1 order.",
+    "Sound On Sound's 'All About EMS' places Osc 1 on row 3 and output channel 1 on column A. That is the Mk 2 layout; on the Mk 1 they are rows 1 and 2 and column B.",
+    "Red pins are given as 2% tolerance by Sound On Sound and Hinton Instruments, and 1% by forum posters describing modern replacements."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Matrix loading",
+      "detail": "The matrix sums through 2.7 kohm into 10 kohm inputs with no buffering, so the gain of any pin depends on every other pin in its column and row. The file records the values; a simulation would need to solve the resistor network."
+    },
+    {
+      "topic": "Version",
+      "detail": "Modelled on the Mk 1 (1969 to about 1972), as the manual describes it. The Mk 2 differs: rows 1 and 2 become Output ch 1 and 2, rows 3 and 4 carry Osc 1 and Osc 2 as single mixed outputs, the meter moves to column B and output channel 1 to column A, and row 16 doubles as a sequencer input from Jones pin 8 (selected by clicking the vertical RANGE knob to 'seq'). From 1974 the filter became 24 dB/octave. Mk 1 units used a GE PA234 power amplifier IC and an inexpensive Japanese spring tank; new Cornwall units use an Accutronics tank. None of this is modelled here."
+    },
+    {
+      "topic": "Common modifications",
+      "detail": "Many surviving units carry EMS or third-party modifications that are not part of a stock Mk 1 and are not modelled: HI/LO range switches on Osc 2 and 3, an envelope trigger source switch (keyboard socket or external gate), input channel SI/MULT switches, voltage-controlled shape jacks for the three oscillators, a dual patchable inverter, a four-way multiple, extra input channels with an EXT CV/STICK switch, oscillator sync, matrix buffering, and Mk 2 matrices rewired to Mk 1 rows."
+    },
+    {
+      "topic": "Oscillator stability",
+      "detail": "The VCS3 is famous for drift. Nothing in the manual quantifies it beyond warm-up and calibration advice."
+    },
+    {
+      "topic": "Filter and waveshapes",
+      "detail": "Slopes and Q are specified; the diode-ladder character, the sine shaper's curve and the pulse width at each shape setting are not."
+    },
+    {
+      "topic": "No MIDI, no memory",
+      "detail": "There is nothing digital. The midi section is empty; every patch is pins plus knob positions, which example_patches records where the manual gives them."
+    }
+  ]
+}

@@ -1,0 +1,4240 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "udo-audio-super-6",
+    "manufacturer": "UDO Audio",
+    "model": "Super 6",
+    "category": "12-voice binaural hybrid polyphonic synthesizer (DDS oscillators, analogue filters and VCAs), 49-key keyboard or desktop",
+    "based_on": "Original design (UK, 2020; desktop 2021) by George Hearn; panel design with Axel Hartmann; Jupiter-8-influenced layout.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "UDO Super 6 Owner's Manual, version 1.4 (February 2024)",
+        "kind": "user_manual",
+        "file": "UDO_Super_6_Manual.pdf (also https://cdn.prod.website-files.com/641dd1a703957e750da6b5e3/66e4297ca75f0eb7e730884b_UDO_Super6_Manual.pdf)",
+        "pages": 140,
+        "note": "Complete: every section, keyboard and desktop controls, modulation matrix, voice assign, arpeggiator/sequencer, global settings, MPE, file management, cheat sheet, and the official CC, RPN and NRPN tables."
+      },
+      {
+        "id": "midiguide",
+        "title": "midi.guide, 'UDO Audio Super 6 MIDI CCs and NRPNs' (January 2023)",
+        "kind": "other",
+        "file": "https://midi.guide/d/udo-audio/super-6/",
+        "note": "Community chart; superseded by the manual's tables, with several differences logged."
+      },
+      {
+        "id": "udo_support",
+        "title": "UDO Audio support, 'How do I process an external audio signal?'",
+        "kind": "other",
+        "file": "https://udo-audio.zendesk.com/hc/en-gb/articles/4402097901842-How-do-I-process-an-external-audio-signal",
+        "note": "Gate detector triggers envelopes and LFO 1 (reset mode) at a threshold set by input gain; not in POLY 2."
+      },
+      {
+        "id": "reviews",
+        "title": "Gearnews desktop review; Gearspace owner discussion; retailer specifications",
+        "kind": "other",
+        "file": "https://www.gearnews.com/udo-audio-super-6-desktop-synthesizer-review/",
+        "note": "SSI2144 low-pass; HPF tracking locked to the low-pass cutoff and not resonant; 'fixed or linked' high-pass."
+      },
+      {
+        "id": "firmware",
+        "title": "Synthtopia / Synth Anatomy on firmware v0.27",
+        "kind": "other",
+        "file": "https://www.synthtopia.com/content/2021/11/18/udo-super-6-firmware-update-adds-new-midi-synthesis-options/",
+        "note": "Launch prices and history of CC/NRPN support."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 12,
+    "polyphony_mode": "12 voices, or binaural: six stereo 'super voices' with a full voice per ear; voice assign POLY 1, POLY 2, UNISON (adjustable size), SOLO, LEGATO; MPE",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "128 patches in banks A1-H2 (8 each); 32 user-loadable alternative DDS 1 waveforms (stored per patch); sequences stored separately; files via USB drive.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 49,
+      "select_buttons": 16
+    },
+    "summary": "Per voice: DDS 1, a super-wave core of seven free-running oscillators (sine, saw, square, triangle, noise or one of 32 alternative waves; 64'-2') with stereo de-phasing and detune; DDS 2, an algorithmic oscillator (six waves, 32'-2', tune ±10 st) that can sync, crossfade by key, become an LFO, a square sub an octave below DDS 1, or carry the external input; MIX balances the two. Analogue path: voltage-controlled high-pass (off, fixed, tracking) into an SSI 24 dB low-pass with drive, then a VCA. ENV 1 (attack hold, attack, decay hold, decay, sustain, release; normal, inverted or looping), ENV 2 (with decay hold), LFO 1 (four waves to 50 Hz or 20 Hz-20 kHz, with L/R phase), LFO 2 (triangle per voice). Chorus I/II and delay with freeze. Matrix with fixed sources and destinations plus direct mappings. Arpeggiator and step sequencer."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and voice assign",
+      "panel_section": "VOICE ASSIGN / KEYBOARD",
+      "scope": "common",
+      "description": "49-key Fatar keyboard (velocity, aftertouch) or MIDI; voice assign, binaural pairing, octave and transpose, portamento (interval-dependent), MPE.",
+      "properties": {
+        "keys": 49
+      },
+      "inputs": ["kbd.midi_in", "kbd.sustain", "kbd.arp_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.velocity", "kbd.aftertouch"]
+    },
+    {
+      "id": "bender",
+      "type": "manual_controller",
+      "name": "Bender and pedal",
+      "panel_section": "PERFORMANCE",
+      "scope": "common",
+      "description": "Bender: left/right bends pitch (to an octave) and cutoff; pushing up (pressure pad) triggers LFO 2. Expression pedal (0-5 V TRS) as a matrix source.",
+      "inputs": ["bender.pedal_in"],
+      "outputs": ["bender.bend", "bender.push", "bender.pedal"]
+    },
+    {
+      "id": "dds1",
+      "type": "oscillator",
+      "name": "DDS 1",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "FPGA super-wave core: a centroid and six sister oscillators, free-running; classic waves or one of 32 alternative waves; super mode de-phases the sisters in stereo with detune and SWM.",
+      "properties": {
+        "sub_oscillators": 7,
+        "alternative_waves": 32
+      },
+      "inputs": ["dds1.pitch_cv", "dds1.fm", "dds1.detune_cv", "dds1.lfo1_sum"],
+      "outputs": ["dds1.out"]
+    },
+    {
+      "id": "dds2",
+      "type": "oscillator",
+      "name": "DDS 2",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Algorithmic FPGA oscillator: sine, saw, square, triangle, noise, pulse; phase reset per note; NORM, X-FADE (key crossfade) or SYNC; LFO range (0.1-100 Hz) with sub or audio-in options.",
+      "properties": {
+        "lfo_rate_hz": [0.1, 100]
+      },
+      "inputs": ["dds2.pitch_cv", "dds2.pw_cv", "dds2.sync_in", "dds2.fm", "dds2.lfo1_sum"],
+      "outputs": ["dds2.out", "dds2.mod_out"]
+    },
+    {
+      "id": "sub",
+      "type": "oscillator",
+      "name": "Sub oscillator",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Square one octave below DDS 1, replacing DDS 2's audio (RANGE at LFO, mode at SUB OSC).",
+      "inputs": ["sub.pitch_cv"],
+      "outputs": ["sub.out"]
+    },
+    {
+      "id": "audioin",
+      "type": "preamp",
+      "name": "External audio input",
+      "panel_section": "OSCILLATORS / rear panel",
+      "scope": "common",
+      "description": "Stereo input through the DDS 2 channel (RANGE at LFO, mode at AUDIO IN); gain (SHIFT + MIX); gate detector triggers envelopes and LFO 1 reset.",
+      "inputs": ["audioin.in"],
+      "outputs": ["audioin.out", "audioin.gate"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "MIX balances DDS 1 against DDS 2, the sub or the audio input; in X-FADE it sets the split point (two-octave crossfade).",
+      "inputs": ["mixer.a", "mixer.b"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "hpf",
+      "type": "filter",
+      "name": "VC high-pass filter",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "Analogue voltage-controlled high-pass (non-resonant): off, fixed (about 500 Hz, adjustable with SHIFT + FREQ since firmware v0.27) or tracking the low-pass cutoff for a pseudo band-pass.",
+      "inputs": ["hpf.in", "hpf.cutoff_cv"],
+      "outputs": ["hpf.out"]
+    },
+    {
+      "id": "lpf",
+      "type": "filter",
+      "name": "VC low-pass filter",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "SSI2144 4-pole 24 dB/oct resonant low-pass, self-oscillating; drive off, 1 (saturation with resonance compensation) or 2 (overdrive); auto-tuned for key tracking.",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "chip": "SSI2144"
+      },
+      "inputs": ["lpf.in", "lpf.cutoff_cv"],
+      "outputs": ["lpf.out"]
+    },
+    {
+      "id": "vcfcv",
+      "type": "summer",
+      "name": "Filter cutoff CV",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "Sum of FREQ and every cutoff modulation; drives the low-pass and, in TRK mode, the high-pass at the same frequency.",
+      "inputs": ["vcfcv.in"],
+      "outputs": ["vcfcv.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "scope": "per_voice",
+      "description": "Analogue VCA under ENV 2 or one of two fixed envelopes (gate; gate with release); LFO 1 tremolo; velocity dynamics.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "ENV 1",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "Attack hold (to 10 s), attack, decay hold, decay, sustain, release (1 ms-10 s); normal, inverted or loop; key tracking of decay and release.",
+      "properties": {
+        "time_s": [0.001, 10]
+      },
+      "inputs": ["env1.gate"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "ENV 2",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "Attack, decay hold, decay, sustain, release (1 ms-10 s); default VCA envelope.",
+      "properties": {
+        "time_s": [0.001, 10]
+      },
+      "inputs": ["env2.gate"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "LFO 1",
+      "scope": "per_voice",
+      "description": "One LFO per super voice: triangle, square, random, saw at 0.05-50 Hz, or HF (20 Hz-20 kHz) and HF TRK (key-tracked, a third oscillator); delay, L/R phase, free/once/reset; DDS 1 waveform via SHIFT ('Battwave').",
+      "properties": {
+        "rate_hz": [0.05, 50],
+        "hf_hz": [20, 20000]
+      },
+      "inputs": ["lfo1.reset"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "LFO 2",
+      "scope": "per_voice",
+      "description": "Triangle LFO, one per voice (polyphonically modulatable), triggered by bender push, aftertouch or always on; rate and delay.",
+      "inputs": ["lfo2.trigger"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "chorus",
+      "type": "chorus",
+      "name": "Chorus",
+      "panel_section": "CHORUS",
+      "scope": "common",
+      "description": "24-bit stereo chorus: I (subtle), II (denser, faster), I+II (ensemble).",
+      "inputs": ["chorus.in"],
+      "outputs": ["chorus.out"]
+    },
+    {
+      "id": "delay",
+      "type": "delay",
+      "name": "Delay",
+      "panel_section": "DELAY",
+      "scope": "common",
+      "description": "24-bit stereo delay, 1 ms-1 s (or synced divisions), feedback to infinite repeat, level; freeze via footswitch or CC 69.",
+      "properties": {
+        "time_s": [0.001, 1]
+      },
+      "inputs": ["delay.in"],
+      "outputs": ["delay.out"]
+    },
+    {
+      "id": "arp",
+      "type": "sequencer",
+      "name": "Arpeggiator and sequencer",
+      "panel_section": "ARPEGGIATOR / SEQUENCER",
+      "scope": "common",
+      "description": "Arpeggiator (up, down, up and down, random; 1-4 octaves; hold) and step sequencer (steps, slide, accent, rest, length); 30-300 BPM, swing, MIDI clock; syncs LFO 1 and delay.",
+      "properties": {
+        "tempo_bpm": [30, 300]
+      },
+      "inputs": [],
+      "outputs": ["arp.notes"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MASTER / rear panel",
+      "scope": "common",
+      "description": "Stereo outputs (L alone sums to mono) and headphones; MASTER VOLUME to +4 dB.",
+      "inputs": ["out.in"],
+      "outputs": ["out.main_l", "out.main_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "dds1.wave",
+      "module": "dds1",
+      "label": "DDS 1 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "noise"
+        },
+        {
+          "value": "alternative"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "Classic waves or the selected alternative wave (rightmost)."
+    },
+    {
+      "id": "dds1.range",
+      "module": "dds1",
+      "label": "DDS 1 RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "64'"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        }
+      ],
+      "function": "Footage."
+    },
+    {
+      "id": "dds1.alt_wave",
+      "module": "dds1",
+      "label": "Alternative waveform (W1-W16)",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 32
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "One of 32 user-loadable waves (press twice for 17-32); stored per patch."
+    },
+    {
+      "id": "dds2.wave",
+      "module": "dds2",
+      "label": "DDS 2 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "noise"
+        },
+        {
+          "value": "pulse"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31"
+        }
+      ],
+      "function": "DDS 2 waveform."
+    },
+    {
+      "id": "dds2.range",
+      "module": "dds2",
+      "label": "DDS 2 RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 34"
+        }
+      ],
+      "function": "Footage, or LFO (DDS 2 leaves the audio path; enables SUB OSC / AUDIO IN)."
+    },
+    {
+      "id": "dds2.tune",
+      "module": "dds2",
+      "label": "DDS 2 TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -10,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 35"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1059 (MSB 08H, LSB 23H, 14-bit)"
+        }
+      ],
+      "function": "±10 semitones; in LFO range, rate about 0.1-100 Hz."
+    },
+    {
+      "id": "dds2.mode",
+      "module": "dds2",
+      "label": "DDS 2 MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "norm"
+        },
+        {
+          "value": "x_fade"
+        },
+        {
+          "value": "sync"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 36"
+        }
+      ],
+      "function": "NORM, X-FADE (key crossfade) or SYNC (hard sync to DDS 1).",
+      "note": "CC 36: 0 Norm, 43 X-Fade/Sub Osc, 85 Sync/Audio In."
+    },
+    {
+      "id": "dds2.lfo_mode",
+      "module": "dds2",
+      "label": "DDS 2 MODE (RANGE at LFO)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo_only"
+        },
+        {
+          "value": "sub_osc"
+        },
+        {
+          "value": "audio_in"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 36"
+        }
+      ],
+      "function": "With RANGE at LFO the same switch selects LFO only, SUB OSC (middle) or AUDIO IN (upper).",
+      "note": "Same physical switch and CC as DDS 2 MODE; its meaning changes with RANGE."
+    },
+    {
+      "id": "mixer.mix",
+      "module": "mixer",
+      "label": "MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 37"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1061 (MSB 08H, LSB 25H, 14-bit)"
+        }
+      ],
+      "function": "DDS 1 to DDS 2 (or sub, or audio in); split point in X-FADE."
+    },
+    {
+      "id": "audioin.gain",
+      "module": "audioin",
+      "label": "Audio input gain (SHIFT + MIX)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "SHIFT (secondary function)"
+        }
+      ],
+      "function": "Input gain (default line level matching the oscillators); also sets the gate-detector threshold."
+    },
+    {
+      "id": "vcf.drive",
+      "module": "lpf",
+      "label": "DRIVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 41"
+        }
+      ],
+      "function": "Low-pass drive."
+    },
+    {
+      "id": "vcf.hpf_mode",
+      "module": "hpf",
+      "label": "HPF",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "fix"
+        },
+        {
+          "value": "trk"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 40"
+        }
+      ],
+      "function": "High-pass mode."
+    },
+    {
+      "id": "vcf.freq",
+      "module": "lpf",
+      "label": "FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1098 (MSB 08H, LSB 4AH, 14-bit)"
+        }
+      ],
+      "function": "Low-pass cutoff (headroom left for modulation per key tracking)."
+    },
+    {
+      "id": "vcf.hpf_freq",
+      "module": "hpf",
+      "label": "HPF (SHIFT + FREQ)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1119 (MSB 08H, LSB 5FH, 14-bit)"
+        }
+      ],
+      "function": "High-pass cutoff in FIX mode."
+    },
+    {
+      "id": "vcf.res",
+      "module": "lpf",
+      "label": "RES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1095 (MSB 08H, LSB 47H, 14-bit)"
+        }
+      ],
+      "function": "Resonance; self-oscillates at maximum."
+    },
+    {
+      "id": "vcf.env",
+      "module": "lpf",
+      "label": "ENV (VCF)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 45"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1069 (MSB 08H, LSB 2DH, 14-bit)"
+        }
+      ],
+      "function": "Envelope depth on cutoff."
+    },
+    {
+      "id": "vcf.env_src",
+      "module": "lpf",
+      "label": "VCF envelope source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "1_plus_2"
+        },
+        {
+          "value": "env2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 44"
+        }
+      ],
+      "function": "ENV 1, both, or ENV 2."
+    },
+    {
+      "id": "vcf.lfo1",
+      "module": "lpf",
+      "label": "LFO 1 (VCF)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 46"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1070 (MSB 08H, LSB 2EH, 14-bit)"
+        }
+      ],
+      "function": "LFO 1 depth on cutoff."
+    },
+    {
+      "id": "vcf.dds2",
+      "module": "lpf",
+      "label": "DDS 2 (VCF)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 47"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1071 (MSB 08H, LSB 2FH, 14-bit)"
+        }
+      ],
+      "function": "DDS 2 depth on cutoff (audio-rate or LFO)."
+    },
+    {
+      "id": "vcf.keytrack",
+      "module": "lpf",
+      "label": "KEYTRACK (VCF)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 43"
+        }
+      ],
+      "function": "Cutoff tracking: off, half (quarter tones per key) or full (semitones)."
+    },
+    {
+      "id": "vca.env_level",
+      "module": "vca",
+      "label": "ENV LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1031 (MSB 08H, LSB 07H, 14-bit)"
+        }
+      ],
+      "function": "Envelope level into the VCA (high settings can clip)."
+    },
+    {
+      "id": "vca.lfo1",
+      "module": "vca",
+      "label": "LFO 1 (VCA)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1116 (MSB 08H, LSB 5CH, 14-bit)"
+        }
+      ],
+      "function": "Tremolo depth."
+    },
+    {
+      "id": "vca.env_mode",
+      "module": "vca",
+      "label": "VCA envelope",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env2"
+        },
+        {
+          "value": "gate"
+        },
+        {
+          "value": "gate_release"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 49"
+        }
+      ],
+      "function": "ENV 2, fixed envelope 1 (gate), or fixed envelope 2 (gate with release)."
+    },
+    {
+      "id": "vca.dynamics",
+      "module": "vca",
+      "label": "DYNAMICS",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 48"
+        }
+      ],
+      "function": "Velocity to VCA level and cutoff."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "ENV 1 A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 53"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1077 (MSB 08H, LSB 35H, 14-bit)"
+        }
+      ],
+      "function": "Attack (1 ms-10 s)."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "ENV 1 D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 54"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1078 (MSB 08H, LSB 36H, 14-bit)"
+        }
+      ],
+      "function": "Decay (1 ms-10 s)."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "ENV 1 S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 55"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1079 (MSB 08H, LSB 37H, 14-bit)"
+        }
+      ],
+      "function": "Sustain (level)."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "ENV 1 R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 56"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1080 (MSB 08H, LSB 38H, 14-bit)"
+        }
+      ],
+      "function": "Release (1 ms-10 s)."
+    },
+    {
+      "id": "env1.decay_hold",
+      "module": "env1",
+      "label": "ENV 1 DECAY HOLD (SHIFT + D)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 32"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1056 (MSB 08H, LSB 20H, 14-bit)"
+        }
+      ],
+      "function": "Time before decay starts, up to 10 s."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "ENV 2 A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1097 (MSB 08H, LSB 49H, 14-bit)"
+        }
+      ],
+      "function": "Attack (1 ms-10 s)."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "ENV 2 D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 57"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1081 (MSB 08H, LSB 39H, 14-bit)"
+        }
+      ],
+      "function": "Decay (1 ms-10 s)."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "ENV 2 S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 58"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1082 (MSB 08H, LSB 3AH, 14-bit)"
+        }
+      ],
+      "function": "Sustain (level)."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "ENV 2 R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1096 (MSB 08H, LSB 48H, 14-bit)"
+        }
+      ],
+      "function": "Release (1 ms-10 s)."
+    },
+    {
+      "id": "env2.decay_hold",
+      "module": "env2",
+      "label": "ENV 2 DECAY HOLD (SHIFT + D)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 33"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1057 (MSB 08H, LSB 21H, 14-bit)"
+        }
+      ],
+      "function": "Time before decay starts, up to 10 s."
+    },
+    {
+      "id": "env1.attack_hold",
+      "module": "env1",
+      "label": "ENV 1 ATTACK HOLD (SHIFT + A)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 52"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1076 (MSB 08H, LSB 34H, 14-bit)"
+        }
+      ],
+      "function": "Delay before the attack, up to 10 s."
+    },
+    {
+      "id": "env1.keytrack",
+      "module": "env1",
+      "label": "ENV 1 KEYTRACK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 51"
+        }
+      ],
+      "function": "Shortens decay and release up the keyboard."
+    },
+    {
+      "id": "env1.mode",
+      "module": "env1",
+      "label": "ENV 1 MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "inverted"
+        },
+        {
+          "value": "loop"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 50"
+        }
+      ],
+      "function": "Normal, inverted or loop (attack, decay hold and decay repeat while held)."
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "LFO 1 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 50,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1041 (MSB 08H, LSB 11H, 14-bit)"
+        }
+      ],
+      "function": "0.05-50 Hz, 20 Hz-20 kHz in HF modes, or a clock division with SYNC."
+    },
+    {
+      "id": "lfo1.delay",
+      "module": "lfo1",
+      "label": "LFO 1 DELAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1042 (MSB 08H, LSB 12H, 14-bit)"
+        }
+      ],
+      "function": "Delay before the LFO acts, 0-10 s."
+    },
+    {
+      "id": "lfo1.lr_phase",
+      "module": "lfo1",
+      "label": "LR PHASE / PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 6.283
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1043 (MSB 08H, LSB 13H, 14-bit)"
+        }
+      ],
+      "function": "Binaural: left-right LFO phase (0-2π). Non-binaural: pan spread of the voices."
+    },
+    {
+      "id": "lfo1.wave",
+      "module": "lfo1",
+      "label": "LFO 1 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "hf"
+        },
+        {
+          "value": "hf_trk"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        }
+      ],
+      "function": "LFO waveform or HF modes (sine by default); SHIFT + move: DDS 1's waveform."
+    },
+    {
+      "id": "lfo1.mode",
+      "module": "lfo1",
+      "label": "LFO 1 MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free_norm"
+        },
+        {
+          "value": "once_dds1"
+        },
+        {
+          "value": "reset_dds2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        }
+      ],
+      "function": "LF: free, once, reset. HF: NORM (modulation), DDS 1 or DDS 2 (summed into that channel)."
+    },
+    {
+      "id": "dds.lfo1",
+      "module": "dds1",
+      "label": "LFO 1 (DDS pitch)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1045 (MSB 08H, LSB 15H, 14-bit)"
+        }
+      ],
+      "function": "LFO 1 pitch modulation."
+    },
+    {
+      "id": "dds.env1",
+      "module": "dds1",
+      "label": "ENV 1 (DDS pitch)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1046 (MSB 08H, LSB 16H, 14-bit)"
+        }
+      ],
+      "function": "ENV 1 pitch modulation."
+    },
+    {
+      "id": "dds.mod_dest",
+      "module": "dds1",
+      "label": "DDS modulator destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "dds1"
+        },
+        {
+          "value": "1_plus_2"
+        },
+        {
+          "value": "dds2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Pitch modulation to DDS 1, both, or DDS 2."
+    },
+    {
+      "id": "dds1.super",
+      "module": "dds1",
+      "label": "SUPER (DDS 1)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "Super mode off, half depth (phase reset per note), or full."
+    },
+    {
+      "id": "dds.pw_detune",
+      "module": "dds2",
+      "label": "PW/DETUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1049 (MSB 08H, LSB 19H, 14-bit)"
+        }
+      ],
+      "function": "DDS 2 pulse width; DDS 1 detune spread in super mode."
+    },
+    {
+      "id": "dds.drift",
+      "module": "dds1",
+      "label": "DRIFT (SHIFT + PW/DETUNE)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1118 (MSB 08H, LSB 5EH, 14-bit)"
+        }
+      ],
+      "function": "Randomises oscillator pitch, filters and envelopes."
+    },
+    {
+      "id": "dds.pwm_swm",
+      "module": "dds2",
+      "label": "PWM/SWM",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1050 (MSB 08H, LSB 1AH, 14-bit)"
+        }
+      ],
+      "function": "PWM of DDS 2's pulse; super-wave modulation of DDS 1's detune."
+    },
+    {
+      "id": "dds.pwm_src",
+      "module": "dds2",
+      "label": "PWM/SWM source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "both"
+        },
+        {
+          "value": "env1"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "LFO 1, both, or ENV 1."
+    },
+    {
+      "id": "dds.cross_mod",
+      "module": "dds1",
+      "label": "CROSS MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1052 (MSB 08H, LSB 1CH, 14-bit)"
+        }
+      ],
+      "function": "DDS 2 FMs DDS 1 (exponential); reversed when SYNC is on."
+    },
+    {
+      "id": "chorus.mode",
+      "module": "chorus",
+      "label": "CHORUS I / II",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "I"
+        },
+        {
+          "value": "II"
+        },
+        {
+          "value": "I_II"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Off, I, II, or I + II (ensemble)."
+    },
+    {
+      "id": "delay.level",
+      "module": "delay",
+      "label": "DELAY LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1115 (MSB 08H, LSB 5BH, 14-bit)"
+        }
+      ],
+      "function": "Wet level."
+    },
+    {
+      "id": "delay.time",
+      "module": "delay",
+      "label": "DELAY TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.001,
+        "max": 1,
+        "unit": "s"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1036 (MSB 08H, LSB 0CH, 14-bit)"
+        }
+      ],
+      "function": "1 ms-1 s, or a division with SYNC."
+    },
+    {
+      "id": "delay.feedback",
+      "module": "delay",
+      "label": "DELAY FEEDBACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1037 (MSB 08H, LSB 0DH, 14-bit)"
+        }
+      ],
+      "function": "Repeats; maximum is infinite without decay."
+    },
+    {
+      "id": "delay.freeze",
+      "module": "delay",
+      "label": "Delay freeze",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 69"
+        }
+      ],
+      "function": "Holds the loop: released footswitch adds notes, held footswitch loops (right pedal of a dual switch, or CC 69)."
+    },
+    {
+      "id": "bend.dds",
+      "module": "bender",
+      "label": "BENDER DDS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1100 (MSB 08H, LSB 4CH, 14-bit)"
+        }
+      ],
+      "function": "Pitch-bend depth, to one octave."
+    },
+    {
+      "id": "bend.dds_dest",
+      "module": "bender",
+      "label": "Performance destination (bender)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "dds1"
+        },
+        {
+          "value": "1_plus_2"
+        },
+        {
+          "value": "dds2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 61"
+        }
+      ],
+      "function": "DDS 1, both, or DDS 2."
+    },
+    {
+      "id": "bend.detune",
+      "module": "bender",
+      "label": "Performance detune (SHIFT + DDS)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "SHIFT (secondary function)"
+        }
+      ],
+      "function": "Detune between the oscillators, ±7 semitones."
+    },
+    {
+      "id": "bend.vcf",
+      "module": "bender",
+      "label": "BENDER VCF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1101 (MSB 08H, LSB 4DH, 14-bit)"
+        }
+      ],
+      "function": "Bend depth on cutoff."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "LFO 2 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 62"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1086 (MSB 08H, LSB 3EH, 14-bit)"
+        }
+      ],
+      "function": "LFO 2 rate."
+    },
+    {
+      "id": "lfo2.delay",
+      "module": "lfo2",
+      "label": "LFO 2 DELAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 63"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1087 (MSB 08H, LSB 3FH, 14-bit)"
+        }
+      ],
+      "function": "Fade-in delay."
+    },
+    {
+      "id": "lfo2.trigger",
+      "module": "lfo2",
+      "label": "LFO 2 trigger",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "trig"
+        },
+        {
+          "value": "at_trig"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 60"
+        }
+      ],
+      "function": "Bender push; aftertouch and push; or always on (aftertouch then acts as bend)."
+    },
+    {
+      "id": "lfo2.vcf",
+      "module": "lfo2",
+      "label": "LFO 2 VCF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1099 (MSB 08H, LSB 4BH, 14-bit)"
+        }
+      ],
+      "function": "LFO 2 depth on cutoff."
+    },
+    {
+      "id": "lfo2.dds",
+      "module": "lfo2",
+      "label": "LFO 2 DDS",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1094 (MSB 08H, LSB 46H, 14-bit)"
+        }
+      ],
+      "function": "LFO 2 depth on pitch."
+    },
+    {
+      "id": "lfo2.dds_dest",
+      "module": "lfo2",
+      "label": "LFO 2 destination",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "dds1"
+        },
+        {
+          "value": "1_plus_2"
+        },
+        {
+          "value": "dds2"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "DDS 1, both, or DDS 2."
+    },
+    {
+      "id": "kbd.portamento",
+      "module": "kbd",
+      "label": "PORTAMENTO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1029 (MSB 08H, LSB 05H, 14-bit)"
+        }
+      ],
+      "function": "Up to 10 s per octave; interval-dependent."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "OCTAVE",
+      "kind": "integer",
+      "range": {
+        "min": -2,
+        "max": 2
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 67"
+        }
+      ],
+      "function": "Spring-loaded octave selector ±2; SHIFT: global transpose ±12."
+    },
+    {
+      "id": "kbd.fine_tune",
+      "module": "kbd",
+      "label": "Global fine tune (SHIFT + MOD AMOUNT)",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "SHIFT + MOD AMOUNT"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 1 (channel fine tuning)"
+        }
+      ],
+      "function": "±100 cents."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "MASTER VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output and headphone level to +4 dB (not stored)."
+    },
+    {
+      "id": "kbd.assign",
+      "module": "kbd",
+      "label": "VOICE ASSIGN MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "poly2"
+        },
+        {
+          "value": "poly1"
+        },
+        {
+          "value": "unison"
+        },
+        {
+          "value": "legato"
+        },
+        {
+          "value": "solo"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        }
+      ],
+      "function": "POLY 1 (overlapping releases, default), POLY 2 (curtailed releases; disables the audio-input gate), UNISON, LEGATO (no retrigger), SOLO (retrigger)."
+    },
+    {
+      "id": "kbd.unison_size",
+      "module": "kbd",
+      "label": "U. SIZE (SHIFT + MODE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "3_binaural"
+        },
+        {
+          "value": "6_binaural"
+        },
+        {
+          "value": "6_octave"
+        },
+        {
+          "value": "6_octave_fifth"
+        },
+        {
+          "value": "6_major_chord"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        }
+      ],
+      "function": "Unison stacking."
+    },
+    {
+      "id": "kbd.binaural",
+      "module": "kbd",
+      "label": "Binaural mode",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Pairs the 12 voices into six stereo super voices (forced on by X-FADE and key tracking)."
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ARP/SEQ ON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Runs the arpeggiator or sequencer."
+    },
+    {
+      "id": "ui.manual_cc",
+      "module": "kbd",
+      "label": "Manual mode (MIDI)",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 59"
+        }
+      ],
+      "function": "Manual mode on/off."
+    },
+    {
+      "id": "arp.hold",
+      "module": "arp",
+      "label": "HOLD",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "Latches notes."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "ARP/SEQ MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "random"
+        },
+        {
+          "value": "seq"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Arpeggio order or sequencer."
+    },
+    {
+      "id": "arp.range",
+      "module": "arp",
+      "label": "RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Arpeggio octaves; in sequencer mode, the page (steps 1-16 ... 49-64)."
+    },
+    {
+      "id": "arp.tempo",
+      "module": "arp",
+      "label": "TEMPO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 30,
+        "max": 300,
+        "unit": "BPM"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 1027 (MSB 08H, LSB 03H, 14-bit)"
+        }
+      ],
+      "function": "30-300 BPM."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "SWING (SHIFT + RANGE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Swing off or 1-4."
+    },
+    {
+      "id": "arp.sync",
+      "module": "arp",
+      "label": "SYNC",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "Syncs LFO 1 rate and delay time to the tempo (as clock divisions)."
+    },
+    {
+      "id": "arp.ext_clk",
+      "module": "arp",
+      "label": "EXT CLK (SHIFT + SYNC)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "clock_tx"
+        },
+        {
+          "value": "clock_rx"
+        },
+        {
+          "value": "note_out"
+        },
+        {
+          "value": "stop_rx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        }
+      ],
+      "function": "1 clock transmit, 2 clock receive (and start/stop; exclusive with 1), 3 MIDI note output, 4 MIDI stop receive."
+    },
+    {
+      "id": "arp.seq_rec",
+      "module": "arp",
+      "label": "SEQ REC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "step"
+        },
+        {
+          "value": "slide"
+        },
+        {
+          "value": "accent"
+        },
+        {
+          "value": "rest"
+        },
+        {
+          "value": "length"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arms recording and steps through the STEP, SLIDE, ACCENT, REST and LENGTH tracks."
+    },
+    {
+      "id": "arp.length",
+      "module": "arp",
+      "label": "LENGTH",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 64
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Sequence length (LENGTH track)."
+    },
+    {
+      "id": "arp.sequence",
+      "module": "arp",
+      "label": "Sequence load / store",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        }
+      ],
+      "function": "16 sequences: SHIFT + HOLD loads, SHIFT + SEQ REC stores (hold a button 3 s)."
+    },
+    {
+      "id": "sys.midi_ch",
+      "module": "kbd",
+      "label": "MIDI CH",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then MIDI CH, buttons 1-8/A-H"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 2051"
+        }
+      ],
+      "function": "Channel 1-16 (omni until set); DIN and USB MIDI cannot be used together."
+    },
+    {
+      "id": "sys.txrx_e",
+      "module": "kbd",
+      "label": "TX/RX E",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "cc_tx"
+        },
+        {
+          "value": "cc_rx"
+        },
+        {
+          "value": "nrpn"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then TX/RX E"
+        }
+      ],
+      "function": "1 CC transmit, 2 CC receive (7- and 14-bit), 3 NRPN (14-bit) transmit mode."
+    },
+    {
+      "id": "sys.txrx_p",
+      "module": "kbd",
+      "label": "TX/RX P",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then TX/RX P"
+        },
+        {
+          "type": "midi",
+          "message": "NRPN 2055 (tx), 2056 (rx)"
+        }
+      ],
+      "function": "1 program change transmit, 2 receive."
+    },
+    {
+      "id": "sys.clock_nrpn",
+      "module": "arp",
+      "label": "MIDI clock transmit/receive",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "tx"
+        },
+        {
+          "value": "rx"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "midi",
+          "message": "NRPN 2052 (tx), 2053 (rx)"
+        }
+      ],
+      "function": "Also set in EXT CLK."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "LOCAL",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then LOCAL"
+        },
+        {
+          "type": "midi",
+          "message": "CC 122"
+        }
+      ],
+      "function": "Local control (MIDI still sent when off)."
+    },
+    {
+      "id": "sys.tune",
+      "module": "lpf",
+      "label": "TUNE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then TUNE"
+        }
+      ],
+      "function": "Filter auto-tune (12 LEDs show progress)."
+    },
+    {
+      "id": "sys.mpe",
+      "module": "kbd",
+      "label": "MPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mpe_on"
+        },
+        {
+          "value": "at_dead_zone"
+        },
+        {
+          "value": "y_reduce"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then MPE"
+        }
+      ],
+      "function": "1 MPE on (limited to six voices), 2 poly aftertouch dead zone, 3 reduced Y-axis (CC 74) sensitivity; stored per patch."
+    },
+    {
+      "id": "sys.dump",
+      "module": "kbd",
+      "label": "DUMP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then DUMP"
+        }
+      ],
+      "function": "Reserved for future use."
+    },
+    {
+      "id": "sys.transpose",
+      "module": "kbd",
+      "label": "Global transpose",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SHIFT (global settings), then octave switch / TRNSP"
+        },
+        {
+          "type": "midi",
+          "message": "RPN 2 (coarse tuning)"
+        }
+      ],
+      "function": "±12 semitones (keyboard: SHIFT + octave switch; desktop: TRNSP + MOD AMOUNT)."
+    },
+    {
+      "id": "sys.global_reset",
+      "module": "kbd",
+      "label": "Global reset",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold MANUAL for 5 seconds",
+          "when": "any_time"
+        }
+      ],
+      "function": "Hold MANUAL 5 s after power-on; resets globals and runs auto-tune."
+    },
+    {
+      "id": "ui.patch",
+      "module": "kbd",
+      "label": "PATCH",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Patch mode; A-H banks (twice for A2-H2), 1-8 patches; hold 1-8 for 3 s to store."
+    },
+    {
+      "id": "ui.wave",
+      "module": "kbd",
+      "label": "WAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Alternative wave selection."
+    },
+    {
+      "id": "ui.manual",
+      "module": "kbd",
+      "label": "MANUAL",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Plays the panel as set; SHIFT + MANUAL loads INIT."
+    },
+    {
+      "id": "ui.shift",
+      "module": "kbd",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Secondary functions and global settings."
+    },
+    {
+      "id": "ui.mod_assign",
+      "module": "kbd",
+      "label": "MOD ASSIGN",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Matrix assignment mode."
+    },
+    {
+      "id": "ui.mod_amount",
+      "module": "kbd",
+      "label": "MOD AMOUNT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Matrix depth -100% to +100% (encoder)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out_l",
+      "label": "OUTPUT L",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.main_l",
+      "function": "Unbalanced; mono sum if R is unplugged."
+    },
+    {
+      "id": "jack.out_r",
+      "label": "OUTPUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.main_r",
+      "function": "Unbalanced."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo headphones (MASTER VOLUME)."
+    },
+    {
+      "id": "jack.audio_in",
+      "label": "AUDIO IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "audioin.in",
+      "function": "Stereo external audio through the DDS 2 channel."
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TRS",
+      "node": "kbd.sustain",
+      "function": "Footswitch (polarity auto-detected; dual: ring = delay freeze)."
+    },
+    {
+      "id": "jack.pedal",
+      "label": "CONTROL (expression)",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "bender.pedal_in",
+      "function": "Expression pedal, TRS, 0-5 V; matrix source PED/CV."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB",
+      "node": null,
+      "function": "Class-compliant USB MIDI; patch, wave and sequence files; firmware (SUPER6-BOOT drive)."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "IEC mains, 90-240 V AC, 50 W, 2 A T fuse."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "arp.notes",
+      "to": "kbd.arp_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "dds1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "lfo1.out",
+      "to": "dds1.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.mod_dest",
+            "equals": "dds1"
+          },
+          {
+            "param": "dds.mod_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "dds.lfo1"
+    },
+    {
+      "id": "c04",
+      "from": "env1.out",
+      "to": "dds1.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.mod_dest",
+            "equals": "dds1"
+          },
+          {
+            "param": "dds.mod_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "dds.env1"
+    },
+    {
+      "id": "c05",
+      "from": "bender.bend",
+      "to": "dds1.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "bend.dds_dest",
+            "equals": "dds1"
+          },
+          {
+            "param": "bend.dds_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "bend.dds"
+    },
+    {
+      "id": "c06",
+      "from": "lfo2.out",
+      "to": "dds1.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "lfo2.dds_dest",
+            "equals": "dds1"
+          },
+          {
+            "param": "lfo2.dds_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "lfo2.dds"
+    },
+    {
+      "id": "c07",
+      "from": "kbd.pitch",
+      "to": "dds2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "lfo1.out",
+      "to": "dds2.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.mod_dest",
+            "equals": "dds2"
+          },
+          {
+            "param": "dds.mod_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "dds.lfo1"
+    },
+    {
+      "id": "c09",
+      "from": "env1.out",
+      "to": "dds2.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.mod_dest",
+            "equals": "dds2"
+          },
+          {
+            "param": "dds.mod_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "dds.env1"
+    },
+    {
+      "id": "c10",
+      "from": "bender.bend",
+      "to": "dds2.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "bend.dds_dest",
+            "equals": "dds2"
+          },
+          {
+            "param": "bend.dds_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "bend.dds"
+    },
+    {
+      "id": "c11",
+      "from": "lfo2.out",
+      "to": "dds2.pitch_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "lfo2.dds_dest",
+            "equals": "dds2"
+          },
+          {
+            "param": "lfo2.dds_dest",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "lfo2.dds"
+    },
+    {
+      "id": "c12",
+      "from": "kbd.pitch",
+      "to": "sub.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "One octave below DDS 1."
+    },
+    {
+      "id": "c13",
+      "from": "lfo1.out",
+      "to": "dds2.pw_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.pwm_src",
+            "equals": "lfo1"
+          },
+          {
+            "param": "dds.pwm_src",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "dds.pwm_swm"
+    },
+    {
+      "id": "c14",
+      "from": "env1.out",
+      "to": "dds2.pw_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "dds.pwm_src",
+            "equals": "env1"
+          },
+          {
+            "param": "dds.pwm_src",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "dds.pwm_swm"
+    },
+    {
+      "id": "c15",
+      "from": "lfo1.out",
+      "to": "dds1.detune_cv",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "any": [
+              {
+                "param": "dds.pwm_src",
+                "equals": "lfo1"
+              },
+              {
+                "param": "dds.pwm_src",
+                "equals": "both"
+              }
+            ]
+          },
+          {
+            "param": "dds1.super",
+            "not_equals": "off"
+          }
+        ]
+      },
+      "amount": "dds.pwm_swm",
+      "note": "Super-wave modulation."
+    },
+    {
+      "id": "c16",
+      "from": "dds2.out",
+      "to": "dds1.fm",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dds2.mode",
+        "not_equals": "sync"
+      },
+      "amount": "dds.cross_mod",
+      "note": "Exponential FM of DDS 1 by DDS 2."
+    },
+    {
+      "id": "c17",
+      "from": "dds1.out",
+      "to": "dds2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dds2.mode",
+        "equals": "sync"
+      }
+    },
+    {
+      "id": "c18",
+      "from": "dds1.out",
+      "to": "dds2.fm",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dds2.mode",
+        "equals": "sync"
+      },
+      "amount": "dds.cross_mod",
+      "note": "With SYNC on, cross mod reverses: DDS 1 frequency-modulates DDS 2 (wavefold/PM-like)."
+    },
+    {
+      "id": "c19",
+      "from": "lfo1.out",
+      "to": "dds1.lfo1_sum",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "any": [
+              {
+                "param": "lfo1.wave",
+                "equals": "hf"
+              },
+              {
+                "param": "lfo1.wave",
+                "equals": "hf_trk"
+              }
+            ]
+          },
+          {
+            "param": "lfo1.mode",
+            "equals": "once_dds1"
+          }
+        ]
+      },
+      "note": "HF LFO 1 summed into the DDS 1 channel."
+    },
+    {
+      "id": "c20",
+      "from": "lfo1.out",
+      "to": "dds2.lfo1_sum",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "any": [
+              {
+                "param": "lfo1.wave",
+                "equals": "hf"
+              },
+              {
+                "param": "lfo1.wave",
+                "equals": "hf_trk"
+              }
+            ]
+          },
+          {
+            "param": "lfo1.mode",
+            "equals": "reset_dds2"
+          }
+        ]
+      },
+      "note": "HF LFO 1 summed into the DDS 2 channel."
+    },
+    {
+      "id": "c21",
+      "from": "dds1.out",
+      "to": "mixer.a",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "dds2.out",
+      "to": "mixer.b",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dds2.range",
+        "not_equals": "lfo"
+      }
+    },
+    {
+      "id": "c23",
+      "from": "sub.out",
+      "to": "mixer.b",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "dds2.range",
+            "equals": "lfo"
+          },
+          {
+            "param": "dds2.lfo_mode",
+            "equals": "sub_osc"
+          }
+        ]
+      },
+      "note": "Sub replaces DDS 2's audio."
+    },
+    {
+      "id": "c24",
+      "from": "audioin.out",
+      "to": "mixer.b",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "dds2.range",
+            "equals": "lfo"
+          },
+          {
+            "param": "dds2.lfo_mode",
+            "equals": "audio_in"
+          }
+        ]
+      },
+      "note": "External audio in the DDS 2 channel."
+    },
+    {
+      "id": "c25",
+      "from": "audioin.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "kbd.assign",
+        "not_equals": "poly2"
+      },
+      "note": "Gate detector: input above the threshold (set by input gain) triggers the envelopes; off in POLY 2."
+    },
+    {
+      "id": "c26",
+      "from": "audioin.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "kbd.assign",
+        "not_equals": "poly2"
+      }
+    },
+    {
+      "id": "c27",
+      "from": "audioin.gate",
+      "to": "lfo1.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "kbd.assign",
+            "not_equals": "poly2"
+          },
+          {
+            "param": "lfo1.mode",
+            "equals": "reset_dds2"
+          }
+        ]
+      },
+      "note": "Also resets LFO 1 in RESET mode."
+    },
+    {
+      "id": "c28",
+      "from": "mixer.out",
+      "to": "hpf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "hpf.out",
+      "to": "lpf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "vcfcv.out",
+      "to": "lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c31",
+      "from": "vcfcv.out",
+      "to": "hpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.hpf_mode",
+        "equals": "trk"
+      },
+      "note": "TRK locks the high-pass to the low-pass cutoff for a pseudo band-pass; the HPF is not resonant (owner report)."
+    },
+    {
+      "id": "c32",
+      "from": "env1.out",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcf.env_src",
+            "equals": "env1"
+          },
+          {
+            "param": "vcf.env_src",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "vcf.env"
+    },
+    {
+      "id": "c33",
+      "from": "env2.out",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcf.env_src",
+            "equals": "env2"
+          },
+          {
+            "param": "vcf.env_src",
+            "equals": "1_plus_2"
+          }
+        ]
+      },
+      "amount": "vcf.env"
+    },
+    {
+      "id": "c34",
+      "from": "lfo1.out",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo1"
+    },
+    {
+      "id": "c35",
+      "from": "dds2.mod_out",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.dds2"
+    },
+    {
+      "id": "c36",
+      "from": "kbd.pitch",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.keytrack",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c37",
+      "from": "bender.bend",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "bend.vcf"
+    },
+    {
+      "id": "c38",
+      "from": "lfo2.out",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.vcf"
+    },
+    {
+      "id": "c39",
+      "from": "kbd.velocity",
+      "to": "vcfcv.in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.dynamics",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c40",
+      "from": "lpf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "env2.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.env_mode",
+        "equals": "env2"
+      },
+      "amount": "vca.env_level"
+    },
+    {
+      "id": "c42",
+      "from": "kbd.gate",
+      "to": "vca.cv",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.env_mode",
+        "not_equals": "env2"
+      },
+      "amount": "vca.env_level",
+      "note": "Fixed gate envelopes."
+    },
+    {
+      "id": "c43",
+      "from": "lfo1.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.lfo1"
+    },
+    {
+      "id": "c44",
+      "from": "kbd.velocity",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.dynamics",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c45",
+      "from": "kbd.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c46",
+      "from": "kbd.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c47",
+      "from": "kbd.gate",
+      "to": "lfo1.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.mode",
+        "equals": "reset_dds2"
+      }
+    },
+    {
+      "id": "c48",
+      "from": "bender.push",
+      "to": "lfo2.trigger",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.trigger",
+        "not_equals": "on"
+      }
+    },
+    {
+      "id": "c49",
+      "from": "kbd.aftertouch",
+      "to": "lfo2.trigger",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.trigger",
+        "equals": "at_trig"
+      }
+    },
+    {
+      "id": "c50",
+      "from": "vca.out",
+      "to": "chorus.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Voices summed in stereo (binaural pairs to left and right)."
+    },
+    {
+      "id": "c51",
+      "from": "chorus.out",
+      "to": "delay.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c52",
+      "from": "delay.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "delay.level"
+    }
+  ],
+  "mod_matrix": {
+    "name": "Modulation matrix",
+    "module": "kbd",
+    "slots": 240,
+    "combine": "single",
+    "sources": [
+      {
+        "id": 1,
+        "name": "DDS 2",
+        "node": "dds2.mod_out",
+        "per_voice": true,
+        "description": "Select button 1"
+      },
+      {
+        "id": 2,
+        "name": "LFO 2",
+        "node": "lfo2.out",
+        "per_voice": true,
+        "description": "Select button 2"
+      },
+      {
+        "id": 3,
+        "name": "Envelope 1",
+        "node": "env1.out",
+        "per_voice": true,
+        "description": "Select button 3"
+      },
+      {
+        "id": 4,
+        "name": "Velocity",
+        "node": "kbd.velocity",
+        "per_voice": true,
+        "description": "Select button 4"
+      },
+      {
+        "id": 5,
+        "name": "Aftertouch",
+        "node": "kbd.aftertouch",
+        "per_voice": true,
+        "description": "Select button 5"
+      },
+      {
+        "id": 6,
+        "name": "Expression pedal/CV",
+        "node": "bender.pedal",
+        "per_voice": false,
+        "description": "Select button 6"
+      },
+      {
+        "id": 7,
+        "name": "Bender left (-) [desktop: pitch bend wheel]",
+        "node": "bender.bend",
+        "per_voice": false,
+        "description": "Select button 7"
+      },
+      {
+        "id": 8,
+        "name": "Bender right (+) [desktop: note number]",
+        "node": "bender.bend",
+        "per_voice": false,
+        "description": "Select button 8"
+      }
+    ],
+    "destinations": [
+      {
+        "id": "A",
+        "name": "LFO 1 rate",
+        "parameter": "lfo1.rate",
+        "description": "Matrix destination, select button A"
+      },
+      {
+        "id": "B",
+        "name": "Cross modulation",
+        "parameter": "dds.cross_mod",
+        "description": "Matrix destination, select button B"
+      },
+      {
+        "id": "C",
+        "name": "Envelope 1 decay",
+        "parameter": "env1.decay",
+        "description": "Matrix destination, select button C"
+      },
+      {
+        "id": "D",
+        "name": "Envelope 2 release",
+        "parameter": "env2.release",
+        "description": "Matrix destination, select button D"
+      },
+      {
+        "id": "E",
+        "name": "Filter resonance",
+        "parameter": "vcf.res",
+        "description": "Matrix destination, select button E"
+      },
+      {
+        "id": "F",
+        "name": "Delay time",
+        "parameter": "delay.time",
+        "description": "Matrix destination, select button F"
+      },
+      {
+        "id": "G",
+        "name": "Delay feedback",
+        "parameter": "delay.feedback",
+        "description": "Matrix destination, select button G"
+      },
+      {
+        "id": "H",
+        "name": "LR phase",
+        "parameter": "lfo1.lr_phase",
+        "description": "Matrix destination, select button H"
+      },
+      {
+        "id": "direct_1",
+        "name": "DDS 2 tune",
+        "parameter": "dds2.tune",
+        "description": "Direct parameter mapping 1 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_2",
+        "name": "Oscillator mix",
+        "parameter": "mixer.mix",
+        "description": "Direct parameter mapping 2 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_3",
+        "name": "VCF cutoff",
+        "parameter": "vcf.freq",
+        "description": "Direct parameter mapping 3 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_4",
+        "name": "VCF envelope amount",
+        "parameter": "vcf.env",
+        "description": "Direct parameter mapping 4 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_5",
+        "name": "VCF LFO 1 amount",
+        "parameter": "vcf.lfo1",
+        "description": "Direct parameter mapping 5 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_6",
+        "name": "VCF DDS 2 amount",
+        "parameter": "vcf.dds2",
+        "description": "Direct parameter mapping 6 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_7",
+        "name": "VCA envelope level",
+        "parameter": "vca.env_level",
+        "description": "Direct parameter mapping 7 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_8",
+        "name": "VCA LFO 1 amount",
+        "parameter": "vca.lfo1",
+        "description": "Direct parameter mapping 8 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_9",
+        "name": "Envelope 1 hold",
+        "parameter": "env1.attack_hold",
+        "description": "Direct parameter mapping 9 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_10",
+        "name": "Envelope 1 attack",
+        "parameter": "env1.attack",
+        "description": "Direct parameter mapping 10 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_11",
+        "name": "Envelope 1 sustain",
+        "parameter": "env1.sustain",
+        "description": "Direct parameter mapping 11 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_12",
+        "name": "Envelope 1 release",
+        "parameter": "env1.release",
+        "description": "Direct parameter mapping 12 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_13",
+        "name": "Envelope 2 attack",
+        "parameter": "env2.attack",
+        "description": "Direct parameter mapping 13 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_14",
+        "name": "Envelope 2 decay",
+        "parameter": "env2.decay",
+        "description": "Direct parameter mapping 14 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_15",
+        "name": "Envelope 2 sustain",
+        "parameter": "env2.sustain",
+        "description": "Direct parameter mapping 15 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_16",
+        "name": "LFO 1 delay",
+        "parameter": "lfo1.delay",
+        "description": "Direct parameter mapping 16 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_17",
+        "name": "LFO 2 rate",
+        "parameter": "lfo2.rate",
+        "description": "Direct parameter mapping 17 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_18",
+        "name": "LFO 2 delay",
+        "parameter": "lfo2.delay",
+        "description": "Direct parameter mapping 18 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_19",
+        "name": "DDS modulator LFO 1 amount",
+        "parameter": "dds.lfo1",
+        "description": "Direct parameter mapping 19 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_20",
+        "name": "DDS 2 pulse width / DDS 1 detune",
+        "parameter": "dds.pw_detune",
+        "description": "Direct parameter mapping 20 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_21",
+        "name": "Portamento time",
+        "parameter": "kbd.portamento",
+        "description": "Direct parameter mapping 21 (hold a source button and move the control)"
+      },
+      {
+        "id": "direct_22",
+        "name": "Delay level",
+        "parameter": "delay.level",
+        "description": "Direct parameter mapping 22 (hold a source button and move the control)"
+      }
+    ],
+    "depth_range": {
+      "min": -100,
+      "max": 100
+    },
+    "note": "MOD ASSIGN: buttons 1-8 are sources, A-H destinations; pick either first, then the other, and set depth with MOD AMOUNT (-100% to +100%, shown on the 16 LEDs). Holding a source and moving a continuous panel control creates a direct parameter mapping (22 destinations; switches excluded). SHIFT + MOD ASSIGN clears all, or all for the selected source or destination (desktop: push MOD AMOUNT). Keyboard sources 7/8 are bender left/right; desktop sources 7/8 are pitch bend wheel and note number."
+  },
+  "indicators": [
+    {
+      "id": "select_leds",
+      "module": "kbd",
+      "label": "select button LEDs 1-8, A-H",
+      "kind": "led",
+      "function": "Patch, bank (flashing for second banks), waves, matrix, global settings, fine tune legend; flashing number = edited."
+    },
+    {
+      "id": "rate_leds",
+      "module": "lfo1",
+      "label": "LFO 1, LFO 2, ENV 1 loop and delay LEDs",
+      "kind": "led",
+      "function": "Rates and ENV 1 loop rate."
+    },
+    {
+      "id": "gate_led",
+      "module": "audioin",
+      "label": "audio gate LED (left of ENV 1)",
+      "kind": "led",
+      "function": "Lights on each audio-input gate trigger."
+    },
+    {
+      "id": "octave_leds",
+      "module": "kbd",
+      "label": "octave LEDs",
+      "kind": "led",
+      "function": "Octave; flashing for transpose or non-440 Hz tuning."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Binaural mode",
+      "applies_to": ["kbd", "lfo1", "dds1"],
+      "rule": "Pairs the 12 voices into six stereo super voices, one per ear, so oscillator, LFO 1 phase and other parameters can differ left and right. Forced on by DDS 2 X-FADE and filter key tracking. Non-binaural: 12 voices, LR PHASE becomes pan spread."
+    },
+    {
+      "id": "b02",
+      "name": "DDS 1 super mode",
+      "applies_to": ["dds1"],
+      "rule": "Seven free-running oscillators; super mode (half, with phase reset, or full) de-phases the six sisters in stereo; PW/DETUNE sets the spread and PWM/SWM modulates it."
+    },
+    {
+      "id": "b03",
+      "name": "DDS 2 modes",
+      "applies_to": ["dds2", "sub", "audioin", "mixer"],
+      "rule": "NORM; X-FADE (DDS 1 to DDS 2 across a two-octave zone around MIX's split point); SYNC (DDS 2 slaved to DDS 1, cross mod reversed). RANGE at LFO removes DDS 2 from audio (0.1-100 Hz LFO, matrix and VCF source) and allows the square sub or the audio input in its channel."
+    },
+    {
+      "id": "b04",
+      "name": "Filters",
+      "applies_to": ["hpf", "lpf"],
+      "rule": "High-pass (off, fixed around 500 Hz, or tracking for band-pass) into the SSI 24 dB low-pass with drive off/1/2; modulated by ENV 1/2, LFO 1, DDS 2, LFO 2, bender, velocity and key tracking."
+    },
+    {
+      "id": "b05",
+      "name": "Envelopes",
+      "applies_to": ["env1", "env2"],
+      "rule": "ENV 1: attack hold, attack, decay hold, decay, sustain, release (1 ms-10 s); normal, inverted or loop (attack/decay hold/decay repeat from the sustain level). ENV 2: attack, decay hold, decay, sustain, release; drives the VCA unless a fixed gate envelope is chosen."
+    },
+    {
+      "id": "b06",
+      "name": "LFOs",
+      "applies_to": ["lfo1", "lfo2"],
+      "rule": "LFO 1 (one per super voice): triangle, square, random, saw to 50 Hz, or HF/HF TRK to 20 kHz (sine, or DDS 1's wave via SHIFT); free, once or reset; HF can sum into either DDS channel. LFO 2: triangle per voice, triggered by bender push, aftertouch or always on."
+    },
+    {
+      "id": "b07",
+      "name": "Effects",
+      "applies_to": ["chorus", "delay"],
+      "rule": "Chorus (I, II, both) then delay (to 1 s, synced divisions, infinite feedback, freeze by footswitch or CC 69)."
+    },
+    {
+      "id": "b09",
+      "name": "Voice assign",
+      "applies_to": ["kbd"],
+      "rule": "POLY 1 (default) lets releases overlap; POLY 2 curtails them; SOLO and LEGATO are monophonic (LEGATO without retrigger); UNISON stacks 3 or 6 binaural voices, or 6 as an octave, octave and fifth, or major chord. Binaural off gives 12 mono voices with PAN spread; true mono: left output, binaural off, PAN 100%."
+    },
+    {
+      "id": "b10",
+      "name": "Arpeggiator and sequencer",
+      "applies_to": ["arp"],
+      "rule": "Arpeggiator: up, down, up and down, random; 1-4 octaves; HOLD latches. Sequencer: 64 steps on four pages of 16; tracks STEP (notes/chords, and bender position), SLIDE (ties; glide with portamento), ACCENT (with DYNAMICS), REST and LENGTH; HOLD transposes from C4; 16 stored sequences. Tempo 30-300 BPM or divisions of external clock; swing 0-4; SYNC locks LFO 1 and delay; EXT CLK sets clock tx/rx, note output and stop handling."
+    },
+    {
+      "id": "b11",
+      "name": "MPE",
+      "applies_to": ["kbd"],
+      "rule": "Per-note channels; limited to six voices (the analogue CV allows six independent sets). Pitch bend via the bender settings, Y axis via CC 74 (cutoff), pressure via aftertouch routings; options for an aftertouch dead zone and reduced Y sensitivity, stored per patch."
+    },
+    {
+      "id": "b12",
+      "name": "Files",
+      "applies_to": ["kbd"],
+      "rule": "Hold PATCH at power-up for the SUPER6 drive (patch_banks a1-h2, waveforms, alt_waveforms, sequences); hold SHIFT for SUPER6-BOOT (firmware, init_patch.s6). Alternative waves: 16-bit signed, 4096-point single cycle, band-limited to 512 Hz content, raw .ws6."
+    },
+    {
+      "id": "b08",
+      "name": "Patches",
+      "applies_to": ["kbd"],
+      "rule": "128 patches (A1-H2 x 8). Edits flash the patch LED; hold a number 3 s to store; press the same number to compare. MANUAL plays the panel; SHIFT + MANUAL loads INIT (also at power-up). Firmware via the SUPER6-BOOT drive."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "poly_pressure",
+        "note": "routed like aftertouch; matrix-only with LFO 2 always on"
+      },
+      {
+        "message": "program_change",
+        "note": "A1:1 = 0 ... H2:8 = 127; CC 0 bank select"
+      },
+      {
+        "message": "control_change",
+        "note": "official table: see parameter access entries"
+      },
+      {
+        "message": "nrpn",
+        "note": "patch parameters 1024 + CC (MSB 08H, 14-bit); globals 2051 MIDI channel, 2052 clock tx, 2053 clock rx, 2055 PC tx, 2056 PC rx"
+      },
+      {
+        "message": "rpn",
+        "number": 0,
+        "parameter": "pitch bend sensitivity (±12 semitones)"
+      },
+      {
+        "message": "rpn",
+        "number": 1,
+        "parameter": "channel fine tuning (±100 cents)"
+      },
+      {
+        "message": "rpn",
+        "number": 2,
+        "parameter": "channel coarse tuning (±12 semitones)"
+      },
+      {
+        "message": "mpe"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on",
+        "note": "including arpeggiator/sequencer with note output on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "channel_note": "One channel (omni until set); DIN or USB, not both at once.",
+    "note": "From the manual's official tables (pages 120-130). CC 14 sequence load, 59 manual mode, 61 performance destination, 67 octave, 69 delay freeze, 93 chorus, 122 local."
+  },
+  "specifications": {
+    "voices": "12, or 6 binaural stereo voices",
+    "oscillators": "2 FPGA DDS per voice (DDS 1: 7 super oscillators, 32 alternative waves)",
+    "filters": "VC high-pass + SSI 4-pole 24 dB low-pass",
+    "envelopes": "2 per voice, 1 ms-10 s",
+    "lfos": "LFO 1 (0.05-50 Hz; 20 Hz-20 kHz HF) + LFO 2",
+    "effects": "24-bit chorus and delay",
+    "patches": 128,
+    "keyboard": "49-key Fatar, velocity and aftertouch (keyboard model)",
+    "connections": {
+      "outputs": "L/R 1/4\" unbalanced",
+      "phones": "1/4\" stereo",
+      "audio_in": "1/4\" stereo",
+      "pedals": "sustain, expression (TRS 0-5 V)",
+      "midi": "DIN in, out, thru; USB"
+    },
+    "power": "90-240 V AC, 47-63 Hz, 50 W, 2 A T fuse",
+    "launch_price": "EUR 2,490 (keyboard), EUR 2,290 (desktop)",
+    "sequencer": "64 steps, 16 sequences",
+    "alternative_wave_format": "16-bit signed, 4096 points, .ws6"
+  },
+  "omitted_from_source": [
+    "safety text",
+    "glossary",
+    "file management and how-to chapters (not read)"
+  ],
+  "not_in_source": [
+    "dimensions and weight",
+    "output levels and impedances",
+    "the LFO 1 sync division count for the keyboard vs desktop"
+  ],
+  "source_inconsistencies": [
+    "The DDS 2 RANGE text says it adjusts 'the coarse frequency of DDS 1'.",
+    "The manual says binaural mode 'is always be enabled' with X-FADE (typo); LFO 2 text repeats 'the the'.",
+    "Backing up patches refers to folders 'patch_banks_a' and 'patch_banks_b'; the drive structure shows a single 'patch_banks' folder.",
+    "The community midi.guide chart differs from the official table: chorus as CC 14/15 (officially CC 93; CC 14 is sequence load), CC 92 as VCF LFO 1 (officially VCA LFO 1), CC 81 'Sync' (officially clock sync), CC 89/90 as sequencer record/length (unassigned).",
+    "Early-firmware forum descriptions list matrix destination H as 'LFO 1 phase'; the manual names it LR phase. Desktop sources 7/8 (pitch bend wheel, note number) differ from the keyboard's bender left/right.",
+    "The PDF has 140 pages; the manual's own numbering ends at 138.",
+    "Some retailer specifications describe the high-pass as fixed-frequency with on/off; firmware v0.27 made it fully voltage-controlled (variable in FIX via SHIFT, tracking in TRK).",
+    "Pre-launch specifications listed 64 sequence memories; the manual gives 16."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Binaural pairs",
+      "detail": "Voice modules are modelled once (per_voice); left/right independence in binaural mode is a behaviour."
+    },
+    {
+      "topic": "Keyboard vs desktop",
+      "detail": "The keyboard model is modelled; the desktop replaces the bender with pitch bend/mod wheel, adds LFO 2 MODE (MW, MW+AT, always on), I DDS II/VCF/VCA destination buttons with MOD AMOUNT, direct mod wheel assignment and a TRNSP button."
+    },
+    {
+      "topic": "Shared switch",
+      "detail": "DDS 2 MODE and its RANGE-at-LFO meaning are modelled as two parameters sharing CC 36."
+    }
+  ]
+}

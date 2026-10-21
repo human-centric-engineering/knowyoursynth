@@ -12,8 +12,9 @@ its baseline and its goldens.
 ## 1. Definition
 
 Write `lib/app/synths/defs/<id>.ts`, typed `SynthDef`, starting from the nearest definition
-already in the app (the B1 started from `defs/td-3.ts`). Measure positions on a product photo,
-and put the photo's path and size in the docblock. Register it in `SYNTH_DEFS` (`defs/index.ts`)
+already in the app (the B1 started from `defs/td-3.ts`). Read the synth's folder under
+[`synth-data/`](./synth-data/README.md) first: the spec, and the manual and photo in its `raw/`. Measure
+positions on the photo, and put its path and size in the docblock. Register it in `SYNTH_DEFS` (`defs/index.ts`)
 and `LOADERS` (`defs/load.ts`); `registry.test.ts` fails if one is missing.
 
 - `version: 1`, and no content: no presets, lineage, unusual notes or limits
@@ -43,8 +44,9 @@ printed "DONNER SYN BASS / ANALOG SYNTHESIZER AND SEQUENCER").
 
 ## 3. Content, by hand
 
-There is no export. Work from the owner's spec for the synth (the B1's is
-`donner-b1_synth.json`, kept outside the repo with the product photo): its parameters, ports,
+There is no export. Work from the owner's spec for the synth
+(`.context/app/synth-data/<id>/<id>.synth.json`; its manual and photo are in that folder's
+local-only `raw/`): its parameters, ports,
 behaviours, `not_in_source` and `modelling_gaps` are what the notes and limits say, and nothing
 in them may contradict it. Where the spec says a fact is missing, say so rather than fill it in. Write the files the export would have written, under
 `prisma/seeds/app-knowyoursynth/data/`:
