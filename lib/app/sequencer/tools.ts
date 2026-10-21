@@ -7,19 +7,28 @@ import { snapToScale, type Rng } from '@/lib/app/sequencer/compile';
 import {
   MAX_STEPS,
   SCALES,
+  clampNote,
   emptyStep,
+  pitchClass,
   type Pattern,
   type ScaleName,
   type Step,
 } from '@/lib/app/sequencer/pattern';
 
 const clone = (steps: Step[]): Step[] => structuredClone(steps);
-const clampNote = (n: number) => Math.min(127, Math.max(0, n));
+/** A note moved by whole octaves back inside MIDI, so it keeps its place in the scale. */
+const foldIntoMidi = (n: number) => {
+  let x = n;
+  while (x > 127) x -= 12;
+  while (x < 0) x += 12;
+  return x;
+};
 
 /**
- * `hits` spread as evenly as they go over `length` steps, then turned `rotate` steps later. Bjorklund's algorithm, so
- * each rhythm starts the way Toussaint's tables write it: 3 in 8 is the tresillo `x..x..x.`, 5 in 8 the cinquillo
- * `x.xx.xx.`.
+ * `hits` spread as evenly as they go over `length` steps, then turned `rotate` steps later. Bjorklund's algorithm,
+ * starting on a hit. For most rhythms that is how Toussaint's tables write them (3 in 8 is the tresillo `x..x..x.`, 5 in
+ * 8 the cinquillo `x.xx.xx.`); for a few it is another rotation of the same rhythm (4 in 7 comes out `x.x.x.x`, which
+ * the tables start as `x.xx.x.`), and `rotate` reaches it.
  */
 export function euclid(hits: number, length: number, rotate = 0): boolean[] {
   const k = Math.max(0, Math.min(hits, length));
@@ -60,7 +69,7 @@ export function euclidFill(
   const rhythm = euclid(hits, steps.length, rotate);
   return clone(steps).map((s, i) => {
     s.on = rhythm[i];
-    if (rhythm[i] && s.notes.length === 0) s.notes = [{ note: clampNote(note), gate }];
+    if (rhythm[i] && s.notes.length === 0) s.notes = [{ note: clampNote(Math.round(note)), gate }];
     return s;
   });
 }
@@ -71,10 +80,10 @@ export const rotateSteps = (steps: Step[], by: number): Step[] => rotateArray(cl
 /** The steps back to front. Each step keeps its own notes and settings. */
 export const reverseSteps = (steps: Step[]): Step[] => clone(steps).reverse();
 
-/** Every note moved by whole octaves. A note pushed past either end of MIDI stops there. */
+/** Every note moved by whole octaves. A note pushed past either end of MIDI stays an octave inside it. */
 export function shiftOctave(steps: Step[], octaves: number): Step[] {
   return clone(steps).map((s) => {
-    s.notes.forEach((n) => (n.note = clampNote(n.note + 12 * octaves)));
+    s.notes.forEach((n) => (n.note = foldIntoMidi(n.note + 12 * Math.round(octaves))));
     return s;
   });
 }
@@ -90,10 +99,10 @@ export function moveByDegree(
   const on = snapToScale(note, root, scale);
   const rel = on - root;
   const octave = Math.floor(rel / 12);
-  const index = ds.indexOf(((rel % 12) + 12) % 12) + degrees;
+  const index = ds.indexOf(pitchClass(rel)) + degrees;
   const o = octave + Math.floor(index / ds.length);
   const d = ds[((index % ds.length) + ds.length) % ds.length];
-  return clampNote(root + o * 12 + d);
+  return foldIntoMidi(root + o * 12 + d);
 }
 
 /** Every note moved `degrees` steps along the scale. */
@@ -127,7 +136,7 @@ export function randomise(length: number, rng: Rng, o: RandomiseOptions): Step[]
   const ds: readonly number[] = SCALES[o.scale];
   const pool: number[] = [];
   for (let n = Math.max(0, o.low); n <= Math.min(127, o.high); n++)
-    if (ds.includes((((n - o.root) % 12) + 12) % 12)) pool.push(n);
+    if (ds.includes(pitchClass(n, o.root))) pool.push(n);
   return Array.from({ length }, () => {
     if (pool.length === 0 || rng() >= o.density) return emptyStep();
     const step: Step = {
@@ -165,11 +174,12 @@ export function mutate(
 export const copySteps = (steps: Step[], from: number, to: number): Step[] =>
   clone(steps.slice(from, to));
 
-/** The clip written over the steps from `at`, cut off at the pattern's end. */
+/** The clip written over the steps from `at`, cut off at either end of the pattern. */
 export function pasteSteps(steps: Step[], at: number, clip: Step[]): Step[] {
   const out = clone(steps);
   clip.forEach((s, i) => {
-    if (at + i < out.length) out[at + i] = structuredClone(s);
+    const to = Math.round(at) + i;
+    if (to >= 0 && to < out.length) out[to] = structuredClone(s);
   });
   return out;
 }
@@ -179,9 +189,14 @@ export function clearSteps(steps: Step[], from = 0, to = steps.length): Step[] {
   return clone(steps).map((s, i) => (i >= from && i < to ? emptyStep() : s));
 }
 
-/** The pattern with `length` steps in every part: rests added at the end, or steps cut from it. */
+/**
+ * The pattern with `length` steps in every part: rests added at the end, or steps cut from it. A length that is not a
+ * number leaves it as it was.
+ */
 export function resizePattern(p: Pattern, length: number): Pattern {
-  const len = Math.max(1, Math.min(MAX_STEPS, Math.round(length)));
+  const len = Number.isFinite(length)
+    ? Math.max(1, Math.min(MAX_STEPS, Math.round(length)))
+    : p.parts[0].steps.length;
   return {
     ...p,
     parts: p.parts.map((part) => ({

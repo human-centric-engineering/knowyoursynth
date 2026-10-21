@@ -126,6 +126,24 @@ describe('importPhrase', () => {
     ]);
   });
 
+  it('keeps a note held past the riff’s last beat', () => {
+    const p = importPhrase({ bpm: 100, loop: true, steps: [[0, 40, 32.0005]] });
+    expect(p.parts[0].steps).toHaveLength(128);
+    expect(PatternSchema.safeParse(p).success).toBe(true);
+  });
+
+  it('keeps a whole-semitone transpose and refuses one it cannot hold', () => {
+    expect(
+      importPhrase({ bpm: 100, loop: true, steps: [[0, 40, 1]], transpose: -12 }).transpose
+    ).toBe(-12);
+    expect(() =>
+      importPhrase({ bpm: 100, loop: true, steps: [[0, 40, 1]], transpose: 0.5 })
+    ).toThrow(RangeError);
+    expect(() =>
+      importPhrase({ bpm: 100, loop: true, steps: [[0, 40, 1]], transpose: 60 })
+    ).toThrow(RangeError);
+  });
+
   it('keeps a riff that plays once as one that plays once', () => {
     expect(importPhrase({ bpm: 100, loop: false, steps: [[0, 60, 1]] }).loop).toBe(false);
   });

@@ -23,8 +23,13 @@ export const MAX_PARTS = 2;
 export const MAX_CHAIN = 16;
 /** The most times a step repeats inside itself. */
 export const MAX_RATCHET = 4;
-/** The longest a note can be held, in steps: a tie across a whole pattern. */
-export const MAX_GATE = MAX_STEPS;
+/**
+ * The longest a note can be held, in steps: a tie across a whole pattern and on into the next pass, which a library
+ * note ending just past the loop's last beat does.
+ */
+export const MAX_GATE = MAX_STEPS * 2;
+/** The furthest a pattern is transposed, in semitones, either way. */
+export const MAX_TRANSPOSE = 48;
 export const MIN_BPM = 20;
 export const MAX_BPM = 300;
 /** The velocity a step's notes play at when nothing sets it, as the engine reads a riff note without one. */
@@ -141,7 +146,7 @@ export const PatternSchema = z
     /** 50 is straight; up to 75 delays every second step by half a step. */
     swing: z.number().min(50).max(75),
     /** Semitones added to every note, before the scale. */
-    transpose: z.number().int().min(-48).max(48),
+    transpose: z.number().int().min(-MAX_TRANSPOSE).max(MAX_TRANSPOSE),
     /** 0..11, C = 0. */
     root: z.number().int().min(0).max(11),
     scale: z.enum(SCALE_NAMES as [ScaleName, ...ScaleName[]]),
@@ -180,6 +185,12 @@ export const PatternSchema = z
     });
   });
 export type Pattern = z.infer<typeof PatternSchema>;
+
+/** A note kept inside MIDI. */
+export const clampNote = (n: number): number => Math.min(127, Math.max(0, n));
+
+/** A note's place in the octave above `root`, 0..11, for notes below the root too. */
+export const pitchClass = (note: number, root = 0): number => (((note - root) % 12) + 12) % 12;
 
 /** Steps in one beat at the pattern's step size. */
 export const stepsPerBeat = (p: Pick<Pattern, 'stepSize'>): number => STEP_SIZES[p.stepSize];

@@ -19,7 +19,7 @@ A `Pattern` (`pattern.ts`) is the same music on a grid of steps, plus what a mod
 | Pattern | `bpm` 20–300, `stepSize` (`1/8`, `1/8t`, `1/16`, `1/16t`, `1/32`), `loop`, `direction`, `swing` 50–75, `transpose` ±48, `root`, `scale`, `parts` (A, B), `chain` |
 | Part    | `steps`: 1–128, and every part has the same number                                                                                                               |
 | Step    | `on`, `notes` (0–6: none is a rest, several a chord), `accent`, `slide`, `ratchet` 1–4, `probability` 0–1, `condition`                                           |
-| Note    | `note` 0–127, `gate` in steps (past 1 it ties over), `velocity` 0–1, `nudge` 0 to just under 1 step                                                              |
+| Note    | `note` 0–127, `gate` in steps up to 256 (past 1 it ties over), `velocity` 0–1, `nudge` 0 to just under 1 step                                                    |
 
 Gate, velocity and nudge belong to the note, not the step. The library's chords aren't always struck or let go
 together, and a pattern has to hold them exactly.
@@ -45,8 +45,14 @@ The import:
 3. Puts each note on the step it starts in, with the remainder as its `nudge`, its length as `gate` in steps, and its
    velocity only if the riff gave one.
 
-The result is one part, forward, straight, chromatic, at the riff's tempo. A riff too long for any step size is refused
-(`RangeError`), not cut. None in the library are.
+The result is one part, forward, straight, chromatic, at the riff's tempo. Two kinds of riff are refused
+(`RangeError`) rather than changed:
+
+- one too long for any step size
+- one transposed by part of a semitone or by more than 48
+
+None in the library are either, and no library sound sets a transpose at all. A note can be held for up to 256 steps,
+so a note that runs past the riff's last beat still imports.
 
 `tests/unit/lib/app/sequencer/import.test.ts` holds it to that. Every seeded riff, imported and compiled for loop 0,
 gives back the riff's own notes (starts and lengths to a millionth of a beat) and its loop length.
@@ -77,15 +83,17 @@ The rules, in the order they apply, for each slot of the loop:
    - `first`, `notFirst`.
    - `fill` and `notFill` read `fill`.
 
-   Then `probability`, which draws from `rng` only when it is below 1. A pattern with no probability or random
-   direction never touches `rng`.
+   Then `probability`, which draws from `rng` only when it is below 1. A pattern with no probability below 1, and a
+   direction other than `random` or `brownian`, never touches `rng`.
 
 4. **Each note:**
-   1. Transpose, then snap to the nearest note of `scale` from `root` (a tie goes down), then clamp to MIDI.
+   1. Transpose, then snap to the nearest note of `scale` from `root` (a tie goes down). A note past either end of
+      MIDI takes the scale's last note inside it, not a clamped one that may be off the scale (`placeNote`).
    2. Ratchet: _r_ even hits inside the step, each `min(gate, 1) / r` long.
    3. Nudge, as a share of each hit.
    4. Swing moves odd slots later by `(swing / 50 − 1)` steps: half a step at 75.
-   5. A slide holds the last hit until 0.05 steps past the start of the next step, so a mono voice glides.
+   5. A slide holds the last hit until 0.05 steps past the start of the next slot, swung or not, so a mono voice
+      glides.
    6. An accent sets the velocity to 1. Otherwise the note keeps its own velocity or none, and the engine's default
       0.85 applies.
 
@@ -96,11 +104,15 @@ Notes come out sorted by start, then by pitch.
 `tools.ts` holds the tools. Each takes steps (or a pattern) and returns new ones without changing its input, so the
 page's Undo is a stack of what they return.
 
-- `euclid` and `euclidFill`: Bjorklund's algorithm, in the form Toussaint's tables write. 3 in 8 is `x..x..x.`, and
-  `euclidFill` turns steps on and off without dropping their notes.
+- `euclid` and `euclidFill`: Bjorklund's algorithm, starting on a hit. `euclidFill` turns steps on and off without
+  dropping their notes.
+  - Most rhythms come out as Toussaint's tables write them: 3 in 8 is `x..x..x.`.
+  - A few come out as another rotation of the same rhythm: 4 in 7 is `x.x.x.x` where the tables write `x.xx.x.`.
+    `rotate` reaches the tables' form.
 - `rotateSteps` and `reverseSteps`.
-- `shiftOctave` clamps at the ends of MIDI. `shiftDegree` and `moveByDegree` put a note on the scale first, then move
-  along it.
+- `shiftOctave` keeps a note pushed past either end of MIDI an octave inside it, so it stays on the scale.
+  `shiftDegree` and `moveByDegree` put a note on the scale first, then move along it, and keep it in MIDI the same
+  way.
 - `randomise` makes a fresh line on the scale, in a range, at a density, with optional accents and slides.
 - `mutate` moves each note one degree with chance _amount_, and mutes or unmutes each step with chance _amount_ / 2.
 - `copySteps`, `pasteSteps` (cut off at the end), `clearSteps`.

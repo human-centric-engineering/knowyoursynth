@@ -12,6 +12,8 @@ import type { PhraseNote } from '@/lib/app/synths/contract';
 import {
   ACCENT_VELOCITY,
   SCALES,
+  clampNote,
+  pitchClass,
   patternLength,
   stepsPerBeat,
   type Pattern,
@@ -62,10 +64,29 @@ export function snapToScale(note: number, root: number, scale: ScaleName): numbe
   const degrees: readonly number[] = SCALES[scale];
   if (degrees.length === 12) return note;
   for (let d = 0; d <= 6; d++) {
-    if (degrees.includes((((note - d - root) % 12) + 12) % 12)) return note - d;
-    if (degrees.includes((((note + d - root) % 12) + 12) % 12)) return note + d;
+    if (degrees.includes(pitchClass(note - d, root))) return note - d;
+    if (degrees.includes(pitchClass(note + d, root))) return note + d;
   }
   return note;
+}
+
+/**
+ * The note on the scale nearest to `note` that MIDI can play. Clamping after the snap could land on a note off the
+ * scale (127 is G, which C# major does not have), so a snap past either end takes the scale's last note inside it.
+ */
+export function placeNote(note: number, root: number, scale: ScaleName): number {
+  const snapped = snapToScale(clampNote(note), root, scale);
+  if (snapped > 127) return firstOnScale(127, -1, root, scale);
+  if (snapped < 0) return firstOnScale(0, 1, root, scale);
+  return snapped;
+}
+
+/** The first note on the scale from `from`, walking by `dir`. */
+function firstOnScale(from: number, dir: 1 | -1, root: number, scale: ScaleName): number {
+  const degrees: readonly number[] = SCALES[scale];
+  let n = from;
+  while (!degrees.includes(pitchClass(n, root))) n += dir;
+  return n;
 }
 
 /** Whether a step's condition lets it play on loop `loop` (from 0). */
@@ -129,21 +150,24 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
   const { order, to } = stepOrder(p, opts);
   // Swing moves the second step of each pair later: at 50 not at all, at 75 by half a step.
   const swing = (p.swing / 100) * 2 - 1;
+  const slotStart = (slot: number) => slot + (slot % 2 === 1 ? swing : 0);
   const notes: PhraseNote[] = [];
   order.forEach((index, slot) => {
     const step = part.steps[index];
     if (!step || !stepPlays(step, opts)) return;
     const ratchet = step.ratchet ?? 1;
-    const start = slot + (slot % 2 === 1 ? swing : 0);
+    const start = slotStart(slot);
+    // Where the next slot starts, swung or not: a slide has to reach past it to overlap the note there.
+    const next = slotStart(slot + 1);
     for (const n of step.notes) {
-      const note = Math.min(127, Math.max(0, snapToScale(n.note + p.transpose, p.root, p.scale)));
+      const note = placeNote(n.note + p.transpose, p.root, p.scale);
       const velocity = step.accent ? ACCENT_VELOCITY : n.velocity;
       for (let k = 0; k < ratchet; k++) {
         const offset = (k + (n.nudge ?? 0)) / ratchet;
         let gate = ratchet > 1 ? Math.min(n.gate, 1) / ratchet : n.gate;
-        // A slide holds the step's last hit past the start of the next step, so the two overlap.
-        if (step.slide && k === ratchet - 1) gate = Math.max(gate, 1 - offset + SLIDE_OVERLAP);
         const at = start + offset;
+        // A slide holds the step's last hit past the start of the next slot, so the two overlap.
+        if (step.slide && k === ratchet - 1) gate = Math.max(gate, next - at + SLIDE_OVERLAP);
         const out: PhraseNote = [at / perBeat, note, gate / perBeat];
         if (velocity !== undefined) out.push(velocity);
         notes.push(out);

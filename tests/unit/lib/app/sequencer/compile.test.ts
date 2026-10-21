@@ -7,6 +7,7 @@ import {
   SLIDE_OVERLAP,
   compileLoop,
   conditionPlays,
+  placeNote,
   seededRng,
   snapToScale,
   stepOrder,
@@ -194,6 +195,16 @@ describe('compileLoop', () => {
       expect(hits[1][0] + hits[1][2]).toBeGreaterThan(0.25);
     });
 
+    it('a slide reaches past the next slot even when swing moves that slot later', () => {
+      const p = line([60, 62], (q) => {
+        set(q, 0, { slide: true });
+        q.swing = 75;
+      });
+      const [first, second] = compileLoop(p, { loop: 0, rng: seededRng(1) }).notes;
+      expect(second[0]).toBe(0.375);
+      expect(first[0] + first[2]).toBeCloseTo(0.375 + SLIDE_OVERLAP / 4, 9);
+    });
+
     it('the step size sets how many steps fit in a beat', () => {
       const p = line([60, 62, 64], (q) => (q.stepSize = '1/8t'));
       const loop = compileLoop(p, { loop: 0, rng: seededRng(1) });
@@ -225,8 +236,18 @@ describe('compileLoop', () => {
       expect(pitches(p)).toEqual([62, 62, 67]);
     });
 
-    it('keeps notes inside MIDI after a transpose', () => {
+    it('keeps notes inside MIDI after a transpose, and on the scale', () => {
       expect(pitches(line([120], (q) => (q.transpose = 12)))).toEqual([127]);
+      // 127 is G, which C# major does not have: the highest C# major note in MIDI is F#, 126.
+      expect(
+        pitches(
+          line([120], (q) => {
+            q.transpose = 12;
+            q.root = 1;
+            q.scale = 'major';
+          })
+        )
+      ).toEqual([126]);
     });
   });
 
@@ -241,6 +262,17 @@ describe('compileLoop', () => {
       q.chain = [0, 0, 1];
     });
     expect([0, 1, 2, 3].map((l) => pitches(p, l))).toEqual([[60, 62], [60, 62], [70], [60, 62]]);
+  });
+});
+
+describe('placeNote', () => {
+  it('snaps to the scale, then keeps the note inside MIDI on the scale', () => {
+    expect(placeNote(61, 0, 'major')).toBe(60);
+    expect(placeNote(140, 1, 'major')).toBe(126);
+    // C# major has B#, which is C: 0 is on it. D major does not, so the lowest D major note is C#, 1.
+    expect(placeNote(-5, 1, 'major')).toBe(0);
+    expect(placeNote(-5, 2, 'major')).toBe(1);
+    expect(placeNote(-5, 0, 'chromatic')).toBe(0);
   });
 });
 

@@ -13,6 +13,7 @@ import type { Phrase } from '@/lib/app/synths/contract';
 import {
   MAX_BPM,
   MAX_STEPS,
+  MAX_TRANSPOSE,
   MIN_BPM,
   PATTERN_VERSION,
   STEP_SIZES,
@@ -57,8 +58,9 @@ export function bestStepSize(ph: Pick<Phrase, 'steps'>): StepSize {
 }
 
 /**
- * The riff as a one-part pattern: forward, straight, chromatic, at the riff's tempo. A riff too long for any step size
- * (none in the library are) is refused rather than cut.
+ * The riff as a one-part pattern: forward, straight, chromatic, at the riff's tempo. A riff too long for any step size,
+ * or transposed by a part of a semitone or more than four octaves, is refused rather than changed. None in the library
+ * are; no library sound sets a transpose at all.
  */
 export function importPhrase(ph: Phrase): Pattern {
   const stepSize = bestStepSize(ph);
@@ -66,6 +68,10 @@ export function importPhrase(ph: Phrase): Pattern {
   const length = phraseBeats(ph) * perBeat;
   if (length > MAX_STEPS)
     throw new RangeError(`A riff of ${length} steps is longer than ${MAX_STEPS}`);
+  // The engine adds a riff's transpose at play time, so it can be any number; a pattern's is whole semitones.
+  const transpose = ph.transpose ?? 0;
+  if (!Number.isInteger(transpose) || Math.abs(transpose) > MAX_TRANSPOSE)
+    throw new RangeError(`A riff transposed by ${transpose} cannot be a pattern`);
   const steps = Array.from({ length }, emptyStep);
   for (const [beat, note, len, velocity] of ph.steps) {
     const at = beat * perBeat;
@@ -85,7 +91,7 @@ export function importPhrase(ph: Phrase): Pattern {
     loop: ph.loop !== false,
     direction: 'forward',
     swing: 50,
-    transpose: ph.transpose ?? 0,
+    transpose,
     root: 0,
     scale: 'chromatic',
     parts: [{ steps }],

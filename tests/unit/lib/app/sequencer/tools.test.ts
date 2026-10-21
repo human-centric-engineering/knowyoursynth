@@ -52,6 +52,7 @@ describe('euclidFill', () => {
     expect(after.map((s) => s.on)).toEqual([true, false, true, false]);
     expect(pitchesOf(after)).toEqual([60, 62, 48, 64]);
     expect(before.map((s) => s.on)).toEqual([true, true, true, true]);
+    expect(euclidFill(steps(null), 1, 0, 60.4)[0].notes[0].note).toBe(60);
   });
 });
 
@@ -69,9 +70,9 @@ describe('moving steps', () => {
 });
 
 describe('shifting notes', () => {
-  it('by octaves, stopping at either end of MIDI', () => {
-    expect(pitchesOf(shiftOctave(steps(60, null, 120), 1))).toEqual([72, null, 127]);
-    expect(pitchesOf(shiftOctave(steps(5), -1))).toEqual([0]);
+  it('by octaves, keeping a note pushed past either end of MIDI an octave inside it', () => {
+    expect(pitchesOf(shiftOctave(steps(60, null, 120), 1))).toEqual([72, null, 120]);
+    expect(pitchesOf(shiftOctave(steps(5), -1))).toEqual([5]);
   });
 
   it('by scale degrees, across octaves', () => {
@@ -82,6 +83,8 @@ describe('shifting notes', () => {
     // A note off the scale is put on it first: C# snaps to C, then up one is D.
     expect(moveByDegree(61, 1, 0, 'major')).toBe(62);
     expect(pitchesOf(shiftDegree(steps(60, 64), 1, 0, 'major'))).toEqual([62, 65]);
+    // Past the top of MIDI it drops an octave and stays on the scale: a degree above G 127 is A 129, so A 117.
+    expect(moveByDegree(127, 1, 0, 'major')).toBe(117);
   });
 });
 
@@ -139,6 +142,10 @@ describe('copy, paste and clear', () => {
     const clip = copySteps(source, 1, 3);
     expect(pitchesOf(pasteSteps(source, 3, clip))).toEqual([60, 62, 64, 62]);
     expect(pitchesOf(pasteSteps(source, 0, clip))).toEqual([62, 64, 64, 65]);
+    // A paste starting before the first step keeps only the part of the clip that lands inside.
+    const pasted = pasteSteps(source, -1, clip);
+    expect(pitchesOf(pasted)).toEqual([64, 62, 64, 65]);
+    expect(Object.keys(pasted)).toEqual(['0', '1', '2', '3']);
     clip[0].notes[0].note = 0;
     expect(pitchesOf(source)).toEqual([60, 62, 64, 65]);
   });
@@ -161,5 +168,6 @@ describe('resizePattern', () => {
     expect(PatternSchema.safeParse(longer).success).toBe(true);
     expect(resizePattern(p, 500).parts[0].steps).toHaveLength(128);
     expect(resizePattern(p, 0).parts[0].steps).toHaveLength(1);
+    expect(resizePattern(p, Number.NaN).parts[0].steps).toHaveLength(4);
   });
 });
