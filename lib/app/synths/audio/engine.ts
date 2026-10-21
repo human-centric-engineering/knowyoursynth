@@ -125,10 +125,16 @@ export class Engine {
       }
     }
     if (!node) {
-      const local = createSynth(ctx.sampleRate, (e) => this.onEvent(e));
+      // A pattern's `loop` event counts frames from the synth's first sample; moved onto the context's clock here,
+      // from the time the first buffer plays, as the worklet does from `currentFrame`.
+      let base = -1;
+      const local = createSynth(ctx.sampleRate, (e) =>
+        this.onEvent(e.type === 'loop' ? { ...e, frame: e.frame + Math.max(base, 0) } : e)
+      );
       this.local = local;
       const sp = ctx.createScriptProcessor(1024, 0, 2);
       sp.onaudioprocess = (e) => {
+        if (base < 0) base = Math.round((e.playbackTime || 0) * ctx.sampleRate);
         const l = e.outputBuffer.getChannelData(0);
         local.process(l, l.length, e.outputBuffer.getChannelData(1));
       };
@@ -150,6 +156,16 @@ export class Engine {
     pending.forEach((m) => this.send(m));
     if (ctx.state !== 'running') await ctx.resume();
     return this.mode;
+  }
+
+  /**
+   * The frame the listener hears now, on the clock a pattern's `loop` events use: with {@link beatAt} it places the
+   * sequencer's playhead. 0 before the voice exists.
+   */
+  get frame(): number {
+    if (!this.ctx) return 0;
+    const latency = this.ctx.outputLatency || this.ctx.baseLatency || 0;
+    return Math.max(0, (this.ctx.currentTime - latency) * this.ctx.sampleRate);
   }
 
   get running(): boolean {

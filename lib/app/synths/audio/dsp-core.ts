@@ -25,6 +25,11 @@ import type {
 } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
 import { createMoog, MOOG_SIGNALS, MOOG_DESTS } from '@/lib/app/synths/audio/moog-core';
+import {
+  withPatterns,
+  type PatternEvent,
+  type PatternMessage,
+} from '@/lib/app/synths/audio/pattern-player';
 
 /** The settings one voice takes. A voice of a `dual` synth gets its module's settings, which carry no `volume`. */
 export type VoiceParams = Omit<EngineParams, 'volume'> & { volume?: number };
@@ -39,7 +44,8 @@ export type SynthMessage =
   | { type: 'stopPhrase' }
   | { type: 'panic' }
   | { type: 'offset'; semi?: number }
-  | { type: 'phase'; lfo?: number; lfo2?: number };
+  | { type: 'phase'; lfo?: number; lfo2?: number }
+  | PatternMessage;
 
 /** A message to one voice: as {@link SynthMessage}, but its params may be a `dual` module's. */
 type VoiceMessage = Exclude<SynthMessage, { type: 'params' }> | { type: 'params'; p: VoiceParams };
@@ -68,6 +74,7 @@ export type SynthEvent =
   | { type: 'note'; n: number; on: boolean }
   | { type: 'allOff' }
   | { type: 'phraseEnd' }
+  | PatternEvent
   | MeterEvent;
 
 export type SynthEventHandler = (e: SynthEvent) => void;
@@ -2278,6 +2285,11 @@ function createChorus(sr: number): {
  * other voice's signal a sample late, so the two are then run sample by sample.
  */
 export function createSynth(sr: number, onEvent: SynthEventHandler | null): Synth {
+  // The sequencer's pattern player sits around the synth (pattern-player.ts); idle, it passes everything straight through.
+  return withPatterns(createSynthCore(sr, onEvent), sr, onEvent);
+}
+
+function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const mono = createVoice(sr, onEvent);
   let P: EngineParams | null = null;
   let polyOn = false;

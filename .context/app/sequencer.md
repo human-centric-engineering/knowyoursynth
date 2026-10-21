@@ -2,7 +2,7 @@
 
 One sequencer works on every synth. You edit a riff step by step, starting from any riff in the library, and play it
 on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it:
-`lib/app/sequencer/`, from t-78. The module on the page, saving and sharing come in later tasks of §21, and each adds
+`lib/app/sequencer/`, from t-78, and the engine's pattern player, from t-79. The module on the page, saving and sharing come in later tasks of §21, and each adds
 its section here.
 
 ## Riffs and patterns
@@ -118,10 +118,40 @@ page's Undo is a stack of what they return.
 - `copySteps`, `pasteSteps` (cut off at the end), `clearSteps`.
 - `resizePattern` changes every part's length, between 1 and 128.
 
+## Playing a pattern
+
+The engine plays a pattern with its pattern player (`lib/app/synths/audio/pattern-player.ts`, t-79). The player sits
+around the synth `createSynth` makes, so a mono, poly or dual synth plays a pattern the same way: the player sends it
+notes, and splits each block it renders at the samples where a note falls. With no pattern playing it passes everything
+straight through, so riffs (`phrase`), the sound map and the goldens are unchanged.
+
+The page sends it compiled loops:
+
+| Message               | What the player does                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `pattern` (loop, bpm) | Stops any riff or pattern and starts this loop from beat 0                                             |
+| `patternNext` (loop)  | Queues the loop after this one, swapped in on the boundary sample. `loop: null` ends the pattern there |
+| `patternEdit` (loop)  | Replaces what is still to play of this loop, from the playhead on. What has played stays played        |
+| `tempo`               | Moves the playhead and the notes to come, as it moves a riff                                           |
+| `stopPattern`         | Lets go of every note it holds. A `phrase` or `panic` stops it too                                     |
+
+- **Nothing queued, the loop plays again.** A page that is late never leaves a gap.
+- **A note held past the loop's end** (a slide, a tie) is let go at that point in the next loop. A note ending exactly
+  on the boundary is let go on the boundary sample. A riff never lets go of such a note.
+- **An edit keeps the let-go of a note sounding now**, so a note the edit removed doesn't stay held.
+- **A synth changing between mono, poly and dual** gets the pattern's notes let go first, and the next note plays on the
+  new one.
+
+The player reports `loop` events: when a loop starts (`start: true`, the page's cue to compile and queue the next) and
+when the tempo or an edit moves the playhead. Each carries the loop's `index`, the `beat` and `bpm` from then on, and
+the `frame` of the audio context's clock it applies from. The worklet moves its own count onto the context's clock
+with `currentFrame`, and the ScriptProcessor fallback does it from its first buffer's `playbackTime`. The page draws
+the playhead from `beatAt(event, engine.frame, sampleRate)`, where `engine.frame` is the frame being heard now (the
+context's time less its output latency). `patternEnd` says a pattern told to end has played out.
+
 ## Not yet
 
 Coming in later tasks of §21:
 
 - Mod lanes, per-step values for panel controls (t-82). They add an optional field to the pattern.
-- Playing a loop in the engine (t-79).
 - Saving (t-81) and sharing (t-83).

@@ -12,16 +12,23 @@ declare abstract class AudioWorkletProcessor {
 }
 declare function registerProcessor(name: string, ctor: new () => AudioWorkletProcessor): void;
 declare const sampleRate: number;
+declare const currentFrame: number;
 
 class KysProcessor extends AudioWorkletProcessor {
   synth: Synth;
+  /** The context's frame when the synth played its first sample: its own frame count starts there. */
+  base = -1;
   constructor() {
     super();
-    this.synth = createSynth(sampleRate, (e) => this.port.postMessage(e));
+    this.synth = createSynth(sampleRate, (e) =>
+      // A pattern's `loop` event counts frames from the synth's first sample; the page reads the context's clock.
+      this.port.postMessage(e.type === 'loop' ? { ...e, frame: e.frame + this.base } : e)
+    );
     this.port.onmessage = (m: MessageEvent<SynthMessage>) => this.synth.handle(m.data);
   }
 
   process(_inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
+    if (this.base < 0) this.base = currentFrame;
     const out = outputs[0];
     this.synth.process(out[0], out[0].length, out[1]);
     for (let c = 2; c < out.length; c++) out[c].set(out[0]);
