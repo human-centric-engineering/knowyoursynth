@@ -223,3 +223,7 @@ public/worklets/
 
 # The social card's panel renderer, bundled by scripts/build-panel-renderer.ts (t-50)
 components/app/sharing/generated/panel-render.mjs
+
+# The owner's raw synth data (manuals, photos, zips, older spec versions): local only, never pushed.
+# Each synth's spec, build script and README are committed beside it. See .context/app/synth-data/README.md
+.context/app/synth-data/*/raw/

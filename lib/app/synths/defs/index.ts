@@ -38,6 +38,7 @@ import deepmind12d from '@/lib/app/synths/defs/deepmind-12d';
 import system15 from '@/lib/app/synths/defs/system-15';
 import system35 from '@/lib/app/synths/defs/system-35';
 import system55 from '@/lib/app/synths/defs/system-55';
+import donnerB1 from '@/lib/app/synths/defs/donner-b1';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -69,6 +70,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   system15,
   system35,
   system55,
+  donnerB1,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

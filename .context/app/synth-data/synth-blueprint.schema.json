@@ -1,0 +1,1558 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/synth-blueprint-0.13.0.json",
+  "title": "Synth blueprint",
+  "description": "Device-independent model of a synthesizer, derived from its documentation. Organised around the signal graph rather than the front panel: modules hold named nodes, parameters and ports reference those nodes, and connections wire them together. Four provenance sections record what the source document did not say, so that gaps are never silently filled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "device",
+    "architecture",
+    "modules",
+    "parameters",
+    "ports",
+    "connections",
+    "omitted_from_source",
+    "not_in_source",
+    "source_inconsistencies",
+    "modelling_gaps"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": ["0.8.0", "0.9.0", "0.10.0", "0.11.0", "0.12.0", "0.13.0"],
+      "description": "0.9.0 adds level_param and offset_param on patch_matrix rows and columns. 0.10.0 adds program_card, port amount_param, offset_param, stackable and colour, and cord- and card-based example patches. Earlier files remain valid. 0.11.0 adds algorithms (operator routing chosen by one parameter, for FM), the operator module type, and memory on parameters. 0.12.0 adds a second source (source_b) on mod matrix slots with a combine rule, a name on mod matrices, and additional_mod_matrices for instruments with more than one matrix. 0.13.0 adds the electromechanical_oscillator module type and the electromechanical synthesis type, for sound sources driven by moving parts (motors, tonewheels, spinning discs)."
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "manufacturer", "model", "sources"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "based_on": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "kind"],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/slug"
+              },
+              "title": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "user_manual",
+                  "quick_start_guide",
+                  "service_manual",
+                  "spec_sheet",
+                  "measurement",
+                  "circuit_analysis",
+                  "other"
+                ],
+                "description": "Depth of the source. A file built only from a quick_start_guide should be expected to have a large not_in_source section."
+              },
+              "file": {
+                "type": "string"
+              },
+              "pages": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "version": {
+                "type": "string"
+              },
+              "year": {
+                "type": "integer"
+              },
+              "firmware_basis": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["synthesis", "voices", "summary"],
+      "properties": {
+        "synthesis": {
+          "enum": [
+            "subtractive",
+            "additive",
+            "fm",
+            "wavetable",
+            "phase_distortion",
+            "physical_modelling",
+            "sampling",
+            "hybrid",
+            "electromechanical"
+          ]
+        },
+        "signal_path": {
+          "enum": ["analogue", "digital", "hybrid"]
+        },
+        "voices": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "polyphony_mode": {
+          "type": "string"
+        },
+        "poly_chain_max_units": {
+          "type": ["integer", "null"]
+        },
+        "patch_memory": {
+          "type": "boolean"
+        },
+        "semi_modular": {
+          "type": "boolean"
+        },
+        "panel_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "summary": {
+          "type": "string",
+          "description": "Prose description of the whole signal path, readable on its own."
+        }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "name", "description", "inputs", "outputs"],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/slug"
+          },
+          "type": {
+            "$ref": "#/$defs/moduleType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "panel_section": {
+            "type": "string",
+            "description": "Where the source document puts it, for traceability back to the manual."
+          },
+          "description": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nodeId"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nodeId"
+            }
+          },
+          "scope": {
+            "enum": ["per_voice", "common"],
+            "description": "On a polyphonic instrument, whether each voice has its own instance of this module (per_voice) or one instance serves all voices (common). Omit on monophonic instruments."
+          }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "module", "label", "kind", "access", "function"],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/slug"
+          },
+          "module": {
+            "$ref": "#/$defs/slug"
+          },
+          "label": {
+            "type": "string",
+            "description": "As printed on the panel or named in the source."
+          },
+          "manual_ref": {
+            "type": ["integer", "string", "null"]
+          },
+          "kind": {
+            "$ref": "#/$defs/parameterKind"
+          },
+          "panel_scale": {
+            "$ref": "#/$defs/scale"
+          },
+          "physical": {
+            "$ref": "#/$defs/physical"
+          },
+          "range": {
+            "$ref": "#/$defs/scale"
+          },
+          "values": {
+            "type": "array",
+            "description": "Required for kind enum and morph. For morph, the order is the sweep order.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["value"],
+              "properties": {
+                "value": {},
+                "label": {
+                  "type": "string"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "blend_param": {
+            "$ref": "#/$defs/slug",
+            "description": "morph only: parameter that decides whether the sweep crossfades or steps."
+          },
+          "bipolar": {
+            "type": "boolean"
+          },
+          "default": {},
+          "weight": {
+            "type": "number"
+          },
+          "access": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "$ref": "#/$defs/accessType"
+                },
+                "control": {
+                  "$ref": "#/$defs/controlType"
+                },
+                "gesture": {
+                  "type": "string",
+                  "description": "gesture only: what the player does."
+                },
+                "when": {
+                  "enum": ["power_on", "any_time"],
+                  "description": "gesture only: when the gesture is available. Replaces the old power_on_gesture and button_combo access types."
+                },
+                "message": {
+                  "type": "string"
+                },
+                "sub": {
+                  "type": "string"
+                },
+                "encoding": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "gesture"
+                      }
+                    },
+                    "required": ["type"]
+                  },
+                  "then": {
+                    "required": ["gesture", "when"]
+                  }
+                }
+              ]
+            }
+          },
+          "function": {
+            "type": "string",
+            "description": "Plain statement of what the control does, in the file's own words."
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "note": {
+            "type": "string"
+          },
+          "led_colour": {
+            "$ref": "#/$defs/ledColour"
+          },
+          "memory": {
+            "enum": ["patch", "global", "none"],
+            "description": "Where the value lives: patch (stored with each patch or voice), global (a setting shared by all patches), none (live control, not stored). Omit when the instrument has no memory."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": ["enum", "morph"]
+                }
+              },
+              "required": ["kind"]
+            },
+            "then": {
+              "required": ["values"]
+            }
+          }
+        ]
+      }
+    },
+    "indicators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "module", "label", "function"],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/slug"
+          },
+          "module": {
+            "$ref": "#/$defs/slug"
+          },
+          "label": {
+            "type": "string"
+          },
+          "manual_ref": {
+            "type": ["integer", "string", "null"]
+          },
+          "function": {
+            "type": "string"
+          },
+          "led_colour": {
+            "$ref": "#/$defs/ledColour"
+          },
+          "kind": {
+            "enum": ["led", "lamp", "meter", "display"]
+          }
+        }
+      }
+    },
+    "ports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "location",
+          "direction",
+          "signal",
+          "connector",
+          "node",
+          "function"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/slug"
+          },
+          "label": {
+            "type": "string"
+          },
+          "manual_ref": {
+            "type": ["integer", "string", "null"]
+          },
+          "location": {
+            "$ref": "#/$defs/portLocation"
+          },
+          "direction": {
+            "enum": ["in", "out", "bidirectional"]
+          },
+          "signal": {
+            "$ref": "#/$defs/signal"
+          },
+          "connector": {
+            "type": "string"
+          },
+          "node": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/nodeId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The module node this jack exposes. Null for jacks outside the audio and CV graph, such as MIDI DIN, USB and power."
+          },
+          "normalled_from": {
+            "$ref": "#/$defs/nodeId"
+          },
+          "combine": {
+            "enum": ["sum", "replace", "unknown"],
+            "description": "How an input jack relates to the panel control or internal source feeding the same node. Use unknown, not omission, when the source document does not say."
+          },
+          "electrical": {
+            "type": "object"
+          },
+          "function": {
+            "type": "string"
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "note": {
+            "type": "string"
+          },
+          "amount_param": {
+            "$ref": "#/$defs/slug",
+            "description": "Parameter that attenuates whatever is patched into this input (a 'processing' control)."
+          },
+          "offset_param": {
+            "$ref": "#/$defs/slug",
+            "description": "Parameter that sets the value the patched voltage adds to."
+          },
+          "stackable": {
+            "type": "boolean",
+            "description": "Plugs stack on this jack, so one output can feed several inputs without a multiple."
+          },
+          "colour": {
+            "type": "string",
+            "description": "Jack colour where the panel uses colour to code function."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "location": {
+                  "const": "patch_in"
+                }
+              },
+              "required": ["location"]
+            },
+            "then": {
+              "properties": {
+                "direction": {
+                  "const": "in"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "location": {
+                  "const": "patch_out"
+                }
+              },
+              "required": ["location"]
+            },
+            "then": {
+              "properties": {
+                "direction": {
+                  "const": "out"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "from", "to", "signal", "kind"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "from": {
+            "$ref": "#/$defs/nodeId"
+          },
+          "to": {
+            "$ref": "#/$defs/nodeId"
+          },
+          "signal": {
+            "$ref": "#/$defs/signal"
+          },
+          "kind": {
+            "enum": ["fixed", "switched", "normalled"],
+            "description": "fixed: always present. switched: present when enabled_when holds. normalled: present until broken_by is patched."
+          },
+          "enabled_when": {
+            "$ref": "#/$defs/condition"
+          },
+          "amount": {
+            "$ref": "#/$defs/slug",
+            "description": "Parameter that scales this connection."
+          },
+          "amount_expr": {
+            "type": "string",
+            "description": "Expression over parameter ids, where a single amount will not do."
+          },
+          "broken_by": {
+            "$ref": "#/$defs/slug",
+            "description": "normalled only: the port whose insertion breaks this connection."
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "normalled"
+                }
+              },
+              "required": ["kind"]
+            },
+            "then": {
+              "required": ["broken_by"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "switched"
+                }
+              },
+              "required": ["kind"]
+            },
+            "then": {
+              "anyOf": [
+                {
+                  "required": ["enabled_when"]
+                },
+                {
+                  "required": ["note"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "behaviours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "applies_to", "rule"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "applies_to": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/slug"
+            }
+          },
+          "rule": {
+            "type": "string",
+            "description": "A rule that is not wiring: summation laws, trigger logic, envelope shape, mode interactions."
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "midi": {
+      "type": "object"
+    },
+    "specifications": {
+      "type": "object"
+    },
+    "omitted_from_source": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Present in the source document, deliberately left out of this file because it does not bear on modelling: safety text, warranty, hook-up diagrams, translations."
+    },
+    "not_in_source": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Absent from the source document altogether. The distinction from omitted_from_source matters: this list is the shopping list for a better source, and tells a consumer of the file that silence here is the document's, not the author's."
+    },
+    "source_inconsistencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Places where the source contradicts itself, with a note on which reading this file follows."
+    },
+    "modelling_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "detail"],
+        "properties": {
+          "topic": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Known but unquantified behaviour: tapers, ranges, curves, non-linearities. What measurement or circuit reference would have to supply before the model sounds right."
+    },
+    "led_legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the panel's LED colours mean, where the device uses colour as a code. Separate from the observations themselves so that a disputed reading does not corrupt the data.",
+      "required": ["rule", "colours", "confidence"],
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "colours": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["colour", "meaning"],
+            "properties": {
+              "colour": {
+                "$ref": "#/$defs/ledColour"
+              },
+              "meaning": {
+                "type": "string"
+              },
+              "modules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/slug"
+                }
+              }
+            }
+          }
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "mod_matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A digital routing table where any source can reach any destination through a fixed number of slots. Destinations are parameters, not signal nodes, so this cannot be expressed as connections; the slot parameters themselves live in parameters and are named here.",
+      "required": ["slots", "sources", "destinations"],
+      "properties": {
+        "module": {
+          "$ref": "#/$defs/slug"
+        },
+        "slots": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "slot_parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["slot", "source", "destination", "depth"],
+            "properties": {
+              "slot": {
+                "type": "integer"
+              },
+              "source": {
+                "$ref": "#/$defs/slug"
+              },
+              "destination": {
+                "$ref": "#/$defs/slug"
+              },
+              "depth": {
+                "$ref": "#/$defs/slug"
+              },
+              "source_b": {
+                "$ref": "#/$defs/slug",
+                "description": "Second source parameter, where a slot takes two."
+              }
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "node": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "midi": {
+                "type": "string"
+              },
+              "per_voice": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "destinations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": ["integer", "string"]
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "parameter": {
+                "$ref": "#/$defs/slug"
+              },
+              "common_to_all_voices": {
+                "type": "boolean"
+              },
+              "modelled": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "depth_range": {
+          "type": "object"
+        },
+        "note": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "combine": {
+          "enum": ["single", "multiply", "add"],
+          "description": "How two sources in a slot combine; single when slots take one source."
+        }
+      }
+    },
+    "effects_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "schema"],
+      "description": "Where this device's effects catalogue lives. Effects are a catalogue of alternatives (any algorithm in any slot in any routing) rather than a fixed graph, so they have their own document and schema.",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "module": {
+          "$ref": "#/$defs/slug"
+        }
+      }
+    },
+    "patch_matrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "rows", "columns"],
+      "description": "A pin or switch matrix that IS the routing. Each row is a source node, each column a destination node, and any intersection can be joined. Use this instead of listing every possible connection; connections then holds only the fixed internal wiring.",
+      "properties": {
+        "kind": {
+          "enum": ["resistive_pin", "shorting_pin", "switch"]
+        },
+        "size": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "node"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "node": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "note": {
+                "type": "string"
+              },
+              "level_param": {
+                "type": "string",
+                "description": "Parameter id of the panel control that sets this row's output level into the matrix."
+              }
+            }
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "node", "class"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "node": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "class": {
+                "enum": ["signal", "control", "monitor"]
+              },
+              "note": {
+                "type": "string"
+              },
+              "offset_param": {
+                "type": "string",
+                "description": "Parameter id of the manual control that pinned voltages on this column add to. Control columns only."
+              }
+            }
+          }
+        },
+        "pins": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "resistance_ohm"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "resistance_ohm": {
+                "type": ["number", "null"]
+              },
+              "tolerance_pct": {
+                "type": ["number", "null"]
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "confidence": {
+                "$ref": "#/$defs/confidence"
+              },
+              "source": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "combine": {
+          "enum": ["sum", "replace", "unknown"],
+          "description": "What happens when several pins share a column."
+        },
+        "electrical": {
+          "type": "object"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "example_patches": {
+      "type": "array",
+      "description": "Patches documented in a source, as pin lists and control settings, so a model can be tested against them.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "pins": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][0-9]{1,2}$"
+            },
+            "description": "Matrix pins as column letter plus row number."
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["number", "string", "boolean"]
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "confidence": {
+            "$ref": "#/$defs/confidence"
+          },
+          "cords": {
+            "type": "array",
+            "description": "Patch cords as [from_port, to_port] pairs of port ids.",
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "$ref": "#/$defs/slug"
+              }
+            }
+          },
+          "card": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "A program card realisation.",
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["row", "column", "conductance"],
+                  "properties": {
+                    "row": {
+                      "type": "string"
+                    },
+                    "column": {
+                      "type": "string"
+                    },
+                    "conductance": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "Card field id to conductance value."
+              }
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "required": ["pins"]
+          },
+          {
+            "required": ["cords"]
+          },
+          {
+            "required": ["card"]
+          },
+          {
+            "required": ["settings"]
+          }
+        ]
+      }
+    },
+    "program_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "rows", "columns", "fields"],
+      "description": "A plug-in card that stores a patch as resistors: a conductance matrix of control routings and levels, plus coded fields for switch positions and trigger routing. Distinct from patch_matrix because it coexists with front-panel patching and its values are set by resistor choice, not pin presence.",
+      "properties": {
+        "kind": {
+          "enum": ["resistor_card"]
+        },
+        "selector_param": {
+          "$ref": "#/$defs/slug",
+          "description": "Parameter that chooses card, front panel or both."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "node"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "node": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "note": {
+                "type": "string"
+              },
+              "confidence": {
+                "$ref": "#/$defs/confidence"
+              }
+            }
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "node"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "node": {
+                "$ref": "#/$defs/nodeId"
+              },
+              "offset_param": {
+                "$ref": "#/$defs/slug"
+              },
+              "amount_param": {
+                "$ref": "#/$defs/slug"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "conductance_table": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["level", "resistance_ohm"],
+            "properties": {
+              "level": {
+                "type": "number"
+              },
+              "resistance_ohm": {
+                "type": "number"
+              },
+              "colour_code": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "section"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "section": {
+                "type": "string"
+              },
+              "parameter": {
+                "$ref": "#/$defs/slug",
+                "description": "Front-panel parameter this field replicates."
+              },
+              "encoding": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["conductance"],
+                  "properties": {
+                    "conductance": {
+                      "type": "number"
+                    },
+                    "value": {},
+                    "meaning": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "card_only": {
+                "type": "boolean"
+              },
+              "note": {
+                "type": "string"
+              },
+              "confidence": {
+                "$ref": "#/$defs/confidence"
+              }
+            }
+          }
+        },
+        "combine": {
+          "type": "string"
+        },
+        "saturation": {
+          "type": "string"
+        },
+        "not_programmable": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "algorithms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selector_param", "operators", "entries"],
+      "description": "Operator routings for FM instruments, chosen by one parameter. Each entry lists the carriers (heard), the modulation links between operators, and the feedback loop. Modules named here are operator modules; links are not repeated as connections.",
+      "properties": {
+        "selector_param": {
+          "$ref": "#/$defs/slug",
+          "description": "Parameter that selects the algorithm."
+        },
+        "feedback_param": {
+          "$ref": "#/$defs/slug",
+          "description": "Parameter that sets the depth of the feedback loop."
+        },
+        "operators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "minItems": 2,
+          "description": "Operator module ids, in panel numbering order."
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["number", "carriers", "modulation"],
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "carriers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/slug"
+                },
+                "minItems": 1
+              },
+              "modulation": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["from", "to"],
+                  "properties": {
+                    "from": {
+                      "$ref": "#/$defs/slug"
+                    },
+                    "to": {
+                      "$ref": "#/$defs/slug"
+                    }
+                  }
+                }
+              },
+              "feedback": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["loop"],
+                "description": "Operators in the feedback loop, in signal order; one operator means self-feedback. The last feeds back into the first.",
+                "properties": {
+                  "loop": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/slug"
+                    },
+                    "minItems": 1
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              },
+              "note": {
+                "type": "string"
+              },
+              "confidence": {
+                "$ref": "#/$defs/confidence"
+              }
+            }
+          }
+        },
+        "source": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        }
+      }
+    },
+    "additional_mod_matrices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "A digital routing table where any source can reach any destination through a fixed number of slots. Destinations are parameters, not signal nodes, so this cannot be expressed as connections; the slot parameters themselves live in parameters and are named here.",
+        "required": ["slots", "sources", "destinations"],
+        "properties": {
+          "module": {
+            "$ref": "#/$defs/slug"
+          },
+          "slots": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "slot_parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["slot", "source", "destination", "depth"],
+              "properties": {
+                "slot": {
+                  "type": "integer"
+                },
+                "source": {
+                  "$ref": "#/$defs/slug"
+                },
+                "destination": {
+                  "$ref": "#/$defs/slug"
+                },
+                "depth": {
+                  "$ref": "#/$defs/slug"
+                },
+                "source_b": {
+                  "$ref": "#/$defs/slug",
+                  "description": "Second source parameter, where a slot takes two."
+                }
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "name"],
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "node": {
+                  "$ref": "#/$defs/nodeId"
+                },
+                "midi": {
+                  "type": "string"
+                },
+                "per_voice": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "name"],
+              "properties": {
+                "id": {
+                  "type": ["integer", "string"]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "parameter": {
+                  "$ref": "#/$defs/slug"
+                },
+                "common_to_all_voices": {
+                  "type": "boolean"
+                },
+                "modelled": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "depth_range": {
+            "type": "object"
+          },
+          "note": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "combine": {
+            "enum": ["single", "multiply", "add"],
+            "description": "How two sources in a slot combine; single when slots take one source."
+          }
+        }
+      },
+      "description": "Further matrices (for example an FX matrix), each with the same shape as mod_matrix."
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$"
+    },
+    "nodeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+\\.[a-z0-9_]+$",
+      "description": "module_id.node_name"
+    },
+    "confidence": {
+      "enum": ["stated", "inferred", "speculative"],
+      "description": "stated: the source says it. inferred: derived from the source plus standard practice. speculative: a reasonable guess with no support in the source. Absent means stated. Put the reasoning in note, not here.",
+      "default": "stated"
+    },
+    "scale": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
+    "physical": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Real-world end points of a control, as distinct from its panel markings.",
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "taper": {
+          "type": "string",
+          "description": "Mapping from panel position to physical value. 'unknown' is a legitimate and common value."
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "param": {
+          "$ref": "#/$defs/slug"
+        },
+        "equals": {},
+        "not_equals": {},
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/condition"
+          }
+        },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/condition"
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["param"]
+        },
+        {
+          "required": ["all"]
+        },
+        {
+          "required": ["any"]
+        }
+      ]
+    },
+    "moduleType": {
+      "description": "Controlled vocabulary. Extend deliberately, and bump the schema version when you do.",
+      "enum": [
+        "oscillator",
+        "noise",
+        "external_input",
+        "mixer",
+        "filter",
+        "vca",
+        "envelope",
+        "lfo",
+        "modulation_bus",
+        "pitch_control",
+        "gate_logic",
+        "sequencer",
+        "arpeggiator",
+        "overdrive",
+        "delay",
+        "reverb",
+        "chorus",
+        "effects",
+        "electronic_switch",
+        "preamp",
+        "envelope_follower",
+        "frequency_to_voltage",
+        "ring_modulator",
+        "sample_hold",
+        "slew_limiter",
+        "attenuator",
+        "mult",
+        "summer",
+        "inverter",
+        "cv_source_selector",
+        "midi_to_cv",
+        "voice_allocator",
+        "output",
+        "manual_controller",
+        "meter",
+        "operator",
+        "electromechanical_oscillator"
+      ]
+    },
+    "parameterKind": {
+      "enum": ["continuous", "enum", "boolean", "integer", "morph"],
+      "description": "morph is an ordered list of shapes swept by one control; see values and blend_param."
+    },
+    "accessType": {
+      "description": "How the player reaches a parameter. A parameter may have several. gesture replaces the older power_on_gesture and button_combo, distinguished by the when field.",
+      "enum": ["panel", "rear_panel", "gesture", "menu", "midi", "sysex", "app", "none"]
+    },
+    "controlType": {
+      "enum": [
+        "knob",
+        "slide_switch",
+        "toggle_switch",
+        "rotary_switch",
+        "button",
+        "fader",
+        "dip_switches_x4",
+        "encoder",
+        "wheel",
+        "ribbon",
+        "pad",
+        "joystick",
+        "slow_motion_dial",
+        "push_button"
+      ]
+    },
+    "portLocation": {
+      "enum": ["patch_in", "patch_out", "top", "rear", "front"],
+      "description": "patch_in and patch_out are the CV and audio patch bay, and must agree with direction. top, rear and front are non-patch sockets such as MIDI DIN, USB, main outputs and power."
+    },
+    "signal": {
+      "enum": ["audio", "cv", "gate", "clock", "sync", "midi", "power", "cv_or_audio"]
+    },
+    "ledColour": {
+      "enum": ["red", "amber", "yellow", "green", "blue", "white", "off", "multi"],
+      "description": "Observed colour of the indicator or of the LED in a slider cap. Record what is on the panel; put any reading of what the colour means in led_legend."
+    }
+  }
+}

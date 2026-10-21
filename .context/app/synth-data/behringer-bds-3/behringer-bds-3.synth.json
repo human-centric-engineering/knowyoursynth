@@ -1,0 +1,2790 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "behringer-bds-3",
+    "manufacturer": "Behringer",
+    "model": "BDS-3 Classic 4-Channel Analog Drum Synthesizer with Special Effects Channel and Eurorack Format",
+    "category": "4-channel analogue drum synthesizer, desktop or 70 HP Eurorack",
+    "based_on": "Simmons SDS-3 (late 1970s), per retailer descriptions; Behringer's own copy says only 'a classic drum synthesizer from the late 1970s'. Some early units are printed SDS-3.",
+    "sources": [
+      {
+        "id": "qsg",
+        "title": "Behringer BDS-3 Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer-BDS-3.pdf",
+        "pages": 51,
+        "note": "Multilingual; English controls, getting started, Eurorack installation and specifications used. The patch sheets are blank templates."
+      },
+      {
+        "id": "retail",
+        "title": "Thomann and Musicorp product pages",
+        "kind": "other",
+        "file": "https://www.musicorp.com.au/keyboards/behringer-bds-3-4-channel-analog-drum-synthesizer-w-fx-channel-eurorack-format/1072615-6886658/",
+        "note": "Original instrument (SDS-3), release (December 2025), and a user report of SDS-3 printed on early units."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 4,
+    "polyphony_mode": "4 independent monophonic drum channels",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No memory; settings are the panel. SynthTribe sets per-channel options.",
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 30,
+      "faders": 6,
+      "toggle_switches": 20,
+      "jacks_top": 15,
+      "eurorack_hp": 70
+    },
+    "summary": "Four identical channels, each triggered by a microphone or other audio at its MIC IN (velocity sensitive) or by its own MIDI note. Each channel's tone comes from a self-oscillating diode ladder filter, mixed with filtered white noise, with an impact click, a pitch bend up or down into the set pitch, and a decay from 50 ms to 7 s. A master section holds overall pitch (with a pitch pedal), an LFO with an audio-rate FAST range, and RUN, a sample-and-hold stepped by channel triggers; each channel chooses whether these reach it and how strongly. Individual and mix outputs, MIDI and USB MIDI, decay kill footswitch."
+  },
+  "modules": [
+    {
+      "id": "ch1_trig",
+      "type": "envelope_follower",
+      "name": "Channel 1 trigger",
+      "panel_section": "CHANNEL 1",
+      "description": "Turns sound at MIC IN into a velocity-sensitive trigger once it passes MIC SENSITIVITY, or takes the channel's MIDI note. MIC OUT passes the microphone signal on.",
+      "inputs": ["ch1_trig.mic_in", "ch1_trig.midi_in"],
+      "outputs": ["ch1_trig.gate", "ch1_trig.mic_thru"]
+    },
+    {
+      "id": "ch1_env",
+      "type": "envelope",
+      "name": "Channel 1 decay envelope",
+      "panel_section": "CHANNEL 1",
+      "description": "Decay from 50 ms to 7 s on each trigger; also drives the bend and the impact click. Cut short by DECAY KILL.",
+      "properties": {
+        "decay_s": [0.05, 7]
+      },
+      "inputs": ["ch1_env.gate", "ch1_env.kill"],
+      "outputs": ["ch1_env.out"]
+    },
+    {
+      "id": "ch1_osc",
+      "type": "oscillator",
+      "name": "Channel 1 tone",
+      "panel_section": "CHANNEL 1",
+      "description": "A self-oscillating diode ladder filter used as the tone oscillator, from below 20 Hz to over 30 kHz.",
+      "properties": {
+        "frequency_hz": [20, 30000],
+        "circuit": "self-oscillating diode ladder filter"
+      },
+      "inputs": ["ch1_osc.pitch_cv"],
+      "outputs": ["ch1_osc.out"]
+    },
+    {
+      "id": "ch1_noise",
+      "type": "noise",
+      "name": "Channel 1 noise",
+      "panel_section": "CHANNEL 1",
+      "description": "White noise source.",
+      "inputs": [],
+      "outputs": ["ch1_noise.out"]
+    },
+    {
+      "id": "ch1_nflt",
+      "type": "filter",
+      "name": "Channel 1 noise filter",
+      "panel_section": "CHANNEL 1",
+      "description": "Filters the noise; PITCH opens it as it raises the tone.",
+      "inputs": ["ch1_nflt.in", "ch1_nflt.cutoff_cv"],
+      "outputs": ["ch1_nflt.out"]
+    },
+    {
+      "id": "ch1_mix",
+      "type": "mixer",
+      "name": "Channel 1 balance",
+      "panel_section": "CHANNEL 1",
+      "description": "Balances tone and noise; equal at 12 o'clock.",
+      "inputs": ["ch1_mix.tone", "ch1_mix.noise"],
+      "outputs": ["ch1_mix.out"]
+    },
+    {
+      "id": "ch1_lpf",
+      "type": "filter",
+      "name": "Channel 1 click filter",
+      "panel_section": "CHANNEL 1",
+      "description": "Low-pass filter opened at the start of each hit by IMPACT CLICK, giving a stick-strike transient.",
+      "inputs": ["ch1_lpf.in", "ch1_lpf.cutoff_cv"],
+      "outputs": ["ch1_lpf.out"]
+    },
+    {
+      "id": "ch1_vca",
+      "type": "vca",
+      "name": "Channel 1 VCA",
+      "panel_section": "CHANNEL 1",
+      "description": "Shapes the channel with its decay; CHANNEL LEVEL sets both the channel output and its share of the mix.",
+      "inputs": ["ch1_vca.in", "ch1_vca.cv"],
+      "outputs": ["ch1_vca.out"]
+    },
+    {
+      "id": "ch2_trig",
+      "type": "envelope_follower",
+      "name": "Channel 2 trigger",
+      "panel_section": "CHANNEL 2",
+      "description": "Turns sound at MIC IN into a velocity-sensitive trigger once it passes MIC SENSITIVITY, or takes the channel's MIDI note. MIC OUT passes the microphone signal on.",
+      "inputs": ["ch2_trig.mic_in", "ch2_trig.midi_in"],
+      "outputs": ["ch2_trig.gate", "ch2_trig.mic_thru"]
+    },
+    {
+      "id": "ch2_env",
+      "type": "envelope",
+      "name": "Channel 2 decay envelope",
+      "panel_section": "CHANNEL 2",
+      "description": "Decay from 50 ms to 7 s on each trigger; also drives the bend and the impact click. Cut short by DECAY KILL.",
+      "properties": {
+        "decay_s": [0.05, 7]
+      },
+      "inputs": ["ch2_env.gate", "ch2_env.kill"],
+      "outputs": ["ch2_env.out"]
+    },
+    {
+      "id": "ch2_osc",
+      "type": "oscillator",
+      "name": "Channel 2 tone",
+      "panel_section": "CHANNEL 2",
+      "description": "A self-oscillating diode ladder filter used as the tone oscillator, from below 20 Hz to over 30 kHz.",
+      "properties": {
+        "frequency_hz": [20, 30000],
+        "circuit": "self-oscillating diode ladder filter"
+      },
+      "inputs": ["ch2_osc.pitch_cv"],
+      "outputs": ["ch2_osc.out"]
+    },
+    {
+      "id": "ch2_noise",
+      "type": "noise",
+      "name": "Channel 2 noise",
+      "panel_section": "CHANNEL 2",
+      "description": "White noise source.",
+      "inputs": [],
+      "outputs": ["ch2_noise.out"]
+    },
+    {
+      "id": "ch2_nflt",
+      "type": "filter",
+      "name": "Channel 2 noise filter",
+      "panel_section": "CHANNEL 2",
+      "description": "Filters the noise; PITCH opens it as it raises the tone.",
+      "inputs": ["ch2_nflt.in", "ch2_nflt.cutoff_cv"],
+      "outputs": ["ch2_nflt.out"]
+    },
+    {
+      "id": "ch2_mix",
+      "type": "mixer",
+      "name": "Channel 2 balance",
+      "panel_section": "CHANNEL 2",
+      "description": "Balances tone and noise; equal at 12 o'clock.",
+      "inputs": ["ch2_mix.tone", "ch2_mix.noise"],
+      "outputs": ["ch2_mix.out"]
+    },
+    {
+      "id": "ch2_lpf",
+      "type": "filter",
+      "name": "Channel 2 click filter",
+      "panel_section": "CHANNEL 2",
+      "description": "Low-pass filter opened at the start of each hit by IMPACT CLICK, giving a stick-strike transient.",
+      "inputs": ["ch2_lpf.in", "ch2_lpf.cutoff_cv"],
+      "outputs": ["ch2_lpf.out"]
+    },
+    {
+      "id": "ch2_vca",
+      "type": "vca",
+      "name": "Channel 2 VCA",
+      "panel_section": "CHANNEL 2",
+      "description": "Shapes the channel with its decay; CHANNEL LEVEL sets both the channel output and its share of the mix.",
+      "inputs": ["ch2_vca.in", "ch2_vca.cv"],
+      "outputs": ["ch2_vca.out"]
+    },
+    {
+      "id": "ch3_trig",
+      "type": "envelope_follower",
+      "name": "Channel 3 trigger",
+      "panel_section": "CHANNEL 3",
+      "description": "Turns sound at MIC IN into a velocity-sensitive trigger once it passes MIC SENSITIVITY, or takes the channel's MIDI note. MIC OUT passes the microphone signal on.",
+      "inputs": ["ch3_trig.mic_in", "ch3_trig.midi_in"],
+      "outputs": ["ch3_trig.gate", "ch3_trig.mic_thru"]
+    },
+    {
+      "id": "ch3_env",
+      "type": "envelope",
+      "name": "Channel 3 decay envelope",
+      "panel_section": "CHANNEL 3",
+      "description": "Decay from 50 ms to 7 s on each trigger; also drives the bend and the impact click. Cut short by DECAY KILL.",
+      "properties": {
+        "decay_s": [0.05, 7]
+      },
+      "inputs": ["ch3_env.gate", "ch3_env.kill"],
+      "outputs": ["ch3_env.out"]
+    },
+    {
+      "id": "ch3_osc",
+      "type": "oscillator",
+      "name": "Channel 3 tone",
+      "panel_section": "CHANNEL 3",
+      "description": "A self-oscillating diode ladder filter used as the tone oscillator, from below 20 Hz to over 30 kHz.",
+      "properties": {
+        "frequency_hz": [20, 30000],
+        "circuit": "self-oscillating diode ladder filter"
+      },
+      "inputs": ["ch3_osc.pitch_cv"],
+      "outputs": ["ch3_osc.out"]
+    },
+    {
+      "id": "ch3_noise",
+      "type": "noise",
+      "name": "Channel 3 noise",
+      "panel_section": "CHANNEL 3",
+      "description": "White noise source.",
+      "inputs": [],
+      "outputs": ["ch3_noise.out"]
+    },
+    {
+      "id": "ch3_nflt",
+      "type": "filter",
+      "name": "Channel 3 noise filter",
+      "panel_section": "CHANNEL 3",
+      "description": "Filters the noise; PITCH opens it as it raises the tone.",
+      "inputs": ["ch3_nflt.in", "ch3_nflt.cutoff_cv"],
+      "outputs": ["ch3_nflt.out"]
+    },
+    {
+      "id": "ch3_mix",
+      "type": "mixer",
+      "name": "Channel 3 balance",
+      "panel_section": "CHANNEL 3",
+      "description": "Balances tone and noise; equal at 12 o'clock.",
+      "inputs": ["ch3_mix.tone", "ch3_mix.noise"],
+      "outputs": ["ch3_mix.out"]
+    },
+    {
+      "id": "ch3_lpf",
+      "type": "filter",
+      "name": "Channel 3 click filter",
+      "panel_section": "CHANNEL 3",
+      "description": "Low-pass filter opened at the start of each hit by IMPACT CLICK, giving a stick-strike transient.",
+      "inputs": ["ch3_lpf.in", "ch3_lpf.cutoff_cv"],
+      "outputs": ["ch3_lpf.out"]
+    },
+    {
+      "id": "ch3_vca",
+      "type": "vca",
+      "name": "Channel 3 VCA",
+      "panel_section": "CHANNEL 3",
+      "description": "Shapes the channel with its decay; CHANNEL LEVEL sets both the channel output and its share of the mix.",
+      "inputs": ["ch3_vca.in", "ch3_vca.cv"],
+      "outputs": ["ch3_vca.out"]
+    },
+    {
+      "id": "ch4_trig",
+      "type": "envelope_follower",
+      "name": "Channel 4 trigger",
+      "panel_section": "CHANNEL 4",
+      "description": "Turns sound at MIC IN into a velocity-sensitive trigger once it passes MIC SENSITIVITY, or takes the channel's MIDI note. MIC OUT passes the microphone signal on.",
+      "inputs": ["ch4_trig.mic_in", "ch4_trig.midi_in"],
+      "outputs": ["ch4_trig.gate", "ch4_trig.mic_thru"]
+    },
+    {
+      "id": "ch4_env",
+      "type": "envelope",
+      "name": "Channel 4 decay envelope",
+      "panel_section": "CHANNEL 4",
+      "description": "Decay from 50 ms to 7 s on each trigger; also drives the bend and the impact click. Cut short by DECAY KILL.",
+      "properties": {
+        "decay_s": [0.05, 7]
+      },
+      "inputs": ["ch4_env.gate", "ch4_env.kill"],
+      "outputs": ["ch4_env.out"]
+    },
+    {
+      "id": "ch4_osc",
+      "type": "oscillator",
+      "name": "Channel 4 tone",
+      "panel_section": "CHANNEL 4",
+      "description": "A self-oscillating diode ladder filter used as the tone oscillator, from below 20 Hz to over 30 kHz.",
+      "properties": {
+        "frequency_hz": [20, 30000],
+        "circuit": "self-oscillating diode ladder filter"
+      },
+      "inputs": ["ch4_osc.pitch_cv"],
+      "outputs": ["ch4_osc.out"]
+    },
+    {
+      "id": "ch4_noise",
+      "type": "noise",
+      "name": "Channel 4 noise",
+      "panel_section": "CHANNEL 4",
+      "description": "White noise source.",
+      "inputs": [],
+      "outputs": ["ch4_noise.out"]
+    },
+    {
+      "id": "ch4_nflt",
+      "type": "filter",
+      "name": "Channel 4 noise filter",
+      "panel_section": "CHANNEL 4",
+      "description": "Filters the noise; PITCH opens it as it raises the tone.",
+      "inputs": ["ch4_nflt.in", "ch4_nflt.cutoff_cv"],
+      "outputs": ["ch4_nflt.out"]
+    },
+    {
+      "id": "ch4_mix",
+      "type": "mixer",
+      "name": "Channel 4 balance",
+      "panel_section": "CHANNEL 4",
+      "description": "Balances tone and noise; equal at 12 o'clock.",
+      "inputs": ["ch4_mix.tone", "ch4_mix.noise"],
+      "outputs": ["ch4_mix.out"]
+    },
+    {
+      "id": "ch4_lpf",
+      "type": "filter",
+      "name": "Channel 4 click filter",
+      "panel_section": "CHANNEL 4",
+      "description": "Low-pass filter opened at the start of each hit by IMPACT CLICK, giving a stick-strike transient.",
+      "inputs": ["ch4_lpf.in", "ch4_lpf.cutoff_cv"],
+      "outputs": ["ch4_lpf.out"]
+    },
+    {
+      "id": "ch4_vca",
+      "type": "vca",
+      "name": "Channel 4 VCA",
+      "panel_section": "CHANNEL 4",
+      "description": "Shapes the channel with its decay; CHANNEL LEVEL sets both the channel output and its share of the mix.",
+      "inputs": ["ch4_vca.in", "ch4_vca.cv"],
+      "outputs": ["ch4_vca.out"]
+    },
+    {
+      "id": "pitch",
+      "type": "pitch_control",
+      "name": "Overall pitch",
+      "panel_section": "MASTER/EFFECTS",
+      "description": "Scales all channels' pitch from 25% to 400%; at the centre the PITCH PEDAL takes over.",
+      "properties": {
+        "range_pct": [25, 400]
+      },
+      "inputs": ["pitch.pedal"],
+      "outputs": ["pitch.cv"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "MASTER/EFFECTS",
+      "description": "Square or sine LFO, 0.1-20 Hz (SLOW) or 20 Hz-4.3 kHz (FAST, usable for basic FM).",
+      "properties": {
+        "rate_hz": {
+          "slow": [0.1, 20],
+          "fast": [20, 4300]
+        },
+        "waveforms": ["square", "sine"]
+      },
+      "inputs": [],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "run",
+      "type": "sample_hold",
+      "name": "RUN",
+      "panel_section": "MASTER/EFFECTS",
+      "description": "Sample and hold that takes a new sample each time a RUN-enabled channel is triggered. RUN TIME sets how many samples are taken before the sampled wave resets.",
+      "inputs": ["run.trig"],
+      "outputs": ["run.out"]
+    },
+    {
+      "id": "kill",
+      "type": "gate_logic",
+      "name": "Decay kill",
+      "panel_section": "(rear panel)",
+      "description": "Footswitch or MIDI CC 80 that cuts the decay short on enabled channels.",
+      "inputs": ["kill.in"],
+      "outputs": ["kill.out"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI and USB MIDI",
+      "panel_section": "(rear panel)",
+      "description": "Triggers channels from notes C1, D1, E1, F1; pitch by CC 20-23; decay kill by CC 80.",
+      "inputs": [],
+      "outputs": ["midi.trig1", "midi.trig2", "midi.trig3", "midi.trig4"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MASTER/EFFECTS",
+      "description": "Mix of the four channels at OUTPUT LEVEL, on the top MIX OUT and rear OUTPUT.",
+      "inputs": ["out.mix_in"],
+      "outputs": ["out.mix"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "ch1.mic_sens",
+      "module": "ch1_trig",
+      "label": "MIC SENSITIVITY",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger sensitivity of MIC IN."
+    },
+    {
+      "id": "ch1.mic_on",
+      "module": "ch1_trig",
+      "label": "MIC ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Bypasses the sensitivity control.",
+      "note": "The guide's wording ('bypass the mic sensitivity controls') is ambiguous: it may disable the mic input."
+    },
+    {
+      "id": "ch1.click",
+      "module": "ch1_lpf",
+      "label": "IMPACT CLICK",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Strike transient at the start of the sound; clockwise opens the low-pass cutoff for a louder click."
+    },
+    {
+      "id": "ch1.decay",
+      "module": "ch1_env",
+      "label": "DECAY TIME",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 7,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "ch1.bend_dir",
+      "module": "ch1_osc",
+      "label": "UP/DOWN",
+      "kind": "enum",
+      "manual_ref": 9,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Whether the pitch bends up to, or down to, the PITCH setting."
+    },
+    {
+      "id": "ch1.bend",
+      "module": "ch1_osc",
+      "label": "BEND LEVEL",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of bend into the set pitch; fully anticlockwise is none."
+    },
+    {
+      "id": "ch1.pitch",
+      "module": "ch1_osc",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 30000,
+        "unit": "Hz",
+        "note": "'below 20 Hz to over 30 kHz'"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Tone frequency and noise filter cutoff together."
+    },
+    {
+      "id": "ch1.balance",
+      "module": "ch1_mix",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Anticlockwise favours noise, clockwise the tone."
+    },
+    {
+      "id": "ch1.lfo_on",
+      "module": "ch1_osc",
+      "label": "LFO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets the master LFO reach this channel."
+    },
+    {
+      "id": "ch1.effect_range",
+      "module": "ch1_osc",
+      "label": "EFFECT RANGE",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO and RUN effects on this channel."
+    },
+    {
+      "id": "ch1.run_on",
+      "module": "ch1_osc",
+      "label": "RUN ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets RUN reach this channel; its triggers also step RUN."
+    },
+    {
+      "id": "ch1.level",
+      "module": "ch1_vca",
+      "label": "CHANNEL LEVEL",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level at the channel output and in the mix."
+    },
+    {
+      "id": "ch1.velocity",
+      "module": "ch1_vca",
+      "label": "velocity",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether trigger velocity sets the channel's loudness."
+    },
+    {
+      "id": "ch1.decay_kill",
+      "module": "ch1_env",
+      "label": "decay kill enable",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether DECAY KILL acts on this channel."
+    },
+    {
+      "id": "ch2.mic_sens",
+      "module": "ch2_trig",
+      "label": "MIC SENSITIVITY",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger sensitivity of MIC IN."
+    },
+    {
+      "id": "ch2.mic_on",
+      "module": "ch2_trig",
+      "label": "MIC ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Bypasses the sensitivity control.",
+      "note": "The guide's wording ('bypass the mic sensitivity controls') is ambiguous: it may disable the mic input."
+    },
+    {
+      "id": "ch2.click",
+      "module": "ch2_lpf",
+      "label": "IMPACT CLICK",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Strike transient at the start of the sound; clockwise opens the low-pass cutoff for a louder click."
+    },
+    {
+      "id": "ch2.decay",
+      "module": "ch2_env",
+      "label": "DECAY TIME",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 7,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "ch2.bend_dir",
+      "module": "ch2_osc",
+      "label": "UP/DOWN",
+      "kind": "enum",
+      "manual_ref": 9,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Whether the pitch bends up to, or down to, the PITCH setting."
+    },
+    {
+      "id": "ch2.bend",
+      "module": "ch2_osc",
+      "label": "BEND LEVEL",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of bend into the set pitch; fully anticlockwise is none."
+    },
+    {
+      "id": "ch2.pitch",
+      "module": "ch2_osc",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 30000,
+        "unit": "Hz",
+        "note": "'below 20 Hz to over 30 kHz'"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Tone frequency and noise filter cutoff together."
+    },
+    {
+      "id": "ch2.balance",
+      "module": "ch2_mix",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Anticlockwise favours noise, clockwise the tone."
+    },
+    {
+      "id": "ch2.lfo_on",
+      "module": "ch2_osc",
+      "label": "LFO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets the master LFO reach this channel."
+    },
+    {
+      "id": "ch2.effect_range",
+      "module": "ch2_osc",
+      "label": "EFFECT RANGE",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO and RUN effects on this channel."
+    },
+    {
+      "id": "ch2.run_on",
+      "module": "ch2_osc",
+      "label": "RUN ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets RUN reach this channel; its triggers also step RUN."
+    },
+    {
+      "id": "ch2.level",
+      "module": "ch2_vca",
+      "label": "CHANNEL LEVEL",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level at the channel output and in the mix."
+    },
+    {
+      "id": "ch2.velocity",
+      "module": "ch2_vca",
+      "label": "velocity",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether trigger velocity sets the channel's loudness."
+    },
+    {
+      "id": "ch2.decay_kill",
+      "module": "ch2_env",
+      "label": "decay kill enable",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether DECAY KILL acts on this channel."
+    },
+    {
+      "id": "ch3.mic_sens",
+      "module": "ch3_trig",
+      "label": "MIC SENSITIVITY",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger sensitivity of MIC IN."
+    },
+    {
+      "id": "ch3.mic_on",
+      "module": "ch3_trig",
+      "label": "MIC ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Bypasses the sensitivity control.",
+      "note": "The guide's wording ('bypass the mic sensitivity controls') is ambiguous: it may disable the mic input."
+    },
+    {
+      "id": "ch3.click",
+      "module": "ch3_lpf",
+      "label": "IMPACT CLICK",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Strike transient at the start of the sound; clockwise opens the low-pass cutoff for a louder click."
+    },
+    {
+      "id": "ch3.decay",
+      "module": "ch3_env",
+      "label": "DECAY TIME",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 7,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "ch3.bend_dir",
+      "module": "ch3_osc",
+      "label": "UP/DOWN",
+      "kind": "enum",
+      "manual_ref": 9,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Whether the pitch bends up to, or down to, the PITCH setting."
+    },
+    {
+      "id": "ch3.bend",
+      "module": "ch3_osc",
+      "label": "BEND LEVEL",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of bend into the set pitch; fully anticlockwise is none."
+    },
+    {
+      "id": "ch3.pitch",
+      "module": "ch3_osc",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 30000,
+        "unit": "Hz",
+        "note": "'below 20 Hz to over 30 kHz'"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Tone frequency and noise filter cutoff together."
+    },
+    {
+      "id": "ch3.balance",
+      "module": "ch3_mix",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Anticlockwise favours noise, clockwise the tone."
+    },
+    {
+      "id": "ch3.lfo_on",
+      "module": "ch3_osc",
+      "label": "LFO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets the master LFO reach this channel."
+    },
+    {
+      "id": "ch3.effect_range",
+      "module": "ch3_osc",
+      "label": "EFFECT RANGE",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO and RUN effects on this channel."
+    },
+    {
+      "id": "ch3.run_on",
+      "module": "ch3_osc",
+      "label": "RUN ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets RUN reach this channel; its triggers also step RUN."
+    },
+    {
+      "id": "ch3.level",
+      "module": "ch3_vca",
+      "label": "CHANNEL LEVEL",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level at the channel output and in the mix."
+    },
+    {
+      "id": "ch3.velocity",
+      "module": "ch3_vca",
+      "label": "velocity",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether trigger velocity sets the channel's loudness."
+    },
+    {
+      "id": "ch3.decay_kill",
+      "module": "ch3_env",
+      "label": "decay kill enable",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether DECAY KILL acts on this channel."
+    },
+    {
+      "id": "ch4.mic_sens",
+      "module": "ch4_trig",
+      "label": "MIC SENSITIVITY",
+      "kind": "continuous",
+      "manual_ref": 4,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Trigger sensitivity of MIC IN."
+    },
+    {
+      "id": "ch4.mic_on",
+      "module": "ch4_trig",
+      "label": "MIC ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 5,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Bypasses the sensitivity control.",
+      "note": "The guide's wording ('bypass the mic sensitivity controls') is ambiguous: it may disable the mic input."
+    },
+    {
+      "id": "ch4.click",
+      "module": "ch4_lpf",
+      "label": "IMPACT CLICK",
+      "kind": "continuous",
+      "manual_ref": 6,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Strike transient at the start of the sound; clockwise opens the low-pass cutoff for a louder click."
+    },
+    {
+      "id": "ch4.decay",
+      "module": "ch4_env",
+      "label": "DECAY TIME",
+      "kind": "continuous",
+      "manual_ref": 7,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 7,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time."
+    },
+    {
+      "id": "ch4.bend_dir",
+      "module": "ch4_osc",
+      "label": "UP/DOWN",
+      "kind": "enum",
+      "manual_ref": 9,
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Whether the pitch bends up to, or down to, the PITCH setting."
+    },
+    {
+      "id": "ch4.bend",
+      "module": "ch4_osc",
+      "label": "BEND LEVEL",
+      "kind": "continuous",
+      "manual_ref": 10,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of bend into the set pitch; fully anticlockwise is none."
+    },
+    {
+      "id": "ch4.pitch",
+      "module": "ch4_osc",
+      "label": "PITCH",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 30000,
+        "unit": "Hz",
+        "note": "'below 20 Hz to over 30 kHz'"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Tone frequency and noise filter cutoff together."
+    },
+    {
+      "id": "ch4.balance",
+      "module": "ch4_mix",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "manual_ref": 12,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Anticlockwise favours noise, clockwise the tone."
+    },
+    {
+      "id": "ch4.lfo_on",
+      "module": "ch4_osc",
+      "label": "LFO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 13,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets the master LFO reach this channel."
+    },
+    {
+      "id": "ch4.effect_range",
+      "module": "ch4_osc",
+      "label": "EFFECT RANGE",
+      "kind": "continuous",
+      "manual_ref": 14,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the LFO and RUN effects on this channel."
+    },
+    {
+      "id": "ch4.run_on",
+      "module": "ch4_osc",
+      "label": "RUN ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 15,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Lets RUN reach this channel; its triggers also step RUN."
+    },
+    {
+      "id": "ch4.level",
+      "module": "ch4_vca",
+      "label": "CHANNEL LEVEL",
+      "kind": "continuous",
+      "manual_ref": 16,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level at the channel output and in the mix."
+    },
+    {
+      "id": "ch4.velocity",
+      "module": "ch4_vca",
+      "label": "velocity",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether trigger velocity sets the channel's loudness."
+    },
+    {
+      "id": "ch4.decay_kill",
+      "module": "ch4_env",
+      "label": "decay kill enable",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "Whether DECAY KILL acts on this channel."
+    },
+    {
+      "id": "pitch.overall",
+      "module": "pitch",
+      "label": "OVERALL PITCH",
+      "kind": "continuous",
+      "manual_ref": 20,
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "physical": {
+        "min": 25,
+        "max": 400,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Base pitch of all channels, 25% to 400%; centre hands control to the pitch pedal."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "LFO RATE",
+      "kind": "continuous",
+      "manual_ref": 21,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO rate within the selected range."
+    },
+    {
+      "id": "lfo.range",
+      "module": "lfo",
+      "label": "LFO RANGE",
+      "kind": "enum",
+      "manual_ref": 22,
+      "values": [
+        {
+          "value": "slow"
+        },
+        {
+          "value": "fast"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "SLOW 0.1-20 Hz or FAST 20 Hz-4.3 kHz."
+    },
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "LFO SHAPE",
+      "kind": "enum",
+      "manual_ref": 23,
+      "values": [
+        {
+          "value": "square"
+        },
+        {
+          "value": "sine"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.on",
+      "module": "lfo",
+      "label": "LFO ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 24,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Master LFO on or off."
+    },
+    {
+      "id": "run.on",
+      "module": "run",
+      "label": "RUN ON/OFF",
+      "kind": "boolean",
+      "manual_ref": 25,
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "RUN effect on or off."
+    },
+    {
+      "id": "run.time",
+      "module": "run",
+      "label": "RUN TIME",
+      "kind": "continuous",
+      "manual_ref": 26,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "How many samples RUN takes before resetting."
+    },
+    {
+      "id": "out.level",
+      "module": "out",
+      "label": "OUTPUT LEVEL",
+      "kind": "continuous",
+      "manual_ref": 27,
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Master level at MIX OUT and OUTPUT."
+    },
+    {
+      "id": "midi.channel",
+      "module": "midi",
+      "label": "MIDI CHANNEL SELECT",
+      "kind": "integer",
+      "manual_ref": 31,
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "MIDI receive channel, 1-16."
+    },
+    {
+      "id": "kill.cc",
+      "module": "kill",
+      "label": "decay kill (MIDI)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Decay kill by MIDI."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER BUTTON",
+      "kind": "boolean",
+      "manual_ref": 34,
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Power on or off."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.ch1_mic_in",
+      "label": "MIC IN 1",
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch1_trig.mic_in",
+      "function": "Microphone or other trigger source; velocity sensitive.",
+      "manual_ref": 1
+    },
+    {
+      "id": "jack.ch1_out",
+      "label": "CHANNEL OUT 1",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch1_vca.out",
+      "function": "Individual channel output.",
+      "manual_ref": 2
+    },
+    {
+      "id": "jack.ch1_mic_out",
+      "label": "MIC OUT 1",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch1_trig.mic_thru",
+      "function": "Passes the MIC IN signal on.",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.ch2_mic_in",
+      "label": "MIC IN 2",
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch2_trig.mic_in",
+      "function": "Microphone or other trigger source; velocity sensitive.",
+      "manual_ref": 1
+    },
+    {
+      "id": "jack.ch2_out",
+      "label": "CHANNEL OUT 2",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch2_vca.out",
+      "function": "Individual channel output.",
+      "manual_ref": 2
+    },
+    {
+      "id": "jack.ch2_mic_out",
+      "label": "MIC OUT 2",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch2_trig.mic_thru",
+      "function": "Passes the MIC IN signal on.",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.ch3_mic_in",
+      "label": "MIC IN 3",
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch3_trig.mic_in",
+      "function": "Microphone or other trigger source; velocity sensitive.",
+      "manual_ref": 1
+    },
+    {
+      "id": "jack.ch3_out",
+      "label": "CHANNEL OUT 3",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch3_vca.out",
+      "function": "Individual channel output.",
+      "manual_ref": 2
+    },
+    {
+      "id": "jack.ch3_mic_out",
+      "label": "MIC OUT 3",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch3_trig.mic_thru",
+      "function": "Passes the MIC IN signal on.",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.ch4_mic_in",
+      "label": "MIC IN 4",
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch4_trig.mic_in",
+      "function": "Microphone or other trigger source; velocity sensitive.",
+      "manual_ref": 1
+    },
+    {
+      "id": "jack.ch4_out",
+      "label": "CHANNEL OUT 4",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch4_vca.out",
+      "function": "Individual channel output.",
+      "manual_ref": 2
+    },
+    {
+      "id": "jack.ch4_mic_out",
+      "label": "MIC OUT 4",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "ch4_trig.mic_thru",
+      "function": "Passes the MIC IN signal on.",
+      "manual_ref": 3
+    },
+    {
+      "id": "jack.mix_out",
+      "label": "MIX OUT",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.mix",
+      "function": "Mix of the four channels; same as the rear OUTPUT.",
+      "manual_ref": 17
+    },
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.mix",
+      "function": "Master output, unbalanced.",
+      "manual_ref": 28
+    },
+    {
+      "id": "jack.pitch_pedal_top",
+      "label": "PITCH PEDAL",
+      "location": "top",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TRS",
+      "node": "pitch.pedal",
+      "function": "Expression pedal (e.g. FC600): the tip sends an internal voltage to the pedal, the ring returns it. Acts when OVERALL PITCH is centred.",
+      "manual_ref": 18,
+      "combine": "replace"
+    },
+    {
+      "id": "jack.pitch_pedal_rear",
+      "label": "PITCH PEDAL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "pitch.pedal",
+      "function": "Expression pedal (e.g. FC600): the tip sends an internal voltage to the pedal, the ring returns it. Acts when OVERALL PITCH is centred.",
+      "manual_ref": 29,
+      "combine": "replace"
+    },
+    {
+      "id": "jack.decay_kill",
+      "label": "DECAY KILL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kill.in",
+      "function": "Footswitch that cuts off the decay.",
+      "manual_ref": 30
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Channel triggering and pitch over MIDI.",
+      "manual_ref": 19
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Mirrors MIDI IN.",
+      "manual_ref": 32
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB 2.0 type B",
+      "node": null,
+      "function": "Class-compliant USB MIDI, SynthTribe and firmware updates.",
+      "manual_ref": 33
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC, 1000 mA supply.",
+      "manual_ref": 35
+    },
+    {
+      "id": "jack.eurorack",
+      "label": "Eurorack power",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "10-pin IDC header",
+      "node": null,
+      "function": "10-pin header; a 10-to-16-pin ribbon is supplied. Draws 800 mA from +12 V."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "ch1_trig.gate",
+      "to": "ch1_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "midi.trig1",
+      "to": "ch1_trig.midi_in",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "MIDI note C1."
+    },
+    {
+      "id": "c03",
+      "from": "pitch.cv",
+      "to": "ch1_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall"
+    },
+    {
+      "id": "c04",
+      "from": "pitch.cv",
+      "to": "ch1_nflt.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c05",
+      "from": "ch1_env.out",
+      "to": "ch1_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.bend",
+      "note": "Polarity set by UP/DOWN.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c06",
+      "from": "ch1_noise.out",
+      "to": "ch1_nflt.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "ch1_osc.out",
+      "to": "ch1_mix.tone",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "ch1_nflt.out",
+      "to": "ch1_mix.noise",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "ch1_mix.out",
+      "to": "ch1_lpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c10",
+      "from": "ch1_env.out",
+      "to": "ch1_lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.click",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c11",
+      "from": "ch1_lpf.out",
+      "to": "ch1_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "ch1_env.out",
+      "to": "ch1_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch1.level"
+    },
+    {
+      "id": "c13",
+      "from": "lfo.out",
+      "to": "ch1_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.on",
+            "equals": true
+          },
+          {
+            "param": "ch1.lfo_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch1.effect_range",
+      "confidence": "inferred",
+      "note": "The guide says the LFO 'affects the channel'; pitch is the assumed destination."
+    },
+    {
+      "id": "c14",
+      "from": "run.out",
+      "to": "ch1_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch1.run_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch1.effect_range",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c15",
+      "from": "ch1_trig.gate",
+      "to": "run.trig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch1.run_on",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c16",
+      "from": "kill.out",
+      "to": "ch1_env.kill",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch1.decay_kill",
+        "equals": true
+      }
+    },
+    {
+      "id": "c17",
+      "from": "ch1_vca.out",
+      "to": "out.mix_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level"
+    },
+    {
+      "id": "c18",
+      "from": "ch2_trig.gate",
+      "to": "ch2_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "midi.trig2",
+      "to": "ch2_trig.midi_in",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "MIDI note D1."
+    },
+    {
+      "id": "c20",
+      "from": "pitch.cv",
+      "to": "ch2_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall"
+    },
+    {
+      "id": "c21",
+      "from": "pitch.cv",
+      "to": "ch2_nflt.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c22",
+      "from": "ch2_env.out",
+      "to": "ch2_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.bend",
+      "note": "Polarity set by UP/DOWN.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c23",
+      "from": "ch2_noise.out",
+      "to": "ch2_nflt.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c24",
+      "from": "ch2_osc.out",
+      "to": "ch2_mix.tone",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c25",
+      "from": "ch2_nflt.out",
+      "to": "ch2_mix.noise",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c26",
+      "from": "ch2_mix.out",
+      "to": "ch2_lpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c27",
+      "from": "ch2_env.out",
+      "to": "ch2_lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.click",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c28",
+      "from": "ch2_lpf.out",
+      "to": "ch2_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "ch2_env.out",
+      "to": "ch2_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch2.level"
+    },
+    {
+      "id": "c30",
+      "from": "lfo.out",
+      "to": "ch2_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.on",
+            "equals": true
+          },
+          {
+            "param": "ch2.lfo_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch2.effect_range",
+      "confidence": "inferred",
+      "note": "The guide says the LFO 'affects the channel'; pitch is the assumed destination."
+    },
+    {
+      "id": "c31",
+      "from": "run.out",
+      "to": "ch2_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch2.run_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch2.effect_range",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c32",
+      "from": "ch2_trig.gate",
+      "to": "run.trig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch2.run_on",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c33",
+      "from": "kill.out",
+      "to": "ch2_env.kill",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch2.decay_kill",
+        "equals": true
+      }
+    },
+    {
+      "id": "c34",
+      "from": "ch2_vca.out",
+      "to": "out.mix_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level"
+    },
+    {
+      "id": "c35",
+      "from": "ch3_trig.gate",
+      "to": "ch3_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c36",
+      "from": "midi.trig3",
+      "to": "ch3_trig.midi_in",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "MIDI note E1."
+    },
+    {
+      "id": "c37",
+      "from": "pitch.cv",
+      "to": "ch3_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall"
+    },
+    {
+      "id": "c38",
+      "from": "pitch.cv",
+      "to": "ch3_nflt.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c39",
+      "from": "ch3_env.out",
+      "to": "ch3_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch3.bend",
+      "note": "Polarity set by UP/DOWN.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c40",
+      "from": "ch3_noise.out",
+      "to": "ch3_nflt.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "ch3_osc.out",
+      "to": "ch3_mix.tone",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c42",
+      "from": "ch3_nflt.out",
+      "to": "ch3_mix.noise",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c43",
+      "from": "ch3_mix.out",
+      "to": "ch3_lpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c44",
+      "from": "ch3_env.out",
+      "to": "ch3_lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch3.click",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c45",
+      "from": "ch3_lpf.out",
+      "to": "ch3_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c46",
+      "from": "ch3_env.out",
+      "to": "ch3_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch3.level"
+    },
+    {
+      "id": "c47",
+      "from": "lfo.out",
+      "to": "ch3_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.on",
+            "equals": true
+          },
+          {
+            "param": "ch3.lfo_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch3.effect_range",
+      "confidence": "inferred",
+      "note": "The guide says the LFO 'affects the channel'; pitch is the assumed destination."
+    },
+    {
+      "id": "c48",
+      "from": "run.out",
+      "to": "ch3_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch3.run_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch3.effect_range",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c49",
+      "from": "ch3_trig.gate",
+      "to": "run.trig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch3.run_on",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c50",
+      "from": "kill.out",
+      "to": "ch3_env.kill",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch3.decay_kill",
+        "equals": true
+      }
+    },
+    {
+      "id": "c51",
+      "from": "ch3_vca.out",
+      "to": "out.mix_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level"
+    },
+    {
+      "id": "c52",
+      "from": "ch4_trig.gate",
+      "to": "ch4_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c53",
+      "from": "midi.trig4",
+      "to": "ch4_trig.midi_in",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "MIDI note F1."
+    },
+    {
+      "id": "c54",
+      "from": "pitch.cv",
+      "to": "ch4_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall"
+    },
+    {
+      "id": "c55",
+      "from": "pitch.cv",
+      "to": "ch4_nflt.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "pitch.overall",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c56",
+      "from": "ch4_env.out",
+      "to": "ch4_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch4.bend",
+      "note": "Polarity set by UP/DOWN.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c57",
+      "from": "ch4_noise.out",
+      "to": "ch4_nflt.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c58",
+      "from": "ch4_osc.out",
+      "to": "ch4_mix.tone",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c59",
+      "from": "ch4_nflt.out",
+      "to": "ch4_mix.noise",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c60",
+      "from": "ch4_mix.out",
+      "to": "ch4_lpf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c61",
+      "from": "ch4_env.out",
+      "to": "ch4_lpf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch4.click",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c62",
+      "from": "ch4_lpf.out",
+      "to": "ch4_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c63",
+      "from": "ch4_env.out",
+      "to": "ch4_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "ch4.level"
+    },
+    {
+      "id": "c64",
+      "from": "lfo.out",
+      "to": "ch4_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "lfo.on",
+            "equals": true
+          },
+          {
+            "param": "ch4.lfo_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch4.effect_range",
+      "confidence": "inferred",
+      "note": "The guide says the LFO 'affects the channel'; pitch is the assumed destination."
+    },
+    {
+      "id": "c65",
+      "from": "run.out",
+      "to": "ch4_osc.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch4.run_on",
+            "equals": true
+          }
+        ]
+      },
+      "amount": "ch4.effect_range",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c66",
+      "from": "ch4_trig.gate",
+      "to": "run.trig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "run.on",
+            "equals": true
+          },
+          {
+            "param": "ch4.run_on",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c67",
+      "from": "kill.out",
+      "to": "ch4_env.kill",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "ch4.decay_kill",
+        "equals": true
+      }
+    },
+    {
+      "id": "c68",
+      "from": "ch4_vca.out",
+      "to": "out.mix_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.level"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "ch1.trigger_led",
+      "module": "ch1_trig",
+      "label": "TRIGGER LED 1",
+      "kind": "led",
+      "function": "Lights on a trigger from the mic input or MIDI."
+    },
+    {
+      "id": "ch2.trigger_led",
+      "module": "ch2_trig",
+      "label": "TRIGGER LED 2",
+      "kind": "led",
+      "function": "Lights on a trigger from the mic input or MIDI."
+    },
+    {
+      "id": "ch3.trigger_led",
+      "module": "ch3_trig",
+      "label": "TRIGGER LED 3",
+      "kind": "led",
+      "function": "Lights on a trigger from the mic input or MIDI."
+    },
+    {
+      "id": "ch4.trigger_led",
+      "module": "ch4_trig",
+      "label": "TRIGGER LED 4",
+      "kind": "led",
+      "function": "Lights on a trigger from the mic input or MIDI."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Triggering",
+      "applies_to": ["ch1_trig", "ch2_trig", "ch3_trig", "ch4_trig", "midi"],
+      "rule": "Each channel fires from sound at its MIC IN once it passes MIC SENSITIVITY, louder sound giving a louder hit, or from its MIDI note (C1, D1, E1, F1 on the DIP-switch channel), with velocity setting loudness unless disabled in SynthTribe. MIC OUT passes the microphone on so the acoustic drum can still be recorded."
+    },
+    {
+      "id": "b02",
+      "name": "Tone and noise",
+      "applies_to": ["ch1_osc", "ch2_osc", "ch3_osc", "ch4_osc"],
+      "rule": "The tone is a self-oscillating diode ladder filter. PITCH sets its frequency and opens the noise filter together, so higher pitches give brighter noise. BALANCE mixes the two, from noise only to tone only."
+    },
+    {
+      "id": "b03",
+      "name": "Bend",
+      "applies_to": ["ch1_osc", "ch2_osc", "ch3_osc", "ch4_osc"],
+      "rule": "Each hit starts above (DOWN) or below (UP) the PITCH setting by BEND LEVEL and sweeps to it: the classic falling or rising synth-tom sweep. Fully anticlockwise gives a steady pitch.",
+      "confidence": "inferred",
+      "note": "The guide says the pitch bends 'until the required frequency is reached'; the sweep following the decay envelope is assumed."
+    },
+    {
+      "id": "b04",
+      "name": "Impact click",
+      "applies_to": ["ch1_lpf", "ch2_lpf", "ch3_lpf", "ch4_lpf"],
+      "rule": "Adds a stick-like attack. Turning it up opens the low-pass cutoff at the start of the sound, making the click louder and brighter."
+    },
+    {
+      "id": "b05",
+      "name": "Master effects",
+      "applies_to": ["lfo", "run", "pitch"],
+      "rule": "OVERALL PITCH scales every channel from 25% to 400%; at its centre the pitch pedal takes over. The LFO (square or sine, SLOW to 20 Hz or FAST to 4.3 kHz for FM-like tones) and RUN reach only channels with their switches on, by each channel's EFFECT RANGE."
+    },
+    {
+      "id": "b06",
+      "name": "RUN",
+      "applies_to": ["run"],
+      "rule": "A sample and hold clocked by the triggers of RUN-enabled channels: each hit takes a new sample, so successive hits step through values. RUN TIME sets how many samples are taken before the sampled wave resets.",
+      "confidence": "inferred",
+      "note": "What is sampled is not stated."
+    },
+    {
+      "id": "b07",
+      "name": "Decay kill",
+      "applies_to": ["kill", "ch1_env", "ch2_env", "ch3_env", "ch4_env"],
+      "rule": "The DECAY KILL footswitch or MIDI CC 80 overrides DECAY TIME and cuts the sound off, on channels enabled in SynthTribe."
+    },
+    {
+      "id": "b08",
+      "name": "Warm-up",
+      "applies_to": ["ch1_osc", "ch2_osc", "ch3_osc", "ch4_osc"],
+      "rule": "Allow 15 minutes or more, longer from cold, before recording or performance."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note_numbers": {
+          "C1": "channel 1",
+          "D1": "channel 2",
+          "E1": "channel 3",
+          "F1": "channel 4"
+        },
+        "velocity": "loudness (can be disabled)"
+      },
+      {
+        "message": "control_change",
+        "cc": 20,
+        "parameter": "ch1.pitch"
+      },
+      {
+        "message": "control_change",
+        "cc": 21,
+        "parameter": "ch2.pitch"
+      },
+      {
+        "message": "control_change",
+        "cc": 22,
+        "parameter": "ch3.pitch"
+      },
+      {
+        "message": "control_change",
+        "cc": 23,
+        "parameter": "ch4.pitch"
+      },
+      {
+        "message": "control_change",
+        "cc": 80,
+        "parameter": "decay kill"
+      }
+    ],
+    "transmits": [],
+    "channel_note": "Receive channel 1-16 set by rear DIP switches; MIDI THRU mirrors MIDI IN; USB MIDI is class compliant.",
+    "note": "Note-number octave convention for C1 is not stated (36 under the C1 = 36 convention, 24 under C-1 = 0)."
+  },
+  "specifications": {
+    "voices": "4 x monophonic",
+    "type": "analogue",
+    "oscillators": "4 self-oscillating diode ladder filters / 4 x white noise",
+    "lfo": 1,
+    "run": "1 S&H",
+    "decay_s": [0.05, 7],
+    "pitch_hz": "below 20 to over 30000",
+    "overall_pitch_pct": [25, 400],
+    "lfo_hz": {
+      "slow": [0.1, 20],
+      "fast": [20, 4300]
+    },
+    "connectivity": {
+      "midi": "In and Thru, 5-pin DIN",
+      "usb": "USB 2.0 type B, class compliant",
+      "audio_out": "3.5 mm TS mix, 4 x 3.5 mm TS channel, 6.35 mm TS rear",
+      "mic_in": "4 x 3.5 mm TS",
+      "mic_out": "4 x 3.5 mm TS",
+      "pitch_pedal": "3.5 mm TRS top / 6.35 mm TRS rear",
+      "decay_kill": "6.35 mm TS rear"
+    },
+    "power": {
+      "psu": "12 V DC, 1000 mA",
+      "eurorack": "800 mA on +12 V"
+    },
+    "eurorack_hp": 70,
+    "dimensions_mm": {
+      "h": 95,
+      "w": 375,
+      "d": 136
+    },
+    "weight_kg": 1.51,
+    "operating_temp_c": [5, 45]
+  },
+  "omitted_from_source": [
+    "safety, warranty and legal text",
+    "hook-up diagrams",
+    "Eurorack installation steps beyond power requirements",
+    "the blank patch sheet templates",
+    "non-English translations"
+  ],
+  "not_in_source": [
+    "what LFO and RUN modulate (pitch is assumed) and what RUN samples",
+    "how the bend is generated and its time",
+    "whether the tone and noise share one diode ladder filter or use two",
+    "the impact click circuit and the click filter's slope",
+    "trigger threshold behaviour, velocity curve and MIDI note-off handling",
+    "MIDI CC value scaling and whether panel moves are sent anywhere",
+    "the noise filter's type and slope"
+  ],
+  "source_inconsistencies": [
+    "The title promises a 'Special Effects Channel', but the guide describes four channels and a master/effects section, not a fifth channel.",
+    "The TRIGGER LED description refers to triggers 'over MIDI (3)', but callout 3 is the MIC OUT socket.",
+    "Dimensions are 95 x 375 x 136 mm in the guide and 374 x 136 x 93 mm on Thomann."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Thin source",
+      "detail": "A quick start guide only. The signal order (mix, click filter, VCA) and the modulation destinations are inferred from control descriptions."
+    },
+    {
+      "topic": "Original instrument",
+      "detail": "The Simmons SDS-3 attribution comes from retailers, not Behringer; an original SDS-3 manual or schematic would settle the inferred structure."
+    },
+    {
+      "topic": "SynthTribe",
+      "detail": "Per-channel pitch, velocity and decay kill settings exist in the app; further app-only options may follow firmware updates."
+    }
+  ]
+}

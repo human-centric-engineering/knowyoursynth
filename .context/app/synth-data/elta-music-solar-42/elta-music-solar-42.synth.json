@@ -1,0 +1,4474 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "elta-music-solar-42",
+    "manufacturer": "Elta Music",
+    "model": "SOLAR 42 Ambient Machine",
+    "category": "analogue microtonal drone synthesizer with touch keyboard, 8 voices, dual Polivoks filter and cartridge effects; desktop, no MIDI",
+    "based_on": "Successor to the Elta SOLAR 50 (2021); designed by Arseny Tokarev, made in Riga, Latvia; launched 2023. Followed by the SOLAR 42F and 42N (renumbered voices, added distortion and sub-oscillators).",
+    "sources": [
+      {
+        "id": "user_specs",
+        "title": "Specification list supplied by the user (from the SOLAR 42 manual)",
+        "kind": "spec_sheet",
+        "file": "conversation",
+        "note": "Output voltage ranges, power, weight, size."
+      },
+      {
+        "id": "manual",
+        "title": "Elta Music SOLAR 42 User Manual (28 pages)",
+        "kind": "user_manual",
+        "file": "https://www.eltamusic.com/_files/ugd/12d408_d4c9881033524945ae276dc3559589ff.pdf",
+        "note": "Elta's PDF exceeds the fetch limit; read through ManualsLib page summaries (https://www.manualslib.com/manual/3351553/Elta-Music-Solar-42.html) and Scribd excerpts. The second supplied PDF (panel graphic) has no text layer."
+      },
+      {
+        "id": "press",
+        "title": "Resident Advisor, gearnews, Sonicstate and Perfect Circuit coverage",
+        "kind": "other",
+        "file": "https://ra.co/news/79473",
+        "note": "Eight voices (six drones, two playable), two Polivoks filters, 5-step sequencer, two noise and two S&H; no MIDI, no presets; voices 4 and 5 have individual outputs."
+      },
+      {
+        "id": "elta_page",
+        "title": "Elta Music SOLAR 42F/42N product page",
+        "kind": "other",
+        "file": "https://www.eltamusic.com/solar-42f",
+        "note": "Elta's feature list ('Two LFO's and 3 Square pulse generators') and the specification block, which still uses the original voice numbering."
+      },
+      {
+        "id": "modwiggler",
+        "title": "Mod Wiggler 'Elta Music Solar 42' thread",
+        "kind": "other",
+        "file": "https://www.modwiggler.com/forum/viewtopic.php?p=4249186",
+        "note": "Owners note the 42F manual mixes updated and original SOLAR 42 names (e.g. buttons 3 and 8)."
+      },
+      {
+        "id": "ambientmodules",
+        "title": "neilbgr/AmbientModules (VCV Rack modules of SOLAR 42F parts)",
+        "kind": "other",
+        "file": "https://github.com/neilbgr/AmbientModules",
+        "note": "Control-level descriptions of each section; based on the 42F (different voice numbering), used only for detail not found elsewhere."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 8,
+    "polyphony_mode": "eight independent voices: six drones on push-buttons or gates, two VCO voices on the touch keyboard (single or split)",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound presets; the touch keyboard stores its own settings and sequencer presets.",
+    "semi_modular": true,
+    "panel_counts": {
+      "voices": 8,
+      "touch_plates": 12,
+      "drone_buttons": 6,
+      "cartridge_slots": 2
+    },
+    "summary": "Four 'classic' drone voices (1, 2, 6, 7), each five independently tuned sawtooth generators (no V/oct) spanning about B0-D7, with a VOLT knob that detunes them down together and then cross-modulates them, and a photosensor driven by a red LED for pitch modulation. Two 'Papa Srapa' voices (3, 8): an audio square cross-modulated (FM/AM) by a low-frequency square, blended with white noise, with sample and hold. Two AS3340 VCO voices (4, 5) with six waveforms including two morphing shapes, voice 4 normalled into voice 5's FM. Every voice has an envelope (AR on the drones) with CV in and out and HOLD. A 10-channel stereo mixer (8 voices, external audio, preamp) feeds a dual 12 dB Polivoks filter and a dual cartridge effector with X/Y/Z CV. Two LFOs, a 5-step sequencer with pulser, a joystick and a contact-mic envelope follower provide CV."
+  },
+  "modules": [
+    {
+      "id": "keys",
+      "type": "voice_allocator",
+      "name": "Touch keyboard and drone buttons",
+      "panel_section": "TOUCH SENSITIVE CONTROLLER / DRONE VOICES",
+      "description": "12 capacitive plates with V/oct, gate and pressure outputs (single or split), arpeggiator, sequencer, quantiser, portamento, vibrato and presets; six push-buttons gate the drone voices.",
+      "properties": {
+        "plates": 12,
+        "clock_bpm": [10, 300]
+      },
+      "inputs": ["keys.clock_in"],
+      "outputs": [
+        "keys.cv_l",
+        "keys.gate_l",
+        "keys.cv_r",
+        "keys.gate_r",
+        "keys.pressure",
+        "keys.drone_gates"
+      ]
+    },
+    {
+      "id": "v1",
+      "type": "oscillator",
+      "name": "Voice 1 (classic drone)",
+      "panel_section": "VOICE 1",
+      "description": "Five sawtooth generators, each with its own TUNE knob and on/off key: 1st C0-G2, 2nd B1-G3, 3rd D3-B4, 4th E4-C6, 5th G5-D7. VOLT transposes all five down together, then makes them frequency-modulate each other. A photosensor lit by a red LED (from LFO or CV) bends the pitch. Envelope (attack/release, HOLD) into the voice VCA.",
+      "properties": {
+        "generators": 5,
+        "range": "B0-D7"
+      },
+      "inputs": ["v1.photo_cv", "v1.volt_cv", "v1.gate"],
+      "outputs": ["v1.out", "v1.env"]
+    },
+    {
+      "id": "v2",
+      "type": "oscillator",
+      "name": "Voice 2 (classic drone)",
+      "panel_section": "VOICE 2",
+      "description": "Five sawtooth generators, each with its own TUNE knob and on/off key: 1st C0-G2, 2nd B1-G3, 3rd D3-B4, 4th E4-C6, 5th G5-D7. VOLT transposes all five down together, then makes them frequency-modulate each other. A photosensor lit by a red LED (from LFO or CV) bends the pitch. Envelope (attack/release, HOLD) into the voice VCA.",
+      "properties": {
+        "generators": 5,
+        "range": "B0-D7"
+      },
+      "inputs": ["v2.photo_cv", "v2.volt_cv", "v2.gate"],
+      "outputs": ["v2.out", "v2.env"]
+    },
+    {
+      "id": "v6",
+      "type": "oscillator",
+      "name": "Voice 6 (classic drone)",
+      "panel_section": "VOICE 6",
+      "description": "Five sawtooth generators, each with its own TUNE knob and on/off key: 1st C0-G2, 2nd B1-G3, 3rd D3-B4, 4th E4-C6, 5th G5-D7. VOLT transposes all five down together, then makes them frequency-modulate each other. A photosensor lit by a red LED (from LFO or CV) bends the pitch. Envelope (attack/release, HOLD) into the voice VCA.",
+      "properties": {
+        "generators": 5,
+        "range": "B0-D7"
+      },
+      "inputs": ["v6.photo_cv", "v6.volt_cv", "v6.gate"],
+      "outputs": ["v6.out", "v6.env"]
+    },
+    {
+      "id": "v7",
+      "type": "oscillator",
+      "name": "Voice 7 (classic drone)",
+      "panel_section": "VOICE 7",
+      "description": "Five sawtooth generators, each with its own TUNE knob and on/off key: 1st C0-G2, 2nd B1-G3, 3rd D3-B4, 4th E4-C6, 5th G5-D7. VOLT transposes all five down together, then makes them frequency-modulate each other. A photosensor lit by a red LED (from LFO or CV) bends the pitch. Envelope (attack/release, HOLD) into the voice VCA.",
+      "properties": {
+        "generators": 5,
+        "range": "B0-D7"
+      },
+      "inputs": ["v7.photo_cv", "v7.volt_cv", "v7.gate"],
+      "outputs": ["v7.out", "v7.env"]
+    },
+    {
+      "id": "v3",
+      "type": "oscillator",
+      "name": "Voice 3 (Papa Srapa drone)",
+      "panel_section": "VOICE 3",
+      "description": "After Papa Srapa's DIY noise synths: two Schmitt-trigger square oscillators. The low-frequency one is a modulator (RATE knob, x1/x10 switch, CV OUT); the other is the tone, C0-E7 (PITCH). FM AMOUNT and DIVIDER set the modulation depth; FM and AM toggles choose frequency modulation, interruption (AM) or both. White noise and a sample and hold sit alongside; attack/release envelope with HOLD, gated by its push-button. Sirens, birds, gunfire, surf, wind.",
+      "inputs": ["v3.pitch_cv", "v3.gate", "v3.sh_clock"],
+      "outputs": ["v3.out", "v3.env", "v3.mod_out", "v3.sh_out", "v3.noise_out"]
+    },
+    {
+      "id": "v8",
+      "type": "oscillator",
+      "name": "Voice 8 (Papa Srapa drone)",
+      "panel_section": "VOICE 8",
+      "description": "After Papa Srapa's DIY noise synths: two Schmitt-trigger square oscillators. The low-frequency one is a modulator (RATE knob, x1/x10 switch, CV OUT); the other is the tone, C0-E7 (PITCH). FM AMOUNT and DIVIDER set the modulation depth; FM and AM toggles choose frequency modulation, interruption (AM) or both. White noise and a sample and hold sit alongside; attack/release envelope with HOLD, gated by its push-button. Sirens, birds, gunfire, surf, wind.",
+      "inputs": ["v8.pitch_cv", "v8.gate", "v8.sh_clock"],
+      "outputs": ["v8.out", "v8.env", "v8.mod_out", "v8.sh_out", "v8.noise_out"]
+    },
+    {
+      "id": "v4",
+      "type": "oscillator",
+      "name": "Voice 4 (VCO)",
+      "panel_section": "VOICE 4",
+      "description": "AS3340 triangle-core VCO: six waveforms (including saw-to-inverted-saw and sine-to-triangle morphs with SHAPE), octave switch and tune, 1 V/oct input, envelope (ADSR/ASR/AD/looped AD per manual excerpts) into its VCA. Has a VCO output.",
+      "properties": {
+        "chip": "AS3340",
+        "waveforms": 6
+      },
+      "inputs": ["v4.voct", "v4.fm", "v4.gate"],
+      "outputs": ["v4.out", "v4.env", "v4.vco_out"]
+    },
+    {
+      "id": "v5",
+      "type": "oscillator",
+      "name": "Voice 5 (VCO)",
+      "panel_section": "VOICE 5",
+      "description": "AS3340 triangle-core VCO: six waveforms (including saw-to-inverted-saw and sine-to-triangle morphs with SHAPE), octave switch and tune, 1 V/oct input, envelope (ADSR/ASR/AD/looped AD per manual excerpts) into its VCA. Has a SYNC input; voice 4's VCO output is normalled to its FM input.",
+      "properties": {
+        "chip": "AS3340",
+        "waveforms": 6
+      },
+      "inputs": ["v5.voct", "v5.fm", "v5.gate", "v5.sync"],
+      "outputs": ["v5.out", "v5.env"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO A and B",
+      "panel_section": "LFOs",
+      "description": "Two LFOs, A slow and B fast, each blending square and triangle (centre = mix); positive-only output so they can drive the drone photosensors' red LEDs.",
+      "properties": {
+        "output_v": [0, 10]
+      },
+      "inputs": [],
+      "outputs": ["lfo.a", "lfo.b"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer and pulser",
+      "panel_section": "SEQUENCER",
+      "description": "Buchla-inspired 5-stage sequential voltage source: per-step 0-5 V level and gate, 3/4/5 stages, internal PULSER clock or external clock.",
+      "properties": {
+        "steps": 5
+      },
+      "inputs": ["seq.clock_in"],
+      "outputs": ["seq.cv", "seq.gate", "seq.pulser"]
+    },
+    {
+      "id": "joy",
+      "type": "manual_controller",
+      "name": "Joystick",
+      "panel_section": "JOYSTICK",
+      "description": "Two-axis CV with an offset per axis selecting -10..0 V (left), -5..+5 V (middle) or 0..+10 V (right).",
+      "inputs": [],
+      "outputs": ["joy.x", "joy.y"]
+    },
+    {
+      "id": "preamp",
+      "type": "preamp",
+      "name": "Contact mic, preamp and envelope follower",
+      "panel_section": "CONTACT MIC + ENVELOPE FOLLOWER",
+      "description": "Built-in piezo under the keyboard (the case becomes a microphone) or an external source; preamp gain; envelope follower (attack, release) with envelope and gate outputs; audio to the mixer.",
+      "inputs": ["preamp.ext"],
+      "outputs": ["preamp.out", "preamp.env", "preamp.gate"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Volume and pan for voices 1-8, external audio and preamp: ten channels to a stereo bus.",
+      "inputs": [
+        "mixer.v1",
+        "mixer.v2",
+        "mixer.v3",
+        "mixer.v4",
+        "mixer.v5",
+        "mixer.v6",
+        "mixer.v7",
+        "mixer.v8",
+        "mixer.ext",
+        "mixer.preamp"
+      ],
+      "outputs": ["mixer.out_l", "mixer.out_r"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Dual Polivoks filter",
+      "panel_section": "FILTERS",
+      "description": "Two 12 dB/oct lo-fi filters on the classic Soviet Polivoks chip (left and right), frequency and resonance each, CV on frequency, LINK.",
+      "properties": {
+        "slope_db_per_oct": 12
+      },
+      "inputs": ["vcf.in_l", "vcf.in_r", "vcf.cv"],
+      "outputs": ["vcf.out_l", "vcf.out_r"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Dual cartridge effector",
+      "panel_section": "EFFECTOR",
+      "description": "Two cartridge effect circuits (left and right, as in the Elta Console pedal and SOLAR 50); BLEND sets the effect level; X, Y, Z parameters under CV (-10..+10 V).",
+      "inputs": ["fx.in_l", "fx.in_r", "fx.x_cv", "fx.y_cv", "fx.z_cv"],
+      "outputs": ["fx.out_l", "fx.out_r"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Outputs",
+      "panel_section": "OUTPUTS",
+      "description": "Wet L/R (MASTER VOLUME), dry outputs for the keyboard voices, headphones.",
+      "inputs": ["out.wet_l", "out.wet_r", "out.dry_4", "out.dry_5"],
+      "outputs": ["out.wet_out_l", "out.wet_out_r", "out.dry_out_l", "out.dry_out_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "v1.tune1",
+      "module": "v1",
+      "label": "V1 TUNE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 1 pitch, C0-G2."
+    },
+    {
+      "id": "v1.on1",
+      "module": "v1",
+      "label": "V1 GEN 1 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 1 on/off."
+    },
+    {
+      "id": "v1.tune2",
+      "module": "v1",
+      "label": "V1 TUNE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 2 pitch, B1-G3."
+    },
+    {
+      "id": "v1.on2",
+      "module": "v1",
+      "label": "V1 GEN 2 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 2 on/off."
+    },
+    {
+      "id": "v1.tune3",
+      "module": "v1",
+      "label": "V1 TUNE 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 3 pitch, D3-B4."
+    },
+    {
+      "id": "v1.on3",
+      "module": "v1",
+      "label": "V1 GEN 3 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 3 on/off."
+    },
+    {
+      "id": "v1.tune4",
+      "module": "v1",
+      "label": "V1 TUNE 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 4 pitch, E4-C6."
+    },
+    {
+      "id": "v1.on4",
+      "module": "v1",
+      "label": "V1 GEN 4 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 4 on/off."
+    },
+    {
+      "id": "v1.tune5",
+      "module": "v1",
+      "label": "V1 TUNE 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 5 pitch, G5-D7."
+    },
+    {
+      "id": "v1.on5",
+      "module": "v1",
+      "label": "V1 GEN 5 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 5 on/off."
+    },
+    {
+      "id": "v1.volt",
+      "module": "v1",
+      "label": "V1 VOLT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Transposes all five generators down together (each at a different rate, so chords re-tune); further on, they cross-modulate."
+    },
+    {
+      "id": "v1.attack",
+      "module": "v1",
+      "label": "V1 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v1.release",
+      "module": "v1",
+      "label": "V1 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v1.hold",
+      "module": "v1",
+      "label": "V1 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v2.tune1",
+      "module": "v2",
+      "label": "V2 TUNE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 1 pitch, C0-G2."
+    },
+    {
+      "id": "v2.on1",
+      "module": "v2",
+      "label": "V2 GEN 1 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 1 on/off."
+    },
+    {
+      "id": "v2.tune2",
+      "module": "v2",
+      "label": "V2 TUNE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 2 pitch, B1-G3."
+    },
+    {
+      "id": "v2.on2",
+      "module": "v2",
+      "label": "V2 GEN 2 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 2 on/off."
+    },
+    {
+      "id": "v2.tune3",
+      "module": "v2",
+      "label": "V2 TUNE 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 3 pitch, D3-B4."
+    },
+    {
+      "id": "v2.on3",
+      "module": "v2",
+      "label": "V2 GEN 3 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 3 on/off."
+    },
+    {
+      "id": "v2.tune4",
+      "module": "v2",
+      "label": "V2 TUNE 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 4 pitch, E4-C6."
+    },
+    {
+      "id": "v2.on4",
+      "module": "v2",
+      "label": "V2 GEN 4 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 4 on/off."
+    },
+    {
+      "id": "v2.tune5",
+      "module": "v2",
+      "label": "V2 TUNE 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 5 pitch, G5-D7."
+    },
+    {
+      "id": "v2.on5",
+      "module": "v2",
+      "label": "V2 GEN 5 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 5 on/off."
+    },
+    {
+      "id": "v2.volt",
+      "module": "v2",
+      "label": "V2 VOLT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Transposes all five generators down together (each at a different rate, so chords re-tune); further on, they cross-modulate."
+    },
+    {
+      "id": "v2.attack",
+      "module": "v2",
+      "label": "V2 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v2.release",
+      "module": "v2",
+      "label": "V2 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v2.hold",
+      "module": "v2",
+      "label": "V2 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v6.tune1",
+      "module": "v6",
+      "label": "V6 TUNE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 1 pitch, C0-G2."
+    },
+    {
+      "id": "v6.on1",
+      "module": "v6",
+      "label": "V6 GEN 1 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 1 on/off."
+    },
+    {
+      "id": "v6.tune2",
+      "module": "v6",
+      "label": "V6 TUNE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 2 pitch, B1-G3."
+    },
+    {
+      "id": "v6.on2",
+      "module": "v6",
+      "label": "V6 GEN 2 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 2 on/off."
+    },
+    {
+      "id": "v6.tune3",
+      "module": "v6",
+      "label": "V6 TUNE 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 3 pitch, D3-B4."
+    },
+    {
+      "id": "v6.on3",
+      "module": "v6",
+      "label": "V6 GEN 3 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 3 on/off."
+    },
+    {
+      "id": "v6.tune4",
+      "module": "v6",
+      "label": "V6 TUNE 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 4 pitch, E4-C6."
+    },
+    {
+      "id": "v6.on4",
+      "module": "v6",
+      "label": "V6 GEN 4 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 4 on/off."
+    },
+    {
+      "id": "v6.tune5",
+      "module": "v6",
+      "label": "V6 TUNE 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 5 pitch, G5-D7."
+    },
+    {
+      "id": "v6.on5",
+      "module": "v6",
+      "label": "V6 GEN 5 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 5 on/off."
+    },
+    {
+      "id": "v6.volt",
+      "module": "v6",
+      "label": "V6 VOLT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Transposes all five generators down together (each at a different rate, so chords re-tune); further on, they cross-modulate."
+    },
+    {
+      "id": "v6.attack",
+      "module": "v6",
+      "label": "V6 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v6.release",
+      "module": "v6",
+      "label": "V6 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v6.hold",
+      "module": "v6",
+      "label": "V6 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v7.tune1",
+      "module": "v7",
+      "label": "V7 TUNE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 1 pitch, C0-G2."
+    },
+    {
+      "id": "v7.on1",
+      "module": "v7",
+      "label": "V7 GEN 1 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 1 on/off."
+    },
+    {
+      "id": "v7.tune2",
+      "module": "v7",
+      "label": "V7 TUNE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 2 pitch, B1-G3."
+    },
+    {
+      "id": "v7.on2",
+      "module": "v7",
+      "label": "V7 GEN 2 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 2 on/off."
+    },
+    {
+      "id": "v7.tune3",
+      "module": "v7",
+      "label": "V7 TUNE 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 3 pitch, D3-B4."
+    },
+    {
+      "id": "v7.on3",
+      "module": "v7",
+      "label": "V7 GEN 3 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 3 on/off."
+    },
+    {
+      "id": "v7.tune4",
+      "module": "v7",
+      "label": "V7 TUNE 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 4 pitch, E4-C6."
+    },
+    {
+      "id": "v7.on4",
+      "module": "v7",
+      "label": "V7 GEN 4 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 4 on/off."
+    },
+    {
+      "id": "v7.tune5",
+      "module": "v7",
+      "label": "V7 TUNE 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Generator 5 pitch, G5-D7."
+    },
+    {
+      "id": "v7.on5",
+      "module": "v7",
+      "label": "V7 GEN 5 ON",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Generator 5 on/off."
+    },
+    {
+      "id": "v7.volt",
+      "module": "v7",
+      "label": "V7 VOLT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Transposes all five generators down together (each at a different rate, so chords re-tune); further on, they cross-modulate."
+    },
+    {
+      "id": "v7.attack",
+      "module": "v7",
+      "label": "V7 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v7.release",
+      "module": "v7",
+      "label": "V7 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v7.hold",
+      "module": "v7",
+      "label": "V7 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v3.pitch",
+      "module": "v3",
+      "label": "V3 PITCH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone oscillator, about C0-E7."
+    },
+    {
+      "id": "v3.rate",
+      "module": "v3",
+      "label": "V3 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulator (low-frequency square) rate."
+    },
+    {
+      "id": "v3.x10",
+      "module": "v3",
+      "label": "V3 RATE SWITCH x1/x10",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "x1"
+        },
+        {
+          "value": "x10"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator rate range."
+    },
+    {
+      "id": "v3.divider",
+      "module": "v3",
+      "label": "V3 DIVIDER",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sets modulation depth (deviation) together with FM AMOUNT."
+    },
+    {
+      "id": "v3.depth",
+      "module": "v3",
+      "label": "V3 FM AMOUNT (amt)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulation depth (deviation)."
+    },
+    {
+      "id": "v3.fm",
+      "module": "v3",
+      "label": "V3 FM",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator to frequency (up = on)."
+    },
+    {
+      "id": "v3.am",
+      "module": "v3",
+      "label": "V3 AM",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator interrupts the tone (up = on); with FM down and AM up the tone is chopped at RATE."
+    },
+    {
+      "id": "v3.noise",
+      "module": "v3",
+      "label": "V3 NOISE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "White noise level.",
+      "confidence": "inferred",
+      "note": "Two white noise generators are listed; the control layout is from the 42F recreation."
+    },
+    {
+      "id": "v3.attack",
+      "module": "v3",
+      "label": "V3 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v3.release",
+      "module": "v3",
+      "label": "V3 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v3.hold",
+      "module": "v3",
+      "label": "V3 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v8.pitch",
+      "module": "v8",
+      "label": "V8 PITCH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone oscillator, about C0-E7."
+    },
+    {
+      "id": "v8.rate",
+      "module": "v8",
+      "label": "V8 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulator (low-frequency square) rate."
+    },
+    {
+      "id": "v8.x10",
+      "module": "v8",
+      "label": "V8 RATE SWITCH x1/x10",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "x1"
+        },
+        {
+          "value": "x10"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator rate range."
+    },
+    {
+      "id": "v8.divider",
+      "module": "v8",
+      "label": "V8 DIVIDER",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sets modulation depth (deviation) together with FM AMOUNT."
+    },
+    {
+      "id": "v8.depth",
+      "module": "v8",
+      "label": "V8 FM AMOUNT (amt)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulation depth (deviation)."
+    },
+    {
+      "id": "v8.fm",
+      "module": "v8",
+      "label": "V8 FM",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator to frequency (up = on)."
+    },
+    {
+      "id": "v8.am",
+      "module": "v8",
+      "label": "V8 AM",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Modulator interrupts the tone (up = on); with FM down and AM up the tone is chopped at RATE."
+    },
+    {
+      "id": "v8.noise",
+      "module": "v8",
+      "label": "V8 NOISE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "White noise level.",
+      "confidence": "inferred",
+      "note": "Two white noise generators are listed; the control layout is from the 42F recreation."
+    },
+    {
+      "id": "v8.attack",
+      "module": "v8",
+      "label": "V8 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v8.release",
+      "module": "v8",
+      "label": "V8 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v8.hold",
+      "module": "v8",
+      "label": "V8 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open without a gate."
+    },
+    {
+      "id": "v4.wave",
+      "module": "v4",
+      "label": "V4 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "saw_to_inverted_saw"
+        },
+        {
+          "value": "sine_to_triangle"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Six waveforms including two morphing shapes.",
+      "confidence": "inferred",
+      "note": "Exact list from the 42F recreation; the manual names the two morphs."
+    },
+    {
+      "id": "v4.shape",
+      "module": "v4",
+      "label": "V4 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width or morph position."
+    },
+    {
+      "id": "v4.octave",
+      "module": "v4",
+      "label": "V4 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LO"
+        },
+        {
+          "value": "64'"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        },
+        {
+          "value": "1'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "8-position octave switch for coarse tuning.",
+      "note": "Eight positions read from the panel legend in the manual (LO, 64' to 1')."
+    },
+    {
+      "id": "v4.tune",
+      "module": "v4",
+      "label": "V4 TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tune."
+    },
+    {
+      "id": "v4.fm_amt",
+      "module": "v4",
+      "label": "V4 FM",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "FM depth (voice 5: from voice 4 by default)."
+    },
+    {
+      "id": "v4.attack",
+      "module": "v4",
+      "label": "V4 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v4.decay",
+      "module": "v4",
+      "label": "V4 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay."
+    },
+    {
+      "id": "v4.sustain",
+      "module": "v4",
+      "label": "V4 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope sustain."
+    },
+    {
+      "id": "v4.release",
+      "module": "v4",
+      "label": "V4 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v4.env_mode",
+      "module": "v4",
+      "label": "V4 ENV MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ASR"
+        },
+        {
+          "value": "AD"
+        },
+        {
+          "value": "LOOP"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Envelope type.",
+      "note": "The manual lists ASR, AD and looped AD envelope types; the VCO panel legend shows PW, ATTACK, DECAY, SUSTAIN, RELEASE with HOLD and LOOP switches."
+    },
+    {
+      "id": "v4.hold",
+      "module": "v4",
+      "label": "V4 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open."
+    },
+    {
+      "id": "v5.wave",
+      "module": "v5",
+      "label": "V5 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "saw"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "saw_to_inverted_saw"
+        },
+        {
+          "value": "sine_to_triangle"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Six waveforms including two morphing shapes.",
+      "confidence": "inferred",
+      "note": "Exact list from the 42F recreation; the manual names the two morphs."
+    },
+    {
+      "id": "v5.shape",
+      "module": "v5",
+      "label": "V5 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width or morph position."
+    },
+    {
+      "id": "v5.octave",
+      "module": "v5",
+      "label": "V5 OCTAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LO"
+        },
+        {
+          "value": "64'"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        },
+        {
+          "value": "1'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "8-position octave switch for coarse tuning.",
+      "note": "Eight positions read from the panel legend in the manual (LO, 64' to 1')."
+    },
+    {
+      "id": "v5.tune",
+      "module": "v5",
+      "label": "V5 TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tune."
+    },
+    {
+      "id": "v5.fm_amt",
+      "module": "v5",
+      "label": "V5 FM",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "FM depth (voice 5: from voice 4 by default)."
+    },
+    {
+      "id": "v5.attack",
+      "module": "v5",
+      "label": "V5 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "v5.decay",
+      "module": "v5",
+      "label": "V5 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay."
+    },
+    {
+      "id": "v5.sustain",
+      "module": "v5",
+      "label": "V5 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope sustain."
+    },
+    {
+      "id": "v5.release",
+      "module": "v5",
+      "label": "V5 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "v5.env_mode",
+      "module": "v5",
+      "label": "V5 ENV MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ASR"
+        },
+        {
+          "value": "AD"
+        },
+        {
+          "value": "LOOP"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Envelope type.",
+      "note": "The manual lists ASR, AD and looped AD envelope types; the VCO panel legend shows PW, ATTACK, DECAY, SUSTAIN, RELEASE with HOLD and LOOP switches."
+    },
+    {
+      "id": "v5.hold",
+      "module": "v5",
+      "label": "V5 HOLD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Keeps the voice open."
+    },
+    {
+      "id": "lfo.a_rate",
+      "module": "lfo",
+      "label": "LFO A RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO A rate (slow)."
+    },
+    {
+      "id": "lfo.a_wave",
+      "module": "lfo",
+      "label": "LFO A WAVE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Square (one side) to triangle (other side); centre mixes both."
+    },
+    {
+      "id": "lfo.b_rate",
+      "module": "lfo",
+      "label": "LFO B RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO B rate (fast)."
+    },
+    {
+      "id": "lfo.b_wave",
+      "module": "lfo",
+      "label": "LFO B WAVE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Square (one side) to triangle (other side); centre mixes both."
+    },
+    {
+      "id": "seq.pulser",
+      "module": "seq",
+      "label": "PULSER",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Internal clock rate."
+    },
+    {
+      "id": "seq.stages",
+      "module": "seq",
+      "label": "STAGES",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "3"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sequence length.",
+      "confidence": "inferred",
+      "note": "Switch order 4-5-3 per the 42F recreation."
+    },
+    {
+      "id": "seq.step1",
+      "module": "seq",
+      "label": "STEP 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "V"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step level 0-5 V."
+    },
+    {
+      "id": "seq.gate1",
+      "module": "seq",
+      "label": "GATE 1",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step gate on/off."
+    },
+    {
+      "id": "seq.step2",
+      "module": "seq",
+      "label": "STEP 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "V"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step level 0-5 V."
+    },
+    {
+      "id": "seq.gate2",
+      "module": "seq",
+      "label": "GATE 2",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step gate on/off."
+    },
+    {
+      "id": "seq.step3",
+      "module": "seq",
+      "label": "STEP 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "V"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step level 0-5 V."
+    },
+    {
+      "id": "seq.gate3",
+      "module": "seq",
+      "label": "GATE 3",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step gate on/off."
+    },
+    {
+      "id": "seq.step4",
+      "module": "seq",
+      "label": "STEP 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "V"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step level 0-5 V."
+    },
+    {
+      "id": "seq.gate4",
+      "module": "seq",
+      "label": "GATE 4",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step gate on/off."
+    },
+    {
+      "id": "seq.step5",
+      "module": "seq",
+      "label": "STEP 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 5,
+        "unit": "V"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step level 0-5 V."
+    },
+    {
+      "id": "seq.gate5",
+      "module": "seq",
+      "label": "GATE 5",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Step gate on/off."
+    },
+    {
+      "id": "joy.stick",
+      "module": "joy",
+      "label": "JOYSTICK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "X/Y position."
+    },
+    {
+      "id": "joy.x_offset",
+      "module": "joy",
+      "label": "JOYSTICK X OFFSET",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-10..0V"
+        },
+        {
+          "value": "-5..+5V"
+        },
+        {
+          "value": "0..+10V"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output range: left -10..0 V, middle -5..+5 V, right 0..+10 V."
+    },
+    {
+      "id": "joy.y_offset",
+      "module": "joy",
+      "label": "JOYSTICK Y OFFSET",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-10..0V"
+        },
+        {
+          "value": "-5..+5V"
+        },
+        {
+          "value": "0..+10V"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output range: left -10..0 V, middle -5..+5 V, right 0..+10 V."
+    },
+    {
+      "id": "preamp.gain",
+      "module": "preamp",
+      "label": "GAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Preamp gain for the piezo or external source."
+    },
+    {
+      "id": "preamp.source",
+      "module": "preamp",
+      "label": "SOURCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "piezo"
+        },
+        {
+          "value": "external"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Internal piezo or external source."
+    },
+    {
+      "id": "preamp.attack",
+      "module": "preamp",
+      "label": "EF ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope follower attack."
+    },
+    {
+      "id": "preamp.release",
+      "module": "preamp",
+      "label": "EF RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope follower release."
+    },
+    {
+      "id": "mixer.v1_vol",
+      "module": "mixer",
+      "label": "VOICE 1 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v1_pan",
+      "module": "mixer",
+      "label": "VOICE 1 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v2_vol",
+      "module": "mixer",
+      "label": "VOICE 2 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v2_pan",
+      "module": "mixer",
+      "label": "VOICE 2 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v3_vol",
+      "module": "mixer",
+      "label": "VOICE 3 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v3_pan",
+      "module": "mixer",
+      "label": "VOICE 3 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v4_vol",
+      "module": "mixer",
+      "label": "VOICE 4 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v4_pan",
+      "module": "mixer",
+      "label": "VOICE 4 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v5_vol",
+      "module": "mixer",
+      "label": "VOICE 5 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v5_pan",
+      "module": "mixer",
+      "label": "VOICE 5 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v6_vol",
+      "module": "mixer",
+      "label": "VOICE 6 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v6_pan",
+      "module": "mixer",
+      "label": "VOICE 6 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v7_vol",
+      "module": "mixer",
+      "label": "VOICE 7 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v7_pan",
+      "module": "mixer",
+      "label": "VOICE 7 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.v8_vol",
+      "module": "mixer",
+      "label": "VOICE 8 VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.v8_pan",
+      "module": "mixer",
+      "label": "VOICE 8 PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.ext_vol",
+      "module": "mixer",
+      "label": "EXT VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.ext_pan",
+      "module": "mixer",
+      "label": "EXT PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "mixer.preamp_vol",
+      "module": "mixer",
+      "label": "PREAMP VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel level."
+    },
+    {
+      "id": "mixer.preamp_pan",
+      "module": "mixer",
+      "label": "PREAMP PAN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Channel panorama."
+    },
+    {
+      "id": "vcf.freq_l",
+      "module": "vcf",
+      "label": "FILTER L FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff."
+    },
+    {
+      "id": "vcf.res_l",
+      "module": "vcf",
+      "label": "FILTER L RES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonance."
+    },
+    {
+      "id": "vcf.freq_r",
+      "module": "vcf",
+      "label": "FILTER R FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff."
+    },
+    {
+      "id": "vcf.res_r",
+      "module": "vcf",
+      "label": "FILTER R RES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonance."
+    },
+    {
+      "id": "vcf.link",
+      "module": "vcf",
+      "label": "FREQ LINK",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Right filter follows the left filter's frequency."
+    },
+    {
+      "id": "vcf.cv_amt",
+      "module": "vcf",
+      "label": "FILTER CV",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the frequency CV input."
+    },
+    {
+      "id": "fx.blend",
+      "module": "fx",
+      "label": "BLEND",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Effect level."
+    },
+    {
+      "id": "fx.master",
+      "module": "fx",
+      "label": "MASTER VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Wet output level."
+    },
+    {
+      "id": "fx.x",
+      "module": "fx",
+      "label": "EFFECT X",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cartridge parameter X; also under CV."
+    },
+    {
+      "id": "fx.y",
+      "module": "fx",
+      "label": "EFFECT Y",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cartridge parameter Y; also under CV."
+    },
+    {
+      "id": "fx.z",
+      "module": "fx",
+      "label": "EFFECT Z",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cartridge parameter Z; also under CV."
+    },
+    {
+      "id": "fx.cartridge",
+      "module": "fx",
+      "label": "CARTRIDGES (L/R)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "Cathedral (reverbs: shimmer...)"
+        },
+        {
+          "value": "Magic (pitched delays)"
+        },
+        {
+          "value": "Time (mod delays)"
+        },
+        {
+          "value": "Pitch Shifter (octave, pitch)"
+        },
+        {
+          "value": "Infinity (big ambient)"
+        },
+        {
+          "value": "String Ringer (audio-rate modulation)"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Effect cartridges, each with two programs."
+    },
+    {
+      "id": "fx.bypass",
+      "module": "fx",
+      "label": "BYPASS",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Effector bypass per channel.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "keys.behaviour",
+      "module": "keys",
+      "label": "BEHAVIOUR",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "single"
+        },
+        {
+          "value": "split"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Single or split (each side plays one VCO voice)."
+    },
+    {
+      "id": "keys.mode",
+      "module": "keys",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "keyboard"
+        },
+        {
+          "value": "arpeggiator"
+        },
+        {
+          "value": "sequencer"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Keyboard, arpeggiator or sequencer (per side in split)."
+    },
+    {
+      "id": "keys.quantiser",
+      "module": "keys",
+      "label": "QUANTISER",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "on"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Quantise to notes, or play microtonally with plates as pressure/position."
+    },
+    {
+      "id": "keys.pressure_mode",
+      "module": "keys",
+      "label": "PRESSURE MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "pressure"
+        },
+        {
+          "value": "other"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "What the pressure output carries."
+    },
+    {
+      "id": "keys.clock_src",
+      "module": "keys",
+      "label": "CLOCK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "internal"
+        },
+        {
+          "value": "external"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Internal 10-300 BPM or external (switches automatically on an incoming clock)."
+    },
+    {
+      "id": "keys.portamento",
+      "module": "keys",
+      "label": "PORTAMENTO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Glide time."
+    },
+    {
+      "id": "keys.vibrato_speed",
+      "module": "keys",
+      "label": "VIBRATO SPEED",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Keyboard vibrato speed (0-127)."
+    },
+    {
+      "id": "keys.vibrato_depth",
+      "module": "keys",
+      "label": "VIBRATO DEPTH",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Keyboard vibrato depth (0-127)."
+    },
+    {
+      "id": "keys.vibrato_delay",
+      "module": "keys",
+      "label": "VIBRATO DELAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Keyboard vibrato delay (0-127)."
+    },
+    {
+      "id": "keys.seq_length",
+      "module": "keys",
+      "label": "SEQUENCER LENGTH",
+      "kind": "integer",
+      "range": {
+        "min": 2,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Keyboard sequencer steps."
+    },
+    {
+      "id": "keys.arp_div",
+      "module": "keys",
+      "label": "ARP CLOCK DIV/MULT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ratios"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Arpeggiator clock ratio."
+    },
+    {
+      "id": "keys.presets",
+      "module": "keys",
+      "label": "PRESETS",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "slots"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "touch keyboard menu (encoder)"
+        }
+      ],
+      "function": "Stored keyboard settings and sequences."
+    },
+    {
+      "id": "keys.octave_buttons",
+      "module": "keys",
+      "label": "OCTAVE BUTTONS",
+      "kind": "integer",
+      "range": {
+        "min": -4,
+        "max": 4
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Transpose: octave range (quantised) or offset (unquantised)."
+    },
+    {
+      "id": "keys.drone_buttons",
+      "module": "keys",
+      "label": "DRONE KEYS 1-3, 6-8",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Push-buttons gating the six drone voices."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch.",
+      "confidence": "inferred"
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.v1_env_out",
+      "label": "V1 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v1.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v1_gate",
+      "label": "V1 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v1.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v2_env_out",
+      "label": "V2 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v2.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v2_gate",
+      "label": "V2 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v2.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v6_env_out",
+      "label": "V6 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v6.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v6_gate",
+      "label": "V6 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v6.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v7_env_out",
+      "label": "V7 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v7.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v7_gate",
+      "label": "V7 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v7.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v3_env_out",
+      "label": "V3 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v3.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v3_gate",
+      "label": "V3 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v3.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v8_env_out",
+      "label": "V8 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v8.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v8_gate",
+      "label": "V8 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v8.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v4_env_out",
+      "label": "V4 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v4.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v4_gate",
+      "label": "V4 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v4.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v5_env_out",
+      "label": "V5 ENV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v5.env",
+      "function": "Voice envelope out (can trigger the next voice or modulate filter/effector)."
+    },
+    {
+      "id": "jack.v5_gate",
+      "label": "V5 GATE / ENV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "v5.gate",
+      "function": "External gate or CV triggers the voice envelope (5 V)."
+    },
+    {
+      "id": "jack.v1_photo",
+      "label": "V1 PHOTO CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v1.photo_cv",
+      "function": "Positive CV lights the voice's red LED over its photosensor.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v1_volt",
+      "label": "V1 VOLT CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v1.volt_cv",
+      "function": "Adds to VOLT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v2_photo",
+      "label": "V2 PHOTO CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v2.photo_cv",
+      "function": "Positive CV lights the voice's red LED over its photosensor.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v2_volt",
+      "label": "V2 VOLT CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v2.volt_cv",
+      "function": "Adds to VOLT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v6_photo",
+      "label": "V6 PHOTO CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v6.photo_cv",
+      "function": "Positive CV lights the voice's red LED over its photosensor.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v6_volt",
+      "label": "V6 VOLT CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v6.volt_cv",
+      "function": "Adds to VOLT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v7_photo",
+      "label": "V7 PHOTO CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v7.photo_cv",
+      "function": "Positive CV lights the voice's red LED over its photosensor.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v7_volt",
+      "label": "V7 VOLT CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v7.volt_cv",
+      "function": "Adds to VOLT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v3_mod_out",
+      "label": "V3 MOD OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v3.mod_out",
+      "function": "Modulator square, 0 to +12 V."
+    },
+    {
+      "id": "jack.v3_sh_out",
+      "label": "V3 S&H OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v3.sh_out",
+      "function": "Sample and hold, -5 to +5 V."
+    },
+    {
+      "id": "jack.v3_sh_clock",
+      "label": "V3 S&H CLOCK",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "v3.sh_clock",
+      "function": "Sample clock.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v3_noise",
+      "label": "V3 NOISE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "v3.noise_out",
+      "function": "White noise.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v3_pitch",
+      "label": "V3 PITCH CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v3.pitch_cv",
+      "function": "Pitch CV.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v8_mod_out",
+      "label": "V8 MOD OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v8.mod_out",
+      "function": "Modulator square, 0 to +12 V."
+    },
+    {
+      "id": "jack.v8_sh_out",
+      "label": "V8 S&H OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v8.sh_out",
+      "function": "Sample and hold, -5 to +5 V."
+    },
+    {
+      "id": "jack.v8_sh_clock",
+      "label": "V8 S&H CLOCK",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "v8.sh_clock",
+      "function": "Sample clock.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v8_noise",
+      "label": "V8 NOISE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "v8.noise_out",
+      "function": "White noise.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v8_pitch",
+      "label": "V8 PITCH CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v8.pitch_cv",
+      "function": "Pitch CV.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.v4_voct",
+      "label": "V4 V/OCT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v4.voct",
+      "function": "1 V/oct pitch; normalled from the touch keyboard."
+    },
+    {
+      "id": "jack.v4_fm",
+      "label": "V4 FM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "v4.fm",
+      "function": "FM input."
+    },
+    {
+      "id": "jack.v5_voct",
+      "label": "V5 V/OCT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "v5.voct",
+      "function": "1 V/oct pitch; normalled from the touch keyboard."
+    },
+    {
+      "id": "jack.v5_fm",
+      "label": "V5 FM",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "v5.fm",
+      "function": "FM input (voice 4 VCO normalled here)."
+    },
+    {
+      "id": "jack.v4_vco",
+      "label": "V4 VCO OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "v4.vco_out",
+      "function": "Raw voice 4 oscillator, -5 to +5 V."
+    },
+    {
+      "id": "jack.v5_sync",
+      "label": "V5 SYNC",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "sync",
+      "connector": "3.5 mm TS",
+      "node": "v5.sync",
+      "function": "Hard sync input."
+    },
+    {
+      "id": "jack.lfo_a",
+      "label": "LFO A OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.a",
+      "function": "0 to +10 V."
+    },
+    {
+      "id": "jack.lfo_b",
+      "label": "LFO B OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.b",
+      "function": "0 to +10 V."
+    },
+    {
+      "id": "jack.seq_cv",
+      "label": "SEQ CV OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "seq.cv",
+      "function": "0 to +5 V."
+    },
+    {
+      "id": "jack.seq_gate",
+      "label": "SEQ GATE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "seq.gate",
+      "function": "0 to +10 V."
+    },
+    {
+      "id": "jack.pulser",
+      "label": "PULSER OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "seq.pulser",
+      "function": "-10 to +10 V."
+    },
+    {
+      "id": "jack.seq_clock",
+      "label": "SEQ EXT CLOCK",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "seq.clock_in",
+      "function": "External clock replaces the pulser."
+    },
+    {
+      "id": "jack.joy_x",
+      "label": "JOYSTICK X",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "joy.x",
+      "function": "-10 to +10 V by offset range."
+    },
+    {
+      "id": "jack.joy_y",
+      "label": "JOYSTICK Y",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "joy.y",
+      "function": "-10 to +10 V by offset range."
+    },
+    {
+      "id": "jack.ef_env",
+      "label": "ENV FOLLOWER OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "preamp.env",
+      "function": "0 to +10 V."
+    },
+    {
+      "id": "jack.ef_gate",
+      "label": "ENV FOLLOWER GATE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "preamp.gate",
+      "function": "0 to +8 V."
+    },
+    {
+      "id": "jack.ef_ext",
+      "label": "EXT.SOURCE",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "preamp.ext",
+      "function": "External source replaces the piezo.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.kb_cv_l",
+      "label": "KEYBOARD CV (L)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "keys.cv_l",
+      "function": "V/oct out, left side / single."
+    },
+    {
+      "id": "jack.kb_gate_l",
+      "label": "KEYBOARD GATE (L)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "keys.gate_l",
+      "function": "Gate out."
+    },
+    {
+      "id": "jack.kb_cv_r",
+      "label": "KEYBOARD CV (R)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "keys.cv_r",
+      "function": "V/oct out, right side in split.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.kb_gate_r",
+      "label": "KEYBOARD GATE (R)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "keys.gate_r",
+      "function": "Gate out, right side.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.kb_pressure",
+      "label": "PRESSURE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "keys.pressure",
+      "function": "Plate pressure CV."
+    },
+    {
+      "id": "jack.kb_clock",
+      "label": "KEYBOARD CLOCK IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "keys.clock_in",
+      "function": "External clock for arpeggiator/sequencer."
+    },
+    {
+      "id": "jack.vcf_cv",
+      "label": "FILTER CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.cv",
+      "function": "Filter frequency CV."
+    },
+    {
+      "id": "jack.fx_x",
+      "label": "EFFECTOR X CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "fx.x_cv",
+      "function": "Cartridge parameter CV, -10 to +10 V."
+    },
+    {
+      "id": "jack.fx_y",
+      "label": "EFFECTOR Y CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "fx.y_cv",
+      "function": "Cartridge parameter CV, -10 to +10 V."
+    },
+    {
+      "id": "jack.fx_z",
+      "label": "EFFECTOR Z CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "fx.z_cv",
+      "function": "Cartridge parameter CV, -10 to +10 V."
+    },
+    {
+      "id": "jack.ext_audio",
+      "label": "EXT AUDIO IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "mixer.ext",
+      "function": "External audio into the mixer.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.wet_l",
+      "label": "WET OUT L",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.wet_out_l",
+      "function": "Stereo wet output (effector, MASTER VOLUME).",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.wet_r",
+      "label": "WET OUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.wet_out_r",
+      "function": "Stereo wet output.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.dry_l",
+      "label": "DRY OUT L",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.dry_out_l",
+      "function": "Dry output for the left-hand keyboard voice.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.dry_r",
+      "label": "DRY OUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.dry_out_r",
+      "function": "Dry output for the right-hand keyboard voice.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "Headphones.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.power",
+      "label": "DC 12V",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC, 1-2 A (2 A supply included)."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "keys.drone_gates",
+      "to": "v1.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Drone push-buttons 1, 2, 3, 6, 7, 8 gate their voices (one shown per voice)."
+    },
+    {
+      "id": "c02",
+      "from": "keys.drone_gates",
+      "to": "v2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "keys.drone_gates",
+      "to": "v3.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "keys.drone_gates",
+      "to": "v6.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "keys.drone_gates",
+      "to": "v7.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "keys.drone_gates",
+      "to": "v8.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "keys.cv_l",
+      "to": "v4.voct",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "In split mode the left plates play voice 4 and the right plates voice 5; in single mode both follow.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c08",
+      "from": "keys.cv_r",
+      "to": "v5.voct",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c09",
+      "from": "keys.gate_l",
+      "to": "v4.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c10",
+      "from": "keys.gate_r",
+      "to": "v5.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c11",
+      "from": "v4.vco_out",
+      "to": "v5.fm",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.v5_fm",
+      "note": "Voice 4's VCO normalled to voice 5's FM input (FM attenuator)."
+    },
+    {
+      "id": "c12",
+      "from": "v1.out",
+      "to": "mixer.v1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v1_vol"
+    },
+    {
+      "id": "c13",
+      "from": "v2.out",
+      "to": "mixer.v2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v2_vol"
+    },
+    {
+      "id": "c14",
+      "from": "v3.out",
+      "to": "mixer.v3",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v3_vol"
+    },
+    {
+      "id": "c15",
+      "from": "v4.out",
+      "to": "mixer.v4",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v4_vol"
+    },
+    {
+      "id": "c16",
+      "from": "v5.out",
+      "to": "mixer.v5",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v5_vol"
+    },
+    {
+      "id": "c17",
+      "from": "v6.out",
+      "to": "mixer.v6",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v6_vol"
+    },
+    {
+      "id": "c18",
+      "from": "v7.out",
+      "to": "mixer.v7",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v7_vol"
+    },
+    {
+      "id": "c19",
+      "from": "v8.out",
+      "to": "mixer.v8",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.v8_vol"
+    },
+    {
+      "id": "c20",
+      "from": "preamp.out",
+      "to": "mixer.preamp",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.preamp_vol"
+    },
+    {
+      "id": "c21",
+      "from": "mixer.out_l",
+      "to": "vcf.in_l",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "mixer.out_r",
+      "to": "vcf.in_r",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "vcf.out_l",
+      "to": "fx.in_l",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c24",
+      "from": "vcf.out_r",
+      "to": "fx.in_r",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c25",
+      "from": "fx.out_l",
+      "to": "out.wet_l",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "fx.master"
+    },
+    {
+      "id": "c26",
+      "from": "fx.out_r",
+      "to": "out.wet_r",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "fx.master"
+    },
+    {
+      "id": "c27",
+      "from": "v4.out",
+      "to": "out.dry_4",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Dry outputs for the keyboard voices.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c28",
+      "from": "v5.out",
+      "to": "out.dry_5",
+      "signal": "audio",
+      "kind": "fixed",
+      "confidence": "inferred"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "photo_leds",
+      "module": "v1",
+      "label": "photosensor LEDs (voices 1, 2, 6, 7)",
+      "kind": "led",
+      "function": "Red LEDs over globe photoresistors; brightness from LFO or CV sets the pitch bend."
+    },
+    {
+      "id": "env_leds",
+      "module": "v4",
+      "label": "envelope LEDs",
+      "kind": "led",
+      "function": "Show each voice's envelope (inferred)."
+    },
+    {
+      "id": "seq_leds",
+      "module": "seq",
+      "label": "step LEDs",
+      "kind": "led",
+      "function": "Current step."
+    },
+    {
+      "id": "kb_display",
+      "module": "keys",
+      "label": "keyboard display and encoder",
+      "kind": "display",
+      "function": "Keyboard menu, calibration (hold encoder at power-up)."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Classic drone voices",
+      "applies_to": ["v1", "v2", "v6", "v7"],
+      "rule": "Five sawtooth generators per voice (no V/oct), tuned by ear into chords, triads or clusters across about B0-D7 and switched in or out individually. VOLT lowers all five at different rates, so the chord drifts as it falls, then turns into cross-FM. Photosensors (red LEDs, positive voltage only) give pitch modulation from the LFOs or any positive CV."
+    },
+    {
+      "id": "b02",
+      "name": "Papa Srapa voices",
+      "applies_to": ["v3", "v8"],
+      "rule": "Two Schmitt-trigger squares: a low-frequency modulator (RATE, x1/x10, CV OUT 0 to +12 V) and a tone oscillator (PITCH, about C0-E7). FM AMOUNT and DIVIDER set the depth. FM up gives frequency modulation; FM down with AM up chops the tone at RATE; both up combine them. Noise and sample and hold alongside. Sirens, bird calls, space monsters, gunfire, surf and wind."
+    },
+    {
+      "id": "b03",
+      "name": "VCO voices",
+      "applies_to": ["v4", "v5"],
+      "rule": "AS3340 oscillators with six waveforms (two morphing with SHAPE), 1 V/oct, FM and sync; voice 4's oscillator is normalled into voice 5's FM. Played from the touch keyboard (single or split) or external CV."
+    },
+    {
+      "id": "b04",
+      "name": "Envelopes",
+      "applies_to": ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"],
+      "rule": "Each voice opens its VCA from an envelope triggered by its button, the keyboard or an external 5 V gate; HOLD keeps it open. Envelope outputs can trigger the next voice or modulate the filter and effector."
+    },
+    {
+      "id": "b05",
+      "name": "Touch keyboard",
+      "applies_to": ["keys"],
+      "rule": "12 capacitive plates with V/oct, gate and pressure outputs; single or split behaviour; keyboard, arpeggiator or sequencer (2-16 steps) modes; quantiser on (notes) or off (microtonal); portamento; vibrato (speed, depth, delay); internal clock 10-300 BPM or external; presets; calibration by holding the encoder at power-up."
+    },
+    {
+      "id": "b06",
+      "name": "Signal path",
+      "applies_to": ["mixer", "vcf", "fx", "out"],
+      "rule": "Eight voices, external audio and the preamp are mixed and panned to stereo, filtered by two Polivoks 12 dB filters (left and right) and processed by two cartridge effect circuits; BLEND and MASTER VOLUME set the wet outputs. The two circuits differ slightly, giving a live stereo image."
+    },
+    {
+      "id": "b07",
+      "name": "Modulation sources",
+      "applies_to": ["lfo", "seq", "joy", "preamp"],
+      "rule": "Elta lists 'two LFOs and three square pulse generators' (the 'five LFO generators' of the manual): LFO A (slow) and B (fast), square-to-triangle, 0 to +10 V; plus the PULSER and the two Papa Srapa modulators, each with an output. 5-step sequencer (0-5 V steps, gates, pulser or external clock); joystick (-10..0, -5..+5 or 0..+10 V per axis); contact mic or external source to an envelope follower (0-10 V) and gate (0-8 V)."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "No MIDI: control is by the panel, touch keyboard and CV/gate."
+  },
+  "specifications": {
+    "voices": 8,
+    "drone_voices": "4 classic (5 saw generators each) + 2 Papa Srapa",
+    "vco_voices": "2 x AS3340",
+    "filter": "dual 12 dB Polivoks",
+    "effects": "dual cartridge effector",
+    "cv_levels": {
+      "vco_out": "10 Vpp (-5..+5 V)",
+      "eg": "0..+8 V",
+      "env_out_voices_1_2_3_6_7_8": "-10..+10 V",
+      "lfos": "0..+10 V",
+      "pulser_out": "-10..+10 V",
+      "env_follower": "0..+10 V, gate 0..+8 V",
+      "joystick": "-10..+10 V (left -10..0, middle -5..+5, right 0..+10)",
+      "s_and_h": "-5..+5 V",
+      "voice_3_5_modulator_out": "0..+12 V",
+      "sequencer": "CV 0..+5 V, gate 0..+10 V"
+    },
+    "modulation_generators": "2 LFOs + 3 square pulse generators (pulser, two Papa Srapa modulators)",
+    "power": "12 V DC, 1-2 A",
+    "weight_kg": 5.4,
+    "dimensions_cm": {
+      "l": 49.5,
+      "d": 32,
+      "h": 2.9,
+      "h_with_knobs": 5.6
+    },
+    "box_contents": [
+      "SOLAR 42",
+      "Infinity cartridge",
+      "12 V 2 A supply",
+      "instructions",
+      "5 minijack patch cables",
+      "sticker pack"
+    ]
+  },
+  "omitted_from_source": [
+    "introduction and safety text",
+    "cartridge program details beyond names",
+    "calibration procedure detail"
+  ],
+  "not_in_source": [
+    "full jack list and exact panel positions (manual PDF not readable here)",
+    "VCO envelope switch positions",
+    "LFO rates in Hz",
+    "filter cutoff range",
+    "audio connector sizes"
+  ],
+  "source_inconsistencies": [
+    "Elta's specification says 'VOICE 3, 5 modulator out 0...+12V'. The manual places the modulator CV OUT on the Papa Srapa voices, 3 and 8 in this numbering (3 and 6 on the 42F/42N); voice 5 is a VCO. The same specification block, still listing 'ENV OUT VOICES 1,2,3,6,7,8', is reused unchanged on Elta's 42F/42N page, so the '3, 5' error is in Elta's published text, not a transcription slip. Modelled on voices 3 and 8.",
+    "The mixer page calls the instrument 'SOLAR 52' (a typo; no SOLAR 52 exists).",
+    "The manual's 'five LFO generators' are, per Elta's own feature list, two LFOs plus three square pulse generators: the pulser and the two Papa Srapa modulators (resolved).",
+    "Later 42F/42N material renumbers the voices (classic drones 1, 2, 4, 5; Papa Srapa 3, 6; VCO A/B), and owners report the 42F manual mixes old and new names, which can be confused with this original layout."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Source access",
+      "detail": "Elta's manual PDF was too large to fetch and the panel PDF has no text; the model uses indexed manual excerpts, the supplied specs and secondary sources. Uploading the PDFs would allow a full check."
+    },
+    {
+      "topic": "Patch points",
+      "detail": "Jacks are those named in the sources; the full panel likely has more (per-voice VOLT/photo/shape CV), marked inferred where assumed."
+    },
+    {
+      "topic": "42F detail",
+      "detail": "Control detail taken from the 42F-based VCV recreation is marked inferred."
+    }
+  ]
+}

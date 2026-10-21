@@ -1,0 +1,4316 @@
+{
+  "schema_version": "0.5.0",
+  "device": {
+    "id": "behringer-2600",
+    "manufacturer": "Behringer",
+    "model": "2600",
+    "category": "semi-modular analogue synthesizer, 19-inch rack / Eurorack",
+    "based_on": "ARP 2600. The Behringer manual does not name it; the panel layout, module set and pre-wiring are the ARP's.",
+    "sources": [
+      {
+        "id": "b2600",
+        "title": "2600 Quick Start Guide",
+        "kind": "user_manual",
+        "file": "Behringer_2600_manual.pdf",
+        "pages": 62,
+        "note": "Titled Quick Start Guide but is a full controls manual: 100 numbered items with descriptions, plus a complete specifications table. Nine languages; English is pages 6 to 10, specifications pages 56 to 57."
+      },
+      {
+        "id": "panel",
+        "title": "Behringer 2600 front panel photograph",
+        "kind": "measurement",
+        "file": "behringer-2600.jpg",
+        "note": "Used for the pre-wired source labels, the unnumbered attenuator sliders, and every LED colour. None of this is in the manual."
+      },
+      {
+        "id": "arp",
+        "title": "ARP 2600 Owner's Manual",
+        "kind": "user_manual",
+        "file": "Arp_2600_Manual.pdf",
+        "pages": 112,
+        "note": "Scanned images with no text layer, so not mined for this pass. It is the obvious source for the gaps listed in modelling_gaps: slider tapers, voltage laws, filter behaviour."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic, or two voices in DUO keyboard mode. The specifications say 'Multiphonic', the ARP term for duophonic.",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": true,
+    "panel_counts": {
+      "sliders": 62,
+      "switches": 12,
+      "buttons": 3,
+      "rotary": 2,
+      "jacks_3_5mm": 60
+    },
+    "summary": "A fully normalled modular. 3 VCOs (each switchable to LFO range, VCO2 and VCO3 syncable to VCO1) plus a noise generator and a ring modulator feed a 4-pole low-pass VCF through five attenuator sliders. The VCF and the ring modulator feed a VCA in parallel, and VCF and VCA outputs are then blended in a two-channel mixer, panned, sent through reverb and out in stereo. Two envelope generators (AR and ADSR) are triggered from the keyboard, the sample and hold clock, or external gate and trigger jacks. A dedicated LFO with delayed vibrato, a preamp and envelope follower, a sample and hold with an internal clock, an electronic switch, a voltage processor (two inverting summers and a lag processor) and a 4-way mult complete the set. Every pre-wired connection has a jack above its slider that breaks the normal when a plug is inserted."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "Keyboard interface",
+      "panel_section": "KEYBOARD",
+      "description": "Turns incoming MIDI into pitch CV, gate and trigger. MONO plays one voice; DUO splits the held notes so the lowest drives the main keyboard CV and the highest drives the UPPER VOICE output. REPEAT and TRIG MODE decide how triggers are generated. There is no physical keyboard on this model; the section is driven over MIDI or USB.",
+      "inputs": [],
+      "outputs": ["kbd.cv", "kbd.upper_cv", "kbd.gate", "kbd.trig"]
+    },
+    {
+      "id": "portamento",
+      "type": "pitch_control",
+      "name": "Portamento",
+      "panel_section": "PORTAMENTO",
+      "description": "Slews the keyboard CV so one pitch slides to the next. Switched on by the panel switch, momentarily by the MOMEN button, or by a footswitch on the rear.",
+      "inputs": ["portamento.in"],
+      "outputs": ["portamento.out"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "Voltage Controlled Oscillator 1",
+      "panel_section": "VOLTAGE CONTROLLED OSCILLATOR 1",
+      "description": "Analogue VCO. The AUDIO/LF switch moves it between four audio ranges and four sub-audio ranges; in LF it becomes an LFO and keyboard control is disabled automatically. Outputs sawtooth and pulse.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.03,
+          "max": 40000,
+          "note": "specifications give 0.03 Hz to 40 kHz across four overlapping ranges for the three VCOs together"
+        },
+        "audio_ranges_hz": [10, 100, 1000, 10000],
+        "lf_ranges_hz": [0.03, 0.3, 3.0, 30],
+        "waveforms": ["sawtooth", "pulse"],
+        "simultaneous_outputs": true
+      },
+      "inputs": ["vco1.kbd_in", "vco1.fm1", "vco1.fm2", "vco1.fm3"],
+      "outputs": ["vco1.saw", "vco1.pulse"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "Voltage Controlled Oscillator 2",
+      "panel_section": "VOLTAGE CONTROLLED OSCILLATOR 2",
+      "description": "Analogue VCO. The AUDIO/LF switch moves it between four audio ranges and four sub-audio ranges; in LF it becomes an LFO and keyboard control is disabled automatically. Outputs triangle, sawtooth, sine and pulse, all simultaneously available. SYNC locks it to VCO1 so the pair behaves as one oscillator following VCO1's frequency.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.03,
+          "max": 40000,
+          "note": "specifications give 0.03 Hz to 40 kHz across four overlapping ranges for the three VCOs together"
+        },
+        "audio_ranges_hz": [10, 100, 1000, 10000],
+        "lf_ranges_hz": [0.03, 0.3, 3.0, 30],
+        "waveforms": ["triangle", "sawtooth", "sine", "pulse"],
+        "simultaneous_outputs": true
+      },
+      "inputs": ["vco2.kbd_in", "vco2.fm1", "vco2.fm2", "vco2.fm3", "vco2.pwm_in", "vco2.sync_in"],
+      "outputs": ["vco2.saw", "vco2.pulse", "vco2.tri", "vco2.sine"]
+    },
+    {
+      "id": "vco3",
+      "type": "oscillator",
+      "name": "Voltage Controlled Oscillator 3",
+      "panel_section": "VOLTAGE CONTROLLED OSCILLATOR 3",
+      "description": "Analogue VCO. The AUDIO/LF switch moves it between four audio ranges and four sub-audio ranges; in LF it becomes an LFO and keyboard control is disabled automatically. Outputs triangle, sawtooth, sine and pulse, all simultaneously available. SYNC locks it to VCO1 so the pair behaves as one oscillator following VCO1's frequency.",
+      "properties": {
+        "frequency_hz": {
+          "min": 0.03,
+          "max": 40000,
+          "note": "specifications give 0.03 Hz to 40 kHz across four overlapping ranges for the three VCOs together"
+        },
+        "audio_ranges_hz": [10, 100, 1000, 10000],
+        "lf_ranges_hz": [0.03, 0.3, 3.0, 30],
+        "waveforms": ["triangle", "sawtooth", "sine", "pulse"],
+        "simultaneous_outputs": true
+      },
+      "inputs": ["vco3.kbd_in", "vco3.fm1", "vco3.fm2", "vco3.fm3", "vco3.pwm_in", "vco3.sync_in"],
+      "outputs": ["vco3.saw", "vco3.pulse", "vco3.tri", "vco3.sine"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Voltage Controlled Filter / Resonator",
+      "panel_section": "VOLTAGE CONTROLLED FILTER / RESONATOR VCF",
+      "description": "4-pole low-pass filter with variable cutoff and resonance. A switch picks between two filter circuits, the 4012 and the 4072. Five audio attenuators and three control attenuators feed it.",
+      "properties": {
+        "slope_db_per_octave": 24,
+        "poles": 4,
+        "modes": ["lowpass"],
+        "circuits": ["4012", "4072"]
+      },
+      "inputs": [
+        "vcf.audio_ring",
+        "vcf.audio_vco1",
+        "vcf.audio_vco2",
+        "vcf.audio_vco3",
+        "vcf.audio_noise",
+        "vcf.ctrl_kbd",
+        "vcf.ctrl_adsr",
+        "vcf.ctrl_vco2"
+      ],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "Voltage Controlled Amplifier",
+      "panel_section": "VOLTAGE CONTROLLED AMPLIFIER",
+      "description": "Amplifier sitting in parallel with the VCF rather than after it; both are blended in the mixer. At maximum gain it passes signal at unity; at minimum it passes nothing. INITIAL GAIN sets the standing gain, and the two control inputs add to it, one linear and one exponential.",
+      "inputs": ["vca.audio_vcf", "vca.audio_ring", "vca.ctrl_lin", "vca.ctrl_exp"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "ar",
+      "type": "envelope",
+      "name": "AR Envelope Generator",
+      "panel_section": "AR ENV GEN",
+      "description": "Attack and release transient generator, fired by the gate or trigger chosen at its routing switch or by the MANUAL button. TIME FACTOR scales both times.",
+      "properties": {
+        "stages": ["attack", "release"],
+        "output_v": {
+          "min": 0,
+          "max": 10
+        }
+      },
+      "inputs": ["ar.gate_in"],
+      "outputs": ["ar.out"]
+    },
+    {
+      "id": "adsr",
+      "type": "envelope",
+      "name": "ADSR Envelope Generator",
+      "panel_section": "ADSR ENVELOPE GENERATOR",
+      "description": "Four-stage transient generator, fired by the gate or trigger chosen at its routing switch or by the MANUAL button. TIME FACTOR scales the times.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "output_v": {
+          "min": 0,
+          "max": 10
+        }
+      },
+      "inputs": ["adsr.gate_in"],
+      "outputs": ["adsr.out"]
+    },
+    {
+      "id": "trigger_bus",
+      "type": "gate_logic",
+      "name": "Envelope trigger routing",
+      "panel_section": "AR / ADSR ENVELOPE GENERATOR",
+      "description": "Selects what fires the envelopes. Each generator has a three-position routing switch choosing the pre-wired S/H CLOCK, the GATE IN jack or the TRIG IN jack, and the manual says the chosen signal is passed on to the ADSR as well. The keyboard gate and trigger and the MANUAL buttons also reach the envelopes.",
+      "inputs": [
+        "trigger_bus.kbd_gate_in",
+        "trigger_bus.kbd_trig_in",
+        "trigger_bus.sh_clock_in",
+        "trigger_bus.gate_jack_in",
+        "trigger_bus.trig_jack_in"
+      ],
+      "outputs": ["trigger_bus.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Two attenuators, pre-wired from the VCF and the VCA, summed to one signal which is then panned into the stereo output. The summed signal also feeds the reverb over a separate pre-wired connection that the POST-MIXER jack does not break.",
+      "inputs": ["mixer.in_vcf", "mixer.in_vca", "mixer.pan_in"],
+      "outputs": ["mixer.sum_out", "mixer.post_atten_vcf", "mixer.post_atten_vca"]
+    },
+    {
+      "id": "reverb",
+      "type": "reverb",
+      "name": "Reverb",
+      "panel_section": "REVERB",
+      "description": "Stereo reverb fed from the mixer sum, with its own left and right level sliders and two input jacks that sum extra signal hard left and hard right. Digital on the 2600; the BLUE MARVIN edition has a real spring tank.",
+      "inputs": ["reverb.in", "reverb.left_in", "reverb.right_in"],
+      "outputs": ["reverb.left", "reverb.right"]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Stereo output",
+      "panel_section": "OUTPUT",
+      "description": "Final left and right outputs on parallel 1/4-inch and 3.5 mm jacks, plus the headphone amplifier, which is fed from the mixer output.",
+      "inputs": ["output.left_in", "output.right_in"],
+      "outputs": ["output.left", "output.right", "output.phones"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "Low Frequency Oscillator",
+      "panel_section": "LFO",
+      "description": "Dedicated LFO intended to work with the keyboard. Sawtooth, square and sine are all available at once on separate jacks; the sine is pre-wired to VCO1 and is the one that carries the vibrato delay and depth.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.25,
+          "max": 25
+        },
+        "shapes": ["sawtooth", "square", "sine"]
+      },
+      "inputs": ["lfo.ext_vib_in"],
+      "outputs": ["lfo.saw", "lfo.square", "lfo.sine", "lfo.sine_delayed"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise Generator",
+      "panel_section": "NOISE GENERATOR",
+      "description": "Noise source sweepable through low frequency, pink and white with one slider, followed by a level slider.",
+      "properties": {
+        "colours": ["low_freq", "pink", "white"],
+        "continuous_colour": true
+      },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "ring_mod",
+      "type": "ring_modulator",
+      "name": "Ring Modulator",
+      "panel_section": "RING MOD",
+      "description": "Voltage multiplier combining two inputs. Pre-wired from VCO1 sawtooth and VCO2 sine; each input jack blends an external signal with the pre-wired one rather than replacing it, and the adjacent slider sets the combined gain. An AUDIO/DC switch optimises the VCO1 path for audio or control voltages.",
+      "inputs": ["ring_mod.in_a", "ring_mod.in_b"],
+      "outputs": ["ring_mod.out"]
+    },
+    {
+      "id": "preamp",
+      "type": "preamp",
+      "name": "Preamp",
+      "panel_section": "PREAMP",
+      "description": "Switchable-gain preamp bringing an external signal up to synth level, in three ranges of x10, x100 and x1000 (20, 40 and 60 dB). Pre-wired into the envelope follower.",
+      "inputs": ["preamp.in"],
+      "outputs": ["preamp.out"]
+    },
+    {
+      "id": "env_follower",
+      "type": "envelope_follower",
+      "name": "Envelope Follower",
+      "panel_section": "ENV FOLLOWER",
+      "description": "Produces a control voltage tracking the average amplitude of its input. Fed from the preamp over a pre-wired connection, or directly through its own input, which blends rather than replaces. Its output has no pre-wired destination anywhere in the synth, so it needs a cable.",
+      "inputs": ["env_follower.in"],
+      "outputs": ["env_follower.out"]
+    },
+    {
+      "id": "sample_hold",
+      "type": "sample_hold",
+      "name": "Sample & Hold",
+      "panel_section": "SAMPLE & HOLD",
+      "description": "Samples its input on each clock tick and holds the value until the next, turning a smooth signal into a stepped one. Pre-wired from the noise generator, which makes it a random voltage source by default. Runs on its own internal clock unless EXT CLK IN is patched, which disables the internal clock and the RATE slider with it.",
+      "inputs": ["sample_hold.in", "sample_hold.clock_in"],
+      "outputs": ["sample_hold.out", "sample_hold.clock_out"]
+    },
+    {
+      "id": "elec_switch",
+      "type": "electronic_switch",
+      "name": "Electronic Switch",
+      "panel_section": "ELEC SWITCH",
+      "description": "Bidirectional two-way switch clocked by the sample and hold internal clock. It can alternate one input at C between outputs A and B, or alternate the C output between two inputs at A and B.",
+      "inputs": ["elec_switch.a_in", "elec_switch.b_in", "elec_switch.c_in"],
+      "outputs": ["elec_switch.a_out", "elec_switch.b_out", "elec_switch.c_out"]
+    },
+    {
+      "id": "inverter1",
+      "type": "inverter",
+      "name": "Inverter 1",
+      "panel_section": "VOLTAGE PROCESSOR",
+      "description": "Sums four inputs and inverts the result. A +10 V input leaves as -10 V; audio leaves with its phase reversed. Three of the four inputs have attenuator sliders.",
+      "inputs": ["inverter1.in1", "inverter1.in2", "inverter1.in3", "inverter1.in4"],
+      "outputs": ["inverter1.out"]
+    },
+    {
+      "id": "inverter2",
+      "type": "inverter",
+      "name": "Inverter 2",
+      "panel_section": "VOLTAGE PROCESSOR",
+      "description": "Sums two inputs and inverts the result.",
+      "inputs": ["inverter2.in5", "inverter2.in6"],
+      "outputs": ["inverter2.out"]
+    },
+    {
+      "id": "lag",
+      "type": "slew_limiter",
+      "name": "Lag Processor",
+      "panel_section": "VOLTAGE PROCESSOR",
+      "description": "Slows down sudden changes in the input voltage by an amount set by its slider. On audio it behaves as a low-pass filter, rolling off treble as the lag increases.",
+      "inputs": ["lag.in"],
+      "outputs": ["lag.out"]
+    },
+    {
+      "id": "mult",
+      "type": "mult",
+      "name": "Mult",
+      "panel_section": "MULT",
+      "description": "Four jacks wired in parallel, usable in any combination of inputs and outputs, for splitting one signal to several destinations or passively combining several.",
+      "inputs": ["mult.bus_in"],
+      "outputs": ["mult.bus_out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco1.initial_frequency",
+      "module": "vco1",
+      "label": "INITIAL OSCILLATOR FREQUENCY",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "decade marks"
+      },
+      "physical": {
+        "min": 0.03,
+        "max": 40000,
+        "unit": "Hz",
+        "taper": "approximately logarithmic, about one decade per marked division"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse operating frequency. The scale is marked in four audio decades (10 Hz, 100 Hz, 1 kHz, 10 kHz) and, for LF mode, four sub-audio ones (.03, .3, 3.0, 30 Hz). The ranges overlap, so the marks locate a region rather than switch between fixed bands.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco1.fine_tune",
+      "module": "vco1",
+      "label": "FINE TUNE",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "unspecified"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Trims the frequency up or down from the coarse setting. The span is not stated.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco1.pulse_width",
+      "module": "vco1",
+      "label": "PULSE WIDTH",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty",
+        "taper": "linear (panel marks are evenly spaced)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Duty cycle of the pulse output, marked 10%, 50% and 90%. This is the standing width before any PWM.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco1.audio_lf",
+      "module": "vco1",
+      "label": "AUDIO (KYBD ON) / LF (KYBD OFF)",
+      "manual_ref": 6,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio",
+          "label": "AUDIO KYBD ON"
+        },
+        {
+          "value": "lf",
+          "label": "LF KYBD OFF"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "AUDIO puts the oscillator in the audio ranges with keyboard control enabled. LF moves it to the sub-audio ranges and disables keyboard control automatically, turning it into an LFO."
+    },
+    {
+      "id": "vco2.initial_frequency",
+      "module": "vco2",
+      "label": "INITIAL OSCILLATOR FREQUENCY",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "decade marks"
+      },
+      "physical": {
+        "min": 0.03,
+        "max": 40000,
+        "unit": "Hz",
+        "taper": "approximately logarithmic, about one decade per marked division"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse operating frequency. The scale is marked in four audio decades (10 Hz, 100 Hz, 1 kHz, 10 kHz) and, for LF mode, four sub-audio ones (.03, .3, 3.0, 30 Hz). The ranges overlap, so the marks locate a region rather than switch between fixed bands.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco2.fine_tune",
+      "module": "vco2",
+      "label": "FINE TUNE",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "unspecified"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Trims the frequency up or down from the coarse setting. The span is not stated.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco2.pulse_width",
+      "module": "vco2",
+      "label": "PULSE WIDTH",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty",
+        "taper": "linear (panel marks are evenly spaced)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Duty cycle of the pulse output, marked 10%, 50% and 90%. This is the standing width before any PWM.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco2.audio_lf",
+      "module": "vco2",
+      "label": "AUDIO (KYBD ON) / LF (KYBD OFF)",
+      "manual_ref": 6,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio",
+          "label": "AUDIO KYBD ON"
+        },
+        {
+          "value": "lf",
+          "label": "LF KYBD OFF"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "AUDIO puts the oscillator in the audio ranges with keyboard control enabled. LF moves it to the sub-audio ranges and disables keyboard control automatically, turning it into an LFO."
+    },
+    {
+      "id": "vco2.sync",
+      "module": "vco2",
+      "label": "SYNC ON/OFF",
+      "manual_ref": 4,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Hard-syncs VCO2 to VCO1, so the pair behaves as one oscillator following VCO1's frequency."
+    },
+    {
+      "id": "vco3.initial_frequency",
+      "module": "vco3",
+      "label": "INITIAL OSCILLATOR FREQUENCY",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "decade marks"
+      },
+      "physical": {
+        "min": 0.03,
+        "max": 40000,
+        "unit": "Hz",
+        "taper": "approximately logarithmic, about one decade per marked division"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse operating frequency. The scale is marked in four audio decades (10 Hz, 100 Hz, 1 kHz, 10 kHz) and, for LF mode, four sub-audio ones (.03, .3, 3.0, 30 Hz). The ranges overlap, so the marks locate a region rather than switch between fixed bands.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco3.fine_tune",
+      "module": "vco3",
+      "label": "FINE TUNE",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "unspecified"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Trims the frequency up or down from the coarse setting. The span is not stated.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco3.pulse_width",
+      "module": "vco3",
+      "label": "PULSE WIDTH",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 10,
+        "max": 90,
+        "unit": "%"
+      },
+      "physical": {
+        "min": 10,
+        "max": 90,
+        "unit": "% duty",
+        "taper": "linear (panel marks are evenly spaced)"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Duty cycle of the pulse output, marked 10%, 50% and 90%. This is the standing width before any PWM.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco3.audio_lf",
+      "module": "vco3",
+      "label": "AUDIO (KYBD ON) / LF (KYBD OFF)",
+      "manual_ref": 6,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio",
+          "label": "AUDIO KYBD ON"
+        },
+        {
+          "value": "lf",
+          "label": "LF KYBD OFF"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "AUDIO puts the oscillator in the audio ranges with keyboard control enabled. LF moves it to the sub-audio ranges and disables keyboard control automatically, turning it into an LFO."
+    },
+    {
+      "id": "vco3.sync",
+      "module": "vco3",
+      "label": "SYNC ON/OFF",
+      "manual_ref": 4,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Hard-syncs VCO3 to VCO1, so the pair behaves as one oscillator following VCO1's frequency."
+    },
+    {
+      "id": "vco1.fm_sh",
+      "module": "vco1",
+      "label": "S/H OUT (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from sample hold into vco1.fm1. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "vco1.fm_adsr",
+      "module": "vco1",
+      "label": "ADSR (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vco1.fm2. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vco1.fm_lfo",
+      "module": "vco1",
+      "label": "LFO (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from lfo into vco1.fm3. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "vco2.fm_sh",
+      "module": "vco2",
+      "label": "S/H OUT (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from sample hold into vco2.fm1. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "vco2.fm_adsr",
+      "module": "vco2",
+      "label": "ADSR (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vco2.fm2. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vco2.fm_vco1",
+      "module": "vco2",
+      "label": "VCO 1 pulse (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco1 into vco2.fm3. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vco2.pwm_noise",
+      "module": "vco2",
+      "label": "NOISE GEN (PWM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from noise into vco2.pwm_in. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco3.fm_noise",
+      "module": "vco3",
+      "label": "NOISE GEN (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from noise into vco3.fm1. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco3.fm_adsr",
+      "module": "vco3",
+      "label": "ADSR (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vco3.fm2. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vco3.fm_vco2",
+      "module": "vco3",
+      "label": "VCO 2 sine (FM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco2 into vco3.fm3. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vco3.pwm_adsr",
+      "module": "vco3",
+      "label": "ADSR (PWM)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vco3.pwm_in. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vcf.lvl_ring",
+      "module": "vcf",
+      "label": "RING MOD (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from ring mod into vcf.audio_ring. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vcf.lvl_vco1",
+      "module": "vcf",
+      "label": "VCO 1 pulse (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco1 into vcf.audio_vco1. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vcf.lvl_vco2",
+      "module": "vcf",
+      "label": "VCO 2 pulse (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco2 into vcf.audio_vco2. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vcf.lvl_vco3",
+      "module": "vcf",
+      "label": "VCO 3 saw (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco3 into vcf.audio_vco3. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "blue"
+    },
+    {
+      "id": "vcf.lvl_noise",
+      "module": "vcf",
+      "label": "NOISE GEN (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from noise into vcf.audio_noise. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vcf.lvl_kbd",
+      "module": "vcf",
+      "label": "KYBD CV (control)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from kbd into vcf.ctrl_kbd. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vcf.lvl_adsr",
+      "module": "vcf",
+      "label": "ADSR (control)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vcf.ctrl_adsr. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vcf.lvl_vco2_sine",
+      "module": "vcf",
+      "label": "VCO 2 sine (control)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vco2 into vcf.ctrl_vco2. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vca.lvl_vcf",
+      "module": "vca",
+      "label": "VCF (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vcf into vca.audio_vcf. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vca.lvl_ring",
+      "module": "vca",
+      "label": "RING MOD (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from ring mod into vca.audio_ring. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "green"
+    },
+    {
+      "id": "vca.lvl_ar",
+      "module": "vca",
+      "label": "AR (control, linear)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from ar into vca.ctrl_lin. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vca.lvl_adsr",
+      "module": "vca",
+      "label": "ADSR (control, exponential)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from adsr into vca.ctrl_exp. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mixer.lvl_vcf",
+      "module": "mixer",
+      "label": "VCF (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vcf into mixer.in_vcf. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "white"
+    },
+    {
+      "id": "mixer.lvl_vca",
+      "module": "mixer",
+      "label": "VCA (audio)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuator for the pre-wired signal from vca into mixer.in_vca. Unnumbered on the panel: the manual describes the pre-wiring scheme and the specifications list the slider, but neither gives it a number. The jack immediately below breaks the pre-wired connection when a plug is inserted; the slider then sets the level of whatever is patched in.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vcf.initial_frequency",
+      "module": "vcf",
+      "label": "INITIAL FILTER FREQUENCY",
+      "manual_ref": 9,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "decade marks"
+      },
+      "physical": {
+        "min": 10,
+        "max": 10000,
+        "unit": "Hz",
+        "taper": "approximately logarithmic",
+        "note": "end points read from the panel scale; the manual gives no measured range"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Coarse cutoff, marked at 10 Hz, 100 Hz, 1 kHz and 10 kHz.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vcf.fine_tune",
+      "module": "vcf",
+      "label": "FINE TUNE",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "unspecified"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Trims the cutoff up or down from the coarse setting.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "MIN to MAX"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Filter Q. At MAX the response around cutoff becomes sharp and the filter rings in response to pulses passing through it. The manual stops short of saying it self-oscillates.",
+      "led_colour": "white"
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "MODE (4012 / 4072)",
+      "manual_ref": 12,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "4012",
+          "label": "4012",
+          "meaning": "the earlier ARP filter"
+        },
+        {
+          "value": "4072",
+          "label": "4072",
+          "meaning": "the later ARP filter"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Chooses between two filter circuits. The manual's description of them is garbled: it calls the 4012 the original design with a 16 Hz maximum cutoff and the 4072 a lower maximum at 11 Hz, which cannot be right for a filter whose panel is marked to 10 kHz. Read as 16 kHz and 11 kHz.",
+      "confidence": "inferred",
+      "note": "The kHz reading is an inference from the panel scale and from the two circuits being audio filters."
+    },
+    {
+      "id": "ar.attack",
+      "module": "ar",
+      "label": "ATTACK TIME",
+      "manual_ref": 16,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Time to rise to the fixed peak when a key is pressed or a gate or trigger arrives.",
+      "led_colour": "red"
+    },
+    {
+      "id": "ar.release",
+      "module": "ar",
+      "label": "RELEASE TIME",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Fall time after the key or the gate is released.",
+      "led_colour": "red"
+    },
+    {
+      "id": "ar.manual",
+      "module": "ar",
+      "label": "MANUAL",
+      "manual_ref": 18,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Produces a gate by hand, firing both the AR and the ADSR."
+    },
+    {
+      "id": "ar.time_factor",
+      "module": "ar",
+      "label": "TIME FACTOR (x2 / x1 / x0.5)",
+      "manual_ref": 19,
+      "kind": "enum",
+      "values": [
+        {
+          "value": 2,
+          "label": "x2"
+        },
+        {
+          "value": 1,
+          "label": "x1"
+        },
+        {
+          "value": 0.5,
+          "label": "x0.5"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Multiplies the whole envelope's timing."
+    },
+    {
+      "id": "ar.trigger_source",
+      "module": "ar",
+      "label": "ROUTING SWITCH",
+      "manual_ref": 20,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sh_clock",
+          "label": "S/H CLOCK"
+        },
+        {
+          "value": "gate_in",
+          "label": "GATE IN"
+        },
+        {
+          "value": "trig_in",
+          "label": "TRIG IN"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Chooses what fires the envelope: the pre-wired S/H CLOCK, the GATE IN jack or the TRIG IN jack. The manual adds that the chosen signal is passed on to the ADSR generator as well."
+    },
+    {
+      "id": "adsr.attack",
+      "module": "adsr",
+      "label": "ATTACK TIME",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Time to rise to the fixed peak when a key is pressed or a gate or trigger arrives.",
+      "led_colour": "red"
+    },
+    {
+      "id": "adsr.decay",
+      "module": "adsr",
+      "label": "DECAY TIME",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "How quickly the envelope falls from the peak to the sustain level.",
+      "led_colour": "red"
+    },
+    {
+      "id": "adsr.sustain",
+      "module": "adsr",
+      "label": "SUS LEVEL",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Level held after the decay, for as long as the gate is held.",
+      "led_colour": "red"
+    },
+    {
+      "id": "adsr.release",
+      "module": "adsr",
+      "label": "REL TIME",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Fall time after the key or the gate is released.",
+      "led_colour": "red"
+    },
+    {
+      "id": "adsr.time_factor",
+      "module": "adsr",
+      "label": "TIME FACTOR (x2 / x1 / x0.5)",
+      "manual_ref": 29,
+      "kind": "enum",
+      "values": [
+        {
+          "value": 2,
+          "label": "x2"
+        },
+        {
+          "value": 1,
+          "label": "x1"
+        },
+        {
+          "value": 0.5,
+          "label": "x0.5"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Multiplies the whole envelope's timing."
+    },
+    {
+      "id": "adsr.manual",
+      "module": "adsr",
+      "label": "MANUAL",
+      "manual_ref": 32,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Produces a gate by hand, firing both the AR and the ADSR. The manual lists a MANUAL button under both generators; the panel has one button in the AR block and one in the ADSR block."
+    },
+    {
+      "id": "adsr.trigger_source",
+      "module": "adsr",
+      "label": "ROUTING SWITCH",
+      "manual_ref": 33,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sh_clock",
+          "label": "S/H CLOCK"
+        },
+        {
+          "value": "gate_in",
+          "label": "GATE IN"
+        },
+        {
+          "value": "trig_in",
+          "label": "TRIG IN"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Chooses what fires the envelope: the pre-wired S/H CLOCK, the GATE IN jack or the TRIG IN jack."
+    },
+    {
+      "id": "vca.initial_gain",
+      "module": "vca",
+      "label": "INITIAL GAIN",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Standing gain of the VCA before any control voltage is added. At maximum the VCA passes signal at unity gain; at minimum it passes nothing.",
+      "led_colour": "white"
+    },
+    {
+      "id": "mixer.pan",
+      "module": "mixer",
+      "label": "PAN",
+      "manual_ref": 41,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "L to R"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "horizontal"
+        }
+      ],
+      "function": "Places the summed mixer signal in the stereo field before the final output.",
+      "led_colour": "white"
+    },
+    {
+      "id": "reverb.level_left",
+      "module": "reverb",
+      "label": "REVERB L",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Left reverb level. Unnumbered on the panel; listed in the specifications as one of the mixer and reverb sliders.",
+      "led_colour": "green"
+    },
+    {
+      "id": "reverb.level_right",
+      "module": "reverb",
+      "label": "REVERB R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Right reverb level. Unnumbered on the panel; listed in the specifications as one of the mixer and reverb sliders.",
+      "led_colour": "green"
+    },
+    {
+      "id": "output.phones_level",
+      "module": "output",
+      "label": "PHONES level",
+      "manual_ref": 91,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone volume. The headphone feed is taken from the mixer output."
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 92,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Turns the synthesizer on and off. Make the connections before switching on."
+    },
+    {
+      "id": "kbd.voice_mode",
+      "module": "kbd",
+      "label": "VOICE MODE (MONO / DUO)",
+      "manual_ref": 51,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mono",
+          "label": "MONO"
+        },
+        {
+          "value": "duo",
+          "label": "DUO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "MONO plays one voice at a time. DUO plays two: the main keyboard CV and the separate UPPER VOICE output."
+    },
+    {
+      "id": "kbd.repeat",
+      "module": "kbd",
+      "label": "REPEAT (KYBD / OFF / AUTO)",
+      "manual_ref": 52,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "kybd",
+          "label": "KYBD"
+        },
+        {
+          "value": "off",
+          "label": "OFF"
+        },
+        {
+          "value": "auto",
+          "label": "AUTO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "How triggers are generated. KYBD sends repeating trigger pulses for as long as a key is held. AUTO sends a stream of triggers at the LFO rate. OFF gives one trigger per key press, which is normal keyboard behaviour."
+    },
+    {
+      "id": "kbd.trig_mode",
+      "module": "kbd",
+      "label": "TRIG MODE (SINGLE / MULT)",
+      "manual_ref": 53,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "single",
+          "label": "SINGLE"
+        },
+        {
+          "value": "mult",
+          "label": "MULT"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "SINGLE generates a trigger only when a key is played with no other key down, which is legato behaviour. MULT generates a trigger on every key press even while other keys are held."
+    },
+    {
+      "id": "portamento.on",
+      "module": "portamento",
+      "label": "ON / OFF",
+      "manual_ref": 54,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Turns portamento on or off."
+    },
+    {
+      "id": "portamento.momentary",
+      "module": "portamento",
+      "label": "MOMEN",
+      "manual_ref": 55,
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Turns portamento on for as long as the button is held."
+    },
+    {
+      "id": "portamento.amount",
+      "module": "portamento",
+      "label": "MAX / MIN",
+      "manual_ref": 56,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "MIN to MAX"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Strength of the portamento. MAX is the most gradual glide.",
+      "led_colour": "white"
+    },
+    {
+      "id": "lfo.speed",
+      "module": "lfo",
+      "label": "LFO SPEED",
+      "manual_ref": 61,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.25,
+        "max": 25,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Base rate of the LFO, and therefore of the AUTO repeat trigger stream.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "lfo.vib_delay",
+      "module": "lfo",
+      "label": "VIB DELAY",
+      "manual_ref": 62,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "How long the delayed sine output takes to come in.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "lfo.vib_depth",
+      "module": "lfo",
+      "label": "VIB DEPTH",
+      "manual_ref": 63,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Intensity of the vibrato produced by the delayed sine.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "preamp.range",
+      "module": "preamp",
+      "label": "RANGE (x1000 / x100 / x10)",
+      "manual_ref": 65,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "x10",
+          "label": "x10",
+          "meaning": "20 dB"
+        },
+        {
+          "value": "x100",
+          "label": "x100",
+          "meaning": "40 dB"
+        },
+        {
+          "value": "x1000",
+          "label": "x1000",
+          "meaning": "60 dB"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Base amplification applied before the GAIN slider: 20, 40 or 60 dB."
+    },
+    {
+      "id": "preamp.gain",
+      "module": "preamp",
+      "label": "GAIN",
+      "manual_ref": 66,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "MIN to MAX"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "How strongly the input signal is amplified within the selected range.",
+      "led_colour": "white"
+    },
+    {
+      "id": "env_follower.sensitivity",
+      "module": "env_follower",
+      "label": "SENSITIVITY",
+      "manual_ref": 69,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sensitivity of the envelope follower. Listed in the specifications as the input gain slider.",
+      "led_colour": "white"
+    },
+    {
+      "id": "ring_mod.level_a",
+      "module": "ring_mod",
+      "label": "VCO 1 level",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gain of the VCO1 sawtooth input, combined with anything patched into the VCO1 jack. Unnumbered; the manual describes it under item 71.",
+      "led_colour": "green"
+    },
+    {
+      "id": "ring_mod.level_b",
+      "module": "ring_mod",
+      "label": "VCO 2 level",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Gain of the VCO2 sine input, combined with anything patched into the VCO2 jack. Unnumbered; the manual describes it under item 72.",
+      "led_colour": "green"
+    },
+    {
+      "id": "ring_mod.audio_dc",
+      "module": "ring_mod",
+      "label": "AUDIO / DC",
+      "manual_ref": 73,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio",
+          "label": "AUDIO"
+        },
+        {
+          "value": "dc",
+          "label": "DC"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Optimises the VCO1 input path for audio or for control voltages."
+    },
+    {
+      "id": "noise.colour",
+      "module": "noise",
+      "label": "COLOR",
+      "manual_ref": 75,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "LOW FREQ to WHITE"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sweeps the noise spectrum continuously between low frequency, pink and white. A slider, not a switch, so intermediate settings are valid.",
+      "led_colour": "green"
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "LEVEL",
+      "manual_ref": 76,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "MIN to MAX"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates the noise signal before its output.",
+      "led_colour": "green"
+    },
+    {
+      "id": "inverter1.gain_minus10",
+      "module": "inverter1",
+      "label": "-10 V gain",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "horizontal"
+        }
+      ],
+      "function": "Attenuator on the -10 V input of Inverter 1. Horizontal slider, unnumbered; the jack is item 79.",
+      "led_colour": "white"
+    },
+    {
+      "id": "inverter1.gain_kbd",
+      "module": "inverter1",
+      "label": "KYBD CV gain",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "horizontal"
+        }
+      ],
+      "function": "Attenuator on the keyboard CV input of Inverter 1. Horizontal slider, unnumbered; the jack is item 80.",
+      "led_colour": "white"
+    },
+    {
+      "id": "inverter2.gain_plus10",
+      "module": "inverter2",
+      "label": "+10 V gain",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "horizontal"
+        }
+      ],
+      "function": "Attenuator on the +10 V input of Inverter 2. Horizontal slider, unnumbered; the jack is item 81.",
+      "led_colour": "white"
+    },
+    {
+      "id": "lag.time",
+      "module": "lag",
+      "label": "INCREASE LAG TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader",
+          "note": "horizontal"
+        }
+      ],
+      "function": "How much the lag processor slows changes at its input. On audio it acts as a low-pass filter.",
+      "led_colour": "white"
+    },
+    {
+      "id": "sample_hold.level",
+      "module": "sample_hold",
+      "label": "LEVEL",
+      "manual_ref": 88,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attenuates the input before it reaches the sample and hold circuit.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "sample_hold.rate",
+      "module": "sample_hold",
+      "label": "RATE",
+      "manual_ref": 89,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Speed of the internal clock, and so how often a sample is taken. Does nothing while EXT CLK IN is patched.",
+      "led_colour": "yellow"
+    },
+    {
+      "id": "output.led_brightness",
+      "module": "output",
+      "label": "LED",
+      "manual_ref": 93,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "unit": "min to max"
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rear-panel knob setting the brightness of every LED on the front panel. It does not change their colours."
+    },
+    {
+      "id": "kbd.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CHANNEL SWITCHES",
+      "manual_ref": 94,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        }
+      ],
+      "function": "MIDI receive channel, 1 to 16, set by four rear DIP switches. The combinations are printed both in the manual and on the rear panel itself."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "output.power_led",
+      "module": "output",
+      "label": "POWER",
+      "kind": "led",
+      "led_colour": "amber",
+      "manual_ref": 92,
+      "function": "Lit when the unit is on."
+    },
+    {
+      "id": "panel.slider_leds",
+      "module": "output",
+      "label": "Slider LEDs",
+      "kind": "led",
+      "led_colour": "multi",
+      "manual_ref": 93,
+      "function": "Every slider cap carries a lit LED. The colour is fixed per slider and is not adjustable; the rear LED knob changes brightness only. See led_legend for what the colours appear to encode, and the led_colour field on each parameter for the observed colour of that slider."
+    }
+  ],
+  "led_legend": {
+    "rule": "A slider's LED takes the colour of the module the signal in it comes from. A module's own sliders (its frequency, its envelope times, its gain) carry that module's colour, and an attenuator slider for a pre-wired input carries the colour of the source at the other end. So the five VCF audio sliders read green, blue, green, blue, green from left to right, matching ring modulator, VCO1, VCO2, VCO3 and noise, and the pattern repeats wherever those sources appear.",
+    "colours": [
+      {
+        "colour": "blue",
+        "meaning": "VCO 1 and VCO 3",
+        "modules": ["vco1", "vco3"]
+      },
+      {
+        "colour": "green",
+        "meaning": "VCO 2, noise generator, ring modulator, reverb",
+        "modules": ["vco2", "noise", "ring_mod", "reverb"]
+      },
+      {
+        "colour": "red",
+        "meaning": "the two envelope generators, AR and ADSR",
+        "modules": ["ar", "adsr"]
+      },
+      {
+        "colour": "yellow",
+        "meaning": "the clock and modulation sources: LFO and sample and hold",
+        "modules": ["lfo", "sample_hold"]
+      },
+      {
+        "colour": "white",
+        "meaning": "the signal-path and control blocks: VCF, VCA, mixer, keyboard CV, portamento, preamp, envelope follower, voltage processor",
+        "modules": [
+          "vcf",
+          "vca",
+          "mixer",
+          "kbd",
+          "portamento",
+          "preamp",
+          "env_follower",
+          "inverter1",
+          "inverter2",
+          "lag"
+        ]
+      }
+    ],
+    "exceptions": [
+      "The ring modulator's two sliders are both green although their sources are VCO1 (blue) and VCO2 (green). This fits the rule rather than breaking it: the manual says those sliders set the gain of the combined pre-wired and patched signal, so they are the module's own gain controls, not per-source attenuators.",
+      "VCO1 and VCO3 share blue, so colour distinguishes signal families rather than individual modules."
+    ],
+    "confidence": "inferred",
+    "note": "Read off the front panel photograph. The manual documents the LEDs only as something whose brightness the rear knob controls; it contains no colour legend at all, and neither do the specifications. Every observation here is consistent, but the rule itself is a reading, not a documented fact."
+  },
+  "ports": [
+    {
+      "id": "jack.vco1_fm_kbd",
+      "label": "FM CONTROL KYBD CV",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.kbd_in",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO1, pre-wired from KYBD CV. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco1_fm_sh",
+      "label": "FM CONTROL S/H OUT",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.fm1",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO1, pre-wired from S/H OUT. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco1_fm_adsr",
+      "label": "FM CONTROL ADSR",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.fm2",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO1, pre-wired from ADSR. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco1_fm_lfo",
+      "label": "FM CONTROL LFO",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco1.fm3",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO1, pre-wired from LFO. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco2_fm_kbd",
+      "label": "FM CONTROL KYBD CV",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.kbd_in",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO2, pre-wired from KYBD CV. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco2_fm_sh",
+      "label": "FM CONTROL S/H OUT",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.fm1",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO2, pre-wired from S/H OUT. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco2_fm_adsr",
+      "label": "FM CONTROL ADSR",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.fm2",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO2, pre-wired from ADSR. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco2_fm_vco1",
+      "label": "FM CONTROL VCO 1",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.fm3",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO2, pre-wired from VCO 1. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco3_fm_kbd",
+      "label": "FM CONTROL KYBD CV",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco3.kbd_in",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO3, pre-wired from KYBD CV. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco3_fm_noise",
+      "label": "FM CONTROL NOISE GEN",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco3.fm1",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO3, pre-wired from NOISE GEN. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco3_fm_adsr",
+      "label": "FM CONTROL ADSR",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco3.fm2",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO3, pre-wired from ADSR. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco3_fm_vco2",
+      "label": "FM CONTROL VCO 2",
+      "manual_ref": 7,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco3.fm3",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Frequency modulation input on VCO3, pre-wired from VCO 2. Inserting a plug breaks that pre-wired connection, as the panel graphic below the jack shows."
+    },
+    {
+      "id": "jack.vco2_pwm",
+      "label": "PWM (NOISE GEN)",
+      "manual_ref": 8,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco2.pwm_in",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5,
+        "scaling": "1 V per 10% duty"
+      },
+      "function": "Pulse width modulation input on VCO2, pre-wired from the noise generator. Inserting a plug breaks the pre-wire and the incoming voltage takes over from the PULSE WIDTH slider."
+    },
+    {
+      "id": "jack.vco3_pwm",
+      "label": "PWM (ADSR)",
+      "manual_ref": 8,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vco3.pwm_in",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -5,
+        "max_v": 5,
+        "scaling": "1 V per 10% duty"
+      },
+      "function": "Pulse width modulation input on VCO3, pre-wired from the ADSR."
+    },
+    {
+      "id": "jack.vco1_saw",
+      "label": "OUTPUT (SAW)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco1.saw",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Saw output of VCO1. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco1_pulse",
+      "label": "OUTPUT (PULSE)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco1.pulse",
+      "electrical": {
+        "impedance_ohm": 800
+      },
+      "function": "Pulse output of VCO1. Carries audio or, with the oscillator in LF, a modulation signal. The manual adds that the PULSE outputs can also be used to mix in a signal from another section."
+    },
+    {
+      "id": "jack.vco2_tri",
+      "label": "OUTPUT (TRI)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco2.tri",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Tri output of VCO2. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco2_saw",
+      "label": "OUTPUT (SAW)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco2.saw",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Saw output of VCO2. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco2_sine",
+      "label": "OUTPUT (SINE)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco2.sine",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Sine output of VCO2. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco2_pulse",
+      "label": "OUTPUT (PULSE)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco2.pulse",
+      "electrical": {
+        "impedance_ohm": 800
+      },
+      "function": "Pulse output of VCO2. Carries audio or, with the oscillator in LF, a modulation signal. The manual adds that the PULSE outputs can also be used to mix in a signal from another section."
+    },
+    {
+      "id": "jack.vco3_tri",
+      "label": "OUTPUT (TRI)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco3.tri",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Tri output of VCO3. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco3_saw",
+      "label": "OUTPUT (SAW)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco3.saw",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Saw output of VCO3. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco3_sine",
+      "label": "OUTPUT (SINE)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco3.sine",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Sine output of VCO3. Carries audio or, with the oscillator in LF, a modulation signal."
+    },
+    {
+      "id": "jack.vco3_pulse",
+      "label": "OUTPUT (PULSE)",
+      "manual_ref": 5,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "vco3.pulse",
+      "electrical": {
+        "impedance_ohm": 800
+      },
+      "function": "Pulse output of VCO3. Carries audio or, with the oscillator in LF, a modulation signal. The manual adds that the PULSE outputs can also be used to mix in a signal from another section."
+    },
+    {
+      "id": "jack.vcf_audio_ring",
+      "label": "AUDIO (RING MOD)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.audio_ring",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio input to the VCF, pre-wired from RING MOD. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_audio_vco1",
+      "label": "AUDIO (VCO 1)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.audio_vco1",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio input to the VCF, pre-wired from VCO 1. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_audio_vco2",
+      "label": "AUDIO (VCO 2)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.audio_vco2",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio input to the VCF, pre-wired from VCO 2. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_audio_vco3",
+      "label": "AUDIO (VCO 3)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.audio_vco3",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio input to the VCF, pre-wired from VCO 3. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_audio_noise",
+      "label": "AUDIO (NOISE GEN)",
+      "manual_ref": 14,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.audio_noise",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio input to the VCF, pre-wired from NOISE GEN. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_ctrl_kbd",
+      "label": "CONTROL (KYBD CV)",
+      "manual_ref": 15,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.ctrl_kbd",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Cutoff control input, pre-wired from KYBD CV. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_ctrl_adsr",
+      "label": "CONTROL (ADSR)",
+      "manual_ref": 15,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.ctrl_adsr",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Cutoff control input, pre-wired from ADSR. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_ctrl_vco2",
+      "label": "CONTROL (VCO 2 sine)",
+      "manual_ref": 15,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vcf.ctrl_vco2",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Cutoff control input, pre-wired from VCO 2 sine. Inserting a plug breaks the pre-wire."
+    },
+    {
+      "id": "jack.vcf_out",
+      "label": "OUTPUT",
+      "manual_ref": 13,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vcf.out",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "VCF output, for use anywhere the pre-wired VCF signal is not available."
+    },
+    {
+      "id": "jack.ar_out",
+      "label": "OUTPUT (AR)",
+      "manual_ref": 21,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "ar.out",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 10
+      },
+      "function": "AR envelope output, for use where no pre-wired AR connection exists."
+    },
+    {
+      "id": "jack.sh_clock_in",
+      "label": "S&H CLOCK",
+      "manual_ref": 22,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5mm TS",
+      "node": "trigger_bus.sh_clock_in",
+      "electrical": {
+        "threshold_v": 6
+      },
+      "function": "Substitutes an external signal for the sample and hold output feeding the envelope routing switch."
+    },
+    {
+      "id": "jack.trig_in",
+      "label": "TRIG IN",
+      "manual_ref": 23,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "trigger_bus.trig_jack_in",
+      "electrical": {
+        "threshold_v": 5
+      },
+      "function": "External trigger into the envelope routing switches."
+    },
+    {
+      "id": "jack.gate_in_ar",
+      "label": "GATE IN (AR)",
+      "manual_ref": 24,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "trigger_bus.gate_jack_in",
+      "electrical": {
+        "threshold_v": 4
+      },
+      "function": "External gate into the AR and ADSR circuits."
+    },
+    {
+      "id": "jack.adsr_out",
+      "label": "OUTPUT (ADSR)",
+      "manual_ref": 30,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "adsr.out",
+      "electrical": {
+        "min_v": 0,
+        "max_v": 10
+      },
+      "function": "ADSR envelope output, for use where no pre-wired ADSR connection exists."
+    },
+    {
+      "id": "jack.gate_in_adsr",
+      "label": "GATE IN (ADSR)",
+      "manual_ref": 31,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "trigger_bus.gate_jack_in",
+      "electrical": {
+        "threshold_v": 4
+      },
+      "function": "Gate input in the ADSR block. The manual numbers two separate GATE IN jacks (24 and 31) while the specifications count only one.",
+      "note": "Modelled as a second jack onto the same node, following the manual rather than the specifications."
+    },
+    {
+      "id": "jack.vca_audio_vcf",
+      "label": "AUDIO (VCF)",
+      "manual_ref": 35,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca.audio_vcf",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio into the VCA, pre-wired from the VCF. Inserting a plug disables that pre-wire."
+    },
+    {
+      "id": "jack.vca_audio_ring",
+      "label": "AUDIO (RING MOD)",
+      "manual_ref": 35,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca.audio_ring",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio into the VCA, pre-wired from the ring modulator."
+    },
+    {
+      "id": "jack.vca_ctrl_lin",
+      "label": "CNTRL (LIN)",
+      "manual_ref": 36,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca.ctrl_lin",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Linear gain control input, pre-wired from the AR. Inserting a plug disables that pre-wire."
+    },
+    {
+      "id": "jack.vca_ctrl_exp",
+      "label": "CNTRL (EXP'L)",
+      "manual_ref": 36,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca.ctrl_exp",
+      "combine": "replace",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Exponential gain control input, pre-wired from the ADSR."
+    },
+    {
+      "id": "jack.vca_out",
+      "label": "OUTPUT",
+      "manual_ref": 37,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca.out",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "VCA output, for use where the pre-wired VCA signal is not available."
+    },
+    {
+      "id": "jack.mixer_audio_vcf",
+      "label": "AUDIO (VCF)",
+      "manual_ref": 38,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.in_vcf",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio into the mixer, pre-wired from the VCF. Inserting a plug disables that pre-wire."
+    },
+    {
+      "id": "jack.mixer_audio_vca",
+      "label": "AUDIO (VCA)",
+      "manual_ref": 38,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.in_vca",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Audio into the mixer, pre-wired from the VCA."
+    },
+    {
+      "id": "jack.post_atten_vcf",
+      "label": "POST-ATTENUATOR OUTPUT (VCF)",
+      "manual_ref": 39,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.post_atten_vcf",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Taps the mixer's VCF channel immediately after its attenuator slider, so the slider can be used to scale audio or control voltage for use elsewhere.",
+      "note": "An output taken from an input node. The attenuator output is a tap, not a separate stage."
+    },
+    {
+      "id": "jack.post_atten_vca",
+      "label": "POST-ATTENUATOR OUTPUT (VCA)",
+      "manual_ref": 39,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.post_atten_vca",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Taps the mixer's VCA channel immediately after its attenuator slider."
+    },
+    {
+      "id": "jack.post_mixer",
+      "label": "POST-MIXER OUTPUT",
+      "manual_ref": 40,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.pan_in",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Breaks the connection from the mixer sum to the PAN slider and substitutes whatever is patched in. The mixer sum still reaches the reverb over its own pre-wired connection."
+    },
+    {
+      "id": "jack.mixer_out",
+      "label": "MIXER OUT",
+      "manual_ref": 42,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.sum_out",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Extra mixer output, tapping the pre-wired feed into the reverb."
+    },
+    {
+      "id": "jack.reverb_out",
+      "label": "REVERB OUT",
+      "manual_ref": 43,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "reverb.right",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Taps the right reverb signal for use elsewhere."
+    },
+    {
+      "id": "jack.reverb_left_in",
+      "label": "LEFT INPUT",
+      "manual_ref": 44,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "reverb.left_in",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Adds a signal to the reverb's left output, summed there and panned hard left."
+    },
+    {
+      "id": "jack.reverb_right_in",
+      "label": "RIGHT INPUT",
+      "manual_ref": 45,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "reverb.right_in",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Adds a signal to the reverb's right output, summed there and panned hard right."
+    },
+    {
+      "id": "jack.out_l_quarter",
+      "label": "L OUTPUT (1/4\")",
+      "manual_ref": 46,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS, unbalanced",
+      "node": "output.left",
+      "electrical": {
+        "impedance_ohm": 500
+      },
+      "function": "Main left output for amplifiers, speakers or outboard."
+    },
+    {
+      "id": "jack.out_r_quarter",
+      "label": "R OUTPUT (1/4\")",
+      "manual_ref": 46,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TS, unbalanced",
+      "node": "output.right",
+      "electrical": {
+        "impedance_ohm": 500
+      },
+      "function": "Main right output."
+    },
+    {
+      "id": "jack.out_l_mini",
+      "label": "L OUTPUT (3.5 mm)",
+      "manual_ref": 46,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.left",
+      "electrical": {
+        "impedance_ohm": 500
+      },
+      "function": "Left output in parallel with the 1/4-inch jack, for sending the final mix back into other parts of the synth."
+    },
+    {
+      "id": "jack.out_r_mini",
+      "label": "R OUTPUT (3.5 mm)",
+      "manual_ref": 46,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.right",
+      "electrical": {
+        "impedance_ohm": 500
+      },
+      "function": "Right output in parallel with the 1/4-inch jack."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 91,
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_level_dbu": 5,
+        "impedance_ohm": 8
+      },
+      "function": "Headphone socket, fed from the mixer output, with its own level knob below."
+    },
+    {
+      "id": "jack.trig_out",
+      "label": "TRIG OUT",
+      "manual_ref": 47,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "kbd.trig",
+      "electrical": {
+        "level_v": 14
+      },
+      "function": "Keyboard trigger output."
+    },
+    {
+      "id": "jack.gate_out",
+      "label": "GATE OUT",
+      "manual_ref": 48,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "kbd.gate",
+      "electrical": {
+        "level_v": 10
+      },
+      "function": "Keyboard gate output."
+    },
+    {
+      "id": "jack.upper_voice",
+      "label": "UPPER VOICE",
+      "manual_ref": 49,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "kbd.upper_cv",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Control voltage for the highest note held, active in DUO voice mode."
+    },
+    {
+      "id": "jack.kybd_cv",
+      "label": "KYBD CV",
+      "manual_ref": 50,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "kbd.cv",
+      "electrical": {
+        "max_v": 7,
+        "scaling": "1 V/octave",
+        "note": "the 1 V/octave scaling is the ARP convention and is not stated in this manual"
+      },
+      "function": "The full keyboard control voltage, for use elsewhere.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.lfo_saw",
+      "label": "LFO (SAW)",
+      "manual_ref": 57,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.saw",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Sawtooth LFO output.",
+      "note": "The specifications label this output triangle while the panel and the controls list both say sawtooth."
+    },
+    {
+      "id": "jack.lfo_square",
+      "label": "LFO (SQUARE)",
+      "manual_ref": 58,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.square",
+      "electrical": {
+        "impedance_ohm": 1800
+      },
+      "function": "Square LFO output."
+    },
+    {
+      "id": "jack.ext_vib_in",
+      "label": "EXT VIB IN",
+      "manual_ref": 59,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.ext_vib_in",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Routes an external LFO in to blend with the delayed sine."
+    },
+    {
+      "id": "jack.lfo_sine_delayed",
+      "label": "LFO (SINE) DELAYED",
+      "manual_ref": 60,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.sine_delayed",
+      "electrical": {
+        "impedance_ohm": 1000
+      },
+      "function": "Copy of the LFO's pre-wired sine output, delayed by the VIB DELAY slider."
+    },
+    {
+      "id": "jack.preamp_in",
+      "label": "PREAMP INPUT",
+      "manual_ref": 64,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "preamp.in",
+      "electrical": {
+        "impedance_ohm": 100000
+      },
+      "function": "External signal into the preamp."
+    },
+    {
+      "id": "jack.preamp_out",
+      "label": "PREAMP OUTPUT",
+      "manual_ref": 67,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "preamp.out",
+      "electrical": {
+        "max_gain_dbu": [20, 40, 60]
+      },
+      "function": "Copy of the preamp signal for use elsewhere. Maximum gain depends on the RANGE switch: +20, +40 or +60 dBu."
+    },
+    {
+      "id": "jack.env_follower_in",
+      "label": "PREAMP INPUT (env follower)",
+      "manual_ref": 68,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "env_follower.in",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 100000
+      },
+      "function": "Bypasses the preamp and feeds the envelope follower directly, or blends with the pre-wired preamp signal."
+    },
+    {
+      "id": "jack.env_follower_out",
+      "label": "OUTPUT (ENV FOLLOWER)",
+      "manual_ref": 70,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "env_follower.out",
+      "electrical": {
+        "max_v": 14
+      },
+      "function": "Envelope follower output. There is no pre-wired destination for it, so it only does anything when patched."
+    },
+    {
+      "id": "jack.ring_in_a",
+      "label": "VCO 1",
+      "manual_ref": 71,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "ring_mod.in_a",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 100000
+      },
+      "function": "External signal blended with the pre-wired VCO1 sawtooth. Unlike most jacks on this panel it adds to the pre-wire rather than breaking it."
+    },
+    {
+      "id": "jack.ring_in_b",
+      "label": "VCO 2",
+      "manual_ref": 72,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "ring_mod.in_b",
+      "combine": "sum",
+      "electrical": {
+        "impedance_ohm": 100000
+      },
+      "function": "External signal blended with the pre-wired VCO2 sine."
+    },
+    {
+      "id": "jack.ring_out",
+      "label": "RING MOD OUTPUT",
+      "manual_ref": 74,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "ring_mod.out",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Ring modulator output."
+    },
+    {
+      "id": "jack.noise_out",
+      "label": "NOISE GENERATOR OUTPUT",
+      "manual_ref": 77,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "noise.out",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Noise output, for use where no pre-wired noise connection exists."
+    },
+    {
+      "id": "jack.vp_in1",
+      "label": "Input 1",
+      "manual_ref": "1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter1.in1",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Unattenuated input to Inverter 1."
+    },
+    {
+      "id": "jack.vp_minus10",
+      "label": "-10 V",
+      "manual_ref": 79,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter1.in2",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Attenuated input to Inverter 1. The manual says it attenuates the input by 10 V; the panel marking and the specifications describe it as the -10 V input with its own gain slider."
+    },
+    {
+      "id": "jack.vp_in3",
+      "label": "Input 3",
+      "manual_ref": "3",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter1.in3",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Unattenuated input to Inverter 1."
+    },
+    {
+      "id": "jack.vp_kbd",
+      "label": "KYBD CV",
+      "manual_ref": 80,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "inverter1.in4",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Input to Inverter 1 optimised for keyboard control voltage, with its own gain slider."
+    },
+    {
+      "id": "jack.vp_in5",
+      "label": "Input 5",
+      "manual_ref": "5",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter2.in5",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Unattenuated input to Inverter 2."
+    },
+    {
+      "id": "jack.vp_plus10",
+      "label": "+10 V",
+      "manual_ref": 81,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter2.in6",
+      "combine": "sum",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Attenuated input to Inverter 2, with its own gain slider."
+    },
+    {
+      "id": "jack.vp_env_foll",
+      "label": "ENV FOLL",
+      "manual_ref": 82,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "lag.in",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Input to the lag processor. Accepts control voltages or audio but is set up for the envelope follower output."
+    },
+    {
+      "id": "jack.inverter1_out",
+      "label": "Inverter 1 output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter1.out",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Sum of inputs 1 to 4, inverted."
+    },
+    {
+      "id": "jack.inverter2_out",
+      "label": "Inverter 2 output",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter2.out",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Sum of inputs 5 and 6, inverted."
+    },
+    {
+      "id": "jack.lag_out",
+      "label": "LAG",
+      "manual_ref": 83,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "lag.out",
+      "electrical": {
+        "min_v": -10,
+        "max_v": 10
+      },
+      "function": "Lag processor output."
+    },
+    {
+      "id": "jack.mult1",
+      "label": "MULT 1",
+      "manual_ref": 78,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.bus_in",
+      "function": "One of four jacks wired directly in parallel. Any of them can be an input or an output; the split into inputs and outputs here is a modelling convenience, not a property of the hardware.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.mult2",
+      "label": "MULT 2",
+      "manual_ref": 78,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.bus_in",
+      "function": "One of four jacks wired directly in parallel. Any of them can be an input or an output; the split into inputs and outputs here is a modelling convenience, not a property of the hardware.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.mult3",
+      "label": "MULT 3",
+      "manual_ref": 78,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.bus_out",
+      "function": "One of four jacks wired directly in parallel. Any of them can be an input or an output; the split into inputs and outputs here is a modelling convenience, not a property of the hardware.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.mult4",
+      "label": "MULT 4",
+      "manual_ref": 78,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.bus_out",
+      "function": "One of four jacks wired directly in parallel. Any of them can be an input or an output; the split into inputs and outputs here is a modelling convenience, not a property of the hardware.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.sh_noise_in",
+      "label": "NOISE GENERATOR",
+      "manual_ref": 84,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.in",
+      "combine": "replace",
+      "electrical": {
+        "impedance_ohm": 50000
+      },
+      "function": "Interrupts the pre-wired noise feed into the sample and hold and substitutes whatever is patched in."
+    },
+    {
+      "id": "jack.sh_int_clock_out",
+      "label": "INT CLOCK OUT",
+      "manual_ref": 85,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.clock_out",
+      "electrical": {
+        "max_v": 10
+      },
+      "function": "Exports the internally generated clock."
+    },
+    {
+      "id": "jack.sh_out",
+      "label": "S/H OUT",
+      "manual_ref": 86,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.out",
+      "electrical": {
+        "max_v": 14
+      },
+      "function": "Sample and hold output, for use where no pre-wired connection exists."
+    },
+    {
+      "id": "jack.sh_ext_clock",
+      "label": "EXT CLK IN",
+      "manual_ref": 87,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.clock_in",
+      "combine": "replace",
+      "electrical": {
+        "threshold_v": 3
+      },
+      "function": "Runs the sample and hold from an external clock. Inserting a plug disables the internal clock generator and the RATE slider with it. Any square or pulse wave, or a keyboard gate or trigger, will do."
+    },
+    {
+      "id": "jack.elec_a",
+      "label": "ELEC SWITCH A",
+      "manual_ref": 90,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.a_in",
+      "function": "Electronic switch terminal A. Bidirectional: an input when C is the output, an output when C is the input.",
+      "confidence": "inferred",
+      "note": "Modelled with separate in and out jack entries per terminal because the schema's direction field is single-valued; the hardware has one jack per terminal."
+    },
+    {
+      "id": "jack.elec_a_out",
+      "label": "ELEC SWITCH A (out)",
+      "manual_ref": 90,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.a_out",
+      "function": "The same physical A jack acting as an output.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.elec_b",
+      "label": "ELEC SWITCH B",
+      "manual_ref": 90,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.b_in",
+      "function": "Electronic switch terminal B.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.elec_b_out",
+      "label": "ELEC SWITCH B (out)",
+      "manual_ref": 90,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.b_out",
+      "function": "The same physical B jack acting as an output.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.elec_c",
+      "label": "ELEC SWITCH C",
+      "manual_ref": 90,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.c_in",
+      "function": "Electronic switch terminal C, the common side.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.elec_c_out",
+      "label": "ELEC SWITCH C (out)",
+      "manual_ref": 90,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "elec_switch.c_out",
+      "function": "The same physical C jack acting as an output.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.interval_latch",
+      "label": "INTERVAL LATCH",
+      "manual_ref": 95,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TRS",
+      "node": null,
+      "function": "Footswitch input. In DUO voice mode, holding two notes and pressing the footswitch keeps that interval while you carry on playing single notes."
+    },
+    {
+      "id": "jack.portamento_footswitch",
+      "label": "PORTAMENTO FOOTSWITCH",
+      "manual_ref": 96,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TRS",
+      "node": null,
+      "function": "Footswitch input turning portamento on and off."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 97,
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from a keyboard, sequencer or computer."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 98,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Passes through the data arriving at MIDI IN."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB PORT",
+      "manual_ref": 99,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI, in and out."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "manual_ref": 100,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": {
+        "voltage_v": 12,
+        "current_ma": 2000
+      },
+      "function": "12 V DC from the supplied adaptor, which runs on 100 to 240 V at 50 or 60 Hz."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv",
+      "to": "portamento.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "trigger_bus.kbd_gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.trig",
+      "to": "trigger_bus.kbd_trig_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c10",
+      "from": "portamento.out",
+      "to": "vco1.kbd_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm_kbd"
+    },
+    {
+      "id": "c11",
+      "from": "sample_hold.out",
+      "to": "vco1.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm_sh",
+      "amount": "vco1.fm_sh"
+    },
+    {
+      "id": "c12",
+      "from": "adsr.out",
+      "to": "vco1.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm_adsr",
+      "amount": "vco1.fm_adsr"
+    },
+    {
+      "id": "c13",
+      "from": "lfo.sine",
+      "to": "vco1.fm3",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm_lfo",
+      "amount": "vco1.fm_lfo"
+    },
+    {
+      "id": "c14",
+      "from": "portamento.out",
+      "to": "vco2.kbd_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm_kbd"
+    },
+    {
+      "id": "c15",
+      "from": "sample_hold.out",
+      "to": "vco2.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm_sh",
+      "amount": "vco2.fm_sh"
+    },
+    {
+      "id": "c16",
+      "from": "adsr.out",
+      "to": "vco2.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm_adsr",
+      "amount": "vco2.fm_adsr"
+    },
+    {
+      "id": "c17",
+      "from": "vco1.pulse",
+      "to": "vco2.fm3",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm_vco1",
+      "amount": "vco2.fm_vco1"
+    },
+    {
+      "id": "c18",
+      "from": "noise.out",
+      "to": "vco2.pwm_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_pwm",
+      "amount": "vco2.pwm_noise"
+    },
+    {
+      "id": "c19",
+      "from": "portamento.out",
+      "to": "vco3.kbd_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco3_fm_kbd"
+    },
+    {
+      "id": "c20",
+      "from": "noise.out",
+      "to": "vco3.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco3_fm_noise",
+      "amount": "vco3.fm_noise"
+    },
+    {
+      "id": "c21",
+      "from": "adsr.out",
+      "to": "vco3.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco3_fm_adsr",
+      "amount": "vco3.fm_adsr"
+    },
+    {
+      "id": "c22",
+      "from": "vco2.sine",
+      "to": "vco3.fm3",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco3_fm_vco2",
+      "amount": "vco3.fm_vco2"
+    },
+    {
+      "id": "c23",
+      "from": "adsr.out",
+      "to": "vco3.pwm_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco3_pwm",
+      "amount": "vco3.pwm_adsr"
+    },
+    {
+      "id": "c24",
+      "from": "ring_mod.out",
+      "to": "vcf.audio_ring",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_audio_ring",
+      "amount": "vcf.lvl_ring"
+    },
+    {
+      "id": "c25",
+      "from": "vco1.pulse",
+      "to": "vcf.audio_vco1",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_audio_vco1",
+      "amount": "vcf.lvl_vco1"
+    },
+    {
+      "id": "c26",
+      "from": "vco2.pulse",
+      "to": "vcf.audio_vco2",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_audio_vco2",
+      "amount": "vcf.lvl_vco2"
+    },
+    {
+      "id": "c27",
+      "from": "vco3.saw",
+      "to": "vcf.audio_vco3",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_audio_vco3",
+      "amount": "vcf.lvl_vco3"
+    },
+    {
+      "id": "c28",
+      "from": "noise.out",
+      "to": "vcf.audio_noise",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_audio_noise",
+      "amount": "vcf.lvl_noise"
+    },
+    {
+      "id": "c29",
+      "from": "portamento.out",
+      "to": "vcf.ctrl_kbd",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_ctrl_kbd",
+      "amount": "vcf.lvl_kbd"
+    },
+    {
+      "id": "c30",
+      "from": "adsr.out",
+      "to": "vcf.ctrl_adsr",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_ctrl_adsr",
+      "amount": "vcf.lvl_adsr"
+    },
+    {
+      "id": "c31",
+      "from": "vco2.sine",
+      "to": "vcf.ctrl_vco2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_ctrl_vco2",
+      "amount": "vcf.lvl_vco2_sine"
+    },
+    {
+      "id": "c32",
+      "from": "vcf.out",
+      "to": "vca.audio_vcf",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_audio_vcf",
+      "amount": "vca.lvl_vcf"
+    },
+    {
+      "id": "c33",
+      "from": "ring_mod.out",
+      "to": "vca.audio_ring",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_audio_ring",
+      "amount": "vca.lvl_ring"
+    },
+    {
+      "id": "c34",
+      "from": "ar.out",
+      "to": "vca.ctrl_lin",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vca_ctrl_lin",
+      "amount": "vca.lvl_ar"
+    },
+    {
+      "id": "c35",
+      "from": "adsr.out",
+      "to": "vca.ctrl_exp",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vca_ctrl_exp",
+      "amount": "vca.lvl_adsr"
+    },
+    {
+      "id": "c36",
+      "from": "vcf.out",
+      "to": "mixer.in_vcf",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mixer_audio_vcf",
+      "amount": "mixer.lvl_vcf"
+    },
+    {
+      "id": "c37",
+      "from": "vca.out",
+      "to": "mixer.in_vca",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mixer_audio_vca",
+      "amount": "mixer.lvl_vca"
+    },
+    {
+      "id": "c38",
+      "from": "noise.out",
+      "to": "sample_hold.in",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.sh_noise_in",
+      "amount": "sample_hold.level"
+    },
+    {
+      "id": "c39",
+      "from": "preamp.out",
+      "to": "env_follower.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.env_follower_in",
+      "note": "The envelope follower input jack blends rather than replaces, so this normal is only partly broken."
+    },
+    {
+      "id": "c40",
+      "from": "mixer.sum_out",
+      "to": "mixer.pan_in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.post_mixer",
+      "note": "Breaking this normal does not stop the mixer sum reaching the reverb; that is a separate pre-wire."
+    },
+    {
+      "id": "c41",
+      "from": "vco1.saw",
+      "to": "ring_mod.in_a",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ring_mod.level_a",
+      "note": "Pre-wired, but the VCO1 jack sums with it rather than breaking it, so this is not a normalled connection."
+    },
+    {
+      "id": "c42",
+      "from": "vco2.sine",
+      "to": "ring_mod.in_b",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "ring_mod.level_b",
+      "note": "Pre-wired, but the VCO2 jack sums with it rather than breaking it."
+    },
+    {
+      "id": "c43",
+      "from": "vco1.saw",
+      "to": "vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.sync",
+        "equals": true
+      },
+      "confidence": "inferred",
+      "note": "The manual says SYNC locks VCO2 to VCO1 but does not say which VCO1 output drives the sync input."
+    },
+    {
+      "id": "c44",
+      "from": "vco1.saw",
+      "to": "vco3.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco3.sync",
+        "equals": true
+      },
+      "confidence": "inferred"
+    },
+    {
+      "id": "c50",
+      "from": "sample_hold.clock_out",
+      "to": "trigger_bus.sh_clock_in",
+      "signal": "clock",
+      "kind": "normalled",
+      "broken_by": "jack.sh_clock_in"
+    },
+    {
+      "id": "c51",
+      "from": "trigger_bus.out",
+      "to": "ar.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c52",
+      "from": "trigger_bus.out",
+      "to": "adsr.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c60",
+      "from": "mixer.sum_out",
+      "to": "output.left_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.pan",
+      "note": "Panned feed to the left output. PAN is modelled as the amount on both output legs."
+    },
+    {
+      "id": "c61",
+      "from": "mixer.sum_out",
+      "to": "output.right_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.pan"
+    },
+    {
+      "id": "c62",
+      "from": "mixer.sum_out",
+      "to": "reverb.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Separate pre-wire from the mixer sum into the reverb, which the POST-MIXER jack does not break."
+    },
+    {
+      "id": "c65",
+      "from": "reverb.left",
+      "to": "output.left_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "reverb.level_left"
+    },
+    {
+      "id": "c66",
+      "from": "reverb.right",
+      "to": "output.right_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "reverb.level_right"
+    },
+    {
+      "id": "c71",
+      "from": "sample_hold.clock_out",
+      "to": "elec_switch.c_in",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "The switching rate of the electronic switch is set by the sample and hold internal clock. The clock gates the switch rather than passing through it; modelled as a connection for want of a clock-control node.",
+      "confidence": "inferred"
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Pre-wiring and normalling",
+      "applies_to": ["vco1", "vco2", "vco3", "vcf", "vca", "mixer", "sample_hold"],
+      "rule": "Every pre-wired connection is drawn on the panel as an orange line ending in a labelled box. Directly above the box is a jack, and directly above that a slider. The slider attenuates whatever reaches that input. Inserting a plug into the jack breaks the factory connection and substitutes the patched signal, which the slider then attenuates instead. The ring modulator and envelope follower inputs are the exceptions: they blend with the pre-wired signal rather than replacing it."
+    },
+    {
+      "id": "b02",
+      "name": "Parallel VCF and VCA",
+      "applies_to": ["vcf", "vca", "mixer"],
+      "rule": "Unlike a conventional subtractive voice, the VCA does not sit after the filter. The VCF feeds the VCA, but the mixer takes both the VCF output and the VCA output as separate channels, so the two are blended rather than cascaded. Dialling the mixer's VCF channel up gives unshaped filter output alongside the amplitude-shaped path."
+    },
+    {
+      "id": "b03",
+      "name": "VCO as LFO",
+      "applies_to": ["vco1", "vco2", "vco3"],
+      "rule": "Moving a VCO's AUDIO/LF switch to LF shifts all four frequency ranges down to 0.03, 0.3, 3.0 and 30 Hz and disables keyboard control automatically. The oscillator keeps all of its outputs, so it becomes a multi-waveform modulation source with the same panel controls."
+    },
+    {
+      "id": "b04",
+      "name": "Envelope triggering",
+      "applies_to": ["trigger_bus", "ar", "adsr", "kbd"],
+      "rule": "Each envelope has a three-way routing switch choosing the pre-wired S/H CLOCK, the GATE IN jack or the TRIG IN jack, and a MANUAL button that fires both generators by hand. The keyboard's own gate and trigger also reach them. How these sources combine, and whether the routing switch replaces the keyboard or sits alongside it, is not stated.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b05",
+      "name": "Keyboard repeat and trigger modes",
+      "applies_to": ["kbd", "lfo"],
+      "rule": "REPEAT set to KYBD sends repeating triggers while a key is held; AUTO sends a stream at the LFO rate; OFF gives one trigger per press. Independently, TRIG MODE SINGLE only triggers when no other key is held (legato), while MULT triggers on every press. Together they decide whether held notes re-fire the envelopes."
+    },
+    {
+      "id": "b06",
+      "name": "Duophonic keyboard",
+      "applies_to": ["kbd"],
+      "rule": "In DUO mode the keyboard produces two control voltages: the main KYBD CV and the UPPER VOICE output for the highest note held. The rear INTERVAL LATCH footswitch freezes the interval between the two so that further single notes keep it. Only the main CV is pre-wired to the oscillators; using the second voice means patching UPPER VOICE somewhere."
+    },
+    {
+      "id": "b07",
+      "name": "Sample and hold clocking",
+      "applies_to": ["sample_hold", "elec_switch"],
+      "rule": "The internal clock drives the sampling, the electronic switch's alternation, and, through the envelope routing switches, the envelopes. Patching EXT CLK IN disables the internal clock entirely, which also makes the RATE slider inert."
+    },
+    {
+      "id": "b08",
+      "name": "Voltage processor summing",
+      "applies_to": ["inverter1", "inverter2", "lag"],
+      "rule": "Inverter 1 sums its four inputs and inverts the result, so +10 V in gives -10 V out and audio comes out 180 degrees out of phase. Inverter 2 does the same for two inputs. The lag processor slews its input; on audio that reads as a low-pass filter. None of the three has a pre-wired destination, so the voltage processor only does anything when patched."
+    },
+    {
+      "id": "b09",
+      "name": "Mult is passive",
+      "applies_to": ["mult"],
+      "rule": "The four MULT jacks are wired directly together with no buffering, so they work in any combination of inputs and outputs. Loading and mixing behave as passive parallel connections do: several sources joined at a mult sum and interact rather than staying independent."
+    },
+    {
+      "id": "b10",
+      "name": "Envelope times",
+      "applies_to": ["ar", "adsr"],
+      "rule": "Both generators output 0 to +10 V. The TIME FACTOR switch multiplies the whole envelope's timing by 0.5, 1 or 2. No absolute times in seconds are given anywhere in the manual or specifications."
+    },
+    {
+      "id": "b11",
+      "name": "Composite oscillator outputs",
+      "applies_to": ["vco1", "vco2", "vco3"],
+      "rule": "The manual states that each VCO's PULSE output can also be used to mix in a signal from another section: the LFO for VCO1, the noise generator for VCO2, the ADSR for VCO3. This reads as the modulation source appearing at the pulse jack alongside the oscillator, but the mechanism is not explained and no slider is identified.",
+      "confidence": "speculative"
+    },
+    {
+      "id": "b12",
+      "name": "Electronic switch crosspoints",
+      "applies_to": ["elec_switch", "sample_hold"],
+      "rule": "The three terminals are bidirectional. Either C is the input and the signal alternates between the A and B outputs, or A and B are two inputs and C alternates between them. The alternation rate is the sample and hold internal clock, so it follows the RATE slider unless EXT CLK IN is patched. The crosspoints are internal to the module and so do not appear in connections."
+    },
+    {
+      "id": "b13",
+      "name": "LFO vibrato delay",
+      "applies_to": ["lfo", "vco1"],
+      "rule": "VIB DELAY sets how long the sine takes to fade in and VIB DEPTH its intensity. The manual describes both as acting on the delayed sine, and describes the LFO (SINE) DELAYED jack as a delayed copy of the LFO's pre-wired sine output. Whether the pre-wire to VCO1 carries the delayed sine or the plain one is therefore unclear; this file wires the plain sine to VCO1 and exposes the delayed copy at the jack.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b14",
+      "name": "Pan and the stereo output",
+      "applies_to": ["mixer", "reverb", "output"],
+      "rule": "The mixer sum passes through PAN into the left and right outputs, and separately into the reverb, whose left and right levels are set by their own sliders and summed into the same outputs. The POST-MIXER jack breaks the feed into PAN but not the feed into the reverb, so patching it leaves the reverb still hearing the mixer."
+    }
+  ],
+  "midi": {
+    "receives": ["note_on", "note_off"],
+    "transmits": ["MIDI THRU: pass-through of MIDI IN", "USB: in and out, class compliant"],
+    "channel": {
+      "range": [1, 16],
+      "set_by": "four rear DIP switches, table printed on the rear panel and in the manual"
+    },
+    "note_to_cv": {
+      "kybd_cv_max_v": 7,
+      "scaling": "1 V/octave (ARP convention; not stated in this manual)",
+      "zero_volt_note": null
+    },
+    "usb": {
+      "class_compliant": true,
+      "spec": "USB 2.0, type B",
+      "os": "Windows 7 or higher, Mac OS X 10.6.8 or higher"
+    },
+    "cc_map": null,
+    "sysex": null,
+    "pitch_bend": "not mentioned",
+    "clock": "not stated whether MIDI clock can drive the sample and hold clock or the repeat function"
+  },
+  "specifications": {
+    "voices": "Multiphonic (ARP's term; mono or duo in practice)",
+    "vco": {
+      "count": 3,
+      "frequency_hz": {
+        "min": 0.03,
+        "max": 40000
+      },
+      "ranges": "4 overlapping"
+    },
+    "lfo_hz": {
+      "min": 0.25,
+      "max": 25
+    },
+    "vcf": "1 x 4-pole low pass, 24 dB/octave, switchable 4012 or 4072 circuit",
+    "envelopes": ["AR", "ADSR"],
+    "effects": "digital spring reverb (the BLUE MARVIN edition has a real spring tank)",
+    "envelope_output_v": {
+      "min": 0,
+      "max": 10
+    },
+    "impedances": {
+      "vcf_audio_in_ohm": 50000,
+      "vca_audio_in_ohm": 50000,
+      "ring_mod_in_ohm": 100000,
+      "preamp_in_ohm": 100000,
+      "vco_out_saw_ohm": 1000,
+      "vco_out_pulse_ohm": 800,
+      "main_out_ohm": 500,
+      "phones_ohm": 8
+    },
+    "thresholds_v": {
+      "gate_in": 4,
+      "trig_in": 5,
+      "sh_clock": 6,
+      "ext_clock": 3
+    },
+    "power": {
+      "adaptor": "12 V DC, 2000 mA",
+      "consumption_w_max": 15
+    },
+    "dimensions_mm": {
+      "w": 482,
+      "h": 356,
+      "d": 108
+    },
+    "rack": {
+      "units": "19 inch",
+      "eurorack_hp": 95
+    },
+    "weight_kg": 5.1
+  },
+  "omitted_from_source": [
+    "safety and legal text in nine languages",
+    "warranty, registration and FCC/EU declarations",
+    "non-English duplicates of the controls section (Spanish, French, German, Portuguese, Italian, Dutch, Swedish, Polish, Japanese, Chinese)",
+    "the MIDI channel DIP switch table, which is reproducible from the rear panel silk-screen"
+  ],
+  "not_in_source": [
+    "any legend for the LED colours; the manual mentions the LEDs only as something the rear knob dims",
+    "numbering for the roughly thirty pre-wired attenuator sliders, which the specifications list but the controls section never numbers",
+    "envelope times in seconds, for either generator, at any TIME FACTOR setting",
+    "cutoff frequency range of the VCF in Hz, and any statement on self-oscillation at maximum resonance",
+    "what actually differs between the 4012 and 4072 filter circuits, beyond a garbled sentence about maximum cutoff",
+    "the 1 V/octave scaling of the keyboard CV, which is assumed here from the ARP original",
+    "how the keyboard gate and trigger combine with the envelope routing switch selection",
+    "which VCO1 output drives the sync inputs of VCO2 and VCO3",
+    "the mechanism behind the composite PULSE outputs described in item 5",
+    "any MIDI implementation detail: CC map, pitch bend, MIDI clock, SysEx, note priority, global settings",
+    "patch examples or a signal flow diagram of any kind"
+  ],
+  "source_inconsistencies": [
+    "Item 12 describes the 4012 as having a 16 Hz maximum cutoff and the 4072 an 11 Hz maximum. Both figures must be kHz for a filter whose panel is marked to 10 kHz.",
+    "The specifications list SYNC as 'VCO 2 / 3 only' under controls and 'VCO 1 / 2 only' under switches. Item 4 and the panel agree it is on VCO2 and VCO3.",
+    "The specifications count 11 FM control jacks; the panel has twelve, four on each VCO.",
+    "The specifications count one GATE IN jack; the manual numbers two, items 24 and 31, and the panel has two.",
+    "The LFO sawtooth output is item 57 and is marked SAW on the panel, but the specifications call it triangle.",
+    "Item 79 says the -10 V input 'attenuates the input signal by 10 V', which is not what an attenuator does. The panel and specifications treat it as a -10 V source input with a gain slider.",
+    "Items 20 and 33 are the same routing switch description repeated for both generators, each saying the chosen signal is also routed to the ADSR, which cannot be true of the ADSR's own switch.",
+    "Item 5 says the type of waveform is shown by the silk-screening 'depending on the specific VCO in use', without saying that VCO1 has only two outputs while VCO2 and VCO3 have four.",
+    "The manual is titled Quick Start Guide throughout but is a full controls manual."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Slider tapers",
+      "detail": "Every slider is 0 to 10 or MIN to MAX on the panel. Only the oscillator and filter frequency sliders have marked physical scales, and those are decade marks rather than a stated law."
+    },
+    {
+      "topic": "Envelope times",
+      "detail": "No times in seconds for attack, decay or release, so the TIME FACTOR multiplier has nothing to multiply. This is the largest single gap for anyone trying to make the model sound right."
+    },
+    {
+      "topic": "Filter behaviour",
+      "detail": "No cutoff range in Hz, no resonance law, and no account of what distinguishes the 4012 from the 4072 beyond the garbled sentence in item 12. The two circuits differ audibly on real hardware; this file cannot say how."
+    },
+    {
+      "topic": "Modulation depth",
+      "detail": "FM inputs accept -10 V to +10 V and the PWM inputs work at 1 V per 10% duty, but no volts-per-octave figure is given for the FM path, so full-slider modulation depth is unknown."
+    },
+    {
+      "topic": "Oscillator range overlap",
+      "detail": "The four ranges are described as overlapping and the panel marks one decade per division, but the actual span of each range is not given."
+    },
+    {
+      "topic": "Ring modulator law",
+      "detail": "Described as a voltage multiplier with a -10 V to +10 V output. Whether it is a true four-quadrant multiplier, and how the AUDIO/DC switch changes the VCO1 path, is not stated."
+    },
+    {
+      "topic": "Noise colour sweep",
+      "detail": "COLOR is a continuous slider through low frequency, pink and white, but the spectral shape at intermediate positions is not described."
+    },
+    {
+      "topic": "Reverb",
+      "detail": "A digital emulation of a spring on this model and a real tank on the BLUE MARVIN. No decay time, no controls beyond left and right level, no statement of how the two differ."
+    },
+    {
+      "topic": "Envelope follower",
+      "detail": "No attack or release time constant and no transfer function from input amplitude to output voltage, only a maximum of +14 V."
+    },
+    {
+      "topic": "Lag processor",
+      "detail": "Described qualitatively as slew on CV and low-pass on audio. No time constant range and no statement of whether it is linear or exponential slew."
+    },
+    {
+      "topic": "Mult loading",
+      "detail": "Passive and unbuffered, so patching several sources together has real electrical consequences that a naive model will not reproduce."
+    },
+    {
+      "topic": "Non-linearities",
+      "detail": "Nothing anywhere on VCA headroom, filter saturation, or what happens when attenuator sliders are driven hard. On a 2600 these are much of the character."
+    },
+    {
+      "topic": "ARP 2600 manual",
+      "detail": "The uploaded original manual is a 112-page scan with no text layer. Running OCR over it is the obvious next move: it is likely to settle the filter circuits, the envelope times, the keyboard CV scaling and the sync source."
+    }
+  ]
+}

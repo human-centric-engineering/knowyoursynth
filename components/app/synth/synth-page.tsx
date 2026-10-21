@@ -542,7 +542,11 @@ function Synth({
     }
     const measure = () => {
       const dockH = dock.offsetHeight;
-      const top = scroller.getBoundingClientRect().top + window.scrollY;
+      // Full screen, what is above the panel is the player's own top, not the page's header.
+      const full = document.fullscreenElement;
+      const top = full?.contains(scroller)
+        ? scroller.getBoundingClientRect().top - full.getBoundingClientRect().top + full.scrollTop
+        : scroller.getBoundingClientRect().top + window.scrollY;
       root.style.setProperty('--kys-dock-h', `${dockH}px`);
       // The space over the panel and under it: what is above it on the page, the scroller's padding and the dock.
       root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40)}px`);
@@ -551,7 +555,11 @@ function Synth({
     const ro = new ResizeObserver(measure);
     ro.observe(dock);
     ro.observe(root);
-    return () => ro.disconnect();
+    document.addEventListener('fullscreenchange', measure);
+    return () => {
+      ro.disconnect();
+      document.removeEventListener('fullscreenchange', measure);
+    };
   }, [small, scrollerRef]);
 
   // The Sound Design strip shows while the pointer comes down towards the dock, as a video's chapters do: within
@@ -585,21 +593,16 @@ function Synth({
     };
   }, [small]);
 
-  // The video feel: with the pointer at rest, the player's secondary controls fade until it moves again.
-  const [idle, setIdle] = useState(false);
+  // The video feel: with the pointer at rest, the player's secondary controls fade until it moves again. Not while
+  // the sounds are open. Set on the element, not in state, so resting and waking do not render the page.
   useEffect(() => {
+    const root = rootRef.current;
+    if (small || soundsOpen || !root) return undefined;
     let t: ReturnType<typeof setTimeout> | undefined;
-    let asleep = false;
     const wake = () => {
-      if (asleep) {
-        asleep = false;
-        setIdle(false);
-      }
+      if (root.hasAttribute('data-idle')) root.removeAttribute('data-idle');
       clearTimeout(t);
-      t = setTimeout(() => {
-        asleep = true;
-        setIdle(true);
-      }, IDLE_MS);
+      t = setTimeout(() => root.setAttribute('data-idle', ''), IDLE_MS);
     };
     wake();
     window.addEventListener('pointermove', wake, { passive: true });
@@ -610,8 +613,9 @@ function Synth({
       window.removeEventListener('pointermove', wake);
       window.removeEventListener('pointerdown', wake);
       window.removeEventListener('keydown', wake);
+      root.removeAttribute('data-idle');
     };
-  }, []);
+  }, [small, soundsOpen]);
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
@@ -1243,8 +1247,9 @@ function Synth({
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
   // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
   const litKey = litFor === synthId ? stepKey : '';
-  // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit.
-  const chapterLit = small ? stepKey : litKey;
+  // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit, and from
+  // `lg` up so does the lesson card while it shows the lesson.
+  const chapterLit = small || card === 'build' ? stepKey : litKey;
   useEffect(() => {
     if (small) return undefined;
     highlightStore.set(litKey ? litKey.split('|') : []);
@@ -1446,7 +1451,6 @@ function Synth({
   return (
     <div
       ref={rootRef}
-      data-idle={idle && !small && !soundsOpen ? '' : undefined}
       className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6"
     >
       <RotatePrompt />
@@ -1924,15 +1928,19 @@ function Synth({
                     noteOn={noteOn}
                     noteOff={noteOff}
                   />
-                  <div className="h-28 min-w-0">
-                    <Scope
-                      source={engine}
-                      running={audio === 'on'}
-                      measureStore={measureStore}
-                      changeKey={traceKey}
-                      onExpand={() => setScopeOpen(true)}
-                    />
-                  </div>
+                  {/* Put away, the scope is not drawn at all, so its frame loop does not run for a hidden canvas. It stays
+                      while the harmonics are on: it is what measures the pitch they are numbered from. */}
+                  {(small || deckOn || harmOn) && (
+                    <div className="h-28 min-w-0">
+                      <Scope
+                        source={engine}
+                        running={audio === 'on'}
+                        measureStore={measureStore}
+                        changeKey={traceKey}
+                        onExpand={() => setScopeOpen(true)}
+                      />
+                    </div>
+                  )}
                 </div>
                 {small && <FxRack fx={fx} onChange={setFx} />}
               </div>

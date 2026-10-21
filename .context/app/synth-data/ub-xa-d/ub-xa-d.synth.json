@@ -1,0 +1,2746 @@
+{
+  "schema_version": "0.7.0",
+  "device": {
+    "id": "behringer-ub-xa-d",
+    "manufacturer": "Behringer",
+    "model": "UB-Xa D",
+    "category": "16-voice bi-timbral analogue polyphonic synthesizer, desktop, digitally controlled",
+    "based_on": "Oberheim OB-Xa. The Behringer guide does not name it; the panel layout, control set, the OSC 2 HALF/FULL switches and the two-LFO modulation panel are the OB-Xa's, and the guide's pedal descriptions are lifted almost verbatim from the Oberheim owner's manual.",
+    "sources": [
+      {
+        "id": "ubxa",
+        "title": "UB-Xa D Quick Start Guide",
+        "kind": "quick_start_guide",
+        "file": "Behringer_UB-Xa_D_Manual.pdf",
+        "pages": 34,
+        "note": "Numbered controls 1 to 92 with one-line descriptions, a hook-up page and a specifications table. No CC or NRPN map, no envelope times, no description of the menus behind the SHIFT functions."
+      },
+      {
+        "id": "panel",
+        "title": "UB-Xa D front panel image",
+        "kind": "measurement",
+        "file": "Behringer_UB-Xa_D.png",
+        "note": "Used for the secondary (SHIFT) labels printed under each control, which the guide mostly does not describe."
+      },
+      {
+        "id": "obxa",
+        "title": "Oberheim OB-Xa Owner's Manual",
+        "kind": "user_manual",
+        "file": "Obherheim_obxa_ownersmanual.pdf",
+        "pages": 34,
+        "note": "A scan with no text layer, not mined for this pass. The obvious source for control ranges, the HALF/FULL levels, envelope times and the modulation panel's routing."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "signal_path_note": "analogue voices under digital control; no effects engine",
+    "voices": 16,
+    "timbrality": 2,
+    "polyphony_mode": "16-voice polyphonic, bi-timbral: two patches (lower and upper) in split or double, unison per layer",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 30,
+      "switches": 56,
+      "encoder": 1
+    },
+    "summary": "Sixteen analogue voices arranged as two independent layers, lower and upper, each running its own patch: played together in DOUBLE or either side of a split point in SPLIT. Each voice has two oscillators with sawtooth and pulse switches (triangle by combination), a shared pulse width, oscillator sync and filter-envelope to OSC 2 pitch, a noise source, a mixer where OSC 2 enters at half or full level, a low-pass filter switchable between 2-pole and 4-pole with keyboard tracking, and separate filter and loudness ADSR envelopes. Two LFOs: the modulation LFO with two depth controls, one for pitch and filter destinations and one for pulse width and volume, and a performance LFO with its own depth and layer enables. Polyphonic portamento, per-layer unison, OSC 2 detune and a pitch bend section with OSC 2 only and range switches. Arpeggiator and step sequencer. Every control is a stored value, so settings live in presets recalled from the programmer or the four assignable recall switches."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "midi_to_cv",
+      "name": "MIDI and keyboard section",
+      "panel_section": "KEYBOARD",
+      "scope": "common",
+      "description": "Notes arrive over MIDI or USB; there is no keyboard on the D model. This block also holds the layer logic: SPLIT divides the range at a chosen key with the lower patch below and the upper above, DOUBLE plays both patches at once or on two MIDI channels, LOWER and UPPER choose which patch the panel edits, CHORD memorises a chord and transposes it from any key, TRANSPOSE shifts by octaves. Vibrato and filter pedals and the sustain, hold and program-advance footswitches arrive here.",
+      "inputs": ["kbd.vibrato_pedal_in", "kbd.filter_pedal_in", "kbd.sustain_in"],
+      "outputs": ["kbd.note", "kbd.gate", "kbd.bend", "kbd.filter_pedal_cv"]
+    },
+    {
+      "id": "voices",
+      "type": "voice_allocator",
+      "name": "Voice allocation",
+      "panel_section": "CONTROL",
+      "scope": "common",
+      "description": "Shares sixteen voices between the two layers and assigns them to notes. UNISON plays all of a layer's voices from one key with low-note priority, independently per layer in split mode. The SHIFT functions VOICES, VOICE DETUNE and VINTAGE on the panel suggest a voice-count, per-voice detune and vintage-drift setting; the guide does not describe them.",
+      "properties": {
+        "voice_count": 16,
+        "layers": 2
+      },
+      "inputs": ["voices.note_in", "voices.gate_in"],
+      "outputs": ["voices.pitch", "voices.gate"]
+    },
+    {
+      "id": "portamento",
+      "type": "pitch_control",
+      "name": "Portamento",
+      "panel_section": "CONTROL",
+      "scope": "per_voice",
+      "description": "Polyphonic glide: each voice slides from its previous pitch to its new one independently.",
+      "inputs": ["portamento.in"],
+      "outputs": ["portamento.out"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Sawtooth and pulse, each switchable; both on gives a triangle. Frequency in octave steps over four octaves. Sync master for OSC 2. Pulse width is shared with OSC 2.",
+      "properties": {
+        "waveforms": ["sawtooth", "pulse", "triangle (saw and pulse together)"],
+        "range_octaves": 4
+      },
+      "inputs": ["osc1.pitch_in", "osc1.fm_in", "osc1.pwm_in"],
+      "outputs": ["osc1.out", "osc1.sync_out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATORS",
+      "scope": "per_voice",
+      "description": "Sawtooth and pulse, each switchable; both on sums them, both off gives a triangle, so OSC 2 always sounds. Frequency stepped in semitones over four octaves, plus a fine detune. Can be hard-synced to OSC 1 and have its pitch driven by the filter envelope, which with sync on is the classic OB-Xa sync sweep.",
+      "properties": {
+        "waveforms": ["sawtooth", "pulse", "both", "triangle (neither)"],
+        "range_octaves": 4,
+        "step": "semitone"
+      },
+      "inputs": ["osc2.pitch_in", "osc2.fm_in", "osc2.env_in", "osc2.pwm_in", "osc2.sync_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Noise source with a level control in the filter section. Per voice by inference.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Voice mixer",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Three switched sources into the filter: OSC 1 on or off, OSC 2 at half level (about 5 dB down), full level or off, and noise at a continuous level. There are no continuous level controls for the oscillators.",
+      "inputs": ["mixer.in_osc1", "mixer.in_osc2", "mixer.in_noise"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "scope": "per_voice",
+      "description": "Low-pass filter, 2-pole by default and 4-pole with the switch, with resonance. Cutoff is modulated by the filter envelope, the modulation LFO through the MODULATION knob, keyboard tracking when TRACK is on, and the filter pedal.",
+      "properties": {
+        "slope_db_per_octave": [12, 24],
+        "poles": [2, 4],
+        "modes": ["lowpass"]
+      },
+      "inputs": ["vcf.in", "vcf.env_in", "vcf.lfo_in", "vcf.kbd_in", "vcf.pedal_in"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env_filter",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "ADSR driving filter cutoff and, with F-ENV on, OSC 2 pitch. The SHIFT labels MOD 1 DELAY, MOD 1 ATTACK and TRIG POINT sit under its knobs but belong to the modulation LFO and the sequencer, not the envelope.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"]
+      },
+      "inputs": ["env_filter.gate_in"],
+      "outputs": ["env_filter.out"]
+    },
+    {
+      "id": "env_loud",
+      "type": "envelope",
+      "name": "Loudness envelope",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "ADSR driving the VCA. The sustain footswitch replaces both envelopes' release with a programmed pedal release time, whose SHIFT label PEDAL RELEASE sits under this envelope's RELEASE knob.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"]
+      },
+      "inputs": ["env_loud.gate_in"],
+      "outputs": ["env_loud.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPES",
+      "scope": "per_voice",
+      "description": "Per-voice amplifier driven by the loudness envelope, with tremolo from the modulation LFO when VOLUME MOD is on.",
+      "inputs": ["vca.in", "vca.env_in", "vca.lfo_in"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "mod_lfo",
+      "type": "lfo",
+      "name": "Modulation LFO",
+      "panel_section": "MODULATION",
+      "scope": "per_voice",
+      "description": "The main LFO. Rate 0.06 to 50 Hz, seven waveform positions of which two are modes rather than shapes: TRIG re-syncs the LFO to each key and SMP samples the performance LFO instead of running its own shape. Two depth knobs feed two groups of routing switches: DEPTH 1 to OSC 1 pitch, OSC 2 pitch and filter cutoff, DEPTH 2 to OSC 1 pulse width, OSC 2 pulse width and VCA volume. Per voice by inference from the MOD LFO PHASE shift function, which only makes sense if each voice has its own.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.06,
+          "max": 50
+        },
+        "shapes": ["sine", "sawtooth", "square", "ramp", "sample_hold"],
+        "modes": ["trig", "smp"]
+      },
+      "inputs": ["mod_lfo.sample_in"],
+      "outputs": ["mod_lfo.out"]
+    },
+    {
+      "id": "perf_lfo",
+      "type": "lfo",
+      "name": "Performance LFO",
+      "panel_section": "PERF LFO",
+      "scope": "common",
+      "description": "A second LFO for vibrato under performance control. Rate 0.06 to 50 Hz, six shapes, one depth, routable to OSC 1 and OSC 2 pitch and enabled per layer. Its depth is what the vibrato pedal scales. Also the source the modulation LFO samples in SMP mode.",
+      "properties": {
+        "rate_hz": {
+          "min": 0.06,
+          "max": 50
+        },
+        "shapes": ["sine", "sawtooth", "square", "ramp", "noise", "sample_hold"]
+      },
+      "inputs": [],
+      "outputs": ["perf_lfo.out"]
+    },
+    {
+      "id": "bend",
+      "type": "modulation_bus",
+      "name": "Pitch bend",
+      "panel_section": "BEND",
+      "scope": "common",
+      "description": "Pitch bend from MIDI. OSC 2 ONLY restricts it to the second oscillator, which against a synced OSC 2 bends the timbre rather than the pitch. AMOUNT (the guide calls it NARROW) switches the range between a whole tone and an octave. The BEND shift function under PORTAMENTO suggests a finer range setting the guide does not describe.",
+      "inputs": ["bend.in"],
+      "outputs": ["bend.osc1_out", "bend.osc2_out"]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "ARPEGGIATOR",
+      "scope": "common",
+      "description": "On, hold, and a settings menu the guide does not describe. Shift labels AUTO and SETTINGS.",
+      "inputs": ["arp.notes_in"],
+      "outputs": ["arp.notes_out"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer",
+      "panel_section": "SEQUENCER",
+      "scope": "common",
+      "description": "Step sequencer recorded from played notes: RECORD, REST/TIE, STOP, PLAY/PAUSE, with shift functions SETTINGS, APPEND, CLR LAST and RESTART. Step count, clock and quantisation are not described.",
+      "inputs": ["seq.notes_in"],
+      "outputs": ["seq.notes_out"]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MANUAL",
+      "scope": "common",
+      "description": "Master VOLUME, BALANCE between the two layers, MASTER TUNE, and the balanced left, right, mono and headphone outputs.",
+      "inputs": ["output.in_lower", "output.in_upper"],
+      "outputs": ["output.left", "output.right", "output.mono", "output.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "kbd.split",
+      "module": "kbd",
+      "label": "SPLIT",
+      "manual_ref": 1,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Splits the range at a chosen key, lower patch below and upper above. Hold SPLIT and play the key to set the point."
+    },
+    {
+      "id": "kbd.double",
+      "module": "kbd",
+      "label": "DOUBLE",
+      "manual_ref": 2,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Plays both patches at once, as one sound or on two MIDI channels."
+    },
+    {
+      "id": "kbd.edit_layer",
+      "module": "kbd",
+      "label": "LOWER / UPPER",
+      "manual_ref": 3,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lower",
+          "label": "LOWER"
+        },
+        {
+          "value": "upper",
+          "label": "UPPER"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Which of the two patches the panel is editing.",
+      "note": "Items 3 and 4 in the guide."
+    },
+    {
+      "id": "kbd.transpose",
+      "module": "kbd",
+      "label": "TRANSPOSE DOWN / UP",
+      "manual_ref": 5,
+      "kind": "integer",
+      "range": {
+        "min": -4,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Shifts the keyboard by an octave per press.",
+      "confidence": "speculative",
+      "note": "Items 5 and 6. The limit is not stated; four octaves each way is a guess."
+    },
+    {
+      "id": "kbd.chord",
+      "module": "kbd",
+      "label": "CHORD",
+      "manual_ref": 7,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Hold a chord and press CHORD; any key then plays that chord transposed. Independent for upper and lower."
+    },
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master volume, 0 to 100%. SHIFT function PRESET VOLUME stores a level with the preset."
+    },
+    {
+      "id": "output.balance",
+      "module": "output",
+      "label": "BALANCE",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "lower to upper"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level between the two patches in a split or double."
+    },
+    {
+      "id": "output.master_tune",
+      "module": "output",
+      "label": "MASTER TUNE",
+      "manual_ref": 13,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "unit": "unspecified"
+      },
+      "bipolar": true,
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall tuning."
+    },
+    {
+      "id": "perf_lfo.rate",
+      "module": "perf_lfo",
+      "label": "LFO RATE",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.06,
+        "max": 50,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Performance LFO speed. SHIFT function TEMPO SYNC locks it to tempo."
+    },
+    {
+      "id": "perf_lfo.waveform",
+      "module": "perf_lfo",
+      "label": "WAVEFORM",
+      "manual_ref": 15,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "noise"
+        },
+        {
+          "value": "sample_hold",
+          "label": "S/H"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Cycles through six shapes."
+    },
+    {
+      "id": "perf_lfo.depth",
+      "module": "perf_lfo",
+      "label": "DEPTH",
+      "manual_ref": 16,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Performance LFO modulation depth. The vibrato pedal scales it from nothing up to this value. SHIFT function TEMPO."
+    },
+    {
+      "id": "perf_lfo.osc1",
+      "module": "perf_lfo",
+      "label": "OSC 1",
+      "manual_ref": 22,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the performance LFO to OSC 1 pitch. The guide says 'control of OSC 1 via MIDI CC'.",
+      "confidence": "inferred",
+      "note": "The guide's wording is odd; read as the OSC 1 routing switch the panel shows."
+    },
+    {
+      "id": "perf_lfo.osc2",
+      "module": "perf_lfo",
+      "label": "OSC 2",
+      "manual_ref": 23,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the performance LFO to OSC 2 pitch.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "perf_lfo.lower",
+      "module": "perf_lfo",
+      "label": "LOWER",
+      "manual_ref": 24,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Enables the performance LFO for the lower layer."
+    },
+    {
+      "id": "perf_lfo.upper",
+      "module": "perf_lfo",
+      "label": "UPPER",
+      "manual_ref": 25,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Enables the performance LFO for the upper layer."
+    },
+    {
+      "id": "portamento.time",
+      "module": "portamento",
+      "label": "PORTAMENTO",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Glide rate, applied per voice."
+    },
+    {
+      "id": "voices.unison",
+      "module": "voices",
+      "label": "UNISON",
+      "manual_ref": 18,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "All of the layer's voices on one key, low-note priority. Independent per layer in split. SHIFT function VOICES."
+    },
+    {
+      "id": "osc2.detune",
+      "module": "osc2",
+      "label": "OSC 2 DETUNE",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine detune of OSC 2 against OSC 1; the LED lights when detuned. SHIFT function VOICE DETUNE.",
+      "led_colour": "red"
+    },
+    {
+      "id": "bend.osc2_only",
+      "module": "bend",
+      "label": "OSC 2 ONLY",
+      "manual_ref": 20,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Pitch bend reaches only OSC 2."
+    },
+    {
+      "id": "bend.narrow",
+      "module": "bend",
+      "label": "AMOUNT (NARROW)",
+      "manual_ref": 21,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "On: bend range is a whole tone. Off: an octave.",
+      "note": "Labelled AMOUNT on the panel, NARROW in the guide."
+    },
+    {
+      "id": "osc1.frequency",
+      "module": "osc1",
+      "label": "FREQUENCY (OSC 1)",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 4,
+        "unit": "octaves"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC 1 frequency in octave steps over a four-octave range."
+    },
+    {
+      "id": "osc1.pulse_width",
+      "module": "osc1",
+      "label": "PULSE WIDTH (OSC 1+2)",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width of both oscillators together."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "FREQUENCY (OSC 2)",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 48,
+        "unit": "semitones"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC 2 frequency stepped in semitones over a four-octave range."
+    },
+    {
+      "id": "osc1.saw",
+      "module": "osc1",
+      "label": "SAW (OSC 1)",
+      "manual_ref": 29,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 1 sawtooth on. With PULSE also on, OSC 1 produces a triangle."
+    },
+    {
+      "id": "osc1.pulse",
+      "module": "osc1",
+      "label": "PULSE (OSC 1)",
+      "manual_ref": 30,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 1 pulse on."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "manual_ref": 31,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Locks OSC 2 to OSC 1. SHIFT function FREQ."
+    },
+    {
+      "id": "osc2.f_env",
+      "module": "osc2",
+      "label": "F-ENV",
+      "manual_ref": 32,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Filter envelope modulates OSC 2 pitch. SHIFT function PW."
+    },
+    {
+      "id": "osc2.saw",
+      "module": "osc2",
+      "label": "SAW (OSC 2)",
+      "manual_ref": 33,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 2 sawtooth on."
+    },
+    {
+      "id": "osc2.pulse",
+      "module": "osc2",
+      "label": "PULSE (OSC 2)",
+      "manual_ref": 34,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 2 pulse on. Both on: both waves. Both off: triangle."
+    },
+    {
+      "id": "osc1.lfo_invert",
+      "module": "osc1",
+      "label": "OSC 1 LFO INVERT",
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + OSC 2 (SYNC/F-ENV)",
+          "when": "any_time"
+        }
+      ],
+      "function": "Inverts the LFO into OSC 1. Panel shift label only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "mod_lfo.rate",
+      "module": "mod_lfo",
+      "label": "LFO RATE",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.06,
+        "max": 50,
+        "unit": "Hz",
+        "taper": "unknown"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Modulation LFO speed. SHIFT function TEMPO SYNC."
+    },
+    {
+      "id": "mod_lfo.waveform",
+      "module": "mod_lfo",
+      "label": "WAVEFORM",
+      "manual_ref": 40,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "sample_hold",
+          "label": "S/H"
+        },
+        {
+          "value": "trig",
+          "label": "TRIG",
+          "meaning": "key sync"
+        },
+        {
+          "value": "smp",
+          "label": "SMP",
+          "meaning": "sampled from the performance LFO"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Seven positions: five shapes plus TRIG (LFO restarts on each key, long press to engage) and SMP (samples the performance LFO)."
+    },
+    {
+      "id": "mod_lfo.depth1",
+      "module": "mod_lfo",
+      "label": "DEPTH 1",
+      "manual_ref": 44,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth for the OSC 1 FREQ, OSC 2 FREQ and FILTER FREQ switches. SHIFT function MOD LFO PHASE.",
+      "note": "The guide assigns DEPTH 1 to the PWM and volume switches and DEPTH 2 to the frequency switches, the reverse of the panel. This file follows the panel."
+    },
+    {
+      "id": "mod_lfo.depth2",
+      "module": "mod_lfo",
+      "label": "DEPTH 2",
+      "manual_ref": 39,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth for the OSC 1 PWM, OSC 2 PWM and VOLUME MOD switches."
+    },
+    {
+      "id": "mod_lfo.to_osc1_freq",
+      "module": "mod_lfo",
+      "label": "OSC 1 FREQ",
+      "manual_ref": 41,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to OSC 1 pitch. SHIFT function QUANTIZE.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.to_osc2_freq",
+      "module": "mod_lfo",
+      "label": "OSC 2 FREQ",
+      "manual_ref": 42,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to OSC 2 pitch. SHIFT function INVERT.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.to_filter",
+      "module": "mod_lfo",
+      "label": "FILTER FREQ",
+      "manual_ref": 43,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to filter cutoff. SHIFT function TRACK.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.to_osc1_pwm",
+      "module": "mod_lfo",
+      "label": "OSC 1 PWM",
+      "manual_ref": 36,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to OSC 1 pulse width. SHIFT function QUANTIZE.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.to_osc2_pwm",
+      "module": "mod_lfo",
+      "label": "OSC 2 PWM",
+      "manual_ref": 37,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to OSC 2 pulse width. SHIFT function INVERT.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.to_volume",
+      "module": "mod_lfo",
+      "label": "VOLUME MOD",
+      "manual_ref": 38,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Routes the LFO to the VCA for tremolo. SHIFT function ENV MOD.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mod_lfo.delay1",
+      "module": "mod_lfo",
+      "label": "MOD 1 DELAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + FILTER ENVELOPE ATTACK",
+          "when": "any_time"
+        }
+      ],
+      "function": "Delay before DEPTH 1 modulation begins. Panel shift label only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "mod_lfo.attack1",
+      "module": "mod_lfo",
+      "label": "MOD 1 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + FILTER ENVELOPE DECAY",
+          "when": "any_time"
+        }
+      ],
+      "function": "Fade-in of DEPTH 1 modulation. Panel shift label only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "mod_lfo.delay2",
+      "module": "mod_lfo",
+      "label": "MOD 2 DELAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + LOUDNESS ENVELOPE ATTACK",
+          "when": "any_time"
+        }
+      ],
+      "function": "Delay before DEPTH 2 modulation begins. Panel shift label only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "mod_lfo.attack2",
+      "module": "mod_lfo",
+      "label": "MOD 2 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + LOUDNESS ENVELOPE DECAY",
+          "when": "any_time"
+        }
+      ],
+      "function": "Fade-in of DEPTH 2 modulation. Panel shift label only.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "vcf.frequency",
+      "module": "vcf",
+      "label": "FREQUENCY",
+      "manual_ref": 45,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Low-pass cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "manual_ref": 46,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis around the cutoff."
+    },
+    {
+      "id": "vcf.modulation",
+      "module": "vcf",
+      "label": "MODULATION",
+      "manual_ref": 47,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Amount of filter envelope applied to cutoff.",
+      "confidence": "inferred",
+      "note": "The guide says 'set by the LFO', but on the OB-Xa this knob is the envelope amount and the LFO reaches the filter through the modulation panel's FILTER FREQ switch. Modelled as envelope amount."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "NOISE",
+      "manual_ref": 48,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise into the filter, 0 to 100%."
+    },
+    {
+      "id": "mixer.osc1_on",
+      "module": "mixer",
+      "label": "OSC 1",
+      "manual_ref": 49,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 1 into the filter on or off.",
+      "led_colour": "red"
+    },
+    {
+      "id": "mixer.osc2_level",
+      "module": "mixer",
+      "label": "HALF / FULL (OSC 2)",
+      "manual_ref": 50,
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "half",
+          "meaning": "about 5 dB below full"
+        },
+        {
+          "value": "full"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "OSC 2 into the filter at about 5 dB below full, at full, or off.",
+      "note": "Items 50 and 51.",
+      "led_colour": "red"
+    },
+    {
+      "id": "vcf.four_pole",
+      "module": "vcf",
+      "label": "4 POLE",
+      "manual_ref": 52,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Switches the filter from 2-pole to 4-pole."
+    },
+    {
+      "id": "vcf.track",
+      "module": "vcf",
+      "label": "TRACK",
+      "manual_ref": 53,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Keyboard voltage applied to cutoff so the filter follows pitch."
+    },
+    {
+      "id": "env_filter.attack",
+      "module": "env_filter",
+      "label": "ATTACK",
+      "manual_ref": 54,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the filter envelope. No time scale is given."
+    },
+    {
+      "id": "env_filter.decay",
+      "module": "env_filter",
+      "label": "DECAY",
+      "manual_ref": 55,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the filter envelope. No time scale is given."
+    },
+    {
+      "id": "env_filter.sustain",
+      "module": "env_filter",
+      "label": "SUSTAIN",
+      "manual_ref": 56,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the filter envelope. No time scale is given."
+    },
+    {
+      "id": "env_filter.release",
+      "module": "env_filter",
+      "label": "RELEASE",
+      "manual_ref": 57,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time of the filter envelope. No time scale is given."
+    },
+    {
+      "id": "env_loud.attack",
+      "module": "env_loud",
+      "label": "ATTACK",
+      "manual_ref": 58,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack time of the loudness envelope. No time scale is given."
+    },
+    {
+      "id": "env_loud.decay",
+      "module": "env_loud",
+      "label": "DECAY",
+      "manual_ref": 59,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the loudness envelope. No time scale is given."
+    },
+    {
+      "id": "env_loud.sustain",
+      "module": "env_loud",
+      "label": "SUSTAIN",
+      "manual_ref": 60,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sustain level of the loudness envelope. No time scale is given."
+    },
+    {
+      "id": "env_loud.release",
+      "module": "env_loud",
+      "label": "RELEASE",
+      "manual_ref": 61,
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Release time of the loudness envelope. No time scale is given."
+    },
+    {
+      "id": "env_loud.pedal_release",
+      "module": "env_loud",
+      "label": "PEDAL RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + LOUDNESS ENVELOPE RELEASE",
+          "when": "any_time"
+        }
+      ],
+      "function": "Release time used when the sustain footswitch is down, same range as the panel release. Programmed per patch. Panel shift label; the function is described under the SUSTAIN pedal."
+    },
+    {
+      "id": "seq.trig_point",
+      "module": "seq",
+      "label": "TRIG POINT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "SHIFT + FILTER ENVELOPE RELEASE",
+          "when": "any_time"
+        }
+      ],
+      "function": "Panel shift label under the filter envelope RELEASE; not described.",
+      "confidence": "speculative"
+    },
+    {
+      "id": "arp.on",
+      "module": "arp",
+      "label": "ON",
+      "manual_ref": 9,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Arpeggiator on or off.",
+      "led_colour": "red"
+    },
+    {
+      "id": "arp.hold",
+      "module": "arp",
+      "label": "HOLD",
+      "manual_ref": 10,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Latches the arpeggiated chord after release. Mirrored by the rear HOLD footswitch."
+    },
+    {
+      "id": "arp.settings",
+      "module": "arp",
+      "label": "SETTINGS",
+      "manual_ref": 8,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Opens the arpeggiator settings menu on the display. Contents not described."
+    },
+    {
+      "id": "seq.rest_tie",
+      "module": "seq",
+      "label": "REST/TIE",
+      "manual_ref": 63,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Ties notes or enters an empty step while recording."
+    },
+    {
+      "id": "seq.record",
+      "module": "seq",
+      "label": "RECORD",
+      "manual_ref": 64,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Enter note data into a sequence from played notes."
+    },
+    {
+      "id": "seq.stop",
+      "module": "seq",
+      "label": "STOP",
+      "manual_ref": 65,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Stops the sequencer."
+    },
+    {
+      "id": "seq.play_pause",
+      "module": "seq",
+      "label": "PLAY/PAUSE",
+      "manual_ref": 66,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Plays or pauses the sequence."
+    },
+    {
+      "id": "voices.manual_mode",
+      "module": "voices",
+      "label": "MANUAL",
+      "manual_ref": 68,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "The sound reflects the physical control positions rather than the stored preset. Not available in split or double."
+    },
+    {
+      "id": "voices.shift",
+      "module": "voices",
+      "label": "SHIFT",
+      "manual_ref": 62,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Held to reach the secondary function printed under each control."
+    },
+    {
+      "id": "voices.compare",
+      "module": "voices",
+      "label": "COMPARE",
+      "manual_ref": 67,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Compares the edited sound with the stored patch."
+    },
+    {
+      "id": "voices.write",
+      "module": "voices",
+      "label": "WRITE",
+      "manual_ref": 69,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Stores a patch; held, stores a split or double program. SELECT chooses the destination."
+    },
+    {
+      "id": "voices.select",
+      "module": "voices",
+      "label": "SELECT",
+      "manual_ref": 71,
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Rotary encoder for values and menus; push to enter.",
+      "note": "Range not stated."
+    },
+    {
+      "id": "voices.preset_value",
+      "module": "voices",
+      "label": "- / + PRESET/VALUE",
+      "manual_ref": 72,
+      "kind": "integer",
+      "range": {
+        "min": -1,
+        "max": 1
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Steps the preset or value down or up by one. Items 72 and 73. SHIFT gives BANK/PAGE."
+    },
+    {
+      "id": "voices.recall",
+      "module": "voices",
+      "label": "ASSIGNABLE PRESET RECALL 1-4",
+      "manual_ref": 74,
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "button"
+        }
+      ],
+      "function": "Four switches that recall assigned presets, alone or in combination. With SHIFT: 1 USB/MIDI menu, 2 velocity and aftertouch menu, 3 voice menu, 4 mod menu. Items 74 to 77.",
+      "led_colour": "red"
+    },
+    {
+      "id": "output.power",
+      "module": "output",
+      "label": "POWER",
+      "manual_ref": 78,
+      "kind": "boolean",
+      "values": [
+        {
+          "value": false,
+          "label": "Off"
+        },
+        {
+          "value": true,
+          "label": "On"
+        }
+      ],
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Mains switch."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "osc2.detune_led",
+      "module": "osc2",
+      "label": "OSC 2 DETUNE",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 19,
+      "function": "Lit when OSC 2 is detuned from OSC 1."
+    },
+    {
+      "id": "perf_lfo.shape_leds",
+      "module": "perf_lfo",
+      "label": "Performance LFO waveform",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 15,
+      "function": "Six LEDs, one per shape, showing the selected waveform."
+    },
+    {
+      "id": "mod_lfo.shape_leds",
+      "module": "mod_lfo",
+      "label": "Modulation LFO waveform",
+      "kind": "led",
+      "led_colour": "red",
+      "manual_ref": 40,
+      "function": "Seven LEDs: five shapes, TRIG and SMP."
+    },
+    {
+      "id": "output.display",
+      "module": "output",
+      "label": "LCD DISPLAY",
+      "kind": "display",
+      "manual_ref": 70,
+      "function": "2-line, 16-character display showing the preset and menu values."
+    }
+  ],
+  "led_legend": {
+    "rule": "Every switch carries a red LED and every LED means the same thing: the switch is on. There is no colour code on this panel.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "switch engaged, or the selected LFO shape, or OSC 2 detuned"
+      }
+    ],
+    "confidence": "stated",
+    "note": "From the panel image; the guide describes only the OSC 2 DETUNE LED."
+  },
+  "ports": [
+    {
+      "id": "jack.mains",
+      "label": "AC IN",
+      "manual_ref": 79,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "IEC C14",
+      "node": null,
+      "function": "IEC mains inlet, 100 to 240 V auto-ranging, 40 W maximum, 3.15 A fuse."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 80,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI to a computer."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 81,
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI from a sequencer, DAW or keyboard. Split and double can use two channels."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "manual_ref": 82,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI to external devices."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 83,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Direct copy of MIDI IN for chaining."
+    },
+    {
+      "id": "jack.vibrato_pedal",
+      "label": "VIBRATO",
+      "manual_ref": 84,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": "kbd.vibrato_pedal_in",
+      "function": "Vibrato pedal: scales the programmed performance LFO depth from off to its programmed maximum."
+    },
+    {
+      "id": "jack.filter_pedal",
+      "label": "FILTER",
+      "manual_ref": 85,
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35mm TRS",
+      "node": "kbd.filter_pedal_in",
+      "function": "Master filter pedal: moves every voice's cutoff from slightly below its panel setting to significantly above it."
+    },
+    {
+      "id": "jack.sustain",
+      "label": "SUSTAIN",
+      "manual_ref": 86,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": "kbd.sustain_in",
+      "function": "Sustain footswitch: replaces both envelopes' release with the programmed pedal release time, per patch."
+    },
+    {
+      "id": "jack.program_advance",
+      "label": "PROGRAM ADVANCE",
+      "manual_ref": 87,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": null,
+      "function": "Footswitch that steps to the next program."
+    },
+    {
+      "id": "jack.hold",
+      "label": "HOLD",
+      "manual_ref": 88,
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35mm TS",
+      "node": null,
+      "function": "Footswitch mirroring the front-panel HOLD button."
+    },
+    {
+      "id": "jack.out_left",
+      "label": "LEFT",
+      "manual_ref": 89,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS balanced",
+      "node": "output.left",
+      "electrical": {
+        "max_level_dbu": 22,
+        "impedance_ohm": 50
+      },
+      "function": "Main left output."
+    },
+    {
+      "id": "jack.out_mono",
+      "label": "MONO",
+      "manual_ref": 90,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS balanced",
+      "node": "output.mono",
+      "electrical": {
+        "max_level_dbu": 22,
+        "impedance_ohm": 50
+      },
+      "function": "Mono output."
+    },
+    {
+      "id": "jack.out_right",
+      "label": "RIGHT",
+      "manual_ref": 91,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS balanced",
+      "node": "output.right",
+      "electrical": {
+        "max_level_dbu": 22,
+        "impedance_ohm": 50
+      },
+      "function": "Main right output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 92,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS",
+      "node": "output.phones",
+      "electrical": {
+        "max_power_mw": 25,
+        "impedance_ohm": 25
+      },
+      "function": "Headphones."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate",
+      "to": "voices.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "kbd.note",
+      "to": "arp.notes_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "arp.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c05",
+      "from": "kbd.note",
+      "to": "seq.notes_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq.record",
+        "equals": true
+      }
+    },
+    {
+      "id": "c06",
+      "from": "seq.notes_out",
+      "to": "voices.note_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq.play_pause",
+        "equals": true
+      }
+    },
+    {
+      "id": "c07",
+      "from": "voices.pitch",
+      "to": "portamento.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "portamento.time"
+    },
+    {
+      "id": "c08",
+      "from": "portamento.out",
+      "to": "osc1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc1.frequency"
+    },
+    {
+      "id": "c09",
+      "from": "portamento.out",
+      "to": "osc2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc2.frequency"
+    },
+    {
+      "id": "c10",
+      "from": "voices.gate",
+      "to": "env_filter.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "voices.gate",
+      "to": "env_loud.gate_in",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "kbd.bend",
+      "to": "bend.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "bend.osc1_out",
+      "to": "osc1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.osc2_only",
+        "equals": false
+      }
+    },
+    {
+      "id": "c14",
+      "from": "bend.osc2_out",
+      "to": "osc2.fm_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "osc1.sync_out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c16",
+      "from": "env_filter.out",
+      "to": "osc2.env_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.f_env",
+        "equals": true
+      }
+    },
+    {
+      "id": "c20",
+      "from": "mod_lfo.out",
+      "to": "osc1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_osc1_freq",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth1"
+    },
+    {
+      "id": "c21",
+      "from": "mod_lfo.out",
+      "to": "osc2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_osc2_freq",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth1"
+    },
+    {
+      "id": "c22",
+      "from": "mod_lfo.out",
+      "to": "vcf.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_filter",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth1"
+    },
+    {
+      "id": "c23",
+      "from": "mod_lfo.out",
+      "to": "osc1.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_osc1_pwm",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth2"
+    },
+    {
+      "id": "c24",
+      "from": "mod_lfo.out",
+      "to": "osc2.pwm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_osc2_pwm",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth2"
+    },
+    {
+      "id": "c25",
+      "from": "mod_lfo.out",
+      "to": "vca.lfo_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.to_volume",
+        "equals": true
+      },
+      "amount": "mod_lfo.depth2"
+    },
+    {
+      "id": "c26",
+      "from": "perf_lfo.out",
+      "to": "osc1.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "perf_lfo.osc1",
+        "equals": true
+      },
+      "amount": "perf_lfo.depth"
+    },
+    {
+      "id": "c27",
+      "from": "perf_lfo.out",
+      "to": "osc2.fm_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "perf_lfo.osc2",
+        "equals": true
+      },
+      "amount": "perf_lfo.depth"
+    },
+    {
+      "id": "c28",
+      "from": "perf_lfo.out",
+      "to": "mod_lfo.sample_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mod_lfo.waveform",
+        "equals": "smp"
+      },
+      "note": "In SMP mode the modulation LFO samples the performance LFO instead of generating its own shape."
+    },
+    {
+      "id": "c30",
+      "from": "osc1.out",
+      "to": "mixer.in_osc1",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.osc1_on",
+        "equals": true
+      }
+    },
+    {
+      "id": "c31",
+      "from": "osc2.out",
+      "to": "mixer.in_osc2",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mixer.osc2_level",
+        "not_equals": "off"
+      },
+      "amount": "mixer.osc2_level"
+    },
+    {
+      "id": "c32",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "noise.level"
+    },
+    {
+      "id": "c33",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c34",
+      "from": "env_filter.out",
+      "to": "vcf.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.modulation"
+    },
+    {
+      "id": "c35",
+      "from": "portamento.out",
+      "to": "vcf.kbd_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.track",
+        "equals": true
+      }
+    },
+    {
+      "id": "c36",
+      "from": "kbd.filter_pedal_cv",
+      "to": "vcf.pedal_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c37",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c38",
+      "from": "env_loud.out",
+      "to": "vca.env_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c39",
+      "from": "vca.out",
+      "to": "output.in_lower",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Voices assigned to the lower layer sum here; upper-layer voices to output.in_upper. BALANCE sets the ratio."
+    },
+    {
+      "id": "c40",
+      "from": "vca.out",
+      "to": "output.in_upper",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Two layers, sixteen voices",
+      "applies_to": ["voices", "kbd", "output"],
+      "rule": "The instrument holds two complete patches, lower and upper. In single mode one patch uses all sixteen voices. SPLIT assigns the lower patch below the split key and the upper above it; DOUBLE stacks both on every note or puts them on two MIDI channels. How the sixteen voices are divided between layers is not stated; eight each is the OB-Xa's arrangement. LOWER and UPPER choose which patch the panel edits, and BALANCE mixes the two."
+    },
+    {
+      "id": "b02",
+      "name": "Unison per layer",
+      "applies_to": ["voices"],
+      "rule": "UNISON puts all of a layer's voices on one key with low-note priority. In split mode each layer's unison is independent. OSC 2 DETUNE and the VOICE DETUNE shift function spread the stacked voices."
+    },
+    {
+      "id": "b03",
+      "name": "Oscillator waveform switches",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "OSC 1: SAW on, PULSE on, or both on for a triangle; both off is silence. OSC 2: SAW on, PULSE on, both on for both, both off for a triangle, so OSC 2 always produces something. Pulse width is one knob shared by both."
+    },
+    {
+      "id": "b04",
+      "name": "Sync and F-ENV",
+      "applies_to": ["osc1", "osc2", "env_filter"],
+      "rule": "SYNC locks OSC 2 to a harmonic of OSC 1. F-ENV routes the filter envelope to OSC 2 pitch. With both on, the envelope sweeps the synced harmonic content rather than the pitch: the OB-Xa's signature sync sweep. OSC 2 ONLY on the bend section does the same with the bend lever."
+    },
+    {
+      "id": "b05",
+      "name": "Modulation LFO routing",
+      "applies_to": ["mod_lfo"],
+      "rule": "One LFO, two depths. DEPTH 1 scales the three frequency destinations (OSC 1, OSC 2, filter) and DEPTH 2 the three width and volume destinations (OSC 1 PWM, OSC 2 PWM, VCA), each destination gated by its own switch. Delay and fade-in for each depth group are on the shift functions MOD 1/2 DELAY and MOD 1/2 ATTACK. The guide swaps which depth serves which group; the panel and the OB-Xa agree on the assignment used here.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b06",
+      "name": "TRIG and SMP",
+      "applies_to": ["mod_lfo", "perf_lfo"],
+      "rule": "TRIG restarts the modulation LFO on every key, held long to engage. SMP makes the modulation LFO sample the performance LFO, so a sampled vibrato at the performance LFO's shape and speed reaches the modulation panel's destinations."
+    },
+    {
+      "id": "b07",
+      "name": "Performance LFO and the vibrato pedal",
+      "applies_to": ["perf_lfo", "kbd"],
+      "rule": "The performance LFO reaches OSC 1 and OSC 2 pitch through its own switches and is enabled per layer. The vibrato pedal scales its DEPTH from nothing up to the programmed value, so the programmed depth is a ceiling."
+    },
+    {
+      "id": "b08",
+      "name": "Mixer levels",
+      "applies_to": ["mixer"],
+      "rule": "OSC 1 is on or off. OSC 2 is off, HALF (about 5 dB below full) or FULL. Noise is continuous. There is no oscillator level knob; balance between oscillators is done with HALF."
+    },
+    {
+      "id": "b09",
+      "name": "Filter modulation sum",
+      "applies_to": ["vcf"],
+      "rule": "Cutoff = FREQUENCY + filter envelope x MODULATION + modulation LFO x DEPTH 1 when FILTER FREQ is on + keyboard pitch when TRACK is on + filter pedal. The pedal moves cutoff from slightly below the panel value to significantly above it. Summation law not stated.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b10",
+      "name": "Sustain pedal as release",
+      "applies_to": ["env_filter", "env_loud", "kbd"],
+      "rule": "The sustain footswitch does not hold notes; it substitutes a programmed PEDAL RELEASE time for both envelopes' release, with the same range as the panel release. In split or double each patch dies away by its own pedal release."
+    },
+    {
+      "id": "b11",
+      "name": "Manual mode",
+      "applies_to": ["voices"],
+      "rule": "MANUAL makes the sound follow the physical positions of the controls rather than the stored preset. Not available in split or double, because two patches cannot both be read from one set of knobs."
+    },
+    {
+      "id": "b12",
+      "name": "Presets and recall",
+      "applies_to": ["voices"],
+      "rule": "Every control is a stored value. WRITE stores a patch, or held, a split or double program. COMPARE audits the edit against the stored version. Four ASSIGNABLE PRESET RECALL switches bring up presets, and with SHIFT open the USB/MIDI, velocity and aftertouch, voice and mod menus."
+    },
+    {
+      "id": "b13",
+      "name": "Menus not described",
+      "applies_to": ["voices", "arp", "seq"],
+      "rule": "The panel's shift labels and the four menus imply a vintage mode, a mod matrix, velocity and aftertouch routing, voice settings, arpeggiator settings, sequencer settings, tempo sync and quantise. The quick start guide names none of their contents."
+    }
+  ],
+  "midi": {
+    "receives": [
+      "note_on",
+      "note_off",
+      "pitch_bend",
+      "program_change",
+      "cc (map not published in this guide)"
+    ],
+    "transmits": ["MIDI OUT", "MIDI THRU pass-through", "USB MIDI"],
+    "channel": {
+      "range": [1, 16],
+      "set_by": "USB/MIDI menu (SHIFT + recall switch 1); split and double can use two channels"
+    },
+    "cc_map": null,
+    "nrpn": null,
+    "sysex": null,
+    "clock": "TEMPO SYNC shift functions exist; clock source not stated",
+    "usb": {
+      "class_compliant": true,
+      "os": "Windows 7 or higher, Mac OS X 10.10 or higher"
+    }
+  },
+  "specifications": {
+    "voices": {
+      "count": 16,
+      "timbrality": "bi-timbral",
+      "type": "analogue",
+      "oscillators": 32
+    },
+    "lfos": 2,
+    "vcf": "1 low pass per voice, 2-pole or 4-pole (12 or 24 dB/oct), switchable",
+    "envelopes": ["VCF", "VCA"],
+    "outputs": {
+      "main": "2 x 1/4-inch TRS balanced, max +22 dBu, 50 ohm",
+      "mono": "1/4-inch TRS balanced",
+      "phones": "1/4-inch TRS, 25 mW, 25 ohm"
+    },
+    "pedals": {
+      "cv": ["vibrato", "filter"],
+      "switch": ["sustain", "program advance", "hold"]
+    },
+    "midi": "In, Out, Thru on DIN; USB 2.0 type B class compliant",
+    "display": "2 x 16 character LCD",
+    "power": {
+      "mains": "IEC, auto-ranging 100 to 240 V",
+      "consumption_w_max": 40,
+      "fuse_a": 3.15
+    },
+    "dimensions_mm": {
+      "h": 119,
+      "w": 460.75,
+      "d": 224.1
+    },
+    "weight_kg": 4.8,
+    "operating_temperature_c": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "omitted_from_source": [
+    "safety and legal text in nine languages",
+    "warranty and FCC/EU declarations",
+    "hook-up diagrams",
+    "non-English duplicates of the controls section"
+  ],
+  "not_in_source": [
+    "a MIDI CC or NRPN map; the guide mentions that OSC 1 and OSC 2 MOD are 'via MIDI CC' and gives no numbers",
+    "envelope times in seconds for either envelope, and the pedal release range beyond 'the same as the panel'",
+    "the contents of any menu: arpeggiator settings, sequencer settings, globals, vintage mode, the mod menu, voice menu, velocity and aftertouch menu, USB/MIDI menu",
+    "the meaning of most shift functions printed on the panel: PRESET VOLUME, TEMPO SYNC, BEND, VOICES, TEMPO, VOICE DETUNE, QUANTIZE, INVERT, TRACK, MOD LFO PHASE, TRIG POINT, ENV MOD, OSC 1 LFO INVERT, FREQ, PW, AUTO, APPEND, CLR LAST, RESTART, INITIAL, BANK/PAGE",
+    "how the sixteen voices are divided between the two layers",
+    "whether the modulation LFO is per voice or shared; the MOD LFO PHASE shift function implies per voice",
+    "the exact level of HALF OSC 2 beyond 'approximately 5 dB below full'",
+    "the sequencer's step count, clock and quantisation; the arpeggiator's modes and range",
+    "the pitch bend curve, and what the BEND shift function under PORTAMENTO adjusts",
+    "the number of presets and banks"
+  ],
+  "source_inconsistencies": [
+    "Item 39 assigns DEPTH 1 to the PWM and VOLUME MOD switches (36 to 38) and item 44 assigns DEPTH 2 to the frequency switches (41 to 43); the panel prints DEPTH 1 above the frequency row and DEPTH 2 above the PWM row. This file follows the panel.",
+    "Item 47 says the MODULATION knob sets filter modulation 'by the LFO'; the LFO reaches the filter through the FILTER FREQ switch and DEPTH 1, so this knob is the envelope amount, as on the OB-Xa.",
+    "Item 21 is called NARROW in the guide and AMOUNT on the panel.",
+    "Items 22 and 23 (performance LFO OSC 1 and OSC 2) are described as 'turns on control of OSC via MIDI CC', which does not describe a routing switch.",
+    "The guide's page layout scatters the item numbers so that several descriptions are printed out of order and two (5 and 6, 3 and 4) share one heading.",
+    "Item 15 lists the performance LFO shapes as sine, sawtooth, square, ramp, noise and sample and hold; the specifications list triangle, square, ramp up, sawtooth, random and sample and hold.",
+    "The specifications say 'VCA, VCF' for envelopes and '32' oscillators without saying per voice; both are per voice.",
+    "The headphone output is specified as 'max 25mW dBu', mixing two units."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Thin source",
+      "detail": "A quick start guide. The full UB-Xa manual and the OB-Xa owner's manual would resolve most of not_in_source; the OB-Xa scan is uploaded but unread."
+    },
+    {
+      "topic": "Envelope times",
+      "detail": "None given. The OB-Xa manual gives ranges for its envelopes and the UB-Xa is designed to match; that is the first thing to OCR."
+    },
+    {
+      "topic": "Control tapers",
+      "detail": "Every knob is 0 to 10. OSC 1 frequency is in octave steps and OSC 2 in semitone steps; the LFOs have a stated Hz range; nothing else has physical end points."
+    },
+    {
+      "topic": "Filter",
+      "detail": "No cutoff range, no resonance law, no self-oscillation statement, and nothing on what distinguishes the 2-pole and 4-pole modes beyond slope. The OB-Xa's two filter modes sound very different and this is the heart of the instrument."
+    },
+    {
+      "topic": "Vintage mode",
+      "detail": "A VINTAGE shift function exists and is undescribed. The UB-Xa is known to model several OB-Xa revisions; none of that is in this guide."
+    },
+    {
+      "topic": "Modulation matrix",
+      "detail": "A MOD menu exists behind SHIFT + recall switch 4. Nothing about slots, sources or destinations is given, so unlike the DeepMind this file has no mod_matrix section."
+    },
+    {
+      "topic": "Pulse width",
+      "detail": "One knob for both oscillators; modelled as osc1.pulse_width with osc2 following it, and PWM per oscillator switched separately."
+    },
+    {
+      "topic": "Pedal scaling",
+      "detail": "The vibrato pedal scales a depth parameter and the filter pedal offsets cutoff; the first is a behaviour and the second a connection, because the schema has no way to say a jack scales a parameter."
+    }
+  ]
+}

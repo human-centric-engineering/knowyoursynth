@@ -1,0 +1,47 @@
+{
+  "synth": "donner-b1",
+  "title": "From the Roland TB-303 to the Donner B1",
+  "intro": "The B1 is Donner’s take on the Roland TB-303, the 1981 bass machine that became the sound of acid house. It is not a copy of the 303’s circuit: it keeps the idea (one oscillator, a resonant filter, a decay envelope, accent, slide and a 16-step sequencer), with Donner’s own sequencer and keyboard, and adds what acid players have long added themselves, saturation and a delay.",
+  "timeline": [
+    {
+      "year": "1981",
+      "name": "Roland TB-303 Bass Line",
+      "tag": "The inspiration",
+      "text": "One oscillator, a resonant filter, a decay envelope, and a 16-step sequencer with accent and slide. Made until 1984."
+    },
+    {
+      "year": "1987",
+      "name": "Acid house",
+      "text": "Chicago producers turned the TB-303’s filter and resonance while patterns played, and the sound became a genre."
+    },
+    {
+      "year": "2010s",
+      "name": "Clones and tributes",
+      "text": "As used 303s grew expensive, kits, software and new hardware brought the sound back within reach, from Roland’s own TB-03 (2016) to Behringer’s TD-3 (2019)."
+    },
+    {
+      "year": "2022",
+      "name": "Donner Essential B1",
+      "tag": "This synth",
+      "text": "A 303-style analogue voice with switchable saturation and delay, 26 touch keys whose white keys double as the 16 sequencer steps, 128 patterns with gate length and ratchet per step, and an eight-mode arpeggiator."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Roland TB-303",
+      "years": "1981–84",
+      "text": "The instrument that inspired it."
+    },
+    {
+      "name": "Behringer TD-3",
+      "years": "2019",
+      "text": "A close copy of the 303’s circuit and panel, with distortion. The B1 is a looser tribute with its own layout."
+    },
+    {
+      "name": "Roland TB-03",
+      "years": "2016",
+      "text": "Roland’s own small Boutique version of the TB-303, a digital model with a delay and overdrive."
+    }
+  ],
+  "note": "The B1 is an inspired-by instrument, not a recreation: its own sound and records are its own, and none of the databank’s records name it yet."
+}

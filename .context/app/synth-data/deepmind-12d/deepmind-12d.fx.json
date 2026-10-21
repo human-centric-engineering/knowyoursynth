@@ -1,0 +1,4260 @@
+{
+  "schema_version": "0.1.0",
+  "device": {
+    "id": "behringer-deepmind-fx",
+    "manufacturer": "Behringer",
+    "model": "DeepMind effects engine (TC Electronic, Klark Teknik and Midas algorithms)",
+    "for_device": ["behringer-deepmind-12d", "behringer-deepmind-12", "behringer-deepmind-6"],
+    "sources": [
+      {
+        "id": "manual",
+        "title": "DeepMind 12D User Manual, chapters 7 (FX menu), 9 (Effects Reference Guide) and 16 (MIDI CC)",
+        "file": "DeepMind_12D.pdf",
+        "kind": "user_manual",
+        "note": "Chapter 9 gives one table per algorithm: parameter number, short reference, name, units, min, max, description, and a mark for parameters that are matrix destinations. The 35 tables are parsed mechanically; the prose descriptions in 9.2 are not transcribed."
+      }
+    ]
+  },
+  "engine": {
+    "slots": 4,
+    "algorithm_count": 35,
+    "sample_rate_hz": 48000,
+    "bit_depth": "24-bit converters, 32/40-bit floating point processing",
+    "dsp": "one true-stereo SHARC",
+    "bypass": "true hard bypass; the analogue path from the voices to the outputs is preserved when bypassed",
+    "modes": ["insert", "send", "bypass"],
+    "dynamic_range_db": 114
+  },
+  "slot_controls": [
+    {
+      "slot": 1,
+      "type_cc": 105,
+      "gain_cc": 109,
+      "mix": "per slot, on the FX menu",
+      "parameter_cc": "62, 63, 65 to 74",
+      "note": "Each slot has a TYPE (which algorithm), a MIX (dry to wet) and a LEVEL (output gain). Parameters 1 to 12 of the loaded algorithm map to CCs for slots 1 to 3; slot 4 has type and gain CCs only."
+    },
+    {
+      "slot": 2,
+      "type_cc": 106,
+      "gain_cc": 110,
+      "mix": "per slot, on the FX menu",
+      "parameter_cc": "75 to 86",
+      "note": "Each slot has a TYPE (which algorithm), a MIX (dry to wet) and a LEVEL (output gain). Parameters 1 to 12 of the loaded algorithm map to CCs for slots 1 to 3; slot 4 has type and gain CCs only."
+    },
+    {
+      "slot": 3,
+      "type_cc": 107,
+      "gain_cc": 111,
+      "mix": "per slot, on the FX menu",
+      "parameter_cc": "87 to 95, 102 to 104",
+      "note": "Each slot has a TYPE (which algorithm), a MIX (dry to wet) and a LEVEL (output gain). Parameters 1 to 12 of the loaded algorithm map to CCs for slots 1 to 3; slot 4 has type and gain CCs only."
+    },
+    {
+      "slot": 4,
+      "type_cc": 108,
+      "gain_cc": 112,
+      "mix": "per slot, on the FX menu",
+      "parameter_cc": "none listed",
+      "note": "Each slot has a TYPE (which algorithm), a MIX (dry to wet) and a LEVEL (output gain). Parameters 1 to 12 of the loaded algorithm map to CCs for slots 1 to 3; slot 4 has type and gain CCs only."
+    }
+  ],
+  "routing_modes": [
+    {
+      "id": "M-1",
+      "name": "SERIAL 1-2-3-4",
+      "topology": "1 -> 2 -> 3 -> 4"
+    },
+    {
+      "id": "M-2",
+      "name": "PARALLEL 1/2 SERIAL 3-4",
+      "topology": "(1 || 2) -> 3 -> 4"
+    },
+    {
+      "id": "M-3",
+      "name": "PARALLEL 1/2 PARALLEL 3/4",
+      "topology": "(1 || 2) -> (3 || 4)"
+    },
+    {
+      "id": "M-4",
+      "name": "PARALLEL 1/2/3/4",
+      "topology": "1 || 2 || 3 || 4"
+    },
+    {
+      "id": "M-5",
+      "name": "PARALLEL 1/2/3 SERIAL 4",
+      "topology": "(1 || 2 || 3) -> 4"
+    },
+    {
+      "id": "M-6",
+      "name": "SERIAL 1-2 PARALLEL 3/4",
+      "topology": "1 -> 2 -> (3 || 4)"
+    },
+    {
+      "id": "M-7",
+      "name": "SERIAL 1 PARALLEL 2/3/4",
+      "topology": "1 -> (2 || 3 || 4)"
+    },
+    {
+      "id": "M-8",
+      "name": "PARALLEL (SERIAL 1-2-3)/4",
+      "topology": "(1 -> 2 -> 3) || 4"
+    },
+    {
+      "id": "M-9",
+      "name": "SERIAL 3-4 FEEDBACK4(1-2)",
+      "topology": "3 -> 4, with 4's output fed back through 1 -> 2",
+      "note": "The manual names the mode; the feedback path is read from the name and the routing diagram, not described in words."
+    },
+    {
+      "id": "M-10",
+      "name": "SERIAL 4 FEEDBACK4(1-2-3)",
+      "topology": "4, with its output fed back through 1 -> 2 -> 3",
+      "note": "As M-9."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "tc-deepvrb",
+      "number": 1,
+      "name": "TC-DeepVRB",
+      "long_name": "TC DEEP REVERB",
+      "type": "reverb",
+      "inspiration": "TC Hall of Fame",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PST",
+          "name": "Preset",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Options: Ambience, Church, Gate, Hall, Lo Fi, Modulated, Plate, Room, Spring, Tile, Default.",
+          "options": [
+            "Ambience",
+            "Church",
+            "Gate",
+            "Hall",
+            "Lo Fi",
+            "Modulated",
+            "Plate",
+            "Room",
+            "Spring",
+            "Tile",
+            "Default"
+          ]
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.1,
+          "max": 6.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate (range is preset dependant)."
+        },
+        {
+          "number": 3,
+          "ref": "TON",
+          "name": "Tone",
+          "units": "%",
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Enhances high frequencies/low frequencies for positive/negative settings respectivly."
+        },
+        {
+          "number": 4,
+          "ref": "PDY",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 5,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "ambverb",
+      "number": 2,
+      "name": "AmbVerb",
+      "long_name": "AMBIENT REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.2,
+          "max": 7.3,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": null,
+          "min": 2.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb."
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": null,
+          "min": 1.0,
+          "max": 30.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "MOD",
+          "name": "Mod",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the reverb tail modulation depth."
+        },
+        {
+          "number": 10,
+          "ref": "TGN",
+          "name": "TailGain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the volume of the reverb tail."
+        }
+      ]
+    },
+    {
+      "id": "roomrev",
+      "number": 3,
+      "name": "RoomRev",
+      "long_name": "ROOM REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.3,
+          "max": 28.9,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": "m",
+          "min": 4.0,
+          "max": 76.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb."
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "LFX",
+          "name": "BassMult",
+          "units": "-0.2",
+          "min": 4.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 10,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": "-0.0",
+          "min": 50.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 11,
+          "ref": "SHP",
+          "name": "Shape",
+          "units": "-0.0",
+          "min": 250.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 12,
+          "ref": "SPI",
+          "name": "Spin",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls randomization / modulation effects within the reverb."
+        }
+      ]
+    },
+    {
+      "id": "vintagerev",
+      "number": 4,
+      "name": "VintageRev",
+      "long_name": "VINTAGE ROOM REVERB",
+      "type": "reverb",
+      "inspiration": "EMT 250",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": "%",
+          "min": 1.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb. Affects DECAY range."
+        },
+        {
+          "number": 3,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.1,
+          "max": 20.7,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate. Range dependant on SIZE."
+        },
+        {
+          "number": 4,
+          "ref": "LFX",
+          "name": "Lo Mult",
+          "units": "-0.1",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 5,
+          "ref": "HFX",
+          "name": "Hi Mult",
+          "units": "-0.1",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 6,
+          "ref": "DEN",
+          "name": "Density",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Manipulates the reflection density in the simulated room."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "ERL",
+          "name": "ER Level",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Set the early reflection times."
+        },
+        {
+          "number": 10,
+          "ref": "ERD",
+          "name": "ER Delay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Sets the loudness of the early reflection level."
+        },
+        {
+          "number": 11,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 12,
+          "ref": "FRZ",
+          "name": "Freeze",
+          "units": "-OFF",
+          "min": null,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "hallrev",
+      "number": 5,
+      "name": "HallRev",
+      "long_name": "HALL REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.2,
+          "max": 4.9,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": "-2.0",
+          "min": 200.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": "-1.0",
+          "min": 30.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "LFX",
+          "name": "BassMult",
+          "units": "-0.5",
+          "min": 2.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 10,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": "-0.0",
+          "min": 50.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 11,
+          "ref": "SHP",
+          "name": "Shape",
+          "units": "-0.0",
+          "min": 250.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 12,
+          "ref": "MOD",
+          "name": "ModSpeed",
+          "units": "-0.0",
+          "min": 100.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "chamberrev",
+      "number": 6,
+      "name": "ChamberRev",
+      "long_name": "CHAMBER REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.3,
+          "max": 28.9,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": "m",
+          "min": 4.0,
+          "max": 76.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb."
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "LFX",
+          "name": "BassMult",
+          "units": "-0.2",
+          "min": 4.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 10,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": "-0.0",
+          "min": 50.0,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 11,
+          "ref": "SHP",
+          "name": "Shape",
+          "units": "-0.0",
+          "min": 250.0,
+          "max": null,
+          "mod_destination": true,
+          "description": ""
+        },
+        {
+          "number": 12,
+          "ref": "SPI",
+          "name": "Spin",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls randomization / modulation effects within the reverb."
+        }
+      ]
+    },
+    {
+      "id": "platerev",
+      "number": 7,
+      "name": "PlateRev",
+      "long_name": "PLATE REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon PCM-70",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.5,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": null,
+          "min": 2.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb."
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": null,
+          "min": 1.0,
+          "max": 30.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "LFX",
+          "name": "BassMult",
+          "units": null,
+          "min": 0.5,
+          "max": 2.0,
+          "mod_destination": true,
+          "description": "Controls the low frequency build-up."
+        },
+        {
+          "number": 10,
+          "ref": "XOV",
+          "name": "Xover",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Controls the crossover point for bass multiplier."
+        },
+        {
+          "number": 11,
+          "ref": "MOD",
+          "name": "ModDepth",
+          "units": null,
+          "min": 1.0,
+          "max": 50.0,
+          "mod_destination": false,
+          "description": "Controls the reverb tail modulation depth."
+        },
+        {
+          "number": 12,
+          "ref": "MDS",
+          "name": "ModSpeed",
+          "units": null,
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the reverb tail modulation rate."
+        }
+      ]
+    },
+    {
+      "id": "richpltrev",
+      "number": 8,
+      "name": "RichPltRev",
+      "long_name": "RICH PLATE REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.3,
+          "max": 28.9,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": "m",
+          "min": 4.0,
+          "max": 39.0,
+          "mod_destination": false,
+          "description": "Controls the perceived size of the space being created by the reverb."
+        },
+        {
+          "number": 4,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the decay of the high frequencies within the reverb tail."
+        },
+        {
+          "number": 5,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "LFX",
+          "name": "BassMult",
+          "units": null,
+          "min": 0.2,
+          "max": 4.0,
+          "mod_destination": true,
+          "description": "Controls the low frequency build-up."
+        },
+        {
+          "number": 10,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": null,
+          "min": 0.0,
+          "max": 50.0,
+          "mod_destination": false,
+          "description": "Emphasizes the stereo effect of the reverb."
+        },
+        {
+          "number": 11,
+          "ref": "ATK",
+          "name": "Attack",
+          "units": null,
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the contour of the reverberation envelope."
+        },
+        {
+          "number": 12,
+          "ref": "SPN",
+          "name": "Spin",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls randomization / modulation effects within the reverb."
+        }
+      ]
+    },
+    {
+      "id": "gatedrev",
+      "number": 9,
+      "name": "GatedRev",
+      "long_name": "GATED REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 300/480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "ms",
+          "min": 140.0,
+          "max": 1000.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "ATK",
+          "name": "Attack",
+          "units": null,
+          "min": 0.0,
+          "max": 30.0,
+          "mod_destination": true,
+          "description": "Adjusts the contour of the reverberation envelope."
+        },
+        {
+          "number": 4,
+          "ref": "DEN",
+          "name": "Density",
+          "units": null,
+          "min": 1.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Manipulates the reflection density in the simulated room."
+        },
+        {
+          "number": 5,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": null,
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Emphasizes the stereo effect of the reverb."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HIF",
+          "name": "HiSvFreq",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of a Hi-Shelving filter at the input of the reverb effect."
+        },
+        {
+          "number": 9,
+          "ref": "HIG",
+          "name": "HiSvGain",
+          "units": "dB",
+          "min": -30.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of a Hi-Shelving filter at the input of the reverb effect."
+        },
+        {
+          "number": 10,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        }
+      ]
+    },
+    {
+      "id": "reverse",
+      "number": 10,
+      "name": "Reverse",
+      "long_name": "REVERSE REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon 300/480L",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PD",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 2,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "ms",
+          "min": 140.0,
+          "max": 1000.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 3,
+          "ref": "RIS",
+          "name": "Rise",
+          "units": null,
+          "min": 0.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Controls how quickly the effect builds up."
+        },
+        {
+          "number": 4,
+          "ref": "DIF",
+          "name": "Diffusion",
+          "units": null,
+          "min": 1.0,
+          "max": 30.0,
+          "mod_destination": false,
+          "description": "Controls the initial reflection density."
+        },
+        {
+          "number": 5,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": null,
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Controls how the reflection is distributed through the envelope of the reverb."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies affected by the reverb to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HIF",
+          "name": "HiSvFreq",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of a Hi-Shelving filter at the input of the reverb effect."
+        },
+        {
+          "number": 9,
+          "ref": "HIG",
+          "name": "HiSvGain",
+          "units": "dB",
+          "min": -30.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of a Hi-Shelving filter at the input of the reverb effect."
+        }
+      ]
+    },
+    {
+      "id": "chorusverb",
+      "number": 11,
+      "name": "ChorusVerb",
+      "long_name": "CHORUS & REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon PCM-70",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 4.0,
+          "mod_destination": true,
+          "description": "Adjusts the rate of the chorus. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the modulation depth of the chorus."
+        },
+        {
+          "number": 3,
+          "ref": "DLY",
+          "name": "Delay",
+          "units": "ms",
+          "min": 0.5,
+          "max": 50.0,
+          "mod_destination": false,
+          "description": "Adjusts the delay of the chorus."
+        },
+        {
+          "number": 4,
+          "ref": "PHS",
+          "name": "Phase",
+          "units": null,
+          "min": 0.0,
+          "max": 180.0,
+          "mod_destination": true,
+          "description": "Offsets the phase between the left and right channels."
+        },
+        {
+          "number": 5,
+          "ref": "WAV",
+          "name": "Wave",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Adjusts the LFO waveform from a sine wave to triangular wave."
+        },
+        {
+          "number": 6,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the balance between chorus and reverb."
+        },
+        {
+          "number": 7,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 8,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.1,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 9,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": null,
+          "min": 2.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls how large or small the simulated space is."
+        },
+        {
+          "number": 10,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Determines the decay of high frequencies within the reverb tail."
+        },
+        {
+          "number": 11,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Excludes low frequencies below the value."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "delayverb",
+      "number": 12,
+      "name": "DelayVerb",
+      "long_name": "DELAY & REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon PCM-70",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "TIM",
+          "name": "Time",
+          "units": "ms",
+          "min": 1.0,
+          "max": 1500.0,
+          "mod_destination": false,
+          "description": "Adjusts the delay time for the left channel delay. Time sync options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "PAT",
+          "name": "Pattern",
+          "units": null,
+          "min": 1.0,
+          "max": 1.0,
+          "mod_destination": false,
+          "description": "Sets the delay ratio for the right channel delay."
+        },
+        {
+          "number": 3,
+          "ref": "FHC",
+          "name": "FeedHC",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Trims high frequencies from the feedback."
+        },
+        {
+          "number": 4,
+          "ref": "FBK",
+          "name": "Feedback",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of feedback."
+        },
+        {
+          "number": 5,
+          "ref": "XFD",
+          "name": "X-Feed",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Control the amount of delay sound sent to the reverb effect."
+        },
+        {
+          "number": 6,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the ratio between delay and reverb."
+        },
+        {
+          "number": 7,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 8,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.1,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 9,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": null,
+          "min": 2.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls how large or small the simulated space is."
+        },
+        {
+          "number": 10,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Determines the decay of high frequencies within the reverb tail."
+        },
+        {
+          "number": 11,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Excludes low frequencies below the value."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "flangeverb",
+      "number": 13,
+      "name": "FlangeVerb",
+      "long_name": "FLANGER & REVERB",
+      "type": "reverb",
+      "inspiration": "Lexicon PCM-70",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 4.0,
+          "mod_destination": true,
+          "description": "Adjusts the rate of the flanger. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the modulation depth of the flanger."
+        },
+        {
+          "number": 3,
+          "ref": "DLY",
+          "name": "Delay",
+          "units": "ms",
+          "min": 0.5,
+          "max": 20.0,
+          "mod_destination": false,
+          "description": "Adjusts the delay of the flanger."
+        },
+        {
+          "number": 4,
+          "ref": "PHS",
+          "name": "Phase",
+          "units": null,
+          "min": 0.0,
+          "max": 180.0,
+          "mod_destination": true,
+          "description": "Offsets the phase between the left and right channels."
+        },
+        {
+          "number": 5,
+          "ref": "FBK",
+          "name": "Feed",
+          "units": "%",
+          "min": -90.0,
+          "max": 90.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of positive or negative feedback."
+        },
+        {
+          "number": 6,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the balance between flanger and reverb."
+        },
+        {
+          "number": 7,
+          "ref": "PRE",
+          "name": "PreDelay",
+          "units": "ms",
+          "min": 0.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls the amount of time before the reverb is heard following the source signal."
+        },
+        {
+          "number": 8,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": "s",
+          "min": 0.1,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 9,
+          "ref": "SIZ",
+          "name": "Size",
+          "units": null,
+          "min": 2.0,
+          "max": 200.0,
+          "mod_destination": false,
+          "description": "Controls how large or small the simulated space is."
+        },
+        {
+          "number": 10,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": "Hz",
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Determines the decay of high frequencies within the reverb tail."
+        },
+        {
+          "number": 11,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Excludes low frequencies below the value."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "midaseq",
+      "number": 14,
+      "name": "MidasEQ",
+      "long_name": "MIDAS EQUALIZER",
+      "type": "processing",
+      "inspiration": "Midas ProX",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "LSG",
+          "name": "LoShelfGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the low band."
+        },
+        {
+          "number": 2,
+          "ref": "LSF",
+          "name": "LoShelfFreq",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the low band."
+        },
+        {
+          "number": 3,
+          "ref": "LMG",
+          "name": "LoMidGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the low-mid band."
+        },
+        {
+          "number": 4,
+          "ref": "LMF",
+          "name": "LoMidFreq",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the low-mid band."
+        },
+        {
+          "number": 5,
+          "ref": "LMQ",
+          "name": "LoMidQ",
+          "units": null,
+          "min": 0.3,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Adjusts the Q-factor of the low-mid band."
+        },
+        {
+          "number": 6,
+          "ref": "HMG",
+          "name": "HiMidGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the high-mid band."
+        },
+        {
+          "number": 7,
+          "ref": "HMF",
+          "name": "HiMidFreq",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the high-mid band."
+        },
+        {
+          "number": 8,
+          "ref": "HMQ",
+          "name": "HiMidQ",
+          "units": null,
+          "min": 0.3,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Adjusts the Q-factor of the high-mid band."
+        },
+        {
+          "number": 9,
+          "ref": "HSG",
+          "name": "HiShelfGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the high band."
+        },
+        {
+          "number": 10,
+          "ref": "HSF",
+          "name": "HiShelfFreq",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the high band."
+        },
+        {
+          "number": 11,
+          "ref": "EQ",
+          "name": "EQ",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the high band."
+        }
+      ]
+    },
+    {
+      "id": "enhancer",
+      "number": 15,
+      "name": "Enhancer",
+      "long_name": "ENHANCING EQ",
+      "type": "processing",
+      "inspiration": "SPL Vitalizer",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "OGN",
+          "name": "OutGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Compensates for changes in level resulting from the effect."
+        },
+        {
+          "number": 2,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Emphasizes the stereo content for a wider mix."
+        },
+        {
+          "number": 3,
+          "ref": "BGN",
+          "name": "BassGain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the bass band."
+        },
+        {
+          "number": 4,
+          "ref": "BFR",
+          "name": "BassFreq",
+          "units": null,
+          "min": 1.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the bass band."
+        },
+        {
+          "number": 5,
+          "ref": "MGN",
+          "name": "MidGain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the mid band."
+        },
+        {
+          "number": 6,
+          "ref": "MIQ",
+          "name": "MidQ",
+          "units": null,
+          "min": 1.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the Q-factor of the mid band."
+        },
+        {
+          "number": 7,
+          "ref": "HIG",
+          "name": "HiGain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the gain of the high band."
+        },
+        {
+          "number": 8,
+          "ref": "HIF",
+          "name": "HiFreq",
+          "units": null,
+          "min": 1.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency of the high band."
+        },
+        {
+          "number": 9,
+          "ref": "SOL",
+          "name": "FactorC",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Solo mode - used to isolate only the audio resulting from the effect."
+        }
+      ]
+    },
+    {
+      "id": "faircomp",
+      "number": 16,
+      "name": "FairComp",
+      "long_name": "COMPRESSOR",
+      "type": "processing",
+      "inspiration": "Fairchild 670",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "MOD",
+          "name": "Mode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": ""
+        },
+        {
+          "number": 2,
+          "ref": "INL",
+          "name": "InGain L/M",
+          "units": null,
+          "min": -20.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Controls the input gain for the Left/Mid signal."
+        },
+        {
+          "number": 3,
+          "ref": "THL",
+          "name": "ThreshL/M",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Controls the threshold for the Left/Mid signal."
+        },
+        {
+          "number": 4,
+          "ref": "TML",
+          "name": "TImeL/M",
+          "units": null,
+          "min": 1.0,
+          "max": 6.0,
+          "mod_destination": false,
+          "description": "Controls the attack and release time for the Left/Mid signal."
+        },
+        {
+          "number": 5,
+          "ref": "DCL",
+          "name": "DCBiasL/M",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjust the ratio and knee of the compression curve for the Left/Mid signal."
+        },
+        {
+          "number": 6,
+          "ref": "OGL",
+          "name": "OutGainL/M",
+          "units": "dB",
+          "min": -18.0,
+          "max": 6.0,
+          "mod_destination": true,
+          "description": "Controls the output gain for the Left/Mid signal."
+        },
+        {
+          "number": 7,
+          "ref": "BAL",
+          "name": "Bias Bal",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjust the bias current, creating accentuation of attacks"
+        },
+        {
+          "number": 8,
+          "ref": "INR",
+          "name": "InGain R/S",
+          "units": null,
+          "min": -20.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Controls the input gain for the Right/Side signal."
+        },
+        {
+          "number": 9,
+          "ref": "THR",
+          "name": "ThreshR/S",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Controls the threshold for the Right/Side signal."
+        },
+        {
+          "number": 10,
+          "ref": "TMR",
+          "name": "TImeR/S",
+          "units": null,
+          "min": 1.0,
+          "max": 6.0,
+          "mod_destination": false,
+          "description": "Controls the attack and release time for the Right/Side signal."
+        },
+        {
+          "number": 11,
+          "ref": "DCR",
+          "name": "DCBiasR/S",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjust the ratio and knee of the compression curve for the Right/Side signal."
+        },
+        {
+          "number": 12,
+          "ref": "OGR",
+          "name": "OutGainR/S",
+          "units": "dB",
+          "min": -18.0,
+          "max": 6.0,
+          "mod_destination": true,
+          "description": "Controls the output gain for the Right/Side signal."
+        }
+      ]
+    },
+    {
+      "id": "mulbnddist",
+      "number": 17,
+      "name": "MulBndDist",
+      "long_name": "MULTIBAND DISTORTION",
+      "type": "processing",
+      "inspiration": "Midas ProX",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "IPG",
+          "name": "InputGain",
+          "units": "dB",
+          "min": -24.0,
+          "max": 24.0,
+          "mod_destination": true,
+          "description": "Controls the amount of input gain applied to the signal."
+        },
+        {
+          "number": 2,
+          "ref": "DST",
+          "name": "Dist Types",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Distortion Type: VAL(Valve), SAT(Saturation), TUB (Tube), & Post Filter variants (PFV/PFS/PFT)."
+        },
+        {
+          "number": 3,
+          "ref": "LBL",
+          "name": "Low Level",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Controls the level of the frequencies below XoverFreq 1."
+        },
+        {
+          "number": 4,
+          "ref": "LDR",
+          "name": "Low Drive",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of distortion introduced below XoverFreq 1."
+        },
+        {
+          "number": 5,
+          "ref": "XV1",
+          "name": "Xover Freq 1",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 9000.0,
+          "mod_destination": true,
+          "description": "Sets the lower cross over frequency."
+        },
+        {
+          "number": 6,
+          "ref": "MBL",
+          "name": "Mid Level",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Controls the level of the frequencies between Xover1 Freq and Xover2 Freq."
+        },
+        {
+          "number": 7,
+          "ref": "MDR",
+          "name": "Mid Drive",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of distortion introduced between Xover1 Freq and Xover2 Freq."
+        },
+        {
+          "number": 8,
+          "ref": "XV2",
+          "name": "Xover Freq 2",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 9000.0,
+          "mod_destination": true,
+          "description": "Sets the upper cross over frequency."
+        },
+        {
+          "number": 9,
+          "ref": "HBL",
+          "name": "High Level",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Controls the level of the frequencies below XoverFreq 2."
+        },
+        {
+          "number": 10,
+          "ref": "HDR",
+          "name": "High Drive",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of distortion introduced above XoverFreq 2."
+        },
+        {
+          "number": 11,
+          "ref": "CAB",
+          "name": "Cabinet",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Cabinet Type: OFF, VTw, VBs, A10, Mid, BFC, B60, V30, S78, Oax, A12, Rck. (See Table Above)."
+        },
+        {
+          "number": 12,
+          "ref": "OPG",
+          "name": "OutputGain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Controls the amount of output gain applied to the signal."
+        }
+      ]
+    },
+    {
+      "id": "rackamp",
+      "number": 18,
+      "name": "RackAmp",
+      "long_name": "RACK AMPLIFIER",
+      "type": "processing",
+      "inspiration": "Tech 21 SansAmp",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "PRE",
+          "name": "PreAmp",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of input gain prior to the band-specific distortion adjustment."
+        },
+        {
+          "number": 2,
+          "ref": "BUZ",
+          "name": "Buzz",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of low-end breakup."
+        },
+        {
+          "number": 3,
+          "ref": "PNC",
+          "name": "Punch",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of midrange distortion."
+        },
+        {
+          "number": 4,
+          "ref": "CRN",
+          "name": "Crunch",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Tailors the high-frequency content and distortion for smooth or cutting notes."
+        },
+        {
+          "number": 5,
+          "ref": "DRV",
+          "name": "Drive",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Emulates the amount of power amp distortion from a tube amp."
+        },
+        {
+          "number": 6,
+          "ref": "LVL",
+          "name": "Level",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Controls the overall output level."
+        },
+        {
+          "number": 7,
+          "ref": "LOW",
+          "name": "Low",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "EQ adjustment of the low frequencies, independent of distortion content."
+        },
+        {
+          "number": 8,
+          "ref": "HI",
+          "name": "High",
+          "units": null,
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "EQ adjustment of the high frequencies, independent of distortion content."
+        },
+        {
+          "number": 9,
+          "ref": "CAB",
+          "name": "Cabinet",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Turns the cabinet simulation on or off."
+        }
+      ]
+    },
+    {
+      "id": "edisonex1",
+      "number": 19,
+      "name": "EdisonEX1",
+      "long_name": "STEREO IMAGING",
+      "type": "processing",
+      "inspiration": "Edison EX-1",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "ON",
+          "name": "On",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Allows the effect to be turned On or Off."
+        },
+        {
+          "number": 2,
+          "ref": "IMD",
+          "name": "InMode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the input mode (Stereo or Mid/Side)."
+        },
+        {
+          "number": 3,
+          "ref": "OMD",
+          "name": "OutMode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the output mode (Stereo or Mid/Side)."
+        },
+        {
+          "number": 4,
+          "ref": "STS",
+          "name": "StSpread",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Controls the spread of the stereo field."
+        },
+        {
+          "number": 5,
+          "ref": "LMF",
+          "name": "LMFSpread",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Controls the spread of the stereo field for low/mid frequencies only."
+        },
+        {
+          "number": 6,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the ratio of mono to stereo content."
+        },
+        {
+          "number": 7,
+          "ref": "CNT",
+          "name": "CntrDist",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Allows the mono content to be panned."
+        },
+        {
+          "number": 8,
+          "ref": "GN",
+          "name": "Gain",
+          "units": "dB",
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Controls the amount of output gain applied to the signal."
+        }
+      ]
+    },
+    {
+      "id": "auto-pan",
+      "number": 20,
+      "name": "Auto Pan",
+      "long_name": "AUTO PANNING/Tremolo",
+      "type": "processing",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Adjusts the LFO rate. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "PHS",
+          "name": "Phase",
+          "units": null,
+          "min": 0.0,
+          "max": 180.0,
+          "mod_destination": true,
+          "description": "Controls the LFO phase difference between the left and right channels."
+        },
+        {
+          "number": 3,
+          "ref": "WAV",
+          "name": "Wave",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Blends the LFO waveform between triangular and square shape."
+        },
+        {
+          "number": 4,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the depth (amount) of modulation."
+        },
+        {
+          "number": 5,
+          "ref": "ESP",
+          "name": "EnvSpd",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts how much the LFO speed is modulated by the envelope."
+        },
+        {
+          "number": 6,
+          "ref": "EDP",
+          "name": "EnvDepth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the depth of the envelope modulation."
+        },
+        {
+          "number": 7,
+          "ref": "ATK",
+          "name": "Attack",
+          "units": "ms",
+          "min": 10.0,
+          "max": 1000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope attack stage time."
+        },
+        {
+          "number": 8,
+          "ref": "HLD",
+          "name": "Hold",
+          "units": "ms",
+          "min": 1.0,
+          "max": 2000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope hold stage time."
+        },
+        {
+          "number": 9,
+          "ref": "REL",
+          "name": "Release",
+          "units": "ms",
+          "min": 10.0,
+          "max": 1000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope release stage time."
+        }
+      ]
+    },
+    {
+      "id": "noisegate",
+      "number": 21,
+      "name": "NoiseGate",
+      "long_name": "NOISE GATE",
+      "type": "processing",
+      "inspiration": "Midas ProX",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "THR",
+          "name": "Threshold",
+          "units": "dB",
+          "min": -50.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Sets signal level at which gate opens."
+        },
+        {
+          "number": 2,
+          "ref": "RNG",
+          "name": "Range",
+          "units": "dB",
+          "min": -100.0,
+          "max": 0.0,
+          "mod_destination": true,
+          "description": "Control adjusts the amount of gain reduction applied to the signal below threshold."
+        },
+        {
+          "number": 3,
+          "ref": "ATT",
+          "name": "Attack",
+          "units": "ms",
+          "min": 0.0,
+          "max": 20.0,
+          "mod_destination": true,
+          "description": "Adjusts time taken for gate to open after an over-threshold signal."
+        },
+        {
+          "number": 4,
+          "ref": "REL",
+          "name": "Release",
+          "units": "ms",
+          "min": 2.0,
+          "max": 1999.9,
+          "mod_destination": true,
+          "description": "Adjusts time taken for gate to close after programme material falls back below threshold."
+        },
+        {
+          "number": 5,
+          "ref": "HLD",
+          "name": "Hold",
+          "units": "ms",
+          "min": 2.0,
+          "max": 1999.9,
+          "mod_destination": true,
+          "description": "This defines a waiting period before the gate starts to close."
+        },
+        {
+          "number": 6,
+          "ref": "PUN",
+          "name": "Punch",
+          "units": null,
+          "min": -6.0,
+          "max": 6.0,
+          "mod_destination": true,
+          "description": "Used to increase tonal shaping or reduce gated breathing/delay/resonant howl-round."
+        },
+        {
+          "number": 7,
+          "ref": "MOD",
+          "name": "Mode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "GAT (Gate), TRN (Transient Gate), DUC (Ducker)."
+        },
+        {
+          "number": 8,
+          "ref": "PWR",
+          "name": "Power",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Enables gate in the signal path. When switched off, gate is bypassed."
+        }
+      ]
+    },
+    {
+      "id": "delay",
+      "number": 22,
+      "name": "Delay",
+      "long_name": "STEREO DELAY",
+      "type": "delay",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "2",
+          "name": "MIX",
+          "units": "TIM",
+          "min": null,
+          "max": null,
+          "mod_destination": true,
+          "description": "% ms 0.0% 1.0 ms 100% 1500.0 ms DESCRIPTION Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals. Adjusts the master delay time. Time synchronised options from 4 to 1/64 bars. ST- Stereo feedback, X - crosses feedback between channels, M - Mono mix in feedback chain."
+        },
+        {
+          "number": 3,
+          "ref": "MOD",
+          "name": "Mode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "P-P - Ping Pong (Note that Feedback-R (FBR) is disabled in this mode."
+        },
+        {
+          "number": 4,
+          "ref": "FCL",
+          "name": "FactorL",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Sets left delay to rhythmic fractions of the master delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 5,
+          "ref": "FCR",
+          "name": "FactorR",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Sets right delay to rhythmic fractions of the master delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 6,
+          "ref": "OFS",
+          "name": "Offset",
+          "units": "ms",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Adds a delay difference between the left and right delayed signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LC",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Adjusts the low frequency cut, allowing lower frequencies to remain unaffected by the delay."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "HC",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the high frequency cut, allowing higher frequencies to remain unaffected by the delay."
+        },
+        {
+          "number": 9,
+          "ref": "FLC",
+          "name": "FeedLC",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Adjusts the low cut filter frequency in the feedback paths."
+        },
+        {
+          "number": 10,
+          "ref": "FBL",
+          "name": "FeedL",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Control the amount of feedback for the left channel."
+        },
+        {
+          "number": 11,
+          "ref": "FBR",
+          "name": "FeedR",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Control the amount of feedback for the right channel."
+        },
+        {
+          "number": 12,
+          "ref": "FHC",
+          "name": "FeedHC",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the high cut filter frequency in the feedback paths."
+        }
+      ]
+    },
+    {
+      "id": "3tapdelay",
+      "number": 23,
+      "name": "3TapDelay",
+      "long_name": "3-TAP DELAY",
+      "type": "delay",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "TIM",
+          "name": "Time",
+          "units": "ms",
+          "min": 1.0,
+          "max": 1500.0,
+          "mod_destination": false,
+          "description": "Sets the master delay time, and the first stage. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "GNT",
+          "name": "GainT",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Sets the gain level of the first stage of the delay."
+        },
+        {
+          "number": 3,
+          "ref": "PNT",
+          "name": "PanT",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Sets the position of the first delay stage in the stereo field."
+        },
+        {
+          "number": 4,
+          "ref": "FBK",
+          "name": "Feedback",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of feedback."
+        },
+        {
+          "number": 5,
+          "ref": "FCA",
+          "name": "FactorA",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the delay time in the second stage of the delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 6,
+          "ref": "GNA",
+          "name": "GainA",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the gain level of the second delay stage."
+        },
+        {
+          "number": 7,
+          "ref": "PNA",
+          "name": "PanA",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Sets the position of the second delay stage in the stereo field."
+        },
+        {
+          "number": 8,
+          "ref": "FCB",
+          "name": "FactorB",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the delay time in the third stage of the delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 9,
+          "ref": "GNB",
+          "name": "GainB",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the gain level of the third delay stage."
+        },
+        {
+          "number": 10,
+          "ref": "PNB",
+          "name": "PanB",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Sets the position of the third gain stage in the stereo field."
+        },
+        {
+          "number": 11,
+          "ref": "XFD",
+          "name": "X-Feed",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Turns the stereo cross-feedback of the delays On or Off."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "4tapdelay",
+      "number": 24,
+      "name": "4TapDelay",
+      "long_name": "4-TAP DELAY",
+      "type": "delay",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "TIM",
+          "name": "Time",
+          "units": "ms",
+          "min": 1.0,
+          "max": 1500.0,
+          "mod_destination": false,
+          "description": "Sets the master delay time, and the first stage. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "GN",
+          "name": "Gain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Sets the gain level of the first stage of the delay."
+        },
+        {
+          "number": 3,
+          "ref": "FBK",
+          "name": "Feedback",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of feedback."
+        },
+        {
+          "number": 4,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": null,
+          "min": 0.0,
+          "max": 6.0,
+          "mod_destination": false,
+          "description": "Positions the first delay stage in the stereo field."
+        },
+        {
+          "number": 5,
+          "ref": "FCA",
+          "name": "FactorA",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the delay time in the second stage of the delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 6,
+          "ref": "GNA",
+          "name": "GainA",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the gain level of the second delay stage."
+        },
+        {
+          "number": 7,
+          "ref": "FCB",
+          "name": "FactorB",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the delay time in the third stage of the delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 8,
+          "ref": "GNB",
+          "name": "GainB",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the gain level of the third delay stage."
+        },
+        {
+          "number": 9,
+          "ref": "FCC",
+          "name": "FactorC",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the delay time in the fourth stage of the delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 10,
+          "ref": "GNC",
+          "name": "GainC",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the gain level of the fourth delay stage."
+        },
+        {
+          "number": 11,
+          "ref": "XFD",
+          "name": "X-Feed",
+          "units": null,
+          "min": 0.0,
+          "max": 1.0,
+          "mod_destination": false,
+          "description": "Turns the stereo cross-feedback of the delays On or Off."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        }
+      ]
+    },
+    {
+      "id": "t-raydelay",
+      "number": 25,
+      "name": "T-RayDelay",
+      "long_name": "TEL-RAY DELAY",
+      "type": "delay",
+      "inspiration": "Tel-Ray Delay",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 2,
+          "ref": "DLY",
+          "name": "Delay",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the master delay time."
+        },
+        {
+          "number": 3,
+          "ref": "SUS",
+          "name": "Sustain",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls how long the delay is sustained for. Warning at 100% build up will occur."
+        },
+        {
+          "number": 4,
+          "ref": "WOB",
+          "name": "Wobble",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the amount of wobble caused by age and quality of build/materials."
+        },
+        {
+          "number": 5,
+          "ref": "TON",
+          "name": "Tone",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the tone of the delays."
+        }
+      ]
+    },
+    {
+      "id": "decimdelay",
+      "number": 26,
+      "name": "DecimDelay",
+      "long_name": "Decimator Delay",
+      "type": "delay",
+      "inspiration": "Decimator Delay",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 2,
+          "ref": "TIM",
+          "name": "Time",
+          "units": "Ms",
+          "min": 1.0,
+          "max": 1500.0,
+          "mod_destination": false,
+          "description": "Adjusts the master delay time. Time synchronized options from 4 to 1/64 bars."
+        },
+        {
+          "number": 3,
+          "ref": "DSM",
+          "name": "Downsample",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Decimates the signal by reducing the sampling frequency."
+        },
+        {
+          "number": 4,
+          "ref": "FCL",
+          "name": "FactorL",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Sets left delay to rhythmic fractions of the master delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 5,
+          "ref": "FCR",
+          "name": "FactorR",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Sets right delay to rhythmic fractions of the master delay (1/4, 3/8, 1/2, 2/3, 1, 4/3, 3/2, 2, 3)."
+        },
+        {
+          "number": 6,
+          "ref": "BRC",
+          "name": "Bit-Reduce",
+          "units": null,
+          "min": 24.0,
+          "max": 1.0,
+          "mod_destination": false,
+          "description": "Decimates the signal by reducing the bit-depth."
+        },
+        {
+          "number": 7,
+          "ref": "FC",
+          "name": "Cutoff",
+          "units": "Hz",
+          "min": 30.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjust the cutoff frequency of the filter, allowing specific frequencies to be affected by the delay."
+        },
+        {
+          "number": 8,
+          "ref": "RES",
+          "name": "Resonance",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the resonance of the filter."
+        },
+        {
+          "number": 9,
+          "ref": "FLT",
+          "name": "Type",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "It sets the filter type (Lowpass, Highpass, Bandpass, Notch)."
+        },
+        {
+          "number": 10,
+          "ref": "FBL",
+          "name": "FeedL",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the amount of feedback for the left channel."
+        },
+        {
+          "number": 11,
+          "ref": "FBR",
+          "name": "FeedR",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the amount of feedback for the right channel."
+        },
+        {
+          "number": 12,
+          "ref": "DMT",
+          "name": "Decimate",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "It sets the decimation on the input signal (PRE) or only on the delay (POST)."
+        }
+      ]
+    },
+    {
+      "id": "moddlyrev",
+      "number": 27,
+      "name": "ModDlyRev",
+      "long_name": "MODULATION/DELAY/REVERB",
+      "type": "delay",
+      "inspiration": "Lexicon PCM-70",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "TIM",
+          "name": "Time",
+          "units": "ms",
+          "min": 1.0,
+          "max": 1500.0,
+          "mod_destination": false,
+          "description": "Sets the master delay time. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "FAC",
+          "name": "Factor",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Sets the delay to rhythmic fractions (1, 1/2, 2/3, 3/2)."
+        },
+        {
+          "number": 3,
+          "ref": "FBK",
+          "name": "Feedback",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the percentage of positive feedback."
+        },
+        {
+          "number": 4,
+          "ref": "FHC",
+          "name": "FeedHC",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Adjusts the high cut filter frequency in the feedback path."
+        },
+        {
+          "number": 5,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the depth (amount) of modulation."
+        },
+        {
+          "number": 6,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Adjusts the rate of the modulation. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 7,
+          "ref": "MOD",
+          "name": "Mode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Controls the processor chain routing (Serial/Parallel)"
+        },
+        {
+          "number": 8,
+          "ref": "RTY",
+          "name": "Rtype",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Reverb Type can be set to AMB (Ambience), CLUB, or HALL."
+        },
+        {
+          "number": 9,
+          "ref": "DCY",
+          "name": "Decay",
+          "units": null,
+          "min": 1.0,
+          "max": 10.0,
+          "mod_destination": true,
+          "description": "Controls the amount of time it takes for the reverb to dissipate."
+        },
+        {
+          "number": 10,
+          "ref": "DMP",
+          "name": "Damping",
+          "units": null,
+          "min": 1000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Determines the decay of high frequencies within the reverb tail."
+        },
+        {
+          "number": 11,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts ratio of the delay signal to the reverb signal."
+        },
+        {
+          "number": 12,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals"
+        }
+      ]
+    },
+    {
+      "id": "chorus",
+      "number": 28,
+      "name": "Chorus",
+      "long_name": "STEREO CHORUS",
+      "type": "creative",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Sets the modulation speed. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "WDL",
+          "name": "WidthL",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Determines the amount of modulated delay in the left channel."
+        },
+        {
+          "number": 3,
+          "ref": "WDR",
+          "name": "WidthR",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Determines the amount of modulated delay in the right channel."
+        },
+        {
+          "number": 4,
+          "ref": "DLL",
+          "name": "DelayL",
+          "units": "ms",
+          "min": 0.5,
+          "max": 50.0,
+          "mod_destination": false,
+          "description": "Sets the total amount of delay for the left channel."
+        },
+        {
+          "number": 5,
+          "ref": "DLR",
+          "name": "DelayR",
+          "units": "ms",
+          "min": 0.5,
+          "max": 50.0,
+          "mod_destination": false,
+          "description": "Sets the total amount of delay for the right channel."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies in the signal to be reduced."
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies in the signal to be reduced."
+        },
+        {
+          "number": 9,
+          "ref": "PHS",
+          "name": "Phase",
+          "units": null,
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Adjusts the phase offset of the LFO between left and right channel."
+        },
+        {
+          "number": 10,
+          "ref": "WAV",
+          "name": "Wave",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Blends between the digital triangular chorus sound and the classic analog sine wave."
+        },
+        {
+          "number": 11,
+          "ref": "SPR",
+          "name": "Spread",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts how much of the left channel is mixed into the right and vice versa."
+        }
+      ]
+    },
+    {
+      "id": "chorus-d",
+      "number": 29,
+      "name": "Chorus-D",
+      "long_name": "DIMENSIONAL CHORUS",
+      "type": "creative",
+      "inspiration": "Roland Dimension D",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "ON",
+          "name": "On",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Allows the effect to be turned On or Off."
+        },
+        {
+          "number": 2,
+          "ref": "MOD",
+          "name": "Mode",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Switches the operation between Mono and Stereo modes."
+        },
+        {
+          "number": 3,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 4,
+          "ref": "SW1",
+          "name": "Sw1",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Engages level one intensity (minimum)."
+        },
+        {
+          "number": 5,
+          "ref": "SW2",
+          "name": "Sw2",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Engages level two intensity."
+        },
+        {
+          "number": 6,
+          "ref": "SW3",
+          "name": "Sw3",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Engages level three intensity."
+        },
+        {
+          "number": 7,
+          "ref": "SW4",
+          "name": "Sw4",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Engages level four intensity (maximum)."
+        }
+      ]
+    },
+    {
+      "id": "flanger",
+      "number": 30,
+      "name": "Flanger",
+      "long_name": "STEREO FLANGER",
+      "type": "creative",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 5.0,
+          "max": null,
+          "mod_destination": true,
+          "description": "0.0% 100%"
+        },
+        {
+          "number": 2,
+          "ref": "WDL",
+          "name": "WidthL",
+          "units": "%",
+          "min": null,
+          "max": 3.0,
+          "mod_destination": true,
+          "description": "WDR WidthR % 0.0% 100% Determines the amount of modulated delay in the right channel."
+        },
+        {
+          "number": 4,
+          "ref": "DLL",
+          "name": "DelayL",
+          "units": "ms",
+          "min": 0.5,
+          "max": 20.0,
+          "mod_destination": false,
+          "description": "Sets the total amount of delay for the left channel. 0.5 ms 20.0 ms"
+        },
+        {
+          "number": 5,
+          "ref": "DLR",
+          "name": "DelayR",
+          "units": "ms",
+          "min": null,
+          "max": 6.0,
+          "mod_destination": false,
+          "description": "MIX Mix % 0.0% 100% Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "LC",
+          "name": "LoCut",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Allows the low frequencies in the signal to be reduced. 200.0 Hz 20000.0 Hz"
+        },
+        {
+          "number": 8,
+          "ref": "HC",
+          "name": "Hi Cut",
+          "units": "Hz",
+          "min": null,
+          "max": 9.0,
+          "mod_destination": true,
+          "description": "PHS Phase -- 0.0 180.0 Adjusts the phase offset of the LFO between left and right channel."
+        },
+        {
+          "number": 10,
+          "ref": "FLC",
+          "name": "FeedLC",
+          "units": "Hz",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Adjusts the low cut filter frequency in the feedback path. 200.0 Hz 20000.0 Hz"
+        },
+        {
+          "number": 11,
+          "ref": "FHC",
+          "name": "FeedHC",
+          "units": "Hz",
+          "min": null,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "FD Feed % -90.0% 90.0% Controls the percentage of positive or negative feedback."
+        }
+      ]
+    },
+    {
+      "id": "phaser",
+      "number": 31,
+      "name": "Phaser",
+      "long_name": "STEREO PHASER",
+      "type": "creative",
+      "inspiration": "Behringer X32",
+      "direct_port": true,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 5.0,
+          "mod_destination": true,
+          "description": "Sets the modulation speed. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the depth (amount) of modulation."
+        },
+        {
+          "number": 3,
+          "ref": "RES",
+          "name": "Reso",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the resonance of the multiple filter stages."
+        },
+        {
+          "number": 4,
+          "ref": "BAS",
+          "name": "Base Freq",
+          "units": "Hz",
+          "min": 20.0,
+          "max": 15000.0,
+          "mod_destination": true,
+          "description": "Adjusts the frequency range of the modulated filters."
+        },
+        {
+          "number": 5,
+          "ref": "STG",
+          "name": "Stages",
+          "units": null,
+          "min": 2.0,
+          "max": 12.0,
+          "mod_destination": false,
+          "description": "Controls how many filter stages are used."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "WAV",
+          "name": "Wave",
+          "units": null,
+          "min": -50.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "Shapes the symmetry of the LFO waveform."
+        },
+        {
+          "number": 8,
+          "ref": "PHS",
+          "name": "Phase",
+          "units": "deg",
+          "min": 0.0,
+          "max": 180.0,
+          "mod_destination": false,
+          "description": "Adjusts the LFO phase difference between the left and right channel"
+        },
+        {
+          "number": 9,
+          "ref": "ENV",
+          "name": "EnvMod",
+          "units": "ms",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the level of positive or negative envelope modulation."
+        },
+        {
+          "number": 10,
+          "ref": "ATK",
+          "name": "Attack",
+          "units": "ms",
+          "min": 10.0,
+          "max": 1000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope attack stage time."
+        },
+        {
+          "number": 11,
+          "ref": "HLD",
+          "name": "Hold",
+          "units": "ms",
+          "min": 1.0,
+          "max": 2000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope hold stage time."
+        },
+        {
+          "number": 12,
+          "ref": "REL",
+          "name": "Release",
+          "units": "ms",
+          "min": 10.0,
+          "max": 1000.0,
+          "mod_destination": true,
+          "description": "Controls the envelope release stage time."
+        }
+      ]
+    },
+    {
+      "id": "moodfilter",
+      "number": 32,
+      "name": "MoodFilter",
+      "long_name": "MOOG TYPE FILTER",
+      "type": "creative",
+      "inspiration": "Moog type filter",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": "Hz",
+          "min": 0.0,
+          "max": 20.0,
+          "mod_destination": false,
+          "description": "Sets the modulation speed. Time synchronised options from 4 to 1/64 bars."
+        },
+        {
+          "number": 2,
+          "ref": "DEP",
+          "name": "Depth",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the depth (amount) of modulation."
+        },
+        {
+          "number": 3,
+          "ref": "RES",
+          "name": "Resonance",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the resonance of the filter."
+        },
+        {
+          "number": 4,
+          "ref": "FRQ",
+          "name": "Base Freq",
+          "units": "Hz",
+          "min": 20.0,
+          "max": 15000.0,
+          "mod_destination": true,
+          "description": "Adjusts the level of positive or negative envelope modulation."
+        },
+        {
+          "number": 5,
+          "ref": "TYP",
+          "name": "Type LP",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Selects between low pass (LP), high-pass (HP), band-pass (BP) and Notch (NOT)."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "WAV",
+          "name": "Wave",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": false,
+          "description": "Selects modulation waveform Triangular, Sine, Saw Up, Saw Down, Ramp, Square or Random."
+        },
+        {
+          "number": 8,
+          "ref": "ENV",
+          "name": "EnvMod",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the level of positive or negative envelope modulation."
+        },
+        {
+          "number": 9,
+          "ref": "ATK",
+          "name": "Attack",
+          "units": "ms",
+          "min": 10.0,
+          "max": 249.9,
+          "mod_destination": true,
+          "description": "Controls the filter attack time."
+        },
+        {
+          "number": 10,
+          "ref": "REL",
+          "name": "Release",
+          "units": "ms",
+          "min": 10.0,
+          "max": 500.0,
+          "mod_destination": true,
+          "description": "Controls the filter release time."
+        },
+        {
+          "number": 11,
+          "ref": "DRV",
+          "name": "Drive",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the level, also introduces an overdrive effect if pushed hard."
+        },
+        {
+          "number": 12,
+          "ref": "4P",
+          "name": "4-Pole",
+          "units": null,
+          "min": 2.0,
+          "max": 100.0,
+          "mod_destination": false,
+          "description": "Adjusts the slope of the filter from 2-pole to 4-pole (steeper)."
+        }
+      ]
+    },
+    {
+      "id": "dual-pitch",
+      "number": 33,
+      "name": "Dual Pitch",
+      "long_name": "DUAL PITCH SHIFTER",
+      "type": "creative",
+      "inspiration": "Eventide",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SM1",
+          "name": "Semi1",
+          "units": null,
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the first channel in semi-tones."
+        },
+        {
+          "number": 2,
+          "ref": "CN1",
+          "name": "Cent1",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the first channel in cents."
+        },
+        {
+          "number": 3,
+          "ref": "DL1",
+          "name": "Delay1",
+          "units": "ms",
+          "min": 1.0,
+          "max": 500.0,
+          "mod_destination": false,
+          "description": "Adjusts the time difference between the wet and dry signals. Sync options from 4 to 1/64 bars."
+        },
+        {
+          "number": 4,
+          "ref": "GN1",
+          "name": "Gain1",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows gain compensation to be applied to the first channel."
+        },
+        {
+          "number": 5,
+          "ref": "PN1",
+          "name": "Pan1",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows panning of the first channel."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "SM2",
+          "name": "Semi2",
+          "units": null,
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the second channel in semi-tones."
+        },
+        {
+          "number": 8,
+          "ref": "CN2",
+          "name": "Cent2",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the second channel in cents."
+        },
+        {
+          "number": 9,
+          "ref": "DL2",
+          "name": "Delay2",
+          "units": "ms",
+          "min": 1.0,
+          "max": 500.0,
+          "mod_destination": false,
+          "description": "Adjusts the time difference between the wet and dry signals. Sync options from 4 to 1/64 bars."
+        },
+        {
+          "number": 10,
+          "ref": "GN2",
+          "name": "Gain2",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows gain compensation to be applied to the second channel."
+        },
+        {
+          "number": 11,
+          "ref": "PN2",
+          "name": "Pan2",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows panning of the second channel."
+        },
+        {
+          "number": 12,
+          "ref": "HIC",
+          "name": "HiCut",
+          "units": "Hz",
+          "min": 200.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the pitch shifting to be reduced."
+        }
+      ]
+    },
+    {
+      "id": "vintage-pitch",
+      "number": 34,
+      "name": "Vintage Pitch",
+      "long_name": "DUAL PITCH SHIFTER",
+      "type": "creative",
+      "inspiration": "Eventide",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "SM1",
+          "name": "Semi1",
+          "units": null,
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the first channel in semi-tones."
+        },
+        {
+          "number": 2,
+          "ref": "CN1",
+          "name": "Cent1",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the first channel in cents."
+        },
+        {
+          "number": 3,
+          "ref": "DL1",
+          "name": "Delay1",
+          "units": "ms",
+          "min": 1.0,
+          "max": 500.0,
+          "mod_destination": false,
+          "description": "Adjusts the time difference between the wet and dry signals. Sync options from 4 to 1/64 bars."
+        },
+        {
+          "number": 4,
+          "ref": "FB1",
+          "name": "Feedback1",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows feedback to be applied to the first channel."
+        },
+        {
+          "number": 5,
+          "ref": "PN1",
+          "name": "Pan1",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows panning of the first channel."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "SM2",
+          "name": "Semi2",
+          "units": null,
+          "min": -12.0,
+          "max": 12.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the second channel in semi-tones."
+        },
+        {
+          "number": 8,
+          "ref": "CN2",
+          "name": "Cent2",
+          "units": null,
+          "min": -50.0,
+          "max": 50.0,
+          "mod_destination": true,
+          "description": "Adjusts the pitch of the second channel in cents."
+        },
+        {
+          "number": 9,
+          "ref": "DL2",
+          "name": "Delay2",
+          "units": "ms",
+          "min": 1.0,
+          "max": 500.0,
+          "mod_destination": false,
+          "description": "Adjusts the time difference between the wet and dry signals. Sync options from 4 to 1/64 bars."
+        },
+        {
+          "number": 10,
+          "ref": "FB2",
+          "name": "Feedback2",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows feedback to be applied to the second channel."
+        },
+        {
+          "number": 11,
+          "ref": "PN2",
+          "name": "Pan2",
+          "units": "%",
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Allows panning of the second channel."
+        },
+        {
+          "number": 12,
+          "ref": "HIC",
+          "name": "HiCut",
+          "units": "Hz",
+          "min": 2000.0,
+          "max": 20000.0,
+          "mod_destination": true,
+          "description": "Allows the high frequencies affected by the pitch shifting to be reduced."
+        }
+      ]
+    },
+    {
+      "id": "rotaryspkr",
+      "number": 35,
+      "name": "RotarySpkr",
+      "long_name": "ROTARY SPEAKER",
+      "type": "creative",
+      "inspiration": "Leslie",
+      "direct_port": false,
+      "parameters": [
+        {
+          "number": 1,
+          "ref": "LOS",
+          "name": "LoSpeed",
+          "units": "Hz",
+          "min": 0.1,
+          "max": 4.0,
+          "mod_destination": true,
+          "description": "Adjusts the rotational speed when the Low Speed operation is selected."
+        },
+        {
+          "number": 2,
+          "ref": "HIS",
+          "name": "HiSpeed",
+          "units": "Hz",
+          "min": 2.0,
+          "max": 9.9,
+          "mod_destination": true,
+          "description": "Adjusts the rotational speed when the High Speed operation is selected."
+        },
+        {
+          "number": 3,
+          "ref": "ACC",
+          "name": "Accel",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts how quickly the speed increases and decreases from the Slow mode to the Fast mode."
+        },
+        {
+          "number": 4,
+          "ref": "DIS",
+          "name": "Distance",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the distance between the Rotary speakers and the virtual microphone."
+        },
+        {
+          "number": 5,
+          "ref": "BAL",
+          "name": "Balance",
+          "units": null,
+          "min": -100.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Adjusts the balance between the virtual horn and virtual drum controlling the signal tone."
+        },
+        {
+          "number": 6,
+          "ref": "MIX",
+          "name": "Mix",
+          "units": "%",
+          "min": 0.0,
+          "max": 100.0,
+          "mod_destination": true,
+          "description": "Controls the mix (or ratio) of wet (processed) and dry (unprocessed) signals."
+        },
+        {
+          "number": 7,
+          "ref": "MOT",
+          "name": "Motor",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": true,
+          "description": "Allows The rotation effect of the motor to be disengaged (STOP)."
+        },
+        {
+          "number": 8,
+          "ref": "SPD",
+          "name": "Speed",
+          "units": null,
+          "min": null,
+          "max": null,
+          "mod_destination": true,
+          "description": "Selects either the slow or fast speeds for rotation."
+        },
+        {
+          "number": 1,
+          "ref": "M IN VO",
+          "name": "L",
+          "units": "0",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "Headphones Desktop Computer MIDI Out Studio Monitors MOT?R 49/61 MIDI Keyboard/Controller 11.2 Live Configuration Example Footswitch OUTP CV UT2 OUTPUT NORM"
+        },
+        {
+          "number": 1,
+          "ref": "M IN VO",
+          "name": "L",
+          "units": "0",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "Laptop Computer Mixing console Headphones Active Loudspeakers MIDI Out MOT?R 49/61 MIDI Keyboard/Controller 11.3 Band/Practice Configuration Example Wi-Fi Connection DeepMind iOS App DeepMind iOS App Footswitch OUTP CV UT2 OUTPUT NORM"
+        },
+        {
+          "number": 1,
+          "ref": "M IN VO",
+          "name": "L",
+          "units": "0",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "Headphones MIDI Out MOT?R 49/61 MIDI Keyboard/Controller 11.4 Interfacing with Other Hardware Example Sync to another Player Footswitch OUTP CV UT2 OUTPUT NORM"
+        },
+        {
+          "number": 1,
+          "ref": "M IN VO",
+          "name": "L",
+          "units": "0",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "Expression Pedal Mixing console MIDI Out Headphones MOT?R 49/61 MIDI Keyboard/Controller Active Loudspeakers 11.5 Interfacing with Modular Synthesizer Example MIDI Out MOT?R 49/61 MIDI Keyboard/Controller Mixing console CV Gate Modular Synthesizer Headphones Active Loudspeakers 11.6 Poly Chain Example DeepMind 12 OUTP Footswitch CV UT2 OUTPUT NORM"
+        },
+        {
+          "number": 1,
+          "ref": "M IN VO",
+          "name": "L",
+          "units": "0",
+          "min": 10.0,
+          "max": null,
+          "mod_destination": false,
+          "description": "DeepMind 12D Headphones DeepMind 12D Mixing console Active Loudspeakers 12. DAW MIDI Configuration All the parameters which can be controlled by MIDI can be recorded and then played back as automation data within any DAW or application that supports MIDI. The DeepMind 12D offers three methods of communicating via MIDI: o Physical MIDI Ports - When using the physical MIDI ports you will need to connect these to a MIDI interface or other device which can pass the MIDI information to your host computer/tablet/phone. o USB-MIDI - The DeepMind 12D is a class compliant USB device and should appear as both inputs and outputs in most applications without the need for any additional drivers. o WiFi-MIDI - The DeepMind 12D supports RTP-MIDI and should appear as both inputs and outputs in most applications without the need for any additional drivers. In order to use the DeepMind 12D analog polyphonic synthesizer in conjunction with a Digital Audio Workstation (DAW) or any Audio/MIDI application please follow these steps: Ensure that the relevant interface (MIDI/USB/Wi-Fi) is configured correctly in the GLOBAL-CONNECTIVITY menu. Ensure that the DeepMind 12D is an active input and output in your DAW / Application MIDI setup. Ensure that your DAW is setup to receive MIDI on the same channel as the DeepMind 12D Transmit channel. Recording, editing and playback of Note data such as Note number, Velocity, Note Length etc, of your external MIDI keyboard/controller, should be possible in most applications. Recording, editing and playback of MIDI CC data such as Aftertouch, Pitch Bend, Mod Wheel of your external MIDI keyboard/controller, or any of the DeepMind 12D faders should be possible in most applications. Recording and playback of MIDI NRPN data is only possible in certain applications, please consult your manufacturers data for details on NRPN support. Note: If you adjust a parameter using an external device or application connected, the DeepMind 12D will forward the change to the other interfaces. For example, a change received over Wi-Fi will be re-transmitted by the DeepMind 12D to both the USB port and the MIDI socket. The data format will be dependant on the mode settings for each interface Warning: Be careful not to create any kind of MIDI loop as feeding back the same information to the DeepMind 12D will cause erratic behavior. Wi-Fi TAP Master BPM Clock Generator MIDI IN USB Master BPM CLOCK DIVIDER KEY-SYNC Key Gate VEL-CURVE SWING Sequence Editor LOOPING RATE GATE TIME Gate LENGTH Pattern Editor MIDI OUT ARP-TO-MIDI SWING External MIDI Clock Generator OCT MODE POLY CHORD CHORD OCT OCT ON/OFF HOLD Velocity Pattern Editor AFT CURVE CtrlSeq Clock Arp Input Notes Arp Clock Key Pitch Control Sequencer Pedal Mod Destination PEDAL/CV SUSTAIN Master BPM CLOCK DIVIDER KEY-SYNC Key Gate Arpeggiator TRIGGERING PRIORITY POLYPHONY ENABLE Wi-Fi SLEW RATE USB Wi-Fi Mono LFO 2 Clock Generator Mono LFO 1 Clock Generator CtrlSeq Mod Destination VOICE ALLOCATION MIDI IN USB UNISON DETUNE Ramp Down Smp&Glide Smp&Hold Ramp Up Square Triangle Sine OSC DRIFT SHAPE TONE MOD SLEW RATE PW Mod Pitch OSC 1 PITCH MOD SYNC PITCH MOD DELAY TIME Key Gate TM Mod Pitch PITCH OSC 2 Mod Wheel WHEEL>P.MOD AFT>P.MOD Aftertouch PARAM DRIFT PWM Mod Wheel WHEEL>P.MOD AFT>P.MOD Aftertouch PARAM DRIFT OSC DRIFT CLOCK DIVIDER Voice LFO Clock PHASE T.MOD-SRC MANUAL LFO-1 LFO-2 VCA ENV VCF ENV MOD ENV P.MOD-SRC LFO-1 LFO-2 ENV-1 ENV-2 ENV-3 LFO-1(Uni) LFO-2(Uni) OSC2 RANGE P.MOD MODE PWM-SRC MANUAL LFO-1 LFO-2 VCA ENV VCF ENV MOD ENV P.MOD-SRC LFO-1 LFO-2 ENV-1 ENV-2 ENV-3 LFO-1(Uni) LFO-2(Uni) OSC1 RANGE PB DEPTH +/- Pitch Bend Arp Clock ARP-SYNC RATE Unison Voice Key Gate KEY-SYNC Mono LFO Phase LFO 1 LFO 2 Portamento Time PORTA-MODE PORTA-OSC-BAL Voices 1-12 LFO Destination Noise LEVEL NOISE LEVEL KYBD Tracking 13. System Block Diagram"
+        }
+      ]
+    }
+  ],
+  "midi": {
+    "cc": "slot types 105 to 108, slot gains 109 to 112, slot parameters as listed per slot, Effects Mode 114, Analog Thru 113",
+    "nrpn": "effects parameters have NRPN numbers above the voice range; not transcribed",
+    "mod_matrix": "parameters marked mod_destination are reachable from the 8-slot modulation matrix as 'Fx N Params' destinations; each slot's level is also a destination"
+  },
+  "omitted_from_source": [
+    "the prose description of each algorithm in section 9.2, which restates the parameter tables with usage advice",
+    "the FX menu operating procedures in chapter 7: loading, moving between slots, editing on the display",
+    "the parameter-page screenshots and routing diagrams"
+  ],
+  "not_in_source": [
+    "any statement of what the algorithms do: no impulse responses, no filter topologies, no modulation waveforms, only the hardware each is 'inspired by'",
+    "NRPN numbers for effects parameters (the table stops within the voice range in the pages transcribed)",
+    "CC numbers for slot 4's parameters",
+    "a description in words of the two feedback routing modes",
+    "latency through the effects engine, or through the converters when it is engaged",
+    "which parameters each TC-DeepVRB preset changes, beyond 'the decay range is preset dependent'"
+  ],
+  "source_inconsistencies": [
+    "The FairComp table labels its fourth parameter 'TImeL/M' with a capital I.",
+    "The 9.1 table calls algorithm 34 'Vintage Pitch Dual Pitch Shifter' and the 9.3 table 'Vintage Pitch (DUAL PITCH SHIFTER)'; algorithm 33 is also a dual pitch shifter.",
+    "The DecimDelay table has a stray row headed PARAMETERS before its first real parameter; dropped here.",
+    "The specifications say 35 algorithms; a product listing quoted by retailers says 'over 33'. The manual tables number 35.",
+    "Slots 1 to 3 have parameter CCs and slot 4 does not, though all four slots have type and gain CCs.",
+    "The count of matrix destinations includes effects parameters (marked with an asterisk) but the manual's destination list groups them as 'Fx N Params' without saying which parameter of a slot is addressed."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Sound",
+      "detail": "This is a catalogue of controls, not a model of the effects. Every algorithm is named after a hardware device and none is described technically. Reproducing any of them means either a licensed algorithm or measurement of the real unit; the file records the parameter surface that such a model would need to expose."
+    },
+    {
+      "topic": "Units",
+      "detail": "Ranges are recorded as printed. Some are unitless numbers (Size 2.0 to 100.0, Diffusion 1.0 to 30.0) whose physical meaning is not given. Where the manual prints a choice list the options are captured; where it prints '--' the parameter is stored as unitless."
+    },
+    {
+      "topic": "Preset-dependent ranges",
+      "detail": "TC-DeepVRB's decay range changes with its preset; the file records the widest stated range."
+    },
+    {
+      "topic": "Routing",
+      "detail": "The ten topologies are recorded as expressions read from the mode names and diagrams. Mix and level behaviour inside a parallel pair (how two wet signals sum) is not described."
+    }
+  ]
+}

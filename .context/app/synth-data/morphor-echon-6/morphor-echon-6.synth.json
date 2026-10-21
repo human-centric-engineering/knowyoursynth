@@ -1,0 +1,3372 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "morphor-echon-6",
+    "manufacturer": "Morphor",
+    "model": "ECHON 6",
+    "category": "6-voice multitimbral analogue BBD-resonator synthesizer (desktop, 19-inch rack or VESA), no keyboard or display",
+    "based_on": "Original design (Belgium, 2026) by Eli Clement, Matthew Philpott and Boris Uytterhaegen; billed as the first analogue BBD synthesizer.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Morphor ECHON 6 Owner's Manual, revision 1.2 (April 2026)",
+        "kind": "user_manual",
+        "file": "Echon_6_Owners_Manual_V1_2.pdf",
+        "pages": 130,
+        "note": "Features and specifications, voice architecture (exciter, BBD resonator, output), Quad LFO, modulation matrix, voice groups and MIDI channels, settings menu, MIDI implementation with full CC chart and modulation source/destination tables."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "physical_modelling",
+    "signal_path": "analogue",
+    "voices": 6,
+    "polyphony_mode": "6-voice polyphonic; up to 6 voice groups (multitimbral), each with its own sound, MIDI channel, unison and voice allocation",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "216 presets (6 banks x 6 sub-banks x 6), each holding all voice groups; a scratch pad saved at power-off by an internal UPS. MIDI channels and system settings are global.",
+    "semi_modular": false,
+    "panel_counts": {
+      "display": 0,
+      "number_keys": 6,
+      "modulation_sources": 6,
+      "modulation_destinations_per_voice": 32
+    },
+    "summary": "Each voice is an exciter feeding a resonator. The exciter is a small subtractive synth: an analogue VCO whose WAVE knob morphs sine, triangle, ramp, 5% pulse and square (or crossfades from the external input), analogue noise through a sample-and-hold, and a DADSR envelope on a VCA. Its output passes a 12 dB/oct low-pass INPUT FILTER into a 1024-stage BBD whose clock always follows the note (NOTE OFFSET, FINE TUNE, GLIDE). FEEDBACK through a 6 dB/oct in-loop filter, optionally inverted, makes the delay resonate like a struck, bowed or blown body, up to self-oscillation. DRY/WET blends exciter and resonator before pan and level. Four LFO + random generators per voice; a dense 9-source x 32-destination modulation matrix.",
+    "synthesis_note": "Analogue modal-style synthesis: one BBD resonator (one mode) per voice; unison stacks six into a multi-mode body."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "MIDI and voice groups",
+      "panel_section": "CONTROL SECTION",
+      "scope": "common",
+      "description": "Receives MIDI (no keyboard) on a preset channel and up to six voice-group channels; allocates voices per group (five priority modes, unison). The six NUMBER keys can also play voices.",
+      "inputs": ["kbd.midi_in"],
+      "outputs": [
+        "kbd.note",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.modwheel",
+        "kbd.bend"
+      ]
+    },
+    {
+      "id": "extin",
+      "type": "preamp",
+      "name": "External input",
+      "panel_section": "rear panel",
+      "scope": "common",
+      "description": "Mono +4 dBu input, available to each voice group's exciter when enabled; LED white when present, red when clipping.",
+      "inputs": ["extin.in"],
+      "outputs": ["extin.out"]
+    },
+    {
+      "id": "vco",
+      "type": "oscillator",
+      "name": "Exciter VCO",
+      "panel_section": "EXCITER",
+      "scope": "per_voice",
+      "description": "Analogue VCO, about 16 Hz-4.2 kHz (8 octaves). WAVE morphs sine > triangle > ramp > 5% pulse > square (or ext in > waves). Follows the keyboard only through KEY FOLLOW modulation.",
+      "properties": {
+        "frequency_hz": [16, 4200]
+      },
+      "inputs": ["vco.ext"],
+      "outputs": ["vco.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Exciter noise",
+      "panel_section": "EXCITER",
+      "scope": "per_voice",
+      "description": "Analogue transistor white noise through a sample-and-hold; NOISE S&H RATE tracks COARSE FREQ for most of its range, then rises to continuous white noise.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "xmix",
+      "type": "mixer",
+      "name": "Wave / noise mix",
+      "panel_section": "EXCITER",
+      "scope": "per_voice",
+      "description": "Crossfade from VCO (or ext in blend) to noise.",
+      "inputs": ["xmix.wave", "xmix.noise"],
+      "outputs": ["xmix.out"]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "EXCITER",
+      "scope": "per_voice",
+      "description": "DADSR: onset delay 0-2 s, logarithmic attack, exponential decay and release; short (to ~250 ms), medium or long (to ~25 s) ranges; HOLD, LEGATO, LOOP.",
+      "properties": {
+        "onset_delay_s": [0, 2],
+        "time_ranges": ["short (~0-250 ms)", "medium", "long (~25 s)"]
+      },
+      "inputs": ["env.gate"],
+      "outputs": ["env.out"]
+    },
+    {
+      "id": "xvca",
+      "type": "vca",
+      "name": "Exciter VCA",
+      "panel_section": "EXCITER",
+      "scope": "per_voice",
+      "description": "Envelope-controlled amplitude; LEVEL sets how hard the resonator is driven (above about 3 o'clock, sustained signals distort the BBD).",
+      "inputs": ["xvca.in", "xvca.cv"],
+      "outputs": ["xvca.out"]
+    },
+    {
+      "id": "inflt",
+      "type": "filter",
+      "name": "Input filter",
+      "panel_section": "BBD RESONATOR",
+      "scope": "per_voice",
+      "description": "12 dB/oct low-pass, 32.7 Hz-21 kHz; its output feeds both the BBD and the dry path.",
+      "properties": {
+        "slope_db_per_oct": 12,
+        "cutoff_hz": [32.7, 21000]
+      },
+      "inputs": ["inflt.in"],
+      "outputs": ["inflt.out"]
+    },
+    {
+      "id": "clock",
+      "type": "pitch_control",
+      "name": "Resonator pitch chain",
+      "panel_section": "BBD RESONATOR",
+      "scope": "per_voice",
+      "description": "MIDI note (and bend) plus NOTE OFFSET (±12 st), FINE TUNE (±3 st) and GLIDE (0-1 s) set the BBD clock; the result is also the KEY FOLLOW source (C0-C8 = 0-1).",
+      "inputs": ["clock.note"],
+      "outputs": ["clock.bbd_clock", "clock.key_follow"]
+    },
+    {
+      "id": "bbd",
+      "type": "delay",
+      "name": "BBD resonator",
+      "panel_section": "BBD RESONATOR",
+      "scope": "per_voice",
+      "description": "1024-stage bucket-brigade delay with pitch-compensated clocking; with feedback it resonates at a pitch set by the clock. Higher clock: tighter, shorter rings; lower: longer sustain.",
+      "properties": {
+        "stages": 1024
+      },
+      "inputs": ["bbd.in", "bbd.clock"],
+      "outputs": ["bbd.out"]
+    },
+    {
+      "id": "fbflt",
+      "type": "filter",
+      "name": "Feedback filter",
+      "panel_section": "BBD RESONATOR",
+      "scope": "per_voice",
+      "description": "6 dB/oct low-pass inside the feedback loop: damping, and a lower perceived pitch as it closes.",
+      "properties": {
+        "slope_db_per_oct": 6
+      },
+      "inputs": ["fbflt.in"],
+      "outputs": ["fbflt.out"]
+    },
+    {
+      "id": "fb",
+      "type": "vca",
+      "name": "Feedback amount and polarity",
+      "panel_section": "BBD RESONATOR",
+      "scope": "per_voice",
+      "description": "FEEDBACK level back into the BBD, normal or INVERTed (a different resonant mode); safe up to self-oscillation.",
+      "inputs": ["fb.in"],
+      "outputs": ["fb.out"]
+    },
+    {
+      "id": "drywet",
+      "type": "mixer",
+      "name": "Dry / wet",
+      "panel_section": "OUTPUT",
+      "scope": "per_voice",
+      "description": "Blend of the filtered exciter and the resonator; with a self-oscillating resonator it acts as the resonator's VCA.",
+      "inputs": ["drywet.dry", "drywet.wet"],
+      "outputs": ["drywet.out"]
+    },
+    {
+      "id": "vout",
+      "type": "vca",
+      "name": "Voice pan and level",
+      "panel_section": "OUTPUT",
+      "scope": "per_voice",
+      "description": "Per-voice PANNING (kept on the individual outputs) and voice-group LEVEL.",
+      "inputs": ["vout.in"],
+      "outputs": ["vout.out"]
+    },
+    {
+      "id": "lfo1",
+      "type": "lfo",
+      "name": "LFO 1",
+      "panel_section": "QUAD LFO",
+      "scope": "per_voice",
+      "description": "Periodic wave (sine, triangle, ramp, square; 20 s to 50 Hz, or 19 MIDI-clock divisions) mixed with a stepped random generator (with smoothing); amplitude, uni/bipolar, KB reset or single-shot.",
+      "properties": {
+        "rate": "20 s per cycle to 50 Hz"
+      },
+      "inputs": ["lfo1.reset"],
+      "outputs": ["lfo1.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "LFO 2",
+      "panel_section": "QUAD LFO",
+      "scope": "per_voice",
+      "description": "Periodic wave (sine, triangle, ramp, square; 20 s to 50 Hz, or 19 MIDI-clock divisions) mixed with a stepped random generator (with smoothing); amplitude, uni/bipolar, KB reset or single-shot.",
+      "properties": {
+        "rate": "20 s per cycle to 50 Hz"
+      },
+      "inputs": ["lfo2.reset"],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "lfo3",
+      "type": "lfo",
+      "name": "LFO 3",
+      "panel_section": "QUAD LFO",
+      "scope": "per_voice",
+      "description": "Periodic wave (sine, triangle, ramp, square; 20 s to 50 Hz, or 19 MIDI-clock divisions) mixed with a stepped random generator (with smoothing); amplitude, uni/bipolar, KB reset or single-shot.",
+      "properties": {
+        "rate": "20 s per cycle to 50 Hz"
+      },
+      "inputs": ["lfo3.reset"],
+      "outputs": ["lfo3.out"]
+    },
+    {
+      "id": "lfo4",
+      "type": "lfo",
+      "name": "LFO 4",
+      "panel_section": "QUAD LFO",
+      "scope": "per_voice",
+      "description": "Periodic wave (sine, triangle, ramp, square; 20 s to 50 Hz, or 19 MIDI-clock divisions) mixed with a stepped random generator (with smoothing); amplitude, uni/bipolar, KB reset or single-shot.",
+      "properties": {
+        "rate": "20 s per cycle to 50 Hz"
+      },
+      "inputs": ["lfo4.reset"],
+      "outputs": ["lfo4.out"]
+    },
+    {
+      "id": "master",
+      "type": "output",
+      "name": "Outputs",
+      "panel_section": "OUTPUT / rear panel",
+      "scope": "common",
+      "description": "Main stereo mix (MASTER), headphones (PHONES, independent), and six individual voice outputs; a voice plugged into its individual output leaves the main mix.",
+      "inputs": ["master.in"],
+      "outputs": ["master.main_l", "master.main_r", "master.phones", "master.voice_out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco.wave",
+      "module": "vco",
+      "label": "WAVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15"
+        }
+      ],
+      "function": "Morph sine > triangle > ramp > 5% pulse > square (ext in at minimum when present)."
+    },
+    {
+      "id": "vco.kb_reset",
+      "module": "vco",
+      "label": "KB RESET (exciter)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        }
+      ],
+      "function": "Restart the VCO phase on each note."
+    },
+    {
+      "id": "vco.coarse",
+      "module": "vco",
+      "label": "COARSE FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        }
+      ],
+      "function": "Eight octaves; summed with FINE FREQ (same modulation destination)."
+    },
+    {
+      "id": "vco.fine",
+      "module": "vco",
+      "label": "FINE FREQ",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        }
+      ],
+      "function": "±3 semitones.",
+      "note": "63 = centre."
+    },
+    {
+      "id": "noise.sh_rate",
+      "module": "noise",
+      "label": "NOISE S&H RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        }
+      ],
+      "function": "Sample-and-hold clock; fully clockwise is white noise."
+    },
+    {
+      "id": "xmix.mix",
+      "module": "xmix",
+      "label": "WAVE / NOISE MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        }
+      ],
+      "function": "VCO (anticlockwise) to noise (clockwise)."
+    },
+    {
+      "id": "xvca.level",
+      "module": "xvca",
+      "label": "LEVEL (exciter)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        }
+      ],
+      "function": "Exciter output and resonator drive."
+    },
+    {
+      "id": "env.onset",
+      "module": "env",
+      "label": "ONSET DELAY",
+      "kind": "integer",
+      "physical": {
+        "min": 0,
+        "max": 2,
+        "unit": "s"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        }
+      ],
+      "function": "0-2 s before the attack."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Logarithmic rise."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "Exponential fall to sustain."
+    },
+    {
+      "id": "env.sustain",
+      "module": "env",
+      "label": "SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env.release",
+      "module": "env",
+      "label": "RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        }
+      ],
+      "function": "Exponential fall after note-off."
+    },
+    {
+      "id": "env.range",
+      "module": "env",
+      "label": "ENV RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "short"
+        },
+        {
+          "value": "medium"
+        },
+        {
+          "value": "long"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "Short, medium or long stage times (LED brightness)."
+    },
+    {
+      "id": "env.hold",
+      "module": "env",
+      "label": "HOLD (long press ENV RANGE)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        }
+      ],
+      "function": "Ignores note-off; NUMBER keys toggle held voices."
+    },
+    {
+      "id": "env.legato",
+      "module": "env",
+      "label": "LEGATO",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "Envelope continues from its current level instead of zero."
+    },
+    {
+      "id": "env.loop",
+      "module": "env",
+      "label": "LOOP (long press LEGATO)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        }
+      ],
+      "function": "Loops onset delay, attack and decay while held (implies legato)."
+    },
+    {
+      "id": "inflt.cutoff",
+      "module": "inflt",
+      "label": "INPUT FILTER",
+      "kind": "integer",
+      "physical": {
+        "min": 32.7,
+        "max": 21000,
+        "unit": "Hz"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31"
+        }
+      ],
+      "function": "Cutoff 32.7 Hz-21 kHz."
+    },
+    {
+      "id": "fbflt.cutoff",
+      "module": "fbflt",
+      "label": "FEEDBACK FILTER",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 40"
+        }
+      ],
+      "function": "In-loop low-pass: damping and pitch drop."
+    },
+    {
+      "id": "fb.invert",
+      "module": "fb",
+      "label": "INVERT",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 41"
+        }
+      ],
+      "function": "Inverts feedback polarity: a different tonal centre and harmonics."
+    },
+    {
+      "id": "fb.amount",
+      "module": "fb",
+      "label": "FEEDBACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 43"
+        }
+      ],
+      "function": "Amount of BBD output fed back; self-oscillates past the damping threshold."
+    },
+    {
+      "id": "clock.glide",
+      "module": "clock",
+      "label": "GLIDE",
+      "kind": "integer",
+      "physical": {
+        "min": 0,
+        "max": 1,
+        "unit": "s"
+      },
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Resonator portamento 0-1 s."
+    },
+    {
+      "id": "clock.fine_tune",
+      "module": "clock",
+      "label": "FINE TUNE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 46"
+        }
+      ],
+      "function": "±3 semitones, continuous."
+    },
+    {
+      "id": "clock.note_offset",
+      "module": "clock",
+      "label": "NOTE OFFSET",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 47"
+        }
+      ],
+      "function": "±12 semitones in steps."
+    },
+    {
+      "id": "drywet.mix",
+      "module": "drywet",
+      "label": "DRY WET",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 48"
+        }
+      ],
+      "function": "Filtered exciter (anticlockwise) to resonator (clockwise)."
+    },
+    {
+      "id": "vout.pan",
+      "module": "vout",
+      "label": "PANNING",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        }
+      ],
+      "function": "Stereo position of each voice."
+    },
+    {
+      "id": "vout.level",
+      "module": "vout",
+      "label": "LEVEL (voice group)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Voice group output level."
+    },
+    {
+      "id": "master.level",
+      "module": "master",
+      "label": "MASTER",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Main output level."
+    },
+    {
+      "id": "master.phones",
+      "module": "master",
+      "label": "PHONES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level, independent of MASTER."
+    },
+    {
+      "id": "lfo1.wave",
+      "module": "lfo1",
+      "label": "LFO 1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 49"
+        }
+      ],
+      "function": "Periodic waveform.",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.random_rate",
+      "module": "lfo1",
+      "label": "LFO 1 RANDOM RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 50"
+        }
+      ],
+      "function": "S&H clock; fully anticlockwise holds the last value (a per-voice random offset).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.amplitude",
+      "module": "lfo1",
+      "label": "LFO 1 AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 51"
+        }
+      ],
+      "function": "Output level (hold AMPLITUDE and turn RANDOM / WAVE MIX).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.smooth",
+      "module": "lfo1",
+      "label": "LFO 1 SMOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 52"
+        }
+      ],
+      "function": "Glides between random steps.",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.mix",
+      "module": "lfo1",
+      "label": "LFO 1 RANDOM / WAVE MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 53"
+        }
+      ],
+      "function": "Random only (anticlockwise) to wave only (clockwise).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.kb_reset",
+      "module": "lfo1",
+      "label": "LFO 1 KB RESET",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 54"
+        }
+      ],
+      "function": "Restarts the wave (and picks a new random value) on each note.",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.single",
+      "module": "lfo1",
+      "label": "LFO 1 SINGLE (long press)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 55"
+        }
+      ],
+      "function": "One cycle per note (implies KB reset).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.rate",
+      "module": "lfo1",
+      "label": "LFO 1 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 56"
+        }
+      ],
+      "function": "20 s per cycle to 50 Hz, or a clock division.",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.polarity",
+      "module": "lfo1",
+      "label": "LFO 1 POLARITY (long press WAVE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bipolar"
+        },
+        {
+          "value": "unipolar"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 57"
+        }
+      ],
+      "function": "Bipolar (red LED) or unipolar (white).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo1.clock_sync",
+      "module": "lfo1",
+      "label": "LFO 1 CLOCK SYNC (long press SELECT)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 58"
+        }
+      ],
+      "function": "Sync wave and random rates to MIDI clock (19 divisions, 2 bars to 1/32 triplet).",
+      "note": "SELECT at LFO 1"
+    },
+    {
+      "id": "lfo2.wave",
+      "module": "lfo2",
+      "label": "LFO 2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 59"
+        }
+      ],
+      "function": "Periodic waveform.",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.random_rate",
+      "module": "lfo2",
+      "label": "LFO 2 RANDOM RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 60"
+        }
+      ],
+      "function": "S&H clock; fully anticlockwise holds the last value (a per-voice random offset).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.amplitude",
+      "module": "lfo2",
+      "label": "LFO 2 AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 61"
+        }
+      ],
+      "function": "Output level (hold AMPLITUDE and turn RANDOM / WAVE MIX).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.smooth",
+      "module": "lfo2",
+      "label": "LFO 2 SMOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 62"
+        }
+      ],
+      "function": "Glides between random steps.",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.mix",
+      "module": "lfo2",
+      "label": "LFO 2 RANDOM / WAVE MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 63"
+        }
+      ],
+      "function": "Random only (anticlockwise) to wave only (clockwise).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.kb_reset",
+      "module": "lfo2",
+      "label": "LFO 2 KB RESET",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        }
+      ],
+      "function": "Restarts the wave (and picks a new random value) on each note.",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.single",
+      "module": "lfo2",
+      "label": "LFO 2 SINGLE (long press)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        }
+      ],
+      "function": "One cycle per note (implies KB reset).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "LFO 2 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        }
+      ],
+      "function": "20 s per cycle to 50 Hz, or a clock division.",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.polarity",
+      "module": "lfo2",
+      "label": "LFO 2 POLARITY (long press WAVE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bipolar"
+        },
+        {
+          "value": "unipolar"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        }
+      ],
+      "function": "Bipolar (red LED) or unipolar (white).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo2.clock_sync",
+      "module": "lfo2",
+      "label": "LFO 2 CLOCK SYNC (long press SELECT)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74"
+        }
+      ],
+      "function": "Sync wave and random rates to MIDI clock (19 divisions, 2 bars to 1/32 triplet).",
+      "note": "SELECT at LFO 2"
+    },
+    {
+      "id": "lfo3.wave",
+      "module": "lfo3",
+      "label": "LFO 3 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        }
+      ],
+      "function": "Periodic waveform.",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.random_rate",
+      "module": "lfo3",
+      "label": "LFO 3 RANDOM RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        }
+      ],
+      "function": "S&H clock; fully anticlockwise holds the last value (a per-voice random offset).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.amplitude",
+      "module": "lfo3",
+      "label": "LFO 3 AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "Output level (hold AMPLITUDE and turn RANDOM / WAVE MIX).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.smooth",
+      "module": "lfo3",
+      "label": "LFO 3 SMOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        }
+      ],
+      "function": "Glides between random steps.",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.mix",
+      "module": "lfo3",
+      "label": "LFO 3 RANDOM / WAVE MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        }
+      ],
+      "function": "Random only (anticlockwise) to wave only (clockwise).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.kb_reset",
+      "module": "lfo3",
+      "label": "LFO 3 KB RESET",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Restarts the wave (and picks a new random value) on each note.",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.single",
+      "module": "lfo3",
+      "label": "LFO 3 SINGLE (long press)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "One cycle per note (implies KB reset).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.rate",
+      "module": "lfo3",
+      "label": "LFO 3 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "20 s per cycle to 50 Hz, or a clock division.",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.polarity",
+      "module": "lfo3",
+      "label": "LFO 3 POLARITY (long press WAVE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bipolar"
+        },
+        {
+          "value": "unipolar"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Bipolar (red LED) or unipolar (white).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo3.clock_sync",
+      "module": "lfo3",
+      "label": "LFO 3 CLOCK SYNC (long press SELECT)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Sync wave and random rates to MIDI clock (19 divisions, 2 bars to 1/32 triplet).",
+      "note": "SELECT at LFO 3"
+    },
+    {
+      "id": "lfo4.wave",
+      "module": "lfo4",
+      "label": "LFO 4 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Periodic waveform.",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.random_rate",
+      "module": "lfo4",
+      "label": "LFO 4 RANDOM RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "S&H clock; fully anticlockwise holds the last value (a per-voice random offset).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.amplitude",
+      "module": "lfo4",
+      "label": "LFO 4 AMPLITUDE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        }
+      ],
+      "function": "Output level (hold AMPLITUDE and turn RANDOM / WAVE MIX).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.smooth",
+      "module": "lfo4",
+      "label": "LFO 4 SMOOTH",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "Glides between random steps.",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.mix",
+      "module": "lfo4",
+      "label": "LFO 4 RANDOM / WAVE MIX",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 90"
+        }
+      ],
+      "function": "Random only (anticlockwise) to wave only (clockwise).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.kb_reset",
+      "module": "lfo4",
+      "label": "LFO 4 KB RESET",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Restarts the wave (and picks a new random value) on each note.",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.single",
+      "module": "lfo4",
+      "label": "LFO 4 SINGLE (long press)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        }
+      ],
+      "function": "One cycle per note (implies KB reset).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.rate",
+      "module": "lfo4",
+      "label": "LFO 4 RATE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "20 s per cycle to 50 Hz, or a clock division.",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.polarity",
+      "module": "lfo4",
+      "label": "LFO 4 POLARITY (long press WAVE)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "bipolar"
+        },
+        {
+          "value": "unipolar"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Bipolar (red LED) or unipolar (white).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo4.clock_sync",
+      "module": "lfo4",
+      "label": "LFO 4 CLOCK SYNC (long press SELECT)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        }
+      ],
+      "function": "Sync wave and random rates to MIDI clock (19 divisions, 2 bars to 1/32 triplet).",
+      "note": "SELECT at LFO 4"
+    },
+    {
+      "id": "lfo.select",
+      "module": "lfo1",
+      "label": "SELECT (LFO)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo1"
+        },
+        {
+          "value": "lfo2"
+        },
+        {
+          "value": "lfo3"
+        },
+        {
+          "value": "lfo4"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 115"
+        }
+      ],
+      "function": "Which LFO the section edits (and, with QUAD LFO source key, which LFO is the modulation source)."
+    },
+    {
+      "id": "modsrc.env_macro",
+      "module": "kbd",
+      "label": "ENVELOPE SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 102"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.env_select",
+      "module": "kbd",
+      "label": "ENVELOPE SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "modsrc.quad_lfo_macro",
+      "module": "kbd",
+      "label": "QUAD LFO SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.quad_lfo_select",
+      "module": "kbd",
+      "label": "QUAD LFO SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "modsrc.modwheel_macro",
+      "module": "kbd",
+      "label": "MODWHEEL SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 104"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.modwheel_select",
+      "module": "kbd",
+      "label": "MODWHEEL SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "modsrc.velocity_macro",
+      "module": "kbd",
+      "label": "VELOCITY SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.velocity_select",
+      "module": "kbd",
+      "label": "VELOCITY SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "modsrc.aftertouch_macro",
+      "module": "kbd",
+      "label": "AFTERTOUCH SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 106"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.aftertouch_select",
+      "module": "kbd",
+      "label": "AFTERTOUCH SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "modsrc.key_follow_macro",
+      "module": "kbd",
+      "label": "KEY FOLLOW SOURCE MACRO",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 107"
+        }
+      ],
+      "function": "Attenuverter for the source (centre off, clockwise +1, anticlockwise -1); when detached, a manual control for its destinations.",
+      "note": "64 = no modulation."
+    },
+    {
+      "id": "modsrc.key_follow_select",
+      "module": "kbd",
+      "label": "KEY FOLLOW SOURCE SELECTION",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9 (detach/attach)"
+        }
+      ],
+      "function": "Shows the source's destinations; hold and turn a destination knob to assign; press to detach or attach the input."
+    },
+    {
+      "id": "mod.source",
+      "module": "kbd",
+      "label": "Modulation source select",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 8
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 109"
+        }
+      ],
+      "function": "Source for matrix editing over MIDI (0 envelope, 1-4 LFO, 5 modwheel, 6 velocity, 7 aftertouch, 8 key follow)."
+    },
+    {
+      "id": "mod.destination",
+      "module": "kbd",
+      "label": "Modulation destination select",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 110"
+        }
+      ],
+      "function": "Destination for matrix editing (0-31)."
+    },
+    {
+      "id": "mod.depth",
+      "module": "kbd",
+      "label": "Destination depth",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 111"
+        }
+      ],
+      "function": "Depth of the selected source on the selected destination (turn the destination knob while holding the source key)."
+    },
+    {
+      "id": "mod.polarity",
+      "module": "kbd",
+      "label": "Destination depth polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "negative"
+        },
+        {
+          "value": "positive"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 112"
+        }
+      ],
+      "function": "Red (positive) or blue (negative); SOURCE key + DESTINATION button flips it."
+    },
+    {
+      "id": "mod.enable",
+      "module": "kbd",
+      "label": "Modulation enable",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 113"
+        }
+      ],
+      "function": "DESTINATION button mutes or unmutes; hold to delete; SOURCE + hold DESTINATION for full depth."
+    },
+    {
+      "id": "ui.preset",
+      "module": "kbd",
+      "label": "PRESET",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Preset mode; hold with three NUMBER keys to load (bank, sub-bank, slot)."
+    },
+    {
+      "id": "ui.voice_group",
+      "module": "kbd",
+      "label": "VOICE GROUP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Voice group mode; hold with a NUMBER key for voice group edit."
+    },
+    {
+      "id": "ui.init",
+      "module": "kbd",
+      "label": "INIT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Hold to load the INIT preset (or INIT voice group)."
+    },
+    {
+      "id": "ui.reload",
+      "module": "kbd",
+      "label": "RELOAD",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Restores the saved preset (A/B compare); INIT + RELOAD syncs the panel."
+    },
+    {
+      "id": "ui.write",
+      "module": "kbd",
+      "label": "WRITE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Saves (hold, or WRITE + three NUMBER keys); copy/paste voice groups."
+    },
+    {
+      "id": "ui.number",
+      "module": "kbd",
+      "label": "NUMBER keys 1-6",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Voices, voice groups, preset digits, settings and playing notes."
+    },
+    {
+      "id": "kbd.unison",
+      "module": "kbd",
+      "label": "UNISON",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 126"
+        }
+      ],
+      "function": "Preset mode: notes go to all voice groups. Voice group mode: all the group's voices play each note.",
+      "note": "CC 126 mono (unison on), CC 127 poly."
+    },
+    {
+      "id": "sys.preset_channel",
+      "module": "kbd",
+      "label": "MIDI CH (preset)",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "default": 1,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page MIDI CH (NUMBER key 1), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Preset (master) MIDI channel; voice groups default to 2-7 and never share it."
+    },
+    {
+      "id": "vg.midi_channel",
+      "module": "kbd",
+      "label": "MIDI CH (voice group)",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page MIDI CH (NUMBER key 1), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "MIDI channel of the selected voice group."
+    },
+    {
+      "id": "sys.cc_in",
+      "module": "kbd",
+      "label": "CC in",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page CONTROL (NUMBER key 2), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Receive CCs."
+    },
+    {
+      "id": "sys.cc_out",
+      "module": "kbd",
+      "label": "CC out",
+      "kind": "boolean",
+      "default": true,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page CONTROL (NUMBER key 2), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Send CCs from the panel."
+    },
+    {
+      "id": "vg.ext_in",
+      "module": "extin",
+      "label": "EXT IN (voice group)",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page EXT IN (NUMBER key 3), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        }
+      ],
+      "function": "External input enabled for the voice group."
+    },
+    {
+      "id": "vg.bend_range",
+      "module": "kbd",
+      "label": "PITCHBEND",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "±1"
+        },
+        {
+          "value": "±2"
+        },
+        {
+          "value": "±3"
+        },
+        {
+          "value": "±5"
+        },
+        {
+          "value": "±7"
+        },
+        {
+          "value": "±12"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page PITCHBEND (NUMBER key 4), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 108"
+        }
+      ],
+      "function": "Pitch bend range of the voice group."
+    },
+    {
+      "id": "vg.priority",
+      "module": "kbd",
+      "label": "PRIORITY",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "first_available_steal"
+        },
+        {
+          "value": "first_available_no_steal"
+        },
+        {
+          "value": "round_robin_steal"
+        },
+        {
+          "value": "least_recently_used"
+        },
+        {
+          "value": "reuse_same_note"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page PRIORITY (NUMBER key 5), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 116"
+        }
+      ],
+      "function": "Voice allocation (and, in preset mode, voice group allocation)."
+    },
+    {
+      "id": "sys.local",
+      "module": "kbd",
+      "label": "Local control",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Panel and NUMBER keys drive the engine (CC 122)."
+    },
+    {
+      "id": "sys.pc_in",
+      "module": "kbd",
+      "label": "Program change in",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Receive program changes."
+    },
+    {
+      "id": "sys.pc_out",
+      "module": "kbd",
+      "label": "Program change out",
+      "kind": "boolean",
+      "default": true,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Send program changes."
+    },
+    {
+      "id": "sys.catch_up",
+      "module": "kbd",
+      "label": "Control catch-up",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Knobs act only after passing the stored value."
+    },
+    {
+      "id": "sys.led_brightness",
+      "module": "kbd",
+      "label": "LED brightness",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 5
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Five levels."
+    },
+    {
+      "id": "sys.vco_tuning",
+      "module": "vco",
+      "label": "VCO tuning",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "UNISON + WRITE (settings), page SYSTEM (NUMBER key 6), then NUMBER keys or RANDOM / WAVE MIX",
+          "when": "any_time"
+        }
+      ],
+      "function": "Auto-tunes all six exciter VCOs (several minutes, silent; warm up 10 minutes first). Also MIDI Tune Request."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.main_l",
+      "label": "MAIN OUT L",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.main_l",
+      "function": "Balanced +4 dBu; mono (sums right) if only L is used."
+    },
+    {
+      "id": "jack.main_r",
+      "label": "MAIN OUT R",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.main_r",
+      "function": "Balanced +4 dBu."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.phones",
+      "function": "Stereo headphones, pre-master monitoring with its own level."
+    },
+    {
+      "id": "jack.voice1",
+      "label": "OUT 1",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 1 in stereo (tip left, ring right), +4 dBu; removes voice 1 from the main mix."
+    },
+    {
+      "id": "jack.voice2",
+      "label": "OUT 2",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 2 in stereo (tip left, ring right), +4 dBu; removes voice 2 from the main mix."
+    },
+    {
+      "id": "jack.voice3",
+      "label": "OUT 3",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 3 in stereo (tip left, ring right), +4 dBu; removes voice 3 from the main mix."
+    },
+    {
+      "id": "jack.voice4",
+      "label": "OUT 4",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 4 in stereo (tip left, ring right), +4 dBu; removes voice 4 from the main mix."
+    },
+    {
+      "id": "jack.voice5",
+      "label": "OUT 5",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 5 in stereo (tip left, ring right), +4 dBu; removes voice 5 from the main mix."
+    },
+    {
+      "id": "jack.voice6",
+      "label": "OUT 6",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.voice_out",
+      "function": "Voice 6 in stereo (tip left, ring right), +4 dBu; removes voice 6 from the main mix."
+    },
+    {
+      "id": "jack.ext_in",
+      "label": "EXT IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "extin.in",
+      "function": "Mono line input, +4 dBu; a voice output can be patched back here for cross-feedback."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out (CCs, program changes, SysEx dumps)."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB-C (MIDI)",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-C",
+      "node": null,
+      "function": "Class-compliant USB MIDI (no bus power); SysEx, configurator, firmware."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "USB-C",
+      "node": null,
+      "function": "USB-C power supply, 9 V 3 A; power switch beside it."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.note",
+      "to": "clock.note",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "The resonator always tracks the keyboard."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.bend",
+      "to": "clock.note",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vg.bend_range",
+      "note": "Pitch bend joins the note in the pitch chain (and so in KEY FOLLOW)."
+    },
+    {
+      "id": "c03",
+      "from": "kbd.gate",
+      "to": "env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.gate",
+      "to": "lfo1.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo1.kb_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c05",
+      "from": "kbd.gate",
+      "to": "lfo2.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo2.kb_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c06",
+      "from": "kbd.gate",
+      "to": "lfo3.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo3.kb_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c07",
+      "from": "kbd.gate",
+      "to": "lfo4.reset",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo4.kb_reset",
+        "equals": true
+      }
+    },
+    {
+      "id": "c08",
+      "from": "clock.bbd_clock",
+      "to": "bbd.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "extin.out",
+      "to": "vco.ext",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vg.ext_in",
+        "equals": true
+      },
+      "note": "At WAVE minimum the exciter outputs the external input instead of a sine, crossfading into the other waves."
+    },
+    {
+      "id": "c10",
+      "from": "vco.out",
+      "to": "xmix.wave",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "noise.out",
+      "to": "xmix.noise",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "xmix.out",
+      "to": "xvca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "env.out",
+      "to": "xvca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "xvca.out",
+      "to": "inflt.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "xvca.level"
+    },
+    {
+      "id": "c15",
+      "from": "inflt.out",
+      "to": "bbd.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c16",
+      "from": "inflt.out",
+      "to": "drywet.dry",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "bbd.out",
+      "to": "fbflt.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "fbflt.out",
+      "to": "fb.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "fb.out",
+      "to": "bbd.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "fb.amount",
+      "note": "Positive feedback loop; INVERT flips polarity."
+    },
+    {
+      "id": "c20",
+      "from": "bbd.out",
+      "to": "drywet.wet",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "drywet.out",
+      "to": "vout.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "drywet.mix"
+    },
+    {
+      "id": "c22",
+      "from": "vout.out",
+      "to": "master.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vout.level",
+      "note": "Voices patched to their individual outputs leave the main mix."
+    }
+  ],
+  "mod_matrix": {
+    "name": "Modulation matrix (dense)",
+    "module": "kbd",
+    "slots": 288,
+    "combine": "single",
+    "sources": [
+      {
+        "id": 0,
+        "name": "Envelope",
+        "node": "env.out",
+        "per_voice": true,
+        "midi": "CC 109 value 0"
+      },
+      {
+        "id": 1,
+        "name": "Random/LFO 1",
+        "node": "lfo1.out",
+        "per_voice": true,
+        "midi": "CC 109 value 1"
+      },
+      {
+        "id": 2,
+        "name": "Random/LFO 2",
+        "node": "lfo2.out",
+        "per_voice": true,
+        "midi": "CC 109 value 2"
+      },
+      {
+        "id": 3,
+        "name": "Random/LFO 3",
+        "node": "lfo3.out",
+        "per_voice": true,
+        "midi": "CC 109 value 3"
+      },
+      {
+        "id": 4,
+        "name": "Random/LFO 4",
+        "node": "lfo4.out",
+        "per_voice": true,
+        "midi": "CC 109 value 4"
+      },
+      {
+        "id": 5,
+        "name": "Modwheel",
+        "node": "kbd.modwheel",
+        "per_voice": false,
+        "midi": "CC 109 value 5"
+      },
+      {
+        "id": 6,
+        "name": "Velocity",
+        "node": "kbd.velocity",
+        "per_voice": true,
+        "midi": "CC 109 value 6"
+      },
+      {
+        "id": 7,
+        "name": "Aftertouch",
+        "node": "kbd.aftertouch",
+        "per_voice": true,
+        "midi": "CC 109 value 7"
+      },
+      {
+        "id": 8,
+        "name": "Key Follow",
+        "node": "clock.key_follow",
+        "per_voice": true,
+        "midi": "CC 109 value 8"
+      }
+    ],
+    "destinations": [
+      {
+        "id": 0,
+        "name": "Exciter Wave / Ext In",
+        "parameter": "vco.wave"
+      },
+      {
+        "id": 1,
+        "name": "Exciter Noise S&H Rate",
+        "parameter": "noise.sh_rate"
+      },
+      {
+        "id": 2,
+        "name": "Exciter Wave / Noise Mix",
+        "parameter": "xmix.mix"
+      },
+      {
+        "id": 3,
+        "name": "Exciter Frequency",
+        "parameter": "vco.coarse"
+      },
+      {
+        "id": 4,
+        "name": "Exciter Level",
+        "parameter": "xvca.level"
+      },
+      {
+        "id": 5,
+        "name": "Envelope Onset Delay",
+        "parameter": "env.onset"
+      },
+      {
+        "id": 6,
+        "name": "Envelope Attack",
+        "parameter": "env.attack"
+      },
+      {
+        "id": 7,
+        "name": "Envelope Decay",
+        "parameter": "env.decay"
+      },
+      {
+        "id": 8,
+        "name": "Resonator Input Filter",
+        "parameter": "inflt.cutoff"
+      },
+      {
+        "id": 9,
+        "name": "Resonator Feedback Filter",
+        "parameter": "fbflt.cutoff"
+      },
+      {
+        "id": 10,
+        "name": "Resonator Feedback",
+        "parameter": "fb.amount"
+      },
+      {
+        "id": 11,
+        "name": "Resonator Glide",
+        "parameter": "clock.glide"
+      },
+      {
+        "id": 12,
+        "name": "Resonator Fine Tune",
+        "parameter": "clock.fine_tune"
+      },
+      {
+        "id": 13,
+        "name": "Resonator Dry/Wet",
+        "parameter": "drywet.mix"
+      },
+      {
+        "id": 14,
+        "name": "Resonator Panning",
+        "parameter": "vout.pan"
+      },
+      {
+        "id": 15,
+        "name": "Resonator Level",
+        "parameter": "vout.level"
+      },
+      {
+        "id": 16,
+        "name": "LFO 1 LFO Rate",
+        "parameter": "lfo1.rate"
+      },
+      {
+        "id": 17,
+        "name": "LFO 1 Mix",
+        "parameter": "lfo1.mix"
+      },
+      {
+        "id": 18,
+        "name": "LFO 1 Amplitude",
+        "parameter": "lfo1.amplitude"
+      },
+      {
+        "id": 19,
+        "name": "LFO 1 Random Rate",
+        "parameter": "lfo1.random_rate"
+      },
+      {
+        "id": 20,
+        "name": "LFO 2 LFO Rate",
+        "parameter": "lfo2.rate"
+      },
+      {
+        "id": 21,
+        "name": "LFO 2 Mix",
+        "parameter": "lfo2.mix"
+      },
+      {
+        "id": 22,
+        "name": "LFO 2 Amplitude",
+        "parameter": "lfo2.amplitude"
+      },
+      {
+        "id": 23,
+        "name": "LFO 2 Random Rate",
+        "parameter": "lfo2.random_rate"
+      },
+      {
+        "id": 24,
+        "name": "LFO 3 LFO Rate",
+        "parameter": "lfo3.rate"
+      },
+      {
+        "id": 25,
+        "name": "LFO 3 Mix",
+        "parameter": "lfo3.mix"
+      },
+      {
+        "id": 26,
+        "name": "LFO 3 Amplitude",
+        "parameter": "lfo3.amplitude"
+      },
+      {
+        "id": 27,
+        "name": "LFO 3 Random Rate",
+        "parameter": "lfo3.random_rate"
+      },
+      {
+        "id": 28,
+        "name": "LFO 4 LFO Rate",
+        "parameter": "lfo4.rate"
+      },
+      {
+        "id": 29,
+        "name": "LFO 4 Mix",
+        "parameter": "lfo4.mix"
+      },
+      {
+        "id": 30,
+        "name": "LFO 4 Amplitude",
+        "parameter": "lfo4.amplitude"
+      },
+      {
+        "id": 31,
+        "name": "LFO 4 Random Rate",
+        "parameter": "lfo4.random_rate"
+      }
+    ],
+    "depth_range": {
+      "min": -127,
+      "max": 127
+    },
+    "note": "Every source/destination pair (9 x 32 = 288) has its own depth, polarity and mute, set by holding a SOURCE SELECTION key and turning the destination knob; multiple sources sum on a destination. Each source also passes through its SOURCE MACRO attenuverter (the Quad LFO macro scales all four LFOs). Unipolar sources push from the knob's value, bipolar LFOs swing around it; results clip at the control's range. Over MIDI: CC 109 source, CC 110 destination, CC 111 depth, CC 112 polarity, CC 113 enable. LFOs can cross-modulate each other's rate, mix, amplitude and random rate."
+  },
+  "indicators": [
+    {
+      "id": "number_leds",
+      "module": "kbd",
+      "label": "NUMBER LEDs",
+      "kind": "led",
+      "function": "Active voices, voice groups, preset digits, settings values."
+    },
+    {
+      "id": "dest_leds",
+      "module": "kbd",
+      "label": "DESTINATION LEDs",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Red positive, blue negative; brightness shows depth; blinking when muted."
+    },
+    {
+      "id": "source_leds",
+      "module": "kbd",
+      "label": "SOURCE LEDs",
+      "kind": "led",
+      "function": "Selected source; also an original-value bar while turning a knob."
+    },
+    {
+      "id": "lfo_leds",
+      "module": "lfo1",
+      "label": "SELECT and WAVE LEDs",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Selected LFO (brightness = amplitude), waveform, polarity (red bipolar, white unipolar), sync blink; MIDI channel display."
+    },
+    {
+      "id": "ext_led",
+      "module": "extin",
+      "label": "EXT IN LED",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "White when the input is present and enabled, red when clipping."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Exciter and resonator",
+      "applies_to": ["vco", "noise", "env", "xvca", "inflt", "bbd", "fbflt", "fb", "drywet"],
+      "rule": "The exciter (VCO, S&H noise or external input under a DADSR) passes the INPUT FILTER into the BBD and the dry path. With feedback the BBD reinforces frequencies tied to its delay and resonates: short exciter bursts strike it, sustained ones bow or blow it. FEEDBACK past the damping threshold self-oscillates with no input; FEEDBACK FILTER damps the loop and lowers the perceived pitch; INVERT locks onto a different mode. DRY/WET blends exciter and resonance."
+    },
+    {
+      "id": "b02",
+      "name": "Pitch",
+      "applies_to": ["clock", "vco"],
+      "rule": "The resonator always follows the note through NOTE OFFSET, FINE TUNE and GLIDE. The VCO follows only via KEY FOLLOW modulation (full depth in INIT), so exciter and resonator pitch can be detached for beating, moiré and inharmonic textures."
+    },
+    {
+      "id": "b03",
+      "name": "Envelope modes",
+      "applies_to": ["env"],
+      "rule": "Short, medium or long ranges; HOLD ignores note-off (NUMBER keys toggle held voices); LEGATO continues from the current level; LOOP repeats onset delay, attack and decay while held."
+    },
+    {
+      "id": "b04",
+      "name": "Quad LFO",
+      "applies_to": ["lfo1", "lfo2", "lfo3", "lfo4"],
+      "rule": "Each of four per-voice LFOs mixes a periodic wave with stepped random (optionally smoothed). Free (20 s to 50 Hz) or MIDI-clock synced (19 divisions), uni or bipolar, KB reset or single-shot. RANDOM RATE at zero holds a per-voice random offset."
+    },
+    {
+      "id": "b05",
+      "name": "Modulation",
+      "applies_to": ["kbd"],
+      "rule": "Six source sections (envelope, Quad LFO = four sources, modwheel, velocity, aftertouch, key follow) to 32 destinations per voice in a dense matrix. Hold SOURCE SELECTION and turn a destination knob to assign; DESTINATION button mutes, long press deletes. Detached sources turn their SOURCE MACRO into a manual control. Polyphonic aftertouch works per voice."
+    },
+    {
+      "id": "b06",
+      "name": "Voice groups",
+      "applies_to": ["kbd"],
+      "rule": "A preset holds up to six voice groups, each with its own sound, MIDI channel (default 2-7), unison, priority, bend range and external input setting. Voices are assigned to groups in voice group edit mode. The preset channel (default 1) plays groups by unison (all groups) or by preset priority. CCs on the preset channel edit the group selected with CC 114."
+    },
+    {
+      "id": "b07",
+      "name": "Presets",
+      "applies_to": ["kbd"],
+      "rule": "216 presets in 6 banks x 6 sub-banks x 6, loaded with PRESET + three NUMBER keys, saved with WRITE. RELOAD compares with the saved version. An internal UPS saves the scratch pad at power-off. Program change: CC 0 (bank) + CC 32 (sub-bank) + PC (slot), or CC 0 + PC 0-35, or PC 0-127 alone (banks 0-3)."
+    },
+    {
+      "id": "b08",
+      "name": "Playing without MIDI",
+      "applies_to": ["kbd"],
+      "rule": "In preset mode each NUMBER key plays its voice (middle C, velocity 127 by default; note, velocity, modwheel and aftertouch per key are editable)."
+    },
+    {
+      "id": "b09",
+      "name": "Individual outputs",
+      "applies_to": ["master"],
+      "rule": "A voice patched to its individual output (stereo TRS, panning kept) leaves the main mix; voice outputs can feed EXT IN for cross-feedback and chained resonators."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "14-bit"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "poly_pressure"
+      },
+      {
+        "message": "program_change",
+        "note": "preset channel; with CC 0 / CC 32 bank select"
+      },
+      {
+        "message": "control_change",
+        "note": "full parameter set (see parameter access), on preset or voice group channels"
+      },
+      {
+        "message": "clock",
+        "note": "24 ppqn for LFO sync"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "continue"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "active_sensing"
+      },
+      {
+        "message": "tune_request",
+        "note": "starts VCO tuning"
+      },
+      {
+        "message": "system_reset",
+        "note": "reboots"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 00 22 17",
+        "note": "preset and complete dumps"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "control_change",
+        "note": "when CC out is on"
+      },
+      {
+        "message": "program_change",
+        "note": "when PC out is on"
+      },
+      {
+        "message": "sysex",
+        "note": "preset or complete dump"
+      }
+    ],
+    "channel_note": "One preset (master) channel plus up to six voice group channels; groups may share a channel, but never the preset channel.",
+    "special_ccs": {
+      "1": "modwheel (all groups)",
+      "9": "detach/attach sources",
+      "11-13, 2, 3": "NUMBER key note, velocity, modwheel and aftertouch setup",
+      "114": "select active voice group",
+      "115": "LFO select",
+      "116": "note priority",
+      "117": "remove voice from group",
+      "118": "add voice to group",
+      "120": "all sounds off",
+      "121": "reset (init) controls",
+      "122": "local control",
+      "123": "all notes off",
+      "126": "unison",
+      "127": "poly"
+    },
+    "note": "Every panel control has a CC; the manual's chart lists ranges, accepted channels and whether each is modulatable."
+  },
+  "specifications": {
+    "voices": 6,
+    "multitimbral_parts": 6,
+    "exciter": "analogue VCO (sine, triangle, ramp, pulse, square), analogue S&H noise, external input, DADSR + VCA",
+    "resonator": "1024-stage BBD, 12 dB/oct input LPF, 6 dB/oct feedback LPF, polarity invert",
+    "lfos": "4 per voice (24 total) with random generators",
+    "modulation": "9 sources x 32 destinations per voice",
+    "presets": "216 (6 x 6 x 6)",
+    "audio": {
+      "main": "2 x 1/4\" TRS balanced, +4 dBu",
+      "voice_outs": "6 x 1/4\" TRS stereo, +4 dBu",
+      "ext_in": "1/4\" mono, +4 dBu",
+      "phones": "1/4\" stereo, independent level"
+    },
+    "midi": "DIN in, out, thru; USB-C class compliant",
+    "power": "USB-C 9 V 3 A, 15 W",
+    "dimensions_mm": {
+      "h": 53,
+      "w": 450,
+      "d": 185
+    },
+    "rack": "19\", 4U (+1U for cables)",
+    "weight_kg": 2.3,
+    "sysex_id": "00 22 17",
+    "operating_temp_c_max": 32
+  },
+  "omitted_from_source": [
+    "foreword and dedication",
+    "safety, warranty and regulatory text",
+    "rack and VESA mounting details",
+    "UI diagrams",
+    "original value indicator details"
+  ],
+  "not_in_source": [
+    "envelope times beyond the range end points",
+    "LFO waveform shapes in voltage",
+    "exact VCO and BBD clock ranges in Hz beyond the VCO's ~16 Hz-4.2 kHz",
+    "SysEx data format"
+  ],
+  "source_inconsistencies": [
+    "In the CC chart, LFO 4's mix, KB reset, single shot, rate, polarity and clock sync (CC 90-95) are labelled 'LFO 3'.",
+    "CC 46 FINE TUNE lists 'Short / Medium / Long' values and CC 47 NOTE OFFSET lists 'Off / On', both copied from other rows.",
+    "CC 43 FEEDBACK and CC 5 GLIDE are marked not modulatable, but both are matrix destinations (10 and 11); CC 41 INVERT is marked modulatable but is not a destination.",
+    "LFO 1 WAVE (CC 49) is marked not modulatable, LFO 2-4 WAVE are marked modulatable; no LFO wave appears in the destination table.",
+    "Key features list 'ADSR with onset delay' and 'DADSR'; the envelope is DADSR throughout the manual.",
+    "Key features call the WAVE morph a 'blend between 2 VCO waveforms'; the WAVE control text describes a morph through five shapes.",
+    "Sustain and release are not modulation destinations (the destination list has onset delay, attack and decay only)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Per-voice modules",
+      "detail": "Voice modules are modelled once (per_voice); voice groups are described in behaviours."
+    },
+    {
+      "topic": "Dense matrix",
+      "detail": "288 source/destination pairs each hold depth, polarity and mute; modelled as a matrix with 288 slots and no per-slot parameters."
+    },
+    {
+      "topic": "Synthesis type",
+      "detail": "Recorded as physical_modelling: analogue modal-style synthesis with one BBD resonator per voice (see synthesis_note)."
+    },
+    {
+      "topic": "Matrix-only modulation",
+      "detail": "Modulation reaches parameters through the matrix (destinations name parameters), so exciter, filter and output modules carry no separate CV input nodes."
+    }
+  ]
+}

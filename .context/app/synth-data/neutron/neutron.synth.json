@@ -1,0 +1,2633 @@
+{
+  "schema_version": "0.2.0",
+
+  "device": {
+    "id": "behringer-neutron",
+    "manufacturer": "Behringer",
+    "model": "NEUTRON",
+    "category": "paraphonic analogue synthesizer, semi-modular, desktop/Eurorack",
+    "based_on": "Original design around the 3340 VCO chip",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "NEUTRON User Manual",
+        "file": "Neutron_M_EN.pdf",
+        "pages": 34,
+        "firmware_basis": "V2.0.0"
+      }
+    ]
+  },
+
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic or 2-note paraphonic (two oscillators pitched independently through one filter, VCA and envelope set)",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "semi_modular": true,
+    "panel_counts": { "knobs": 36, "buttons": 7, "patch_inputs": 32, "patch_outputs": 24 },
+    "summary": "2 x 3340 VCOs with morphing wave shape + white noise + external input -> 12 dB/oct multimode filter (LP/BP/HP, dual output) -> overdrive -> VCA -> BBD delay -> output. Two ADSR envelopes, one audio-rate morphing LFO, sample and hold, slew limiter, two attenuators, mult, two summers and an inverter, all reachable on a 56-point patch bay with default (normalled) routings."
+  },
+
+  "modules": [
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI / USB interface",
+      "panel_section": "OUTPUT / rear",
+      "description": "Converts MIDI (DIN or class-compliant USB) into per-oscillator pitch, gate, velocity, mod wheel, aftertouch and clock. Handles note priority, paraphonic allocation, key split, note range and poly chain.",
+      "properties": {
+        "note_range": { "min": 24, "max": 96 },
+        "cc_received": { "1": "mod wheel MSB", "33": "mod wheel LSB", "64": "sustain pedal" }
+      },
+      "inputs": [],
+      "outputs": [
+        "midi.pitch_osc1",
+        "midi.pitch_osc2",
+        "midi.pitch_last",
+        "midi.gate",
+        "midi.pitch_bend",
+        "midi.velocity",
+        "midi.mod_wheel",
+        "midi.aftertouch",
+        "midi.clock"
+      ]
+    },
+    {
+      "id": "pitch_bus",
+      "type": "pitch_control",
+      "name": "Pitch processing (portamento, bend, autoglide)",
+      "panel_section": "SLEW RATE LIMITER",
+      "description": "Applies portamento, autoglide and pitch bend to the MIDI note for each oscillator, and adds the OSC1+2 CV input to both.",
+      "inputs": [
+        "pitch_bus.kbd_in_osc1",
+        "pitch_bus.kbd_in_osc2",
+        "pitch_bus.bend_in",
+        "pitch_bus.ext_cv_in"
+      ],
+      "outputs": ["pitch_bus.osc1_out", "pitch_bus.osc2_out"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSC 1",
+      "description": "3340 VCO. Five shapes that can be stepped or continuously morphed. Master when OSC SYNC is on.",
+      "properties": {
+        "frequency_hz": { "min": 0.7, "max": 55000 },
+        "range_count": 4,
+        "self_calibrates_at_startup": true
+      },
+      "inputs": ["osc1.pitch_in", "osc1.pitch_cv_in", "osc1.shape_cv_in", "osc1.pw_cv_in"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSC 2",
+      "description": "3340 VCO, identical to OSC 1. Slave when OSC SYNC is on.",
+      "properties": {
+        "frequency_hz": { "min": 0.7, "max": 55000 },
+        "range_count": 4,
+        "self_calibrates_at_startup": true
+      },
+      "inputs": [
+        "osc2.pitch_in",
+        "osc2.pitch_cv_in",
+        "osc2.shape_cv_in",
+        "osc2.pw_cv_in",
+        "osc2.sync_in"
+      ],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "NOISE",
+      "description": "White noise. Feeds the filter via the NOISE knob and is the default sample and hold source.",
+      "properties": { "colours": ["white"] },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "ext_in",
+      "type": "external_input",
+      "name": "External audio input",
+      "panel_section": "rear",
+      "description": "Rear-panel mono input summed into the filter with the oscillators and noise. No level control.",
+      "properties": { "input_impedance_ohm": 100000 },
+      "inputs": ["ext_in.in"],
+      "outputs": ["ext_in.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Oscillator mix and filter input sum",
+      "panel_section": "OSC MIX / NOISE",
+      "description": "OSC MIX crossfades the two oscillators. That result is summed with noise and the external input before the filter.",
+      "inputs": ["mixer.in_osc1", "mixer.in_osc2", "mixer.in_noise", "mixer.in_ext"],
+      "outputs": ["mixer.osc_mix_out", "mixer.out"]
+    },
+    {
+      "id": "filter",
+      "type": "filter",
+      "name": "Multimode filter",
+      "panel_section": "VCF",
+      "description": "2-pole state-variable style filter with self-oscillating resonance. A second output carries a different mode from the main one.",
+      "properties": {
+        "slope_db_per_octave": 12,
+        "poles": 2,
+        "modes": ["highpass", "bandpass", "lowpass"],
+        "cutoff_hz": { "min": 10, "max": 15000 },
+        "self_oscillates": true,
+        "second_output_mode": {
+          "highpass": "bandpass",
+          "bandpass": "lowpass",
+          "lowpass": "highpass"
+        }
+      },
+      "inputs": [
+        "filter.in",
+        "filter.cutoff_mod_in",
+        "filter.cutoff_env_in",
+        "filter.cutoff_kbd_in",
+        "filter.cutoff_midi_mod_in",
+        "filter.resonance_cv_in"
+      ],
+      "outputs": ["filter.out", "filter.out2"]
+    },
+    {
+      "id": "overdrive",
+      "type": "overdrive",
+      "name": "Overdrive",
+      "panel_section": "OVERDRIVE",
+      "description": "Analogue soft-clipping stage with tone control, between filter and VCA.",
+      "inputs": ["overdrive.in"],
+      "outputs": ["overdrive.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA BIAS",
+      "description": "Amplifier controlled by Envelope 1 by default. VCA BIAS holds it open without a gate.",
+      "inputs": ["vca.in", "vca.cv_in"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "delay",
+      "type": "delay",
+      "name": "Bucket brigade delay",
+      "panel_section": "DELAY",
+      "description": "Analogue BBD delay, 8192 stages. Can self-oscillate at high REPEATS depending on internal trimmer VR37.",
+      "properties": {
+        "technology": "BBD",
+        "stages": 8192,
+        "time_s": { "min": 0.025, "max": 0.64 }
+      },
+      "inputs": ["delay.in", "delay.time_cv_in"],
+      "outputs": ["delay.out"]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT / rear",
+      "description": "Master volume and independent headphone amp.",
+      "inputs": ["output.in"],
+      "outputs": ["output.main", "output.phones"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "Envelope 1",
+      "panel_section": "ENVELOPE 1",
+      "description": "ADSR. Routed to VCA CV by default.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "output_v": { "min": 0, "max": 9 },
+        "curves": { "attack": "linear", "decay": "exponential", "release": "exponential" },
+        "gate_threshold_v": 1.5
+      },
+      "inputs": ["env1.gate_in"],
+      "outputs": ["env1.out", "env1.gate_thru"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "Envelope 2",
+      "panel_section": "ENVELOPE 2",
+      "description": "ADSR. Routed to filter cutoff through ENV DEPTH by default, and to the inverter input.",
+      "properties": {
+        "stages": ["attack", "decay", "sustain", "release"],
+        "output_v": { "min": 0, "max": 9 },
+        "curves": { "attack": "linear", "decay": "exponential", "release": "exponential" },
+        "gate_threshold_v": 1.5
+      },
+      "inputs": ["env2.gate_in"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "description": "Runs from 0.01 Hz to 10 kHz, so it doubles as an audio-rate modulator. Five shapes, stepped or morphed. Bipolar and unipolar outputs. Can sync to MIDI clock, retrigger per note, run one-shot, and track the keyboard.",
+      "properties": {
+        "rate_hz": { "min": 0.01, "max": 10000 },
+        "shapes": ["sine", "triangle", "saw", "square", "reverse_saw"],
+        "midi_clock_divisions_ccw_to_cw": [
+          "4/1",
+          "3/1",
+          "2/1",
+          "3/2",
+          "1/1",
+          "1/2",
+          "3/8",
+          "1/3",
+          "1/4",
+          "1/5",
+          "3/16",
+          "1/6",
+          "1/7",
+          "1/8",
+          "3/32",
+          "1/12",
+          "1/16",
+          "1/24",
+          "1/32",
+          "1/48",
+          "1/64"
+        ]
+      },
+      "inputs": ["lfo.rate_cv_in", "lfo.shape_cv_in", "lfo.trig_in", "lfo.clock_in"],
+      "outputs": ["lfo.out", "lfo.uni_out"]
+    },
+    {
+      "id": "sample_hold",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "SAMPLE & HOLD",
+      "description": "Samples its input on each clock and holds it. Internal clock set by RATE. GLIDE smooths the steps. Samples noise by default, giving random voltages.",
+      "properties": { "clock_threshold_v": 3, "output_max_v": 9.5 },
+      "inputs": ["sample_hold.in", "sample_hold.clock_in"],
+      "outputs": ["sample_hold.out"]
+    },
+    {
+      "id": "slew",
+      "type": "slew_limiter",
+      "name": "Slew rate limiter",
+      "panel_section": "SLEW RATE LIMITER",
+      "description": "Limits the rate of change of any patched signal. Nothing is routed to it by default.",
+      "inputs": ["slew.in"],
+      "outputs": ["slew.out"]
+    },
+    {
+      "id": "att1",
+      "type": "attenuator",
+      "name": "Attenuator 1 (voltage controlled)",
+      "panel_section": "ATTENUATORS",
+      "description": "Effectively a spare VCA. Level set by the knob and by the ATT1 CV input, which receives the ASSIGN output by default.",
+      "properties": { "gain_db": { "min": "-inf", "max": 4 }, "voltage_controlled": true },
+      "inputs": ["att1.in", "att1.cv_in"],
+      "outputs": ["att1.out"]
+    },
+    {
+      "id": "att2",
+      "type": "attenuator",
+      "name": "Attenuator 2 (passive)",
+      "panel_section": "ATTENUATORS",
+      "description": "Passive attenuator. By default it takes the LFO and feeds both pulse-width inputs, so its knob is the PWM depth.",
+      "properties": { "gain_db": { "min": "-inf", "max": 0 }, "voltage_controlled": false },
+      "inputs": ["att2.in"],
+      "outputs": ["att2.out"]
+    },
+    {
+      "id": "mult",
+      "type": "mult",
+      "name": "Multiple",
+      "panel_section": "patch bay",
+      "description": "One input copied to two outputs. Carries the bipolar LFO by default.",
+      "inputs": ["mult.in"],
+      "outputs": ["mult.out1", "mult.out2"]
+    },
+    {
+      "id": "sum1",
+      "type": "summer",
+      "name": "Sum 1",
+      "panel_section": "patch bay",
+      "description": "Adds two signals or CVs.",
+      "inputs": ["sum1.a", "sum1.b"],
+      "outputs": ["sum1.out"]
+    },
+    {
+      "id": "sum2",
+      "type": "summer",
+      "name": "Sum 2",
+      "panel_section": "patch bay",
+      "description": "Adds two signals or CVs.",
+      "inputs": ["sum2.a", "sum2.b"],
+      "outputs": ["sum2.out"]
+    },
+    {
+      "id": "inverter",
+      "type": "inverter",
+      "name": "Inverter",
+      "panel_section": "patch bay",
+      "description": "Inverts its input. Carries Envelope 2 by default.",
+      "inputs": ["inverter.in"],
+      "outputs": ["inverter.out"]
+    },
+    {
+      "id": "assign",
+      "type": "cv_source_selector",
+      "name": "Assignable CV output",
+      "panel_section": "patch bay",
+      "description": "DAC output that can carry one of five MIDI-derived values. Normalled into ATT1 CV.",
+      "properties": { "output_v": { "min": 0, "max": 5 } },
+      "inputs": [
+        "assign.in_osc1_cv",
+        "assign.in_osc2_cv",
+        "assign.in_velocity",
+        "assign.in_mod_wheel",
+        "assign.in_aftertouch"
+      ],
+      "outputs": ["assign.out"]
+    }
+  ],
+
+  "parameters": [
+    {
+      "id": "osc1.tune",
+      "module": "osc1",
+      "label": "TUNE",
+      "manual_ref": 1,
+      "kind": "continuous",
+      "bipolar": true,
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "octaves (approximate)",
+        "note": "In +/-10 octave range the knob sweeps the whole 0.7 Hz to 50 kHz span"
+      },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Oscillator 1 frequency offset. Ignored when osc1.tune_bypass is on."
+    },
+    {
+      "id": "osc1.shape",
+      "module": "osc1",
+      "label": "SHAPE",
+      "manual_ref": 4,
+      "kind": "morph",
+      "values": [
+        { "value": "tone_mod" },
+        { "value": "pulse" },
+        { "value": "saw" },
+        { "value": "triangle" },
+        { "value": "sine" }
+      ],
+      "blend_param": "osc1.shape_blend",
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Wave shape. Morphs smoothly between adjacent shapes when blend is on, otherwise steps between the five."
+    },
+    {
+      "id": "osc1.range",
+      "module": "osc1",
+      "label": "RANGE",
+      "manual_ref": 6,
+      "kind": "enum",
+      "default": "8'",
+      "values": [
+        { "value": "32'", "sysex": 0 },
+        { "value": "16'", "sysex": 1 },
+        { "value": "8'", "sysex": 2 },
+        {
+          "value": "wide",
+          "sysex": 3,
+          "meaning": "all three LEDs lit: +/-10 octave mode, TUNE covers 0.7 Hz to 50 kHz"
+        }
+      ],
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "26" }
+      ],
+      "function": "Octave range, one octave per step."
+    },
+    {
+      "id": "osc1.pulse_width",
+      "module": "osc1",
+      "label": "WIDTH",
+      "manual_ref": 10,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Pulse width. Only affects the tone mod and pulse shapes. The PW CV (LFO via ATT 2 by default) adds to it."
+    },
+    {
+      "id": "osc1.shape_blend",
+      "module": "osc1",
+      "label": "OSC 1 shape blend",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "hold OSC1 RANGE, then press PARAPHONIC to toggle (throbs = blend, flashes = switched)"
+        },
+        { "type": "sysex", "sub": "20", "encoding": "0 = blend, 1 = no blend" }
+      ],
+      "function": "Whether SHAPE morphs or steps."
+    },
+    {
+      "id": "osc1.tune_bypass",
+      "module": "osc1",
+      "label": "OSC 1 tune pot bypass",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "hold OSC1 RANGE + PARAPHONIC until the octave LED flashes"
+        },
+        { "type": "sysex", "sub": "22" }
+      ],
+      "function": "Takes the TUNE knob out of circuit so the oscillator plays exactly in tune."
+    },
+    {
+      "id": "osc1.autoglide",
+      "module": "osc1",
+      "label": "OSC 1 autoglide",
+      "kind": "integer",
+      "range": { "min": -12, "max": 12, "unit": "semitones" },
+      "default": 0,
+      "access": [{ "type": "sysex", "sub": "24", "encoding": "value + 12" }, { "type": "app" }],
+      "function": "Each note starts this many semitones away and glides linearly to pitch, at the speed set by PORTA TIME."
+    },
+
+    {
+      "id": "osc2.tune",
+      "module": "osc2",
+      "label": "TUNE",
+      "manual_ref": 3,
+      "kind": "continuous",
+      "bipolar": true,
+      "physical": { "min": -1, "max": 1, "unit": "octaves (approximate)" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Oscillator 2 frequency offset. Ignored when osc2.tune_bypass is on."
+    },
+    {
+      "id": "osc2.shape",
+      "module": "osc2",
+      "label": "SHAPE",
+      "manual_ref": 5,
+      "kind": "morph",
+      "values": [
+        { "value": "tone_mod" },
+        { "value": "pulse" },
+        { "value": "saw" },
+        { "value": "triangle" },
+        { "value": "sine" }
+      ],
+      "blend_param": "osc2.shape_blend",
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Wave shape, morphing or stepped."
+    },
+    {
+      "id": "osc2.range",
+      "module": "osc2",
+      "label": "RANGE",
+      "manual_ref": 7,
+      "kind": "enum",
+      "default": "8'",
+      "values": [
+        { "value": "32'", "sysex": 0 },
+        { "value": "16'", "sysex": 1 },
+        { "value": "8'", "sysex": 2 },
+        { "value": "wide", "sysex": 3 }
+      ],
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "27" }
+      ],
+      "function": "Octave range."
+    },
+    {
+      "id": "osc2.pulse_width",
+      "module": "osc2",
+      "label": "WIDTH",
+      "manual_ref": 11,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Pulse width for the tone mod and pulse shapes."
+    },
+    {
+      "id": "osc2.shape_blend",
+      "module": "osc2",
+      "label": "OSC 2 shape blend",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        { "type": "button_combo", "gesture": "hold OSC2 RANGE, then press PARAPHONIC to toggle" },
+        { "type": "sysex", "sub": "21", "encoding": "0 = blend, 1 = no blend" }
+      ],
+      "function": "Whether SHAPE morphs or steps."
+    },
+    {
+      "id": "osc2.tune_bypass",
+      "module": "osc2",
+      "label": "OSC 2 tune pot bypass",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "hold OSC2 RANGE + PARAPHONIC until the octave LED flashes"
+        },
+        { "type": "sysex", "sub": "23" }
+      ],
+      "function": "Takes the TUNE knob out of circuit."
+    },
+    {
+      "id": "osc2.autoglide",
+      "module": "osc2",
+      "label": "OSC 2 autoglide",
+      "kind": "integer",
+      "range": { "min": -12, "max": 12, "unit": "semitones" },
+      "default": 0,
+      "access": [{ "type": "sysex", "sub": "25", "encoding": "value + 12" }, { "type": "app" }],
+      "function": "As osc1.autoglide."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "OSC SYNC",
+      "manual_ref": 8,
+      "kind": "boolean",
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "0E" }
+      ],
+      "function": "Hard sync: OSC 1 restarts OSC 2's cycle, so OSC 2 takes OSC 1's base pitch and its own tuning changes timbre."
+    },
+    {
+      "id": "osc2.pedal_mode",
+      "module": "osc2",
+      "label": "Pedal Mode",
+      "kind": "boolean",
+      "default": false,
+      "access": [{ "type": "button_combo", "gesture": "hold OSC2 RANGE, press KEY TRK to toggle" }],
+      "function": "OSC 2 holds the last note played before the mode was enabled (a drone) while OSC 1 follows the keyboard."
+    },
+
+    {
+      "id": "mixer.osc_mix",
+      "module": "mixer",
+      "label": "OSC MIX",
+      "manual_ref": 2,
+      "kind": "continuous",
+      "bipolar": true,
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Linear crossfade from OSC 1 only (left) to OSC 2 only (right)."
+    },
+    {
+      "id": "mixer.noise_level",
+      "module": "mixer",
+      "label": "NOISE",
+      "manual_ref": 21,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Amount of white noise injected into the filter."
+    },
+
+    {
+      "id": "filter.cutoff",
+      "module": "filter",
+      "label": "FREQ",
+      "manual_ref": 12,
+      "kind": "continuous",
+      "physical": {
+        "min": 10,
+        "max": 15000,
+        "unit": "Hz",
+        "taper": "unknown, presumably exponential"
+      },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Base cutoff frequency."
+    },
+    {
+      "id": "filter.mode",
+      "module": "filter",
+      "label": "MODE",
+      "manual_ref": 13,
+      "kind": "enum",
+      "values": [
+        { "value": "highpass", "sysex": 0 },
+        { "value": "bandpass", "sysex": 1 },
+        { "value": "lowpass", "sysex": 2 }
+      ],
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "10" }
+      ],
+      "function": "Main output mode. Also determines the VCF 2 output mode (see filter.properties.second_output_mode)."
+    },
+    {
+      "id": "filter.resonance",
+      "module": "filter",
+      "label": "RESO",
+      "manual_ref": 14,
+      "kind": "continuous",
+      "panel_scale": { "min": 0, "max": 10 },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Resonance. At or near maximum the filter self-oscillates as a sine at the cutoff frequency."
+    },
+    {
+      "id": "filter.key_track",
+      "module": "filter",
+      "label": "KEY TRK",
+      "manual_ref": 15,
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "11" }
+      ],
+      "function": "Cutoff follows the latest MIDI note. Tracks well enough for the self-oscillating filter to be played as an oscillator."
+    },
+    {
+      "id": "filter.mod_depth",
+      "module": "filter",
+      "label": "MOD DEPTH",
+      "manual_ref": 16,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Depth of cutoff modulation from the FREQ MOD input, which carries the LFO by default."
+    },
+    {
+      "id": "filter.env_depth",
+      "module": "filter",
+      "label": "ENV DEPTH",
+      "manual_ref": 17,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Depth of cutoff modulation from Envelope 2."
+    },
+    {
+      "id": "filter.midi_mod_source",
+      "module": "filter",
+      "label": "VCF mod source",
+      "kind": "enum",
+      "default": "disabled",
+      "values": [
+        { "value": "disabled", "sysex": 0 },
+        { "value": "aftertouch", "sysex": 1 },
+        { "value": "mod_wheel", "sysex": 2 },
+        { "value": "velocity", "sysex": 3 }
+      ],
+      "access": [
+        { "type": "button_combo", "gesture": "long-press VCF MODE, RANGE +/- to select" },
+        { "type": "sysex", "sub": "12" }
+      ],
+      "function": "Lets a MIDI performance value open the filter."
+    },
+    {
+      "id": "filter.midi_mod_depth",
+      "module": "filter",
+      "label": "VCF mod depth",
+      "kind": "integer",
+      "range": { "min": 0, "max": 63 },
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "long-press VCF MODE, press MODE to switch to depth, RANGE +/- to set"
+        },
+        { "type": "sysex", "sub": "14" }
+      ],
+      "function": "Depth of filter.midi_mod_source, 64 steps from minimum to 100%."
+    },
+
+    {
+      "id": "overdrive.drive",
+      "module": "overdrive",
+      "label": "DRIVE",
+      "manual_ref": 26,
+      "kind": "continuous",
+      "panel_scale": { "min": 0, "max": 11 },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Amount of soft clipping, from gentle warming to heavy distortion."
+    },
+    {
+      "id": "overdrive.tone",
+      "module": "overdrive",
+      "label": "TONE",
+      "manual_ref": 27,
+      "kind": "continuous",
+      "panel_scale": { "min": 0, "max": 10 },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Tilt-style tone: left rolls off highs for a warmer sound, right thins the lows and boosts highs."
+    },
+    {
+      "id": "overdrive.level",
+      "module": "overdrive",
+      "label": "LEVEL",
+      "manual_ref": 28,
+      "kind": "continuous",
+      "physical": { "min": "-inf", "max": 0, "unit": "dB" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Output level of the overdrive stage. Fully down silences the synth. Also sets how hard the delay is driven."
+    },
+
+    {
+      "id": "vca.bias",
+      "module": "vca",
+      "label": "VCA BIAS",
+      "manual_ref": 22,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Minimum VCA opening, independent of the envelope. Turn up for drones or to hear external audio without a gate."
+    },
+
+    {
+      "id": "delay.time",
+      "module": "delay",
+      "label": "TIME",
+      "manual_ref": 23,
+      "kind": "continuous",
+      "physical": { "min": 0.025, "max": 0.64, "unit": "s", "direction": "clockwise = longer" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Delay time. Modulating short times gives chorus."
+    },
+    {
+      "id": "delay.repeats",
+      "module": "delay",
+      "label": "REPEATS",
+      "manual_ref": 24,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Feedback amount. At maximum the repeats are infinite and build up."
+    },
+    {
+      "id": "delay.mix",
+      "module": "delay",
+      "label": "MIX",
+      "manual_ref": 25,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "% wet" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Dry/wet balance. Fully left is dry only, fully right is wet only."
+    },
+
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "A",
+      "manual_ref": 29,
+      "kind": "continuous",
+      "physical": { "min": 0.0003, "max": 5, "unit": "s", "curve": "linear" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Attack time."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "D",
+      "manual_ref": 30,
+      "kind": "continuous",
+      "physical": { "min": 0.0024, "max": 10, "unit": "s", "curve": "exponential" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Decay time."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "S",
+      "manual_ref": 31,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 9, "unit": "V" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "R",
+      "manual_ref": 32,
+      "kind": "continuous",
+      "physical": { "min": 0.0015, "max": 6, "unit": "s", "curve": "exponential" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Release time."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "A",
+      "manual_ref": 33,
+      "kind": "continuous",
+      "physical": { "min": 0.0003, "max": 5, "unit": "s", "curve": "linear" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Attack time."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "D",
+      "manual_ref": 34,
+      "kind": "continuous",
+      "physical": { "min": 0.0024, "max": 10, "unit": "s", "curve": "exponential" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Decay time."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "S",
+      "manual_ref": 35,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 9, "unit": "V" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "R",
+      "manual_ref": 36,
+      "kind": "continuous",
+      "physical": { "min": 0.0015, "max": 6, "unit": "s", "curve": "exponential" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Release time."
+    },
+
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "SHAPE",
+      "manual_ref": 18,
+      "kind": "morph",
+      "values": [
+        { "value": "sine" },
+        { "value": "triangle" },
+        { "value": "saw" },
+        { "value": "square" },
+        { "value": "reverse_saw" }
+      ],
+      "blend_param": "lfo.shape_blend",
+      "order_param": "lfo.shape_order",
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "LFO wave shape, morphing or stepped."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "manual_ref": 19,
+      "kind": "continuous",
+      "panel_scale": { "min": 0, "max": 10 },
+      "physical": { "min": 0.01, "max": 10000, "unit": "Hz", "taper": "unknown" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "LFO frequency. When synced to MIDI clock the knob selects a clock division instead."
+    },
+    {
+      "id": "lfo.key_sync",
+      "module": "lfo",
+      "label": "KEY SYNC",
+      "manual_ref": 20,
+      "kind": "boolean",
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "37" }
+      ],
+      "function": "Restarts the LFO phase on each new note."
+    },
+    {
+      "id": "lfo.shape_blend",
+      "module": "lfo",
+      "label": "LFO shape blend",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        { "type": "button_combo", "gesture": "hold KEY SYNC, press PARAPHONIC to toggle" },
+        { "type": "sysex", "sub": "30", "encoding": "0 = blend, 1 = no blend" }
+      ],
+      "function": "Whether LFO SHAPE morphs or steps."
+    },
+    {
+      "id": "lfo.depth",
+      "module": "lfo",
+      "label": "LFO depth",
+      "kind": "continuous",
+      "physical": { "min": 1, "max": 100, "unit": "%" },
+      "default": 100,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "long-press KEY SYNC, RANGE buttons as +/-",
+          "resolution": "64 steps"
+        },
+        { "type": "sysex", "sub": "34", "resolution": "5 steps: 20, 40, 60, 80, 100%" }
+      ],
+      "function": "Global output amplitude of the LFO."
+    },
+    {
+      "id": "lfo.one_shot",
+      "module": "lfo",
+      "label": "LFO one-shot",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "with KEY SYNC on, long-press KEY SYNC and use VCF MODE (HPF LED = off, BPF LED = on)"
+        },
+        { "type": "sysex", "sub": "31" }
+      ],
+      "function": "LFO runs one cycle per trigger, acting as a simple envelope. Requires lfo.key_sync."
+    },
+    {
+      "id": "lfo.retrigger_on_overlap",
+      "module": "lfo",
+      "label": "LFO retrigger",
+      "kind": "boolean",
+      "access": [
+        { "type": "button_combo", "gesture": "in the KEY SYNC sub-menu, press KEY TRK" },
+        { "type": "sysex", "sub": "3B" }
+      ],
+      "function": "Whether overlapping (legato) notes retrigger the LFO."
+    },
+    {
+      "id": "lfo.key_rate_root",
+      "module": "lfo",
+      "label": "LFO key rate tracking",
+      "kind": "integer",
+      "range": { "min": 12, "max": 108, "unit": "MIDI note", "off_value": 0 },
+      "default": 0,
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "in the KEY SYNC sub-menu, hold KEY TRK while playing the root note"
+        },
+        { "type": "sysex", "sub": "32" }
+      ],
+      "function": "When set, LFO rate doubles per octave above this note and halves per octave below it."
+    },
+    {
+      "id": "lfo.midi_clock_sync",
+      "module": "lfo",
+      "label": "LFO MIDI clock sync",
+      "kind": "boolean",
+      "default": true,
+      "access": [
+        { "type": "button_combo", "gesture": "in the KEY SYNC sub-menu, press OSC SYNC" },
+        { "type": "sysex", "sub": "35", "encoding": "0 = sync, 1 = ignore clock" }
+      ],
+      "function": "When on and MIDI clock is present, the LFO locks to tempo and RATE picks the division."
+    },
+    {
+      "id": "lfo.shape_order",
+      "module": "lfo",
+      "label": "LFO shape order",
+      "kind": "list",
+      "length": 5,
+      "access": [
+        { "type": "sysex", "sub": "38", "encoding": "slot index 0-4, shape 0-4" },
+        { "type": "app" }
+      ],
+      "function": "Which shape sits at each of the five SHAPE positions. Changes what morphs into what."
+    },
+    {
+      "id": "lfo.shape_phase",
+      "module": "lfo",
+      "label": "LFO phase offset",
+      "kind": "list",
+      "length": 5,
+      "range": { "min": 0, "max": 315, "step": 45, "unit": "degrees" },
+      "access": [
+        {
+          "type": "sysex",
+          "sub": "3A",
+          "encoding": "shape index 0-4, phase 0-7 in eighths of a cycle"
+        },
+        { "type": "app" }
+      ],
+      "function": "Start phase on trigger, set separately for each shape position."
+    },
+
+    {
+      "id": "sample_hold.rate",
+      "module": "sample_hold",
+      "label": "RATE",
+      "manual_ref": 39,
+      "kind": "continuous",
+      "physical": { "min": 0.26, "max": 28, "unit": "Hz" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Internal sample clock rate."
+    },
+    {
+      "id": "sample_hold.glide",
+      "module": "sample_hold",
+      "label": "GLIDE",
+      "manual_ref": 40,
+      "kind": "continuous",
+      "physical": { "min": 0.0005, "max": 1, "unit": "s" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Slew between sampled values."
+    },
+    {
+      "id": "slew.rate",
+      "module": "slew",
+      "label": "SLEW",
+      "manual_ref": 41,
+      "kind": "continuous",
+      "physical": { "min": 0.001, "max": 3, "unit": "s" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Slew time applied to whatever is patched into SLEW IN."
+    },
+    {
+      "id": "pitch_bus.porta_time",
+      "module": "pitch_bus",
+      "label": "PORTA TIME",
+      "manual_ref": 42,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 10, "unit": "s" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Portamento between MIDI notes. Off fully left. Also sets autoglide speed."
+    },
+    {
+      "id": "att1.level",
+      "module": "att1",
+      "label": "ATTENUATOR 1",
+      "manual_ref": 43,
+      "kind": "continuous",
+      "physical": { "min": "-inf", "max": 4, "unit": "dB" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Level of attenuator 1. Works together with the ATT1 CV input."
+    },
+    {
+      "id": "att2.level",
+      "module": "att2",
+      "label": "ATTENUATOR 2",
+      "manual_ref": 44,
+      "kind": "continuous",
+      "physical": { "min": "-inf", "max": 0, "unit": "dB" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Level of attenuator 2. With default routing this is LFO-to-pulse-width depth for both oscillators."
+    },
+
+    {
+      "id": "output.volume",
+      "module": "output",
+      "label": "VOLUME",
+      "manual_ref": 37,
+      "kind": "continuous",
+      "physical": { "min": 0, "max": 100, "unit": "%" },
+      "access": [{ "type": "panel", "control": "knob" }],
+      "function": "Main output level. Does not affect headphones."
+    },
+    {
+      "id": "output.phones_volume",
+      "module": "output",
+      "label": "PHONES LEVEL",
+      "manual_ref": 104,
+      "kind": "continuous",
+      "access": [{ "type": "rear_panel", "control": "knob" }],
+      "function": "Headphone level."
+    },
+
+    {
+      "id": "assign.source",
+      "module": "assign",
+      "label": "Assignable output",
+      "kind": "enum",
+      "default": "osc1_cv",
+      "values": [
+        { "value": "osc1_cv", "sysex": 0 },
+        { "value": "osc2_cv", "sysex": 1 },
+        { "value": "velocity", "sysex": 2 },
+        { "value": "mod_wheel", "sysex": 3 },
+        { "value": "aftertouch", "sysex": 4 }
+      ],
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "hold OSC SYNC until RANGE buttons flash, RANGE buttons select, hold OSC SYNC to exit"
+        },
+        { "type": "sysex", "sub": "04" }
+      ],
+      "function": "What the ASSIGN jack outputs. Persists across power cycles."
+    },
+
+    {
+      "id": "midi.paraphonic",
+      "module": "midi",
+      "label": "PARAPHONIC",
+      "manual_ref": 9,
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        { "type": "panel", "control": "button" },
+        { "type": "sysex", "sub": "0F" }
+      ],
+      "function": "When on and two notes are held, each oscillator takes its own note. With one note both play it."
+    },
+    {
+      "id": "midi.channel",
+      "module": "midi",
+      "label": "MIDI CHANNEL",
+      "manual_ref": 105,
+      "kind": "integer",
+      "range": { "min": 1, "max": 16 },
+      "default": 1,
+      "access": [
+        { "type": "rear_panel", "control": "dip_switches_x4" },
+        {
+          "type": "sysex",
+          "sub": "00",
+          "value_range": "0-15",
+          "side_effect": "disables the DIP switches"
+        }
+      ],
+      "function": "MIDI receive channel."
+    },
+    {
+      "id": "midi.note_priority",
+      "module": "midi",
+      "label": "Note priority",
+      "kind": "enum",
+      "default": "last",
+      "values": [
+        { "value": "low", "sysex": 0 },
+        { "value": "high", "sysex": 1 },
+        { "value": "last", "sysex": 2 }
+      ],
+      "access": [
+        {
+          "type": "button_combo",
+          "gesture": "long-press OSC SYNC, VCF MODE cycles (HPF = high, BPF = last, LPF = low)"
+        },
+        { "type": "sysex", "sub": "01" }
+      ],
+      "function": "Which held note sounds when more keys are down than there are voices."
+    },
+    {
+      "id": "midi.envelope_retrigger",
+      "module": "midi",
+      "label": "Envelope retriggering",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        { "type": "button_combo", "gesture": "in the OSC SYNC sub-menu, press KEY TRK" },
+        { "type": "sysex", "sub": "05" }
+      ],
+      "function": "Whether overlapping notes retrigger both envelopes."
+    },
+    {
+      "id": "midi.pitch_bend_range",
+      "module": "midi",
+      "label": "Pitch bend range",
+      "kind": "integer",
+      "range": { "min": 0, "max": 24, "unit": "semitones" },
+      "default": 2,
+      "access": [{ "type": "sysex", "sub": "03" }, { "type": "app" }],
+      "function": "Pitch wheel range."
+    },
+    {
+      "id": "midi.key_split",
+      "module": "midi",
+      "label": "Key split",
+      "kind": "integer",
+      "range": { "min": 24, "max": 88, "unit": "MIDI note", "off_value": 0 },
+      "default": 0,
+      "access": [{ "type": "sysex", "sub": "28" }, { "type": "app" }],
+      "function": "Notes below the split play OSC 1, notes from the split upward play OSC 2."
+    },
+    {
+      "id": "midi.min_note",
+      "module": "midi",
+      "label": "Min MIDI note",
+      "kind": "integer",
+      "range": { "min": 0, "max": 127 },
+      "default": 24,
+      "access": [{ "type": "sysex", "sub": "0C" }, { "type": "app" }],
+      "function": "Lowest note played."
+    },
+    {
+      "id": "midi.max_note",
+      "module": "midi",
+      "label": "Max MIDI note",
+      "kind": "integer",
+      "range": { "min": 0, "max": 127 },
+      "default": 96,
+      "access": [{ "type": "sysex", "sub": "0D" }, { "type": "app" }],
+      "function": "Highest note played."
+    },
+    {
+      "id": "midi.mute_out_of_range",
+      "module": "midi",
+      "label": "Mute out-of-range notes",
+      "kind": "boolean",
+      "default": false,
+      "access": [{ "type": "sysex", "sub": "0B" }, { "type": "app" }],
+      "function": "Off: notes outside the range are clamped to the nearest limit. On: they are ignored."
+    },
+    {
+      "id": "midi.poly_chain",
+      "module": "midi",
+      "label": "Poly chain",
+      "kind": "boolean",
+      "default": false,
+      "access": [
+        { "type": "button_combo", "gesture": "hold PARAPHONIC for 2 s" },
+        { "type": "sysex", "sub": "08" }
+      ],
+      "function": "Passes notes this unit cannot play to the next unit over MIDI THRU."
+    },
+    {
+      "id": "midi.device_id",
+      "module": "midi",
+      "label": "Device ID",
+      "kind": "integer",
+      "range": { "min": 0, "max": 15 },
+      "default": 0,
+      "access": [{ "type": "sysex", "sub": "09" }],
+      "function": "SysEx address. Not the MIDI channel."
+    },
+    {
+      "id": "midi.channel_switches_disabled",
+      "module": "midi",
+      "label": "Disable MIDI DIP switches",
+      "kind": "boolean",
+      "default": false,
+      "access": [{ "type": "sysex", "sub": "0A" }, { "type": "app" }],
+      "function": "Ignores the rear DIP switches."
+    }
+  ],
+
+  "indicators": [
+    {
+      "id": "osc1.octave_leds",
+      "module": "osc1",
+      "label": "OCTAVE 8/16/32",
+      "function": "Current range. All three lit = +/-10 octave mode. Also shows firmware version and sub-menu state."
+    },
+    {
+      "id": "osc2.octave_leds",
+      "module": "osc2",
+      "label": "OCTAVE 8/16/32",
+      "function": "Current range."
+    },
+    {
+      "id": "osc1.shape_leds",
+      "module": "osc1",
+      "label": "SHAPE",
+      "function": "Current wave shape."
+    },
+    {
+      "id": "osc2.shape_leds",
+      "module": "osc2",
+      "label": "SHAPE",
+      "function": "Current wave shape."
+    },
+    {
+      "id": "filter.mode_leds",
+      "module": "filter",
+      "label": "MODE",
+      "function": "Filter mode. Reused to show note priority and one-shot state in sub-menus."
+    },
+    {
+      "id": "lfo.shape_leds",
+      "module": "lfo",
+      "label": "SHAPE ring",
+      "function": "LFO shape and rate. Reused as value display for depth settings, assign source and the tuning aid."
+    },
+    {
+      "id": "overdrive.drive_led",
+      "module": "overdrive",
+      "label": "DRIVE",
+      "function": "Drive amount."
+    },
+    {
+      "id": "sample_hold.rate_led",
+      "module": "sample_hold",
+      "label": "RATE",
+      "function": "Sample clock."
+    },
+    { "id": "output.gate_led", "module": "output", "label": "MIDI", "function": "Gate present." }
+  ],
+
+  "ports": [
+    {
+      "id": "jack.osc1",
+      "label": "OSC 1",
+      "manual_ref": 45,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc1.pitch_cv_in",
+      "combine": "sum",
+      "electrical": { "scaling": "1 V/octave" },
+      "function": "OSC 1 pitch CV. Adds to the MIDI pitch (inferred from patch tip 10)."
+    },
+    {
+      "id": "jack.osc2",
+      "label": "OSC 2",
+      "manual_ref": 46,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc2.pitch_cv_in",
+      "combine": "sum",
+      "electrical": { "scaling": "1 V/octave" },
+      "function": "OSC 2 pitch CV. With OSC SYNC on, audio-rate input here gives FM-style timbres."
+    },
+    {
+      "id": "jack.osc1_2",
+      "label": "OSC 1+2",
+      "manual_ref": 47,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "pitch_bus.ext_cv_in",
+      "combine": "sum",
+      "electrical": { "scaling": "1 V/octave" },
+      "function": "Pitch CV to both oscillators."
+    },
+    {
+      "id": "jack.invert_in",
+      "label": "INVERT IN",
+      "manual_ref": 48,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter.in",
+      "normalled_from": "env2.out",
+      "function": "Inverter input."
+    },
+    {
+      "id": "jack.shape1",
+      "label": "SHAPE 1",
+      "manual_ref": 49,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc1.shape_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "OSC 1 shape CV."
+    },
+    {
+      "id": "jack.shape2",
+      "label": "SHAPE 2",
+      "manual_ref": 50,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc2.shape_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "OSC 2 shape CV."
+    },
+    {
+      "id": "jack.pw1",
+      "label": "PW1",
+      "manual_ref": 51,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc1.pw_cv_in",
+      "normalled_from": "att2.out",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "OSC 1 pulse width CV."
+    },
+    {
+      "id": "jack.pw2",
+      "label": "PW2",
+      "manual_ref": 52,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "osc2.pw_cv_in",
+      "normalled_from": "att2.out",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "OSC 2 pulse width CV."
+    },
+    {
+      "id": "jack.vcf_in",
+      "label": "VCF",
+      "manual_ref": 53,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "filter.in",
+      "normalled_from": "mixer.out",
+      "function": "Filter audio input."
+    },
+    {
+      "id": "jack.freq_mod",
+      "label": "FREQ MOD",
+      "manual_ref": 54,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "filter.cutoff_mod_in",
+      "normalled_from": "lfo.out",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "Cutoff CV, scaled by MOD DEPTH."
+    },
+    {
+      "id": "jack.res",
+      "label": "RES",
+      "manual_ref": 55,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "filter.resonance_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "Resonance CV."
+    },
+    {
+      "id": "jack.od_in",
+      "label": "OD IN",
+      "manual_ref": 56,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "overdrive.in",
+      "normalled_from": "filter.out",
+      "function": "Overdrive audio input."
+    },
+    {
+      "id": "jack.vca_in",
+      "label": "VCA IN",
+      "manual_ref": 57,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca.in",
+      "normalled_from": "overdrive.out",
+      "function": "VCA audio input. An unterminated cable here silences the synth."
+    },
+    {
+      "id": "jack.vca_cv",
+      "label": "VCA CV",
+      "manual_ref": 58,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "vca.cv_in",
+      "normalled_from": "env1.out",
+      "electrical": { "min_v": -9, "max_v": 9 },
+      "function": "VCA control voltage."
+    },
+    {
+      "id": "jack.delay_in",
+      "label": "DELAY IN",
+      "manual_ref": 59,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "delay.in",
+      "normalled_from": "vca.out",
+      "function": "Delay audio input."
+    },
+    {
+      "id": "jack.delay_time",
+      "label": "DELAY TIME",
+      "manual_ref": 60,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "delay.time_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "Delay time CV."
+    },
+    {
+      "id": "jack.e_gate1",
+      "label": "E. GATE1",
+      "manual_ref": 61,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "env1.gate_in",
+      "normalled_from": "midi.gate",
+      "electrical": { "min_v": -5, "max_v": 5, "trigger_v": 1.5 },
+      "function": "Envelope 1 gate."
+    },
+    {
+      "id": "jack.e_gate2",
+      "label": "E. GATE2",
+      "manual_ref": 62,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "env2.gate_in",
+      "normalled_from": "env1.gate_thru",
+      "electrical": { "min_v": -5, "max_v": 5, "trigger_v": 1.5 },
+      "function": "Envelope 2 gate. Follows gate 1 unless patched."
+    },
+    {
+      "id": "jack.sh_in",
+      "label": "S&H IN",
+      "manual_ref": 63,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.in",
+      "normalled_from": "noise.out",
+      "function": "Signal to be sampled."
+    },
+    {
+      "id": "jack.sh_clock",
+      "label": "S&H CLOCK",
+      "manual_ref": 64,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.clock_in",
+      "electrical": { "min_v": -5, "max_v": 5, "trigger_v": 3 },
+      "function": "External sample clock, in place of the internal RATE clock."
+    },
+    {
+      "id": "jack.lfo_rate",
+      "label": "LFO RATE",
+      "manual_ref": 65,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.rate_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "LFO rate CV."
+    },
+    {
+      "id": "jack.lfo_shape",
+      "label": "LFO SHAPE",
+      "manual_ref": 66,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.shape_cv_in",
+      "combine": "sum",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "LFO shape CV."
+    },
+    {
+      "id": "jack.lfo_trig",
+      "label": "LFO TRIG",
+      "manual_ref": 67,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "lfo.trig_in",
+      "electrical": { "min_v": -5, "max_v": 5, "trigger_v": 1.6 },
+      "function": "Restarts the LFO."
+    },
+    {
+      "id": "jack.mult",
+      "label": "MULT",
+      "manual_ref": 68,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.in",
+      "normalled_from": "lfo.out",
+      "function": "Mult input."
+    },
+    {
+      "id": "jack.att1_in",
+      "label": "ATT1 IN",
+      "manual_ref": 69,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "att1.in",
+      "normalled_from": "att2.out",
+      "function": "Attenuator 1 input."
+    },
+    {
+      "id": "jack.att1_cv",
+      "label": "ATT1 CV",
+      "manual_ref": 70,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "att1.cv_in",
+      "normalled_from": "assign.out",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "Attenuator 1 level CV."
+    },
+    {
+      "id": "jack.att2_in",
+      "label": "ATT2 IN",
+      "manual_ref": 71,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "att2.in",
+      "normalled_from": "lfo.out",
+      "function": "Attenuator 2 input."
+    },
+    {
+      "id": "jack.slew_in",
+      "label": "SLEW IN",
+      "manual_ref": 72,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "slew.in",
+      "function": "Slew limiter input."
+    },
+    {
+      "id": "jack.sum1_a",
+      "label": "SUM1(A)",
+      "manual_ref": 73,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum1.a",
+      "function": "Summer 1, first input."
+    },
+    {
+      "id": "jack.sum1_b",
+      "label": "SUM1(B)",
+      "manual_ref": 74,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum1.b",
+      "function": "Summer 1, second input."
+    },
+    {
+      "id": "jack.sum2_a",
+      "label": "SUM2(A)",
+      "manual_ref": 75,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum2.a",
+      "function": "Summer 2, first input."
+    },
+    {
+      "id": "jack.sum2_b",
+      "label": "SUM2(B)",
+      "manual_ref": 76,
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum2.b",
+      "function": "Summer 2, second input."
+    },
+
+    {
+      "id": "jack.osc1_out",
+      "label": "OSC 1",
+      "manual_ref": 77,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "osc1.out",
+      "electrical": { "max_level_dbu": 14 },
+      "function": "Oscillator 1 output."
+    },
+    {
+      "id": "jack.osc2_out",
+      "label": "OSC 2",
+      "manual_ref": 78,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "osc2.out",
+      "electrical": { "max_level_dbu": 14 },
+      "function": "Oscillator 2 output."
+    },
+    {
+      "id": "jack.osc_mix_out",
+      "label": "OSC MIX",
+      "manual_ref": 79,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "mixer.osc_mix_out",
+      "electrical": { "max_level_dbu": 14 },
+      "function": "Oscillator crossfade output, before noise and external input."
+    },
+    {
+      "id": "jack.vcf1",
+      "label": "VCF 1",
+      "manual_ref": 80,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "filter.out",
+      "electrical": { "max_level_dbu": 12 },
+      "function": "Main filter output."
+    },
+    {
+      "id": "jack.vcf2",
+      "label": "VCF 2",
+      "manual_ref": 81,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "filter.out2",
+      "electrical": { "max_level_dbu": 12 },
+      "function": "Alternate-mode filter output. Not connected to anything by default."
+    },
+    {
+      "id": "jack.overdrive_out",
+      "label": "OVERDRIVE",
+      "manual_ref": 82,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "overdrive.out",
+      "electrical": { "max_level_dbu": 18 },
+      "function": "Overdrive output."
+    },
+    {
+      "id": "jack.vca_out",
+      "label": "VCA",
+      "manual_ref": 83,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "vca.out",
+      "electrical": { "max_level_dbu": 18 },
+      "function": "VCA output, pre delay."
+    },
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "manual_ref": 84,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "output.main",
+      "electrical": { "max_level_dbu": 15 },
+      "function": "Main output, post delay. The only main output when racked."
+    },
+    {
+      "id": "jack.noise_out",
+      "label": "NOISE",
+      "manual_ref": 85,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5mm TS",
+      "node": "noise.out",
+      "electrical": { "max_level_dbu": 18 },
+      "function": "White noise."
+    },
+    {
+      "id": "jack.env1_out",
+      "label": "ENV1",
+      "manual_ref": 86,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "env1.out",
+      "electrical": { "min_v": 0, "max_v": 9 },
+      "function": "Envelope 1."
+    },
+    {
+      "id": "jack.env2_out",
+      "label": "ENV2",
+      "manual_ref": 87,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "env2.out",
+      "electrical": { "min_v": 0, "max_v": 9 },
+      "function": "Envelope 2."
+    },
+    {
+      "id": "jack.invert_out",
+      "label": "INVERT",
+      "manual_ref": 88,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "inverter.out",
+      "electrical": { "min_v": -9.5, "max_v": 9.5 },
+      "function": "Inverted copy of INVERT IN."
+    },
+    {
+      "id": "jack.lfo_out",
+      "label": "LFO",
+      "manual_ref": 89,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.out",
+      "electrical": { "min_v": -5, "max_v": 5 },
+      "function": "Bipolar LFO."
+    },
+    {
+      "id": "jack.lfo_uni",
+      "label": "LFO UNI",
+      "manual_ref": 90,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "lfo.uni_out",
+      "electrical": { "min_v": 0, "max_v": 5 },
+      "function": "Unipolar LFO."
+    },
+    {
+      "id": "jack.sh_out",
+      "label": "S&H",
+      "manual_ref": 91,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "sample_hold.out",
+      "electrical": { "max_v": 9.5 },
+      "function": "Sample and hold output. Not connected to anything by default."
+    },
+    {
+      "id": "jack.mult1",
+      "label": "MULT 1",
+      "manual_ref": 92,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.out1",
+      "function": "Copy of MULT in."
+    },
+    {
+      "id": "jack.mult2",
+      "label": "MULT 2",
+      "manual_ref": 93,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "mult.out2",
+      "function": "Copy of MULT in."
+    },
+    {
+      "id": "jack.midi_gate",
+      "label": "MIDI GATE",
+      "manual_ref": 94,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5mm TS",
+      "node": "midi.gate",
+      "electrical": { "min_v": 0, "max_v": 3.3 },
+      "function": "Gate derived from MIDI notes."
+    },
+    {
+      "id": "jack.att1_out",
+      "label": "ATT1",
+      "manual_ref": 95,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "att1.out",
+      "electrical": { "min_v": -9.5, "max_v": 9.5 },
+      "function": "Attenuator 1 output."
+    },
+    {
+      "id": "jack.att2_out",
+      "label": "ATT2",
+      "manual_ref": 96,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "att2.out",
+      "function": "Attenuator 2 output."
+    },
+    {
+      "id": "jack.slew_out",
+      "label": "SLEW",
+      "manual_ref": 97,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "slew.out",
+      "electrical": { "min_v": -9.5, "max_v": 9.5 },
+      "function": "Slew limiter output."
+    },
+    {
+      "id": "jack.sum1_out",
+      "label": "SUM1",
+      "manual_ref": 98,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum1.out",
+      "electrical": { "min_v": -9.5, "max_v": 9.5 },
+      "function": "SUM1 A + B."
+    },
+    {
+      "id": "jack.sum2_out",
+      "label": "SUM2",
+      "manual_ref": 99,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5mm TS",
+      "node": "sum2.out",
+      "electrical": { "min_v": -9.5, "max_v": 9.5 },
+      "function": "SUM2 A + B."
+    },
+    {
+      "id": "jack.assign",
+      "label": "ASSIGN",
+      "manual_ref": 100,
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5mm TS",
+      "node": "assign.out",
+      "electrical": { "min_v": 0, "max_v": 5 },
+      "function": "Assignable MIDI-to-CV output."
+    },
+
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "manual_ref": 38,
+      "location": "top",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "MIDI input."
+    },
+    {
+      "id": "jack.input",
+      "label": "INPUT",
+      "manual_ref": 101,
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35mm TS, unbalanced",
+      "node": "ext_in.in",
+      "electrical": { "impedance_ohm": 100000 },
+      "function": "External audio input."
+    },
+    {
+      "id": "jack.main_out",
+      "label": "OUTPUT",
+      "manual_ref": 102,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS, servo-balanced mono",
+      "node": "output.main",
+      "electrical": { "max_level_dbu": 12 },
+      "function": "Main output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "manual_ref": 103,
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35mm TRS",
+      "node": "output.phones",
+      "electrical": { "impedance_ohm": 8 },
+      "function": "Headphones."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "manual_ref": 106,
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "DIN-5",
+      "node": null,
+      "function": "Soft thru. Carries unplayed notes in poly chain mode."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "manual_ref": 107,
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": null,
+      "function": "Class-compliant USB MIDI. Do not send the same data on USB and DIN at once."
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC INPUT",
+      "manual_ref": 109,
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "barrel",
+      "node": null,
+      "electrical": { "voltage_v": 12, "current_ma": 1000 },
+      "function": "12 V DC supply."
+    }
+  ],
+
+  "connections": [
+    {
+      "id": "c01",
+      "from": "midi.pitch_osc1",
+      "to": "pitch_bus.kbd_in_osc1",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "midi.pitch_osc2",
+      "to": "pitch_bus.kbd_in_osc2",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Same note as OSC 1 unless paraphonic, key split or pedal mode is active."
+    },
+    {
+      "id": "c03",
+      "from": "midi.pitch_bend",
+      "to": "pitch_bus.bend_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "pitch_bus.osc1_out",
+      "to": "osc1.pitch_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "pitch_bus.osc2_out",
+      "to": "osc2.pitch_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": { "param": "osc2.sync", "equals": true }
+    },
+
+    {
+      "id": "c10",
+      "from": "osc1.out",
+      "to": "mixer.in_osc1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "1 - mixer.osc_mix (normalised 0..1)"
+    },
+    {
+      "id": "c11",
+      "from": "osc2.out",
+      "to": "mixer.in_osc2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount_expr": "mixer.osc_mix (normalised 0..1)"
+    },
+    {
+      "id": "c12",
+      "from": "noise.out",
+      "to": "mixer.in_noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise_level"
+    },
+    { "id": "c13", "from": "ext_in.out", "to": "mixer.in_ext", "signal": "audio", "kind": "fixed" },
+
+    {
+      "id": "c20",
+      "from": "mixer.out",
+      "to": "filter.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_in"
+    },
+    {
+      "id": "c21",
+      "from": "filter.out",
+      "to": "overdrive.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.od_in"
+    },
+    {
+      "id": "c22",
+      "from": "overdrive.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_in"
+    },
+    {
+      "id": "c23",
+      "from": "vca.out",
+      "to": "delay.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.delay_in"
+    },
+    { "id": "c24", "from": "delay.out", "to": "output.in", "signal": "audio", "kind": "fixed" },
+
+    {
+      "id": "c30",
+      "from": "midi.gate",
+      "to": "env1.gate_in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.e_gate1"
+    },
+    {
+      "id": "c31",
+      "from": "env1.gate_thru",
+      "to": "env2.gate_in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.e_gate2",
+      "note": "Envelope 2 follows whatever gates Envelope 1."
+    },
+    {
+      "id": "c32",
+      "from": "env1.out",
+      "to": "vca.cv_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vca_cv"
+    },
+    {
+      "id": "c33",
+      "from": "env2.out",
+      "to": "filter.cutoff_env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "filter.env_depth"
+    },
+    {
+      "id": "c34",
+      "from": "env2.out",
+      "to": "inverter.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.invert_in"
+    },
+
+    {
+      "id": "c40",
+      "from": "lfo.out",
+      "to": "filter.cutoff_mod_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.freq_mod",
+      "amount": "filter.mod_depth"
+    },
+    {
+      "id": "c41",
+      "from": "lfo.out",
+      "to": "att2.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att2_in"
+    },
+    {
+      "id": "c42",
+      "from": "lfo.out",
+      "to": "mult.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.mult"
+    },
+    {
+      "id": "c43",
+      "from": "att2.out",
+      "to": "osc1.pw_cv_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.pw1"
+    },
+    {
+      "id": "c44",
+      "from": "att2.out",
+      "to": "osc2.pw_cv_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.pw2"
+    },
+    {
+      "id": "c45",
+      "from": "att2.out",
+      "to": "att1.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att1_in"
+    },
+    {
+      "id": "c46",
+      "from": "assign.out",
+      "to": "att1.cv_in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att1_cv"
+    },
+    {
+      "id": "c47",
+      "from": "noise.out",
+      "to": "sample_hold.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.sh_in"
+    },
+
+    {
+      "id": "c50",
+      "from": "midi.pitch_last",
+      "to": "filter.cutoff_kbd_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "filter.key_track", "equals": true }
+    },
+    {
+      "id": "c51",
+      "from": "midi.aftertouch",
+      "to": "filter.cutoff_midi_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "filter.midi_mod_source", "equals": "aftertouch" },
+      "amount": "filter.midi_mod_depth"
+    },
+    {
+      "id": "c52",
+      "from": "midi.mod_wheel",
+      "to": "filter.cutoff_midi_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "filter.midi_mod_source", "equals": "mod_wheel" },
+      "amount": "filter.midi_mod_depth"
+    },
+    {
+      "id": "c53",
+      "from": "midi.velocity",
+      "to": "filter.cutoff_midi_mod_in",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "filter.midi_mod_source", "equals": "velocity" },
+      "amount": "filter.midi_mod_depth"
+    },
+    {
+      "id": "c54",
+      "from": "midi.gate",
+      "to": "lfo.trig_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": { "param": "lfo.key_sync", "equals": true }
+    },
+    {
+      "id": "c55",
+      "from": "midi.clock",
+      "to": "lfo.clock_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": { "param": "lfo.midi_clock_sync", "equals": true }
+    },
+
+    {
+      "id": "c60",
+      "from": "pitch_bus.osc1_out",
+      "to": "assign.in_osc1_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "assign.source", "equals": "osc1_cv" },
+      "note": "Whether this CV includes portamento and bend is not stated."
+    },
+    {
+      "id": "c61",
+      "from": "pitch_bus.osc2_out",
+      "to": "assign.in_osc2_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "assign.source", "equals": "osc2_cv" }
+    },
+    {
+      "id": "c62",
+      "from": "midi.velocity",
+      "to": "assign.in_velocity",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "assign.source", "equals": "velocity" }
+    },
+    {
+      "id": "c63",
+      "from": "midi.mod_wheel",
+      "to": "assign.in_mod_wheel",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "assign.source", "equals": "mod_wheel" }
+    },
+    {
+      "id": "c64",
+      "from": "midi.aftertouch",
+      "to": "assign.in_aftertouch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": { "param": "assign.source", "equals": "aftertouch" }
+    }
+  ],
+
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Envelope shape",
+      "applies_to": ["env1", "env2"],
+      "rule": "Standard ADSR, 0 to 9 V. Attack is linear, decay and release are exponential. Gate threshold 1.5 V. Overlapping notes retrigger only if midi.envelope_retrigger is on."
+    },
+    {
+      "id": "b02",
+      "name": "Filter cutoff sum",
+      "applies_to": ["filter"],
+      "rule": "Effective cutoff = FREQ + FREQ MOD input x MOD DEPTH + Envelope 2 x ENV DEPTH + key tracking (if on) + MIDI mod source x VCF mod depth. Both depth knobs are positive only; use the inverter for negative envelope amounts.",
+      "confidence": "inferred from manual plus standard VCF practice"
+    },
+    {
+      "id": "b03",
+      "name": "Dual filter outputs",
+      "applies_to": ["filter"],
+      "rule": "VCF 2 always carries a different response from VCF 1: HP -> BP, BP -> LP, LP -> HP. Summing VCF 1 and VCF 2 in LP mode (LP + HP) gives a notch."
+    },
+    {
+      "id": "b04",
+      "name": "Self-oscillation",
+      "applies_to": ["filter"],
+      "rule": "Near maximum RESO the filter outputs a sine at the cutoff frequency with no input. With KEY TRK on it can be played chromatically."
+    },
+    {
+      "id": "b05",
+      "name": "Shape morphing",
+      "applies_to": ["osc1", "osc2", "lfo"],
+      "rule": "With blend on, SHAPE position p in [0,4] crossfades between shape floor(p) and floor(p)+1. With blend off it snaps to the nearest of five. Shape CV adds to the knob. Oscillator order: tone mod, pulse, saw, triangle, sine. LFO order: sine, triangle, saw, square, reverse saw (re-orderable).",
+      "confidence": "crossfade law inferred"
+    },
+    {
+      "id": "b06",
+      "name": "Pulse width",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "WIDTH only affects the tone mod and pulse shapes. Default PWM path is LFO -> ATT 2 -> both PW inputs, so ATT 2 is the PWM depth and patching PW1 or PW2 frees that oscillator from it."
+    },
+    {
+      "id": "b07",
+      "name": "Hard sync",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "With OSC SYNC on, OSC 1 tracks the MIDI note and resets OSC 2's cycle. OSC 2 tuning or CV then changes harmonic content rather than pitch."
+    },
+    {
+      "id": "b08",
+      "name": "Voice allocation",
+      "applies_to": ["midi"],
+      "rule": "Mono: both oscillators play the priority note. Paraphonic: with two or more notes held the oscillators take different notes; with one note both play it. Key split: notes below the split go to OSC 1, the rest to OSC 2. Pedal mode: OSC 2 is frozen on one note. There is still one filter, one VCA and one envelope pair."
+    },
+    {
+      "id": "b09",
+      "name": "Note range",
+      "applies_to": ["midi"],
+      "rule": "Playable range is MIDI 24 to 96 by default. Notes outside are clamped to the nearest limit, or ignored if midi.mute_out_of_range is on."
+    },
+    {
+      "id": "b10",
+      "name": "VCA control",
+      "applies_to": ["vca"],
+      "rule": "VCA gain follows VCA CV (Envelope 1 by default) plus VCA BIAS. External audio is only heard while the VCA is open."
+    },
+    {
+      "id": "b11",
+      "name": "Signal order and gain staging",
+      "applies_to": ["overdrive", "vca", "delay"],
+      "rule": "Overdrive sits before the VCA, so distortion does not change as the note decays. Overdrive LEVEL sets how hard the delay is driven; hot levels plus high REPEATS push the BBD into distorted runaway feedback."
+    },
+    {
+      "id": "b12",
+      "name": "Delay character",
+      "applies_to": ["delay"],
+      "rule": "BBD delay, 25 to 640 ms. Feedback can exceed unity depending on trimmer VR37. Some clock noise is always present at long times. Modulating time shifts pitch, giving chorus at short settings."
+    },
+    {
+      "id": "b13",
+      "name": "LFO modes",
+      "applies_to": ["lfo"],
+      "rule": "Free-running, or tempo-synced when MIDI clock is present. KEY SYNC resets phase per note (start phase per shape is settable). One-shot plays a single cycle per trigger. Key rate tracking scales rate by 2x per octave from a root note."
+    },
+    {
+      "id": "b14",
+      "name": "Sample and hold",
+      "applies_to": ["sample_hold"],
+      "rule": "On each clock (internal RATE or external above 3 V) the input is sampled and held. GLIDE slews between values. Default input is white noise, giving stepped random voltage. The output goes nowhere until patched."
+    },
+    {
+      "id": "b15",
+      "name": "Autoglide",
+      "applies_to": ["pitch_bus"],
+      "rule": "Each note starts offset by up to +/-12 semitones and slides linearly to pitch at the PORTA TIME rate. Set per oscillator."
+    },
+    {
+      "id": "b16",
+      "name": "Poly chain",
+      "applies_to": ["midi"],
+      "rule": "All units on the same channel with poly chain on. Each unit plays the notes it can (1, or 2 if paraphonic) in played order and passes the rest down MIDI THRU. If the last unit has poly chain off it steals its voice for extra notes; if on, extra notes are dropped."
+    },
+    {
+      "id": "b17",
+      "name": "Start-up calibration",
+      "applies_to": ["osc1", "osc2"],
+      "rule": "Oscillators self-calibrate at power-on, so tuning is stable compared with the Model D. A model needs little or no drift."
+    },
+    {
+      "id": "b18",
+      "name": "Patch bay semantics",
+      "applies_to": ["slew", "sum1", "sum2", "mult", "inverter", "att1", "att2"],
+      "rule": "Any output may be patched to any input. Inserting a cable into an input with a default source replaces that source. Inputs with 'combine: sum' add to the panel control instead. One output can feed several inputs via the mult."
+    }
+  ],
+
+  "midi": {
+    "receives": [
+      "note_on (with velocity)",
+      "note_off",
+      "pitch_bend",
+      "channel_aftertouch",
+      "cc1/cc33_mod_wheel",
+      "cc64_sustain",
+      "midi_clock",
+      "sysex"
+    ],
+    "transmits": ["sysex responses (software version, global setting updates)"],
+    "note_to_cv": { "scaling": "1 V/octave" },
+    "sysex": {
+      "format": "F0 00 20 32 28 ID <payload> F7",
+      "fields": {
+        "00 20 32": "Behringer manufacturer ID",
+        "28": "Neutron model ID",
+        "ID": "device ID 00-0F, or 7F for all"
+      },
+      "main_commands": {
+        "0A": "global setting: 0A <sub> <value> (see parameters with access.type = sysex)",
+        "0B": "restore global settings",
+        "10": "ASSIGN output calibration (20 = 1 V, 21 = 4 V, 22 = down, 23 = up, 24 = save and exit)",
+        "73": "software version request",
+        "74": "software version response",
+        "5A": "global setting update"
+      }
+    }
+  },
+
+  "specifications": {
+    "power": { "adaptor": "12 V DC, 1000 mA", "consumption_w_typical": "7.5-9" },
+    "eurorack": { "width_hp": 80, "supply": "+12 V, 1 A" },
+    "dimensions_mm": { "h": 94, "w": 424, "d": 136 },
+    "weight_kg": 2.0,
+    "operating_temperature_c": { "min": 5, "max": 40 }
+  },
+
+  "omitted_from_source": [
+    "safety and legal text",
+    "firmware update and ASSIGN/BBD calibration procedures",
+    "tuning aid and software-version LED read-outs",
+    "hook-up diagrams",
+    "Eurorack installation steps",
+    "troubleshooting",
+    "Neutron app screenshots",
+    "example patches (worth adding later as test cases)",
+    "glossary",
+    "FCC statement"
+  ],
+
+  "source_inconsistencies": [
+    "Signal order: features text says the VCA passes through the overdrive; the routing table and block diagram say VCF > overdrive > VCA > delay. The table is used here, and patch tip 6 supports it.",
+    "ATT 2 default source is 'LFO (bipolar)' in the routing table and section 4.12, but 'uni-polar LFO' in the block diagram. Bipolar is used here.",
+    "LFO depth is 64 steps from 1 to 100% from the panel, but only 5 steps (20 to 100%) over SysEx.",
+    "Delay minimum is 24 ms in the overview and 25 ms in the specifications. Oscillator maximum is 'over 50 kHz' and 55 kHz.",
+    "SysEx table gives OSC sync and LFO key sync as '0 = enabled, 1 = disabled, default enabled'. This looks inverted relative to every other boolean and to the panel default.",
+    "SysEx VCF mod source has 4 values (disabled, aftertouch, mod wheel, velocity); the panel menu lists 5 slots including 'not used'.",
+    "Attenuator 1 description refers the reader to item 58 (VCA CV) where item 70 (ATT1 CV) is meant.",
+    "Rear output is a 'mono jack' in the text and 'TRS balanced' in the specifications. Both are true of a servo-balanced mono output.",
+    "Section 11.4 points to section 5.4 for tuning; tuning is section 5.5.",
+    "VCF mod source SysEx numbering differs from the ASSIGN numbering for the same three MIDI sources."
+  ],
+
+  "modelling_gaps": [
+    {
+      "topic": "Tone mod waveform",
+      "detail": "Named and drawn as a pulse-like shape but not defined. Needs a scope capture."
+    },
+    {
+      "topic": "Morph law",
+      "detail": "Whether shape blending is a linear crossfade of adjacent shapes or something else is not stated. Shape CV volts-per-position is not given."
+    },
+    {
+      "topic": "Control tapers",
+      "detail": "End points are given for most knobs (better than the Model D) but not the curve between them."
+    },
+    {
+      "topic": "CV scaling",
+      "detail": "Inputs are rated -5 to +5 V but the effect per volt on cutoff, resonance, delay time, LFO rate and pulse width is not stated."
+    },
+    {
+      "topic": "Summing vs replacing inputs",
+      "detail": "The manual does not say whether CV inputs without a default source add to the panel knob. 'combine: sum' is inferred."
+    },
+    {
+      "topic": "Paraphonic allocation",
+      "detail": "Which oscillator takes the lower or newer note is not stated, nor behaviour with three or more notes."
+    },
+    {
+      "topic": "Key tracking amount",
+      "detail": "Implied to be 100% (1 V/oct) since the filter can be played in tune, but not stated."
+    },
+    {
+      "topic": "ATT 1 control law",
+      "detail": "How the knob and ATT1 CV combine, and the CV-to-gain curve."
+    },
+    {
+      "topic": "Overdrive",
+      "detail": "Clipping curve, gain range and tone filter corner frequencies are described only qualitatively."
+    },
+    {
+      "topic": "Delay",
+      "detail": "BBD bandwidth, companding and filtering, which define the sound, are not covered. Feedback ceiling depends on a user-adjustable trimmer."
+    },
+    {
+      "topic": "External input and VCF jack",
+      "detail": "Not stated whether patching VCF IN removes noise and the rear input as well as the oscillators."
+    },
+    {
+      "topic": "OUTPUT patch point",
+      "detail": "Described as post delay; whether it is also post VOLUME is not stated."
+    },
+    {
+      "topic": "Filter response",
+      "detail": "Resonance-versus-passband-gain behaviour and any input saturation are not described."
+    }
+  ]
+}

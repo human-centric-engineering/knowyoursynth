@@ -1,0 +1,4087 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "gamechanger-audio-motor-synth-mkii",
+    "manufacturer": "Gamechanger Audio",
+    "model": "MOTOR Synth MKII",
+    "category": "electromechanical desktop synthesizer: eight motor oscillators in two voices plus a digital voice, 4-note polyphony, analogue filters",
+    "based_on": "Successor to the MOTOR Synth (MKI), the first electromechanical polysynth (Riga, Latvia); MKII adds the DCO voice, expanded portamento, detune and cross-mod controls.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Gamechanger Audio, MOTOR Synth MKII online manual (chapters 1-24)",
+        "kind": "user_manual",
+        "file": "https://gamechangeraudio.com/msmkii-manual/",
+        "note": "Overview, Motor Controls, Acceleration/Brake, Filter and Modulation chapters read in full; DCO, cross mod, drift/detune, performance and I/O from the overview and search excerpts."
+      },
+      {
+        "id": "cc_map",
+        "title": "Gamechanger Audio, 'Motor Synth MKII CC MAP' (April 4, 2023)",
+        "kind": "spec_sheet",
+        "file": "https://gamechangeraudio.com/wp-content/uploads/2023/04/MS-MKII-CC-MAP-_-APRIL-4-2023.pdf",
+        "note": "Official CC map; 14-bit pairs for CC 1-31; NRPN and SysEx maps exist as separate PDFs (not read)."
+      },
+      {
+        "id": "product",
+        "title": "Gamechanger Audio product page; retailer specifications; MusicRadar review",
+        "kind": "other",
+        "file": "https://gamechangeraudio.com/motor-synth-mkii/",
+        "note": "Signal path all analogue except the DCO; 24 V DC 5 A; 3 CV and 3 trigger inputs; DCO with six waveforms incl. noise, PWM and wave folding."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "electromechanical",
+    "signal_path": "hybrid",
+    "voices": 3,
+    "polyphony_mode": "4 notes: each MOTOR VOICE has four motors (poly, duo or unison per voice) and the DCO four digital oscillators; up to 3 voices per note. Polyphonic before the filters, paraphonic after.",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "Presets and projects (with sequencer patterns, arp patterns and motion recordings) on internal memory and microSD.",
+    "semi_modular": false,
+    "panel_counts": {
+      "motors": 8,
+      "keypad_keys": 8,
+      "pitch_encoders": 4
+    },
+    "summary": "Each MOTOR VOICE is four custom brushless DC motors. Spinning speed sets pitch; each motor's sound is read either electromagnetically (the 'M' wave from a pickup beside the rotating coils, akin to a tonewheel organ) or optically (infrared sensors reading sine, saw and square patterns printed on reflective discs, with deliberate imperfections). Physical inertia slews every pitch change; ACCEL and BRAKE extend that into a pitch envelope (or portamento). Each motor has its own amp envelope and VCA; the four are mixed, sent through a pre-filter send/return, drive and an analogue multimode filter (LP24, BP12, HP12, AP24, self-oscillating) per voice. A DCO voice (four digital oscillators with six waves, PWM, folding, sync) runs alongside with a digital twin filter. Cross mod (FM or ring), drift/detune, three assignable modulators with envelopes, arpeggiator, 8-pattern sequencer, motion recording, audio input processing.",
+    "synthesis_note": "Electromechanical: pitch is motor rotation speed; waveforms are physical readouts (electromagnetic induction and optical disc reflection), not electronic oscillators."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Performance interface and voice allocation",
+      "panel_section": "PERFORMANCE INTERFACE",
+      "scope": "common",
+      "description": "8-key non-velocity keypad with scales and microtuning, four PITCH ENCODERS (per-voice detune, momentary pitchwheel), MIDI, CV/trigger, arpeggiator and sequencer; per-voice poly/duo/unison and performance-tool assignment.",
+      "inputs": ["kbd.midi_in", "kbd.cv_in", "kbd.trig_in", "kbd.seq_in"],
+      "outputs": ["kbd.pitch", "kbd.gate", "kbd.modwheel", "kbd.pressure"]
+    },
+    {
+      "id": "v1_drive_ctl",
+      "type": "slew_limiter",
+      "name": "MOTOR VOICE 1 motor drive and inertia (ACCEL / BRAKE)",
+      "panel_section": "MOTOR VOICE 1 ACCEL / BRAKE",
+      "scope": "per_voice",
+      "description": "Converts note pitch to target motor speed. Inertia gives an inherent rev-up/rev-down slew; ACCEL (on note-on, from the FROM interval) and BRAKE (on note-off, to the TO interval) extend it as a pitch envelope, or act as rise/fall portamento in GLIDE mode. Per motor (polyphonic).",
+      "inputs": ["v1_drive_ctl.pitch", "v1_drive_ctl.gate", "v1_drive_ctl.mod"],
+      "outputs": ["v1_drive_ctl.rpm"]
+    },
+    {
+      "id": "v1_motor",
+      "type": "electromechanical_oscillator",
+      "name": "MOTOR VOICE 1 motors",
+      "panel_section": "MOTOR VOICE 1",
+      "scope": "per_voice",
+      "description": "Four brushless DC motors per voice (soft-mounted, acoustically treated). Outputs per motor: M (electromagnetic inductive pickup), OPT SINE, OPT SAW, OPT SQ (infrared reading of reflective disc patterns). Imperfect readout is part of the character.",
+      "properties": {
+        "motors": 4,
+        "motor_type": "brushless DC",
+        "pickups": ["electromagnetic inductive", "infrared optical"],
+        "scale_feet": ["32'", "16'", "8'", "4'", "2'"]
+      },
+      "inputs": ["v1_motor.rpm"],
+      "outputs": ["v1_motor.m", "v1_motor.opt_sine", "v1_motor.opt_saw", "v1_motor.opt_sq"]
+    },
+    {
+      "id": "v1_wave",
+      "type": "electronic_switch",
+      "name": "MOTOR VOICE 1 WAVE selector",
+      "panel_section": "MOTOR VOICE 1",
+      "scope": "per_voice",
+      "description": "Chooses which motor readout feeds the voice.",
+      "inputs": ["v1_wave.m", "v1_wave.sine", "v1_wave.saw", "v1_wave.sq"],
+      "outputs": ["v1_wave.out"]
+    },
+    {
+      "id": "v1_tone",
+      "type": "filter",
+      "name": "MOTOR VOICE 1 analogue tone tilt",
+      "panel_section": "MOTOR VOICE 1 (ANALOG TONE screen)",
+      "scope": "per_voice",
+      "description": "Tilt EQ before the mix: follows SCALE (low boost at low scales, high boost at high) or manual.",
+      "inputs": ["v1_tone.in"],
+      "outputs": ["v1_tone.out"]
+    },
+    {
+      "id": "v1_env",
+      "type": "envelope",
+      "name": "MOTOR VOICE 1 amp envelope",
+      "panel_section": "MOTOR VOICE 1 AMP ENV",
+      "scope": "per_voice",
+      "description": "Per-motor envelope: ADSR, AD, AR, DADSR, ADSHR, AD loop or ADS with curve.",
+      "inputs": ["v1_env.gate"],
+      "outputs": ["v1_env.out"]
+    },
+    {
+      "id": "v1_vca",
+      "type": "vca",
+      "name": "MOTOR VOICE 1 motor VCAs",
+      "panel_section": "MOTOR VOICE 1",
+      "scope": "per_voice",
+      "description": "One analogue VCA per motor, under its amp envelope; VOLUME sets the peak.",
+      "inputs": ["v1_vca.in", "v1_vca.cv"],
+      "outputs": ["v1_vca.out"]
+    },
+    {
+      "id": "v1_mix",
+      "type": "summer",
+      "name": "MOTOR VOICE 1 motor mix",
+      "panel_section": "MOTOR VOICE 1",
+      "scope": "common",
+      "description": "Mixes the voice's four motors (paraphonic from here on); DCO can be routed in.",
+      "inputs": ["v1_mix.motors", "v1_mix.dco"],
+      "outputs": ["v1_mix.out"]
+    },
+    {
+      "id": "v1_drive",
+      "type": "overdrive",
+      "name": "MOTOR VOICE 1 drive",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "Analogue drive circuit before the filter (0 unity to 100 maximum distortion).",
+      "inputs": ["v1_drive.in"],
+      "outputs": ["v1_drive.out"]
+    },
+    {
+      "id": "v1_vcf",
+      "type": "filter",
+      "name": "MOTOR VOICE 1 analogue filter",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "Analogue multimode filter: LP24, BP12, HP12, AP24; resonance self-oscillates (~87); calibrated key tracking with glide.",
+      "properties": {
+        "modes": ["LP24", "BP12", "HP12", "AP24"],
+        "cutoff_hz": [20, 21096]
+      },
+      "inputs": ["v1_vcf.in", "v1_vcf.cutoff_cv"],
+      "outputs": ["v1_vcf.out"]
+    },
+    {
+      "id": "v1_fenv",
+      "type": "envelope",
+      "name": "MOTOR VOICE 1 filter envelope",
+      "panel_section": "FILTER ENV",
+      "scope": "common",
+      "description": "Filter envelope (same modes as the amp envelopes) to cutoff by ENV AMOUNT.",
+      "inputs": ["v1_fenv.gate"],
+      "outputs": ["v1_fenv.out"]
+    },
+    {
+      "id": "v2_drive_ctl",
+      "type": "slew_limiter",
+      "name": "MOTOR VOICE 2 motor drive and inertia (ACCEL / BRAKE)",
+      "panel_section": "MOTOR VOICE 2 ACCEL / BRAKE",
+      "scope": "per_voice",
+      "description": "Converts note pitch to target motor speed. Inertia gives an inherent rev-up/rev-down slew; ACCEL (on note-on, from the FROM interval) and BRAKE (on note-off, to the TO interval) extend it as a pitch envelope, or act as rise/fall portamento in GLIDE mode. Per motor (polyphonic).",
+      "inputs": ["v2_drive_ctl.pitch", "v2_drive_ctl.gate", "v2_drive_ctl.mod"],
+      "outputs": ["v2_drive_ctl.rpm"]
+    },
+    {
+      "id": "v2_motor",
+      "type": "electromechanical_oscillator",
+      "name": "MOTOR VOICE 2 motors",
+      "panel_section": "MOTOR VOICE 2",
+      "scope": "per_voice",
+      "description": "Four brushless DC motors per voice (soft-mounted, acoustically treated). Outputs per motor: M (electromagnetic inductive pickup), OPT SINE, OPT SAW, OPT SQ (infrared reading of reflective disc patterns). Imperfect readout is part of the character.",
+      "properties": {
+        "motors": 4,
+        "motor_type": "brushless DC",
+        "pickups": ["electromagnetic inductive", "infrared optical"],
+        "scale_feet": ["32'", "16'", "8'", "4'", "2'"]
+      },
+      "inputs": ["v2_motor.rpm"],
+      "outputs": ["v2_motor.m", "v2_motor.opt_sine", "v2_motor.opt_saw", "v2_motor.opt_sq"]
+    },
+    {
+      "id": "v2_wave",
+      "type": "electronic_switch",
+      "name": "MOTOR VOICE 2 WAVE selector",
+      "panel_section": "MOTOR VOICE 2",
+      "scope": "per_voice",
+      "description": "Chooses which motor readout feeds the voice.",
+      "inputs": ["v2_wave.m", "v2_wave.sine", "v2_wave.saw", "v2_wave.sq"],
+      "outputs": ["v2_wave.out"]
+    },
+    {
+      "id": "v2_tone",
+      "type": "filter",
+      "name": "MOTOR VOICE 2 analogue tone tilt",
+      "panel_section": "MOTOR VOICE 2 (ANALOG TONE screen)",
+      "scope": "per_voice",
+      "description": "Tilt EQ before the mix: follows SCALE (low boost at low scales, high boost at high) or manual.",
+      "inputs": ["v2_tone.in"],
+      "outputs": ["v2_tone.out"]
+    },
+    {
+      "id": "v2_env",
+      "type": "envelope",
+      "name": "MOTOR VOICE 2 amp envelope",
+      "panel_section": "MOTOR VOICE 2 AMP ENV",
+      "scope": "per_voice",
+      "description": "Per-motor envelope: ADSR, AD, AR, DADSR, ADSHR, AD loop or ADS with curve.",
+      "inputs": ["v2_env.gate"],
+      "outputs": ["v2_env.out"]
+    },
+    {
+      "id": "v2_vca",
+      "type": "vca",
+      "name": "MOTOR VOICE 2 motor VCAs",
+      "panel_section": "MOTOR VOICE 2",
+      "scope": "per_voice",
+      "description": "One analogue VCA per motor, under its amp envelope; VOLUME sets the peak.",
+      "inputs": ["v2_vca.in", "v2_vca.cv"],
+      "outputs": ["v2_vca.out"]
+    },
+    {
+      "id": "v2_mix",
+      "type": "summer",
+      "name": "MOTOR VOICE 2 motor mix",
+      "panel_section": "MOTOR VOICE 2",
+      "scope": "common",
+      "description": "Mixes the voice's four motors (paraphonic from here on); DCO can be routed in.",
+      "inputs": ["v2_mix.motors", "v2_mix.dco"],
+      "outputs": ["v2_mix.out"]
+    },
+    {
+      "id": "v2_drive",
+      "type": "overdrive",
+      "name": "MOTOR VOICE 2 drive",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "Analogue drive circuit before the filter (0 unity to 100 maximum distortion).",
+      "inputs": ["v2_drive.in"],
+      "outputs": ["v2_drive.out"]
+    },
+    {
+      "id": "v2_vcf",
+      "type": "filter",
+      "name": "MOTOR VOICE 2 analogue filter",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "Analogue multimode filter: LP24, BP12, HP12, AP24; resonance self-oscillates (~87); calibrated key tracking with glide.",
+      "properties": {
+        "modes": ["LP24", "BP12", "HP12", "AP24"],
+        "cutoff_hz": [20, 21096]
+      },
+      "inputs": ["v2_vcf.in", "v2_vcf.cutoff_cv"],
+      "outputs": ["v2_vcf.out"]
+    },
+    {
+      "id": "v2_fenv",
+      "type": "envelope",
+      "name": "MOTOR VOICE 2 filter envelope",
+      "panel_section": "FILTER ENV",
+      "scope": "common",
+      "description": "Filter envelope (same modes as the amp envelopes) to cutoff by ENV AMOUNT.",
+      "inputs": ["v2_fenv.gate"],
+      "outputs": ["v2_fenv.out"]
+    },
+    {
+      "id": "dco",
+      "type": "oscillator",
+      "name": "DCO (digital voice)",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "Four virtual-analogue oscillators (paraphonic or unison): six waveshapes including noise, PWM, wave folding, hard sync; own amp and pitch envelopes.",
+      "properties": {
+        "oscillators": 4,
+        "waveshapes": 6
+      },
+      "inputs": ["dco.pitch_cv"],
+      "outputs": ["dco.out"]
+    },
+    {
+      "id": "dco_env",
+      "type": "envelope",
+      "name": "DCO amp envelope",
+      "panel_section": "DCO AMP ENV",
+      "scope": "per_voice",
+      "description": "Amp envelope for the DCO oscillators.",
+      "inputs": ["dco_env.gate"],
+      "outputs": ["dco_env.out"]
+    },
+    {
+      "id": "dco_vca",
+      "type": "vca",
+      "name": "DCO VCAs",
+      "panel_section": "DCO",
+      "scope": "per_voice",
+      "description": "One per digital oscillator.",
+      "inputs": ["dco_vca.in", "dco_vca.cv"],
+      "outputs": ["dco_vca.out"]
+    },
+    {
+      "id": "dco_fenv",
+      "type": "envelope",
+      "name": "DCO filter envelope",
+      "panel_section": "FILTER ENV",
+      "scope": "common",
+      "description": "Filter envelope for the DCO's digital filter.",
+      "inputs": ["dco_fenv.gate"],
+      "outputs": ["dco_fenv.out"]
+    },
+    {
+      "id": "dco_vcf",
+      "type": "filter",
+      "name": "DCO digital filter",
+      "panel_section": "FILTER",
+      "scope": "common",
+      "description": "Digital emulation of the analogue filter (same modes and parameters); the DCO can instead pass through either analogue filter.",
+      "inputs": ["dco_vcf.in", "dco_vcf.cutoff_cv"],
+      "outputs": ["dco_vcf.out"]
+    },
+    {
+      "id": "xmod",
+      "type": "ring_modulator",
+      "name": "Cross mod",
+      "panel_section": "CROSS MOD",
+      "scope": "common",
+      "description": "Amplitude (RING) or frequency (FM) cross modulation between the two motor voices; from frenzied ring-mod distortion to a pulsating 'broken' sound.",
+      "inputs": ["xmod.v1", "xmod.v2"],
+      "outputs": ["xmod.out"]
+    },
+    {
+      "id": "drift",
+      "type": "modulation_bus",
+      "name": "Drift / detune",
+      "panel_section": "DRIFT / DETUNE",
+      "scope": "common",
+      "description": "Gradual variation in motor rotation speeds: drift or static detune between motors, assignable per voice.",
+      "inputs": [],
+      "outputs": ["drift.out"]
+    },
+    {
+      "id": "mod1",
+      "type": "lfo",
+      "name": "Modulator 1",
+      "panel_section": "MODULATION",
+      "scope": "common",
+      "description": "Shapes STEP (up, down, noise, pattern, random), TRI, SQ, SAW UP, SAW DOWN with curve, PW, X/Y offset, slope; 0-32760 Hz; clock INT, another modulator, BPM or note; own mod envelope on depth; two destination slots.",
+      "properties": {
+        "rate_hz": [0, 32760.1]
+      },
+      "inputs": [],
+      "outputs": ["mod1.out"]
+    },
+    {
+      "id": "mod2",
+      "type": "lfo",
+      "name": "Modulator 2",
+      "panel_section": "MODULATION",
+      "scope": "common",
+      "description": "Shapes STEP (up, down, noise, pattern, random), TRI, SQ, SAW UP, SAW DOWN with curve, PW, X/Y offset, slope; 0-32760 Hz; clock INT, another modulator, BPM or note; own mod envelope on depth; two destination slots.",
+      "properties": {
+        "rate_hz": [0, 32760.1]
+      },
+      "inputs": [],
+      "outputs": ["mod2.out"]
+    },
+    {
+      "id": "mod3",
+      "type": "lfo",
+      "name": "Modulator 3",
+      "panel_section": "MODULATION",
+      "scope": "common",
+      "description": "Shapes STEP (up, down, noise, pattern, random), TRI, SQ, SAW UP, SAW DOWN with curve, PW, X/Y offset, slope; 0-32760 Hz; clock INT, another modulator, BPM or note; own mod envelope on depth; two destination slots.",
+      "properties": {
+        "rate_hz": [0, 32760.1]
+      },
+      "inputs": [],
+      "outputs": ["mod3.out"]
+    },
+    {
+      "id": "input",
+      "type": "preamp",
+      "name": "Audio input processing",
+      "panel_section": "INPUT",
+      "scope": "common",
+      "description": "External audio for filtering, gating, side-chaining and vocoder-style processing through the voices.",
+      "inputs": ["input.in"],
+      "outputs": ["input.out"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Arpeggiator, sequencer and motion rec",
+      "panel_section": "ARP / SEQ / MOTION REC",
+      "scope": "common",
+      "description": "Arpeggiator with rhythm editor; 8 patterns per project with ratchets, micro-timing, probability; 8 motion-recording lanes; master tempo.",
+      "inputs": [],
+      "outputs": ["seq.notes"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "MASTER / rear panel",
+      "scope": "common",
+      "description": "Main out (TS mono, or TRS split V1/V2), headphones; MASTER VOLUME not stored.",
+      "inputs": ["out.v1", "out.v2", "out.dco"],
+      "outputs": ["out.main_l", "out.main_r", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "v1.vol",
+      "module": "v1_vca",
+      "label": "V1 VOLUME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9"
+        }
+      ],
+      "function": "Voice level at the envelope peak (saved; MASTER VOLUME is not)."
+    },
+    {
+      "id": "v1.wave",
+      "module": "v1_wave",
+      "label": "V1 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "opt_sine"
+        },
+        {
+          "value": "opt_saw"
+        },
+        {
+          "value": "opt_sq"
+        },
+        {
+          "value": "m"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 114"
+        }
+      ],
+      "function": "Motor readout."
+    },
+    {
+      "id": "v1.scale",
+      "module": "v1_motor",
+      "label": "V1 SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 111"
+        }
+      ],
+      "function": "Octave range of the motors."
+    },
+    {
+      "id": "v1.tone_mode",
+      "module": "v1_tone",
+      "label": "V1 Tone Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "scale"
+        },
+        {
+          "value": "manual"
+        }
+      ],
+      "default": "scale",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ANALOG TONE screen (turn VOLUME, then RIGHT ENCODER)"
+        }
+      ],
+      "function": "Tilt follows SCALE or is manual."
+    },
+    {
+      "id": "v1.tone",
+      "module": "v1_tone",
+      "label": "V1 Tone",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ANALOG TONE screen"
+        }
+      ],
+      "function": "0 low boost/high cut to 100 low cut/high boost."
+    },
+    {
+      "id": "v1.from",
+      "module": "v1_drive_ctl",
+      "label": "V1 FROM",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 73"
+        }
+      ],
+      "function": "ACCEL start interval relative to the target (centre detent 0; CCW = rising)."
+    },
+    {
+      "id": "v1.to",
+      "module": "v1_drive_ctl",
+      "label": "V1 TO (ALT + FROM)",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "ALT + FROM/TO"
+        },
+        {
+          "type": "midi",
+          "message": "CC 75"
+        }
+      ],
+      "function": "BRAKE end interval relative to the target."
+    },
+    {
+      "id": "v1.accel",
+      "module": "v1_drive_ctl",
+      "label": "V1 ACCEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 72"
+        }
+      ],
+      "function": "Rate to the target pitch after note-on; fully CCW = off."
+    },
+    {
+      "id": "v1.brake",
+      "module": "v1_drive_ctl",
+      "label": "V1 BRAKE (ALT + ACCEL)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "ALT + ACCEL/BRAKE"
+        },
+        {
+          "type": "midi",
+          "message": "CC 74"
+        }
+      ],
+      "function": "Rate to the TO interval after note-off; fully CCW = off."
+    },
+    {
+      "id": "v1.accel_curve",
+      "module": "v1_drive_ctl",
+      "label": "V1 Accel/Brake Curve",
+      "kind": "continuous",
+      "physical": {
+        "min": -2,
+        "max": 2,
+        "unit": "curve"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ACCEL / BRAKE screen"
+        }
+      ],
+      "function": "-2 exponential, 0 linear, +2 logarithmic."
+    },
+    {
+      "id": "v1.accel_mode",
+      "module": "v1_drive_ctl",
+      "label": "V1 Accel/Brake Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "target"
+        },
+        {
+          "value": "glide"
+        }
+      ],
+      "default": "target",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ACCEL / BRAKE screen"
+        }
+      ],
+      "function": "TARGET (pitch envelope) or GLIDE (portamento: ACCEL rising, BRAKE falling)."
+    },
+    {
+      "id": "v1.amp_attack",
+      "module": "v1_env",
+      "label": "V1 AMP ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 20"
+        }
+      ],
+      "function": "Amp envelope attack."
+    },
+    {
+      "id": "v1.amp_decay",
+      "module": "v1_env",
+      "label": "V1 AMP DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 21"
+        }
+      ],
+      "function": "Amp envelope decay."
+    },
+    {
+      "id": "v1.amp_sustain",
+      "module": "v1_env",
+      "label": "V1 AMP SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Amp envelope sustain."
+    },
+    {
+      "id": "v1.amp_release",
+      "module": "v1_env",
+      "label": "V1 AMP RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "Amp envelope release."
+    },
+    {
+      "id": "v1.amp_mode",
+      "module": "v1_env",
+      "label": "V1 Amp Env Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ADSR"
+        },
+        {
+          "value": "AD"
+        },
+        {
+          "value": "AR"
+        },
+        {
+          "value": "DADSR"
+        },
+        {
+          "value": "ADSHR"
+        },
+        {
+          "value": "AD_LOOP"
+        },
+        {
+          "value": "ADS"
+        }
+      ],
+      "default": "ADSR",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen"
+        }
+      ],
+      "function": "Envelope type."
+    },
+    {
+      "id": "v1.amp_curve",
+      "module": "v1_env",
+      "label": "V1 Amp Env Curve",
+      "kind": "continuous",
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "curve"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen (AMP ENV / CURVE encoder)"
+        }
+      ],
+      "function": "Segment curvature."
+    },
+    {
+      "id": "v1.vcf_type",
+      "module": "v1_vcf",
+      "label": "V1 FILTER TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LP24"
+        },
+        {
+          "value": "BP12"
+        },
+        {
+          "value": "HP12"
+        },
+        {
+          "value": "AP24"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 117"
+        }
+      ],
+      "function": "Filter mode."
+    },
+    {
+      "id": "v1.cutoff",
+      "module": "v1_vcf",
+      "label": "V1 CUTOFF",
+      "kind": "integer",
+      "physical": {
+        "min": 20,
+        "max": 21096,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 11"
+        }
+      ],
+      "function": "20 Hz-21.1 kHz (or 0-12000 cents above 20 Hz); fine tune on the LEFT ENCODER."
+    },
+    {
+      "id": "v1.resonance",
+      "module": "v1_vcf",
+      "label": "V1 RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 14"
+        }
+      ],
+      "function": "Self-oscillates from about 87."
+    },
+    {
+      "id": "v1.drive",
+      "module": "v1_drive",
+      "label": "V1 DRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 69"
+        }
+      ],
+      "function": "Pre-filter drive."
+    },
+    {
+      "id": "v1.env_amt",
+      "module": "v1_vcf",
+      "label": "V1 FILTER ENV AMOUNT",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17"
+        }
+      ],
+      "function": "Bipolar envelope amount (centre detent)."
+    },
+    {
+      "id": "v1.fenv_attack",
+      "module": "v1_fenv",
+      "label": "V1 FILTER ENV ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        }
+      ],
+      "function": "Filter envelope attack."
+    },
+    {
+      "id": "v1.fenv_decay",
+      "module": "v1_fenv",
+      "label": "V1 FILTER ENV DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 27"
+        }
+      ],
+      "function": "Filter envelope decay."
+    },
+    {
+      "id": "v1.fenv_sustain",
+      "module": "v1_fenv",
+      "label": "V1 FILTER ENV SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 86"
+        }
+      ],
+      "function": "Filter envelope sustain."
+    },
+    {
+      "id": "v1.fenv_release",
+      "module": "v1_fenv",
+      "label": "V1 FILTER ENV RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 87"
+        }
+      ],
+      "function": "Filter envelope release."
+    },
+    {
+      "id": "v1.keytrack",
+      "module": "v1_vcf",
+      "label": "V1 Key Tracking",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Key tracking on/off (last note of the voice)."
+    },
+    {
+      "id": "v1.keytrack_amt",
+      "module": "v1_vcf",
+      "label": "V1 Key Tracking Amount",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "-100 inverted to 100 precise."
+    },
+    {
+      "id": "v1.keytrack_glide",
+      "module": "v1_vcf",
+      "label": "V1 Key Tracking Glide",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Slew on tracking (smooths paraphonic pads)."
+    },
+    {
+      "id": "v1.detune",
+      "module": "kbd",
+      "label": "V1 DETUNE (ALT + PITCH ENCODER)",
+      "kind": "integer",
+      "range": {
+        "min": -1200,
+        "max": 1200
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "ALT + turn PITCH ENCODER (V1)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Voice detune in cents (within DETUNE MIN/MAX)."
+    },
+    {
+      "id": "v2.vol",
+      "module": "v2_vca",
+      "label": "V2 VOLUME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        }
+      ],
+      "function": "Voice level at the envelope peak (saved; MASTER VOLUME is not)."
+    },
+    {
+      "id": "v2.wave",
+      "module": "v2_wave",
+      "label": "V2 WAVE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "opt_sine"
+        },
+        {
+          "value": "opt_saw"
+        },
+        {
+          "value": "opt_sq"
+        },
+        {
+          "value": "m"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 115"
+        }
+      ],
+      "function": "Motor readout."
+    },
+    {
+      "id": "v2.scale",
+      "module": "v2_motor",
+      "label": "V2 SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 112"
+        }
+      ],
+      "function": "Octave range of the motors."
+    },
+    {
+      "id": "v2.tone_mode",
+      "module": "v2_tone",
+      "label": "V2 Tone Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "scale"
+        },
+        {
+          "value": "manual"
+        }
+      ],
+      "default": "scale",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ANALOG TONE screen (turn VOLUME, then RIGHT ENCODER)"
+        }
+      ],
+      "function": "Tilt follows SCALE or is manual."
+    },
+    {
+      "id": "v2.tone",
+      "module": "v2_tone",
+      "label": "V2 Tone",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ANALOG TONE screen"
+        }
+      ],
+      "function": "0 low boost/high cut to 100 low cut/high boost."
+    },
+    {
+      "id": "v2.from",
+      "module": "v2_drive_ctl",
+      "label": "V2 FROM",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 77"
+        }
+      ],
+      "function": "ACCEL start interval relative to the target (centre detent 0; CCW = rising)."
+    },
+    {
+      "id": "v2.to",
+      "module": "v2_drive_ctl",
+      "label": "V2 TO (ALT + FROM)",
+      "kind": "integer",
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "ALT + FROM/TO"
+        },
+        {
+          "type": "midi",
+          "message": "CC 79"
+        }
+      ],
+      "function": "BRAKE end interval relative to the target."
+    },
+    {
+      "id": "v2.accel",
+      "module": "v2_drive_ctl",
+      "label": "V2 ACCEL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 76"
+        }
+      ],
+      "function": "Rate to the target pitch after note-on; fully CCW = off."
+    },
+    {
+      "id": "v2.brake",
+      "module": "v2_drive_ctl",
+      "label": "V2 BRAKE (ALT + ACCEL)",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "ALT + ACCEL/BRAKE"
+        },
+        {
+          "type": "midi",
+          "message": "CC 78"
+        }
+      ],
+      "function": "Rate to the TO interval after note-off; fully CCW = off."
+    },
+    {
+      "id": "v2.accel_curve",
+      "module": "v2_drive_ctl",
+      "label": "V2 Accel/Brake Curve",
+      "kind": "continuous",
+      "physical": {
+        "min": -2,
+        "max": 2,
+        "unit": "curve"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ACCEL / BRAKE screen"
+        }
+      ],
+      "function": "-2 exponential, 0 linear, +2 logarithmic."
+    },
+    {
+      "id": "v2.accel_mode",
+      "module": "v2_drive_ctl",
+      "label": "V2 Accel/Brake Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "target"
+        },
+        {
+          "value": "glide"
+        }
+      ],
+      "default": "target",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ACCEL / BRAKE screen"
+        }
+      ],
+      "function": "TARGET (pitch envelope) or GLIDE (portamento: ACCEL rising, BRAKE falling)."
+    },
+    {
+      "id": "v2.amp_attack",
+      "module": "v2_env",
+      "label": "V2 AMP ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 22"
+        }
+      ],
+      "function": "Amp envelope attack."
+    },
+    {
+      "id": "v2.amp_decay",
+      "module": "v2_env",
+      "label": "V2 AMP DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Amp envelope decay."
+    },
+    {
+      "id": "v2.amp_sustain",
+      "module": "v2_env",
+      "label": "V2 AMP SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Amp envelope sustain."
+    },
+    {
+      "id": "v2.amp_release",
+      "module": "v2_env",
+      "label": "V2 AMP RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Amp envelope release."
+    },
+    {
+      "id": "v2.amp_mode",
+      "module": "v2_env",
+      "label": "V2 Amp Env Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ADSR"
+        },
+        {
+          "value": "AD"
+        },
+        {
+          "value": "AR"
+        },
+        {
+          "value": "DADSR"
+        },
+        {
+          "value": "ADSHR"
+        },
+        {
+          "value": "AD_LOOP"
+        },
+        {
+          "value": "ADS"
+        }
+      ],
+      "default": "ADSR",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen"
+        }
+      ],
+      "function": "Envelope type."
+    },
+    {
+      "id": "v2.amp_curve",
+      "module": "v2_env",
+      "label": "V2 Amp Env Curve",
+      "kind": "continuous",
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "curve"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen (AMP ENV / CURVE encoder)"
+        }
+      ],
+      "function": "Segment curvature."
+    },
+    {
+      "id": "v2.vcf_type",
+      "module": "v2_vcf",
+      "label": "V2 FILTER TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LP24"
+        },
+        {
+          "value": "BP12"
+        },
+        {
+          "value": "HP12"
+        },
+        {
+          "value": "AP24"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 118"
+        }
+      ],
+      "function": "Filter mode."
+    },
+    {
+      "id": "v2.cutoff",
+      "module": "v2_vcf",
+      "label": "V2 CUTOFF",
+      "kind": "integer",
+      "physical": {
+        "min": 20,
+        "max": 21096,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        }
+      ],
+      "function": "20 Hz-21.1 kHz (or 0-12000 cents above 20 Hz); fine tune on the LEFT ENCODER."
+    },
+    {
+      "id": "v2.resonance",
+      "module": "v2_vcf",
+      "label": "V2 RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 15"
+        }
+      ],
+      "function": "Self-oscillates from about 87."
+    },
+    {
+      "id": "v2.drive",
+      "module": "v2_drive",
+      "label": "V2 DRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 70"
+        }
+      ],
+      "function": "Pre-filter drive."
+    },
+    {
+      "id": "v2.env_amt",
+      "module": "v2_vcf",
+      "label": "V2 FILTER ENV AMOUNT",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18"
+        }
+      ],
+      "function": "Bipolar envelope amount (centre detent)."
+    },
+    {
+      "id": "v2.fenv_attack",
+      "module": "v2_fenv",
+      "label": "V2 FILTER ENV ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        }
+      ],
+      "function": "Filter envelope attack."
+    },
+    {
+      "id": "v2.fenv_decay",
+      "module": "v2_fenv",
+      "label": "V2 FILTER ENV DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "Filter envelope decay."
+    },
+    {
+      "id": "v2.fenv_sustain",
+      "module": "v2_fenv",
+      "label": "V2 FILTER ENV SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        }
+      ],
+      "function": "Filter envelope sustain."
+    },
+    {
+      "id": "v2.fenv_release",
+      "module": "v2_fenv",
+      "label": "V2 FILTER ENV RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89"
+        }
+      ],
+      "function": "Filter envelope release."
+    },
+    {
+      "id": "v2.keytrack",
+      "module": "v2_vcf",
+      "label": "V2 Key Tracking",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Key tracking on/off (last note of the voice)."
+    },
+    {
+      "id": "v2.keytrack_amt",
+      "module": "v2_vcf",
+      "label": "V2 Key Tracking Amount",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "-100 inverted to 100 precise."
+    },
+    {
+      "id": "v2.keytrack_glide",
+      "module": "v2_vcf",
+      "label": "V2 Key Tracking Glide",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Slew on tracking (smooths paraphonic pads)."
+    },
+    {
+      "id": "v2.detune",
+      "module": "kbd",
+      "label": "V2 DETUNE (ALT + PITCH ENCODER)",
+      "kind": "integer",
+      "range": {
+        "min": -1200,
+        "max": 1200
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "ALT + turn PITCH ENCODER (V2)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Voice detune in cents (within DETUNE MIN/MAX)."
+    },
+    {
+      "id": "dco.vol",
+      "module": "dco_vca",
+      "label": "DCO VOLUME",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8"
+        }
+      ],
+      "function": "Voice level at the envelope peak (saved; MASTER VOLUME is not)."
+    },
+    {
+      "id": "dco.amp_attack",
+      "module": "dco_env",
+      "label": "DCO AMP ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "Amp envelope attack."
+    },
+    {
+      "id": "dco.amp_decay",
+      "module": "dco_env",
+      "label": "DCO AMP DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 25"
+        }
+      ],
+      "function": "Amp envelope decay."
+    },
+    {
+      "id": "dco.amp_sustain",
+      "module": "dco_env",
+      "label": "DCO AMP SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 84"
+        }
+      ],
+      "function": "Amp envelope sustain."
+    },
+    {
+      "id": "dco.amp_release",
+      "module": "dco_env",
+      "label": "DCO AMP RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 85"
+        }
+      ],
+      "function": "Amp envelope release."
+    },
+    {
+      "id": "dco.amp_mode",
+      "module": "dco_env",
+      "label": "DCO Amp Env Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ADSR"
+        },
+        {
+          "value": "AD"
+        },
+        {
+          "value": "AR"
+        },
+        {
+          "value": "DADSR"
+        },
+        {
+          "value": "ADSHR"
+        },
+        {
+          "value": "AD_LOOP"
+        },
+        {
+          "value": "ADS"
+        }
+      ],
+      "default": "ADSR",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen"
+        }
+      ],
+      "function": "Envelope type."
+    },
+    {
+      "id": "dco.amp_curve",
+      "module": "dco_env",
+      "label": "DCO Amp Env Curve",
+      "kind": "continuous",
+      "physical": {
+        "min": -1,
+        "max": 1,
+        "unit": "curve"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "AMP ENV screen (AMP ENV / CURVE encoder)"
+        }
+      ],
+      "function": "Segment curvature."
+    },
+    {
+      "id": "dco.vcf_type",
+      "module": "dco_vcf",
+      "label": "DCO FILTER TYPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "LP24"
+        },
+        {
+          "value": "BP12"
+        },
+        {
+          "value": "HP12"
+        },
+        {
+          "value": "AP24"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 119"
+        }
+      ],
+      "function": "Filter mode."
+    },
+    {
+      "id": "dco.cutoff",
+      "module": "dco_vcf",
+      "label": "DCO CUTOFF",
+      "kind": "integer",
+      "physical": {
+        "min": 20,
+        "max": 21096,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        }
+      ],
+      "function": "20 Hz-21.1 kHz (or 0-12000 cents above 20 Hz); fine tune on the LEFT ENCODER."
+    },
+    {
+      "id": "dco.resonance",
+      "module": "dco_vcf",
+      "label": "DCO RESONANCE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16"
+        }
+      ],
+      "function": "Self-oscillates from about 87."
+    },
+    {
+      "id": "dco.drive",
+      "module": "dco_vcf",
+      "label": "DCO DRIVE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 71"
+        }
+      ],
+      "function": "Pre-filter drive."
+    },
+    {
+      "id": "dco.env_amt",
+      "module": "dco_vcf",
+      "label": "DCO FILTER ENV AMOUNT",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 19"
+        }
+      ],
+      "function": "Bipolar envelope amount (centre detent)."
+    },
+    {
+      "id": "dco.fenv_attack",
+      "module": "dco_fenv",
+      "label": "DCO FILTER ENV ATTACK",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 30"
+        }
+      ],
+      "function": "Filter envelope attack."
+    },
+    {
+      "id": "dco.fenv_decay",
+      "module": "dco_fenv",
+      "label": "DCO FILTER ENV DECAY",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 31"
+        }
+      ],
+      "function": "Filter envelope decay."
+    },
+    {
+      "id": "dco.fenv_sustain",
+      "module": "dco_fenv",
+      "label": "DCO FILTER ENV SUSTAIN",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 90"
+        }
+      ],
+      "function": "Filter envelope sustain."
+    },
+    {
+      "id": "dco.fenv_release",
+      "module": "dco_fenv",
+      "label": "DCO FILTER ENV RELEASE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Filter envelope release."
+    },
+    {
+      "id": "dco.keytrack",
+      "module": "dco_vcf",
+      "label": "DCO Key Tracking",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Key tracking on/off (last note of the voice)."
+    },
+    {
+      "id": "dco.keytrack_amt",
+      "module": "dco_vcf",
+      "label": "DCO Key Tracking Amount",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "-100 inverted to 100 precise."
+    },
+    {
+      "id": "dco.keytrack_glide",
+      "module": "dco_vcf",
+      "label": "DCO Key Tracking Glide",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "FILTER screen"
+        }
+      ],
+      "function": "Slew on tracking (smooths paraphonic pads)."
+    },
+    {
+      "id": "dco.detune",
+      "module": "kbd",
+      "label": "DCO DETUNE (ALT + PITCH ENCODER)",
+      "kind": "integer",
+      "range": {
+        "min": -1200,
+        "max": 1200
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "ALT + turn PITCH ENCODER (DCO)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        }
+      ],
+      "function": "Voice detune in cents (within DETUNE MIN/MAX)."
+    },
+    {
+      "id": "dco.waveshape",
+      "module": "dco",
+      "label": "DCO waveshape",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "six shapes incl. noise"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "DCO screen"
+        },
+        {
+          "type": "midi",
+          "message": "CC 116"
+        }
+      ],
+      "function": "Six waveshapes including noise.",
+      "note": "CC 116 'DCO WAVE'; shape names not read."
+    },
+    {
+      "id": "dco.pw",
+      "module": "dco",
+      "label": "DCO pulse width",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "DCO screen"
+        }
+      ],
+      "function": "Pulse width.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "dco.fold",
+      "module": "dco",
+      "label": "DCO wave fold",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "DCO screen"
+        }
+      ],
+      "function": "Wave folding amount.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "dco.sync",
+      "module": "dco",
+      "label": "DCO hard sync",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "DCO screen"
+        }
+      ],
+      "function": "Hard sync."
+    },
+    {
+      "id": "dco.route",
+      "module": "dco",
+      "label": "DCO routing",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "dco_filter"
+        },
+        {
+          "value": "v1_filter"
+        },
+        {
+          "value": "v2_filter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "DCO / ROUTING screen"
+        }
+      ],
+      "function": "Digital filter, or through the V1 or V2 analogue filter; output routing."
+    },
+    {
+      "id": "osc.detune",
+      "module": "drift",
+      "label": "DRIFT / DETUNE",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        }
+      ],
+      "function": "Master drift/detune of motor speeds (assignable per voice)."
+    },
+    {
+      "id": "xmod.depth",
+      "module": "xmod",
+      "label": "CROSS MOD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 68"
+        }
+      ],
+      "function": "Cross-mod depth."
+    },
+    {
+      "id": "xmod.mode",
+      "module": "xmod",
+      "label": "FM / RING",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fm"
+        },
+        {
+          "value": "ring"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Cross-mod type."
+    },
+    {
+      "id": "link.accel",
+      "module": "kbd",
+      "label": "ACCEL LINK",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 65"
+        }
+      ],
+      "function": "Shared controls edit all voices together (or one voice at a time)."
+    },
+    {
+      "id": "link.env",
+      "module": "kbd",
+      "label": "ENV LINK",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 66"
+        }
+      ],
+      "function": "Shared controls edit all voices together (or one voice at a time)."
+    },
+    {
+      "id": "link.filter",
+      "module": "kbd",
+      "label": "FILTER LINK",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 67"
+        }
+      ],
+      "function": "Shared controls edit all voices together (or one voice at a time)."
+    },
+    {
+      "id": "mod1.rate",
+      "module": "mod1",
+      "label": "MOD 1 RATE/SUBDIV",
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 32760.1,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 2"
+        }
+      ],
+      "function": "Rate (Hz or BPM) or subdivision 1/32-8/1 of the clock source."
+    },
+    {
+      "id": "mod1.shape",
+      "module": "mod1",
+      "label": "MOD 1 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "step"
+        },
+        {
+          "value": "tri"
+        },
+        {
+          "value": "sq"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "saw_down"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 102"
+        }
+      ],
+      "function": "Modulator shape."
+    },
+    {
+      "id": "mod1.depth_a",
+      "module": "mod1",
+      "label": "MOD 1 DEPTH A",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "Depth to destination A (A/B switch selects)."
+    },
+    {
+      "id": "mod1.dest_a",
+      "module": "mod1",
+      "label": "MOD 1 destination A",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod1.depth_b",
+      "module": "mod1",
+      "label": "MOD 1 DEPTH B",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 106"
+        }
+      ],
+      "function": "Depth to destination B (A/B switch selects)."
+    },
+    {
+      "id": "mod1.dest_b",
+      "module": "mod1",
+      "label": "MOD 1 destination B",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod1.clk",
+      "module": "mod1",
+      "label": "MOD 1 clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "mod1"
+        },
+        {
+          "value": "mod2"
+        },
+        {
+          "value": "mod3"
+        },
+        {
+          "value": "bpm"
+        },
+        {
+          "value": "note"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "INT, another modulator's rate, BPM or the last note's frequency."
+    },
+    {
+      "id": "mod1.phase_reset",
+      "module": "mod1",
+      "label": "MOD 1 phase reset",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "Restart on each note."
+    },
+    {
+      "id": "mod2.rate",
+      "module": "mod2",
+      "label": "MOD 2 RATE/SUBDIV",
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 32760.1,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3"
+        }
+      ],
+      "function": "Rate (Hz or BPM) or subdivision 1/32-8/1 of the clock source."
+    },
+    {
+      "id": "mod2.shape",
+      "module": "mod2",
+      "label": "MOD 2 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "step"
+        },
+        {
+          "value": "tri"
+        },
+        {
+          "value": "sq"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "saw_down"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103"
+        }
+      ],
+      "function": "Modulator shape."
+    },
+    {
+      "id": "mod2.depth_a",
+      "module": "mod2",
+      "label": "MOD 2 DEPTH A",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 107"
+        }
+      ],
+      "function": "Depth to destination A (A/B switch selects)."
+    },
+    {
+      "id": "mod2.dest_a",
+      "module": "mod2",
+      "label": "MOD 2 destination A",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod2.depth_b",
+      "module": "mod2",
+      "label": "MOD 2 DEPTH B",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 108"
+        }
+      ],
+      "function": "Depth to destination B (A/B switch selects)."
+    },
+    {
+      "id": "mod2.dest_b",
+      "module": "mod2",
+      "label": "MOD 2 destination B",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod2.clk",
+      "module": "mod2",
+      "label": "MOD 2 clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "mod1"
+        },
+        {
+          "value": "mod2"
+        },
+        {
+          "value": "mod3"
+        },
+        {
+          "value": "bpm"
+        },
+        {
+          "value": "note"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "INT, another modulator's rate, BPM or the last note's frequency."
+    },
+    {
+      "id": "mod2.phase_reset",
+      "module": "mod2",
+      "label": "MOD 2 phase reset",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "Restart on each note."
+    },
+    {
+      "id": "mod3.rate",
+      "module": "mod3",
+      "label": "MOD 3 RATE/SUBDIV",
+      "kind": "continuous",
+      "physical": {
+        "min": 0,
+        "max": 32760.1,
+        "unit": "Hz"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        },
+        {
+          "type": "midi",
+          "message": "CC 4"
+        }
+      ],
+      "function": "Rate (Hz or BPM) or subdivision 1/32-8/1 of the clock source."
+    },
+    {
+      "id": "mod3.shape",
+      "module": "mod3",
+      "label": "MOD 3 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "step"
+        },
+        {
+          "value": "tri"
+        },
+        {
+          "value": "sq"
+        },
+        {
+          "value": "saw_up"
+        },
+        {
+          "value": "saw_down"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 104"
+        }
+      ],
+      "function": "Modulator shape."
+    },
+    {
+      "id": "mod3.depth_a",
+      "module": "mod3",
+      "label": "MOD 3 DEPTH A",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 109"
+        }
+      ],
+      "function": "Depth to destination A (A/B switch selects)."
+    },
+    {
+      "id": "mod3.dest_a",
+      "module": "mod3",
+      "label": "MOD 3 destination A",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod3.depth_b",
+      "module": "mod3",
+      "label": "MOD 3 DEPTH B",
+      "kind": "integer",
+      "range": {
+        "min": -100,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 110"
+        }
+      ],
+      "function": "Depth to destination B (A/B switch selects)."
+    },
+    {
+      "id": "mod3.dest_b",
+      "module": "mod3",
+      "label": "MOD 3 destination B",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "any parameter"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "ALT + MOD SETUP/ASSIGN, move a control, confirm"
+        }
+      ],
+      "function": "Nearly any parameter, including other modulators."
+    },
+    {
+      "id": "mod3.clk",
+      "module": "mod3",
+      "label": "MOD 3 clock source",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "mod1"
+        },
+        {
+          "value": "mod2"
+        },
+        {
+          "value": "mod3"
+        },
+        {
+          "value": "bpm"
+        },
+        {
+          "value": "note"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "INT, another modulator's rate, BPM or the last note's frequency."
+    },
+    {
+      "id": "mod3.phase_reset",
+      "module": "mod3",
+      "label": "MOD 3 phase reset",
+      "kind": "boolean",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MOD screen"
+        }
+      ],
+      "function": "Restart on each note."
+    },
+    {
+      "id": "out.motor_vol",
+      "module": "out",
+      "label": "MOTOR VOL",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "midi",
+          "message": "CC 5"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Combined motor voice level."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "MASTER VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 7"
+        }
+      ],
+      "function": "Output level (not stored)."
+    },
+    {
+      "id": "ui.keypad",
+      "module": "kbd",
+      "label": "KEYPAD 1-8",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Notes, chords, sequences (scales, microtuning)."
+    },
+    {
+      "id": "ui.pitch_enc",
+      "module": "kbd",
+      "label": "PITCH ENCODERS 1-4",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Edit notes and microtonal pitch; with ALT, voice detune."
+    },
+    {
+      "id": "ui.clutch",
+      "module": "kbd",
+      "label": "CLUTCH",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Temporary parameter editing buffer."
+    },
+    {
+      "id": "ui.alt",
+      "module": "kbd",
+      "label": "ALT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions."
+    },
+    {
+      "id": "ui.arrows",
+      "module": "kbd",
+      "label": "< > / RESET",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Navigate voices and screens; ALT + > resets."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "kbd",
+      "label": "MIDI channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SETTINGS menu"
+        }
+      ],
+      "function": "MIDI channel (settings menu)."
+    },
+    {
+      "id": "sys.output_routing",
+      "module": "out",
+      "label": "Output routing",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mono"
+        },
+        {
+          "value": "split"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "SETTINGS > ROUTING"
+        }
+      ],
+      "function": "Main out as mono mix or split (tip V1, ring V2); DCO to V1, V2 or both."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out",
+      "label": "OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_l",
+      "function": "Main output; TS for mono, TRS for split voices (tip V1, ring V2)."
+    },
+    {
+      "id": "jack.out_ring",
+      "label": "OUT (ring, split mode)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_r",
+      "function": "Motor Voice 2 in split mode."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "Headphones, unbalanced TRS."
+    },
+    {
+      "id": "jack.in",
+      "label": "IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "input.in",
+      "function": "Audio input, unbalanced."
+    },
+    {
+      "id": "jack.v1_send",
+      "label": "V1 SEND",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "v1_mix.out",
+      "function": "MOTOR VOICE 1 pre-filter send (tip of the SEND RET jack)."
+    },
+    {
+      "id": "jack.v1_ret",
+      "label": "V1 RET",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "v1_drive.in",
+      "function": "MOTOR VOICE 1 pre-filter return (ring); a plug breaks the internal path."
+    },
+    {
+      "id": "jack.v2_send",
+      "label": "V2 SEND",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "v2_mix.out",
+      "function": "MOTOR VOICE 2 pre-filter send (tip of the SEND RET jack)."
+    },
+    {
+      "id": "jack.v2_ret",
+      "label": "V2 RET",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "v2_drive.in",
+      "function": "MOTOR VOICE 2 pre-filter return (ring); a plug breaks the internal path."
+    },
+    {
+      "id": "jack.cv1",
+      "label": "CV 1",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv_in",
+      "function": "Assignable CV input."
+    },
+    {
+      "id": "jack.trig1",
+      "label": "TRIG 1",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.trig_in",
+      "function": "Assignable trigger input."
+    },
+    {
+      "id": "jack.cv2",
+      "label": "CV 2",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv_in",
+      "function": "Assignable CV input."
+    },
+    {
+      "id": "jack.trig2",
+      "label": "TRIG 2",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.trig_in",
+      "function": "Assignable trigger input."
+    },
+    {
+      "id": "jack.cv3",
+      "label": "CV 3",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv_in",
+      "function": "Assignable CV input."
+    },
+    {
+      "id": "jack.trig3",
+      "label": "TRIG 3",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.trig_in",
+      "function": "Assignable trigger input."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "USB-B: MIDI, file transfer, firmware."
+    },
+    {
+      "id": "jack.dc",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "24 V DC 5 A, centre positive, 3.0 x 6.5 mm barrel (supply included)."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "seq.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "kbd.pitch",
+      "to": "v1_drive_ctl.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Note to target motor speed; voice DETUNE and SCALE applied."
+    },
+    {
+      "id": "c03",
+      "from": "kbd.gate",
+      "to": "v1_drive_ctl.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Note-on starts ACCEL, note-off starts BRAKE."
+    },
+    {
+      "id": "c04",
+      "from": "drift.out",
+      "to": "v1_drive_ctl.mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.detune"
+    },
+    {
+      "id": "c05",
+      "from": "v1_drive_ctl.rpm",
+      "to": "v1_motor.rpm",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Motor speed = pitch; physical inertia limits how fast it can change."
+    },
+    {
+      "id": "c06",
+      "from": "v1_motor.m",
+      "to": "v1_wave.m",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v1.wave",
+        "equals": "m"
+      }
+    },
+    {
+      "id": "c07",
+      "from": "v1_motor.opt_sine",
+      "to": "v1_wave.sine",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v1.wave",
+        "equals": "opt_sine"
+      }
+    },
+    {
+      "id": "c08",
+      "from": "v1_motor.opt_saw",
+      "to": "v1_wave.saw",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v1.wave",
+        "equals": "opt_saw"
+      }
+    },
+    {
+      "id": "c09",
+      "from": "v1_motor.opt_sq",
+      "to": "v1_wave.sq",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v1.wave",
+        "equals": "opt_sq"
+      }
+    },
+    {
+      "id": "c10",
+      "from": "v1_wave.out",
+      "to": "v1_tone.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "v1_tone.out",
+      "to": "v1_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "kbd.gate",
+      "to": "v1_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "v1_env.out",
+      "to": "v1_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "v1.vol"
+    },
+    {
+      "id": "c14",
+      "from": "v1_vca.out",
+      "to": "v1_mix.motors",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Four motors summed: paraphonic from here."
+    },
+    {
+      "id": "c15",
+      "from": "v1_mix.out",
+      "to": "v1_drive.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.v1_ret",
+      "note": "Pre-filter send/return: unpatched, the mix passes straight to the drive stage."
+    },
+    {
+      "id": "c16",
+      "from": "v1_drive.out",
+      "to": "v1_vcf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "v1.drive"
+    },
+    {
+      "id": "c17",
+      "from": "kbd.gate",
+      "to": "v1_fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "v1_fenv.out",
+      "to": "v1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "v1.env_amt"
+    },
+    {
+      "id": "c19",
+      "from": "kbd.pitch",
+      "to": "v1_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v1.keytrack",
+        "equals": true
+      },
+      "amount": "v1.keytrack_amt"
+    },
+    {
+      "id": "c20",
+      "from": "dco_vca.out",
+      "to": "v1_mix.dco",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.route",
+        "equals": "v1_filter"
+      },
+      "note": "DCO through this analogue filter."
+    },
+    {
+      "id": "c21",
+      "from": "kbd.pitch",
+      "to": "v2_drive_ctl.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Note to target motor speed; voice DETUNE and SCALE applied."
+    },
+    {
+      "id": "c22",
+      "from": "kbd.gate",
+      "to": "v2_drive_ctl.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Note-on starts ACCEL, note-off starts BRAKE."
+    },
+    {
+      "id": "c23",
+      "from": "drift.out",
+      "to": "v2_drive_ctl.mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "osc.detune"
+    },
+    {
+      "id": "c24",
+      "from": "v2_drive_ctl.rpm",
+      "to": "v2_motor.rpm",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Motor speed = pitch; physical inertia limits how fast it can change."
+    },
+    {
+      "id": "c25",
+      "from": "v2_motor.m",
+      "to": "v2_wave.m",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v2.wave",
+        "equals": "m"
+      }
+    },
+    {
+      "id": "c26",
+      "from": "v2_motor.opt_sine",
+      "to": "v2_wave.sine",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v2.wave",
+        "equals": "opt_sine"
+      }
+    },
+    {
+      "id": "c27",
+      "from": "v2_motor.opt_saw",
+      "to": "v2_wave.saw",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v2.wave",
+        "equals": "opt_saw"
+      }
+    },
+    {
+      "id": "c28",
+      "from": "v2_motor.opt_sq",
+      "to": "v2_wave.sq",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v2.wave",
+        "equals": "opt_sq"
+      }
+    },
+    {
+      "id": "c29",
+      "from": "v2_wave.out",
+      "to": "v2_tone.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "v2_tone.out",
+      "to": "v2_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c31",
+      "from": "kbd.gate",
+      "to": "v2_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c32",
+      "from": "v2_env.out",
+      "to": "v2_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "v2.vol"
+    },
+    {
+      "id": "c33",
+      "from": "v2_vca.out",
+      "to": "v2_mix.motors",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Four motors summed: paraphonic from here."
+    },
+    {
+      "id": "c34",
+      "from": "v2_mix.out",
+      "to": "v2_drive.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.v2_ret",
+      "note": "Pre-filter send/return: unpatched, the mix passes straight to the drive stage."
+    },
+    {
+      "id": "c35",
+      "from": "v2_drive.out",
+      "to": "v2_vcf.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "v2.drive"
+    },
+    {
+      "id": "c36",
+      "from": "kbd.gate",
+      "to": "v2_fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c37",
+      "from": "v2_fenv.out",
+      "to": "v2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "v2.env_amt"
+    },
+    {
+      "id": "c38",
+      "from": "kbd.pitch",
+      "to": "v2_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "v2.keytrack",
+        "equals": true
+      },
+      "amount": "v2.keytrack_amt"
+    },
+    {
+      "id": "c39",
+      "from": "dco_vca.out",
+      "to": "v2_mix.dco",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.route",
+        "equals": "v2_filter"
+      },
+      "note": "DCO through this analogue filter."
+    },
+    {
+      "id": "c40",
+      "from": "v1_vcf.out",
+      "to": "xmod.v1",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "v2_vcf.out",
+      "to": "xmod.v2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c42",
+      "from": "xmod.out",
+      "to": "out.v1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "xmod.depth",
+      "note": "Cross mod (FM or RING) applied to the motor voices' output."
+    },
+    {
+      "id": "c43",
+      "from": "v2_vcf.out",
+      "to": "out.v2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c44",
+      "from": "kbd.pitch",
+      "to": "dco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c45",
+      "from": "dco.out",
+      "to": "dco_vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c46",
+      "from": "kbd.gate",
+      "to": "dco_env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c47",
+      "from": "dco_env.out",
+      "to": "dco_vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "dco.vol"
+    },
+    {
+      "id": "c48",
+      "from": "dco_vca.out",
+      "to": "dco_vcf.in",
+      "signal": "audio",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "dco.route",
+        "equals": "dco_filter"
+      }
+    },
+    {
+      "id": "c49",
+      "from": "kbd.gate",
+      "to": "dco_fenv.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c50",
+      "from": "dco_fenv.out",
+      "to": "dco_vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "dco.env_amt"
+    },
+    {
+      "id": "c51",
+      "from": "dco_vcf.out",
+      "to": "out.dco",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c52",
+      "from": "input.out",
+      "to": "v1_drive.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "note": "Input processing can be routed through the voice filters (vocoder, gate, side-chain).",
+      "confidence": "inferred"
+    }
+  ],
+  "mod_matrix": {
+    "name": "Modulators (3 x 2 assignable slots)",
+    "module": "mod1",
+    "slots": 6,
+    "combine": "single",
+    "slot_parameters": [
+      {
+        "slot": 1,
+        "source": "mod1.shape",
+        "destination": "mod1.dest_a",
+        "depth": "mod1.depth_a"
+      },
+      {
+        "slot": 2,
+        "source": "mod1.shape",
+        "destination": "mod1.dest_b",
+        "depth": "mod1.depth_b"
+      },
+      {
+        "slot": 3,
+        "source": "mod2.shape",
+        "destination": "mod2.dest_a",
+        "depth": "mod2.depth_a"
+      },
+      {
+        "slot": 4,
+        "source": "mod2.shape",
+        "destination": "mod2.dest_b",
+        "depth": "mod2.depth_b"
+      },
+      {
+        "slot": 5,
+        "source": "mod3.shape",
+        "destination": "mod3.dest_a",
+        "depth": "mod3.depth_a"
+      },
+      {
+        "slot": 6,
+        "source": "mod3.shape",
+        "destination": "mod3.dest_b",
+        "depth": "mod3.depth_b"
+      }
+    ],
+    "sources": [
+      {
+        "id": 0,
+        "name": "Modulator 1",
+        "node": "mod1.out",
+        "per_voice": false
+      },
+      {
+        "id": 1,
+        "name": "Modulator 2",
+        "node": "mod2.out",
+        "per_voice": false
+      },
+      {
+        "id": 2,
+        "name": "Modulator 3",
+        "node": "mod3.out",
+        "per_voice": false
+      },
+      {
+        "id": 3,
+        "name": "Mod wheel (MIDI)",
+        "node": "kbd.modwheel",
+        "per_voice": false
+      },
+      {
+        "id": 4,
+        "name": "Channel pressure (MIDI)",
+        "node": "kbd.pressure",
+        "per_voice": false
+      }
+    ],
+    "destinations": [
+      {
+        "id": 0,
+        "name": "Any parameter (assigned by moving its control)",
+        "description": "Including other modulators' depth and rate; defaults MOD 1A V1 AMP, MOD 2A ALL CUTOFF, MOD 3A V2 AMP."
+      }
+    ],
+    "depth_range": {
+      "min": -100,
+      "max": 100
+    },
+    "note": "Each modulator has two destination slots with independent depth and SCALE; a MOD ENVELOPE scales its depth. Mod wheel and channel pressure have their own assignable slots."
+  },
+  "indicators": [
+    {
+      "id": "oled",
+      "module": "kbd",
+      "label": "OLED display",
+      "kind": "display",
+      "function": "Oscilloscope play screen, per-motor accel/brake status, envelopes, filter, modulators, sequencer."
+    },
+    {
+      "id": "mod_target",
+      "module": "mod1",
+      "label": "modulation target symbol",
+      "kind": "display",
+      "function": "Marks any parameter assigned as a destination."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Motor oscillators",
+      "applies_to": ["v1_motor", "v2_motor"],
+      "rule": "Each note sets a motor's rotation speed. The M wave comes from an electromagnetic pickup beside the coils (harmonically rich, responds well to drive); OPT SINE/SAW/SQ are infrared readings of printed patterns on a reflective disc, deliberately imperfect. Mechanical noise is damped by soft mounts and acoustic treatment."
+    },
+    {
+      "id": "b02",
+      "name": "Inertia and ACCEL / BRAKE",
+      "applies_to": ["v1_drive_ctl", "v2_drive_ctl"],
+      "rule": "Motors cannot change speed instantly, so every pitch change slews slightly. TARGET mode: each note starts FROM ±12 semitones away and reaches pitch at the ACCEL rate; on release it moves TO ±12 semitones at the BRAKE rate (curve -2 to +2). GLIDE mode: ACCEL sets rising, BRAKE falling portamento. Per motor; short gates may leave notes off-pitch (a usable detune)."
+    },
+    {
+      "id": "b03",
+      "name": "Polyphony and paraphony",
+      "applies_to": ["kbd", "v1_mix", "v2_mix"],
+      "rule": "Each voice's four motors can be poly (four notes), duo or unison; each motor has its own amp envelope and VCA. The four are then mixed into one analogue filter per voice (paraphonic), so filter key tracking follows the last note (with optional glide). The DCO mirrors this with four digital oscillators."
+    },
+    {
+      "id": "b04",
+      "name": "Filters",
+      "applies_to": ["v1_vcf", "v2_vcf", "dco_vcf"],
+      "rule": "Shared controls edit V1, V2 and DCO filters individually or linked: LP24, BP12, HP12, AP24, resonance to self-oscillation (~87), pre-filter drive, bipolar envelope amount, key tracking. Self-oscillating filters track pitch and can be played as oscillators."
+    },
+    {
+      "id": "b05",
+      "name": "Cross mod and drift",
+      "applies_to": ["xmod", "drift"],
+      "rule": "CROSS MOD multiplies (RING) or frequency-modulates (FM) between the motor voices. DRIFT/DETUNE varies motor speeds for analogue-style detune or drift, assignable per voice."
+    },
+    {
+      "id": "b06",
+      "name": "Modulators",
+      "applies_to": ["mod1", "mod2", "mod3"],
+      "rule": "Three modulators, each with two destinations (any parameter, including each other), independent depth and scale, a mod envelope on depth, five shapes with detailed shaping, and clocks from internal rate, another modulator, master tempo or note frequency (audio-rate possible)."
+    },
+    {
+      "id": "b07",
+      "name": "Performance",
+      "applies_to": ["kbd", "seq"],
+      "rule": "8-key keypad with scales and microtuning, four pitch encoders, CLUTCH buffer, arpeggiator with rhythm editor, sequencer (8 patterns per project, chaining, ratchets, micro-timing, probability), 8 motion-rec lanes, randomiser; MIDI (incl. poly aftertouch controllers) and 3 CV / 3 trigger inputs."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "channel_pressure",
+        "note": "assignable slots"
+      },
+      {
+        "message": "program_change"
+      },
+      {
+        "message": "control_change",
+        "note": "official CC map; CC 1-31 are 14-bit with LSB at CC 33-63; CC 64 sustain not supported"
+      },
+      {
+        "message": "nrpn",
+        "note": "map in a separate PDF"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sysex",
+        "note": "parameter dump"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "nrpn"
+      },
+      {
+        "message": "note_on",
+        "note": "sequencer/arp"
+      },
+      {
+        "message": "clock"
+      }
+    ],
+    "note": "From the official CC map (April 2023). Mono/poly mode messages set all voices to minimum/maximum polyphony."
+  },
+  "specifications": {
+    "sound_engine": "electromechanical (8 brushless DC motors) + digital voice",
+    "voices": "2 motor voices x 4 motors + DCO x 4",
+    "polyphony": "4 notes, up to 3 voices per note",
+    "waveforms": {
+      "motor": ["M (electromagnetic)", "optical sine", "optical saw", "optical square"],
+      "dco": "6 incl. noise, PWM, fold, sync"
+    },
+    "filters": "2 analogue multimode (LP24, BP12, HP12, AP24) + 1 digital",
+    "modulators": 3,
+    "sequencer": "8 patterns per project",
+    "motion_rec_lanes": 8,
+    "display": "OLED 128 x 64",
+    "connections": {
+      "out": "1/4\" TRS (mono or split)",
+      "in": "1/4\" TS",
+      "phones": "3.5 mm TRS",
+      "send_return": "2 x 3.5 mm TRS",
+      "cv": 3,
+      "trig": 3,
+      "midi": "DIN in, out; USB-B",
+      "storage": "microSD"
+    },
+    "power": "24 V DC 5 A, centre positive",
+    "fan": "variable-speed cooling fan"
+  },
+  "omitted_from_source": [
+    "chapters not read in full (DCO, link, mod effects, performance, tempo, arp, sequencer, motion rec, random, clear/reset, input, CV, MIDI assign, presets, settings, firmware, history)",
+    "NRPN and SysEx maps (separate PDFs)",
+    "video material"
+  ],
+  "not_in_source": [
+    "DCO waveshape names and the exact DCO parameter ranges",
+    "motor frequency range in Hz",
+    "CV and trigger voltage ranges",
+    "dimensions and weight",
+    "the exact cross-mod signal routing"
+  ],
+  "source_inconsistencies": [
+    "The CC map labels CC 77 'V1 ACCEL FROM' and CC 79 'V1 BRAKE TO' in the V2 block (they duplicate CC 73 and 75); they are taken as V2 FROM and V2 TO.",
+    "The Motor Controls chapter calls the optical saw both 'Optical Saw' and 'Optical Triangle \"OPT SAW\"'.",
+    "Retailer specifications list the all-pass filter as 12 dB; the manual says 24 dB all-pass.",
+    "Overview says amp envelope modes include ADSHR and AD Loop for amp and filter envelopes, while mod envelopes list five modes (no AD Loop, ADS).",
+    "Retailer copy describes cross mod as 'amplitude cross-modulation with either Voice 1 or Voice 2'; the MKI manual describes RING and FM modes with Voice 2 modulating."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Electromechanical source",
+      "detail": "Uses the electromechanical_oscillator module type (schema 0.13.0); motor inertia is modelled as a slew limiter ahead of each motor, as the manual describes."
+    },
+    {
+      "topic": "Partial manual read",
+      "detail": "Several chapters came from search excerpts; DCO details, input processing routing and the matrix destination list are summarised."
+    },
+    {
+      "topic": "Per-motor scope",
+      "detail": "Motor, envelope and VCA modules are per_voice (one per motor/note); mixers, filters and effects are per motor voice."
+    }
+  ]
+}

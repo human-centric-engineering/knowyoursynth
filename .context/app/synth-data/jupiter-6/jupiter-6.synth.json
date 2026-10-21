@@ -1,0 +1,2426 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "roland-jupiter-6",
+    "manufacturer": "Roland",
+    "model": "Jupiter-6 (JP-6) Programmable Polyphonic Synthesizer",
+    "category": "6-voice polyphonic analogue synthesizer with split keyboard, arpeggiator and MIDI",
+    "based_on": "Successor to the Jupiter-8 at a lower price, 1983-85; one of the first instruments with MIDI.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Roland Jupiter-6 Owner's Manual",
+        "kind": "user_manual",
+        "file": "Jupiter-6_Owner_s_Manual.pdf",
+        "pages": 39,
+        "note": "Scanned; read by OCR. Performance controls, manual section, patch writing, tape memory, external control and specifications."
+      },
+      {
+        "id": "sos",
+        "title": "Sound On Sound, 'Roland Jupiter 6' (retro review)",
+        "kind": "other",
+        "file": "https://www.soundonsound.com/reviews/roland-jupiter-6",
+        "note": "Original MIDI implementation: note on/off and patch preset changes only, permanently in omni."
+      },
+      {
+        "id": "midi_forums",
+        "title": "Kid Nepro and Vintage Synth Explorer notes on Jupiter-6 MIDI",
+        "kind": "other",
+        "file": "https://www.kidnepro.com/mobile/roland/roland-jupiter6-sounds-mobile.html",
+        "note": "Omni at power-on, channel 1 (upper) and 2 (lower) after omni off, v6.0 ROM channel select, MIDI THRU from serial 353800."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 6,
+    "polyphony_mode": "polyphonic, 6 voices; split 4+2 or 2+4; unison and solo modes",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "48 patch memories (6 banks x 8) and 32 patch presets (4 banks x 8) that store a patch or split pair with performance modes. Battery backed; tape save.",
+    "semi_modular": false,
+    "panel_counts": {
+      "keys": 61,
+      "patch_memories": 48,
+      "patch_presets": 32
+    },
+    "summary": "Two VCOs per voice with cross modulation, two-way sync and chromatic range controls, a multimode VCF (low-pass, high-pass or band-pass), two ADSRs with key follow, a programmable LFO and a performance LFO. The keyboard can split into two patches, and five assign modes include solo-unison with detune. Arpeggiator, portamento and glissando, auto-tune, tape memory and an early MIDI interface."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard and assigner",
+      "panel_section": "MEMORY PANEL: KEY MODE / ASSIGN / ARPEGGIO / GLIDE",
+      "scope": "common",
+      "description": "61-key keyboard. KEY MODE splits or layers the voices into upper and lower patches; ASSIGN chooses how keys take voices; an arpeggiator and portamento act per section. Sends pitch CV and gates to the voices.",
+      "properties": {
+        "keys": 61
+      },
+      "inputs": ["kbd.clock_in", "kbd.hold_in", "kbd.ext_notes"],
+      "outputs": ["kbd.cv", "kbd.gate"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "scope": "common",
+      "description": "Main programmable LFO, shared by the voices, with delay.",
+      "inputs": [],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "Performance LFO",
+      "panel_section": "PERFORMANCE: LFO MOD",
+      "scope": "common",
+      "description": "Second LFO for performance vibrato and growl, brought in by the LFO MOD button.",
+      "inputs": [],
+      "outputs": ["lfo2.out"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO-1",
+      "panel_section": "VCO-1",
+      "scope": "per_voice",
+      "description": "First oscillator; receives cross modulation from VCO-2.",
+      "inputs": ["vco1.pitch_cv", "vco1.pw_cv", "vco1.xmod_in", "vco1.sync_in"],
+      "outputs": ["vco1.out"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO-2",
+      "panel_section": "VCO-2",
+      "scope": "per_voice",
+      "description": "Second oscillator; a LOW setting turns it into a low-frequency modulator for cross modulation.",
+      "inputs": ["vco2.pitch_cv", "vco2.pw_cv", "vco2.sync_in"],
+      "outputs": ["vco2.out"]
+    },
+    {
+      "id": "mix",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "scope": "per_voice",
+      "description": "Balances VCO-1 and VCO-2.",
+      "inputs": ["mix.vco1", "mix.vco2"],
+      "outputs": ["mix.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "ENV-1",
+      "panel_section": "ENV-1",
+      "scope": "per_voice",
+      "description": "ADSR with key follow and polarity; drives VCO modulation, PWM, cross mod and optionally the VCF.",
+      "inputs": ["env1.gate"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "ENV-2",
+      "panel_section": "ENV-2",
+      "scope": "per_voice",
+      "description": "ADSR with key follow; drives the VCA and optionally the VCF.",
+      "inputs": ["env2.gate"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "scope": "per_voice",
+      "description": "Shapes each voice with ENV-2, with LFO tremolo.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "bend",
+      "type": "manual_controller",
+      "name": "Bender",
+      "panel_section": "PERFORMANCE: BENDER",
+      "scope": "common",
+      "description": "Left-right bender lever with separate VCO and VCF amounts.",
+      "inputs": [],
+      "outputs": ["bend.cv"]
+    },
+    {
+      "id": "memory",
+      "type": "cv_source_selector",
+      "name": "Patch memory and presets",
+      "panel_section": "MEMORY PANEL",
+      "scope": "common",
+      "description": "Patch memories, patch presets (a patch or split pair plus performance modes), manual panel, write, protect, tape memory and auto-tune.",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF (multimode)",
+      "panel_section": "VCF",
+      "scope": "per_voice",
+      "description": "Low-pass (24 dB/oct), high-pass (24 dB/oct) or band-pass (12 dB/oct, both switches down), with resonance.",
+      "properties": {
+        "cutoff_hz": [5, 30000],
+        "modes": {
+          "lpf": -24,
+          "hpf": -24,
+          "bpf": -12
+        }
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI interface",
+      "panel_section": "(rear panel)",
+      "scope": "common",
+      "description": "Early MIDI: note on/off and patch preset changes in, keyboard notes out.",
+      "inputs": [],
+      "outputs": ["midi.notes"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / rear panel",
+      "scope": "common",
+      "description": "Volume, unbalanced and balanced outputs, headphones; foot volume control.",
+      "inputs": ["out.in", "out.vca_pedal"],
+      "outputs": ["out.unbalanced", "out.balanced", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vcomod.lfo",
+      "module": "vco1",
+      "label": "VCO MOD LFO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of LFO pitch modulation."
+    },
+    {
+      "id": "vcomod.env",
+      "module": "vco1",
+      "label": "VCO MOD ENV",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of ENV-1 pitch modulation."
+    },
+    {
+      "id": "vcomod.target",
+      "module": "vco1",
+      "label": "VCO MOD selector",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "vco1"
+        },
+        {
+          "value": "both"
+        },
+        {
+          "value": "vco2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which VCOs the LFO and ENV pitch modulation reach."
+    },
+    {
+      "id": "env1.key_follow",
+      "module": "env1",
+      "label": "KEY FOLLOW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 120,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Shortens the envelope on higher notes."
+    },
+    {
+      "id": "env2.key_follow",
+      "module": "env2",
+      "label": "KEY FOLLOW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 120,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Shortens the envelope on higher notes."
+    },
+    {
+      "id": "env1.polarity",
+      "module": "env1",
+      "label": "POLARITY",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "normal"
+        },
+        {
+          "value": "inverted"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Normal or inverted ENV-1."
+    },
+    {
+      "id": "vca.lfo_mod",
+      "module": "vca",
+      "label": "LFO MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Tremolo depth."
+    },
+    {
+      "id": "bend.lever",
+      "module": "bend",
+      "label": "BENDER lever",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick",
+          "note": "left-right lever"
+        }
+      ],
+      "function": "Left-right lever, centre at rest."
+    },
+    {
+      "id": "bend.vco_sens",
+      "module": "bend",
+      "label": "BEND VCO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum bend on pitch."
+    },
+    {
+      "id": "bend.vcf_sens",
+      "module": "bend",
+      "label": "BEND VCF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum bend on cutoff."
+    },
+    {
+      "id": "bend.vco1",
+      "module": "bend",
+      "label": "BEND VCO-1",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bend reaches VCO-1."
+    },
+    {
+      "id": "bend.vco2",
+      "module": "bend",
+      "label": "BEND VCO-2",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bend reaches VCO-2."
+    },
+    {
+      "id": "lfo2.on",
+      "module": "lfo2",
+      "label": "LFO MOD",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Brings in the performance LFO."
+    },
+    {
+      "id": "lfo2.vco",
+      "module": "lfo2",
+      "label": "LFO MOD VCO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Performance vibrato depth."
+    },
+    {
+      "id": "lfo2.vcf",
+      "module": "lfo2",
+      "label": "LFO MOD VCF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Performance growl depth."
+    },
+    {
+      "id": "lfo2.rise",
+      "module": "lfo2",
+      "label": "RISE TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Time for the performance LFO to reach depth."
+    },
+    {
+      "id": "kbd.assign",
+      "module": "kbd",
+      "label": "ASSIGN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "solo"
+        },
+        {
+          "value": "unison"
+        },
+        {
+          "value": "poly_1"
+        },
+        {
+          "value": "poly_2"
+        },
+        {
+          "value": "solo_unison"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Voice assignment."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Holds notes at the sustain level; per section in split."
+    },
+    {
+      "id": "kbd.glide_time",
+      "module": "kbd",
+      "label": "GLIDE TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Portamento or glissando time."
+    },
+    {
+      "id": "kbd.arp_rate",
+      "module": "kbd",
+      "label": "ARPEGGIO RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Arpeggio speed."
+    },
+    {
+      "id": "kbd.arp_range",
+      "module": "kbd",
+      "label": "ARPEGGIO RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggio range in octaves."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Master volume. Not memorised."
+    },
+    {
+      "id": "out.balance",
+      "module": "out",
+      "label": "BALANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Upper and lower balance in split (and dual) mode."
+    },
+    {
+      "id": "memory.manual",
+      "module": "memory",
+      "label": "MANUAL",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Plays the manual control section."
+    },
+    {
+      "id": "memory.write",
+      "module": "memory",
+      "label": "WRITE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Writes the current patch or preset."
+    },
+    {
+      "id": "memory.patch_preset",
+      "module": "memory",
+      "label": "PATCH PRESET",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Switches the bank and number buttons to patch presets."
+    },
+    {
+      "id": "kbd.auto_tune",
+      "module": "kbd",
+      "label": "AUTO TUNE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tunes all VCOs automatically; also done at power-on."
+    },
+    {
+      "id": "kbd.master_tune",
+      "module": "kbd",
+      "label": "MASTER TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Overall tuning, ±50 cents."
+    },
+    {
+      "id": "memory.protect",
+      "module": "memory",
+      "label": "MEMORY PROTECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "on"
+        },
+        {
+          "value": "off"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Rear switch that guards the patch memories."
+    },
+    {
+      "id": "memory.tape_save",
+      "module": "memory",
+      "label": "TAPE SAVE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tape memory: save patch data."
+    },
+    {
+      "id": "memory.tape_verify",
+      "module": "memory",
+      "label": "TAPE VERIFY",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tape memory: verify patch data."
+    },
+    {
+      "id": "memory.tape_load",
+      "module": "memory",
+      "label": "TAPE LOAD",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tape memory: load patch data."
+    },
+    {
+      "id": "vco1.range",
+      "module": "vco1",
+      "label": "VCO-1 RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "32'"
+        },
+        {
+          "value": "chromatic steps"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Pitch in half steps across 32' to 2'.",
+      "note": "A rotary control stepping chromatically; shown here by its end points."
+    },
+    {
+      "id": "vco1.wave_triangle",
+      "module": "vco1",
+      "label": "VCO-1 TRIANGLE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the triangle wave; waves can be combined, except pulse with square."
+    },
+    {
+      "id": "vco1.wave_sawtooth",
+      "module": "vco1",
+      "label": "VCO-1 SAWTOOTH",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the sawtooth wave; waves can be combined, except pulse with square."
+    },
+    {
+      "id": "vco1.wave_pulse",
+      "module": "vco1",
+      "label": "VCO-1 PULSE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the pulse wave; waves can be combined, except pulse with square."
+    },
+    {
+      "id": "vco1.wave_square",
+      "module": "vco1",
+      "label": "VCO-1 SQUARE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the square wave; waves can be combined, except pulse with square."
+    },
+    {
+      "id": "vco1.xmod",
+      "module": "vco1",
+      "label": "CROSS MOD MANUAL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of VCO-2 modulating VCO-1's frequency."
+    },
+    {
+      "id": "vco1.xmod_env",
+      "module": "vco1",
+      "label": "CROSS MOD ENV-1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "ENV-1 control of cross-mod depth."
+    },
+    {
+      "id": "vco2.range",
+      "module": "vco2",
+      "label": "VCO-2 RANGE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "32'"
+        },
+        {
+          "value": "chromatic steps"
+        },
+        {
+          "value": "2'"
+        },
+        {
+          "value": "high"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "LOW (about 1.5-50 Hz), chromatic 32' to 2', or HI (2' to 1/2')."
+    },
+    {
+      "id": "vco2.wave_triangle",
+      "module": "vco2",
+      "label": "VCO-2 TRIANGLE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the triangle output; waves can be combined."
+    },
+    {
+      "id": "vco2.wave_sawtooth",
+      "module": "vco2",
+      "label": "VCO-2 SAWTOOTH",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the sawtooth output; waves can be combined."
+    },
+    {
+      "id": "vco2.wave_pulse",
+      "module": "vco2",
+      "label": "VCO-2 PULSE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the pulse output; waves can be combined."
+    },
+    {
+      "id": "vco2.wave_noise",
+      "module": "vco2",
+      "label": "VCO-2 NOISE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the noise output; waves can be combined."
+    },
+    {
+      "id": "vco2.tune",
+      "module": "vco2",
+      "label": "TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine pitch between half steps, ±50 cents."
+    },
+    {
+      "id": "vco.sync",
+      "module": "vco2",
+      "label": "SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "vco1_to_vco2"
+        },
+        {
+          "value": "vco2_to_vco1"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Oscillator sync in either direction."
+    },
+    {
+      "id": "pwm.pw",
+      "module": "vco1",
+      "label": "PW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Pulse width: 0 is square (50%), 10 is 0% (silent)."
+    },
+    {
+      "id": "pwm.depth",
+      "module": "vco1",
+      "label": "PWM",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Depth of pulse width modulation."
+    },
+    {
+      "id": "pwm.source",
+      "module": "vco1",
+      "label": "PWM selector",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lfo"
+        },
+        {
+          "value": "env1"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Source of pulse width modulation."
+    },
+    {
+      "id": "lfo.waveform",
+      "module": "lfo",
+      "label": "LFO-1 WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.04,
+        "max": 100,
+        "unit": "Hz",
+        "note": "random to 400 Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "LFO rate."
+    },
+    {
+      "id": "lfo.delay",
+      "module": "lfo",
+      "label": "DELAY TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 2.5,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Delay before LFO modulation; first note only in legato; no effect on PWM or VCA."
+    },
+    {
+      "id": "mix.balance",
+      "module": "mix",
+      "label": "MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Balance of VCO-1 (anticlockwise) and VCO-2 (clockwise)."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lpf"
+        },
+        {
+          "value": "hpf"
+        },
+        {
+          "value": "bpf"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "LPF, HPF, or BPF with both pressed."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 5,
+        "max": 30000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Cutoff frequency."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RES",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Emphasis at the cutoff."
+    },
+    {
+      "id": "vcf.env_mod",
+      "module": "vcf",
+      "label": "ENV MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Envelope depth on cutoff; no effect with FREQ at 10."
+    },
+    {
+      "id": "vcf.env_select",
+      "module": "vcf",
+      "label": "ENV selector",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "env1"
+        },
+        {
+          "value": "env2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Envelope for the filter."
+    },
+    {
+      "id": "vcf.lfo_mod",
+      "module": "vcf",
+      "label": "LFO MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "LFO depth on cutoff."
+    },
+    {
+      "id": "vcf.key_follow",
+      "module": "vcf",
+      "label": "KEY FOLLOW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 120,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Keyboard tracking of cutoff, up to 120%."
+    },
+    {
+      "id": "vca.level",
+      "module": "vca",
+      "label": "ENV-2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Patch volume under ENV-2, up to 60 dB."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "ENV-1 A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 18,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "ENV-1 D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 20,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "ENV-1 S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level while the key is held."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "ENV-1 R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 20,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Release time after the key is let go."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "ENV-2 A",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 18,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Attack time."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "ENV-2 D",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 20,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Decay time to the sustain level."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "ENV-2 S",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level while the key is held."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "ENV-2 R",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 20,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Release time after the key is let go."
+    },
+    {
+      "id": "kbd.key_mode",
+      "module": "kbd",
+      "label": "KEY MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "whole"
+        },
+        {
+          "value": "split_1"
+        },
+        {
+          "value": "split_2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Whole keyboard, or split with 4 lower + 2 upper voices (SPLIT-1) or 2 lower + 4 upper (SPLIT-2)."
+    },
+    {
+      "id": "kbd.panel_mode",
+      "module": "kbd",
+      "label": "PANEL MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lower"
+        },
+        {
+          "value": "upper"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Which split section the panel edits."
+    },
+    {
+      "id": "kbd.detune",
+      "module": "kbd",
+      "label": "DETUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Spread between unison voices, ±50 cents."
+    },
+    {
+      "id": "kbd.arp_mode",
+      "module": "kbd",
+      "label": "ARPEGGIO UP/DOWN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down"
+        },
+        {
+          "value": "down_up"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggio direction; any ASSIGN button stops it."
+    },
+    {
+      "id": "kbd.glide_mode",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "portamento"
+        },
+        {
+          "value": "glissando"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Portamento or glissando, not both."
+    },
+    {
+      "id": "bend.enable",
+      "module": "bend",
+      "label": "BENDER",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enables the performance controls (always on in WHOLE)."
+    },
+    {
+      "id": "bend.wide",
+      "module": "bend",
+      "label": "WIDE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bender over more than 3 octaves on the selected VCOs; BEND VCO is then ignored."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "LFO-2 RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 1,
+        "max": 10,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Performance LFO rate, sine."
+    },
+    {
+      "id": "memory.bank",
+      "module": "memory",
+      "label": "BANK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "A"
+        },
+        {
+          "value": "B"
+        },
+        {
+          "value": "C"
+        },
+        {
+          "value": "D"
+        },
+        {
+          "value": "E"
+        },
+        {
+          "value": "F"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Bank A-F (patch presets use A-D)."
+    },
+    {
+      "id": "memory.number",
+      "module": "memory",
+      "label": "NUMBER",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Patch number 1-8."
+    },
+    {
+      "id": "out.level",
+      "module": "out",
+      "label": "OUTPUT LEVEL",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0 dBm"
+        },
+        {
+          "value": "-15 dBm"
+        },
+        {
+          "value": "-30 dBm"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Unbalanced output level."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out_unbal",
+      "label": "OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm jack",
+      "node": "out.unbalanced",
+      "function": "Unbalanced output.",
+      "electrical": {
+        "levels_dbm": [0, -15, -30]
+      }
+    },
+    {
+      "id": "jack.out_bal",
+      "label": "OUTPUT (BALANCED)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "XLR",
+      "node": "out.balanced",
+      "function": "Balanced output; not affected by the level switch.",
+      "electrical": {
+        "impedance_ohm": 600
+      }
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm stereo jack",
+      "node": "out.phones",
+      "function": "Stereo headphones, 8 ohm."
+    },
+    {
+      "id": "jack.arp_clock",
+      "label": "ARPEGGIO CLOCK IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "6.35 mm jack",
+      "node": "kbd.clock_in",
+      "function": "One arpeggio step per pulse; overrides ARPEGGIO RATE.",
+      "combine": "replace",
+      "electrical": {
+        "threshold_v": 2.5
+      }
+    },
+    {
+      "id": "jack.patch_shift",
+      "label": "PATCH SHIFT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm jack",
+      "node": null,
+      "function": "Pedal switch (DP-2) or pulse over 2.5 V, at least 20 ms: steps through patches 1-8 in the bank."
+    },
+    {
+      "id": "jack.hold",
+      "label": "PEDAL HOLD",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm jack",
+      "node": "kbd.hold_in",
+      "function": "Pedal switch (DP-2) for hold."
+    },
+    {
+      "id": "jack.vca_pedal",
+      "label": "VCA CONTROL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm jack",
+      "node": "out.vca_pedal",
+      "function": "Foot volume (FV-200), -20 dB range."
+    },
+    {
+      "id": "jack.vcf_pedal",
+      "label": "VCF CONTROL",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm jack",
+      "node": "vcf.cutoff_cv",
+      "function": "Foot volume (FV-200) on cutoff, +2 to -6 octaves; needs BENDER on in split.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.tape_load",
+      "label": "TAPE MEMORY LOAD",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": null,
+      "function": "From a tape recorder for loading."
+    },
+    {
+      "id": "jack.tape_save",
+      "label": "TAPE MEMORY SAVE",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": null,
+      "function": "To a tape recorder for saving."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out. A THRU jack appears from serial 353800."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "mains cord",
+      "node": null,
+      "function": "Mains, 30 W."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Includes portamento or glissando."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.cv",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.range",
+        "not_equals": "low"
+      },
+      "note": "In LOW the VCO-2 pitch no longer follows the keyboard."
+    },
+    {
+      "id": "c03",
+      "from": "kbd.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "kbd.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c05",
+      "from": "vco2.out",
+      "to": "vco1.xmod_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vco1.xmod"
+    },
+    {
+      "id": "c06",
+      "from": "vco1.out",
+      "to": "mix.vco1",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c07",
+      "from": "vco2.out",
+      "to": "mix.vco2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c08",
+      "from": "env2.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.level"
+    },
+    {
+      "id": "c09",
+      "from": "lfo.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vca.lfo_mod"
+    },
+    {
+      "id": "c10",
+      "from": "bend.cv",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "bend.vcf_sens"
+    },
+    {
+      "id": "c11",
+      "from": "lfo2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.vcf"
+    },
+    {
+      "id": "c12",
+      "from": "lfo.out",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcomod.target",
+            "equals": "vco1"
+          },
+          {
+            "param": "vcomod.target",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "vcomod.lfo"
+    },
+    {
+      "id": "c13",
+      "from": "env1.out",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcomod.target",
+            "equals": "vco1"
+          },
+          {
+            "param": "vcomod.target",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "vcomod.env"
+    },
+    {
+      "id": "c14",
+      "from": "bend.cv",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vco1",
+        "equals": true
+      },
+      "amount": "bend.vco_sens"
+    },
+    {
+      "id": "c15",
+      "from": "lfo2.out",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.vco",
+      "note": "Only while the LFO MOD button is held or on."
+    },
+    {
+      "id": "c16",
+      "from": "lfo.out",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcomod.target",
+            "equals": "vco2"
+          },
+          {
+            "param": "vcomod.target",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "vcomod.lfo"
+    },
+    {
+      "id": "c17",
+      "from": "env1.out",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcomod.target",
+            "equals": "vco2"
+          },
+          {
+            "param": "vcomod.target",
+            "equals": "both"
+          }
+        ]
+      },
+      "amount": "vcomod.env"
+    },
+    {
+      "id": "c18",
+      "from": "bend.cv",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "bend.vco2",
+        "equals": true
+      },
+      "amount": "bend.vco_sens"
+    },
+    {
+      "id": "c19",
+      "from": "lfo2.out",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "lfo2.vco",
+      "note": "Only while the LFO MOD button is held or on."
+    },
+    {
+      "id": "c20",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c21",
+      "from": "midi.notes",
+      "to": "kbd.ext_notes",
+      "signal": "midi",
+      "kind": "fixed"
+    },
+    {
+      "id": "c22",
+      "from": "mix.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c23",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c24",
+      "from": "env1.out",
+      "to": "vco1.xmod_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco1.xmod_env",
+      "note": "Envelope control of the cross-mod depth."
+    },
+    {
+      "id": "c25",
+      "from": "vco1.out",
+      "to": "vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco.sync",
+        "equals": "vco1_to_vco2"
+      }
+    },
+    {
+      "id": "c26",
+      "from": "vco2.out",
+      "to": "vco1.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco.sync",
+        "equals": "vco2_to_vco1"
+      }
+    },
+    {
+      "id": "c27",
+      "from": "lfo.out",
+      "to": "vco1.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pwm.source",
+        "equals": "lfo"
+      },
+      "amount": "pwm.depth"
+    },
+    {
+      "id": "c28",
+      "from": "env1.out",
+      "to": "vco1.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pwm.source",
+        "equals": "env1"
+      },
+      "amount": "pwm.depth"
+    },
+    {
+      "id": "c29",
+      "from": "lfo.out",
+      "to": "vco2.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pwm.source",
+        "equals": "lfo"
+      },
+      "amount": "pwm.depth"
+    },
+    {
+      "id": "c30",
+      "from": "env1.out",
+      "to": "vco2.pw_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "pwm.source",
+        "equals": "env1"
+      },
+      "amount": "pwm.depth"
+    },
+    {
+      "id": "c31",
+      "from": "env1.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.env_select",
+        "equals": "env1"
+      },
+      "amount": "vcf.env_mod"
+    },
+    {
+      "id": "c32",
+      "from": "env2.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vcf.env_select",
+        "equals": "env2"
+      },
+      "amount": "vcf.env_mod"
+    },
+    {
+      "id": "c33",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.lfo_mod"
+    },
+    {
+      "id": "c34",
+      "from": "kbd.cv",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.key_follow"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "memory.protect_led",
+      "module": "memory",
+      "label": "Memory Protect indicator",
+      "kind": "led",
+      "function": "Shows when the memories are protected."
+    },
+    {
+      "id": "kbd.arp_range_leds",
+      "module": "kbd",
+      "label": "Arpeggio RANGE indicators",
+      "kind": "led",
+      "function": "Show 1 to 4 octaves."
+    },
+    {
+      "id": "bend.wide_led",
+      "module": "bend",
+      "label": "WIDE indicator",
+      "kind": "led",
+      "function": "Turns orange in WIDE."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Key modes",
+      "applies_to": ["kbd", "out"],
+      "rule": "WHOLE plays one patch on all six voices. SPLIT-1 gives 4 voices to the lower section and 2 to the upper; SPLIT-2 the reverse. Each section has its own patch, assign mode, arpeggio, glide, hold and bender settings. Hold a SPLIT button and press a key to move the split point (not stored). BALANCE mixes the sections."
+    },
+    {
+      "id": "b02",
+      "name": "Assign modes",
+      "applies_to": ["kbd"],
+      "rule": "SOLO: one voice, last-note priority. UNISON: voices shared across held keys (1 key 6 voices, 2 keys 3 each, 3 keys 2 each, 4-6 keys 1 each), with DETUNE. SOLO UNISON (SOLO and UNISON together): all voices on one key. POLY-1: one voice per key, natural releases; suits piano-like sounds. POLY-2: only the last notes keep their releases; suits glide."
+    },
+    {
+      "id": "b03",
+      "name": "Arpeggio",
+      "applies_to": ["kbd"],
+      "rule": "Plays held notes in key order over 1-4 octaves: UP, DOWN, U&D (press UP then DOWN) or D&U (DOWN then UP). Mode and range per section in split; rate is shared. Repeats only while keys are held unless HOLD is on. An ASSIGN button stops it. ARPEGGIO CLOCK IN takes one step per pulse."
+    },
+    {
+      "id": "b04",
+      "name": "Patch presets",
+      "applies_to": ["memory"],
+      "rule": "32 presets store a patch (or split pair) with key mode, assign, arpeggio, glide, hold and bender settings. With PATCH PRESET on, the BANK and NUMBER buttons select presets instead of memories. PATCH SHIFT steps through 1-8 in the bank."
+    },
+    {
+      "id": "b05",
+      "name": "Editing",
+      "applies_to": ["memory"],
+      "rule": "Moving any manual control edits the current patch live without overwriting it; WRITE with MEMORY PROTECT off stores it."
+    },
+    {
+      "id": "b06",
+      "name": "Cross modulation and sync",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "VCO-2 modulates VCO-1's frequency at a depth set by CROSS MOD MANUAL plus ENV-1. With VCO-2 in LOW it acts as an LFO; in audio range it gives metallic, ring-mod-like tones. SYNC locks either VCO to the other."
+    },
+    {
+      "id": "b07",
+      "name": "Performance controls",
+      "applies_to": ["bend", "lfo2"],
+      "rule": "The bender moves pitch (selected VCOs) and cutoff by the BEND amounts; WIDE gives over 3 octaves on the VCOs. LFO MOD brings in a sine LFO-2 at RATE, rising over RISE TIME. Neither is sent or received over MIDI."
+    },
+    {
+      "id": "b08",
+      "name": "Auto tune",
+      "applies_to": ["kbd"],
+      "rule": "All 12 VCOs are tuned at power-on and whenever AUTO TUNE is pressed."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "program_change",
+        "note": "patch presets"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "all_notes_off",
+        "note": "sent after each key"
+      }
+    ],
+    "channel_note": "Omni on at power-up; after poly on / omni off, channel 1 (upper) and channel 2 (lower in split). v6.0 ROM adds channel selection.",
+    "note": "No SysEx, bender or modulation over MIDI. From secondary sources; the manual only mentions the DIN IN/OUT."
+  },
+  "specifications": {
+    "voices": 6,
+    "vcos": 12,
+    "keyboard": "61 keys",
+    "vco1_range": "32' to 2', chromatic",
+    "vco2_range": "LOW 1.5-50 Hz, 32'-2' chromatic, HIGH 2'-0.5'",
+    "vco2_tune_cents": [-50, 50],
+    "vco_mod_depth": {
+      "lfo": "10 oct",
+      "env1": "5 oct"
+    },
+    "pw_pct": [50, 0],
+    "vcf": {
+      "modes_db_per_oct": {
+        "lpf": -24,
+        "hpf": -24,
+        "bpf": -12
+      },
+      "cutoff_hz": [5, 30000],
+      "env_depth": "10 oct or more",
+      "lfo_depth": "10 oct or more",
+      "key_follow_pct": [0, 120]
+    },
+    "vca_env2_level_db": 60,
+    "envelopes": {
+      "attack_s_max": 18,
+      "decay_s_max": 20,
+      "release_s_max": 20,
+      "key_follow_pct": [0, 120]
+    },
+    "lfo1": {
+      "rate_hz": [0.04, 100],
+      "random_rate_hz": [0.04, 400],
+      "delay_s": [0, 2]
+    },
+    "detune_cents": [-50, 50],
+    "arpeggio": {
+      "rate_hz": [1, 25],
+      "range_oct": [1, 4],
+      "modes": ["up", "down", "U&D", "D&U"]
+    },
+    "glide_s_per_oct": [0, 1.6],
+    "master_tune_cents": [-50, 50],
+    "bender": {
+      "wide": "±3 oct or more",
+      "vco": "±1 oct",
+      "vcf": "±5 oct"
+    },
+    "lfo2": {
+      "vco": "±100 cents or more",
+      "vcf": "±4 oct",
+      "rate_hz": [1, 10],
+      "rise_s": [0.05, 1]
+    },
+    "memory": {
+      "patch_memories": 48,
+      "patch_presets": 32
+    },
+    "outputs": {
+      "unbalanced": "1/4\" jack, 0/-15/-30 dBm",
+      "balanced": "XLR, 600 ohm",
+      "phones": "stereo, 8 ohm"
+    },
+    "power_w": 30,
+    "dimensions_mm": {
+      "w": 1063,
+      "d": 434,
+      "h": 120
+    },
+    "weight_kg": 16
+  },
+  "omitted_from_source": [
+    "tape memory step-by-step procedures",
+    "the copy and data arrangement examples",
+    "basic connection diagrams"
+  ],
+  "not_in_source": [
+    "the MIDI implementation",
+    "envelope minimum times",
+    "whether PWM reaches both VCOs' pulse waves",
+    "the VCO-1 RANGE detent count",
+    "LFO-1 waveform names (symbols only)"
+  ],
+  "source_inconsistencies": [
+    "LFO-1 DELAY TIME is about 2.5 s at 10 in the text but 0 to 2 s in the specifications.",
+    "The specifications list three VCO-1 waveform symbols, but the panel diagram shows four VCO-1 waveform switches (triangle, sawtooth, pulse, square).",
+    "The OCR of the envelope attack maximum reads 18 s; the scan is unclear and it may be 15 s."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "MIDI",
+      "detail": "Taken from reviews and forums, not the manual. Later ROMs and the Europa and Tauntek upgrades change it substantially."
+    },
+    {
+      "topic": "Split voicing",
+      "detail": "Voices are modelled once; split and unison voice counts are behaviours, not duplicated modules."
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/synth-effects-0.1.0.json",
+  "title": "Synth effects catalogue",
+  "description": "The control surface of a built-in effects engine: the slots, the routing topologies and every algorithm with its parameters, units and ranges. It records what can be set, not what the DSP does; see modelling_gaps.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "device",
+    "engine",
+    "routing_modes",
+    "algorithms",
+    "omitted_from_source",
+    "not_in_source",
+    "source_inconsistencies",
+    "modelling_gaps"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "device": {
+      "type": "object",
+      "required": ["id", "manufacturer", "model", "for_device", "sources"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "for_device": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Blueprint device ids that use this engine."
+        },
+        "sources": {
+          "type": "array"
+        }
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["slots"],
+      "properties": {
+        "slots": {
+          "type": "integer"
+        },
+        "algorithm_count": {
+          "type": "integer"
+        },
+        "sample_rate_hz": {
+          "type": "integer"
+        },
+        "bit_depth": {
+          "type": "string"
+        },
+        "bypass": {
+          "type": "string"
+        },
+        "modes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "slot_controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["slot"]
+      }
+    },
+    "routing_modes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "topology"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "topology": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "algorithms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "number", "name", "long_name", "type", "parameters"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "long_name": {
+            "type": "string"
+          },
+          "type": {
+            "enum": ["reverb", "processing", "delay", "creative"]
+          },
+          "inspiration": {
+            "type": "string"
+          },
+          "direct_port": {
+            "type": "boolean",
+            "description": "Marked * in the manual: an algorithm ported directly from a Music Group hardware device."
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["number", "name", "description"],
+              "properties": {
+                "number": {
+                  "type": "integer"
+                },
+                "ref": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "units": {
+                  "type": ["string", "null"]
+                },
+                "min": {
+                  "type": ["number", "string", "null"]
+                },
+                "max": {
+                  "type": ["number", "string", "null"]
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "mod_destination": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "midi": {
+      "type": "object"
+    },
+    "omitted_from_source": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "not_in_source": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_inconsistencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modelling_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["topic", "detail"]
+      }
+    }
+  }
+}

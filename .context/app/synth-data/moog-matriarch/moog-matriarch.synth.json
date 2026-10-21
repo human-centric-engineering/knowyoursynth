@@ -1,0 +1,4489 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "moog-matriarch",
+    "manufacturer": "Moog Music",
+    "model": "Matriarch",
+    "category": "4-note paraphonic semi-modular analogue synthesizer, 49 keys, with stereo analogue delay, arpeggiator and sequencer",
+    "based_on": "Moog modular circuits: oscillators from the Minimoog Voyager (921 lineage), mixer after the CP3, filters after the 904A, envelopes after the 911, VCAs after the 902, delay after the Moog 500 Series analog delay; released 2019.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Moog Matriarch Owner's Manual",
+        "kind": "user_manual",
+        "file": "Moog_Matriarch_Manual.pdf",
+        "pages": 92,
+        "note": "Every module with its patch points and normals, paraphony, rear panel, global settings, MIDI CC and SysEx documentation, specifications."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 4,
+    "polyphony_mode": "1-note mono, 2-note paraphonic (Osc 1+2, Osc 3+4) or 4-note paraphonic (one oscillator per note), shared filter and VCA path",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No sound memory. Twelve sequences (three banks of four, up to 256 steps) and global settings are retained.",
+    "semi_modular": true,
+    "panel_counts": {
+      "keys": 49,
+      "patch_points": 90,
+      "patch_inputs": 49,
+      "patch_outputs": 33,
+      "mult_jacks": 8
+    },
+    "summary": "Four VCOs (triangle, saw, square, narrow pulse; 16'-2'; Osc 2-4 detune and hard-sync to the previous one) with pitch, linear FM and PWM inputs; white noise and a rear instrument input into a DC-coupled mixer with per-oscillator gates for paraphony. Two ladder filters share CUTOFF (SPACING offsets VCF 1) and run HP/LP in series, LP/LP in stereo or HP/LP in parallel. Two ADSRs, two VCAs (AMP ENV, SPLIT or DRONE), stereo BBD delay. Modulation oscillator (six waves, to 1.3 kHz) with noise and S/H outputs, plus a separate triangle/square LFO, three voltage-controlled inverting attenuators and two mults. Arpeggiator and sequencer. Plays without patching; 90 jacks extend it."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "voice_allocator",
+      "name": "Keyboard, LHC and voice assigner",
+      "panel_section": "KEYBOARD / LEFT-HAND CONTROLLER / PARAPHONY",
+      "description": "49-key Fatar with velocity and channel aftertouch (not hard-wired: use the rear jacks or MIDI). Assigns notes to oscillators by VOICE MODE and opens each oscillator's mixer gate. Glide, octave transpose, wheels.",
+      "properties": {
+        "keys": 49
+      },
+      "inputs": ["kbd.midi_in", "kbd.seq_in", "kbd.sustain"],
+      "outputs": [
+        "kbd.cv1",
+        "kbd.cv2",
+        "kbd.cv3",
+        "kbd.cv4",
+        "kbd.gate1",
+        "kbd.gate2",
+        "kbd.gate3",
+        "kbd.gate4",
+        "kbd.cv",
+        "kbd.gate",
+        "kbd.velocity",
+        "kbd.aftertouch",
+        "kbd.modwheel",
+        "kbd.bend"
+      ]
+    },
+    {
+      "id": "pitchbus",
+      "type": "cv_source_selector",
+      "name": "Oscillator pitch inputs",
+      "panel_section": "OSCILLATORS",
+      "description": "The four PITCH IN jacks chain: a signal at Osc 1 PITCH IN reaches Osc 1-4, until a later PITCH IN jack is patched, which takes over from there on.",
+      "inputs": ["pitchbus.in1", "pitchbus.in2", "pitchbus.in3", "pitchbus.in4"],
+      "outputs": ["pitchbus.out1", "pitchbus.out2", "pitchbus.out3", "pitchbus.out4"]
+    },
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATORS",
+      "description": "VCO: triangle, sawtooth, square or narrow pulse; 16'-2'. Sets the reference pitch for Osc 2-4.",
+      "inputs": ["osc1.pitch_cv", "osc1.lin_fm", "osc1.pwm"],
+      "outputs": ["osc1.out"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATORS",
+      "description": "VCO: triangle, sawtooth, square or narrow pulse; 16'-2'. FREQUENCY detunes ±7 semitones from Osc 1; hard sync to Osc 1.",
+      "inputs": ["osc2.pitch_cv", "osc2.lin_fm", "osc2.pwm", "osc2.sync_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "osc3",
+      "type": "oscillator",
+      "name": "Oscillator 3",
+      "panel_section": "OSCILLATORS",
+      "description": "VCO: triangle, sawtooth, square or narrow pulse; 16'-2'. FREQUENCY detunes ±7 semitones from Osc 1; hard sync to Osc 2.",
+      "inputs": ["osc3.pitch_cv", "osc3.lin_fm", "osc3.pwm", "osc3.sync_in"],
+      "outputs": ["osc3.out"]
+    },
+    {
+      "id": "osc4",
+      "type": "oscillator",
+      "name": "Oscillator 4",
+      "panel_section": "OSCILLATORS",
+      "description": "VCO: triangle, sawtooth, square or narrow pulse; 16'-2'. FREQUENCY detunes ±7 semitones from Osc 1; hard sync to Osc 3.",
+      "inputs": ["osc4.pitch_cv", "osc4.lin_fm", "osc4.pwm", "osc4.sync_in"],
+      "outputs": ["osc4.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "White noise",
+      "panel_section": "MIXER / MODULATION",
+      "description": "White noise with a 1-pole high-pass colour filter (global setting); into the mixer and to NOISE OUT.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "instr",
+      "type": "preamp",
+      "name": "Instrument input",
+      "panel_section": "rear panel",
+      "description": "Instrument-level input with +20 dB gain, straight into the mixer.",
+      "inputs": ["instr.in"],
+      "outputs": ["instr.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Five levels (noise, Osc 1-4) plus the instrument input; DC coupled; overdrives above 11 o'clock. Oscillator channels have gates that mute unplayed oscillators in paraphonic modes.",
+      "inputs": [
+        "mixer.noise",
+        "mixer.in1",
+        "mixer.in2",
+        "mixer.in3",
+        "mixer.in4",
+        "mixer.ext",
+        "mixer.gate1",
+        "mixer.gate2",
+        "mixer.gate3",
+        "mixer.gate4"
+      ],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "cutbus",
+      "type": "cv_source_selector",
+      "name": "Cutoff inputs",
+      "panel_section": "FILTERS",
+      "description": "CUTOFF 1 IN is normalled to CUTOFF 2 IN, so one patch moves both filters until CUTOFF 2 IN is used.",
+      "inputs": ["cutbus.in1", "cutbus.in2"],
+      "outputs": ["cutbus.out1", "cutbus.out2"]
+    },
+    {
+      "id": "vcf1",
+      "type": "filter",
+      "name": "VCF 1",
+      "panel_section": "FILTERS",
+      "description": "Moog 24 dB/oct ladder, high-pass (series, parallel) or low-pass (stereo); cutoff = CUTOFF + SPACING; resonance 1 self-oscillates above about 3 o'clock.",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [20, 20000]
+      },
+      "inputs": ["vcf1.in", "vcf1.cutoff_cv"],
+      "outputs": ["vcf1.out"]
+    },
+    {
+      "id": "vcf2",
+      "type": "filter",
+      "name": "VCF 2",
+      "panel_section": "FILTERS",
+      "description": "Moog 24 dB/oct ladder, always low-pass; fed from the mixer or from VCF 1 (series).",
+      "properties": {
+        "slope_db_per_oct": 24,
+        "cutoff_hz": [20, 20000]
+      },
+      "inputs": ["vcf2.in", "vcf2.cutoff_cv"],
+      "outputs": ["vcf2.out"]
+    },
+    {
+      "id": "filtsum",
+      "type": "summer",
+      "name": "Filter routing",
+      "panel_section": "FILTERS",
+      "description": "Sums VCF 1 and VCF 2 in parallel mode; passes the routed filter outputs to the VCAs.",
+      "inputs": ["filtsum.a", "filtsum.b"],
+      "outputs": ["filtsum.out"]
+    },
+    {
+      "id": "env_f",
+      "type": "envelope",
+      "name": "Filter envelope",
+      "panel_section": "ENVELOPE GENERATORS",
+      "description": "ADSR, 2 ms-10 s stages, 0 to +8 V; also controls VCA 1 in SPLIT. ENV END OUT goes high when the envelope finishes.",
+      "properties": {
+        "time_s": [0.002, 10]
+      },
+      "inputs": ["env_f.trig"],
+      "outputs": ["env_f.out", "env_f.end"]
+    },
+    {
+      "id": "env_a",
+      "type": "envelope",
+      "name": "Amplitude envelope",
+      "panel_section": "ENVELOPE GENERATORS",
+      "description": "ADSR, 2 ms-10 s; controls both VCAs in AMP ENV, VCA 2 in SPLIT.",
+      "properties": {
+        "time_s": [0.002, 10]
+      },
+      "inputs": ["env_a.trig"],
+      "outputs": ["env_a.out", "env_a.end"]
+    },
+    {
+      "id": "vca1",
+      "type": "vca",
+      "name": "VCA 1",
+      "panel_section": "OUTPUT",
+      "description": "Left channel VCA; level from an envelope (per VCA MODE) times VCA 1 CV IN, or the CV alone in DRONE.",
+      "inputs": ["vca1.in", "vca1.cv", "vca1.env"],
+      "outputs": ["vca1.out"]
+    },
+    {
+      "id": "vca2",
+      "type": "vca",
+      "name": "VCA 2",
+      "panel_section": "OUTPUT",
+      "description": "Right channel VCA; level from an envelope (per VCA MODE) times VCA 2 CV IN, or the CV alone in DRONE.",
+      "inputs": ["vca2.in", "vca2.cv", "vca2.env"],
+      "outputs": ["vca2.out"]
+    },
+    {
+      "id": "ref",
+      "type": "cv_source_selector",
+      "name": "Internal references",
+      "panel_section": "(internal)",
+      "description": "Default drone voltage normalled to VCA 1/2 CV IN in DRONE, and +8 V normalled to each attenuator input.",
+      "inputs": [],
+      "outputs": ["ref.drone", "ref.v8"]
+    },
+    {
+      "id": "dly",
+      "type": "delay",
+      "name": "Stereo delay",
+      "panel_section": "STEREO DELAY",
+      "description": "Two BBD delays: 35-780 ms (longer by tap or patching), SPACING offsets Delay 1, feedback to self-oscillation, ping pong, sync or tap tempo; dark or bright tone.",
+      "properties": {
+        "time_ms": [35, 780]
+      },
+      "inputs": [
+        "dly.in1",
+        "dly.in2",
+        "dly.fb_cv",
+        "dly.fb2_cv",
+        "dly.mix_cv",
+        "dly.time1_cv",
+        "dly.time2_cv",
+        "dly.sync"
+      ],
+      "outputs": ["dly.out1", "dly.out2"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUTPUT / rear panel",
+      "description": "MIX crossfades dry VCA and wet delay per side; MAIN VOLUME to MAIN OUT L/R (L mono when R is unplugged); EURO OUT and headphones bypass MAIN VOLUME.",
+      "inputs": ["out.dry1", "out.dry2", "out.wet1", "out.wet2"],
+      "outputs": ["out.main_l", "out.main_r", "out.euro_l", "out.euro_r", "out.phones"]
+    },
+    {
+      "id": "modosc",
+      "type": "lfo",
+      "name": "Modulation oscillator",
+      "panel_section": "MODULATION",
+      "description": "0.07 Hz-1.3 kHz; sine, sawtooth, ramp, square (uni or bipolar), staircase (stepped triangle at the arp clock) or smooth random. Routed by the mod wheel to pitch, cutoff and pulse width.",
+      "properties": {
+        "rate_hz": [0.07, 1300]
+      },
+      "inputs": ["modosc.rate_cv", "modosc.sync", "modosc.clock"],
+      "outputs": ["modosc.out"]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "Sample and hold",
+      "panel_section": "MODULATION",
+      "description": "Samples the noise at the start of each modulation cycle; no internal routing.",
+      "inputs": ["snh.in", "snh.clock"],
+      "outputs": ["snh.out"]
+    },
+    {
+      "id": "att1",
+      "type": "attenuator",
+      "name": "Attenuator 1",
+      "panel_section": "UTILITIES (1)",
+      "description": "Inverting, voltage-controlled: centre fully attenuated, clockwise towards unity, anticlockwise inverted; +8 V normalled to the input (a DC source unpatched). Usable as a ring modulator.",
+      "inputs": ["att1.in", "att1.cv"],
+      "outputs": ["att1.out"]
+    },
+    {
+      "id": "att2",
+      "type": "attenuator",
+      "name": "Attenuator 2",
+      "panel_section": "UTILITIES (1)",
+      "description": "Inverting, voltage-controlled: centre fully attenuated, clockwise towards unity, anticlockwise inverted; +8 V normalled to the input (a DC source unpatched). Usable as a ring modulator.",
+      "inputs": ["att2.in", "att2.cv"],
+      "outputs": ["att2.out"]
+    },
+    {
+      "id": "att3",
+      "type": "attenuator",
+      "name": "Attenuator 3",
+      "panel_section": "UTILITIES (2)",
+      "description": "Inverting, voltage-controlled: centre fully attenuated, clockwise towards unity, anticlockwise inverted; +8 V normalled to the input (a DC source unpatched). Usable as a ring modulator.",
+      "inputs": ["att3.in", "att3.cv"],
+      "outputs": ["att3.out"]
+    },
+    {
+      "id": "mult1",
+      "type": "mult",
+      "name": "Mult 1",
+      "panel_section": "UTILITIES (1)",
+      "description": "Four unbuffered parallel jacks; also passively mixes outputs.",
+      "inputs": ["mult1.in"],
+      "outputs": ["mult1.out"]
+    },
+    {
+      "id": "mult2",
+      "type": "mult",
+      "name": "Mult 2",
+      "panel_section": "UTILITIES (2)",
+      "description": "Four unbuffered parallel jacks; also passively mixes outputs.",
+      "inputs": ["mult2.in"],
+      "outputs": ["mult2.out"]
+    },
+    {
+      "id": "lfo2",
+      "type": "lfo",
+      "name": "Patchable LFO",
+      "panel_section": "UTILITIES (2)",
+      "description": "Triangle and square at once, 0.07-520 Hz (about 620 Hz with CV).",
+      "properties": {
+        "rate_hz": [0.07, 520]
+      },
+      "inputs": ["lfo2.rate_cv"],
+      "outputs": ["lfo2.tri", "lfo2.square"]
+    },
+    {
+      "id": "arp",
+      "type": "sequencer",
+      "name": "Arpeggiator / sequencer",
+      "panel_section": "ARP / SEQ",
+      "description": "Arpeggiator (order, forward/backward, random; 1-3 octaves) and 12 sequences of up to 256 steps (up to four notes, rest, tie, up to 8 ratchets per step); 20-280 BPM, tap, MIDI or clock.",
+      "properties": {
+        "tempo_bpm": [20, 280],
+        "sequences": 12,
+        "steps": 256
+      },
+      "inputs": ["arp.rate_cv", "arp.clock_in", "arp.on_off", "arp.reset"],
+      "outputs": ["arp.notes", "arp.cv", "arp.gate", "arp.velocity", "arp.clock_out"]
+    },
+    {
+      "id": "exp",
+      "type": "manual_controller",
+      "name": "Expression pedal",
+      "panel_section": "rear panel",
+      "description": "Expression pedal (e.g. EP-3) scaled to 0-8 V at EXP CV OUT.",
+      "inputs": ["exp.in"],
+      "outputs": ["exp.out"]
+    },
+    {
+      "id": "vcfctl",
+      "type": "cv_source_selector",
+      "name": "Filter envelope amount",
+      "panel_section": "FILTERS",
+      "description": "ENVELOPE AMT knob plus ENV AMT IN; scales the filter envelope to both cutoffs.",
+      "inputs": ["vcfctl.env", "vcfctl.env_amt_cv"],
+      "outputs": ["vcfctl.out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OCTAVE (Osc 1)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Footage."
+    },
+    {
+      "id": "osc1.wave",
+      "module": "osc1",
+      "label": "WAVEFORM (Osc 1)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OCTAVE (Osc 2)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Footage."
+    },
+    {
+      "id": "osc2.wave",
+      "module": "osc2",
+      "label": "WAVEFORM (Osc 2)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc2.frequency",
+      "module": "osc2",
+      "label": "FREQUENCY (Osc 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 16:48"
+        }
+      ],
+      "function": "Detune from Osc 1, ±7 semitones by default (global range 0-24); much wider when synced."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "1 > 2 SYNC",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 81"
+        }
+      ],
+      "function": "Hard-syncs Osc 2 to Osc 1 (needs SYNC ENABLE)."
+    },
+    {
+      "id": "osc3.octave",
+      "module": "osc3",
+      "label": "OCTAVE (Osc 3)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Footage."
+    },
+    {
+      "id": "osc3.wave",
+      "module": "osc3",
+      "label": "WAVEFORM (Osc 3)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc3.frequency",
+      "module": "osc3",
+      "label": "FREQUENCY (Osc 3)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 17:49"
+        }
+      ],
+      "function": "Detune from Osc 1, ±7 semitones by default (global range 0-24); much wider when synced."
+    },
+    {
+      "id": "osc3.sync",
+      "module": "osc3",
+      "label": "2 > 3 SYNC",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 82"
+        }
+      ],
+      "function": "Hard-syncs Osc 3 to Osc 2 (needs SYNC ENABLE)."
+    },
+    {
+      "id": "osc4.octave",
+      "module": "osc4",
+      "label": "OCTAVE (Osc 4)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "16'"
+        },
+        {
+          "value": "8'"
+        },
+        {
+          "value": "4'"
+        },
+        {
+          "value": "2'"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Footage."
+    },
+    {
+      "id": "osc4.wave",
+      "module": "osc4",
+      "label": "WAVEFORM (Osc 4)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "narrow_pulse"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "osc4.frequency",
+      "module": "osc4",
+      "label": "FREQUENCY (Osc 4)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -7,
+        "max": 7
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 18:50"
+        }
+      ],
+      "function": "Detune from Osc 1, ±7 semitones by default (global range 0-24); much wider when synced."
+    },
+    {
+      "id": "osc4.sync",
+      "module": "osc4",
+      "label": "3 > 4 SYNC",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Hard-syncs Osc 4 to Osc 3 (needs SYNC ENABLE)."
+    },
+    {
+      "id": "osc.sync_enable",
+      "module": "osc1",
+      "label": "SYNC ENABLE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 80"
+        }
+      ],
+      "function": "Master enable for the individual sync buttons; also enters Global Settings with SHIFT."
+    },
+    {
+      "id": "osc.fine_tune",
+      "module": "osc1",
+      "label": "FINE TUNE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Global tuning ±1 semitone (rear panel)."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise level into the filters; overdrives above 11 o'clock."
+    },
+    {
+      "id": "mixer.osc1",
+      "module": "mixer",
+      "label": "OSCILLATOR 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Oscillator 1 level into the filters; overdrives above 11 o'clock."
+    },
+    {
+      "id": "mixer.osc2",
+      "module": "mixer",
+      "label": "OSCILLATOR 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Oscillator 2 level into the filters; overdrives above 11 o'clock."
+    },
+    {
+      "id": "mixer.osc3",
+      "module": "mixer",
+      "label": "OSCILLATOR 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Oscillator 3 level into the filters; overdrives above 11 o'clock."
+    },
+    {
+      "id": "mixer.osc4",
+      "module": "mixer",
+      "label": "OSCILLATOR 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Oscillator 4 level into the filters; overdrives above 11 o'clock."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf2",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 20000,
+        "unit": "Hz"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff of both filters, 20 Hz-20 kHz."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf2",
+      "label": "FILTER MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "hp_lp_series"
+        },
+        {
+          "value": "lp_lp_stereo"
+        },
+        {
+          "value": "hp_lp_parallel"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Filter configuration."
+    },
+    {
+      "id": "vcf.spacing",
+      "module": "vcf1",
+      "label": "SPACING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Offsets VCF 1 cutoff above or below VCF 2."
+    },
+    {
+      "id": "vcf1.resonance",
+      "module": "vcf1",
+      "label": "RESONANCE 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCF 1 resonance; self-oscillates above about 3 o'clock."
+    },
+    {
+      "id": "vcf2.resonance",
+      "module": "vcf2",
+      "label": "RESONANCE 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCF 2 resonance."
+    },
+    {
+      "id": "vcf.env_amt",
+      "module": "vcf2",
+      "label": "ENVELOPE AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar filter envelope depth on both cutoffs."
+    },
+    {
+      "id": "vcf.kb_tracking",
+      "module": "vcf2",
+      "label": "KB TRACKING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Keyboard tracking; maximum is 1 V/oct."
+    },
+    {
+      "id": "env_f.attack",
+      "module": "env_f",
+      "label": "FILTER ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "env_f.decay",
+      "module": "env_f",
+      "label": "FILTER DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "env_f.sustain",
+      "module": "env_f",
+      "label": "FILTER SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level (slider)."
+    },
+    {
+      "id": "env_f.release",
+      "module": "env_f",
+      "label": "FILTER RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "env_a.attack",
+      "module": "env_a",
+      "label": "AMPLITUDE ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "env_a.decay",
+      "module": "env_a",
+      "label": "AMPLITUDE DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "env_a.sustain",
+      "module": "env_a",
+      "label": "AMPLITUDE SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "fader"
+        }
+      ],
+      "function": "Sustain level (slider)."
+    },
+    {
+      "id": "env_a.release",
+      "module": "env_a",
+      "label": "AMPLITUDE RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.002,
+        "max": 10,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "2 ms-10 s."
+    },
+    {
+      "id": "out.main_volume",
+      "module": "out",
+      "label": "MAIN VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level at MAIN OUT L/R only."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca1",
+      "label": "VCA MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "amp_env"
+        },
+        {
+          "value": "split"
+        },
+        {
+          "value": "drone"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "AMP ENV: amp envelope on both VCAs. SPLIT: filter envelope on VCA 1, amp envelope on VCA 2. DRONE: a fixed voltage (or VCA CV IN) sets the level."
+    },
+    {
+      "id": "dly.time",
+      "module": "dly",
+      "label": "TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.035,
+        "max": 0.78,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12:44"
+        }
+      ],
+      "function": "35-780 ms, or divisions when synced."
+    },
+    {
+      "id": "dly.spacing",
+      "module": "dly",
+      "label": "SPACING (delay)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13:45"
+        }
+      ],
+      "function": "Offsets Delay 1's time from Delay 2."
+    },
+    {
+      "id": "dly.feedback",
+      "module": "dly",
+      "label": "FEEDBACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Single to infinite repeats; self-oscillates above about 2 o'clock."
+    },
+    {
+      "id": "dly.mix",
+      "module": "dly",
+      "label": "MIX",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Dry VCA to wet delay crossfade."
+    },
+    {
+      "id": "dly.sync_tap",
+      "module": "dly",
+      "label": "SYNC / TAP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 89 (sync)"
+        }
+      ],
+      "function": "Press: sync to the arp/seq or external clock. Hold: tap tempo mode."
+    },
+    {
+      "id": "dly.ping_pong",
+      "module": "dly",
+      "label": "PING PONG",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 88"
+        }
+      ],
+      "function": "Delay 1 feeds Delay 2 and back, alternating left and right."
+    },
+    {
+      "id": "modosc.rate",
+      "module": "modosc",
+      "label": "RATE (modulation)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.07,
+        "max": 1300,
+        "unit": "Hz"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 3:35"
+        }
+      ],
+      "function": "0.07 Hz-1.3 kHz (SHIFT for fine)."
+    },
+    {
+      "id": "modosc.wave",
+      "module": "modosc",
+      "label": "WAVEFORM (modulation)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sine"
+        },
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "ramp"
+        },
+        {
+          "value": "square"
+        },
+        {
+          "value": "staircase"
+        },
+        {
+          "value": "smooth_random"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Modulation waveform."
+    },
+    {
+      "id": "modosc.pitch_amt",
+      "module": "modosc",
+      "label": "PITCH AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum pitch modulation at full mod wheel."
+    },
+    {
+      "id": "modosc.pitch_assign",
+      "module": "modosc",
+      "label": "PITCH MOD ASSIGN",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1_and_3"
+        },
+        {
+          "value": "all"
+        },
+        {
+          "value": "2_and_4"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Oscillators that receive pitch modulation."
+    },
+    {
+      "id": "modosc.cutoff_amt",
+      "module": "modosc",
+      "label": "CUTOFF AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum cutoff modulation at full mod wheel."
+    },
+    {
+      "id": "modosc.pw_amt",
+      "module": "modosc",
+      "label": "PULSE WIDTH AMT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Maximum pulse width modulation at full mod wheel (square and narrow pulse only)."
+    },
+    {
+      "id": "att1.amount",
+      "module": "att1",
+      "label": "ATTENUATOR 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre fully attenuated; clockwise towards unity; anticlockwise inverted."
+    },
+    {
+      "id": "att2.amount",
+      "module": "att2",
+      "label": "ATTENUATOR 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre fully attenuated; clockwise towards unity; anticlockwise inverted."
+    },
+    {
+      "id": "att3.amount",
+      "module": "att3",
+      "label": "ATTENUATOR 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Centre fully attenuated; clockwise towards unity; anticlockwise inverted."
+    },
+    {
+      "id": "lfo2.rate",
+      "module": "lfo2",
+      "label": "RATE (LFO)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.07,
+        "max": 520,
+        "unit": "Hz"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "0.07-520 Hz."
+    },
+    {
+      "id": "arp.rate",
+      "module": "arp",
+      "label": "RATE (arp/seq)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 20,
+        "max": 280,
+        "unit": "BPM"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 8:40"
+        }
+      ],
+      "function": "20-280 BPM, or divisions when synced (SHIFT for triplets)."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "MODE (arp/seq)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "arp"
+        },
+        {
+          "value": "seq"
+        },
+        {
+          "value": "rec"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91"
+        }
+      ],
+      "function": "Arpeggiator, sequencer, or sequencer record."
+    },
+    {
+      "id": "arp.direction",
+      "module": "arp",
+      "label": "DIRECTION",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "ord"
+        },
+        {
+          "value": "fw_bw"
+        },
+        {
+          "value": "rnd"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92"
+        }
+      ],
+      "function": "Order, forward/backward, random."
+    },
+    {
+      "id": "arp.oct_bank",
+      "module": "arp",
+      "label": "OCT / BANK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93"
+        }
+      ],
+      "function": "Arpeggio octaves, or sequence bank."
+    },
+    {
+      "id": "arp.sequence",
+      "module": "arp",
+      "label": "SEQUENCE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Sequence 1-4 in the bank."
+    },
+    {
+      "id": "arp.rest",
+      "module": "arp",
+      "label": "REST",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters a rest while recording."
+    },
+    {
+      "id": "arp.tie",
+      "module": "arp",
+      "label": "TIE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters a tie (SHIFT + TIE duplicates the step tied)."
+    },
+    {
+      "id": "arp.ratchet",
+      "module": "arp",
+      "label": "RATCHET",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds ratchets (up to 8) to the step."
+    },
+    {
+      "id": "kbd.voice_mode",
+      "module": "kbd",
+      "label": "VOICE MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "4"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94"
+        }
+      ],
+      "function": "Mono, 2-note or 4-note paraphonic."
+    },
+    {
+      "id": "kbd.multi_trig",
+      "module": "kbd",
+      "label": "MULTI TRIG",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 95"
+        }
+      ],
+      "function": "Envelopes retrigger on every new note (off: only after all keys are released)."
+    },
+    {
+      "id": "kbd.glide",
+      "module": "kbd",
+      "label": "GLIDE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5:37"
+        }
+      ],
+      "function": "Glide time up to about 10 s; SHIFT + turn right/left toggles legato glide."
+    },
+    {
+      "id": "kbd.play",
+      "module": "kbd",
+      "label": "PLAY",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arms the arpeggiator or sequencer."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "HOLD [SHIFT]",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Latches the arp/seq; sustain when it is not running; SHIFT for second functions."
+    },
+    {
+      "id": "kbd.tap",
+      "module": "kbd",
+      "label": "TAP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Tap tempo; hold to exit."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "Octave transpose",
+      "kind": "integer",
+      "range": {
+        "min": -2,
+        "max": 2
+      },
+      "default": 0,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "Keyboard ±2 octaves (SHIFT + <KB / KB>)."
+    },
+    {
+      "id": "kbd.pitch_wheel",
+      "module": "kbd",
+      "label": "PITCH wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "pitch bend"
+        }
+      ],
+      "function": "Spring-loaded bend; range 0-12 semitones (default 2)."
+    },
+    {
+      "id": "kbd.mod_wheel",
+      "module": "kbd",
+      "label": "MOD wheel",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "wheel"
+        },
+        {
+          "type": "midi",
+          "message": "CC 1:33"
+        }
+      ],
+      "function": "Applies the Modulation module's amounts."
+    },
+    {
+      "id": "out.phones",
+      "module": "out",
+      "label": "HEADPHONE VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Headphone level only."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    },
+    {
+      "id": "sys.note_priority",
+      "module": "kbd",
+      "label": "0.1 Note Priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "default": "last",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then C#0; white keys set the value",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex",
+          "message": "F0 04 17 23, parameter 3"
+        }
+      ],
+      "function": "Mono note priority."
+    },
+    {
+      "id": "sys.glide_type",
+      "module": "kbd",
+      "label": "0.2 Glide Type",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lcr"
+        },
+        {
+          "value": "lct"
+        },
+        {
+          "value": "exp"
+        }
+      ],
+      "default": "lcr",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then D#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Linear constant rate, linear constant time, exponential."
+    },
+    {
+      "id": "sys.gated_glide",
+      "module": "kbd",
+      "label": "0.3 Gated Glide",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "default": "on",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then F#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Glide only while a key is held."
+    },
+    {
+      "id": "sys.bend_range",
+      "module": "kbd",
+      "label": "0.4 Pitch Bend Range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "12"
+        }
+      ],
+      "default": "2",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then G#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Semitones."
+    },
+    {
+      "id": "sys.pitch_variance",
+      "module": "kbd",
+      "label": "0.5 Pitch Variance",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0..40 cents"
+        }
+      ],
+      "default": "0..40 cents",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then A#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Random detune per note, up to ±40 cents."
+    },
+    {
+      "id": "sys.osc_freq_range",
+      "module": "osc2",
+      "label": "0.6 Oscillator Frequency Knob Range",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "0"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "13"
+        },
+        {
+          "value": "14"
+        },
+        {
+          "value": "15"
+        },
+        {
+          "value": "16"
+        },
+        {
+          "value": "17"
+        },
+        {
+          "value": "18"
+        },
+        {
+          "value": "19"
+        },
+        {
+          "value": "20"
+        },
+        {
+          "value": "21"
+        },
+        {
+          "value": "22"
+        },
+        {
+          "value": "23"
+        },
+        {
+          "value": "24"
+        }
+      ],
+      "default": "7",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then C#1; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Range of the Osc 2-4 FREQUENCY knobs, 0-24 semitones."
+    },
+    {
+      "id": "sys.square_polarity",
+      "module": "modosc",
+      "label": "0.7 Square LFO Polarity",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "unipolar"
+        },
+        {
+          "value": "bipolar"
+        }
+      ],
+      "default": "bipolar",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then D#1; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Modulation square unipolar or bipolar."
+    },
+    {
+      "id": "sys.noise_hpf",
+      "module": "noise",
+      "label": "0.8 Noise Filter Cutoff",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lowest..highest"
+        }
+      ],
+      "default": "lowest..highest",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then F#1; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "1-pole high-pass on the noise."
+    },
+    {
+      "id": "sys.delay_tone",
+      "module": "dly",
+      "label": "0.9 Delay Filter Brightness",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "dark"
+        },
+        {
+          "value": "bright"
+        }
+      ],
+      "default": "bright",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then G#1; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Dark or bright delay tone."
+    },
+    {
+      "id": "sys.delay_cv_bend",
+      "module": "dly",
+      "label": "0.10 Delay Sync CV Bend",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "default": "off",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then A#1; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "TIME CV bends a synced delay ±33% (on) or steps divisions (off)."
+    },
+    {
+      "id": "sys.midi_in_ch",
+      "module": "kbd",
+      "label": "1.1 MIDI Input Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "13"
+        },
+        {
+          "value": "14"
+        },
+        {
+          "value": "15"
+        },
+        {
+          "value": "16"
+        }
+      ],
+      "default": "1",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then C#2 + C#0; white keys set the value",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex",
+          "message": "F0 04 17 23, parameter 10"
+        }
+      ],
+      "function": "Receive channel."
+    },
+    {
+      "id": "sys.midi_out_ch",
+      "module": "kbd",
+      "label": "1.2 MIDI Output Channel",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "13"
+        },
+        {
+          "value": "14"
+        },
+        {
+          "value": "15"
+        },
+        {
+          "value": "16"
+        }
+      ],
+      "default": "1",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then C#2 + D#0; white keys set the value",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex",
+          "message": "F0 04 17 23, parameter 11"
+        }
+      ],
+      "function": "Transmit channel."
+    },
+    {
+      "id": "sys.local_keys",
+      "module": "kbd",
+      "label": "1.7 Local Control (Keyboard)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "default": "on",
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then C#2 + C#1; white keys set the value",
+          "when": "any_time"
+        },
+        {
+          "type": "sysex",
+          "message": "F0 04 17 23, parameter 16"
+        }
+      ],
+      "function": "Keyboard plays the engine."
+    },
+    {
+      "id": "sys.voice_round_robin",
+      "module": "kbd",
+      "label": "4.2 Round-Robin Mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then group 4 + D#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Paraphonic voice allocation order."
+    },
+    {
+      "id": "sys.para_unison",
+      "module": "kbd",
+      "label": "4.3 Paraphonic Unison",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then group 4 + F#0; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "Stacks spare oscillators on held notes in paraphonic modes."
+    },
+    {
+      "id": "sys.cv_range",
+      "module": "kbd",
+      "label": "3.3-3.10 CV OUT ranges",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "default"
+        },
+        {
+          "value": "extended"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Global Settings (hold SHIFT + SYNC ENABLE), then group 3; white keys set the value",
+          "when": "any_time"
+        }
+      ],
+      "function": "KB and arp/seq CV, velocity, aftertouch, mod wheel and gate output ranges (-5..+5 / 0..10 V, 5 / 10 V gates)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.osc1_pitch",
+      "label": "OSC 1 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "pitchbus.in1",
+      "function": "Exponential pitch CV, 1 V/oct, added to the keyboard; chains to later oscillators."
+    },
+    {
+      "id": "jack.osc1_linfm",
+      "label": "OSC 1 LIN FM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc1.lin_fm",
+      "function": "Linear FM, AC coupled."
+    },
+    {
+      "id": "jack.osc1_pwm",
+      "label": "OSC 1 PWM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc1.pwm",
+      "function": "Pulse width of square or narrow pulse."
+    },
+    {
+      "id": "jack.osc1_out",
+      "label": "OSC 1 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc1.out",
+      "function": "Oscillator output, 10 Vpp."
+    },
+    {
+      "id": "jack.osc2_pitch",
+      "label": "OSC 2 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "pitchbus.in2",
+      "function": "Exponential pitch CV, 1 V/oct, added to the keyboard; chains to later oscillators."
+    },
+    {
+      "id": "jack.osc2_linfm",
+      "label": "OSC 2 LIN FM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.lin_fm",
+      "function": "Linear FM, AC coupled."
+    },
+    {
+      "id": "jack.osc2_pwm",
+      "label": "OSC 2 PWM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc2.pwm",
+      "function": "Pulse width of square or narrow pulse."
+    },
+    {
+      "id": "jack.osc2_out",
+      "label": "OSC 2 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc2.out",
+      "function": "Oscillator output, 10 Vpp."
+    },
+    {
+      "id": "jack.osc3_pitch",
+      "label": "OSC 3 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "pitchbus.in3",
+      "function": "Exponential pitch CV, 1 V/oct, added to the keyboard; chains to later oscillators."
+    },
+    {
+      "id": "jack.osc3_linfm",
+      "label": "OSC 3 LIN FM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc3.lin_fm",
+      "function": "Linear FM, AC coupled."
+    },
+    {
+      "id": "jack.osc3_pwm",
+      "label": "OSC 3 PWM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc3.pwm",
+      "function": "Pulse width of square or narrow pulse."
+    },
+    {
+      "id": "jack.osc3_out",
+      "label": "OSC 3 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc3.out",
+      "function": "Oscillator output, 10 Vpp."
+    },
+    {
+      "id": "jack.osc4_pitch",
+      "label": "OSC 4 PITCH IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "pitchbus.in4",
+      "function": "Exponential pitch CV, 1 V/oct, added to the keyboard; chains to later oscillators."
+    },
+    {
+      "id": "jack.osc4_linfm",
+      "label": "OSC 4 LIN FM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "osc4.lin_fm",
+      "function": "Linear FM, AC coupled."
+    },
+    {
+      "id": "jack.osc4_pwm",
+      "label": "OSC 4 PWM IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "osc4.pwm",
+      "function": "Pulse width of square or narrow pulse."
+    },
+    {
+      "id": "jack.osc4_out",
+      "label": "OSC 4 WAVE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "osc4.out",
+      "function": "Oscillator output, 10 Vpp."
+    },
+    {
+      "id": "jack.mix_noise_in",
+      "label": "NOISE IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.noise",
+      "function": "Replaces the noise in the mixer."
+    },
+    {
+      "id": "jack.mix_osc1_in",
+      "label": "OSC 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in1",
+      "function": "Replaces Oscillator 1 in the mixer (still gated in paraphonic modes)."
+    },
+    {
+      "id": "jack.mix_osc2_in",
+      "label": "OSC 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in2",
+      "function": "Replaces Oscillator 2 in the mixer (still gated in paraphonic modes)."
+    },
+    {
+      "id": "jack.mix_osc3_in",
+      "label": "OSC 3 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in3",
+      "function": "Replaces Oscillator 3 in the mixer (still gated in paraphonic modes)."
+    },
+    {
+      "id": "jack.mix_osc4_in",
+      "label": "OSC 4 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.in4",
+      "function": "Replaces Oscillator 4 in the mixer (still gated in paraphonic modes)."
+    },
+    {
+      "id": "jack.mix_out",
+      "label": "MIXER OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.out",
+      "function": "Mixer output, 10 Vpp."
+    },
+    {
+      "id": "jack.vcf1_in",
+      "label": "VCF 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf1.in",
+      "function": "Replaces the mixer feed to VCF 1."
+    },
+    {
+      "id": "jack.vcf2_in",
+      "label": "VCF 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf2.in",
+      "function": "Replaces VCF 2's feed (mixer or VCF 1)."
+    },
+    {
+      "id": "jack.vcf1_out",
+      "label": "VCF 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf1.out",
+      "function": "VCF 1 output."
+    },
+    {
+      "id": "jack.vcf2_out",
+      "label": "VCF 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf2.out",
+      "function": "VCF 2 output."
+    },
+    {
+      "id": "jack.cutoff1_in",
+      "label": "CUTOFF 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cutbus.in1",
+      "function": "VCF 1 cutoff CV; normalled to CUTOFF 2 IN.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.cutoff2_in",
+      "label": "CUTOFF 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "cutbus.in2",
+      "function": "VCF 2 cutoff CV; breaks the normal from CUTOFF 1 IN.",
+      "combine": "sum"
+    },
+    {
+      "id": "jack.env_amt_in",
+      "label": "ENV AMT IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcfctl.env_amt_cv",
+      "function": "CV control of ENVELOPE AMT."
+    },
+    {
+      "id": "jack.env_f_trig",
+      "label": "TRIGGER IN (FILTER EG)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env_f.trig",
+      "function": "Gate above 2.3 V; overrides the keyboard gate."
+    },
+    {
+      "id": "jack.env_f_out",
+      "label": "ENV OUT (FILTER EG)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env_f.out",
+      "function": "Envelope, 0 to +8 V."
+    },
+    {
+      "id": "jack.env_f_end",
+      "label": "ENV END OUT (FILTER EG)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env_f.end",
+      "function": "Gate once the envelope has finished; patch to TRIGGER IN to loop."
+    },
+    {
+      "id": "jack.env_a_trig",
+      "label": "TRIGGER IN (AMP EG)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env_a.trig",
+      "function": "Gate above 2.3 V; overrides the keyboard gate."
+    },
+    {
+      "id": "jack.env_a_out",
+      "label": "ENV OUT (AMP EG)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env_a.out",
+      "function": "Envelope, 0 to +8 V."
+    },
+    {
+      "id": "jack.env_a_end",
+      "label": "ENV END OUT (AMP EG)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env_a.end",
+      "function": "Gate once the envelope has finished; patch to TRIGGER IN to loop."
+    },
+    {
+      "id": "jack.vca1_in",
+      "label": "VCA 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca1.in",
+      "function": "Replaces the filter feed to this VCA."
+    },
+    {
+      "id": "jack.vca1_cv",
+      "label": "VCA 1 CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca1.cv",
+      "function": "Level CV: -8 to +8 V with ENV/SPLIT (tremolo), 0 to +8 V sets the level in DRONE."
+    },
+    {
+      "id": "jack.vca2_in",
+      "label": "VCA 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca2.in",
+      "function": "Replaces the filter feed to this VCA."
+    },
+    {
+      "id": "jack.vca2_cv",
+      "label": "VCA 2 CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca2.cv",
+      "function": "Level CV: -8 to +8 V with ENV/SPLIT (tremolo), 0 to +8 V sets the level in DRONE."
+    },
+    {
+      "id": "jack.dly_in1",
+      "label": "INPUT 1 (delay)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "dly.in1",
+      "function": "Replaces VCA 1 into Delay 1."
+    },
+    {
+      "id": "jack.dly_in2",
+      "label": "INPUT 2 (delay)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "dly.in2",
+      "function": "Replaces VCA 2 into Delay 2."
+    },
+    {
+      "id": "jack.dly_fb",
+      "label": "FB CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "dly.fb_cv",
+      "function": "Feedback CV for both delays (Delay 1 only if FB 2 CV IN is used)."
+    },
+    {
+      "id": "jack.dly_mix",
+      "label": "MIX IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "dly.mix_cv",
+      "function": "Dry/wet CV."
+    },
+    {
+      "id": "jack.dly_time1",
+      "label": "TIME 1 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "dly.time1_cv",
+      "function": "Delay 1 time CV."
+    },
+    {
+      "id": "jack.dly_time2",
+      "label": "TIME 2 IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "dly.time2_cv",
+      "function": "Delay 2 time CV."
+    },
+    {
+      "id": "jack.mod_rate",
+      "label": "RATE IN (modulation)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "modosc.rate_cv",
+      "function": "1 V/oct rate CV (patch KB OUT here to play it)."
+    },
+    {
+      "id": "jack.mod_sync",
+      "label": "SYNC IN (modulation)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "modosc.sync",
+      "function": "Rising edge above 2.5 V resets the wave (and steps the S/H)."
+    },
+    {
+      "id": "jack.noise_out",
+      "label": "NOISE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "noise.out",
+      "function": "White noise, -8 to +8 V."
+    },
+    {
+      "id": "jack.snh_out",
+      "label": "S/H OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "snh.out",
+      "function": "Sample and hold, -8 to +8 V."
+    },
+    {
+      "id": "jack.mod_wave_out",
+      "label": "WAVE OUT (modulation)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "modosc.out",
+      "function": "Modulation oscillator, 10 Vpp."
+    },
+    {
+      "id": "jack.att1_in",
+      "label": "ATTENUATOR 1 INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att1.in",
+      "function": "Signal in; +8 V normalled when empty."
+    },
+    {
+      "id": "jack.att1_cv",
+      "label": "ATTENUATOR 1 CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "att1.cv",
+      "function": "Adds to the knob (-8 to +8 V)."
+    },
+    {
+      "id": "jack.att1_out",
+      "label": "ATTENUATOR 1 OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att1.out",
+      "function": "Attenuated / inverted output, -8 to +8 V."
+    },
+    {
+      "id": "jack.att2_in",
+      "label": "ATTENUATOR 2 INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att2.in",
+      "function": "Signal in; +8 V normalled when empty."
+    },
+    {
+      "id": "jack.att2_cv",
+      "label": "ATTENUATOR 2 CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "att2.cv",
+      "function": "Adds to the knob (-8 to +8 V)."
+    },
+    {
+      "id": "jack.att2_out",
+      "label": "ATTENUATOR 2 OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att2.out",
+      "function": "Attenuated / inverted output, -8 to +8 V."
+    },
+    {
+      "id": "jack.att3_in",
+      "label": "ATTENUATOR 3 INPUT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att3.in",
+      "function": "Signal in; +8 V normalled when empty."
+    },
+    {
+      "id": "jack.att3_cv",
+      "label": "ATTENUATOR 3 CV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "att3.cv",
+      "function": "Adds to the knob (-8 to +8 V)."
+    },
+    {
+      "id": "jack.att3_out",
+      "label": "ATTENUATOR 3 OUTPUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "att3.out",
+      "function": "Attenuated / inverted output, -8 to +8 V."
+    },
+    {
+      "id": "jack.mult1_1",
+      "label": "MULT 1 (1)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.in",
+      "function": "Unbuffered parallel jack (modelled as the input)."
+    },
+    {
+      "id": "jack.mult1_2",
+      "label": "MULT 1 (2)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.mult1_3",
+      "label": "MULT 1 (3)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.mult1_4",
+      "label": "MULT 1 (4)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult1.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.mult2_1",
+      "label": "MULT 2 (1)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.in",
+      "function": "Unbuffered parallel jack (modelled as the input)."
+    },
+    {
+      "id": "jack.mult2_2",
+      "label": "MULT 2 (2)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.mult2_3",
+      "label": "MULT 2 (3)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.mult2_4",
+      "label": "MULT 2 (4)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "mult2.out",
+      "function": "Unbuffered parallel jack."
+    },
+    {
+      "id": "jack.lfo2_rate",
+      "label": "RATE IN (LFO)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo2.rate_cv",
+      "function": "Adds to the LFO rate (to about 620 Hz)."
+    },
+    {
+      "id": "jack.lfo2_tri",
+      "label": "TRI OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo2.tri",
+      "function": "Triangle, 10 Vpp."
+    },
+    {
+      "id": "jack.lfo2_sq",
+      "label": "SQUARE OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo2.square",
+      "function": "Square, 10 Vpp."
+    },
+    {
+      "id": "jack.arp_rate",
+      "label": "ARP RATE / DIV IN",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "arp.rate_cv",
+      "function": "Arp/seq rate CV."
+    },
+    {
+      "id": "jack.arp_vel",
+      "label": "VELOCITY OUT (arp/seq)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "arp.velocity",
+      "function": "Velocity of arp/seq notes, 0-5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.arp_cv",
+      "label": "CV OUT (arp/seq)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "arp.cv",
+      "function": "Arp/seq pitch, -5 to +5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.arp_gate",
+      "label": "GATE OUT (arp/seq)",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "arp.gate",
+      "function": "Arp/seq gate, +5 V (or +10 V)."
+    },
+    {
+      "id": "jack.euro_l",
+      "label": "EURO OUT (L)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.euro_l",
+      "function": "Main left at Eurorack level, unaffected by MAIN VOLUME."
+    },
+    {
+      "id": "jack.euro_r",
+      "label": "EURO OUT (R)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.euro_r",
+      "function": "Main right at Eurorack level."
+    },
+    {
+      "id": "jack.dly_out_l",
+      "label": "DELAY OUT (L)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "dly.out1",
+      "function": "100% wet Delay 1."
+    },
+    {
+      "id": "jack.dly_out_r",
+      "label": "DELAY OUT (R)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "dly.out2",
+      "function": "100% wet Delay 2."
+    },
+    {
+      "id": "jack.dly_sync",
+      "label": "SYNC IN (delay)",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "dly.sync",
+      "function": "Delay clock (rising edge above 3.6 V) when SYNC is on."
+    },
+    {
+      "id": "jack.dly_fb2",
+      "label": "DELAY FB 2 CV IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "dly.fb2_cv",
+      "function": "Feedback CV for Delay 2 only (0 to +8 V)."
+    },
+    {
+      "id": "jack.exp_cv",
+      "label": "EXP CV OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "exp.out",
+      "function": "Expression pedal, buffered, 0 to +8 V."
+    },
+    {
+      "id": "jack.kb_vel_out",
+      "label": "KB VEL OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.velocity",
+      "function": "Velocity, 0-5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.kb_at_out",
+      "label": "KB AT OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.aftertouch",
+      "function": "Aftertouch, 0-5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.mod_whl_out",
+      "label": "MOD WHL OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.modwheel",
+      "function": "Mod wheel position, 0-5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.kb_cv_out",
+      "label": "KB CV OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "kbd.cv",
+      "function": "Keyboard pitch, -5 to +5 V (or 0-10 V)."
+    },
+    {
+      "id": "jack.kb_gate_out",
+      "label": "KB GATE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "kbd.gate",
+      "function": "Keyboard gate, +5 V (or +10 V)."
+    },
+    {
+      "id": "jack.clock_in",
+      "label": "CLOCK IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "arp.clock_in",
+      "function": "Clock (rising edge above 3.6 V) advances the arp/seq.",
+      "combine": "replace"
+    },
+    {
+      "id": "jack.on_off",
+      "label": "ON / OFF IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "arp.on_off",
+      "function": "Below 1 V stop, above 3.6 V start."
+    },
+    {
+      "id": "jack.reset",
+      "label": "RESET IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "arp.reset",
+      "function": "Rising edge above 2.5 V returns to the first step."
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLOCK OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "arp.clock_out",
+      "function": "Arp/seq clock, 0-10 V."
+    },
+    {
+      "id": "jack.main_l",
+      "label": "MAIN OUT LEFT (MONO)",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_l",
+      "function": "+4 dBu, impedance balanced; mono mix if RIGHT is unplugged."
+    },
+    {
+      "id": "jack.main_r",
+      "label": "MAIN OUT RIGHT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.main_r",
+      "function": "+4 dBu, impedance balanced."
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Stereo, 1.1 V into 16 ohm."
+    },
+    {
+      "id": "jack.instr",
+      "label": "INSTRUMENT IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "instr.in",
+      "function": "Instrument level, +20 dB gain, into the mixer."
+    },
+    {
+      "id": "jack.sus",
+      "label": "SUS PEDAL IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "6.35 mm TS",
+      "node": "kbd.sustain",
+      "function": "Normally open sustain pedal."
+    },
+    {
+      "id": "jack.exp",
+      "label": "EXP PEDAL IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "6.35 mm TRS",
+      "node": "exp.in",
+      "function": "Expression pedal (+5 V on the ring)."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "kbd.midi_in",
+      "function": "MIDI in."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI thru."
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB type B",
+      "node": null,
+      "function": "USB MIDI and firmware updates."
+    },
+    {
+      "id": "jack.power",
+      "label": "12V DC",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC 2 A, tip positive."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "kbd.cv1",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Per VOICE MODE: mono all four on one note; 2-note pairs; 4-note one each."
+    },
+    {
+      "id": "c02",
+      "from": "kbd.gate1",
+      "to": "mixer.gate1",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Mutes unplayed oscillators in paraphonic modes."
+    },
+    {
+      "id": "c03",
+      "from": "pitchbus.out1",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Chained PITCH IN normals."
+    },
+    {
+      "id": "c04",
+      "from": "kbd.bend",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c05",
+      "from": "osc1.out",
+      "to": "mixer.in1",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_osc1_in",
+      "amount": "mixer.osc1"
+    },
+    {
+      "id": "c06",
+      "from": "modosc.out",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "all"
+          },
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "1_and_3"
+          }
+        ]
+      },
+      "amount_expr": "modosc.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c07",
+      "from": "modosc.out",
+      "to": "osc1.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c08",
+      "from": "kbd.cv2",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Per VOICE MODE: mono all four on one note; 2-note pairs; 4-note one each."
+    },
+    {
+      "id": "c09",
+      "from": "kbd.gate2",
+      "to": "mixer.gate2",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Mutes unplayed oscillators in paraphonic modes."
+    },
+    {
+      "id": "c10",
+      "from": "pitchbus.out2",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Chained PITCH IN normals."
+    },
+    {
+      "id": "c11",
+      "from": "kbd.bend",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c12",
+      "from": "osc2.out",
+      "to": "mixer.in2",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_osc2_in",
+      "amount": "mixer.osc2"
+    },
+    {
+      "id": "c13",
+      "from": "modosc.out",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "all"
+          },
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "2_and_4"
+          }
+        ]
+      },
+      "amount_expr": "modosc.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c14",
+      "from": "modosc.out",
+      "to": "osc2.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c15",
+      "from": "osc1.out",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc.sync_enable",
+            "equals": true
+          },
+          {
+            "param": "osc2.sync",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c16",
+      "from": "kbd.cv3",
+      "to": "osc3.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Per VOICE MODE: mono all four on one note; 2-note pairs; 4-note one each."
+    },
+    {
+      "id": "c17",
+      "from": "kbd.gate3",
+      "to": "mixer.gate3",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Mutes unplayed oscillators in paraphonic modes."
+    },
+    {
+      "id": "c18",
+      "from": "pitchbus.out3",
+      "to": "osc3.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Chained PITCH IN normals."
+    },
+    {
+      "id": "c19",
+      "from": "kbd.bend",
+      "to": "osc3.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c20",
+      "from": "osc3.out",
+      "to": "mixer.in3",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_osc3_in",
+      "amount": "mixer.osc3"
+    },
+    {
+      "id": "c21",
+      "from": "modosc.out",
+      "to": "osc3.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "all"
+          },
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "1_and_3"
+          }
+        ]
+      },
+      "amount_expr": "modosc.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c22",
+      "from": "modosc.out",
+      "to": "osc3.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c23",
+      "from": "osc2.out",
+      "to": "osc3.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc.sync_enable",
+            "equals": true
+          },
+          {
+            "param": "osc3.sync",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c24",
+      "from": "kbd.cv4",
+      "to": "osc4.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Per VOICE MODE: mono all four on one note; 2-note pairs; 4-note one each."
+    },
+    {
+      "id": "c25",
+      "from": "kbd.gate4",
+      "to": "mixer.gate4",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Mutes unplayed oscillators in paraphonic modes."
+    },
+    {
+      "id": "c26",
+      "from": "pitchbus.out4",
+      "to": "osc4.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Chained PITCH IN normals."
+    },
+    {
+      "id": "c27",
+      "from": "kbd.bend",
+      "to": "osc4.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "sys.bend_range"
+    },
+    {
+      "id": "c28",
+      "from": "osc4.out",
+      "to": "mixer.in4",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_osc4_in",
+      "amount": "mixer.osc4"
+    },
+    {
+      "id": "c29",
+      "from": "modosc.out",
+      "to": "osc4.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "all"
+          },
+          {
+            "param": "modosc.pitch_assign",
+            "equals": "2_and_4"
+          }
+        ]
+      },
+      "amount_expr": "modosc.pitch_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c30",
+      "from": "modosc.out",
+      "to": "osc4.pwm",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.pw_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c31",
+      "from": "osc3.out",
+      "to": "osc4.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "osc.sync_enable",
+            "equals": true
+          },
+          {
+            "param": "osc4.sync",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c32",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.mix_noise_in",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c33",
+      "from": "instr.out",
+      "to": "mixer.ext",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c34",
+      "from": "arp.notes",
+      "to": "kbd.seq_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Arp/seq notes (can be disconnected from the oscillators in Global Settings)."
+    },
+    {
+      "id": "c35",
+      "from": "mixer.out",
+      "to": "vcf1.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf1_in"
+    },
+    {
+      "id": "c36",
+      "from": "mixer.out",
+      "to": "vcf2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vcf.mode",
+            "equals": "lp_lp_stereo"
+          },
+          {
+            "param": "vcf.mode",
+            "equals": "hp_lp_parallel"
+          }
+        ]
+      },
+      "broken_by": "jack.vcf2_in"
+    },
+    {
+      "id": "c37",
+      "from": "vcf1.out",
+      "to": "vcf2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "hp_lp_series"
+      },
+      "broken_by": "jack.vcf2_in"
+    },
+    {
+      "id": "c38",
+      "from": "cutbus.out1",
+      "to": "vcf1.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c39",
+      "from": "cutbus.out2",
+      "to": "vcf2.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Carries CUTOFF 1 IN unless CUTOFF 2 IN is patched."
+    },
+    {
+      "id": "c40",
+      "from": "env_f.out",
+      "to": "vcfctl.env",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c41",
+      "from": "vcfctl.out",
+      "to": "vcf1.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amt"
+    },
+    {
+      "id": "c42",
+      "from": "kbd.cv",
+      "to": "vcf1.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.kb_tracking"
+    },
+    {
+      "id": "c43",
+      "from": "modosc.out",
+      "to": "vcf1.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.cutoff_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c44",
+      "from": "vcfctl.out",
+      "to": "vcf2.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_amt"
+    },
+    {
+      "id": "c45",
+      "from": "kbd.cv",
+      "to": "vcf2.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.kb_tracking"
+    },
+    {
+      "id": "c46",
+      "from": "modosc.out",
+      "to": "vcf2.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "modosc.cutoff_amt * kbd.mod_wheel"
+    },
+    {
+      "id": "c47",
+      "from": "vcf1.out",
+      "to": "filtsum.a",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c48",
+      "from": "vcf2.out",
+      "to": "filtsum.b",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c49",
+      "from": "vcf2.out",
+      "to": "vca1.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "hp_lp_series"
+      },
+      "broken_by": "jack.vca1_in"
+    },
+    {
+      "id": "c50",
+      "from": "vcf2.out",
+      "to": "vca2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "hp_lp_series"
+      },
+      "broken_by": "jack.vca2_in"
+    },
+    {
+      "id": "c51",
+      "from": "vcf1.out",
+      "to": "vca1.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "lp_lp_stereo"
+      },
+      "broken_by": "jack.vca1_in"
+    },
+    {
+      "id": "c52",
+      "from": "vcf2.out",
+      "to": "vca2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "lp_lp_stereo"
+      },
+      "broken_by": "jack.vca2_in"
+    },
+    {
+      "id": "c53",
+      "from": "filtsum.out",
+      "to": "vca1.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "hp_lp_parallel"
+      },
+      "broken_by": "jack.vca1_in"
+    },
+    {
+      "id": "c54",
+      "from": "filtsum.out",
+      "to": "vca2.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vcf.mode",
+        "equals": "hp_lp_parallel"
+      },
+      "broken_by": "jack.vca2_in"
+    },
+    {
+      "id": "c55",
+      "from": "kbd.gate",
+      "to": "env_f.trig",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.env_f_trig"
+    },
+    {
+      "id": "c56",
+      "from": "kbd.gate",
+      "to": "env_a.trig",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.env_a_trig"
+    },
+    {
+      "id": "c57",
+      "from": "env_a.out",
+      "to": "vca1.env",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "amp_env"
+      }
+    },
+    {
+      "id": "c58",
+      "from": "env_f.out",
+      "to": "vca1.env",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "split"
+      }
+    },
+    {
+      "id": "c59",
+      "from": "env_a.out",
+      "to": "vca2.env",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "vca.mode",
+            "equals": "amp_env"
+          },
+          {
+            "param": "vca.mode",
+            "equals": "split"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c60",
+      "from": "ref.drone",
+      "to": "vca1.cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "drone"
+      },
+      "broken_by": "jack.vca1_cv"
+    },
+    {
+      "id": "c61",
+      "from": "ref.drone",
+      "to": "vca2.cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "enabled_when": {
+        "param": "vca.mode",
+        "equals": "drone"
+      },
+      "broken_by": "jack.vca2_cv"
+    },
+    {
+      "id": "c62",
+      "from": "vca1.out",
+      "to": "dly.in1",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.dly_in1"
+    },
+    {
+      "id": "c63",
+      "from": "vca2.out",
+      "to": "dly.in2",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.dly_in2"
+    },
+    {
+      "id": "c64",
+      "from": "vca1.out",
+      "to": "out.dry1",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c65",
+      "from": "vca2.out",
+      "to": "out.dry2",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c66",
+      "from": "dly.out1",
+      "to": "out.wet1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "dly.mix"
+    },
+    {
+      "id": "c67",
+      "from": "dly.out2",
+      "to": "out.wet2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "dly.mix"
+    },
+    {
+      "id": "c68",
+      "from": "noise.out",
+      "to": "snh.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c69",
+      "from": "modosc.out",
+      "to": "snh.clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "Samples at the start of each modulation cycle."
+    },
+    {
+      "id": "c70",
+      "from": "arp.clock_out",
+      "to": "modosc.clock",
+      "signal": "clock",
+      "kind": "fixed",
+      "note": "Steps the staircase waveform."
+    },
+    {
+      "id": "c71",
+      "from": "ref.v8",
+      "to": "att1.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att1_in"
+    },
+    {
+      "id": "c72",
+      "from": "ref.v8",
+      "to": "att2.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att2_in"
+    },
+    {
+      "id": "c73",
+      "from": "ref.v8",
+      "to": "att3.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.att3_in"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "rate_leds",
+      "module": "modosc",
+      "label": "rate LEDs",
+      "kind": "led",
+      "function": "Flash at the modulation, LFO, arp/seq and delay rates; the delay LED is red, green (internal sync) or yellow (external sync)."
+    },
+    {
+      "id": "button_leds",
+      "module": "kbd",
+      "label": "button LEDs",
+      "kind": "led",
+      "function": "Sync, multi trig, ping pong, sync/tap, play, hold, tap, rest, tie, ratchet; SYNC ENABLE blinks the selected global setting."
+    },
+    {
+      "id": "midi_led",
+      "module": "kbd",
+      "label": "MIDI LED",
+      "kind": "led",
+      "function": "Blinks on MIDI input."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Default signal path",
+      "applies_to": ["mixer", "vcf1", "vcf2", "vca1", "vca2", "dly", "out"],
+      "rule": "Oscillators, noise and instrument input into the mixer, the filters (per FILTER MODE), the two VCAs (per VCA MODE), the stereo delay (MIX crossfades dry and wet), then the outputs. Patching a mixer, filter, VCA or delay input replaces its normal."
+    },
+    {
+      "id": "b02",
+      "name": "Filter modes",
+      "applies_to": ["vcf1", "vcf2"],
+      "rule": "Series: VCF 1 high-pass into VCF 2 low-pass (band-pass), mono to both VCAs. Stereo: both low-pass from the mixer, VCF 1 to VCA 1 (left), VCF 2 to VCA 2 (right). Parallel: VCF 1 high-pass and VCF 2 low-pass summed (notch), mono to both. CUTOFF moves both; SPACING offsets VCF 1."
+    },
+    {
+      "id": "b03",
+      "name": "Paraphony",
+      "applies_to": ["kbd", "mixer"],
+      "rule": "VOICE MODE 1: all four oscillators on one note. 2: first key Osc 1+2, second key Osc 3+4. 4: one oscillator per key, Osc 1 first after all keys are released. Mixer gates mute unused oscillators (and their external replacements). MULTI TRIG retriggers envelopes on every note; otherwise only after all keys are up."
+    },
+    {
+      "id": "b04",
+      "name": "Chained normals",
+      "applies_to": ["pitchbus", "cutbus", "osc1", "osc2", "osc3", "osc4"],
+      "rule": "PITCH IN at Osc 1 reaches Osc 1-4 until a later PITCH IN is patched (a dead patch isolates). CUTOFF 1 IN reaches both filters until CUTOFF 2 IN is patched. FB CV IN reaches both delays until FB 2 CV IN is patched."
+    },
+    {
+      "id": "b05",
+      "name": "Modulation",
+      "applies_to": ["modosc", "kbd"],
+      "rule": "PITCH AMT (to all, 1&3 or 2&4), CUTOFF AMT and PULSE WIDTH AMT set maxima; the MOD wheel applies them. The S/H samples noise each cycle and has no internal routing. Velocity and aftertouch are not hard-wired: patch the rear jacks."
+    },
+    {
+      "id": "b06",
+      "name": "VCA modes",
+      "applies_to": ["vca1", "vca2"],
+      "rule": "AMP ENV: amp envelope on both. SPLIT: filter envelope on VCA 1 (left), amp envelope on VCA 2 (right). DRONE: a default voltage (or VCA CV IN, 0-8 V) holds the level without keys."
+    },
+    {
+      "id": "b07",
+      "name": "Utilities",
+      "applies_to": ["att1", "att2", "att3", "mult1", "mult2", "lfo2"],
+      "rule": "Each attenuator inverts anticlockwise, has a CV input, and outputs a DC level from its +8 V normal when nothing is patched; audio into INPUT and CV IN gives ring modulation. Mults are unbuffered and also mix outputs passively."
+    },
+    {
+      "id": "b08",
+      "name": "Arpeggiator and sequencer",
+      "applies_to": ["arp"],
+      "rule": "PLAY arms, a key starts (and transposes the sequence); HOLD latches (sustain when idle); TAP sets tempo. REC records steps of up to four notes with rests, ties and up to 8 ratchets; recording while stopped overwrites the sequence. 12 sequences, up to 256 steps, kept at power-off."
+    },
+    {
+      "id": "b09",
+      "name": "Envelope looping",
+      "applies_to": ["env_f", "env_a"],
+      "rule": "ENV END OUT goes high when an envelope finishes; patch it to TRIGGER IN for a looping envelope."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "program_change",
+        "note": "when enabled"
+      },
+      {
+        "message": "control_change",
+        "note": "14-bit pairs: mod wheel 1:33, mod rate 3:35, glide 5:37, arp rate 8:40, noise filter 9:41, delay time 12:44, delay spacing 13:45, arp swing 14:46, arp gate length 15:47, Osc 2-4 frequency 16:48-18:50"
+      },
+      {
+        "message": "control_change",
+        "note": "switches: 64 sustain, 65 glide on, 80-83 sync, 84 portamento control, 85 glide type, 86 gated glide, 87 legato glide, 88 ping pong, 89 delay sync, 90 square LFO polarity, 91 arp mode, 92 arp pattern, 93 range/bank, 94 voice mode, 95 multi trig, 105 octave"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sysex",
+        "header": "F0 04 17 23",
+        "note": "set global and some panel parameters by ID; F0 04 17 3E requests a value"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "control_change",
+        "note": "filtered by the MIDI OUT filter settings"
+      },
+      {
+        "message": "clock",
+        "note": "off, when playing or always"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "channel_note": "Separate in and out channels; DIN and USB ports selectable, with echo options.",
+    "note": "Most analogue knobs (cutoff, resonance, envelopes, mixer) are not on MIDI."
+  },
+  "specifications": {
+    "type": "semi-modular analogue",
+    "keys": "49 full-size, velocity and aftertouch",
+    "polyphony": "mono, 2-note or 4-note paraphonic",
+    "oscillators": 4,
+    "filters": "2 Moog ladder, -24 dB/oct, series/stereo/parallel",
+    "envelopes": "2 ADSR, 2 ms-10 s",
+    "modulation": "mod oscillator 0.07 Hz-1.3 kHz (6 waves + S/H); LFO 0.07-520 Hz",
+    "utilities": "3 voltage-controlled attenuators, 2 x 4 mults",
+    "effects": "stereo BBD delay 35-780 ms, ping pong, sync",
+    "sequencer": "12 sequences, 256 steps",
+    "patch_points": {
+      "total": 90,
+      "inputs": 49,
+      "outputs": 33,
+      "mult_jacks": 8
+    },
+    "audio": {
+      "main": "2 x 1/4\" TRS, +4 dBu",
+      "phones": "1/4\" TRS, 1.1 V into 16 ohm",
+      "instrument_in": "1/4\" TS, +20 dB",
+      "euro_out": "2 x 3.5 mm, 10 Vpp",
+      "delay_out": "2 x 3.5 mm"
+    },
+    "midi": "DIN in, out, thru; USB",
+    "dimensions_mm": {
+      "w": 812.8,
+      "d": 361.9,
+      "h": 139.7
+    },
+    "weight_kg": 13.61,
+    "power": "12 V DC 2 A, tip positive; 100-240 V AC adaptor"
+  },
+  "omitted_from_source": [
+    "setup and safety",
+    "synthesis primer text",
+    "signal flow diagram images",
+    "blank preset sheets",
+    "the full global settings list beyond those modelled",
+    "the full SysEx parameter ID table"
+  ],
+  "not_in_source": [
+    "envelope curve shapes",
+    "the drone reference voltage",
+    "noise filter cutoff values",
+    "delay feedback range in repeats"
+  ],
+  "source_inconsistencies": [
+    "The specifications describe the attenuators as 'Three Bipolar Voltage Controlled Amplifiers (VCA)'; the module text calls them inverting attenuators.",
+    "The Mod Sources line in the specifications lists S/H as a waveform; on the panel S/H is a separate output.",
+    "CLOCK OUT is labelled 'CV INPUT: 0V to 10V' in its own description, though it is an output.",
+    "Amp EG ENV END OUT is a 'GATE OUTPUT: 0V to +8V'; the filter EG's is 'CV OUTPUT: 0V to +5V'."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Global settings",
+      "detail": "About 50 global settings exist; the main performance and routing ones are modelled, the rest are listed by name in the manual's tables."
+    },
+    {
+      "topic": "Mults",
+      "detail": "Four bidirectional parallel jacks per mult are modelled as one input and three outputs."
+    },
+    {
+      "topic": "Chained normals",
+      "detail": "Pitch and cutoff input chains are small selector modules; the selection rule is a behaviour."
+    }
+  ]
+}

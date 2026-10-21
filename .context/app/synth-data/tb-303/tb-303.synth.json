@@ -1,0 +1,1059 @@
+{
+  "schema_version": "0.10.0",
+  "device": {
+    "id": "roland-tb-303",
+    "manufacturer": "Roland",
+    "model": "TB-303 Computer Controlled Bass Line",
+    "category": "monophonic analogue bass synthesizer with built-in step sequencer",
+    "based_on": "Original design, 1981-84.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Roland TB-303 Owner's Manual (April 1982)",
+        "kind": "user_manual",
+        "file": "Roland_TB-303_Owners_Manual.pdf",
+        "pages": 96,
+        "note": "Scanned; read by OCR at 150 dpi. Basic, intermediate and advanced courses, sync and CV/gate section, sample bass lines and specifications. Sample sound knob settings are drawn as dials and not readable by OCR."
+      },
+      {
+        "id": "devilfish",
+        "title": "Robin Whittle, Devil Fish TB-303 modification manual",
+        "kind": "circuit_analysis",
+        "file": "https://manualzz.com/doc/1172463/roland-tb-303-user-manual",
+        "note": "The two envelopes and their times, the accent sweep circuit, fixed slide."
+      },
+      {
+        "id": "filter_refs",
+        "title": "Gearspace TB-303 filter thread; Olney, 'Computational Thinking in Modular', ch. 13",
+        "kind": "other",
+        "file": "https://olney.ai/ct-modular-book/tb-303.html",
+        "note": "Filter as a mismatched 4-pole diode-style ladder."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "Stores sequences only (64 patterns, 7 tracks); the sound is set live on the knobs.",
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 8,
+      "rotary_switches": 2,
+      "slide_switches": 1
+    },
+    "summary": "A one-oscillator bass voice (saw or square into a resonant low-pass filter and VCA, with a decay envelope and accent) driven by a 16-step sequencer with accent and slide per step. Patterns chain into seven tracks. Runs on batteries or an adaptor, syncs to Roland rhythm machines over DIN, and can play other synthesizers from its CV and gate outputs."
+  },
+  "modules": [
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer",
+      "panel_section": "SEQUENCER",
+      "description": "16-step pattern sequencer with track (song) chaining. Each step stores pitch (one of 13 keys plus octave transpose), timing as note, tie or rest, accent and slide. It drives the voice with pitch CV, gate, accent and slide.",
+      "inputs": ["seq.clock_in"],
+      "outputs": ["seq.cv", "seq.gate", "seq.accent"]
+    },
+    {
+      "id": "vco",
+      "type": "oscillator",
+      "name": "VCO",
+      "panel_section": "TONE CONTROL",
+      "description": "Single oscillator, sawtooth or square, chosen by the WAVEFORM switch. Pitch from the sequencer, with TUNING setting the reference.",
+      "inputs": ["vco.pitch_cv"],
+      "outputs": ["vco.out"],
+      "properties": {
+        "waveforms": ["sawtooth", "square"],
+        "pitch_reference": "A key plays about 220 Hz with TUNING centred"
+      }
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "TONE CONTROL",
+      "description": "Resonant low-pass filter. CUTOFF sets the base frequency, ENV MOD the depth of the main envelope, RESONANCE the emphasis (to self-oscillation on the TD-3). On accented notes the accent sweep circuit adds a further rise.",
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"],
+      "properties": {
+        "type": "low-pass",
+        "topology": "4-pole diode-style ladder (transistors wired as diodes)",
+        "slope_note": "four poles with the first mismatched; often heard as about 18 dB/octave",
+        "topology_source": "circuit analyses (Whittle; Gearspace; Olney); neither manual says"
+      }
+    },
+    {
+      "id": "meg",
+      "type": "envelope",
+      "name": "Main envelope generator",
+      "panel_section": "TONE CONTROL",
+      "description": "Sharp attack, exponential decay, retriggered by each gate. Drives the filter cutoff through ENV MOD and, on accented notes, the accent sweep circuit. DECAY sets its time on unaccented notes; accented notes force the shortest decay.",
+      "inputs": ["meg.trigger", "meg.accent"],
+      "outputs": ["meg.out"],
+      "properties": {
+        "decay_s": [0.2, 2],
+        "accent_decay_s": 0.2,
+        "source": "Whittle, Devil Fish manual"
+      }
+    },
+    {
+      "id": "veg",
+      "type": "envelope",
+      "name": "Volume envelope generator",
+      "panel_section": "(internal)",
+      "description": "Fixed attack-decay envelope for the VCA, retriggered by each gate. No panel control.",
+      "inputs": ["veg.trigger"],
+      "outputs": ["veg.out"],
+      "properties": {
+        "decay_s": [3, 4],
+        "source": "Whittle, Devil Fish manual"
+      }
+    },
+    {
+      "id": "acc",
+      "type": "slew_limiter",
+      "name": "Accent sweep circuit",
+      "panel_section": "TONE CONTROL",
+      "description": "On accented steps, passes the main envelope through a smoothing network to add to filter cutoff and VCA level. The ACCENT knob sets the amount; the RESONANCE knob also sets how much of the sweep reaches the filter. It does not fully discharge between steps, so consecutive accents climb higher.",
+      "inputs": ["acc.env_in", "acc.gate"],
+      "outputs": ["acc.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "(internal)",
+      "description": "Shapes the filtered signal with the volume envelope, boosted on accented notes.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME",
+      "description": "Line output and headphones at the VOLUME setting.",
+      "inputs": ["out.in"],
+      "outputs": ["out.line", "out.phones"]
+    },
+    {
+      "id": "mix",
+      "type": "mixer",
+      "name": "MIX IN",
+      "panel_section": "(rear edge)",
+      "description": "Mixes an external audio signal, such as a rhythm machine, with the bass at unity gain before the output and headphones. Works only with the power on.",
+      "inputs": ["mix.ext_in", "mix.bass_in"],
+      "outputs": ["mix.out"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco.waveform",
+      "module": "vco",
+      "label": "WAVEFORM",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "sawtooth"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "slide_switch",
+          "note": "on the rear edge beside SYNC IN"
+        }
+      ],
+      "function": "Selects the oscillator waveform."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF FREQ",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter cutoff. Lower removes upper harmonics, softening the tone and lowering the level."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis at the cutoff. Also scales the accent sweep's effect on the filter."
+    },
+    {
+      "id": "vcf.env_mod",
+      "module": "vcf",
+      "label": "ENV MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the main envelope on filter cutoff: how much each note's tone moves."
+    },
+    {
+      "id": "meg.decay",
+      "module": "meg",
+      "label": "DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.2,
+        "max": 2,
+        "unit": "s",
+        "taper": "unknown",
+        "source": "Whittle"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the main envelope on unaccented notes."
+    },
+    {
+      "id": "acc.amount",
+      "module": "acc",
+      "label": "ACCENT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "How strongly accented steps stand out. No effect on unaccented steps."
+    },
+    {
+      "id": "seq.tempo",
+      "module": "seq",
+      "label": "TEMPO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Playback rate of patterns and tracks, slow to fast.",
+      "physical": {
+        "min": 40,
+        "max": 300,
+        "unit": "BPM"
+      }
+    },
+    {
+      "id": "seq.mode",
+      "module": "seq",
+      "label": "MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "pattern_write"
+        },
+        {
+          "value": "pattern_play"
+        },
+        {
+          "value": "track_write"
+        },
+        {
+          "value": "track_play"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Operating mode of the sequencer."
+    },
+    {
+      "id": "seq.track_group",
+      "module": "seq",
+      "label": "TRACK / PATTERN GROUP",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "track_1",
+          "meaning": "track 1, pattern group I"
+        },
+        {
+          "value": "track_2",
+          "meaning": "track 2, pattern group I"
+        },
+        {
+          "value": "track_3",
+          "meaning": "track 3, pattern group II"
+        },
+        {
+          "value": "track_4",
+          "meaning": "track 4, pattern group II"
+        },
+        {
+          "value": "track_5",
+          "meaning": "track 5, pattern group III"
+        },
+        {
+          "value": "track_6",
+          "meaning": "track 6, pattern group III"
+        },
+        {
+          "value": "track_7",
+          "meaning": "track 7, pattern group IV"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "In track modes selects TRACK 1 to 7; in pattern modes selects PATTERN GROUP I to IV. Tracks 1-2 use group I, 3-4 group II, 5-6 group III, 7 group IV."
+    },
+    {
+      "id": "seq.key",
+      "module": "seq",
+      "label": "13-note keyboard",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "C"
+        },
+        {
+          "value": "C#"
+        },
+        {
+          "value": "D"
+        },
+        {
+          "value": "D#"
+        },
+        {
+          "value": "E"
+        },
+        {
+          "value": "F"
+        },
+        {
+          "value": "F#"
+        },
+        {
+          "value": "G"
+        },
+        {
+          "value": "G#"
+        },
+        {
+          "value": "A"
+        },
+        {
+          "value": "A#"
+        },
+        {
+          "value": "B"
+        },
+        {
+          "value": "C (upper)"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters pitches in PITCH MODE; with PITCH MODE held, transposes the playing pattern or selects the tuning note. The lower eight keys double as the PATTERN 1-8 selectors, and C# and D# as DEL and INS in track editing."
+    },
+    {
+      "id": "seq.pattern_select",
+      "module": "seq",
+      "label": "PATTERN 1-8",
+      "kind": "enum",
+      "values": [
+        {
+          "value": 1
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 7
+        },
+        {
+          "value": 8
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Selects the pattern number (the lower eight note keys), or the measure number while BAR is held."
+    },
+    {
+      "id": "seq.pitch_mode",
+      "module": "seq",
+      "label": "PITCH MODE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters pitch entry; held with a key, transposes or selects the tuning note."
+    },
+    {
+      "id": "seq.time_mode",
+      "module": "seq",
+      "label": "TIME MODE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Enters timing entry: note, tie or rest per step."
+    },
+    {
+      "id": "seq.function",
+      "module": "seq",
+      "label": "FUNCTION",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Returns to normal mode; held, gives second functions (step count, pattern position in a track, insert, delete)."
+    },
+    {
+      "id": "seq.back",
+      "module": "seq",
+      "label": "BACK",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps back one note while checking or editing a pattern."
+    },
+    {
+      "id": "seq.write_next",
+      "module": "seq",
+      "label": "WRITE/NEXT (TAP)",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Writes a pattern into a track, steps to the next note, and enters timing by tapping (hold for sustain)."
+    },
+    {
+      "id": "seq.clear",
+      "module": "seq",
+      "label": "CLEAR / BAR RESET / D.C.",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Clears a pattern, resets a track to its first measure, marks the last pattern of a track (D.C.); starts the metronome for tap writing."
+    },
+    {
+      "id": "seq.run_stop",
+      "module": "seq",
+      "label": "RUN/STOP",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts and stops patterns and tracks."
+    },
+    {
+      "id": "seq.down_note_step",
+      "module": "seq",
+      "label": "TRANSPOSE DOWN / NOTE / STEP",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Octave down in PITCH MODE; a note in TIME MODE; with FUNCTION, counts the steps in a pattern."
+    },
+    {
+      "id": "seq.up_tie_triplet",
+      "module": "seq",
+      "label": "TRANSPOSE UP / TIE / TRIPLET",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Octave up in PITCH MODE; a tie in TIME MODE; sets triplet step mode."
+    },
+    {
+      "id": "seq.accent_a",
+      "module": "seq",
+      "label": "ACCENT / PATTERN A",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds or removes an accent on the current step; selects the A bank."
+    },
+    {
+      "id": "seq.slide_b",
+      "module": "seq",
+      "label": "SLIDE / PATTERN B",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds or removes a slide on the current step; selects the B bank."
+    },
+    {
+      "id": "vco.tuning",
+      "module": "vco",
+      "label": "TUNING",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "physical": {
+        "min": -500,
+        "max": 500,
+        "unit": "cents"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pitch reference, about 500 cents either way.",
+      "note": "Printed as '±500 overcents'."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME / POWER SW",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Power switch and volume on one knob: click on, then turn clockwise for level."
+    },
+    {
+      "id": "seq.ds",
+      "module": "seq",
+      "label": "D.S.",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Marks or jumps to the D.S. (segno) measure, so a track can repeat a section."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.output",
+      "label": "OUTPUT",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm jack",
+      "node": "out.line",
+      "function": "Line output to an amplifier.",
+      "electrical": {
+        "output_impedance_ohm": 10000
+      }
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONE",
+      "location": "top",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm stereo jack",
+      "node": "out.phones",
+      "function": "Stereo headphones, 8 to 300 ohm. Do not use the output jack at the same time.",
+      "electrical": {
+        "load_ohm": [8, 300]
+      }
+    },
+    {
+      "id": "jack.cv_out",
+      "label": "CV",
+      "location": "top",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm mini jack",
+      "node": "seq.cv",
+      "function": "Pitch CV for another synthesizer, 1 V/octave, +1 to +5 V. A 32' VCO setting matches the TB-303's register.",
+      "electrical": {
+        "range_v": [1, 5],
+        "scaling": "1 V/octave"
+      }
+    },
+    {
+      "id": "jack.gate_out",
+      "label": "GATE",
+      "location": "top",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm mini jack",
+      "node": "seq.gate",
+      "function": "Gate for another synthesizer: 0 V off, +12 V on.",
+      "electrical": {
+        "off_v": 0,
+        "on_v": 12
+      }
+    },
+    {
+      "id": "jack.sync_in",
+      "label": "SYNC IN",
+      "location": "top",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "5-pin DIN",
+      "node": "seq.clock_in",
+      "function": "Tempo, start and stop from a TR-606, TR-808, CR-8000, CSQ-600, MC-4 or EP-11. The TR-606 can also trigger D.S. from its TAP button.",
+      "combine": "replace"
+    },
+    {
+      "id": "jack.mix_in",
+      "label": "MIX IN",
+      "location": "top",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm jack",
+      "node": "mix.ext_in",
+      "function": "External audio mixed with the bass at 1:1; its level is set at the source.",
+      "electrical": {
+        "impedance_ohm": 100000
+      }
+    },
+    {
+      "id": "jack.dc_in",
+      "label": "DC 9V",
+      "location": "top",
+      "direction": "in",
+      "signal": "power",
+      "connector": "BOSS ACA-type adaptor jack",
+      "node": null,
+      "function": "9 V adaptor (BOSS ACA-100 or equivalent)."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "seq.cv",
+      "to": "vco.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Through the slide circuit: slewed when the step has slide, near-instant otherwise."
+    },
+    {
+      "id": "c02",
+      "from": "vco.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c03",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "seq.gate",
+      "to": "meg.trigger",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Not retriggered across a slide."
+    },
+    {
+      "id": "c05",
+      "from": "seq.gate",
+      "to": "veg.trigger",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "meg.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf.env_mod"
+    },
+    {
+      "id": "c07",
+      "from": "seq.accent",
+      "to": "meg.accent",
+      "signal": "gate",
+      "kind": "fixed",
+      "note": "Forces the shortest decay on accented steps.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c08",
+      "from": "meg.out",
+      "to": "acc.env_in",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c09",
+      "from": "seq.accent",
+      "to": "acc.gate",
+      "signal": "gate",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c10",
+      "from": "acc.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount_expr": "acc.amount * vcf.resonance",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c11",
+      "from": "acc.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "acc.amount",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c12",
+      "from": "veg.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "vca.out",
+      "to": "mix.bass_in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "mix.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "seq.run_led",
+      "module": "seq",
+      "label": "BATTERY CHECK / RUN",
+      "kind": "led",
+      "function": "Lit while running; also the battery check."
+    },
+    {
+      "id": "seq.pitch_led",
+      "module": "seq",
+      "label": "PITCH MODE",
+      "kind": "led",
+      "function": "Lit in pitch mode."
+    },
+    {
+      "id": "seq.normal_led",
+      "module": "seq",
+      "label": "NORMAL MODE",
+      "kind": "led",
+      "function": "Lit in normal mode."
+    },
+    {
+      "id": "seq.time_led",
+      "module": "seq",
+      "label": "TIME MODE",
+      "kind": "led",
+      "function": "Lit in time mode."
+    },
+    {
+      "id": "seq.key_leds",
+      "module": "seq",
+      "label": "key and selector LEDs",
+      "kind": "led",
+      "function": "Show the current note, pattern, bank and step state; a flashing pattern LED marks the pattern being selected or written."
+    }
+  ],
+  "led_legend": {
+    "rule": "Single-colour LEDs: lit means active, flashing means selected and waiting.",
+    "colours": [
+      {
+        "colour": "red",
+        "meaning": "state indicators"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Pattern memory",
+      "applies_to": ["seq"],
+      "rule": "64 patterns: four groups (I to IV), each with PATTERN 1 to 8 in banks A and B. A pattern holds up to 16 steps of sixteenths, or 15 in triplet step mode (the TB-303 manual), and stores pitch, timing, accent and slide. The sound itself is not stored: the knobs always play live."
+    },
+    {
+      "id": "b02",
+      "name": "Two-pass pattern writing",
+      "applies_to": ["seq"],
+      "rule": "Pitches go in first, in PITCH MODE, using the 13 keys with TRANSPOSE held for octaves. Timing follows in TIME MODE: each step is a note (takes the next pitch), a tie (extends the previous note) or a rest. Accent and slide are added last, by stepping through with WRITE/NEXT held and pressing ACCENT or SLIDE. Timing can instead be tapped against a metronome started with CLEAR; holding TAP adds sustain. Clearing timing while running keeps the pitches."
+    },
+    {
+      "id": "b03",
+      "name": "Step modes",
+      "applies_to": ["seq"],
+      "rule": "Normal step mode divides a beat into four sixteenths. Triplet mode divides it into three, for 12/8 and shuffle feels. The step count (FUNCTION plus STEP pressed repeatedly) sets bar length, so 12 steps of sixteenths give 3/4."
+    },
+    {
+      "id": "b04",
+      "name": "Slide",
+      "applies_to": ["seq", "vco", "meg"],
+      "rule": "A slide ties the step to the next one: the gate stays high, the envelopes are not retriggered, and the pitch glides at a fixed, short rate. A slide on a pattern's last note carries into the next pattern, or the pattern's own start if it repeats. Two slid notes of the same pitch simply tie. A slide into a rest does nothing."
+    },
+    {
+      "id": "b05",
+      "name": "Accent",
+      "applies_to": ["acc", "meg", "vca", "vcf"],
+      "rule": "An accented step does three things: the main envelope's decay drops to its shortest, the accent sweep circuit adds a rise to the filter cutoff (scaled by both ACCENT and RESONANCE, which is where the 'wow' comes from), and the VCA gets louder. The sweep does not fully discharge, so runs of accents climb. Accent is not sent to the CV output.",
+      "confidence": "inferred",
+      "note": "From Whittle's Devil Fish manual; the owner's manuals say only that ACCENT affects accented notes."
+    },
+    {
+      "id": "b06",
+      "name": "Envelopes",
+      "applies_to": ["meg", "veg", "vcf", "vca"],
+      "rule": "The main envelope (DECAY, about 0.2 to 2 s) moves the filter; ENV MOD sets how far. The volume envelope's decay is fixed at about 3 to 4 s, so note length is mostly set by gate time and the filter closing.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "b07",
+      "name": "Tracks",
+      "applies_to": ["seq"],
+      "rule": "Seven tracks, each built from patterns in its own group (1-2 group I, 3-4 II, 5-6 III, 7 IV). A track stores the order of patterns, a transpose per measure (hold PITCH MODE and press a key while writing), and a D.C. marker on the last measure, after which it loops. Measures can be inserted, deleted and overwritten; a shorter new track simply ends at its D.C."
+    },
+    {
+      "id": "b08",
+      "name": "Chaining and live transpose",
+      "applies_to": ["seq"],
+      "rule": "Holding one pattern switch and pressing another selects that range, played in order. While playing, holding PITCH MODE and pressing a key transposes the pattern from its next repeat. A newly chosen pattern starts when the current one ends."
+    },
+    {
+      "id": "b09",
+      "name": "Tuning",
+      "applies_to": ["vco"],
+      "rule": "In PATTERN PLAY, hold PITCH MODE and press A, then each TAP (WRITE/NEXT) sounds that note so TUNING can be set to 220 Hz, or to another instrument. Any other key can be used as the reference."
+    },
+    {
+      "id": "b10",
+      "name": "CV and gate",
+      "applies_to": ["seq"],
+      "rule": "CV follows the played note at 1 V/octave between +1 and +5 V, and glides on slides. The gate is high for slightly less than the written note, stays high across slides, and is off for rests. Accent does not reach the CV."
+    },
+    {
+      "id": "b11",
+      "name": "DIN sync",
+      "applies_to": ["seq"],
+      "rule": "With SYNC IN connected, tempo, start and stop come from the master; press CLEAR/RESET on both units first. Sequencers such as the CSQ-600 and MC-4 must not be stopped and continued mid-way. Write patterns with the units disconnected."
+    },
+    {
+      "id": "b12",
+      "name": "D.C. and D.S.",
+      "applies_to": ["seq"],
+      "rule": "D.C. on a track's last measure makes it loop from the first. D.S. marks a segno measure that playback can jump back to. Measures are addressed with BAR held and the selector switches as digits. Do not insert after the D.C. measure."
+    },
+    {
+      "id": "b13",
+      "name": "Headphone pitch",
+      "applies_to": ["out"],
+      "rule": "The manual warns that bass through headphones can sound out of tune and suggests adjusting the tone or using a speaker."
+    }
+  ],
+  "midi": {
+    "receives": [],
+    "transmits": [],
+    "note": "None. Sync is DIN (Roland 24 pulses per quarter note) and external control is CV and gate out only."
+  },
+  "specifications": {
+    "patterns": "64 (groups I-IV x 8 x A/B)",
+    "pattern_contents": ["pitch", "length of note", "accent", "slide"],
+    "steps_per_pattern": {
+      "sixteenths": [1, 16],
+      "triplets": [1, 15]
+    },
+    "sound_range_octaves": {
+      "pattern": 3,
+      "track": 4
+    },
+    "tracks": "7, 64 measures each, 256 measures maximum",
+    "track_contents": ["order of patterns", "shift (transpose)", "D.C.", "D.S."],
+    "tuning_cents": [-500, 500],
+    "tempo_bpm": [40, 300],
+    "outputs": {
+      "line": "jack, 10 kohm",
+      "headphones": "stereo jack, 8-300 ohm",
+      "cv": "mini jack, +1 to +5 V, 1 V/octave",
+      "gate": "mini jack, 0 / +12 V"
+    },
+    "inputs": {
+      "sync": "5-pin DIN",
+      "mix_in": "jack, 100 kohm, 1:1"
+    },
+    "power": {
+      "battery": "6 V (4 x 1.5 V)",
+      "adaptor": "9 V",
+      "current_ma": [80, 120]
+    },
+    "dimensions_mm": {
+      "w": 300,
+      "d": 146,
+      "h": 55
+    },
+    "weight_kg": 1.0,
+    "accessories": ["SC-303 soft case", "PJ-1 connection cord"]
+  },
+  "omitted_from_source": [
+    "the step-by-step procedure tables for each worked example, condensed into behaviours",
+    "the sample bass lines and their track scores (pp. 81-88)",
+    "the four sample sound settings, whose knob positions are drawn as dials and not readable from the scan",
+    "the measure-number indication rules for BAR, beyond the summary in b12"
+  ],
+  "not_in_source": [
+    "any description of the voice circuit: filter type and slope, envelope count and times, how accent works; taken from circuit analyses",
+    "slide time",
+    "the TEMPO and knob tapers",
+    "the oscillator's pitch range in Hz, beyond A at about 220 Hz and a 3-octave pattern range",
+    "DIN sync pulse rate"
+  ],
+  "source_inconsistencies": [
+    "The manual says DECAY lengthens both the volume and the tone's fade; Whittle's circuit analysis says the volume envelope is fixed at about 3 to 4 s and DECAY acts on the filter envelope only.",
+    "The tuning range is printed as '±500 overcents'; read as ±500 cents.",
+    "The manual's step diagram shows 5/4 as 20 sixteenth steps, but the specification limits a pattern to 16 steps."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Filter response",
+      "detail": "The mismatched first pole gives a response between 18 and 24 dB/octave; exact pole positions and the resonance-cutoff interaction need measurement."
+    },
+    {
+      "topic": "Accent sweep",
+      "detail": "Its time constant and the resonance pot's part in it are described qualitatively only."
+    },
+    {
+      "topic": "Slide",
+      "detail": "Fixed and short; the RC value is in the service notes, not here."
+    },
+    {
+      "topic": "Square wave",
+      "detail": "The square's pulse width shifts with pitch on the original; not quantified."
+    }
+  ]
+}

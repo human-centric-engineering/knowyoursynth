@@ -1,0 +1,2769 @@
+{
+  "schema_version": "0.12.0",
+  "device": {
+    "id": "erica-synths-syntrx-ii",
+    "manufacturer": "Erica Synths",
+    "model": "SYNTRX II",
+    "category": "matrix-patched analogue synthesizer with digital patch memory, piano-roll sequencer and DSP effects",
+    "based_on": "Successor to the Erica Synths SYNTRX (a re-imagining of the EMS Synthi AKS, approved by Peter Zinovieff; 1056 units).",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Erica Synths SYNTRX II User Manual (March 2023)",
+        "kind": "user_manual",
+        "file": "Syntrx_II_Manual_Mar_2023.pdf",
+        "pages": 27,
+        "note": "Features, connections, every 'module', matrix connections, patch memory, sequencer and stepped modulation, six example patches, MIDI and configuration settings."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "hybrid",
+    "voices": 1,
+    "polyphony_mode": "monophonic; paraphonic patches with CV2 on Oscillator 2",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "256 matrix patches (connections and gain levels, sequence, stepped modulation and per-patch settings); knob positions are not stored. The last patch is autosaved every 30 s.",
+    "semi_modular": false,
+    "routing": "16 x 16 analogue matrix under digital control; three gain levels per point",
+    "panel_counts": {
+      "matrix_points": 256,
+      "matrix_rows": 16,
+      "matrix_columns": 16
+    },
+    "summary": "Sources (matrix rows): Osc 1 pulse and sine, Osc 2 (pulse and saw mixed), Osc 3 triangle/ramp, Osc 3 pulse or S&H, noise, Input 1, envelope follower, Input 2, filter, Trapezoid CV, Trapezoid VCA output, ring mod, effects, and joystick Y and X. Destinations (matrix columns): Ch1 and Ch2 outputs, scope, Trapezoid VCA input, ring mod A, effects, filter, the three oscillator pitches, oscillator shape, S&H input, envelope decay, filter frequency and both output levels. Nothing sounds until a patch is made. The matrix also becomes a 16-step piano-roll sequencer with two stepped modulation lanes added to the joystick."
+  },
+  "modules": [
+    {
+      "id": "osc1",
+      "type": "oscillator",
+      "name": "Oscillator 1",
+      "panel_section": "OSCILLATOR 1",
+      "description": "Audio oscillator, about C0-C8, with sine and pulse each on its own matrix row; shape for each (pulse width; sine to sharkfin either way), octave ±3, tune about two octaves.",
+      "properties": {
+        "range": "C0-C8"
+      },
+      "inputs": ["osc1.pitch_cv", "osc1.shape_cv"],
+      "outputs": ["osc1.pulse", "osc1.sine"]
+    },
+    {
+      "id": "osc2",
+      "type": "oscillator",
+      "name": "Oscillator 2",
+      "panel_section": "OSCILLATOR 2",
+      "description": "Audio oscillator with pulse and saw (to 'dual super saw') mixed to one row; shape, octave ±3, tune; hard sync to Osc 1; CV2 input takes over its pitch.",
+      "properties": {
+        "range": "C0-C8"
+      },
+      "inputs": ["osc2.pitch_cv", "osc2.shape_cv", "osc2.sync_in"],
+      "outputs": ["osc2.out"]
+    },
+    {
+      "id": "osc3",
+      "type": "oscillator",
+      "name": "Oscillator 3",
+      "panel_section": "OSCILLATOR 3",
+      "description": "LFO into audio range (0.05-500 Hz): triangle/ramp and pulse with shape; free or keyboard-following.",
+      "properties": {
+        "rate_hz": [0.05, 500]
+      },
+      "inputs": ["osc3.pitch_cv"],
+      "outputs": ["osc3.tri", "osc3.pulse"]
+    },
+    {
+      "id": "snh",
+      "type": "sample_hold",
+      "name": "Random (sample and hold)",
+      "panel_section": "RANDOM",
+      "description": "Samples the matrix S&H input at its own rate or on each gate; shares a matrix row with Osc 3 pulse.",
+      "inputs": ["snh.in", "snh.gate"],
+      "outputs": ["snh.out"]
+    },
+    {
+      "id": "osc3sel",
+      "type": "electronic_switch",
+      "name": "Osc 3 / S&H selector",
+      "panel_section": "RANDOM",
+      "description": "Chooses whether row 5 carries Osc 3 pulse or the S&H output.",
+      "inputs": ["osc3sel.osc3", "osc3sel.snh"],
+      "outputs": ["osc3sel.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "NOISE",
+      "description": "Zener-diode white noise with a tone (colour) control.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "in1",
+      "type": "preamp",
+      "name": "Input 1 and envelope follower",
+      "panel_section": "INPUT 1 / E.F.",
+      "description": "External audio input with level, and an envelope follower giving a CV (attenuverted) and a gate (threshold, to the gate OR).",
+      "inputs": ["in1.in"],
+      "outputs": ["in1.out", "in1.env", "in1.gate"]
+    },
+    {
+      "id": "in2",
+      "type": "preamp",
+      "name": "Input 2",
+      "panel_section": "INPUT 2",
+      "description": "DC-coupled external input, line or mic gain, level (overdrives at high settings), direct or inverted.",
+      "inputs": ["in2.in"],
+      "outputs": ["in2.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Filter",
+      "panel_section": "FILTER",
+      "description": "High-pass and low-pass in series: LPF fully open gives HP, HPF fully closed gives LP, anything else band-pass. Resonance self-oscillates (pure sine) from 7.",
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "ring",
+      "type": "ring_modulator",
+      "name": "Ring modulator",
+      "panel_section": "RINGMODULATOR",
+      "description": "Four-quadrant multiplier: A from the matrix; B (the carrier) chosen internally by the SOURCE B rotary switch, whose positions the manual does not list.",
+      "inputs": ["ring.a"],
+      "outputs": ["ring.out"]
+    },
+    {
+      "id": "shapebus",
+      "type": "cv_source_selector",
+      "name": "Oscillator shape CV",
+      "panel_section": "OSCILLATOR 1 / 2",
+      "description": "Matrix Oscillator Shape input, sent to Osc 1 and Osc 2 according to their shape switches.",
+      "inputs": ["shapebus.in"],
+      "outputs": ["shapebus.out"]
+    },
+    {
+      "id": "trap",
+      "type": "envelope",
+      "name": "Trapezoid envelope",
+      "panel_section": "TRAPEZOID",
+      "description": "Looping attack (6-850 ms), on (0-1.5 s), decay (16 ms-2 s, voltage controlled) and off (14 ms-1.3 s). OFF above 9 stops looping: then gates or the GATE button fire it.",
+      "properties": {
+        "attack_s": [0.006, 0.85],
+        "on_s": [0, 1.5],
+        "decay_s": [0.016, 2],
+        "off_s": [0.014, 1.3]
+      },
+      "inputs": ["trap.gate", "trap.decay_cv"],
+      "outputs": ["trap.out"]
+    },
+    {
+      "id": "trapvca",
+      "type": "vca",
+      "name": "Trapezoid VCA",
+      "panel_section": "TRAPEZOID",
+      "description": "VCA driven by the Trapezoid; its input is the 'Envelope Signal' matrix column.",
+      "inputs": ["trapvca.in", "trapvca.cv"],
+      "outputs": ["trapvca.out"]
+    },
+    {
+      "id": "fx",
+      "type": "effects",
+      "name": "Effects",
+      "panel_section": "EFFECTS",
+      "description": "DSP delay or reverb (with 112dB): time or size, feedback (self-oscillating delay; looping reverb), level; wet only. Time knob motion recordable for 8 s.",
+      "properties": {
+        "delay_s": {
+          "short": [0.005, 0.5],
+          "long": [0.005, 3]
+        }
+      },
+      "inputs": ["fx.in"],
+      "outputs": ["fx.out"]
+    },
+    {
+      "id": "joy",
+      "type": "manual_controller",
+      "name": "Joystick",
+      "panel_section": "JOYSTICK",
+      "description": "Two bipolar CVs (±5 V) with X and Y levels; motion and gate patterns recordable for 8 s; MIDI CCs and the sequencer's stepped lanes add to it.",
+      "inputs": ["joy.cc_x", "joy.cc_y", "joy.step_x", "joy.step_y"],
+      "outputs": ["joy.x", "joy.y"]
+    },
+    {
+      "id": "ctl",
+      "type": "voice_allocator",
+      "name": "CV, gate, MIDI and sequencer",
+      "panel_section": "CONNECTIONS / SEQUENCER",
+      "description": "CV1 (all oscillators), CV2 (Osc 2), gate input, MIDI note (high-note priority, added to CV), GATE button and the piano-roll sequencer, ORed gates.",
+      "inputs": ["ctl.cv1_in", "ctl.cv2_in", "ctl.gate_in", "ctl.midi_in"],
+      "outputs": [
+        "ctl.cv1",
+        "ctl.cv2",
+        "ctl.gate",
+        "ctl.velocity",
+        "ctl.modwheel",
+        "ctl.cc_x",
+        "ctl.cc_y",
+        "ctl.step_x",
+        "ctl.step_y"
+      ]
+    },
+    {
+      "id": "scope",
+      "type": "output",
+      "name": "Scope (meter) and scope output",
+      "panel_section": "SCOPE",
+      "description": "Meter for audio or CV, with its own output jack, normalled to both inputs.",
+      "inputs": ["scope.in"],
+      "outputs": ["scope.out"]
+    },
+    {
+      "id": "out1",
+      "type": "vca",
+      "name": "Output channel 1",
+      "panel_section": "OUTPUT AMPLIFIERS",
+      "description": "Output VCA with level (plus matrix CV), tone filter and pan.",
+      "inputs": ["out1.in", "out1.cv"],
+      "outputs": ["out1.out"]
+    },
+    {
+      "id": "out2",
+      "type": "vca",
+      "name": "Output channel 2",
+      "panel_section": "OUTPUT AMPLIFIERS",
+      "description": "Output VCA with level (plus matrix CV), tone filter and pan.",
+      "inputs": ["out2.in", "out2.cv"],
+      "outputs": ["out2.out"]
+    },
+    {
+      "id": "master",
+      "type": "output",
+      "name": "Outputs",
+      "panel_section": "rear panel",
+      "description": "Panned sum of both channels to outputs 1 and 2 and headphones.",
+      "inputs": ["master.ch1", "master.ch2"],
+      "outputs": ["master.out1", "master.out2", "master.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc1.octave",
+      "module": "osc1",
+      "label": "OCTAVE (Osc 1)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-3"
+        },
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        },
+        {
+          "value": "+3"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave offset."
+    },
+    {
+      "id": "osc1.tune",
+      "module": "osc1",
+      "label": "TUNE (Osc 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine pitch over about two octaves."
+    },
+    {
+      "id": "osc1.shape",
+      "module": "osc1",
+      "label": "SHAPE (Osc 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width, and sine to inverted sharkfin (left) or sharkfin (right)."
+    },
+    {
+      "id": "osc1.shape_cv_target",
+      "module": "osc1",
+      "label": "OSC1 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "pwm"
+        },
+        {
+          "value": "both"
+        },
+        {
+          "value": "sine"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which wave the Oscillator Shape CV changes."
+    },
+    {
+      "id": "osc1.pulse_level",
+      "module": "osc1",
+      "label": "LEVEL (pulse)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse level into the matrix."
+    },
+    {
+      "id": "osc1.sine_level",
+      "module": "osc1",
+      "label": "LEVEL (sine)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Sine level into the matrix."
+    },
+    {
+      "id": "osc2.octave",
+      "module": "osc2",
+      "label": "OCTAVE (Osc 2)",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "-3"
+        },
+        {
+          "value": "-2"
+        },
+        {
+          "value": "-1"
+        },
+        {
+          "value": "0"
+        },
+        {
+          "value": "+1"
+        },
+        {
+          "value": "+2"
+        },
+        {
+          "value": "+3"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Octave offset."
+    },
+    {
+      "id": "osc2.tune",
+      "module": "osc2",
+      "label": "TUNE (Osc 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine pitch over about two octaves."
+    },
+    {
+      "id": "osc2.shape",
+      "module": "osc2",
+      "label": "SHAPE (Osc 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width, and saw to dual super saw."
+    },
+    {
+      "id": "osc2.shape_cv_target",
+      "module": "osc2",
+      "label": "OSC2 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "pwm"
+        },
+        {
+          "value": "none"
+        },
+        {
+          "value": "saw"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which wave the Oscillator Shape CV changes (centre: none)."
+    },
+    {
+      "id": "osc2.pulse_level",
+      "module": "osc2",
+      "label": "LEVEL (pulse)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse level into the Osc 2 mix."
+    },
+    {
+      "id": "osc2.saw_level",
+      "module": "osc2",
+      "label": "LEVEL (saw)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Saw level into the Osc 2 mix."
+    },
+    {
+      "id": "osc2.sync",
+      "module": "osc2",
+      "label": "SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "sync"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Free or hard-synced to Osc 1."
+    },
+    {
+      "id": "osc3.tune",
+      "module": "osc3",
+      "label": "TUNE (Osc 3)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.05,
+        "max": 500,
+        "unit": "Hz"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Rate 0.05-500 Hz."
+    },
+    {
+      "id": "osc3.shape",
+      "module": "osc3",
+      "label": "SHAPE (Osc 3)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Shapes both waves (triangle towards ramp)."
+    },
+    {
+      "id": "osc3.tri_level",
+      "module": "osc3",
+      "label": "LEVEL (triangle)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Triangle/ramp level into the matrix."
+    },
+    {
+      "id": "osc3.pulse_level",
+      "module": "osc3",
+      "label": "LEVEL (pulse)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse level into the matrix."
+    },
+    {
+      "id": "osc3.key_follow",
+      "module": "osc3",
+      "label": "FREE / KEY FOL",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "key_follow"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Free-running, or following CV1."
+    },
+    {
+      "id": "snh.rate",
+      "module": "snh",
+      "label": "S&H RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Internal sampling rate."
+    },
+    {
+      "id": "snh.level",
+      "module": "snh",
+      "label": "LEVEL (S&H)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "S&H output level."
+    },
+    {
+      "id": "snh.clock",
+      "module": "snh",
+      "label": "FREE / GATE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "free"
+        },
+        {
+          "value": "gate"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Sample on the internal clock or on each gate."
+    },
+    {
+      "id": "osc3sel.select",
+      "module": "osc3sel",
+      "label": "OSC 3 / S&H",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "osc3"
+        },
+        {
+          "value": "snh"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which signal goes to matrix row 5."
+    },
+    {
+      "id": "noise.tone",
+      "module": "noise",
+      "label": "NOISE TONE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Colour from low (left) to high (right)."
+    },
+    {
+      "id": "noise.level",
+      "module": "noise",
+      "label": "LEVEL (noise)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise level into the matrix."
+    },
+    {
+      "id": "in1.level",
+      "module": "in1",
+      "label": "LEVEL (Input 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Input 1 level."
+    },
+    {
+      "id": "in1.thresh",
+      "module": "in1",
+      "label": "THRESH",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Gate detection threshold."
+    },
+    {
+      "id": "in1.decay",
+      "module": "in1",
+      "label": "DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope follower decay."
+    },
+    {
+      "id": "in1.ef_level",
+      "module": "in1",
+      "label": "EF LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope follower output, attenuverted (left inverts, for ducking)."
+    },
+    {
+      "id": "in1.to_gate",
+      "module": "in1",
+      "label": "TO GATE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Adds the extracted gate to the gate OR."
+    },
+    {
+      "id": "in2.gain",
+      "module": "in2",
+      "label": "MIC / LINE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mic"
+        },
+        {
+          "value": "line"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Input 2 gain range."
+    },
+    {
+      "id": "in2.level",
+      "module": "in2",
+      "label": "LEVEL (Input 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Input 2 level; overdrives at high settings."
+    },
+    {
+      "id": "in2.polarity",
+      "module": "in2",
+      "label": "DIRECT / INVERT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "direct"
+        },
+        {
+          "value": "invert"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Inverts Input 2."
+    },
+    {
+      "id": "vcf.hpf",
+      "module": "vcf",
+      "label": "HPF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "High-pass cutoff (0 fully open)."
+    },
+    {
+      "id": "vcf.lpf",
+      "module": "vcf",
+      "label": "LPF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Low-pass cutoff (10 fully open)."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Emphasis; self-oscillates from 7."
+    },
+    {
+      "id": "vcf.cv_target",
+      "module": "vcf",
+      "label": "HPF / LPF",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "hpf"
+        },
+        {
+          "value": "both"
+        },
+        {
+          "value": "lpf"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which cutoff the Filter Frequency CV moves (centre: both)."
+    },
+    {
+      "id": "vcf.level",
+      "module": "vcf",
+      "label": "LEVEL (filter)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter output level into the matrix."
+    },
+    {
+      "id": "ring.source_b",
+      "module": "ring",
+      "label": "SOURCE B",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "unspecified"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Ring mod carrier source.",
+      "confidence": "inferred",
+      "note": "Positions not listed in the manual."
+    },
+    {
+      "id": "ring.level",
+      "module": "ring",
+      "label": "LEVEL (ring mod)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Ring mod output level."
+    },
+    {
+      "id": "trap.attack",
+      "module": "trap",
+      "label": "ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.006,
+        "max": 0.85,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Attack 6-850 ms."
+    },
+    {
+      "id": "trap.on",
+      "module": "trap",
+      "label": "ON",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0,
+        "max": 1.5,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "On time 0-1.5 s (ignored with an external gate)."
+    },
+    {
+      "id": "trap.decay",
+      "module": "trap",
+      "label": "DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.016,
+        "max": 2,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay 16 ms-2 s."
+    },
+    {
+      "id": "trap.off",
+      "module": "trap",
+      "label": "OFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "physical": {
+        "min": 0.014,
+        "max": 1.3,
+        "unit": "s"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Off time 14 ms-1.3 s; above 9 stops looping."
+    },
+    {
+      "id": "trap.level",
+      "module": "trap",
+      "label": "TRAPEZOID",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope CV level into the matrix."
+    },
+    {
+      "id": "trapvca.signal",
+      "module": "trapvca",
+      "label": "SIGNAL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCA output level into the matrix."
+    },
+    {
+      "id": "fx.type",
+      "module": "fx",
+      "label": "DELAY / REVERB",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "delay"
+        },
+        {
+          "value": "reverb"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Effect type."
+    },
+    {
+      "id": "fx.time",
+      "module": "fx",
+      "label": "TIME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Delay time, or reverb size; motion recordable."
+    },
+    {
+      "id": "fx.feedback",
+      "module": "fx",
+      "label": "FEEDBACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Repeats (self-oscillates), or reverb feedback (loops at maximum)."
+    },
+    {
+      "id": "fx.level",
+      "module": "fx",
+      "label": "LEVEL (effects)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Wet level into the matrix."
+    },
+    {
+      "id": "joy.x_level",
+      "module": "joy",
+      "label": "X LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Range of the X CV."
+    },
+    {
+      "id": "joy.y_level",
+      "module": "joy",
+      "label": "Y LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Range of the Y CV."
+    },
+    {
+      "id": "joy.stick",
+      "module": "joy",
+      "label": "JOYSTICK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "Two-axis bipolar CV, ±5 V."
+    },
+    {
+      "id": "out1.filter",
+      "module": "out1",
+      "label": "OUTPUT FILTER (ch 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone: flat at 5, bass boost left, treble right."
+    },
+    {
+      "id": "out1.level",
+      "module": "out1",
+      "label": "LEVEL (ch 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level, plus the matrix CV."
+    },
+    {
+      "id": "out1.pan",
+      "module": "out1",
+      "label": "PAN (ch 1)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Stereo position."
+    },
+    {
+      "id": "out2.filter",
+      "module": "out2",
+      "label": "OUTPUT FILTER (ch 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Tone: flat at 5, bass boost left, treble right."
+    },
+    {
+      "id": "out2.level",
+      "module": "out2",
+      "label": "LEVEL (ch 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level, plus the matrix CV."
+    },
+    {
+      "id": "out2.pan",
+      "module": "out2",
+      "label": "PAN (ch 2)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Stereo position."
+    },
+    {
+      "id": "scope.mode",
+      "module": "scope",
+      "label": "AUDIO / CV",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "audio"
+        },
+        {
+          "value": "cv"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Meter scale: audio (to about 4.5 V) or bipolar CV."
+    },
+    {
+      "id": "ui.gate",
+      "module": "ctl",
+      "label": "GATE/SEQ",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Fires the Trapezoid; SHIFT + it opens the sequencer."
+    },
+    {
+      "id": "ui.rec",
+      "module": "ctl",
+      "label": "REC/CLEAR",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Records joystick, gate or TIME motion; double tap clears."
+    },
+    {
+      "id": "ui.save",
+      "module": "ctl",
+      "label": "SAVE",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Saves the patch."
+    },
+    {
+      "id": "ui.recall",
+      "module": "ctl",
+      "label": "RECALL",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Recalls a patch; SHIFT + it turns the matrix off (or resets the sequencer note)."
+    },
+    {
+      "id": "ui.patch",
+      "module": "ctl",
+      "label": "< PATCH >",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Steps through saved patches; SHIFT + > randomises; sequencer start/stop."
+    },
+    {
+      "id": "ui.shift",
+      "module": "ctl",
+      "label": "SHIFT",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions."
+    },
+    {
+      "id": "ui.encoders",
+      "module": "ctl",
+      "label": "X / Y encoders",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder"
+        }
+      ],
+      "function": "Move around the matrix; push to set points (left: gain 1, 0.7, 0.3, off; right: 1 or off)."
+    },
+    {
+      "id": "cfg.portamento",
+      "module": "ctl",
+      "label": "P-TM",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), P-TM"
+        }
+      ],
+      "function": "Portamento time for sequencer and MIDI, 0-100 (100 = 1 s)."
+    },
+    {
+      "id": "cfg.rnd_density",
+      "module": "ctl",
+      "label": "RNDD",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 80
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), RNDD"
+        }
+      ],
+      "function": "Random patch density, 0-80%."
+    },
+    {
+      "id": "cfg.rnd_area",
+      "module": "ctl",
+      "label": "RNDA",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "area"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), RNDA"
+        }
+      ],
+      "function": "Area of the matrix used for random patches."
+    },
+    {
+      "id": "cfg.seq_gate",
+      "module": "ctl",
+      "label": "SQGL",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "15%"
+        },
+        {
+          "value": "30%"
+        },
+        {
+          "value": "50%"
+        },
+        {
+          "value": "65%"
+        },
+        {
+          "value": "80%"
+        },
+        {
+          "value": "100%"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), SQGL"
+        }
+      ],
+      "function": "Default sequencer gate length."
+    },
+    {
+      "id": "cfg.delay_length",
+      "module": "fx",
+      "label": "DELL",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "short"
+        },
+        {
+          "value": "long"
+        }
+      ],
+      "default": "short",
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), DELL"
+        }
+      ],
+      "function": "Delay time range."
+    },
+    {
+      "id": "cfg.reverb_feedback",
+      "module": "fx",
+      "label": "REV F",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), REV F"
+        }
+      ],
+      "function": "Reverb FEEDBACK knob gives feedback (looping) instead of tone."
+    },
+    {
+      "id": "cfg.fx_mode",
+      "module": "fx",
+      "label": "FX BD",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), FX BD"
+        }
+      ],
+      "function": "Effects in BBD mode (on) or tape mode (off)."
+    },
+    {
+      "id": "cfg.midi_channel",
+      "module": "ctl",
+      "label": "M-CH",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), M-CH"
+        }
+      ],
+      "function": "MIDI channel; 0 = omni."
+    },
+    {
+      "id": "cfg.clock_source",
+      "module": "ctl",
+      "label": "CLKS",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "midi"
+        },
+        {
+          "value": "int"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), CLKS"
+        }
+      ],
+      "function": "Sequencer clock."
+    },
+    {
+      "id": "cfg.clock_div",
+      "module": "ctl",
+      "label": "CLKD",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1"
+        },
+        {
+          "value": "/2"
+        },
+        {
+          "value": "/4"
+        },
+        {
+          "value": "/8"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), CLKD"
+        }
+      ],
+      "function": "MIDI clock division."
+    },
+    {
+      "id": "cfg.bend_range",
+      "module": "ctl",
+      "label": "M-PB",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 12
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), M-PB"
+        }
+      ],
+      "function": "Pitch bend range in semitones."
+    },
+    {
+      "id": "cfg.note_offset",
+      "module": "ctl",
+      "label": "M-NO",
+      "kind": "integer",
+      "range": {
+        "min": -36,
+        "max": 36
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), M-NO"
+        }
+      ],
+      "function": "MIDI note offset, up to 3 octaves.",
+      "note": "Direction of the offset range not stated."
+    },
+    {
+      "id": "cfg.vel_cutoff",
+      "module": "vcf",
+      "label": "VELC",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), VELC"
+        }
+      ],
+      "function": "Velocity to filter cutoff depth."
+    },
+    {
+      "id": "cfg.key_cutoff",
+      "module": "vcf",
+      "label": "KEYC",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), KEYC"
+        }
+      ],
+      "function": "Keyboard tracking depth of the filter."
+    },
+    {
+      "id": "cfg.cc_x",
+      "module": "joy",
+      "label": "CC X",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 70,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), CC X"
+        }
+      ],
+      "function": "MIDI CC added to joystick X."
+    },
+    {
+      "id": "cfg.cc_y",
+      "module": "joy",
+      "label": "CC Y",
+      "kind": "integer",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "default": 71,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), CC Y"
+        }
+      ],
+      "function": "MIDI CC added to joystick Y."
+    },
+    {
+      "id": "cfg.patch_view",
+      "module": "ctl",
+      "label": "P-VW",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "mtx"
+        },
+        {
+          "value": "num"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), P-VW"
+        }
+      ],
+      "function": "Patch memory shown as a grid or numbers."
+    },
+    {
+      "id": "cfg.matrix_dim",
+      "module": "ctl",
+      "label": "MX D",
+      "kind": "boolean",
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "configuration screen (SHIFT + < PATCH), MX D"
+        }
+      ],
+      "function": "Dims the matrix LEDs."
+    },
+    {
+      "id": "seq.steps",
+      "module": "ctl",
+      "label": "Sequencer last step",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "default": 16,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "sequencer screen: SHIFT + turn X encoder",
+          "when": "any_time"
+        }
+      ],
+      "function": "Sequence length."
+    },
+    {
+      "id": "seq.bpm",
+      "module": "ctl",
+      "label": "Sequencer BPM",
+      "kind": "integer",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "sequencer screen: SHIFT + turn Y encoder",
+          "when": "any_time"
+        }
+      ],
+      "function": "Internal tempo.",
+      "confidence": "inferred",
+      "note": "Whether BPM is stored per patch is not stated."
+    },
+    {
+      "id": "seq.direction",
+      "module": "ctl",
+      "label": "Play direction",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fwd"
+        },
+        {
+          "value": "bwd"
+        },
+        {
+          "value": "pp"
+        },
+        {
+          "value": "rnd"
+        },
+        {
+          "value": "man"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "sequencer screen: hold < PATCH and turn X (direction) or Y (manual)",
+          "when": "any_time"
+        }
+      ],
+      "function": "Forward, backward, ping-pong, random, or manual step advance."
+    },
+    {
+      "id": "sys.power",
+      "module": "master",
+      "label": "Power switch",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power on or off."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out1",
+      "label": "OUTPUT 1",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "master.out1",
+      "function": "Line output 1.",
+      "confidence": "inferred",
+      "note": "Connector size not stated."
+    },
+    {
+      "id": "jack.out2",
+      "label": "OUTPUT 2",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "master.out2",
+      "function": "Line output 2.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.phones",
+      "label": "HEADPHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "master.phones",
+      "function": "Headphones.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.scope_out",
+      "label": "SCOPE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv_or_audio",
+      "connector": "3.5 mm TS",
+      "node": "scope.out",
+      "function": "Whatever is patched to the Scope column; normalled to both inputs.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.in1",
+      "label": "INPUT 1",
+      "location": "rear",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "in1.in",
+      "function": "External audio with envelope follower; normalled from SCOPE OUT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.in2",
+      "label": "INPUT 2",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv_or_audio",
+      "connector": "6.35 mm TS",
+      "node": "in2.in",
+      "function": "DC-coupled external input; normalled from SCOPE OUT.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.cv1",
+      "label": "CV1 IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "ctl.cv1_in",
+      "function": "1 V/oct to all three oscillators (Osc 2 unless CV2 is used); MIDI note CV adds to it.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.cv2",
+      "label": "CV2 IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "ctl.cv2_in",
+      "function": "1 V/oct to Osc 2 only, overriding CV1 there.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.gate",
+      "label": "GATE IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "ctl.gate_in",
+      "function": "Fires the Trapezoid (set non-looping).",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "ctl.midi_in",
+      "function": "Notes, gate, pitch wheel, mod wheel, velocity and two CCs; SysEx firmware."
+    },
+    {
+      "id": "jack.midi_thru",
+      "label": "MIDI THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "Copy of MIDI IN."
+    },
+    {
+      "id": "jack.power",
+      "label": "12V DC",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "Supplied 12 V DC adaptor, centre positive."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "ctl.cv1",
+      "to": "osc1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "ctl.cv1",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.cv2",
+      "note": "CV2 takes over Osc 2."
+    },
+    {
+      "id": "c03",
+      "from": "ctl.cv2",
+      "to": "osc2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c04",
+      "from": "ctl.cv1",
+      "to": "osc3.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc3.key_follow",
+        "equals": "key_follow"
+      }
+    },
+    {
+      "id": "c05",
+      "from": "ctl.gate",
+      "to": "trap.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c06",
+      "from": "ctl.gate",
+      "to": "snh.gate",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "snh.clock",
+        "equals": "gate"
+      }
+    },
+    {
+      "id": "c07",
+      "from": "in1.gate",
+      "to": "ctl.gate_in",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "in1.to_gate",
+        "equals": true
+      },
+      "note": "ORed with the other gates."
+    },
+    {
+      "id": "c08",
+      "from": "ctl.cc_x",
+      "to": "joy.cc_x",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "ctl.cc_y",
+      "to": "joy.cc_y",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c10",
+      "from": "ctl.step_x",
+      "to": "joy.step_x",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Sequencer stepped modulation lane, added to the joystick."
+    },
+    {
+      "id": "c11",
+      "from": "ctl.step_y",
+      "to": "joy.step_y",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c12",
+      "from": "ctl.modwheel",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "ctl.velocity",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "cfg.vel_cutoff"
+    },
+    {
+      "id": "c14",
+      "from": "ctl.cv1",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "cfg.key_cutoff"
+    },
+    {
+      "id": "c15",
+      "from": "osc1.pulse",
+      "to": "osc2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.sync",
+        "equals": "sync"
+      }
+    },
+    {
+      "id": "c16",
+      "from": "osc3.pulse",
+      "to": "osc3sel.osc3",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c17",
+      "from": "snh.out",
+      "to": "osc3sel.snh",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c18",
+      "from": "trap.out",
+      "to": "trapvca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c19",
+      "from": "shapebus.out",
+      "to": "osc1.shape_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "Pulse width, sine shape or both, per OSC1 SHAPE."
+    },
+    {
+      "id": "c20",
+      "from": "shapebus.out",
+      "to": "osc2.shape_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "osc2.shape_cv_target",
+        "not_equals": "none"
+      },
+      "note": "Pulse width or saw shape, per OSC2 SHAPE; centre gives none."
+    },
+    {
+      "id": "c21",
+      "from": "scope.out",
+      "to": "in1.in",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.in1"
+    },
+    {
+      "id": "c22",
+      "from": "scope.out",
+      "to": "in2.in",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.in2"
+    },
+    {
+      "id": "c23",
+      "from": "out1.out",
+      "to": "master.ch1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out1.level"
+    },
+    {
+      "id": "c24",
+      "from": "out2.out",
+      "to": "master.ch2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out2.level"
+    }
+  ],
+  "patch_matrix": {
+    "kind": "switch",
+    "size": "16 x 16 (256 points)",
+    "rows": [
+      {
+        "id": "1",
+        "label": "Oscillator 1 pulse",
+        "node": "osc1.pulse",
+        "level_param": "osc1.pulse_level"
+      },
+      {
+        "id": "2",
+        "label": "Oscillator 1 sine",
+        "node": "osc1.sine",
+        "level_param": "osc1.sine_level"
+      },
+      {
+        "id": "3",
+        "label": "Oscillator 2",
+        "node": "osc2.out"
+      },
+      {
+        "id": "4",
+        "label": "Oscillator 3 triangle/ramp",
+        "node": "osc3.tri",
+        "level_param": "osc3.tri_level"
+      },
+      {
+        "id": "5",
+        "label": "Oscillator 3 pulse / S&H",
+        "node": "osc3sel.out"
+      },
+      {
+        "id": "6",
+        "label": "Noise",
+        "node": "noise.out",
+        "level_param": "noise.level"
+      },
+      {
+        "id": "7",
+        "label": "Input 1",
+        "node": "in1.out",
+        "level_param": "in1.level"
+      },
+      {
+        "id": "8",
+        "label": "Envelope follower",
+        "node": "in1.env",
+        "level_param": "in1.ef_level"
+      },
+      {
+        "id": "9",
+        "label": "Input 2",
+        "node": "in2.out",
+        "level_param": "in2.level"
+      },
+      {
+        "id": "10",
+        "label": "Filter",
+        "node": "vcf.out",
+        "level_param": "vcf.level"
+      },
+      {
+        "id": "11",
+        "label": "Trapezoid (CV)",
+        "node": "trap.out",
+        "level_param": "trap.level"
+      },
+      {
+        "id": "12",
+        "label": "Env. signal (VCA out)",
+        "node": "trapvca.out",
+        "level_param": "trapvca.signal"
+      },
+      {
+        "id": "13",
+        "label": "Ring mod",
+        "node": "ring.out",
+        "level_param": "ring.level"
+      },
+      {
+        "id": "14",
+        "label": "Effects",
+        "node": "fx.out",
+        "level_param": "fx.level"
+      },
+      {
+        "id": "15",
+        "label": "Joystick Y (vertical) + MIDI CC Y",
+        "node": "joy.y",
+        "level_param": "joy.y_level"
+      },
+      {
+        "id": "16",
+        "label": "Joystick X (horizontal) + MIDI CC X",
+        "node": "joy.x",
+        "level_param": "joy.x_level"
+      }
+    ],
+    "columns": [
+      {
+        "id": "A",
+        "label": "Ch1 Output",
+        "node": "out1.in",
+        "class": "signal"
+      },
+      {
+        "id": "B",
+        "label": "Ch2 Output",
+        "node": "out2.in",
+        "class": "signal"
+      },
+      {
+        "id": "C",
+        "label": "Scope",
+        "node": "scope.in",
+        "class": "monitor"
+      },
+      {
+        "id": "D",
+        "label": "Envelope Signal (VCA in)",
+        "node": "trapvca.in",
+        "class": "signal"
+      },
+      {
+        "id": "E",
+        "label": "Ringmod A",
+        "node": "ring.a",
+        "class": "signal"
+      },
+      {
+        "id": "F",
+        "label": "Effects",
+        "node": "fx.in",
+        "class": "signal"
+      },
+      {
+        "id": "G",
+        "label": "Filter",
+        "node": "vcf.in",
+        "class": "signal"
+      },
+      {
+        "id": "H",
+        "label": "Oscillator frequency 1",
+        "node": "osc1.pitch_cv",
+        "class": "control",
+        "offset_param": "osc1.tune"
+      },
+      {
+        "id": "I",
+        "label": "Oscillator frequency 2",
+        "node": "osc2.pitch_cv",
+        "class": "control",
+        "offset_param": "osc2.tune"
+      },
+      {
+        "id": "J",
+        "label": "Oscillator frequency 3",
+        "node": "osc3.pitch_cv",
+        "class": "control",
+        "offset_param": "osc3.tune"
+      },
+      {
+        "id": "K",
+        "label": "Oscillator Shape",
+        "node": "shapebus.in",
+        "class": "control",
+        "offset_param": "osc1.shape"
+      },
+      {
+        "id": "L",
+        "label": "S&H Input",
+        "node": "snh.in",
+        "class": "signal"
+      },
+      {
+        "id": "M",
+        "label": "Decay",
+        "node": "trap.decay_cv",
+        "class": "control",
+        "offset_param": "trap.decay"
+      },
+      {
+        "id": "N",
+        "label": "Filter Frequency",
+        "node": "vcf.cutoff_cv",
+        "class": "control",
+        "offset_param": "vcf.lpf"
+      },
+      {
+        "id": "O",
+        "label": "Output ch. level 1",
+        "node": "out1.cv",
+        "class": "control",
+        "offset_param": "out1.level"
+      },
+      {
+        "id": "P",
+        "label": "Output ch. level 2",
+        "node": "out2.cv",
+        "class": "control",
+        "offset_param": "out2.level"
+      }
+    ],
+    "pins": [
+      {
+        "name": "gain 1",
+        "resistance_ohm": null,
+        "purpose": "full-level connection (first push of either encoder)"
+      },
+      {
+        "name": "gain 0.7",
+        "resistance_ohm": null,
+        "purpose": "attenuated connection (second push of the left encoder)"
+      },
+      {
+        "name": "gain 0.3",
+        "resistance_ohm": null,
+        "purpose": "attenuated connection (third push of the left encoder)"
+      }
+    ],
+    "combine": "sum",
+    "electrical": {
+      "internal_audio_vpp": 3.7,
+      "cv_range_v": [-5, 5]
+    },
+    "note": "Digitally controlled analogue mixer/buffered multiple: up to 16 inputs mix into one column without loss, one row feeds up to 16 columns. Letters A-P and numbers 1-16 are for reference; the panel labels rows and columns by name. Column order follows the panel; the order of S&H Input and Decay is read from the panel art. Oscillator Shape reaches Osc 1 and Osc 2 according to their shape switches; Filter Frequency reaches HPF, LPF or both per its switch. Row 3 carries Osc 2's pulse and saw already mixed by their levels."
+  },
+  "example_patches": [
+    {
+      "id": "basic",
+      "name": "Basic patch",
+      "pins": ["A1", "A2"],
+      "description": "Osc 1 pulse and sine to channel 1. Set channel 1 level, pan centre.",
+      "source": "manual p.19",
+      "confidence": "stated"
+    },
+    {
+      "id": "filtered",
+      "name": "Filtered oscillator",
+      "pins": ["G1", "A10"],
+      "description": "Osc 1 pulse through the filter to channel 1.",
+      "source": "manual p.19",
+      "confidence": "stated"
+    },
+    {
+      "id": "trapezoid_vca",
+      "name": "Looping VCA",
+      "pins": ["G1", "D10", "A12"],
+      "description": "Osc 1 pulse, filter, Trapezoid VCA, channel 1: the looping envelope pulses the level.",
+      "source": "manual p.20",
+      "confidence": "stated"
+    },
+    {
+      "id": "modulation",
+      "name": "Modulation madness",
+      "pins": ["G1", "D10", "A12", "N4", "K16", "H15"],
+      "description": "As the looping VCA patch, with Osc 3 triangle/ramp on filter frequency, joystick X on oscillator shape (Osc 1 pulse width) and joystick Y on Osc 1 pitch. Record joystick motion for automation.",
+      "source": "manual p.21",
+      "confidence": "stated"
+    },
+    {
+      "id": "stereo_pan",
+      "name": "Stereo panning",
+      "pins": ["A1", "B1", "C4", "O4", "P9"],
+      "description": "Osc 1 pulse to both channels (ch 1 panned left, ch 2 right). Osc 3 triangle to the scope and channel 1 level; the scope output is normalled to Input 2, set to LINE and INVERT, which drives channel 2 level: an auto-pan.",
+      "settings": {
+        "in2.gain": "line",
+        "in2.polarity": "invert",
+        "out1.pan": -5,
+        "out2.pan": 5
+      },
+      "source": "manual p.22",
+      "confidence": "stated"
+    },
+    {
+      "id": "effects",
+      "name": "Dry/wet effects",
+      "pins": ["D1", "A12", "F12", "A14"],
+      "description": "Osc 1 pulse through the Trapezoid VCA to channel 1 (dry) and to the effects, whose wet output also goes to channel 1.",
+      "source": "manual p.23",
+      "confidence": "stated"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "matrix_leds",
+      "module": "ctl",
+      "label": "matrix LEDs",
+      "kind": "led",
+      "function": "Patch points at three brightness levels (gain 1, 0.7, 0.3); also patch memory, sequencer notes, gate lengths, BPM and configuration text."
+    },
+    {
+      "id": "trap_led",
+      "module": "trap",
+      "label": "Trapezoid LED",
+      "kind": "led",
+      "function": "Envelope state."
+    },
+    {
+      "id": "ef_led",
+      "module": "in1",
+      "label": "envelope follower gate LED",
+      "kind": "led",
+      "function": "Lit when a gate is detected."
+    },
+    {
+      "id": "joy_leds",
+      "module": "joy",
+      "label": "joystick LEDs",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "Bicolour feedback of the recorded CVs."
+    },
+    {
+      "id": "meter",
+      "module": "scope",
+      "label": "SCOPE meter",
+      "kind": "meter",
+      "function": "Audio level (to about 4.5 V) or bipolar CV."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Patching",
+      "applies_to": ["ctl"],
+      "rule": "No sound until a patch is made. Move with the X/Y encoders (or SHIFT + joystick); the left encoder cycles gain 1, 0.7, 0.3, off; the right toggles gain 1 or off. SHIFT + encoder previews a point while held; SHIFT + right encoder + joystick draws points."
+    },
+    {
+      "id": "b02",
+      "name": "Patch memory",
+      "applies_to": ["ctl"],
+      "rule": "256 patches: SAVE, choose a slot, push an encoder; RECALL to load; < PATCH > to step through; SHIFT + PATCH > for a random patch within the set density and area. Autosaves every 30 s. Knob positions are not stored."
+    },
+    {
+      "id": "b03",
+      "name": "Trapezoid",
+      "applies_to": ["trap", "trapvca"],
+      "rule": "Loops attack, on, decay, off by default; OFF above 9 makes it one-shot, fired by gates, the envelope follower or the GATE button. With an external gate, ON is the gate length. Decay is voltage controlled; the built-in VCA takes the Envelope Signal column."
+    },
+    {
+      "id": "b04",
+      "name": "Filter",
+      "applies_to": ["vcf"],
+      "rule": "HPF and LPF in series: LPF at 10 is pure high-pass, HPF at 0 pure low-pass, otherwise band-pass with adjustable width and centre. Audio-rate modulation works; resonance from 7 makes a sine oscillator."
+    },
+    {
+      "id": "b05",
+      "name": "Effects are wet only",
+      "applies_to": ["fx"],
+      "rule": "Send the dry signal and the effects row to the same output for a mix. TIME knob motion can be recorded (8 s, not saved)."
+    },
+    {
+      "id": "b06",
+      "name": "Sequencer",
+      "applies_to": ["ctl"],
+      "rule": "SHIFT + GATE/SEQ turns the matrix into a 16-step piano roll: rows 1-12 semitones (three octaves by brightness), row 13 length, rows 14-16 gate length (15-100%). The CV goes to all oscillators. Two stepped modulation lanes (21 levels, ±5 V) add to joystick Y and X. Saved with the patch."
+    },
+    {
+      "id": "b07",
+      "name": "Joystick and MIDI CCs",
+      "applies_to": ["joy"],
+      "rule": "Joystick X and Y (±5 V by their levels) appear on rows 16 and 15; MIDI CCs (default 70 and 71) and the stepped lanes add to them. Motion and gate patterns record for 8 s and overdub."
+    },
+    {
+      "id": "b08",
+      "name": "MIDI and CV",
+      "applies_to": ["ctl"],
+      "rule": "One MIDI note at a time, high-note priority; MIDI note CV adds to CV1/CV2. Mod wheel and velocity reach the filter cutoff; pitch bend range 0-12. SHIFT + REC/CLEAR for 3 s sends MIDI panic."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "high-note priority; velocity to filter cutoff (VELC)"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "0-12 semitones"
+      },
+      {
+        "message": "control_change",
+        "cc": 1,
+        "parameter": "filter cutoff (mod wheel)"
+      },
+      {
+        "message": "control_change",
+        "cc": 70,
+        "parameter": "joystick X (assignable)"
+      },
+      {
+        "message": "control_change",
+        "cc": 71,
+        "parameter": "joystick Y (assignable)"
+      },
+      {
+        "message": "clock",
+        "note": "sequencer clock with division 1, /2, /4, /8"
+      },
+      {
+        "message": "sysex",
+        "note": "firmware update only"
+      }
+    ],
+    "transmits": [],
+    "channel_note": "Channel 1-16 or 0 (omni); MIDI THRU passes input on.",
+    "note": "No patch dumps over MIDI."
+  },
+  "specifications": {
+    "oscillators": "3 (two audio C0-C8, one 0.05-500 Hz)",
+    "filter": "HP and LP in series, resonant",
+    "envelope": "Trapezoid: attack 6-850 ms, on 0-1.5 s, decay 16 ms-2 s, off 14 ms-1.3 s",
+    "matrix": "16 x 16, 3 gain levels, 256 patch memories",
+    "sequencer": "16 steps, 3 octaves, 6 gate lengths",
+    "effects": "delay (to 0.5 s or 3 s) and reverb, tape or BBD mode",
+    "inputs": [
+      "Input 1 with envelope follower",
+      "Input 2 line/mic, DC coupled",
+      "CV1",
+      "CV2",
+      "gate",
+      "MIDI in"
+    ],
+    "outputs": ["Output 1", "Output 2", "headphones", "scope out", "MIDI thru"],
+    "power": "12 V DC, centre positive",
+    "internal_levels": "audio about 3.7 Vpp; CV ±5 V"
+  },
+  "omitted_from_source": [
+    "safety, disposal and warranty",
+    "interface illustration labels beyond control names",
+    "firmware update procedure steps",
+    "MIDI DAC calibration steps"
+  ],
+  "not_in_source": [
+    "ring mod SOURCE B positions",
+    "jack sizes",
+    "dimensions, weight and power draw",
+    "output levels",
+    "matrix column order beyond the panel art"
+  ],
+  "source_inconsistencies": [
+    "Input 1's normalling text says the scope output is routed 'if nothing is patched into the INPUT 2 jack', copied from the Input 2 text.",
+    "The factory reset text says the 'firmware update screen will appear' and 'proceed with the FW update', in a reset procedure.",
+    "The joystick is on 'pins 15 and 16' of the matrix; the matrix list gives vertical then horizontal, taken here as rows 15 (Y) and 16 (X).",
+    "The modulation example calls Osc 3's output a sawtooth; its row is the triangle/ramp wave."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Matrix references",
+      "detail": "Letters and numbers are added for reference; the panel uses names only."
+    },
+    {
+      "topic": "Sequencer and lanes",
+      "detail": "Step data (notes, gates, stepped lanes) is described, not modelled as parameters."
+    },
+    {
+      "topic": "Recordable motion",
+      "detail": "Joystick, gate and TIME recordings (8 s each) are performance data and not saved."
+    }
+  ]
+}

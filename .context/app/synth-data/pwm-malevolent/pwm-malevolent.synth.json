@@ -1,0 +1,2222 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "pwm-malevolent",
+    "manufacturer": "PWM (Paul Whittington Group)",
+    "model": "Malevolent Modular Pure Analogue Synthesiser",
+    "category": "semi-modular analogue monosynth, 32 velocity-sensitive mini keys, 19 inputs and 19 outputs",
+    "based_on": "Original design (UK, 2022); analogue signal path by Future Sound Systems.",
+    "sources": [
+      {
+        "id": "guide",
+        "title": "PWM Malevolent Getting Started Guide (doc v4.1)",
+        "kind": "quick_start_guide",
+        "file": "PWM_Malevolent_Getting_Started_Guide.pdf",
+        "pages": 12,
+        "note": "Box contents, power, outputs, first sound, tuning (octave stretch), USB-MIDI, channel select, local off, resets."
+      },
+      {
+        "id": "specs",
+        "title": "PWM, 'Malevolent Specifications' and 'Connectivity' pages",
+        "kind": "spec_sheet",
+        "file": "https://www.1pwm.com/malevolentspecifications",
+        "note": "Section list, 19/19 patch points, arpeggiator, keyboard, dimensions, weight, price; rear panel connections."
+      },
+      {
+        "id": "patch_sheets",
+        "title": "Suren Forward patch sheets (8)",
+        "kind": "other",
+        "file": "Suren_Forward_Patch_Sheets.zip",
+        "note": "Full top-panel graphic: every control and jack label and the printed normal under each input; eight patches transcribed as example patches."
+      },
+      {
+        "id": "paul_patches",
+        "title": "Paul Whittington patch sheets (3)",
+        "kind": "other",
+        "file": "Pauls_Patches.zip",
+        "note": "Nasty Bass FX, Reece Bass, Sweet Lead: cables, wave buttons and knob positions."
+      },
+      {
+        "id": "reviews",
+        "title": "Sound On Sound, MusicRadar, Molten Music Technology, Synth and Software, Gearnews reviews",
+        "kind": "other",
+        "file": "https://www.soundonsound.com/reviews/pwm-malevolent",
+        "note": "Joystick functions (bend, glide, vibrato, hold, latch), arpeggiator mode selection, dedicated vibrato LFO."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic (sends polyphonic MIDI as a controller)",
+    "poly_chain_max_units": null,
+    "patch_memory": false,
+    "patch_memory_note": "No presets; MIDI channel, octave stretch, bend range and hold mode are remembered.",
+    "semi_modular": true,
+    "panel_counts": {
+      "keys": 32,
+      "patch_inputs": 19,
+      "patch_outputs": 19
+    },
+    "summary": "Two 4046-core VCOs with saw, triangle and pulse outputs plus an OUT that mixes whichever waves are selected by three buttons; shape (pulse width / wave shaping) with mod amount, and two FM inputs with amounts, normalled to LFO triangle, Env 1 and LFO triangle. A mixer adds noise and an aux input (VCO levels sit in the VCO sections). The opto-FET 2-pole Sallen-Key filter has separate low-pass, band-pass and high-pass inputs (low-pass normalled from the mix) and two FM inputs. Two ADSRs with separate gates; a VCA with drive, two AM inputs (Env 2, LFO triangle) and a drone/gated switch. Keys output pitch, velocity and gate; the joystick bends, glides, adds vibrato and holds."
+  },
+  "modules": [
+    {
+      "id": "keys",
+      "type": "voice_allocator",
+      "name": "Keyboard, joystick and arpeggiator",
+      "panel_section": "KEYS / keyboard section",
+      "description": "32 velocity-sensitive mini keys (octave ±4); MIDI/USB to 1V/oct CV and gate (analogue pitch and gate path); arpeggiator; hold; local off.",
+      "properties": {
+        "keys": 32
+      },
+      "inputs": ["keys.midi_in", "keys.clock_in", "keys.joy"],
+      "outputs": ["keys.pitch", "keys.velocity", "keys.gate", "keys.clock_out"]
+    },
+    {
+      "id": "joy",
+      "type": "manual_controller",
+      "name": "Joystick",
+      "panel_section": "left of the keyboard",
+      "description": "X: pitch bend. Y up: glide (more = slower), or vibrato depth with VIBRATO on (dedicated ~5 Hz vibrato LFO). Y down: momentary hold; click: latching hold.",
+      "inputs": [],
+      "outputs": ["joy.out"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "description": "Analogue LFO with triangle and square outputs and RATE; LED.",
+      "inputs": [],
+      "outputs": ["lfo.tri", "lfo.square"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "VCO 1",
+      "panel_section": "VCO 1",
+      "description": "4046-based VCO: saw, triangle, pulse outputs; OUT mixes the waves selected by the three buttons; shape with mod amount; two FM inputs with amounts; coarse, fine; level to the mixer.",
+      "inputs": ["vco1.voct", "vco1.shape", "vco1.fm1", "vco1.fm2"],
+      "outputs": ["vco1.saw", "vco1.tri", "vco1.pulse", "vco1.out"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "VCO 2",
+      "panel_section": "VCO 2",
+      "description": "4046-based VCO: saw, triangle, pulse outputs; OUT mixes the waves selected by the three buttons; shape with mod amount; two FM inputs with amounts; coarse, fine; level to the mixer.",
+      "inputs": ["vco2.voct", "vco2.shape", "vco2.fm1", "vco2.fm2"],
+      "outputs": ["vco2.saw", "vco2.tri", "vco2.pulse", "vco2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise",
+      "panel_section": "MIXER",
+      "description": "Noise source with output jack and mixer level.",
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "Sums VCO 1 and VCO 2 (levels in the VCO sections), noise and the aux input.",
+      "inputs": ["mixer.vco1", "mixer.vco2", "mixer.noise", "mixer.aux"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF",
+      "panel_section": "VCF",
+      "description": "Opto-FET controlled 2-pole Sallen-Key multimode filter: separate low-pass, band-pass and high-pass inputs into one output; cutoff, resonance (self-oscillates early); two FM inputs.",
+      "properties": {
+        "poles": 2,
+        "topology": "Sallen-Key",
+        "control": "opto-FET"
+      },
+      "inputs": ["vcf.lp", "vcf.bp", "vcf.hp", "vcf.fm1", "vcf.fm2"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "env1",
+      "type": "envelope",
+      "name": "Envelope 1",
+      "panel_section": "ENV 1",
+      "description": "ADSR with its own gate input and output.",
+      "inputs": ["env1.gate"],
+      "outputs": ["env1.out"]
+    },
+    {
+      "id": "env2",
+      "type": "envelope",
+      "name": "Envelope 2",
+      "panel_section": "ENV 2",
+      "description": "ADSR with its own gate input and output.",
+      "inputs": ["env2.gate"],
+      "outputs": ["env2.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVS (unlabelled VCA section)",
+      "description": "VCA with input (normalled from the filter), DRIVE (overdrive), AM 1 (Env 2) and AM 2 (LFO triangle) inputs with amounts, and a DRONE / GATED switch.",
+      "inputs": ["vca.in", "vca.am1", "vca.am2"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "OUT / rear panel",
+      "description": "Top-panel OUT (3.5 mm, unaffected by MASTER VOL); MASTER VOL to the rear line out and headphones.",
+      "inputs": ["out.in"],
+      "outputs": ["out.patch", "out.line", "out.phones"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "keys.arp_rate",
+      "module": "keys",
+      "label": "ARP RATE / SYNC",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Arpeggiator rate, or division when a clock is detected."
+    },
+    {
+      "id": "keys.arp",
+      "module": "keys",
+      "label": "ARP",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Arpeggiator on; hold ARP and circle the joystick to choose the mode."
+    },
+    {
+      "id": "keys.arp_mode",
+      "module": "keys",
+      "label": "Arp mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "up"
+        },
+        {
+          "value": "down"
+        },
+        {
+          "value": "up_down_1"
+        },
+        {
+          "value": "up_down_2"
+        },
+        {
+          "value": "played"
+        },
+        {
+          "value": "random"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold ARP and move the joystick in a circle",
+          "when": "any_time"
+        }
+      ],
+      "function": "Note order."
+    },
+    {
+      "id": "keys.arp_range",
+      "module": "keys",
+      "label": "Arp range",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 6
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "ARP with the OCTAVE buttons",
+          "when": "any_time"
+        }
+      ],
+      "function": "Octave range.",
+      "confidence": "inferred",
+      "note": "Reviews say range is set with the octave buttons; the exact gesture is undocumented."
+    },
+    {
+      "id": "keys.octave",
+      "module": "keys",
+      "label": "OCTAVE - / +",
+      "kind": "integer",
+      "range": {
+        "min": -4,
+        "max": 4
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Keyboard shift ±4 octaves; with VIBRATO held during tuning, stretches the octave."
+    },
+    {
+      "id": "keys.vibrato",
+      "module": "joy",
+      "label": "VIBRATO",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Joystick up gives vibrato instead of glide; hold and play a key for the tuning routine."
+    },
+    {
+      "id": "joy.position",
+      "module": "joy",
+      "label": "JOYSTICK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -1,
+        "max": 1
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "joystick"
+        }
+      ],
+      "function": "Bend (X), glide or vibrato (Y up), hold (Y down), latch toggle (click)."
+    },
+    {
+      "id": "keys.hold_mode",
+      "module": "keys",
+      "label": "Hold mode",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "momentary"
+        },
+        {
+          "value": "latching"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "click the joystick",
+          "when": "any_time"
+        }
+      ],
+      "function": "Momentary or latching hold (click the joystick); remembered."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "LFO RATE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "LFO speed."
+    },
+    {
+      "id": "vco1.coarse",
+      "module": "vco1",
+      "label": "VCO 1 COARSE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning."
+    },
+    {
+      "id": "vco1.fine",
+      "module": "vco1",
+      "label": "VCO 1 FINE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning."
+    },
+    {
+      "id": "vco1.shape",
+      "module": "vco1",
+      "label": "VCO 1 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width / wave shape."
+    },
+    {
+      "id": "vco1.shape_mod",
+      "module": "vco1",
+      "label": "VCO 1 SHAPE MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the SHAPE input (normalled LFO triangle)."
+    },
+    {
+      "id": "vco1.fm1",
+      "module": "vco1",
+      "label": "VCO 1 FM 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 1 (normalled Env 1)."
+    },
+    {
+      "id": "vco1.fm2",
+      "module": "vco1",
+      "label": "VCO 1 FM 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 2 (normalled LFO triangle)."
+    },
+    {
+      "id": "vco1.level",
+      "module": "vco1",
+      "label": "VCO 1 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level into the mixer."
+    },
+    {
+      "id": "vco1.sel_saw",
+      "module": "vco1",
+      "label": "VCO 1 SAW button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the saw to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "vco1.sel_tri",
+      "module": "vco1",
+      "label": "VCO 1 TRI button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the tri to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "vco1.sel_pulse",
+      "module": "vco1",
+      "label": "VCO 1 PULSE button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the pulse to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "vco2.coarse",
+      "module": "vco2",
+      "label": "VCO 2 COARSE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Coarse tuning."
+    },
+    {
+      "id": "vco2.fine",
+      "module": "vco2",
+      "label": "VCO 2 FINE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Fine tuning."
+    },
+    {
+      "id": "vco2.shape",
+      "module": "vco2",
+      "label": "VCO 2 SHAPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Pulse width / wave shape."
+    },
+    {
+      "id": "vco2.shape_mod",
+      "module": "vco2",
+      "label": "VCO 2 SHAPE MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of the SHAPE input (normalled LFO triangle)."
+    },
+    {
+      "id": "vco2.fm1",
+      "module": "vco2",
+      "label": "VCO 2 FM 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 1 (normalled Env 1)."
+    },
+    {
+      "id": "vco2.fm2",
+      "module": "vco2",
+      "label": "VCO 2 FM 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 2 (normalled LFO triangle)."
+    },
+    {
+      "id": "vco2.level",
+      "module": "vco2",
+      "label": "VCO 2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level into the mixer."
+    },
+    {
+      "id": "vco2.sel_saw",
+      "module": "vco2",
+      "label": "VCO 2 SAW button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the saw to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "vco2.sel_tri",
+      "module": "vco2",
+      "label": "VCO 2 TRI button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the tri to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "vco2.sel_pulse",
+      "module": "vco2",
+      "label": "VCO 2 PULSE button",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Adds the pulse to OUT and the mixer (LED lit)."
+    },
+    {
+      "id": "mixer.aux",
+      "module": "mixer",
+      "label": "AUX LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Aux input level."
+    },
+    {
+      "id": "mixer.noise",
+      "module": "mixer",
+      "label": "NOISE LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Noise level."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUT OFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonance; self-oscillates."
+    },
+    {
+      "id": "vcf.fm1",
+      "module": "vcf",
+      "label": "VCF FM 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 1 (normalled Env 1)."
+    },
+    {
+      "id": "vcf.fm2",
+      "module": "vcf",
+      "label": "VCF FM 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of FM 2 (normalled LFO triangle)."
+    },
+    {
+      "id": "env1.attack",
+      "module": "env1",
+      "label": "ENV 1 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "env1.decay",
+      "module": "env1",
+      "label": "ENV 1 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay."
+    },
+    {
+      "id": "env1.sustain",
+      "module": "env1",
+      "label": "ENV 1 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope sustain."
+    },
+    {
+      "id": "env1.release",
+      "module": "env1",
+      "label": "ENV 1 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "env2.attack",
+      "module": "env2",
+      "label": "ENV 2 ATTACK",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope attack."
+    },
+    {
+      "id": "env2.decay",
+      "module": "env2",
+      "label": "ENV 2 DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope decay."
+    },
+    {
+      "id": "env2.sustain",
+      "module": "env2",
+      "label": "ENV 2 SUSTAIN",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope sustain."
+    },
+    {
+      "id": "env2.release",
+      "module": "env2",
+      "label": "ENV 2 RELEASE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Envelope release."
+    },
+    {
+      "id": "vca.mode",
+      "module": "vca",
+      "label": "DRONE / GATED",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "drone"
+        },
+        {
+          "value": "gated"
+        }
+      ],
+      "default": "gated",
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Drone holds the VCA open; gated follows AM 1 (Env 2)."
+    },
+    {
+      "id": "vca.drive",
+      "module": "vca",
+      "label": "DRIVE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCA overdrive."
+    },
+    {
+      "id": "vca.am1",
+      "module": "vca",
+      "label": "AM 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of AM 1 (normalled Env 2)."
+    },
+    {
+      "id": "vca.am2",
+      "module": "vca",
+      "label": "AM 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of AM 2 (normalled LFO triangle)."
+    },
+    {
+      "id": "out.master",
+      "module": "out",
+      "label": "MASTER VOL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Line out and headphones (not the top-panel OUT)."
+    },
+    {
+      "id": "sys.midi_channel",
+      "module": "keys",
+      "label": "MIDI channel",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold a key while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "1-16 (default 1): hold a key while powering on (lowest F = 1, highest G = 16)."
+    },
+    {
+      "id": "sys.local_off",
+      "module": "keys",
+      "label": "Local Off",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold ARP while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold ARP while powering on (not saved)."
+    },
+    {
+      "id": "sys.stretch",
+      "module": "keys",
+      "label": "Octave stretch tuning",
+      "kind": "integer",
+      "range": {
+        "min": -64,
+        "max": 63
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold VIBRATO, play a key, tap OCTAVE +/-",
+          "when": "any_time"
+        }
+      ],
+      "function": "Hold VIBRATO, press a key, tap OCTAVE +/- (both resets); saved.",
+      "confidence": "inferred",
+      "note": "Step range not stated."
+    },
+    {
+      "id": "sys.reset",
+      "module": "keys",
+      "label": "Reset to defaults",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "hold top C while powering on",
+          "when": "power_on"
+        }
+      ],
+      "function": "Hold the top C while powering on: MIDI channel, stretch, bend range and hold mode."
+    },
+    {
+      "id": "sys.power",
+      "module": "out",
+      "label": "POWER",
+      "kind": "boolean",
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Power switch."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.keys_pitch",
+      "label": "KEYS PITCH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "keys.pitch",
+      "function": "Keyboard/MIDI pitch, 1V/oct."
+    },
+    {
+      "id": "jack.keys_velocity",
+      "label": "KEYS VELOCITY",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "keys.velocity",
+      "function": "Key velocity CV."
+    },
+    {
+      "id": "jack.keys_gate",
+      "label": "KEYS GATE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "keys.gate",
+      "function": "Key gate."
+    },
+    {
+      "id": "jack.lfo_tri",
+      "label": "LFO TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.tri",
+      "function": "LFO triangle."
+    },
+    {
+      "id": "jack.lfo_sq",
+      "label": "LFO SQUARE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "lfo.square",
+      "function": "LFO square."
+    },
+    {
+      "id": "jack.vco1_saw",
+      "label": "VCO 1 SAW",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco1.saw",
+      "function": "Saw wave."
+    },
+    {
+      "id": "jack.vco1_tri",
+      "label": "VCO 1 TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco1.tri",
+      "function": "Triangle wave."
+    },
+    {
+      "id": "jack.vco1_pulse",
+      "label": "VCO 1 PULSE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco1.pulse",
+      "function": "Pulse wave."
+    },
+    {
+      "id": "jack.vco1_out",
+      "label": "VCO 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco1.out",
+      "function": "Mix of the selected waves."
+    },
+    {
+      "id": "jack.vco1_1voct",
+      "label": "VCO 1 1V/OCT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco1.voct",
+      "function": "Pitch; normalled from KEY PITCH."
+    },
+    {
+      "id": "jack.vco1_shape",
+      "label": "VCO 1 SHAPE",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco1.shape",
+      "function": "Shape CV; normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.vco1_fm1",
+      "label": "VCO 1 FM 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco1.fm1",
+      "function": "Normalled from ENV 1."
+    },
+    {
+      "id": "jack.vco1_fm2",
+      "label": "VCO 1 FM 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco1.fm2",
+      "function": "Normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.vco2_saw",
+      "label": "VCO 2 SAW",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco2.saw",
+      "function": "Saw wave."
+    },
+    {
+      "id": "jack.vco2_tri",
+      "label": "VCO 2 TRIANGLE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco2.tri",
+      "function": "Triangle wave."
+    },
+    {
+      "id": "jack.vco2_pulse",
+      "label": "VCO 2 PULSE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco2.pulse",
+      "function": "Pulse wave."
+    },
+    {
+      "id": "jack.vco2_out",
+      "label": "VCO 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vco2.out",
+      "function": "Mix of the selected waves."
+    },
+    {
+      "id": "jack.vco2_1voct",
+      "label": "VCO 2 1V/OCT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco2.voct",
+      "function": "Pitch; normalled from KEY PITCH."
+    },
+    {
+      "id": "jack.vco2_shape",
+      "label": "VCO 2 SHAPE",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco2.shape",
+      "function": "Shape CV; normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.vco2_fm1",
+      "label": "VCO 2 FM 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco2.fm1",
+      "function": "Normalled from ENV 1."
+    },
+    {
+      "id": "jack.vco2_fm2",
+      "label": "VCO 2 FM 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vco2.fm2",
+      "function": "Normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.noise",
+      "label": "NOISE",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "noise.out",
+      "function": "Noise."
+    },
+    {
+      "id": "jack.mix_out",
+      "label": "MIX OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.out",
+      "function": "Mixer output."
+    },
+    {
+      "id": "jack.aux",
+      "label": "AUX",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "mixer.aux",
+      "function": "External or patched audio into the mixer."
+    },
+    {
+      "id": "jack.vcf_lp",
+      "label": "LOW PASS",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.lp",
+      "function": "Low-pass input; normalled from MIX OUT."
+    },
+    {
+      "id": "jack.vcf_bp",
+      "label": "BAND PASS",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.bp",
+      "function": "Band-pass input."
+    },
+    {
+      "id": "jack.vcf_hp",
+      "label": "HIGH PASS",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.hp",
+      "function": "High-pass input."
+    },
+    {
+      "id": "jack.vcf_fm1",
+      "label": "VCF FM 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.fm1",
+      "function": "Normalled from ENV 1."
+    },
+    {
+      "id": "jack.vcf_fm2",
+      "label": "VCF FM 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vcf.fm2",
+      "function": "Normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.vcf_out",
+      "label": "VCF OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vcf.out",
+      "function": "Filter output."
+    },
+    {
+      "id": "jack.env1_out",
+      "label": "ENV 1 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env1.out",
+      "function": "Envelope 1."
+    },
+    {
+      "id": "jack.env2_out",
+      "label": "ENV 2 OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "env2.out",
+      "function": "Envelope 2."
+    },
+    {
+      "id": "jack.vca_in",
+      "label": "INPUT (VCA)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "vca.in",
+      "function": "VCA input; normalled from VCF OUT."
+    },
+    {
+      "id": "jack.env1_gate",
+      "label": "GATE (ENV 1)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env1.gate",
+      "function": "Normalled from KEY GATE."
+    },
+    {
+      "id": "jack.env2_gate",
+      "label": "GATE (ENV 2)",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm TS",
+      "node": "env2.gate",
+      "function": "Normalled from KEY GATE."
+    },
+    {
+      "id": "jack.vca_am1",
+      "label": "AM 1",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca.am1",
+      "function": "Normalled from ENV 2."
+    },
+    {
+      "id": "jack.vca_am2",
+      "label": "AM 2",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm TS",
+      "node": "vca.am2",
+      "function": "Normalled from LFO TRIANGLE."
+    },
+    {
+      "id": "jack.out",
+      "label": "OUT",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TS",
+      "node": "out.patch",
+      "function": "VCA output for modular gear (not affected by MASTER VOL)."
+    },
+    {
+      "id": "jack.line_out",
+      "label": "LINE OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TS",
+      "node": "out.line",
+      "function": "Rear 1/4\" TS line output."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.phones",
+      "function": "Rear 1/4\" TRS headphones."
+    },
+    {
+      "id": "jack.clock_in",
+      "label": "CLOCK IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "keys.clock_in",
+      "function": "Analogue clock; the arpeggiator syncs automatically."
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLOCK OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TS",
+      "node": "keys.clock_out",
+      "function": "Clock out while the arpeggiator runs."
+    },
+    {
+      "id": "jack.midi_in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "keys.midi_in",
+      "function": "MIDI in.",
+      "confidence": "inferred",
+      "note": "Connector type not stated."
+    },
+    {
+      "id": "jack.midi_out",
+      "label": "MIDI OUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": null,
+      "function": "MIDI out.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "jack.usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "bidirectional",
+      "signal": "midi",
+      "connector": "USB-C",
+      "node": null,
+      "function": "USB-C: class-compliant MIDI; bus power."
+    },
+    {
+      "id": "jack.power",
+      "label": "POWER",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "9 V DC 600 mA."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "joy.out",
+      "to": "keys.joy",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c02",
+      "from": "keys.pitch",
+      "to": "vco1.voct",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_1voct"
+    },
+    {
+      "id": "c03",
+      "from": "lfo.tri",
+      "to": "vco1.shape",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_shape",
+      "amount": "vco1.shape_mod"
+    },
+    {
+      "id": "c04",
+      "from": "env1.out",
+      "to": "vco1.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm1",
+      "amount": "vco1.fm1"
+    },
+    {
+      "id": "c05",
+      "from": "lfo.tri",
+      "to": "vco1.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco1_fm2",
+      "amount": "vco1.fm2"
+    },
+    {
+      "id": "c06",
+      "from": "vco1.out",
+      "to": "mixer.vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vco1.level",
+      "note": "Selected waves."
+    },
+    {
+      "id": "c07",
+      "from": "keys.pitch",
+      "to": "vco2.voct",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_1voct"
+    },
+    {
+      "id": "c08",
+      "from": "lfo.tri",
+      "to": "vco2.shape",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_shape",
+      "amount": "vco2.shape_mod"
+    },
+    {
+      "id": "c09",
+      "from": "env1.out",
+      "to": "vco2.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm1",
+      "amount": "vco2.fm1"
+    },
+    {
+      "id": "c10",
+      "from": "lfo.tri",
+      "to": "vco2.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vco2_fm2",
+      "amount": "vco2.fm2"
+    },
+    {
+      "id": "c11",
+      "from": "vco2.out",
+      "to": "mixer.vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vco2.level",
+      "note": "Selected waves."
+    },
+    {
+      "id": "c12",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mixer.noise"
+    },
+    {
+      "id": "c13",
+      "from": "mixer.out",
+      "to": "vcf.lp",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_lp"
+    },
+    {
+      "id": "c14",
+      "from": "env1.out",
+      "to": "vcf.fm1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_fm1",
+      "amount": "vcf.fm1"
+    },
+    {
+      "id": "c15",
+      "from": "lfo.tri",
+      "to": "vcf.fm2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_fm2",
+      "amount": "vcf.fm2"
+    },
+    {
+      "id": "c16",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.vca_in"
+    },
+    {
+      "id": "c17",
+      "from": "keys.gate",
+      "to": "env1.gate",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.env1_gate"
+    },
+    {
+      "id": "c18",
+      "from": "keys.gate",
+      "to": "env2.gate",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.env2_gate"
+    },
+    {
+      "id": "c19",
+      "from": "env2.out",
+      "to": "vca.am1",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vca_am1",
+      "amount": "vca.am1"
+    },
+    {
+      "id": "c20",
+      "from": "lfo.tri",
+      "to": "vca.am2",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.vca_am2",
+      "amount": "vca.am2"
+    },
+    {
+      "id": "c21",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vca.drive"
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "chordal",
+      "name": "Chordal",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_pitch", "jack.vco2_shape"],
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.vco1_saw", "jack.aux"],
+        ["jack.keys_velocity", "jack.vcf_fm1"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_pulse": true,
+        "vco2.sel_saw": true
+      }
+    },
+    {
+      "id": "extreme",
+      "name": "Extreme",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_pitch", "jack.vca_am1"],
+        ["jack.vco1_tri", "jack.vco1_shape"],
+        ["jack.lfo_sq", "jack.vco1_1voct"]
+      ],
+      "settings": {
+        "vco1.sel_pulse": true,
+        "vco2.sel_tri": true
+      },
+      "description": "VCO 1 shapes itself; the LFO square jumps VCO 1's pitch (replacing key pitch)."
+    },
+    {
+      "id": "fm_phasers",
+      "name": "FM Phasers",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_pitch", "jack.vca_am2"],
+        ["jack.keys_velocity", "jack.vcf_fm1"],
+        ["jack.vco1_saw", "jack.vco1_shape"],
+        ["jack.env2_out", "jack.vca_am1"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_tri": true,
+        "vco1.sel_pulse": true,
+        "vco2.sel_saw": true,
+        "vco2.sel_tri": true,
+        "vco2.sel_pulse": true
+      }
+    },
+    {
+      "id": "plink",
+      "name": "Plink",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_velocity", "jack.vco2_shape"],
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.vco2_saw", "jack.vcf_fm1"],
+        ["jack.mix_out", "jack.vcf_bp"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco2.sel_saw": true
+      },
+      "description": "Mix into the band-pass input (breaking nothing: the low-pass keeps its normal)."
+    },
+    {
+      "id": "sentient_bass",
+      "name": "Sentient Bass",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.keys_velocity", "jack.vcf_fm2"],
+        ["jack.mix_out", "jack.vcf_hp"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_tri": true,
+        "vco2.sel_saw": true,
+        "vco2.sel_tri": true
+      }
+    },
+    {
+      "id": "tangerine",
+      "name": "Tangerine",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_pitch", "jack.vcf_fm1"],
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.keys_velocity", "jack.env2_gate"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_tri": true,
+        "vco2.sel_saw": true
+      },
+      "description": "Pitch tracks the filter; velocity gates the amp envelope."
+    },
+    {
+      "id": "twin",
+      "name": "Twin",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.keys_velocity", "jack.vcf_hp"],
+        ["jack.env2_out", "jack.vco1_fm2"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_tri": true,
+        "vco1.sel_pulse": true,
+        "vco2.sel_tri": true
+      },
+      "description": "Also an external clock into ENV 1's GATE (drawn as 'Clock In', outside the panel)."
+    },
+    {
+      "id": "waves",
+      "name": "Waves",
+      "source": "Suren Forward patch sheet (transcribed from the drawing)",
+      "confidence": "stated",
+      "cords": [
+        ["jack.lfo_tri", "jack.vco1_shape"],
+        ["jack.keys_pitch", "jack.vcf_fm1"],
+        ["jack.keys_velocity", "jack.env2_gate"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco1.sel_tri": true,
+        "vco2.sel_saw": true
+      }
+    },
+    {
+      "id": "nasty_bass_fx",
+      "name": "Nasty Bass FX",
+      "source": "Paul Whittington (PWM) patch sheet; knob values read from the drawn pointers on a 0-10 scale (7 o'clock = 0, 12 = 5, 5 o'clock = 10), approximate to about half a unit",
+      "confidence": "stated",
+      "cords": [
+        ["jack.vco1_tri", "jack.vco2_fm2"],
+        ["jack.mix_out", "jack.vcf_hp"]
+      ],
+      "settings": {
+        "vco2.sel_saw": true,
+        "keys.arp_rate": 4.5,
+        "lfo.rate": 4.3,
+        "vco1.coarse": 1,
+        "vco1.fine": 1,
+        "vco1.shape": 5,
+        "vco1.shape_mod": 1,
+        "vco1.fm1": 1,
+        "vco1.fm2": 1,
+        "vco1.level": 1,
+        "vco2.coarse": 4.3,
+        "vco2.fine": 5,
+        "vco2.shape": 5,
+        "vco2.shape_mod": 4.3,
+        "vco2.fm1": 5.5,
+        "vco2.fm2": 5.4,
+        "vco2.level": 8.3,
+        "env1.attack": 1,
+        "env1.decay": 5,
+        "env1.sustain": 0.5,
+        "env1.release": 1,
+        "env2.attack": 1,
+        "env2.decay": 1,
+        "env2.sustain": 9.5,
+        "env2.release": 8.3,
+        "mixer.aux": 1,
+        "mixer.noise": 1,
+        "vcf.fm1": 3.3,
+        "vcf.fm2": 1,
+        "vcf.cutoff": 3.3,
+        "vcf.resonance": 9,
+        "vca.am2": 1,
+        "out.master": 1.7
+      },
+      "description": "VCO 1 (no waves selected, so silent) is used purely as an FM source for VCO 2's FM 2; the mix also feeds the high-pass input. Drive and AM 1 are drawn without pointers."
+    },
+    {
+      "id": "reece_bass",
+      "name": "Reece Bass",
+      "source": "Paul Whittington (PWM) patch sheet; knob values read from the drawn pointers on a 0-10 scale (7 o'clock = 0, 12 = 5, 5 o'clock = 10), approximate to about half a unit",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_velocity", "jack.vcf_fm2"],
+        ["jack.vco2_out", "jack.vco1_fm1"]
+      ],
+      "settings": {
+        "vco1.sel_saw": true,
+        "vco2.sel_pulse": true,
+        "keys.arp_rate": 4.5,
+        "lfo.rate": 4.3,
+        "vco1.coarse": 1.7,
+        "vco1.fine": 4.8,
+        "vco1.shape": 5,
+        "vco1.shape_mod": 1,
+        "vco1.fm1": 5.7,
+        "vco1.fm2": 1,
+        "vco1.level": 9.4,
+        "vco2.coarse": 4,
+        "vco2.fine": 9.5,
+        "vco2.shape": 5,
+        "vco2.shape_mod": 1,
+        "vco2.fm1": 1,
+        "vco2.fm2": 1,
+        "vco2.level": 9.3,
+        "env1.attack": 1,
+        "env1.decay": 5,
+        "env1.sustain": 0.5,
+        "env1.release": 1,
+        "env2.attack": 1,
+        "env2.decay": 1,
+        "env2.sustain": 9.5,
+        "env2.release": 1.7,
+        "mixer.noise": 1,
+        "vcf.fm1": 1.2,
+        "vcf.fm2": 6.7,
+        "vcf.cutoff": 1.7,
+        "vcf.resonance": 9.5,
+        "vca.drive": 1,
+        "vca.am1": 9.5,
+        "vca.am2": 1,
+        "out.master": 3.3
+      },
+      "description": "VCO 2 (pulse, fine tuned up for the Reece detune) cross-modulates VCO 1 (saw) through FM 1; velocity opens the filter via FM 2. Aux Level is drawn without a pointer."
+    },
+    {
+      "id": "sweet_lead",
+      "name": "Sweet Lead",
+      "source": "Paul Whittington (PWM) patch sheet; knob values read from the drawn pointers on a 0-10 scale (7 o'clock = 0, 12 = 5, 5 o'clock = 10), approximate to about half a unit",
+      "confidence": "stated",
+      "cords": [
+        ["jack.keys_velocity", "jack.vcf_fm2"],
+        ["jack.vco1_pulse", "jack.aux"]
+      ],
+      "settings": {
+        "vco1.sel_tri": true,
+        "vco2.sel_tri": true,
+        "keys.arp_rate": 4.5,
+        "lfo.rate": 4.3,
+        "vco1.coarse": 1.5,
+        "vco1.fine": 4.6,
+        "vco1.shape": 5,
+        "vco1.shape_mod": 1,
+        "vco1.fm1": 1,
+        "vco1.fm2": 1,
+        "vco1.level": 6.9,
+        "vco2.coarse": 3.3,
+        "vco2.fine": 7.2,
+        "vco2.shape": 5,
+        "vco2.shape_mod": 1,
+        "vco2.fm1": 1,
+        "vco2.fm2": 1,
+        "vco2.level": 8.3,
+        "env1.attack": 1,
+        "env1.decay": 5,
+        "env1.sustain": 0.5,
+        "env1.release": 1,
+        "env2.attack": 0.6,
+        "env2.decay": 1,
+        "env2.sustain": 9.5,
+        "env2.release": 1.5,
+        "mixer.aux": 5,
+        "mixer.noise": 1,
+        "vcf.fm1": 1,
+        "vcf.fm2": 7.2,
+        "vcf.cutoff": 3.5,
+        "vcf.resonance": 9.5,
+        "vca.drive": 1,
+        "vca.am1": 9.5,
+        "vca.am2": 1,
+        "out.master": 3.3
+      },
+      "description": "Both VCOs on triangle; VCO 1's pulse output is added through the aux input as an extra voice; velocity opens the filter via FM 2."
+    }
+  ],
+  "indicators": [
+    {
+      "id": "wave_leds",
+      "module": "vco1",
+      "label": "wave select LEDs",
+      "kind": "led",
+      "function": "Selected waves per VCO."
+    },
+    {
+      "id": "section_leds",
+      "module": "keys",
+      "label": "KEYBOARD, LFO, FILTER, ENV 1, ENV 2, OUT LEDs",
+      "kind": "led",
+      "function": "Activity of keyboard gate, LFO rate, filter, envelopes and output."
+    },
+    {
+      "id": "octave_leds",
+      "module": "keys",
+      "label": "octave LEDs",
+      "kind": "led",
+      "function": "Octave shift (inferred)."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Normalled signal path",
+      "applies_to": ["vco1", "vco2", "mixer", "vcf", "vca"],
+      "rule": "With nothing patched: key pitch to both VCOs, LFO triangle to shape and FM 2, Env 1 to FM 1 (VCOs and filter), mix into the low-pass input, filter into the VCA, key gate to both envelopes, Env 2 and LFO triangle to the VCA's AM inputs. A VCO sounds only when a wave button is lit and its LEVEL is up."
+    },
+    {
+      "id": "b02",
+      "name": "Multimode filter inputs",
+      "applies_to": ["vcf"],
+      "rule": "Separate LOW PASS (normalled from the mix), BAND PASS and HIGH PASS inputs into one 2-pole output; different sources can be filtered differently at once."
+    },
+    {
+      "id": "b03",
+      "name": "Joystick",
+      "applies_to": ["joy", "keys"],
+      "rule": "Left/right bends pitch. Up: glide (a little = quick, more = slower), or vibrato depth when VIBRATO is on (a dedicated ~5 Hz vibrato LFO). Down: momentary hold; click: toggle latching hold (also latches the arpeggio). Transmits mod and vibrato over MIDI."
+    },
+    {
+      "id": "b04",
+      "name": "Arpeggiator",
+      "applies_to": ["keys"],
+      "rule": "Six modes (up, down, up/down 1 and 2, played, random) chosen by holding ARP and circling the joystick; up to six octaves; auto-syncs to analogue, MIDI or USB clock with selectable divisions; outputs clock while running."
+    },
+    {
+      "id": "b05",
+      "name": "MIDI and CV",
+      "applies_to": ["keys"],
+      "rule": "Class-compliant USB and DIN MIDI on channel 1 by default; analogue pitch and gate conversion; usable as a polyphonic MIDI controller; local off at power-up."
+    },
+    {
+      "id": "b06",
+      "name": "Tuning",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "Temperature-compensated; warm up a minute or two. The VIBRATO tuning routine plays a note with octaves above and below while OCTAVE +/- stretches the octave scaling."
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "control_change",
+        "note": "mod/vibrato"
+      },
+      {
+        "message": "clock"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on",
+        "note": "velocity; polyphonic as a controller"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "pitch_bend"
+      },
+      {
+        "message": "control_change",
+        "note": "joystick modulation and vibrato"
+      },
+      {
+        "message": "clock",
+        "note": "while the arpeggiator runs"
+      }
+    ],
+    "channel_note": "Channel 1-16 chosen at power-up (default 1).",
+    "note": "No CC control of panel parameters (all analogue)."
+  },
+  "specifications": {
+    "voices": 1,
+    "oscillators": "2 VCOs (4046 core), saw/triangle/pulse + mix",
+    "filter": "2-pole Sallen-Key multimode, opto-FET",
+    "envelopes": "2 ADSR",
+    "lfo": "triangle, square",
+    "patch_points": {
+      "inputs": 19,
+      "outputs": 19
+    },
+    "keyboard": "32 velocity-sensitive mini keys, octave ±4",
+    "arpeggiator": "6 modes, 6 octaves, clock sync",
+    "connections": {
+      "patch": "3.5 mm",
+      "line_out": "1/4\" TS",
+      "phones": "1/4\" TRS",
+      "midi": "in, out",
+      "usb": "USB-C (bus power)",
+      "clock": "in, out"
+    },
+    "power": "9 V DC 600 mA or USB bus power",
+    "dimensions_mm": {
+      "w": 490,
+      "d": 250,
+      "h": 80
+    },
+    "weight_kg": 2.61,
+    "price": "USD 629.99 / EUR 629.99 / GBP 559.99"
+  },
+  "omitted_from_source": [
+    "first-sound knob diagram",
+    "warranty text",
+    "patch sheet knob positions (cables and wave buttons only)"
+  ],
+  "not_in_source": [
+    "control voltage ranges",
+    "LFO and envelope time ranges",
+    "the arp range gesture and the joystick-to-mode map",
+    "pitch bend range adjustment method"
+  ],
+  "source_inconsistencies": [
+    "Gearnews describes the VCOs as offering square waves; the panel and specifications say pulse (with shape).",
+    "Synth and Software says the joystick's down position duplicates the Drone/Hold function; other reviews and the guide describe it as keyboard hold, separate from the VCA's DRONE switch.",
+    "The guide says the reset clears the 'Pitch Bend range', but no method for setting the bend range is documented.",
+    "Reviewers note pitch bend appears to stop working while VIBRATO is on (observed behaviour, not documented)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Thin documentation",
+      "detail": "PWM provides only a getting started guide; panel details come from the patch-sheet graphic and control behaviour from reviews."
+    },
+    {
+      "topic": "Joystick",
+      "detail": "Modelled as one controller feeding the keyboard logic; its glide/vibrato/hold split is a behaviour."
+    },
+    {
+      "topic": "Patch knob settings",
+      "detail": "Suren Forward patches record cables and wave buttons only; Paul's patches also record knob positions (approximate, read from the drawings)."
+    }
+  ]
+}
