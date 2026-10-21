@@ -22,6 +22,7 @@ import type { ProbeJob, ProbeResult } from '@/lib/app/synths/audio/probe';
 import { controlMap, displayName, presetState } from '@/lib/app/synths/lib/patch';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { logger } from '@/lib/logging';
+import { openSide, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -108,6 +109,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
   vi.mocked(createProbe).mockReset();
@@ -228,6 +230,7 @@ describe('the sound map', () => {
     page();
     fireEvent.click(button('Dim unused parts'));
     await settle(400);
+    openSide('Inspect');
     act(() => focusStore.set({ kind: 'control', id: GLIDE, x: 0, y: 0, tip: false }));
     expect(
       screen.getAllByText(/Does nothing at the moment: wherever you set it/).length
@@ -241,6 +244,7 @@ describe('the sound map', () => {
     fireEvent.click(button('Dim unused parts'));
     await settle(300); // the first sound's analysis is under way, its answers held
     const other = detail.sounds[1];
+    openSide('Sounds');
     const library = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
     if (!library) throw new Error('no library');
     fireEvent.click(within(library).getByText(other.name));
@@ -350,6 +354,7 @@ describe('the sound map', () => {
     await settle(400);
     const first = mapStore.get().key;
     const other = detail.sounds[1];
+    openSide('Sounds');
     fireEvent.click(
       within(
         screen.getByRole('heading', { name: 'Sound library' }).closest('section') ?? document.body
@@ -385,6 +390,19 @@ describe('the harmonics strip and the big view', () => {
     );
     const cutoff = def.toEngine(values, { wheel: 0, patched }).filter.cutoff;
     expect(strip.getByText(khz(cutoff))).toBeTruthy();
+  });
+
+  it('shows the harmonics with the piano put away, and the piano only when it is out', async () => {
+    vi.stubGlobal('Worker', undefined);
+    page();
+    fireEvent.click(button('Piano'));
+    expect(screen.queryByRole('slider', { name: 'Mod wheel' })).toBeNull();
+    fireEvent.click(button('Show harmonics'));
+    await settle(100);
+    expect(screen.getByRole('region', { name: 'Harmonics of the sound' })).toBeTruthy();
+    expect(screen.queryByRole('slider', { name: 'Mod wheel' })).toBeNull();
+    fireEvent.click(button('Show harmonics'));
+    expect(screen.queryByRole('region', { name: 'Harmonics of the sound' })).toBeNull();
   });
 
   it('opens the big view from the scope strip and from the harmonics strip', async () => {

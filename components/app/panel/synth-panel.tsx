@@ -41,6 +41,7 @@ import {
   HeatLayer,
   HeatRanks,
   Lens,
+  LessonBadges,
   Locator,
 } from '@/components/app/panel/layers';
 import {
@@ -514,6 +515,7 @@ export function SynthPanel({
           <DimLayer def={def} cables={cables} values={values} outline={outline} />
         )}
         {heatOn && !areasOn && <HeatRanks def={shown} values={values} outline={outline} />}
+        {!areasOn && <LessonBadges def={shown} values={values} />}
         {def.matrix && (
           <Matrix
             def={def}

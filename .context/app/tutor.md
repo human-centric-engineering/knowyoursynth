@@ -501,7 +501,8 @@ the tutor: read its reasoning before reading it as a regression.
 
 ## The panel
 
-`components/app/tutor/`, in the synth page's aside under the Inspector, where the prototype's sat.
+`components/app/tutor/`, in the Tutor drawer beside the synth page's player from `lg` up (t-70),
+and in the Tutor sheet below it.
 Signed out, it says what the tutor does and links to sign-in, back to this synth: the allowance is
 per person and `streamChat()` needs a user. Borrowed from BeatBuddy's drawer
 (`~/code/beatbreaker/.context/app/beatbuddy.md`, _The drawer and the apply loop_), with two

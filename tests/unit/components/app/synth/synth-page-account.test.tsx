@@ -22,7 +22,7 @@
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import {
   ACCOUNT_WRITE_DELAY_MS,
@@ -33,6 +33,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { AccountSettings, PanelPref } from '@/lib/app/sounds/preference-data';
+import { tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -183,6 +184,7 @@ const settingsPatches = () => api.patch.mock.calls.filter((c) => c[0] === SETTIN
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = false;
   auth.pending = false;
@@ -370,7 +372,8 @@ describe('signed in, opening a synth', () => {
     page();
     await waitFor(() => expect(pressed('Show harmonics')).toBe('true'));
     expect(pressed('Dim unused parts')).toBe('false');
-    expect(pressed('Info cards: off')).toBe('false');
+    const cards = within(screen.getByRole('group', { name: 'Hover help' }));
+    expect(cards.getByRole('button', { name: 'Off' }).getAttribute('aria-pressed')).toBe('true');
   });
 
   it("fills what the account has no value for from the browser's, once", async () => {

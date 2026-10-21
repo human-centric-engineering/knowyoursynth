@@ -31,6 +31,7 @@
  * The theme switch is Sunrise's, in the header.
  */
 
+import { z } from 'zod';
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
@@ -44,7 +45,7 @@ import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
-import { CABLE_COLORS, moduleOf } from '@/lib/app/synths/lib/modules';
+import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
 import { cablesToEngine, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
@@ -52,12 +53,23 @@ import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import {
-  HelpButton,
-  MidiStatus,
-  PanelSwitch,
-  Segmented,
-} from '@/components/app/synth/bar-controls';
+  AudioWaveform,
+  EyeOff,
+  Flame,
+  Eraser,
+  Piano,
+  Play,
+  RotateCcw,
+  ScanSearch,
+  Settings2,
+  Shapes,
+  SlidersHorizontal,
+  Sparkles,
+  Volume2,
+  VolumeX,
+} from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
@@ -66,13 +78,17 @@ import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth
 import { Lesson, stepIds } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
+import { About } from '@/components/app/synth/about';
 import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
+import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
+import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
+import { TutorDrawer } from '@/components/app/synth/drawers';
+import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
 import {
-  Captions,
-  Chapters,
   FullscreenButton,
   PlayButton,
-  StepTransport,
+  SoundDesign,
+  SoundPicker,
   Wordmark,
 } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
@@ -104,6 +120,7 @@ import {
   PanelViewSchema,
   STORAGE_KEYS,
   fitPanel,
+  useStoredPref,
   parseSession,
   readStored,
   sessionKey,
@@ -117,6 +134,7 @@ import {
   MAP_OFF,
   findStore,
   focusStore,
+  highlightStore,
   mapStore,
   meterStore,
   notesStore,
@@ -154,13 +172,33 @@ const PANEL_HELP = [
 ] as const;
 
 const PLAY_HELP = [
-  ['Mouse or touch', 'Click or tap the keys on screen.'],
-  ['Computer keys', 'A W S E D F T G Y H U J K play notes. Z and X change octave.'],
   [
-    'MIDI keyboard',
-    'Click Connect MIDI, then play a USB or Bluetooth keyboard. Notes and the mod wheel both work. Works in Chrome and Edge.',
+    'The piano',
+    'Click or tap its keys. On a computer the Piano button in the bar shows it or puts it away: on a short screen it starts put away, so press Piano to bring it out.',
+    <Piano key="piano" size={14} />,
   ],
-  ['Play riff', 'Plays a short original phrase that suits the sound.'],
+  [
+    'Computer keys',
+    'The middle row (A S D F G H J K L ;) plays the white keys and the row above (W E T Y U O P) the black ones, as the letters on the piano show. Z and X move down and up an octave. They play with the piano put away too.',
+  ],
+  [
+    'Octave, Hold and the mod wheel',
+    'The − and + beside the piano move it an octave. Hold keeps the notes sounding after you let go, until you play the next one. The wheel on the left is the synth’s mod wheel.',
+  ],
+  [
+    'A MIDI keyboard',
+    'Press MIDI in the bar to connect one plugged into this computer, in Chrome or Edge. Its notes and mod wheel both play the panel.',
+  ],
+  [
+    'Play riff',
+    'Plays a short original phrase that suits the sound, so you can turn the knobs and hear what they do.',
+    <Play key="play" size={13} />,
+  ],
+  [
+    'No sound?',
+    'The first note you play turns the sound on. If it is still silent, press Unmute in the bar and check the computer’s volume.',
+    <Volume2 key="volume" size={14} />,
+  ],
 ] as const;
 
 type AudioState = 'off' | 'starting' | 'on' | 'error';
@@ -173,6 +211,16 @@ const SHEETS: [SheetId, string][] = [
   ['inspector', 'Inspector'],
   ['tutor', 'Tutor'],
 ];
+/** The dock's piano and scope, shown or put away, as chosen; `null` until the user chooses, and the screen decides. */
+const DeckSchema = z.boolean().nullable();
+/** A screen tall enough to keep the piano in the dock under the panel without crowding it: it is out by default. */
+const TALL_QUERY = '(min-height: 900px)';
+/** The side of the panel the lesson card floats on, as stored. */
+const CardSideSchema = z.enum(['left', 'right']);
+/** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
+const IDLE_MS = 2500;
+/** How far above the dock the pointer brings up the Sound Design strip, in px: the strip's height and a little more. */
+const STRIP_REACH = 160;
 /** How far a press may move and still be a tap, in px. */
 const TAP_SLOP = 10;
 
@@ -219,7 +267,12 @@ export function SynthPage(props: SynthPageProps) {
   const id = props.detail.synth.id;
   const loading = loadSynthDef(id);
   const baseDef = loadedSynthDef(id) ?? (loading ? use(loading) : null);
-  return baseDef ? <Synth baseDef={baseDef} {...props} /> : null;
+  // One provider for the player's tips, so moving along the bar opens each at once.
+  return baseDef ? (
+    <PlayerTips>
+      <Synth baseDef={baseDef} {...props} />
+    </PlayerTips>
+  ) : null;
 }
 
 function Synth({
@@ -404,13 +457,14 @@ function Synth({
   const [octave, setOctave] = useState(0);
   const [hold, setHold] = useState(false);
   const [engineError, setEngineError] = useState('');
-  const [zoom, setZoom] = useState(0); // magnifier: 0 = off, else the enlargement
+  const [zoom, setZoom] = useState<number>(0); // magnifier: 0 = off, else the enlargement
   const [scale, setScale] = useState<PanelScale>(1); // the panel's size: 1 fits the page
   const scrollerRef = useKeepCentre(scale);
   const [areasOn, setAreasOn] = useState(false);
   const [tourOn, setTourOn] = useState(false);
   const [lineageOpen, setLineageOpen] = useState(false);
   const [limitsOpen, setLimitsOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [scopeOpen, setScopeOpen] = useState(false);
   const settings = useSettings(userId);
   const [tipsOn, setTipsOn] = settings.tips;
@@ -435,6 +489,129 @@ function Synth({
     setSheet(id);
     setDockSnap('half');
   };
+  // From `lg` up (t-74): the lesson card over the panel, the sounds over the strip, the tutor's drawer over the panel,
+  // and the dock's piano. The card's side and the piano are remembered in this browser.
+  const [card, setCard] = useState<CardId | null>(null);
+  const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
+  const [soundsOpen, setSoundsOpen] = useState(false);
+  const [tutorOpen, setTutorOpen] = useState(false);
+  // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
+  const tall = useMediaQuery(TALL_QUERY);
+  const [deckChoice, setDeckOn] = useStoredPref(STORAGE_KEYS.deck, DeckSchema, null);
+  const deckOn = deckChoice ?? tall;
+  const tutorBtnRef = useRef<HTMLButtonElement | null>(null);
+  const closeTutor = useCallback(() => {
+    setTutorOpen(false);
+    tutorBtnRef.current?.focus();
+  }, []);
+  const closeCard = useCallback(() => setCard(null), []);
+  const closeSounds = useCallback(() => setSoundsOpen(false), []);
+  // The Sound Design strip's sound picker: the library, wherever it is at this width.
+  const libraryRef = useRef<HTMLDivElement | null>(null);
+  const chooseSound = () => {
+    if (small) return openSheet('library');
+    if (soundsOpen) return setSoundsOpen(false);
+    setSoundsOpen(true);
+    // After the popover is shown: a hidden input cannot take focus.
+    requestAnimationFrame(() =>
+      libraryRef.current?.querySelector<HTMLInputElement>('input[type="search"]')?.focus()
+    );
+  };
+  // A lesson section from the strip: the card from `lg` up, the Lesson sheet below it.
+  const openSection = (id: CardId) => {
+    if (small)
+      return id === 'fx' ? undefined : openSheet(id === 'inspector' ? 'inspector' : 'lesson');
+    setCard((c) => (c === id && id !== 'build' ? null : id));
+  };
+
+  // From `lg` up the dock is pinned to the bottom of the screen. The page keeps room under it to scroll past, and the
+  // panel is fitted to the height between the top of the panel and the dock (`panelFrameStyle` reads the variables).
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const dockRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const root = rootRef.current;
+    const dock = dockRef.current;
+    const scroller = scrollerRef.current;
+    if (!root || !dock || !scroller) return undefined;
+    if (small || typeof ResizeObserver === 'undefined') {
+      root.style.removeProperty('--kys-dock-h');
+      root.style.removeProperty('--kys-fit-chrome');
+      return undefined;
+    }
+    const measure = () => {
+      const dockH = dock.offsetHeight;
+      const top = scroller.getBoundingClientRect().top + window.scrollY;
+      root.style.setProperty('--kys-dock-h', `${dockH}px`);
+      // The space over the panel and under it: what is above it on the page, the scroller's padding and the dock.
+      root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40)}px`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(dock);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, [small, scrollerRef]);
+
+  // The Sound Design strip shows while the pointer comes down towards the dock, as a video's chapters do: within
+  // `STRIP_REACH` px above it, or over it. Set on the element, not in state, so a pointer move does not render the page.
+  useEffect(() => {
+    const dock = dockRef.current;
+    if (small || !dock) return undefined;
+    // The dock's top, read when it or the window changes size rather than on every move: a move can come while a
+    // knob or cable drag is re-rendering the panel, and reading layout then forces it.
+    let top = dock.getBoundingClientRect().top;
+    const remeasure = () => {
+      top = dock.getBoundingClientRect().top;
+    };
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(dock);
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'touch') return;
+      const near = e.clientY >= top - STRIP_REACH;
+      if (near !== dock.hasAttribute('data-near')) dock.toggleAttribute('data-near', near);
+    };
+    const onLeave = () => dock.removeAttribute('data-near');
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('resize', remeasure);
+    document.documentElement.addEventListener('pointerleave', onLeave);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('resize', remeasure);
+      document.documentElement.removeEventListener('pointerleave', onLeave);
+      dock.removeAttribute('data-near');
+    };
+  }, [small]);
+
+  // The video feel: with the pointer at rest, the player's secondary controls fade until it moves again.
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    let asleep = false;
+    const wake = () => {
+      if (asleep) {
+        asleep = false;
+        setIdle(false);
+      }
+      clearTimeout(t);
+      t = setTimeout(() => {
+        asleep = true;
+        setIdle(true);
+      }, IDLE_MS);
+    };
+    wake();
+    window.addEventListener('pointermove', wake, { passive: true });
+    window.addEventListener('pointerdown', wake, { passive: true });
+    window.addEventListener('keydown', wake);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('pointermove', wake);
+      window.removeEventListener('pointerdown', wake);
+      window.removeEventListener('keydown', wake);
+    };
+  }, []);
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
@@ -820,7 +997,7 @@ function Synth({
   const askTutor = (query: string) => {
     setTutorAsk((a) => ({ text: `Design a sound: ${query}`, n: (a?.n ?? 0) + 1 }));
     if (small) openSheet('tutor');
-    else document.getElementById('tutor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    else setTutorOpen(true);
   };
 
   // Open one of the user's sounds: it replaces the panel, as choosing a library sound does. One the synth has moved on
@@ -1031,7 +1208,11 @@ function Synth({
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   // The open sound's own lesson is the exception: the sound stays open (its lesson goes with it), and nothing is
   // recorded, since progress is kept for the library's lessons.
+  // The page lights a step's controls only once a step has been picked on this synth since the page opened: a step
+  // restored from the stored session (on a refresh, or coming back to a synth) leaves the panel unlit.
+  const [litFor, setLitFor] = useState<string | null>(null);
   const setStep = (k: number | null) => {
+    setLitFor(synthId);
     // A full-height Lesson sheet would cover the step's controls: it drops to half, and they scroll into view above it.
     if (small && sheet === 'lesson') setDockSnap('half');
     if (ownLesson) {
@@ -1059,6 +1240,16 @@ function Synth({
   // each step, and when the sheet drops back to half. Full height covers the panel, so there is nothing to scroll to.
   // The band is worked out from the half height rather than measured: dropping from full, the sheet is still shrinking.
   const stepKey = shown && step != null ? stepIds(shown.steps[step]).join('|') : '';
+  // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
+  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
+  const litKey = litFor === synthId ? stepKey : '';
+  // What a hovered chapter puts back when it is left: below `lg` the Lesson in its sheet keeps the step lit.
+  const chapterLit = small ? stepKey : litKey;
+  useEffect(() => {
+    if (small) return undefined;
+    highlightStore.set(litKey ? litKey.split('|') : []);
+    return () => highlightStore.set([]);
+  }, [small, litKey]);
   useEffect(() => {
     if (!small || sheet !== 'lesson' || dockSnap !== 'half' || !stepKey) return undefined;
     const t = requestAnimationFrame(() => {
@@ -1136,7 +1327,7 @@ function Synth({
 
   // The regions beside the panel: in the grid at `lg` and up, each in a bottom sheet below it.
   const library = (
-    <div className="flex min-h-0 flex-col gap-5">
+    <div ref={libraryRef} className="flex min-h-0 flex-col gap-5">
       <MySoundsList
         signedIn={authPending ? null : signedIn}
         synthName={def.name}
@@ -1146,6 +1337,7 @@ function Synth({
         currentId={openSound?.id ?? null}
         onOpen={(id) => {
           if (small) openSheet(null);
+          else setSoundsOpen(false);
           void openMine(id);
         }}
         isStarred={(id) => favourites.isOn({ kind: 'mine', soundId: id })}
@@ -1156,6 +1348,7 @@ function Synth({
         currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
         onSelect={(id) => {
           if (small) openSheet(null);
+          else setSoundsOpen(false);
           selectPreset(id);
         }}
         marks={progress.marks}
@@ -1203,35 +1396,15 @@ function Synth({
       setPanel={setTutorPanel}
       openDesign={openDesign}
       ask={tutorAsk}
-      fill={small}
+      fill
     />
   );
-  const about = (
-    <section className="rounded-xl bg-(--kys-surface) p-4 text-sm text-(--kys-muted)">
-      <h2 className="kys-label mb-1">About this {detail.synth.name}</h2>
-      <p>{detail.synth.summary}</p>
-      {detail.lineage && (
-        <button
-          type="button"
-          onClick={() => setLineageOpen(true)}
-          className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
-        >
-          Where it comes from: the {detail.synth.name}’s lineage
-        </button>
-      )}
-      <button
-        type="button"
-        onClick={() => setLimitsOpen(true)}
-        className="mt-2 block text-left text-(--kys-accent) underline underline-offset-2"
-      >
-        What this app does not model on the {detail.synth.name}
-      </button>
-    </section>
-  );
-
   const linkBtn = 'kys-label text-(--kys-accent) underline-offset-2 hover:underline';
   const smallBtn =
     'rounded-md border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-(--kys-muted) hover:text-(--kys-text)';
+  // The buttons beside the sound's name: the height, type and weight of the panel settings' switches on the same row.
+  const rowBtn =
+    'inline-flex h-9 items-center rounded-md border border-(--kys-line) bg-(--kys-surface) px-3.5 text-xs font-semibold whitespace-nowrap text-(--kys-muted) hover:text-(--kys-text)';
 
   const loadedName = openSound
     ? openSound.name
@@ -1269,11 +1442,13 @@ function Synth({
       patch((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }));
     else if (restoreFrom === 'library' && preset) selectPreset(preset.id);
   };
-  const current = shown && step != null ? shown.steps[step] : undefined;
-  const currentModule = current ? moduleOf(current.module) : null;
 
   return (
-    <div className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6">
+    <div
+      ref={rootRef}
+      data-idle={idle && !small && !soundsOpen ? '' : undefined}
+      className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6"
+    >
       <RotatePrompt />
       {shared && (
         <SharedSoundStrip
@@ -1288,392 +1463,515 @@ function Synth({
         />
       )}
 
-      {/* The player: the panel on its stage, the lesson as its chapters, the transport, and the keyboard as its deck. */}
-      <section ref={playerRef} aria-label={`${def.name} panel`} className="kys-player">
-        <div className="kys-player-stage">
-          <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3 px-4 pt-4 pb-3 sm:px-5">
-            <div className="flex min-w-0 flex-col gap-2">
-              <Wordmark lit={audio === 'on'} />
-              <h1 className="sr-only">
-                {detail.synth.maker} {detail.synth.name} · {detail.synth.heritage}
-              </h1>
-              <SynthPicker
-                variant="caption"
-                synths={synths}
-                synthId={synthId}
-                onSelect={switchSynth}
-                isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
-                onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
-              />
-              <p className="flex max-w-[64ch] flex-wrap items-baseline gap-x-3 gap-y-1 text-[13px] text-(--kys-muted)">
-                <span>{detail.synth.heritage}</span>
-                {detail.lineage && (
-                  <button type="button" onClick={() => setLineageOpen(true)} className={linkBtn}>
-                    History ›
-                  </button>
-                )}
-                <button type="button" onClick={() => setLimitsOpen(true)} className={linkBtn}>
-                  What is not modelled ›
-                </button>
-              </p>
-            </div>
-            <div className="flex min-w-[min(100%,340px)] flex-1 flex-col items-end gap-2.5 max-sm:items-stretch">
-              <div className="flex items-center gap-2 max-sm:[&>:first-child]:flex-1">
-                <Search def={def} />
-                <HelpButton title="How to use the panel" items={PANEL_HELP} />
-              </div>
-              <div className="kys-scroll flex max-w-full items-center gap-1.5 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap sm:justify-end [&>*]:shrink-0">
-                <PanelSwitch
-                  label="Orientation tour"
-                  short="Tour"
-                  tone="start"
-                  on={tourOn}
-                  title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
-                  onClick={() => {
-                    setTourOn(!tourOn);
-                    setAreasOn(false);
-                    findStore.set(null);
-                  }}
-                />
-                <PanelSwitch
-                  label="Explain sections"
-                  short="Sections"
-                  on={areasOn}
-                  title="Colour in every named part of the panel, and explain what it does when you point at it."
-                  onClick={() => {
-                    setAreasOn(!areasOn);
-                    setTourOn(false);
-                    findStore.set(null);
-                    focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                  }}
-                />
-                <PanelSwitch
-                  label="Dim unused parts"
-                  short="Dim unused"
-                  on={dimOn}
-                  title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
-                  onClick={() => setDimOn(!dimOn)}
-                />
-                <PanelSwitch
-                  label="Show sensitive controls"
-                  short="Sensitive"
-                  on={heatOn}
-                  title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                  onClick={() => setHeatOn(!heatOn)}
-                />
-                <PanelSwitch
-                  label="Show harmonics"
-                  short="Harmonics"
-                  on={harmOn}
-                  title="Show the wave and the harmonics of this patch under the panel, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
-                  onClick={() => setHarmOn(!harmOn)}
-                />
-                <PanelSwitch
-                  label={`Info cards: ${tipsOn ? 'on' : 'off'}`}
-                  short={`Cards: ${tipsOn ? 'on' : 'off'}`}
-                  tone="quiet"
-                  on={tipsOn}
-                  title="Show or hide the pop-up card when you point at a knob, switch, jack or cable. The inspector always explains it."
-                  onClick={() => setTipsOn(!tipsOn)}
-                />
-              </div>
-            </div>
-          </header>
+      <div>
+        <div className="flex min-w-0 flex-col gap-5">
+          {/* The player: the panel on its stage, the lesson as its chapters, the transport, and the keyboard as its deck. */}
+          <section ref={playerRef} aria-label={`${def.name} panel`} className="kys-player">
+            <div className="kys-player-stage">
+              {/* The row over the panel: the synth and what it is on the left, with its history and what is not
+              modelled under the description; the layers, the inspector, the tutor and the tour on the
+              right, with their words from `xl` up. The secondary parts fade with the bar while the pointer rests. From
+              `lg` up it never wraps, so the panel keeps the height: the description is cut at two lines. */}
+              <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 px-4 pt-3 pb-1 sm:px-5 lg:flex-nowrap lg:items-center lg:gap-x-4 lg:pt-2 lg:pb-2.5">
+                <div className="flex min-w-0 flex-wrap items-end gap-x-5 gap-y-1 lg:flex-nowrap lg:items-center lg:gap-x-4">
+                  <h1 className="sr-only">
+                    {detail.synth.maker} {detail.synth.name} · {detail.synth.heritage}
+                  </h1>
+                  <div className="shrink-0">
+                    <SynthPicker
+                      variant="caption"
+                      synths={synths}
+                      synthId={synthId}
+                      onSelect={switchSynth}
+                      isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
+                      onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
+                    />
+                  </div>
+                  <div className="kys-autohide flex max-w-[72ch] min-w-0 flex-col gap-0.5 pb-1 text-[13px] text-(--kys-muted) lg:pb-0">
+                    <p className="leading-snug lg:line-clamp-2">{detail.synth.heritage}</p>
+                    <p className="flex flex-wrap items-baseline gap-x-3 [&>button]:whitespace-nowrap">
+                      <button type="button" onClick={() => setAboutOpen(true)} className={linkBtn}>
+                        About ›
+                      </button>
+                      {detail.lineage && (
+                        <button
+                          type="button"
+                          onClick={() => setLineageOpen(true)}
+                          className={linkBtn}
+                        >
+                          History ›
+                        </button>
+                      )}
+                      <button type="button" onClick={() => setLimitsOpen(true)} className={linkBtn}>
+                        What is not modelled ›
+                      </button>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 max-sm:w-full lg:shrink-0">
+                  {/* On a phone: the layers share one row, evenly, with the tour and its help under them. */}
+                  <div className="kys-autohide flex flex-wrap items-center gap-1 max-sm:flex-1 max-sm:gap-2">
+                    <div
+                      role="group"
+                      aria-label="Layers over the panel"
+                      className="flex items-center gap-1 max-sm:grid max-sm:w-full max-sm:grid-cols-3"
+                    >
+                      <LayerToggle
+                        label="Explain sections"
+                        short="Sections"
+                        icon={<Shapes size={17} aria-hidden="true" />}
+                        on={areasOn}
+                        title="Colour in every named part of the panel, and explain what it does when you point at it."
+                        onClick={() => {
+                          setAreasOn(!areasOn);
+                          setTourOn(false);
+                          findStore.set(null);
+                          focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                        }}
+                      />
+                      <LayerToggle
+                        label="Dim unused parts"
+                        short="Dim unused"
+                        icon={<EyeOff size={17} aria-hidden="true" />}
+                        on={dimOn}
+                        title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
+                        onClick={() => setDimOn(!dimOn)}
+                      />
+                      <LayerToggle
+                        label="Show sensitive controls"
+                        short="Sensitive"
+                        icon={<Flame size={17} aria-hidden="true" />}
+                        on={heatOn}
+                        title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                        onClick={() => setHeatOn(!heatOn)}
+                      />
+                    </div>
+                    {!small && (
+                      <div
+                        role="group"
+                        aria-label="Over the panel"
+                        className="flex items-center gap-1"
+                      >
+                        <LayerToggle
+                          label="Inspector"
+                          short="Inspect"
+                          icon={<ScanSearch size={17} aria-hidden="true" />}
+                          on={card === 'inspector'}
+                          title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                          onClick={() => openSection('inspector')}
+                        />
+                      </div>
+                    )}
+                    <span className="ml-1 flex items-center gap-2 max-sm:ml-0 max-sm:w-full max-sm:[&>*:first-child]:flex-1">
+                      <PanelSwitch
+                        label="Orientation tour"
+                        short="Tour"
+                        tone="start"
+                        on={tourOn}
+                        title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
+                        onClick={() => {
+                          setTourOn(!tourOn);
+                          setAreasOn(false);
+                          findStore.set(null);
+                        }}
+                      />
+                      <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                    </span>
+                  </div>
+                  {/* The tutor at the far right, named and always on show: it does not fade with the tools when the
+                  pointer rests. */}
+                  {!small && (
+                    <LayerToggle
+                      ref={tutorBtnRef}
+                      label="Ask AI tutor"
+                      short="Ask AI"
+                      keepShort
+                      hoverFill
+                      icon={<Sparkles size={17} aria-hidden="true" />}
+                      on={tutorOpen}
+                      title="Ask the tutor about this synth, or have it design a sound. It slides in over the panel."
+                      onClick={() => (tutorOpen ? closeTutor() : setTutorOpen(true))}
+                    />
+                  )}
+                </div>
+              </header>
 
-          <div
-            ref={scrollerRef}
-            className="kys-scroll overflow-x-auto px-3 pt-2 pb-5 sm:px-6"
-            {...panelTaps}
-          >
-            <div
-              ref={frameRef}
-              data-testid="panel-frame"
-              className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
-              style={panelFrameStyle(def.layout ? def.view : null, scale)}
-            >
-              <SynthPanel
-                def={def}
-                values={sess.values}
-                target={step == null ? target : null}
-                cables={sess.cables}
-                outline={view.outline}
-                zoom={zoom}
-                areasOn={areasOn}
-                dimOn={dimOn}
-                heatOn={heatOn}
-                onChange={onChange}
-                onConnect={onConnect}
-                onRemoveCable={onRemoveCable}
-                onMoveCable={onMoveCable}
-                design={detail.synth.design}
-              />
-            </div>
-          </div>
-          {(!areasOn || mapOn || engineError) && (
-            <div className="px-4 pb-3 empty:hidden sm:px-6">
-              {!areasOn && (
-                <MapLegend
-                  def={def}
-                  values={sess.values}
-                  dimOn={dimOn}
-                  heatOn={heatOn}
-                  outline={view.outline}
-                />
+              <div
+                ref={scrollerRef}
+                className="kys-scroll kys-panel-scroller overflow-x-auto p-2"
+                {...panelTaps}
+              >
+                <div
+                  ref={frameRef}
+                  data-testid="panel-frame"
+                  className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
+                  style={panelFrameStyle(def.view, scale)}
+                >
+                  <SynthPanel
+                    def={def}
+                    values={sess.values}
+                    target={step == null ? target : null}
+                    cables={sess.cables}
+                    outline={view.outline}
+                    zoom={zoom}
+                    areasOn={areasOn}
+                    dimOn={dimOn}
+                    heatOn={heatOn}
+                    onChange={onChange}
+                    onConnect={onConnect}
+                    onRemoveCable={onRemoveCable}
+                    onMoveCable={onMoveCable}
+                    design={detail.synth.design}
+                  />
+                </div>
+              </div>
+              {/* Under the panel, on the stage with it: the sound's name and what you can do with it on the left; how the
+              panel is drawn and find a control on the right; and what the sound is under both. The name comes first:
+              it stays on one line, and as the screen narrows the search gives up its width, then the tools wrap
+              under the name. */}
+              <div className="px-3 pt-4 pb-3 sm:px-6">
+                <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
+                  <section
+                    aria-label="The sound on the panel"
+                    className="max-w-full min-w-0 max-md:flex-1"
+                  >
+                    {/* The sound's name, and beside it what can be done with it: keep it, or unplug its cables. */}
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
+                      <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
+                        <span className="sr-only">Loaded:</span>
+                        <span className="kys-sound-title truncate" title={loadedName}>
+                          {loadedName}
+                        </span>
+                        {openSound && (
+                          <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                            mine
+                          </span>
+                        )}
+                        {designed && !openSound && (
+                          <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                            from the tutor
+                          </span>
+                        )}
+                        {changed > 0 && (
+                          <span className="shrink-0 text-sm text-(--kys-accent)">
+                            {changed} control{changed === 1 ? '' : 's'} moved
+                          </span>
+                        )}
+                      </p>
+                      {/* Not until the open sound is known: without it, Save would make a new sound instead of
+                        saving this one. Not while a shared sound is on the panel either: saving it is Save a copy, which
+                        credits it. */}
+                      {!authPending &&
+                        !sharedPanel &&
+                        !(signedIn && sess.soundId && !mine.sounds) && (
+                          <SoundActions
+                            synthId={synthId}
+                            signedIn={signedIn}
+                            signInHref={signInHref}
+                            open={openSound}
+                            midLesson={ownLesson !== null && step != null}
+                            credit={credit}
+                            design={designed && !openSound ? designed : null}
+                            panel={panelInput}
+                            onSaved={onSaved}
+                            onDeleted={onDeleted}
+                            libraryTags={libraryTags}
+                            buttonClass={rowBtn}
+                          />
+                        )}
+                      {sess.cables.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => patch((s) => ({ ...s, cables: [] }))}
+                          className={rowBtn}
+                        >
+                          Unplug all
+                        </button>
+                      )}
+                    </div>
+                  </section>
+                  <button
+                    type="button"
+                    aria-label="Panel settings"
+                    aria-expanded={settingsOpen}
+                    aria-controls="kys-tools"
+                    onClick={() => setSettingsOpen(!settingsOpen)}
+                    className={`${rowBtn} ml-auto px-2.5 md:hidden ${settingsOpen ? 'text-(--kys-text)' : ''}`}
+                  >
+                    <Settings2 size={17} aria-hidden="true" />
+                  </button>
+                  <div
+                    id="kys-tools"
+                    data-settings={settingsOpen ? 'open' : 'closed'}
+                    className="kys-tools kys-autohide"
+                  >
+                    <PlayerSettings
+                      view={view}
+                      onView={setView}
+                      modular={!!synthDef.modular}
+                      zoom={zoom}
+                      onZoom={setZoom}
+                      tipsOn={tipsOn}
+                      onTips={setTipsOn}
+                    />
+                    <Search def={def} up className="kys-tools-find" />
+                  </div>
+                </div>
+                {/* What the sound is, under its name as a video's description is under its title. */}
+                {(described || mineNotice || sharedNotice) && (
+                  <div className="mt-3 min-w-0">
+                    {described && (
+                      <section
+                        aria-label="About the sound"
+                        className="mt-1 max-w-[80ch] text-sm leading-relaxed text-(--kys-muted)"
+                      >
+                        <p className="kys-label text-(--kys-faint)">{described.ref}</p>
+                        <p className="mt-0.5">{described.blurb}</p>
+                      </section>
+                    )}
+                    {(mineNotice || sharedNotice) && (
+                      <p role="status" className="mt-1 max-w-[80ch] text-sm text-(--kys-warn)">
+                        {mineNotice ?? sharedNotice}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+              {(!areasOn || mapOn || engineError) && (
+                <div className="px-4 pb-3 empty:hidden sm:px-6">
+                  {!areasOn && (
+                    <MapLegend
+                      def={def}
+                      values={sess.values}
+                      dimOn={dimOn}
+                      heatOn={heatOn}
+                      outline={view.outline}
+                    />
+                  )}
+                  {mapOn && <WhyAsker mapperRef={mapperRef} />}
+                  {engineError && (
+                    <p role="alert" className="mt-2 text-sm text-(--kys-warn)">
+                      This panel setting could not be turned into sound: {engineError}
+                    </p>
+                  )}
+                </div>
               )}
-              {mapOn && <WhyAsker mapperRef={mapperRef} />}
-              {engineError && (
-                <p role="alert" className="mt-2 text-sm text-(--kys-warn)">
-                  This panel setting could not be turned into sound: {engineError}
+              {areasOn && (
+                <p className="px-4 pb-3 text-xs text-(--kys-accent) sm:px-6">
+                  Explain sections is on: point at (or tap) a coloured section to read what it does.
+                  Knobs and jacks are locked until you turn it off.
                 </p>
               )}
             </div>
-          )}
-          {areasOn && (
-            <p className="px-4 pb-3 text-xs text-(--kys-accent) sm:px-6">
-              Explain sections is on: point at (or tap) a coloured section to read what it does.
-              Knobs and jacks are locked until you turn it off.
-            </p>
-          )}
-          {shown && step != null && <Captions steps={shown.steps} step={step} />}
-        </div>
 
-        <div className="kys-player-bar pt-1 pb-2.5">
-          {steps.length > 0 && <Chapters steps={steps} step={step} onStep={setStep} />}
-          <div className="kys-scroll flex items-center gap-2 overflow-x-auto px-3 pt-1 text-sm sm:px-4 [&>*]:shrink-0">
-            {shown && (
-              <PlayButton
-                playing={playing}
-                onClick={() => (playing ? stopRiff() : void playRiff(shown.phrase))}
+            {/* The dock: the Sound Design strip, the bar and the deck. From `lg` up it is pinned to the bottom of the
+            screen, and what opens from it (the lesson card, the sounds, the tutor) floats over the panel, so it never
+            changes height unless the piano is put away. With a pointer, the strip floats over the foot of the panel and
+            shows only while the pointer is near the dock. */}
+            <div ref={dockRef} className="kys-dock">
+              <SoundDesign
+                steps={steps}
+                step={step}
+                onStep={(k) => {
+                  setStep(k);
+                  openSection('build');
+                }}
+                hasLesson={!!shown}
+                mark={<Wordmark lit={audio === 'on'} />}
+                lit={chapterLit ? chapterLit.split('|') : []}
               />
-            )}
-            {steps.length > 0 && <StepTransport n={steps.length} step={step} onStep={setStep} />}
-            <button
-              type="button"
-              onClick={() => void toggleAudio()}
-              aria-pressed={audio === 'on'}
-              className={`flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold ${audio === 'on' ? 'text-(--kys-good)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-white/5`}
-            >
-              <span
-                className={`h-2.5 w-2.5 rounded-full ${audio === 'on' ? 'bg-(--kys-good) shadow-[0_0_8px_var(--kys-good)]' : audio === 'error' ? 'bg-(--kys-warn)' : 'bg-(--kys-faint)'}`}
-              />
-              {audio === 'on'
-                ? 'Sound on'
-                : audio === 'starting'
-                  ? 'Starting…'
-                  : audio === 'error'
-                    ? 'Sound unavailable'
-                    : 'Turn sound on'}
-            </button>
-            <p className="min-w-[12ch] flex-1 truncate font-mono text-[12.5px] text-(--kys-muted)">
-              {current && currentModule && step != null ? (
-                <>
-                  <span style={{ color: currentModule.color }}>
-                    Step {step + 1}/{steps.length}
-                  </span>{' '}
-                  <span className="text-(--kys-text)">{current.title}</span>
-                </>
-              ) : steps.length > 0 && described ? (
-                <>
-                  <span className="text-(--kys-text)">The finished sound</span> · built in{' '}
-                  {steps.length} step{steps.length === 1 ? '' : 's'}
-                </>
-              ) : null}
-            </p>
-            {synthDef.modular && (
-              <Segmented
-                label="Panel layout"
-                title="Modular: the sections stacked as modules, easier to read on a small screen. Long: the faceplate as it is on the keyboard."
-                options={[
-                  [false, 'Modular'],
-                  [true, 'Long'],
-                ]}
-                value={view.long}
-                onChange={(long) => setView({ ...view, long })}
-              />
-            )}
-            <Segmented
-              label="Panel view"
-              options={[
-                [false, 'Hardware'],
-                [true, 'Outline'],
-              ]}
-              value={view.outline}
-              onChange={(outline) => setView({ ...view, outline })}
-            />
-            <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
-            <div
-              className="flex items-center rounded-md border border-(--kys-line) bg-(--kys-surface) p-0.5"
-              role="group"
-              aria-label="Magnifier"
-            >
-              <span className="px-1.5 text-(--kys-muted) sm:px-2">Magnify</span>
-              {(
-                [
-                  [0, 'Off'],
-                  [2, '2×'],
-                  [3, '3×'],
-                ] as const
-              ).map(([z, l]) => (
-                <button
-                  key={l}
-                  type="button"
-                  aria-pressed={zoom === z}
-                  onClick={() => setZoom(z)}
-                  className={`rounded px-2 py-1 font-semibold sm:px-2.5 ${zoom === z ? 'bg-(--kys-text) text-(--kys-ground)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
+
+              <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
+                <SoundPicker
+                  soundName={loadedName}
+                  soundRef={described?.ref ?? null}
+                  onChooseSound={chooseSound}
+                  soundsOpen={!small && soundsOpen}
+                  onCloseSounds={closeSounds}
+                  sounds={small ? undefined : library}
+                />
+                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach. */}
+                <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
+                  {shown && (
+                    <PlayButton
+                      playing={playing}
+                      onClick={() => (playing ? stopRiff() : void playRiff(shown.phrase))}
+                    />
+                  )}
+                  {/* Named for what it will do, as a video's mute button is: Mute while the sound is on. */}
+                  <PlayerTip
+                    name={
+                      audio === 'on' ? 'Mute' : audio === 'error' ? 'Sound unavailable' : 'Unmute'
+                    }
+                    help={
+                      audio === 'on'
+                        ? 'Turn the sound off. The panel keeps its settings.'
+                        : audio === 'error'
+                          ? 'This browser would not start the sound. Press to try again.'
+                          : 'Turn the sound on, to hear the panel as you play and turn it.'
+                    }
+                  >
+                    <button
+                      type="button"
+                      onClick={() => void toggleAudio()}
+                      className={`flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold pointer-coarse:h-11 ${audio === 'on' ? 'text-(--kys-good)' : audio === 'error' ? 'text-(--kys-warn)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-(--kys-raised)`}
+                    >
+                      {audio === 'on' ? (
+                        <Volume2 size={17} aria-hidden="true" />
+                      ) : (
+                        <VolumeX size={17} aria-hidden="true" />
+                      )}
+                      {audio === 'on'
+                        ? 'Mute'
+                        : audio === 'starting'
+                          ? 'Starting…'
+                          : audio === 'error'
+                            ? 'Sound unavailable'
+                            : 'Unmute'}
+                    </button>
+                  </PlayerTip>
+                  {restoreFrom && (
+                    <PlayerTip
+                      name="Restore sound"
+                      help="Put the sound back as it was before you moved its controls."
+                    >
+                      <button type="button" onClick={restoreSound} className="kys-layer">
+                        <RotateCcw size={16} aria-hidden="true" />
+                        Restore sound
+                      </button>
+                    </PlayerTip>
+                  )}
+                  <PlayerTip
+                    name="Blank patch"
+                    help="Start from nothing: every control at its starting place, and no cables."
+                  >
+                    <button
+                      type="button"
+                      onClick={() =>
+                        patch((s) => ({ ...s, values: { ...synthDef.init }, cables: [] }))
+                      }
+                      className="kys-layer"
+                    >
+                      <Eraser size={16} aria-hidden="true" />
+                      Blank patch
+                    </button>
+                  </PlayerTip>
+                  <span className="flex-1" />
+                  <div className="kys-autohide flex flex-wrap items-center gap-2 lg:flex-nowrap">
+                    {!small && (
+                      <LayerToggle
+                        label="Piano"
+                        short="Piano"
+                        icon={<Piano size={17} aria-hidden="true" />}
+                        on={deckOn}
+                        title="Show or put away the piano and the scope under the bar."
+                        onClick={() => setDeckOn(!deckOn)}
+                      />
+                    )}
+                    <LayerToggle
+                      label="Show harmonics"
+                      short="Harmonics"
+                      icon={<AudioWaveform size={17} aria-hidden="true" />}
+                      on={harmOn}
+                      title="Show the wave and the harmonics of this patch over the keyboard, worked out by rendering a note through the synth model. No sound need be playing; turn a knob and both redraw."
+                      onClick={() => setHarmOn(!harmOn)}
+                    />
+                    {!small && (
+                      <LayerToggle
+                        label="Effects"
+                        short={fx.on ? 'Effects on' : 'Effects'}
+                        icon={<SlidersHorizontal size={17} aria-hidden="true" />}
+                        on={card === 'fx'}
+                        filled={fx.on}
+                        title="Open the effects rack over the panel: drive, chorus, delay and reverb after the synth."
+                        onClick={() => openSection('fx')}
+                      />
+                    )}
+                    <MidiStatus midi={midi} onConnect={connectMidi} />
+                    <HelpButton title="How to play sounds" items={PLAY_HELP} />
+                    <PanelZoom scale={scale} onScale={setScale} className="max-sm:order-first" />
+                  </div>
+                </div>
+                <div className="kys-autohide flex items-center lg:shrink-0">
+                  <FullscreenButton target={playerRef} />
+                </div>
+              </div>
+
+              {/* With the piano put away the deck still holds the harmonics, while they are on. */}
+              <div className="kys-player-deck p-3 sm:p-4" hidden={!small && !deckOn && !harmOn}>
+                {harmOn && (
+                  <HarmonicsStrip
+                    cutoff={cutoffNow}
+                    pred={pred}
+                    source={engine}
+                    running={audio === 'on'}
+                    playing={playing}
+                    measureStore={measureStore}
+                    onExpand={() => setScopeOpen(true)}
+                  />
+                )}
+                <div
+                  className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,300px)]"
+                  hidden={!small && !deckOn}
                 >
-                  {l}
-                </button>
-              ))}
+                  <Keyboard
+                    octave={octave}
+                    onOctave={setOctave}
+                    wheel={wheel}
+                    onWheel={setWheel}
+                    hold={hold}
+                    onHold={setHoldMode}
+                    noteOn={noteOn}
+                    noteOff={noteOff}
+                  />
+                  <div className="h-28 min-w-0">
+                    <Scope
+                      source={engine}
+                      running={audio === 'on'}
+                      measureStore={measureStore}
+                      changeKey={traceKey}
+                      onExpand={() => setScopeOpen(true)}
+                    />
+                  </div>
+                </div>
+                {small && <FxRack fx={fx} onChange={setFx} />}
+              </div>
             </div>
-            <FullscreenButton target={playerRef} />
-          </div>
-        </div>
 
-        <div className="kys-player-deck p-3 sm:p-4">
-          {harmOn && (
-            <HarmonicsStrip
-              cutoff={cutoffNow}
-              pred={pred}
-              source={engine}
-              running={audio === 'on'}
-              playing={playing}
-              measureStore={measureStore}
-              onExpand={() => setScopeOpen(true)}
-            />
-          )}
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,300px)]">
-            <Keyboard
-              octave={octave}
-              onOctave={setOctave}
-              wheel={wheel}
-              onWheel={setWheel}
-              hold={hold}
-              onHold={setHoldMode}
-              noteOn={noteOn}
-              noteOff={noteOff}
-            />
-            <div className="h-28 min-w-0">
-              <Scope
-                source={engine}
-                running={audio === 'on'}
-                measureStore={measureStore}
-                changeKey={traceKey}
-                onExpand={() => setScopeOpen(true)}
+            {!small && card && (
+              <LessonCard
+                def={def}
+                preset={shown ?? null}
+                step={step}
+                onStep={setStep}
+                section={card}
+                onClose={closeCard}
+                side={cardSide}
+                onSide={() => setCardSide(cardSide === 'right' ? 'left' : 'right')}
+                inspector={inspector}
+                effects={<FxRack fx={fx} onChange={setFx} inCard />}
+                mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
               />
-            </div>
-          </div>
-          <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
-            <MidiStatus midi={midi} onConnect={connectMidi} />
-            <HelpButton title="How to play" items={PLAY_HELP} />
-          </div>
-          <FxRack fx={fx} onChange={setFx} />
-        </div>
+            )}
+            {!small && (
+              <TutorDrawer open={tutorOpen} onClose={closeTutor}>
+                {tutor}
+              </TutorDrawer>
+            )}
 
-        {/* Inside the player, so the cards and the tour still show with the player full screen. */}
-        <Tooltip
-          enabled={tipsOn && !(small && coarse)}
-          def={def}
-          values={sess.values}
-          target={step == null ? target : null}
-          preset={shown ?? null}
-          cables={sess.cables}
-        />
-        {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
-      </section>
-
-      {/* Under the player, as under a video: what is on it, what you can do with it, and what it is. */}
-      <section aria-label="The sound on the panel" className="flex flex-col gap-3 px-1">
-        <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
-          <div className="min-w-0">
-            <p className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-              <span className="kys-label text-(--kys-faint)">Loaded:</span>
-              <span className="text-[clamp(20px,2vw,26px)] leading-tight font-semibold text-balance">
-                {loadedName}
-              </span>
-              {openSound && (
-                <span className="rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
-                  mine
-                </span>
-              )}
-              {designed && !openSound && (
-                <span className="rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
-                  from the tutor
-                </span>
-              )}
-              {shown && step != null && (
-                <span className="rounded bg-(--kys-accent) px-1.5 py-0.5 font-mono text-xs text-(--kys-accent-ink)">
-                  step {step + 1} of {shown.steps.length}
-                </span>
-              )}
-              {changed > 0 && (
-                <span className="text-sm text-(--kys-accent)">
-                  {changed} control{changed === 1 ? '' : 's'} moved
-                </span>
-              )}
-            </p>
-            {(mineNotice || sharedNotice) && (
-              <p role="status" className="mt-1 max-w-[80ch] text-sm text-(--kys-warn)">
-                {mineNotice ?? sharedNotice}
-              </p>
-            )}
-          </div>
-          <div className="kys-scroll flex max-w-full items-center gap-2 overflow-x-auto text-sm max-sm:pb-1 sm:flex-wrap [&>*]:shrink-0">
-            {restoreFrom && (
-              <button type="button" onClick={restoreSound} className={smallBtn}>
-                Restore sound
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => patch((s) => ({ ...s, values: { ...synthDef.init }, cables: [] }))}
-              className={smallBtn}
-            >
-              Blank patch
-            </button>
-            {sess.cables.length > 0 && (
-              <button
-                type="button"
-                onClick={() => patch((s) => ({ ...s, cables: [] }))}
-                className={smallBtn}
-              >
-                Unplug all
-              </button>
-            )}
-          </div>
+            {/* Inside the player, so the cards and the tour still show with the player full screen. */}
+            <Tooltip
+              enabled={tipsOn && !(small && coarse)}
+              def={def}
+              values={sess.values}
+              target={step == null ? target : null}
+              preset={shown ?? null}
+              cables={sess.cables}
+            />
+            {tourOn && <Tour def={def} notes={detail.notes.unusual} onClose={closeTour} />}
+          </section>
         </div>
-        {/* Not until the open sound is known: without it, Save would make a new sound instead of saving this one.
-            Not while a shared sound is on the panel either: saving it is Save a copy, which credits it. */}
-        {!authPending && !sharedPanel && !(signedIn && sess.soundId && !mine.sounds) && (
-          <SoundActions
-            synthId={synthId}
-            signedIn={signedIn}
-            signInHref={signInHref}
-            open={openSound}
-            midLesson={ownLesson !== null && step != null}
-            credit={credit}
-            design={designed && !openSound ? designed : null}
-            panel={panelInput}
-            onSaved={onSaved}
-            onDeleted={onDeleted}
-            libraryTags={libraryTags}
-            buttonClass={smallBtn}
-          />
-        )}
-        <div className="grid items-start gap-3 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          {described ? (
-            <section
-              aria-label="About the sound"
-              className="rounded-xl bg-(--kys-surface) p-4 text-sm"
-            >
-              <p className="kys-label text-(--kys-faint)">{described.ref}</p>
-              <p className="mt-1 max-w-[72ch] leading-relaxed">{described.blurb}</p>
-            </section>
-          ) : (
-            <div className="max-md:hidden" />
-          )}
-          {about}
-        </div>
-      </section>
+      </div>
 
       {small ? (
         <>
@@ -1739,16 +2037,7 @@ function Synth({
             <KeptSlot node={tutorNode} className="h-full" />
           </BottomSheet>
         </>
-      ) : (
-        <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_360px]">
-          {library}
-          {lesson}
-          <aside className="flex flex-col gap-4 lg:col-span-2 xl:col-span-1">
-            {inspector}
-            {tutor}
-          </aside>
-        </div>
-      )}
+      ) : null}
 
       {detail.lineage && (
         <Lineage
@@ -1763,6 +2052,7 @@ function Synth({
           }}
         />
       )}
+      <About synth={detail.synth} open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <Limits
         synth={detail.synth}
         limits={detail.notes.limits}

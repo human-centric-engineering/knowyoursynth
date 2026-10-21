@@ -29,6 +29,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundSummary } from '@/lib/app/sounds/data';
+import { openSide, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -179,12 +180,21 @@ const entry = (slug: string, furthestStep: number, completedAt: string | null = 
 const page = () => render(<SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} />);
 /** The walkthrough's own button by its text: the step bar's arrows carry the same labels. */
 const walk = (text: string) => {
+  openSide('Lesson');
   const b = screen.getAllByRole('button').find((el) => el.textContent === text);
   if (!b) throw new Error(`no ${text} button`);
   return b;
 };
-const library = () => screen.getByRole('region', { name: 'Sound library' });
-const lesson = () => screen.getByRole('article', { name: 'Fat bass' });
+// At `lg` and up the library and the lesson open over the panel (t-74): each helper opens the one it reads.
+const library = () => {
+  openSide('Sounds');
+  return screen.getByRole('region', { name: 'Sound library' });
+};
+// The lesson opens in the card over the panel, from its chapter in the Sound Design strip (t-74).
+const lesson = () => {
+  openSide('Lesson');
+  return screen.getByTestId('lesson-card');
+};
 
 /** The API's answers: the user's sounds, their progress and their favourites. */
 function serve({
@@ -206,6 +216,7 @@ const progressPuts = () =>
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = true;
   for (const f of Object.values(api)) f.mockReset();
@@ -246,7 +257,7 @@ describe('lesson progress', () => {
 
     fireEvent.click(within(lesson()).getByRole('button', { name: 'Continue from step 2' }));
     // On step 2 of 3 now; it is no further than they had got, so nothing is sent.
-    expect(within(lesson()).getByRole('tab', { name: /Build it/ }).textContent).toContain('2/3');
+    expect(lesson().textContent).toContain('Step 2 of 3');
     expect(progressPuts()).toEqual([]);
   });
 
@@ -257,7 +268,7 @@ describe('lesson progress', () => {
     );
     fireEvent.click(walk('Build it step by step'));
     fireEvent.click(walk('Next step'));
-    fireEvent.click(walk('Back'));
+    fireEvent.click(walk('Previous'));
     fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Finish'));
@@ -279,7 +290,7 @@ describe('lesson progress', () => {
     await waitFor(() => expect(within(library()).getByText('Reached step 3 of 3')).toBeTruthy());
     expect(within(lesson()).getByText('You reached step 3 of 3')).toBeTruthy();
     fireEvent.click(within(lesson()).getByRole('button', { name: 'Continue from step 3' }));
-    expect(within(lesson()).getByRole('tab', { name: /Build it/ }).textContent).toContain('3/3');
+    expect(lesson().textContent).toContain('Step 3 of 3');
   });
 
   it('does not write a step answered after the synth changed into the new synth’s progress', async () => {
@@ -307,7 +318,7 @@ describe('lesson progress', () => {
     await waitFor(() => expect(api.put).toHaveBeenCalledTimes(1));
     // Back to the finished sound, then the first step again: it was never kept, so it goes again.
     fireEvent.click(within(library()).getByRole('button', { name: /^Fat bass/ }));
-    fireEvent.click(walk('Start from a blank patch'));
+    fireEvent.click(walk('Build it step by step'));
     await waitFor(() => expect(progressPuts()).toHaveLength(2));
     expect(progressPuts().map(([, body]) => body)).toEqual([{ step: 0 }, { step: 0 }]);
   });

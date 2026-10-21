@@ -21,6 +21,7 @@
  * @see components/app/sharing/shared-sound-strip.tsx
  */
 
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
@@ -203,6 +204,7 @@ function serve(list: UserSoundSummary[], byId: Record<string, UserSoundDetail> =
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.history.replaceState(null, '', SHARED_PATH);
   auth.signedIn = false;
   auth.pending = false;
@@ -295,6 +297,7 @@ describe('signed out', () => {
   it('leaves it when another sound is opened, and Load it again puts it back', () => {
     shared();
     expect(within(strip()).queryByRole('button', { name: 'Load it again' })).toBeNull();
+    openSide('Sounds');
     fireEvent.click(screen.getByRole('button', { name: /Wobble lead/ }));
     expect(loadedName()).toBe('Wobble lead');
     fireEvent.click(within(strip()).getByRole('button', { name: 'Load it again' }));
@@ -337,6 +340,7 @@ describe('signed out', () => {
 
   it('loads the shared sound again on a reload once another sound was opened over it', () => {
     const first = shared();
+    openSide('Sounds');
     fireEvent.click(screen.getByRole('button', { name: /Wobble lead/ }));
     expect(loadedName()).toBe('Wobble lead');
     reload(first, () => shared());
@@ -529,6 +533,8 @@ describe('signed in', () => {
 });
 
 describe("a shared sound's lesson (f-tutor t-55)", () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+
   const LESSON: SoundLesson = {
     blurb: 'A glassy pluck the tutor built.',
     level: 1,
@@ -547,25 +553,31 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
     phrase: { bpm: 120, steps: [[0, 60, 0.25]] },
   };
   const WITH_LESSON: PublicSound = { ...SHARED, fromTutor: true, lesson: LESSON };
-  const lessonPanel = () => screen.getByRole('article', { name: /./ });
+  // The lesson card over the panel, opened from the Sound Design strip (t-74).
+  const lessonPanel = () => {
+    openSide('Lesson');
+    return screen.getByTestId('lesson-card');
+  };
 
   it("shows on its page in place of the library's, with the tutor's mark", () => {
     shared({ shared: WITH_LESSON });
     const lesson = lessonPanel();
     expect(within(lesson).getByRole('heading', { level: 2 }).textContent).toBe('Glass pluck');
     expect(within(lesson).getByText('Designed by the AI tutor')).toBeTruthy();
-    expect(within(lesson).getByText(LESSON.blurb)).toBeTruthy();
+    expect(within(lesson).getByText('AI designed · check by ear')).toBeTruthy();
+    expect(within(lesson).getByText(LESSON.how)).toBeTruthy();
   });
 
   it('steps through with the shared sound still on show, and Restore puts its panel back', () => {
     shared({ shared: WITH_LESSON });
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
-    expect(screen.getByText('step 1 of 1')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 1');
     expect(loadedName()).toBe('Glass pluck');
     expect(cutoff()).toBe('2');
     expect(within(strip()).getByText(/patchwork/)).toBeTruthy();
 
-    fireEvent.click(button('Finish'));
+    fireEvent.click(button('Finish the lesson'));
     // the lesson ends at 2; the shared sound as published is at -3
     expect(screen.getByText('1 control moved')).toBeTruthy();
     fireEvent.click(button('Restore sound'));
@@ -574,9 +586,9 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
 
   it('shows no lesson of its own for a shared sound saved without one', () => {
     shared();
-    expect(within(lessonPanel()).getByRole('heading', { level: 2 }).textContent).not.toBe(
-      'Glass pluck'
-    );
-    expect(within(lessonPanel()).queryByText('Designed by the AI tutor')).toBeNull();
+    // The library's walkthrough is what the strip offers, not one of its own.
+    const card = lessonPanel();
+    expect(within(card).getByRole('heading', { level: 2 }).textContent).not.toBe('Glass pluck');
+    expect(within(card).queryByText('Designed by the AI tutor')).toBeNull();
   });
 });

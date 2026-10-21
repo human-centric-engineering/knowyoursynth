@@ -26,7 +26,15 @@ describe('HelpButton', () => {
     render(<HelpButton title="How to use the panel" items={ITEMS} />);
     const button = screen.getByRole('button', { name: 'How to use the panel' });
     expect(button.textContent).toBe('?');
-    expect(button.getAttribute('title')).toBe('How to use the panel');
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('names itself in the player tooltip on focus, not in a browser title', () => {
+    render(<HelpButton title="How to use the panel" items={ITEMS} />);
+    const button = screen.getByRole('button', { name: 'How to use the panel' });
+    expect(button.getAttribute('title')).toBeNull();
+    fireEvent.focus(button);
+    expect(screen.getByRole('tooltip').textContent).toBe('How to use the panel');
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
@@ -178,17 +186,37 @@ describe('MidiStatus', () => {
       disconnect: vi.fn(),
     };
   }
+  // The bar shows one MIDI button; what is true, and the way to connect, are in the dialog it opens.
   const setup = (m: Midi) => {
     const onConnect = vi.fn();
     render(<MidiStatus midi={m} onConnect={onConnect} />);
+    fireEvent.click(screen.getByRole('button', { name: 'MIDI' }));
     return onConnect;
   };
 
-  it('offers Connect MIDI when off, and says nothing else', () => {
-    const onConnect = setup(midi('off'));
+  it('shows only the MIDI button in the bar until it is opened', () => {
+    render(<MidiStatus midi={midi('blocked')} onConnect={vi.fn()} />);
     expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.queryByText(/MIDI was not allowed/)).toBeNull();
+    expect(screen.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual([
+      'MIDI',
+    ]);
+  });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Connect MIDI' }));
+  it('offers Connect MIDI when off, with the steps to connect a keyboard', () => {
+    const onConnect = setup(midi('off'));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByRole('status').textContent).toBe('MIDI is off.');
+    const steps = within(
+      within(dialog).getByRole('region', { name: 'How to connect a MIDI keyboard' })
+    ).getAllByRole('listitem');
+    expect(steps).toHaveLength(4);
+    expect(steps[2].textContent).toContain('choose Allow when the browser asks');
+    expect(
+      within(dialog).queryByRole('region', { name: 'If the browser blocked MIDI' })
+    ).toBeNull();
+
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Connect MIDI' }));
 
     expect(onConnect).toHaveBeenCalledTimes(1);
   });
@@ -203,11 +231,13 @@ describe('MidiStatus', () => {
     expect(onConnect).not.toHaveBeenCalled();
   });
 
-  it('offers Try MIDI again, with a warning, when blocked', () => {
+  it('offers Try MIDI again when blocked, with a warning and how to unblock it', () => {
     const onConnect = setup(midi('blocked'));
     const note = screen.getByRole('status');
     expect(note.textContent).toContain('MIDI was not allowed.');
     expect(note.className).toContain('text-(--kys-warn)');
+    const unblock = screen.getByRole('region', { name: 'If the browser blocked MIDI' });
+    expect(unblock.textContent).toContain('set MIDI devices to Allow');
 
     fireEvent.click(screen.getByRole('button', { name: 'Try MIDI again' }));
 
@@ -243,9 +273,11 @@ describe('MidiStatus', () => {
   it.each([
     ['unsupported', 'This browser has no MIDI support.'],
     ['frame', 'MIDI keyboards cannot connect while this page is shown inside another site.'],
-  ] as const)('explains %s and offers no button', (status, text) => {
+  ] as const)('explains %s and offers no way to connect', (status, text) => {
     setup(midi(status));
     expect(screen.getByRole('status').textContent).toContain(text);
-    expect(screen.queryByRole('button')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: /Connect MIDI|Try MIDI again|Stop MIDI/ })
+    ).toBeNull();
   });
 });

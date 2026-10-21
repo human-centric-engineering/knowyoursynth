@@ -22,6 +22,7 @@ import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -183,10 +184,18 @@ function page(over: Partial<SynthPageProps> = {}) {
 }
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
+/** The library, opening its drawer at `lg` and up (t-70). */
+const soundLibrary = () => {
+  openSide('Sounds');
+  return screen.getByRole('region', { name: 'Sound library' });
+};
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
-const mySounds = () => screen.getByRole('region', { name: 'My sounds' });
+const mySounds = () => {
+  openSide('Sounds');
+  return screen.getByRole('region', { name: 'My sounds' });
+};
 
 /** The API's answers: the list, and each sound by id. */
 function serve(list: UserSoundSummary[], byId: Record<string, UserSoundDetail> = {}) {
@@ -201,6 +210,7 @@ function serve(list: UserSoundSummary[], byId: Record<string, UserSoundDetail> =
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.history.replaceState(null, '', '/synths/model-d');
   auth.signedIn = false;
   auth.pending = false;
@@ -438,7 +448,7 @@ describe('My sounds', () => {
     page();
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+      within(soundLibrary()).getByRole('button', {
         name: /Wobble lead/,
       })
     );
@@ -456,11 +466,12 @@ describe('My sounds', () => {
     page();
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
 
     expect(loadedName()).toBe('Fat bass');
     expect(screen.queryByText('mine')).toBeNull();
-    expect(screen.getByText('step 1 of 1')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 1');
     // Save no longer writes to Night bass: it makes a new copy of the library sound.
     expect(button('Save a copy…')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull();
@@ -470,7 +481,7 @@ describe('My sounds', () => {
     serve([summary()], { cmmine1: NIGHT_BASS });
     const view = page();
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+      within(soundLibrary()).getByRole('button', {
         name: /Wobble lead/,
       })
     );
@@ -707,7 +718,7 @@ describe('saving', () => {
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+      within(soundLibrary()).getByRole('button', {
         name: /Wobble lead/,
       })
     );
@@ -825,6 +836,8 @@ describe('a reload with one of theirs open', () => {
 // ── a sound saved with its lesson (f-tutor t-55) ────────────────────────────
 
 describe('a sound saved with its lesson', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+
   const LESSON: SoundLesson = {
     blurb: 'A dark, round bass the tutor built.',
     level: 2,
@@ -856,7 +869,11 @@ describe('a sound saved with its lesson', () => {
   });
   /** Saved after a tweak: the filter at 4, where the lesson leaves it at -1. */
   const TUTOR_BASS: UserSoundDetail = { ...NIGHT_BASS, ...tutorSummary };
-  const lessonPanel = () => screen.getByRole('article', { name: /./ });
+  // The lesson card over the panel, opened from the Sound Design strip (t-74).
+  const lessonPanel = () => {
+    openSide('Lesson');
+    return screen.getByTestId('lesson-card');
+  };
 
   beforeEach(() => {
     auth.signedIn = true;
@@ -876,20 +893,24 @@ describe('a sound saved with its lesson', () => {
     expect(within(lesson).getByRole('heading', { level: 2 }).textContent).toBe('Tutor bass');
     expect(within(lesson).getByText('Designed by the AI tutor')).toBeTruthy();
     expect(within(lesson).getByText('AI designed · check by ear')).toBeTruthy();
-    expect(within(lesson).getByText(LESSON.blurb)).toBeTruthy();
     expect(within(lesson).getByText(LESSON.how)).toBeTruthy();
-    expect(within(lesson).getByRole('tab', { name: /Build it/ }).textContent).toContain('2 steps');
-    expect(within(lesson).getByRole('tab', { name: /Make it yours/ })).toBeTruthy();
+    expect(within(lesson).getByRole('list', { name: 'Ways to make it yours' })).toBeTruthy();
+    expect(within(lesson).getByRole('button', { name: /Build it step by step/ })).toBeTruthy();
     expect(within(lesson).queryByText('Fat bass')).toBeNull();
+    // Its blurb is under its name beside the panel, as the library's are.
+    expect(
+      within(screen.getByRole('region', { name: 'About the sound' })).getByText(LESSON.blurb)
+    ).toBeTruthy();
     // No library sound is the one on show.
-    const library = screen.getByRole('region', { name: 'Sound library' });
+    const library = soundLibrary();
     expect(within(library).queryAllByRole('button', { current: true })).toHaveLength(0);
   });
 
   it('steps through its lesson with the sound still open, and Finish builds the sound as designed', async () => {
     await openIt();
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
-    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 2');
     expect(loadedName()).toBe('Tutor bass');
     expect(screen.getByText('mine')).toBeTruthy();
     expect(cutoff()).toBe('-1');
@@ -903,9 +924,9 @@ describe('a sound saved with its lesson', () => {
     const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
     if (!next) throw new Error('no Next step');
     fireEvent.click(next);
-    expect(screen.getByText('step 2 of 2')).toBeTruthy();
-    fireEvent.click(button('Finish'));
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(stepShown()).toBe('step 2 of 2');
+    fireEvent.click(button('Finish the lesson'));
+    expect(stepShown()).toBeNull();
     expect(button('Save')).toBeEnabled();
     // The lesson builds the sound as the tutor designed it; the sound as saved differs, and Restore puts it back.
     expect(cutoff()).toBe('-1');
@@ -923,7 +944,7 @@ describe('a sound saved with its lesson', () => {
     await waitFor(() => expect(api.patch).toHaveBeenCalledTimes(1));
     // Only the panel: the lesson stays with the sound as it was designed.
     expect(Object.keys((api.patch.mock.calls[0][1] as { body: object }).body)).toEqual(['panel']);
-    expect(within(lessonPanel()).getByText(LESSON.blurb)).toBeTruthy();
+    expect(within(lessonPanel()).getByText(LESSON.how)).toBeTruthy();
 
     fireEvent.click(button('Save as…'));
     fireEvent.click(button('Save as new'));
@@ -936,14 +957,15 @@ describe('a sound saved with its lesson', () => {
   it('leaves no step behind when the sound is deleted part-way through its lesson', async () => {
     api.delete.mockResolvedValue(undefined);
     await openIt();
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
-    expect(screen.getByText('step 1 of 2')).toBeTruthy();
+    expect(stepShown()).toBe('step 1 of 2');
     fireEvent.click(button('Delete…'));
     fireEvent.click(button('Delete it'));
     await waitFor(() => expect(api.delete).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(screen.queryByText('mine')).toBeNull());
     // not read against a library lesson the panel never followed
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(stepShown()).toBeNull();
     expect(cutoff()).toBe('-1');
   });
 
@@ -967,16 +989,16 @@ describe('a sound saved with its lesson', () => {
     );
     page();
     // the list has not answered: no library lesson is walked with this panel
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(stepShown()).toBeNull();
     await act(async () => answer([tutorSummary]));
-    expect(await screen.findByText('step 1 of 2')).toBeTruthy();
+    await waitFor(() => expect(stepShown()).toBe('step 1 of 2'));
     expect(loadedName()).toBe('Tutor bass');
   });
 
   it("shows the library's lesson again once a library sound is chosen", async () => {
     await openIt();
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Sound library' })).getByRole('button', {
+      within(soundLibrary()).getByRole('button', {
         name: /Wobble lead/,
       })
     );

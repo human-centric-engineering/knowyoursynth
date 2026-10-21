@@ -208,7 +208,7 @@ function SignedInTutor({
           e.preventDefault();
           submit();
         }}
-        className="flex flex-col gap-2"
+        className={`flex flex-col gap-2 ${fill ? 'mt-auto' : ''}`}
       >
         <div className="flex items-center gap-1">
           <label htmlFor="tutor-input" className="text-sm text-(--kys-text)">

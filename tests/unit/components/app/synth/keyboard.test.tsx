@@ -141,12 +141,15 @@ describe('Keyboard keys', () => {
     expect(key(40).className).toBe(plain);
   });
 
-  it('labels the C keys and the computer-key mapping', () => {
+  it('labels the computer-key mapping on the keys, and the Cs under them', () => {
     setup({ octave: 0 });
-    // The first key is C2 (note 36 = C2 in the C-1 convention).
-    expect(key(36).textContent).toBe('C2');
-    // The QWERTY row starts on the second octave's C: 'A' is note 48.
-    expect(key(48).textContent).toBe('C3');
+    // The first key is C2 (note 36 = C2 in the C-1 convention): not a computer key, so blank, with C2 under it.
+    expect(key(36).textContent).toBe('');
+    // The QWERTY row starts on the second octave's C: 'A' is note 48, and keeps its letter.
+    expect(key(48).textContent).toBe('A');
+    expect(screen.getByText('C2')).toBeInTheDocument();
+    expect(screen.getByText('C3')).toBeInTheDocument();
+    expect(screen.getByText('C5')).toBeInTheDocument();
     expect(key(50).textContent).toBe('S');
     expect(key(49).textContent).toBe('W');
   });
@@ -180,9 +183,19 @@ describe('Keyboard keys', () => {
     expect(next).toHaveBeenCalledExactlyOnceWith(36);
   });
 
-  it('scrolls by a strip above the keys, while the keys themselves play rather than pan', () => {
+  it('scrolls the keys by dragging the strip above them, while the keys themselves play rather than pan', () => {
     setup();
-    expect(screen.getByTestId('key-scroll-strip').className).toContain('touch-pan-x');
+    const strip = screen.getByTestId('key-scroll-strip');
+    const scroller = strip.parentElement?.parentElement;
+    if (!scroller) throw new Error('no scroller');
+    scroller.scrollLeft = 200;
+    // Dragged left by 120px, the keys move with it: further right along the keyboard.
+    fireEvent.pointerDown(strip, { pointerId: 3, clientX: 300 });
+    fireEvent.pointerMove(strip, { pointerId: 3, clientX: 180 });
+    expect(scroller.scrollLeft).toBe(320);
+    fireEvent.pointerUp(strip, { pointerId: 3, clientX: 180 });
+    fireEvent.pointerMove(strip, { pointerId: 3, clientX: 0 });
+    expect(scroller.scrollLeft).toBe(320); // let go: no more scrolling
     expect(key(36).closest('.touch-none')).not.toBeNull();
     expect(key(36).closest('.touch-pan-x')).toBeNull();
   });

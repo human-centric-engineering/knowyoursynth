@@ -4,23 +4,23 @@
  * The player's own pieces (`f-player`): what turns the panel into something you watch and play, as a video player
  * gathers its controls round the picture. BeatBreaker's drummer player is the precedent (its `studio/player/`).
  *
- * - `Wordmark`: the app's name in the corner of the stage, with an LED that is lit while the sound is on.
- * - `Chapters`: the lesson's steps as a video's chapters, one segment per step in its module's colour, filled up to the
- *   step the panel is at. A segment is a place to go: clicked, the panel moves to that step.
- * - `StepTransport`: back a step and on a step, as a player's skip buttons.
- * - `Captions`: the step the panel is at, said under the panel as a video's subtitles are.
+ * - `Wordmark`: the app's name at the right of the Sound Design strip's heading, with an LED that is lit while the sound is on.
+ * - `SoundPicker`: the sound's name at the start of the bar, which opens the library.
+ * - `SoundDesign`: the strip over the bar that teaches how the sound is built: the lesson's steps as a video's
+ *   chapters. Each opens the lesson card over the panel (`lesson-card.tsx`).
  * - `FullscreenButton`: the whole player full screen, where the browser allows it.
  *
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useEffect, useState } from 'react';
-import type { CSSProperties, RefObject } from 'react';
-import { Check, Maximize, Minimize, Play, SkipBack, SkipForward, Square } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties, ReactNode, RefObject } from 'react';
+import { Check, ChevronDown, Maximize, Minimize, Play, Square } from 'lucide-react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import type { PresetStep } from '@/lib/app/synths/contract';
-import { StepText, stepIds } from '@/components/app/synth/lesson';
+import { stepIds } from '@/components/app/synth/lesson';
 import { highlightStore } from '@/components/app/synth/stores';
+import { PlayerTip } from '@/components/app/synth/player-tip';
 import { logger } from '@/lib/logging';
 
 /** The app's name over the panel. The LED is the sound's: lit while it is on. */
@@ -34,19 +34,148 @@ export function Wordmark({ lit }: { lit: boolean }) {
 }
 
 /**
- * One segment per step, as long as each other, and a last one for the finished sound. While walking, the steps up to
- * the panel's are filled and the one it is at glows; with the finished sound on the panel, every step is filled. Hovered
- * while nothing is being walked, a step lights its controls on the panel, as the lesson's step cards do.
+ * The sound picker (t-74): the sound's name as a button at the start of the player bar, next to the riff, as a video's
+ * title opens its list. It opens the library over the bar (a bottom sheet below `lg`).
  */
-export function Chapters({
+export function SoundPicker({
+  soundName,
+  soundRef,
+  onChooseSound,
+  soundsOpen = false,
+  onCloseSounds,
+  sounds,
+}: {
+  /** What is on the panel: a library sound, one of the user's, or "Blank patch". */
+  soundName: string;
+  /** "In the style of…", where the sound has one. */
+  soundRef: string | null;
+  /** Opens (or closes) the sound library. */
+  onChooseSound: () => void;
+  /** Whether the library is open over the bar. Below `lg` it is a sheet instead, and this stays false. */
+  soundsOpen?: boolean;
+  onCloseSounds?: () => void;
+  /** The library, shown over the bar while `soundsOpen`. */
+  sounds?: ReactNode;
+}) {
+  const pick = useRef<HTMLButtonElement | null>(null);
+  const pop = useRef<HTMLDivElement | null>(null);
+  // The library closes on a press outside it (not on the picker, which toggles it), and on Escape inside it.
+  useEffect(() => {
+    if (!soundsOpen || !onCloseSounds) return undefined;
+    const onDown = (e: PointerEvent) => {
+      const t = e.target;
+      if (!(t instanceof Node)) return;
+      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
+      onCloseSounds();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      onCloseSounds();
+      pick.current?.focus();
+    };
+    const el = pop.current;
+    document.addEventListener('pointerdown', onDown);
+    el?.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      el?.removeEventListener('keydown', onKey);
+    };
+  }, [soundsOpen, onCloseSounds]);
+  return (
+    <div className="relative min-w-0 shrink">
+      <button
+        ref={pick}
+        type="button"
+        className="kys-sound-pick"
+        onClick={onChooseSound}
+        aria-expanded={soundsOpen}
+        aria-label={`Choose a sound (now: ${soundName})`}
+        title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a sound from the library'}
+      >
+        <span className="kys-sound-pick-eyebrow">Sound</span>
+        <span className="kys-sound-pick-name">{soundName}</span>
+        <ChevronDown size={16} className="kys-sound-pick-caret" aria-hidden="true" />
+      </button>
+      {sounds !== undefined && (
+        <div
+          ref={pop}
+          className="kys-sounds-pop kys-scroll"
+          role="dialog"
+          aria-label="Sounds"
+          hidden={!soundsOpen}
+        >
+          {sounds}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The Sound Design strip (t-74): the lesson as a video's chapters, over the player bar. Each step is in its module's
+ * colour (filled up to the step the panel is at), then the finished sound. Choosing one moves the panel to it and
+ * opens it in the lesson card. The finished sound's card is the overview: how the sound works and the ways to make it
+ * yours. From `lg` up, with a pointer, it floats over the foot of the panel and shows only while the pointer comes
+ * down towards the dock (or focus is in it), as a video's chapters do.
+ */
+export function SoundDesign({
   steps,
   step,
   onStep,
+  hasLesson,
+  mark,
+  lit = [],
 }: {
   steps: readonly PresetStep[];
   /** The step the panel is at, or `null` for the finished sound. */
   step: number | null;
   onStep: (k: number | null) => void;
+  /** Whether the sound on the panel has a lesson. */
+  hasLesson: boolean;
+  /** The app's wordmark, at the far right of the strip's heading. */
+  mark?: ReactNode;
+  /** The controls the page has lit for the step the panel is at, put back when a hovered step is left. */
+  lit?: readonly string[];
+}) {
+  const n = steps.length;
+  return (
+    <section aria-labelledby="kys-design-h" className="kys-design">
+      <div className="kys-design-head">
+        <h2 id="kys-design-h" className="kys-design-h">
+          Learn sound design
+        </h2>
+        {mark}
+      </div>
+      <div className="kys-design-row">
+        {hasLesson ? (
+          n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
+        ) : (
+          <p className="kys-design-sub">
+            This sound has no walkthrough. Choose a library sound to learn how one is built.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * One chapter per step, as long as each other and labelled with its number, the part of the synth it works on and
+ * its title, and a last one for the finished
+ * sound. While walking, the steps up to the panel's are filled and the one it is at glows; with the finished sound on
+ * the panel, every step is filled. Hovered, a step lights its controls on the panel in place of whatever was
+ * lit, as the lesson's step cards do, and leaving it puts back what the page had lit.
+ */
+export function Chapters({
+  steps,
+  step,
+  onStep,
+  lit = [],
+}: {
+  steps: readonly PresetStep[];
+  step: number | null;
+  onStep: (k: number | null) => void;
+  lit?: readonly string[];
 }) {
   const walking = step != null;
   return (
@@ -57,18 +186,24 @@ export function Chapters({
         // The step's module colour, for the stylesheet's fill and glow.
         const colour: CSSProperties & Record<'--chapter', string> = { '--chapter': m.color };
         return (
-          <li key={i} className="kys-chapter" data-state={state} style={{ flexGrow: 1 }}>
+          <li key={i} className="kys-chapter" data-state={state}>
             <button
               type="button"
               onClick={() => onStep(i)}
               aria-current={i === step ? 'step' : undefined}
               aria-label={`Lesson step ${i + 1}: ${s.title}`}
-              title={`${i + 1}. ${s.title}`}
-              onPointerEnter={() => !walking && highlightStore.set(stepIds(s))}
-              onPointerLeave={() => !walking && highlightStore.set([])}
+              onPointerEnter={() => highlightStore.set(stepIds(s))}
+              onPointerLeave={() => highlightStore.set([...lit])}
               style={colour}
             >
               <span className="kys-chapter-track" />
+              <span className="kys-chapter-label" aria-hidden="true">
+                <span className="kys-chapter-area">
+                  <span className="kys-chapter-num">{i + 1}</span>
+                  <span className="kys-chapter-module">{m.label}</span>
+                </span>
+                <span className="kys-chapter-name">{s.title}</span>
+              </span>
             </button>
           </li>
         );
@@ -79,95 +214,39 @@ export function Chapters({
           onClick={() => onStep(null)}
           aria-current={walking ? undefined : 'step'}
           aria-label="The finished sound"
-          title="The finished sound"
         >
-          <Check size={12} strokeWidth={3} aria-hidden="true" />
+          <span className="kys-chapter-track" />
+          <span className="kys-chapter-label" aria-hidden="true">
+            <span className="kys-chapter-area">
+              <Check size={12} strokeWidth={3} />
+              <span className="kys-chapter-module">Finished</span>
+            </span>
+            <span className="kys-chapter-name">How it works</span>
+          </span>
         </button>
       </li>
     </ol>
   );
 }
 
-/**
- * Back a step and on a step. With the finished sound on the panel, "on" starts the lesson at its first step; from the
- * last step it finishes. Named apart from the lesson's own step arrows, which are still on the page.
- */
-export function StepTransport({
-  n,
-  step,
-  onStep,
-}: {
-  n: number;
-  step: number | null;
-  onStep: (k: number | null) => void;
-}) {
-  const next =
-    step == null
-      ? { to: 0, label: 'Start the lesson' }
-      : step >= n - 1
-        ? { to: null, label: 'Finish the lesson' }
-        : { to: step + 1, label: 'Next lesson step' };
-  return (
-    <>
-      <button
-        type="button"
-        className="kys-pbtn"
-        aria-label="Previous lesson step"
-        title="Back a step"
-        disabled={step == null || step === 0}
-        onClick={() => step != null && onStep(step - 1)}
-      >
-        <SkipBack size={17} fill="currentColor" aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        className="kys-pbtn"
-        aria-label={next.label}
-        title={next.label}
-        onClick={() => onStep(next.to)}
-      >
-        <SkipForward size={17} fill="currentColor" aria-hidden="true" />
-      </button>
-    </>
-  );
-}
-
 /** The riff: the player's play button. Named for what it will do, as the page's tests and the old button were. */
 export function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`kys-play ${playing ? 'is-playing' : ''}`}
-      title={playing ? 'Stop the riff' : 'Play a short riff that suits the sound'}
+    <PlayerTip
+      name={playing ? 'Stop the riff' : 'Play a riff'}
+      help={playing ? undefined : 'A short phrase that suits the sound, played through the panel.'}
     >
-      <span className="kys-play-dot" aria-hidden="true">
-        {playing ? (
-          <Square size={13} fill="currentColor" />
-        ) : (
-          <Play size={16} fill="currentColor" className="translate-x-px" />
-        )}
-      </span>
-      {playing ? 'Stop riff' : 'Play riff'}
-    </button>
-  );
-}
-
-/** The step the panel is at, under the panel: its number, its part of the synth, its title and what to listen for. */
-export function Captions({ steps, step }: { steps: readonly PresetStep[]; step: number }) {
-  const s = steps[step];
-  if (!s) return null;
-  const m = moduleOf(s.module);
-  return (
-    <div className="kys-captions" aria-live="polite">
-      <p className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-        <span className="kys-label" style={{ color: m.color }}>
-          Step {step + 1} of {steps.length} · {m.label}
+      <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
+        <span className="kys-play-dot" aria-hidden="true">
+          {playing ? (
+            <Square size={13} fill="currentColor" />
+          ) : (
+            <Play size={16} fill="currentColor" className="translate-x-px" />
+          )}
         </span>
-        <span className="font-semibold text-(--kys-text)">{s.title}</span>
-      </p>
-      <StepText text={s.why} className="mt-1 max-w-[96ch] text-[14px]" />
-    </div>
+        {playing ? 'Stop riff' : 'Play riff'}
+      </button>
+    </PlayerTip>
   );
 }
 
@@ -199,14 +278,22 @@ export function FullscreenButton({ target }: { target: RefObject<HTMLElement | n
     else void target.current?.requestFullscreen().catch(refused);
   };
   return (
-    <button
-      type="button"
-      className="kys-pbtn"
-      aria-label={full ? 'Leave full screen' : 'Full screen'}
-      title={full ? 'Leave full screen' : 'Full screen'}
-      onClick={toggle}
+    <PlayerTip
+      name={full ? 'Leave full screen' : 'Full screen'}
+      help={full ? undefined : 'The panel, the bar and the piano fill the screen.'}
     >
-      {full ? <Minimize size={17} aria-hidden="true" /> : <Maximize size={17} aria-hidden="true" />}
-    </button>
+      <button
+        type="button"
+        className="kys-pbtn"
+        aria-label={full ? 'Leave full screen' : 'Full screen'}
+        onClick={toggle}
+      >
+        {full ? (
+          <Minimize size={17} aria-hidden="true" />
+        ) : (
+          <Maximize size={17} aria-hidden="true" />
+        )}
+      </button>
+    </PlayerTip>
   );
 }

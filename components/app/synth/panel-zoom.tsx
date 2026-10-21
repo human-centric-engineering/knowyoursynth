@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * How big the panel is drawn: fitted to the page, or zoomed in and scrolled (`f-phone-and-tablet`).
+ * How big the panel is drawn: fitted to the page, a little smaller, or zoomed in and scrolled (`f-phone-and-tablet`).
  *
  * The panel's SVG fills its frame, so zooming widens the frame inside the horizontal scroller around it. The panel is
  * laid out bigger, not magnified, so its controls keep working at every size, and dragging on bare panel scrolls it.
@@ -11,25 +11,38 @@
 
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { CSSProperties, RefObject } from 'react';
+import { PlayerTip } from '@/components/app/synth/player-tip';
 
-/** The sizes, as multiples of the fitted width. The first is "Fit". */
-export const PANEL_SCALES = [1, 1.5, 2, 3] as const;
+/** The sizes, as multiples of the fitted width: 90%, then fitted (100%), then up in tenths to 200%. */
+export const PANEL_SCALES = [0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2] as const;
+/** The fitted size, which the middle of the zoom control goes back to. */
+const FIT: PanelScale = 1;
 export type PanelScale = (typeof PANEL_SCALES)[number];
 
-/** The widest the fitted panel is drawn. */
-const MAX_FIT_PX = 1560;
+/** The widest the fitted panel is drawn, unless `--kys-fit-max` says otherwise (full screen lifts it). */
+const MAX_FIT = 'var(--kys-fit-max, 1560px)';
+/**
+ * The narrowest that fitting to the screen's height draws a panel, where the page is that wide. A tall panel (the
+ * ARP 2600) fitted to the height would be too small to read and work, so below this it overflows and the page scrolls.
+ */
+const MIN_FIT_PX = 1100;
 
 /**
- * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px; a synth with its own layout
- * is also kept short enough to fit the screen's height. Zoomed, it is that width times the scale.
+ * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px (or `--kys-fit-max`: the
+ * whole width, full screen), and kept short enough to fit the screen's height. Zoomed, it is that width times the
+ * scale.
+ *
+ * The height it fits is the screen's less `--kys-fit-chrome`, which the page sets from `lg` up to what is above the
+ * panel and the dock pinned under it (t-74). Without it, the panel may take 82% of the screen's height. Fitting to the
+ * height never draws it narrower than `MIN_FIT_PX`: a tall panel is drawn at a working size and scrolled instead.
  */
 export function panelFrameStyle(
   view: { w: number; h: number } | null,
   scale: PanelScale
 ): CSSProperties {
   const cap = view
-    ? `min(${MAX_FIT_PX}px, ${((82 * view.w) / view.h).toFixed(1)}vh)`
-    : `${MAX_FIT_PX}px`;
+    ? `min(${MAX_FIT}, max(${MIN_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${(view.w / view.h).toFixed(4)})))`
+    : MAX_FIT;
   return { width: `calc(${scale} * min(100%, ${cap}))` };
 }
 
@@ -70,7 +83,10 @@ export function useKeepCentre(scale: PanelScale): RefObject<HTMLDivElement | nul
   return scroller;
 }
 
-/** Zoom out, back to fit, and zoom in. */
+/** A scale as a percentage, rounded, so 1.1 reads 110% rather than 110.00000000000001%. */
+const percent = (s: PanelScale) => `${Math.round(s * 100)}%`;
+
+/** Zoom out, back to fit, and zoom in, a tenth at a time. */
 export function PanelZoom({
   scale,
   onScale,
@@ -89,33 +105,49 @@ export function PanelZoom({
       role="group"
       aria-label="Panel size"
     >
-      <button
-        type="button"
-        aria-label="Zoom out"
-        disabled={i === 0}
-        onClick={() => onScale(PANEL_SCALES[i - 1])}
-        className={btn}
+      <PlayerTip name="Zoom out" help="Draw the panel smaller.">
+        <button
+          type="button"
+          aria-label="Zoom out"
+          disabled={i === 0}
+          onClick={() => onScale(PANEL_SCALES[i - 1])}
+          className={btn}
+        >
+          −
+        </button>
+      </PlayerTip>
+      <PlayerTip
+        name="Zoom"
+        help={
+          scale === FIT
+            ? 'The panel is fitted to the page. Use − and + to draw it smaller or bigger.'
+            : `Drawn at ${percent(scale)} now. Click to fit it to the page again.`
+        }
       >
-        −
-      </button>
-      <button
-        type="button"
-        aria-label="Fit the panel to the page"
-        aria-pressed={i === 0}
-        onClick={() => onScale(PANEL_SCALES[0])}
-        className={`${btn} min-w-12 font-mono text-xs`}
+        <button
+          type="button"
+          aria-label="Fit the panel to the page"
+          aria-pressed={scale === FIT}
+          onClick={() => onScale(FIT)}
+          className={`${btn} min-w-14 font-mono text-xs`}
+        >
+          {scale === FIT ? 'Zoom' : percent(scale)}
+        </button>
+      </PlayerTip>
+      <PlayerTip
+        name="Zoom in"
+        help="Draw the panel bigger, every control still working. Scroll it sideways."
       >
-        {i === 0 ? 'Fit' : `${scale * 100}%`}
-      </button>
-      <button
-        type="button"
-        aria-label="Zoom in"
-        disabled={i === PANEL_SCALES.length - 1}
-        onClick={() => onScale(PANEL_SCALES[i + 1])}
-        className={btn}
-      >
-        +
-      </button>
+        <button
+          type="button"
+          aria-label="Zoom in"
+          disabled={i === PANEL_SCALES.length - 1}
+          onClick={() => onScale(PANEL_SCALES[i + 1])}
+          className={btn}
+        >
+          +
+        </button>
+      </PlayerTip>
     </div>
   );
 }

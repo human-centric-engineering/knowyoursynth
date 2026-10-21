@@ -6,6 +6,7 @@
 import { useEffect, useRef } from 'react';
 import type { PointerEvent, FocusEvent, MouseEvent } from 'react';
 import {
+  badgeStore,
   findStore,
   focusStore,
   highlightStore,
@@ -483,6 +484,53 @@ export function HeatRanks({
               y={y + 5.5}
               textAnchor="middle"
               fontSize="16"
+              fontWeight="700"
+              fontFamily="'JetBrains Mono', ui-monospace, monospace"
+              fill="#1b1204"
+            >
+              {i + 1}
+            </text>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+/**
+ * The open lesson card's numbers on the panel: ① on the first control or jack it lists, ② on the second, so the card
+ * and the panel can be read together. A cable is numbered at its input. Controls the panel is not showing are skipped,
+ * as the heat ranks skip them, but keep their number so the card and the panel still agree.
+ */
+export function LessonBadges({ def, values }: { def: SynthDef; values: ControlValues }) {
+  const ids = useStore(badgeStore);
+  if (!ids.length) return null;
+  const cm = controlMap(def);
+  const jm = jackMap(def);
+  return (
+    <g pointerEvents="none" className="kys-fade" data-testid="lesson-badges">
+      {ids.map((id, i) => {
+        const c = cm[id];
+        const j = c ? null : jm[id];
+        let x: number;
+        let y: number;
+        if (c) {
+          if (!isShown(c, values)) return null;
+          const off = c.type === 'knob' ? c.r * 1.05 : 20;
+          x = c.x - off;
+          y = c.type === 'fader' && c.orient !== 'h' ? c.y - (c.len || 200) / 2 - 6 : c.y - off;
+        } else if (j) {
+          x = j.x - 16;
+          y = j.y - 16;
+        } else return null;
+        return (
+          <g key={id}>
+            <circle cx={x} cy={y} r="14" fill="#f6a63a" stroke="#1b1204" strokeWidth="2.5" />
+            <text
+              x={x}
+              y={y + 6}
+              textAnchor="middle"
+              fontSize="17"
               fontWeight="700"
               fontFamily="'JetBrains Mono', ui-monospace, monospace"
               fill="#1b1204"

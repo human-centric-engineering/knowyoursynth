@@ -126,14 +126,16 @@ describe('FxRack master switch', () => {
     expect(window.localStorage.getItem('kys.fxOpen')).toBe('true');
   });
 
-  it('turns the rack off and leaves the fold as it was', () => {
-    const { onChange } = setup(fxWith({ on: true }));
+  it('turns the rack off and folds it away', () => {
+    const { onChange } = setup(fxWith({ on: true }), { open: true });
+    expect(screen.getAllByRole('slider')).toHaveLength(9);
 
     fireEvent.click(master());
 
     expect(onChange).toHaveBeenCalledExactlyOnceWith({ ...FX_DEFAULT, on: false });
     expect(header().getAttribute('aria-expanded')).toBe('false');
-    expect(window.localStorage.getItem('kys.fxOpen')).toBeNull();
+    expect(screen.queryAllByRole('slider')).toHaveLength(0);
+    expect(window.localStorage.getItem('kys.fxOpen')).toBe('false');
   });
 });
 

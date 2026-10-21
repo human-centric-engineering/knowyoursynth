@@ -19,6 +19,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -73,6 +74,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
 });
@@ -92,6 +94,7 @@ function page() {
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const library = () => {
+  openSide('Sounds');
   const section = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
   if (!section) throw new Error('no library');
   return section;
@@ -102,15 +105,18 @@ describe('the library on the page', () => {
     expect(detail.sounds).toHaveLength(99);
     // Every sound but the first, which is loaded, then the first again.
     const order = [...detail.sounds.slice(1), detail.sounds[0]];
+    // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 99 times over.
+    const lib = library();
+    const picker = button(/^Choose a sound/);
     for (const p of order) {
-      const row = within(library())
-        .getAllByRole('button')
-        .find((b) => b.querySelector('.font-semibold')?.textContent === p.name);
+      const row = [...lib.querySelectorAll('button')].find(
+        (b) => b.querySelector('.font-semibold')?.textContent === p.name
+      );
       if (!row) throw new Error(`${p.name} is not in the library`);
       fireEvent.click(row);
       expect(loadedName()).toBe(p.name);
       expect(row.getAttribute('aria-current')).toBe('true');
-      expect(screen.getByRole('heading', { level: 2, name: p.name })).toBeTruthy();
+      expect(picker.getAttribute('aria-label')).toBe(`Choose a sound (now: ${p.name})`);
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
     // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.
@@ -118,6 +124,8 @@ describe('the library on the page', () => {
 });
 
 describe('the lesson on the page', () => {
+  // At `lg` and up the region these use is in its drawer (t-70).
+
   const pickSound = () => {
     const p = detail.sounds.find((s) => s.steps.length > 2);
     if (!p) throw new Error('no sound with several steps');
@@ -135,20 +143,21 @@ describe('the lesson on the page', () => {
     page();
     const p = pickSound();
     open(p);
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
-    expect(screen.getByText(`step 1 of ${p.steps.length}`)).toBeTruthy();
+    expect(stepShown()).toBe(`step 1 of ${p.steps.length}`);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 0));
     expect(highlightStore.get().length).toBeGreaterThan(0);
 
     const next = screen.getAllByRole('button').find((b) => b.textContent === 'Next step');
     if (!next) throw new Error('no Next step');
     fireEvent.click(next);
-    expect(screen.getByText(`step 2 of ${p.steps.length}`)).toBeTruthy();
+    expect(stepShown()).toBe(`step 2 of ${p.steps.length}`);
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p, 1));
 
-    fireEvent.click(button(`Step ${p.steps.length}: ${p.steps[p.steps.length - 1].title}`));
-    fireEvent.click(button('Finish'));
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    fireEvent.click(button(`Lesson step ${p.steps.length}: ${p.steps[p.steps.length - 1].title}`));
+    fireEvent.click(button('Finish the lesson'));
+    expect(stepShown()).toBeNull();
     expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
   });
 
@@ -156,11 +165,12 @@ describe('the lesson on the page', () => {
     page();
     const p = pickSound();
     open(p);
+    openSide('Lesson');
     fireEvent.click(button('Build it step by step'));
     const other = detail.sounds.find((s) => s.id !== p.id);
     if (!other) throw new Error('only one sound');
     open(other);
-    expect(screen.queryByText(/^step \d+ of/)).toBeNull();
+    expect(stepShown()).toBeNull();
     expect(lastParams(engine.send)).toEqual(expectedParams(def, other));
   });
 });
@@ -198,7 +208,7 @@ describe('the synth bar’s tour, lineage and limits', () => {
     expect(button('Orientation tour').getAttribute('aria-pressed')).toBe('false');
   });
 
-  it('opens the lineage with the API’s lineage, from History › and from About', () => {
+  it('opens the lineage with the API’s lineage, from History ›', () => {
     page();
     const lineageTitle = detail.lineage?.title ?? '';
     const dialog = screen
@@ -210,13 +220,9 @@ describe('the synth bar’s tour, lineage and limits', () => {
     expect(dialog.open).toBe(true);
     fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
     expect(dialog.open).toBe(false);
-    fireEvent.click(button('Where it comes from: the Model D’s lineage'));
-    expect(dialog.open).toBe(true);
-    // The same dialog both times, not a second copy of it.
-    expect(screen.getAllByRole('heading', { name: lineageTitle, hidden: true })).toHaveLength(1);
   });
 
-  it('opens "What is not modelled" with the API’s limits, from the bar and from About', () => {
+  it('opens "What is not modelled" with the API’s limits, from the bar', () => {
     page();
     const dialog = screen
       .getByRole('heading', { name: 'What is not modelled', hidden: true })
@@ -227,8 +233,21 @@ describe('the synth bar’s tour, lineage and limits', () => {
     expect(within(dialog).getByText(detail.notes.limits.intro ?? '')).toBeTruthy();
     expect(within(dialog).getByText(detail.notes.limits.items[0].title)).toBeTruthy();
     fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
-    fireEvent.click(button('What this app does not model on the Model D'));
+    expect(dialog.open).toBe(false);
+  });
+
+  it('opens About with the synth’s summary from About ›', () => {
+    page();
+    const dialog = screen
+      .getByRole('heading', { name: 'About this Model D', hidden: true })
+      .closest('dialog');
+    if (!dialog) throw new Error('no about dialog');
+    expect(dialog.open).toBe(false);
+    fireEvent.click(button('About ›'));
     expect(dialog.open).toBe(true);
+    expect(within(dialog).getByText(detail.synth.summary)).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
+    expect(dialog.open).toBe(false);
   });
 
   it('offers no History for a synth with no lineage', () => {

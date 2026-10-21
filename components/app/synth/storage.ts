@@ -48,6 +48,10 @@ export const STORAGE_KEYS = {
    * above: it is kept in this browser only, never stamped or kept in the account.
    */
   rotateSeen: 'kys.rotateSeen',
+  /** Whether the piano and the scope are shown in the dock from `lg` up (t-74). Kept in this browser only. */
+  deck: 'kys.deck',
+  /** Which side of the panel the lesson card floats on from `lg` up (t-74). Kept in this browser only. */
+  cardSide: 'kys.cardSide',
 } as const;
 
 /** One synth's panel, as it was left. */

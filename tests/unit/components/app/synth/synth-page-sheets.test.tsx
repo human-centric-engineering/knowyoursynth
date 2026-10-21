@@ -10,6 +10,7 @@
  * @see components/app/ui/bottom-sheet.tsx
  */
 
+import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
@@ -17,6 +18,7 @@ import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
   findStore,
   focusStore,
+  highlightStore,
   meterStore,
   notesStore,
   pendingStore,
@@ -185,6 +187,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 beforeEach(() => {
   window.localStorage.clear();
+  tallScreen();
   window.location.hash = '';
   engine.send.mockReset();
   engine.setFx.mockReset();
@@ -237,14 +240,53 @@ function tap(el: Element) {
 }
 
 describe('at lg and up', () => {
-  it('lays the regions out beside the panel as before, with no bar and no sheets', () => {
+  it('opens what is beside the panel over it, from the bar and the strip, with no bottom bar and no sheets', () => {
     page();
     expect(screen.queryByRole('navigation', { name: 'Beside the panel' })).toBeNull();
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(screen.getByRole('region', { name: 'Sound library' })).toBeTruthy();
-    expect(screen.getByRole('article', { name: /Fat bass/ })).toBeTruthy();
+    // Nothing is open on a first visit: the library waits behind the sound picker, and there is no card.
+    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
+    expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
+
+    openSide('Sounds');
+    expect(screen.getByRole('heading', { name: 'Sound library' })).toBeTruthy();
+
+    // One card at a time over the panel: the inspector, then the effects in its place.
+    openSide('Inspect');
     expect(screen.getByRole('heading', { name: 'Control inspector' })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Effects' }));
+    expect(screen.queryByRole('heading', { name: 'Control inspector' })).toBeNull();
+    expect(screen.getByRole('heading', { name: /Effects rack/ })).toBeTruthy();
+  });
+
+  it('closes the card from its close button or from Escape inside it', () => {
+    page();
+    openSide('Inspect');
+    fireEvent.click(screen.getByRole('button', { name: 'Close the card' }));
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Inspector' }).getAttribute('aria-pressed')).toBe(
+      'false'
+    );
+
+    openSide('Inspect');
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Close the card' }), { key: 'Escape' });
+    expect(screen.queryByTestId('lesson-card')).toBeNull();
+  });
+
+  it('keeps the lesson’s place while the library is looked at', () => {
+    page();
+    const first = screen
+      .getByRole('list', { name: 'Lesson steps' })
+      .querySelector<HTMLButtonElement>('button');
+    if (!first) throw new Error('no chapter');
+    fireEvent.click(first);
+    expect(stepShown()).toBe('step 1 of 1');
+    openSide('Sounds');
+    fireEvent.click(screen.getByRole('button', { name: /^Choose a sound/ }));
+    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    expect(stepShown()).toBe('step 1 of 1');
+    expect(screen.getByTestId('lesson-card').textContent).toContain('Step 1 of 1');
   });
 
   it('opens no Inspector sheet on a tap, and leaves the floating cards on', () => {
@@ -265,7 +307,7 @@ describe('below lg', () => {
     ).toEqual(['Library', 'Lesson', 'Inspector', 'Tutor']);
     expect(screen.queryByRole('region', { name: 'Sound library' })).toBeNull();
     expect(screen.queryByRole('article', { name: /Fat bass/ })).toBeNull();
-    expect(screen.getByRole('heading', { name: 'About this Model D' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
 
     fireEvent.click(within(bar()).getByRole('button', { name: 'Library' }));
     expect(within(sheet('Library')).getByRole('region', { name: 'Sound library' })).toBeTruthy();
@@ -289,6 +331,28 @@ describe('below lg', () => {
     fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
     fireEvent.click(within(bar()).getByRole('button', { name: 'Lesson' }));
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('puts back the step the Lesson has lit when a pointed-at chapter is left', () => {
+    phone();
+    const twoSteps = sound({
+      id: 'two-steps',
+      name: 'Two steps',
+      steps: [
+        { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
+        { title: 'Close the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -2 } },
+      ],
+    });
+    page({ detail: { ...detail, sounds: [twoSteps] } });
+    const chapters = within(screen.getByRole('list', { name: 'Lesson steps' }));
+    const [first, second] = chapters.getAllByRole('button', { name: /^Lesson step / });
+    fireEvent.click(first);
+    const lit = highlightStore.get();
+    expect(lit.length).toBeGreaterThan(0);
+    fireEvent.pointerEnter(second);
+    expect(highlightStore.get()).not.toEqual(lit);
+    fireEvent.pointerLeave(second);
+    expect(highlightStore.get()).toEqual(lit);
   });
 
   it('closes the Library sheet when a sound is chosen from it, with the sound on the panel', () => {
@@ -473,7 +537,7 @@ describe('below lg', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Close Lesson' }));
       scrollBy.mockClear();
       // the lesson stays mounted while its sheet is closed, so the step is still lit on the panel
-      expect(screen.getByText('step 1 of 1')).toBeTruthy();
+      expect(stepShown()).toBe('step 1 of 1');
       await act(() => new Promise((r) => setTimeout(r, 20)));
       expect(scrollBy).not.toHaveBeenCalled();
     });
