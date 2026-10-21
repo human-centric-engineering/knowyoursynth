@@ -1050,6 +1050,15 @@
       "source": "https://www.gforcesoftware.com/blog/cheetah-ms800/"
     },
     {
+      "id": "donner-essential-l1",
+      "name": "Donner Essential L1",
+      "maker": "Donner",
+      "year": "2025",
+      "kind": "mono",
+      "text": "Donner’s second synthesizer, inspired by the Roland SH-101: an analogue monosynth with a 3340 oscillator, a 64-step sequencer, an arpeggiator and a detachable 32-key keyboard.",
+      "source": "https://www.musicradar.com/music-tech/namm-2025-donner-launches-essential-l1-a-budget-analogue-synth-with-detachable-keyboard-thats-inspired-by-the-roland-sh-101"
+    },
+    {
       "id": "nord-lead",
       "name": "Nord Lead",
       "maker": "Clavia",

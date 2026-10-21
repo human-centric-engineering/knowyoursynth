@@ -5,6 +5,8 @@ ported when its definition is code, its content is in the catalogue tables, the 
 its baseline, and `/synths/<id>` plays it. Six steps, in order. Each names the file that changes
 and the test that holds it.
 
+A synth with no prototype version follows [`adding-a-synth.md`](./adding-a-synth.md) instead.
+
 Batch synths that share an engine into one PR (plan §3 "The 25 synths"): the steps repeat, and
 reviewing them once per engine is the point.
 

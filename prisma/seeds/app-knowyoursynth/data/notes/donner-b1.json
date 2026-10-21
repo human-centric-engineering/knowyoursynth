@@ -1,0 +1,58 @@
+{
+  "synth": "donner-b1",
+  "unusual": [
+    {
+      "target": "keys",
+      "text": "Twenty-six flat touch keys, B1 to C4, with OCT shifting them across a four-octave range. A note is accented by the ACCENT button or a step’s accent mark, or, from MIDI, by velocity above the accent threshold."
+    },
+    {
+      "target": "steps",
+      "text": "The sixteen white keys are also the sixteen steps of a pattern, numbered under them. The same key plays a note, enters a step, picks a step to edit, and transposes a playing pattern (C3 is the centre, up to an octave either way)."
+    },
+    {
+      "target": "seq.save",
+      "text": "A pattern stores each step’s note, gate length, accent, slide and ratchet, and the pattern’s tempo, length and transpose, but never the knobs. Load a pattern and it plays with whatever the knobs are set to now. Edits are lost unless saved."
+    },
+    {
+      "target": "out.master",
+      "text": "The knobs send and receive no MIDI. A recording of the B1’s MIDI captures the notes, not the filter sweeps; turn the knobs while recording the audio instead."
+    },
+    {
+      "target": "vcf.depth",
+      "text": "Printed DEPTH: on the TB-303 the same job is ENV MOD. It sets how far the one envelope opens the filter on each note."
+    },
+    {
+      "target": "env.decay",
+      "text": "The only envelope knob. The one envelope runs both the filter and the volume, and has no release stage, so DECAY sets how quickly a note closes and fades together."
+    },
+    {
+      "target": "vco.pitch",
+      "text": "PITCH tunes the oscillator up to a fifth either way, with a detent at the centre."
+    },
+    {
+      "target": "seq.gate",
+      "text": "Gate length is set per step in eighths of a step, from 0, a rest, to 8, a tie into the next step. A new note takes the previous step’s gate length."
+    },
+    {
+      "target": "seq.ratchet",
+      "text": "RATCHET plays a step one to four times inside its own length. It is ignored on a slid or tied step."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: the sawtooth or square oscillator with PITCH, the resonant filter with CUTOFF, RESONANCE and DEPTH, the one decay envelope, accent, slide, saturation with DRIVE and TONE, and the delay with LEVEL, TIME and FEEDBACK. The riffs carry accents, slides, gate lengths and ratchets per step, and the BPM setting sets their speed.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Step entry and pattern memory: REC/EDIT, PATTERN, SAVE, CLEAR/REST, GATE LENGTH, RATCHET, ▼, ▲, TEMPO TAP and PLAY/STOP change nothing, and each sound plays its own riff instead; pattern length and stored transpose with them. The arpeggiator, its eight orders and HOLD. MIDI channels, forwarding, soft through and local control; SYNC IN, SYNC OUT and the clock source; AUX IN. Key priority, multi-trigger and pattern waiting. A playable step sequencer is planned (f-step-sequencer)."
+      },
+      {
+        "title": "ACCENT and SLIDE play live",
+        "text": "On the B1 these buttons write marks into steps, or apply to every step while held during playback. Here, lit, they accent or slide every note you play. Notes from a MIDI keyboard are accented here above velocity about 115; the B1’s own threshold is 96 by default and can be set in Donner’s app. Overlapping notes slide, as on the B1 with multi-trigger set to slide."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "Donner’s manual does not give the filter’s slope or circuit, the envelope times, or the order of the effects. Here the filter is the app’s 24 dB ladder, and the envelope times, accent sweep and cutoff range follow the app’s TB-303-style voices, since reviewers find the B1’s filter close to a 303’s. The saturation is the app’s generic overdrive. The B1’s delay is digital and tape-style by reviewers’ accounts, up to about half a second; here it is the app’s clean delay over the same range. Saturation comes before the delay, as the panel is laid out."
+      }
+    ]
+  }
+}

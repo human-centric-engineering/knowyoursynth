@@ -1,0 +1,899 @@
+{
+  "synth": "donner-b1",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "b1-first-acid",
+      "name": "First Acid",
+      "ref": "In the style of late 1980s Chicago acid house",
+      "artist": "Various",
+      "tags": ["bass", "acid", "house", "80s"],
+      "level": 1,
+      "blurb": "A plain acid line: a sawtooth that squelches on every note and jumps out on the accents.",
+      "how": "One sawtooth goes through a resonant low-pass filter. DEPTH lets the envelope flick the filter open on each note and DECAY closes it again, and RESONANCE turns that movement into a squelch. Accented steps play louder and open the filter further; slid steps glide into the next note.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.1375, 0.8],
+          [0.25, 36, 0.1375, 0.8],
+          [0.5, 48, 0.1375, 1.0],
+          [0.75, 36, 0.1375, 0.8],
+          [1.0, 39, 0.28, 0.8],
+          [1.25, 41, 0.1375, 0.8],
+          [1.5, 36, 0.1375, 0.8],
+          [1.75, 36, 0.1375, 1.0],
+          [2.0, 31, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 0.8],
+          [2.5, 34, 0.28, 0.8],
+          [2.75, 36, 0.1375, 0.8],
+          [3.0, 48, 0.1375, 1.0],
+          [3.25, 36, 0.1375, 0.8],
+          [3.5, 41, 0.28, 0.8],
+          [3.75, 39, 0.1375, 0.8],
+          [4.0, 36, 0.1375, 0.8],
+          [4.25, 36, 0.1375, 0.8],
+          [4.5, 48, 0.1375, 1.0],
+          [4.75, 36, 0.1375, 0.8],
+          [5.0, 39, 0.28, 0.8],
+          [5.25, 41, 0.1375, 0.8],
+          [5.5, 36, 0.1375, 0.8],
+          [5.75, 36, 0.1375, 1.0],
+          [6.0, 43, 0.1375, 1.0],
+          [6.25, 41, 0.1375, 0.8],
+          [6.5, 39, 0.28, 0.8],
+          [6.75, 36, 0.1375, 0.8],
+          [7.0, 34, 0.1375, 0.8],
+          [7.25, 36, 0.1375, 0.8],
+          [7.5, 31, 0.28, 0.8],
+          [7.75, 34, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth, filter fairly low",
+          "module": "osc",
+          "why": "Everything starts with the one oscillator. The sawtooth carries every harmonic, so it gives the filter the most to work on.\n- WAVE sawtooth: bright and buzzy.\n- CUTOFF 3.5 (about 520 Hz): low, so between notes the sound is dark.\n- RESONANCE 2 and DEPTH 2: almost no squelch yet.\n- Listen for: play the riff. It is a dull, plodding bass for now.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 2,
+            "vcf.depth": 2,
+            "env.decay": 4,
+            "vca.accent": 0
+          }
+        },
+        {
+          "title": "Turn up the resonance",
+          "module": "filter",
+          "why": "RESONANCE boosts the frequencies at the cutoff point. On a 303-style filter that is the squelch.\n- RESONANCE 8: a strong, vocal peak that follows the filter as it moves.\n- Listen for: each note now has a rubbery \"yow\". Turn RESONANCE back to 2 and the line goes plain again.",
+          "set": {
+            "vcf.resonance": 8
+          }
+        },
+        {
+          "title": "Let the envelope open it",
+          "module": "filter",
+          "why": "DEPTH sets how far the envelope opens the filter on each note before DECAY closes it. With high resonance that sweep is the acid sound.\n- DEPTH 6: a big sweep on every note.\n- DECAY 3.5 (about 340 ms): each note closes fairly quickly, so the line stays tight.\n- Listen for: the squelch gets wider. Turn DECAY up and the notes smear into long \"wows\".",
+          "set": {
+            "vcf.depth": 6,
+            "env.decay": 3.5
+          }
+        },
+        {
+          "title": "Accents",
+          "module": "env",
+          "why": "The riff has accented steps. ACCENT sets how much they stand out: louder, and with an extra sweep of the filter that grows with RESONANCE.\n- ACCENT 7: the accented notes jump out with a sharp shriek.\n- Listen for: the pattern of loud and quiet notes. Turn ACCENT to 0 and the line goes flat.",
+          "set": {
+            "vca.accent": 7
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "The squelch. Most acid lines live between 7 and 10.",
+        "vcf.cutoff": "Sweep this slowly while the riff plays. That slow sweep is how acid tracks build.",
+        "vcf.depth": "How far each note opens. Low values keep the line dark, so the accents stand out more.",
+        "env.decay": "How long each note takes to close. Short is tight and plucky; long smears the notes together.",
+        "vca.accent": "How hard the accented steps hit."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep slowly from 2 to 8 while the riff plays",
+          "hear": "The line opens from a muffled thud into a screaming squelch."
+        },
+        {
+          "id": "sat.on",
+          "try": "Switch the saturation on",
+          "hear": "The same line, thicker and angrier."
+        }
+      ]
+    },
+    {
+      "id": "b1-saturated-acid",
+      "name": "Saturated Acid",
+      "ref": "In the style of mid-1990s acid techno",
+      "artist": "Various",
+      "tags": ["bass", "acid", "techno", "90s"],
+      "level": 2,
+      "blurb": "A hard, driven acid line pushed through the B1’s saturation until the resonance screams.",
+      "how": "The acid voice with the resonance near the top and a long decay, run into the saturation. Saturation squashes the loud and quiet parts together, so the squelch stays loud as the filter closes and the resonant peak turns into a scream. TONE sets how harsh the scream is.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0.0, 33, 0.1375, 1.0],
+          [0.25, 33, 0.1375, 0.8],
+          [0.5, 45, 0.1375, 0.8],
+          [0.75, 33, 0.1375, 0.8],
+          [1.0, 33, 0.28, 0.8],
+          [1.25, 36, 0.1375, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [1.75, 45, 0.1375, 1.0],
+          [2.0, 33, 0.1375, 0.8],
+          [2.25, 33, 0.1375, 0.8],
+          [2.5, 43, 0.28, 0.8],
+          [2.75, 45, 0.1375, 0.8],
+          [3.0, 33, 0.1375, 1.0],
+          [3.25, 33, 0.1375, 0.8],
+          [3.5, 40, 0.28, 0.8],
+          [3.75, 41, 0.1375, 0.8],
+          [4.0, 33, 0.1375, 1.0],
+          [4.25, 33, 0.1375, 0.8],
+          [4.5, 45, 0.1375, 0.8],
+          [4.75, 33, 0.1375, 0.8],
+          [5.0, 33, 0.28, 0.8],
+          [5.25, 36, 0.1375, 0.8],
+          [5.5, 33, 0.1375, 0.8],
+          [5.75, 45, 0.1375, 1.0],
+          [6.0, 36, 0.1375, 1.0],
+          [6.25, 33, 0.1375, 0.8],
+          [6.5, 43, 0.28, 0.8],
+          [6.75, 45, 0.1375, 0.8],
+          [7.0, 48, 0.1375, 1.0],
+          [7.25, 45, 0.1375, 0.8],
+          [7.5, 43, 0.28, 0.8],
+          [7.75, 40, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A squelchy start",
+          "module": "filter",
+          "why": "Set up a strong acid voice first, so the saturation has a peak to work on.\n- WAVE sawtooth, CUTOFF 4, RESONANCE 9: a sharp, ringing peak.\n- DEPTH 5, DECAY 5 (about 510 ms): each note opens and closes slowly.\n- ACCENT 6: the accents stand out.\n- Listen for: a loud, wet squelch, still clean.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 9,
+            "vcf.depth": 5,
+            "env.decay": 5,
+            "vca.accent": 6
+          }
+        },
+        {
+          "title": "Switch the saturation on",
+          "module": "fx",
+          "why": "SATURATION comes after the VCA, so it shapes the whole note.\n- SATURATION on, DRIVE 7: the line is pushed hard into the clipper.\n- Listen for: the notes get louder and longer, and the quiet ends of each note are lifted up.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 7
+          }
+        },
+        {
+          "title": "Shape the scream with TONE",
+          "module": "fx",
+          "why": "TONE is a brightness control after the clipping. Turned up, it lets the harsh new harmonics through.\n- TONE 7: a bright, cutting scream on every accent.\n- Listen for: the top end biting. Turn TONE to 2 for a darker, woollier roar.",
+          "set": {
+            "sat.tone": 7
+          }
+        }
+      ],
+      "context": {
+        "sat.drive": "How hard the line is pushed. Above 8 the notes blur into one roar.",
+        "sat.tone": "Turn right for a harsher, brighter scream.",
+        "vcf.resonance": "Near the top so the saturation has a peak to scream with."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep from 2 to 9 slowly",
+          "hear": "The build-up of a 90s acid track, from rumble to scream."
+        },
+        {
+          "id": "sat.drive",
+          "try": "Drop to 2",
+          "hear": "Just a little grit; the squelch comes back into focus."
+        }
+      ]
+    },
+    {
+      "id": "b1-dub-echo",
+      "name": "Dub Echo",
+      "ref": "In the style of slow, dub-influenced acid",
+      "artist": "Various",
+      "tags": ["bass", "acid", "dub", "downtempo"],
+      "level": 2,
+      "blurb": "A sparse, rubbery line that the delay throws back and forth into the gaps.",
+      "how": "A slow acid voice with plenty of room between the notes. The delay is set to about three sixteenths at this tempo, so each echo lands off the beat, and FEEDBACK keeps the echoes coming. The line is written sparse so the echoes have space.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.1375, 1.0],
+          [0.75, 36, 0.1375, 0.8],
+          [1.5, 43, 0.28, 0.8],
+          [1.75, 41, 0.1375, 0.8],
+          [2.5, 36, 0.1375, 0.8],
+          [3.0, 39, 0.1375, 1.0],
+          [4.0, 36, 0.1375, 1.0],
+          [4.75, 36, 0.1375, 0.8],
+          [5.5, 46, 0.28, 0.8],
+          [5.75, 43, 0.1375, 0.8],
+          [6.5, 41, 0.1375, 0.8],
+          [7.0, 39, 0.28, 0.8],
+          [7.25, 36, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A round, slow voice",
+          "module": "filter",
+          "why": "Dub likes a fat, soft bass, with the squelch kept low.\n- WAVE sawtooth, CUTOFF 3, RESONANCE 6: dark with a gentle peak.\n- DEPTH 4, DECAY 6 (about 690 ms): each note opens softly and dies slowly.\n- Listen for: a slow, rubbery line with lots of space.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 3,
+            "vcf.resonance": 6,
+            "vcf.depth": 4,
+            "env.decay": 6,
+            "vca.accent": 5
+          }
+        },
+        {
+          "title": "Turn the delay on",
+          "module": "fx",
+          "why": "The delay repeats the sound after the saturation, so it echoes whatever you hear.\n- DELAY on, TIME 9 (about 390 ms): close to three sixteenths at 96 BPM, so the echoes fall off the beat.\n- LEVEL 5: the echoes sit a little under the dry line.\n- FEEDBACK 0: one echo per note.\n- Listen for: every note answered once, in the gaps.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 9,
+            "dly.level": 5,
+            "dly.feedback": 0
+          }
+        },
+        {
+          "title": "Feed it back",
+          "module": "fx",
+          "why": "FEEDBACK sends the echo back into the delay, so each echo makes another, quieter one.\n- FEEDBACK 6: four or five echoes that fade away.\n- Listen for: the line turns into a cloud of repeats. Above 9 the echoes take a long time to die; drop it when the cloud gets muddy.",
+          "set": {
+            "dly.feedback": 6
+          }
+        }
+      ],
+      "context": {
+        "dly.time": "Set it so the echoes land on a beat or off it. Small changes while it plays make a pitch-bending warble.",
+        "dly.feedback": "How many echoes. The higher, the longer the tail.",
+        "dly.level": "How loud the echoes are against the dry line."
+      },
+      "tweaks": [
+        {
+          "id": "dly.time",
+          "try": "Turn TIME slowly while the riff plays",
+          "hear": "The echoes slide in pitch as the delay stretches: the classic dub warble."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 9",
+          "hear": "Every echo squelches too."
+        }
+      ]
+    },
+    {
+      "id": "b1-ratchet-roll",
+      "name": "Ratchet Roll",
+      "ref": "In the style of modern acid techno",
+      "artist": "Various",
+      "tags": ["bass", "acid", "techno", "10s"],
+      "level": 2,
+      "blurb": "A driving line with rolls: some steps play two, three or four times inside their own length.",
+      "how": "RATCHET repeats a step inside its own length. Here some steps play twice, some three or four times, so the line stutters into the next beat. A short decay keeps each repeat crisp, and a little saturation glues them together.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.1375, 1.0],
+          [0.25, 36, 0.1375, 0.8],
+          [0.5, 36, 0.0625, 0.8],
+          [0.625, 36, 0.0625, 0.8],
+          [0.75, 48, 0.1375, 0.8],
+          [1.0, 36, 0.1375, 0.8],
+          [1.25, 39, 0.1375, 0.8],
+          [1.5, 36, 0.0417, 0.8],
+          [1.5833, 36, 0.0417, 0.8],
+          [1.6667, 36, 0.0417, 0.8],
+          [1.75, 41, 0.1375, 1.0],
+          [2.0, 36, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 0.8],
+          [2.5, 34, 0.0625, 0.8],
+          [2.625, 34, 0.0625, 0.8],
+          [2.75, 36, 0.1375, 0.8],
+          [3.0, 48, 0.1375, 1.0],
+          [3.25, 36, 0.0312, 0.8],
+          [3.3125, 36, 0.0312, 0.8],
+          [3.375, 36, 0.0312, 0.8],
+          [3.4375, 36, 0.0312, 0.8],
+          [3.5, 43, 0.1375, 0.8],
+          [3.75, 41, 0.1375, 0.8],
+          [4.0, 36, 0.1375, 1.0],
+          [4.25, 36, 0.1375, 0.8],
+          [4.5, 36, 0.0625, 0.8],
+          [4.625, 36, 0.0625, 0.8],
+          [4.75, 48, 0.1375, 0.8],
+          [5.0, 36, 0.1375, 0.8],
+          [5.25, 39, 0.1375, 0.8],
+          [5.5, 36, 0.0417, 0.8],
+          [5.5833, 36, 0.0417, 0.8],
+          [5.6667, 36, 0.0417, 0.8],
+          [5.75, 41, 0.1375, 1.0],
+          [6.0, 36, 0.1375, 1.0],
+          [6.25, 36, 0.1375, 0.8],
+          [6.5, 46, 0.0625, 0.8],
+          [6.625, 46, 0.0625, 0.8],
+          [6.75, 43, 0.1375, 0.8],
+          [7.0, 41, 0.0417, 0.8],
+          [7.0833, 41, 0.0417, 0.8],
+          [7.1667, 41, 0.0417, 0.8],
+          [7.25, 39, 0.1375, 0.8],
+          [7.5, 36, 0.0312, 0.8],
+          [7.5625, 36, 0.0312, 0.8],
+          [7.625, 36, 0.0312, 0.8],
+          [7.6875, 36, 0.0312, 0.8],
+          [7.75, 34, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tight, short voice",
+          "module": "env",
+          "why": "Ratchets only work if each repeat is heard on its own, so the notes have to be short.\n- WAVE sawtooth, CUTOFF 4.5, RESONANCE 7, DEPTH 5.\n- DECAY 2 (about 215 ms): each note closes quickly.\n- ACCENT 6.\n- Listen for: the rolls ticking clearly, like a drum roll on the bass.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 7,
+            "vcf.depth": 5,
+            "env.decay": 2,
+            "vca.accent": 6
+          }
+        },
+        {
+          "title": "Hear what DECAY does to a roll",
+          "module": "env",
+          "why": "With a long decay the repeats run into each other and the roll turns into a smear.\n- DECAY 5: about half a second.\n- Listen for: the rolls blurring into single, wobbling notes. Bring it back down when you have heard it.",
+          "set": {
+            "env.decay": 5
+          }
+        },
+        {
+          "title": "Back to tight, with some grit",
+          "module": "fx",
+          "why": "A little saturation makes the repeats sound like one instrument.\n- DECAY 2.5: crisp again.\n- SATURATION on, DRIVE 4, TONE 5: some warmth and weight, not a scream.\n- Listen for: a punchy, rolling line that sits on the beat.",
+          "set": {
+            "env.decay": 2.5,
+            "sat.on": true,
+            "sat.drive": 4,
+            "sat.tone": 5
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "Keep it short, or the repeats run into each other.",
+        "vcf.depth": "More DEPTH and every repeat squelches."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.depth",
+          "try": "Raise to 9",
+          "hear": "Each repeat in a roll gets its own squelch."
+        },
+        {
+          "id": "dly.on",
+          "try": "Switch the delay on",
+          "hear": "The rolls echo into one another."
+        }
+      ]
+    },
+    {
+      "id": "b1-square-bounce",
+      "name": "Square Bounce",
+      "ref": "In the style of 1980s electro bass lines",
+      "artist": "Various",
+      "tags": ["bass", "electro", "funk", "80s"],
+      "level": 1,
+      "blurb": "A hollow, bouncing square-wave bass with short notes and plenty of space.",
+      "how": "The square wave has only odd harmonics, so it sounds hollow and woody next to the sawtooth. Short GATE LENGTHs leave gaps between the notes, which is what makes the line bounce, and the occasional long note holds a beat down.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.07, 0.8],
+          [0.5, 36, 0.07, 0.8],
+          [0.75, 48, 0.07, 0.8],
+          [1.25, 36, 0.07, 0.8],
+          [1.75, 46, 0.21, 0.8],
+          [2.0, 36, 0.07, 0.8],
+          [2.5, 36, 0.07, 0.8],
+          [2.75, 43, 0.07, 0.8],
+          [3.25, 41, 0.07, 0.8],
+          [3.5, 39, 0.07, 0.8],
+          [4.0, 36, 0.07, 0.8],
+          [4.5, 36, 0.07, 0.8],
+          [4.75, 48, 0.07, 0.8],
+          [5.25, 36, 0.07, 0.8],
+          [5.75, 46, 0.21, 0.8],
+          [6.0, 34, 0.07, 0.8],
+          [6.5, 34, 0.07, 0.8],
+          [6.75, 46, 0.07, 0.8],
+          [7.25, 43, 0.21, 0.8],
+          [7.75, 41, 0.07, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Switch to the square wave",
+          "module": "osc",
+          "why": "WAVE picks the oscillator’s shape. The square has half the harmonics of the sawtooth, all the odd ones.\n- WAVE square: hollow and woody.\n- CUTOFF 4.5, RESONANCE 3: the filter softens it a little without squelching.\n- Listen for: a rounder, more muted bass than a sawtooth.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 3,
+            "vcf.depth": 3,
+            "env.decay": 3,
+            "vca.accent": 4
+          }
+        },
+        {
+          "title": "Short notes for bounce",
+          "module": "env",
+          "why": "The riff uses short gate lengths on most steps and a long one now and then. DECAY is kept short so the short notes stay short.\n- DECAY 2: a quick pluck.\n- DEPTH 5: a small \"pop\" at the start of each note.\n- Listen for: the gaps between the notes. They are as much a part of the groove as the notes.",
+          "set": {
+            "env.decay": 2,
+            "vcf.depth": 5
+          }
+        }
+      ],
+      "context": {
+        "vco.wave": "Flip to sawtooth and the same line turns brighter and buzzier.",
+        "env.decay": "Longer and the notes lose their bounce."
+      },
+      "tweaks": [
+        {
+          "id": "vco.pitch",
+          "try": "Set PITCH to +5",
+          "hear": "The line moves up a fourth, still in tune with itself."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 8",
+          "hear": "The pop at the start of each note turns into a quick \"bip\"."
+        }
+      ]
+    },
+    {
+      "id": "b1-gliding-line",
+      "name": "Gliding Line",
+      "ref": "In the style of early 1990s acid trance",
+      "artist": "Various",
+      "tags": ["bass", "acid", "trance", "90s"],
+      "level": 1,
+      "blurb": "A long, singing line where most notes slide into the next.",
+      "how": "A slid step is held into the next one, so the pitch glides there without starting the envelope again. With most of the steps slid, the line sings in one long, rising and falling breath; the few un-slid notes give it a pulse.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.1375, 1.0],
+          [0.25, 36, 0.28, 0.8],
+          [0.5, 48, 0.28, 0.8],
+          [0.75, 46, 0.1375, 0.8],
+          [1.0, 36, 0.1375, 0.8],
+          [1.25, 36, 0.28, 0.8],
+          [1.5, 43, 0.28, 0.8],
+          [1.75, 41, 0.28, 0.8],
+          [2.0, 39, 0.1375, 0.8],
+          [2.25, 36, 0.1375, 1.0],
+          [2.5, 36, 0.28, 0.8],
+          [2.75, 51, 0.28, 0.8],
+          [3.0, 48, 0.1375, 0.8],
+          [3.25, 46, 0.28, 0.8],
+          [3.5, 43, 0.28, 0.8],
+          [3.75, 41, 0.1375, 0.8],
+          [4.0, 36, 0.1375, 1.0],
+          [4.25, 36, 0.28, 0.8],
+          [4.5, 48, 0.28, 0.8],
+          [4.75, 46, 0.1375, 0.8],
+          [5.0, 36, 0.1375, 0.8],
+          [5.25, 36, 0.28, 0.8],
+          [5.5, 43, 0.28, 0.8],
+          [5.75, 46, 0.28, 0.8],
+          [6.0, 48, 0.1375, 1.0],
+          [6.25, 51, 0.28, 0.8],
+          [6.5, 48, 0.28, 0.8],
+          [6.75, 46, 0.1375, 0.8],
+          [7.0, 43, 0.28, 0.8],
+          [7.25, 41, 0.28, 0.8],
+          [7.5, 39, 0.28, 0.8],
+          [7.75, 36, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A singing voice",
+          "module": "filter",
+          "why": "A slide only sings if the note is long enough to hear it, so the decay is longer than usual.\n- WAVE sawtooth, CUTOFF 5, RESONANCE 7, DEPTH 4.\n- DECAY 6: long notes.\n- Listen for: the pitch gliding between most of the notes.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 5,
+            "vcf.resonance": 7,
+            "vcf.depth": 4,
+            "env.decay": 6,
+            "vca.accent": 5
+          }
+        },
+        {
+          "title": "Slide everything you play",
+          "module": "glide",
+          "why": "The riff’s slides are written into its steps. SLIDE does the same for the notes you play yourself.\n- SLIDE lit: every note you play glides from the one before.\n- Listen for: play a few keys on the keyboard while the riff is stopped. Each one glides in. Switch SLIDE off and the notes jump.",
+          "set": {
+            "seq.slide": true
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "Long, so a slid note has time to glide.",
+        "seq.slide": "Lit, every note you play glides; the riff slides only where it is written to."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep from 3 to 8",
+          "hear": "The singing line opening up into a trance lead."
+        },
+        {
+          "id": "dly.on",
+          "try": "Switch the delay on",
+          "hear": "The glides trail off into echoes."
+        }
+      ]
+    },
+    {
+      "id": "b1-deep-sub",
+      "name": "Deep Sub",
+      "ref": "In the style of deep house bass lines",
+      "artist": "Various",
+      "tags": ["bass", "house", "deep"],
+      "level": 1,
+      "blurb": "A dark, round bass with the filter almost shut and no squelch.",
+      "how": "Not every bass needs to squelch. With CUTOFF low, RESONANCE and DEPTH down, the B1 gives a dark, warm bass that sits under a track. The square wave down low is close to a pure tone, felt as much as heard.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0.0, 33, 0.1375, 0.8],
+          [0.75, 33, 0.21, 0.8],
+          [1.5, 33, 0.1375, 0.8],
+          [2.0, 36, 0.1375, 0.8],
+          [2.75, 36, 0.21, 0.8],
+          [3.25, 38, 0.28, 0.8],
+          [3.5, 40, 0.1375, 0.8],
+          [4.0, 33, 0.1375, 0.8],
+          [4.75, 33, 0.21, 0.8],
+          [5.5, 33, 0.1375, 0.8],
+          [6.0, 31, 0.1375, 0.8],
+          [6.75, 31, 0.21, 0.8],
+          [7.25, 33, 0.28, 0.8],
+          [7.5, 36, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "A low CUTOFF lets through only the lowest harmonics.\n- WAVE square, CUTOFF 2 (about 300 Hz): dark and round.\n- RESONANCE 1, DEPTH 1: no peak and almost no movement.\n- DECAY 6: long, steady notes.\n- Listen for: a warm, heavy bass with no squelch at all.",
+          "set": {
+            "vco.wave": "sq",
+            "vcf.cutoff": 2,
+            "vcf.resonance": 1,
+            "vcf.depth": 1,
+            "env.decay": 6,
+            "vca.accent": 2
+          }
+        },
+        {
+          "title": "A touch of warmth",
+          "module": "fx",
+          "why": "Low saturation adds harmonics that let a deep bass be heard on small speakers.\n- SATURATION on, DRIVE 2, TONE 3.\n- Listen for: the same bass, a little fuller, especially on headphones or laptop speakers.",
+          "set": {
+            "sat.on": true,
+            "sat.drive": 2,
+            "sat.tone": 3
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "Keep it under 3 for a sub bass; open it for more bite.",
+        "sat.drive": "A little makes it heard on small speakers; a lot makes it a different sound."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 6",
+          "hear": "A gentle \"wow\" creeps into each note."
+        },
+        {
+          "id": "vco.wave",
+          "try": "Switch to sawtooth",
+          "hear": "A buzzier, more present bass."
+        }
+      ]
+    },
+    {
+      "id": "b1-acid-lead",
+      "name": "Acid Lead",
+      "ref": "In the style of acid house leads",
+      "artist": "Various",
+      "tags": ["lead", "acid", "house", "90s"],
+      "level": 2,
+      "blurb": "The B1 played high: a whistling, resonant lead with echoes behind it.",
+      "how": "The same voice an octave or two up turns from a bass into a lead. PITCH tunes the whole line up by seven semitones, high RESONANCE makes it whistle, and the delay gives the phrase space.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.0, 48, 0.1375, 1.0],
+          [0.5, 55, 0.1375, 0.8],
+          [1.0, 58, 0.28, 0.8],
+          [1.25, 60, 0.1375, 0.8],
+          [1.75, 55, 0.1375, 0.8],
+          [2.25, 53, 0.1375, 0.8],
+          [2.75, 51, 0.28, 0.8],
+          [3.0, 48, 0.1375, 0.8],
+          [4.0, 48, 0.1375, 1.0],
+          [4.5, 55, 0.1375, 0.8],
+          [5.0, 58, 0.28, 0.8],
+          [5.25, 60, 0.1375, 0.8],
+          [5.75, 63, 0.1375, 1.0],
+          [6.25, 60, 0.1375, 0.8],
+          [6.75, 58, 0.28, 0.8],
+          [7.0, 55, 0.1375, 0.8],
+          [7.5, 53, 0.28, 0.8],
+          [7.75, 51, 0.1375, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tune it up",
+          "module": "osc",
+          "why": "PITCH tunes the oscillator up to seven semitones either way.\n- PITCH +7: a fifth up.\n- WAVE sawtooth, CUTOFF 5.5, RESONANCE 8, DEPTH 5, DECAY 4.\n- Listen for: a bright, whistling line, higher than any of the basses.",
+          "set": {
+            "vco.wave": "saw",
+            "vco.pitch": 7,
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 8,
+            "vcf.depth": 5,
+            "env.decay": 4,
+            "vca.accent": 6
+          }
+        },
+        {
+          "title": "Give it echoes",
+          "module": "fx",
+          "why": "A lead with gaps sounds bigger with the delay filling them.\n- DELAY on, TIME 8 (about 300 ms), LEVEL 4, FEEDBACK 4.\n- Listen for: each phrase answered by a trail of echoes.",
+          "set": {
+            "dly.on": true,
+            "dly.time": 8,
+            "dly.level": 4,
+            "dly.feedback": 4
+          }
+        }
+      ],
+      "context": {
+        "vco.pitch": "The whole line moves; the riff itself is already up high.",
+        "vcf.resonance": "The whistle. Up high it can get piercing, so watch MASTER."
+      },
+      "tweaks": [
+        {
+          "id": "sat.on",
+          "try": "Switch the saturation on",
+          "hear": "A raw, overdriven lead."
+        },
+        {
+          "id": "env.decay",
+          "try": "Raise to 7",
+          "hear": "Long, singing notes that overlap their echoes."
+        }
+      ]
+    },
+    {
+      "id": "b1-res-zaps",
+      "name": "Resonant Zaps",
+      "ref": "In the style of the zaps and blips of early acid house",
+      "artist": "Various",
+      "tags": ["fx", "acid", "house", "80s"],
+      "level": 3,
+      "blurb": "Laser zaps: the filter ringing on its own, swept down fast on every note.",
+      "how": "With RESONANCE right up the filter rings at its cutoff like a second oscillator. DEPTH at the top makes the envelope sweep that ring from high to low in a moment, and a very short DECAY makes it a zap. Ratchets fire bursts of zaps.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0.0, 48, 0.1375, 1.0],
+          [0.75, 60, 0.1375, 0.8],
+          [1.5, 48, 0.0417, 0.8],
+          [1.5833, 48, 0.0417, 0.8],
+          [1.6667, 48, 0.0417, 0.8],
+          [2.25, 55, 0.1375, 1.0],
+          [3.0, 60, 0.0625, 0.8],
+          [3.125, 60, 0.0625, 0.8],
+          [3.5, 48, 0.1375, 0.8],
+          [4.0, 48, 0.1375, 1.0],
+          [4.75, 60, 0.1375, 0.8],
+          [5.5, 48, 0.0312, 0.8],
+          [5.5625, 48, 0.0312, 0.8],
+          [5.625, 48, 0.0312, 0.8],
+          [5.6875, 48, 0.0312, 0.8],
+          [6.0, 63, 0.1375, 1.0],
+          [6.75, 55, 0.1375, 0.8],
+          [7.25, 60, 0.0417, 0.8],
+          [7.3333, 60, 0.0417, 0.8],
+          [7.4167, 60, 0.0417, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Make the filter ring",
+          "module": "filter",
+          "why": "At the top of RESONANCE the filter rings on its own.\n- RESONANCE 10, CUTOFF 2: a low, ringing note under the sawtooth.\n- WAVE sawtooth, DEPTH 3, DECAY 3.\n- Listen for: a whistle on every note.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 2,
+            "vcf.resonance": 10,
+            "vcf.depth": 3,
+            "env.decay": 3,
+            "vca.accent": 5
+          }
+        },
+        {
+          "title": "Sweep it fast",
+          "module": "env",
+          "why": "The zap is the ring swept from high to low very quickly.\n- DEPTH 10: the envelope throws the cutoff right to the top.\n- DECAY 1 (about 160 ms): and drops it straight back.\n- Listen for: \"pew\" on every note.",
+          "set": {
+            "vcf.depth": 10,
+            "env.decay": 1
+          }
+        },
+        {
+          "title": "Accents make bigger zaps",
+          "module": "env",
+          "why": "ACCENT adds its own sweep of the filter, so the accented zaps go further.\n- ACCENT 10.\n- DELAY on, TIME 6, FEEDBACK 5, LEVEL 4: the zaps bounce into the distance.\n- Listen for: the accented zaps jumping out above the others.",
+          "set": {
+            "vca.accent": 10,
+            "dly.on": true,
+            "dly.time": 6,
+            "dly.feedback": 5,
+            "dly.level": 4
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "Keep at the top: the zap is the ring.",
+        "env.decay": "Shorter for a click, longer for a \"peeow\".",
+        "vcf.depth": "How far the zap sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "env.decay",
+          "try": "Raise to 4",
+          "hear": "Each zap turns into a slower, falling whistle."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Raise to 5",
+          "hear": "The zaps start higher and end on a squelch."
+        }
+      ]
+    },
+    {
+      "id": "b1-gated-stabs",
+      "name": "Gated Stabs",
+      "ref": "A sequencer technique: gate length as the groove",
+      "artist": "Technique",
+      "tags": ["seq", "acid", "techno"],
+      "level": 2,
+      "blurb": "One note, the groove written entirely in gate lengths, accents and rests.",
+      "how": "Every step is the same pitch. What changes is how long each one is held (GATE LENGTH), which are accented, and where the rests fall. With a long DECAY the gate length is what cuts each note off, so short, normal and long gates sound clearly different.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0.0, 36, 0.1375, 1.0],
+          [0.25, 36, 0.07, 0.8],
+          [0.5, 36, 0.07, 0.8],
+          [0.75, 36, 0.21, 0.8],
+          [1.25, 36, 0.07, 0.8],
+          [1.5, 36, 0.1375, 1.0],
+          [1.75, 36, 0.07, 0.8],
+          [2.0, 36, 0.21, 0.8],
+          [2.25, 36, 0.07, 0.8],
+          [2.75, 36, 0.1375, 1.0],
+          [3.0, 36, 0.07, 0.8],
+          [3.25, 36, 0.21, 0.8],
+          [3.5, 36, 0.07, 0.8],
+          [3.75, 36, 0.07, 0.8],
+          [4.0, 36, 0.1375, 1.0],
+          [4.25, 36, 0.07, 0.8],
+          [4.5, 36, 0.07, 0.8],
+          [4.75, 36, 0.21, 0.8],
+          [5.25, 36, 0.07, 0.8],
+          [5.5, 36, 0.1375, 1.0],
+          [5.75, 36, 0.07, 0.8],
+          [6.0, 36, 0.21, 0.8],
+          [6.25, 36, 0.07, 0.8],
+          [6.75, 36, 0.1375, 1.0],
+          [7.0, 36, 0.0625, 0.8],
+          [7.125, 36, 0.0625, 0.8],
+          [7.25, 36, 0.21, 0.8],
+          [7.5, 36, 0.1375, 1.0],
+          [7.75, 36, 0.07, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A long voice, so the gate decides",
+          "module": "env",
+          "why": "With a long DECAY the note keeps sounding until its gate ends, so the gate lengths in the pattern are what you hear.\n- WAVE sawtooth, CUTOFF 4, RESONANCE 7, DEPTH 4.\n- DECAY 7: long.\n- Listen for: some notes clipped short, some held. Same pitch every time, still a groove.",
+          "set": {
+            "vco.wave": "saw",
+            "vcf.cutoff": 4,
+            "vcf.resonance": 7,
+            "vcf.depth": 4,
+            "env.decay": 7,
+            "vca.accent": 7
+          }
+        },
+        {
+          "title": "Shorten DECAY and lose it",
+          "module": "env",
+          "why": "Once DECAY is shorter than the shortest gate, every note dies on its own and the gate lengths stop mattering.\n- DECAY 1.\n- Listen for: the groove going flat, every note the same click. Turn DECAY back up to bring the gate lengths back.",
+          "set": {
+            "env.decay": 1
+          }
+        },
+        {
+          "title": "Back up, with saturation",
+          "module": "fx",
+          "why": "Saturation makes the held notes louder for longer, so the long gates stand out more.\n- DECAY 6.\n- SATURATION on, DRIVE 5, TONE 6.\n- Listen for: a pumping, stabbing groove on one note.",
+          "set": {
+            "env.decay": 6,
+            "sat.on": true,
+            "sat.drive": 5,
+            "sat.tone": 6
+          }
+        }
+      ],
+      "context": {
+        "env.decay": "Longer than the gates, or the gate lengths cannot be heard.",
+        "vca.accent": "The accents carry the groove along with the gate lengths."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Sweep while the riff plays",
+          "hear": "One note, but the whole groove opening and closing."
+        },
+        {
+          "id": "vco.pitch",
+          "try": "Turn PITCH while it plays",
+          "hear": "The stabs transpose, as the B1’s keys transpose a playing pattern."
+        }
+      ]
+    }
+  ]
+}
