@@ -1,0 +1,155 @@
+/**
+ * One pass through a pattern, as the notes the engine plays (`f-step-sequencer` t-78).
+ *
+ * A pattern with probability, conditions or a random direction plays differently each time round, so it is compiled a
+ * loop at a time: the page compiles the next loop while this one plays, and the engine swaps it in at the boundary
+ * (t-79). Given the same random source, the same loop compiles the same way, which is what lets the tests pin it.
+ *
+ * The order the rules apply in, per slot of the loop: which step plays here (direction), whether it plays (on, rests,
+ * condition, probability), then each of its notes: transpose and scale, ratchet, nudge, swing, slide and accent.
+ */
+import type { PhraseNote } from '@/lib/app/synths/contract';
+import {
+  ACCENT_VELOCITY,
+  SCALES,
+  patternLength,
+  stepsPerBeat,
+  type Pattern,
+  type ScaleName,
+  type Step,
+  type StepCondition,
+} from '@/lib/app/sequencer/pattern';
+
+/** A source of random numbers in [0, 1). `Math.random` in the page; a seeded one in tests. */
+export type Rng = () => number;
+
+/** How far past the next step a slid note is held, in steps, so a mono voice hears the two overlap and glides. */
+export const SLIDE_OVERLAP = 0.05;
+
+/** A small seeded generator (mulberry32), so a loop can be compiled again and come out the same. */
+export function seededRng(seed: number): Rng {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export interface LoopOptions {
+  /** Which pass this is, from 0: it picks the part from the chain, and conditions and pendulum read it. */
+  loop: number;
+  rng: Rng;
+  /** Whether Fill is held. */
+  fill?: boolean;
+  /** Where a Brownian walk stood at the end of the loop before. Absent starts it before the first step. */
+  from?: number;
+}
+
+export interface CompiledLoop {
+  /** The notes, in beats from the start of the loop, sorted by start then note. */
+  notes: PhraseNote[];
+  /** How long the loop is in beats: every step, played or not. */
+  beats: number;
+  /** Where a Brownian walk stands at the end, for the next loop's `from`. */
+  to: number;
+}
+
+/** The note on the scale nearest to `note`, measured from `root`. A tie goes down. */
+export function snapToScale(note: number, root: number, scale: ScaleName): number {
+  const degrees: readonly number[] = SCALES[scale];
+  if (degrees.length === 12) return note;
+  for (let d = 0; d <= 6; d++) {
+    if (degrees.includes((((note - d - root) % 12) + 12) % 12)) return note - d;
+    if (degrees.includes((((note + d - root) % 12) + 12) % 12)) return note + d;
+  }
+  return note;
+}
+
+/** Whether a step's condition lets it play on loop `loop` (from 0). */
+export function conditionPlays(c: StepCondition | undefined, loop: number, fill: boolean): boolean {
+  if (!c) return true;
+  switch (c.t) {
+    case 'ab':
+      return loop % c.b === c.a - 1;
+    case 'first':
+      return loop === 0;
+    case 'notFirst':
+      return loop > 0;
+    case 'fill':
+      return fill;
+    case 'notFill':
+      return !fill;
+  }
+}
+
+/** Which step plays in each slot of the loop, and where a Brownian walk ends. */
+export function stepOrder(p: Pattern, opts: LoopOptions): { order: number[]; to: number } {
+  const len = patternLength(p);
+  const slots = Array.from({ length: len }, (_, s) => s);
+  switch (p.direction) {
+    case 'forward':
+      return { order: slots, to: len - 1 };
+    case 'reverse':
+      return { order: slots.map((s) => len - 1 - s), to: 0 };
+    case 'pendulum':
+      return opts.loop % 2 === 0
+        ? { order: slots, to: len - 1 }
+        : { order: slots.map((s) => len - 1 - s), to: 0 };
+    case 'random':
+      return { order: slots.map(() => Math.floor(opts.rng() * len)), to: 0 };
+    case 'brownian': {
+      // Half the time a step on, a quarter it stays, a quarter it steps back, wrapping at either end.
+      let pos = opts.from ?? -1;
+      const order = slots.map(() => {
+        const r = opts.rng();
+        pos = pos < 0 ? 0 : (pos + (r < 0.5 ? 1 : r < 0.75 ? 0 : -1) + len) % len;
+        return pos;
+      });
+      return { order, to: pos };
+    }
+  }
+}
+
+/** Whether a step plays this pass. Probability draws from `rng` only for a step that has one below 1. */
+function stepPlays(step: Step, opts: LoopOptions): boolean {
+  if (!step.on || step.notes.length === 0) return false;
+  if (!conditionPlays(step.condition, opts.loop, opts.fill ?? false)) return false;
+  if (step.probability !== undefined && step.probability < 1) return opts.rng() < step.probability;
+  return true;
+}
+
+/** The notes of loop `opts.loop`. */
+export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
+  const perBeat = stepsPerBeat(p);
+  const len = patternLength(p);
+  const part = p.parts[p.chain[opts.loop % p.chain.length]] ?? p.parts[0];
+  const { order, to } = stepOrder(p, opts);
+  // Swing moves the second step of each pair later: at 50 not at all, at 75 by half a step.
+  const swing = (p.swing / 100) * 2 - 1;
+  const notes: PhraseNote[] = [];
+  order.forEach((index, slot) => {
+    const step = part.steps[index];
+    if (!step || !stepPlays(step, opts)) return;
+    const ratchet = step.ratchet ?? 1;
+    const start = slot + (slot % 2 === 1 ? swing : 0);
+    for (const n of step.notes) {
+      const note = Math.min(127, Math.max(0, snapToScale(n.note + p.transpose, p.root, p.scale)));
+      const velocity = step.accent ? ACCENT_VELOCITY : n.velocity;
+      for (let k = 0; k < ratchet; k++) {
+        const offset = (k + (n.nudge ?? 0)) / ratchet;
+        let gate = ratchet > 1 ? Math.min(n.gate, 1) / ratchet : n.gate;
+        // A slide holds the step's last hit past the start of the next step, so the two overlap.
+        if (step.slide && k === ratchet - 1) gate = Math.max(gate, 1 - offset + SLIDE_OVERLAP);
+        const at = start + offset;
+        const out: PhraseNote = [at / perBeat, note, gate / perBeat];
+        if (velocity !== undefined) out.push(velocity);
+        notes.push(out);
+      }
+    }
+  });
+  notes.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return { notes, beats: len / perBeat, to };
+}
