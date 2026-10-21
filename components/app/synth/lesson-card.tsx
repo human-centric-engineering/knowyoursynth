@@ -14,7 +14,7 @@
  * Below `lg` the lesson stays in its bottom sheet (`lesson.tsx`), and this is not drawn.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
@@ -107,16 +107,26 @@ export function LessonCard({
   }, [badgeKey]);
   useEffect(() => () => badgeStore.set([]), []);
 
+  // Closed from inside (Escape or ×), focus goes back to what opened the card rather than dropping to the page.
+  const opener = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (document.activeElement instanceof HTMLElement) opener.current = document.activeElement;
+  }, []);
+  const close = useCallback(() => {
+    onClose();
+    if (opener.current?.isConnected) opener.current.focus();
+  }, [onClose]);
+
   // Escape inside the card closes it. Not on the window: the panel and the dialogs have their own uses for it.
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !e.defaultPrevented) onClose();
+      if (e.key === 'Escape' && !e.defaultPrevented) close();
     };
     el.addEventListener('keydown', onKey);
     return () => el.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [close]);
 
   // A dragged card stays on screen when the window shrinks.
   const dragged = pos != null;
@@ -428,7 +438,7 @@ export function LessonCard({
           >
             <ArrowLeftRight size={16} aria-hidden="true" />
           </button>
-          <button type="button" className="kys-pbtn" aria-label="Close the card" onClick={onClose}>
+          <button type="button" className="kys-pbtn" aria-label="Close the card" onClick={close}>
             <X size={17} aria-hidden="true" />
           </button>
         </div>

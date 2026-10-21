@@ -837,7 +837,7 @@ svg .kys-hit:focus-visible {
 @media (min-width: 1024px) {
   .kys-dock[data-near],
   .kys-dock:has(.kys-design:focus-within),
-  .kys-dock:has(.kys-sounds-pop) {
+  .kys-dock:has(.kys-sounds-pop:not([hidden])) {
     z-index: 46;
   }
 }

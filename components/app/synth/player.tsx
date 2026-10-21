@@ -59,7 +59,8 @@ export function SoundPicker({
 }) {
   const pick = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
-  // The library closes on a press outside it (not on the picker, which toggles it), and on Escape inside it.
+  // The library closes on a press outside it (not on the picker, which toggles it), on Escape inside it, and when
+  // Tab takes focus out of it.
   useEffect(() => {
     if (!soundsOpen || !onCloseSounds) return undefined;
     const onDown = (e: PointerEvent) => {
@@ -73,12 +74,21 @@ export function SoundPicker({
       onCloseSounds();
       pick.current?.focus();
     };
+    // Only for focus that lands somewhere else: a press on the popover's own padding leaves focus nowhere.
+    const onFocusOut = (e: FocusEvent) => {
+      const t = e.relatedTarget;
+      if (!(t instanceof Node)) return;
+      if (pop.current?.contains(t) || pick.current?.contains(t)) return;
+      onCloseSounds();
+    };
     const el = pop.current;
     document.addEventListener('pointerdown', onDown);
     el?.addEventListener('keydown', onKey);
+    el?.addEventListener('focusout', onFocusOut);
     return () => {
       document.removeEventListener('pointerdown', onDown);
       el?.removeEventListener('keydown', onKey);
+      el?.removeEventListener('focusout', onFocusOut);
     };
   }, [soundsOpen, onCloseSounds]);
   return (

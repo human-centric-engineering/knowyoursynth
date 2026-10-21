@@ -23,7 +23,7 @@ import {
 } from '@/lib/app/bank/joins';
 import type { Bank, BankArtist, BankSong } from '@/lib/app/bank/data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
-import { isNativeSynth } from '@/scripts/native-synths';
+import { NATIVE_SYNTHS, isNativeSynth } from '@/scripts/native-synths';
 
 const golden = JSON.parse(
   readFileSync(resolve(process.cwd(), 'tests/fixtures/bank/heard-on.json'), 'utf8')
@@ -51,6 +51,21 @@ describe('heardFor over the seed data', () => {
 
   it.each(ported)('%s: equals the prototype', (id) => {
     expect(heardFor(bank, id)).toEqual(golden[id]);
+  });
+});
+
+describe('heardFor for a native synth', () => {
+  // No prototype list to hold these to, so each one's list is written here. The bank has no song with a Donner B1
+  // part yet: when one is added, this changes on purpose, alongside the data.
+  const expected: Record<string, HeardEntry[]> = { 'donner-b1': [] };
+
+  it('has an expectation for every native synth', () => {
+    expect(Object.keys(expected).sort()).toEqual([...NATIVE_SYNTHS].sort());
+  });
+
+  it.each([...NATIVE_SYNTHS])('%s: is registered and lists what is written here', (id) => {
+    expect(SYNTH_DEFS.map((d) => d.id)).toContain(id);
+    expect(heardFor(bank, id)).toEqual(expected[id]);
   });
 });
 
