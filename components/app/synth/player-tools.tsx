@@ -5,7 +5,7 @@
  * captions button, and how the panel is drawn, as switches under it.
  *
  * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect, Tutor over it; Piano,
- *   Harmonics, Effects on the bar). An icon, with its word from `xl` up; the full name is the
+ *   Harmonics, Effects on the bar). An icon, with its word from `xl` up and below `lg` (a phone has no tooltips to name it); the full name is the
  *   accessible name and the tooltip at every width.
  * - `PlayerSettings`: under the panel, by the search. Hardware or Outline, Modular or Long, the magnifier and the
  *   hover help, all on show as a row of switches, each named, with what it does on hover.
@@ -52,7 +52,7 @@ export function LayerToggle({
         className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''}`}
       >
         {icon}
-        <span className="max-xl:hidden">{short}</span>
+        <span className="lg:max-xl:hidden">{short}</span>
       </button>
     </PlayerTip>
   );

@@ -183,9 +183,19 @@ describe('Keyboard keys', () => {
     expect(next).toHaveBeenCalledExactlyOnceWith(36);
   });
 
-  it('scrolls by a strip above the keys, while the keys themselves play rather than pan', () => {
+  it('scrolls the keys by dragging the strip above them, while the keys themselves play rather than pan', () => {
     setup();
-    expect(screen.getByTestId('key-scroll-strip').className).toContain('touch-pan-x');
+    const strip = screen.getByTestId('key-scroll-strip');
+    const scroller = strip.parentElement?.parentElement;
+    if (!scroller) throw new Error('no scroller');
+    scroller.scrollLeft = 200;
+    // Dragged left by 120px, the keys move with it: further right along the keyboard.
+    fireEvent.pointerDown(strip, { pointerId: 3, clientX: 300 });
+    fireEvent.pointerMove(strip, { pointerId: 3, clientX: 180 });
+    expect(scroller.scrollLeft).toBe(320);
+    fireEvent.pointerUp(strip, { pointerId: 3, clientX: 180 });
+    fireEvent.pointerMove(strip, { pointerId: 3, clientX: 0 });
+    expect(scroller.scrollLeft).toBe(320); // let go: no more scrolling
     expect(key(36).closest('.touch-none')).not.toBeNull();
     expect(key(36).closest('.touch-pan-x')).toBeNull();
   });

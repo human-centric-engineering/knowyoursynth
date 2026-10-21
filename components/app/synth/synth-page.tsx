@@ -1480,11 +1480,12 @@ function Synth({
                   </div>
                 </div>
                 <div className="flex items-center gap-4 max-sm:w-full lg:shrink-0">
-                  <div className="kys-autohide flex flex-wrap items-center gap-1 max-sm:flex-1">
+                  {/* On a phone: the layers share one row, evenly, with the tour and its help under them. */}
+                  <div className="kys-autohide flex flex-wrap items-center gap-1 max-sm:flex-1 max-sm:gap-2">
                     <div
                       role="group"
                       aria-label="Layers over the panel"
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 max-sm:grid max-sm:w-full max-sm:grid-cols-3"
                     >
                       <LayerToggle
                         label="Explain sections"
@@ -1541,7 +1542,7 @@ function Synth({
                         />
                       </div>
                     )}
-                    <span className="ml-1 flex items-center gap-2">
+                    <span className="ml-1 flex items-center gap-2 max-sm:ml-0 max-sm:w-full max-sm:[&>*:first-child]:flex-1">
                       <PanelSwitch
                         label="Orientation tour"
                         short="Tour"
@@ -1562,7 +1563,7 @@ function Synth({
 
               <div
                 ref={scrollerRef}
-                className="kys-scroll overflow-x-auto px-3 pt-2 pb-5 sm:px-6"
+                className="kys-scroll kys-panel-scroller overflow-x-auto px-3 pt-2 pb-5 sm:px-6"
                 {...panelTaps}
               >
                 <div
@@ -1651,7 +1652,7 @@ function Synth({
                     </div>
                   </section>
                 </div>
-                <div className="kys-autohide flex flex-wrap items-end gap-x-6 gap-y-3 max-sm:w-full 2xl:row-span-2">
+                <div className="kys-autohide flex flex-wrap items-end gap-x-6 gap-y-3 max-md:w-full 2xl:row-span-2">
                   <PlayerSettings
                     view={view}
                     onView={setView}
@@ -1664,7 +1665,7 @@ function Synth({
                   <Search
                     def={def}
                     up
-                    className="min-w-0 max-sm:w-full max-sm:flex-1 sm:w-[420px] sm:max-w-full"
+                    className="min-w-0 max-md:w-full max-md:flex-1 md:w-[420px] md:max-w-full"
                   />
                 </div>
                 {/* What the sound is, under its name as a video's description is under its title: beside the
@@ -1740,7 +1741,8 @@ function Synth({
                   onCloseSounds={closeSounds}
                   sounds={small ? undefined : library}
                 />
-                <div className="kys-scroll flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [&>*]:shrink-0">
+                {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach. */}
+                <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
                   {shown && (
                     <PlayButton
                       playing={playing}
@@ -1763,7 +1765,7 @@ function Synth({
                     <button
                       type="button"
                       onClick={() => void toggleAudio()}
-                      className={`flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold ${audio === 'on' ? 'text-(--kys-good)' : audio === 'error' ? 'text-(--kys-warn)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-(--kys-raised)`}
+                      className={`flex h-9 items-center gap-2 rounded-full px-3 text-[13px] font-semibold pointer-coarse:h-11 ${audio === 'on' ? 'text-(--kys-good)' : audio === 'error' ? 'text-(--kys-warn)' : 'text-(--kys-muted) hover:text-(--kys-text)'} hover:bg-(--kys-raised)`}
                     >
                       {audio === 'on' ? (
                         <Volume2 size={17} aria-hidden="true" />
@@ -1806,7 +1808,7 @@ function Synth({
                     </button>
                   </PlayerTip>
                   <span className="flex-1" />
-                  <div className="kys-autohide flex items-center gap-2">
+                  <div className="kys-autohide flex flex-wrap items-center gap-2 lg:flex-nowrap">
                     {!small && (
                       <LayerToggle
                         label="Piano"

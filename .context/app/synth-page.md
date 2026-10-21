@@ -182,7 +182,12 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   one, until the Piano button says otherwise (stored as `kys.deck`). Harmonics show in the deck
   with the piano put away. **In the light theme the stage is light** (the player's tokens follow
   the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
-  dialog with the status, Connect / Try again / Stop, and how to connect a keyboard. The step the panel is at is not repeated here: the
+  dialog with the status, Connect / Try again / Stop, and how to connect a keyboard.
+- **On a phone** the bar's buttons wrap rather than scroll, with their words, at 44px on a touch
+  screen; the header's layers share one even row; the settings are a grid the screen's width; the
+  wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
+  mouse drags it too. **Full screen** lifts the panel's 1560px cap (`--kys-fit-max`), so it takes
+  the screen's width. The step the panel is at is not repeated here: the
   chapters and the card show it. The description is of the sound on
   the panel. It does not show a library sound's words under one of the user's own sounds, or a
   shared sound, that has no lesson of its own.

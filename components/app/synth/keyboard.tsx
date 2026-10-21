@@ -5,9 +5,9 @@
  *
  * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3). What changed (`f-phone-and-tablet`):
  * - Each pointer holds its own note, so several fingers play a chord.
- * - Under `lg` the keys and buttons are finger-sized (44 px), so the keys scroll sideways, by a strip above them. A
- *   swipe on the keys themselves plays rather than scrolls: a browser pan would cancel the pointer and cut a held
- *   note.
+ * - Under `lg` the keys and buttons are finger-sized (44 px), so the keys scroll sideways, by a strip above them that
+ *   a finger or the mouse drags. A swipe on the keys themselves plays rather than scrolls: a browser pan would cancel
+ *   the pointer and cut a held note.
  */
 
 import { useEffect, useRef } from 'react';
@@ -115,6 +115,31 @@ export function Keyboard({
   noteOff,
 }: KeyboardProps) {
   const active = useStore(notesStore);
+  // The keys' scroller, and the drag on the strip that scrolls it: by the page, not the browser, so a mouse drags it
+  // too, and a finger is not left to a pan the browser may not start inside a scroller.
+  const scroller = useRef<HTMLDivElement | null>(null);
+  const strip = useRef<{ id: number; x: number; left: number } | null>(null);
+  const stripProps = {
+    onPointerDown: (e: PointerEvent<HTMLDivElement>) => {
+      const el = scroller.current;
+      if (!el) return;
+      e.preventDefault();
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      strip.current = { id: e.pointerId, x: e.clientX, left: el.scrollLeft };
+    },
+    onPointerMove: (e: PointerEvent<HTMLDivElement>) => {
+      const d = strip.current;
+      const el = scroller.current;
+      if (!d || !el || d.id !== e.pointerId) return;
+      el.scrollLeft = d.left - (e.clientX - d.x);
+    },
+    onPointerUp: (e: PointerEvent<HTMLDivElement>) => {
+      if (strip.current?.id === e.pointerId) strip.current = null;
+    },
+    onPointerCancel: (e: PointerEvent<HTMLDivElement>) => {
+      if (strip.current?.id === e.pointerId) strip.current = null;
+    },
+  };
   // One note per finger (or mouse), so a chord holds on a poly. A mono still gets last-note priority from the engine.
   const down = useRef(new Map<number, number>());
   const base = 36 + octave * 12;
@@ -184,13 +209,14 @@ export function Keyboard({
     // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
       <ModWheel value={wheel} onChange={onWheel} />
-      <div className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
+      <div ref={scroller} className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="min-w-[980px] lg:min-w-[620px]">
           {/* What a finger drags to scroll the keys, since a drag on the keys plays them. */}
           <div
             aria-hidden="true"
             data-testid="key-scroll-strip"
-            className="mb-1 flex h-7 touch-pan-x items-center rounded-md border border-(--kys-line) bg-[repeating-linear-gradient(90deg,var(--kys-line)_0_1px,transparent_1px_10px)] select-none lg:hidden"
+            {...stripProps}
+            className="mb-1 flex h-7 cursor-grab touch-none items-center rounded-md border border-(--kys-line) bg-[repeating-linear-gradient(90deg,var(--kys-line)_0_1px,transparent_1px_10px)] select-none active:cursor-grabbing lg:hidden"
           >
             <span className="kys-label sticky left-2 rounded bg-(--kys-surface) px-1.5 text-(--kys-faint)">
               Drag here to scroll the keys

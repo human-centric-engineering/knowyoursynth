@@ -305,12 +305,14 @@ describe('SynthPage layout', () => {
     page();
     const frame = screen.getByTestId('panel-frame');
     // The width the screen gives it, capped at 1560px and by the screen's height (see `panelFrameStyle`), times the scale.
-    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(1560px, /);
+    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
     expect(frame.className).not.toContain('min-w-');
 
     fireEvent.click(button('Zoom in'));
     fireEvent.click(button('Zoom in'));
-    expect(frame.style.width).toMatch(/^calc\(1\.2 \* min\(100%, min\(1560px, /);
+    expect(frame.style.width).toMatch(
+      /^calc\(1\.2 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /
+    );
 
     // Laid out bigger, not magnified: a knob still turns from the keyboard.
     const cutoff = screen.getAllByRole('slider', { name: /CUTOFF/ })[0];
@@ -319,7 +321,7 @@ describe('SynthPage layout', () => {
     expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
 
     fireEvent.click(button('Fit the panel to the page'));
-    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(1560px, /);
+    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
   });
 
   it('puts the rotate note above the panel on a small screen, and not on a wide one', () => {

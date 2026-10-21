@@ -105,15 +105,18 @@ describe('the library on the page', () => {
     expect(detail.sounds).toHaveLength(99);
     // Every sound but the first, which is loaded, then the first again.
     const order = [...detail.sounds.slice(1), detail.sounds[0]];
+    // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 99 times over.
+    const lib = library();
+    const picker = button(/^Choose a sound/);
     for (const p of order) {
-      const row = within(library())
-        .getAllByRole('button')
-        .find((b) => b.querySelector('.font-semibold')?.textContent === p.name);
+      const row = [...lib.querySelectorAll('button')].find(
+        (b) => b.querySelector('.font-semibold')?.textContent === p.name
+      );
       if (!row) throw new Error(`${p.name} is not in the library`);
       fireEvent.click(row);
       expect(loadedName()).toBe(p.name);
       expect(row.getAttribute('aria-current')).toBe('true');
-      expect(screen.getByRole('button', { name: `Choose a sound (now: ${p.name})` })).toBeTruthy();
+      expect(picker.getAttribute('aria-label')).toBe(`Choose a sound (now: ${p.name})`);
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
     // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.

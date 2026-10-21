@@ -163,6 +163,11 @@ svg .kys-hit:focus-visible {
 .kys-player:fullscreen {
   overflow-y: auto;
   border-radius: 0;
+  /* Full screen, the panel takes the screen's whole width, as a video does. */
+  --kys-fit-max: 100vw;
+}
+.kys-player:fullscreen .kys-panel-scroller {
+  padding-inline: 8px;
 }
 
 /* The stage: a warm spotlight from above, falling off into the room, over a faint
@@ -204,6 +209,12 @@ svg .kys-hit:focus-visible {
   text-transform: uppercase;
   color: var(--kys-accent);
   white-space: nowrap;
+}
+/* The wordmark at the strip's heading only where there is room for both on one line. */
+@media (max-width: 767px) {
+  .kys-design-head .kys-player-mark {
+    display: none;
+  }
 }
 .kys-led {
   width: 7px;
@@ -248,6 +259,7 @@ svg .kys-hit:focus-visible {
 }
 .kys-design-h {
   margin: 0;
+  white-space: nowrap;
   font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
   font-size: 10px;
   font-weight: 400;
@@ -571,6 +583,14 @@ svg .kys-hit:focus-visible {
     background-color 0.15s ease,
     color 0.15s ease;
 }
+/* A finger needs a bigger target than a pointer: 44px, as the platforms ask. */
+@media (pointer: coarse) {
+  .kys-layer,
+  .kys-pbtn {
+    height: 44px;
+    min-width: 44px;
+  }
+}
 .kys-layer:hover {
   color: var(--kys-text);
   background: rgb(var(--kys-wash) / 0.07);
@@ -631,6 +651,18 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 3px;
+}
+/* On a phone the settings are a grid the width of the screen, each switch filling
+   its cell, rather than a ragged row. */
+@media (max-width: 767px) {
+  .kys-settings {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+  }
+  .kys-setting > [role='group'] {
+    width: 100%;
+  }
 }
 .kys-setting-name {
   width: fit-content;

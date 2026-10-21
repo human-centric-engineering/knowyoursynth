@@ -19,8 +19,8 @@ export const PANEL_SCALES = [0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9
 const FIT: PanelScale = 1;
 export type PanelScale = (typeof PANEL_SCALES)[number];
 
-/** The widest the fitted panel is drawn. */
-const MAX_FIT_PX = 1560;
+/** The widest the fitted panel is drawn, unless `--kys-fit-max` says otherwise (full screen lifts it). */
+const MAX_FIT = 'var(--kys-fit-max, 1560px)';
 /**
  * The narrowest that fitting to the screen's height draws a panel, where the page is that wide. A tall panel (the
  * ARP 2600) fitted to the height would be too small to read and work, so below this it overflows and the page scrolls.
@@ -28,7 +28,8 @@ const MAX_FIT_PX = 1560;
 const MIN_FIT_PX = 1100;
 
 /**
- * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px; a synth with its own layout
+ * The panel frame's width at a scale. Fitted, it is the scroller's width, up to 1560 px (or `--kys-fit-max`: the
+ * whole width, full screen); a synth with its own layout
  * is also kept short enough to fit the screen's height. Zoomed, it is that width times the scale.
  *
  * The height it fits is the screen's less `--kys-fit-chrome`, which the page sets from `lg` up to what is above the
@@ -40,8 +41,8 @@ export function panelFrameStyle(
   scale: PanelScale
 ): CSSProperties {
   const cap = view
-    ? `min(${MAX_FIT_PX}px, max(${MIN_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${(view.w / view.h).toFixed(4)})))`
-    : `${MAX_FIT_PX}px`;
+    ? `min(${MAX_FIT}, max(${MIN_FIT_PX}px, calc((100vh - var(--kys-fit-chrome, 18vh)) * ${(view.w / view.h).toFixed(4)})))`
+    : MAX_FIT;
   return { width: `calc(${scale} * min(100%, ${cap}))` };
 }
 
