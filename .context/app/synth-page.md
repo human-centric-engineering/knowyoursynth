@@ -143,7 +143,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   settings and the search (its matches open upward). The wordmark is at the far right of the Sound
   Design strip's heading.
 - **With the pointer at rest the secondary controls fade** (`.kys-autohide`, under
-  `.kys-synth[data-idle]`), as a video player's do; focus inside one, or hovering the dock, brings
+  `.kys-synth[data-idle]`), as a video player's do; focus inside one, or hovering it or the dock, brings
   it back.
 - **The Sound Design strip teaches the sound** (t-71), over the bar, where a video's chapters are
   (`SoundDesign` in `player.tsx`). From `lg` up with a pointer it floats over the foot of the panel
