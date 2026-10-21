@@ -547,7 +547,7 @@ const BLACK: [note: string, x: number][] = [
   ['G#3', 972],
   ['A#3', 1040],
 ];
-const spoken = (n: string): string => n.replace('#', ' sharp ').replace(/ (\d)$/, '$1');
+const spoken = (n: string): string => n.replace('#', ' sharp ');
 const keyId = (n: string): string => `kbd.key${n.replace('#', 's')}`;
 WHITE.forEach((n, i) => {
   const x = 130 + i * (1010 / 15);

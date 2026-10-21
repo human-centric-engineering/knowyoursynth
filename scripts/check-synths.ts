@@ -212,6 +212,10 @@ function withPorted(
     const def = getSynthDef(id);
     if (def && !protoIds.has(id)) synths.push(withContent(def));
   }
+  // In the listing's order, so a native synth is reported where the catalogue puts it, not after every ported one.
+  const order = new Map(data.listing.synths.map((l) => [l.id, l.order]));
+  const at = (id: string): number => order.get(id) ?? Number.MAX_SAFE_INTEGER;
+  synths.sort((a, b) => at(a.id) - at(b.id));
   return { synths, drift, orphans, native, content };
 }
 
@@ -262,6 +266,11 @@ async function main(): Promise<void> {
       )
     ) {
       console.log(`ERR unknown flag ${f}`);
+      process.exit(1);
+    }
+    // On or off by being there: `--write-baseline=false` would otherwise still write one.
+    if (f.startsWith('--compare=') || f.startsWith('--write-baseline=')) {
+      console.log(`ERR ${f.split('=')[0]} takes no value`);
       process.exit(1);
     }
   }

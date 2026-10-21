@@ -107,14 +107,25 @@ export function LessonCard({
   }, [badgeKey]);
   useEffect(() => () => badgeStore.set([]), []);
 
-  // Closed from inside (Escape or ×), focus goes back to what opened the card rather than dropping to the page.
+  // Closed from inside (Escape or ×), focus goes back to what opened the card rather than dropping to the page. The
+  // opener is whatever focus last came into the card from, so a section switched from the bar is the one returned to.
+  // Only when focus is in the card: a mouse close that left focus elsewhere is not moved.
   const opener = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (document.activeElement instanceof HTMLElement) opener.current = document.activeElement;
+    const el = ref.current;
+    if (!el) return undefined;
+    const onFocusIn = (e: FocusEvent) => {
+      const from = e.relatedTarget;
+      if (from instanceof HTMLElement && !el.contains(from)) opener.current = from;
+    };
+    el.addEventListener('focusin', onFocusIn);
+    return () => el.removeEventListener('focusin', onFocusIn);
   }, []);
   const close = useCallback(() => {
+    const inside = !!ref.current?.contains(document.activeElement);
     onClose();
-    if (opener.current?.isConnected) opener.current.focus();
+    if (inside && opener.current?.isConnected) opener.current.focus();
   }, [onClose]);
 
   // Escape inside the card closes it. Not on the window: the panel and the dialogs have their own uses for it.

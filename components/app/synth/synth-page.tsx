@@ -544,7 +544,7 @@ function Synth({
       const dockH = dock.offsetHeight;
       // Full screen, what is above the panel is the player's own top, not the page's header.
       const full = document.fullscreenElement;
-      const top = full
+      const top = full?.contains(scroller)
         ? scroller.getBoundingClientRect().top - full.getBoundingClientRect().top + full.scrollTop
         : scroller.getBoundingClientRect().top + window.scrollY;
       root.style.setProperty('--kys-dock-h', `${dockH}px`);
@@ -1928,8 +1928,9 @@ function Synth({
                     noteOn={noteOn}
                     noteOff={noteOff}
                   />
-                  {/* Put away, the scope is not drawn at all, so its frame loop does not run for a hidden canvas. */}
-                  {(small || deckOn) && (
+                  {/* Put away, the scope is not drawn at all, so its frame loop does not run for a hidden canvas. It stays
+                      while the harmonics are on: it is what measures the pitch they are numbered from. */}
+                  {(small || deckOn || harmOn) && (
                     <div className="h-28 min-w-0">
                       <Scope
                         source={engine}

@@ -60,7 +60,7 @@ export function SoundPicker({
   const pick = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
   // The library closes on a press outside it (not on the picker, which toggles it), on Escape inside it, and when
-  // Tab takes focus out of it.
+  // focus leaves it for anything but the picker, by Tab or moved by script.
   useEffect(() => {
     if (!soundsOpen || !onCloseSounds) return undefined;
     const onDown = (e: PointerEvent) => {
