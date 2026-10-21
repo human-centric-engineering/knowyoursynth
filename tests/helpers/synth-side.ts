@@ -33,7 +33,7 @@ export function openSide(tab: SideTab): void {
     if (b) fireEvent.click(b);
     return;
   }
-  const b = screen.getByRole('button', { name: tab === 'Inspect' ? 'Inspector' : 'Tutor' });
+  const b = screen.getByRole('button', { name: tab === 'Inspect' ? 'Inspector' : 'Ask AI tutor' });
   if (!pressed(b, 'aria-pressed')) fireEvent.click(b);
 }
 

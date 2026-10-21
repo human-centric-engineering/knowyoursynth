@@ -166,9 +166,6 @@ svg .kys-hit:focus-visible {
   /* Full screen, the panel takes the screen's whole width, as a video does. */
   --kys-fit-max: 100vw;
 }
-.kys-player:fullscreen .kys-panel-scroller {
-  padding-inline: 8px;
-}
 
 /* The stage: a warm spotlight from above, falling off into the room, over a faint
    floor grid. Painted on a layer under the content so nothing it holds is
@@ -602,7 +599,8 @@ svg .kys-hit:focus-visible {
 }
 /* What the button controls is switched on (the effects): filled with the accent. */
 .kys-layer.is-filled,
-.kys-layer.is-filled:hover {
+.kys-layer.is-filled:hover,
+.kys-layer.is-hover-fill:hover {
   color: var(--kys-accent-ink);
   background: var(--kys-accent);
   box-shadow: 0 0 12px -2px rgb(246 166 58 / 0.6);
@@ -646,6 +644,60 @@ svg .kys-hit:focus-visible {
   align-items: flex-end;
   gap: 6px 14px;
   font-size: 12px;
+}
+/* The row under the panel: the sound's name, then the tools. The name is set in the
+   panel's label face, on one line, and wins the row: the search gives up its width
+   first, then the tools wrap under the name. */
+.kys-sound-title {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 600;
+  font-size: clamp(18px, 1.5vw, 22px);
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+/* A zero basis with the settings and the narrowest search as its floor: the tools
+   share the name's row while they fit at that floor, and wrap under it once not. */
+.kys-tools {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 12px 24px;
+}
+.kys-tools > .kys-settings {
+  flex: none;
+}
+.kys-tools-find {
+  flex: 1 1 160px;
+  min-width: 160px;
+  max-width: 420px;
+}
+/* Squeezed, the search opens out to the row's width while it is in use, and the
+   settings step aside until it is left. */
+@media (max-width: 1279px) {
+  .kys-tools:has(.kys-tools-find:focus-within) > .kys-settings {
+    display: none;
+  }
+  .kys-tools:has(.kys-tools-find:focus-within) > .kys-tools-find {
+    max-width: none;
+  }
+}
+@media (max-width: 767px) {
+  .kys-tools {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+  }
+  .kys-tools > .kys-settings {
+    flex: 1 1 100%;
+  }
+  /* Behind the settings button by the sound's name until it is opened. */
+  .kys-tools[data-settings='closed'] > .kys-settings {
+    display: none;
+  }
+  .kys-tools-find {
+    max-width: none;
+  }
 }
 .kys-setting {
   display: flex;

@@ -124,6 +124,7 @@ export function SoundDesign({
   onStep,
   hasLesson,
   mark,
+  lit = [],
 }: {
   steps: readonly PresetStep[];
   /** The step the panel is at, or `null` for the finished sound. */
@@ -133,6 +134,8 @@ export function SoundDesign({
   hasLesson: boolean;
   /** The app's wordmark, at the far right of the strip's heading. */
   mark?: ReactNode;
+  /** The controls the page has lit for the step the panel is at, put back when a hovered step is left. */
+  lit?: readonly string[];
 }) {
   const n = steps.length;
   return (
@@ -145,7 +148,7 @@ export function SoundDesign({
       </div>
       <div className="kys-design-row">
         {hasLesson ? (
-          n > 0 && <Chapters steps={steps} step={step} onStep={onStep} />
+          n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
         ) : (
           <p className="kys-design-sub">
             This sound has no walkthrough. Choose a library sound to learn how one is built.
@@ -160,17 +163,19 @@ export function SoundDesign({
  * One chapter per step, as long as each other and labelled with its number, the part of the synth it works on and
  * its title, and a last one for the finished
  * sound. While walking, the steps up to the panel's are filled and the one it is at glows; with the finished sound on
- * the panel, every step is filled. Hovered while nothing is being walked, a step lights its controls on the panel, as
- * the lesson's step cards do.
+ * the panel, every step is filled. Hovered, a step lights its controls on the panel in place of whatever was
+ * lit, as the lesson's step cards do, and leaving it puts back what the page had lit.
  */
 export function Chapters({
   steps,
   step,
   onStep,
+  lit = [],
 }: {
   steps: readonly PresetStep[];
   step: number | null;
   onStep: (k: number | null) => void;
+  lit?: readonly string[];
 }) {
   const walking = step != null;
   return (
@@ -187,9 +192,8 @@ export function Chapters({
               onClick={() => onStep(i)}
               aria-current={i === step ? 'step' : undefined}
               aria-label={`Lesson step ${i + 1}: ${s.title}`}
-              title={`${i + 1}. ${s.title}`}
-              onPointerEnter={() => !walking && highlightStore.set(stepIds(s))}
-              onPointerLeave={() => !walking && highlightStore.set([])}
+              onPointerEnter={() => highlightStore.set(stepIds(s))}
+              onPointerLeave={() => highlightStore.set([...lit])}
               style={colour}
             >
               <span className="kys-chapter-track" />
@@ -210,7 +214,6 @@ export function Chapters({
           onClick={() => onStep(null)}
           aria-current={walking ? undefined : 'step'}
           aria-label="The finished sound"
-          title="The whole sound back on the panel: how it works, and ways to make it yours"
         >
           <span className="kys-chapter-track" />
           <span className="kys-chapter-label" aria-hidden="true">

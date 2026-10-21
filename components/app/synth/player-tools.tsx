@@ -24,6 +24,8 @@ export function LayerToggle({
   icon,
   on,
   filled = false,
+  keepShort = false,
+  hoverFill = false,
   onClick,
   ref,
 }: {
@@ -37,6 +39,10 @@ export function LayerToggle({
   on: boolean;
   /** What it controls is switched on (the effects, say), whether or not it is open: the button is filled. */
   filled?: boolean;
+  /** Its word is on show at every width, not only from `xl` up and below `lg`. */
+  keepShort?: boolean;
+  /** Filled with the accent on hover, as a filled button is: for a button that invites a click (Ask AI). */
+  hoverFill?: boolean;
   onClick: () => void;
   /** For a toggle that something else hands focus back to when it closes. */
   ref?: Ref<HTMLButtonElement>;
@@ -49,10 +55,10 @@ export function LayerToggle({
         aria-pressed={on}
         aria-label={label}
         onClick={onClick}
-        className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''}`}
+        className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''} ${hoverFill ? 'is-hover-fill' : ''}`}
       >
         {icon}
-        <span className="lg:max-xl:hidden">{short}</span>
+        <span className={keepShort ? undefined : 'lg:max-xl:hidden'}>{short}</span>
       </button>
     </PlayerTip>
   );

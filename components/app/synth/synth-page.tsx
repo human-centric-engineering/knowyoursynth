@@ -63,6 +63,7 @@ import {
   Play,
   RotateCcw,
   ScanSearch,
+  Settings2,
   Shapes,
   SlidersHorizontal,
   Sparkles,
@@ -489,6 +490,8 @@ function Synth({
   const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
   const [soundsOpen, setSoundsOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
+  // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
+  const [settingsOpen, setSettingsOpen] = useState(false);
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
   const tall = useMediaQuery(TALL_QUERY);
   const [deckChoice, setDeckOn] = useStoredPref(STORAGE_KEYS.deck, DeckSchema, null);
@@ -1189,7 +1192,11 @@ function Synth({
   // Signed in, a step further than the user had got is recorded, and Finish from the last step finishes the lesson.
   // The open sound's own lesson is the exception: the sound stays open (its lesson goes with it), and nothing is
   // recorded, since progress is kept for the library's lessons.
+  // The page lights a step's controls only once a step has been picked on this synth since the page opened: a step
+  // restored from the stored session (on a refresh, or coming back to a synth) leaves the panel unlit.
+  const [litFor, setLitFor] = useState<string | null>(null);
   const setStep = (k: number | null) => {
+    setLitFor(synthId);
     // A full-height Lesson sheet would cover the step's controls: it drops to half, and they scroll into view above it.
     if (small && sheet === 'lesson') setDockSnap('half');
     if (ownLesson) {
@@ -1218,12 +1225,13 @@ function Synth({
   // The band is worked out from the half height rather than measured: dropping from full, the sheet is still shrinking.
   const stepKey = shown && step != null ? stepIds(shown.steps[step]).join('|') : '';
   // From `lg` up the lesson is not on the page (it is in the card, when that is open), so the page lights the step's
-  // controls itself while the panel is at a step, as the lesson does in its sheet below `lg`.
+  // controls itself while the panel is at a step picked here, as the lesson does in its sheet below `lg`.
+  const litKey = litFor === synthId ? stepKey : '';
   useEffect(() => {
     if (small) return undefined;
-    highlightStore.set(stepKey ? stepKey.split('|') : []);
+    highlightStore.set(litKey ? litKey.split('|') : []);
     return () => highlightStore.set([]);
-  }, [small, stepKey]);
+  }, [small, litKey]);
   useEffect(() => {
     if (!small || sheet !== 'lesson' || dockSnap !== 'half' || !stepKey) return undefined;
     const t = requestAnimationFrame(() => {
@@ -1376,6 +1384,9 @@ function Synth({
   const linkBtn = 'kys-label text-(--kys-accent) underline-offset-2 hover:underline';
   const smallBtn =
     'rounded-md border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-(--kys-muted) hover:text-(--kys-text)';
+  // The buttons beside the sound's name: the height, type and weight of the panel settings' switches on the same row.
+  const rowBtn =
+    'inline-flex h-9 items-center rounded-md border border-(--kys-line) bg-(--kys-surface) px-3.5 text-xs font-semibold whitespace-nowrap text-(--kys-muted) hover:text-(--kys-text)';
 
   const loadedName = openSound
     ? openSound.name
@@ -1531,15 +1542,6 @@ function Synth({
                           title="Open the inspector over the panel: what the control under the pointer does, and its value."
                           onClick={() => openSection('inspector')}
                         />
-                        <LayerToggle
-                          ref={tutorBtnRef}
-                          label="Tutor"
-                          short="Tutor"
-                          icon={<Sparkles size={17} aria-hidden="true" />}
-                          on={tutorOpen}
-                          title="Ask the tutor about this synth, or have it design a sound. It slides in over the panel."
-                          onClick={() => (tutorOpen ? closeTutor() : setTutorOpen(true))}
-                        />
                       </div>
                     )}
                     <span className="ml-1 flex items-center gap-2 max-sm:ml-0 max-sm:w-full max-sm:[&>*:first-child]:flex-1">
@@ -1558,12 +1560,27 @@ function Synth({
                       <HelpButton title="How to use the panel" items={PANEL_HELP} />
                     </span>
                   </div>
+                  {/* The tutor at the far right, named and always on show: it does not fade with the tools when the
+                  pointer rests. */}
+                  {!small && (
+                    <LayerToggle
+                      ref={tutorBtnRef}
+                      label="Ask AI tutor"
+                      short="Ask AI"
+                      keepShort
+                      hoverFill
+                      icon={<Sparkles size={17} aria-hidden="true" />}
+                      on={tutorOpen}
+                      title="Ask the tutor about this synth, or have it design a sound. It slides in over the panel."
+                      onClick={() => (tutorOpen ? closeTutor() : setTutorOpen(true))}
+                    />
+                  )}
                 </div>
               </header>
 
               <div
                 ref={scrollerRef}
-                className="kys-scroll kys-panel-scroller overflow-x-auto px-3 pt-2 pb-5 sm:px-6"
+                className="kys-scroll kys-panel-scroller overflow-x-auto p-2"
                 {...panelTaps}
               >
                 <div
@@ -1591,30 +1608,34 @@ function Synth({
                 </div>
               </div>
               {/* Under the panel, on the stage with it: the sound's name and what you can do with it on the left; how the
-              panel is drawn and find a control on the right; and what the sound is under its name, or under both
-              where the screen is too narrow for it to sit beside the controls. */}
-              <div className="grid grid-cols-1 items-start gap-x-6 gap-y-3 px-3 pb-3 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto]">
-                <div className="min-w-0">
-                  <section aria-label="The sound on the panel" className="min-w-0">
+              panel is drawn and find a control on the right; and what the sound is under both. The name comes first:
+              it stays on one line, and as the screen narrows the search gives up its width, then the tools wrap
+              under the name. */}
+              <div className="px-3 pt-4 pb-3 sm:px-6">
+                <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
+                  <section
+                    aria-label="The sound on the panel"
+                    className="max-w-full min-w-0 max-md:flex-1"
+                  >
                     {/* The sound's name, and beside it what can be done with it: keep it, or unplug its cables. */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                      <p className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
+                      <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
                         <span className="sr-only">Loaded:</span>
-                        <span className="text-[clamp(20px,2vw,26px)] leading-tight font-semibold text-balance">
+                        <span className="kys-sound-title truncate" title={loadedName}>
                           {loadedName}
                         </span>
                         {openSound && (
-                          <span className="rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                          <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             mine
                           </span>
                         )}
                         {designed && !openSound && (
-                          <span className="rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                          <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
                             from the tutor
                           </span>
                         )}
                         {changed > 0 && (
-                          <span className="text-sm text-(--kys-accent)">
+                          <span className="shrink-0 text-sm text-(--kys-accent)">
                             {changed} control{changed === 1 ? '' : 's'} moved
                           </span>
                         )}
@@ -1637,41 +1658,50 @@ function Synth({
                             onSaved={onSaved}
                             onDeleted={onDeleted}
                             libraryTags={libraryTags}
-                            buttonClass={smallBtn}
+                            buttonClass={rowBtn}
                           />
                         )}
                       {sess.cables.length > 0 && (
                         <button
                           type="button"
                           onClick={() => patch((s) => ({ ...s, cables: [] }))}
-                          className={smallBtn}
+                          className={rowBtn}
                         >
                           Unplug all
                         </button>
                       )}
                     </div>
                   </section>
+                  <button
+                    type="button"
+                    aria-label="Panel settings"
+                    aria-expanded={settingsOpen}
+                    aria-controls="kys-tools"
+                    onClick={() => setSettingsOpen(!settingsOpen)}
+                    className={`${rowBtn} ml-auto px-2.5 md:hidden ${settingsOpen ? 'text-(--kys-text)' : ''}`}
+                  >
+                    <Settings2 size={17} aria-hidden="true" />
+                  </button>
+                  <div
+                    id="kys-tools"
+                    data-settings={settingsOpen ? 'open' : 'closed'}
+                    className="kys-tools kys-autohide"
+                  >
+                    <PlayerSettings
+                      view={view}
+                      onView={setView}
+                      modular={!!synthDef.modular}
+                      zoom={zoom}
+                      onZoom={setZoom}
+                      tipsOn={tipsOn}
+                      onTips={setTipsOn}
+                    />
+                    <Search def={def} up className="kys-tools-find" />
+                  </div>
                 </div>
-                <div className="kys-autohide flex flex-wrap items-end gap-x-6 gap-y-3 max-md:w-full 2xl:row-span-2">
-                  <PlayerSettings
-                    view={view}
-                    onView={setView}
-                    modular={!!synthDef.modular}
-                    zoom={zoom}
-                    onZoom={setZoom}
-                    tipsOn={tipsOn}
-                    onTips={setTipsOn}
-                  />
-                  <Search
-                    def={def}
-                    up
-                    className="min-w-0 max-md:w-full max-md:flex-1 md:w-[420px] md:max-w-full"
-                  />
-                </div>
-                {/* What the sound is, under its name as a video's description is under its title: beside the
-                controls on a wide screen, and under them, the whole width, where they leave its column narrow. */}
+                {/* What the sound is, under its name as a video's description is under its title. */}
                 {(described || mineNotice || sharedNotice) && (
-                  <div className="min-w-0 lg:col-span-2 2xl:col-span-1">
+                  <div className="mt-3 min-w-0">
                     {described && (
                       <section
                         aria-label="About the sound"
@@ -1730,6 +1760,7 @@ function Synth({
                 }}
                 hasLesson={!!shown}
                 mark={<Wordmark lit={audio === 'on'} />}
+                lit={!small && litKey ? litKey.split('|') : []}
               />
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
