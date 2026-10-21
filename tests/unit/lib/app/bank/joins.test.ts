@@ -2,7 +2,8 @@
  * The ported joins over the committed seed data give every synth the "Heard on" list the prototype gave it.
  *
  * `tests/fixtures/bank/heard-on.json` is the prototype's own `heardFor()` for each of the 25 synths, recorded by
- * `scripts/record-heard-on.ts` and never re-recorded to make a port pass (D3).
+ * `scripts/record-heard-on.ts` and never re-recorded to make a port pass (D3). A synth written straight into the app
+ * (`scripts/native-synths.ts`) has no prototype list, so it is not in the file.
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -22,11 +23,13 @@ import {
 } from '@/lib/app/bank/joins';
 import type { Bank, BankArtist, BankSong } from '@/lib/app/bank/data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+import { isNativeSynth } from '@/scripts/native-synths';
 
 const golden = JSON.parse(
   readFileSync(resolve(process.cwd(), 'tests/fixtures/bank/heard-on.json'), 'utf8')
 ) as Record<string, HeardEntry[]>;
 const bank = loadBankData();
+const ported = SYNTH_DEFS.map((d) => d.id).filter((id) => !isNativeSynth(id));
 
 describe('the seed data', () => {
   it('holds the prototype databank whole', () => {
@@ -39,13 +42,14 @@ describe('the seed data', () => {
 });
 
 describe('heardFor over the seed data', () => {
-  it('has a recorded list for every registered synth, and the lists are not empty', () => {
+  it('has a recorded list for every ported synth, and the lists are not empty', () => {
     // Without this floor an empty golden or an empty bank would match every synth.
-    expect(Object.keys(golden).sort()).toEqual(SYNTH_DEFS.map((d) => d.id).sort());
+    expect(ported.length).toBeGreaterThan(0);
+    expect(Object.keys(golden).sort()).toEqual([...ported].sort());
     for (const list of Object.values(golden)) expect(list.length).toBeGreaterThan(0);
   });
 
-  it.each(SYNTH_DEFS.map((d) => d.id))('%s: equals the prototype', (id) => {
+  it.each(ported)('%s: equals the prototype', (id) => {
     expect(heardFor(bank, id)).toEqual(golden[id]);
   });
 });
