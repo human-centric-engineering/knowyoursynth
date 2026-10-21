@@ -26,9 +26,13 @@
  * Left out of the transliteration, and why:
  * - The "What is not modelled" check only asks that a ported synth's seed data has an entry. The prototype's
  *   `limitsFor` check ran on every synth, and the unported ones still have theirs in `prototype/src/lib/limits.js`.
- * - `--write-baseline`: the baseline in `.context/app/check/` is the prototype's own rendering. The ported engine has
- *   to reproduce it, not overwrite it, so this script only reads it. Re-record it with the prototype's own checker
- *   (`node check.mjs --write-baseline`, run in the prototype folder) if a sound is ever meant to change.
+ * - `--write-baseline` for a ported synth: its baseline in `.context/app/check/` is the prototype's own rendering. The
+ *   ported engine has to reproduce it, not overwrite it, so this script only reads it. Re-record it with the
+ *   prototype's own checker (`node check.mjs --write-baseline`, run in the prototype folder) if a sound is ever meant
+ *   to change.
+ *
+ * A synth written straight into the app (`scripts/native-synths.ts`) has no prototype: it is checked like a ported one
+ * without the parity check, and `--write-baseline` records its first baseline, once. It never overwrites a baseline.
  * - One tightening: under `--compare` a different sample hash is an error here, where `check.mjs` only noted it. The
  *   port is meant to be exact, so "agrees to the fingerprint's precision" is not good enough.
  *
@@ -37,6 +41,7 @@
  *   npm run check:synths -- neutron               one synth
  *   npm run check:synths -- neutron reese         one synth, only sounds whose id contains "reese"
  *   npm run check:synths -- model-d --compare     one synth against its baseline
+ *   npm run check:synths -- donner-b1 --write-baseline   a native synth's first baseline (refuses to overwrite one)
  * Flags (anywhere on the line, after npm's `--`):
  *   --seed=N            seed for Math.random, reset before every sound (default 20240919, as the sound-map probe)
  *   --compare           compare each synth's fingerprints with .context/app/check/<synth>.json; any difference is an error
@@ -47,10 +52,11 @@
  */
 
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { availableParallelism } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { format, resolveConfig } from 'prettier';
 
 import { createSynth, SIGNALS, DESTS } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, Lineage, Preset, SynthDef } from '@/lib/app/synths/contract';
@@ -62,6 +68,12 @@ import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import type { Bank } from '@/lib/app/bank/data';
 import { heardFor } from '@/lib/app/bank/joins';
 import { BankDataError, planBank } from '@/lib/app/bank/seed';
+import {
+  isNativeSynth,
+  NATIVE_SYNTHS,
+  nativeSynthProblems,
+  writeBaselineRefusal,
+} from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
 import { modularDef } from '@/lib/app/synths/lib/layout';
@@ -133,9 +145,10 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
 
 /**
  * The definitions to check: each ported one in place of the prototype's, carrying its sounds and lineage from the seed
- * data. `orphans` are registered ids with no prototype definition (a mistyped id, or a synth the prototype never had):
- * nothing below would check them, so the run refuses to start rather than pass them by. `content` lists what is wrong
- * with a ported synth's seed data, per synth.
+ * data, then each native one (`scripts/native-synths.ts`), which has no prototype to stand in for. `orphans` are
+ * registered ids with neither a prototype definition nor a line in the native list (a mistyped id): nothing below
+ * would check them, so the run refuses to start rather than pass them by, as it does for a `native` problem.
+ * `content` lists what is wrong with a synth's seed data, per synth.
  */
 function withPorted(
   prototypes: SynthDef[],
@@ -145,22 +158,25 @@ function withPorted(
   synths: SynthDef[];
   drift: Map<string, string>;
   orphans: string[];
+  native: string[];
   content: Map<string, string[]>;
 } {
   const protoIds = new Set(prototypes.map((p) => p.id));
-  const orphans = SYNTH_DEFS.map((d) => d.id).filter((id) => !protoIds.has(id));
+  const registered = SYNTH_DEFS.map((d) => d.id);
+  const orphans = registered.filter((id) => !protoIds.has(id) && !isNativeSynth(id));
+  const native = nativeSynthProblems(registered, [...protoIds]);
   const drift = new Map<string, string>();
   const content = new Map<string, string[]>();
-  const synths = prototypes.map((proto) => {
-    const ported = getSynthDef(proto.id);
-    if (!ported) return proto;
-    const d = definitionDrift(ported, proto);
-    if (d) drift.set(proto.id, d);
+  const withContent = (ported: SynthDef): SynthDef => {
     const problems: string[] = [];
     const sounds = data.sounds.find((f) => f.synth === ported.id);
     const lineage = data.lineage.find((f) => f.synth === ported.id);
     if (!sounds)
-      problems.push('has no sounds in the seed data (run prototype/tools/export-content.mjs)');
+      problems.push(
+        isNativeSynth(ported.id)
+          ? "has no sounds in the seed data (a native synth's are written by hand: .context/app/adding-a-synth.md)"
+          : 'has no sounds in the seed data (run prototype/tools/export-content.mjs)'
+      );
     else if (sounds.version !== ported.version)
       problems.push(
         `seed data sounds are on version ${sounds.version}, the definition is at ${ported.version}`
@@ -184,8 +200,19 @@ function withPorted(
       history = { ...rest, heard: heardFor(bank, ported.id) };
     }
     return { ...ported, presets, lineage: history };
+  };
+  const synths = prototypes.map((proto) => {
+    const ported = getSynthDef(proto.id);
+    if (!ported) return proto;
+    const d = definitionDrift(ported, proto);
+    if (d) drift.set(proto.id, d);
+    return withContent(ported);
   });
-  return { synths, drift, orphans, content };
+  for (const id of NATIVE_SYNTHS) {
+    const def = getSynthDef(id);
+    if (def && !protoIds.has(id)) synths.push(withContent(def));
+  }
+  return { synths, drift, orphans, native, content };
 }
 
 async function main(): Promise<void> {
@@ -194,12 +221,17 @@ async function main(): Promise<void> {
     synths: SYNTHS,
     drift,
     orphans,
+    native,
     content,
   } = withPorted(await loadPrototypeSynths(), loadCatalogueData(), BANK);
   if (orphans.length) {
     console.log(
-      `ERR registered with no prototype definition to check against: ${orphans.join(', ')}`
+      `ERR registered with no prototype definition to check against: ${orphans.join(', ')} (a synth written straight into the app goes in scripts/native-synths.ts)`
     );
+    process.exit(1);
+  }
+  if (native.length) {
+    for (const problem of native) console.log(`ERR ${problem}`);
     process.exit(1);
   }
   // The databank: every id resolves and every linked sound exists. Checked once, by the process that starts the others.
@@ -224,12 +256,12 @@ async function main(): Promise<void> {
     flags.find((f) => f === `--${name}` || f.startsWith(`--${name}=`));
   const optValue = (name: string): string | undefined => (opt(name) || '').split('=')[1];
   for (const f of flags) {
-    if (!['seed', 'compare', 'jobs'].some((n) => f === `--${n}` || f.startsWith(`--${n}=`))) {
-      console.log(
-        f.startsWith('--write-baseline')
-          ? "ERR --write-baseline is not ported: the baseline is the prototype's; re-record it from prototype/ (node check.mjs --write-baseline)"
-          : `ERR unknown flag ${f}`
-      );
+    if (
+      !['seed', 'compare', 'jobs', 'write-baseline'].some(
+        (n) => f === `--${n}` || f.startsWith(`--${n}=`)
+      )
+    ) {
+      console.log(`ERR unknown flag ${f}`);
       process.exit(1);
     }
   }
@@ -239,6 +271,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   const COMPARE = !!opt('compare');
+  const WRITE = !!opt('write-baseline');
   const BASELINE_DIR = join(ROOT, '.context', 'app', 'check');
 
   const norm = (t: string | undefined): string =>
@@ -275,6 +308,21 @@ async function main(): Promise<void> {
     console.log('ERR', m);
   };
   const SR = 48000;
+  const baselineFile = (id: string): string => join(BASELINE_DIR, `${id}.json`);
+
+  // `--write-baseline` records a native synth's first baseline, and nothing else (`writeBaselineRefusal`).
+  if (WRITE) {
+    const refuse = writeBaselineRefusal({
+      compare: COMPARE,
+      synth: onlySynth,
+      soundFilter: onlyPreset,
+      baselineExists: !!onlySynth && existsSync(baselineFile(onlySynth)),
+    });
+    if (refuse) {
+      console.log(`ERR ${refuse}`);
+      process.exit(1);
+    }
+  }
 
   // Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 1,100 sounds of
   // 3 s each, roughly half an hour on one core and about ten minutes on eight. Each synth's report is printed whole, in
@@ -412,8 +460,6 @@ async function main(): Promise<void> {
     return (h >>> 0).toString(16).padStart(8, '0');
   };
 
-  const baselineFile = (id: string): string => join(BASELINE_DIR, `${id}.json`);
-
   /** The engine gets a plain-data copy of the params, as it does through the worklet port (functions and undefined dropped). */
   const jsonCopy = (p: EngineParams): EngineParams => {
     const copy: unknown = JSON.parse(JSON.stringify(p));
@@ -423,6 +469,7 @@ async function main(): Promise<void> {
 
   type Sound = Pick<Preset, 'id' | 'steps' | 'phrase'> & Partial<Preset>;
 
+  let toWrite: (Baseline & { sampleRate: number; seconds: number }) | null = null;
   for (const def of SYNTHS) {
     if (onlySynth && def.id !== onlySynth) continue;
     const d = drift.get(def.id);
@@ -505,7 +552,9 @@ async function main(): Promise<void> {
         else E(`${def.id} baseline is not a baseline file`);
       } catch {
         E(
-          `${def.id} has no baseline – record one from prototype/ (node check.mjs --write-baseline)`
+          isNativeSynth(def.id)
+            ? `${def.id} has no baseline – record its first one with npm run check:synths -- ${def.id} --write-baseline`
+            : `${def.id} has no baseline – record one from prototype/ (node check.mjs --write-baseline)`
         );
       }
       if (baseline && baseline.seed !== SEED)
@@ -678,10 +727,24 @@ async function main(): Promise<void> {
     if (baseline && !onlyPreset)
       for (const id of Object.keys(baseline.sounds))
         if (!prints[id]) E(`${def.id}/${id} is in the baseline but no longer in the library`);
+    if (WRITE) toWrite = { synth: def.id, seed: SEED, sampleRate: SR, seconds: 3, sounds: prints };
   }
   if (!rendered) {
     console.log('ERR nothing matched – no sounds were checked');
     process.exit(1);
+  }
+  // A baseline is only as good as the run that wrote it: a silent or NaN sound would be recorded as correct.
+  if (toWrite && errs)
+    console.log(`baseline NOT written for ${toWrite.synth}: fix the errors above first`);
+  else if (toWrite) {
+    // Pretty-printed by the repo's own Prettier, so `npm run format` leaves the committed file alone.
+    const file = baselineFile(toWrite.synth);
+    mkdirSync(BASELINE_DIR, { recursive: true });
+    writeFileSync(
+      file,
+      await format(JSON.stringify(toWrite), { ...(await resolveConfig(file)), filepath: file })
+    );
+    console.log(`baseline written: ${relative(ROOT, file)}`);
   }
   console.log(
     errs

@@ -1,6 +1,8 @@
 /**
  * Records a ported synth's golden values from the prototype's definition, into
- * `tests/fixtures/synths/goldens/<id>.json` (see `scripts/synth-goldens.ts` for what is recorded and why).
+ * `tests/fixtures/synths/goldens/<id>.json` (see `scripts/synth-goldens.ts` for what is recorded and why). A synth
+ * written straight into the app (`scripts/native-synths.ts`) has no prototype, so its own definition is recorded, once,
+ * and the same rule holds from then on: a later definition that differs is the definition's to fix.
  *
  *   npx tsx scripts/record-synth-goldens.ts                     every registered synth that has no goldens yet
  *   npx tsx scripts/record-synth-goldens.ts <id> ...            only these, if they have no goldens yet
@@ -17,7 +19,8 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { format, resolveConfig } from 'prettier';
-import { SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { getSynthDef, SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { isNativeSynth, nativeSynthProblems } from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { recordGoldens } from '@/scripts/synth-goldens';
 
@@ -45,10 +48,21 @@ async function main(args: string[]): Promise<void> {
   }
 
   const prototypes = new Map((await loadPrototypeSynths()).map((d) => [d.id, d]));
+  const problems = nativeSynthProblems(
+    SYNTH_DEFS.map((d) => d.id),
+    [...prototypes.keys()]
+  );
+  if (problems.length) throw new Error(problems.join('; '));
   mkdirSync(OUT_DIR, { recursive: true });
   for (const id of wanted) {
-    const def = prototypes.get(id);
-    if (!def) throw new Error(`the prototype has no synth ${id}`);
+    // A native synth has no prototype: its own definition is recorded, once (scripts/native-synths.ts).
+    const def = isNativeSynth(id) ? getSynthDef(id) : prototypes.get(id);
+    if (!def)
+      throw new Error(
+        isNativeSynth(id)
+          ? `native synth ${id} is not registered`
+          : `the prototype has no synth ${id} (a synth written straight into the app goes in scripts/native-synths.ts)`
+      );
     const goldens = recordGoldens(def);
     const options = await resolveConfig(file(id));
     writeFileSync(

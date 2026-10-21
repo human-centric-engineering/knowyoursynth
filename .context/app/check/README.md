@@ -51,11 +51,24 @@ npm run check:synths -- model-d --compare      # one synth
 npm run check:synths -- model-d funk --compare # only sounds whose id contains "funk"
 ```
 
-It reads these files and never writes them (there is no `--write-baseline`), and under
+For a ported synth it reads these files and never writes them, and under
 `--compare` a different `hash` is an error, not a note: the port has to be exact. Until the
 definitions are ported (m1) it takes them from the prototype's source, bundled when it runs.
 It skips the limits (m2) and databank (b1) checks. A full `--compare` run: 1,086 sounds, every
 one identical, 260 s on eight processes.
+
+## A synth with no prototype
+
+A synth written straight into the app (listed in `scripts/native-synths.ts`, the Donner B1
+first) has no prototype rendering to reproduce. Its first baseline is recorded from its own
+definition and seed sounds, once:
+
+```bash
+npm run check:synths -- donner-b1 --write-baseline
+```
+
+It records one native synth at a time, never a ported one, and never over an existing file.
+From then on the native synth is held to its baseline exactly as a ported one is.
 
 **Re-record only on purpose.** A baseline rewritten to make a port pass loses the only thing
 that would have shown that the port changed a sound.

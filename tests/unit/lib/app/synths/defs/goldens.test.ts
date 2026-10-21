@@ -2,7 +2,8 @@
  * Every ported definition does what the prototype's does: its readouts, jack checks, jack depths, "what you will
  * hear" sentences and engine parameters, over a grid of panel settings, equal the goldens recorded from the prototype
  * (`tests/fixtures/synths/goldens/`, by `scripts/record-synth-goldens.ts`). The goldens are never re-recorded to make
- * a port pass (D3: the prototype is the spec).
+ * a port pass (D3: the prototype is the spec). A synth written straight into the app (`scripts/native-synths.ts`) has
+ * no prototype: its goldens are recorded once from its own definition, and the same rule holds from then on.
  *
  * `npm run check:synths` proves the engine mapping on every library sound and compares the functions on controls and
  * jacks only by presence; this is the half it leaves.
@@ -55,7 +56,7 @@ describe.each(SYNTH_DEFS.map((d) => d.id))('%s', (id) => {
   const def = getSynthDef(id);
   if (!def) throw new Error(`${id} is registered`);
 
-  it('has goldens recorded from the prototype', () => {
+  it('has goldens recorded', () => {
     expect(
       existsSync(goldenFile(id)),
       `record them: npx tsx scripts/record-synth-goldens.ts ${id}`
@@ -64,7 +65,7 @@ describe.each(SYNTH_DEFS.map((d) => d.id))('%s', (id) => {
 
   // The DeepMind's grid is ~7,400 settings of 1,568 controls: about 6 s alone, and past the default 30 s when the
   // whole suite runs in parallel. Every other synth's grid takes under a second.
-  it('does what the prototype does over the whole grid', { timeout: 120_000 }, () => {
+  it('does what its goldens say over the whole grid', { timeout: 120_000 }, () => {
     const want = golden(id);
     const got = recordGoldens(def);
     expect(got.id).toBe(want.id);
