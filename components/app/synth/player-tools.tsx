@@ -4,7 +4,7 @@
  * The player's tools (`f-player` t-72): the learning layers as toggles over the panel, as a video player carries its
  * captions button, and how the panel is drawn, as switches under it.
  *
- * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect, Tutor over it; Piano,
+ * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect over it, Ask AI at its far right; Piano,
  *   Harmonics, Effects on the bar). An icon, with its word from `xl` up and below `lg` (a phone has no tooltips to name it); the full name is the
  *   accessible name and the tooltip at every width.
  * - `PlayerSettings`: under the panel, by the search. Hardware or Outline, Modular or Long, the magnifier and the

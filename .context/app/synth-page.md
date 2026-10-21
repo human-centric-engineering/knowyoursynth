@@ -13,7 +13,8 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
 | `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, play, full screen  |
 | `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings under the panel            |
-| `components/app/synth/drawers.tsx`       | The tab strip and drawer beside the player from `lg` up                   |
+| `components/app/synth/drawers.tsx`       | The tutor's drawer, sliding over the panel from `lg` up                   |
+| `components/app/synth/lesson-card.tsx`   | The card over the panel from `lg` up: lesson, inspector or effects        |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
@@ -135,10 +136,15 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   is the picker (`SynthPicker variant="caption"`). The page's `h1` is visually hidden, since the
   picker shows the name, on one line. Beside it the description (up to two lines from `lg`), with
   About (the synth's summary, in a dialog), History and What is not modelled under it. On the right of the header are the layers (Sections,
-  Dim unused, Sensitive), Inspect and Tutor, icons with their words from `xl`, then Tour, the one
-  switch that starts something. Under the panel, on the stage, is the sound on it (see below) on the
-  left, its top level with the settings' names, then the panel settings and the search (its matches
-  open upward). The wordmark is at the far right of the Sound Design strip's heading.
+  Dim unused, Sensitive) and Inspect, icons with their words from `xl`, then Tour, the one
+  switch that starts something. At the header's far right, from `lg` up, is **Ask AI** (the tutor):
+  always named (`keepShort`), filled on hover (`hoverFill`), and not faded with the tools when the
+  pointer rests. Under the panel, on the stage, is the sound on it (see below), then the panel
+  settings and the search (its matches open upward). The wordmark is at the far right of the Sound
+  Design strip's heading.
+- **With the pointer at rest the secondary controls fade** (`.kys-autohide`, under
+  `.kys-synth[data-idle]`), as a video player's do; focus inside one, or hovering the dock, brings
+  it back.
 - **The Sound Design strip teaches the sound** (t-71), over the bar, where a video's chapters are
   (`SoundDesign` in `player.tsx`). From `lg` up with a pointer it floats over the foot of the panel
   and shows only while the pointer is within `STRIP_REACH` px of the dock (`data-near` on the dock,
@@ -154,7 +160,13 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   overview, with how the sound works, the parts it uses in order, and its ways to make it yours
   (numbered on the panel), so the lesson starts and ends on it.
   A chapter moves the panel to that step, through the same `setStep` as the Lesson region, so
-  progress, the open sound's own lesson and shared sounds behave alike.
+  progress, the open sound's own lesson and shared sounds behave alike, and opens the lesson card
+  (below). Hovered, a chapter lights its step's controls in place of whatever is lit, and leaving
+  it puts back what the page had lit (`SoundDesign`'s `lit`).
+- **From `lg` up the page lights the step's controls itself** while the panel is at a step, since
+  the lesson is not on the page there — but only once a step has been picked on this synth since
+  the page opened (`litFor`). A step restored from `kys.session.<id>` (a refresh, or coming back to
+  a synth) leaves the panel unlit.
 - **The step card** is the step the panel is at, in a column no wider than 68ch in the middle of
   the strip, between Previous and Next. With the finished sound on, it is the overview above and
   its button is "Build it step by step"; from the last step Next finishes. Their names ("Previous
@@ -173,33 +185,43 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   screen. The info cards and the tour are rendered inside the player so they still show there.
   The stage, not the player, isolates its stacking, so they still stack over the page's bottom
   nav, and they read the player's dark roles.
-- **Under the panel, on the stage,** is the title row, as under a video: the loaded sound, its
-  marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug all on one
-  line, with the sound's "In the style of…" and blurb under its name as a video's description is
-  under its title. From `2xl` the description sits beside the settings; below it, it runs the whole
-  width under them.
+- **Under the panel, on the stage,** is the title row, as under a video: the loaded sound (on one
+  line in the panel's label face, `.kys-sound-title`, truncated with its full name as the
+  `title`), its marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug
+  all, then the panel settings and the search (`.kys-tools`). The name wins the row: as the screen
+  narrows the search gives up its width (to 160px), then the tools wrap under the name. Below
+  `xl`, while the search is in use, it takes the row and the settings step aside. The sound's "In
+  the style of…" and blurb run the whole width under both, as a video's description is under its
+  title.
 - **The piano is out by default on a tall screen** (`min-height: 900px`) and put away on a short
   one, until the Piano button says otherwise (stored as `kys.deck`). Harmonics show in the deck
   with the piano put away. **In the light theme the stage is light** (the player's tokens follow
   the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
   dialog with the status, Connect / Try again / Stop, and how to connect a keyboard.
 - **On a phone** the bar's buttons wrap rather than scroll, with their words, at 44px on a touch
-  screen; the header's layers share one even row; the settings are a grid the screen's width; the
-  wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
+  screen; the header's layers share one even row; below `md` the panel settings fold behind a
+  settings button by the sound's name (`aria-expanded`, `data-settings` on `#kys-tools`), the
+  search staying on show; the wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
   mouse drags it too. **Full screen** lifts the panel's 1560px cap (`--kys-fit-max`), so it takes
   the screen's width. The step the panel is at is not repeated here: the
   chapters and the card show it. The description is of the sound on
   the panel. It does not show a library sound's words under one of the user's own sounds, or a
   shared sound, that has no lesson of its own.
-- **Beside the player, from `lg` up, is a drawer** (t-70, `drawers.tsx`), as a video page keeps
-  its side panel: a labelled tab strip down the right-hand edge (Sounds, Lesson, Inspect, Tutor)
-  opens one region at a time beside the player. It pushes rather than covers: the player narrows
-  and the panel refits. Sounds is open on a first visit; the drawer open (or none) is kept in this
-  browser (`kys.side`). Every region is rendered all the time, the closed ones `hidden`, so a
-  closed one keeps its state (the tutor streams on, the lesson keeps its step) and is out of the
-  accessibility tree. The tab, the drawer's ✕ and Escape inside it close it; the last two hand
-  focus back to the tab. Asking the tutor from the library opens the Tutor drawer. Below `lg` none
-  of this is drawn and the bottom sheets (below) are used instead.
+- **From `lg` up the dock is pinned to the screen** (t-74): the Sound Design strip, the bar and
+  the piano sit at the bottom, and the panel is fitted to the height left above them. Nothing
+  opens beside the player any more, so the panel never refits while you use it. (t-70's tab strip
+  and pushing drawer, and its `kys.side`, are gone.)
+- **The lesson card floats over the panel** (`lesson-card.tsx`), opened from a chapter: one
+  section of the lesson, its moves numbered ①②③ on the card and on the panel (`badgeStore`). It
+  does not block the panel, since it tells you to turn the knobs under it. It can be dragged by its
+  header anywhere on the screen; ⇆ docks it on the other side (`kys.cardSide`). The inspector
+  (Inspect) and the effects rack (Effects, in the bar) open in the same card, so there is one card
+  at a time; below `lg` the rack stays under the keyboard.
+- **The tutor slides in over the panel** (`TutorDrawer`, `drawers.tsx`) rather than pushing the
+  player narrower. It is rendered all the time, the drawer `hidden` while closed, so an answer
+  streams on and a closed one is out of the accessibility tree. Ask AI, the drawer's ✕ and Escape
+  inside it close it; the last two hand focus back to Ask AI. Asking the tutor from the library
+  opens it. Below `lg` none of this is drawn and the bottom sheets (below) are used instead.
 
 ## On phones and tablets
 
@@ -291,5 +313,7 @@ in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)).
 | `kys.dim`, `kys.heat`  | The sound map's "Dim unused parts" and "Show sensitive controls"                                                                                                                                                                                                   |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
 | `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |
+| `kys.deck`             | The Piano button's choice: out, put away, or `null` for the screen's default                                                                                                                                                                                       |
+| `kys.cardSide`         | Which side of the panel the lesson card docks on from `lg` up (`left` or `right`)                                                                                                                                                                                  |
 | `kys.settingsBy`       | Who was signed in when the settings were last changed (`null` for no one), so another user's are not filled into an account                                                                                                                                        |
 | `kys.settingsAt`       | When the settings were last changed (ms), weighed against the account's copy                                                                                                                                                                                       |
