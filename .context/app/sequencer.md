@@ -1,9 +1,9 @@
 # The pattern sequencer
 
 One sequencer works on every synth. You edit a riff step by step, starting from any riff in the library, and play it
-on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it:
-`lib/app/sequencer/`, from t-78, and the engine's pattern player, from t-79. The module on the page, saving and sharing come in later tasks of §21, and each adds
-its section here.
+on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it
+(`lib/app/sequencer/`, t-78), the engine's pattern player (t-79) and the module on the synth page
+(`components/app/sequencer/`, t-80). Saving and sharing come in later tasks of §21, and each adds its section here.
 
 ## Riffs and patterns
 
@@ -163,9 +163,67 @@ latency (`baseLatency`) and the output device's (`outputLatency`). `beatAt` read
 `patternEnd` says the pattern stopped without the page stopping it: it was told to end and has played out, or a
 `panic` (which the engine sends on suspend) stopped it.
 
+## The module
+
+The sequencer module sits under the panel on every synth page. The **Sequencer** button on the player bar opens it.
+From `lg` up it is in the dock, between the bar and the piano. Below `lg` it is a docked bottom sheet at half height,
+with the panel live above it.
+
+The page owns the pattern through `useSequencer` (`use-sequencer.ts`), so closing the module keeps every edit. The
+hook is handed the riff of the sound on the panel and imports it whenever that riff's content changes. Choosing
+another sound replaces the pattern, and Undo starts empty. A sound read again with the same riff (a rename, a save)
+keeps the edits. A panel tempo control (`SynthDef.tempo`, the TB-303's TEMPO) sets the pattern's tempo as it sets a
+riff's, and Undo does not count it.
+
+**One transport.** With the sequencer open, the bar's Play riff plays the pattern. The module's Play button is the same
+transport. A pattern starting stops a riff, a riff starting stops the pattern, and Stop stops both. Opening the
+sequencer while the riff plays hands over to the pattern. Closing it while the pattern plays leaves it playing.
+
+**Playing.** Play compiles loop 0 and sends `pattern`. Each `loop` event with `start` set compiles the loop after it and
+queues it (`patternNext`). A pattern with Loop off queues its end instead. Every loop is compiled from its own seed,
+which buys two things:
+
+- The step order the playhead is drawn with is the order the loop was compiled with, random and Brownian included.
+- An edit recompiles the loop playing now with the same draws, so a step with a chance doesn't change its mind because
+  a different step was edited.
+
+An edit while playing sends `patternEdit` for the loop playing, then queues a fresh next loop. A tempo change sends
+`tempo` too. An edit that `PatternSchema` refuses is not made.
+
+**The playhead.** The module reads `position()` once a frame while playing. That pushes the hook's `loop` events
+through `createPlayhead` at `engine.frame`, and maps the beat to a slot and the slot to a step through the loop's
+order. The keys redraw only when the step changes.
+
+**What is on it:**
+
+- **The head.** Play/Stop, Fill and Loop, then four encoders (tempo, swing, length, transpose). Then selects for step
+  size, direction, root and scale. Then the parts: **+ B** adds B as a copy of A and chains it `A B`, and once there
+  is a B a select picks the chain.
+- **Step keys**, sixteen to a page, with a page button for each sixteen past the first. A key's LED is lit when the
+  step plays and outlined when it is muted with notes. The key the playhead is on is lit.
+- **Choosing and toggling.** A press chooses a step, and a double press turns it on or off. A rest turned on takes the
+  note before it.
+- **The keys from the keyboard.** The keys are one Tab stop. Left and Right move along the steps and across pages,
+  Home and End go to either end, Up and Down move the step's notes a semitone, Enter or Space turns it on or off, and
+  Delete makes it a rest.
+- **The tool row.** Euclid (with a Hits encoder), rotate left and right, reverse, octave and scale-degree shifts,
+  Randomise (on the scale, in the range the part already uses), Mutate, copy a step or a page, paste, clear, and Undo.
+  Each tool works on the part being edited.
+- **The step inspector.** On, accent and slide, then ratchet, chance and condition, then a row of encoders per note:
+  pitch, gate, velocity and nudge. A velocity the note does not set shows the default, dimmed.
+  **Add note** / **Add to chord** adds up to six notes.
+- **Encoders** (`encoder.tsx`) are sliders. Arrows move a step, Page Up and Page Down a big step (an octave for a
+  note), and Home and End go to either end. A vertical drag turns one, with a mouse or a finger. One encoder's turn
+  is one Undo: edits in one group within 1.2 s are one entry. Undo holds 100.
+- **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all.
+- **Narrow widths.** The keys go eight to a row when the module is narrower than 620px. The inspector sits beside the
+  keys from 900px. Coarse pointers get 44px targets.
+
 ## Not yet
 
 Coming in later tasks of §21:
 
 - Mod lanes, per-step values for panel controls (t-82). They add an optional field to the pattern.
 - Saving (t-81) and sharing (t-83).
+- Playing into it: step record, live record and arp mode (t-86).
+- The tutor writing patterns (t-84), and the TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).

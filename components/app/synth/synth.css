@@ -1069,7 +1069,6 @@ svg .kys-hit:focus-visible {
   align-self: center;
 }
 .kys-seq-name {
-  margin: 0;
   font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
   font-size: 10.5px;
   letter-spacing: 0.24em;
@@ -1202,10 +1201,10 @@ svg .kys-hit:focus-visible {
 }
 .kys-seq-select {
   height: 32px;
-  max-width: 150px;
-  padding: 0 8px;
+  max-width: 132px;
+  padding: 0 6px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--kys-text);
   background: var(--kys-raised);
   border: 1px solid var(--kys-line);
@@ -1215,6 +1214,13 @@ svg .kys-hit:focus-visible {
   display: grid;
   gap: 12px;
   margin-top: 10px;
+}
+/* Where the head would wrap (a landscape tablet), its name goes: the bar's button and the
+   keys say what it is, and one row of controls keeps the dock low over the panel. */
+@container (max-width: 1240px) {
+  .kys-seq-title {
+    display: none;
+  }
 }
 @container (min-width: 900px) {
   .kys-seq-body {
@@ -1449,11 +1455,11 @@ svg .kys-hit:focus-visible {
     height: 36px;
   }
   .kys-enc-knob {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
   .kys-seq-key {
-    height: 70px;
+    height: 64px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

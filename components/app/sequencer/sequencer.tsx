@@ -167,6 +167,7 @@ export function Sequencer({
   onPlay,
   onStop,
   onClose,
+  titled = true,
 }: {
   seq: SequencerState;
   /** The page's transport: whether a riff or the pattern is playing. */
@@ -175,6 +176,8 @@ export function Sequencer({
   onStop: () => void;
   /** Closes the module; absent in a bottom sheet, which has its own close. */
   onClose?: () => void;
+  /** Its name over it. A bottom sheet's title names it already. */
+  titled?: boolean;
 }) {
   const p = seq.pattern;
   const len = patternLength(p);
@@ -309,14 +312,14 @@ export function Sequencer({
   );
 
   return (
-    <section className="kys-seq" aria-labelledby="kys-seq-h">
+    <section className="kys-seq" aria-label="Sequencer">
       <div className="kys-seq-head">
-        <div className="kys-seq-title">
-          <span className={`kys-led ${seq.playing ? 'is-lit' : ''}`} aria-hidden="true" />
-          <h2 id="kys-seq-h" className="kys-seq-name">
-            Sequencer
-          </h2>
-        </div>
+        {titled && (
+          <div className="kys-seq-title" aria-hidden="true">
+            <span className={`kys-led ${seq.playing ? 'is-lit' : ''}`} />
+            <span className="kys-seq-name">Sequencer</span>
+          </div>
+        )}
         <div className="kys-seq-transport">
           <PlayerTip
             name={playing ? 'Stop' : 'Play the pattern'}

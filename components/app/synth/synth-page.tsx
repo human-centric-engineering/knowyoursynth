@@ -2114,6 +2114,7 @@ function Synth({
               playing={transportPlaying}
               onPlay={() => void playPattern()}
               onStop={stopRiff}
+              titled={false}
             />
           </BottomSheet>
           <BottomSheet
