@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Encoder, snap } from '@/components/app/sequencer/encoder';
+import { Encoder, parseNumber, snap } from '@/components/app/sequencer/encoder';
 
 function encoder(over: Partial<Parameters<typeof Encoder>[0]> = {}) {
   const onChange = vi.fn();
@@ -122,5 +122,65 @@ describe('Encoder', () => {
   it('draws its meter to the share of its range', () => {
     const { knob } = encoder({ min: 0, max: 100, value: 50 });
     expect(knob.style.getPropertyValue('--enc')).toBe('50%');
+  });
+
+  describe('typing a value', () => {
+    const box = () => screen.getByRole('textbox', { name: 'Note: type a value' });
+
+    it('becomes a text box holding the value on Enter, and sets what is typed on Enter', () => {
+      const { knob, onChange } = encoder({ format: (v) => `${v}%` });
+      fireEvent.keyDown(knob, { key: 'Enter' });
+      expect((box() as HTMLInputElement).value).toBe('60%');
+      expect(document.activeElement).toBe(box());
+      fireEvent.change(box(), { target: { value: '70%' } });
+      fireEvent.keyDown(box(), { key: 'Enter' });
+      expect(onChange).toHaveBeenCalledWith(70);
+      // Back to the slider, focused, for the next arrow.
+      expect(document.activeElement).toBe(screen.getByRole('slider', { name: 'Note' }));
+    });
+
+    it('starts typing with a digit, keeps the value in range and on the step, and sets it on leaving', () => {
+      const { knob, onChange } = encoder({ max: 100, step: 5 });
+      fireEvent.keyDown(knob, { key: '9' });
+      expect((box() as HTMLInputElement).value).toBe('9');
+      fireEvent.change(box(), { target: { value: '93' } });
+      fireEvent.blur(box());
+      expect(onChange).toHaveBeenCalledWith(95);
+      fireEvent.keyDown(screen.getByRole('slider', { name: 'Note' }), { key: '-' });
+      fireEvent.change(box(), { target: { value: '-40' } });
+      fireEvent.keyDown(box(), { key: 'Enter' });
+      expect(onChange).toHaveBeenLastCalledWith(0);
+    });
+
+    it('opens on a double press, and leaves the value as it was on Escape or for text that is not one', () => {
+      const { knob, onChange } = encoder();
+      fireEvent.doubleClick(knob);
+      fireEvent.change(box(), { target: { value: '12' } });
+      fireEvent.keyDown(box(), { key: 'Escape' });
+      expect(screen.queryByRole('textbox')).toBeNull();
+      fireEvent.doubleClick(screen.getByRole('slider', { name: 'Note' }));
+      fireEvent.change(box(), { target: { value: 'loud' } });
+      fireEvent.keyDown(box(), { key: 'Enter' });
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('reads its value with the parser it is given', () => {
+      const { knob, onChange } = encoder({ parse: (t) => (t === 'middle' ? 64 : null) });
+      fireEvent.keyDown(knob, { key: 'Enter' });
+      fireEvent.change(box(), { target: { value: 'middle' } });
+      fireEvent.keyDown(box(), { key: 'Enter' });
+      expect(onChange).toHaveBeenCalledWith(64);
+    });
+  });
+
+  it('reads the first number in typed text', () => {
+    expect(['70%', '×3', '-12', '0.5', ',5', 'x'].map(parseNumber)).toEqual([
+      70,
+      3,
+      -12,
+      0.5,
+      0.5,
+      null,
+    ]);
   });
 });

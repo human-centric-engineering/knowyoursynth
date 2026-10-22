@@ -12,6 +12,7 @@ import {
   conditionKey,
   conditionMark,
   noteName,
+  parseNote,
 } from '@/components/app/sequencer/labels';
 import { StepConditionSchema } from '@/lib/app/sequencer/pattern';
 
@@ -46,5 +47,13 @@ describe('chains', () => {
     for (const c of CHAINS) expect(chainLabel(c.chain)).toBe(c.label);
     expect(chainLabel([0, 1, 1])).toBe('A B B');
     expect(chainLabel([5])).toBe('?');
+  });
+});
+
+describe('parseNote', () => {
+  it('reads a note name and octave, sharp or flat, either case, or a MIDI number', () => {
+    expect(['C4', 'c4', 'C#3', 'C♯3', 'Db3', 'E♭4', 'B-1', '60', 'H2', 'C'].map(parseNote)).toEqual(
+      [60, 60, 49, 49, 49, 63, 11, 60, null, null]
+    );
   });
 });

@@ -21,7 +21,7 @@ import {
   type Step,
   type StepNote,
 } from '@/lib/app/sequencer/pattern';
-import { CONDITIONS, conditionKey, noteName } from '@/components/app/sequencer/labels';
+import { CONDITIONS, conditionKey, noteName, parseNote } from '@/components/app/sequencer/labels';
 import { Encoder } from '@/components/app/sequencer/encoder';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
@@ -231,6 +231,7 @@ export function StepInspector({
               max={127}
               big={12}
               format={noteName}
+              parse={parseNote}
               help="The note. Page Up and Page Down move it an octave. The pattern's scale and transpose apply as it plays."
               onChange={(v) => setNote({ note: v }, 'note')}
             />

@@ -11,6 +11,21 @@ const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A'
 export const noteName = (n: number): string =>
   `${NOTE_NAMES[((n % 12) + 12) % 12]}${Math.floor(n / 12) - 1}`;
 
+const PITCH: Record<string, number> = { c: 0, d: 2, e: 4, f: 5, g: 7, a: 9, b: 11 };
+
+/**
+ * A note typed in: a name and octave ("C#3", "Db3", "E♭4", "c4", 60 being C4), or a MIDI number. `null` for anything
+ * else.
+ */
+export function parseNote(text: string): number | null {
+  const t = text.trim();
+  if (/^\d+$/.test(t)) return Number(t);
+  const m = /^([a-g])\s*([#♯b♭]?)\s*(-?\d+)$/i.exec(t);
+  if (!m) return null;
+  const shift = m[2] === '#' || m[2] === '♯' ? 1 : m[2] === 'b' || m[2] === '♭' ? -1 : 0;
+  return (Number(m[3]) + 1) * 12 + PITCH[m[1].toLowerCase()] + shift;
+}
+
 /** The twelve roots, C first. */
 export const ROOT_NAMES = NOTE_NAMES;
 
