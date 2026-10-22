@@ -1066,6 +1066,46 @@ describe('a sound that plays a pattern by default (f-step-sequencer t-81)', () =
     expect(api.get.mock.calls.some(([p]) => String(p).startsWith('/api/v1/patterns'))).toBe(false);
   });
 
+  /** A second sound with its own riff (its lesson's), defaulting to the same pattern. */
+  const TUTOR_LESSON: SoundLesson = {
+    blurb: 'A bass the tutor built.',
+    level: 1,
+    category: 'bass',
+    how: 'The filter is nearly shut.',
+    steps: [
+      { title: 'Shut the filter', module: 'filter', why: 'Dark.', set: { 'filter.cutoff': -1 } },
+    ],
+    context: {},
+    tweaks: [],
+    phrase: { bpm: 96, steps: [[0, 40, 1]] },
+  };
+  const patternReads = () => api.get.mock.calls.filter(([p]) => p === '/api/v1/patterns/cmpat1');
+
+  it('opens it again for another sound that plays it, though that sound’s riff came in first', async () => {
+    const night = summary({ patternId: 'cmpat1' });
+    const tutor = summary({
+      id: 'cmtutor',
+      name: 'Tutor bass',
+      lesson: TUTOR_LESSON,
+      patternId: 'cmpat1',
+    });
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/sounds') return [night, tutor];
+      if (path === '/api/v1/patterns/cmpat1') return SAVED;
+      if (path === '/api/v1/sounds/cmmine1') return { ...NIGHT_BASS, ...night };
+      if (path === '/api/v1/sounds/cmtutor') return { ...NIGHT_BASS, ...tutor };
+      throw new Error(`unexpected GET ${path}`);
+    });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    fireEvent.click(button('Sequencer'));
+    await waitFor(() => expect(strip().getByText('Rolling bass')).toBeTruthy());
+
+    fireEvent.click(within(mySounds()).getByRole('button', { name: /Tutor bass/ }));
+    await waitFor(() => expect(patternReads()).toHaveLength(2));
+    await waitFor(() => expect(strip().getByText('Rolling bass')).toBeTruthy());
+  });
+
   it('clears it through the sounds API, and the sound plays its riff from then on', async () => {
     serveWithPattern(summary({ patternId: 'cmpat1' }));
     api.patch.mockResolvedValue({ ...NIGHT_BASS, patternId: null });

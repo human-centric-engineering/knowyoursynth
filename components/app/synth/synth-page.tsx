@@ -885,7 +885,9 @@ function Synth({
   }, [seqShown, seqNoteIn]);
   // My patterns (`f-step-sequencer` t-81). One of the user's sounds that plays a pattern by default opens the sequencer
   // on it: read once the sound is open, after the sound's riff has been imported, so it replaces that riff. A pattern
-  // the sequencer already holds (the user just pointed the sound at it) is not read again over their edits.
+  // the sequencer already holds while the same sound stays open (the user just pointed the sound at it) is not read
+  // again over their edits. Another sound opening always reads it: that sound's riff has just replaced what was held,
+  // in the same commit, before `loaded` says so.
   const myPatterns = useMyPatterns();
   const { open: openPattern } = myPatterns;
   const { load: loadPattern, loaded: seqLoaded } = seq;
@@ -895,8 +897,11 @@ function Synth({
   }, [seqLoaded]);
   const openSoundId = openSound?.id ?? null;
   const soundPatternId = openSound?.patternId ?? null;
+  const patternFor = useRef<string | null>(null);
   useEffect(() => {
-    if (!soundPatternId || seqLoadedId.current === soundPatternId) return undefined;
+    const sameSound = patternFor.current === openSoundId;
+    patternFor.current = openSoundId;
+    if (!soundPatternId || (sameSound && seqLoadedId.current === soundPatternId)) return undefined;
     let live = true;
     openPattern(soundPatternId)
       .then((d) => {

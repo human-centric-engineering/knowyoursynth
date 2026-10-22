@@ -26,11 +26,14 @@ vi.mock('@/lib/logging', () => ({
 }));
 
 /** The API: patterns kept between renders, and two synths' libraries. */
-const server = vi.hoisted(() => ({
-  patterns: new Map<string, { id: string; name: string; pattern: unknown; synthId: string }>(),
-  n: 0,
-  libraries: {},
-}));
+const server = vi.hoisted(() => {
+  const libraries: Record<string, unknown[]> = {};
+  return {
+    patterns: new Map<string, { id: string; name: string; pattern: unknown; synthId: string }>(),
+    n: 0,
+    libraries,
+  };
+});
 
 vi.mock('@/lib/api/client', () => {
   const detail = (p: { id: string; name: string; pattern: unknown; synthId: string }) => ({
@@ -359,6 +362,57 @@ describe('what goes wrong', () => {
     expect(
       await screen.findByText('The Broken’s library could not be read. Try again.')
     ).toBeTruthy();
+  });
+});
+
+describe('what goes wrong part-way', () => {
+  it('renames nothing, and saves nothing new, when the pattern was deleted while its new name was typed', async () => {
+    render(<Page />);
+    await saveAs('Going');
+    await act(async () => fireEvent.click(button('Rename')));
+    fireEvent.change(screen.getByLabelText('New name'), { target: { value: 'Gone' } });
+    await act(async () => fireEvent.click(button('Delete')));
+    await act(async () =>
+      fireEvent.click(
+        within(screen.getByRole('group', { name: 'Delete the pattern' })).getByRole('button', {
+          name: 'Delete',
+        })
+      )
+    );
+    expect(server.patterns.size).toBe(0);
+    const form = screen.getByLabelText('New name').closest('form')!;
+    await act(async () => fireEvent.click(within(form).getByRole('button', { name: 'Rename' })));
+    expect(server.patterns.size).toBe(0);
+    expect(screen.getByRole('status').textContent).toBe('There is no saved pattern to rename now.');
+    expect(screen.queryByLabelText('New name')).toBeNull();
+  });
+
+  it('closes My patterns when it cannot be read, so the button reads it again', async () => {
+    const { apiClient } = await import('@/lib/api/client');
+    vi.mocked(apiClient.get).mockRejectedValueOnce(new Error('Too many requests.'));
+    render(<Page />);
+    await act(async () => fireEvent.click(button('My patterns')));
+    expect(screen.getByRole('status').textContent).toBe(
+      'Could not read My patterns. Too many requests.'
+    );
+    expect(screen.queryByText('Reading My patterns…')).toBeNull();
+    expect(button('My patterns').getAttribute('aria-expanded')).toBe('false');
+
+    await act(async () => fireEvent.click(button('My patterns')));
+    expect(await screen.findByText(/No patterns saved yet/)).toBeTruthy();
+  });
+
+  it('shows a library read before, not the failure of another synth’s since', async () => {
+    render(<Page />);
+    await act(async () => fireEvent.click(button('Library')));
+    expect(await screen.findByRole('button', { name: /Fat bass/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole('combobox', { name: 'Synth' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Broken' }));
+    expect(await screen.findByText(/library could not be read/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('combobox', { name: 'Synth' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Model D' }));
+    expect(screen.queryByText(/library could not be read/)).toBeNull();
+    expect(screen.getByRole('button', { name: /Fat bass/ })).toBeTruthy();
   });
 });
 

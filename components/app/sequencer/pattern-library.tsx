@@ -105,6 +105,13 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       return;
     }
     const { mode } = form;
+    // The pattern being renamed went while the name was typed (deleted, or something else opened): nothing to rename,
+    // and not a reason to save a new one.
+    if (mode === 'rename' && !own) {
+      setForm(null);
+      setStatus('There is no saved pattern to rename now.');
+      return;
+    }
     void run(mode === 'rename' ? 'rename the pattern' : 'save the pattern', async () => {
       if (mode === 'rename' && own) {
         const d = await mine.update(own.id, { name: name.data });
@@ -248,8 +255,14 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                 () => {
                   const next = panel === 'mine' ? null : 'mine';
                   setPanel(next);
+                  // A list that could not be read closes again, so the status says so alone and this button tries again.
                   if (next && mine.patterns === null)
-                    void run('read My patterns', () => mine.refresh());
+                    void run('read My patterns', () =>
+                      mine.refresh().catch((err: unknown) => {
+                        setPanel(null);
+                        throw err;
+                      })
+                    );
                 },
                 { expanded: panel === 'mine' }
               )}
@@ -410,6 +423,7 @@ function LibraryBrowser({
     const kept = cache.current.get(from);
     if (kept) {
       setRiffs(kept);
+      setError(false);
       return undefined;
     }
     let live = true;

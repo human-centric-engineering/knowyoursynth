@@ -337,15 +337,17 @@ export function useSequencer({
         logger.warn('sequencer: pattern refused', { issue: ok.error.issues[0]?.message });
         return;
       }
+      // On a synth with a tempo knob the knob sets the tempo, as it does for the sound's riff.
+      const next = tempoRef.current ? { ...ok.data, bpm: clampBpm(tempoRef.current) } : ok.data;
       const was = patternRef.current;
-      patternRef.current = ok.data;
-      setPattern(ok.data);
+      patternRef.current = next;
+      setPattern(next);
       setLoaded(from);
-      setBaseline(JSON.stringify(ok.data));
+      setBaseline(JSON.stringify(next));
       past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
       setUndoable(true);
       lastGroup.current = null;
-      if (playingRef.current) start(ok.data);
+      if (playingRef.current) start(next);
     },
     [start]
   );
