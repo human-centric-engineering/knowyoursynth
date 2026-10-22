@@ -43,11 +43,8 @@ import {
   STEP_SIZE_NAMES,
   emptyStep,
   patternLength,
-  type Direction,
   type Pattern,
-  type ScaleName,
   type Step,
-  type StepSize,
 } from '@/lib/app/sequencer/pattern';
 import {
   clearSteps,
@@ -399,14 +396,20 @@ export function Sequencer({
             help="How long each step is. A triplet fits three in the time of two."
             value={p.stepSize}
             options={STEP_SIZE_NAMES.map((s) => [s, STEP_SIZE_LABELS[s]])}
-            onChange={(v) => setP('stepSize', v as StepSize)}
+            onChange={(v) => {
+              const size = STEP_SIZE_NAMES.find((x) => x === v);
+              if (size) setP('stepSize', size);
+            }}
           />
           <Select
             label="Direction"
             help="The order the steps play in, each pass."
             value={p.direction}
             options={DIRECTIONS.map((d) => [d, DIRECTION_LABELS[d]])}
-            onChange={(v) => setP('direction', v as Direction)}
+            onChange={(v) => {
+              const d = DIRECTIONS.find((x) => x === v);
+              if (d) setP('direction', d);
+            }}
           />
           <Select
             label="Root"
@@ -420,7 +423,10 @@ export function Sequencer({
             help="Every note moves to the nearest note of the scale as it plays. Chromatic leaves them as they are."
             value={p.scale}
             options={SCALE_NAMES.map((s) => [s, SCALE_LABELS[s]])}
-            onChange={(v) => setP('scale', v as ScaleName)}
+            onChange={(v) => {
+              const scale = SCALE_NAMES.find((x) => x === v);
+              if (scale) setP('scale', scale);
+            }}
           />
         </div>
         <div className="kys-seq-parts" role="group" aria-label="Parts">
