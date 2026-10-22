@@ -8,6 +8,9 @@ the sitemap; h3 the buttons on the synth page; h4 reports and the moderation que
 The model is BeatBreaker's (`~/code/beatbreaker/.context/app/sharing.md`) without variations,
 sessions or fixed published sounds. Where it differs, the reason is below.
 
+Patterns are shared the same way (`f-step-sequencer` t-83). What carried over and what changed is in
+[`sequencer.md`](./sequencer.md#sharing-and-publishing-patterns).
+
 ## Anti-patterns first
 
 - **Don't put `userId`, the row's `id`, an account name or an email in anything a non-owner
