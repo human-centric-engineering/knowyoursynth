@@ -8,7 +8,7 @@
  * The order the rules apply in, per slot of the loop: which step plays here (direction), whether it plays (on, rests,
  * condition, probability), then each of its notes: transpose and scale, ratchet, nudge, swing, slide and accent.
  */
-import type { PhraseNote } from '@/lib/app/synths/contract';
+import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
 import {
   ACCENT_VELOCITY,
   SCALES,
@@ -59,7 +59,35 @@ export interface CompiledLoop {
   to: number;
   /** Which step played in each slot: what a playhead is drawn from. */
   order: number[];
+  /** Where the mod lanes' values change: empty for a pattern with no lanes. See {@link ModChange}. */
+  mods: ModChange[];
 }
+
+/**
+ * From `beat` of the loop on, the lanes set these controls (by id), and every other control is at the panel's value.
+ * `null`: no lane sets anything, so the whole panel is at its own values.
+ */
+export type ModChange = [beat: number, set: ControlValues | null];
+
+/** What a step's lanes set, of the pattern's lanes: `null` for nothing. */
+export function stepMods(step: Step | undefined, lanes: readonly string[]): ControlValues | null {
+  if (!step?.mod) return null;
+  let set: ControlValues | null = null;
+  for (const id of lanes) {
+    // Own keys only: a lane named `constructor` must not read the object's prototype.
+    if (!Object.hasOwn(step.mod, id)) continue;
+    (set ??= {})[id] = step.mod[id];
+  }
+  return set;
+}
+
+const sameMods = (a: ControlValues | null, b: ControlValues | null): boolean => {
+  if (a === null || b === null) return a === b;
+  const ka = Object.keys(a);
+  return (
+    ka.length === Object.keys(b).length && ka.every((k) => Object.hasOwn(b, k) && a[k] === b[k])
+  );
+};
 
 /** The note on the scale nearest to `note`, measured from `root`. A tie goes down. */
 export function snapToScale(note: number, root: number, scale: ScaleName): number {
@@ -154,8 +182,17 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
   const swing = (p.swing / 100) * 2 - 1;
   const slotStart = (slot: number) => slot + (slot % 2 === 1 ? swing : 0);
   const notes: PhraseNote[] = [];
+  // A lane is a row of CV: it moves on every slot, whether the step plays or not, so it never draws from `rng`. The
+  // first slot always says what it sets, which puts back what the loop before left set.
+  const lanes = p.lanes ?? [];
+  const mods: ModChange[] = [];
   order.forEach((index, slot) => {
     const step = part.steps[index];
+    if (lanes.length > 0) {
+      const set = stepMods(step, lanes);
+      if (mods.length === 0 || !sameMods(mods[mods.length - 1][1], set))
+        mods.push([slotStart(slot) / perBeat, set]);
+    }
     if (!step || !stepPlays(step, opts)) return;
     const ratchet = step.ratchet ?? 1;
     const start = slotStart(slot);
@@ -177,5 +214,5 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
     }
   });
   notes.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  return { notes, beats: len / perBeat, to, order };
+  return { notes, beats: len / perBeat, to, order, mods };
 }

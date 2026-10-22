@@ -74,7 +74,8 @@ import {
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
-import { useSequencer } from '@/components/app/sequencer/use-sequencer';
+import { useSequencer, type LaneTarget } from '@/components/app/sequencer/use-sequencer';
+import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useFavourites } from '@/components/app/synth/favourites';
@@ -670,18 +671,27 @@ function Synth({
     }
   }, [engine]);
 
+  // The voice's settings for a set of panel values: the panel's own, or (mod lanes) with a lane's values in them.
+  const engineParams = useCallback(
+    (values: ControlValues) => {
+      const p = synthDef.toEngine(values, { wheel, patched: patchedJacks(sess.cables) });
+      p.cables = cablesToEngine(synthDef, sess.cables, values);
+      p.wheel = wheel;
+      return p;
+    },
+    [synthDef, sess.cables, wheel]
+  );
+
   useEffect(() => {
     if (!engine) return;
     try {
-      const p = synthDef.toEngine(sess.values, { wheel, patched: patchedJacks(sess.cables) });
-      p.cables = cablesToEngine(synthDef, sess.cables, sess.values);
-      p.wheel = wheel;
+      const p = engineParams(sess.values);
       engine.send({ type: 'params', p });
       setEngineError('');
     } catch (err) {
       setEngineError(err instanceof Error ? err.message : String(err));
     }
-  }, [synthDef, sess.values, sess.cables, wheel, engine]);
+  }, [engineParams, sess.values, engine]);
 
   // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
   // up with a knob being dragged. waveStory's attribution is hundreds of calls and stays in the dialog.
@@ -856,12 +866,33 @@ function Synth({
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
   const [seqOpen, setSeqOpen] = useState(false);
+  // Mod lanes (t-82) play the panel with a lane's values in place of the panel's: the settings the voice gets, made the
+  // same way, with those controls changed. A lane can't move the voice between mono, poly and dual, which would let go
+  // of every held note on each step it did: a step that would plays the panel's settings.
+  const laneTarget = useMemo<LaneTarget>(() => {
+    let mode: ReturnType<typeof voiceMode> | undefined;
+    return {
+      def: synthDef,
+      paramsFor: (set) => {
+        try {
+          mode ??= voiceMode(engineParams(sess.values));
+          const p = engineParams({ ...sess.values, ...set });
+          return voiceMode(p) === mode ? p : null;
+        } catch {
+          return null; // the panel already reports the error
+        }
+      },
+    };
+  }, [synthDef, sess.values, engineParams]);
   const seq = useSequencer({
     engine,
     ensureAudio,
     riff: shown?.phrase ?? null,
     tempo: tempoBpm,
+    lanes: laneTarget,
   });
+  // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
+  const { modShown } = seq;
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -935,6 +966,8 @@ function Synth({
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
     seq,
+    def: synthDef,
+    panel: sess.values,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
     onStop: stopRiff,
@@ -1726,6 +1759,7 @@ function Synth({
                   <SynthPanel
                     def={def}
                     values={sess.values}
+                    moved={modShown}
                     target={step == null ? target : null}
                     cables={sess.cables}
                     outline={view.outline}

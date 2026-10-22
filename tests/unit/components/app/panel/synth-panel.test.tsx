@@ -449,6 +449,23 @@ describe('controls', () => {
     expect(onChange).toHaveBeenCalledWith('out.a440', true);
   });
 
+  it('turns a control a mod lane holds from the panel’s own value, not the lane’s it draws', () => {
+    const onChange = vi.fn();
+    const values = { ...modelD.init, 'mix.osc1': 4, 'out.a440': false };
+    const moved = { 'mix.osc1': 8, 'out.a440': true };
+    render(<SynthPanel {...props({ values, moved, onChange })} />);
+    const knob = screen.getAllByRole('slider', { name: 'VOLUME' })[0];
+    expect(knob).toHaveAttribute('aria-valuenow', '8');
+    // Drawn at 8 and nudged down a step: the panel's 4 moves down by as much
+    fireEvent.keyDown(knob, { key: 'ArrowDown' });
+    const [id, v] = onChange.mock.lastCall!;
+    expect(id).toBe('mix.osc1');
+    expect(v).toBeCloseTo(3.8);
+    // Drawn on, the rocker pressed: the panel's own (off) is what flips
+    fireEvent.click(screen.getByRole('button', { name: 'A-440' }));
+    expect(onChange).toHaveBeenLastCalledWith('out.a440', true);
+  });
+
   it('marks where a lesson wants a control to go', () => {
     const plain = render(<SynthPanel {...props()} />).container;
     const target = { ...modelD.init, 'filter.cutoff': -4 };

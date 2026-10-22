@@ -11,6 +11,7 @@
  * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
  *   paste of a step or a page, clear, and Undo.
  * - The step inspector: the chosen step's values on encoders (`step-inspector.tsx`).
+ * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, under the keys. **Mod** shows them.
  *
  * - The patterns strip (`pattern-library.tsx`, t-81): save to My patterns, open one, or start from any synth's library.
  *
@@ -33,6 +34,7 @@ import {
   Eraser,
   Play,
   Shuffle,
+  SlidersVertical,
   Square,
   Undo2,
 } from 'lucide-react';
@@ -53,7 +55,9 @@ import {
   clearSteps,
   copySteps,
   euclidFill,
+  keepMods,
   mutate,
+  onlyLanes,
   pasteSteps,
   randomise,
   resizePattern,
@@ -75,6 +79,8 @@ import {
 } from '@/components/app/sequencer/labels';
 import { Encoder } from '@/components/app/sequencer/encoder';
 import { StepInspector, Toggle } from '@/components/app/sequencer/step-inspector';
+import { ModLanes } from '@/components/app/sequencer/mod-lanes';
+import type { ControlValues, SynthDef } from '@/lib/app/synths/contract';
 import { SeqSelect as Select } from '@/components/app/sequencer/select';
 import type {
   SeqPosition,
@@ -135,6 +141,10 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
     'Step inspector',
     'The chosen step: on, accent, slide, ratchet, chance and condition, and each note’s pitch, gate, velocity and nudge.',
   ],
+  [
+    'Mod lanes',
+    'Mod shows them. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
+  ],
 ];
 
 /** The note new notes start on: the pattern's last note before `at`, else the first after it, else C3 above the root. */
@@ -180,8 +190,13 @@ export function Sequencer({
   onStop,
   transport = false,
   library,
+  def,
+  panel,
 }: {
   seq: SequencerState;
+  /** The synth on the panel and its values, for the mod lanes. Left out, the module has no lanes. */
+  def?: SynthDef;
+  panel?: ControlValues;
   /** My patterns and the library (`f-step-sequencer` t-81). Left out, the module has no patterns strip. */
   library?: PatternLibraryProps;
   /** The page's transport: whether a riff or the pattern is playing. */
@@ -208,6 +223,15 @@ export function Sequencer({
   const hits = Math.min(hitsSet, len);
   const [clip, setClip] = useState<{ kind: 'step' | 'page'; steps: Step[] } | null>(null);
   const keyRefs = useRef(new Map<number, HTMLButtonElement>());
+  const laneCount = p.lanes?.length ?? 0;
+  const [lanesOpen, setLanesOpen] = useState(laneCount > 0);
+  // A pattern that replaces the whole one (opened, or a sound's riff) shows its lanes if it has any.
+  const replacedAt = seq.held();
+  const [shownFor, setShownFor] = useState(replacedAt);
+  if (shownFor !== replacedAt) {
+    setShownFor(replacedAt);
+    if (laneCount > 0) setLanesOpen(true);
+  }
   const moveFocus = useRef(false);
 
   // The playhead, read from the audio clock once a frame while the pattern plays; the keys redraw only as it moves on.
@@ -303,7 +327,8 @@ export function Sequencer({
       );
     }
     // Enter and Space are the button's own: its click turns the chosen step on or off, once in every browser.
-    else if (e.key === 'Delete' || e.key === 'Backspace') changeStep(i, () => emptyStep());
+    else if (e.key === 'Delete' || e.key === 'Backspace')
+      changeStep(i, (s) => keepMods([s], [emptyStep()])[0]);
     else return;
     e.preventDefault();
     // The page plays notes from the computer keyboard; these keys are the sequencer's while a step key has focus.
@@ -601,6 +626,18 @@ export function Sequencer({
               );
             })}
           </div>
+          {def && lanesOpen && (
+            <ModLanes
+              pattern={p}
+              def={def}
+              panel={panel ?? def.init}
+              part={editing}
+              first={page * PAGE}
+              count={shown.length}
+              at={at}
+              onEdit={(fn, group) => seq.edit(fn, { group })}
+            />
+          )}
           <div className="kys-seq-tools" role="toolbar" aria-label="Pattern tools">
             <div className="kys-seq-tool-group">
               <Encoder
@@ -687,15 +724,18 @@ export function Sequencer({
                 () => {
                   const [low, high] = noteRange(steps, p.root);
                   setSteps(
-                    randomise(len, Math.random, {
-                      root: p.root,
-                      scale: p.scale,
-                      low,
-                      high,
-                      density: 0.6,
-                      accents: 0.2,
-                      slides: 0.15,
-                    })
+                    keepMods(
+                      steps,
+                      randomise(len, Math.random, {
+                        root: p.root,
+                        scale: p.scale,
+                        low,
+                        high,
+                        density: 0.6,
+                        accents: 0.2,
+                        slides: 0.15,
+                      })
+                    )
                   );
                 },
                 { short: 'Random' }
@@ -708,6 +748,26 @@ export function Sequencer({
                 { short: 'Mutate' }
               )}
             </div>
+            {def && (
+              <div className="kys-seq-tool-group">
+                <PlayerTip
+                  name="Mod lanes"
+                  help="Per-step values for any panel control: the control moves as the pattern plays."
+                >
+                  <button
+                    type="button"
+                    className={`kys-seq-tool ${lanesOpen ? 'is-open' : ''}`}
+                    aria-label="Mod lanes"
+                    aria-pressed={lanesOpen}
+                    onClick={() => setLanesOpen(!lanesOpen)}
+                  >
+                    <SlidersVertical size={15} aria-hidden="true" />
+                    <span className="kys-seq-tool-text">Mod</span>
+                    {laneCount > 0 && <span className="kys-seq-tool-count">{laneCount}</span>}
+                  </button>
+                </PlayerTip>
+              </div>
+            )}
             <EditMenu
               items={[
                 {
@@ -731,14 +791,18 @@ export function Sequencer({
                   run: () => {
                     if (clip)
                       setSteps(
-                        pasteSteps(steps, clip.kind === 'page' ? page * PAGE : sel, clip.steps)
+                        pasteSteps(
+                          steps,
+                          clip.kind === 'page' ? page * PAGE : sel,
+                          onlyLanes(clip.steps, p.lanes ?? [])
+                        )
                       );
                   },
                 },
                 {
                   name: 'Clear',
                   icon: <Eraser size={15} aria-hidden="true" />,
-                  run: () => setSteps(clearSteps(steps)),
+                  run: () => setSteps(keepMods(steps, clearSteps(steps))),
                 },
               ]}
             />
