@@ -21,6 +21,13 @@ export interface MyPatterns {
   /** One pattern with its steps. Rejects when it cannot be read. */
   open: (id: string) => Promise<UserPatternDetail>;
   create: (name: string, pattern: Pattern, synthId: string) => Promise<UserPatternDetail>;
+  /**
+   * Saves a copy of someone's shared pattern, crediting it (t-83): the steps as they are now, under the shared one's
+   * name. Rejects when it is not shared any more (`sharedSourceGone`).
+   */
+  copy: (slug: string, pattern: Pattern, synthId: string) => Promise<UserPatternDetail>;
+  /** Changes how it is shared (t-83): `private` or `link`, or `published` through publishing. */
+  share: (id: string, to: 'private' | 'link' | 'published') => Promise<UserPatternDetail>;
   /** Saves new steps over one, or renames it. */
   update: (id: string, change: { name?: string; pattern?: Pattern }) => Promise<UserPatternDetail>;
   remove: (id: string) => Promise<void>;
@@ -56,6 +63,31 @@ export function useMyPatterns(): MyPatterns {
     [put]
   );
 
+  const copy = useCallback(
+    async (slug: string, pattern: Pattern, synthId: string) => {
+      const d = await apiClient.post<UserPatternDetail>('/api/v1/patterns', {
+        body: { source: { shared: slug }, pattern, synthId },
+      });
+      put(d);
+      return d;
+    },
+    [put]
+  );
+
+  const share = useCallback(
+    async (id: string, to: 'private' | 'link' | 'published') => {
+      const d =
+        to === 'published'
+          ? await apiClient.post<UserPatternDetail>(`${path(id)}/publish`, {
+              body: { confirm: true },
+            })
+          : await apiClient.patch<UserPatternDetail>(path(id), { body: { visibility: to } });
+      put(d);
+      return d;
+    },
+    [put]
+  );
+
   const update = useCallback(
     async (id: string, change: { name?: string; pattern?: Pattern }) => {
       const d = await apiClient.patch<UserPatternDetail>(path(id), { body: change });
@@ -70,5 +102,5 @@ export function useMyPatterns(): MyPatterns {
     setPatterns((list) => list?.filter((p) => p.id !== id) ?? list);
   }, []);
 
-  return { patterns, refresh, open, create, update, remove };
+  return { patterns, refresh, open, create, copy, share, update, remove };
 }

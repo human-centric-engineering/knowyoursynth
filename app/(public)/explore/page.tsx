@@ -5,6 +5,7 @@ import '@/components/app/synth/synth.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { ExploreTabs } from '@/components/app/sharing/explore-tabs';
 import { SoundCards } from '@/components/app/sharing/sound-cards';
 import { listSynths } from '@/lib/app/catalogue/read';
 import {
@@ -74,6 +75,7 @@ export default async function ExploreRoute({ searchParams }: Props) {
           Sounds people made on these synths. Open one to play it; signed in, you can save a copy to
           change.
         </p>
+        <ExploreTabs current="sounds" />
       </header>
 
       <form method="get" action="/explore" className="mt-5 flex flex-wrap items-end gap-3">

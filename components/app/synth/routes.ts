@@ -46,6 +46,24 @@ export function sharedSoundHref(id: string, slug: string, view: PanelView = DEFA
   return `/synths/${encodeURIComponent(id)}/s/${encodeURIComponent(slug)}${q ? `?view=${q}` : ''}`;
 }
 
+/**
+ * A shared pattern's address (`f-step-sequencer` t-83): the one its owner copies, whatever synth it is played on. It
+ * opens the pattern on the synth it was made on (`sharedPatternHref`).
+ */
+export function patternHref(slug: string): string {
+  return `/patterns/${encodeURIComponent(slug)}`;
+}
+
+/** A shared pattern playing on one synth: that synth's page with the pattern in the sequencer. */
+export function sharedPatternHref(
+  id: string,
+  slug: string,
+  view: PanelView = DEFAULT_VIEW
+): string {
+  const q = viewQuery(view);
+  return `/synths/${encodeURIComponent(id)}/p/${encodeURIComponent(slug)}${q ? `?view=${q}` : ''}`;
+}
+
 /** One synth's page, opening with one of its library sounds loaded. */
 export function soundHref(id: string, soundId: string): string {
   return `/synths/${encodeURIComponent(id)}?sound=${encodeURIComponent(soundId)}`;

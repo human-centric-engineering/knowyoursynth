@@ -4,6 +4,9 @@
  * **Report** on a shared sound's page (`f-sharing` h4), for a signed-in visitor whose sound it is not: a dialog with
  * the reason and an optional note, sent as `POST /api/v1/public/sounds/:slug/report`. A second report from the same
  * person updates their first, so sending again is safe. The owner is never told who reported it.
+ *
+ * A shared pattern's page has the same button (`kind="pattern"`, `f-step-sequencer` t-83), sent to
+ * `POST /api/v1/public/patterns/:slug/report`.
  */
 
 import { useId, useState } from 'react';
@@ -24,10 +27,18 @@ import {
   type SoundReportReason,
 } from '@/lib/app/sounds/report-data';
 
-function failureOf(err: unknown): string {
+/** What is reported: a shared sound, or a shared pattern. */
+export type ReportKind = 'sound' | 'pattern';
+
+const reasonLabel = (r: SoundReportReason, kind: ReportKind): string =>
+  kind === 'pattern' && r === 'not_theirs'
+    ? "It's someone else's pattern"
+    : SOUND_REPORT_REASON_LABELS[r];
+
+function failureOf(err: unknown, kind: ReportKind): string {
   if (err instanceof APIClientError) {
     if (err.status === 401) return 'Your session has ended. Sign in again to report it.';
-    if (err.status === 404) return 'This sound is not shared any more.';
+    if (err.status === 404) return `This ${kind} is not shared any more.`;
     if (err.status === 429) return "That's as many reports as you can send today. Try tomorrow.";
     return err.message;
   }
@@ -38,10 +49,13 @@ export function ReportButton({
   slug,
   soundName,
   buttonClass,
+  kind = 'sound',
 }: {
   slug: string;
+  /** The sound's name, or the pattern's. */
   soundName: string;
   buttonClass: string;
+  kind?: ReportKind;
 }) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<SoundReportReason | null>(null);
@@ -56,13 +70,13 @@ export function ReportButton({
     setBusy(true);
     setFailure(null);
     try {
-      await apiClient.post(`/api/v1/public/sounds/${encodeURIComponent(slug)}/report`, {
+      await apiClient.post(`/api/v1/public/${kind}s/${encodeURIComponent(slug)}/report`, {
         body: { reason, ...(note.trim() ? { note: note.trim() } : {}) },
       });
       setSent(true);
       setOpen(false);
     } catch (err) {
-      setFailure(failureOf(err));
+      setFailure(failureOf(err, kind));
     } finally {
       setBusy(false);
     }
@@ -106,11 +120,12 @@ export function ReportButton({
                   What is wrong with it?
                   <FieldHelp title="Reasons">
                     <p>
-                      <strong>Someone else&apos;s sound</strong>: it is put up as theirs but was
+                      <strong>Someone else&apos;s {kind}</strong>: it is put up as theirs but was
                       made by somebody else, and not credited.
                     </p>
                     <p className="mt-2">
-                      <strong>Offensive or hateful</strong>: the name or notes.
+                      <strong>Offensive or hateful</strong>:{' '}
+                      {kind === 'pattern' ? 'the name.' : 'the name or notes.'}
                     </p>
                   </FieldHelp>
                 </legend>
@@ -123,7 +138,7 @@ export function ReportButton({
                       checked={reason === r}
                       onChange={() => setReason(r)}
                     />
-                    {SOUND_REPORT_REASON_LABELS[r]}
+                    {reasonLabel(r, kind)}
                   </label>
                 ))}
               </fieldset>
@@ -134,7 +149,7 @@ export function ReportButton({
                   </label>
                   <FieldHelp title="Note">
                     <p>
-                      Only admins read it. For someone else&apos;s sound, say whose it is, if you
+                      Only admins read it. For someone else&apos;s {kind}, say whose it is, if you
                       know.
                     </p>
                   </FieldHelp>

@@ -2,7 +2,8 @@
  * One of the signed-in user's own patterns (`f-step-sequencer` t-81).
  *
  * GET    /api/v1/patterns/:id — the pattern with its steps, checked as the sequencer reads one.
- * PATCH  /api/v1/patterns/:id — `{ name?, pattern? }`: rename it, or save new steps over it.
+ * PATCH  /api/v1/patterns/:id — `{ name?, pattern?, visibility? }`: rename it, save new steps over it, or share it by
+ *        link or make it private (t-83). Publishing is `POST …/publish`.
  * DELETE /api/v1/patterns/:id — the caller's sounds that played it by default play none after.
  *
  * Another user's pattern is a 404, the same as one that does not exist, never a 403. See `lib/app/patterns/store.ts`.
@@ -43,6 +44,7 @@ export const PATCH = withAuth<Params>(
       patternId: pattern.id,
       renamed: input.name !== undefined,
       steps: input.pattern !== undefined,
+      visibility: input.visibility,
     });
     return successResponse(pattern);
   },

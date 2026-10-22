@@ -2,7 +2,8 @@
  * The signed-in user's own patterns, "My patterns" (`f-step-sequencer` t-81).
  *
  * GET  /api/v1/patterns — the caller's patterns, most recently changed first, without their steps.
- * POST /api/v1/patterns — save one: `{ name, pattern, synthId? }`. 201 with the pattern.
+ * POST /api/v1/patterns — save one: `{ name, pattern, synthId? }`. 201 with the pattern. With `source: { shared }`, a
+ *      copy of someone's shared pattern, crediting it (t-83): the name and steps not sent are the shared pattern's.
  *
  * The pattern is checked with the sequencer's `PatternSchema` and refused (400) when anything in it is wrong. The
  * section rate limit applies (`proxy.ts`). See `lib/app/patterns/store.ts`.
@@ -30,7 +31,11 @@ export const POST = withAuth(
     const log = await getRouteLogger(request);
     const input = await validateRequestBody(request, CreateUserPatternSchema);
     const pattern = await createUserPattern(session.user.id, input);
-    log.info('User pattern saved', { patternId: pattern.id, synthId: pattern.synthId });
+    log.info('User pattern saved', {
+      patternId: pattern.id,
+      synthId: pattern.synthId,
+      copy: input.source !== undefined,
+    });
     return successResponse(pattern, undefined, { status: 201 });
   },
   {

@@ -8,13 +8,14 @@
  * - My patterns: the user's saved patterns, any of which opens in place of what is held (Undo brings that back).
  * - Library: any synth's library riffs, as a starting point. A riff from one synth plays on any other.
  * - With one of the user's sounds open, "Play with <sound>": the sound opens the sequencer on this pattern from then on.
+ * - Share: who can open the saved pattern held, by link or published on Explore (t-83, `PatternSharing`).
  *
  * Every write goes through the API, so a pattern saved here is the one a reload, or another device, opens.
  */
 
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import { BookOpen, FolderOpen, Link2, Pencil, Save, SaveAll, Trash2 } from 'lucide-react';
+import { BookOpen, FolderOpen, Link2, Pencil, Save, SaveAll, Share2, Trash2 } from 'lucide-react';
 import { apiClient } from '@/lib/api/client';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { importPhrase } from '@/lib/app/sequencer/import';
@@ -23,6 +24,10 @@ import type { Sequencer } from '@/components/app/sequencer/use-sequencer';
 import type { MyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import { SeqSelect } from '@/components/app/sequencer/select';
 import { PlayerTip } from '@/components/app/synth/player-tip';
+import { PatternSharing } from '@/components/app/sharing/pattern-sharing';
+import { soundStateLabel } from '@/components/app/sharing/visibility';
+import { synthHref } from '@/components/app/synth/routes';
+import type { UserPatternDetail } from '@/lib/app/patterns/data';
 import { logger } from '@/lib/logging';
 
 /** One of the user's sounds, open on the panel: the pattern it plays by default, and how to change that. */
@@ -36,6 +41,11 @@ export interface OpenSoundDefault {
 export interface PatternLibraryProps {
   /** Null while the session is not known yet. */
   signedIn: boolean | null;
+  /**
+   * Whether the sequencer holds a shared pattern on its page (t-83): then Save and Save as give way to the page's Save a
+   * copy, which credits it, as a shared sound's panel hides its Save buttons.
+   */
+  sharedHeld?: boolean;
   signInHref: string;
   /** The synth on the panel: what a new pattern is saved as made on, and the library shown first. */
   synthId: string;
@@ -45,7 +55,7 @@ export interface PatternLibraryProps {
   sound: OpenSoundDefault | null;
 }
 
-type Panel = 'mine' | 'library' | null;
+type Panel = 'mine' | 'library' | 'share' | null;
 /** `id` is the saved pattern a rename is for: the one held when the box opened. */
 type Form = {
   mode: 'save' | 'saveAs' | 'rename';
@@ -64,7 +74,7 @@ const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
 export function PatternLibrary({ seq, library }: { seq: Sequencer; library: PatternLibraryProps }) {
-  const { signedIn, signInHref, synthId, synths, mine, sound } = library;
+  const { signedIn, signInHref, synthId, synths, mine, sound, sharedHeld = false } = library;
   const { loaded, edited } = seq;
   const [panel, setPanel] = useState<Panel>(null);
   const [form, setForm] = useState<Form>(null);
@@ -72,6 +82,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  /** The saved pattern's sharing, read when Share is pressed. */
+  const [sharing, setSharing] = useState<UserPatternDetail | null>(null);
   const nameId = useId();
   const nameInput = useRef<HTMLInputElement | null>(null);
   // The name box takes focus as it opens, so a name can be typed at once.
@@ -199,6 +211,18 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     );
   };
 
+  const openSharing = () => {
+    if (panel === 'share') {
+      setPanel(null);
+      return;
+    }
+    if (!own) return;
+    void run('read how the pattern is shared', async () => {
+      setSharing(await mine.open(own.id));
+      setPanel('share');
+    });
+  };
+
   const playsWithSound = !!sound && !!own && sound.patternId === own.id;
   const toggleDefault = () => {
     if (!sound || !own) return;
@@ -250,23 +274,32 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
             </a>
           ) : signedIn ? (
             <>
-              {button(
-                own ? `Save ${own.name}` : 'Save to My patterns',
-                own
-                  ? 'Saves the pattern as it is now over the saved one.'
-                  : 'Names the pattern and keeps it in My patterns, to play on any synth.',
-                <Save size={15} aria-hidden="true" />,
-                save,
-                { disabled: !!own && !edited, text: 'Save' }
+              {sharedHeld && (
+                <span className="kys-seq-lib-signin">Save a copy, above the panel, to keep it</span>
               )}
-              {button(
-                'Save as',
-                'Keeps the pattern as a new one in My patterns, under another name.',
-                <SaveAll size={15} aria-hidden="true" />,
-                () =>
-                  setForm({ mode: 'saveAs', name: loaded ? `${loaded.name} 2` : '', error: null }),
-                { disabled: !loaded }
-              )}
+              {!sharedHeld &&
+                button(
+                  own ? `Save ${own.name}` : 'Save to My patterns',
+                  own
+                    ? 'Saves the pattern as it is now over the saved one.'
+                    : 'Names the pattern and keeps it in My patterns, to play on any synth.',
+                  <Save size={15} aria-hidden="true" />,
+                  save,
+                  { disabled: !!own && !edited, text: 'Save' }
+                )}
+              {!sharedHeld &&
+                button(
+                  'Save as',
+                  'Keeps the pattern as a new one in My patterns, under another name.',
+                  <SaveAll size={15} aria-hidden="true" />,
+                  () =>
+                    setForm({
+                      mode: 'saveAs',
+                      name: loaded ? `${loaded.name} 2` : '',
+                      error: null,
+                    }),
+                  { disabled: !loaded }
+                )}
               {button(
                 'Rename',
                 'Gives the saved pattern another name.',
@@ -298,6 +331,15 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                     );
                 },
                 { expanded: panel === 'mine' }
+              )}
+              {button(
+                'Share',
+                own
+                  ? 'Share the saved pattern by a link, or publish it on Explore for anyone to play and copy.'
+                  : 'Save the pattern first: a pattern is shared as it is saved.',
+                <Share2 size={15} aria-hidden="true" />,
+                openSharing,
+                { disabled: !own || sharedHeld, expanded: panel === 'share' }
               )}
             </>
           ) : null}
@@ -387,6 +429,13 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       {panel === 'mine' && (
         <MyPatternList mine={mine} synths={synths} current={own?.id ?? null} onOpen={openMine} />
       )}
+      {panel === 'share' && sharing && own?.id === sharing.id && (
+        <PatternSharing
+          pattern={sharing}
+          share={(to) => mine.share(sharing.id, to)}
+          backHref={synthHref(synthId)}
+        />
+      )}
       {panel === 'library' && (
         <LibraryBrowser synthId={synthId} synths={synths} onOpen={openRiff} />
       )}
@@ -428,6 +477,7 @@ function MyPatternList({
               <span className="kys-seq-lib-item-meta">
                 {p.steps} steps{p.parts > 1 ? ', A and B' : ''}
                 {made ? ` · made on the ${made}` : ''}
+                {p.visibility !== 'private' || p.unlisted ? ` · ${soundStateLabel(p)}` : ''}
               </span>
             </button>
           </li>
