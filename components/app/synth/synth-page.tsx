@@ -1818,17 +1818,20 @@ function Synth({
             changes height unless the piano is put away. With a pointer, the strip floats over the foot of the panel and
             shows only while the pointer is near the dock. */}
             <div ref={dockRef} className="kys-dock">
-              <SoundDesign
-                steps={steps}
-                step={step}
-                onStep={(k) => {
-                  setStep(k);
-                  openSection('build');
-                }}
-                hasLesson={!!shown}
-                mark={<Wordmark lit={audio === 'on'} />}
-                lit={chapterLit ? chapterLit.split('|') : []}
-              />
+              {/* The sequencer in the dock takes the strip's place: what is being played is the pattern, not a lesson. */}
+              {!(seqOpen && !small) && (
+                <SoundDesign
+                  steps={steps}
+                  step={step}
+                  onStep={(k) => {
+                    setStep(k);
+                    openSection('build');
+                  }}
+                  hasLesson={!!shown}
+                  mark={<Wordmark lit={audio === 'on'} />}
+                  lit={chapterLit ? chapterLit.split('|') : []}
+                />
+              )}
 
               <div className="kys-player-bar flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 text-sm sm:px-4 lg:flex-nowrap">
                 <SoundPicker

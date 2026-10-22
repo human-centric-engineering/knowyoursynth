@@ -792,6 +792,10 @@ svg .kys-hit:focus-visible {
   .kys-dock .kys-player-deck {
     border-radius: 0;
   }
+  /* With the strip gone (the sequencer open), the bar is the dock's top. */
+  .kys-dock > .kys-player-bar:first-child {
+    border-radius: 18px 18px 0 0;
+  }
 }
 /* With a pointer, the strip floats over the foot of the panel instead of taking
    room in the dock, and shows only while the pointer is near (`data-near`, set

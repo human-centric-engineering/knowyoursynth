@@ -167,6 +167,15 @@ describe('the sequencer on the synth page', () => {
     expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
   });
 
+  it('takes the Learn sound design strip’s place in the dock while it is open', () => {
+    page();
+    expect(screen.getByRole('heading', { name: 'Learn sound design' })).toBeTruthy();
+    fireEvent.click(button('Sequencer'));
+    expect(screen.queryByRole('heading', { name: 'Learn sound design' })).toBeNull();
+    fireEvent.click(button('Sequencer'));
+    expect(screen.getByRole('heading', { name: 'Learn sound design' })).toBeTruthy();
+  });
+
   it('makes Play riff play the pattern while it is open: the riff’s notes, as the pattern player plays them', async () => {
     page();
     fireEvent.click(button('Sequencer'));

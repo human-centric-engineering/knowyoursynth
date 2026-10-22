@@ -166,7 +166,8 @@ latency (`baseLatency`) and the output device's (`outputLatency`). `beatAt` read
 ## The module
 
 The sequencer module sits under the panel on every synth page. The **Sequencer** button on the player bar opens it.
-From `lg` up it is in the dock, between the bar and the piano. Below `lg` it is a docked bottom sheet at half height,
+From `lg` up it is in the dock, between the bar and the piano, and takes the place of the Learn sound design strip
+while it is open. Below `lg` it is a docked bottom sheet at half height,
 with the panel live above it.
 
 The page owns the pattern through `useSequencer` (`use-sequencer.ts`), so closing the module keeps every edit. The
