@@ -4,7 +4,9 @@
  * Mod lanes in the module and the hook (`f-step-sequencer` t-82): a lane is added and drawn (by pointer and from the
  * keyboard), a stroke is one Undo, playing sends each loop with the voice's settings where the lanes change them, a
  * lane for a control this synth lacks is kept and sends nothing, the panel moving resends the loop playing, and the
- * hook says what the lanes set on the step being heard. The engine is a fake that records what it is sent.
+ * hook says what the lanes set on the step being heard. While a pattern longer than a page plays, the keys and the lanes
+ * turn to the page the playhead is on (t-87), and a page chosen by hand holds until its next turn. The engine is a fake
+ * that records what it is sent.
  *
  * @see components/app/sequencer/mod-lanes.tsx
  * @see components/app/sequencer/use-sequencer.ts
@@ -21,7 +23,7 @@ import {
   type Sequencer as SeqState,
 } from '@/components/app/sequencer/use-sequencer';
 import { importPhrase } from '@/lib/app/sequencer/import';
-import type { Pattern } from '@/lib/app/sequencer/pattern';
+import { newPattern, type Pattern } from '@/lib/app/sequencer/pattern';
 import type { SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import type { LoopEvent } from '@/lib/app/synths/audio/pattern-player';
 import type {
@@ -388,6 +390,45 @@ describe('the lanes playing', () => {
     await waitFor(() => expect(state.modShown).toEqual({ cutoff: 80 }));
     act(() => state.stop());
     await waitFor(() => expect(state.modShown).toBeNull());
+  });
+});
+
+describe('following the playhead across pages', () => {
+  const stepKeys = () =>
+    within(screen.getByRole('group', { name: /^Steps of part/ })).getAllByRole('button');
+  const firstKey = () => stepKeys()[0].getAttribute('aria-label');
+  const firstCell = () => cells()[0].getAttribute('aria-label');
+  /** The playhead on this step: sixteenths at 120 BPM are an eighth of a second. */
+  const playheadOn = (step: number) => {
+    engine.frame = (step * 0.125 + 0.01) * 48000;
+  };
+
+  it('turns the keys and the lanes to the page being heard, and holds a page chosen by hand until the next turn', async () => {
+    render(<Harness />);
+    const p = newPattern(48);
+    p.lanes = ['cutoff'];
+    // a pattern with lanes opens with them shown
+    act(() => void state.load(p, { id: null, name: 'long' }));
+    await act(async () => void (await state.play()));
+    act(() => state.onEvent(loopEvent({ beats: 12 })));
+    playheadOn(0);
+    expect(firstKey()).toMatch(/^Step 1:/);
+
+    playheadOn(16);
+    await waitFor(() => expect(firstKey()).toMatch(/^Step 17:/));
+    expect(firstCell()).toBe('cutoff, step 17');
+
+    // chosen by hand, page 1 holds while the playhead stays on page 2
+    fireEvent.click(screen.getByRole('button', { name: /^Page 1/ }));
+    expect(firstKey()).toMatch(/^Step 1:/);
+    playheadOn(20);
+    await act(async () => await new Promise((r) => setTimeout(r, 50)));
+    expect(firstKey()).toMatch(/^Step 1:/);
+
+    // and gives way when it moves on to page 3
+    playheadOn(33);
+    await waitFor(() => expect(firstKey()).toMatch(/^Step 33:/));
+    expect(firstCell()).toBe('cutoff, step 33');
   });
 });
 

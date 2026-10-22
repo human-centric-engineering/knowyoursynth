@@ -208,6 +208,10 @@ order. The keys redraw only when the step changes.
   picks the chain.
 - **Step keys**, sixteen to a page, with a page button for each sixteen past the first. A key's LED is lit when the
   step plays and outlined when it is muted with notes. The key the playhead is on is lit.
+- **Following the playhead (t-87).** While the part on show plays, the keys and the mod lanes turn to the page the
+  playhead moves into, keeping the chosen step's place on the page. A page chosen by hand holds until the playhead's
+  next turn, not until Stop: holding to Stop would leave the keys on a page nothing is playing for the rest of a long
+  pattern. A key with focus hands it to the same place on the new page.
 - **Choosing and toggling.** A press chooses a step, and a press on the chosen step turns it on or off. A rest turned on takes the
   note before it.
 - **The keys from the keyboard.** The keys are one Tab stop. Left and Right move along the steps and across pages,

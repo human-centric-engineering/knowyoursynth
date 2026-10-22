@@ -6,7 +6,8 @@
  *
  * - The head: the transport (Play and Stop, Fill) and the pattern's controls: tempo, swing, length, transpose, step
  *   size, direction, root and scale, the parts (A and B) and the order they chain in.
- * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them. A key is
+ * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them, turning to the
+ *   page it is on while it plays (t-87). A key is
  *   chosen by a press (or the arrows), and turned on or off by a press on the chosen key (or Enter or Space).
  * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
  *   paste of a step or a page, clear, and Undo.
@@ -104,7 +105,7 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
   [
     'Pages',
-    'A pattern longer than 16 steps is shown 16 at a time. The page the playhead is on is lit.',
+    'A pattern longer than 16 steps is shown 16 at a time. The page the playhead is on is lit, and while it plays the keys turn to it. A page you choose holds until the playhead moves on to the next.',
   ],
   [
     'Play and Stop',
@@ -251,6 +252,19 @@ export function Sequencer({
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [seq.playing, position]);
+
+  // While the part on show plays, its keys (and the lanes under them) turn to the page the playhead moves into (t-87),
+  // keeping the chosen step's place on the page. A page chosen by hand holds until the playhead's next turn. A key
+  // holding focus hands it on, so the keyboard stays on the keys.
+  const atPage = at !== null && at.part === editing ? Math.floor(at.step / PAGE) : null;
+  const followed = useRef<number | null>(null);
+  useEffect(() => {
+    if (atPage === followed.current) return;
+    followed.current = atPage;
+    if (atPage === null || atPage === page) return;
+    moveFocus.current = [...keyRefs.current.values()].some((el) => el === document.activeElement);
+    setChosen(Math.min(len - 1, atPage * PAGE + (sel % PAGE)));
+  }, [atPage, page, sel, len]);
 
   useEffect(() => {
     if (!moveFocus.current) return;
