@@ -360,7 +360,8 @@ are sounds' ([`sharing.md`](./sharing.md)), re-derived for a pattern in `lib/app
   visibility. Every public read, the credit, the copy source and the report route filter on it.
 - **Don't put the owner's id, the row's id or the source's id in a public read.** `getSharedPattern` is the only one.
 - **Don't save a shared pattern through the sequencer's own Save.** It would keep no credit. While the page's shared
-  pattern is held, Save and Save as give way to the strip's Save a copy (`sharedHeld`).
+  pattern is held and it isn't the visitor's own, Save and Save as give way to the strip's Save a copy (`sharedHeld`).
+  Its owner keeps Save. A sound of the visitor's that plays a pattern by default doesn't replace it either.
 
 ### What carried over, and what didn't
 
