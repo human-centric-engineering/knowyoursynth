@@ -73,6 +73,7 @@ import {
 } from '@/components/app/sequencer/labels';
 import { Encoder } from '@/components/app/sequencer/encoder';
 import { StepInspector, Toggle } from '@/components/app/sequencer/step-inspector';
+import { SeqSelect as Select } from '@/components/app/sequencer/select';
 import type {
   SeqPosition,
   Sequencer as SequencerState,
@@ -313,191 +314,191 @@ export function Sequencer({
         onClick={run}
       >
         {icon}
-        {opts.short && <span>{opts.short}</span>}
+        {/* A word beside an icon gives way to the icon alone where the row is tight; a glyph alone (− +) stays. */}
+        {opts.short && <span className={icon ? 'kys-seq-tool-text' : undefined}>{opts.short}</span>}
       </button>
     </PlayerTip>
   );
 
   return (
     <section className="kys-seq" aria-label="Sequencer">
-      <div className="kys-seq-body">
-        <div className="kys-seq-main">
-          <div className="kys-seq-head">
-            <div className="kys-seq-transport">
-              {transport && (
+      <div className="kys-seq-head">
+        <div className="kys-seq-transport">
+          {transport && (
+            <PlayerTip
+              name={playing ? 'Stop' : 'Play the pattern'}
+              help={
+                playing ? undefined : 'From its first step. The same transport as Play on the bar.'
+              }
+            >
+              <button
+                type="button"
+                className={`kys-seq-play ${seq.playing ? 'is-playing' : ''}`}
+                onClick={playing ? onStop : onPlay}
+              >
+                {playing ? (
+                  <Square size={13} fill="currentColor" aria-hidden="true" />
+                ) : (
+                  <Play size={15} fill="currentColor" aria-hidden="true" />
+                )}
+                {playing ? 'Stop' : 'Play'}
+              </button>
+            </PlayerTip>
+          )}
+          <Toggle
+            label="Fill"
+            on={seq.fill}
+            help="Steps set to “Only with Fill” play, and “Not with Fill” rest, from the next loop."
+            onClick={() => seq.setFill(!seq.fill)}
+          />
+          <Toggle
+            label="Loop"
+            on={p.loop}
+            help="Plays the pattern again from the top. Off, it plays once and stops."
+            onClick={() => setP('loop', !p.loop)}
+          />
+        </div>
+        <div className="kys-seq-controls">
+          <Encoder
+            label="Tempo"
+            value={p.bpm}
+            min={MIN_BPM}
+            max={MAX_BPM}
+            format={(v) => `${Math.round(v)}`}
+            help="Beats per minute."
+            onChange={(v) => setP('bpm', v, 'bpm')}
+          />
+          <Encoder
+            label="Swing"
+            value={p.swing}
+            min={50}
+            max={75}
+            big={5}
+            format={(v) => `${v}%`}
+            help="How late every second step is. 50% is straight; 75% delays it by half a step."
+            onChange={(v) => setP('swing', v, 'swing')}
+          />
+          <Encoder
+            label="Length"
+            value={len}
+            min={1}
+            max={MAX_STEPS}
+            big={PAGE}
+            help="How many steps the pattern has. Steps added at the end are rests. Shortening cuts steps from the end; Undo brings them back."
+            onChange={(v) => seq.edit((q) => resizePattern(q, v), { group: 'length' })}
+          />
+          <Encoder
+            label="Transpose"
+            value={p.transpose}
+            min={-MAX_TRANSPOSE}
+            max={MAX_TRANSPOSE}
+            big={12}
+            format={(v) => (v > 0 ? `+${v}` : `${v}`)}
+            help="Moves every note by semitones as it plays, before the scale. Page Up and Page Down move an octave."
+            onChange={(v) => setP('transpose', v, 'transpose')}
+          />
+          <Select
+            label="Step"
+            help="How long each step is. A triplet fits three in the time of two."
+            value={p.stepSize}
+            options={STEP_SIZE_NAMES.map((s) => [s, STEP_SIZE_LABELS[s]])}
+            onChange={(v) => {
+              const size = STEP_SIZE_NAMES.find((x) => x === v);
+              if (size) setP('stepSize', size);
+            }}
+          />
+          <Select
+            label="Direction"
+            help="The order the steps play in, each pass."
+            value={p.direction}
+            options={DIRECTIONS.map((d) => [d, DIRECTION_LABELS[d]])}
+            onChange={(v) => {
+              const d = DIRECTIONS.find((x) => x === v);
+              if (d) setP('direction', d);
+            }}
+          />
+          <Select
+            label="Root"
+            help="The scale's first note."
+            value={String(p.root)}
+            options={ROOT_NAMES.map((n, i) => [String(i), n])}
+            onChange={(v) => setP('root', Number(v))}
+          />
+          <Select
+            label="Scale"
+            help="Every note moves to the nearest note of the scale as it plays. Chromatic leaves them as they are."
+            value={p.scale}
+            options={SCALE_NAMES.map((s) => [s, SCALE_LABELS[s]])}
+            onChange={(v) => {
+              const scale = SCALE_NAMES.find((x) => x === v);
+              if (scale) setP('scale', scale);
+            }}
+          />
+        </div>
+        <div className="kys-seq-parts">
+          {/* The part buttons carry a name under them, as every control in the row does. */}
+          <div className="kys-cell kys-cell-part">
+            <span className="kys-cell-label" aria-hidden="true">
+              Part
+            </span>
+            <div className="kys-seq-part-row" role="group" aria-label="Parts">
+              {p.parts.map((_, i) => (
                 <PlayerTip
-                  name={playing ? 'Stop' : 'Play the pattern'}
-                  help={
-                    playing
-                      ? undefined
-                      : 'From its first step. The same transport as Play on the bar.'
-                  }
+                  key={i}
+                  name={`Edit part ${PART_NAMES[i]}`}
+                  help={playingPart === i ? 'Playing now.' : undefined}
                 >
                   <button
                     type="button"
-                    className={`kys-seq-play ${seq.playing ? 'is-playing' : ''}`}
-                    onClick={playing ? onStop : onPlay}
+                    aria-pressed={editing === i}
+                    aria-label={`Edit part ${PART_NAMES[i]}`}
+                    className={`kys-seq-part ${editing === i ? 'is-on' : ''}`}
+                    onClick={() => setPart(i)}
                   >
-                    {playing ? (
-                      <Square size={13} fill="currentColor" aria-hidden="true" />
-                    ) : (
-                      <Play size={15} fill="currentColor" aria-hidden="true" />
-                    )}
-                    {playing ? 'Stop' : 'Play'}
+                    <span
+                      className={`kys-led ${playingPart === i ? 'is-lit' : ''}`}
+                      aria-hidden="true"
+                    />
+                    {PART_NAMES[i]}
                   </button>
                 </PlayerTip>
-              )}
-              <Toggle
-                label="Fill"
-                on={seq.fill}
-                help="Steps set to “Only with Fill” play, and “Not with Fill” rest, from the next loop."
-                onClick={() => seq.setFill(!seq.fill)}
-              />
-              <Toggle
-                label="Loop"
-                on={p.loop}
-                help="Plays the pattern again from the top. Off, it plays once and stops."
-                onClick={() => setP('loop', !p.loop)}
-              />
-            </div>
-            <div className="kys-seq-controls">
-              <Encoder
-                label="Tempo"
-                value={p.bpm}
-                min={MIN_BPM}
-                max={MAX_BPM}
-                format={(v) => `${Math.round(v)}`}
-                help="Beats per minute."
-                onChange={(v) => setP('bpm', v, 'bpm')}
-              />
-              <Encoder
-                label="Swing"
-                value={p.swing}
-                min={50}
-                max={75}
-                big={5}
-                format={(v) => `${v}%`}
-                help="How late every second step is. 50% is straight; 75% delays it by half a step."
-                onChange={(v) => setP('swing', v, 'swing')}
-              />
-              <Encoder
-                label="Length"
-                value={len}
-                min={1}
-                max={MAX_STEPS}
-                big={PAGE}
-                help="How many steps the pattern has. Steps added at the end are rests. Shortening cuts steps from the end; Undo brings them back."
-                onChange={(v) => seq.edit((q) => resizePattern(q, v), { group: 'length' })}
-              />
-              <Encoder
-                label="Transpose"
-                value={p.transpose}
-                min={-MAX_TRANSPOSE}
-                max={MAX_TRANSPOSE}
-                big={12}
-                format={(v) => (v > 0 ? `+${v}` : `${v}`)}
-                help="Moves every note by semitones as it plays, before the scale. Page Up and Page Down move an octave."
-                onChange={(v) => setP('transpose', v, 'transpose')}
-              />
-              <Select
-                label="Step"
-                help="How long each step is. A triplet fits three in the time of two."
-                value={p.stepSize}
-                options={STEP_SIZE_NAMES.map((s) => [s, STEP_SIZE_LABELS[s]])}
-                onChange={(v) => {
-                  const size = STEP_SIZE_NAMES.find((x) => x === v);
-                  if (size) setP('stepSize', size);
-                }}
-              />
-              <Select
-                label="Direction"
-                help="The order the steps play in, each pass."
-                value={p.direction}
-                options={DIRECTIONS.map((d) => [d, DIRECTION_LABELS[d]])}
-                onChange={(v) => {
-                  const d = DIRECTIONS.find((x) => x === v);
-                  if (d) setP('direction', d);
-                }}
-              />
-              <Select
-                label="Root"
-                help="The scale's first note."
-                value={String(p.root)}
-                options={ROOT_NAMES.map((n, i) => [String(i), n])}
-                onChange={(v) => setP('root', Number(v))}
-              />
-              <Select
-                label="Scale"
-                help="Every note moves to the nearest note of the scale as it plays. Chromatic leaves them as they are."
-                value={p.scale}
-                options={SCALE_NAMES.map((s) => [s, SCALE_LABELS[s]])}
-                onChange={(v) => {
-                  const scale = SCALE_NAMES.find((x) => x === v);
-                  if (scale) setP('scale', scale);
-                }}
-              />
-            </div>
-            <div className="kys-seq-parts">
-              {/* The part buttons carry a name under them, as every control in the row does. */}
-              <div className="kys-cell kys-cell-part">
-                <span className="kys-cell-label" aria-hidden="true">
-                  Part
-                </span>
-                <div className="kys-seq-part-row" role="group" aria-label="Parts">
-                  {p.parts.map((_, i) => (
-                    <PlayerTip
-                      key={i}
-                      name={`Edit part ${PART_NAMES[i]}`}
-                      help={playingPart === i ? 'Playing now.' : undefined}
-                    >
-                      <button
-                        type="button"
-                        aria-pressed={editing === i}
-                        aria-label={`Edit part ${PART_NAMES[i]}`}
-                        className={`kys-seq-part ${editing === i ? 'is-on' : ''}`}
-                        onClick={() => setPart(i)}
-                      >
-                        <span
-                          className={`kys-led ${playingPart === i ? 'is-lit' : ''}`}
-                          aria-hidden="true"
-                        />
-                        {PART_NAMES[i]}
-                      </button>
-                    </PlayerTip>
-                  ))}
-                  {p.parts.length < 2 ? (
-                    <PlayerTip
-                      name="Add part B"
-                      help="A variation, copied from A, that plays after it."
-                    >
-                      <button
-                        type="button"
-                        className="kys-seq-part"
-                        aria-label="Add part B"
-                        onClick={addB}
-                      >
-                        + B
-                      </button>
-                    </PlayerTip>
-                  ) : null}
-                </div>
-              </div>
-              {p.parts.length > 1 && (
-                <Select
-                  label="Chain"
-                  help="The order the parts play in, a loop each, then round again."
-                  value={chainKey}
-                  options={chains.map((c) => [c.key, c.label])}
-                  onChange={(v) => {
-                    const c = chains.find((x) => x.key === v);
-                    if (c) setP('chain', c.chain);
-                  }}
-                />
-              )}
+              ))}
+              {p.parts.length < 2 ? (
+                <PlayerTip
+                  name="Add part B"
+                  help="A variation, copied from A, that plays after it."
+                >
+                  <button
+                    type="button"
+                    className="kys-seq-part"
+                    aria-label="Add part B"
+                    onClick={addB}
+                  >
+                    + B
+                  </button>
+                </PlayerTip>
+              ) : null}
             </div>
           </div>
-          {pages > 1 && (
-            <div className="kys-seq-pages" role="group" aria-label="Pages">
+          {p.parts.length > 1 && (
+            <Select
+              label="Chain"
+              help="The order the parts play in, a loop each, then round again."
+              value={chainKey}
+              options={chains.map((c) => [c.key, c.label])}
+              onChange={(v) => {
+                const c = chains.find((x) => x.key === v);
+                if (c) setP('chain', c.chain);
+              }}
+            />
+          )}
+        </div>
+        {pages > 1 && (
+          <div className="kys-cell kys-cell-part">
+            <span className="kys-cell-label" aria-hidden="true">
+              Page
+            </span>
+            <div className="kys-seq-part-row" role="group" aria-label="Pages">
               {Array.from({ length: pages }, (_, k) => {
                 const lit = at !== null && at.part === editing && Math.floor(at.step / PAGE) === k;
                 return (
@@ -515,7 +516,11 @@ export function Sequencer({
                 );
               })}
             </div>
-          )}
+          </div>
+        )}
+      </div>
+      <div className="kys-seq-body">
+        <div className="kys-seq-main">
           <div
             className="kys-seq-keys"
             role="group"
@@ -737,35 +742,6 @@ export function Sequencer({
   );
 }
 
-function Select({
-  label,
-  help,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  help: string;
-  value: string;
-  options: readonly (readonly [string, string])[];
-  onChange: (v: string) => void;
-}) {
-  return (
-    <PlayerTip name={label} help={help}>
-      <label className="kys-cell kys-cell-select">
-        <span className="kys-cell-label">{label}</span>
-        <select className="kys-cell-input" value={value} onChange={(e) => onChange(e.target.value)}>
-          {options.map(([v, l]) => (
-            <option key={v} value={v}>
-              {l}
-            </option>
-          ))}
-        </select>
-      </label>
-    </PlayerTip>
-  );
-}
-
 /** An item of the Edit menu. */
 interface EditItem {
   name: string;
@@ -815,7 +791,7 @@ function EditMenu({ items }: { items: readonly EditItem[] }) {
           onClick={() => setOpen(!open)}
         >
           <ClipboardList size={15} aria-hidden="true" />
-          <span>Edit</span>
+          <span className="kys-seq-tool-text">Edit</span>
           <ChevronUp size={13} aria-hidden="true" className="kys-seq-menu-caret" />
         </button>
       </PlayerTip>

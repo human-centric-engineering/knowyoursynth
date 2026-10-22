@@ -23,6 +23,7 @@ import {
 } from '@/lib/app/sequencer/pattern';
 import { CONDITIONS, conditionKey, noteName, parseNote } from '@/components/app/sequencer/labels';
 import { Encoder } from '@/components/app/sequencer/encoder';
+import { SeqSelect } from '@/components/app/sequencer/select';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 /** A change to the step, and the group an encoder's turn is undone as. */
@@ -155,28 +156,16 @@ export function StepInspector({
             )
           }
         />
-        <PlayerTip
-          name="Condition"
+        <SeqSelect
+          label="Condition"
           help="Which loops the step plays on: only the first, every other, only while Fill is on, and so on."
-        >
-          <label className="kys-cell kys-cell-select">
-            <span className="kys-cell-label">Condition</span>
-            <select
-              className="kys-cell-input"
-              value={conditionKey(step.condition)}
-              onChange={(e) => {
-                const c = CONDITIONS.find((x) => x.key === e.target.value);
-                if (c) onChange((s) => ({ ...s, condition: c.condition }));
-              }}
-            >
-              {CONDITIONS.map((c) => (
-                <option key={c.key} value={c.key}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </PlayerTip>
+          value={conditionKey(step.condition)}
+          options={CONDITIONS.map((c) => [c.key, c.label])}
+          onChange={(v) => {
+            const c = CONDITIONS.find((x) => x.key === v);
+            if (c) onChange((s) => ({ ...s, condition: c.condition }));
+          }}
+        />
       </div>
 
       <div className="kys-seq-notes">

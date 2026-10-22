@@ -80,6 +80,11 @@ const key = (n: number) => keys()[n - 1];
 const labels = () => keys().map((k) => k.getAttribute('aria-label'));
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const slider = (name: string) => screen.getByRole('slider', { name });
+/** A readout select: opened, then the option pressed. */
+const pick = (scope: Pick<typeof screen, 'getByRole'>, name: string, option: string) => {
+  fireEvent.click(scope.getByRole('combobox', { name }));
+  fireEvent.click(screen.getByRole('option', { name: option }));
+};
 /** Copy, paste and clear are in the Edit menu: opened, then the item chosen. */
 const menu = (name: string) => {
   fireEvent.click(button('Copy, paste and clear'));
@@ -237,9 +242,7 @@ describe('the transport', () => {
     engine.frame = 0.375 * 48000;
     expect(state.position()).toEqual({ step: 3, part: 0 });
     // Reverse plays the last step first.
-    fireEvent.change(screen.getByRole('combobox', { name: 'Direction' }), {
-      target: { value: 'reverse' },
-    });
+    pick(screen, 'Direction', 'Reverse');
     engine.frame = 0;
     expect(state.position()).toEqual({ step: 7, part: 0 });
   });
@@ -286,9 +289,7 @@ describe('editing', () => {
     expect(screen.getByRole('group', { name: 'Pages' })).toBeTruthy();
     fireEvent.keyDown(slider('Swing'), { key: 'End' });
     fireEvent.keyDown(slider('Transpose'), { key: 'PageUp' });
-    fireEvent.change(screen.getByRole('combobox', { name: 'Step' }), {
-      target: { value: '1/8' },
-    });
+    pick(screen, 'Step', '1/8');
     await play();
     const loop = lastOf('pattern')?.loop;
     // 24 eighths are 12 beats. Swing at 75 moves step 2 half a step later: 1.5 eighths. An octave up.
@@ -298,9 +299,7 @@ describe('editing', () => {
 
   it('snaps notes to the scale from the root as they play', async () => {
     open();
-    fireEvent.change(screen.getByRole('combobox', { name: 'Scale' }), {
-      target: { value: 'major' },
-    });
+    pick(screen, 'Scale', 'Major');
     await play();
     // D♯3 is not in C major: it snaps down to D3.
     expect(lastOf('pattern')?.loop.notes.map((n) => n[1])).toEqual([48, 50, 55, 60]);
@@ -311,7 +310,7 @@ describe('editing', () => {
     fireEvent.click(button('Add part B'));
     expect(button('Edit part B').getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('group', { name: 'Steps of part B' })).toBeTruthy();
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Chain' }).value).toBe('0,1');
+    expect(screen.getByRole('combobox', { name: 'Chain' }).textContent).toContain('A B');
     menu('Clear');
     fireEvent.click(button('Edit part A'));
     expect(labels()[0]).toBe('Step 1: C3, on');
@@ -367,9 +366,7 @@ describe('the tools', () => {
 
   it('Randomise writes a fresh line on the scale, and Mutate varies it, each undone', () => {
     open();
-    fireEvent.change(screen.getByRole('combobox', { name: 'Scale' }), {
-      target: { value: 'minorPentatonic' },
-    });
+    pick(screen, 'Scale', 'Minor pentatonic');
     vi.spyOn(Math, 'random').mockReturnValue(0.3);
     fireEvent.click(button('Randomise'));
     const line = notes();
@@ -514,9 +511,7 @@ describe('from the keyboard', () => {
     fireEvent.keyDown(inspector.getByRole('slider', { name: 'Nudge' }), { key: 'ArrowRight' });
     fireEvent.click(inspector.getByRole('button', { name: 'Accent' }));
     fireEvent.click(inspector.getByRole('button', { name: 'Slide' }));
-    fireEvent.change(inspector.getByRole('combobox', { name: 'Condition' }), {
-      target: { value: 'ab:1:2' },
-    });
+    pick(inspector, 'Condition', 'Loop 1 of 2');
     expect(labels()[4]).toBe('Step 5: G2, on, accent, slide, ratchet 4, 75% chance, 1:2');
     fireEvent.click(inspector.getByRole('button', { name: 'On' }));
     expect(labels()[4]).toMatch(/^Step 5: G2, off/);
@@ -650,12 +645,7 @@ describe('what it refuses, and a page that is late', () => {
 describe('what the code review found', () => {
   it('hears Fill from the next loop: the loop queued before it was pressed is queued again', async () => {
     open();
-    fireEvent.change(
-      within(screen.getByRole('region', { name: /^Step 1/ })).getByRole('combobox', {
-        name: 'Condition',
-      }),
-      { target: { value: 'fill' } }
-    );
+    pick(within(screen.getByRole('region', { name: /^Step 1/ })), 'Condition', 'Only with Fill');
     await play();
     fire(loopEvent());
     expect(lastOf('patternNext')?.loop?.notes[0]?.[1]).toBe(51);
@@ -695,9 +685,7 @@ describe('what the code review found', () => {
     fire(loopEvent());
     // Loop 1 is rendered (its frame is not heard yet) while the end of loop 0 still sounds.
     fire(loopEvent({ index: 1, frame: 96000 }));
-    fireEvent.change(screen.getByRole('combobox', { name: 'Step' }), {
-      target: { value: '1/8' },
-    });
+    pick(screen, 'Step', '1/8');
     engine.frame = 0.375 * 48000;
     expect(state.position()).toEqual({ step: 3, part: 0 });
   });
