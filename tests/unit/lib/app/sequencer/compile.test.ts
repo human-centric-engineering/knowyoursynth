@@ -93,6 +93,12 @@ describe('compileLoop', () => {
       const next = stepOrder(p, { loop: 1, rng: fixed(0.9, 0.1, 0.1, 0.1), from: first.to });
       expect(next.order).toEqual([3, 0, 1, 2]);
     });
+
+    it('hands back the order the loop played, which a playhead is drawn from', () => {
+      const p = line(notes, (q) => (q.direction = 'brownian'));
+      const loop = compileLoop(p, { loop: 0, rng: fixed(0.2, 0.1, 0.6, 0.9) });
+      expect(loop.order).toEqual([0, 1, 1, 0]);
+    });
   });
 
   describe('conditions and probability', () => {

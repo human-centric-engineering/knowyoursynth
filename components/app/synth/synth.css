@@ -592,6 +592,10 @@ svg .kys-hit:focus-visible {
   color: var(--kys-text);
   background: rgb(var(--kys-wash) / 0.07);
 }
+.kys-layer-x {
+  margin-left: -2px;
+  opacity: 0.75;
+}
 .kys-layer.is-on {
   color: var(--kys-accent);
   background: rgb(246 166 58 / 0.12);
@@ -791,6 +795,10 @@ svg .kys-hit:focus-visible {
   }
   .kys-dock .kys-player-deck {
     border-radius: 0;
+  }
+  /* With the strip gone (the sequencer open), the bar is the dock's top. */
+  .kys-dock > .kys-player-bar:first-child {
+    border-radius: 18px 18px 0 0;
   }
 }
 /* With a pointer, the strip floats over the foot of the panel instead of taking
@@ -1035,5 +1043,749 @@ svg .kys-hit:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .kys-drawer {
     animation: none;
+  }
+}
+
+/* ==========================================================================
+ * The sequencer (`f-step-sequencer` t-80)
+ * ==========================================================================
+ * Drawn as a hardware step sequencer's front: every value is a cell of an
+ * amber readout (its name, the value lit in the display's amber, a meter along
+ * its foot), the steps are rubber keys with an LED each, and the tools are a
+ * row of quiet buttons with copy and paste behind Edit. The readout and the keys
+ * keep their own colours in the light theme, as hardware does.
+ *
+ * From `lg` up (the dock) it is one row of two columns: the readout, the keys
+ * and the tools on the left (Help at the end of the tools), the step inspector on
+ * the right. The bar's Sequencer button closes it. Below it (the
+ * bottom sheet) it stacks. Media queries, not container queries: a size
+ * container is the containing block of its fixed descendants, which put the
+ * player's tooltips at the top of the screen. The sheet is outside the
+ * player, where `--kys-wash` is set, so the sequencer falls back to white.
+ */
+.kys-seq-dock {
+  border-top: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.06);
+  background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
+}
+.kys-seq {
+  --lcd: #0b0b0d;
+  --lcd-ink: #ffb547;
+  --lcd-dim: #9a7440;
+  --lcd-label: #7c6849;
+  position: relative;
+  padding: 12px 14px;
+  color: var(--kys-text);
+}
+/* The readout across the whole module, then the keys and tools beside the inspector. */
+.kys-seq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.kys-seq-body {
+  display: grid;
+  gap: 12px;
+}
+.kys-seq-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* The readout: one strip of cells that wrap one by one where it is narrow. */
+.kys-seq-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+}
+.kys-seq-transport,
+.kys-seq-controls,
+.kys-seq-parts {
+  display: contents;
+}
+@media (min-width: 1024px) {
+  .kys-seq-body {
+    grid-template-columns: minmax(0, 1fr) minmax(290px, 340px);
+  }
+}
+/* Help: the quiet ? at the end of the tool row, by Undo. */
+.kys-seq-undo button[aria-label='How the sequencer works'] {
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+}
+
+/* A cell of the readout. The hit area is the cell itself, so a drag anywhere on it turns it. */
+.kys-cell {
+  display: flex;
+}
+.kys-cell-hit,
+.kys-cell-select,
+.kys-cell-part {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 58px;
+  height: 44px;
+  padding: 3px 10px 7px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px), var(--lcd);
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 0 0 1px rgb(255 181 71 / 0.07),
+    0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.05);
+  transition: box-shadow 0.15s ease;
+}
+.kys-cell-hit {
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+}
+.kys-cell-hit:hover,
+.kys-cell-select:hover {
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 0 0 1px rgb(255 181 71 / 0.28),
+    0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.05);
+}
+.kys-cell-hit:focus-visible,
+.kys-cell-select:focus-visible,
+.kys-cell-select[aria-expanded='true'] {
+  outline: none;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 0 0 1px var(--lcd-ink),
+    0 0 12px -2px rgb(255 166 58 / 0.55);
+}
+/* Typing a value: the cell lit, a caret in the readout's amber. */
+.kys-cell-hit.is-typing {
+  cursor: text;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 0 0 1px var(--lcd-ink),
+    0 0 12px -2px rgb(255 166 58 / 0.55);
+}
+.kys-cell-type {
+  width: 64px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--lcd-ink);
+  background: transparent;
+  caret-color: var(--lcd-ink);
+}
+.kys-cell-label {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lcd-label);
+  white-space: nowrap;
+}
+.kys-cell-value {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--lcd-ink);
+  text-shadow: 0 0 6px rgb(255 166 58 / 0.45);
+  white-space: nowrap;
+}
+.kys-cell[data-unset] .kys-cell-value {
+  color: var(--lcd-dim);
+  text-shadow: none;
+}
+.kys-cell-meter {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgb(255 181 71 / 0.12);
+}
+.kys-cell-meter::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--enc, 0%);
+  border-radius: 1px;
+  background: var(--lcd-ink);
+  box-shadow: 0 0 4px rgb(255 166 58 / 0.6);
+}
+/* A select in the readout: the value in amber, a caret at its right. */
+.kys-cell-select {
+  padding-right: 22px;
+  cursor: pointer;
+}
+.kys-cell-select::after {
+  content: '';
+  position: absolute;
+  right: 9px;
+  bottom: 13px;
+  border: 4px solid transparent;
+  border-top-color: var(--lcd-dim);
+  pointer-events: none;
+}
+/* A select's list, drawn in the readout's amber rather than the browser's menu. Upward
+   from the cell, or downward where there is no room above. */
+.kys-cell-dropdown {
+  position: relative;
+}
+.kys-cell-select {
+  font: inherit;
+  text-align: left;
+}
+.kys-seq-list {
+  position: absolute;
+  z-index: 70;
+  bottom: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  max-height: 240px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  border-radius: 8px;
+  background: #101114;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 181 71 / 0.25),
+    0 18px 40px -12px rgb(0 0 0 / 0.85);
+  animation: kys-fade 0.12s ease-out;
+}
+.kys-seq-list[data-down] {
+  top: calc(100% + 6px);
+  bottom: auto;
+}
+.kys-seq-option {
+  position: relative;
+  padding: 6px 12px 6px 20px;
+  border-radius: 5px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lcd-dim);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.kys-seq-option[data-active] {
+  color: var(--lcd-ink);
+  background: rgb(255 181 71 / 0.12);
+}
+.kys-seq-option[aria-selected='true'] {
+  color: var(--lcd-ink);
+  text-shadow: 0 0 6px rgb(255 166 58 / 0.45);
+}
+.kys-seq-option[aria-selected='true']::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 999px;
+  background: var(--lcd-ink);
+  box-shadow: 0 0 5px rgb(255 166 58 / 0.8);
+}
+/* A small cell with its name beside it: Hits, in the tool row. */
+.kys-cell[data-compact] .kys-cell-hit {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 9px 2px;
+}
+.kys-cell[data-compact] .kys-cell-value {
+  font-size: 13px;
+}
+.kys-cell[data-compact] .kys-cell-meter {
+  bottom: 3px;
+}
+
+/* The part keys sit in a cell of their own, with the chain beside it once there is a B. */
+.kys-cell-part {
+  padding-bottom: 5px;
+}
+.kys-seq-part-row {
+  display: flex;
+  gap: 4px;
+}
+.kys-seq-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lcd-dim);
+  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.16);
+}
+.kys-seq-part:hover {
+  color: var(--lcd-ink);
+}
+.kys-seq-part.is-on {
+  color: var(--lcd-ink);
+  background: rgb(255 181 71 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.5);
+}
+.kys-seq-part .kys-led {
+  width: 5px;
+  height: 5px;
+}
+
+/* LED keys: Fill and Loop in the readout, On, Accent and Slide in the inspector. */
+.kys-seq-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  background: linear-gradient(
+    rgb(var(--kys-wash, 255 255 255) / 0.06),
+    rgb(var(--kys-wash, 255 255 255) / 0.02)
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.1),
+    0 1px 0 rgb(0 0 0 / 0.4);
+}
+.kys-seq-toggle:hover {
+  color: var(--kys-text);
+}
+.kys-seq-toggle.is-on {
+  color: var(--kys-text);
+}
+.kys-seq-head .kys-seq-toggle {
+  height: 44px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 50px;
+  padding: 0 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.kys-seq-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 44px;
+  padding: 0 16px 0 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+  box-shadow: 0 4px 14px -4px rgb(246 166 58 / 0.7);
+}
+.kys-seq-play.is-playing {
+  animation: kys-pulse 1.3s ease-in-out infinite;
+}
+
+/* The page keys sit in a cell of the readout, as the part keys do, the one the playhead is on lit. */
+.kys-seq-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lcd-dim);
+  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.16);
+}
+.kys-seq-page:hover {
+  color: var(--lcd-ink);
+}
+.kys-seq-page.is-on {
+  color: var(--lcd-ink);
+  background: rgb(255 181 71 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.5);
+}
+.kys-seq-page .kys-led {
+  width: 5px;
+  height: 5px;
+}
+
+/* The step keys: sixteen to a row in groups of four, eight to a row where it is narrow. */
+.kys-seq-keys {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 5px;
+  padding: 7px;
+  border-radius: 10px;
+  background: #0b0c0f;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.6),
+    0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.04);
+}
+@media (max-width: 700px) {
+  .kys-seq-keys {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+/* A gap after every fourth key, as a hardware sequencer groups its beats. */
+.kys-seq-key:nth-child(4n):not(:last-child) {
+  margin-right: 4px;
+}
+.kys-seq-key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  height: 58px;
+  padding: 5px 2px 6px;
+  border-radius: 6px;
+  color: #a2a8b5;
+  background: linear-gradient(#2c3039, #1d2027);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 2px 0 #08090b,
+    0 3px 4px rgb(0 0 0 / 0.45);
+  transition:
+    background-color 0.08s ease,
+    box-shadow 0.08s ease;
+}
+.kys-seq-key[data-beat] {
+  background: linear-gradient(#353a45, #22262e);
+}
+.kys-seq-key:active {
+  translate: 0 1px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    0 1px 0 #08090b;
+}
+.kys-seq-key-led {
+  width: 55%;
+  height: 4px;
+  border-radius: 2px;
+  background: #3a2a14;
+}
+.kys-seq-key[data-plays] .kys-seq-key-led {
+  background: #ffb547;
+  box-shadow: 0 0 6px 1px rgb(255 166 58 / 0.7);
+}
+.kys-seq-key[data-muted] .kys-seq-key-led {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px #8a6020;
+}
+.kys-seq-key[data-plays] {
+  color: #ece9e2;
+}
+.kys-seq-key[data-here] {
+  background: linear-gradient(#5d636f, #3c414c);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.5),
+    0 0 14px rgb(255 255 255 / 0.25);
+}
+.kys-seq-key[aria-current] {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 1px;
+}
+.kys-seq-key-num {
+  font-size: 9px;
+  line-height: 1;
+  color: #6d7688;
+}
+.kys-seq-key-note {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.kys-seq-key-note sup {
+  margin-left: 1px;
+  font-size: 8.5px;
+  color: var(--kys-accent);
+}
+.kys-seq-key-marks {
+  display: flex;
+  gap: 2px;
+  min-height: 9px;
+  font-size: 8.5px;
+  line-height: 1;
+  color: #f6a63a;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* The tools: one quiet row, in groups, with Undo at its end. */
+.kys-seq-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+.kys-seq-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding-right: 6px;
+  border-right: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.08);
+}
+.kys-seq-tool-group:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+.kys-seq-tool-label {
+  padding: 0 3px 0 4px;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kys-faint);
+}
+.kys-seq-undo {
+  margin-left: auto;
+}
+/* Between lg and a wide desktop the tool row would wrap: its words give way to their icons, named by their tooltips. */
+@media (min-width: 1024px) and (max-width: 1359px) {
+  .kys-seq-tool-text {
+    display: none;
+  }
+}
+.kys-seq-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 30px;
+  min-width: 28px;
+  padding: 0 7px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--kys-muted);
+}
+.kys-seq-tool:hover:enabled,
+.kys-seq-tool.is-open {
+  color: var(--kys-text);
+  background: rgb(var(--kys-wash, 255 255 255) / 0.07);
+}
+.kys-seq-tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Edit: copy, paste and clear, in a menu that opens upward from the tool row. */
+.kys-seq-menu-wrap {
+  position: relative;
+}
+.kys-seq-menu-caret {
+  color: var(--kys-faint);
+  transition: rotate 0.15s ease;
+}
+.kys-seq-tool.is-open .kys-seq-menu-caret {
+  rotate: 180deg;
+}
+.kys-seq-menu {
+  position: absolute;
+  z-index: 60;
+  bottom: calc(100% + 6px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 170px;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--kys-raised);
+  box-shadow:
+    0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.08),
+    0 16px 40px -12px var(--kys-shadow);
+  animation: kys-fade 0.12s ease-out;
+}
+.kys-seq-menuitem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kys-text);
+  text-align: left;
+}
+.kys-seq-menuitem:hover:enabled,
+.kys-seq-menuitem:focus-visible {
+  background: rgb(var(--kys-wash, 255 255 255) / 0.07);
+}
+.kys-seq-menuitem:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.kys-seq-menuitem svg {
+  color: var(--kys-muted);
+}
+
+/* The step inspector: the same height for every step, in the readout's language. */
+.kys-seq-inspect {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--kys-surface);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.07);
+}
+.kys-seq-inspect-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.kys-seq-inspect-head h3 {
+  margin: 0;
+  color: var(--kys-text);
+}
+.kys-seq-inspect-part {
+  color: var(--kys-muted);
+  font-size: 12px;
+}
+.kys-seq-inspect-toggles {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.kys-seq-inspect-toggles .kys-seq-toggle {
+  height: 26px;
+  padding: 0 8px;
+}
+.kys-seq-inspect-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.kys-seq-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kys-seq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.kys-seq-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.12);
+}
+.kys-seq-chip:hover {
+  color: var(--kys-text);
+}
+.kys-seq-chip.is-on {
+  color: var(--kys-accent);
+  background: rgb(246 166 58 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+}
+.kys-seq-chip-add,
+.kys-seq-chip-remove {
+  font-family: inherit;
+}
+.kys-seq-chip-remove {
+  margin-left: auto;
+}
+/* The note's cells, or what a rest says in their place: the same height either way. */
+.kys-seq-note,
+.kys-seq-rest {
+  display: flex;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0;
+}
+.kys-seq-rest {
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--kys-faint);
+}
+
+/* A finger needs a bigger target than a pointer: 44px, as the platforms ask. */
+@media (pointer: coarse) {
+  .kys-seq-tool,
+  .kys-seq-inspect-toggles .kys-seq-toggle {
+    height: 44px;
+    min-width: 44px;
+  }
+  .kys-cell-hit,
+  .kys-cell-select,
+  .kys-cell-part {
+    height: 48px;
+  }
+  .kys-cell[data-compact] .kys-cell-hit {
+    height: 44px;
+  }
+  .kys-seq-head .kys-seq-toggle,
+  .kys-seq-play {
+    height: 48px;
+  }
+  .kys-seq-part,
+  .kys-seq-page,
+  .kys-seq-chip {
+    height: 36px;
+    min-width: 36px;
+  }
+  .kys-seq-key {
+    height: 64px;
+  }
+  .kys-seq-menuitem {
+    height: 44px;
+  }
+  .kys-seq-note,
+  .kys-seq-rest {
+    min-height: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-seq-play.is-playing,
+  .kys-seq-menu,
+  .kys-seq-list {
+    animation: none;
+  }
+  .kys-seq-key,
+  .kys-cell-hit,
+  .kys-cell-select,
+  .kys-seq-menu-caret {
+    transition: none;
   }
 }

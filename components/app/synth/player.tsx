@@ -239,12 +239,19 @@ export function Chapters({
   );
 }
 
-/** The riff: the player's play button. Named for what it will do, as the page's tests and the old button were. */
+/**
+ * The player's play button: the sound's riff, or the sequencer's pattern while the sequencer is open (one transport).
+ * Named for what it will do.
+ */
 export function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
   return (
     <PlayerTip
-      name={playing ? 'Stop the riff' : 'Play a riff'}
-      help={playing ? undefined : 'A short phrase that suits the sound, played through the panel.'}
+      name={playing ? 'Stop' : 'Play'}
+      help={
+        playing
+          ? undefined
+          : 'A short phrase that suits the sound, played through the panel. With the sequencer open, its pattern.'
+      }
     >
       <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>
         <span className="kys-play-dot" aria-hidden="true">
@@ -254,7 +261,7 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
             <Play size={16} fill="currentColor" className="translate-x-px" />
           )}
         </span>
-        {playing ? 'Stop riff' : 'Play riff'}
+        {playing ? 'Stop' : 'Play'}
       </button>
     </PlayerTip>
   );

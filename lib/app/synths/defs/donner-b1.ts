@@ -436,7 +436,7 @@ const FUNCS: [id: string, label: string, help: string, rest?: Partial<ButtonRest
     [
       'seq.play',
       'PLAY/STOP',
-      'Starts and stops the pattern. Playing, the keys transpose it live. In this app, use Play riff instead.',
+      'Starts and stops the pattern. Playing, the keys transpose it live. In this app, use Play on the player bar instead.',
     ],
     [
       'seq.rec',

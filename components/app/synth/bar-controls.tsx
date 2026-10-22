@@ -21,10 +21,13 @@ import { PlayerTip } from '@/components/app/synth/player-tip';
 export function HelpButton({
   title,
   items,
+  wide = false,
 }: {
   title: string;
   /** Each a term and what it does, with the icon its button carries where it has one, so it can be found there. */
   items: readonly (readonly [term: string, text: string, icon?: ReactNode])[];
+  /** A long list: two columns from `sm` up, in a wider dialog. */
+  wide?: boolean;
 }) {
   return (
     <Dialog>
@@ -36,12 +39,17 @@ export function HelpButton({
           ?
         </DialogTrigger>
       </PlayerTip>
-      <DialogContent className="w-[min(440px,calc(100vw-32px))] rounded-xl border-(--kys-line) bg-(--kys-raised) p-4 text-(--kys-text)">
+      {/* Never taller than the screen: a long list scrolls inside it. */}
+      <DialogContent
+        className={`flex max-h-[85dvh] flex-col rounded-xl border-(--kys-line) bg-(--kys-raised) p-4 text-(--kys-text) ${wide ? 'w-[min(760px,calc(100vw-32px))] sm:max-w-[760px]' : 'w-[min(440px,calc(100vw-32px))]'}`}
+      >
         <DialogTitle className="kys-label text-(--kys-muted)">{title}</DialogTitle>
         <DialogDescription className="sr-only">{title}</DialogDescription>
-        <dl className="flex flex-col divide-y divide-(--kys-line)/60 text-sm">
+        <dl
+          className={`min-h-0 overflow-y-auto pr-1 text-sm ${wide ? 'grid gap-x-6 sm:grid-cols-2 [&>div]:border-b [&>div]:border-(--kys-line)/60' : 'flex flex-col divide-y divide-(--kys-line)/60'}`}
+        >
           {items.map(([t, d, icon]) => (
-            <div key={t} className="py-2.5 first:pt-0 last:pb-0">
+            <div key={t} className={wide ? 'py-2.5' : 'py-2.5 first:pt-0 last:pb-0'}>
               <dt className="flex items-center gap-2 font-semibold">
                 {icon && (
                   <span

@@ -384,11 +384,11 @@ describe('ScopeDialog (the big view)', () => {
   it('plays and stops the riff, and freezes the trace', () => {
     const onPlay = vi.fn();
     const { rerender } = render(<ScopeDialog {...props({ onPlay })} />);
-    fireEvent.click(screen.getByRole('button', { name: '▶ Play riff' }));
+    fireEvent.click(screen.getByRole('button', { name: '▶ Play' }));
     expect(onPlay).toHaveBeenCalledWith(phrase);
     const onStop = vi.fn();
     rerender(<ScopeDialog {...props({ playing: true, onStop })} />);
-    fireEvent.click(screen.getByRole('button', { name: '■ Stop riff' }));
+    fireEvent.click(screen.getByRole('button', { name: '■ Stop' }));
     expect(onStop).toHaveBeenCalledTimes(1);
 
     step(8);
@@ -405,7 +405,7 @@ describe('ScopeDialog (the big view)', () => {
 
   it('has no Play button for a synth with no sounds', () => {
     render(<ScopeDialog {...props({ phrase: null })} />);
-    expect(screen.queryByRole('button', { name: '▶ Play riff' })).toBeNull();
+    expect(screen.queryByRole('button', { name: '▶ Play' })).toBeNull();
   });
 
   it('carries its own keyboard, and lets the page’s computer keys play (data-plays)', () => {

@@ -115,7 +115,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ │   (‹ Previous)  ┌ Step 2 of 4 · FILTER ──────┐  (Next step ›)  │ │               │        │
 │ │                 │ title · why, ≤68ch          │                 │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
-│ │ [SOUND <name> ▾] (▶ Play riff) [🔊 Mute] [Restore] [Blank]     │ │               │        │
+│ │ [SOUND <name> ▾] (▶ Play)      [🔊 Mute] [Restore] [Blank]     │ │               │        │
 │ │         [Piano] [Harmonics] [Effects] MIDI [?] [−Zoom+] [⛶]   │ │               │        │
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
@@ -150,7 +150,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   and shows only while the pointer is within `STRIP_REACH` px of the dock (`data-near` on the dock,
   set without a render) or focus is in it; it is headed "Learn sound design"; it is hidden by opacity, so Tab still reaches it. On
   touch and below `lg` it sits in the dock's flow.
-- **The sound picker opens the bar** (`SoundPicker`), next to Play riff, with Restore sound and
+- **The sound picker opens the bar** (`SoundPicker`), next to Play, with Restore sound and
   Blank patch: the sound's name opens the library over the bar (or the Library sheet below `lg`)
   and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with

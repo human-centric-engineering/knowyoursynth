@@ -420,7 +420,7 @@ led(117, 741, { id: 'seq.run', eq: true });
 btn('seq.run', 117, 777, 50, 44, {
   label: 'START/STOP',
   name: 'START/STOP',
-  help: 'Starts and stops the pattern or track. In this app, use Play riff instead.',
+  help: 'Starts and stops the pattern or track. In this app, use Play on the player bar instead.',
 });
 text(119, 821, 'START/STOP', 15, { fill: YEL, weight: 700 });
 
