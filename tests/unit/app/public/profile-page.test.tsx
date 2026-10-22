@@ -89,6 +89,33 @@ describe('/u/[username]', () => {
     expect(sounds.queryByText(/@moog_fan/)).toBeNull();
   });
 
+  it('lists their published patterns at their addresses, never a link share or an unlisted one (t-83)', async () => {
+    await renderPage('moog_fan');
+    const patterns = within(screen.getByRole('heading', { name: /Patterns/ }).parentElement!);
+    expect(patterns.getAllByRole('link').map((a) => a.textContent)).toEqual(['Acid walk']);
+    expect(patterns.getByRole('link', { name: 'Acid walk' })).toHaveAttribute(
+      'href',
+      '/patterns/p1yyyyyyyy'
+    );
+    expect(screen.queryByText('Link-only riff')).toBeNull();
+    expect(screen.queryByText('Unlisted riff')).toBeNull();
+  });
+
+  it('says nothing is shared when only a link-shared pattern is left (t-83)', async () => {
+    Object.assign(profileOf('moog_fan'), {
+      youtube: null,
+      instagram: null,
+      bandcamp: null,
+      showOwned: false,
+      showWishlist: false,
+    });
+    db.sounds = [];
+    db.patterns = db.patterns.filter((p) => p.visibility === 'link');
+    await renderPage('moog_fan');
+    expect(screen.queryByRole('heading', { name: /Patterns/ })).toBeNull();
+    expect(screen.getByText('Nothing shared here yet.')).toBeInTheDocument();
+  });
+
   it('never renders the account name or email, on a page that has content', async () => {
     const { container } = await renderPage('moog_fan');
     const html = container.innerHTML;
@@ -115,6 +142,7 @@ describe('/u/[username]', () => {
       showWishlist: false,
     });
     db.sounds = [];
+    db.patterns = [];
     await renderPage('moog_fan');
     expect(screen.getByText('Nothing shared here yet.')).toBeInTheDocument();
     expect(screen.queryByRole('list', { name: 'Where their music is' })).toBeNull();

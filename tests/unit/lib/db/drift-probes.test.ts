@@ -447,6 +447,8 @@ describe('shipped lib/app/db-drift.ts scaffold', () => {
       'user_pattern_userId_fkey (hand-written FK → User)',
       'sound_report_reporterId_fkey (hand-written FK → User)',
       'sound_report_resolvedById_fkey (hand-written FK → User)',
+      'pattern_report_reporterId_fkey (hand-written FK → User)',
+      'pattern_report_resolvedById_fkey (hand-written FK → User)',
     ]);
   });
 });

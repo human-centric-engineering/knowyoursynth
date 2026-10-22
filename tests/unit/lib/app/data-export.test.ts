@@ -24,6 +24,7 @@ vi.mock('@/lib/db/client', () => ({
     synthProfile: { findMany: vi.fn(async () => []) },
     ownedInstrument: { findMany: vi.fn(async () => []) },
     userPattern: { findMany: vi.fn(async () => []) },
+    patternReport: { findMany: vi.fn(async () => []) },
   },
 }));
 
@@ -155,5 +156,58 @@ describe('collectAppSubjectData, patterns (f-step-sequencer t-81)', () => {
       select: Record<string, unknown>;
     };
     expect(sounds.select).toMatchObject({ patternId: true });
+  });
+});
+
+describe('collectAppSubjectData, sharing patterns (f-step-sequencer t-83)', () => {
+  it("carries each pattern's sharing, never the source it was copied from", async () => {
+    await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+    const { select } = vi.mocked(prisma.userPattern.findMany).mock.lastCall![0] as {
+      select: Record<string, unknown>;
+    };
+    expect(select).toMatchObject({
+      visibility: true,
+      slug: true,
+      publishedAt: true,
+      unlistedAt: true,
+    });
+    // the row id of a pattern someone else shared is about them
+    expect(select).not.toHaveProperty('sourceUserPatternId');
+  });
+
+  it('names a reported pattern by its address, and never who resolved the report', async () => {
+    vi.mocked(prisma.patternReport.findMany).mockResolvedValueOnce([
+      {
+        id: 'prep1',
+        reason: 'spam',
+        note: null,
+        status: 'open',
+        resolvedAt: null,
+        createdAt: at,
+        updatedAt: at,
+        pattern: { slug: 'abcdefghjk' },
+      },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+    expect(data.patternReportsFiled).toEqual([
+      {
+        id: 'prep1',
+        reason: 'spam',
+        note: null,
+        status: 'open',
+        resolvedAt: null,
+        createdAt: at,
+        updatedAt: at,
+        patternSlug: 'abcdefghjk',
+      },
+    ]);
+    const { where, select } = vi.mocked(prisma.patternReport.findMany).mock.lastCall![0] as {
+      where: Record<string, unknown>;
+      select: Record<string, unknown>;
+    };
+    expect(where).toEqual({ reporterId: 'user-1' });
+    expect(select).not.toHaveProperty('resolvedById');
+    expect(select).not.toHaveProperty('reporterId');
   });
 });

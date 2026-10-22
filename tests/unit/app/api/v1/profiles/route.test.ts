@@ -100,6 +100,21 @@ describe('GET /api/v1/profiles/:username', () => {
             saves: 0,
           },
         ],
+        // published and not unlisted only (`f-step-sequencer` t-83); the fake's steps cannot be read, so 0
+        patterns: [
+          {
+            slug: 'p1yyyyyyyy',
+            name: 'Acid walk',
+            synthId: 'model-d',
+            synthName: 'Model D',
+            steps: 0,
+            parts: 0,
+            publishedAt: '2026-10-22T00:00:00.000Z',
+            author: 'moog_fan',
+            authorProfile: true,
+            saves: 0,
+          },
+        ],
       },
     });
     expect(res.headers.get('ETag')).toBeTruthy();
