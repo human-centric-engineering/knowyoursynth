@@ -90,6 +90,10 @@ export interface Sequencer {
   onEvent: (e: SynthEvent) => void;
   /** Where the playhead is now, or `null` while stopped (or before the first loop has been heard). */
   position: () => SeqPosition | null;
+  /** A note played on the piano, the computer keyboard or MIDI: the module puts it on the chosen step. */
+  noteIn: (n: number) => void;
+  /** The module's handler for `noteIn`. Returns the undo. */
+  onNoteIn: (f: (n: number) => void) => () => void;
 }
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 32);
@@ -357,6 +361,15 @@ export function useSequencer({
     [halt, queue]
   );
 
+  const noteTarget = useRef<((n: number) => void) | null>(null);
+  const noteIn = useCallback((n: number) => noteTarget.current?.(n), []);
+  const onNoteIn = useCallback((f: (n: number) => void) => {
+    noteTarget.current = f;
+    return () => {
+      if (noteTarget.current === f) noteTarget.current = null;
+    };
+  }, []);
+
   const position = useCallback((): SeqPosition | null => {
     if (!playingRef.current || !engine?.ctx) return null;
     const at = playhead.current.at(engine.frame, engine.ctx.sampleRate);
@@ -380,5 +393,7 @@ export function useSequencer({
     setFill,
     onEvent,
     position,
+    noteIn,
+    onNoteIn,
   };
 }

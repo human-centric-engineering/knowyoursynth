@@ -780,9 +780,12 @@ function Synth({
   // The keys down now, held or not, as presses per note (a MIDI key and a computer key can both be on one note): under
   // Hold, a note pressed while another is down joins the chord.
   const downRef = useRef(new Map<number, number>());
+  // A note played goes to the sequencer too while it is open: it puts it on the step chosen there.
+  const noteToSeq = useRef<(n: number) => void>(() => undefined);
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
       if (!engine) return;
+      noteToSeq.current(n);
       void ensureAudio();
       if (hold) {
         // A fresh press, with every key up, replaces what is held.
@@ -874,6 +877,10 @@ function Synth({
   const seqDocked = !small && seqOpen;
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
   const transportPlaying = playing || seq.playing;
+  const { noteIn: seqNoteIn } = seq;
+  useEffect(() => {
+    noteToSeq.current = seqShown ? seqNoteIn : () => undefined;
+  }, [seqShown, seqNoteIn]);
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
     seq,

@@ -165,7 +165,8 @@ latency (`baseLatency`) and the output device's (`outputLatency`). `beatAt` read
 
 ## The module
 
-The sequencer module sits under the panel on every synth page. The **Sequencer** button on the player bar opens it.
+The sequencer module sits under the panel on every synth page. The **Sequencer** button on the player bar opens it,
+and closes it again: an open toggle on the bar shows a ×.
 From `lg` up it is in the dock, between the bar and the piano, and takes the place of the Learn sound design strip
 while it is open. Below `lg` it is a docked bottom sheet at half height,
 with the panel live above it.
@@ -220,7 +221,14 @@ order. The keys redraw only when the step changes.
   chord and the chosen note's pitch, gate, velocity and nudge. It is the same height for every step. A velocity the note does not set shows the default, dimmed.
   **Add note** / **Add to chord** adds up to six notes.
 - **Encoders** (`encoder.tsx`) are cells of the readout: a name, the value in amber and a meter along the foot. They
-  are sliders. Arrows move a step, Page Up and Page Down a big step (an octave for a
+  are sliders. A double press, Enter, or a digit typed makes one a text box: Enter (or leaving it) sets the value
+  typed, kept on the cell's step and in its range, and Escape leaves it. A number is read from the text; the Note
+  cell reads a name and octave too (`parseNote`: "C#3", "Db3", "E♭4").
+- **Selects** (`select.tsx`) open a list drawn in the readout's amber, not the browser's menu. Each is a combobox
+  with an active descendant. The list opens upward, or downward where there is no room above.
+- **Notes played** on the piano, the computer keyboard or MIDI go on the chosen step while the sequencer is open. A
+  rest gets the note, and a step's first note becomes it. The page hands `noteOn` to `seq.noteIn`, and the module
+  edits the step chosen. Arrows move a step, Page Up and Page Down a big step (an octave for a
   note), and Home and End go to either end. A vertical drag turns one, with a mouse or a finger. One encoder's turn
   is one Undo: edits in one group within 1.2 s are one entry. Undo holds 100.
 - **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all,

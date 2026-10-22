@@ -799,6 +799,26 @@ describe('the Edit menu', () => {
   });
 });
 
+describe('a note played', () => {
+  it('goes on the chosen step: a rest gets it, a step’s first note becomes it, and Undo takes it back', () => {
+    open();
+    act(() => state.noteIn(64));
+    expect(labels()[0]).toBe('Step 1: E4, on');
+    fireEvent.click(key(2));
+    act(() => state.noteIn(67));
+    expect(labels()[1]).toBe('Step 2: G4, on');
+    fireEvent.click(button('Undo'));
+    expect(labels()[1]).toBe('Step 2: rest');
+  });
+
+  it('goes nowhere once the module is gone', () => {
+    const { unmount } = open();
+    const seq = state;
+    unmount();
+    expect(() => seq.noteIn(64)).not.toThrow();
+  });
+});
+
 describe('the help', () => {
   it('names each control and says what it does, on hover and on focus', () => {
     open();

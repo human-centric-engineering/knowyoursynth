@@ -258,6 +258,23 @@ describe('the sequencer on the synth page', () => {
     expect(keys.every((k) => k.getAttribute('aria-label')?.endsWith('rest'))).toBe(true);
   });
 
+  it('puts a note played on the computer keyboard on the chosen step while it is open, and only then', () => {
+    page();
+    // Closed, a key plays and changes nothing.
+    fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    fireEvent.keyUp(window, { key: 'a', code: 'KeyA' });
+    fireEvent.click(button('Sequencer'));
+    const first = () =>
+      within(sequencer())
+        .getAllByRole('button', { name: /^Step \d+:/ })[0]
+        .getAttribute('aria-label');
+    expect(first()).toBe('Step 1: C2, on');
+    // A is C3 at the keyboard's octave.
+    fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    fireEvent.keyUp(window, { key: 'a', code: 'KeyA' });
+    expect(first()).toBe('Step 1: C3, on');
+  });
+
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
     phone();
     page();

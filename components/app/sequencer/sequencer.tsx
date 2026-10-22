@@ -244,6 +244,20 @@ export function Sequencer({
   const setP = <K extends keyof Pattern>(k: K, v: Pattern[K], group?: string) =>
     seq.edit((q) => ({ ...q, [k]: v }), { group });
 
+  // A note played (the piano, the computer keyboard, MIDI) goes on the chosen step: a rest gets it, and a step's first
+  // note becomes it. Read through a ref, so the handler registered once always edits the step chosen now.
+  const putNote = useRef<(n: number) => void>(() => undefined);
+  useEffect(() => {
+    putNote.current = (n: number) =>
+      changeStep(sel, (s) =>
+        s.notes.length === 0
+          ? { ...s, on: true, notes: [{ note: n, gate: 1 }] }
+          : { ...s, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note: n } : x)) }
+      );
+  });
+  const { onNoteIn } = seq;
+  useEffect(() => onNoteIn((n) => putNote.current(n)), [onNoteIn]);
+
   const defaultNote = nearbyNote(steps, sel, p.root);
   const toggle = (i: number) =>
     changeStep(i, (s) =>
