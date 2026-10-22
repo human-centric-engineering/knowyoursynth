@@ -60,7 +60,7 @@ describe('worklet-entry', () => {
     expect(posted).toContainEqual({ type: 'note', n: 60, on: true });
   });
 
-  it("moves a pattern's loop events onto the context's clock, from the frame its first sample played at", async () => {
+  it("moves a pattern's loop events onto the context's clock, from the frame each block plays at", async () => {
     const posted: SynthEvent[] = [];
     class AudioWorkletProcessor {
       port = {
@@ -84,12 +84,14 @@ describe('worklet-entry', () => {
     proc.port.onmessage!({ data: { type: 'params', p: monoParams() } });
     const out = [new Float32Array(128), new Float32Array(128)];
     proc.process([], [out]);
+    // The context skipped a block (an underrun): its clock is 256 frames on, the synth's count only 128
+    vi.stubGlobal('currentFrame', 5256);
     proc.port.onmessage!({
       data: { type: 'pattern', loop: { notes: [[0, 60, 0.5]], beats: 1 }, bpm: 120 },
     });
     proc.process([], [out]);
-    // The pattern started at the synth's frame 128, which is the context's 5,128
-    expect(posted).toContainEqual(expect.objectContaining({ type: 'loop', index: 0, frame: 5128 }));
+    // The pattern started at the synth's frame 128, which this block plays at the context's 5,256
+    expect(posted).toContainEqual(expect.objectContaining({ type: 'loop', index: 0, frame: 5256 }));
     expect(posted).toContainEqual({ type: 'note', n: 60, on: true });
   });
 });

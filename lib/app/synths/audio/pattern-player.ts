@@ -8,7 +8,8 @@
  * - `pattern` starts from beat 0 with the first loop.
  * - `patternNext` queues the loop after this one, swapped in on the boundary sample. With nothing queued, the loop
  *   plays again, so a page that is late never leaves a gap. `loop: null` ends the pattern at the boundary instead.
- * - `patternEdit` replaces what is still to play of this loop, from the playhead on, without a restart.
+ * - `patternEdit` replaces what is still to play of this loop, from the playhead on, without a restart. A loop queued
+ *   before the edit is dropped, since it would undo the edit: the page queues a fresh one.
  * - `tempo` moves it, as it moves a riff. `stopPattern` lets go of every note it holds.
  *
  * It wraps the synth rather than living in each voice, so mono, poly and dual synths play it the same way: it sends
@@ -16,10 +17,11 @@
  * and `handle` pass straight through, which keeps riffs, the sound map and the goldens exactly as they were.
  *
  * It reports `loop` when a loop starts (so the page compiles the next) and when the tempo or an edit moves the playhead,
- * with the frame it applies from, so the page can draw the playhead from the audio clock ({@link beatAt}).
+ * with the frame it applies from, so the page can draw the playhead from the audio clock ({@link createPlayhead}).
  */
 import type { PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
+import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
 
 /** One pass through a pattern, as `compileLoop` returns it: notes in beats from the loop's start, and its length. */
 export interface PatternLoop {
@@ -49,82 +51,134 @@ export interface LoopEvent {
   frame: number;
 }
 
-/** What the player reports. `patternEnd`: a pattern told to end (`patternNext` with no loop) has played out. */
+/**
+ * What the player reports. `patternEnd`: the pattern has stopped without the page stopping it, because it was told to
+ * end (`patternNext` with no loop) and has played out, or because of a `panic` (which the engine sends on suspend).
+ */
 export type PatternEvent = LoopEvent | { type: 'patternEnd' };
 
-/** The velocity a note without one plays at, as in a riff. */
-const DEFAULT_VELOCITY = 0.85;
-
-/** A note going down (`on`, velocity `v`) or up, at beat `b` of its loop and sample `t` at the current tempo. */
-interface PatEvent {
-  b: number;
-  t: number;
-  on: boolean;
-  n: number;
-  v: number;
-}
-
-/** The beat the playhead is on at frame `now`, from the last `loop` event: within the loop, so it never runs past. */
+/** The beat the playhead is on at frame `now`, from the `loop` event in effect then: within the loop, so it never runs past. */
 export function beatAt(e: LoopEvent, now: number, sr: number): number {
   const beat = e.beat + ((now - e.frame) * e.bpm) / (60 * sr);
   return Math.min(Math.max(beat, 0), e.beats);
 }
 
-/** A loop's notes as events, in order: by time, and a key let go before one goes down at the same moment (as a riff). */
-function toEvents(loop: PatternLoop): PatEvent[] {
-  const evs: PatEvent[] = [];
-  for (const [b, n, len, v] of loop.notes) {
-    evs.push({ b, t: 0, on: true, n, v: v == null ? DEFAULT_VELOCITY : v });
-    evs.push({ b: b + len, t: 0, on: false, n, v: 0 });
-  }
-  return evs.sort(byTime);
+/** Where the playhead is: loop `index`, at `beat` of its `beats`. */
+export interface PlayheadPosition {
+  index: number;
+  beat: number;
+  beats: number;
 }
 
-function byTime(x: PatEvent, y: PatEvent): number {
-  return x.b - y.b || (x.on ? 1 : 0) - (y.on ? 1 : 0);
+/**
+ * The page's playhead. A `loop` event is posted when the audio is rendered, which is ahead of when it is heard by the
+ * output latency, so the newest event is not yet the one in effect: a new loop's start would put the playhead on beat 0
+ * while the end of the last loop is still sounding. This keeps the events it is given and reads each one only from
+ * its frame on. `at(engine.frame, sampleRate)` is the playhead now; `clear` when the pattern stops.
+ */
+export function createPlayhead(): {
+  push(e: LoopEvent): void;
+  at(now: number, sr: number): PlayheadPosition | null;
+  clear(): void;
+} {
+  const events: LoopEvent[] = [];
+  return {
+    push(e) {
+      events.push(e);
+    },
+    at(now, sr) {
+      while (events.length > 1 && events[1].frame <= now) events.shift();
+      const e = events[0];
+      return e ? { index: e.index, beat: beatAt(e, now, sr), beats: e.beats } : null;
+    },
+    clear() {
+      events.length = 0;
+    },
+  };
 }
 
-/** Whether a loop from the page can be played: a length, and notes that are numbers. */
+const isNumber = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
+
+/** A note from the page: a start at or after beat 0, a key, a length above 0, and a velocity if it has one. */
+function playableNote(x: unknown): boolean {
+  if (!Array.isArray(x)) return false;
+  const a: readonly unknown[] = x;
+  const [b, n, len, v] = a;
+  return (
+    isNumber(b) && b >= 0 && isNumber(n) && isNumber(len) && len > 0 && (v == null || isNumber(v))
+  );
+}
+
+/** Whether a loop from the page can be played: a length, and notes that can be played. */
 function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
   return (
     !!loop &&
     Number.isFinite(loop.beats) &&
     loop.beats > 0 &&
     Array.isArray(loop.notes) &&
-    loop.notes.every((x) => Array.isArray(x) && x.every((y) => y == null || Number.isFinite(y)))
+    loop.notes.every(playableNote)
   );
 }
 
 /** The synth, able to play patterns as well. */
 export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandler | null): Synth {
   /** The loop playing: its own events (`base`, played again when nothing is queued) and those still to come. */
-  let cur: { base: PatEvent[]; evs: PatEvent[]; beats: number; len: number } | null = null;
+  let cur: { base: NoteEvent[]; evs: NoteEvent[]; beats: number; len: number } | null = null;
   /** The loop after this one: events, `null` to end, `undefined` to play this one again. */
-  let next: { base: PatEvent[]; beats: number } | null | undefined;
+  let next: { base: NoteEvent[]; beats: number } | null | undefined;
+  /**
+   * What a loop before this one still owes (a slide or a tie into this one): its events from `ci` on, which fall `cb`
+   * beats before their beat in this loop. Kept as they were rather than copied in, so turning over allocates nothing.
+   */
+  let carry: NoteEvent[] | null = null;
+  let ci = 0,
+    cb = 0;
   let idx = 0, // the next event of `cur.evs` to fire
     pos = 0, // the next sample to play, from the loop's start
     index = 0, // which loop this is
     bpm = 120,
     frames = 0, // samples played since the synth was made
     announce: boolean | null = null; // a `loop` event is owed: true at a loop's start, false for a moved playhead
-  const held = new Set<number>();
-  // Reused for every note, so playing a pattern allocates nothing per note on the audio thread.
+  /** How many of the pattern's notes hold each key: two notes of one pitch overlap on a slide or a tie. */
+  const held = new Map<number, number>();
+  // Reused for every note, so a note sent to the synth makes no message object on the audio thread.
   const down = { type: 'noteOn' as const, n: 0, v: 0 };
   const up = { type: 'noteOff' as const, n: 0 };
   let mode = '';
 
   const spb = () => (60 / bpm) * sr;
-  const time = (evs: PatEvent[]) => {
+  const time = (evs: NoteEvent[]) => {
     const s = spb();
     for (const e of evs) e.t = Math.round(e.b * s);
   };
   const length = (beats: number) => Math.max(1, Math.round(beats * spb()));
+  const carrying = () => !!carry && ci < carry.length;
+  const carryTime = (s: number) => Math.round((carry![ci].b - cb) * s);
+
+  /** A key goes down, or is let go once the last note holding it ends. */
+  function press(e: NoteEvent) {
+    const k = held.get(e.n) ?? 0;
+    if (e.on) {
+      held.set(e.n, k + 1);
+      down.n = e.n;
+      down.v = e.v;
+      synth.handle(down);
+    } else if (k > 0) {
+      held.set(e.n, k - 1);
+      if (k === 1) {
+        up.n = e.n;
+        synth.handle(up);
+      }
+    }
+  }
 
   function release() {
-    for (const n of Array.from(held)) {
-      up.n = n;
-      synth.handle(up);
-    }
+    held.forEach((k, n) => {
+      if (k > 0) {
+        up.n = n;
+        synth.handle(up);
+      }
+    });
     held.clear();
   }
 
@@ -132,6 +186,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     if (!cur) return;
     cur = null;
     next = undefined;
+    carry = null;
     announce = null;
     release();
     if (!silent && onEvent) onEvent({ type: 'patternEnd' });
@@ -141,7 +196,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     stop(true);
     synth.handle({ type: 'stopPhrase' });
     if (Number.isFinite(tempo) && tempo > 0) bpm = tempo;
-    const base = toEvents(loop);
+    const base = noteEvents(loop.notes);
     time(base);
     cur = { base, evs: base, beats: loop.beats, len: length(loop.beats) };
     next = undefined;
@@ -151,21 +206,24 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     announce = true;
   }
 
-  /** What is left of this loop becomes the edited loop's events from the playhead on. */
+  /** What is left of this loop becomes the edited loop's notes that start from the playhead on. */
   function edit(loop: PatternLoop) {
     if (!cur) return;
-    const base = toEvents(loop);
+    const s = spb();
+    const base = noteEvents(loop.notes);
     time(base);
-    // A note sounding now keeps the let-go it had: dropping it would leave the note held until Stop.
-    const offs = cur.evs.slice(idx).filter((e) => !e.on && held.has(e.n));
-    cur = {
-      base,
-      evs: offs.concat(base.filter((e) => e.t >= pos)).sort(byTime),
-      beats: loop.beats,
-      len: length(loop.beats),
-    };
+    // A note sounding now keeps the let-go it had: dropping it would leave the note held until Stop. The edit's own
+    // notes come in only from the playhead on, let-goes and all, so none lets go of a note it did not start.
+    const owed = cur.evs.slice(idx).filter((e) => !e.on && Math.round(e.st * s) < pos);
+    cur.base = base;
+    cur.evs = owed.concat(base.filter((e) => Math.round(e.st * s) >= pos)).sort(byBeat);
+    cur.beats = loop.beats;
+    cur.len = length(loop.beats);
     idx = 0;
     if (pos >= cur.len) pos = cur.len;
+    // The loop queued for after this one was compiled before the edit and would undo it: dropped, so the edited loop
+    // plays again unless the page queues a fresh one. A pattern told to end still ends.
+    if (next) next = undefined;
     announce = announce ?? false;
   }
 
@@ -181,25 +239,38 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     announce = announce ?? false;
   }
 
-  /** The loop boundary: the next loop comes in, with what is still owed from this one (a note held over the end). */
+  /** The loop boundary: the next loop comes in, and what this one still owes (a note held over the end) is carried. */
   function turn() {
     const c = cur!;
     if (next === null) {
       stop(false);
       return;
     }
-    const nx = next ?? { base: c.base, beats: c.beats };
+    const owes = idx < c.evs.length;
+    if (owes && carrying()) {
+      // Still owed from the loop before as well (a note longer than a loop): both, on this loop's beats. Rare, so it may
+      // allocate.
+      const older = carry!.slice(ci).map((e) => ({ ...e, b: e.b - cb, st: e.st - cb }));
+      carry = older.concat(c.evs.slice(idx)).sort(byBeat);
+      ci = 0;
+      cb = c.beats;
+    } else if (owes) {
+      carry = c.evs;
+      ci = idx;
+      cb = c.beats;
+    } else if (carrying()) {
+      cb += c.beats;
+    } else {
+      carry = null;
+    }
+    if (next) {
+      c.base = next.base;
+      c.beats = next.beats;
+    }
     next = undefined;
-    // An event this loop placed past its end (a slide or a tie into the next bar) still happens, that far into the next.
-    const carried = c.evs.slice(idx).map((e) => ({ ...e, b: e.b - c.beats, t: e.t - c.len }));
-    time(nx.base);
-    cur = {
-      base: nx.base,
-      evs: carried.length ? carried.concat(nx.base).sort(byTime) : nx.base,
-      beats: nx.beats,
-      len: length(nx.beats),
-    };
-    time(cur.evs);
+    time(c.base);
+    c.evs = c.base;
+    c.len = length(c.beats);
     idx = 0;
     pos = 0;
     index++;
@@ -223,18 +294,20 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     }
     announce = null;
     const evs = cur.evs;
-    while (idx < evs.length && evs[idx].t <= pos && evs[idx].t < cur.len) {
-      const e = evs[idx++];
-      if (e.on) {
-        held.add(e.n);
-        down.n = e.n;
-        down.v = e.v;
-        synth.handle(down);
-      } else if (held.has(e.n)) {
-        held.delete(e.n);
-        up.n = e.n;
-        synth.handle(up);
-      }
+    const s = spb();
+    for (;;) {
+      const le = idx < evs.length && evs[idx].t < cur.len ? evs[idx] : null;
+      const lt = le ? le.t : Infinity;
+      const ce = carrying() ? carry![ci] : null;
+      const ct = ce ? carryTime(s) : Infinity;
+      // At the same sample a let-go goes first, and then what the loop before owes.
+      if (ce && ct <= pos && (ct < lt || (ct === lt && (!ce.on || le!.on)))) {
+        ci++;
+        press(ce);
+      } else if (le && lt <= pos) {
+        idx++;
+        press(le);
+      } else break;
     }
   }
 
@@ -245,7 +318,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         return;
       case 'patternNext':
         if (cur && (m.loop === null || playable(m.loop)))
-          next = m.loop && { base: toEvents(m.loop), beats: m.loop.beats };
+          next = m.loop && { base: noteEvents(m.loop.notes), beats: m.loop.beats };
         return;
       case 'patternEdit':
         if (playable(m.loop)) edit(m.loop);
@@ -257,8 +330,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         tempo(m.bpm);
         break;
       case 'phrase':
-      case 'panic':
         stop(true);
+        break;
+      case 'panic':
+        // Sent by the engine too (on suspend), so the page may not know: it is told the pattern has stopped.
+        stop(false);
         break;
       case 'params': {
         // A synth changing between mono, poly and dual drops what its voices held: let go of the pattern's notes first.
@@ -287,8 +363,10 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         frames += n - i;
         return;
       }
-      // Up to the next note or the boundary, whichever comes first.
-      const due = idx < cur.evs.length ? Math.min(cur.evs[idx].t, cur.len) : cur.len;
+      // Up to the next note, the next owed from the loop before, or the boundary, whichever comes first.
+      let due = cur.len;
+      if (idx < cur.evs.length && cur.evs[idx].t < due) due = cur.evs[idx].t;
+      if (carrying()) due = Math.min(due, carryTime(spb()));
       const k = Math.min(Math.max(1, due - pos), n - i);
       if (i === 0 && k === n) synth.process(out, n, outR);
       else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));

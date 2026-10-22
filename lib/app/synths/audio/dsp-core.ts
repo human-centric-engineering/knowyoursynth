@@ -25,6 +25,7 @@ import type {
 } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
 import { createMoog, MOOG_SIGNALS, MOOG_DESTS } from '@/lib/app/synths/audio/moog-core';
+import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
   type PatternEvent,
@@ -950,14 +951,9 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
   function setPhrase(ph: Phrase | null) {
     stopPhrase(true);
     if (!ph || !ph.steps || !ph.steps.length) return;
-    const evs: VoicePhraseEvent[] = [];
+    const evs: VoicePhraseEvent[] = noteEvents(ph.steps);
     let end = 0;
-    for (const [b, n, len, v] of ph.steps) {
-      evs.push({ b, on: true, n, v: v == null ? 0.85 : v });
-      evs.push({ b: b + len, on: false, n });
-      end = Math.max(end, b + len);
-    }
-    evs.sort((x, y) => x.b - y.b || (x.on ? 1 : 0) - (y.on ? 1 : 0));
+    for (const [b, , len] of ph.steps) end = Math.max(end, b + len);
     const beats = Math.max(1, Math.ceil(end - 0.001));
     phrase = { evs, beats, len: 0, loop: ph.loop !== false, transpose: ph.transpose || 0 };
     phraseTiming(ph.bpm);
@@ -2316,7 +2312,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const fx = createFx(sr);
   const chorus = createChorus(sr);
   const keys: number[] = []; // keys held down (the phrase player counts as keys)
-  let vel = 0.85;
+  let vel = DEFAULT_VELOCITY;
   // arpeggiator
   // (the prototype also declared an `arpDir` here that nothing reads; TypeScript refuses an unused local, so it is left out)
   let arpNotes: number[] = [],
@@ -2652,7 +2648,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     const i = keys.indexOf(n);
     if (i >= 0) keys.splice(i, 1);
     keys.push(n);
-    vel = v == null ? 0.85 : v;
+    vel = v == null ? DEFAULT_VELOCITY : v;
     emit({ type: 'note', n, on: true });
     if (dualOn) {
       dualAssign(n);
@@ -2703,13 +2699,12 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     stopPhrase(true);
     if (!ph || !ph.steps || !ph.steps.length) return;
     const spb = (60 / ph.bpm) * sr;
-    const evs: SynthPhraseEvent[] = [];
+    const notes = noteEvents(ph.steps);
+    for (const e of notes) e.t = Math.round(e.b * spb);
+    const evs: SynthPhraseEvent[] = notes;
     let end = 0;
-    for (const [b, n, len, v] of ph.steps) {
-      evs.push({ t: Math.round(b * spb), on: true, n, v: v == null ? 0.85 : v });
-      evs.push({ t: Math.round((b + len) * spb), on: false, n });
-      end = Math.max(end, b + len);
-    }
+    for (const [b, , len] of ph.steps) end = Math.max(end, b + len);
+    // In samples, notes a beat order keeps apart can land together: the let-go goes first there too.
     evs.sort((x, y) => x.t - y.t || (x.on ? 1 : 0) - (y.on ? 1 : 0));
     const beats = Math.max(1, Math.ceil(end - 0.001));
     phrase = {

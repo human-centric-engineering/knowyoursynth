@@ -149,14 +149,20 @@ describe('Engine', () => {
     // The first buffer plays at 0.5 s: frame 24,000 of the context
     sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 });
     engine.send({ type: 'pattern', loop: { notes: [[0, 60, 0.5]], beats: 1 }, bpm: 120 });
-    sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 + 1024 / 48000 });
+    // The browser skipped a buffer (a long task on the main thread): this one plays at frame 26,048, not 25,024
+    sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 + 2048 / 48000 });
     expect(events).toContainEqual(
-      expect.objectContaining({ type: 'loop', index: 0, frame: 25024 })
+      expect.objectContaining({ type: 'loop', index: 0, frame: 26048 })
     );
-    // The frame heard now is the context's clock less its output latency
-    const ctx = Ctx.last! as unknown as { currentTime: number; outputLatency: number };
+    // The frame heard now is the context's clock less its own latency and the output device's after it
+    const ctx = Ctx.last! as unknown as {
+      currentTime: number;
+      outputLatency: number;
+      baseLatency: number;
+    };
     ctx.currentTime = 1;
-    ctx.outputLatency = 0.25;
+    ctx.baseLatency = 0.05;
+    ctx.outputLatency = 0.2;
     expect(engine.frame).toBe(36000);
   });
 

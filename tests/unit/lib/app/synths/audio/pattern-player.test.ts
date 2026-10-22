@@ -13,6 +13,7 @@ import { describe, it, expect } from 'vitest';
 import { type Synth, type SynthEvent, type SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import {
   beatAt,
+  createPlayhead,
   withPatterns,
   type LoopEvent,
   type PatternLoop,
@@ -163,6 +164,75 @@ describe('playing loops', () => {
     ]);
   });
 
+  it('ties a note into the next of the same pitch, letting go only when the last one ends', () => {
+    // A slide into the same note: the first reaches past the second's start
+    const { notes } = play(2000, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop(
+            [
+              [0, 60, 1.25],
+              [1, 60, 0.5],
+            ],
+            2
+          ),
+          bpm: BPM,
+        },
+      ],
+    ]);
+    expect(notes).toEqual([
+      [0, true, 60],
+      [1000, true, 60],
+      [1500, false, 60],
+    ]);
+  });
+
+  it("ties a note held over the boundary into the next loop's first note of the same pitch", () => {
+    const { notes } = play(2900, [
+      [
+        0,
+        {
+          type: 'pattern',
+          loop: loop([
+            [0, 60, 0.5],
+            [0.75, 60, 0.5],
+          ]),
+          bpm: BPM,
+        },
+      ],
+    ]);
+    // The note from 750 ends at 1250, inside the next loop's first note (1000 to 1500): let go at 1500
+    expect(notes).toEqual([
+      [0, true, 60],
+      [500, false, 60],
+      [750, true, 60],
+      [1000, true, 60],
+      [1500, false, 60],
+      [1750, true, 60],
+      [2000, true, 60],
+      [2500, false, 60],
+      [2750, true, 60],
+    ]);
+  });
+
+  it('lets go of a note longer than a loop where it ends, however many loops on', () => {
+    const { notes } = play(3500, [
+      [0, { type: 'pattern', loop: loop([[0.5, 60, 2]]), bpm: BPM }],
+      [100, { type: 'patternNext', loop: loop([[0.5, 62, 1]]) }],
+      [1100, { type: 'patternNext', loop: loop([]) }],
+      [2100, { type: 'patternNext', loop: null }],
+    ]);
+    // 60 from 500 to 2500, 62 from 1500 to 2500: both still owed when loop 2 starts
+    expect(notes).toEqual([
+      [500, true, 60],
+      [1500, true, 62],
+      [2500, false, 60],
+      [2500, false, 62],
+    ]);
+  });
+
   it('ends at the boundary when told to, letting go of everything, and says so', () => {
     const { notes, events } = play(3000, [
       [0, { type: 'pattern', loop: loop([[0.5, 60, 1]]), bpm: BPM }],
@@ -243,6 +313,54 @@ describe('editing while it plays', () => {
     ]);
   });
 
+  it('does not let a note the edit brings in let go of one sounding now', () => {
+    const { notes } = play(1900, [
+      [0, { type: 'pattern', loop: loop([[0, 60, 1.5]], 2), bpm: BPM }],
+      // In at 384. The edit's first note started before the playhead, so neither it nor its let-go at 500 comes in
+      [
+        384,
+        {
+          type: 'patternEdit',
+          loop: loop(
+            [
+              [0, 60, 0.5],
+              [0.75, 60, 1],
+            ],
+            2
+          ),
+        },
+      ],
+    ]);
+    // The sounding note's let-go (1500) falls inside the edit's note (750 to 1750): let go at 1750
+    expect(notes).toEqual([
+      [0, true, 60],
+      [750, true, 60],
+      [1750, false, 60],
+    ]);
+  });
+
+  it('drops a loop queued before the edit, which would undo it, and plays the edit again', () => {
+    const { notes } = play(2000, [
+      [0, { type: 'pattern', loop: loop([[0.5, 60, 0.25]]), bpm: BPM }],
+      [100, { type: 'patternNext', loop: loop([[0.5, 60, 0.25]]) }],
+      [256, { type: 'patternEdit', loop: loop([[0.5, 64, 0.25]]) }],
+    ]);
+    expect(notes.filter(([, on]) => on).map(([at, , n]) => [at, n])).toEqual([
+      [500, 64],
+      [1500, 64],
+    ]);
+  });
+
+  it('still ends after an edit when told to end before it', () => {
+    const { notes, events } = play(2000, [
+      [0, { type: 'pattern', loop: loop([[0.5, 60, 0.25]]), bpm: BPM }],
+      [100, { type: 'patternNext', loop: null }],
+      [256, { type: 'patternEdit', loop: loop([[0.5, 64, 0.25]]) }],
+    ]);
+    expect(notes.filter(([, on]) => on).map(([at, , n]) => [at, n])).toEqual([[500, 64]]);
+    expect(events.filter((e) => e.type === 'patternEnd')).toHaveLength(1);
+  });
+
   it('shortened past the playhead, turns over at once', () => {
     const { loops } = play(1500, [
       [0, { type: 'pattern', loop: loop([[0, 60, 0.25]], 2), bpm: BPM }],
@@ -256,6 +374,13 @@ describe('editing while it plays', () => {
       { notes: [[0, 60, 0.5]], beats: 0 },
       { notes: [[0, Number.NaN, 0.5]], beats: 1 },
       { notes: 'x', beats: 1 },
+      // a note missing its key or length, or lasting no time, would play nonsense or never let go
+      { notes: [[60]], beats: 1 },
+      { notes: [[0, null, 1]], beats: 1 },
+      { notes: [[0, 60, 0]], beats: 1 },
+      { notes: [[0, 60, -0.5]], beats: 1 },
+      { notes: [[-1, 60, 0.5]], beats: 1 },
+      { notes: [[0, 60, 0.5, 'loud']], beats: 1 },
     ] as unknown as PatternLoop[];
     const { notes, other } = play(1000, [
       ...bad.map((l): Timed => [0, { type: 'pattern', loop: l, bpm: BPM }]),
@@ -333,6 +458,9 @@ describe('stopping, and sharing the synth with riffs', () => {
     ]);
     expect(stillHeld(panic.notes)).toEqual([]);
     expect(panic.other.map((m) => m.type)).toEqual(['stopPhrase', 'panic']);
+    // The engine sends a panic on suspend, so the page may not know: it is told. A riff is the page's own act
+    expect(panic.events.filter((e) => e.type === 'patternEnd')).toHaveLength(1);
+    expect(riff.events.some((e) => e.type === 'patternEnd')).toBe(false);
   });
 
   it('lets go of its notes before the synth changes between mono, poly and dual', () => {
@@ -378,6 +506,34 @@ describe('beatAt', () => {
     expect(beatAt(at, 72000, 48000)).toBe(2);
     expect(beatAt(at, 0, 48000)).toBe(0);
     expect(beatAt(at, 480000, 48000)).toBe(4);
+  });
+});
+
+describe('createPlayhead', () => {
+  const ev = (index: number, frame: number, beat = 0): LoopEvent => ({
+    type: 'loop',
+    index,
+    start: beat === 0,
+    beat,
+    beats: 1,
+    bpm: 60,
+    frame,
+  });
+
+  it('reads each event only from its frame on, since events arrive before they are heard', () => {
+    const playhead = createPlayhead();
+    expect(playhead.at(0, SR)).toBeNull();
+    playhead.push(ev(0, 0));
+    playhead.push(ev(1, 1000));
+    // Loop 1's start has arrived but is not heard yet: still the end of loop 0
+    expect(playhead.at(900, SR)).toEqual({ index: 0, beat: 0.9, beats: 1 });
+    expect(playhead.at(1100, SR)).toEqual({ index: 1, beat: 0.1, beats: 1 });
+    // A tempo or edit event that moved the playhead, still to be heard
+    playhead.push(ev(1, 1500, 0.25));
+    expect(playhead.at(1400, SR)).toEqual({ index: 1, beat: 0.4, beats: 1 });
+    expect(playhead.at(1600, SR)).toEqual({ index: 1, beat: 0.35, beats: 1 });
+    playhead.clear();
+    expect(playhead.at(1700, SR)).toBeNull();
   });
 });
 
