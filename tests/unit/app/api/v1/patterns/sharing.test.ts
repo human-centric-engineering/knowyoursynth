@@ -50,6 +50,8 @@ import { GET as readShared } from '@/app/api/v1/public/patterns/[slug]/route';
 import { GET as explore } from '@/app/api/v1/public/patterns/route';
 import { POST as report } from '@/app/api/v1/public/patterns/[slug]/report/route';
 import { POST as moderate } from '@/app/api/v1/admin/patterns/[id]/route';
+import { GET as queue } from '@/app/api/v1/admin/patterns/route';
+import { publishedPatternAddresses } from '@/lib/app/patterns/public';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { PATTERN_PUBLISH_DAILY_CAP } from '@/lib/app/patterns/sharing';
 import { createMockAuthSession } from '@/tests/helpers/auth';
@@ -296,6 +298,8 @@ const listed = async () =>
   (await json(await explore(request('GET', '/api/v1/public/patterns')))).data as Row[];
 const reportIt = (slug: string, body: unknown = { reason: 'spam' }) =>
   report(request('POST', `/api/v1/public/patterns/${slug}/report`, body), slugCtx(slug));
+const queued = async (view: string) =>
+  (await json(await queue(request('GET', `/api/v1/admin/patterns?view=${view}`)))).data as Row[];
 const act = (id: string, action: string) =>
   moderate(request('POST', `/api/v1/admin/patterns/${id}`, { action }), ctx(id));
 
@@ -568,5 +572,118 @@ describe('reports and unlisting', () => {
     const theirs = await theirPublished();
     expect((await act(theirs.id, 'unlist')).status).toBe(403);
     expect(table.rows.find((r) => r.id === theirs.id)!.unlistedAt).toBeNull();
+  });
+});
+
+describe('the moderation queue', () => {
+  beforeEach(() => {
+    // the queue's reads: reports joined to their pattern's unlistedAt, and each pattern with its reports
+    reports.client.findMany.mockImplementation(async ({ where }: { where: Row }) =>
+      reports.rows
+        .filter((r) => matches(r, where))
+        .filter((r) => {
+          const on = (where.pattern as { unlistedAt?: null } | undefined)?.unlistedAt;
+          return (
+            on === undefined || table.rows.find((p) => p.id === r.patternId)?.unlistedAt === null
+          );
+        })
+        .map((r) => ({ ...r }))
+    );
+    table.client.findMany.mockImplementation(
+      async ({ where, select }: { where?: Row; select?: Row } = {}) =>
+        table.rows
+          .filter((r) => matches(r, where))
+          .map((r) => ({
+            ...r,
+            _count: { copies: 0 },
+            ...(select?.reports
+              ? {
+                  reports: reports.rows
+                    .filter(
+                      (x) =>
+                        x.patternId === r.id &&
+                        fieldMatches(
+                          x.status,
+                          (select.reports as { where: { status: unknown } }).where.status
+                        )
+                    )
+                    .map(({ reason, note, status, createdAt }) => ({
+                      reason,
+                      note,
+                      status,
+                      createdAt,
+                    })),
+                }
+              : {}),
+          }))
+    );
+  });
+
+  it('lists reported patterns with their open reports and owner, never the reporter, and unlisted ones apart', async () => {
+    const theirs = await theirPublished();
+    await reportIt(theirs.slug, { reason: 'offensive', note: 'Rude' });
+    signIn('admin-1', 'ADMIN');
+    const reported = await queued('reported');
+    expect(reported).toEqual([
+      expect.objectContaining({
+        id: theirs.id,
+        name: 'Their riff',
+        synthName: 'Model D',
+        owner: 'patchwork',
+        unlistedAt: null,
+        reports: [expect.objectContaining({ reason: 'offensive', note: 'Rude', status: 'open' })],
+      }),
+    ]);
+    expect(JSON.stringify(reported)).not.toContain('user-1');
+    expect(await queued('unlisted')).toEqual([]);
+
+    await act(theirs.id, 'unlist');
+    expect(await queued('reported')).toEqual([]);
+    expect(await queued('unlisted')).toEqual([
+      expect.objectContaining({
+        id: theirs.id,
+        reports: [expect.objectContaining({ status: 'actioned' })],
+      }),
+    ]);
+  });
+
+  it('dismisses open reports and leaves the pattern up; with none open it is a 409', async () => {
+    const theirs = await theirPublished();
+    await reportIt(theirs.slug);
+    signIn('admin-1', 'ADMIN');
+    expect((await act(theirs.id, 'dismiss')).status).toBe(200);
+    expect(reports.rows[0]).toMatchObject({ status: 'dismissed', resolvedById: 'admin-1' });
+    expect((await act(theirs.id, 'dismiss')).status).toBe(409);
+    expect((await act(theirs.id, 'restore')).status).toBe(409);
+    expect((await act('cmnosuchpattern', 'unlist')).status).toBe(404);
+    signIn('user-1');
+    expect((await shared(theirs.slug)).status).toBe(200);
+  });
+
+  it('refuses the queue to anyone but an admin', async () => {
+    expect((await queue(request('GET', '/api/v1/admin/patterns'))).status).toBe(403);
+  });
+});
+
+describe('the sitemap read and an unreadable pattern', () => {
+  it('gives each published pattern the synth its page opens on, never a link share or an unlisted one', async () => {
+    const theirs = await theirPublished();
+    table.rows.find((r) => r.id === theirs.id)!.synthId = 'gone-synth';
+    const link = await save();
+    await patch(String(link.id), { visibility: 'link' });
+    expect(await publishedPatternAddresses()).toEqual([{ synthId: 'model-d', slug: theirs.slug }]);
+    table.rows.find((r) => r.id === theirs.id)!.unlistedAt = new Date();
+    expect(await publishedPatternAddresses()).toEqual([]);
+  });
+
+  it('serves a pattern stored in a shape it cannot read with no steps and the reason, and refuses to publish it', async () => {
+    const p = await save();
+    await patch(String(p.id), { visibility: 'link' });
+    Object.assign(table.rows[0], { version: 99 });
+    const body = (await json(await shared(String(table.rows[0].slug)))).data!;
+    expect(body).toMatchObject({ pattern: null, steps: 0 });
+    expect(String((body.problems as string[])[0])).toMatch(/version 99/);
+    const res = await publishIt(String(p.id));
+    expect((await json(res)).error!.code).toBe('NOT_PLAYABLE');
   });
 });
