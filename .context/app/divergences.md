@@ -225,10 +225,12 @@ the same PR**, and each row names what deletes it.
   (`f-profiles` r2), `lib/app/sounds/reports.ts` and `lib/app/sounds/sharing.ts` (`f-sharing` h1
   and h4), and the `UPDATE` in `lib/app/sounds/store.ts` that removes a sound's lesson (`f-tutor`
   t-55, under a `FORK` comment). The first four were added without a row here; t-55 records them.
+  The `FOR KEY SHARE` lock in `lib/app/patterns/store.ts` (`f-step-sequencer` t-81) holds a pattern
+  while a sound is pointed at it.
 - **Why:** the guard fails on any raw-SQL call in `lib/**` or `app/**` it does not list, and the
-  list has no fork seam. Each site touches only system models (`user`, `user_sound`, `synth`), keyed
+  list has no fork seam. Each site touches only system models (`user`, `user_sound`, `user_pattern`, `synth`), keyed
   on bound parameters, so none needs the tenancy policies the guard is watching for.
-- **On conflict:** take theirs, and re-add our five entries in path order (the test checks the
+- **On conflict:** take theirs, and re-add our six entries in path order (the test checks the
   order).
 - **Upstream:** working as designed upstream: the guard asks a fork to admit its own sites.
 - **Delete when:** a fork seam for the allowlist exists, or the fork has no raw SQL.

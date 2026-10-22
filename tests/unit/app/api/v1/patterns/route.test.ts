@@ -399,6 +399,13 @@ describe("a sound's default pattern", () => {
     expect(set.status).toBe(200);
     expect((await json(set)).data!.patternId).toBe(patternId);
     expect(sounds.rows[0].patternId).toBe(patternId);
+    // The pattern's row is locked before it is checked, so a delete arriving meanwhile waits rather than reaching the FK.
+    const raw = mockPrisma.$queryRaw as ReturnType<typeof vi.fn>;
+    const lock = raw.mock.calls.find(([sql]) => String(sql).includes('FROM user_pattern'));
+    expect((lock?.[0] as string[]).join('?')).toMatch(
+      /WHERE id = \? AND "userId" = \? FOR KEY SHARE$/
+    );
+    expect(lock?.slice(1)).toEqual([patternId, 'user-1']);
 
     const cleared = await setDefault(soundId, null);
     expect((await json(cleared)).data!.patternId).toBeNull();

@@ -136,15 +136,17 @@ export async function deleteUserPattern(userId: string, id: string): Promise<voi
 }
 
 /**
- * That `patternId` is one of the caller's own patterns, read with `db` (a transaction's client, or the default): a 400
- * on `patternId` otherwise, the same for another user's pattern as for one that does not exist.
+ * That `patternId` is one of the caller's own patterns, read in the caller's transaction: a 400 on `patternId`
+ * otherwise, the same for another user's pattern as for one that does not exist. The row is locked first (`FOR KEY
+ * SHARE`), so a delete arriving meanwhile waits for the transaction rather than leaving the FK to refuse it as a 500.
  */
 export async function assertOwnPattern(
-  db: Pick<Prisma.TransactionClient, 'userPattern'>,
+  tx: Pick<Prisma.TransactionClient, 'userPattern' | '$queryRaw'>,
   userId: string,
   patternId: string
 ): Promise<void> {
-  const row = await db.userPattern.findFirst({
+  await tx.$queryRaw`SELECT id FROM user_pattern WHERE id = ${patternId} AND "userId" = ${userId} FOR KEY SHARE`;
+  const row = await tx.userPattern.findFirst({
     where: { id: patternId, userId },
     select: { id: true },
   });

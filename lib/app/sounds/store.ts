@@ -436,7 +436,7 @@ export async function updateUserSound(
         data.definitionVersion = def.version;
       }
 
-      // The pattern it opens the sequencer on: one of the caller's own, read in this transaction, so a pattern deleted
+      // The pattern it opens the sequencer on: one of the caller's own, locked in this transaction, so a pattern deleted
       // meanwhile is refused rather than written (the FK would refuse it too, as a 500).
       if (input.patternId !== undefined) {
         if (input.patternId !== null) await assertOwnPattern(tx, userId, input.patternId);
