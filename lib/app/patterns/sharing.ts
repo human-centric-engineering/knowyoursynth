@@ -119,10 +119,11 @@ export function assertPublishableName(name: string): void {
  */
 export async function assertPatternChanged(
   pattern: Pattern,
-  sourceUserPatternId: string | null
+  sourceUserPatternId: string | null,
+  db: Prisma.TransactionClient = prisma
 ): Promise<void> {
   if (!sourceUserPatternId) return;
-  const source = await prisma.userPattern.findUnique({
+  const source = await db.userPattern.findUnique({
     where: { id: sourceUserPatternId },
     select: { name: true, version: true, pattern: true },
   });
@@ -195,7 +196,7 @@ export async function publishUserPattern(
           'This pattern was saved in a shape the sequencer no longer reads. Open it and save it again before publishing.'
         );
       assertPublishableName(row.name);
-      await assertPatternChanged(pattern, row.sourceUserPatternId);
+      await assertPatternChanged(pattern, row.sourceUserPatternId, tx);
 
       if (!row.publishedAt) {
         const recent = profile.recentPatternPublishes.filter(

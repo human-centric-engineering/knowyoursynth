@@ -9,7 +9,8 @@
  * - Play it on moves to the same pattern on another synth;
  * - signed in on someone else's, Save a copy sends the steps as they are with the shared pattern as its source, and the
  *   sequencer then holds the copy as theirs; while it holds the shared one, the sequencer's own Save gives way to it;
- * - on the visitor's own, no Save a copy and no Report.
+ * - on the visitor's own, no Save a copy and no Report, and the sequencer's own Save stays;
+ * - one of the visitor's sounds that plays a pattern by default, open from their last panel, does not replace it.
  *
  * The page, the panel and the sequencer are real; the router, the audio engine, the session and the API are fakes.
  *
@@ -24,6 +25,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { PublicPattern, UserPatternDetail } from '@/lib/app/patterns/data';
+import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { tallScreen } from '@/tests/helpers/synth-side';
 
@@ -287,9 +289,66 @@ describe('signed in', () => {
     );
     expect(within(strip()).queryByRole('button', { name: 'Save a copy' })).toBeNull();
     expect(within(strip()).queryByRole('button', { name: 'Report' })).toBeNull();
+    // it is theirs, so the sequencer's own Save stays, and nothing points at a Save a copy that is not there
+    expect(within(sequencer()).getByRole('button', { name: 'Save to My patterns' })).toBeTruthy();
+    expect(within(sequencer()).queryByText(/Save a copy/)).toBeNull();
     await act(async () => {
       fireEvent.click(within(strip()).getByRole('button', { name: 'Open it to edit' }));
     });
     expect(within(sequencer()).getByRole('button', { name: 'Save Acid walk' })).toBeTruthy();
+  });
+
+  it('keeps the pattern when their last panel is a sound of theirs that plays another by default', async () => {
+    auth.signedIn = true;
+    const NIGHT_BASS: UserSoundDetail = {
+      id: 'cmmine1',
+      synthId: 'model-d',
+      name: 'Night bass',
+      notes: null,
+      definitionVersion: def.version,
+      source: null,
+      basedOn: null,
+      fromTutor: false,
+      lesson: null,
+      visibility: 'private',
+      slug: null,
+      publishedAt: null,
+      tags: [],
+      unlisted: false,
+      patternId: 'cmpat9',
+      playable: true,
+      createdAt: '2026-10-15T10:00:00.000Z',
+      updatedAt: '2026-10-15T10:00:00.000Z',
+      panel: { values: { ...def.init, 'filter.cutoff': 4 }, cables: [] },
+      problems: [],
+      fitted: null,
+    };
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/sounds') return [NIGHT_BASS];
+      if (path === '/api/v1/sounds/cmmine1') return NIGHT_BASS;
+      if (path === '/api/v1/patterns') return [];
+      if (path === '/api/v1/patterns/cmpat9')
+        return detailOf({ id: 'cmpat9', name: 'Rolling bass' });
+      throw new Error(`unexpected GET ${path}`);
+    });
+    window.localStorage.setItem(
+      'kys.session.model-d',
+      JSON.stringify({
+        presetId: null,
+        step: null,
+        soundId: 'cmmine1',
+        values: { 'filter.cutoff': 4 },
+        cables: [],
+      })
+    );
+    page();
+    // the sound is open as theirs once the list is read
+    await waitFor(() =>
+      expect(screen.getByText('Loaded:').nextElementSibling?.textContent).toBe('Night bass')
+    );
+    await act(async () => undefined);
+    expect(api.get).not.toHaveBeenCalledWith('/api/v1/patterns/cmpat9');
+    expect(within(sequencer()).getByText('Acid walk')).toBeTruthy();
+    expect(within(sequencer()).queryByText('Rolling bass')).toBeNull();
   });
 });

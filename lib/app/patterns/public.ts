@@ -23,7 +23,7 @@ import type {
   PublicPattern,
   PublishedPatternCard,
 } from '@/lib/app/patterns/data';
-import { PATTERN_VERSION, PatternSchema } from '@/lib/app/sequencer/pattern';
+import { patternOf } from '@/lib/app/patterns/store';
 
 /** What a published pattern's every read needs: published, with an address, and not unlisted. */
 const PUBLISHED = {
@@ -58,14 +58,7 @@ export async function getSharedPattern(slug: string): Promise<PublicPattern | nu
   const published = row.visibility === 'published';
   const named = owner !== undefined && (published || owner.public);
   // read as the owner's read reads it; not logged, so anyone holding the address cannot fill the error log
-  const pattern = readablePattern(row);
-  const problems = pattern
-    ? []
-    : row.version !== PATTERN_VERSION
-      ? [`Saved as pattern version ${row.version}, which the sequencer no longer reads`]
-      : (PatternSchema.safeParse(row.pattern)
-          .error?.issues.slice(0, 5)
-          .map((i) => i.message) ?? []);
+  const { pattern, problems } = patternOf(row, false);
 
   return {
     slug,

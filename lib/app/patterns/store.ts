@@ -50,7 +50,7 @@ const toJson = (value: Pattern): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 /** The stored pattern as the sequencer can read it now, or why not. */
-function patternOf(
+export function patternOf(
   row: UserPattern,
   log: boolean
 ): Pick<UserPatternDetail, 'pattern' | 'problems'> {
@@ -162,7 +162,9 @@ export async function createUserPattern(
       name,
       pattern: toJson(pattern),
       version: pattern.version,
-      synthId: input.synthId ?? source?.synthId ?? null,
+      // a copy keeps the synth its source was made on while the app still knows it
+      synthId:
+        input.synthId ?? (source?.synthId && getSynthDef(source.synthId) ? source.synthId : null),
       sourceUserPatternId: source && source.userId !== userId ? source.id : null,
     },
   });
@@ -198,7 +200,7 @@ export async function updateUserPattern(
         data.name = input.name;
       }
       if (input.pattern !== undefined) {
-        if (staysPublished) await assertPatternChanged(input.pattern, row.sourceUserPatternId);
+        if (staysPublished) await assertPatternChanged(input.pattern, row.sourceUserPatternId, tx);
         data.pattern = toJson(input.pattern);
         data.version = input.pattern.version;
       }

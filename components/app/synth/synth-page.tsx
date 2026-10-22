@@ -951,6 +951,8 @@ function Synth({
   useEffect(() => {
     const sameSound = patternFor.current === openSoundId;
     patternFor.current = openSoundId;
+    // On a shared pattern's page the sequencer is there for that pattern, as the riff above is not passed to it.
+    if (sharedPattern) return undefined;
     if (!soundPatternId || (sameSound && seqLoadedId.current === soundPatternId)) return undefined;
     let live = true;
     openPattern(soundPatternId)
@@ -961,7 +963,7 @@ function Synth({
     return () => {
       live = false;
     };
-  }, [openSoundId, soundPatternId, openPattern, loadPattern]);
+  }, [openSoundId, soundPatternId, openPattern, loadPattern, sharedPattern]);
   // ── a shared pattern (`f-step-sequencer` t-83) ──
   // It opens in the sequencer, and the sequencer opens with it. What the sequencer holds is the shared pattern while
   // `loaded` is the object it was loaded as: an edit keeps it, anything opened over it does not.
@@ -1027,7 +1029,8 @@ function Synth({
 
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
-    sharedHeld: sharedPatternHeld,
+    // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
+    sharedHeld: sharedPatternHeld && patternViewer !== 'owner',
     signInHref,
     synthId,
     synths,

@@ -13,6 +13,7 @@
  *   unchanged copy and the daily cap, each with its code; a published pattern's rename stays word-checked;
  * - the public read serves link and published patterns, one 404 for everything else, never the owner's ids;
  * - a copy records its source and is credited live: only while the source is published, and not once it is deleted;
+ * - a copy keeps its source's synth only while the app knows it;
  * - a report is one per person per pattern, never on your own; an unlist takes the pattern out of every public read
  *   (its page, Explore, the credit, the copy route, the report route) until a restore brings it back as it was.
  */
@@ -455,6 +456,15 @@ describe('copies and their credit', () => {
     expect(
       (await json(await read(request('GET', '/x'), ctx(String(copy.id))))).data!.basedOn
     ).toBeNull();
+  });
+
+  it('keeps the synth its source was made on only while the app knows it', async () => {
+    const theirs = await theirPublished();
+    const kept = await save({ source: { shared: theirs.slug } });
+    expect(kept.synthId).toBe('model-d');
+    table.rows.find((r) => r.id === theirs.id)!.synthId = 'gone-synth';
+    const copy = await save({ source: { shared: theirs.slug } });
+    expect(copy.synthId).toBeNull();
   });
 
   it('refuses publishing an unchanged copy, and allows it once changed', async () => {
