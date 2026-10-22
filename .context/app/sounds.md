@@ -46,9 +46,10 @@ the same as one that does not exist, never a 403.
   sound.
 - `GET /api/v1/sounds/:id`: the sound with its panel. One that is not `playable` has no `panel`,
   but carries `fitted`: as much of it as fits the synth now, which the page opens.
-- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, lesson?, visibility? }`. `notes: null`
+- `PATCH /api/v1/sounds/:id`: `{ name?, notes?, panel?, lesson?, visibility?, patternId? }`. `notes: null`
   clears them, and `lesson: null` removes the lesson, the only change a lesson takes; `visibility`
-  is `private` or `link` ([`sharing.md`](./sharing.md)).
+  is `private` or `link` ([`sharing.md`](./sharing.md)); `patternId` is the pattern the sequencer opens on with the
+  sound, one of the caller's own, or `null` ([`sequencer.md`](./sequencer.md#my-patterns)).
 - `POST /api/v1/sounds/:id/publish`: [`sharing.md`](./sharing.md).
 - `DELETE /api/v1/sounds/:id`
 

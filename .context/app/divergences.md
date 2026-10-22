@@ -116,20 +116,21 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds seven bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+- **Change:** adds eight bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
   the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
   catalogue and reading it for the API), `lib/app/bank/` (the same for the databank),
   `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1), `lib/app/profile/` (synth profiles,
-  `f-profiles` r1), `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53) and
-  `lib/app/sequencer/` (the pattern model, `f-step-sequencer` t-78).
+  `f-profiles` r1), `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53),
+  `lib/app/sequencer/` (the pattern model, `f-step-sequencer` t-78) and `lib/app/patterns/` (users' own
+  patterns, t-81).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our seven bullets in the `lib/app/` list, in
+- **On conflict:** take theirs and re-insert our eight bullets in the `lib/app/` list, in
   alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor or sequencer code lives in `lib/app/`, or when the guard
+- **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor, sequencer or patterns code lives in `lib/app/`, or when the guard
   reads fork scaffolds from a fork-owned file.
 
 ### The reserved-tier test, pinned to our app models
@@ -138,7 +139,7 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
-  `f-my-sounds` s1), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
+  `f-my-sounds` s1), user patterns' (one model, `f-step-sequencer` t-81), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
   models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one
   model and one enum, r2) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
@@ -157,7 +158,7 @@ the same PR**, and each row names what deletes it.
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
-  `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
+  `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
   `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2) and `SoundReport`
   (`f-sharing` h4) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
@@ -170,14 +171,14 @@ the same PR**, and each row names what deletes it.
   So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels, settings, lesson progress, favourites, profiles and owned synths follow the same ruling, and so do the
+  panels, settings, lesson progress, favourites, profiles, patterns and owned synths follow the same ruling, and so do the
   usernames held after a change, which record a name and no person. Reports about shared sounds are an inbound queue
   about those sounds, decided from one place, so they sit beside them.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SoundReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-eight names (eighteen global, ten system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty-nine names (eighteen global, eleven system) into the new seam's scaffold.
 
 ### The real-registry counts, pinned to the tutor
 
@@ -206,7 +207,8 @@ the same PR**, and each row names what deletes it.
   hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
   `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
   `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`
-  and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2, and `sound_report_reporterId_fkey`
+  and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2, `user_pattern_userId_fkey`,
+  `f-step-sequencer` t-81, and `sound_report_reporterId_fkey`
   and `sound_report_resolvedById_fkey`, `f-sharing` h4) instead of none, under a `FORK` comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.
@@ -223,10 +225,12 @@ the same PR**, and each row names what deletes it.
   (`f-profiles` r2), `lib/app/sounds/reports.ts` and `lib/app/sounds/sharing.ts` (`f-sharing` h1
   and h4), and the `UPDATE` in `lib/app/sounds/store.ts` that removes a sound's lesson (`f-tutor`
   t-55, under a `FORK` comment). The first four were added without a row here; t-55 records them.
+  The `FOR KEY SHARE` lock in `lib/app/patterns/store.ts` (`f-step-sequencer` t-81) holds a pattern
+  while a sound is pointed at it.
 - **Why:** the guard fails on any raw-SQL call in `lib/**` or `app/**` it does not list, and the
-  list has no fork seam. Each site touches only system models (`user`, `user_sound`, `synth`), keyed
+  list has no fork seam. Each site touches only system models (`user`, `user_sound`, `user_pattern`, `synth`), keyed
   on bound parameters, so none needs the tenancy policies the guard is watching for.
-- **On conflict:** take theirs, and re-add our five entries in path order (the test checks the
+- **On conflict:** take theirs, and re-add our six entries in path order (the test checks the
   order).
 - **Upstream:** working as designed upstream: the guard asks a fork to admit its own sites.
 - **Delete when:** a fork seam for the allowlist exists, or the fork has no raw SQL.

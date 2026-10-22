@@ -64,6 +64,7 @@
     "smoke:bank": "tsx --env-file=.env.local scripts/smoke/bank.ts",
     "smoke:sounds": "tsx --env-file=.env.local scripts/smoke/sounds.ts",
     "smoke:profile": "tsx --env-file=.env.local scripts/smoke/profile.ts",
+    "smoke:patterns": "tsx --env-file=.env.local scripts/smoke/patterns.ts",
     "smoke:tutor": "tsx --env-file=.env.local scripts/smoke/tutor.ts",
     "smoke:orchestration": "tsx --env-file=.env.local scripts/smoke/orchestration.ts",
     "smoke:hybrid-search": "tsx --env-file=.env.local scripts/smoke/knowledge-hybrid-search.ts",

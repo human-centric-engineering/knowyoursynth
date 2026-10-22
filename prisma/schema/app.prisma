@@ -575,15 +575,19 @@ model UserSound {
   /// When an admin unlisted it after a report (`f-sharing` h4): gone from every public read, and its owner cannot
   /// share or publish it again until an admin restores it. Its visibility is kept, so a restore brings it back as it was.
   unlistedAt        DateTime?
+  /// The user pattern the sequencer opens on with this sound (`f-step-sequencer` t-81), always one of the owner's own.
+  patternId         String?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
   /// Restrict, unlike SynthSound's Cascade: deleting a synth must never take users' own sounds with it. Unlist it instead.
-  synth           Synth       @relation(fields: [synthId], references: [id], onDelete: Restrict)
-  sourceSound     SynthSound? @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
-  sourceUserSound UserSound?  @relation("UserSoundCopies", fields: [sourceUserSoundId], references: [id], onDelete: SetNull)
+  synth           Synth        @relation(fields: [synthId], references: [id], onDelete: Restrict)
+  sourceSound     SynthSound?  @relation(fields: [sourceSoundId], references: [id], onDelete: SetNull)
+  sourceUserSound UserSound?   @relation("UserSoundCopies", fields: [sourceUserSoundId], references: [id], onDelete: SetNull)
   /// Copies other users saved from it.
-  copies          UserSound[] @relation("UserSoundCopies")
+  copies          UserSound[]  @relation("UserSoundCopies")
+  /// The pattern it plays by default (`f-step-sequencer` t-81): one of its owner's, and none once that is deleted.
+  pattern         UserPattern? @relation(fields: [patternId], references: [id], onDelete: SetNull)
 
   /// Its user's star on it.
   favourites Favourite[]
@@ -596,7 +600,42 @@ model UserSound {
   @@index([sourceUserSoundId])
   @@index([userId, publishedAt])
   @@index([visibility, publishedAt])
+  @@index([patternId])
   @@map("user_sound")
+}
+
+// ─── Users' patterns (f-step-sequencer t-81) ─────────────────────────────────
+//
+// A pattern a user saved from the sequencer: their own library, "My patterns", not tied to a synth (owner ruling on
+// f-step-sequencer, 2026-10-21). A row is about a person, so it is declared for subject export in
+// lib/app/data-export.ts. On SYSTEM_MODELS beside UserSound, with no orgId, by the same ruling as their sounds.
+//
+// `userId` is a plain string, as UserSound's is, so `User` needs no back-relation field. The FK is written by hand in
+// the migration, `ON DELETE CASCADE`: erasing a user erases their patterns. A drift probe in lib/app/db-drift.ts pins it.
+
+/// A user's own pattern (`lib/app/sequencer/pattern.ts`), validated with `PatternSchema` on write and on read
+/// (lib/app/patterns/). Owner-scoped: nobody else reads it.
+model UserPattern {
+  id        String   @id @default(cuid())
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
+  userId    String
+  name      String
+  /// `Pattern`: the sequencer's pattern, its own `version` inside it.
+  pattern   Json
+  /// The pattern shape's version it was saved as (`PATTERN_VERSION`), beside the JSON so a mapping (D1) can find
+  /// the rows it owes without reading them all.
+  version   Int
+  /// The synth it was made on. Informational only: a pattern plays on any synth. Not a foreign key, so a synth
+  /// leaving the catalogue leaves it as it was.
+  synthId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// The user's sounds that play it by default.
+  sounds UserSound[]
+
+  @@index([userId, updatedAt])
+  @@map("user_pattern")
 }
 
 // ─── Reports about shared sounds (f-sharing h4) ──────────────────────────────

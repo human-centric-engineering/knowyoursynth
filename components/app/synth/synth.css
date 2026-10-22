@@ -1646,6 +1646,156 @@ svg .kys-hit:focus-visible {
   color: var(--kys-muted);
 }
 
+/* The patterns strip (t-81): what the module holds, and My patterns and the library, above the readout. */
+.kys-seq-lib {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.kys-seq-lib-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+.kys-seq-lib-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--lcd);
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+.kys-seq-lib-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lcd-label);
+}
+.kys-seq-lib-value {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--lcd-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kys-seq-lib-edited {
+  font-size: 11px;
+  color: var(--lcd-dim);
+}
+.kys-seq-lib-signin {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.kys-seq-lib-signin:hover {
+  color: var(--kys-text);
+}
+.kys-seq-lib-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.kys-seq-lib-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.12);
+  background: var(--lcd);
+  color: var(--lcd-ink);
+  font-size: 13px;
+}
+.kys-seq-lib-input:focus-visible {
+  outline: 2px solid var(--lcd-ink);
+  outline-offset: 1px;
+}
+.kys-seq-lib-action {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lcd);
+  background: var(--lcd-ink);
+}
+.kys-seq-lib-action.is-quiet {
+  color: var(--kys-muted);
+  background: transparent;
+}
+.kys-seq-lib-action.is-danger {
+  color: #fff;
+  background: #c2413b;
+}
+.kys-seq-lib-action:disabled {
+  opacity: 0.5;
+}
+.kys-seq-lib-error {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 12px;
+  color: #f0817b;
+}
+.kys-seq-lib-status,
+.kys-seq-lib-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--kys-muted);
+}
+.kys-seq-lib-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+.kys-seq-lib-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 4px;
+  max-height: 220px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.kys-seq-lib-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-align: left;
+  background: rgb(var(--kys-wash, 255 255 255) / 0.04);
+}
+.kys-seq-lib-item:hover,
+.kys-seq-lib-item:focus-visible {
+  background: rgb(var(--kys-wash, 255 255 255) / 0.09);
+}
+.kys-seq-lib-item[aria-current='true'] {
+  box-shadow: inset 0 0 0 1px var(--lcd-ink);
+}
+.kys-seq-lib-item-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kys-text);
+}
+.kys-seq-lib-item-meta {
+  font-size: 11px;
+  color: var(--kys-faint);
+}
+
 /* The step inspector: the same height for every step, in the readout's language. */
 .kys-seq-inspect {
   display: flex;

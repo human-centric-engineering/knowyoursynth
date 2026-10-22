@@ -15,6 +15,10 @@
  * - An edit recompiles the loop playing now and sends it as `patternEdit`, so it is heard from the playhead on without
  *   a restart, then queues a fresh next loop: the player drops the one queued before the edit.
  *
+ * A pattern can also be loaded whole (`load`): one of the user's saved patterns (`f-step-sequencer` t-81), or a riff
+ * from any synth's library. `loaded` names what it holds, and `edited` says whether it has changed since it was loaded
+ * or saved. The sound's own riff names nothing.
+ *
  * Each loop is compiled from a seed of its own, so the step order the page draws the playhead with is the order the
  * loop was compiled with, and an edit recompiles the loop with the same draws (a step with a probability does not
  * change its mind because a different step was edited).
@@ -73,8 +77,42 @@ export interface EditOptions {
   undoable?: boolean;
 }
 
+/**
+ * What the sequencer holds, when it is not the sound's own riff: one of the user's patterns (`id` set), or a riff from a
+ * library (`id` null, `name` saying whose).
+ */
+export interface LoadedPattern {
+  id: string | null;
+  name: string;
+}
+
 export interface Sequencer {
   pattern: Pattern;
+  /** What the pattern was loaded from, or null for the sound's own riff. */
+  loaded: LoadedPattern | null;
+  /** Whether the pattern has changed since it was loaded or last saved. */
+  edited: boolean;
+  /**
+   * Replaces the pattern with `p`, from `from`. An edited pattern it replaces is one Undo away, as it is when another
+   * sound's riff arrives, and that Undo names it as it was named. A pattern that would not be valid is refused and
+   * logged: false.
+   */
+  load: (p: Pattern, from: LoadedPattern) => boolean;
+  /**
+   * Which pattern is held: it changes whenever the whole pattern is replaced (one opened, another sound's riff, an Undo
+   * past either). A save, rename or delete takes it as it sends, and names what is held only if it is unchanged.
+   */
+  held: () => number;
+  /**
+   * `saved` (the pattern as it was sent while `at` was held) has been saved as `as`: it names what is held, and an edit
+   * made since the save was sent is still an edit. False, naming nothing, when another pattern is held since.
+   */
+  markSaved: (as: LoadedPattern, saved: Pattern, at: number) => boolean;
+  /**
+   * What the pattern held at `at` is called, or where it is saved, changed (a rename, a delete), its steps not: `edited`
+   * stands. False, naming nothing, when another pattern is held since.
+   */
+  relabel: (as: LoadedPattern, at: number) => boolean;
   /** Changes the pattern. An edit that would not make a valid pattern is refused and logged. */
   edit: (next: Pattern | ((p: Pattern) => Pattern), o?: EditOptions) => void;
   undo: () => void;
@@ -94,6 +132,12 @@ export interface Sequencer {
   noteIn: (n: number) => void;
   /** The module's handler for `noteIn`. Returns the undo. */
   onNoteIn: (f: (n: number) => void) => () => void;
+}
+
+/** An Undo step: the pattern, and for one a whole new pattern replaced, what it was named and saved as. */
+interface Snapshot {
+  p: Pattern;
+  named?: { loaded: LoadedPattern | null; baseline: string };
 }
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 32);
@@ -140,11 +184,36 @@ export function useSequencer({
   const [playing, setPlaying] = useState(false);
   const [fill, setFillState] = useState(false);
   // Undo's stack is a ref, so undoing never runs a side effect inside a state update; `undoable` mirrors whether it is
-  // empty, for the button.
-  const past = useRef<Pattern[]>([]);
+  // empty, for the button. A step that replaced the whole pattern (one opened, another sound's riff) keeps what the
+  // pattern before it was named and saved as, so Undo puts those back too: Save never writes the steps Undo brought
+  // back over the pattern that replaced them.
+  const past = useRef<Snapshot[]>([]);
   const [undoable, setUndoable] = useState(false);
+  const [loaded, setLoadedState] = useState<LoadedPattern | null>(null);
+  /** The pattern as it was loaded or last saved, as JSON: what `edited` compares with. */
+  const [baseline, setBaselineState] = useState(() => JSON.stringify(pattern));
+  const loadedRef = useRef(loaded);
+  const baselineRef = useRef(baseline);
+  const setLoaded = useCallback((l: LoadedPattern | null) => {
+    loadedRef.current = l;
+    setLoadedState(l);
+  }, []);
+  const setBaseline = useCallback((b: string) => {
+    baselineRef.current = b;
+    setBaselineState(b);
+  }, []);
 
   const patternRef = useRef(pattern);
+  /** Counts replacements of the whole pattern: see `held`. */
+  const heldRef = useRef(0);
+  /** What is held now, as the Undo step a replacement of the whole pattern pushes. */
+  const replaced = useCallback(
+    (): Snapshot => ({
+      p: patternRef.current,
+      named: { loaded: loadedRef.current, baseline: baselineRef.current },
+    }),
+    []
+  );
   const playingRef = useRef(false);
   const fillRef = useRef(false);
   const lastGroup = useRef<{ key: string; at: number } | null>(null);
@@ -250,7 +319,7 @@ export function useSequencer({
           now - lastGroup.current.at < GROUP_MS;
         lastGroup.current = o.group !== undefined ? { key: o.group, at: now } : null;
         if (!same) {
-          past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), prev];
+          past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), { p: prev }];
           setUndoable(true);
         }
       }
@@ -266,16 +335,22 @@ export function useSequencer({
   );
 
   const undo = useCallback(() => {
-    const prev = past.current[past.current.length - 1];
-    if (!prev) return;
+    const snap = past.current[past.current.length - 1];
+    if (!snap) return;
     past.current = past.current.slice(0, -1);
     setUndoable(past.current.length > 0);
     const was = patternRef.current;
+    const prev = snap.p;
     patternRef.current = prev;
     setPattern(prev);
+    if (snap.named) {
+      heldRef.current++;
+      setLoaded(snap.named.loaded);
+      setBaseline(snap.named.baseline);
+    }
     lastGroup.current = null;
     if (playingRef.current) resend(prev, was);
-  }, [resend]);
+  }, [resend, setLoaded, setBaseline]);
 
   // The sound's riff, imported whenever it changes (another sound chosen): a fresh pattern with nothing to undo. Keyed
   // on the riff's content, so a sound read again with the same riff (a rename, a save) keeps the edits.
@@ -289,15 +364,65 @@ export function useSequencer({
     const p = fromRiff(ph, tempoRef.current);
     // An edited pattern is not lost to another sound's riff: one Undo brings it back. An unedited one is just the
     // last sound's riff, and is not worth an Undo.
-    const was = patternRef.current;
+    const was = replaced();
+    heldRef.current++;
     const edited = past.current.length > 0;
     patternRef.current = p;
     setPattern(p);
+    setLoaded(null);
+    setBaseline(JSON.stringify(p));
     past.current = edited ? [...past.current.slice(-(UNDO_DEPTH - 1)), was] : [];
     setUndoable(edited);
     lastGroup.current = null;
     if (playingRef.current) start(p);
-  }, [riffKey, start]);
+  }, [riffKey, start, replaced, setLoaded, setBaseline]);
+
+  const load = useCallback(
+    (p: Pattern, from: LoadedPattern) => {
+      const ok = PatternSchema.safeParse(p);
+      if (!ok.success) {
+        logger.warn('sequencer: pattern refused', { issue: ok.error.issues[0]?.message });
+        return false;
+      }
+      // On a synth with a tempo knob the knob sets the tempo, as it does for the sound's riff.
+      const next = tempoRef.current ? { ...ok.data, bpm: clampBpm(tempoRef.current) } : ok.data;
+      const was = replaced();
+      heldRef.current++;
+      patternRef.current = next;
+      setPattern(next);
+      setLoaded(from);
+      setBaseline(JSON.stringify(next));
+      past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
+      setUndoable(true);
+      lastGroup.current = null;
+      if (playingRef.current) start(next);
+      return true;
+    },
+    [start, replaced, setLoaded, setBaseline]
+  );
+
+  const held = useCallback(() => heldRef.current, []);
+
+  const markSaved = useCallback(
+    (as: LoadedPattern, saved: Pattern, at: number) => {
+      if (at !== heldRef.current) return false;
+      setLoaded(as);
+      setBaseline(JSON.stringify(saved));
+      return true;
+    },
+    [setLoaded, setBaseline]
+  );
+
+  const relabel = useCallback(
+    (as: LoadedPattern, at: number) => {
+      if (at !== heldRef.current) return false;
+      setLoaded(as);
+      return true;
+    },
+    [setLoaded]
+  );
+
+  const edited = useMemo(() => JSON.stringify(pattern) !== baseline, [pattern, baseline]);
 
   // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself.
   useEffect(() => {
@@ -309,8 +434,14 @@ export function useSequencer({
     setPattern(patternRef.current);
     // The knob's tempo stands through an Undo: what Undo goes back to is moved to it as well. A tempo set on the
     // sequencer's own encoder after this is a snapshot of its own, and Undo still takes it back.
-    past.current = past.current.map((q) => ({ ...q, bpm }));
-  }, [tempo]);
+    // Nor does it make a saved pattern an edited one, now or after an Undo.
+    const atTempo = (b: string) => JSON.stringify({ ...(JSON.parse(b) as Pattern), bpm });
+    past.current = past.current.map((q) => ({
+      p: { ...q.p, bpm },
+      named: q.named && { ...q.named, baseline: atTempo(q.named.baseline) },
+    }));
+    setBaseline(atTempo(baselineRef.current));
+  }, [tempo, setBaseline]);
 
   const play = useCallback(async () => {
     // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
@@ -383,6 +514,12 @@ export function useSequencer({
 
   return {
     pattern,
+    loaded,
+    edited,
+    load,
+    held,
+    markSaved,
+    relabel,
     edit,
     undo,
     canUndo: undoable,

@@ -239,11 +239,53 @@ order. The keys redraw only when the step changes.
   Narrower than 900px (the bottom sheet), everything stacks. The keys go eight to a row when the module is narrower
   than 620px. Coarse pointers get 44px targets.
 
+## My patterns
+
+A pattern is saved to the user's own library, **My patterns**, not to a synth (owner ruling, 2026-10-21). One made on
+the TB-303 opens on the Model D as it was. The synth it was made on is kept beside it for the list, and limits nothing.
+
+**Stored** in `user_pattern` (`prisma/schema/app.prisma`): the owner (a hand-written `ON DELETE CASCADE` FK to the user,
+pinned by a drift probe), a name, the pattern JSON, its shape version (`PATTERN_VERSION`, beside the JSON so a mapping
+can find the rows it owes), and the synth it was made on (not a foreign key). It is on `SYSTEM_MODELS` with no `orgId`,
+as a user's sounds are, and is exported as its own section, `patterns`.
+
+**The API** (`app/api/v1/patterns`, `lib/app/patterns/store.ts`) lists, creates, reads, renames or saves over, and
+deletes. Every query is keyed on the caller, so another user's pattern is a 404. A pattern is checked with
+`PatternSchema` on write and on read. A stored pattern of another shape version, or one that no longer passes, is listed
+and kept but has no steps to open (`pattern: null`, with `problems`). No mapping exists yet; the first version change
+ships one (D1).
+
+**A sound's default pattern.** `user_sound.patternId` points one of the user's sounds at one of their patterns
+(`ON DELETE SET NULL`, so deleting the pattern leaves the sound playing its riff). It is set and cleared with
+`PATCH /api/v1/sounds/:id { patternId }`. Another user's pattern is refused (400 on `patternId`) exactly as one that does
+not exist. A copy of a sound never carries it. When the sound opens, the page reads the pattern and loads it into the
+sequencer after the sound's riff is imported, so it replaces the riff. A pattern the sequencer already holds is not read
+again, so pointing the open sound at it keeps the edits.
+
+**In the module**, the patterns strip (`pattern-library.tsx`) sits above the readout:
+
+- The name of what the sequencer holds: the sound's riff, one of My patterns, or a library riff with its synth.
+  **edited** marks a change since it was loaded or saved. `useSequencer` tracks it against the pattern as loaded
+  (`load`, `markSaved`, `relabel`). The panel's tempo knob does not count as an edit, as it does not count for Undo.
+  Undo past an opened pattern names what it brings back as it was named and saved, so Save never writes it over the
+  opened one. A save, rename or delete that comes back after another pattern was opened names nothing: `held` says
+  which pattern a request was sent for.
+- **Save** saves over the pattern held when it is one of theirs. Otherwise it asks for a name and saves a new one.
+  **Save as** always saves a new one. **Rename** and **Delete** act on the pattern held when they were pressed. Deleting keeps it in the
+  sequencer, saved nowhere, until something else opens. Signed out, the strip has a link to sign in in their place.
+- **My patterns** lists the user's patterns, read when it is first opened. One opens in place of what is held, and Undo
+  brings that back.
+- **Library** lists any synth's library riffs, one synth at a time. It starts on the synth on the panel and reads the
+  catalogue's `GET /api/v1/synths/:id`. A riff is imported as `importPhrase` imports the sound's own (no note changes), as
+  a starting point saved nowhere.
+- **With sound** (with one of the user's sounds open, and a saved pattern held) points the sound at the pattern, or back
+  at its riff.
+
 ## Not yet
 
 Coming in later tasks of §21:
 
 - Mod lanes, per-step values for panel controls (t-82). They add an optional field to the pattern.
-- Saving (t-81) and sharing (t-83).
+- Sharing and publishing patterns (t-83).
 - Playing into it: step record, live record and arp mode (t-86).
 - The tutor writing patterns (t-84), and the TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).

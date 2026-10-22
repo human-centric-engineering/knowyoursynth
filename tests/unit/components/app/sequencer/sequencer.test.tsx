@@ -15,6 +15,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { useSequencer, type Sequencer as SeqState } from '@/components/app/sequencer/use-sequencer';
 import type { Phrase } from '@/lib/app/synths/contract';
+import { importPhrase } from '@/lib/app/sequencer/import';
 import type { SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import type { LoopEvent, PatternLoop } from '@/lib/app/synths/audio/pattern-player';
 import { logger } from '@/lib/logging';
@@ -150,6 +151,25 @@ describe('opening on a sound', () => {
     expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('150');
     // Not an edit of the user's: there is nothing to undo.
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('opens a saved pattern at the panel’s tempo, as it does the riff, and at its own with no tempo knob', () => {
+    const saved = { ...importPhrase(RIFF), bpm: 96 };
+    const knob = open(RIFF, 140);
+    act(() => {
+      state.load(saved, { id: 'p1', name: 'Slow' });
+    });
+    expect(state.pattern.bpm).toBe(140);
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('140');
+    // Opened at the knob's tempo, it is what was opened, not an edit of it.
+    expect(state.edited).toBe(false);
+    knob.unmount();
+
+    open(RIFF);
+    act(() => {
+      state.load(saved, { id: 'p1', name: 'Slow' });
+    });
+    expect(state.pattern.bpm).toBe(96);
   });
 
   it('loads another sound’s riff in place of the pattern, Undo bringing the edited one back; the same riff keeps the edits', () => {
