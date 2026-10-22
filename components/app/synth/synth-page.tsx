@@ -556,11 +556,18 @@ function Synth({
       root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40)}px`);
     };
     measure();
-    const ro = new ResizeObserver(measure);
+    // Written on the next frame, not inside the observer's callback: a tall dock (the sequencer open) refits the
+    // panel, which resizes the root it also watches, and a resize inside the callback is a "ResizeObserver loop".
+    let frame = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
     ro.observe(dock);
     ro.observe(root);
     document.addEventListener('fullscreenchange', measure);
     return () => {
+      cancelAnimationFrame(frame);
       ro.disconnect();
       document.removeEventListener('fullscreenchange', measure);
     };
