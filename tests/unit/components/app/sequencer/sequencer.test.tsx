@@ -66,7 +66,6 @@ function Harness({
       playing={seq.playing}
       onPlay={() => void seq.play()}
       onStop={seq.stop}
-      onClose={() => undefined}
       transport
     />
   );

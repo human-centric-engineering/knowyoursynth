@@ -163,7 +163,7 @@ describe('the sequencer on the synth page', () => {
       'Step 7: rest',
       'Step 8: rest',
     ]);
-    fireEvent.click(within(sequencer()).getByRole('button', { name: 'Close the sequencer' }));
+    fireEvent.click(button('Sequencer'));
     expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
   });
 
@@ -226,7 +226,7 @@ describe('the sequencer on the synth page', () => {
     expect(lastSent('pattern')).toBeTruthy();
     expect(button('Stop')).toBeTruthy();
     // Closed, the bar plays the riff again: the pattern is told it has stopped.
-    fireEvent.click(within(sequencer()).getByRole('button', { name: 'Close the sequencer' }));
+    fireEvent.click(button('Sequencer'));
     await press('Stop');
     await press('Play');
     expect(sent().at(-1)?.type).toBe('phrase');

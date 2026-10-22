@@ -33,7 +33,6 @@ import {
   Shuffle,
   Square,
   Undo2,
-  X,
 } from 'lucide-react';
 import {
   DIRECTIONS,
@@ -168,7 +167,6 @@ export function Sequencer({
   playing,
   onPlay,
   onStop,
-  onClose,
   transport = false,
 }: {
   seq: SequencerState;
@@ -176,8 +174,6 @@ export function Sequencer({
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
-  /** Closes the module; absent in a bottom sheet, which has its own close. */
-  onClose?: () => void;
   /**
    * A Play button of its own: in a bottom sheet, which can cover the bar. In the dock the bar's Play is just above it,
    * and the same transport.
@@ -724,6 +720,7 @@ export function Sequencer({
                   disabled: !seq.canUndo,
                 }
               )}
+              <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
             </div>
           </div>
         </div>
@@ -735,24 +732,6 @@ export function Sequencer({
           defaultNote={defaultNote}
           onChange={(fn, group) => changeStep(sel, fn, group)}
         />
-        <div className="kys-seq-help">
-          <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
-          {onClose && (
-            <PlayerTip
-              name="Close the sequencer"
-              help="The pattern stays as it is, and keeps playing."
-            >
-              <button
-                type="button"
-                className="kys-pbtn"
-                aria-label="Close the sequencer"
-                onClick={onClose}
-              >
-                <X size={17} aria-hidden="true" />
-              </button>
-            </PlayerTip>
-          )}
-        </div>
       </div>
     </section>
   );

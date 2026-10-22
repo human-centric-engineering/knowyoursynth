@@ -15,6 +15,7 @@
 
 import { useId } from 'react';
 import type { ReactNode, Ref } from 'react';
+import { X } from 'lucide-react';
 import { Segmented } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
@@ -60,6 +61,8 @@ export function LayerToggle({
       >
         {icon}
         <span className={keepShort ? undefined : 'lg:max-xl:hidden'}>{short}</span>
+        {/* Open, it says a press closes it. */}
+        {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
       </button>
     </PlayerTip>
   );

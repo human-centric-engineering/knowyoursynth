@@ -592,6 +592,10 @@ svg .kys-hit:focus-visible {
   color: var(--kys-text);
   background: rgb(var(--kys-wash) / 0.07);
 }
+.kys-layer-x {
+  margin-left: -2px;
+  opacity: 0.75;
+}
 .kys-layer.is-on {
   color: var(--kys-accent);
   background: rgb(246 166 58 / 0.12);
@@ -1051,10 +1055,12 @@ svg .kys-hit:focus-visible {
  * row of quiet buttons with copy and paste behind Edit. The readout and the keys
  * keep their own colours in the light theme, as hardware does.
  *
- * From 900px of module it is one row of two columns: the readout, the keys and
- * the tools on the left, the step inspector on the right, Help and Close in a
- * rail. Narrower (the bottom sheet), it stacks. Laid out by its own width (a
- * container), so the dock and the sheet share it. The sheet is outside the
+ * From `lg` up (the dock) it is one row of two columns: the readout, the keys
+ * and the tools on the left (Help at the end of the tools), the step inspector on
+ * the right. The bar's Sequencer button closes it. Below it (the
+ * bottom sheet) it stacks. Media queries, not container queries: a size
+ * container is the containing block of its fixed descendants, which put the
+ * player's tooltips at the top of the screen. The sheet is outside the
  * player, where `--kys-wash` is set, so the sequencer falls back to white.
  */
 .kys-seq-dock {
@@ -1067,7 +1073,6 @@ svg .kys-hit:focus-visible {
   --lcd-dim: #9a7440;
   --lcd-label: #7c6849;
   position: relative;
-  container-type: inline-size;
   padding: 12px 14px;
   color: var(--kys-text);
 }
@@ -1088,33 +1093,22 @@ svg .kys-hit:focus-visible {
   flex-wrap: wrap;
   align-items: stretch;
   gap: 6px;
-  padding-right: 88px;
 }
 .kys-seq-transport,
 .kys-seq-controls,
 .kys-seq-parts {
   display: contents;
 }
-.kys-seq-help {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-@container (min-width: 900px) {
+@media (min-width: 1024px) {
   .kys-seq-body {
-    grid-template-columns: minmax(0, 1fr) minmax(290px, 340px) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(290px, 340px);
   }
-  .kys-seq-head {
-    padding-right: 0;
-  }
-  .kys-seq-help {
-    position: static;
-    flex-direction: column;
-    align-self: start;
-  }
+}
+/* Help: the quiet ? at the end of the tool row, by Undo. */
+.kys-seq-undo button[aria-label='How the sequencer works'] {
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
 }
 
 /* A cell of the readout. The hit area is the cell itself, so a drag anywhere on it turns it. */
@@ -1380,7 +1374,7 @@ svg .kys-hit:focus-visible {
     inset 0 1px 3px rgb(0 0 0 / 0.6),
     0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.04);
 }
-@container (max-width: 620px) {
+@media (max-width: 700px) {
   .kys-seq-keys {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }

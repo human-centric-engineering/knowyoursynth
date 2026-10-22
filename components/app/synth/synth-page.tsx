@@ -1974,7 +1974,7 @@ function Synth({
 
               {seqDocked && (
                 <div className="kys-seq-dock">
-                  <Sequencer {...seqProps} onClose={() => setSeqOpen(false)} />
+                  <Sequencer {...seqProps} />
                 </div>
               )}
 
