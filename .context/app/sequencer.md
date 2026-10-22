@@ -18,7 +18,7 @@ A `Pattern` (`pattern.ts`) is the same music on a grid of steps, plus what a mod
 | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Pattern | `bpm` 20–300, `stepSize` (`1/8`, `1/8t`, `1/16`, `1/16t`, `1/32`), `loop`, `direction`, `swing` 50–75, `transpose` ±48, `root`, `scale`, `parts` (A, B), `chain` |
 | Part    | `steps`: 1–128, and every part has the same number                                                                                                               |
-| Step    | `on`, `notes` (0–6: none is a rest, several a chord), `accent`, `slide`, `ratchet` 1–4, `probability` 0–1, `condition`                                           |
+| Step    | `on`, `notes` (0–6: none is a rest, several a chord), `accent`, `slide`, `ratchet` 1–4, `probability` 0–1, `condition`, `mod` (mod lanes' values)                |
 | Note    | `note` 0–127, `gate` in steps up to 256 (past 1 it ties over), `velocity` 0–1, `nudge` 0 to just under 1 step                                                    |
 
 Gate, velocity and nudge belong to the note, not the step. The library's chords aren't always struck or let go
@@ -281,11 +281,63 @@ again, so pointing the open sound at it keeps the edits.
 - **With sound** (with one of the user's sounds open, and a saved pattern held) points the sound at the pattern, or back
   at its riff.
 
+## Mod lanes
+
+A mod lane moves one panel control step by step, as a CV row of a modular sequencer does (Elektron calls them
+parameter locks). t-82.
+
+**In the pattern.** `lanes` lists the controls, by id, up to `MAX_LANES` (8). Each step keeps its own values in `mod`
+(control id → value), so rotate, reverse, copy and paste carry them with their steps, and Randomise keeps them
+(`keepMods`). `PatternSchema` refuses a step value for a control with no lane, and a control with two lanes. Both
+fields are optional, so a pattern saved before lanes reads as it was and `PATTERN_VERSION` stays 1. The pattern knows
+no synth, so the schema checks only that a value is a number, a string or a boolean.
+
+**Against the synth** (`lanes.ts`). Only the synth playing a lane knows what its control takes:
+
+- A lane for a control the synth doesn't have is kept, and silent. So is one for its tempo knob, which is the
+  pattern's own tempo. The module says so on the lane.
+- A value the control can't take (a number for a switch, an option it doesn't have) is ignored on that step.
+- A number past either end of the travel is kept inside it.
+
+The pattern is never changed, so a pattern moved between synths loses nothing.
+
+**Compiling.** `compileLoop` also returns `mods`: `[beat, set]` wherever the values change, `set` being the controls
+the lanes set from then on, or `null` for none. The first slot always has one, which puts back what the loop before
+left set. A lane moves on every slot, whether the step plays or not, and draws nothing from `rng`, so a pattern's
+draws are the same with lanes or without. Each change falls on its slot's start, swung, in the step order the loop
+plays.
+
+**Playing.** The page turns each set into the voice's settings: `toEngine` of the panel's values with the set in their
+place, and the cables, as a knob turned to that value would be (`LaneTarget.paramsFor`). The loop carries them as
+`params`, and the pattern player sends each to the synth on its sample, before a note on the same sample. No new DSP
+is involved: it is the `params` message a knob turn sends.
+
+- The page's own `params` are the panel's. The player keeps the last as the rest it goes back to: on a slot no lane
+  sets, at Stop, when the pattern ends or a `panic` stops it, and when an edit takes the lanes away.
+- A knob turned while a lane holds the synth is kept as the rest and not sent, so it doesn't undo the lane mid-step.
+  The page sends the loop playing again (`patternEdit`) whenever the panel moves, so what the lanes leave alone
+  follows the knob from the next change on.
+- An edit applies the settings the edited loop has at the playhead at once.
+- No lane the synth can play: no `params`, and the loop plays exactly as one with no lanes.
+
+**On the panel.** While the pattern plays, `seq.modShown` is what the lanes set on the step being heard (read from
+the audio clock, as the playhead is). The page draws the panel with those values in place of its own. The panel's
+values are unchanged, and the panel is drawn from them again at Stop.
+
+**In the module** (`mod-lanes.tsx`). **Mod** on the tool row shows the lanes under the step keys, on the same grid,
+for the page of keys on show. **Add lane** picks a control of the synth on the panel. A lane's select moves it to
+another control, which clears its values. A dashed line marks the panel's value, which a cell with nothing set plays.
+
+- A press or a drag across the cells sets each to the height it is at, on the control's travel (a log knob by
+  ratio, a choice by its drawn options). A stroke is one Undo. A double press clears a cell.
+- From the keyboard a lane is one Tab stop. Left and Right move along it, Up and Down change the value from the
+  panel's (Page Up and Page Down by more), Home and End go to either end, and Delete clears.
+- Hovering or focusing a cell shows its value at the head of the lane.
+
 ## Not yet
 
 Coming in later tasks of §21:
 
-- Mod lanes, per-step values for panel controls (t-82). They add an optional field to the pattern.
 - Sharing and publishing patterns (t-83).
 - Playing into it: step record, live record and arp mode (t-86).
 - The tutor writing patterns (t-84), and the TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).

@@ -222,6 +222,20 @@ describe('saving and reading back', () => {
     expect(got.data!.pattern).toEqual(riff);
   });
 
+  it('keeps its mod lanes and their values, one for a control model-d lacks included (t-82)', async () => {
+    const laned = structuredClone(riff);
+    laned.lanes = ['cutoff', 'notOnThisSynth'];
+    laned.parts[0].steps[0] = {
+      ...laned.parts[0].steps[0],
+      mod: { cutoff: 3, notOnThisSynth: 0.5 },
+    };
+    const id = await saved('With lanes', laned);
+    expect(patterns.rows[0]).toMatchObject({ version: 1 });
+    const got = await json(await read(request('GET', `/api/v1/patterns/${id}`), ctx(id)));
+    expect(got.data!.pattern).toEqual(laned);
+    expect(got.data!.problems).toEqual([]);
+  });
+
   it("lists only the caller's patterns, newest change first, without steps", async () => {
     await saved('First');
     await saved('Second');
