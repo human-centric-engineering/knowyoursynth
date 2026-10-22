@@ -120,7 +120,14 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a sound and whether the tutor designed it, the library sound each copy credits, whether and when you shared or published each, with its address and tags, and when moderators unlisted one.',
+          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a sound and whether the tutor designed it, the library sound each copy credits, whether and when you shared or published each, with its address and tags, when moderators unlisted one, and the pattern each plays by default.',
+      },
+      {
+        model: 'UserPattern',
+        section: PATTERNS_SECTION,
+        disposition: 'export',
+        description:
+          'Patterns you saved from the sequencer: the name, the steps and settings, and the synth each was made on.',
       },
       {
         model: 'SoundReport',
@@ -226,6 +233,9 @@ const SUGGESTIONS_SECTION = 'synthSuggestions';
 /** The export section for a user's own sounds (`f-my-sounds` s1). */
 const SOUNDS_SECTION = 'sounds';
 
+/** The export section for a user's own patterns (`f-step-sequencer` t-81). */
+const PATTERNS_SECTION = 'patterns';
+
 /** The export section for the reports a user filed about shared sounds (`f-sharing` h4). */
 const REPORTS_SECTION = 'soundReportsFiled';
 
@@ -246,22 +256,33 @@ const SYNTHS_SECTION = 'ownedSynths';
 /**
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
- * profile (`f-profiles` r1), the synths they own and want (r2), and the reports they filed about shared sounds
- * (`f-sharing` h4). Every declared section is returned, empty when they have none.
+ * profile (`f-profiles` r1), the synths they own and want (r2), the reports they filed about shared sounds
+ * (`f-sharing` h4), and the patterns they saved (`f-step-sequencer` t-81). Every declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
-  const [suggestions, sounds, reports, panels, settings, progress, favourites, profile, synths] =
-    await Promise.all([
-      collectSuggestions(userId),
-      collectSounds(userId),
-      collectReportsFiled(userId),
-      collectPanels(userId),
-      collectSettings(userId),
-      collectProgress(userId),
-      collectFavourites(userId),
-      collectProfile(userId),
-      collectOwnedSynths(userId),
-    ]);
+  const [
+    suggestions,
+    sounds,
+    reports,
+    panels,
+    settings,
+    progress,
+    favourites,
+    profile,
+    synths,
+    patterns,
+  ] = await Promise.all([
+    collectSuggestions(userId),
+    collectSounds(userId),
+    collectReportsFiled(userId),
+    collectPanels(userId),
+    collectSettings(userId),
+    collectProgress(userId),
+    collectFavourites(userId),
+    collectProfile(userId),
+    collectOwnedSynths(userId),
+    collectPatterns(userId),
+  ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
     [SOUNDS_SECTION]: sounds,
@@ -272,6 +293,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     [FAVOURITES_SECTION]: favourites,
     [PROFILE_SECTION]: profile,
     [SYNTHS_SECTION]: synths,
+    [PATTERNS_SECTION]: patterns,
   };
 }
 
@@ -435,6 +457,23 @@ function collectSounds(userId: string) {
       publishedAt: true,
       tags: true,
       unlistedAt: true,
+      patternId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+}
+
+function collectPatterns(userId: string) {
+  return prisma.userPattern.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      pattern: true,
+      version: true,
+      synthId: true,
       createdAt: true,
       updatedAt: true,
     },

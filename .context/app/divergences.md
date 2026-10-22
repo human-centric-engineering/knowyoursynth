@@ -138,7 +138,7 @@ the same PR**, and each row names what deletes it.
 - **Change:** the `prisma/schema/app.prisma declares no models` case expects the catalogue's
   declarations (five models and three enums), the databank's (thirteen models), the synth
   suggestions' (one model and one enum, `f-databank` t-37), user sounds' (one model,
-  `f-my-sounds` s1), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
+  `f-my-sounds` s1), user patterns' (one model, `f-step-sequencer` t-81), reports about shared sounds (one model and two enums, `f-sharing` h4), user preferences' (two models, s3), lesson progress and favourites' (two
   models, s4), synth profiles' (two models, `f-profiles` r1) and the synths owned and wanted (one
   model and one enum, r2) instead of none, under a `FORK` comment.
 - **Why:** `app.prisma` is where CUSTOMIZATION.md tells a fork to put its models, and the test's
@@ -157,7 +157,7 @@ the same PR**, and each row names what deletes it.
   seed's record of what it planned, `f-catalogue-admin` t-32) are appended to
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
-  `UserSound` (`f-my-sounds` s1), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
+  `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
   `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2) and `SoundReport`
   (`f-sharing` h4) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
@@ -170,14 +170,14 @@ the same PR**, and each row names what deletes it.
   So it joins `ContactSubmission`, the same shape of inbound queue, on `SYSTEM_MODELS`. A user's
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
-  panels, settings, lesson progress, favourites, profiles and owned synths follow the same ruling, and so do the
+  panels, settings, lesson progress, favourites, profiles, patterns and owned synths follow the same ruling, and so do the
   usernames held after a change, which record a name and no person. Reports about shared sounds are an inbound queue
   about those sounds, decided from one place, so they sit beside them.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `SoundReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-eight names (eighteen global, ten system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the twenty-nine names (eighteen global, eleven system) into the new seam's scaffold.
 
 ### The real-registry counts, pinned to the tutor
 
@@ -206,7 +206,8 @@ the same PR**, and each row names what deletes it.
   hand-written `synth_suggestion_userId_fkey`, `f-databank` t-37, `user_sound_userId_fkey`,
   `f-my-sounds` s1, `synth_preference_userId_fkey` and `user_preference_userId_fkey`, s3, and
   `lesson_progress_userId_fkey` and `favourite_userId_fkey`, s4, and `synth_profile_userId_fkey`
-  and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2, and `sound_report_reporterId_fkey`
+  and `owned_instrument_userId_fkey`, `f-profiles` r1 and r2, `user_pattern_userId_fkey`,
+  `f-step-sequencer` t-81, and `sound_report_reporterId_fkey`
   and `sound_report_resolvedById_fkey`, `f-sharing` h4) instead of none, under a `FORK` comment.
 - **Why:** filling `lib/app/db-drift.ts` necessarily breaks the case that asserts it ships empty
   (`HB2`). Pinning keeps a stray extra probe failing.

@@ -23,6 +23,7 @@ vi.mock('@/lib/db/client', () => ({
     favourite: { findMany: vi.fn() },
     synthProfile: { findMany: vi.fn(async () => []) },
     ownedInstrument: { findMany: vi.fn(async () => []) },
+    userPattern: { findMany: vi.fn(async () => []) },
   },
 }));
 
@@ -130,5 +131,29 @@ describe("collectAppSubjectData, a sound's lesson and the tutor's mark (f-tutor 
     };
     expect(where).toEqual({ userId: 'user-1' });
     expect(select).toMatchObject({ lesson: true, lessonVersion: true, fromTutor: true });
+  });
+});
+
+describe('collectAppSubjectData, patterns (f-step-sequencer t-81)', () => {
+  it("returns the subject's patterns as stored, and each sound's default pattern", async () => {
+    const pattern = { version: 1, bpm: 120 };
+    vi.mocked(prisma.userPattern.findMany).mockResolvedValueOnce([
+      { id: 'cmpat1', name: 'Acid line', pattern, version: 1, synthId: 'tb-303' },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+    expect(data.patterns).toEqual([
+      { id: 'cmpat1', name: 'Acid line', pattern, version: 1, synthId: 'tb-303' },
+    ]);
+    const { where, select } = vi.mocked(prisma.userPattern.findMany).mock.lastCall![0] as {
+      where: Record<string, unknown>;
+      select: Record<string, unknown>;
+    };
+    expect(where).toEqual({ userId: 'user-1' });
+    expect(select).toMatchObject({ name: true, pattern: true, version: true, synthId: true });
+    const sounds = vi.mocked(prisma.userSound.findMany).mock.lastCall![0] as {
+      select: Record<string, unknown>;
+    };
+    expect(sounds.select).toMatchObject({ patternId: true });
   });
 });

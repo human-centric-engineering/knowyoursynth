@@ -243,6 +243,7 @@ describe('reserved fork tiers', () => {
       'model SynthSuggestion {',
       'enum SoundVisibility {',
       'model UserSound {',
+      'model UserPattern {',
       'enum SoundReportReason {',
       'enum SoundReportStatus {',
       'model SoundReport {',
