@@ -2165,7 +2165,8 @@ function Synth({
         cables={sess.cables}
         phrase={shown?.phrase ?? null}
         playing={transportPlaying}
-        onPlay={(ph) => void playRiff(ph)}
+        // One transport: with the sequencer open, the scope's Play plays its pattern too.
+        onPlay={(ph) => void (seqShown ? playPattern() : playRiff(ph))}
         onStop={stopRiff}
         wheel={wheel}
         onWheel={setWheel}

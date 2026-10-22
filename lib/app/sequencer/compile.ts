@@ -57,6 +57,8 @@ export interface CompiledLoop {
   beats: number;
   /** Where a Brownian walk stands at the end, for the next loop's `from`. */
   to: number;
+  /** Which step played in each slot: what a playhead is drawn from. */
+  order: number[];
 }
 
 /** The note on the scale nearest to `note`, measured from `root`. A tie goes down. */
@@ -175,5 +177,5 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
     }
   });
   notes.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  return { notes, beats: len / perBeat, to };
+  return { notes, beats: len / perBeat, to, order };
 }

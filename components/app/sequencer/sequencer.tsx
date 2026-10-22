@@ -194,7 +194,9 @@ export function Sequencer({
   const sel = Math.min(chosen, len - 1);
   const page = Math.floor(sel / PAGE);
   const pages = Math.ceil(len / PAGE);
-  const [hits, setHits] = useState(4);
+  const [hitsSet, setHits] = useState(4);
+  // What Hits shows is what Euclid uses: never more hits than the part has steps.
+  const hits = Math.min(hitsSet, len);
   const [clip, setClip] = useState<{ kind: 'step' | 'page'; steps: Step[] } | null>(null);
   const keyRefs = useRef(new Map<number, HTMLButtonElement>());
   const moveFocus = useRef(false);
@@ -595,7 +597,7 @@ export function Sequencer({
               <Encoder
                 label="Hits"
                 compact
-                value={Math.min(hits, len)}
+                value={hits}
                 min={0}
                 max={len}
                 big={4}

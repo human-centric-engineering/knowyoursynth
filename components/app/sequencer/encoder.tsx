@@ -88,8 +88,9 @@ export function Encoder({
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d) return;
-    // Up is more: a step every few pixels, or the whole range in 400px where that is quicker (a tempo).
-    const per = Math.max(step / DRAG_PX, (max - min) / 400);
+    // Up is more: a step every few pixels, or the whole range in 400px where that is quicker (a tempo), but never more
+    // than half a step a pixel, so a long range with a fine step (a gate) can still be set by hand.
+    const per = Math.max(step / DRAG_PX, Math.min((max - min) / 400, step / 2));
     set(d.from + (d.y - e.clientY) * per);
   };
   const onPointerUp = () => {

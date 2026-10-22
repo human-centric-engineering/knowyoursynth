@@ -97,6 +97,20 @@ describe('Encoder', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('turns a long range with a fine step (a gate) no more than half a step a pixel', () => {
+    const { knob, onChange } = encoder({
+      label: 'Note',
+      min: 0.25,
+      max: 256,
+      step: 0.25,
+      value: 1,
+    });
+    fireEvent.pointerDown(knob, { clientY: 100, pointerId: 1 });
+    // 4px is half a step a pixel: 1.5, where the whole range in 400px would have jumped to 3.5.
+    fireEvent.pointerMove(knob, { clientY: 96, pointerId: 1 });
+    expect(onChange.mock.calls.map((c) => c[0])).toEqual([1.5]);
+  });
+
   it('turns a short range a step every few pixels', () => {
     const { knob, onChange } = encoder({ min: 1, max: 4, value: 1 });
     fireEvent.pointerDown(knob, { clientY: 100, pointerId: 1 });

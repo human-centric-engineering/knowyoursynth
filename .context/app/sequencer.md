@@ -174,7 +174,7 @@ The page owns the pattern through `useSequencer` (`use-sequencer.ts`), so closin
 hook is handed the riff of the sound on the panel and imports it whenever that riff's content changes. Choosing
 another sound replaces the pattern, and Undo starts empty. A sound read again with the same riff (a rename, a save)
 keeps the edits. A panel tempo control (`SynthDef.tempo`, the TB-303's TEMPO) sets the pattern's tempo as it sets a
-riff's, and Undo does not count it.
+riff's. Undo does not count it, and what Undo goes back to takes the knob's tempo too.
 
 **One transport.** With the sequencer open, the bar's Play plays the pattern. In the bottom sheet, which can cover the
 bar, the module has a Play button of its own, the same
@@ -188,6 +188,10 @@ which buys two things:
 - The step order the playhead is drawn with is the order the loop was compiled with, random and Brownian included.
 - An edit recompiles the loop playing now with the same draws, so a step with a chance doesn't change its mind because
   a different step was edited.
+
+After a start, the hook ignores the engine's events until the new run's loop 0 reports, so a `loop` or
+`patternEnd` already on its way from the run before (Stop then Play, or a new sound restarting it) is not taken as this
+run's. `compileLoop` hands back the step order it played (`order`), which the playhead is drawn from.
 
 An edit while playing sends `patternEdit` for the loop playing, then queues a fresh next loop. A tempo change sends
 `tempo` too. An edit that `PatternSchema` refuses is not made.

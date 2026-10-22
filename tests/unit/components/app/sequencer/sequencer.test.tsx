@@ -204,6 +204,7 @@ describe('the transport', () => {
   it('shows Play again when the engine says the pattern ended', async () => {
     open();
     await play();
+    fire(loopEvent());
     fire({ type: 'patternEnd' });
     expect(button('Play')).toBeTruthy();
   });
@@ -589,7 +590,11 @@ describe('what it refuses, and a page that is late', () => {
   it('draws the playhead from the loop before when the player played it again (the page was late)', async () => {
     open();
     await play();
-    // Loop 0 was compiled; the player turned over to loop 2 without the page having queued 1 or 2.
+    // The player turned over to loop 2 before loop 1 was compiled: the loop before stands in.
+    fire(loopEvent());
+    act(() => state.stop());
+    await play();
+    fire(loopEvent());
     fire(loopEvent({ index: 2 }));
     engine.frame = 0.375 * 48000;
     expect(state.position()).toEqual({ step: 3, part: 0 });
@@ -662,6 +667,48 @@ describe('what the code review found', () => {
     });
     engine.frame = 0.375 * 48000;
     expect(state.position()).toEqual({ step: 3, part: 0 });
+  });
+});
+
+describe('what the second review found', () => {
+  it('ignores a loop event from the run before a restart, until the new run’s first loop reports', async () => {
+    open();
+    await play();
+    fire(loopEvent({ index: 6 }));
+    fireEvent.click(button('Stop'));
+    await play();
+    const queued = sentOf('patternNext').length;
+    // Loop 7's start, sent before Stop, arrives after Play: not this run's.
+    fire(loopEvent({ index: 7 }));
+    fire({ type: 'patternEnd' });
+    expect(sentOf('patternNext')).toHaveLength(queued);
+    expect(button('Stop')).toBeTruthy();
+    fire(loopEvent());
+    expect(sentOf('patternNext')).toHaveLength(queued + 1);
+  });
+
+  it('takes back a tempo set on the encoder with Undo, though the panel sets a tempo too', () => {
+    const { rerender } = open(RIFF, 120);
+    rerender(<Harness riff={RIFF} tempo={130} />);
+    fireEvent.keyDown(slider('Tempo'), { key: 'PageUp' });
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('140');
+    fireEvent.click(key(3));
+    fireEvent.click(key(3));
+    fireEvent.click(button('Undo'));
+    // The step is back and the encoder's 140 stays; one more Undo takes the tempo back to the panel's.
+    expect(labels()[2]).toBe('Step 3: D♯3, on');
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('140');
+    fireEvent.click(button('Undo'));
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('130');
+  });
+
+  it('uses the hits it shows: no more than the part has steps', () => {
+    open();
+    for (let i = 0; i < 10; i++) fireEvent.keyDown(slider('Hits'), { key: 'ArrowUp' });
+    expect(slider('Hits').getAttribute('aria-valuenow')).toBe('8');
+    fireEvent.keyDown(slider('Length'), { key: 'PageUp' });
+    // 24 steps now: Hits still shows the 8 Euclid used, not the 14 pressed for.
+    expect(slider('Hits').getAttribute('aria-valuenow')).toBe('8');
   });
 });
 

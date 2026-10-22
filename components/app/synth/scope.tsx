@@ -1228,7 +1228,7 @@ export function ScopeDialog({
                     onClick={() => (playing ? onStop() : onPlay(phrase))}
                     className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${playing ? 'border-(--kys-accent) bg-(--kys-accent) text-(--kys-accent-ink)' : 'border-(--kys-line) bg-(--kys-surface) text-(--kys-text) hover:border-(--kys-muted)'}`}
                   >
-                    {playing ? '■ Stop riff' : '▶ Play riff'}
+                    {playing ? '■ Stop' : '▶ Play'}
                   </button>
                 )}
               </div>

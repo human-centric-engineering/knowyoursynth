@@ -20,8 +20,8 @@
  * change its mind because a different step was edited).
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { compileLoop, seededRng, stepOrder } from '@/lib/app/sequencer/compile';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import {
   MAX_BPM,
@@ -146,6 +146,11 @@ export function useSequencer({
   const lastGroup = useRef<{ key: string; at: number } | null>(null);
   const loops = useRef(new Map<number, LoopInfo>());
   const current = useRef(0);
+  /**
+   * Set from a start until the new run's first loop reports. A `loop` or `patternEnd` from the run before (already on
+   * its way from the audio thread when Stop and Play were pressed, or a new sound restarted it) is not this run's.
+   */
+  const awaiting = useRef(false);
   const playhead = useRef(createPlayhead());
 
   const send = useCallback((m: SynthMessage) => engine?.send(m), [engine]);
@@ -160,14 +165,12 @@ export function useSequencer({
   const compile = useCallback(
     (p: Pattern, index: number, seed: number, from: number | undefined) => {
       const opts = { loop: index, from, fill: fillRef.current };
-      // The same seed gives stepOrder the draws compileLoop starts with, so the order is the one the loop plays.
-      const { order } = stepOrder(p, { ...opts, rng: seededRng(seed) });
       const c = compileLoop(p, { ...opts, rng: seededRng(seed) });
       const info: LoopInfo = {
         seed,
         from,
         to: c.to,
-        order,
+        order: c.order,
         part: p.chain[index % p.chain.length],
         perBeat: stepsPerBeat(p),
       };
@@ -200,6 +203,7 @@ export function useSequencer({
       loops.current.clear();
       playhead.current.clear();
       current.current = 0;
+      awaiting.current = true;
       send({ type: 'pattern', loop: compile(p, 0, newSeed(), undefined), bpm: p.bpm });
     },
     [compile, send]
@@ -256,10 +260,8 @@ export function useSequencer({
   );
 
   const undo = useCallback(() => {
-    const last = past.current[past.current.length - 1];
-    if (!last) return;
-    // The panel's tempo knob still says what it says: Undo does not take the pattern off it.
-    const prev = tempoRef.current ? { ...last, bpm: clampBpm(tempoRef.current) } : last;
+    const prev = past.current[past.current.length - 1];
+    if (!prev) return;
     past.current = past.current.slice(0, -1);
     setUndoable(past.current.length > 0);
     const was = patternRef.current;
@@ -272,7 +274,7 @@ export function useSequencer({
   // The sound's riff, imported whenever it changes (another sound chosen): a fresh pattern with nothing to undo. Keyed
   // on the riff's content, so a sound read again with the same riff (a rename, a save) keeps the edits.
   // A riff that goes away for a moment (no sound shown) and comes back the same is not a new riff.
-  const riffKey = riff ? JSON.stringify(riff) : null;
+  const riffKey = useMemo(() => (riff ? JSON.stringify(riff) : null), [riff]);
   const loadedKey = useRef(riffKey);
   useEffect(() => {
     const ph = riffRef.current;
@@ -295,6 +297,9 @@ export function useSequencer({
     if (p.bpm === bpm) return;
     patternRef.current = { ...p, bpm };
     setPattern(patternRef.current);
+    // The knob's tempo stands through an Undo: what Undo goes back to is moved to it as well. A tempo set on the
+    // sequencer's own encoder after this is a snapshot of its own, and Undo still takes it back.
+    past.current = past.current.map((q) => ({ ...q, bpm }));
   }, [tempo]);
 
   const play = useCallback(async () => {
@@ -330,6 +335,10 @@ export function useSequencer({
   const onEvent = useCallback(
     (e: SynthEvent) => {
       if (!playingRef.current) return;
+      if (awaiting.current) {
+        if (e.type !== 'loop' || e.index !== 0 || !e.start) return;
+        awaiting.current = false;
+      }
       if (e.type === 'loop') {
         current.current = e.index;
         playhead.current.push(e);

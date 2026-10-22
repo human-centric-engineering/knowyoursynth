@@ -139,7 +139,7 @@
     "items": [
       {
         "title": "Sequencer",
-        "text": "SEQUENCE A/B and the RECORD / PLAY switch are not modelled. Use the Play riff button under the keyboard to hear a sound in motion."
+        "text": "SEQUENCE A/B and the RECORD / PLAY switch are not modelled. Use the Play button on the player bar to hear a sound in motion."
       },
       {
         "title": "Arpeggiator",
