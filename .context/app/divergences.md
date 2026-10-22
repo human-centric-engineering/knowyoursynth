@@ -116,20 +116,21 @@ the same PR**, and each row names what deletes it.
 ### VERSIONING.md: the synth library in the Covered list
 
 - **Files:** `VERSIONING.md`
-- **Change:** adds seven bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
+- **Change:** adds eight bullets to the `lib/app/` Covered list: `lib/app/synths/` (the contract,
   the engine, the validator and the definition registry), `lib/app/catalogue/` (seeding the
   catalogue and reading it for the API), `lib/app/bank/` (the same for the databank),
   `lib/app/sounds/` (users' own sounds, `f-my-sounds` s1), `lib/app/profile/` (synth profiles,
-  `f-profiles` r1), `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53) and
-  `lib/app/sequencer/` (the pattern model, `f-step-sequencer` t-78).
+  `f-profiles` r1), `lib/app/tutor/` (the tutor's agent, tools and context, `f-tutor` t-53),
+  `lib/app/sequencer/` (the pattern model, `f-step-sequencer` t-78) and `lib/app/patterns/` (users' own
+  patterns, t-81).
 - **Why:** the public-surface guard treats everything under `lib/app/` as public surface and
   fails on an unlisted path. Its fork note names this as the fix (decision on f-engine
   t-2/t-3).
-- **On conflict:** take theirs and re-insert our seven bullets in the `lib/app/` list, in
+- **On conflict:** take theirs and re-insert our eight bullets in the `lib/app/` list, in
   alphabetical order.
 - **Upstream:** not raised. A guard that read the fork's own list from a fork-owned file would
   remove this row.
-- **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor or sequencer code lives in `lib/app/`, or when the guard
+- **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor, sequencer or patterns code lives in `lib/app/`, or when the guard
   reads fork scaffolds from a fork-owned file.
 
 ### The reserved-tier test, pinned to our app models
