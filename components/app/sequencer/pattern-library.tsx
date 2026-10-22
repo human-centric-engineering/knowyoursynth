@@ -57,6 +57,9 @@ type Form = {
 /** A library sound as the browser lists it: only what loading its riff needs. */
 type LibraryRiff = Pick<SynthDetail['sounds'][number], 'id' | 'name' | 'phrase'>;
 
+/** A save or rename's status when the sequencer holds another pattern by the time it comes back. */
+const since = '. The sequencer holds another pattern now.';
+
 const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
@@ -65,7 +68,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   const { loaded, edited } = seq;
   const [panel, setPanel] = useState<Panel>(null);
   const [form, setForm] = useState<Form>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  /** The saved pattern Delete was pressed for: what the confirmation names and removes. */
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const nameId = useId();
@@ -95,12 +99,17 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       setForm({ mode: 'save', name: loaded?.name ?? '', error: null });
       return;
     }
-    // What was sent is what is saved: an edit made while it was on its way is still an edit.
+    // What was sent is what is saved: an edit made while it was on its way is still an edit, and a pattern opened
+    // meanwhile is not named as the one saved.
     const sent = seq.pattern;
+    const at = seq.held();
     void run('save the pattern', async () => {
       const d = await mine.update(own.id, { pattern: sent });
-      seq.markSaved({ id: d.id, name: d.name }, sent);
-      setStatus(`Saved ${d.name}.`);
+      setStatus(
+        seq.markSaved({ id: d.id, name: d.name }, sent, at)
+          ? `Saved ${d.name}.`
+          : `Saved ${d.name}${since}`
+      );
     });
   };
 
@@ -121,29 +130,38 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       return;
     }
     const sent = seq.pattern;
+    const at = seq.held();
     void run(mode === 'rename' ? 'rename the pattern' : 'save the pattern', async () => {
       if (mode === 'rename' && own) {
         const d = await mine.update(own.id, { name: name.data });
         // A rename leaves the steps as they were saved: an edited pattern stays edited.
-        seq.relabel({ id: d.id, name: d.name });
-        setStatus(`Renamed to ${d.name}.`);
+        const named = seq.relabel({ id: d.id, name: d.name }, at);
+        setStatus(named ? `Renamed to ${d.name}.` : `Renamed to ${d.name}${since}`);
       } else {
         const d = await mine.create(name.data, sent, synthId);
-        seq.markSaved({ id: d.id, name: d.name }, sent);
-        setStatus(`Saved ${d.name} to My patterns.`);
+        const named = seq.markSaved({ id: d.id, name: d.name }, sent, at);
+        setStatus(
+          named ? `Saved ${d.name} to My patterns.` : `Saved ${d.name} to My patterns${since}`
+        );
       }
       setForm(null);
     });
   };
 
   const remove = () => {
-    if (!own) return;
+    const target = confirmDelete;
+    if (!target) return;
+    // Only the pattern it was pressed for, and only while that is what is held, is relabelled.
+    const at = own?.id === target.id ? seq.held() : null;
     void run('delete the pattern', async () => {
-      await mine.remove(own.id);
-      setConfirmDelete(false);
+      await mine.remove(target.id);
+      setConfirmDelete(null);
       // What is held is still the pattern, now saved nowhere: Save puts it back as a new one.
-      seq.relabel({ id: null, name: own.name });
-      setStatus(`Deleted ${own.name}. The sequencer still holds it until something else opens.`);
+      if (at !== null && seq.relabel({ id: null, name: target.name }, at))
+        setStatus(
+          `Deleted ${target.name}. The sequencer still holds it until something else opens.`
+        );
+      else setStatus(`Deleted ${target.name}.`);
     });
   };
 
@@ -260,7 +278,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                 'Delete',
                 'Removes the pattern from My patterns. Sounds that played it play their own riff.',
                 <Trash2 size={14} aria-hidden="true" />,
-                () => setConfirmDelete(true),
+                () => own && setConfirmDelete({ id: own.id, name: own.name }),
                 { disabled: !own }
               )}
               {button(
@@ -339,9 +357,9 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
         </form>
       )}
 
-      {confirmDelete && own && (
+      {confirmDelete && (
         <div className="kys-seq-lib-form" role="group" aria-label="Delete the pattern">
-          <span>Delete {own.name} from My patterns?</span>
+          <span>Delete {confirmDelete.name} from My patterns?</span>
           <button
             type="button"
             className="kys-seq-lib-action is-danger"
@@ -353,7 +371,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
           <button
             type="button"
             className="kys-seq-lib-action is-quiet"
-            onClick={() => setConfirmDelete(false)}
+            onClick={() => setConfirmDelete(null)}
           >
             Keep it
           </button>

@@ -99,12 +99,20 @@ export interface Sequencer {
    */
   load: (p: Pattern, from: LoadedPattern) => boolean;
   /**
-   * `saved` (the pattern as it was sent) has been saved as `as`: it names what is held, and an edit made since the save
-   * was sent is still an edit.
+   * Which pattern is held: it changes whenever the whole pattern is replaced (one opened, another sound's riff, an Undo
+   * past either). A save, rename or delete takes it as it sends, and names what is held only if it is unchanged.
    */
-  markSaved: (as: LoadedPattern, saved: Pattern) => void;
-  /** What the pattern is called, or where it is saved, changed (a rename, a delete), its steps not: `edited` stands. */
-  relabel: (as: LoadedPattern) => void;
+  held: () => number;
+  /**
+   * `saved` (the pattern as it was sent while `at` was held) has been saved as `as`: it names what is held, and an edit
+   * made since the save was sent is still an edit. False, naming nothing, when another pattern is held since.
+   */
+  markSaved: (as: LoadedPattern, saved: Pattern, at: number) => boolean;
+  /**
+   * What the pattern held at `at` is called, or where it is saved, changed (a rename, a delete), its steps not: `edited`
+   * stands. False, naming nothing, when another pattern is held since.
+   */
+  relabel: (as: LoadedPattern, at: number) => boolean;
   /** Changes the pattern. An edit that would not make a valid pattern is refused and logged. */
   edit: (next: Pattern | ((p: Pattern) => Pattern), o?: EditOptions) => void;
   undo: () => void;
@@ -196,6 +204,8 @@ export function useSequencer({
   }, []);
 
   const patternRef = useRef(pattern);
+  /** Counts replacements of the whole pattern: see `held`. */
+  const heldRef = useRef(0);
   /** What is held now, as the Undo step a replacement of the whole pattern pushes. */
   const replaced = useCallback(
     (): Snapshot => ({
@@ -334,6 +344,7 @@ export function useSequencer({
     patternRef.current = prev;
     setPattern(prev);
     if (snap.named) {
+      heldRef.current++;
       setLoaded(snap.named.loaded);
       setBaseline(snap.named.baseline);
     }
@@ -354,6 +365,7 @@ export function useSequencer({
     // An edited pattern is not lost to another sound's riff: one Undo brings it back. An unedited one is just the
     // last sound's riff, and is not worth an Undo.
     const was = replaced();
+    heldRef.current++;
     const edited = past.current.length > 0;
     patternRef.current = p;
     setPattern(p);
@@ -375,6 +387,7 @@ export function useSequencer({
       // On a synth with a tempo knob the knob sets the tempo, as it does for the sound's riff.
       const next = tempoRef.current ? { ...ok.data, bpm: clampBpm(tempoRef.current) } : ok.data;
       const was = replaced();
+      heldRef.current++;
       patternRef.current = next;
       setPattern(next);
       setLoaded(from);
@@ -388,15 +401,26 @@ export function useSequencer({
     [start, replaced, setLoaded, setBaseline]
   );
 
+  const held = useCallback(() => heldRef.current, []);
+
   const markSaved = useCallback(
-    (as: LoadedPattern, saved: Pattern) => {
+    (as: LoadedPattern, saved: Pattern, at: number) => {
+      if (at !== heldRef.current) return false;
       setLoaded(as);
       setBaseline(JSON.stringify(saved));
+      return true;
     },
     [setLoaded, setBaseline]
   );
 
-  const relabel = useCallback((as: LoadedPattern) => setLoaded(as), [setLoaded]);
+  const relabel = useCallback(
+    (as: LoadedPattern, at: number) => {
+      if (at !== heldRef.current) return false;
+      setLoaded(as);
+      return true;
+    },
+    [setLoaded]
+  );
 
   const edited = useMemo(() => JSON.stringify(pattern) !== baseline, [pattern, baseline]);
 
@@ -493,6 +517,7 @@ export function useSequencer({
     loaded,
     edited,
     load,
+    held,
     markSaved,
     relabel,
     edit,

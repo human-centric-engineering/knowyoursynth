@@ -11,7 +11,7 @@
  * @see components/app/sequencer/use-my-patterns.ts
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { useSequencer, type Sequencer as SeqState } from '@/components/app/sequencer/use-sequencer';
@@ -509,6 +509,97 @@ describe('Undo, and edits while a save is on its way', () => {
     expect(server.patterns.get('pat1')?.pattern).not.toEqual(state.pattern);
     expect(state.edited).toBe(true);
     expect(screen.getByText('edited')).toBeTruthy();
+  });
+});
+
+describe('a request still out while something else opens', () => {
+  /** Holds the API's next `method` call until the returned function is called. */
+  async function holdNext(method: 'patch' | 'delete') {
+    const { apiClient } = await import('@/lib/api/client');
+    const fn = vi.mocked(apiClient[method]) as unknown as Mock<
+      (...args: unknown[]) => Promise<unknown>
+    >;
+    const real = fn.getMockImplementation()!;
+    let release = () => undefined as void;
+    fn.mockImplementationOnce(
+      (...args) =>
+        new Promise((resolve) => {
+          release = () => resolve(real(...args));
+        })
+    );
+    return () => release();
+  }
+  const openFromMine = async (name: RegExp) => {
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () => fireEvent.click(within(list).getByRole('button', { name })));
+  };
+  const confirm = () =>
+    within(screen.getByRole('group', { name: 'Delete the pattern' })).getByRole('button', {
+      name: 'Delete',
+    });
+
+  it('does not name a riff opened while a save was out as the saved pattern', async () => {
+    render(<Page />);
+    await saveAs('Mine');
+    editStep2();
+    // the library open (the strip's buttons wait while a request is out; an open panel does not)
+    await act(async () => fireEvent.click(button('Library')));
+    const riff = await screen.findByRole('button', { name: /Fat bass/ });
+    const release = await holdNext('patch');
+    await act(async () => fireEvent.click(button(/^Save Mine$/)));
+    await act(async () => fireEvent.click(riff));
+    await act(async () => release());
+
+    expect(state.loaded).toEqual({ id: null, name: 'Fat bass (Model D)' });
+    expect(screen.getByRole('status').textContent).toBe(
+      'Saved Mine. The sequencer holds another pattern now.'
+    );
+    // so Save names a new pattern, and nothing is written over the saved one
+    await act(async () => fireEvent.click(button('Save to My patterns')));
+    expect(screen.getByLabelText('Name the pattern')).toBeTruthy();
+  });
+
+  it('leaves a pattern opened while a delete was out named as itself', async () => {
+    render(<Page />);
+    await saveAs('Old');
+    editStep2();
+    await act(async () => fireEvent.click(button('Save as')));
+    fireEvent.change(screen.getByLabelText('Name the pattern'), { target: { value: 'New' } });
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Save' })));
+    // Old open, its delete held, New opened meanwhile from the list left open
+    await openFromMine(/Old/);
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () => fireEvent.click(button('Delete')));
+    const release = await holdNext('delete');
+    await act(async () => fireEvent.click(confirm()));
+    await act(async () => fireEvent.click(within(list).getByRole('button', { name: /New/ })));
+    await act(async () => release());
+
+    expect([...server.patterns.values()].map((p) => p.name)).toEqual(['New']);
+    expect(state.loaded).toEqual({ id: 'pat2', name: 'New' });
+    expect(screen.getByRole('status').textContent).toBe('Deleted Old.');
+  });
+
+  it('deletes the pattern the confirmation names, though another was opened while it showed', async () => {
+    render(<Page />);
+    await saveAs('First');
+    editStep2();
+    await act(async () => fireEvent.click(button('Save as')));
+    fireEvent.change(screen.getByLabelText('Name the pattern'), { target: { value: 'Second' } });
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Save' })));
+    await act(async () => fireEvent.click(button('Delete')));
+    await openFromMine(/First/);
+    expect(
+      within(screen.getByRole('group', { name: 'Delete the pattern' })).getByText(
+        'Delete Second from My patterns?'
+      )
+    ).toBeTruthy();
+    await act(async () => fireEvent.click(confirm()));
+
+    expect([...server.patterns.values()].map((p) => p.name)).toEqual(['First']);
+    expect(state.loaded).toEqual({ id: 'pat1', name: 'First' });
   });
 });
 

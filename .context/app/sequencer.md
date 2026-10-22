@@ -267,8 +267,11 @@ again, so pointing the open sound at it keeps the edits.
 - The name of what the sequencer holds: the sound's riff, one of My patterns, or a library riff with its synth.
   **edited** marks a change since it was loaded or saved. `useSequencer` tracks it against the pattern as loaded
   (`load`, `markSaved`, `relabel`). The panel's tempo knob does not count as an edit, as it does not count for Undo.
+  Undo past an opened pattern names what it brings back as it was named and saved, so Save never writes it over the
+  opened one. A save, rename or delete that comes back after another pattern was opened names nothing: `held` says
+  which pattern a request was sent for.
 - **Save** saves over the pattern held when it is one of theirs. Otherwise it asks for a name and saves a new one.
-  **Save as** always saves a new one. **Rename** and **Delete** act on the pattern held. Deleting keeps it in the
+  **Save as** always saves a new one. **Rename** and **Delete** act on the pattern held when they were pressed. Deleting keeps it in the
   sequencer, saved nowhere, until something else opens. Signed out, the strip has a link to sign in in their place.
 - **My patterns** lists the user's patterns, read when it is first opened. One opens in place of what is held, and Undo
   brings that back.
