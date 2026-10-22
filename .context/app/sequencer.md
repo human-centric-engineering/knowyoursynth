@@ -287,8 +287,9 @@ A mod lane moves one panel control step by step, as a CV row of a modular sequen
 parameter locks). t-82.
 
 **In the pattern.** `lanes` lists the controls, by id, up to `MAX_LANES` (8). Each step keeps its own values in `mod`
-(control id → value), so rotate, reverse, copy and paste carry them with their steps, and Randomise keeps them
-(`keepMods`). `PatternSchema` refuses a step value for a control with no lane, and a control with two lanes. Both
+(control id → value), so rotate, reverse, copy and paste carry them with their steps. Randomise, Clear and Delete on
+a step make notes or rests, not lanes, and keep them (`keepMods`). A paste drops a clip's values for lanes the pattern
+hasn't got (`onlyLanes`), which a clip copied before a lane was removed can carry. `PatternSchema` refuses a step value for a control with no lane, and a control with two lanes. Both
 fields are optional, so a pattern saved before lanes reads as it was and `PATTERN_VERSION` stays 1. The pattern knows
 no synth, so the schema checks only that a value is a number, a string or a boolean.
 
@@ -308,30 +309,40 @@ draws are the same with lanes or without. Each change falls on its slot's start,
 plays.
 
 **Playing.** The page turns each set into the voice's settings: `toEngine` of the panel's values with the set in their
-place, and the cables, as a knob turned to that value would be (`LaneTarget.paramsFor`). The loop carries them as
+place, and the cables, as a knob turned to that value would be (`LaneTarget.paramsFor`, from the same `engineParams` the
+panel's own settings come from). A lane can't move the voice between mono, poly and dual (`voiceMode`), which would
+let go of every held note on each step it did: a step that would plays the panel's settings. The loop carries them as
 `params`, and the pattern player sends each to the synth on its sample, before a note on the same sample. No new DSP
 is involved: it is the `params` message a knob turn sends.
 
 - The page's own `params` are the panel's. The player keeps the last as the rest it goes back to: on a slot no lane
-  sets, at Stop, when the pattern ends or a `panic` stops it, and when an edit takes the lanes away.
+  sets, at Stop, when the pattern ends or a `panic` stops it, when an edit takes the lanes away, and at a loop's
+  start when its lanes set nothing there (a part of the chain without lanes). A lane plays only once the page has sent
+  the panel's settings, which it goes back to.
 - A knob turned while a lane holds the synth is kept as the rest and not sent, so it doesn't undo the lane mid-step.
   The page sends the loop playing again (`patternEdit`) whenever the panel moves, so what the lanes leave alone
-  follows the knob from the next change on.
+  follows the knob from the next change on. Only while a lane plays on this synth (or the engine still has a lane's
+  settings to take back), and at most once every `LANE_RESEND_MS` (50 ms), since a knob dragged or the mod wheel
+  ridden moves the panel every frame. The loop queued after it is compiled from the same seed, so a step with a
+  chance doesn't change its mind because the wheel moved.
 - An edit applies the settings the edited loop has at the playhead at once.
 - No lane the synth can play: no `params`, and the loop plays exactly as one with no lanes.
 
 **On the panel.** While the pattern plays, `seq.modShown` is what the lanes set on the step being heard (read from
-the audio clock, as the playhead is). The page draws the panel with those values in place of its own. The panel's
-values are unchanged, and the panel is drawn from them again at Stop.
+the audio clock, as the playhead is). The panel draws those controls at the lanes' values (`SynthPanel`'s `moved`).
+Nothing else reads them: which controls show, and what a turn starts from, are the panel's own values. A turn of a
+control drawn at a lane's value changes the panel's by as much as it moved, a switch pressed flips the panel's, and a
+choice picked is picked (`rebase`). The panel is drawn from its own values again at Stop.
 
 **In the module** (`mod-lanes.tsx`). **Mod** on the tool row shows the lanes under the step keys, on the same grid,
-for the page of keys on show. **Add lane** picks a control of the synth on the panel. A lane's select moves it to
+for the page of keys on show. A pattern opened with lanes shows them. **Add lane** picks a control of the synth on the panel. A lane's select moves it to
 another control, which clears its values. A dashed line marks the panel's value, which a cell with nothing set plays.
 
 - A press or a drag across the cells sets each to the height it is at, on the control's travel (a log knob by
-  ratio, a choice by its drawn options). A stroke is one Undo. A double press clears a cell.
+  ratio, a choice by its drawn options). A stroke is one Undo. A double press clears a cell: its presses and the
+  clear are one stroke, so one Undo puts back what the cell held.
 - From the keyboard a lane is one Tab stop. Left and Right move along it, Up and Down change the value from the
-  panel's (Page Up and Page Down by more), Home and End go to either end, and Delete clears.
+  panel's (Page Up and Page Down by more; a switch or a choice by one option a press), Home and End go to either end, and Delete clears.
 - Hovering or focusing a cell shows its value at the head of the lane.
 
 ## Not yet

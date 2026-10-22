@@ -14,6 +14,8 @@ import {
   lanePos,
   laneValue,
   laneValueAt,
+  lanesPlay,
+  rebase,
   resolveMods,
   stepOverrides,
 } from '@/lib/app/sequencer/lanes';
@@ -26,7 +28,9 @@ import {
 } from '@/lib/app/sequencer/pattern';
 import {
   addLane,
+  clearSteps,
   keepMods,
+  onlyLanes,
   removeLane,
   retargetLane,
   reverseSteps,
@@ -337,5 +341,58 @@ describe('editing lanes', () => {
       undefined,
     ]);
     expect(kept[0].mod).not.toBe(steps[0].mod);
+  });
+
+  it('keeps the values through Clear, which clears notes, not lanes', () => {
+    const steps = laned().parts[0].steps;
+    const cleared = keepMods(steps, clearSteps(steps));
+    expect(cleared.map((s) => s.notes.length)).toEqual([0, 0, 0, 0]);
+    expect(cleared.map((s) => s.mod)).toEqual([
+      { cutoff: 500 },
+      undefined,
+      { cutoff: 4000 },
+      undefined,
+    ]);
+  });
+
+  it('drops a pasted step’s values for lanes the pattern has not got, so the paste is not refused', () => {
+    const clip: Step[] = [
+      { on: true, notes: [], mod: { cutoff: 500, gone: 3 } },
+      { on: true, notes: [], mod: { gone: 3 } },
+      { on: true, notes: [] },
+    ];
+    const kept = onlyLanes(clip, ['cutoff']);
+    expect(kept.map((s) => s.mod)).toEqual([{ cutoff: 500 }, undefined, undefined]);
+    expect('mod' in kept[1]).toBe(false);
+    const p = laned();
+    p.parts[0].steps = [...kept, p.parts[0].steps[3]];
+    expect(PatternSchema.safeParse(p).success).toBe(true);
+  });
+});
+
+describe('lanes and the panel', () => {
+  it('says whether any lane sets a value this synth can take', () => {
+    expect(lanesPlay(DEF, laned())).toBe(true);
+    expect(lanesPlay(DEF, newPattern(4))).toBe(false);
+    // A lane with no values, one for a control the synth lacks, and a value it cannot take: none plays
+    const p = laned();
+    p.lanes = ['cutoff', 'gone', 'acc'];
+    p.parts[0].steps = p.parts[0].steps.map(({ mod: _m, ...s }) => s);
+    p.parts[0].steps[1].mod = { gone: 3, acc: 5 };
+    expect(lanesPlay(DEF, p)).toBe(false);
+  });
+
+  it('turns a control drawn at a lane’s value by moving the panel’s own value by as much', () => {
+    // Drawn at 8, the panel's own at 2: a knob nudged to 9 moves the panel to 3
+    expect(rebase(RES, 8, 2, 9)).toBe(3);
+    // Kept inside the knob's travel, and from its default when the panel has no value
+    expect(rebase(RES, 8, 9, 10)).toBe(10);
+    expect(rebase(RES, 8, undefined, 7)).toBe(1);
+    // A switch flipped flips the panel's; one left alone leaves it
+    expect(rebase(ACCENT, true, false, false)).toBe(true);
+    expect(rebase(ACCENT, true, true, false)).toBe(false);
+    expect(rebase(ACCENT, true, false, true)).toBe(false);
+    // A choice picked is the choice picked
+    expect(rebase(WAVE, 'sq', 'saw', 'odd')).toBe('odd');
   });
 });

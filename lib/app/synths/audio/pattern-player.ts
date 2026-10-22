@@ -120,6 +120,10 @@ export function createPlayhead(): {
   };
 }
 
+/** Which voice settings play: mono, poly or dual. A change between them lets go of every held note. */
+export const voiceMode = (p: EngineParams): 'mono' | 'poly' | 'dual' =>
+  p.dual ? 'dual' : p.poly ? 'poly' : 'mono';
+
 const isNumber = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x);
 
 /** A note from the page: a start at or after beat 0, a key, a length above 0, and a velocity if it has one. */
@@ -221,15 +225,18 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
 
   /** Settings to the synth. One that changes it between mono, poly and dual lets go of the pattern's notes first. */
   function setParams(p: EngineParams) {
-    const now = p.dual ? 'dual' : p.poly ? 'poly' : 'mono';
+    const now = voiceMode(p);
     if (now !== mode && mode) release();
     mode = now;
     synth.handle({ type: 'params', p });
   }
 
-  /** A lane's settings, or (`null`) the panel's back. */
+  /**
+   * A lane's settings, or (`null`) the panel's back. Not before the page has sent the panel's: with nothing to go back
+   * to, a lane's settings would stay on the synth after it lets go.
+   */
   function apply(p: EngineParams | null) {
-    if (p) {
+    if (p && rest) {
       applied = p;
       setParams(p);
     } else if (applied) {
@@ -349,6 +356,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     time(c.base);
     time(c.pev);
     pi = 0;
+    // A loop whose lanes set nothing from its start (none it can play, or a pattern of the chain without lanes) starts
+    // on the panel's settings, not on what the loop before left set.
+    if (c.pev.length === 0 || c.pev[0].t > 0) apply(null);
     c.evs = c.base;
     c.len = length(c.beats);
     idx = 0;

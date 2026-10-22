@@ -33,7 +33,8 @@ import type {
   JackPress,
   PanelCtx,
 } from '@/components/app/panel/parts';
-import { isShown } from '@/lib/app/synths/lib/patch';
+import { controlMap, isShown } from '@/lib/app/synths/lib/patch';
+import { rebase } from '@/lib/app/sequencer/lanes';
 import {
   AreaLayer,
   DimLayer,
@@ -85,6 +86,12 @@ export interface SynthPanelProps {
    */
   def: SynthDef;
   values: ControlValues;
+  /**
+   * What the sequencer's mod lanes set on the step being heard: those controls draw these values in place of `values`.
+   * Nothing else reads them, so what shows and what a turn starts from stay the panel's own: a turn of one of them
+   * changes the panel's value by as much as the control moved (`rebase`).
+   */
+  moved?: ControlValues | null;
   /** A lesson step's target values: each control shows a marker where it should go. */
   target?: ControlValues | null;
   cables: PatchCable[];
@@ -149,6 +156,7 @@ interface PlugDrag {
 export function SynthPanel({
   def,
   values,
+  moved = null,
   target,
   cables,
   outline = false,
@@ -191,6 +199,22 @@ export function SynthPanel({
     [outline, theme]
   );
   const jackById = useMemo(() => Object.fromEntries(def.jacks.map((j) => [j.id, j])), [def]);
+  // A control the lanes hold is turned from the value it draws: the change goes to the panel's own value instead.
+  const live = useRef({ moved, values, onChange });
+  useEffect(() => {
+    live.current = { moved, values, onChange };
+  });
+  const controlById = useMemo(() => controlMap(def), [def]);
+  const onMovedChange = useCallback<ControlChange>(
+    (id, v) => {
+      const { moved: m, values: own, onChange: change } = live.current;
+      const c = controlById[id];
+      change(id, m && c && v !== null && Object.hasOwn(m, id) ? rebase(c, m[id], own[id], v) : v);
+    },
+    [controlById]
+  );
+  const turn = moved ? onMovedChange : onChange;
+  const drawn = (id: string) => (moved && Object.hasOwn(moved, id) ? moved[id] : values[id]);
   // A pin matrix (VCS3): its rows and columns are jacks drawn as the matrix legends, and a cable between two of them is a pin.
   const inMatrix = useMemo(
     () => new Set(def.matrix ? [...def.matrix.rows, ...def.matrix.cols] : []),
@@ -474,7 +498,7 @@ export function SynthPanel({
         {heatOn && !areasOn && <HeatLayer def={shown} values={values} outline={outline} />}
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;
-          const value = values[c.id];
+          const value = drawn(c.id);
           const t = target ? target[c.id] : null;
           // The second axis of a joystick (`pairOf`) is drawn by the first.
           if (c.type === 'joystick')
@@ -483,28 +507,22 @@ export function SynthPanel({
                 key={c.id}
                 c={c}
                 value={value}
-                value2={c.pair ? values[c.pair] : undefined}
+                value2={c.pair ? drawn(c.pair) : undefined}
                 target={t}
                 ctx={ctx}
-                onChange={onChange}
+                onChange={turn}
               />
             );
           // const Comp = knob ? Knob : fader ? Fader : select ? Select : menu ? MenuRow : Switch
           if (c.type === 'knob')
-            return <Knob key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={onChange} />;
+            return <Knob key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           if (c.type === 'fader')
-            return (
-              <Fader key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={onChange} />
-            );
+            return <Fader key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           if (c.type === 'select')
-            return (
-              <Select key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={onChange} />
-            );
+            return <Select key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           if (c.type === 'menu')
-            return (
-              <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={onChange} />
-            );
-          return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={onChange} />;
+            return <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
+          return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
         })}
         {def.jacks.map((j) =>
           inMatrix.has(j.id) ? null : (

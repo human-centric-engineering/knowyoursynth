@@ -41,7 +41,7 @@ import {
   stepsPerBeat,
   type Pattern,
 } from '@/lib/app/sequencer/pattern';
-import { resolveMods, stepOverrides } from '@/lib/app/sequencer/lanes';
+import { lanesPlay, resolveMods, stepOverrides } from '@/lib/app/sequencer/lanes';
 import type { ControlValues, EngineParams, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import {
@@ -63,6 +63,8 @@ export interface SequencerEngine {
 export const UNDO_DEPTH = 100;
 /** Edits in one group (one encoder being turned) this close together are one Undo. */
 const GROUP_MS = 1200;
+/** The least time between two sends of the loop playing for the panel moving under its lanes. */
+const LANE_RESEND_MS = 50;
 
 /** Where the playhead is: the step it is on, and the part (A or B) playing. */
 export interface SeqPosition {
@@ -255,6 +257,8 @@ export function useSequencer({
   const riffRef = useRef(riff);
   const tempoRef = useRef(tempo);
   const lanesRef = useRef(lanes);
+  /** Whether the last loop compiled carried lane settings: the engine may still have them to take back. */
+  const lanesSent = useRef(false);
   useEffect(() => {
     riffRef.current = riff;
     tempoRef.current = tempo;
@@ -297,20 +301,21 @@ export function useSequencer({
       const loop: PatternLoop = { notes: c.notes, beats: c.beats };
       const params = lanePlay(p, c.mods);
       if (params) loop.params = params;
+      lanesSent.current = !!params;
       return loop;
     },
     [lanePlay]
   );
 
   const queue = useCallback(
-    (index: number) => {
+    (index: number, seed = newSeed()) => {
       const p = patternRef.current;
       if (!p.loop) {
         send({ type: 'patternNext', loop: null });
         return;
       }
       const from = newestBefore(loops.current, index - 1)?.to;
-      send({ type: 'patternNext', loop: compile(p, index, newSeed(), from) });
+      send({ type: 'patternNext', loop: compile(p, index, seed, from) });
     },
     [compile, send]
   );
@@ -496,12 +501,38 @@ export function useSequencer({
   }, [engine, ensureAudio, start]);
 
   // The panel moving, or another synth, changes what the lanes play: the loop playing is sent again, so a control no
-  // lane sets follows the panel, and a lane for a control this synth lacks stays silent.
+  // lane sets follows the panel, and a lane for a control this synth lacks stays silent. Only while lanes play here (or
+  // the engine still has their settings to take back), and at most once every LANE_RESEND_MS: a knob dragged or the mod
+  // wheel ridden moves the panel every frame. The loop queued after it keeps its draws, so a step with a chance does
+  // not change its mind because the wheel moved.
+  const laneTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const laneResentAt = useRef(0);
+  const resendLanes = useCallback(() => {
+    laneTimer.current = null;
+    const p = patternRef.current;
+    const target = lanesRef.current;
+    if (!playingRef.current) return;
+    if (!lanesSent.current && !(target && lanesPlay(target.def, p))) return;
+    laneResentAt.current = Date.now();
+    const i = current.current;
+    const info = loops.current.get(i);
+    send({ type: 'patternEdit', loop: compile(p, i, info?.seed ?? newSeed(), info?.from) });
+    queue(i + 1, loops.current.get(i + 1)?.seed);
+  }, [compile, queue, send]);
   useEffect(() => {
     lanesRef.current = lanes;
-    const p = patternRef.current;
-    if (playingRef.current && p.lanes?.length) resend(p, p);
-  }, [lanes, resend]);
+    // One already due reads the newest panel when it goes.
+    if (laneTimer.current) return;
+    const wait = laneResentAt.current + LANE_RESEND_MS - Date.now();
+    if (wait <= 0) resendLanes();
+    else laneTimer.current = setTimeout(resendLanes, wait);
+  }, [lanes, resendLanes]);
+  useEffect(
+    () => () => {
+      if (laneTimer.current) clearTimeout(laneTimer.current);
+    },
+    []
+  );
 
   const [modShown, setModShown] = useState<ControlValues | null>(null);
 

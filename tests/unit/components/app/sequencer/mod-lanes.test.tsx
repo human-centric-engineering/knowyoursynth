@@ -11,8 +11,10 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { useMemo } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
+import { nudged } from '@/components/app/sequencer/mod-lanes';
 import {
   useSequencer,
   type LaneTarget,
@@ -85,7 +87,11 @@ let engine: ReturnType<typeof fakeEngine>;
 let state: SeqState;
 
 function Harness({ panel = PANEL, def = DEF }: { panel?: ControlValues; def?: SynthDef }) {
-  const lanes: LaneTarget = { def, paramsFor: (set) => madeFor(set, panel) };
+  // Made afresh only when the panel or the synth changes, as the page does.
+  const lanes = useMemo<LaneTarget>(
+    () => ({ def, paramsFor: (set) => madeFor(set, panel) }),
+    [def, panel]
+  );
   const seq = useSequencer({ engine, ensureAudio: async () => true, riff: RIFF, lanes });
   state = seq;
   return (
@@ -111,6 +117,17 @@ const addCutoff = () => {
   fireEvent.click(screen.getByRole('option', { name: 'cutoff' }));
 };
 const valueOn = (step: number) => state.pattern.parts[0].steps[step].mod?.cutoff;
+/** Copy, paste and clear are in the Edit menu: opened, then the item chosen. */
+const menu = (name: string) => {
+  fireEvent.click(screen.getByRole('button', { name: 'Copy, paste and clear' }));
+  fireEvent.click(screen.getByRole('menuitem', { name }));
+};
+/** Lays the cells out 20 wide and 40 high, from the left. */
+const layOut = () =>
+  cells().forEach((c, k) => {
+    c.getBoundingClientRect = () =>
+      ({ left: k * 20, right: k * 20 + 18, top: 0, bottom: 40, height: 40, width: 18 }) as DOMRect;
+  });
 
 /** The riff with a cutoff lane at 80 on step 1 and 10 on step 3. */
 function laned(): Pattern {
@@ -181,13 +198,99 @@ describe('the lanes in the module', () => {
     p.lanes = ['cutoff', 'gone'];
     p.parts[0].steps[1] = { ...p.parts[0].steps[1], mod: { gone: 3 } };
     act(() => void state.load(p, { id: null, name: 'test' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Mod lanes' }));
     expect(
       screen.getByText('Not on this synth: kept with the pattern, and silent here.')
     ).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Remove the cutoff lane' }));
     expect(state.pattern.lanes).toEqual(['gone']);
     expect(state.pattern.parts[0].steps[1].mod).toEqual({ gone: 3 });
+  });
+});
+
+describe('editing around the lanes', () => {
+  it('shows the lanes of a pattern opened while they were hidden', () => {
+    render(<Harness />);
+    const mod = screen.getByRole('button', { name: 'Mod lanes' });
+    expect(mod).toHaveAttribute('aria-pressed', 'false');
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    expect(mod).toHaveAttribute('aria-pressed', 'true');
+    expect(cells()).toHaveLength(8);
+  });
+
+  it('clears a cell on a double press, undone as one with the presses before it', () => {
+    render(<Harness />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    layOut();
+    const strip = screen.getByRole('group', { name: 'cutoff lane' });
+    // Two presses at the top of the first cell, then the double click they make
+    for (let k = 0; k < 2; k++) {
+      fireEvent.pointerDown(strip, { button: 0, clientX: 5, clientY: 0, pointerId: 1 });
+      fireEvent.pointerUp(strip, { pointerId: 1 });
+    }
+    expect(valueOn(0)).toBe(100);
+    fireEvent.doubleClick(cells()[0]);
+    expect(valueOn(0)).toBeUndefined();
+    act(() => state.undo());
+    expect(valueOn(0)).toBe(80);
+  });
+
+  it('pastes a step copied before its lane was removed, without the lane’s value', () => {
+    render(<Harness />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    const first = structuredClone(state.pattern.parts[0].steps[0]);
+    menu('Copy step');
+    fireEvent.click(screen.getByRole('button', { name: 'Remove the cutoff lane' }));
+    // The step emptied, so the paste is a change
+    act(() =>
+      state.edit((q) => ({
+        ...q,
+        parts: [
+          { steps: q.parts[0].steps.map((x, i) => (i === 0 ? { on: false, notes: [] } : x)) },
+        ],
+      }))
+    );
+    menu('Paste step');
+    const { mod: _mod, ...notes } = first;
+    expect(state.pattern.parts[0].steps[0]).toEqual(notes);
+  });
+
+  it('keeps the lanes’ values through Clear', () => {
+    render(<Harness />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    menu('Clear');
+    const steps = state.pattern.parts[0].steps;
+    expect(steps.every((s) => s.notes.length === 0)).toBe(true);
+    expect([valueOn(0), valueOn(2)]).toEqual([80, 10]);
+  });
+
+  it('moves a switch or a choice by one option on every press from the keyboard', () => {
+    const at = {
+      x: 0,
+      y: 0,
+      module: 'filter' as const,
+      help: '',
+      type: 'button' as const,
+      w: 10,
+      h: 10,
+    };
+    const sw: Control = { ...at, id: 'sw', kind: 'bool', def: false };
+    const wave: Control = {
+      ...at,
+      id: 'wave',
+      kind: 'enum',
+      def: 'saw',
+      options: [
+        { v: 'saw', label: 'Saw' },
+        { v: 'tri', label: 'Triangle' },
+        { v: 'sq', label: 'Square' },
+      ],
+    };
+    expect(nudged(sw, false, 1, 1 / 50)).toBe(true);
+    expect(nudged(sw, true, -1, 1 / 10)).toBe(false);
+    expect(nudged(sw, true, 1, 1 / 50)).toBe(true);
+    expect(nudged(wave, 'tri', 1, 1 / 50)).toBe('sq');
+    expect(nudged(wave, 'tri', -1, 1 / 10)).toBe('saw');
+    expect(nudged(wave, 'sq', 1, 1 / 50)).toBe('sq');
   });
 });
 
@@ -229,6 +332,45 @@ describe('the lanes playing', () => {
     const edit = sentOf('patternEdit').at(-1)!;
     expect(sentOf('patternEdit')).toHaveLength(before + 1);
     expect(edit.loop.params?.[0]).toEqual([0, madeFor({ cutoff: 80 }, { cutoff: 40, res: 9 })]);
+  });
+
+  it('sends the loop again at most once a moment while the panel keeps moving, with the newest panel', async () => {
+    const { rerender } = render(<Harness />);
+    // Every note a coin toss, so a loop compiled from fresh draws would almost surely differ
+    const p = laned();
+    p.parts[0].steps = p.parts[0].steps.map((x) =>
+      x.notes.length > 0 ? { ...x, probability: 0.5 } : x
+    );
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    await act(async () => void (await state.play()));
+    act(() => state.onEvent(loopEvent()));
+    const before = sentOf('patternEdit').length;
+    const queued = sentOf('patternNext').at(-1)!.loop;
+    rerender(<Harness panel={{ cutoff: 40, res: 1 }} />);
+    rerender(<Harness panel={{ cutoff: 40, res: 2 }} />);
+    rerender(<Harness panel={{ cutoff: 40, res: 3 }} />);
+    expect(sentOf('patternEdit')).toHaveLength(before + 1);
+    await waitFor(() => expect(sentOf('patternEdit')).toHaveLength(before + 2));
+    expect(sentOf('patternEdit').at(-1)!.loop.params?.[0]).toEqual([
+      0,
+      madeFor({ cutoff: 80 }, { cutoff: 40, res: 3 }),
+    ]);
+    // The loop queued after it keeps its notes' draws: only its settings follow the panel
+    expect(sentOf('patternNext').at(-1)!.loop?.notes).toEqual(queued?.notes);
+  });
+
+  it('sends nothing again for the panel moving when no lane plays on this synth', async () => {
+    const { rerender } = render(<Harness />);
+    const p = laned();
+    p.lanes = ['gone'];
+    p.parts[0].steps[0].mod = { gone: 80 };
+    p.parts[0].steps[2].mod = { gone: 10 };
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    await act(async () => void (await state.play()));
+    const before = sentOf('patternEdit').length;
+    rerender(<Harness panel={{ cutoff: 40, res: 9 }} />);
+    await new Promise((r) => setTimeout(r, 80));
+    expect(sentOf('patternEdit')).toHaveLength(before);
   });
 
   it('says what the lanes set on the step being heard, and nothing once stopped', async () => {

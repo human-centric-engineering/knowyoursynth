@@ -57,6 +57,7 @@ import {
   euclidFill,
   keepMods,
   mutate,
+  onlyLanes,
   pasteSteps,
   randomise,
   resizePattern,
@@ -224,6 +225,13 @@ export function Sequencer({
   const keyRefs = useRef(new Map<number, HTMLButtonElement>());
   const laneCount = p.lanes?.length ?? 0;
   const [lanesOpen, setLanesOpen] = useState(laneCount > 0);
+  // A pattern that replaces the whole one (opened, or a sound's riff) shows its lanes if it has any.
+  const replacedAt = seq.held();
+  const [shownFor, setShownFor] = useState(replacedAt);
+  if (shownFor !== replacedAt) {
+    setShownFor(replacedAt);
+    if (laneCount > 0) setLanesOpen(true);
+  }
   const moveFocus = useRef(false);
 
   // The playhead, read from the audio clock once a frame while the pattern plays; the keys redraw only as it moves on.
@@ -319,7 +327,8 @@ export function Sequencer({
       );
     }
     // Enter and Space are the button's own: its click turns the chosen step on or off, once in every browser.
-    else if (e.key === 'Delete' || e.key === 'Backspace') changeStep(i, () => emptyStep());
+    else if (e.key === 'Delete' || e.key === 'Backspace')
+      changeStep(i, (s) => keepMods([s], [emptyStep()])[0]);
     else return;
     e.preventDefault();
     // The page plays notes from the computer keyboard; these keys are the sequencer's while a step key has focus.
@@ -782,14 +791,18 @@ export function Sequencer({
                   run: () => {
                     if (clip)
                       setSteps(
-                        pasteSteps(steps, clip.kind === 'page' ? page * PAGE : sel, clip.steps)
+                        pasteSteps(
+                          steps,
+                          clip.kind === 'page' ? page * PAGE : sel,
+                          onlyLanes(clip.steps, p.lanes ?? [])
+                        )
                       );
                   },
                 },
                 {
                   name: 'Clear',
                   icon: <Eraser size={15} aria-hidden="true" />,
-                  run: () => setSteps(clearSteps(steps)),
+                  run: () => setSteps(keepMods(steps, clearSteps(steps))),
                 },
               ]}
             />

@@ -31,6 +31,8 @@ import { PlayerTip } from '@/components/app/synth/player-tip';
 /** How far Up and Down move a value along its lane, and Page Up and Page Down. */
 const NUDGE = 1 / 50;
 const BIG_NUDGE = 1 / 10;
+/** How soon a second press on a cell makes a double press. */
+const DOUBLE_MS = 500;
 
 /** The words a control goes by in a lane: its name, with its module where another control shares the name. */
 export function controlNames(def: SynthDef): Map<string, string> {
@@ -43,12 +45,14 @@ export function controlNames(def: SynthDef): Map<string, string> {
   );
 }
 
-/** The value one nudge up (`dir` 1) or down from `v` along the lane, or the end it is already at. */
-function nudged(c: Control, v: ControlValue, dir: number, by: number): ControlValue {
+/**
+ * The value one nudge up (`dir` 1) or down from `v` along the lane, or the end it is already at. A knob with a step
+ * can round a small move back to where it was, and a switch or a choice only changes at its next option: either way,
+ * it keeps going until the value changes, so a press always moves it by at least one.
+ */
+export function nudged(c: Control, v: ControlValue, dir: number, by: number): ControlValue {
   const from = lanePos(c, v);
-  if (c.kind !== 'cont') return laneValueAt(c, from + dir * Math.max(by, 0.5 / 64));
-  // A knob with a step can round a small move back to where it was: keep going until the value changes.
-  for (let k = 1; k <= 50; k++) {
+  for (let k = 1; k <= Math.ceil(1 / by) + 1; k++) {
     const next = laneValueAt(c, from + dir * by * k);
     if (next !== v) return next;
   }
@@ -154,6 +158,7 @@ function Lane({
   const cells = useRef<(HTMLDivElement | null)[]>([]);
   const stroke = useRef(0);
   const drawing = useRef<string | null>(null);
+  const lastPress = useRef<{ cell: number | null; at: number } | null>(null);
 
   const valueOf = (i: number): ControlValue | undefined => {
     const mod = steps[i]?.mod;
@@ -245,8 +250,15 @@ function Lane({
         aria-label={`${name} lane`}
         onPointerDown={(e) => {
           if (!c || e.button !== 0) return;
+          // A second press on the same cell straight after the first is a double press: it stays in the first one's
+          // stroke, as does the clear it ends in, so one Undo puts back what the cell held before either.
+          const cell = pick(e)?.[0] ?? null;
+          const now = Date.now();
+          const again = lastPress.current?.cell === cell && now - lastPress.current.at < DOUBLE_MS;
+          lastPress.current = { cell, at: now };
+          if (!again) stroke.current++;
           e.currentTarget.setPointerCapture?.(e.pointerId);
-          drawing.current = `lane:${id}:stroke:${++stroke.current}`;
+          drawing.current = `lane:${id}:stroke:${stroke.current}`;
           draw(e);
         }}
         onPointerMove={draw}
@@ -295,7 +307,7 @@ function Lane({
                 setShownAt(i);
               }}
               onPointerEnter={() => setShownAt(i)}
-              onDoubleClick={() => set(i, null)}
+              onDoubleClick={() => set(i, null, `lane:${id}:stroke:${stroke.current}`)}
               onKeyDown={(e) => onKey(e, k)}
             >
               {restPos !== null && (

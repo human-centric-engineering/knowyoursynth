@@ -211,6 +211,40 @@ describe('mod lanes in the pattern player', () => {
     ]);
   });
 
+  it('puts the panel back at the boundary when the next loop’s lanes set nothing, and lets a knob through after', () => {
+    // A chain from a part with lanes into one without: the second loop carries no settings at all
+    const log = play(2000, [
+      [0, { type: 'pattern', loop: loop([], [[0, lane(0.9)]]), bpm: BPM }],
+      [100, { type: 'patternNext', loop: loop([]) }],
+      [1500, { type: 'params', p: panel2 }],
+    ]);
+    expect(params(log)).toEqual([
+      [0, 'p0.5'],
+      [0, 'p0.9'],
+      [1000, 'p0.5'],
+      [1408, 'p0.55'],
+    ]);
+    // A loop whose first change comes later starts on the panel too
+    const late = play(2000, [
+      [0, { type: 'pattern', loop: loop([], [[0, lane(0.9)]]), bpm: BPM }],
+      [100, { type: 'patternNext', loop: loop([], [[0.5, lane(0.7)]]) }],
+    ]);
+    expect(params(late)).toEqual([
+      [0, 'p0.5'],
+      [0, 'p0.9'],
+      [1000, 'p0.5'],
+      [1500, 'p0.7'],
+    ]);
+  });
+
+  it('plays no lane before the page has sent the panel’s settings, which it could not go back to', () => {
+    const s = standIn();
+    const player = withPatterns(s.synth, SR, () => undefined);
+    player.handle({ type: 'pattern', loop: loop([], [[0, lane(0.9)]]), bpm: BPM });
+    player.process(new Float32Array(128), 128);
+    expect(params(s.log)).toEqual([]);
+  });
+
   it('applies an edit’s settings at the playhead at once, and the panel when the edit has no lanes', () => {
     const changed = play(1000, [
       [0, { type: 'pattern', loop: loop([], [[0, lane(0.9)]]), bpm: BPM }],

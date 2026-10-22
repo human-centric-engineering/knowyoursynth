@@ -75,6 +75,7 @@ import {
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { useSequencer, type LaneTarget } from '@/components/app/sequencer/use-sequencer';
+import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useFavourites } from '@/components/app/synth/favourites';
@@ -670,18 +671,27 @@ function Synth({
     }
   }, [engine]);
 
+  // The voice's settings for a set of panel values: the panel's own, or (mod lanes) with a lane's values in them.
+  const engineParams = useCallback(
+    (values: ControlValues) => {
+      const p = synthDef.toEngine(values, { wheel, patched: patchedJacks(sess.cables) });
+      p.cables = cablesToEngine(synthDef, sess.cables, values);
+      p.wheel = wheel;
+      return p;
+    },
+    [synthDef, sess.cables, wheel]
+  );
+
   useEffect(() => {
     if (!engine) return;
     try {
-      const p = synthDef.toEngine(sess.values, { wheel, patched: patchedJacks(sess.cables) });
-      p.cables = cablesToEngine(synthDef, sess.cables, sess.values);
-      p.wheel = wheel;
+      const p = engineParams(sess.values);
       engine.send({ type: 'params', p });
       setEngineError('');
     } catch (err) {
       setEngineError(err instanceof Error ? err.message : String(err));
     }
-  }, [synthDef, sess.values, sess.cables, wheel, engine]);
+  }, [engineParams, sess.values, engine]);
 
   // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
   // up with a knob being dragged. waveStory's attribution is hundreds of calls and stays in the dialog.
@@ -857,24 +867,23 @@ function Synth({
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
   const [seqOpen, setSeqOpen] = useState(false);
   // Mod lanes (t-82) play the panel with a lane's values in place of the panel's: the settings the voice gets, made the
-  // same way, with those controls changed.
-  const laneTarget = useMemo<LaneTarget>(
-    () => ({
+  // same way, with those controls changed. A lane can't move the voice between mono, poly and dual, which would let go
+  // of every held note on each step it did: a step that would plays the panel's settings.
+  const laneTarget = useMemo<LaneTarget>(() => {
+    let mode: ReturnType<typeof voiceMode> | undefined;
+    return {
       def: synthDef,
       paramsFor: (set) => {
-        const v = { ...sess.values, ...set };
         try {
-          const p = synthDef.toEngine(v, { wheel, patched: patchedJacks(sess.cables) });
-          p.cables = cablesToEngine(synthDef, sess.cables, v);
-          p.wheel = wheel;
-          return p;
+          mode ??= voiceMode(engineParams(sess.values));
+          const p = engineParams({ ...sess.values, ...set });
+          return voiceMode(p) === mode ? p : null;
         } catch {
           return null; // the panel already reports the error
         }
       },
-    }),
-    [synthDef, sess.values, sess.cables, wheel]
-  );
+    };
+  }, [synthDef, sess.values, engineParams]);
   const seq = useSequencer({
     engine,
     ensureAudio,
@@ -884,10 +893,6 @@ function Synth({
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
-  const panelValues = useMemo(
-    () => (modShown ? { ...sess.values, ...modShown } : sess.values),
-    [sess.values, modShown]
-  );
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -1753,7 +1758,8 @@ function Synth({
                 >
                   <SynthPanel
                     def={def}
-                    values={panelValues}
+                    values={sess.values}
+                    moved={modShown}
                     target={step == null ? target : null}
                     cables={sess.cables}
                     outline={view.outline}

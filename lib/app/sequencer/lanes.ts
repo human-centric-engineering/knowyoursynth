@@ -9,6 +9,7 @@
  * The pattern itself is never changed, so a pattern moved between synths loses nothing.
  */
 import type { ModChange } from '@/lib/app/sequencer/compile';
+import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { controlMap } from '@/lib/app/synths/lib/patch';
 import type {
   Control,
@@ -69,6 +70,38 @@ export function resolveMods(def: SynthDef, mods: readonly ModChange[]): ModChang
     last = key;
   }
   return any ? out : [];
+}
+
+/** Whether any of the pattern's lanes sets a value this synth's control can take, on any step: whether they play here. */
+export function lanesPlay(def: SynthDef, p: Pattern): boolean {
+  const live = (p.lanes ?? []).filter((id) => laneControl(def, id));
+  if (live.length === 0) return false;
+  return p.parts.some((part) =>
+    part.steps.some((s) => !!s.mod && stepOverrides(def, s.mod, live) !== null)
+  );
+}
+
+/**
+ * A turn of a control the panel draws at a lane's value (`shown`) while the pattern plays, as a change to the panel's
+ * own value (`own`). The control worked its new value out from the one it drew, so a knob moves the panel's value by
+ * as much as it moved, and a switch flips the panel's. A choice picked is the choice picked.
+ */
+export function rebase(
+  c: Control,
+  shown: ControlValue,
+  own: ControlValue | undefined,
+  next: ControlValue
+): ControlValue {
+  if (c.kind === 'cont') {
+    if (typeof next !== 'number' || typeof shown !== 'number') return next;
+    const from = typeof own === 'number' ? own : c.def;
+    return Math.min(c.max, Math.max(c.min, from + (next - shown)));
+  }
+  if (c.kind === 'bool') {
+    const from = typeof own === 'boolean' ? own : c.def;
+    return next === shown ? from : !from;
+  }
+  return next;
 }
 
 /** What a step's lanes set on this synth, as the panel shows it while the step plays: `null` for nothing. */

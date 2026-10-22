@@ -211,11 +211,28 @@ export function resizePattern(p: Pattern, length: number): Pattern {
 
 // ─── Mod lanes (t-82) ────────────────────────────────────────────────────────
 
-/** `fresh` steps with the mod lanes' values of `from` kept on them, step for step: Randomise makes notes, not lanes. */
+/**
+ * `fresh` steps with the mod lanes' values of `from` kept on them, step for step: Randomise and Clear make notes (or
+ * rests), not lanes.
+ */
 export function keepMods(from: readonly Step[], fresh: Step[]): Step[] {
   return fresh.map((s, i) => {
     const mod = from[i]?.mod;
     return mod ? { ...s, mod: { ...mod } } : s;
+  });
+}
+
+/**
+ * The steps with only the values of lanes in `lanes`. A clip copied before a lane was removed, or from another pattern,
+ * can carry values for a lane this pattern has not got, which the pattern would refuse.
+ */
+export function onlyLanes(steps: readonly Step[], lanes: readonly string[]): Step[] {
+  return steps.map((s) => {
+    if (!s.mod) return s;
+    const mod: StepMod = {};
+    for (const id of Object.keys(s.mod)) if (lanes.includes(id)) mod[id] = s.mod[id];
+    const { mod: _old, ...rest } = s;
+    return Object.keys(mod).length > 0 ? { ...rest, mod } : rest;
   });
 }
 
