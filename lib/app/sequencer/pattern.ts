@@ -32,6 +32,10 @@ export const MAX_GATE = MAX_STEPS * 2;
 export const MAX_TRANSPOSE = 48;
 export const MIN_BPM = 20;
 export const MAX_BPM = 300;
+/** The most mod lanes a pattern carries. */
+export const MAX_LANES = 8;
+/** What a panel control's id looks like: what a mod lane names. */
+export const CONTROL_ID = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
 /** The velocity a step's notes play at when nothing sets it, as the engine reads a riff note without one. */
 export const DEFAULT_VELOCITY = 0.85;
 /** The velocity of an accented step. */
@@ -128,9 +132,18 @@ export const StepSchema = z
     /** 0..1: the chance it plays on any pass. Absent always plays. */
     probability: z.number().min(0).max(1).optional(),
     condition: StepConditionSchema.optional(),
+    /**
+     * What the pattern's mod lanes set on this step, by control id: a value in the control's own range, which the
+     * synth playing it checks (`lanes.ts`). A lane with no value here leaves the control at the panel's value.
+     */
+    mod: z
+      .record(z.string().regex(CONTROL_ID), z.union([z.number(), z.string().max(64), z.boolean()]))
+      .optional(),
   })
   .strict();
 export type Step = z.infer<typeof StepSchema>;
+/** What a step's lanes set: control id → value. */
+export type StepMod = NonNullable<Step['mod']>;
 
 export const PartSchema = z.object({ steps: z.array(StepSchema).min(1).max(MAX_STEPS) }).strict();
 export type Part = z.infer<typeof PartSchema>;
@@ -163,6 +176,12 @@ export const PatternSchema = z
       )
       .min(1)
       .max(MAX_CHAIN),
+    /**
+     * Mod lanes: the panel controls this pattern moves step by step, by id. Optional, so a pattern saved before lanes
+     * existed reads as it was. A lane names a control of whichever synth it was made on and is kept on a synth without
+     * it, silent.
+     */
+    lanes: z.array(z.string().regex(CONTROL_ID)).max(MAX_LANES).optional(),
   })
   .strict()
   .superRefine((p, ctx) => {
@@ -183,6 +202,20 @@ export const PatternSchema = z
           message: 'The chain names a part the pattern does not have',
         });
     });
+    const lanes = p.lanes ?? [];
+    if (new Set(lanes).size !== lanes.length)
+      ctx.addIssue({ code: 'custom', path: ['lanes'], message: 'A control has one lane' });
+    p.parts.forEach((part, i) =>
+      part.steps.forEach((step, k) => {
+        for (const id of Object.keys(step.mod ?? {}))
+          if (!lanes.includes(id))
+            ctx.addIssue({
+              code: 'custom',
+              path: ['parts', i, 'steps', k, 'mod', id],
+              message: 'A step sets a control the pattern has no lane for',
+            });
+      })
+    );
   });
 export type Pattern = z.infer<typeof PatternSchema>;
 

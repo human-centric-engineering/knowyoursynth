@@ -19,6 +19,12 @@
  * from any synth's library. `loaded` names what it holds, and `edited` says whether it has changed since it was loaded
  * or saved. The sound's own riff names nothing.
  *
+ * Mod lanes (t-82) move panel controls step by step. The page hands over `lanes`: the synth, and the voice's settings
+ * for the panel with a lane's values in it. Each loop carries those settings where the lanes change them, and the
+ * engine's pattern player makes the change on the step's sample. The panel moving (a knob turned, another synth) is an
+ * edit of the loop playing, so what a lane leaves alone follows the knob. `modShown` is what the lanes set on the step
+ * being heard, for the panel to draw.
+ *
  * Each loop is compiled from a seed of its own, so the step order the page draws the playhead with is the order the
  * loop was compiled with, and an edit recompiles the loop with the same draws (a step with a probability does not
  * change its mind because a different step was edited).
@@ -35,9 +41,14 @@ import {
   stepsPerBeat,
   type Pattern,
 } from '@/lib/app/sequencer/pattern';
-import type { Phrase } from '@/lib/app/synths/contract';
+import { resolveMods, stepOverrides } from '@/lib/app/sequencer/lanes';
+import type { ControlValues, EngineParams, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
-import { createPlayhead, type PatternLoop } from '@/lib/app/synths/audio/pattern-player';
+import {
+  createPlayhead,
+  type ParamChange,
+  type PatternLoop,
+} from '@/lib/app/synths/audio/pattern-player';
 import { logger } from '@/lib/logging';
 
 /** What the sequencer needs of the page's engine: `Engine` has all three. */
@@ -68,6 +79,13 @@ interface LoopInfo {
   part: number;
   /** Steps per beat when it was compiled: an edit to the step size leaves loops already sounding as they were. */
   perBeat: number;
+}
+
+/** What mod lanes play on: the synth on the panel, and its voice's settings with a lane's values in them. */
+export interface LaneTarget {
+  def: SynthDef;
+  /** The panel's settings with `set` in place of the panel's values for those controls. Null if they can't be made. */
+  paramsFor: (set: ControlValues) => EngineParams | null;
 }
 
 export interface EditOptions {
@@ -132,6 +150,8 @@ export interface Sequencer {
   noteIn: (n: number) => void;
   /** The module's handler for `noteIn`. Returns the undo. */
   onNoteIn: (f: (n: number) => void) => () => void;
+  /** What the mod lanes set on the step being heard, for the panel to show; null when they set nothing (or stopped). */
+  modShown: ControlValues | null;
 }
 
 /** An Undo step: the pattern, and for one a whole new pattern replaced, what it was named and saved as. */
@@ -169,6 +189,7 @@ export function useSequencer({
   ensureAudio,
   riff,
   tempo = null,
+  lanes = null,
 }: {
   engine: SequencerEngine | null;
   /** Turns the sound on, as a press of Play on the bar does; false if it could not. */
@@ -177,6 +198,8 @@ export function useSequencer({
   riff: Phrase | null;
   /** A tempo the panel sets (the TB-303's TEMPO knob), which the pattern follows. */
   tempo?: number | null;
+  /** What mod lanes play on. Without it a pattern's lanes are silent. */
+  lanes?: LaneTarget | null;
 }): Sequencer {
   const [pattern, setPattern] = useState<Pattern>(() =>
     riff ? fromRiff(riff, tempo) : newPattern()
@@ -231,10 +254,27 @@ export function useSequencer({
   const send = useCallback((m: SynthMessage) => engine?.send(m), [engine]);
   const riffRef = useRef(riff);
   const tempoRef = useRef(tempo);
+  const lanesRef = useRef(lanes);
   useEffect(() => {
     riffRef.current = riff;
     tempoRef.current = tempo;
   });
+
+  /** The loop's lane changes as settings for the voice: none for a pattern without lanes the synth can play. */
+  const lanePlay = useCallback((p: Pattern, mods: ReturnType<typeof compileLoop>['mods']) => {
+    const target = lanesRef.current;
+    if (!target || !p.lanes?.length) return undefined;
+    const live = resolveMods(target.def, mods);
+    if (live.length === 0) return undefined;
+    // One set of lane values is one call to the synth's `toEngine`, however many steps share it.
+    const made = new Map<string, EngineParams | null>();
+    return live.map(([beat, set]): ParamChange => {
+      if (!set) return [beat, null];
+      const key = JSON.stringify(set);
+      if (!made.has(key)) made.set(key, target.paramsFor(set));
+      return [beat, made.get(key) ?? null];
+    });
+  }, []);
 
   /** Loop `index` of `p`, compiled from `seed`, with what it was compiled from kept. */
   const compile = useCallback(
@@ -255,9 +295,11 @@ export function useSequencer({
         if (k < index - 4) loops.current.delete(k);
       });
       const loop: PatternLoop = { notes: c.notes, beats: c.beats };
+      const params = lanePlay(p, c.mods);
+      if (params) loop.params = params;
       return loop;
     },
-    []
+    [lanePlay]
   );
 
   const queue = useCallback(
@@ -453,6 +495,16 @@ export function useSequencer({
     return true;
   }, [engine, ensureAudio, start]);
 
+  // The panel moving, or another synth, changes what the lanes play: the loop playing is sent again, so a control no
+  // lane sets follows the panel, and a lane for a control this synth lacks stays silent.
+  useEffect(() => {
+    lanesRef.current = lanes;
+    const p = patternRef.current;
+    if (playingRef.current && p.lanes?.length) resend(p, p);
+  }, [lanes, resend]);
+
+  const [modShown, setModShown] = useState<ControlValues | null>(null);
+
   const halt = useCallback(() => {
     playingRef.current = false;
     setPlaying(false);
@@ -512,6 +564,35 @@ export function useSequencer({
     return step === undefined ? null : { step, part: info.part };
   }, [engine]);
 
+  // While a pattern with lanes plays, what they set on the step being heard, for the panel: read once a frame, and
+  // only a change is set, so the panel redraws once a step at most.
+  const hasLanes = !!pattern.lanes?.length && !!lanes;
+  useEffect(() => {
+    if (!playing || !hasLanes) {
+      setModShown(null);
+      return;
+    }
+    let raf = 0;
+    let last = '';
+    const tick = () => {
+      const at = position();
+      const target = lanesRef.current;
+      const p = patternRef.current;
+      const set =
+        at && target
+          ? stepOverrides(target.def, p.parts[at.part]?.steps[at.step]?.mod, p.lanes ?? [])
+          : null;
+      const key = set ? JSON.stringify(set) : '';
+      if (key !== last) {
+        last = key;
+        setModShown(set);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [playing, hasLanes, position]);
+
   return {
     pattern,
     loaded,
@@ -532,5 +613,6 @@ export function useSequencer({
     position,
     noteIn,
     onNoteIn,
+    modShown,
   };
 }

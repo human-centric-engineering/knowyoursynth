@@ -5,6 +5,7 @@
  */
 import { snapToScale, type Rng } from '@/lib/app/sequencer/compile';
 import {
+  MAX_LANES,
   MAX_STEPS,
   SCALES,
   clampNote,
@@ -13,6 +14,7 @@ import {
   type Pattern,
   type ScaleName,
   type Step,
+  type StepMod,
 } from '@/lib/app/sequencer/pattern';
 
 const clone = (steps: Step[]): Step[] => structuredClone(steps);
@@ -204,5 +206,85 @@ export function resizePattern(p: Pattern, length: number): Pattern {
         i < part.steps.length ? structuredClone(part.steps[i]) : emptyStep()
       ),
     })),
+  };
+}
+
+// ─── Mod lanes (t-82) ────────────────────────────────────────────────────────
+
+/** `fresh` steps with the mod lanes' values of `from` kept on them, step for step: Randomise makes notes, not lanes. */
+export function keepMods(from: readonly Step[], fresh: Step[]): Step[] {
+  return fresh.map((s, i) => {
+    const mod = from[i]?.mod;
+    return mod ? { ...s, mod: { ...mod } } : s;
+  });
+}
+
+/** Every step of every part, with `fn` done to its lane values: a step left with none has no `mod` at all. */
+function mapMods(p: Pattern, fn: (mod: StepMod) => StepMod): Pattern['parts'] {
+  return p.parts.map((part) => ({
+    steps: part.steps.map((s) => {
+      if (!s.mod) return s;
+      const mod = fn({ ...s.mod });
+      const { mod: _old, ...rest } = s;
+      return Object.keys(mod).length > 0 ? { ...rest, mod } : rest;
+    }),
+  }));
+}
+
+/** The pattern with a lane for control `id`, after its others. One it has already, or one too many, changes nothing. */
+export function addLane(p: Pattern, id: string): Pattern {
+  const lanes = p.lanes ?? [];
+  if (lanes.includes(id) || lanes.length >= MAX_LANES) return p;
+  return { ...p, lanes: [...lanes, id] };
+}
+
+/** The pattern without the lane for `id`, and without its values on every step. */
+export function removeLane(p: Pattern, id: string): Pattern {
+  const lanes = (p.lanes ?? []).filter((x) => x !== id);
+  const { lanes: _old, ...rest } = p;
+  const parts = mapMods(p, (mod) => {
+    delete mod[id];
+    return mod;
+  });
+  return lanes.length > 0 ? { ...rest, lanes, parts } : { ...rest, parts };
+}
+
+/**
+ * The lane for `from` moved to control `to`, in its place. Its values were in `from`'s units, which mean nothing to
+ * `to`, so they go. A control that already has a lane changes nothing.
+ */
+export function retargetLane(p: Pattern, from: string, to: string): Pattern {
+  const lanes = p.lanes ?? [];
+  if (from === to || !lanes.includes(from) || lanes.includes(to)) return p;
+  const cleared = removeLane(p, from);
+  const at = lanes.indexOf(from);
+  return { ...cleared, lanes: [...lanes.slice(0, at), to, ...lanes.slice(at + 1)] };
+}
+
+/** Lane `id`'s value on step `step` of part `part`: `null` takes it off, so the control plays the panel's value there. */
+export function setLaneStep(
+  p: Pattern,
+  part: number,
+  step: number,
+  id: string,
+  v: StepMod[string] | null
+): Pattern {
+  if (!(p.lanes ?? []).includes(id)) return p;
+  return {
+    ...p,
+    parts: p.parts.map((pt, i) =>
+      i !== part
+        ? pt
+        : {
+            steps: pt.steps.map((s, k) => {
+              if (k !== step) return s;
+              const mod: StepMod = { ...s.mod };
+              if (v === null) delete mod[id];
+              else mod[id] = v;
+              const { mod: _old, ...rest } = s;
+              return Object.keys(mod).length > 0 ? { ...rest, mod } : rest;
+            }),
+          }
+    ),
   };
 }

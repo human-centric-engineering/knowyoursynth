@@ -16,17 +16,40 @@
  * them notes, and splits each `process` call at the samples where a note falls. With no pattern playing, `process`
  * and `handle` pass straight through, which keeps riffs, the sound map and the goldens exactly as they were.
  *
+ * A loop can carry mod lanes as `params`: the whole voice's settings from a beat on, which the page works out from the
+ * panel with the lanes' values in it (`f-step-sequencer` t-82). They are sent to the synth on their sample, as a knob
+ * turned at that moment is. The page's own `params` are the panel's, kept as the rest the player goes back to when a
+ * step sets nothing, when the pattern stops, and when an edit takes the lanes away. While a lane holds a control, the
+ * panel's are kept and not sent, so a knob turned then does not undo the lane until the page's edit says how.
+ *
  * It reports `loop` when a loop starts (so the page compiles the next) and when the tempo or an edit moves the playhead,
  * with the frame it applies from, so the page can draw the playhead from the audio clock ({@link createPlayhead}).
  */
-import type { PhraseNote } from '@/lib/app/synths/contract';
+import type { EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
 
-/** One pass through a pattern, as `compileLoop` returns it: notes in beats from the loop's start, and its length. */
+/**
+ * From `beat` of the loop on, the synth plays with these settings: the panel with the mod lanes' values in it. `null`
+ * puts back the panel's own (the last `params` the page sent).
+ */
+export type ParamChange = [beat: number, p: EngineParams | null];
+
+/**
+ * One pass through a pattern, as `compileLoop` returns it: notes in beats from the loop's start, and its length. With
+ * mod lanes, `params` says where the voice's settings change, in order.
+ */
 export interface PatternLoop {
   notes: PhraseNote[];
   beats: number;
+  params?: ParamChange[];
+}
+
+/** A settings change, timed to its sample. */
+interface ParamEvent {
+  b: number;
+  t: number;
+  p: EngineParams | null;
 }
 
 /** What the page sends to play a pattern. */
@@ -109,23 +132,47 @@ function playableNote(x: unknown): boolean {
   );
 }
 
-/** Whether a loop from the page can be played: a length, and notes that can be played. */
+/** A settings change from the page: a beat at or after 0, and settings or `null`. */
+function playableChange(x: unknown): boolean {
+  if (!Array.isArray(x)) return false;
+  const a: readonly unknown[] = x;
+  return isNumber(a[0]) && a[0] >= 0 && (a[1] === null || (typeof a[1] === 'object' && !!a[1]));
+}
+
+/** Whether a loop from the page can be played: a length, and notes (and settings changes) that can be played. */
 function playable(loop: PatternLoop | null | undefined): loop is PatternLoop {
   return (
     !!loop &&
     Number.isFinite(loop.beats) &&
     loop.beats > 0 &&
     Array.isArray(loop.notes) &&
-    loop.notes.every(playableNote)
+    loop.notes.every(playableNote) &&
+    (loop.params === undefined || (Array.isArray(loop.params) && loop.params.every(playableChange)))
   );
 }
+
+/** A loop's settings changes, in order, not yet timed. */
+const paramEvents = (loop: PatternLoop): ParamEvent[] =>
+  (loop.params ?? []).map(([b, p]) => ({ b, t: 0, p })).sort((x, y) => x.b - y.b);
 
 /** The synth, able to play patterns as well. */
 export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandler | null): Synth {
   /** The loop playing: its own events (`base`, played again when nothing is queued) and those still to come. */
-  let cur: { base: NoteEvent[]; evs: NoteEvent[]; beats: number; len: number } | null = null;
+  let cur: {
+    base: NoteEvent[];
+    evs: NoteEvent[];
+    beats: number;
+    len: number;
+    /** Its settings changes (mod lanes), and the next of them to make. */
+    pev: ParamEvent[];
+  } | null = null;
   /** The loop after this one: events, `null` to end, `undefined` to play this one again. */
-  let next: { base: NoteEvent[]; beats: number } | null | undefined;
+  let next: { base: NoteEvent[]; beats: number; pev: ParamEvent[] } | null | undefined;
+  let pi = 0;
+  /** The panel's settings, as the page last sent them: what the synth goes back to when no lane sets anything. */
+  let rest: EngineParams | null = null;
+  /** The lane settings the synth has now, or `null` while it has the panel's. */
+  let applied: EngineParams | null = null;
   /**
    * What a loop before this one still owes (a slide or a tie into this one): its events from `ci` on, which fall `cb`
    * beats before their beat in this loop. Kept as they were rather than copied in, so turning over allocates nothing.
@@ -147,7 +194,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   let mode = '';
 
   const spb = () => (60 / bpm) * sr;
-  const time = (evs: NoteEvent[]) => {
+  const time = (evs: { b: number; t: number }[]) => {
     const s = spb();
     for (const e of evs) e.t = Math.round(e.b * s);
   };
@@ -172,6 +219,25 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     }
   }
 
+  /** Settings to the synth. One that changes it between mono, poly and dual lets go of the pattern's notes first. */
+  function setParams(p: EngineParams) {
+    const now = p.dual ? 'dual' : p.poly ? 'poly' : 'mono';
+    if (now !== mode && mode) release();
+    mode = now;
+    synth.handle({ type: 'params', p });
+  }
+
+  /** A lane's settings, or (`null`) the panel's back. */
+  function apply(p: EngineParams | null) {
+    if (p) {
+      applied = p;
+      setParams(p);
+    } else if (applied) {
+      applied = null;
+      if (rest) setParams(rest);
+    }
+  }
+
   function release() {
     held.forEach((k, n) => {
       if (k > 0) {
@@ -188,6 +254,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     next = undefined;
     carry = null;
     announce = null;
+    apply(null);
     release();
     if (!silent && onEvent) onEvent({ type: 'patternEnd' });
   }
@@ -198,8 +265,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     if (Number.isFinite(tempo) && tempo > 0) bpm = tempo;
     const base = noteEvents(loop.notes);
     time(base);
-    cur = { base, evs: base, beats: loop.beats, len: length(loop.beats) };
+    const pev = paramEvents(loop);
+    time(pev);
+    cur = { base, evs: base, beats: loop.beats, len: length(loop.beats), pev };
     next = undefined;
+    pi = 0;
     idx = 0;
     pos = 0;
     index = 0;
@@ -221,6 +291,12 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     cur.len = length(loop.beats);
     idx = 0;
     if (pos >= cur.len) pos = cur.len;
+    // The settings the edited loop has at the playhead come in now: what a lane holds may have changed, or gone.
+    cur.pev = paramEvents(loop);
+    time(cur.pev);
+    pi = 0;
+    while (pi < cur.pev.length && cur.pev[pi].t <= pos) pi++;
+    apply(pi > 0 ? cur.pev[pi - 1].p : null);
     // The loop queued for after this one was compiled before the edit and would undo it: dropped, so the edited loop
     // plays again unless the page queues a fresh one. A pattern told to end still ends.
     if (next) next = undefined;
@@ -234,6 +310,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     const old = cur.len;
     time(cur.base);
     time(cur.evs);
+    time(cur.pev);
     cur.len = length(cur.beats);
     pos = Math.min(Math.round((pos * cur.len) / old), cur.len - 1);
     announce = announce ?? false;
@@ -266,9 +343,12 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     if (next) {
       c.base = next.base;
       c.beats = next.beats;
+      c.pev = next.pev;
     }
     next = undefined;
     time(c.base);
+    time(c.pev);
+    pi = 0;
     c.evs = c.base;
     c.len = length(c.beats);
     idx = 0;
@@ -293,6 +373,9 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       });
     }
     announce = null;
+    // Settings first, so a note on the same sample plays with them.
+    const pev = cur.pev;
+    while (pi < pev.length && pev[pi].t <= pos) apply(pev[pi++].p);
     const evs = cur.evs;
     const s = spb();
     for (;;) {
@@ -318,7 +401,11 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         return;
       case 'patternNext':
         if (cur && (m.loop === null || playable(m.loop)))
-          next = m.loop && { base: noteEvents(m.loop.notes), beats: m.loop.beats };
+          next = m.loop && {
+            base: noteEvents(m.loop.notes),
+            beats: m.loop.beats,
+            pev: paramEvents(m.loop),
+          };
         return;
       case 'patternEdit':
         if (playable(m.loop)) edit(m.loop);
@@ -336,13 +423,12 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         // Sent by the engine too (on suspend), so the page may not know: it is told the pattern has stopped.
         stop(false);
         break;
-      case 'params': {
-        // A synth changing between mono, poly and dual drops what its voices held: let go of the pattern's notes first.
-        const now = m.p.dual ? 'dual' : m.p.poly ? 'poly' : 'mono';
-        if (now !== mode && mode) release();
-        mode = now;
-        break;
-      }
+      case 'params':
+        // The panel's settings. While a lane holds the synth they wait as the rest it goes back to.
+        rest = m.p;
+        if (applied) return;
+        setParams(m.p);
+        return;
       default:
         break;
     }
@@ -366,6 +452,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       // Up to the next note, the next owed from the loop before, or the boundary, whichever comes first.
       let due = cur.len;
       if (idx < cur.evs.length && cur.evs[idx].t < due) due = cur.evs[idx].t;
+      if (pi < cur.pev.length && cur.pev[pi].t < due) due = cur.pev[pi].t;
       if (carrying()) due = Math.min(due, carryTime(spb()));
       const k = Math.min(Math.max(1, due - pos), n - i);
       if (i === 0 && k === n) synth.process(out, n, outR);

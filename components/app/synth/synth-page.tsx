@@ -74,7 +74,7 @@ import {
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
-import { useSequencer } from '@/components/app/sequencer/use-sequencer';
+import { useSequencer, type LaneTarget } from '@/components/app/sequencer/use-sequencer';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useFavourites } from '@/components/app/synth/favourites';
@@ -856,12 +856,38 @@ function Synth({
   // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
   const [seqOpen, setSeqOpen] = useState(false);
+  // Mod lanes (t-82) play the panel with a lane's values in place of the panel's: the settings the voice gets, made the
+  // same way, with those controls changed.
+  const laneTarget = useMemo<LaneTarget>(
+    () => ({
+      def: synthDef,
+      paramsFor: (set) => {
+        const v = { ...sess.values, ...set };
+        try {
+          const p = synthDef.toEngine(v, { wheel, patched: patchedJacks(sess.cables) });
+          p.cables = cablesToEngine(synthDef, sess.cables, v);
+          p.wheel = wheel;
+          return p;
+        } catch {
+          return null; // the panel already reports the error
+        }
+      },
+    }),
+    [synthDef, sess.values, sess.cables, wheel]
+  );
   const seq = useSequencer({
     engine,
     ensureAudio,
     riff: shown?.phrase ?? null,
     tempo: tempoBpm,
+    lanes: laneTarget,
   });
+  // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
+  const { modShown } = seq;
+  const panelValues = useMemo(
+    () => (modShown ? { ...sess.values, ...modShown } : sess.values),
+    [sess.values, modShown]
+  );
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -935,6 +961,8 @@ function Synth({
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
     seq,
+    def: synthDef,
+    panel: sess.values,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
     onStop: stopRiff,
@@ -1725,7 +1753,7 @@ function Synth({
                 >
                   <SynthPanel
                     def={def}
-                    values={sess.values}
+                    values={panelValues}
                     target={step == null ? target : null}
                     cables={sess.cables}
                     outline={view.outline}
