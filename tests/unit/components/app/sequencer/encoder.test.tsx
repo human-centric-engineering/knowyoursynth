@@ -90,6 +90,13 @@ describe('Encoder', () => {
     expect(onChange.mock.calls.map((c) => c[0])).toEqual([73, 47]);
   });
 
+  it('is not turned by a right-click, which opens the context menu', () => {
+    const { knob, onChange } = encoder();
+    fireEvent.pointerDown(knob, { clientY: 200, pointerId: 1, button: 2 });
+    fireEvent.pointerMove(knob, { clientY: 100, pointerId: 1 });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('turns a short range a step every few pixels', () => {
     const { knob, onChange } = encoder({ min: 1, max: 4, value: 1 });
     fireEvent.pointerDown(knob, { clientY: 100, pointerId: 1 });

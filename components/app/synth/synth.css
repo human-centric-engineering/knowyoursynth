@@ -1056,6 +1056,7 @@ svg .kys-hit:focus-visible {
   background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
 }
 .kys-seq {
+  position: relative;
   container-type: inline-size;
   padding: 10px 14px 12px;
   color: var(--kys-text);
@@ -1091,10 +1092,20 @@ svg .kys-hit:focus-visible {
 .kys-seq-transport {
   align-self: center;
 }
+/* Help and Close sit in the module's top-right corner, never wrapped onto a row of
+   their own; the head keeps room for them. */
+.kys-seq-head {
+  padding-right: 92px;
+}
 .kys-seq-help {
-  margin-left: auto;
-  align-self: center;
+  position: absolute;
+  top: 10px;
+  right: 12px;
   align-items: center;
+}
+.kys-seq-part-row {
+  display: flex;
+  gap: 6px;
 }
 .kys-seq-play {
   display: inline-flex;
@@ -1183,6 +1194,18 @@ svg .kys-hit:focus-visible {
   font-weight: 600;
   color: #ece9e2;
   white-space: nowrap;
+}
+.kys-enc[data-compact] {
+  flex-direction: row-reverse;
+  gap: 6px;
+  min-width: 0;
+}
+.kys-enc[data-compact] .kys-enc-knob {
+  width: 32px;
+  height: 32px;
+}
+.kys-enc[data-compact] .kys-enc-knob::before {
+  inset: 3px;
 }
 .kys-enc[data-unset] .kys-enc-value {
   color: #8a91a0;
@@ -1352,13 +1375,13 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 10px;
+  gap: 4px 6px;
 }
 .kys-seq-tool-group {
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding-right: 10px;
+  gap: 2px;
+  padding-right: 6px;
   border-right: 1px solid rgb(var(--kys-wash) / 0.08);
 }
 .kys-seq-tool-group:last-child {
@@ -1372,12 +1395,12 @@ svg .kys-hit:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   height: 32px;
-  min-width: 32px;
-  padding: 0 8px;
+  min-width: 30px;
+  padding: 0 6px;
   border-radius: 8px;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--kys-muted);
 }
@@ -1394,20 +1417,35 @@ svg .kys-hit:focus-visible {
 .kys-seq-inspect {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
   max-height: 290px;
   overflow-y: auto;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 12px;
   background: var(--kys-surface);
   box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.07);
 }
 .kys-seq-inspect-head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.kys-seq-inspect-toggles {
+  display: flex;
+  gap: 4px;
+}
+.kys-seq-inspect-state {
+  margin-left: auto;
+}
+/* With a pointer, the inspector's toggles are as tight as the tool row's buttons. */
+@media (pointer: fine) {
+  .kys-seq-inspect .kys-seq-toggle {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
 }
 .kys-seq-inspect-head h3 {
   margin: 0;
@@ -1428,19 +1466,59 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.kys-seq-note {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
   padding-top: 6px;
   border-top: 1px solid rgb(var(--kys-wash) / 0.07);
 }
-.kys-seq-note .kys-pbtn {
+/* A chip per note of the chord, then + (add) and × (remove the chosen one). */
+.kys-seq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.kys-seq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  min-width: 26px;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.12);
+}
+.kys-seq-chip:hover {
+  color: var(--kys-text);
+}
+.kys-seq-chip.is-on {
+  color: var(--kys-accent);
+  background: rgb(246 166 58 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+}
+.kys-seq-chip-add,
+.kys-seq-chip-remove {
+  font-family: inherit;
+}
+.kys-seq-chip-remove {
   margin-left: auto;
+}
+/* The note's encoders, or what a rest says in their place: the same height either way. */
+.kys-seq-note,
+.kys-seq-rest {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 62px;
+  margin: 0;
+}
+.kys-seq-rest {
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--kys-faint);
 }
 
 /* A finger needs a bigger target than a pointer: 44px, as the platforms ask. */
@@ -1461,6 +1539,14 @@ svg .kys-hit:focus-visible {
   .kys-enc-knob {
     width: 44px;
     height: 44px;
+  }
+  .kys-seq-chip {
+    height: 36px;
+    min-width: 36px;
+  }
+  .kys-seq-note,
+  .kys-seq-rest {
+    min-height: 66px;
   }
   .kys-seq-key {
     height: 64px;

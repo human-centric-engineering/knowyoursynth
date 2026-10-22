@@ -2,7 +2,7 @@
 
 /**
  * The sequencer on the synth page (`f-step-sequencer` t-80): opened from the player bar, it holds the sound's riff,
- * and Play riff and the sequencer are one transport. From `lg` up it is in the dock; below it, in a bottom sheet.
+ * and the bar's Play and the sequencer are one transport. From `lg` up it is in the dock; below it, in a bottom sheet.
  * The audio engine is a fake that records what it is sent; the page, the panel and the sequencer are real.
  *
  * @see components/app/synth/synth-page.tsx
@@ -176,27 +176,27 @@ describe('the sequencer on the synth page', () => {
     expect(screen.getByRole('heading', { name: 'Learn sound design' })).toBeTruthy();
   });
 
-  it('makes Play riff play the pattern while it is open: the riff’s notes, as the pattern player plays them', async () => {
+  it('makes Play play the pattern while it is open: the riff’s notes, as the pattern player plays them', async () => {
     page();
     fireEvent.click(button('Sequencer'));
-    await press('Play riff');
+    await press('Play');
     expect(lastSent('phrase')).toBeUndefined();
     expect(lastSent('pattern')).toEqual({
       type: 'pattern',
       bpm: 90,
       loop: { notes: FAT_BASS.phrase.steps, beats: 2 },
     });
-    // One transport: the module's own button says it is playing, and Stop on the bar stops the pattern.
-    expect(within(sequencer()).getByRole('button', { name: 'Stop' })).toBeTruthy();
-    await press('Stop riff');
+    // One transport, on the bar: the dock has no Play of its own.
+    expect(within(sequencer()).queryByRole('button', { name: /^(Play|Stop)$/ })).toBeNull();
+    await press('Stop');
     expect(lastSent('stopPattern')).toEqual({ type: 'stopPattern' });
-    expect(within(sequencer()).getByRole('button', { name: 'Play' })).toBeTruthy();
+    expect(button('Play')).toBeTruthy();
   });
 
   it('hands the engine’s loop events to the sequencer, which queues the next loop', async () => {
     page();
     fireEvent.click(button('Sequencer'));
-    await press('Play riff');
+    await press('Play');
     act(() =>
       events.fn?.({
         type: 'loop',
@@ -213,24 +213,24 @@ describe('the sequencer on the synth page', () => {
       loop: { notes: FAT_BASS.phrase.steps, beats: 2 },
     });
     act(() => events.fn?.({ type: 'patternEnd' }));
-    expect(button('Play riff')).toBeTruthy();
+    expect(button('Play')).toBeTruthy();
   });
 
   it('takes over from a riff playing when it is opened, and a riff started stops the pattern', async () => {
     page();
-    await press('Play riff');
+    await press('Play');
     expect(lastSent('phrase')).toBeTruthy();
     await act(async () => {
       fireEvent.click(button('Sequencer'));
     });
     expect(lastSent('pattern')).toBeTruthy();
-    expect(button('Stop riff')).toBeTruthy();
+    expect(button('Stop')).toBeTruthy();
     // Closed, the bar plays the riff again: the pattern is told it has stopped.
     fireEvent.click(within(sequencer()).getByRole('button', { name: 'Close the sequencer' }));
-    await press('Stop riff');
-    await press('Play riff');
+    await press('Stop');
+    await press('Play');
     expect(sent().at(-1)?.type).toBe('phrase');
-    expect(button('Stop riff')).toBeTruthy();
+    expect(button('Stop')).toBeTruthy();
   });
 
   it('loads the next sound’s riff when another sound is chosen', () => {
@@ -263,6 +263,8 @@ describe('the sequencer on the synth page', () => {
     fireEvent.click(button('Sequencer'));
     const sheet = screen.getByRole('dialog', { name: 'Sequencer' });
     expect(within(sheet).getAllByRole('button', { name: /^Step \d+:/ })).toHaveLength(8);
+    // The sheet can cover the bar, so it carries a Play of its own.
+    expect(within(sheet).getByRole('button', { name: 'Play' })).toBeTruthy();
     // Docked, not modal: the bar beside the panel is still in reach.
     expect(screen.getByRole('navigation', { name: 'Beside the panel' })).toBeTruthy();
     fireEvent.click(button('Sequencer'));

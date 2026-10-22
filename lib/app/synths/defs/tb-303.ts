@@ -382,7 +382,7 @@ text(195, 380, 'BATTERY', 11);
 btn('seq.run', 171, 396, 34, 18, {
   label: 'RUN/STOP',
   name: 'RUN/STOP',
-  help: 'Starts and stops the pattern or track. In this app, use Play riff instead.',
+  help: 'Starts and stops the pattern or track. In this app, use Play on the player bar instead.',
 });
 text(171, 418, 'RUN/STOP', 12);
 

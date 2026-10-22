@@ -1,13 +1,17 @@
 'use client';
 
 /**
- * The step inspector (`f-step-sequencer` t-80): the selected step's values, on encoders, beside the step keys.
+ * The step inspector (`f-step-sequencer` t-80): the chosen step's values, on encoders, beside the step keys.
  *
- * What belongs to the step (on, accent, slide, ratchet, probability, condition) is in a row at the top; what belongs to
- * each of its notes (pitch, gate, velocity, nudge) is a row per note, since a chord's notes are not always struck or let
- * go together. A rest has no notes: Add note makes it play.
+ * It is the same height whatever step is chosen, so the dock does not jump as the steps are walked:
+ * - The head: the step, its On / Accent / Slide, and whether it plays.
+ * - What belongs to the step: ratchet, chance and condition.
+ * - Its notes: a chip per note of the chord (and one to add a note), with one row of encoders (pitch, gate, velocity,
+ *   nudge) for the chip chosen, since a chord's notes are not always struck or let go together. A rest has no notes,
+ *   and says so in the same space.
  */
 
+import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import {
   DEFAULT_VELOCITY,
@@ -53,6 +57,7 @@ export function Toggle({
   );
 }
 
+/** Mounted afresh for each step (the parent keys it), so the note chosen starts at the first. */
 export function StepInspector({
   step,
   index,
@@ -69,13 +74,27 @@ export function StepInspector({
   defaultNote: number;
   onChange: StepChange;
 }) {
-  const g = (k: string) => `step:${part}:${index}:${k}`;
-  const setNote = (i: number, patch: Partial<StepNote>, key: string) =>
+  const [chosen, setChosen] = useState(0);
+  const at = Math.min(chosen, Math.max(0, step.notes.length - 1));
+  const n: StepNote | undefined = step.notes[at];
+  const g = (k: string) => `step:${part}:${index}:${k}:${at}`;
+  const setNote = (patch: Partial<StepNote>, key: string) =>
     onChange(
-      (s) => ({ ...s, notes: s.notes.map((n, k) => (k === i ? { ...n, ...patch } : n)) }),
-      g(`${key}${i}`)
+      (s) => ({ ...s, notes: s.notes.map((x, k) => (k === at ? { ...x, ...patch } : x)) }),
+      g(key)
     );
-  const chord = step.notes.length > 1;
+  const addNote = () => {
+    const last = step.notes[step.notes.length - 1];
+    // A chord grows by a third above its top note; a rest starts on the pattern's note nearest before it.
+    const note = last ? Math.min(127, last.note + 4) : defaultNote;
+    onChange((s) => ({
+      ...s,
+      on: s.notes.length === 0 ? true : s.on,
+      notes: [...s.notes, { note, gate: last?.gate ?? 1 }],
+    }));
+    setChosen(step.notes.length);
+  };
+  const addName = step.notes.length === 0 ? 'Add a note' : 'Add a note to the chord';
   const playsLabel = step.notes.length === 0 ? 'Rest' : step.on ? 'Plays' : 'Muted';
   return (
     <section className="kys-seq-inspect" aria-labelledby="kys-seq-inspect-h">
@@ -84,27 +103,27 @@ export function StepInspector({
           Step {index + 1}
           <span className="kys-seq-inspect-part"> · {part}</span>
         </h3>
+        <div className="kys-seq-inspect-toggles">
+          <Toggle
+            label="On"
+            on={step.on}
+            help="Whether the step plays. Off keeps its notes, so it can come back."
+            onClick={() => onChange((s) => ({ ...s, on: !s.on }))}
+          />
+          <Toggle
+            label="Accent"
+            on={!!step.accent}
+            help="Plays the step's notes at full velocity, over what each note is set to."
+            onClick={() => onChange((s) => ({ ...s, accent: s.accent ? undefined : true }))}
+          />
+          <Toggle
+            label="Slide"
+            on={!!step.slide}
+            help="Holds the step into the next one, so a mono synth glides to the next note."
+            onClick={() => onChange((s) => ({ ...s, slide: s.slide ? undefined : true }))}
+          />
+        </div>
         <span className="kys-seq-inspect-state">{playsLabel}</span>
-      </div>
-      <div className="kys-seq-inspect-row">
-        <Toggle
-          label="On"
-          on={step.on}
-          help="Whether the step plays. Off keeps its notes, so it can come back."
-          onClick={() => onChange((s) => ({ ...s, on: !s.on }))}
-        />
-        <Toggle
-          label="Accent"
-          on={!!step.accent}
-          help="Plays the step's notes at full velocity, over what each note is set to."
-          onClick={() => onChange((s) => ({ ...s, accent: s.accent ? undefined : true }))}
-        />
-        <Toggle
-          label="Slide"
-          on={!!step.slide}
-          help="Holds the step into the next one, so a mono synth glides to the next note."
-          onClick={() => onChange((s) => ({ ...s, slide: s.slide ? undefined : true }))}
-        />
       </div>
       <div className="kys-seq-inspect-row">
         <Encoder
@@ -116,7 +135,10 @@ export function StepInspector({
           format={(v) => `×${v}`}
           help="Plays the step this many times inside itself, evenly spaced: a roll."
           onChange={(v) =>
-            onChange((s) => ({ ...s, ratchet: v > 1 ? v : undefined }), g('ratchet'))
+            onChange(
+              (s) => ({ ...s, ratchet: v > 1 ? v : undefined }),
+              `step:${part}:${index}:ratchet`
+            )
           }
         />
         <Encoder
@@ -129,7 +151,10 @@ export function StepInspector({
           format={pct}
           help="The chance the step plays on each pass. 100% always plays."
           onChange={(v) =>
-            onChange((s) => ({ ...s, probability: v < 100 ? v / 100 : undefined }), g('chance'))
+            onChange(
+              (s) => ({ ...s, probability: v < 100 ? v / 100 : undefined }),
+              `step:${part}:${index}:chance`
+            )
           }
         />
         <PlayerTip
@@ -155,98 +180,101 @@ export function StepInspector({
           </label>
         </PlayerTip>
       </div>
-      <ol className="kys-seq-notes" aria-label={`Notes of step ${index + 1}`}>
-        {step.notes.map((n, i) => {
-          const name = (what: string) => (chord ? `${what} ${i + 1}` : what);
-          return (
-            <li key={i} className="kys-seq-note">
-              <Encoder
-                label={name('Note')}
-                value={n.note}
-                min={0}
-                max={127}
-                big={12}
-                format={noteName}
-                help="The note. Page Up and Page Down move it an octave. The pattern's scale and transpose apply as it plays."
-                onChange={(v) => setNote(i, { note: v }, 'note')}
-              />
-              <Encoder
-                label={name('Gate')}
-                value={n.gate}
-                min={0.25}
-                max={MAX_GATE}
-                step={0.25}
-                big={4}
-                format={steps}
-                help="How long the note is held, in steps. Past 1 it ties over the steps after it."
-                onChange={(v) => setNote(i, { gate: v }, 'gate')}
-              />
-              <Encoder
-                label={name('Velocity')}
-                value={Math.round((n.velocity ?? DEFAULT_VELOCITY) * 100)}
-                min={0}
-                max={100}
-                step={5}
-                big={25}
-                format={pct}
-                unset={n.velocity === undefined}
-                help="How hard the note is struck. Accent plays it at 100% whatever this says."
-                onChange={(v) => setNote(i, { velocity: v / 100 }, 'velocity')}
-              />
-              <Encoder
-                label={name('Nudge')}
-                value={Math.round((n.nudge ?? 0) * 100)}
-                min={0}
-                max={95}
-                step={5}
-                big={25}
-                format={pct}
-                help="How late the note starts, as a share of a step: a push, a flam, or a triplet on a straight grid."
-                onChange={(v) => setNote(i, { nudge: v > 0 ? v / 100 : undefined }, 'nudge')}
-              />
-              <PlayerTip name={`Remove ${name('note').toLowerCase()}`}>
-                <button
-                  type="button"
-                  className="kys-pbtn"
-                  aria-label={`Remove ${name('note').toLowerCase()}`}
-                  onClick={() =>
-                    onChange((s) => ({ ...s, notes: s.notes.filter((_, k) => k !== i) }))
-                  }
-                >
-                  <X size={15} aria-hidden="true" />
-                </button>
-              </PlayerTip>
-            </li>
-          );
-        })}
-      </ol>
-      {step.notes.length < MAX_CHORD && (
-        <PlayerTip
-          name={step.notes.length === 0 ? 'Add a note' : 'Add a note to the chord'}
-          help={`A step plays up to ${MAX_CHORD} notes at once.`}
-        >
-          <button
-            type="button"
-            className="kys-layer"
-            aria-label={step.notes.length === 0 ? 'Add a note' : 'Add a note to the chord'}
-            onClick={() =>
-              onChange((s) => {
-                const last = s.notes[s.notes.length - 1];
-                // A chord grows by a third above its top note; a rest starts on the pattern's last note.
-                const note = last ? Math.min(127, last.note + 4) : defaultNote;
-                return {
-                  ...s,
-                  on: s.notes.length === 0 ? true : s.on,
-                  notes: [...s.notes, { note, gate: last?.gate ?? 1 }],
-                };
-              })
-            }
-          >
-            <Plus size={15} aria-hidden="true" />
-            {step.notes.length === 0 ? 'Add note' : 'Add to chord'}
-          </button>
-        </PlayerTip>
-      )}
+
+      <div className="kys-seq-notes">
+        <div className="kys-seq-chips" role="group" aria-label={`Notes of step ${index + 1}`}>
+          {step.notes.map((x, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-pressed={i === at}
+              aria-label={`Note ${i + 1} of the step: ${noteName(x.note)}`}
+              className={`kys-seq-chip ${i === at ? 'is-on' : ''}`}
+              onClick={() => setChosen(i)}
+            >
+              {noteName(x.note)}
+            </button>
+          ))}
+          {step.notes.length < MAX_CHORD && (
+            <PlayerTip name={addName} help={`A step plays up to ${MAX_CHORD} notes at once.`}>
+              <button
+                type="button"
+                className="kys-seq-chip kys-seq-chip-add"
+                aria-label={addName}
+                onClick={addNote}
+              >
+                <Plus size={13} aria-hidden="true" />
+                {step.notes.length === 0 && 'Add note'}
+              </button>
+            </PlayerTip>
+          )}
+          {n && (
+            <PlayerTip name="Remove this note" help="The chosen note comes out of the step.">
+              <button
+                type="button"
+                className="kys-seq-chip kys-seq-chip-remove"
+                aria-label="Remove this note"
+                onClick={() => {
+                  onChange((s) => ({ ...s, notes: s.notes.filter((_, k) => k !== at) }));
+                  setChosen(Math.max(0, at - 1));
+                }}
+              >
+                <X size={13} aria-hidden="true" />
+              </button>
+            </PlayerTip>
+          )}
+        </div>
+        {n ? (
+          <div className="kys-seq-note">
+            <Encoder
+              label="Note"
+              value={n.note}
+              min={0}
+              max={127}
+              big={12}
+              format={noteName}
+              help="The note. Page Up and Page Down move it an octave. The pattern's scale and transpose apply as it plays."
+              onChange={(v) => setNote({ note: v }, 'note')}
+            />
+            <Encoder
+              label="Gate"
+              value={n.gate}
+              min={0.25}
+              max={MAX_GATE}
+              step={0.25}
+              big={4}
+              format={steps}
+              help="How long the note is held, in steps. Past 1 it ties over the steps after it."
+              onChange={(v) => setNote({ gate: v }, 'gate')}
+            />
+            <Encoder
+              label="Velocity"
+              value={Math.round((n.velocity ?? DEFAULT_VELOCITY) * 100)}
+              min={0}
+              max={100}
+              step={5}
+              big={25}
+              format={pct}
+              unset={n.velocity === undefined}
+              help="How hard the note is struck. Accent plays it at 100% whatever this says."
+              onChange={(v) => setNote({ velocity: v / 100 }, 'velocity')}
+            />
+            <Encoder
+              label="Nudge"
+              value={Math.round((n.nudge ?? 0) * 100)}
+              min={0}
+              max={95}
+              step={5}
+              big={25}
+              format={pct}
+              help="How late the note starts, as a share of a step: a push, a flam, or a triplet on a straight grid."
+              onChange={(v) => setNote({ nudge: v > 0 ? v / 100 : undefined }, 'nudge')}
+            />
+          </div>
+        ) : (
+          <p className="kys-seq-rest">A rest. Add a note and the step plays it.</p>
+        )}
+      </div>
     </section>
   );
 }

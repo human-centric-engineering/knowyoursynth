@@ -62,6 +62,8 @@ interface LoopInfo {
   to: number;
   order: number[];
   part: number;
+  /** Steps per beat when it was compiled: an edit to the step size leaves loops already sounding as they were. */
+  perBeat: number;
 }
 
 export interface EditOptions {
@@ -121,7 +123,7 @@ export function useSequencer({
   tempo = null,
 }: {
   engine: SequencerEngine | null;
-  /** Turns the sound on, as a press of Play riff does; false if it could not. */
+  /** Turns the sound on, as a press of Play on the bar does; false if it could not. */
   ensureAudio: () => Promise<boolean>;
   /** The riff of the sound on the panel: imported whenever it changes, replacing the pattern. */
   riff: Phrase | null;
@@ -147,6 +149,12 @@ export function useSequencer({
   const playhead = useRef(createPlayhead());
 
   const send = useCallback((m: SynthMessage) => engine?.send(m), [engine]);
+  const riffRef = useRef(riff);
+  const tempoRef = useRef(tempo);
+  useEffect(() => {
+    riffRef.current = riff;
+    tempoRef.current = tempo;
+  });
 
   /** Loop `index` of `p`, compiled from `seed`, with what it was compiled from kept. */
   const compile = useCallback(
@@ -155,7 +163,14 @@ export function useSequencer({
       // The same seed gives stepOrder the draws compileLoop starts with, so the order is the one the loop plays.
       const { order } = stepOrder(p, { ...opts, rng: seededRng(seed) });
       const c = compileLoop(p, { ...opts, rng: seededRng(seed) });
-      const info: LoopInfo = { seed, from, to: c.to, order, part: p.chain[index % p.chain.length] };
+      const info: LoopInfo = {
+        seed,
+        from,
+        to: c.to,
+        order,
+        part: p.chain[index % p.chain.length],
+        perBeat: stepsPerBeat(p),
+      };
       loops.current.set(index, info);
       // Only the last few are read: the one heard now, the one rendered, the one queued.
       loops.current.forEach((_, k) => {
@@ -208,7 +223,8 @@ export function useSequencer({
   const commit = useCallback(
     (p: Pattern, o: EditOptions) => {
       const prev = patternRef.current;
-      if (p === prev) return;
+      // An edit that changes nothing (a tool on a part of rests) is not one: nothing to undo, nothing to resend.
+      if (p === prev || JSON.stringify(p) === JSON.stringify(prev)) return;
       const ok = PatternSchema.safeParse(p);
       if (!ok.success) {
         logger.warn('sequencer: edit refused', { issue: ok.error.issues[0]?.message });
@@ -240,8 +256,10 @@ export function useSequencer({
   );
 
   const undo = useCallback(() => {
-    const prev = past.current[past.current.length - 1];
-    if (!prev) return;
+    const last = past.current[past.current.length - 1];
+    if (!last) return;
+    // The panel's tempo knob still says what it says: Undo does not take the pattern off it.
+    const prev = tempoRef.current ? { ...last, bpm: clampBpm(tempoRef.current) } : last;
     past.current = past.current.slice(0, -1);
     setUndoable(past.current.length > 0);
     const was = patternRef.current;
@@ -253,19 +271,13 @@ export function useSequencer({
 
   // The sound's riff, imported whenever it changes (another sound chosen): a fresh pattern with nothing to undo. Keyed
   // on the riff's content, so a sound read again with the same riff (a rename, a save) keeps the edits.
+  // A riff that goes away for a moment (no sound shown) and comes back the same is not a new riff.
   const riffKey = riff ? JSON.stringify(riff) : null;
-  const riffRef = useRef(riff);
-  const tempoRef = useRef(tempo);
-  useEffect(() => {
-    riffRef.current = riff;
-    tempoRef.current = tempo;
-  });
   const loadedKey = useRef(riffKey);
   useEffect(() => {
-    if (riffKey === loadedKey.current) return;
-    loadedKey.current = riffKey;
     const ph = riffRef.current;
-    if (!ph) return;
+    if (!riffKey || !ph || riffKey === loadedKey.current) return;
+    loadedKey.current = riffKey;
     const p = fromRiff(ph, tempoRef.current);
     patternRef.current = p;
     setPattern(p);
@@ -305,10 +317,15 @@ export function useSequencer({
     halt();
   }, [halt, send]);
 
-  const setFill = useCallback((on: boolean) => {
-    fillRef.current = on;
-    setFillState(on);
-  }, []);
+  // The loop after this one was queued before Fill changed: queued again, so Fill is heard from the next loop.
+  const setFill = useCallback(
+    (on: boolean) => {
+      fillRef.current = on;
+      setFillState(on);
+      if (playingRef.current) queue(current.current + 1);
+    },
+    [queue]
+  );
 
   const onEvent = useCallback(
     (e: SynthEvent) => {
@@ -328,7 +345,7 @@ export function useSequencer({
     if (!at) return null;
     const info = newestBefore(loops.current, at.index);
     if (!info) return null;
-    const slot = Math.floor(at.beat * stepsPerBeat(patternRef.current) + 1e-9);
+    const slot = Math.floor(at.beat * info.perBeat + 1e-9);
     const step = info.order[Math.min(slot, info.order.length - 1)];
     return step === undefined ? null : { step, part: info.part };
   }, [engine]);

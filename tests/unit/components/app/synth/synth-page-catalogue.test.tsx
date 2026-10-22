@@ -177,7 +177,7 @@ describe.each(LISTED)('the %s page', (id) => {
       Math.min(16, steps)
     );
     await act(async () => {
-      fireEvent.click(within(seq).getByRole('button', { name: 'Play' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Play' }));
     });
     const start = engine.send.mock.calls
       .map((c) => c[0] as { type: string; loop?: { notes: unknown[] } })

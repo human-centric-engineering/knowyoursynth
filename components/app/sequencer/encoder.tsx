@@ -33,6 +33,8 @@ export interface EncoderProps {
   help: string;
   /** Shown dimmed: the value is a default, not set on this step. */
   unset?: boolean;
+  /** Smaller, with its name beside it rather than under it: for a tool row. */
+  compact?: boolean;
 }
 
 /** `v` on the step grid from `min`, inside the range, with the float noise of the steps taken out. */
@@ -52,6 +54,7 @@ export function Encoder({
   onChange,
   help,
   unset = false,
+  compact = false,
 }: EncoderProps) {
   const drag = useRef<{ y: number; from: number } | null>(null);
   const bigStep = big ?? step * 10;
@@ -76,6 +79,8 @@ export function Encoder({
     e.stopPropagation();
   };
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    // The main button or a finger: a right-click opens the context menu, which can swallow the let-go.
+    if (e.button !== 0) return;
     e.currentTarget.setPointerCapture?.(e.pointerId);
     e.currentTarget.focus();
     drag.current = { y: e.clientY, from: value };
@@ -94,7 +99,7 @@ export function Encoder({
   const ring: CSSProperties & Record<'--enc', string> = { '--enc': `${share * 270}deg` };
   const text = format(value);
   return (
-    <div className="kys-enc" data-unset={unset || undefined}>
+    <div className="kys-enc" data-unset={unset || undefined} data-compact={compact || undefined}>
       <PlayerTip name={label} help={help}>
         <div
           role="slider"

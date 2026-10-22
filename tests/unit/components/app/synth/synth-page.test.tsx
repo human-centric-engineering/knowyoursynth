@@ -420,21 +420,21 @@ describe('SynthPage engine', () => {
   it("plays the sound's riff, starting audio first, and stops it", async () => {
     page();
     await act(async () => {
-      fireEvent.click(button('Play riff'));
+      fireEvent.click(button('Play'));
     });
     expect(engine.resume).toHaveBeenCalledTimes(1);
     expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
 
-    fireEvent.click(button('Stop riff'));
+    fireEvent.click(button('Stop'));
     expect(engine.send).toHaveBeenCalledWith({ type: 'stopPhrase' });
-    expect(button('Play riff')).toBeTruthy();
+    expect(button('Play')).toBeTruthy();
   });
 
   it('plays the riff of the sound that is loaded, not the first', async () => {
     storeSession({ presetId: 'wobble', step: null, values: {}, cables: [] });
     page();
     await act(async () => {
-      fireEvent.click(button('Play riff'));
+      fireEvent.click(button('Play'));
     });
     expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: WOBBLE.phrase });
   });
@@ -1406,7 +1406,7 @@ describe('SynthPage player', () => {
     page({ detail: { ...detail, sounds: [{ ...FAT_BASS, steps: [] }] } });
     expect(screen.queryByRole('list', { name: 'Lesson steps' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Start the lesson' })).toBeNull();
-    expect(button('Play riff')).toBeTruthy();
+    expect(button('Play')).toBeTruthy();
   });
 
   it('describes the library sound on the panel under the player', () => {
@@ -1465,31 +1465,31 @@ describe('SynthPage player', () => {
 describe('SynthPage riff and engine events', () => {
   const fire = (e: { type: string }) => act(() => events.fn?.(e));
 
-  it('goes back to "Play riff" when the engine says the phrase ended', async () => {
+  it('goes back to "Play" when the engine says the phrase ended', async () => {
     page();
     await act(async () => {
-      fireEvent.click(button('Play riff'));
+      fireEvent.click(button('Play'));
     });
-    expect(button('Stop riff')).toBeTruthy();
+    expect(button('Stop')).toBeTruthy();
 
     fire({ type: 'phraseEnd' });
 
-    expect(button('Play riff')).toBeTruthy();
+    expect(button('Play')).toBeTruthy();
   });
 
   it('keeps playing through any other engine event', async () => {
     page();
     await act(async () => {
-      fireEvent.click(button('Play riff'));
+      fireEvent.click(button('Play'));
     });
     fire({ type: 'meter' });
-    expect(button('Stop riff')).toBeTruthy();
+    expect(button('Stop')).toBeTruthy();
   });
 
   it('plays the riff again when "Restore sound" is pressed while it plays', async () => {
     page();
     await act(async () => {
-      fireEvent.click(button('Play riff'));
+      fireEvent.click(button('Play'));
     });
     fireEvent.click(button('A-440'));
     engine.send.mockClear();
@@ -1564,7 +1564,7 @@ describe('SynthPage sounds', () => {
     page({ detail: { ...detail, sounds: [] } });
     expect(loadedName()).toBe('Blank patch');
     expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Play riff' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Play' })).toBeNull();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 

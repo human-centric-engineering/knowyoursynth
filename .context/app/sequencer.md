@@ -176,9 +176,10 @@ another sound replaces the pattern, and Undo starts empty. A sound read again wi
 keeps the edits. A panel tempo control (`SynthDef.tempo`, the TB-303's TEMPO) sets the pattern's tempo as it sets a
 riff's, and Undo does not count it.
 
-**One transport.** With the sequencer open, the bar's Play riff plays the pattern. The module's Play button is the same
+**One transport.** With the sequencer open, the bar's Play plays the pattern. In the bottom sheet, which can cover the
+bar, the module has a Play button of its own, the same
 transport. A pattern starting stops a riff, a riff starting stops the pattern, and Stop stops both. Opening the
-sequencer while the riff plays hands over to the pattern. Closing it while the pattern plays leaves it playing.
+sequencer while the riff plays hands over to the pattern. Closing it while the pattern plays leaves it playing, and the bar's Stop stays to stop it.
 
 **Playing.** Play compiles loop 0 and sends `pattern`. Each `loop` event with `start` set compiles the loop after it and
 queues it (`patternNext`). A pattern with Loop off queues its end instead. Every loop is compiled from its own seed,
@@ -197,12 +198,12 @@ order. The keys redraw only when the step changes.
 
 **What is on it:**
 
-- **The head.** Play/Stop, Fill and Loop, then four encoders (tempo, swing, length, transpose). Then selects for step
+- **The head.** Fill and Loop (and Play/Stop in the sheet), then four encoders (tempo, swing, length, transpose). Then selects for step
   size, direction, root and scale. Then the parts: **+ B** adds B as a copy of A and chains it `A B`, and once there
   is a B a select picks the chain.
 - **Step keys**, sixteen to a page, with a page button for each sixteen past the first. A key's LED is lit when the
   step plays and outlined when it is muted with notes. The key the playhead is on is lit.
-- **Choosing and toggling.** A press chooses a step, and a double press turns it on or off. A rest turned on takes the
+- **Choosing and toggling.** A press chooses a step, and a press on the chosen step turns it on or off. A rest turned on takes the
   note before it.
 - **The keys from the keyboard.** The keys are one Tab stop. Left and Right move along the steps and across pages,
   Home and End go to either end, Up and Down move the step's notes a semitone, Enter or Space turns it on or off, and

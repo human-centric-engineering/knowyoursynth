@@ -67,6 +67,7 @@ function Harness({
       onPlay={() => void seq.play()}
       onStop={seq.stop}
       onClose={() => undefined}
+      transport
     />
   );
 }
@@ -448,12 +449,15 @@ describe('from the keyboard', () => {
     expect(labels()[1]).toBe('Step 2: rest');
   });
 
-  it('turns a step off and on with a double press, and chooses it with one', () => {
+  it('chooses a step with a press, and turns the chosen step off and on with another', () => {
     open();
     fireEvent.click(key(3));
     expect(screen.getByRole('heading', { name: /^Step 3/ })).toBeTruthy();
-    fireEvent.doubleClick(key(3));
+    expect(labels()[2]).toBe('Step 3: D♯3, on');
+    fireEvent.click(key(3));
     expect(labels()[2]).toBe('Step 3: D♯3, off');
+    fireEvent.click(key(3));
+    expect(labels()[2]).toBe('Step 3: D♯3, on');
   });
 
   it('sets the chosen step’s values in the inspector, each encoder by its keys', () => {
@@ -494,16 +498,36 @@ describe('from the keyboard', () => {
     expect(vel.getAttribute('aria-valuetext')).toBe('90%');
   });
 
-  it('builds a chord with Add to chord, each note with its own encoders, and takes a note away', () => {
+  it('builds a chord with Add to chord, one note on the encoders at a time, and takes the chosen note away', () => {
     open();
     const inspector = () => within(screen.getByRole('region', { name: /^Step 1/ }));
+    const note = () =>
+      inspector().getByRole('slider', { name: 'Note' }).getAttribute('aria-valuetext');
     fireEvent.click(inspector().getByRole('button', { name: 'Add a note to the chord' }));
     expect(labels()[0]).toBe('Step 1: C3 E3, on');
-    expect(inspector().getByRole('slider', { name: 'Note 2' }).getAttribute('aria-valuetext')).toBe(
-      'E3'
-    );
-    fireEvent.click(inspector().getByRole('button', { name: 'Remove note 1' }));
+    // The note added is the one on the encoders; its chip says so.
+    expect(note()).toBe('E3');
+    expect(
+      inspector()
+        .getByRole('button', { name: 'Note 2 of the step: E3' })
+        .getAttribute('aria-pressed')
+    ).toBe('true');
+    fireEvent.click(inspector().getByRole('button', { name: 'Note 1 of the step: C3' }));
+    expect(note()).toBe('C3');
+    fireEvent.keyDown(inspector().getByRole('slider', { name: 'Note' }), { key: 'ArrowDown' });
+    expect(labels()[0]).toBe('Step 1: B2 E3, on');
+    fireEvent.click(inspector().getByRole('button', { name: 'Remove this note' }));
     expect(labels()[0]).toBe('Step 1: E3, on');
+    expect(note()).toBe('E3');
+  });
+
+  it('keeps the inspector the same shape for a rest: no note encoders, a line saying it is a rest', () => {
+    open();
+    fireEvent.click(key(2));
+    const inspector = within(screen.getByRole('region', { name: /^Step 2/ }));
+    expect(inspector.queryByRole('slider', { name: 'Note' })).toBeNull();
+    expect(inspector.getByText('A rest. Add a note and the step plays it.')).toBeTruthy();
+    expect(inspector.queryByRole('button', { name: 'Remove this note' })).toBeNull();
   });
 
   it('gives a rest its first note with Add note', () => {
@@ -582,6 +606,62 @@ describe('what it refuses, and a page that is late', () => {
     });
     fire(loopEvent());
     expect(state.position()).toBeNull();
+  });
+});
+
+describe('what the code review found', () => {
+  it('hears Fill from the next loop: the loop queued before it was pressed is queued again', async () => {
+    open();
+    fireEvent.change(
+      within(screen.getByRole('region', { name: /^Step 1/ })).getByRole('combobox', {
+        name: 'Condition',
+      }),
+      { target: { value: 'fill' } }
+    );
+    await play();
+    fire(loopEvent());
+    expect(lastOf('patternNext')?.loop?.notes[0]?.[1]).toBe(51);
+    fireEvent.click(button('Fill'));
+    expect(lastOf('patternNext')?.loop?.notes[0]).toEqual([0, 48, 0.25]);
+  });
+
+  it('keeps no Undo for an edit that changes nothing', () => {
+    open();
+    fireEvent.click(button('Clear'));
+    fireEvent.click(button('Clear'));
+    fireEvent.click(button('Undo'));
+    expect(labels()[0]).toBe('Step 1: C3, on');
+    expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('keeps the panel’s tempo through an Undo', () => {
+    const { rerender } = open(RIFF, 140);
+    fireEvent.click(button('Clear'));
+    rerender(<Harness riff={RIFF} tempo={150} />);
+    fireEvent.click(button('Undo'));
+    expect(labels()[0]).toBe('Step 1: C3, on');
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('150');
+  });
+
+  it('keeps the edits when the riff goes away for a moment and comes back the same', () => {
+    const { rerender } = open();
+    fireEvent.click(button('Clear'));
+    rerender(<Harness riff={null} />);
+    rerender(<Harness riff={RIFF} />);
+    expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
+  });
+
+  it('places the playhead of a loop still sounding by its own step size after the step size changes', async () => {
+    open();
+    await play();
+    fire(loopEvent());
+    // Loop 1 is rendered (its frame is not heard yet) while the end of loop 0 still sounds.
+    fire(loopEvent({ index: 1, frame: 96000 }));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Step' }), {
+      target: { value: '1/8' },
+    });
+    engine.frame = 0.375 * 48000;
+    expect(state.position()).toEqual({ step: 3, part: 0 });
   });
 });
 

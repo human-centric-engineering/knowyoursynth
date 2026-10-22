@@ -194,7 +194,7 @@ const PLAY_HELP = [
     'Press MIDI in the bar to connect one plugged into this computer, in Chrome or Edge. Its notes and mod wheel both play the panel.',
   ],
   [
-    'Play riff',
+    'Play',
     'Plays a short original phrase that suits the sound, so you can turn the knobs and hear what they do.',
     <Play key="play" size={13} />,
   ],
@@ -848,7 +848,7 @@ function Synth({
     tempoRef.current = tempoBpm;
     if (tempoBpm) engine?.send({ type: 'tempo', bpm: tempoBpm });
   }, [engine, tempoBpm]);
-  // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. Play riff and the sequencer are one
+  // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. The bar's Play and the sequencer are one
   // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
   const [seqOpen, setSeqOpen] = useState(false);
   const seq = useSequencer({
@@ -871,8 +871,16 @@ function Synth({
     if (await startPattern()) setPlaying(false);
   }, [startPattern]);
   // Open in the dock from `lg` up, in its sheet below it.
+  const seqDocked = !small && seqOpen;
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
   const transportPlaying = playing || seq.playing;
+  // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
+  const seqProps = {
+    seq,
+    playing: transportPlaying,
+    onPlay: () => void playPattern(),
+    onStop: stopRiff,
+  };
   const toggleSequencer = () => {
     const opening = !seqShown;
     if (small) openSheet(opening ? 'sequencer' : null);
@@ -1819,7 +1827,7 @@ function Synth({
             shows only while the pointer is near the dock. */}
             <div ref={dockRef} className="kys-dock">
               {/* The sequencer in the dock takes the strip's place: what is being played is the pattern, not a lesson. */}
-              {!(seqOpen && !small) && (
+              {!seqDocked && (
                 <SoundDesign
                   steps={steps}
                   step={step}
@@ -1844,7 +1852,8 @@ function Synth({
                 />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
-                  {(shown || seqShown) && (
+                  {/* Always there while something plays, so a pattern can be stopped with the sequencer closed. */}
+                  {(shown || seqShown || transportPlaying) && (
                     <PlayButton
                       playing={transportPlaying}
                       onClick={() =>
@@ -1963,15 +1972,9 @@ function Synth({
                 </div>
               </div>
 
-              {!small && seqOpen && (
+              {seqDocked && (
                 <div className="kys-seq-dock">
-                  <Sequencer
-                    seq={seq}
-                    playing={transportPlaying}
-                    onPlay={() => void playPattern()}
-                    onStop={stopRiff}
-                    onClose={() => setSeqOpen(false)}
-                  />
+                  <Sequencer {...seqProps} onClose={() => setSeqOpen(false)} />
                 </div>
               )}
 
@@ -2119,13 +2122,7 @@ function Synth({
             fallbackFocus={() => playerRef.current}
             onOpenChange={(o) => openSheet(o ? 'sequencer' : null)}
           >
-            <Sequencer
-              seq={seq}
-              playing={transportPlaying}
-              onPlay={() => void playPattern()}
-              onStop={stopRiff}
-              titled={false}
-            />
+            <Sequencer {...seqProps} titled={false} transport />
           </BottomSheet>
           <BottomSheet
             title="Tutor"
