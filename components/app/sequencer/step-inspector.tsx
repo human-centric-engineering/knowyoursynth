@@ -159,10 +159,10 @@ export function StepInspector({
           name="Condition"
           help="Which loops the step plays on: only the first, every other, only while Fill is on, and so on."
         >
-          <label className="kys-seq-field">
-            <span className="kys-seq-field-label">Condition</span>
+          <label className="kys-cell kys-cell-select">
+            <span className="kys-cell-label">Condition</span>
             <select
-              className="kys-seq-select"
+              className="kys-cell-input"
               value={conditionKey(step.condition)}
               onChange={(e) => {
                 const c = CONDITIONS.find((x) => x.key === e.target.value);

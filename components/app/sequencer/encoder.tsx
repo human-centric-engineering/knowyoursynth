@@ -1,8 +1,9 @@
 'use client';
 
 /**
- * An encoder (`f-step-sequencer` t-80): the sequencer's knob, as a hardware sequencer sets a step's values. A ring
- * lit to the value, the value itself in the middle, and its name under it.
+ * An encoder (`f-step-sequencer` t-80): one cell of the sequencer's readout, as a hardware sequencer shows a value on
+ * its display and sets it with the knob beside it. Its name, the value in the display's amber, and a meter along its
+ * foot showing where the value sits in its range.
  *
  * A slider to assistive technology and the keyboard: arrows move it a step, Page Up and Page Down a big step, Home and
  * End to either end. A drag up or down turns it, with a mouse or a finger. Its help is the player's tooltip, on hover
@@ -97,10 +98,10 @@ export function Encoder({
     drag.current = null;
   };
   const share = max > min ? Math.min(1, Math.max(0, (value - min) / (max - min))) : 0;
-  const ring: CSSProperties & Record<'--enc', string> = { '--enc': `${share * 270}deg` };
+  const meter: CSSProperties & Record<'--enc', string> = { '--enc': `${Math.round(share * 100)}%` };
   const text = format(value);
   return (
-    <div className="kys-enc" data-unset={unset || undefined} data-compact={compact || undefined}>
+    <div className="kys-cell" data-unset={unset || undefined} data-compact={compact || undefined}>
       <PlayerTip name={label} help={help}>
         <div
           role="slider"
@@ -110,20 +111,21 @@ export function Encoder({
           aria-valuemax={max}
           aria-valuenow={value}
           aria-valuetext={unset ? `${text} (default)` : text}
-          className="kys-enc-knob"
-          style={ring}
+          className="kys-cell-hit"
+          style={meter}
           onKeyDown={onKeyDown}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          <span className="kys-enc-value">{text}</span>
+          <span className="kys-cell-label" aria-hidden="true">
+            {label}
+          </span>
+          <span className="kys-cell-value">{text}</span>
+          <span className="kys-cell-meter" aria-hidden="true" />
         </div>
       </PlayerTip>
-      <span className="kys-enc-label" aria-hidden="true">
-        {label}
-      </span>
     </div>
   );
 }

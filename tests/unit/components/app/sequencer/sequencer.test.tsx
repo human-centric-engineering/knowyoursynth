@@ -81,6 +81,11 @@ const key = (n: number) => keys()[n - 1];
 const labels = () => keys().map((k) => k.getAttribute('aria-label'));
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const slider = (name: string) => screen.getByRole('slider', { name });
+/** Copy, paste and clear are in the Edit menu: opened, then the item chosen. */
+const menu = (name: string) => {
+  fireEvent.click(button('Copy, paste and clear'));
+  fireEvent.click(screen.getByRole('menuitem', { name }));
+};
 const sentOf = <T extends SynthMessage['type']>(type: T) =>
   engine.sent.filter((m): m is Extract<SynthMessage, { type: T }> => m.type === type);
 const lastOf = <T extends SynthMessage['type']>(type: T) => sentOf(type).at(-1);
@@ -145,7 +150,7 @@ describe('opening on a sound', () => {
 
   it('loads another sound’s riff in place of the pattern, Undo bringing the edited one back; the same riff keeps the edits', () => {
     const { rerender } = open();
-    fireEvent.click(button('Clear'));
+    menu('Clear');
     expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
     // The same riff read again (the sound renamed, say) is not a new riff.
     rerender(<Harness riff={{ ...RIFF, steps: RIFF.steps.map((s) => [...s] as typeof s) }} />);
@@ -308,7 +313,7 @@ describe('editing', () => {
     expect(button('Edit part B').getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('group', { name: 'Steps of part B' })).toBeTruthy();
     expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Chain' }).value).toBe('0,1');
-    fireEvent.click(button('Clear'));
+    menu('Clear');
     fireEvent.click(button('Edit part A'));
     expect(labels()[0]).toBe('Step 1: C3, on');
     await play();
@@ -333,7 +338,8 @@ describe('the tools', () => {
   ])('%s changes the part, and Undo puts it back', (name, after) => {
     open();
     const was = labels();
-    fireEvent.click(button(name));
+    if (name === 'Clear') menu(name);
+    else fireEvent.click(button(name));
     expect(notes()).toEqual(after);
     fireEvent.click(button('Undo'));
     expect(labels()).toEqual(was);
@@ -392,17 +398,21 @@ describe('the tools', () => {
 
   it('copies a step and pastes it over another, and copies and pastes a page', () => {
     open();
-    expect((button('Paste step') as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(button('Copy, paste and clear'));
+    expect(screen.getByRole<HTMLButtonElement>('menuitem', { name: 'Paste step' }).disabled).toBe(
+      true
+    );
+    fireEvent.click(button('Copy, paste and clear'));
     fireEvent.click(key(5));
-    fireEvent.click(button('Copy step'));
+    menu('Copy step');
     fireEvent.click(key(2));
-    fireEvent.click(button('Paste step'));
+    menu('Paste step');
     expect(labels()[1]).toBe('Step 2: G3, on');
     // A page to paste over: lengthen to two pages, copy the first, paste over the second.
     fireEvent.keyDown(slider('Length'), { key: 'End' });
-    fireEvent.click(button('Copy page'));
+    menu('Copy page');
     fireEvent.click(button(/^Page 2/));
-    fireEvent.click(button('Paste page'));
+    menu('Paste page');
     expect(labels()[0]).toBe('Step 17: C3, on');
     expect(labels()[1]).toBe('Step 18: G3, on');
   });
@@ -418,7 +428,7 @@ describe('the tools', () => {
   it('undoes an edit while it plays, and the engine hears the undo', async () => {
     open();
     await play();
-    fireEvent.click(button('Clear'));
+    menu('Clear');
     expect(lastOf('patternEdit')?.loop.notes).toEqual([]);
     fireEvent.click(button('Undo'));
     expect(lastOf('patternEdit')?.loop.notes).toEqual(RIFF.steps);
@@ -656,8 +666,8 @@ describe('what the code review found', () => {
 
   it('keeps no Undo for an edit that changes nothing', () => {
     open();
-    fireEvent.click(button('Clear'));
-    fireEvent.click(button('Clear'));
+    menu('Clear');
+    menu('Clear');
     fireEvent.click(button('Undo'));
     expect(labels()[0]).toBe('Step 1: C3, on');
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
@@ -665,7 +675,7 @@ describe('what the code review found', () => {
 
   it('keeps the panel’s tempo through an Undo', () => {
     const { rerender } = open(RIFF, 140);
-    fireEvent.click(button('Clear'));
+    menu('Clear');
     rerender(<Harness riff={RIFF} tempo={150} />);
     fireEvent.click(button('Undo'));
     expect(labels()[0]).toBe('Step 1: C3, on');
@@ -674,7 +684,7 @@ describe('what the code review found', () => {
 
   it('keeps the edits when the riff goes away for a moment and comes back the same', () => {
     const { rerender } = open();
-    fireEvent.click(button('Clear'));
+    menu('Clear');
     rerender(<Harness riff={null} />);
     rerender(<Harness riff={RIFF} />);
     expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
@@ -770,6 +780,35 @@ describe('what the third review found', () => {
     expect(gate.getAttribute('aria-valuenow')).toBe('0.1');
     fireEvent.keyDown(gate, { key: 'ArrowDown' });
     expect(gate.getAttribute('aria-valuenow')).toBe('0.05');
+  });
+});
+
+describe('the Edit menu', () => {
+  it('keeps copy, paste and clear out of sight until it is opened, and closes after a choice', () => {
+    open();
+    const edit = button('Copy, paste and clear');
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(edit.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(edit);
+    expect(edit.getAttribute('aria-expanded')).toBe('true');
+    expect(
+      within(screen.getByRole('menu'))
+        .getAllByRole('menuitem')
+        .map((m) => m.textContent)
+    ).toEqual(['Copy step', 'Copy page', 'Paste step', 'Clear']);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Copy step' }));
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(document.activeElement).toBe(edit);
+  });
+
+  it('closes on Escape and on a press outside it', () => {
+    open();
+    fireEvent.click(button('Copy, paste and clear'));
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('menu')).toBeNull();
+    fireEvent.click(button('Copy, paste and clear'));
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
   });
 });
 

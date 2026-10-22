@@ -250,7 +250,8 @@ describe('the sequencer on the synth page', () => {
   it('keeps the pattern’s edits when it is closed and opened again', () => {
     page();
     fireEvent.click(button('Sequencer'));
-    fireEvent.click(within(sequencer()).getByRole('button', { name: 'Clear' }));
+    fireEvent.click(within(sequencer()).getByRole('button', { name: 'Copy, paste and clear' }));
+    fireEvent.click(within(sequencer()).getByRole('menuitem', { name: 'Clear' }));
     fireEvent.click(button('Sequencer'));
     fireEvent.click(button('Sequencer'));
     const keys = within(sequencer()).getAllByRole('button', { name: /^Step \d+:/ });

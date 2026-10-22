@@ -43,7 +43,7 @@ describe('Encoder', () => {
     expect(knob.getAttribute('aria-valuemax')).toBe('127');
     expect(knob.getAttribute('aria-valuenow')).toBe('60');
     expect(knob.getAttribute('aria-valuetext')).toBe('n60');
-    expect(knob.textContent).toBe('n60');
+    expect(knob.querySelector('.kys-cell-value')?.textContent).toBe('n60');
   });
 
   it('says when the value shown is a default', () => {
@@ -119,8 +119,8 @@ describe('Encoder', () => {
     expect(onChange.mock.calls.map((c) => c[0])).toEqual([3]);
   });
 
-  it('draws its ring to the share of its range', () => {
+  it('draws its meter to the share of its range', () => {
     const { knob } = encoder({ min: 0, max: 100, value: 50 });
-    expect(knob.style.getPropertyValue('--enc')).toBe('135deg');
+    expect(knob.style.getPropertyValue('--enc')).toBe('50%');
   });
 });

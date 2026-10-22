@@ -2122,7 +2122,7 @@ function Synth({
             fallbackFocus={() => playerRef.current}
             onOpenChange={(o) => openSheet(o ? 'sequencer' : null)}
           >
-            <Sequencer {...seqProps} titled={false} transport />
+            <Sequencer {...seqProps} transport />
           </BottomSheet>
           <BottomSheet
             title="Tutor"

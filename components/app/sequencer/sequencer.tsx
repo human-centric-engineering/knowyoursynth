@@ -23,7 +23,9 @@ import {
   ArrowLeftRight,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
   ClipboardPaste,
+  ChevronUp,
   Copy,
   Dices,
   Eraser,
@@ -167,7 +169,6 @@ export function Sequencer({
   onPlay,
   onStop,
   onClose,
-  titled = true,
   transport = false,
 }: {
   seq: SequencerState;
@@ -177,8 +178,6 @@ export function Sequencer({
   onStop: () => void;
   /** Closes the module; absent in a bottom sheet, which has its own close. */
   onClose?: () => void;
-  /** Its name over it. A bottom sheet's title names it already. */
-  titled?: boolean;
   /**
    * A Play button of its own: in a bottom sheet, which can cover the bar. In the dock the bar's Play is just above it,
    * and the same transport.
@@ -328,12 +327,6 @@ export function Sequencer({
       <div className="kys-seq-body">
         <div className="kys-seq-main">
           <div className="kys-seq-head">
-            {titled && (
-              <div className="kys-seq-title" aria-hidden="true">
-                <span className={`kys-led ${seq.playing ? 'is-lit' : ''}`} />
-                <span className="kys-seq-name">Sequencer</span>
-              </div>
-            )}
             <div className="kys-seq-transport">
               {transport && (
                 <PlayerTip
@@ -450,8 +443,8 @@ export function Sequencer({
             </div>
             <div className="kys-seq-parts">
               {/* The part buttons carry a name under them, as every control in the row does. */}
-              <div className="kys-seq-field">
-                <span className="kys-seq-field-label" aria-hidden="true">
+              <div className="kys-cell kys-cell-part">
+                <span className="kys-cell-label" aria-hidden="true">
                   Part
                 </span>
                 <div className="kys-seq-part-row" role="group" aria-label="Parts">
@@ -620,33 +613,41 @@ export function Sequencer({
               )}
             </div>
             <div className="kys-seq-tool-group">
+              <span className="kys-seq-tool-label" aria-hidden="true">
+                Oct
+              </span>
               {tool(
                 'Octave down',
                 'Every note an octave lower.',
                 null,
                 () => setSteps(shiftOctave(steps, -1)),
-                { short: 'Oct −' }
+                { short: '−' }
               )}
               {tool(
                 'Octave up',
                 'Every note an octave higher.',
                 null,
                 () => setSteps(shiftOctave(steps, 1)),
-                { short: 'Oct +' }
+                { short: '+' }
               )}
+            </div>
+            <div className="kys-seq-tool-group">
+              <span className="kys-seq-tool-label" aria-hidden="true">
+                Deg
+              </span>
               {tool(
                 'Degree down',
                 'Every note one note down the scale.',
                 null,
                 () => setSteps(shiftDegree(steps, -1, p.root, p.scale)),
-                { short: 'Deg −' }
+                { short: '−' }
               )}
               {tool(
                 'Degree up',
                 'Every note one note up the scale.',
                 null,
                 () => setSteps(shiftDegree(steps, 1, p.root, p.scale)),
-                { short: 'Deg +' }
+                { short: '+' }
               )}
             </div>
             <div className="kys-seq-tool-group">
@@ -678,43 +679,40 @@ export function Sequencer({
                 { short: 'Mutate' }
               )}
             </div>
-            <div className="kys-seq-tool-group">
-              {tool(
-                'Copy step',
-                'The chosen step, to paste over another.',
-                <Copy size={15} aria-hidden="true" />,
-                () => setClip({ kind: 'step', steps: copySteps(steps, sel, sel + 1) }),
-                { short: 'Step' }
-              )}
-              {tool(
-                'Copy page',
-                'The sixteen steps on show, to paste over another page.',
-                <Copy size={15} aria-hidden="true" />,
-                () =>
-                  setClip({
-                    kind: 'page',
-                    steps: copySteps(steps, page * PAGE, page * PAGE + PAGE),
-                  }),
-                { short: 'Page' }
-              )}
-              {tool(
-                clip?.kind === 'page' ? 'Paste page' : 'Paste step',
-                clip?.kind === 'page' ? 'Over the page on show.' : 'Over the chosen step.',
-                <ClipboardPaste size={15} aria-hidden="true" />,
-                () => {
-                  if (!clip) return;
-                  setSteps(pasteSteps(steps, clip.kind === 'page' ? page * PAGE : sel, clip.steps));
+            <EditMenu
+              items={[
+                {
+                  name: 'Copy step',
+                  icon: <Copy size={15} aria-hidden="true" />,
+                  run: () => setClip({ kind: 'step', steps: copySteps(steps, sel, sel + 1) }),
                 },
-                { short: 'Paste', disabled: !clip }
-              )}
-              {tool(
-                'Clear',
-                'Every step of the part a rest.',
-                <Eraser size={15} aria-hidden="true" />,
-                () => setSteps(clearSteps(steps)),
-                { short: 'Clear' }
-              )}
-            </div>
+                {
+                  name: 'Copy page',
+                  icon: <Copy size={15} aria-hidden="true" />,
+                  run: () =>
+                    setClip({
+                      kind: 'page',
+                      steps: copySteps(steps, page * PAGE, page * PAGE + PAGE),
+                    }),
+                },
+                {
+                  name: clip?.kind === 'page' ? 'Paste page' : 'Paste step',
+                  icon: <ClipboardPaste size={15} aria-hidden="true" />,
+                  disabled: !clip,
+                  run: () => {
+                    if (clip)
+                      setSteps(
+                        pasteSteps(steps, clip.kind === 'page' ? page * PAGE : sel, clip.steps)
+                      );
+                  },
+                },
+                {
+                  name: 'Clear',
+                  icon: <Eraser size={15} aria-hidden="true" />,
+                  run: () => setSteps(clearSteps(steps)),
+                },
+              ]}
+            />
             <div className="kys-seq-tool-group kys-seq-undo">
               {tool(
                 'Undo',
@@ -775,9 +773,9 @@ function Select({
 }) {
   return (
     <PlayerTip name={label} help={help}>
-      <label className="kys-seq-field">
-        <span className="kys-seq-field-label">{label}</span>
-        <select className="kys-seq-select" value={value} onChange={(e) => onChange(e.target.value)}>
+      <label className="kys-cell kys-cell-select">
+        <span className="kys-cell-label">{label}</span>
+        <select className="kys-cell-input" value={value} onChange={(e) => onChange(e.target.value)}>
           {options.map(([v, l]) => (
             <option key={v} value={v}>
               {l}
@@ -786,5 +784,83 @@ function Select({
         </select>
       </label>
     </PlayerTip>
+  );
+}
+
+/** An item of the Edit menu. */
+interface EditItem {
+  name: string;
+  icon: ReactNode;
+  run: () => void;
+  disabled?: boolean;
+}
+
+/**
+ * Copy, paste and clear, behind one button rather than always on show: used now and then, they need not take the tool
+ * row. It opens upward (the dock is at the foot of the screen) and closes on a choice, Escape, or a press outside it.
+ */
+function EditMenu({ items }: { items: readonly EditItem[] }) {
+  const [open, setOpen] = useState(false);
+  const wrap = useRef<HTMLDivElement | null>(null);
+  const trigger = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (e: PointerEvent) => {
+      if (e.target instanceof Node && !wrap.current?.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      trigger.current?.focus();
+    };
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+  return (
+    <div ref={wrap} className="kys-seq-menu-wrap">
+      <PlayerTip
+        name="Copy, paste and clear"
+        help="Copy the chosen step or the page on show, paste it, or clear the part."
+      >
+        <button
+          ref={trigger}
+          type="button"
+          className={`kys-seq-tool ${open ? 'is-open' : ''}`}
+          aria-label="Copy, paste and clear"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
+          <ClipboardList size={15} aria-hidden="true" />
+          <span>Edit</span>
+          <ChevronUp size={13} aria-hidden="true" className="kys-seq-menu-caret" />
+        </button>
+      </PlayerTip>
+      {open && (
+        <div role="menu" aria-label="Copy, paste and clear" className="kys-seq-menu">
+          {items.map((it) => (
+            <button
+              key={it.name}
+              type="button"
+              role="menuitem"
+              className="kys-seq-menuitem"
+              disabled={it.disabled}
+              onClick={() => {
+                it.run();
+                setOpen(false);
+                trigger.current?.focus();
+              }}
+            >
+              {it.icon}
+              {it.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
