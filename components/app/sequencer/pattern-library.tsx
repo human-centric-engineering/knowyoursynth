@@ -46,7 +46,13 @@ export interface PatternLibraryProps {
 }
 
 type Panel = 'mine' | 'library' | null;
-type Form = { mode: 'save' | 'saveAs' | 'rename'; name: string; error: string | null } | null;
+/** `id` is the saved pattern a rename is for: the one held when the box opened. */
+type Form = {
+  mode: 'save' | 'saveAs' | 'rename';
+  name: string;
+  error: string | null;
+  id?: string;
+} | null;
 
 /** A library sound as the browser lists it: only what loading its riff needs. */
 type LibraryRiff = Pick<SynthDetail['sounds'][number], 'id' | 'name' | 'phrase'>;
@@ -89,9 +95,11 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       setForm({ mode: 'save', name: loaded?.name ?? '', error: null });
       return;
     }
+    // What was sent is what is saved: an edit made while it was on its way is still an edit.
+    const sent = seq.pattern;
     void run('save the pattern', async () => {
-      const d = await mine.update(own.id, { pattern: seq.pattern });
-      seq.markSaved({ id: d.id, name: d.name });
+      const d = await mine.update(own.id, { pattern: sent });
+      seq.markSaved({ id: d.id, name: d.name }, sent);
       setStatus(`Saved ${d.name}.`);
     });
   };
@@ -106,12 +114,13 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
     }
     const { mode } = form;
     // The pattern being renamed went while the name was typed (deleted, or something else opened): nothing to rename,
-    // and not a reason to save a new one.
-    if (mode === 'rename' && !own) {
+    // and not a reason to save a new one, or to rename what is held now.
+    if (mode === 'rename' && (!own || own.id !== form.id)) {
       setForm(null);
       setStatus('There is no saved pattern to rename now.');
       return;
     }
+    const sent = seq.pattern;
     void run(mode === 'rename' ? 'rename the pattern' : 'save the pattern', async () => {
       if (mode === 'rename' && own) {
         const d = await mine.update(own.id, { name: name.data });
@@ -119,8 +128,8 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
         seq.relabel({ id: d.id, name: d.name });
         setStatus(`Renamed to ${d.name}.`);
       } else {
-        const d = await mine.create(name.data, seq.pattern, synthId);
-        seq.markSaved({ id: d.id, name: d.name });
+        const d = await mine.create(name.data, sent, synthId);
+        seq.markSaved({ id: d.id, name: d.name }, sent);
         setStatus(`Saved ${d.name} to My patterns.`);
       }
       setForm(null);
@@ -145,7 +154,10 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
         setStatus(`${d.name} cannot be opened: ${d.problems.join(' ')}`);
         return;
       }
-      seq.load(d.pattern, { id: d.id, name: d.name });
+      if (!seq.load(d.pattern, { id: d.id, name: d.name })) {
+        setStatus(`${d.name} cannot be opened in the sequencer.`);
+        return;
+      }
       setPanel(null);
       setStatus(`Opened ${d.name}. Undo goes back to what was here.`);
     });
@@ -159,7 +171,10 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       setStatus(`${riff.name} cannot be opened in the sequencer.`);
       return;
     }
-    seq.load(p, { id: null, name: `${riff.name} (${synthName})` });
+    if (!seq.load(p, { id: null, name: `${riff.name} (${synthName})` })) {
+      setStatus(`${riff.name} cannot be opened in the sequencer.`);
+      return;
+    }
     setPanel(null);
     setStatus(
       `Opened the riff of ${riff.name} from the ${synthName}. Undo goes back to what was here.`
@@ -238,7 +253,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
                 'Rename',
                 'Gives the saved pattern another name.',
                 <Pencil size={14} aria-hidden="true" />,
-                () => own && setForm({ mode: 'rename', name: own.name, error: null }),
+                () => own && setForm({ mode: 'rename', name: own.name, error: null, id: own.id }),
                 { disabled: !own }
               )}
               {button(

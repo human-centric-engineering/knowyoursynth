@@ -387,6 +387,46 @@ describe('what goes wrong part-way', () => {
     expect(screen.queryByLabelText('New name')).toBeNull();
   });
 
+  it('renames nothing when another saved pattern was opened while the new name was typed', async () => {
+    render(<Page />);
+    await saveAs('One');
+    editStep2();
+    await act(async () => fireEvent.click(button('Save as')));
+    fireEvent.change(screen.getByLabelText('Name the pattern'), { target: { value: 'Two' } });
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Save' })));
+    await act(async () => fireEvent.click(button('Rename')));
+    fireEvent.change(screen.getByLabelText('New name'), { target: { value: 'Renamed' } });
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () => fireEvent.click(within(list).getByRole('button', { name: /One/ })));
+    const form = screen.getByLabelText('New name').closest('form')!;
+    await act(async () => fireEvent.click(within(form).getByRole('button', { name: 'Rename' })));
+    expect([...server.patterns.values()].map((p) => p.name)).toEqual(['One', 'Two']);
+    expect(screen.getByRole('status').textContent).toBe('There is no saved pattern to rename now.');
+  });
+
+  it('says a saved pattern the sequencer refuses was not opened, and keeps what it holds', async () => {
+    server.patterns.set('patbad', {
+      id: 'patbad',
+      name: 'Broken one',
+      pattern: { version: 1 },
+      synthId: 'model-d',
+    });
+    render(<Page />);
+    const before = state.pattern;
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () =>
+      fireEvent.click(within(list).getByRole('button', { name: /Broken one/ }))
+    );
+    expect(screen.getByRole('status').textContent).toBe(
+      'Broken one cannot be opened in the sequencer.'
+    );
+    expect(state.pattern).toBe(before);
+    expect(state.loaded).toBeNull();
+    expect(screen.getByRole('list', { name: 'My patterns' })).toBeTruthy();
+  });
+
   it('closes My patterns when it cannot be read, so the button reads it again', async () => {
     const { apiClient } = await import('@/lib/api/client');
     vi.mocked(apiClient.get).mockRejectedValueOnce(new Error('Too many requests.'));
@@ -413,6 +453,62 @@ describe('what goes wrong part-way', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Model D' }));
     expect(screen.queryByText(/library could not be read/)).toBeNull();
     expect(screen.getByRole('button', { name: /Fat bass/ })).toBeTruthy();
+  });
+});
+
+describe('Undo, and edits while a save is on its way', () => {
+  it('puts back what an opened pattern replaced, under its own name and as saved', async () => {
+    render(<Page />);
+    editStep2();
+    await saveAs('Kept');
+    // a library riff opened over the saved pattern, then Undo back to it
+    await act(async () => fireEvent.click(button('Library')));
+    await act(async () => fireEvent.click(await screen.findByRole('button', { name: /Fat bass/ })));
+    expect(held().textContent).toBe('Fat bass (Model D)');
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Undo' })));
+    expect(state.loaded).toEqual({ id: 'pat1', name: 'Kept' });
+    expect(state.edited).toBe(false);
+  });
+
+  it('names the sound’s riff again after Undo past the first pattern opened, offering Save to My patterns', async () => {
+    server.patterns.set('pat9', {
+      id: 'pat9',
+      name: 'Other',
+      pattern: { ...importPhrase(ACID), bpm: 132 },
+      synthId: 'tb-303',
+    });
+    render(<Page />);
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () => fireEvent.click(within(list).getByRole('button', { name: /Other/ })));
+    expect(held().textContent).toBe('Other');
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Undo' })));
+    expect(held().textContent).toBe('The sound’s riff');
+    expect(state.loaded).toBeNull();
+    expect(button('Save to My patterns')).toBeTruthy();
+    expect(strip().queryByRole('button', { name: 'Save Other' })).toBeNull();
+  });
+
+  it('keeps an edit made while a save was on its way as an edit', async () => {
+    render(<Page />);
+    await saveAs('Busy');
+    editStep2();
+    const { apiClient } = await import('@/lib/api/client');
+    const patch = vi.mocked(apiClient.patch);
+    const real = patch.getMockImplementation()!;
+    let release = () => undefined as void;
+    patch.mockImplementationOnce(
+      (...args) =>
+        new Promise((resolve) => {
+          release = () => resolve(real(...args));
+        })
+    );
+    await act(async () => fireEvent.click(button(/^Save Busy$/)));
+    editStep(4);
+    await act(async () => release());
+    expect(server.patterns.get('pat1')?.pattern).not.toEqual(state.pattern);
+    expect(state.edited).toBe(true);
+    expect(screen.getByText('edited')).toBeTruthy();
   });
 });
 
