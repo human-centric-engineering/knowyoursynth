@@ -156,7 +156,9 @@ describe('opening on a sound', () => {
   it('opens a saved pattern at the panel’s tempo, as it does the riff, and at its own with no tempo knob', () => {
     const saved = { ...importPhrase(RIFF), bpm: 96 };
     const knob = open(RIFF, 140);
-    act(() => state.load(saved, { id: 'p1', name: 'Slow' }));
+    act(() => {
+      state.load(saved, { id: 'p1', name: 'Slow' });
+    });
     expect(state.pattern.bpm).toBe(140);
     expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('140');
     // Opened at the knob's tempo, it is what was opened, not an edit of it.
@@ -164,7 +166,9 @@ describe('opening on a sound', () => {
     knob.unmount();
 
     open(RIFF);
-    act(() => state.load(saved, { id: 'p1', name: 'Slow' }));
+    act(() => {
+      state.load(saved, { id: 'p1', name: 'Slow' });
+    });
     expect(state.pattern.bpm).toBe(96);
   });
 
