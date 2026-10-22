@@ -125,12 +125,21 @@ export class Engine {
       }
     }
     if (!node) {
-      const local = createSynth(ctx.sampleRate, (e) => this.onEvent(e));
+      // A pattern's `loop` event counts frames from the synth's first sample; moved onto the context's clock here,
+      // as the worklet does from `currentFrame`. Worked out again for every buffer from when it plays: a buffer the
+      // browser skips (a long task on the main thread) moves the context's clock on but not the synth's count.
+      let offset = 0;
+      let played = 0;
+      const local = createSynth(ctx.sampleRate, (e) =>
+        this.onEvent(e.type === 'loop' ? { ...e, frame: e.frame + offset } : e)
+      );
       this.local = local;
       const sp = ctx.createScriptProcessor(1024, 0, 2);
       sp.onaudioprocess = (e) => {
+        if (e.playbackTime) offset = Math.round(e.playbackTime * ctx.sampleRate) - played;
         const l = e.outputBuffer.getChannelData(0);
         local.process(l, l.length, e.outputBuffer.getChannelData(1));
+        played += l.length;
       };
       node = sp;
       this.mode = 'script';
@@ -150,6 +159,17 @@ export class Engine {
     pending.forEach((m) => this.send(m));
     if (ctx.state !== 'running') await ctx.resume();
     return this.mode;
+  }
+
+  /**
+   * The frame the listener hears now, on the clock a pattern's `loop` events use: with `createPlayhead` it places the
+   * sequencer's playhead. 0 before the voice exists. The delay is the context's own (`baseLatency`) and the output
+   * device's after it (`outputLatency`); either may be missing.
+   */
+  get frame(): number {
+    if (!this.ctx) return 0;
+    const latency = (this.ctx.outputLatency || 0) + (this.ctx.baseLatency || 0);
+    return Math.max(0, (this.ctx.currentTime - latency) * this.ctx.sampleRate);
   }
 
   get running(): boolean {

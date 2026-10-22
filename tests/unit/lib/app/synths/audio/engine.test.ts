@@ -37,7 +37,11 @@ class FakeWorkletNode extends FakeNode {
 
 class FakeScriptNode extends FakeNode {
   onaudioprocess:
-    ((e: { outputBuffer: { getChannelData: (c: number) => Float32Array } }) => void) | null = null;
+    | ((e: {
+        outputBuffer: { getChannelData: (c: number) => Float32Array };
+        playbackTime?: number;
+      }) => void)
+    | null = null;
 }
 
 type Load = 'ok' | 'fail' | 'hang' | 'none';
@@ -131,6 +135,35 @@ describe('Engine', () => {
     sp.onaudioprocess!({ outputBuffer: { getChannelData: (c) => (c ? r : l) } });
     expect(l.some((x) => x !== 0)).toBe(true);
     expect(Array.from(r)).toEqual(Array.from(l));
+  });
+
+  it("moves a pattern's loop events onto the context's clock in the fallback, and reads the frame heard now", async () => {
+    const { Ctx, engine, events } = setup('fail');
+    expect(engine.frame).toBe(0);
+    await expect(engine.start()).resolves.toBe('script');
+    const sp = Ctx.last!.script!;
+    engine.send({ type: 'params', p: monoParams() });
+    const l = new Float32Array(1024),
+      r = new Float32Array(1024);
+    const buffer = { getChannelData: (c: number) => (c ? r : l) };
+    // The first buffer plays at 0.5 s: frame 24,000 of the context
+    sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 });
+    engine.send({ type: 'pattern', loop: { notes: [[0, 60, 0.5]], beats: 1 }, bpm: 120 });
+    // The browser skipped a buffer (a long task on the main thread): this one plays at frame 26,048, not 25,024
+    sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 + 2048 / 48000 });
+    expect(events).toContainEqual(
+      expect.objectContaining({ type: 'loop', index: 0, frame: 26048 })
+    );
+    // The frame heard now is the context's clock less its own latency and the output device's after it
+    const ctx = Ctx.last! as unknown as {
+      currentTime: number;
+      outputLatency: number;
+      baseLatency: number;
+    };
+    ctx.currentTime = 1;
+    ctx.baseLatency = 0.05;
+    ctx.outputLatency = 0.2;
+    expect(engine.frame).toBe(36000);
   });
 
   it('asks the context to run while the click still counts, before the worklet has loaded', async () => {

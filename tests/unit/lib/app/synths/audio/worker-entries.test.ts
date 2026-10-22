@@ -37,6 +37,7 @@ describe('worklet-entry', () => {
     const registered: [string, new () => Processor][] = [];
     vi.stubGlobal('AudioWorkletProcessor', AudioWorkletProcessor);
     vi.stubGlobal('sampleRate', 48000);
+    vi.stubGlobal('currentFrame', 0);
     vi.stubGlobal('registerProcessor', (name: string, ctor: new () => Processor) =>
       registered.push([name, ctor])
     );
@@ -56,6 +57,41 @@ describe('worklet-entry', () => {
     // a third channel gets a copy of the first
     expect(Array.from(out[2])).toEqual(Array.from(out[0]));
     // the synth's events go back up the port
+    expect(posted).toContainEqual({ type: 'note', n: 60, on: true });
+  });
+
+  it("moves a pattern's loop events onto the context's clock, from the frame each block plays at", async () => {
+    const posted: SynthEvent[] = [];
+    class AudioWorkletProcessor {
+      port = {
+        onmessage: null as ((m: { data: unknown }) => void) | null,
+        postMessage: (e: SynthEvent) => posted.push(e),
+      };
+    }
+    const registered: (new () => Processor)[] = [];
+    vi.resetModules();
+    vi.stubGlobal('AudioWorkletProcessor', AudioWorkletProcessor);
+    vi.stubGlobal('sampleRate', 48000);
+    // The context had been running 5,000 frames before this node's first render
+    vi.stubGlobal('currentFrame', 5000);
+    vi.stubGlobal('registerProcessor', (_: string, ctor: new () => Processor) =>
+      registered.push(ctor)
+    );
+
+    await import('@/lib/app/synths/audio/worklet-entry');
+
+    const proc = new registered[0]();
+    proc.port.onmessage!({ data: { type: 'params', p: monoParams() } });
+    const out = [new Float32Array(128), new Float32Array(128)];
+    proc.process([], [out]);
+    // The context skipped a block (an underrun): its clock is 256 frames on, the synth's count only 128
+    vi.stubGlobal('currentFrame', 5256);
+    proc.port.onmessage!({
+      data: { type: 'pattern', loop: { notes: [[0, 60, 0.5]], beats: 1 }, bpm: 120 },
+    });
+    proc.process([], [out]);
+    // The pattern started at the synth's frame 128, which this block plays at the context's 5,256
+    expect(posted).toContainEqual(expect.objectContaining({ type: 'loop', index: 0, frame: 5256 }));
     expect(posted).toContainEqual({ type: 'note', n: 60, on: true });
   });
 });
