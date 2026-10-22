@@ -124,4 +124,49 @@ describe('PatternSharing', () => {
     expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual(['Stop sharing']);
     expect(screen.queryByRole('link', { name: 'Its page' })).toBeNull();
   });
+
+  it('unpublishes to a link share, and stops sharing', async () => {
+    share.mockResolvedValueOnce(pattern({ visibility: 'link', slug: SLUG }));
+    share.mockResolvedValueOnce(pattern({ visibility: 'private', slug: SLUG }));
+    view(pattern({ visibility: 'published', slug: SLUG }));
+    await click('Unpublish');
+    expect(share).toHaveBeenLastCalledWith('link');
+    expect(screen.getByText('Unpublished. The link still works.')).toBeTruthy();
+    await click('Stop sharing');
+    expect(share).toHaveBeenLastCalledWith('private');
+    expect(screen.getByText(/Only you can open it\./)).toBeTruthy();
+  });
+
+  it('says when the browser blocks copying', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: vi.fn(async () => Promise.reject(new Error('blocked'))) },
+      configurable: true,
+    });
+    view(pattern({ visibility: 'link', slug: SLUG }));
+    await click('Copy link');
+    expect(screen.getByText(/Your browser blocked copying/)).toBeTruthy();
+  });
+
+  it('offers to read the profile again when it could not be read', async () => {
+    api.get.mockRejectedValueOnce(new Error('offline'));
+    view(pattern());
+    await click('Publish…');
+    await screen.findByRole('button', { name: 'Try again' });
+    await click('Try again');
+    await waitFor(() => expect(screen.getByText(/by @moog-fan/)).toBeTruthy());
+    expect(api.get).toHaveBeenCalledTimes(2);
+  });
+
+  it('says a session that ended and a pattern that went in its own words', async () => {
+    share.mockRejectedValueOnce(new APIClientError('Unauthorized', 'UNAUTHORIZED', 401));
+    view(pattern());
+    await click('Share with a link');
+    expect(screen.getByText('Your session has ended. Sign in again to share it.')).toBeTruthy();
+    share.mockRejectedValueOnce(new APIClientError('Not found', 'NOT_FOUND', 404));
+    await click('Share with a link');
+    expect(screen.getByText('That pattern is no longer in your account.')).toBeTruthy();
+    share.mockRejectedValueOnce(new Error('offline'));
+    await click('Share with a link');
+    expect(screen.getByText(/Could not share it\. Check your connection/)).toBeTruthy();
+  });
 });

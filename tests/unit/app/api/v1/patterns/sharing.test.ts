@@ -507,6 +507,17 @@ describe('the public read', () => {
     expect((await json(await shared(theirs))).data!.author).toBe('patchwork');
   });
 
+  it('answers 304 to a reader holding the current ETag, and the publish route 404s a malformed id', async () => {
+    const p = await save();
+    await patch(String(p.id), { visibility: 'link' });
+    const slug = String(table.rows[0].slug);
+    const etag = (await shared(slug)).headers.get('ETag')!;
+    const req = request('GET', `/api/v1/public/patterns/${slug}`);
+    req.headers.set('If-None-Match', etag);
+    expect((await readShared(req, slugCtx(slug))).status).toBe(304);
+    expect((await publishIt('not an id!')).status).toBe(404);
+  });
+
   it('is one 404 for a malformed or unknown address', async () => {
     expect((await shared('nope')).status).toBe(404);
     expect((await shared('0000000000')).status).toBe(404);
