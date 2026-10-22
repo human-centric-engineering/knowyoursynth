@@ -11,6 +11,12 @@ import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import { SoundLessonSchema, type SoundLesson } from '@/lib/app/sounds/lesson';
 
 /**
+ * A user pattern's id, as Prisma's `cuid()` writes them (`f-step-sequencer` t-81). Here rather than in
+ * `lib/app/patterns/data.ts`, which reads this file's synth id.
+ */
+export const UserPatternIdSchema = z.string().regex(/^[a-z0-9]{1,40}$/);
+
+/**
  * More controls and cables than any panel has (the DeepMind has 1,568 controls). They bound what one request can
  * store; the definition decides the rest.
  */
@@ -88,6 +94,8 @@ export type CreateUserSound = z.infer<typeof CreateUserSoundSchema>;
  * `PATCH /api/v1/sounds/:id`. A new panel is saved on the synth's current definition, and leaves the lesson as it was.
  * `notes: null` clears them, and `lesson: null` removes the lesson: a lesson cannot be changed, so removing it is how a
  * sound whose lesson cannot be published is published without it. `visibility` is `private` or `link` only.
+ * `patternId` is the user pattern the sequencer opens on with the sound (`f-step-sequencer` t-81), one of the caller's
+ * own; `null` clears it.
  */
 export const UpdateUserSoundSchema = z
   .object({
@@ -97,6 +105,7 @@ export const UpdateUserSoundSchema = z
     lesson: z.null().optional(),
     /** Share by link, or stop sharing. Publishing has its own route; this unpublishes a published sound. */
     visibility: z.enum(['private', 'link']).optional(),
+    patternId: UserPatternIdSchema.nullable().optional(),
   })
   .refine(
     (v) =>
@@ -104,7 +113,8 @@ export const UpdateUserSoundSchema = z
       v.notes !== undefined ||
       v.panel !== undefined ||
       v.lesson !== undefined ||
-      v.visibility !== undefined,
+      v.visibility !== undefined ||
+      v.patternId !== undefined,
     { message: 'Nothing to change' }
   );
 export type UpdateUserSound = z.infer<typeof UpdateUserSoundSchema>;
@@ -178,6 +188,8 @@ export interface UserSoundSummary {
    * and it cannot be shared or published again until an admin restores it.
    */
   unlisted: boolean;
+  /** The user pattern the sequencer opens on with this sound (`f-step-sequencer` t-81), or null for the sound's riff. */
+  patternId: string | null;
   /**
    * Whether the panel can be played on the synth as it is now. False when it was saved on a definition version the
    * synth has moved on from with no mapping between them (D1), or when it no longer passes the definition.

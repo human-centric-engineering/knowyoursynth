@@ -16,6 +16,10 @@
  * library sound being renamed, or a removal that does not exist yet. A copy of a sound someone shared links to it too,
  * and carries its library credit across; that credit is read live (`sharing.ts`), never kept.
  *
+ * **A default pattern** (`f-step-sequencer` t-81): PATCH points a sound at one of its owner's patterns, which the
+ * sequencer opens on with it, or clears it. Deleting the pattern clears it too (`ON DELETE SET NULL`). A copy of a sound
+ * never carries it, since it names someone else's pattern.
+ *
  * **Sharing** (`f-sharing` h1): PATCH moves a sound between private and link; only `publish.ts` makes it published.
  * Changing a published sound's name or notes runs the word check again, and its panel the unchanged-copy check.
  *
@@ -55,6 +59,7 @@ import {
   visibilityData,
   withFreshSlug,
 } from '@/lib/app/sounds/sharing';
+import { assertOwnPattern } from '@/lib/app/patterns/store';
 
 function refuse(message: string, problems: { path: string; message: string }[]): never {
   throw new ValidationError(message, { errors: problems });
@@ -208,6 +213,7 @@ function toDetail(row: UserSound, basedOn: SharedSource | null, log: boolean): U
     publishedAt: row.publishedAt?.toISOString() ?? null,
     tags: row.tags,
     unlisted: row.unlistedAt !== null,
+    patternId: row.patternId,
     playable: panel !== null,
     panel,
     problems,
@@ -405,7 +411,7 @@ export async function updateUserSound(
       // An unlisted sound can still be made private, but not shared again until an admin restores it.
       if (input.visibility === 'link') assertNotUnlisted(existing);
 
-      const data: Prisma.UserSoundUpdateManyMutationInput = {};
+      const data: Prisma.UserSoundUncheckedUpdateManyInput = {};
       if (input.name !== undefined) data.name = input.name;
       if (input.notes !== undefined) data.notes = input.notes || null;
       // Still published after this change: held to what publishing is.
@@ -428,6 +434,13 @@ export async function updateUserSound(
         data.values = toJson(panel.values);
         data.cables = toJson(panel.cables);
         data.definitionVersion = def.version;
+      }
+
+      // The pattern it opens the sequencer on: one of the caller's own, read in this transaction, so a pattern deleted
+      // meanwhile is refused rather than written (the FK would refuse it too, as a 500).
+      if (input.patternId !== undefined) {
+        if (input.patternId !== null) await assertOwnPattern(tx, userId, input.patternId);
+        data.patternId = input.patternId;
       }
 
       // Removing the lesson takes text off a public page and never puts any up, so a published sound needs no check for
