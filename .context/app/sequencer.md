@@ -220,9 +220,13 @@ order. The keys redraw only when the step changes.
 - **Encoders** (`encoder.tsx`) are sliders. Arrows move a step, Page Up and Page Down a big step (an octave for a
   note), and Home and End go to either end. A vertical drag turns one, with a mouse or a finger. One encoder's turn
   is one Undo: edits in one group within 1.2 s are one entry. Undo holds 100.
-- **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all.
-- **Narrow widths.** The keys go eight to a row when the module is narrower than 620px. The inspector sits beside the
-  keys from 900px. Coarse pointers get 44px targets.
+- **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all,
+  in two columns, and the list scrolls inside the dialog on a short screen.
+- **Layout.** From 900px of module it is one row of two columns, to keep the dock low over the panel. The head, the keys
+  and the tools are on the left. The step inspector is on the right at their height, and ? and × are in a rail beside
+  it. Up to 1300px the head's controls wrap one by one, so a landscape tablet's head takes two rows, not three.
+  Narrower than 900px (the bottom sheet), everything stacks. The keys go eight to a row when the module is narrower
+  than 620px. Coarse pointers get 44px targets.
 
 ## Not yet
 

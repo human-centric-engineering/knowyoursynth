@@ -4,7 +4,7 @@
  * The step inspector (`f-step-sequencer` t-80): the chosen step's values, on encoders, beside the step keys.
  *
  * It is the same height whatever step is chosen, so the dock does not jump as the steps are walked:
- * - The head: the step, its On / Accent / Slide, and whether it plays.
+ * - The head: the step, and its On / Accent / Slide.
  * - What belongs to the step: ratchet, chance and condition.
  * - Its notes: a chip per note of the chord (and one to add a note), with one row of encoders (pitch, gate, velocity,
  *   nudge) for the chip chosen, since a chord's notes are not always struck or let go together. A rest has no notes,
@@ -95,7 +95,6 @@ export function StepInspector({
     setChosen(step.notes.length);
   };
   const addName = step.notes.length === 0 ? 'Add a note' : 'Add a note to the chord';
-  const playsLabel = step.notes.length === 0 ? 'Rest' : step.on ? 'Plays' : 'Muted';
   return (
     <section className="kys-seq-inspect" aria-labelledby="kys-seq-inspect-h">
       <div className="kys-seq-inspect-head">
@@ -123,7 +122,6 @@ export function StepInspector({
             onClick={() => onChange((s) => ({ ...s, slide: s.slide ? undefined : true }))}
           />
         </div>
-        <span className="kys-seq-inspect-state">{playsLabel}</span>
       </div>
       <div className="kys-seq-inspect-row">
         <Encoder

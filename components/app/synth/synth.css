@@ -1065,7 +1065,7 @@ svg .kys-hit:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 10px 16px;
+  gap: 8px 12px;
 }
 .kys-seq-title {
   display: flex;
@@ -1240,18 +1240,42 @@ svg .kys-hit:focus-visible {
 .kys-seq-body {
   display: grid;
   gap: 12px;
-  margin-top: 10px;
 }
 /* Where the head would wrap (a landscape tablet), its name goes: the bar's button and the
    keys say what it is, and one row of controls keeps the dock low over the panel. */
-@container (max-width: 1240px) {
+@container (max-width: 1600px) {
   .kys-seq-title {
     display: none;
   }
 }
+/* Wide enough, one row of two columns: the pattern's controls, keys and tools on the left,
+   the step inspector on the right at their height, and Help and Close in a rail beside it. */
 @container (min-width: 900px) {
   .kys-seq-body {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px) auto;
+  }
+  .kys-seq-head {
+    padding-right: 0;
+  }
+  .kys-seq-help {
+    position: static;
+    flex-direction: column;
+    align-self: start;
+  }
+  .kys-seq-inspect {
+    max-height: none;
+  }
+}
+/* Narrower (a landscape tablet), the head's controls wrap one by one rather than group by
+   group, so they fill two rows, not three, and the inspector gives the keys a little more. */
+@container (min-width: 900px) and (max-width: 1300px) {
+  .kys-seq-body {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 300px) auto;
+  }
+  .kys-seq-transport,
+  .kys-seq-controls,
+  .kys-seq-parts {
+    display: contents;
   }
 }
 .kys-seq-main {
@@ -1436,9 +1460,6 @@ svg .kys-hit:focus-visible {
   display: flex;
   gap: 4px;
 }
-.kys-seq-inspect-state {
-  margin-left: auto;
-}
 /* With a pointer, the inspector's toggles are as tight as the tool row's buttons. */
 @media (pointer: fine) {
   .kys-seq-inspect .kys-seq-toggle {
@@ -1451,8 +1472,7 @@ svg .kys-hit:focus-visible {
   margin: 0;
   color: var(--kys-text);
 }
-.kys-seq-inspect-part,
-.kys-seq-inspect-state {
+.kys-seq-inspect-part {
   color: var(--kys-muted);
   font-size: 12px;
 }
