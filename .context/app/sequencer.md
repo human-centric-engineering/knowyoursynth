@@ -201,9 +201,10 @@ order. The keys redraw only when the step changes.
 
 **What is on it:**
 
-- **The head.** Fill and Loop (and Play/Stop in the sheet), then four encoders (tempo, swing, length, transpose). Then selects for step
-  size, direction, root and scale. Then the parts: **+ B** adds B as a copy of A and chains it `A B`, and once there
-  is a B a select picks the chain.
+- **The readout** (the head). It is one strip of amber cells, as a hardware sequencer's display. First Fill and Loop
+  (and Play/Stop in the sheet). Then tempo, swing, length and transpose (sliders), and step size, direction, root and
+  scale (selects). Then the parts: **+ B** adds B as a copy of A and chains it `A B`, and once there is a B a select
+  picks the chain.
 - **Step keys**, sixteen to a page, with a page button for each sixteen past the first. A key's LED is lit when the
   step plays and outlined when it is muted with notes. The key the playhead is on is lit.
 - **Choosing and toggling.** A press chooses a step, and a press on the chosen step turns it on or off. A rest turned on takes the
@@ -212,12 +213,14 @@ order. The keys redraw only when the step changes.
   Home and End go to either end, Up and Down move the step's notes a semitone, Enter or Space turns it on or off, and
   Delete makes it a rest.
 - **The tool row.** Euclid (with a Hits encoder), rotate left and right, reverse, octave and scale-degree shifts,
-  Randomise (on the scale, in the range the part already uses), Mutate, copy a step or a page, paste, clear, and Undo.
-  Each tool works on the part being edited.
-- **The step inspector.** On, accent and slide, then ratchet, chance and condition, then a row of encoders per note:
-  pitch, gate, velocity and nudge. A velocity the note does not set shows the default, dimmed.
+  Randomise (on the scale, in the range the part already uses), Mutate, and Undo. Copy step, Copy page, Paste and
+  Clear are behind **Edit**, a menu that opens upward and closes on a choice, Escape or a press outside it. Each tool
+  works on the part being edited.
+- **The step inspector.** On, accent and slide, then ratchet, chance and condition, then a chip per note of the
+  chord and the chosen note's pitch, gate, velocity and nudge. It is the same height for every step. A velocity the note does not set shows the default, dimmed.
   **Add note** / **Add to chord** adds up to six notes.
-- **Encoders** (`encoder.tsx`) are sliders. Arrows move a step, Page Up and Page Down a big step (an octave for a
+- **Encoders** (`encoder.tsx`) are cells of the readout: a name, the value in amber and a meter along the foot. They
+  are sliders. Arrows move a step, Page Up and Page Down a big step (an octave for a
   note), and Home and End go to either end. A vertical drag turns one, with a mouse or a finger. One encoder's turn
   is one Undo: edits in one group within 1.2 s are one entry. Undo holds 100.
 - **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all,
