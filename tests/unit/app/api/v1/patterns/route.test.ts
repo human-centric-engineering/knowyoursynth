@@ -62,6 +62,7 @@ const panel = { values: { [cont.id]: cont.min }, cables: [] };
 /** A riff with a chord, a nudge and a velocity, as a pattern: what the sequencer saves. */
 const riff = importPhrase({
   bpm: 96,
+  loop: true,
   steps: [
     [0, 36, 1, 0.5],
     [1, 48, 0.5],

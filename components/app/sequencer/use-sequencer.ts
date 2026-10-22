@@ -15,6 +15,10 @@
  * - An edit recompiles the loop playing now and sends it as `patternEdit`, so it is heard from the playhead on without
  *   a restart, then queues a fresh next loop: the player drops the one queued before the edit.
  *
+ * A pattern can also be loaded whole (`load`): one of the user's saved patterns (`f-step-sequencer` t-81), or a riff
+ * from any synth's library. `loaded` names what it holds, and `edited` says whether it has changed since it was loaded
+ * or saved. The sound's own riff names nothing.
+ *
  * Each loop is compiled from a seed of its own, so the step order the page draws the playhead with is the order the
  * loop was compiled with, and an edit recompiles the loop with the same draws (a step with a probability does not
  * change its mind because a different step was edited).
@@ -73,8 +77,30 @@ export interface EditOptions {
   undoable?: boolean;
 }
 
+/**
+ * What the sequencer holds, when it is not the sound's own riff: one of the user's patterns (`id` set), or a riff from a
+ * library (`id` null, `name` saying whose).
+ */
+export interface LoadedPattern {
+  id: string | null;
+  name: string;
+}
+
 export interface Sequencer {
   pattern: Pattern;
+  /** What the pattern was loaded from, or null for the sound's own riff. */
+  loaded: LoadedPattern | null;
+  /** Whether the pattern has changed since it was loaded or last saved. */
+  edited: boolean;
+  /**
+   * Replaces the pattern with `p`, from `from`. An edited pattern it replaces is one Undo away, as it is when another
+   * sound's riff arrives. A pattern that would not be valid is refused and logged.
+   */
+  load: (p: Pattern, from: LoadedPattern) => void;
+  /** The pattern as it is now has been saved as `as`: it names it, and is no longer edited. */
+  markSaved: (as: LoadedPattern) => void;
+  /** What the pattern is called, or where it is saved, changed (a rename, a delete), its steps not: `edited` stands. */
+  relabel: (as: LoadedPattern) => void;
   /** Changes the pattern. An edit that would not make a valid pattern is refused and logged. */
   edit: (next: Pattern | ((p: Pattern) => Pattern), o?: EditOptions) => void;
   undo: () => void;
@@ -143,6 +169,9 @@ export function useSequencer({
   // empty, for the button.
   const past = useRef<Pattern[]>([]);
   const [undoable, setUndoable] = useState(false);
+  const [loaded, setLoaded] = useState<LoadedPattern | null>(null);
+  /** The pattern as it was loaded or last saved, as JSON: what `edited` compares with. */
+  const [baseline, setBaseline] = useState(() => JSON.stringify(pattern));
 
   const patternRef = useRef(pattern);
   const playingRef = useRef(false);
@@ -293,11 +322,42 @@ export function useSequencer({
     const edited = past.current.length > 0;
     patternRef.current = p;
     setPattern(p);
+    setLoaded(null);
+    setBaseline(JSON.stringify(p));
     past.current = edited ? [...past.current.slice(-(UNDO_DEPTH - 1)), was] : [];
     setUndoable(edited);
     lastGroup.current = null;
     if (playingRef.current) start(p);
   }, [riffKey, start]);
+
+  const load = useCallback(
+    (p: Pattern, from: LoadedPattern) => {
+      const ok = PatternSchema.safeParse(p);
+      if (!ok.success) {
+        logger.warn('sequencer: pattern refused', { issue: ok.error.issues[0]?.message });
+        return;
+      }
+      const was = patternRef.current;
+      patternRef.current = ok.data;
+      setPattern(ok.data);
+      setLoaded(from);
+      setBaseline(JSON.stringify(ok.data));
+      past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
+      setUndoable(true);
+      lastGroup.current = null;
+      if (playingRef.current) start(ok.data);
+    },
+    [start]
+  );
+
+  const markSaved = useCallback((as: LoadedPattern) => {
+    setLoaded(as);
+    setBaseline(JSON.stringify(patternRef.current));
+  }, []);
+
+  const relabel = useCallback((as: LoadedPattern) => setLoaded(as), []);
+
+  const edited = useMemo(() => JSON.stringify(pattern) !== baseline, [pattern, baseline]);
 
   // The panel's tempo knob moves the pattern's tempo, as it moves a riff's. The page sends the engine the tempo itself.
   useEffect(() => {
@@ -310,6 +370,8 @@ export function useSequencer({
     // The knob's tempo stands through an Undo: what Undo goes back to is moved to it as well. A tempo set on the
     // sequencer's own encoder after this is a snapshot of its own, and Undo still takes it back.
     past.current = past.current.map((q) => ({ ...q, bpm }));
+    // Nor does it make a saved pattern an edited one.
+    setBaseline((b) => JSON.stringify({ ...(JSON.parse(b) as Pattern), bpm }));
   }, [tempo]);
 
   const play = useCallback(async () => {
@@ -383,6 +445,11 @@ export function useSequencer({
 
   return {
     pattern,
+    loaded,
+    edited,
+    load,
+    markSaved,
+    relabel,
     edit,
     undo,
     canUndo: undoable,

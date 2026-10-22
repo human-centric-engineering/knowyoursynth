@@ -46,6 +46,7 @@ const sound = (over: Partial<UserSoundSummary>): UserSoundSummary => ({
   publishedAt: null,
   tags: [],
   unlisted: false,
+  patternId: null,
   playable: true,
   createdAt: '2026-10-15T10:00:00.000Z',
   updatedAt: '2026-10-15T10:00:00.000Z',

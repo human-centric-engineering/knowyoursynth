@@ -12,6 +12,8 @@
  *   paste of a step or a page, clear, and Undo.
  * - The step inspector: the chosen step's values on encoders (`step-inspector.tsx`).
  *
+ * - The patterns strip (`pattern-library.tsx`, t-81): save to My patterns, open one, or start from any synth's library.
+ *
  * The pattern, its Undo and the transport are the page's (`use-sequencer.ts`), so closing the module loses nothing
  * and the bar's play button and this one are one transport. The rules the pattern plays by are in
  * `.context/app/sequencer.md`.
@@ -78,6 +80,10 @@ import type {
   SeqPosition,
   Sequencer as SequencerState,
 } from '@/components/app/sequencer/use-sequencer';
+import {
+  PatternLibrary,
+  type PatternLibraryProps,
+} from '@/components/app/sequencer/pattern-library';
 import { HelpButton } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
@@ -116,6 +122,10 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
     'Every note is moved to the nearest note of the scale as it plays. Chromatic leaves them as they are.',
   ],
   ['Transpose', 'Moves every note by semitones, before the scale.'],
+  [
+    'Patterns',
+    'Save keeps the pattern in My patterns, to open again on any synth. My patterns opens one of yours; Library opens any synth’s riff as a starting point. With one of your sounds open, With sound makes the sound open the sequencer on the saved pattern.',
+  ],
   ['A and B', 'Two variations of the pattern, chained: A A A B plays A three times, then B.'],
   [
     'Tools',
@@ -169,8 +179,11 @@ export function Sequencer({
   onPlay,
   onStop,
   transport = false,
+  library,
 }: {
   seq: SequencerState;
+  /** My patterns and the library (`f-step-sequencer` t-81). Left out, the module has no patterns strip. */
+  library?: PatternLibraryProps;
   /** The page's transport: whether a riff or the pattern is playing. */
   playing: boolean;
   onPlay: () => void;
@@ -336,6 +349,7 @@ export function Sequencer({
 
   return (
     <section className="kys-seq" aria-label="Sequencer">
+      {library && <PatternLibrary seq={seq} library={library} />}
       <div className="kys-seq-head">
         <div className="kys-seq-transport">
           {transport && (

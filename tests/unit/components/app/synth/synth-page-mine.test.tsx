@@ -22,6 +22,7 @@ import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
+import { newPattern } from '@/lib/app/sequencer/pattern';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
 
 const { router, engine, auth, api } = vi.hoisted(() => ({
@@ -162,6 +163,7 @@ const summary = (over: Partial<UserSoundSummary> = {}): UserSoundSummary => ({
   publishedAt: null,
   tags: [],
   unlisted: false,
+  patternId: null,
   playable: true,
   createdAt: '2026-10-15T10:00:00.000Z',
   updatedAt: '2026-10-15T10:00:00.000Z',
@@ -1006,5 +1008,82 @@ describe('a sound saved with its lesson', () => {
       'Wobble lead'
     );
     expect(within(lessonPanel()).queryByText('AI designed · check by ear')).toBeNull();
+  });
+});
+
+describe('a sound that plays a pattern by default (f-step-sequencer t-81)', () => {
+  beforeEach(() => {
+    auth.signedIn = true;
+  });
+
+  /** One of the user's patterns: a C2 on step 1 of eight, nothing like the sound's riff. */
+  const SAVED = {
+    id: 'cmpat1',
+    name: 'Rolling bass',
+    synthId: 'model-d',
+    steps: 8,
+    parts: 1,
+    pattern: { ...newPattern(8), bpm: 140 },
+    problems: [],
+    createdAt: '2026-10-22T10:00:00.000Z',
+    updatedAt: '2026-10-22T10:00:00.000Z',
+  };
+  SAVED.pattern.parts[0].steps[0] = { on: true, notes: [{ note: 36, gate: 1 }] };
+
+  function serveWithPattern(sound: UserSoundSummary) {
+    api.get.mockImplementation(async (path: string) => {
+      if (path === '/api/v1/sounds') return [sound];
+      if (path === '/api/v1/patterns/cmpat1') return SAVED;
+      if (path === '/api/v1/sounds/cmmine1') return { ...NIGHT_BASS, ...sound };
+      throw new Error(`unexpected GET ${path}`);
+    });
+  }
+  const strip = () => within(screen.getByRole('toolbar', { name: 'Patterns' }));
+  const askedFor = (path: string) => api.get.mock.calls.some(([p]) => p === path);
+
+  it('opens the sequencer on that pattern, read from the API, when the sound opens', async () => {
+    serveWithPattern(summary({ patternId: 'cmpat1' }));
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(askedFor('/api/v1/patterns/cmpat1')).toBe(true));
+
+    fireEvent.click(button('Sequencer'));
+    await waitFor(() => expect(strip().getByText('Rolling bass')).toBeTruthy());
+    expect(screen.getByRole('slider', { name: 'Tempo' }).getAttribute('aria-valuenow')).toBe('140');
+    expect(
+      strip().getByRole('button', { name: 'Play with Night bass' }).getAttribute('aria-pressed')
+    ).toBe('true');
+  });
+
+  it('a sound with none opens on its riff, and asks for no pattern', async () => {
+    serveWithPattern(summary());
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Night bass'));
+    fireEvent.click(button('Sequencer'));
+    expect(strip().getByText('The sound’s riff')).toBeTruthy();
+    expect(askedFor('/api/v1/sounds')).toBe(true);
+    expect(api.get.mock.calls.some(([p]) => String(p).startsWith('/api/v1/patterns'))).toBe(false);
+  });
+
+  it('clears it through the sounds API, and the sound plays its riff from then on', async () => {
+    serveWithPattern(summary({ patternId: 'cmpat1' }));
+    api.patch.mockResolvedValue({ ...NIGHT_BASS, patternId: null });
+    page();
+    fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
+    fireEvent.click(button('Sequencer'));
+    await waitFor(() => expect(strip().getByText('Rolling bass')).toBeTruthy());
+
+    await act(async () => {
+      fireEvent.click(strip().getByRole('button', { name: 'Play with Night bass' }));
+    });
+    expect(api.patch).toHaveBeenCalledWith('/api/v1/sounds/cmmine1', {
+      body: { patternId: null },
+    });
+    await waitFor(() =>
+      expect(
+        strip().getByRole('button', { name: 'Play with Night bass' }).getAttribute('aria-pressed')
+      ).toBe('false')
+    );
   });
 });

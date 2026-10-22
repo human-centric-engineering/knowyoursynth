@@ -596,6 +596,7 @@ describe('a designed sound', () => {
           publishedAt: null,
           tags: [],
           unlisted: false,
+          patternId: null,
           playable: true,
           createdAt: '2026-10-18T10:00:00.000Z',
           updatedAt: '2026-10-18T10:00:00.000Z',

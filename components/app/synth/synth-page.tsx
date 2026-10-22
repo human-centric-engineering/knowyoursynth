@@ -75,6 +75,8 @@ import {
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import { useSequencer } from '@/components/app/sequencer/use-sequencer';
+import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
+import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
@@ -881,12 +883,57 @@ function Synth({
   useEffect(() => {
     noteToSeq.current = seqShown ? seqNoteIn : () => undefined;
   }, [seqShown, seqNoteIn]);
+  // My patterns (`f-step-sequencer` t-81). One of the user's sounds that plays a pattern by default opens the sequencer
+  // on it: read once the sound is open, after the sound's riff has been imported, so it replaces that riff. A pattern
+  // the sequencer already holds (the user just pointed the sound at it) is not read again over their edits.
+  const myPatterns = useMyPatterns();
+  const { open: openPattern } = myPatterns;
+  const { load: loadPattern, loaded: seqLoaded } = seq;
+  const seqLoadedId = useRef<string | null>(null);
+  useEffect(() => {
+    seqLoadedId.current = seqLoaded?.id ?? null;
+  }, [seqLoaded]);
+  const openSoundId = openSound?.id ?? null;
+  const soundPatternId = openSound?.patternId ?? null;
+  useEffect(() => {
+    if (!soundPatternId || seqLoadedId.current === soundPatternId) return undefined;
+    let live = true;
+    openPattern(soundPatternId)
+      .then((d) => {
+        if (live && d.pattern) loadPattern(d.pattern, { id: d.id, name: d.name });
+      })
+      .catch(() => undefined); // the sound's own riff stays, as it would with no pattern
+    return () => {
+      live = false;
+    };
+  }, [openSoundId, soundPatternId, openPattern, loadPattern]);
+  const seqLibrary: PatternLibraryProps = {
+    signedIn: authPending ? null : signedIn,
+    signInHref,
+    synthId,
+    synths,
+    mine: myPatterns,
+    sound: openSound
+      ? {
+          name: openSound.name,
+          patternId: openSound.patternId,
+          setPattern: async (patternId) => {
+            const d = await apiClient.patch<UserSoundDetail>(
+              `/api/v1/sounds/${encodeURIComponent(openSound.id)}`,
+              { body: { patternId } }
+            );
+            mine.put(d);
+          },
+        }
+      : null,
+  };
   // What the module is handed in the dock and in the sheet alike: the pattern and the page's one transport.
   const seqProps = {
     seq,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
     onStop: stopRiff,
+    library: seqLibrary,
   };
   const toggleSequencer = () => {
     const opening = !seqShown;

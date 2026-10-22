@@ -51,6 +51,7 @@ async function dbReachable(): Promise<boolean> {
 
 const riff = importPhrase({
   bpm: 110,
+  loop: true,
   steps: [
     [0, 36, 1, 0.5],
     [1, 48, 0.5],
