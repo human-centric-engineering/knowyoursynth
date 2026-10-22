@@ -1037,3 +1037,430 @@ svg .kys-hit:focus-visible {
     animation: none;
   }
 }
+
+/* ==========================================================================
+ * The sequencer (`f-step-sequencer` t-80)
+ * ==========================================================================
+ * Under the bar in the dock from `lg` up, in a bottom sheet below it. Drawn as
+ * a hardware step sequencer: rubber step keys in groups of four with an LED
+ * each, the playhead lighting the key it is on, and encoders for the values.
+ * The keys keep their own colours in the light theme, as hardware does. Laid
+ * out by its own width (a container), so the dock and the sheet share it.
+ */
+.kys-seq-dock {
+  border-top: 1px solid rgb(var(--kys-wash) / 0.06);
+  background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
+}
+.kys-seq {
+  container-type: inline-size;
+  padding: 10px 14px 12px;
+  color: var(--kys-text);
+}
+.kys-seq-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 16px;
+}
+.kys-seq-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+}
+.kys-seq-name {
+  margin: 0;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--kys-accent);
+}
+.kys-seq-transport,
+.kys-seq-controls,
+.kys-seq-parts,
+.kys-seq-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+.kys-seq-transport {
+  align-self: center;
+}
+.kys-seq-help {
+  margin-left: auto;
+  align-self: center;
+  align-items: center;
+}
+.kys-seq-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--kys-accent-ink);
+  background: var(--kys-accent);
+  box-shadow: 0 4px 14px -4px rgb(246 166 58 / 0.7);
+}
+.kys-seq-play.is-playing {
+  animation: kys-pulse 1.3s ease-in-out infinite;
+}
+.kys-seq-toggle,
+.kys-seq-part,
+.kys-seq-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kys-muted);
+  background: rgb(var(--kys-wash) / 0.04);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.1);
+}
+.kys-seq-toggle:hover,
+.kys-seq-part:hover,
+.kys-seq-page:hover {
+  color: var(--kys-text);
+}
+.kys-seq-toggle.is-on,
+.kys-seq-part.is-on,
+.kys-seq-page.is-on {
+  color: var(--kys-accent);
+  box-shadow: inset 0 0 0 1px rgb(246 166 58 / 0.55);
+  background: rgb(246 166 58 / 0.1);
+}
+
+/* An encoder: a ring lit to its value round a dark knob, the value in it. */
+.kys-enc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 50px;
+}
+.kys-enc-knob {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+  background: conic-gradient(
+    from 225deg,
+    var(--kys-accent) 0deg var(--enc, 0deg),
+    rgb(var(--kys-wash) / 0.13) var(--enc, 0deg) 270deg,
+    transparent 270deg
+  );
+}
+.kys-enc-knob::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #3a3f4a, #16181d 70%);
+  box-shadow:
+    0 2px 4px rgb(0 0 0 / 0.5),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+.kys-enc-value {
+  position: relative;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #ece9e2;
+  white-space: nowrap;
+}
+.kys-enc[data-unset] .kys-enc-value {
+  color: #8a91a0;
+}
+.kys-enc-label,
+.kys-seq-field-label {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kys-muted);
+  white-space: nowrap;
+}
+.kys-seq-field {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 3px;
+}
+.kys-seq-select {
+  height: 32px;
+  max-width: 150px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--kys-text);
+  background: var(--kys-raised);
+  border: 1px solid var(--kys-line);
+}
+
+.kys-seq-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+@container (min-width: 900px) {
+  .kys-seq-body {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  }
+}
+.kys-seq-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.kys-seq-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.kys-seq-page {
+  height: 26px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+/* The step keys: sixteen to a row in groups of four, eight to a row where it is narrow. */
+.kys-seq-keys {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 5px;
+  padding: 8px;
+  border-radius: 12px;
+  background: #0c0d11;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.6);
+}
+@container (max-width: 620px) {
+  .kys-seq-keys {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+.kys-seq-key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  height: 62px;
+  padding: 5px 2px 4px;
+  border-radius: 7px;
+  color: #a2a8b5;
+  background: linear-gradient(#2c3039, #1d2027);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 2px 0 #08090b,
+    0 3px 4px rgb(0 0 0 / 0.45);
+  transition:
+    background-color 0.08s ease,
+    box-shadow 0.08s ease;
+}
+/* The first of each group of four is a beat: a lighter key, as the hardware marks it. */
+.kys-seq-key[data-beat] {
+  background: linear-gradient(#363b46, #232730);
+}
+.kys-seq-key:active {
+  translate: 0 1px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    0 1px 0 #08090b;
+}
+.kys-seq-key-led {
+  width: 60%;
+  height: 4px;
+  border-radius: 2px;
+  background: #3a2a14;
+}
+.kys-seq-key[data-plays] .kys-seq-key-led {
+  background: #ffb547;
+  box-shadow: 0 0 6px 1px rgb(255 166 58 / 0.7);
+}
+.kys-seq-key[data-muted] .kys-seq-key-led {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px #8a6020;
+}
+.kys-seq-key[data-plays] {
+  color: #ece9e2;
+}
+.kys-seq-key[data-here] {
+  background: linear-gradient(#5d636f, #3c414c);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.5),
+    0 0 14px rgb(255 255 255 / 0.25);
+}
+.kys-seq-key[aria-current] {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 1px;
+}
+.kys-seq-key-num {
+  font-size: 9.5px;
+  line-height: 1;
+  color: #6d7688;
+}
+.kys-seq-key-note {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.kys-seq-key-note sup {
+  margin-left: 1px;
+  font-size: 8.5px;
+  color: var(--kys-accent);
+}
+.kys-seq-key-marks {
+  display: flex;
+  gap: 2px;
+  min-height: 10px;
+  font-size: 8.5px;
+  line-height: 1;
+  color: #f6a63a;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.kys-seq-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.kys-seq-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding-right: 10px;
+  border-right: 1px solid rgb(var(--kys-wash) / 0.08);
+}
+.kys-seq-tool-group:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+.kys-seq-undo {
+  margin-left: auto;
+}
+.kys-seq-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kys-muted);
+}
+.kys-seq-tool:hover:enabled {
+  color: var(--kys-text);
+  background: rgb(var(--kys-wash) / 0.07);
+}
+.kys-seq-tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* The step inspector. */
+.kys-seq-inspect {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  max-height: 290px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--kys-surface);
+  box-shadow: inset 0 0 0 1px rgb(var(--kys-wash) / 0.07);
+}
+.kys-seq-inspect-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.kys-seq-inspect-head h3 {
+  margin: 0;
+  color: var(--kys-text);
+}
+.kys-seq-inspect-part,
+.kys-seq-inspect-state {
+  color: var(--kys-muted);
+  font-size: 12px;
+}
+.kys-seq-inspect-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+.kys-seq-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kys-seq-note {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgb(var(--kys-wash) / 0.07);
+}
+.kys-seq-note .kys-pbtn {
+  margin-left: auto;
+}
+
+/* A finger needs a bigger target than a pointer: 44px, as the platforms ask. */
+@media (pointer: coarse) {
+  .kys-seq-play,
+  .kys-seq-toggle,
+  .kys-seq-part,
+  .kys-seq-tool,
+  .kys-seq-select {
+    height: 44px;
+  }
+  .kys-seq-tool {
+    min-width: 44px;
+  }
+  .kys-seq-page {
+    height: 36px;
+  }
+  .kys-enc-knob {
+    width: 48px;
+    height: 48px;
+  }
+  .kys-seq-key {
+    height: 70px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-seq-play.is-playing {
+    animation: none;
+  }
+  .kys-seq-key {
+    transition: none;
+  }
+}

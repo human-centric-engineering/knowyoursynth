@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, vi, afterEach, beforeAll, beforeEach } from 'vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
@@ -20,6 +20,8 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { isShown, presetState } from '@/lib/app/synths/lib/patch';
+import { importPhrase } from '@/lib/app/sequencer/import';
+import { patternLength } from '@/lib/app/sequencer/pattern';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
 import { openSide, tallScreen } from '@/tests/helpers/synth-side';
@@ -162,6 +164,25 @@ describe.each(LISTED)('the %s page', (id) => {
     expect(jacks).toHaveLength(def.jacks.length);
     expect(def.controls.length).toBeGreaterThan(0);
     expect(undrawn(frontPanel(def), def, detail.sounds[0])).toEqual([]);
+  });
+
+  it('opens the sequencer under the panel holding the first sound’s riff, and plays it as a pattern', async () => {
+    page();
+    fireEvent.click(screen.getByRole('button', { name: 'Sequencer' }));
+    const seq = screen.getByRole('region', { name: 'Sequencer' });
+    const riff = detail.sounds[0].phrase;
+    // Sixteen keys to a page: the first page of the riff's steps.
+    const steps = patternLength(importPhrase(riff));
+    expect(within(seq).getAllByRole('button', { name: /^Step \d+:/ })).toHaveLength(
+      Math.min(16, steps)
+    );
+    await act(async () => {
+      fireEvent.click(within(seq).getByRole('button', { name: 'Play' }));
+    });
+    const start = engine.send.mock.calls
+      .map((c) => c[0] as { type: string; loop?: { notes: unknown[] } })
+      .find((m) => m.type === 'pattern');
+    expect(start?.loop?.notes).toHaveLength(riff.steps.length);
   });
 
   it('draws the neutral panel without the maker’s marks it tags', () => {

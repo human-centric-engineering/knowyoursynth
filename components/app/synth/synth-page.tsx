@@ -52,10 +52,12 @@ import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
+import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import {
   AudioWaveform,
+  Columns4,
   EyeOff,
   Flame,
   Eraser,
@@ -71,6 +73,8 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
+import { Sequencer } from '@/components/app/sequencer/sequencer';
+import { useSequencer } from '@/components/app/sequencer/use-sequencer';
 import { useFavourites } from '@/components/app/synth/favourites';
 import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
@@ -204,7 +208,7 @@ const PLAY_HELP = [
 type AudioState = 'off' | 'starting' | 'on' | 'error';
 
 /** The side regions, each a bottom sheet below `lg`. */
-type SheetId = 'library' | 'lesson' | 'inspector' | 'tutor';
+type SheetId = 'library' | 'lesson' | 'inspector' | 'tutor' | 'sequencer';
 const SHEETS: [SheetId, string][] = [
   ['library', 'Library'],
   ['lesson', 'Lesson'],
@@ -619,12 +623,15 @@ function Synth({
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
+  // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
+  const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
   useEffect(() => {
     if (!engine) return undefined;
     // Coming from another synth, the sound may already be on.
     if (engine.running) setAudio('on');
     const unlisten = listen((e) => {
       if (e.type === 'phraseEnd') setPlaying(false);
+      seqEvents.current(e);
     });
     return () => {
       unlisten();
@@ -834,20 +841,50 @@ function Synth({
     tempoRef.current = tempoBpm;
     if (tempoBpm) engine?.send({ type: 'tempo', bpm: tempoBpm });
   }, [engine, tempoBpm]);
+  // The sequencer (`f-step-sequencer` t-80): it holds the sound's riff as a pattern. Play riff and the sequencer are one
+  // transport: with the sequencer open, Play plays the pattern; either one starting stops the other, and Stop stops both.
+  const [seqOpen, setSeqOpen] = useState(false);
+  const seq = useSequencer({
+    engine,
+    ensureAudio,
+    riff: shown?.phrase ?? null,
+    tempo: tempoBpm,
+  });
+  const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
+  useEffect(() => {
+    seqEvents.current = seqOnEvent;
+  }, [seqOnEvent]);
   const stopRiff = useCallback(() => {
     engine?.send({ type: 'stopPhrase' });
     setPlaying(false);
-  }, [engine]);
+    stopPattern();
+  }, [engine, stopPattern]);
+  // A pattern starting stops a riff in the engine; the riff's button is told here.
+  const playPattern = useCallback(async () => {
+    if (await startPattern()) setPlaying(false);
+  }, [startPattern]);
+  // Open in the dock from `lg` up, in its sheet below it.
+  const seqShown = small ? sheet === 'sequencer' : seqOpen;
+  const transportPlaying = playing || seq.playing;
+  const toggleSequencer = () => {
+    const opening = !seqShown;
+    if (small) openSheet(opening ? 'sequencer' : null);
+    else setSeqOpen(opening);
+    // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
+    if (opening && playing) void playPattern();
+  };
   const playRiff = useCallback(
     async (ph: Phrase) => {
       if (!engine || !(await ensureAudio())) return;
+      // A riff stops a pattern in the engine, without a word: the sequencer is told here.
+      stopPattern();
       engine.send({
         type: 'phrase',
         phrase: tempoRef.current ? { ...ph, bpm: tempoRef.current } : ph,
       });
       setPlaying(true);
     },
-    [engine, ensureAudio]
+    [engine, ensureAudio, stopPattern]
   );
 
   // computer keyboard. Each key remembers the note it started, so a key held across an octave change (or a Hold
@@ -1323,6 +1360,7 @@ function Synth({
     if (!engine) return;
     if (audio === 'on') {
       setPlaying(false);
+      stopPattern();
       await engine.suspend();
       setAudio('off');
       meterStore.set((m) => ({ ...m, power: false, gate: false }));
@@ -1796,12 +1834,26 @@ function Synth({
                 />
                 {/* Below `lg` the buttons wrap onto more rows rather than scroll out of reach. */}
                 <div className="kys-scroll flex min-w-0 flex-1 flex-wrap items-center gap-2 lg:flex-nowrap lg:overflow-x-auto [&>*]:shrink-0">
-                  {shown && (
+                  {(shown || seqShown) && (
                     <PlayButton
-                      playing={playing}
-                      onClick={() => (playing ? stopRiff() : void playRiff(shown.phrase))}
+                      playing={transportPlaying}
+                      onClick={() =>
+                        transportPlaying
+                          ? stopRiff()
+                          : seqShown || !shown
+                            ? void playPattern()
+                            : void playRiff(shown.phrase)
+                      }
                     />
                   )}
+                  <LayerToggle
+                    label="Sequencer"
+                    short="Sequencer"
+                    icon={<Columns4 size={17} aria-hidden="true" />}
+                    on={seqShown}
+                    title="Open the step sequencer under the panel, holding this sound's riff: edit it step by step, and hear each change as it plays."
+                    onClick={toggleSequencer}
+                  />
                   {/* Named for what it will do, as a video's mute button is: Mute while the sound is on. */}
                   <PlayerTip
                     name={
@@ -1901,6 +1953,18 @@ function Synth({
                 </div>
               </div>
 
+              {!small && seqOpen && (
+                <div className="kys-seq-dock">
+                  <Sequencer
+                    seq={seq}
+                    playing={transportPlaying}
+                    onPlay={() => void playPattern()}
+                    onStop={stopRiff}
+                    onClose={() => setSeqOpen(false)}
+                  />
+                </div>
+              )}
+
               {/* With the piano put away the deck still holds the harmonics, while they are on. */}
               <div className="kys-player-deck p-3 sm:p-4" hidden={!small && !deckOn && !harmOn}>
                 {harmOn && (
@@ -1909,7 +1973,7 @@ function Synth({
                     pred={pred}
                     source={engine}
                     running={audio === 'on'}
-                    playing={playing}
+                    playing={transportPlaying}
                     measureStore={measureStore}
                     onExpand={() => setScopeOpen(true)}
                   />
@@ -2037,6 +2101,22 @@ function Synth({
             <KeptSlot node={inspectorNode} />
           </BottomSheet>
           <BottomSheet
+            title="Sequencer"
+            docked
+            snap={dockSnap}
+            onSnap={setDockSnap}
+            open={sheet === 'sequencer'}
+            fallbackFocus={() => playerRef.current}
+            onOpenChange={(o) => openSheet(o ? 'sequencer' : null)}
+          >
+            <Sequencer
+              seq={seq}
+              playing={transportPlaying}
+              onPlay={() => void playPattern()}
+              onStop={stopRiff}
+            />
+          </BottomSheet>
+          <BottomSheet
             title="Tutor"
             open={sheet === 'tutor'}
             fallbackFocus={() => barRefs.current.tutor ?? null}
@@ -2076,7 +2156,7 @@ function Synth({
         values={sess.values}
         cables={sess.cables}
         phrase={shown?.phrase ?? null}
-        playing={playing}
+        playing={transportPlaying}
         onPlay={(ph) => void playRiff(ph)}
         onStop={stopRiff}
         wheel={wheel}

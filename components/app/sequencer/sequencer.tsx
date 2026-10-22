@@ -1,0 +1,745 @@
+'use client';
+
+/**
+ * The sequencer module (`f-step-sequencer` t-80): under the synth's panel, opened from the player bar, styled as a
+ * hardware step sequencer. From `lg` up it is in the dock under the bar; below it, in a bottom sheet.
+ *
+ * - The head: the transport (Play and Stop, Fill) and the pattern's controls: tempo, swing, length, transpose, step
+ *   size, direction, root and scale, the parts (A and B) and the order they chain in.
+ * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them. A key is
+ *   chosen by a press (or the arrows), and turned on or off by a double press (or Enter or Space).
+ * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
+ *   paste of a step or a page, clear, and Undo.
+ * - The step inspector: the chosen step's values on encoders (`step-inspector.tsx`).
+ *
+ * The pattern, its Undo and the transport are the page's (`use-sequencer.ts`), so closing the module loses nothing
+ * and the bar's play button and this one are one transport. The rules the pattern plays by are in
+ * `.context/app/sequencer.md`.
+ */
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
+import {
+  ArrowLeftRight,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardPaste,
+  Copy,
+  Dices,
+  Eraser,
+  Play,
+  Shuffle,
+  Square,
+  Undo2,
+  X,
+} from 'lucide-react';
+import {
+  DIRECTIONS,
+  MAX_BPM,
+  MAX_STEPS,
+  MAX_TRANSPOSE,
+  MIN_BPM,
+  SCALE_NAMES,
+  STEP_SIZE_NAMES,
+  emptyStep,
+  patternLength,
+  type Direction,
+  type Pattern,
+  type ScaleName,
+  type Step,
+  type StepSize,
+} from '@/lib/app/sequencer/pattern';
+import {
+  clearSteps,
+  copySteps,
+  euclidFill,
+  mutate,
+  pasteSteps,
+  randomise,
+  resizePattern,
+  reverseSteps,
+  rotateSteps,
+  shiftDegree,
+  shiftOctave,
+} from '@/lib/app/sequencer/tools';
+import {
+  CHAINS,
+  DIRECTION_LABELS,
+  PART_NAMES,
+  ROOT_NAMES,
+  SCALE_LABELS,
+  STEP_SIZE_LABELS,
+  chainLabel,
+  conditionMark,
+  noteName,
+} from '@/components/app/sequencer/labels';
+import { Encoder } from '@/components/app/sequencer/encoder';
+import { StepInspector, Toggle } from '@/components/app/sequencer/step-inspector';
+import type {
+  SeqPosition,
+  Sequencer as SequencerState,
+} from '@/components/app/sequencer/use-sequencer';
+import { HelpButton } from '@/components/app/synth/bar-controls';
+import { PlayerTip } from '@/components/app/synth/player-tip';
+
+/** Steps on one page of keys. */
+export const PAGE = 16;
+
+/** What the help lists: every control, as the panel's help does. */
+export const SEQ_HELP: readonly (readonly [string, string])[] = [
+  [
+    'Step keys',
+    'Press a key to choose its step, and press it twice to turn it on or off. With a key focused, the arrows move along the steps, Up and Down move its notes a semitone, Enter or Space turns it on or off, and Delete makes it a rest.',
+  ],
+  [
+    'Pages',
+    'A pattern longer than 16 steps is shown 16 at a time. The page the playhead is on is lit.',
+  ],
+  ['Play and Stop', 'The same transport as Play riff: one stops the other.'],
+  [
+    'Fill',
+    'While it is on, steps set to “Only with Fill” play and steps set to “Not with Fill” do not, from the next loop.',
+  ],
+  [
+    'Tempo and swing',
+    'Beats per minute, and how late every second step is: 50% is straight, 75% a heavy shuffle.',
+  ],
+  ['Length and step size', 'How many steps the pattern has (up to 128), and how long each one is.'],
+  [
+    'Direction',
+    'Forward, reverse, pendulum (there and back), random, or Brownian (a walk, mostly forward).',
+  ],
+  [
+    'Root and scale',
+    'Every note is moved to the nearest note of the scale as it plays. Chromatic leaves them as they are.',
+  ],
+  ['Transpose', 'Moves every note by semitones, before the scale.'],
+  ['A and B', 'Two variations of the pattern, chained: A A A B plays A three times, then B.'],
+  [
+    'Tools',
+    'Euclid spreads hits as evenly as they go. Rotate, octave and degree shifts, reverse, randomise and mutate change the part being edited. Undo takes back any change.',
+  ],
+  [
+    'Step inspector',
+    'The chosen step: on, accent, slide, ratchet, chance and condition, and each note’s pitch, gate, velocity and nudge.',
+  ],
+];
+
+/** The note new notes start on: the pattern's last note before `at`, else the first after it, else C3 above the root. */
+function nearbyNote(steps: readonly Step[], at: number, root: number): number {
+  for (let i = at; i >= 0; i--) {
+    const n = steps[i]?.notes[0];
+    if (n) return n.note;
+  }
+  const after = steps.find((s) => s.notes.length > 0);
+  return after?.notes[0].note ?? 48 + root;
+}
+
+/** The lowest and highest notes of the steps, or a range round C3 when there are none: what Randomise picks from. */
+function noteRange(steps: readonly Step[], root: number): [number, number] {
+  const ns = steps.flatMap((s) => s.notes.map((n) => n.note));
+  if (ns.length === 0) return [48 + root, 60 + root];
+  const lo = Math.min(...ns);
+  const hi = Math.max(...ns);
+  return hi - lo < 7 ? [lo, lo + 12] : [lo, hi];
+}
+
+function keyLabel(s: Step, i: number): string {
+  const what =
+    s.notes.length === 0
+      ? 'rest'
+      : `${s.notes.map((n) => noteName(n.note)).join(' ')}, ${s.on ? 'on' : 'off'}`;
+  const extras = [
+    s.accent && 'accent',
+    s.slide && 'slide',
+    s.ratchet && s.ratchet > 1 && `ratchet ${s.ratchet}`,
+    s.probability !== undefined &&
+      s.probability < 1 &&
+      `${Math.round(s.probability * 100)}% chance`,
+    s.condition && conditionMark(s.condition),
+  ].filter(Boolean);
+  return `Step ${i + 1}: ${what}${extras.length ? `, ${extras.join(', ')}` : ''}`;
+}
+
+export function Sequencer({
+  seq,
+  playing,
+  onPlay,
+  onStop,
+  onClose,
+}: {
+  seq: SequencerState;
+  /** The page's transport: whether a riff or the pattern is playing. */
+  playing: boolean;
+  onPlay: () => void;
+  onStop: () => void;
+  /** Closes the module; absent in a bottom sheet, which has its own close. */
+  onClose?: () => void;
+}) {
+  const p = seq.pattern;
+  const len = patternLength(p);
+  const [part, setPart] = useState(0);
+  const editing = Math.min(part, p.parts.length - 1);
+  const steps = p.parts[editing].steps;
+  const [chosen, setChosen] = useState(0);
+  const sel = Math.min(chosen, len - 1);
+  const page = Math.floor(sel / PAGE);
+  const pages = Math.ceil(len / PAGE);
+  const [hits, setHits] = useState(4);
+  const [clip, setClip] = useState<{ kind: 'step' | 'page'; steps: Step[] } | null>(null);
+  const keyRefs = useRef(new Map<number, HTMLButtonElement>());
+  const moveFocus = useRef(false);
+
+  // The playhead, read from the audio clock once a frame while the pattern plays; the keys redraw only as it moves on.
+  const [at, setAt] = useState<SeqPosition | null>(null);
+  const { position } = seq;
+  useEffect(() => {
+    if (!seq.playing) {
+      setAt(null);
+      return undefined;
+    }
+    let raf = 0;
+    const tick = () => {
+      const now = position();
+      setAt((was) => (was?.step === now?.step && was?.part === now?.part ? was : now));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [seq.playing, position]);
+
+  useEffect(() => {
+    if (!moveFocus.current) return;
+    moveFocus.current = false;
+    keyRefs.current.get(sel)?.focus();
+  }, [sel]);
+
+  const setSteps = (next: Step[], group?: string) =>
+    seq.edit(
+      (q) => ({
+        ...q,
+        parts: q.parts.map((pt, i) => (i === editing ? { steps: next } : pt)),
+      }),
+      { group }
+    );
+  const changeStep = (i: number, fn: (s: Step) => Step, group?: string) =>
+    seq.edit(
+      (q) => ({
+        ...q,
+        parts: q.parts.map((pt, k) =>
+          k === editing
+            ? { steps: pt.steps.map((s, j) => (j === i ? fn(structuredClone(s)) : s)) }
+            : pt
+        ),
+      }),
+      { group }
+    );
+  const setP = <K extends keyof Pattern>(k: K, v: Pattern[K], group?: string) =>
+    seq.edit((q) => ({ ...q, [k]: v }), { group });
+
+  const defaultNote = nearbyNote(steps, sel, p.root);
+  const toggle = (i: number) =>
+    changeStep(i, (s) =>
+      s.notes.length === 0
+        ? { ...s, on: true, notes: [{ note: nearbyNote(steps, i, p.root), gate: 1 }] }
+        : { ...s, on: !s.on }
+    );
+
+  const choose = (i: number, focus: boolean) => {
+    moveFocus.current = focus;
+    setChosen(Math.max(0, Math.min(len - 1, i)));
+  };
+  const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
+    const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
+    if (e.key in by) choose(i + by[e.key], true);
+    else if (e.key === 'Home') choose(0, true);
+    else if (e.key === 'End') choose(len - 1, true);
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const d = e.key === 'ArrowUp' ? 1 : -1;
+      changeStep(
+        i,
+        (s) => ({
+          ...s,
+          notes: s.notes.map((n) => ({ ...n, note: Math.min(127, Math.max(0, n.note + d)) })),
+        }),
+        `key:${editing}:${i}`
+      );
+    } else if (e.key === 'Enter' || e.key === ' ') toggle(i);
+    else if (e.key === 'Delete' || e.key === 'Backspace') changeStep(i, () => emptyStep());
+    else return;
+    e.preventDefault();
+    // The page plays notes from the computer keyboard; these keys are the sequencer's while a step key has focus.
+    e.stopPropagation();
+  };
+
+  const addB = () => {
+    seq.edit((q) =>
+      q.parts.length > 1
+        ? q
+        : { ...q, parts: [q.parts[0], structuredClone(q.parts[0])], chain: [0, 1] }
+    );
+    setPart(1);
+  };
+  const playingPart = at?.part ?? null;
+  const chainKey = p.chain.join(',');
+  const chains = CHAINS.some((c) => c.key === chainKey)
+    ? CHAINS
+    : [...CHAINS, { key: chainKey, label: chainLabel(p.chain), chain: p.chain }];
+
+  const shown = useMemo(() => steps.slice(page * PAGE, page * PAGE + PAGE), [steps, page]);
+  const tool = (
+    name: string,
+    help: string,
+    icon: ReactNode,
+    run: () => void,
+    opts: { short?: string; disabled?: boolean } = {}
+  ) => (
+    <PlayerTip name={name} help={help}>
+      <button
+        type="button"
+        className="kys-seq-tool"
+        aria-label={name}
+        disabled={opts.disabled}
+        onClick={run}
+      >
+        {icon}
+        {opts.short && <span>{opts.short}</span>}
+      </button>
+    </PlayerTip>
+  );
+
+  return (
+    <section className="kys-seq" aria-labelledby="kys-seq-h">
+      <div className="kys-seq-head">
+        <div className="kys-seq-title">
+          <span className={`kys-led ${seq.playing ? 'is-lit' : ''}`} aria-hidden="true" />
+          <h2 id="kys-seq-h" className="kys-seq-name">
+            Sequencer
+          </h2>
+        </div>
+        <div className="kys-seq-transport">
+          <PlayerTip
+            name={playing ? 'Stop' : 'Play the pattern'}
+            help={
+              playing
+                ? undefined
+                : 'From its first step. Play riff on the bar is the same transport.'
+            }
+          >
+            <button
+              type="button"
+              className={`kys-seq-play ${seq.playing ? 'is-playing' : ''}`}
+              onClick={playing ? onStop : onPlay}
+            >
+              {playing ? (
+                <Square size={13} fill="currentColor" aria-hidden="true" />
+              ) : (
+                <Play size={15} fill="currentColor" aria-hidden="true" />
+              )}
+              {playing ? 'Stop' : 'Play'}
+            </button>
+          </PlayerTip>
+          <Toggle
+            label="Fill"
+            on={seq.fill}
+            help="Steps set to “Only with Fill” play, and “Not with Fill” rest, from the next loop."
+            onClick={() => seq.setFill(!seq.fill)}
+          />
+          <Toggle
+            label="Loop"
+            on={p.loop}
+            help="Plays the pattern again from the top. Off, it plays once and stops."
+            onClick={() => setP('loop', !p.loop)}
+          />
+        </div>
+        <div className="kys-seq-controls">
+          <Encoder
+            label="Tempo"
+            value={p.bpm}
+            min={MIN_BPM}
+            max={MAX_BPM}
+            format={(v) => `${Math.round(v)}`}
+            help="Beats per minute."
+            onChange={(v) => setP('bpm', v, 'bpm')}
+          />
+          <Encoder
+            label="Swing"
+            value={p.swing}
+            min={50}
+            max={75}
+            big={5}
+            format={(v) => `${v}%`}
+            help="How late every second step is. 50% is straight; 75% delays it by half a step."
+            onChange={(v) => setP('swing', v, 'swing')}
+          />
+          <Encoder
+            label="Length"
+            value={len}
+            min={1}
+            max={MAX_STEPS}
+            big={PAGE}
+            help="How many steps the pattern has. Steps added at the end are rests; shortening keeps the steps cut until you change them."
+            onChange={(v) => seq.edit((q) => resizePattern(q, v), { group: 'length' })}
+          />
+          <Encoder
+            label="Transpose"
+            value={p.transpose}
+            min={-MAX_TRANSPOSE}
+            max={MAX_TRANSPOSE}
+            big={12}
+            format={(v) => (v > 0 ? `+${v}` : `${v}`)}
+            help="Moves every note by semitones as it plays, before the scale. Page Up and Page Down move an octave."
+            onChange={(v) => setP('transpose', v, 'transpose')}
+          />
+          <Select
+            label="Step"
+            help="How long each step is. A triplet fits three in the time of two."
+            value={p.stepSize}
+            options={STEP_SIZE_NAMES.map((s) => [s, STEP_SIZE_LABELS[s]])}
+            onChange={(v) => setP('stepSize', v as StepSize)}
+          />
+          <Select
+            label="Direction"
+            help="The order the steps play in, each pass."
+            value={p.direction}
+            options={DIRECTIONS.map((d) => [d, DIRECTION_LABELS[d]])}
+            onChange={(v) => setP('direction', v as Direction)}
+          />
+          <Select
+            label="Root"
+            help="The scale's first note."
+            value={String(p.root)}
+            options={ROOT_NAMES.map((n, i) => [String(i), n])}
+            onChange={(v) => setP('root', Number(v))}
+          />
+          <Select
+            label="Scale"
+            help="Every note moves to the nearest note of the scale as it plays. Chromatic leaves them as they are."
+            value={p.scale}
+            options={SCALE_NAMES.map((s) => [s, SCALE_LABELS[s]])}
+            onChange={(v) => setP('scale', v as ScaleName)}
+          />
+        </div>
+        <div className="kys-seq-parts" role="group" aria-label="Parts">
+          {p.parts.map((_, i) => (
+            <PlayerTip
+              key={i}
+              name={`Edit part ${PART_NAMES[i]}`}
+              help={playingPart === i ? 'Playing now.' : undefined}
+            >
+              <button
+                type="button"
+                aria-pressed={editing === i}
+                aria-label={`Edit part ${PART_NAMES[i]}`}
+                className={`kys-seq-part ${editing === i ? 'is-on' : ''}`}
+                onClick={() => setPart(i)}
+              >
+                <span
+                  className={`kys-led ${playingPart === i ? 'is-lit' : ''}`}
+                  aria-hidden="true"
+                />
+                {PART_NAMES[i]}
+              </button>
+            </PlayerTip>
+          ))}
+          {p.parts.length < 2 ? (
+            <PlayerTip name="Add part B" help="A variation, copied from A, that plays after it.">
+              <button type="button" className="kys-seq-part" aria-label="Add part B" onClick={addB}>
+                + B
+              </button>
+            </PlayerTip>
+          ) : (
+            <Select
+              label="Chain"
+              help="The order the parts play in, a loop each, then round again."
+              value={chainKey}
+              options={chains.map((c) => [c.key, c.label])}
+              onChange={(v) => {
+                const c = chains.find((x) => x.key === v);
+                if (c) setP('chain', c.chain);
+              }}
+            />
+          )}
+        </div>
+        <div className="kys-seq-help">
+          <HelpButton title="How the sequencer works" items={SEQ_HELP} />
+          {onClose && (
+            <PlayerTip
+              name="Close the sequencer"
+              help="The pattern stays as it is, and keeps playing."
+            >
+              <button
+                type="button"
+                className="kys-pbtn"
+                aria-label="Close the sequencer"
+                onClick={onClose}
+              >
+                <X size={17} aria-hidden="true" />
+              </button>
+            </PlayerTip>
+          )}
+        </div>
+      </div>
+
+      <div className="kys-seq-body">
+        <div className="kys-seq-main">
+          {pages > 1 && (
+            <div className="kys-seq-pages" role="group" aria-label="Pages">
+              {Array.from({ length: pages }, (_, k) => {
+                const lit = at !== null && at.part === editing && Math.floor(at.step / PAGE) === k;
+                return (
+                  <button
+                    key={k}
+                    type="button"
+                    aria-pressed={page === k}
+                    aria-label={`Page ${k + 1}, steps ${k * PAGE + 1} to ${Math.min(len, (k + 1) * PAGE)}`}
+                    className={`kys-seq-page ${page === k ? 'is-on' : ''}`}
+                    onClick={() => choose(k * PAGE + (sel % PAGE), false)}
+                  >
+                    <span className={`kys-led ${lit ? 'is-lit' : ''}`} aria-hidden="true" />
+                    {k + 1}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          <div
+            className="kys-seq-keys"
+            role="group"
+            aria-label={`Steps of part ${PART_NAMES[editing]}`}
+          >
+            {shown.map((s, k) => {
+              const i = page * PAGE + k;
+              const plays = s.on && s.notes.length > 0;
+              const here = at !== null && at.part === editing && at.step === i;
+              const n = s.notes[0];
+              return (
+                <button
+                  key={i}
+                  ref={(el) => {
+                    if (el) keyRefs.current.set(i, el);
+                    else keyRefs.current.delete(i);
+                  }}
+                  type="button"
+                  tabIndex={i === sel ? 0 : -1}
+                  aria-current={i === sel ? 'true' : undefined}
+                  aria-label={keyLabel(s, i)}
+                  data-beat={i % 4 === 0 || undefined}
+                  data-plays={plays || undefined}
+                  data-muted={(!s.on && s.notes.length > 0) || undefined}
+                  data-here={here || undefined}
+                  className="kys-seq-key"
+                  onClick={() => choose(i, false)}
+                  onDoubleClick={() => toggle(i)}
+                  onKeyDown={(e) => onKeyKey(e, i)}
+                >
+                  <span className="kys-seq-key-led" aria-hidden="true" />
+                  <span className="kys-seq-key-num" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span className="kys-seq-key-note" aria-hidden="true">
+                    {n ? noteName(n.note) : '·'}
+                    {s.notes.length > 1 && <sup>+{s.notes.length - 1}</sup>}
+                  </span>
+                  <span className="kys-seq-key-marks" aria-hidden="true">
+                    {s.accent && <span title="Accent">&gt;</span>}
+                    {s.slide && <span title="Slide">⌒</span>}
+                    {s.ratchet && s.ratchet > 1 && <span>×{s.ratchet}</span>}
+                    {s.probability !== undefined && s.probability < 1 && (
+                      <span>{Math.round(s.probability * 100)}%</span>
+                    )}
+                    {conditionMark(s.condition) && <span>{conditionMark(s.condition)}</span>}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="kys-seq-tools" role="toolbar" aria-label="Pattern tools">
+            <div className="kys-seq-tool-group">
+              <Encoder
+                label="Hits"
+                value={Math.min(hits, len)}
+                min={0}
+                max={len}
+                big={4}
+                help="How many hits Euclid spreads over the part."
+                onChange={setHits}
+              />
+              {tool(
+                'Euclid',
+                'Spreads the hits as evenly as they go over the part. Steps it turns off keep their notes.',
+                <Dices size={15} aria-hidden="true" />,
+                () => setSteps(euclidFill(steps, hits, 0, defaultNote, 1)),
+                { short: 'Euclid' }
+              )}
+            </div>
+            <div className="kys-seq-tool-group">
+              {tool(
+                'Rotate left',
+                'Every step one place earlier, round the end.',
+                <ChevronLeft size={16} aria-hidden="true" />,
+                () => setSteps(rotateSteps(steps, -1))
+              )}
+              {tool(
+                'Rotate right',
+                'Every step one place later, round the end.',
+                <ChevronRight size={16} aria-hidden="true" />,
+                () => setSteps(rotateSteps(steps, 1))
+              )}
+              {tool(
+                'Reverse',
+                'The steps back to front.',
+                <ArrowLeftRight size={15} aria-hidden="true" />,
+                () => setSteps(reverseSteps(steps))
+              )}
+            </div>
+            <div className="kys-seq-tool-group">
+              {tool(
+                'Octave down',
+                'Every note an octave lower.',
+                null,
+                () => setSteps(shiftOctave(steps, -1)),
+                { short: 'Oct −' }
+              )}
+              {tool(
+                'Octave up',
+                'Every note an octave higher.',
+                null,
+                () => setSteps(shiftOctave(steps, 1)),
+                { short: 'Oct +' }
+              )}
+              {tool(
+                'Degree down',
+                'Every note one note down the scale.',
+                null,
+                () => setSteps(shiftDegree(steps, -1, p.root, p.scale)),
+                { short: 'Deg −' }
+              )}
+              {tool(
+                'Degree up',
+                'Every note one note up the scale.',
+                null,
+                () => setSteps(shiftDegree(steps, 1, p.root, p.scale)),
+                { short: 'Deg +' }
+              )}
+            </div>
+            <div className="kys-seq-tool-group">
+              {tool(
+                'Randomise',
+                'A fresh line on the scale, in the range the part already uses.',
+                <Dices size={15} aria-hidden="true" />,
+                () => {
+                  const [low, high] = noteRange(steps, p.root);
+                  setSteps(
+                    randomise(len, Math.random, {
+                      root: p.root,
+                      scale: p.scale,
+                      low,
+                      high,
+                      density: 0.6,
+                      accents: 0.2,
+                      slides: 0.15,
+                    })
+                  );
+                },
+                { short: 'Random' }
+              )}
+              {tool(
+                'Mutate',
+                'A variation: some notes move a step along the scale, and a few steps are muted or come back.',
+                <Shuffle size={15} aria-hidden="true" />,
+                () => setSteps(mutate(steps, Math.random, 0.25, p.root, p.scale)),
+                { short: 'Mutate' }
+              )}
+            </div>
+            <div className="kys-seq-tool-group">
+              {tool(
+                'Copy step',
+                'The chosen step, to paste over another.',
+                <Copy size={15} aria-hidden="true" />,
+                () => setClip({ kind: 'step', steps: copySteps(steps, sel, sel + 1) }),
+                { short: 'Step' }
+              )}
+              {tool(
+                'Copy page',
+                'The sixteen steps on show, to paste over another page.',
+                <Copy size={15} aria-hidden="true" />,
+                () =>
+                  setClip({
+                    kind: 'page',
+                    steps: copySteps(steps, page * PAGE, page * PAGE + PAGE),
+                  }),
+                { short: 'Page' }
+              )}
+              {tool(
+                clip?.kind === 'page' ? 'Paste page' : 'Paste step',
+                clip?.kind === 'page' ? 'Over the page on show.' : 'Over the chosen step.',
+                <ClipboardPaste size={15} aria-hidden="true" />,
+                () => {
+                  if (!clip) return;
+                  setSteps(pasteSteps(steps, clip.kind === 'page' ? page * PAGE : sel, clip.steps));
+                },
+                { short: 'Paste', disabled: !clip }
+              )}
+              {tool(
+                'Clear',
+                'Every step of the part a rest.',
+                <Eraser size={15} aria-hidden="true" />,
+                () => setSteps(clearSteps(steps)),
+                { short: 'Clear' }
+              )}
+            </div>
+            <div className="kys-seq-tool-group kys-seq-undo">
+              {tool(
+                'Undo',
+                'Takes back the last change to the pattern.',
+                <Undo2 size={15} aria-hidden="true" />,
+                seq.undo,
+                {
+                  short: 'Undo',
+                  disabled: !seq.canUndo,
+                }
+              )}
+            </div>
+          </div>
+        </div>
+        <StepInspector
+          step={steps[sel]}
+          index={sel}
+          part={PART_NAMES[editing]}
+          defaultNote={defaultNote}
+          onChange={(fn, group) => changeStep(sel, fn, group)}
+        />
+      </div>
+    </section>
+  );
+}
+
+function Select({
+  label,
+  help,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  help: string;
+  value: string;
+  options: readonly (readonly [string, string])[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <PlayerTip name={label} help={help}>
+      <label className="kys-seq-field">
+        <span className="kys-seq-field-label">{label}</span>
+        <select className="kys-seq-select" value={value} onChange={(e) => onChange(e.target.value)}>
+          {options.map(([v, l]) => (
+            <option key={v} value={v}>
+              {l}
+            </option>
+          ))}
+        </select>
+      </label>
+    </PlayerTip>
+  );
+}
