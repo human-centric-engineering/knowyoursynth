@@ -257,8 +257,11 @@ export function Sequencer({
     );
 
   const choose = (i: number, focus: boolean) => {
-    moveFocus.current = focus;
-    setChosen(Math.max(0, Math.min(len - 1, i)));
+    const to = Math.max(0, Math.min(len - 1, i));
+    // Only a move takes focus with it: a press at either end that goes nowhere leaves nothing owed, which a later
+    // change to the chosen step (Length shortened) would otherwise pay by taking focus off the control in use.
+    moveFocus.current = focus && to !== sel;
+    setChosen(to);
   };
   const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
@@ -275,7 +278,8 @@ export function Sequencer({
         }),
         `key:${editing}:${i}`
       );
-    } else if (e.key === 'Enter' || e.key === ' ') toggle(i);
+    }
+    // Enter and Space are the button's own: its click turns the chosen step on or off, once in every browser.
     else if (e.key === 'Delete' || e.key === 'Backspace') changeStep(i, () => emptyStep());
     else return;
     e.preventDefault();

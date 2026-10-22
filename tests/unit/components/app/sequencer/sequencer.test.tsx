@@ -143,7 +143,7 @@ describe('opening on a sound', () => {
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('loads another sound’s riff in place of the pattern, with nothing to undo; the same riff keeps the edits', () => {
+  it('loads another sound’s riff in place of the pattern, Undo bringing the edited one back; the same riff keeps the edits', () => {
     const { rerender } = open();
     fireEvent.click(button('Clear'));
     expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
@@ -154,6 +154,14 @@ describe('opening on a sound', () => {
     rerender(<Harness riff={other} />);
     expect(labels()).toEqual(['Step 1: C2, on', 'Step 2: rest', 'Step 3: rest', 'Step 4: rest']);
     expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('90');
+    fireEvent.click(button('Undo'));
+    expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
+    expect(keys()).toHaveLength(8);
+  });
+
+  it('gives an unedited pattern nothing to undo when another sound’s riff replaces it', () => {
+    const { rerender } = open();
+    rerender(<Harness riff={{ bpm: 90, loop: true, steps: [[0, 36, 1]] }} />);
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
   });
 
@@ -437,17 +445,33 @@ describe('from the keyboard', () => {
     expect(document.activeElement?.getAttribute('aria-label')).toBe('Step 1: C3, on');
   });
 
-  it('turns a step off and on with Enter and Space, gives a rest a note, and makes a step a rest with Delete', () => {
+  it('leaves Enter and Space to the button, whose click turns the focused (chosen) step off and on, and makes a step a rest with Delete', () => {
     open();
-    fireEvent.keyDown(key(1), { key: 'Enter' });
+    // Enter and Space are not handled on keydown: the browser's click for them is the one toggle.
+    expect(fireEvent.keyDown(key(1), { key: 'Enter' })).toBe(true);
+    expect(fireEvent.keyDown(key(1), { key: ' ' })).toBe(true);
+    expect(labels()[0]).toBe('Step 1: C3, on');
+    fireEvent.click(key(1));
     expect(labels()[0]).toBe('Step 1: C3, off');
-    fireEvent.keyDown(key(1), { key: ' ' });
+    fireEvent.click(key(1));
     expect(labels()[0]).toBe('Step 1: C3, on');
     // A rest turned on takes the note before it.
-    fireEvent.keyDown(key(2), { key: 'Enter' });
+    fireEvent.keyDown(key(1), { key: 'ArrowRight' });
+    fireEvent.click(key(2));
     expect(labels()[1]).toBe('Step 2: C3, on');
     fireEvent.keyDown(key(2), { key: 'Delete' });
     expect(labels()[1]).toBe('Step 2: rest');
+  });
+
+  it('keeps focus on the control in use after an arrow press at the end of the steps went nowhere', () => {
+    open();
+    key(1).focus();
+    fireEvent.keyDown(key(1), { key: 'End' });
+    fireEvent.keyDown(document.activeElement ?? key(8), { key: 'ArrowRight' });
+    const length = slider('Length');
+    length.focus();
+    fireEvent.keyDown(length, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(length);
   });
 
   it('chooses a step with a press, and turns the chosen step off and on with another', () => {
@@ -468,7 +492,7 @@ describe('from the keyboard', () => {
     const gate = inspector.getByRole('slider', { name: 'Gate' });
     expect(gate.getAttribute('aria-valuenow')).toBe('1');
     fireEvent.keyDown(gate, { key: 'ArrowUp' });
-    expect(gate.getAttribute('aria-valuenow')).toBe('1.25');
+    expect(gate.getAttribute('aria-valuenow')).toBe('1.05');
     const vel = inspector.getByRole('slider', { name: 'Velocity' });
     expect(vel.getAttribute('aria-valuetext')).toBe('60%');
     fireEvent.keyDown(vel, { key: 'Home' });
@@ -709,6 +733,43 @@ describe('what the second review found', () => {
     fireEvent.keyDown(slider('Length'), { key: 'PageUp' });
     // 24 steps now: Hits still shows the 8 Euclid used, not the 14 pressed for.
     expect(slider('Hits').getAttribute('aria-valuenow')).toBe('8');
+  });
+});
+
+describe('what the third review found', () => {
+  it('starts nothing when Stop is pressed while the sound is still starting', async () => {
+    let turnOn: (on: boolean) => void = () => undefined;
+    function Slow() {
+      const seq = useSequencer({
+        engine,
+        ensureAudio: () => new Promise<boolean>((r) => (turnOn = r)),
+        riff: RIFF,
+      });
+      state = seq;
+      return null;
+    }
+    render(<Slow />);
+    let started: Promise<boolean> = Promise.resolve(false);
+    act(() => {
+      started = state.play();
+    });
+    act(() => state.stop());
+    await act(async () => {
+      turnOn(true);
+      await started;
+    });
+    expect(sentOf('pattern')).toHaveLength(0);
+    expect(state.playing).toBe(false);
+  });
+
+  it('reaches and keeps a gate shorter than a quarter step, as imported riffs have', () => {
+    open({ bpm: 120, loop: true, steps: [[0, 48, 0.025]] });
+    const gate = within(screen.getByRole('region', { name: /^Step 1/ })).getByRole('slider', {
+      name: 'Gate',
+    });
+    expect(gate.getAttribute('aria-valuenow')).toBe('0.1');
+    fireEvent.keyDown(gate, { key: 'ArrowDown' });
+    expect(gate.getAttribute('aria-valuenow')).toBe('0.05');
   });
 });
 

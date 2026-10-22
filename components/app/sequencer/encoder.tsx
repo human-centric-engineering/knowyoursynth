@@ -96,7 +96,7 @@ export function Encoder({
   const onPointerUp = () => {
     drag.current = null;
   };
-  const share = max > min ? (value - min) / (max - min) : 0;
+  const share = max > min ? Math.min(1, Math.max(0, (value - min) / (max - min))) : 0;
   const ring: CSSProperties & Record<'--enc', string> = { '--enc': `${share * 270}deg` };
   const text = format(value);
   return (

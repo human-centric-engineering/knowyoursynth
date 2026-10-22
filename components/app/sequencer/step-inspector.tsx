@@ -239,10 +239,10 @@ export function StepInspector({
             <Encoder
               label="Gate"
               value={n.gate}
-              min={0.25}
+              min={0.05}
               max={MAX_GATE}
-              step={0.25}
-              big={4}
+              step={0.05}
+              big={1}
               format={steps}
               help="How long the note is held, in steps. Past 1 it ties over the steps after it."
               onChange={(v) => setNote({ gate: v }, 'gate')}

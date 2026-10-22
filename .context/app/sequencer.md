@@ -171,8 +171,7 @@ while it is open. Below `lg` it is a docked bottom sheet at half height,
 with the panel live above it.
 
 The page owns the pattern through `useSequencer` (`use-sequencer.ts`), so closing the module keeps every edit. The
-hook is handed the riff of the sound on the panel and imports it whenever that riff's content changes. Choosing
-another sound replaces the pattern, and Undo starts empty. A sound read again with the same riff (a rename, a save)
+hook is handed the riff of the sound on the panel and imports it whenever that riff's content changes. Choosing another sound replaces the pattern. If the pattern had been edited, one Undo brings it back. A sound read again with the same riff (a rename, a save)
 keeps the edits. A panel tempo control (`SynthDef.tempo`, the TB-303's TEMPO) sets the pattern's tempo as it sets a
 riff's. Undo does not count it, and what Undo goes back to takes the knob's tempo too.
 

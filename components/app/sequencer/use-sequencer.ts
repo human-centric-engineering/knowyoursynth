@@ -151,6 +151,8 @@ export function useSequencer({
    * its way from the audio thread when Stop and Play were pressed, or a new sound restarted it) is not this run's.
    */
   const awaiting = useRef(false);
+  /** Counts Plays and Stops, so a Play still waiting for the sound knows a Stop came after it. */
+  const runs = useRef(0);
   const playhead = useRef(createPlayhead());
 
   const send = useCallback((m: SynthMessage) => engine?.send(m), [engine]);
@@ -281,10 +283,14 @@ export function useSequencer({
     if (!riffKey || !ph || riffKey === loadedKey.current) return;
     loadedKey.current = riffKey;
     const p = fromRiff(ph, tempoRef.current);
+    // An edited pattern is not lost to another sound's riff: one Undo brings it back. An unedited one is just the
+    // last sound's riff, and is not worth an Undo.
+    const was = patternRef.current;
+    const edited = past.current.length > 0;
     patternRef.current = p;
     setPattern(p);
-    past.current = [];
-    setUndoable(false);
+    past.current = edited ? [...past.current.slice(-(UNDO_DEPTH - 1)), was] : [];
+    setUndoable(edited);
     lastGroup.current = null;
     if (playingRef.current) start(p);
   }, [riffKey, start]);
@@ -303,7 +309,9 @@ export function useSequencer({
   }, [tempo]);
 
   const play = useCallback(async () => {
-    if (!engine || !(await ensureAudio())) return false;
+    // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
+    const run = ++runs.current;
+    if (!engine || !(await ensureAudio()) || run !== runs.current) return false;
     playingRef.current = true;
     setPlaying(true);
     start(patternRef.current);
@@ -318,6 +326,7 @@ export function useSequencer({
   }, []);
 
   const stop = useCallback(() => {
+    runs.current++;
     if (playingRef.current) send({ type: 'stopPattern' });
     halt();
   }, [halt, send]);
