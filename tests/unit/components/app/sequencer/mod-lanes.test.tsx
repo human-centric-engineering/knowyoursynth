@@ -54,7 +54,7 @@ const CUTOFF: Control = {
   help: '',
   type: 'knob',
   r: 10,
-  style: 'davies',
+  style: 'pro1',
   kind: 'cont',
   min: 0,
   max: 100,
