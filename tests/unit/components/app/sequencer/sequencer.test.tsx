@@ -17,6 +17,11 @@ import { useSequencer, type Sequencer as SeqState } from '@/components/app/seque
 import type { Phrase } from '@/lib/app/synths/contract';
 import type { SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import type { LoopEvent, PatternLoop } from '@/lib/app/synths/audio/pattern-player';
+import { logger } from '@/lib/logging';
+
+vi.mock('@/lib/logging', () => ({
+  logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
 
 /** C3, D♯3, G3 and a held C4: two beats, eight sixteenths. Step 1, 3, 5 and 7. */
 const RIFF: Phrase = {
@@ -144,7 +149,7 @@ describe('opening on a sound', () => {
     // The same riff read again (the sound renamed, say) is not a new riff.
     rerender(<Harness riff={{ ...RIFF, steps: RIFF.steps.map((s) => [...s] as typeof s) }} />);
     expect(labels().every((l) => l?.endsWith('rest'))).toBe(true);
-    const other: Phrase = { bpm: 90, steps: [[0, 36, 1]] };
+    const other: Phrase = { bpm: 90, loop: true, steps: [[0, 36, 1]] };
     rerender(<Harness riff={other} />);
     expect(labels()).toEqual(['Step 1: C2, on', 'Step 2: rest', 'Step 3: rest', 'Step 4: rest']);
     expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('90');
@@ -154,7 +159,7 @@ describe('opening on a sound', () => {
   it('starts the new riff from its top when another sound is chosen while it plays', async () => {
     const { rerender } = open();
     await play();
-    rerender(<Harness riff={{ bpm: 90, steps: [[0, 36, 1]] }} />);
+    rerender(<Harness riff={{ bpm: 90, loop: true, steps: [[0, 36, 1]] }} />);
     expect(lastOf('pattern')).toEqual({
       type: 'pattern',
       bpm: 90,
@@ -520,6 +525,63 @@ describe('from the keyboard', () => {
     fireEvent.keyDown(key(1), { key: 'ArrowRight' });
     window.removeEventListener('keydown', outside);
     expect(outside).not.toHaveBeenCalled();
+  });
+});
+
+describe('what it refuses, and a page that is late', () => {
+  it('opens an empty pattern at the riff’s tempo for a riff no pattern can hold, and says so', () => {
+    // 65 beats: past 128 steps even in eighths.
+    open({ bpm: 100, loop: true, steps: [[64, 48, 1]] });
+    expect(keys()).toHaveLength(16);
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('100');
+    expect(vi.mocked(logger.warn)).toHaveBeenCalledWith(
+      'sequencer: riff could not be imported',
+      expect.anything()
+    );
+  });
+
+  it('refuses an edit that would not make a valid pattern, and sends nothing', async () => {
+    open();
+    await play();
+    const before = engine.sent.length;
+    act(() => state.edit((p) => ({ ...p, bpm: 1000 })));
+    expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('120');
+    expect(engine.sent).toHaveLength(before);
+    expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
+    expect(vi.mocked(logger.warn)).toHaveBeenCalledWith(
+      'sequencer: edit refused',
+      expect.anything()
+    );
+  });
+
+  it('does nothing for an Undo with nothing to undo, or an edit that changes nothing', () => {
+    open();
+    act(() => state.undo());
+    act(() => state.edit((p) => p));
+    expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
+    expect(labels()[0]).toBe('Step 1: C3, on');
+  });
+
+  it('draws the playhead from the loop before when the player played it again (the page was late)', async () => {
+    open();
+    await play();
+    // Loop 0 was compiled; the player turned over to loop 2 without the page having queued 1 or 2.
+    fire(loopEvent({ index: 2 }));
+    engine.frame = 0.375 * 48000;
+    expect(state.position()).toEqual({ step: 3, part: 0 });
+  });
+
+  it('ignores the engine’s events while it is stopped, and draws no playhead without a sound', async () => {
+    open();
+    fire(loopEvent());
+    expect(sentOf('patternNext')).toHaveLength(0);
+    engine = { ...engine, ctx: null as unknown as FakeEngine['ctx'] };
+    render(<Harness riff={RIFF} />);
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button', { name: 'Play' })[1]);
+    });
+    fire(loopEvent());
+    expect(state.position()).toBeNull();
   });
 });
 
