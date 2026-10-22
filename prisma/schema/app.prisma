@@ -614,28 +614,77 @@ model UserSound {
 // the migration, `ON DELETE CASCADE`: erasing a user erases their patterns. A drift probe in lib/app/db-drift.ts pins it.
 
 /// A user's own pattern (`lib/app/sequencer/pattern.ts`), validated with `PatternSchema` on write and on read
-/// (lib/app/patterns/). Owner-scoped: nobody else reads it.
+/// (lib/app/patterns/). Owner-scoped, until its owner shares it by link or publishes it (t-83,
+/// lib/app/patterns/sharing.ts), as a sound is shared.
 model UserPattern {
-  id        String   @id @default(cuid())
+  id                  String          @id @default(cuid())
   /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
-  userId    String
-  name      String
+  userId              String
+  name                String
   /// `Pattern`: the sequencer's pattern, its own `version` inside it.
-  pattern   Json
+  pattern             Json
   /// The pattern shape's version it was saved as (`PATTERN_VERSION`), beside the JSON so a mapping (D1) can find
   /// the rows it owes without reading them all.
-  version   Int
+  version             Int
   /// The synth it was made on. Informational only: a pattern plays on any synth. Not a foreign key, so a synth
   /// leaving the catalogue leaves it as it was.
-  synthId   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  synthId             String?
+  /// Who can open it (t-83): the sound's three levels, and the same rules (`.context/app/sequencer.md`).
+  visibility          SoundVisibility @default(private)
+  /// Its public address, `/patterns/<slug>`. Minted the first time it leaves private and kept after, as a sound's is.
+  slug                String?         @unique @db.VarChar(16)
+  /// When it was first published, kept when it is unpublished and republished.
+  publishedAt         DateTime?
+  /// When an admin unlisted it after a report: gone from every public read, and its owner cannot share or publish it
+  /// again until an admin restores it. Its visibility is kept, so a restore brings it back as it was.
+  unlistedAt          DateTime?
+  /// The shared pattern it was copied from. Null for anything else, and once that pattern is deleted or its owner
+  /// erased. The credit is read through it while that pattern is published, never kept, so it cannot outlive the
+  /// erasure of the person it names.
+  sourceUserPatternId String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 
   /// The user's sounds that play it by default.
-  sounds UserSound[]
+  sounds            UserSound[]
+  sourceUserPattern UserPattern?    @relation("UserPatternCopies", fields: [sourceUserPatternId], references: [id], onDelete: SetNull)
+  /// Copies other users saved from it.
+  copies            UserPattern[]   @relation("UserPatternCopies")
+  /// What people reported about it.
+  reports           PatternReport[]
 
   @@index([userId, updatedAt])
+  @@index([sourceUserPatternId])
+  @@index([userId, publishedAt])
+  @@index([visibility, publishedAt])
   @@map("user_pattern")
+}
+
+/// A report about someone's shared pattern (t-83): `SoundReport`'s shape, its reasons and statuses, for patterns. It
+/// outlives the person who filed it and the admin who resolved it (hand-written FKs, SET NULL) and goes with the pattern
+/// (Cascade). On SYSTEM_MODELS beside UserPattern, with no orgId. Declared for subject export as the reports a person
+/// filed, never who resolved them.
+model PatternReport {
+  id           String            @id @default(cuid())
+  patternId    String
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration). Never shown to anyone but the reporter.
+  reporterId   String?
+  reason       SoundReportReason
+  note         String?           @db.Text
+  status       SoundReportStatus @default(open)
+  /// FK to User.id, ON DELETE SET NULL (hand-written in the migration). The admin who dismissed or actioned it.
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  pattern UserPattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([patternId, status])
+  @@index([reporterId])
+  @@index([resolvedById])
+  @@map("pattern_report")
 }
 
 // ─── Reports about shared sounds (f-sharing h4) ──────────────────────────────
@@ -647,9 +696,9 @@ model UserPattern {
 // as the reports a person filed, never who resolved them.
 
 enum SoundReportReason {
-  /// Offensive or hateful words in its name or notes.
+  /// Offensive or hateful words in its name or notes (a pattern's name).
   offensive
-  /// Someone else's sound put up as theirs.
+  /// Someone else's sound (or pattern) put up as theirs.
   not_theirs
   spam
   other
@@ -811,27 +860,30 @@ model Favourite {
 /// switch it on.
 model SynthProfile {
   /// FK to User.id, ON DELETE CASCADE (hand-written in the migration). One profile per user.
-  userId            String     @id
+  userId                 String     @id
   /// Stored lower-case, so uniqueness is case-insensitive.
-  username          String     @unique @db.VarChar(24)
+  username               String     @unique @db.VarChar(24)
   /// When the username last changed; null until the first change. Choosing the first one is not a change.
-  usernameChangedAt DateTime?
+  usernameChangedAt      DateTime?
   /// Each link as lib/app/profile/links.ts rebuilds it, never the string typed. Null for none.
-  youtube           String?
-  spotify           String?
-  instagram         String?
-  bandcamp          String?
+  youtube                String?
+  spotify                String?
+  instagram              String?
+  bandcamp               String?
   /// Whether /u/<username> shows anything. Off: the page is a 404.
-  public            Boolean    @default(false)
+  public                 Boolean    @default(false)
   /// Whether the public page lists the synths they own, and the ones they want (f-profiles r2).
-  showOwned         Boolean    @default(false)
-  showWishlist      Boolean    @default(false)
+  showOwned              Boolean    @default(false)
+  showWishlist           Boolean    @default(false)
   /// When they first published each sound in the last 24 hours, pruned at each publish: what the daily cap counts
   /// (lib/app/sounds/publish.ts). Kept here, not counted from user_sound, so deleting a published sound does not give
   /// its place back.
-  recentPublishes   DateTime[] @default([])
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  recentPublishes        DateTime[] @default([])
+  /// The same for patterns (t-83, lib/app/patterns/sharing.ts): a cap of their own, so publishing patterns does not
+  /// use up the day's sounds.
+  recentPatternPublishes DateTime[] @default([])
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
 
   @@map("synth_profile")
 }
