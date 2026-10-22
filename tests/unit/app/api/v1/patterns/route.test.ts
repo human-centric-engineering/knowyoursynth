@@ -284,10 +284,17 @@ describe("another user's pattern", () => {
     expect(patterns.rows[0]).toMatchObject({ name: 'Theirs', userId: 'user-2' });
   });
 
-  it('an id that cannot be one is a 404, not looked up', async () => {
-    const res = await read(request('GET', '/api/v1/patterns/NOT_AN_ID!'), ctx('NOT_AN_ID!'));
-    expect(res.status).toBe(404);
+  it('an id that cannot be one is a 404 on every route, not looked up', async () => {
+    const bad = 'NOT_AN_ID!';
+    const responses = [
+      await read(request('GET', `/api/v1/patterns/${bad}`), ctx(bad)),
+      await change(request('PATCH', `/api/v1/patterns/${bad}`, { name: 'x' }), ctx(bad)),
+      await remove(request('DELETE', `/api/v1/patterns/${bad}`), ctx(bad)),
+    ];
+    expect(responses.map((r) => r.status)).toEqual([404, 404, 404]);
     expect(patterns.client.findFirst).not.toHaveBeenCalled();
+    expect(patterns.client.updateMany).not.toHaveBeenCalled();
+    expect(patterns.client.deleteMany).not.toHaveBeenCalled();
   });
 });
 

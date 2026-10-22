@@ -37,7 +37,7 @@ vi.mock('@/lib/api/client', () => {
     ...p,
     steps: 0,
     parts: 1,
-    problems: [],
+    problems: p.pattern ? [] : ['Saved as pattern version 2.'],
     createdAt: '2026-10-22T00:00:00.000Z',
     updatedAt: '2026-10-22T00:00:00.000Z',
   });
@@ -55,8 +55,10 @@ vi.mock('@/lib/api/client', () => {
           if (!p) throw new Error('Pattern not found');
           return detail(structuredClone(p));
         }
-        if (path.startsWith('/api/v1/synths/'))
+        if (path.startsWith('/api/v1/synths/')) {
+          if (idOf(path) === 'broken') throw new Error('Server error');
           return { sounds: server.libraries[idOf(path)] ?? [] };
+        }
         throw new Error(`unexpected GET ${path}`);
       }),
       post: vi.fn(
@@ -64,6 +66,7 @@ vi.mock('@/lib/api/client', () => {
           _path: string,
           { body }: { body: { name: string; pattern: unknown; synthId: string } }
         ) => {
+          if (body.name === 'Refused') throw new Error('The pattern does not fit.');
           const p = { id: `pat${++server.n}`, ...structuredClone(body) };
           server.patterns.set(p.id, p);
           return detail(p);
@@ -105,7 +108,13 @@ const ACID: Phrase = {
 
 let state: SeqState;
 
-function Page({ sound = null }: { sound?: OpenSoundDefault | null }) {
+function Page({
+  sound = null,
+  signedIn = true,
+}: {
+  sound?: OpenSoundDefault | null;
+  signedIn?: boolean | null;
+}) {
   const seq = useSequencer({ engine: null, ensureAudio: async () => false, riff: RIFF });
   const mine = useMyPatterns();
   state = seq;
@@ -116,12 +125,14 @@ function Page({ sound = null }: { sound?: OpenSoundDefault | null }) {
       onPlay={() => undefined}
       onStop={() => undefined}
       library={{
-        signedIn: true,
+        signedIn,
         signInHref: '/login',
         synthId: 'model-d',
         synths: [
           { id: 'model-d', name: 'Model D' },
           { id: 'tb-303', name: 'TB-303' },
+          { id: 'neutron', name: 'Neutron' },
+          { id: 'broken', name: 'Broken' },
         ],
         mine,
         sound,
@@ -285,5 +296,85 @@ describe('a sound playing a pattern by default', () => {
     );
     await act(async () => fireEvent.click(button('Play with Night bass')));
     expect(setPattern).toHaveBeenLastCalledWith(null);
+  });
+});
+
+describe('signed out, and while the session is read', () => {
+  it('offers sign-in in place of saving, and the library still opens', async () => {
+    render(<Page signedIn={false} />);
+    expect(
+      screen.getByRole('link', { name: 'Sign in to save patterns' }).getAttribute('href')
+    ).toBe('/login');
+    expect(strip().queryByRole('button', { name: 'Save to My patterns' })).toBeNull();
+    expect(strip().queryByRole('button', { name: 'My patterns' })).toBeNull();
+    await act(async () => fireEvent.click(button('Library')));
+    expect(await screen.findByRole('button', { name: 'Fat bass' })).toBeTruthy();
+  });
+
+  it('offers neither while the session is still being read', () => {
+    render(<Page signedIn={null} />);
+    expect(screen.queryByRole('link', { name: 'Sign in to save patterns' })).toBeNull();
+    expect(strip().queryByRole('button', { name: 'Save to My patterns' })).toBeNull();
+  });
+});
+
+describe('what goes wrong', () => {
+  it('says what the API said when a save is refused, and keeps the name box open', async () => {
+    render(<Page />);
+    await saveAs('Refused');
+    expect(screen.getByRole('status').textContent).toBe(
+      'Could not save the pattern. The pattern does not fit.'
+    );
+    expect(screen.getByLabelText('Name the pattern')).toBeTruthy();
+    expect(state.loaded).toBeNull();
+  });
+
+  it('opens nothing from My patterns that the sequencer cannot read, and says why', async () => {
+    server.patterns.set('patold', { id: 'patold', name: 'Old', pattern: null, synthId: 'model-d' });
+    render(<Page />);
+    const before = state.pattern;
+    await act(async () => fireEvent.click(button('My patterns')));
+    const list = await screen.findByRole('list', { name: 'My patterns' });
+    await act(async () => fireEvent.click(within(list).getByRole('button', { name: /Old/ })));
+    expect(screen.getByRole('status').textContent).toBe(
+      'Old cannot be opened: Saved as pattern version 2.'
+    );
+    expect(state.pattern).toBe(before);
+  });
+
+  it('says so when My patterns is empty', async () => {
+    render(<Page />);
+    await act(async () => fireEvent.click(button('My patterns')));
+    expect(await screen.findByText(/No patterns saved yet/)).toBeTruthy();
+  });
+
+  it('says so when a library is empty, or cannot be read', async () => {
+    render(<Page />);
+    await act(async () => fireEvent.click(button('Library')));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Synth' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Neutron' }));
+    expect(await screen.findByText('The Neutron’s library has no riffs.')).toBeTruthy();
+    fireEvent.click(screen.getByRole('combobox', { name: 'Synth' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Broken' }));
+    expect(
+      await screen.findByText('The Broken’s library could not be read. Try again.')
+    ).toBeTruthy();
+  });
+});
+
+describe('Save as', () => {
+  it('keeps the pattern held as a new one, leaving the first as it was', async () => {
+    render(<Page />);
+    await saveAs('First');
+    editStep(4);
+    await act(async () => fireEvent.click(button('Save as')));
+    expect(screen.getByLabelText<HTMLInputElement>('Name the pattern').value).toBe('First 2');
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Save' })));
+    expect([...server.patterns.values()].map((p) => p.name)).toEqual(['First', 'First 2']);
+    expect(server.patterns.get('pat1')?.pattern).not.toEqual(state.pattern);
+    expect(state.loaded).toEqual({ id: 'pat2', name: 'First 2' });
+    fireEvent.click(button('Save as'));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByLabelText('Name the pattern')).toBeNull();
   });
 });
