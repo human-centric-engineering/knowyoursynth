@@ -1193,7 +1193,51 @@ svg .kys-hit:focus-visible {
   color: var(--lcd-label);
   white-space: nowrap;
 }
-.kys-cell-value,
+.kys-cell-value {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--lcd-ink);
+  text-shadow: 0 0 6px rgb(255 166 58 / 0.45);
+  white-space: nowrap;
+}
+.kys-cell[data-unset] .kys-cell-value {
+  color: var(--lcd-dim);
+  text-shadow: none;
+}
+.kys-cell-meter {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgb(255 181 71 / 0.12);
+}
+.kys-cell-meter::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--enc, 0%);
+  border-radius: 1px;
+  background: var(--lcd-ink);
+  box-shadow: 0 0 4px rgb(255 166 58 / 0.6);
+}
+/* A select in the readout: the value in amber, a caret at its right. */
+.kys-cell-select {
+  padding-right: 22px;
+  cursor: pointer;
+}
+.kys-cell-select::after {
+  content: '';
+  position: absolute;
+  right: 9px;
+  bottom: 13px;
+  border: 4px solid transparent;
+  border-top-color: var(--lcd-dim);
+  pointer-events: none;
+}
 /* A select's list, drawn in the readout's amber rather than the browser's menu. Upward
    from the cell, or downward where there is no room above. */
 .kys-cell-dropdown {
