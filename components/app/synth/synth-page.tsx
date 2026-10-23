@@ -1811,7 +1811,7 @@ function Synth({
                         short="Sensitive"
                         icon={<Flame size={17} aria-hidden="true" />}
                         on={heatOn}
-                        title="Put a glow behind the controls where a small move changes this patch most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                        title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
                         onClick={() => setHeatOn(!heatOn)}
                       />
                     </div>

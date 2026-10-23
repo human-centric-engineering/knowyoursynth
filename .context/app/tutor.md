@@ -1,7 +1,7 @@
 # The tutor
 
-`f-tutor`. An AI tutor on the synth page that explains the sound on the panel, proposes changes
-the learner applies, and designs new sounds with their lesson (D6, plan §8). The prototype's tutor
+`f-tutor`. An AI tutor on the synth page that explains the patch on the panel, proposes changes
+the learner applies, and designs new patches with their lesson (D6, plan §8). The prototype's tutor
 (`prototype/src/ui/Tutor.jsx`) called Claude through `window.claude` and asked for JSON in the
 reply. Here it runs through Sunrise's orchestration. **The model proposes, the server validates,
 and the learner applies. The model never writes to the panel.**

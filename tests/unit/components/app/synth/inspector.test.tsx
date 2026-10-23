@@ -313,7 +313,7 @@ describe('Tooltip', () => {
     expect(within(card).getByText(`Patch setting: ${CUT_AT_INIT}`)).toBeTruthy();
   });
 
-  it('omits the sound setting when the knob is where the sound has it', () => {
+  it('omits the patch setting when the knob is where the patch has it', () => {
     tooltip({ target: def.init });
     focus(control('filter.cutoff'));
     expect(screen.queryByText(/Patch setting/)).toBeNull();
