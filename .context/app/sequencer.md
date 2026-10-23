@@ -3,7 +3,8 @@
 One sequencer works on every synth. You edit a riff step by step, starting from any riff in the library, and play it
 on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it
 (`lib/app/sequencer/`, t-78), the engine's pattern player (t-79) and the module on the synth page
-(`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82) and sharing (t-83) each have their section here.
+(`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82), sharing (t-83) and playing into it (t-86) each
+have their section here.
 The tutor reading and writing patterns (t-84) is in [`tutor.md`](./tutor.md#patterns).
 
 ## Riffs and patterns
@@ -236,9 +237,9 @@ order. The keys redraw only when the step changes.
   cell reads a name and octave too (`parseNote`: "C#3", "Db3", "E♭4").
 - **Selects** (`select.tsx`) open a list drawn in the readout's amber, not the browser's menu. Each is a combobox
   with an active descendant. The list opens upward, or downward where there is no room above.
-- **Notes played** on the piano, the computer keyboard or MIDI go on the chosen step while the sequencer is open. A
-  rest gets the note, and a step's first note becomes it. The page hands `noteOn` to `seq.noteIn`, and the module
-  edits the step chosen. Arrows move a step, Page Up and Page Down a big step (an octave for a
+- **Notes played** on the piano, the computer keyboard or MIDI go on the chosen step while the sequencer is open (in
+  **Edit step**, the Keys row's first mode: see [Playing into it](#playing-into-it)). A rest gets the note, and a
+  step's first note becomes it. The page hands `noteOn` to `seq.noteIn`, and the module edits the step chosen. Arrows move a step, Page Up and Page Down a big step (an octave for a
   note), and Home and End go to either end. A vertical drag turns one, with a mouse or a finger. One encoder's turn
   is one Undo: edits in one group within 1.2 s are one entry. Undo holds 100.
 - **Help.** Every control has the player's tooltip (name and what it does) on hover and focus. The **?** lists them all,
@@ -248,6 +249,88 @@ order. The keys redraw only when the step changes.
   it. Up to 1300px the head's controls wrap one by one, so a landscape tablet's head takes two rows, not three.
   Narrower than 900px (the bottom sheet), everything stacks. The keys go eight to a row when the module is narrower
   than 620px. Coarse pointers get 44px targets.
+
+## Playing into it
+
+The **Keys** row under the tool row says what notes played on the piano, the computer keyboard or MIDI do while the
+sequencer is open (t-86). The page hands every note to `seq.noteIn` (with a MIDI key's velocity) and every key let go
+to `seq.noteOut`. A key let go reaches the sequencer even after it has closed, so an arp key held as it closes is let
+go there.
+
+| Keys            | What a note does                                                       | Its controls              |
+| --------------- | ---------------------------------------------------------------------- | ------------------------- |
+| **Edit step**   | Goes on the chosen step, as above. The default.                        |                           |
+| **Step record** | Goes on the chosen step; the step after is chosen once every key is up | Rest, Tie                 |
+| **Live record** | While the pattern plays, goes on the step it was played on             | Quantise, Overdub/Replace |
+| **Arp**         | Plays through the pattern's steps, and is not sounded by the page      | Order, Octaves, Hold      |
+
+**Velocity.** Step and live record write a MIDI key's velocity (`playedVelocity`, to three places). A note at the
+default, 0.85 (the computer keyboard and the piano), is written with none, so it plays as a step does.
+
+### Step record
+
+`record.ts`. The keys down together are the step's chord (`writeChord`: up to six, one of each pitch). It replaces the
+step's notes and keeps its other values (accent, slide, ratchet, lanes). It is written as each key goes down, so it
+is heard while held, and one step's chord is one Undo. The step after is chosen when the last key comes up, round
+from the last step to the first.
+
+- **Rest** makes the chosen step a rest (its lanes kept, as Delete does) and moves on.
+- **Tie** holds the notes of the nearest step before it with notes on to the end of the chosen step, and makes that
+  step a rest, then moves on. Two ties hold them over two steps. A tie with only rests before it is a rest.
+
+### Live record
+
+The hook does this, because it knows where the playhead is (`createPlayhead` at `engine.frame`, as the playhead is
+drawn). A key going down notes the loop, the steps from its start, and the loop's step order and part. Its key coming
+up writes the note, with its length (`edit`, so a loop playing is sent again and the note is heard from the next time
+round). The page still sounds the key as it is played.
+
+- **Quantise on** (the default): the start goes on the nearest step, by `placeHit`. Past the middle of the last
+  step, that is the next loop's first. The length is whole steps, at least one (`liveGate`).
+- **Quantise off**: the start goes on the step it falls in, and how late it was is its `nudge` (kept below a whole
+  step). The length is as played, at least 0.1 steps.
+- Swing is read: a swung step starts late, so a note just before it falls in the step before.
+- The step is the one the loop played in that slot (its direction's order), of the part playing.
+- **Overdub** (the default) adds the note to the step's notes. A pitch played again takes its own place. A step
+  playing six keeps them.
+- **Replace** puts the note in place of the step's notes. Notes on the same step in the same loop are a chord, in
+  either mode.
+- Nothing is recorded while stopped, or for a key still down at Stop.
+- Notes recorded within 1.2 s of each other are one Undo, as an encoder's turn is.
+
+### Arp
+
+`arp.ts`. The keys held play through the pattern's steps, one note a step. Every step that would play (on, with
+notes, its condition and chance passing) plays the arp's next note in place of its own, with its first note's gate,
+velocity and nudge, and its accent, slide and ratchet: a sequenced arp. A rest is a rest. `compileLoop` takes `arp`
+(the notes in order, and where the loop before left off) and returns `arpTo`, so the arp carries on from loop to loop.
+It goes through the pattern player like any loop, so nothing is added to the engine, whose own arpeggiator is
+poly-only.
+
+- **Order** (`arpSequence`): up, down, up-down (neither end twice in a row: C E G E, round to C), as played (the order
+  the keys went down), or random (drawn from the up notes per step, after the step's own chance). **Octaves**, 1–4,
+  repeat the notes an octave up each time, leaving out any past the top of MIDI.
+- The notes go through the pattern's transpose and scale, as a step's do.
+- A change to the keys held, the order or the octaves sends the loop playing again (`patternEdit`) from the same
+  draws.
+- **Starting and stopping.** A key pressed with the pattern stopped starts it, and the last key let go stops what the
+  press started. A pattern started with Play keeps running, silent, with no keys held.
+- **Hold** is the page's Hold, the same one as the keyboard's (`ArpKeys`). With it on, keys let go keep playing. A
+  press with every key up starts a fresh set, and one while others are down joins it. Hold turned off keeps only the
+  keys still down.
+- **The page doesn't sound a key the arp takes.** `noteIn` says so, and the page sends the key no `noteOn`, and no
+  `noteOff` when it comes up.
+- **Not saved.** The order and octaves are a way of playing the pattern, not part of it, so `PatternSchema` is
+  unchanged. A saved pattern can't hold the keys, so an arp saved in one would play nothing when opened.
+- Choosing another mode lets go of the arp's keys, and the steps play their own notes again.
+
+### Tests
+
+`tests/unit/lib/app/sequencer/record.test.ts` (chords, rests, ties, placing a note quantised and not, with swing, the
+length, the velocity, overdub and replace); `arp.test.ts` (each order over 1 and 2 octaves, Hold on and off, a loop
+compiled with the arp); `tests/unit/components/app/sequencer/play-in.test.tsx` (step record through the module, live
+record against the engine's clock, the arp starting, stopping and holding); and the page test that an arp key isn't
+sounded by the page.
 
 ## My patterns
 
@@ -457,5 +540,4 @@ the tutor's Undo is the module's `undo`. From `lg` up applying it opens the modu
 
 Coming in later tasks of §21:
 
-- Playing into it: step record, live record and arp mode (t-86).
-- The tutor writing patterns (t-84), and the TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).
+- The TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).
