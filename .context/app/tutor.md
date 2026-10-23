@@ -11,7 +11,8 @@ t-55 the place a designed sound keeps its lesson once saved ([`sounds.md`](./sou
 sound's lesson_); t-56 the tutor panel on the synth page ([below](#the-panel)). `f-tutor-knowledge`
 grounds it: t-57 the databank search ([`bank.md`](./bank.md#searching)) and its tool, t-58 its
 meaning-based layer, t-59 web search through Brave ([below](#web-search)), t-60 the sources under each answer, t-61
-the eval set ([below](#the-eval-set)).
+the eval set ([below](#the-eval-set)). `f-step-sequencer` t-84 lets it read and write sequencer patterns
+([Patterns](#patterns)).
 
 ## Anti-patterns first
 
@@ -62,33 +63,34 @@ the eval set ([below](#the-eval-set)).
 
 ## Where things are
 
-| Piece                      | Location                                                                                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                                              |
-| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                                    |
-| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`                          |
-| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`                 |
-| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                         |
-| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,search-databank,web-search}.ts`, listed in `tools.ts`     |
-| Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                            |
-| An answer's sources        | `lib/app/tutor/sources.ts` (read from the searches' results), shown by `components/app/tutor/sources.tsx`                            |
-| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                           |
-| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                    |
-| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                                 |
-| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                                |
-| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                                          |
-| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                                           |
-| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                                  |
-| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                                      |
-| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                                     |
-| The eval set               | `prisma/seeds/app-knowyoursynth/data/tutor-evals.json`, seeded by `004-tutor-evals.ts`; its graders `lib/app/tutor/evals/graders.ts` |
+| Piece                      | Location                                                                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| The stream route           | `app/api/v1/tutor/stream/route.ts`, its body `lib/app/tutor/request.ts`                                                                                      |
+| The conversation to resume | `app/api/v1/tutor/conversation/route.ts`, read by `lib/app/tutor/conversation.ts`                                                                            |
+| The tutor panel            | `components/app/tutor/tutor-panel.tsx`, its turn `use-tutor-chat.ts`, its rules for tool results `apply.ts`                                                  |
+| The allowance              | `lib/app/tutor/allowance.ts`, read by `app/api/v1/tutor/allowance/route.ts`; `TUTOR_DAILY_TURNS` in `lib/app/env.ts`                                         |
+| The agent's definition     | `lib/app/tutor/agent.ts` (`TUTOR_AGENT`, slug `synth-tutor`)                                                                                                 |
+| The tools                  | `lib/app/tutor/{get-panel,describe-synth,propose-panel-change,design-sound,get-pattern,propose-pattern,search-databank,web-search}.ts`, listed in `tools.ts` |
+| A pattern edit             | `lib/app/tutor/pattern-edit.ts` (`PatternEditSchema`, `applyPatternEdit()`, `summarisePattern()`), on the server and the page                                |
+| Web search                 | `lib/app/tutor/web-search.ts`; `BRAVE_SEARCH_API_KEY` in `lib/app/env.ts`                                                                                    |
+| An answer's sources        | `lib/app/tutor/sources.ts` (read from the searches' results), shown by `components/app/tutor/sources.tsx`                                                    |
+| The databank search        | `lib/app/bank/search.ts`, also served by `app/api/v1/bank/search/route.ts`                                                                                   |
+| Its meaning-based layer    | `lib/app/bank/knowledge.ts`; the job in `lib/app/jobs.ts`; `npm run bank:reindex` (`scripts/app/bank-reindex.ts`)                                            |
+| The panel they read        | `lib/app/tutor/panel.ts` (`TutorEntityContextSchema`, `readPanel()`)                                                                                         |
+| The synth context          | `lib/app/tutor/context.ts` (`synthContext()`, `contextType: 'synth'`)                                                                                        |
+| Sections and the size cap  | `lib/app/tutor/sections.ts`                                                                                                                                  |
+| Registration               | `lib/app/platform-agents.ts`, `lib/app/capabilities.ts`, `lib/app/context-contributors.ts`                                                                   |
+| The capability rows        | `prisma/seeds/app-knowyoursynth/003-tutor-tools.ts`                                                                                                          |
+| Tests                      | `tests/unit/lib/app/tutor/`, `tests/unit/app/api/v1/tutor/`, `tests/unit/components/app/tutor/`                                                              |
+| Smoke run                  | `npm run smoke:tutor` (`scripts/smoke/tutor.ts`)                                                                                                             |
+| The eval set               | `prisma/seeds/app-knowyoursynth/data/tutor-evals.json`, seeded by `004-tutor-evals.ts`; its graders `lib/app/tutor/evals/graders.ts`                         |
 
 ## One turn
 
-1. The tutor panel sends the learner's message and the panel to `POST /api/v1/tutor/stream`.
+1. The tutor panel sends the learner's message, the panel and the sequencer's pattern to `POST /api/v1/tutor/stream`.
 2. The route checks the synth and the panel, checks the allowance (below), and calls `streamChat()` with
    `agentSlug: 'synth-tutor'`, `contextType: 'synth'`, `contextId` the synth id, and
-   `entityContext` `{ synthId, version, panel: { values, cables } }` (`TutorEntityContext`). The
+   `entityContext` `{ synthId, version, panel: { values, cables }, pattern? }` (`TutorEntityContext`). The
    same synth in both: the tools see only `entityContext` and the prompt only `contextId`, so
    nothing downstream can notice if they differ.
 3. The system prompt is the tutor's instructions, then the `LOCKED CONTEXT` the contributor builds
@@ -110,7 +112,7 @@ the eval set ([below](#the-eval-set)).
 ## The routes
 
 **`POST /api/v1/tutor/stream`**, signed in (`withAuth`; an API key works too if it has the `chat`
-scope). The body is `{ synthId, panel: { values, cables }, message, conversationId? }`: the message
+scope). The body is `{ synthId, panel: { values, cables }, pattern?, message, conversationId? }`: the message
 up to 4,000 characters, the conversation one the caller started with the tutor on this synth. The
 answer is Sunrise's chat SSE stream (`sseResponse`): `start`, `content`, `capability_result(s)`,
 `done`, or an `error` event.
@@ -125,6 +127,7 @@ Everything that can refuse a turn runs before the model is called, in this order
 | The body's shape                                                                         | 400 `VALIDATION_ERROR`                                                                                 |
 | A synth the catalogue lists (`playableSynth`, as a saved sound)                          | 400 `VALIDATION_ERROR`, path `synthId`                                                                 |
 | The panel fits its current definition (`checkPanel`, `validateSound`)                    | 400 `VALIDATION_ERROR`, each problem's path under `panel`                                              |
+| A pattern, if sent, passes `PatternSchema` (with the body's shape)                       | 400 `VALIDATION_ERROR`, each problem's path under `pattern`                                            |
 | The tutor is there and active                                                            | 503 `TUTOR_UNAVAILABLE`, a sentence the panel shows as it is                                           |
 | The tutor's own per-minute limit, `agentChatLimiter` (the admin's `rateLimitRpm`, or 10) | 429 `RATE_LIMIT_EXCEEDED`                                                                              |
 | A `conversationId` names the caller's own tutor conversation on this synth               | 404 `TUTOR_CONVERSATION_NOT_FOUND`; the panel starts a new one                                         |
@@ -208,7 +211,7 @@ A platform agent (owner ruling, 2026-10-18, journaled on `f-tutor`): registered 
 | Visibility         | `internal` (the baseline)                                            | the code's                      |
 | Temperature        | 0.4                                                                  | the code's                      |
 | Max tokens         | 8,192 (room for a designed sound, the longest reply; see `agent.ts`) | the code's                      |
-| Tools              | the six below                                                        | the code's                      |
+| Tools              | the eight below                                                      | the code's                      |
 | Provider and model | none: inherits the org's default at run time                         | the admin's                     |
 | Per-turn cap       | **$0.20** to start (BeatBuddy's)                                     | the admin's, set once on create |
 | Monthly budget     | **$50** to start                                                     | the admin's, set once on create |
@@ -247,6 +250,8 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 | `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                                       | the above, `unknown_section`, `unknown_prefix`                                                       |
 | `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                                          | the above, `empty_proposal`, `invalid_proposal`, `no_change`                                         |
 | `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                                                | the above, `invalid_design`                                                                          |
+| `get_pattern`          | none                                                              | the open pattern's settings, and one line per step that holds notes (`9: 48 g1 v0.7 acc`)                                                       | `no_pattern`, `invalid_panel`                                                                        |
+| `propose_pattern`      | `start` (`open` or `blank`), settings, `length`, `steps`          | the edit as checked, the pattern's length, how many steps it writes                                                                             | `no_pattern`, `empty_proposal`, `invalid_proposal`, `no_change`, `empty_pattern`                     |
 | `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt, its links and `matchedBy`; `search`; a `note` when none match | a bad argument only (it reads no panel)                                                              |
 | `web_search`           | `query`                                                           | at most five web results, each its `title`, `url` and `snippet`; a `note` when none match                                                       | `web_search_not_configured`, `web_search_no_user`, `web_search_allowance_spent`, `web_search_failed` |
 
@@ -267,6 +272,7 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   `{ blurb, level, category, how, steps, context, tweaks, phrase: { bpm, steps } }` as `lesson`,
   with `fromTutor: true`; the `Preset` the tool returns has the category as its first tag and a
   phrase with `loop`.
+- **`get_pattern` and `propose_pattern`**: see [Patterns](#patterns).
 - **`search_databank`** is the databank search in [`bank.md`](./bank.md#searching): by name and
   text, no AI provider. The instructions tell the tutor to call it first for any person, band,
   record or real instrument, keep to what it found, and say when it is going from memory. Six rows
@@ -283,6 +289,35 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
   it `null` (unlimited). A learner's limit is the stream route's daily allowance, which
   `web_search`, the one tool that costs per call, also counts against; Brave's host has Sunrise's
   outbound per-host limit as well (60 a minute unless `ORCHESTRATION_OUTBOUND_RATE_LIMIT` says).
+
+## Patterns
+
+t-84. The tutor reads the pattern open in the sequencer ([`sequencer.md`](./sequencer.md)) and proposes a new one, or
+an edit to it, which the learner applies or not, as a panel change.
+
+- **The page sends the pattern with every turn**, and the route checks it with `PatternSchema` and passes it on as
+  `entityContext.pattern`. A pattern names no synth, so there is nothing else to check it against. A turn with no
+  pattern sends none, and `get_pattern` says so.
+- **`get_pattern` is a summary, not the JSON.** Its settings, then one line per step that holds notes: MIDI note,
+  `g` gate in steps, `v` velocity, `n` nudge, `+` between a chord's notes, then `acc`, `slide`, `r` ratchet, `p` chance,
+  the condition, and `off` for a muted step. A rest is left out. The tool loop sends every result again on each later
+  step, so the largest library riff costs about 1,100 characters rather than its JSON's 3,700 (measured at t-84). Mod lanes are named but
+  their values are not listed.
+- **`propose_pattern` is an edit.** It starts from the open pattern (`start: 'open'`) or 16 steps of rests (`'blank'`),
+  sets any setting it names and the length (rests added at the end, as the module's resize), then writes the steps it
+  lists, counted from 1. A listed step is replaced whole: on, notes, accent, slide, ratchet and chance. It keeps the
+  step's condition and mod lane values, which the tool cannot write. Parts, the chain, conditions and lanes are the
+  learner's in the module; the tool cannot add part B.
+- **Made the same way on both sides.** The result carries the edit, not the pattern, and `applyPatternEdit`
+  (`pattern-edit.ts`) makes it on the server against the pattern the turn sent and on the page against the same one. So
+  the result stays small, and the page loads what the tool checked.
+- **Refused, never repaired.** A step past the end (with the length to set), a part the pattern does not have, a step
+  listed twice, an edit of the open pattern with none open, an empty edit (`empty_proposal`, which is also what a call
+  cut off arrives as), one that changes nothing (`no_change`), and a pattern with no note to play (`empty_pattern`).
+  Anything else the result breaks is `PatternSchema`'s refusal, with its path.
+- **Without a panel.** The tool reads no synth, so `start: 'blank'` works on a turn with no `entityContext`, as an eval
+  run is.
+- **No cost of its own.** A turn that proposes a pattern counts once, as any turn; only `web_search` counts per call.
 
 ## Web search
 
@@ -417,7 +452,8 @@ them on the same seed rather than at the next maintenance tick. Its hash takes i
 every database so the rows match the classes, and reconnect any MCP client that cached the tool
 list. MCP clients see a capability only once an admin exposes it on the MCP Tools page (an
 `McpExposedTool` row); the tutor's tools are not exposed, and would only read and propose if they
-were. Without `entityContext` every one of them refuses with `no_panel`.
+were. Without `entityContext` the panel tools refuse with `no_panel` and `get_pattern` with `no_pattern`;
+`propose_pattern` can still write a new pattern, which nothing would then apply.
 
 ## Smoke run
 
@@ -441,13 +477,14 @@ through the route, and deferred again by the owner (2026-10-18). Record each run
 
 ## The eval set
 
-`f-tutor-knowledge` t-61. A Sunrise dataset, **Tutor: sourcing and scope**, and four graders that score whether the
-tutor sources its answers and stays on topic, so a change to its instructions or its model that sets it inventing
+`f-tutor-knowledge` t-61. A Sunrise dataset, **Tutor: sourcing and scope**, and five graders that score whether the
+tutor sources its answers, stays on topic and writes a pattern when asked for one (t-84), so a change to its instructions or its model that sets it inventing
 again shows as a lower number.
 
 - **The questions** are in `prisma/seeds/app-knowyoursynth/data/tutor-evals.json`, five kinds: people, records and
   instruments in the databank (`databank`), questions only the meaning-based layer finds (`meaning`), music questions
-  the databank can't answer (`web`), general sound design (`general`), and off-topic (`off_topic`). A case's
+  the databank can't answer (`web`), general sound design (`general`), off-topic (`off_topic`), and requests for a
+  sequencer pattern (`pattern`). A case's
   expectation is its `expect`, written to the case's `expectedOutput` as JSON, because that is the only field of a
   case Sunrise passes a grader. Its kind is also `metadata.category`.
 - **`004-tutor-evals` writes it** into the install org under the id `kys-tutor-evals`, checked against Sunrise's
@@ -465,6 +502,7 @@ again shows as a lower number.
 | `tutor_databank_found`     | `databank`, `meaning`                                | a `search_databank` call found one of the case's rows, so the panel links it   |
 | `tutor_web_links`          | `web`, and any case where `web_search` ran           | a `web_search` call returned a link; null when every call refused (not set up) |
 | `tutor_declined_off_topic` | `off_topic`                                          | the answer declines in under 500 characters, and nothing was searched          |
+| `tutor_pattern_proposed`   | `pattern`                                            | a `propose_pattern` call came back with a pattern                              |
 | `tutor_own_knowledge`      | a turn no search sourced, unless it needed no search | the answer says it is from the tutor's own knowledge                           |
 
 **What a search found reaches the graders through a seam.** Sunrise's eval worker passed a grader only each tool
@@ -475,7 +513,9 @@ would show (`sourcesPreview` in `sources.ts`), in place of the default's first 4
 cut a page of rows off mid-row. The same preview is what an admin reads in a conversation's trace.
 
 **Panel changes are not in this set.** Sunrise's batch eval sends each case as a bare message, with no synth context,
-so `get_panel` and the tools after it refuse with `no_panel`. Those stay with the tool tests and `smoke:tutor`.
+so `get_panel` and the tools after it refuse with `no_panel`. Those stay with the tool tests and `smoke:tutor`. For the
+same reason the `pattern` cases ask only for new patterns (`start: 'blank'`, which needs no panel); an edit to the open
+pattern ("make the second half busier") is the owner's check in the app.
 
 ### Running it
 
@@ -485,19 +525,19 @@ so `get_panel` and the tools after it refuse with `no_panel`. Those stay with th
 2. For the `web` cases, web search turned on ([Web search](#web-search)). Without it `tutor_web_links` scores them
    null, and `tutor_own_knowledge` checks the tutor said so.
 3. **Raise the allowance for the run.** Each case is a tutor turn for the admin who queues it, and each web search one
-   more, so 41 cases pass the default 30 a day and `web_search` starts refusing partway. Set `TUTOR_DAILY_TURNS=200`
+   more, so 46 cases pass the default 30 a day and `web_search` starts refusing partway. Set `TUTOR_DAILY_TURNS=200`
    for the run, then put it back.
 4. Admin → Orchestration → Evaluations: a new run with subject the agent **Synth Tutor**, dataset **Tutor: sourcing
-   and scope**, and the four `tutor_*` metrics. The worker drains it on the maintenance tick.
+   and scope**, and the five `tutor_*` metrics. The worker drains it on the maintenance tick.
 5. Read each grader's pass rate, and the reasoning on each failed case: a grader quotes what the tutor said or found.
-   A run costs 41 tutor turns: at most about $8 at the $0.20 per-turn cap, and usually far less.
+   A run costs 46 tutor turns: at most about $9 at the $0.20 per-turn cap, and usually far less.
 
 **The first run, and the pass threshold it sets, are the owner's end-of-feature check** (the feature's done-when),
 since they need a provider. Record each run here. A case that fails the first run may be the case that is wrong, not
 the tutor: read its reasoning before reading it as a regression.
 
-| Date | Provider and model | Databank found | Web links | Declined | Own knowledge |
-| ---- | ------------------ | -------------- | --------- | -------- | ------------- |
+| Date | Provider and model | Databank found | Web links | Declined | Pattern | Own knowledge |
+| ---- | ------------------ | -------------- | --------- | -------- | ------- | ------------- |
 
 ## The panel
 
@@ -573,6 +613,12 @@ above the number of synths.
   the turn has ended, while that design is open and the panel still shows it. A turn that designs
   two opens each in turn, and one Undo goes back to before the first. Undoing a later turn's design
   opens the earlier one again, so its Undo comes back: designs undo in the order they opened.
+- **A pattern** (t-84) waits for Apply too, under its own chip: "Writes steps 9–16", and "Apply to the pattern", or
+  "Load into the sequencer" for a new one. One a turn, the last proposed: a pattern is whole, so two don't combine.
+  It is for the pattern the turn sent, and is offered only while the sequencer still holds that one. Apply puts it in
+  the sequencer as an edit there would, so the module's own Undo takes it back too, and from `lg` up opens the module
+  to show it (below `lg` its sheet would cover the tutor's). The chip's **Undo** puts back the pattern it replaced,
+  while the sequencer still holds what it applied.
 - **Save keeps the lesson and the mark.** With a designed sound open, Save… makes a new sound named
   after it and sends its lesson with `fromTutor: true`; once saved, it is one of the user's, with its
   lesson ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)).

@@ -4,6 +4,7 @@ One sequencer works on every synth. You edit a riff step by step, starting from 
 on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it
 (`lib/app/sequencer/`, t-78), the engine's pattern player (t-79) and the module on the synth page
 (`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82) and sharing (t-83) each have their section here.
+The tutor reading and writing patterns (t-84) is in [`tutor.md`](./tutor.md#patterns).
 
 ## Riffs and patterns
 
@@ -442,6 +443,13 @@ credit, the public read, reports, unlist and restore across every public read);
 `tests/unit/components/app/sequencer/synth-page-shared-pattern.test.tsx` (the page opens and plays the pattern signed
 out, keeps it when a sound is chosen, Play it on, Save a copy and the owner's view); the sitemap, export and profile
 tests.
+
+## The tutor's patterns
+
+The tutor reads the pattern the module holds and proposes a new one or an edit to it (t-84,
+[`tutor.md`](./tutor.md#patterns)). The page sends the pattern with each turn. A proposal the learner applies goes
+through `edit`, as any edit in the module does, so the module's Undo takes it back and Save saves it as the pattern it
+was loaded as. From `lg` up applying it opens the module.
 
 ## Not yet
 

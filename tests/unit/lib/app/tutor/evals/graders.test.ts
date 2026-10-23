@@ -14,6 +14,7 @@ import {
   gradeDatabankFound,
   gradeDeclinedOffTopic,
   gradeOwnKnowledgeLabelled,
+  gradePatternProposed,
   gradeWebLinks,
   type TutorExpectation,
 } from '@/lib/app/tutor/evals/graders';
@@ -223,12 +224,43 @@ describe('tutor_own_knowledge', () => {
   });
 });
 
+describe('tutor_pattern_proposed (t-84)', () => {
+  const pattern: TutorExpectation = { kind: 'pattern' };
+  const call = (success: boolean): ToolCall => ({
+    slug: 'propose_pattern',
+    args: { start: 'blank' },
+    success,
+    ...(success ? {} : { errorCode: 'invalid_proposal' }),
+  });
+
+  it('passes a pattern request that ended with a pattern, after a refusal it corrected', () => {
+    expect(
+      gradePatternProposed(input(pattern, 'Here is a riff.', [call(false), call(true)]))
+    ).toMatchObject({ score: 1, passed: true });
+  });
+
+  it('fails one answered in words, or with only refused calls, naming the refusal', () => {
+    expect(gradePatternProposed(input(pattern, 'Play C, then E…'))).toMatchObject({
+      passed: false,
+      reasoning: 'propose_pattern was not called.',
+    });
+    const r = gradePatternProposed(input(pattern, '…', [call(false)]));
+    expect(r).toMatchObject({ passed: false });
+    expect(r.reasoning).toContain('invalid_proposal');
+  });
+
+  it('scores null on a case that is not a pattern request', () => {
+    expect(gradePatternProposed(input(databank, '…', [call(true)])).score).toBeNull();
+  });
+});
+
 describe('TUTOR_GRADERS', () => {
-  it('registers the four as heuristic graders that need no reference', async () => {
+  it('registers the five as heuristic graders that need no reference', async () => {
     expect(TUTOR_GRADERS.map((g) => g.slug)).toEqual([
       'tutor_databank_found',
       'tutor_web_links',
       'tutor_declined_off_topic',
+      'tutor_pattern_proposed',
       'tutor_own_knowledge',
     ]);
     for (const g of TUTOR_GRADERS) {

@@ -6,7 +6,7 @@
  * proposal waits for the learner's Apply rather than landing as it arrives, and a designed sound opens as it arrives,
  * as the prototype's did.
  *
- * - **A turn** posts `{ synthId, panel, message, conversationId? }` to `POST /api/v1/tutor/stream` and reads Sunrise's
+ * - **A turn** posts `{ synthId, panel, pattern, message, conversationId? }` to `POST /api/v1/tutor/stream` and reads Sunrise's
  *   chat SSE through `parseChatStreamEvent`. `content` builds the reply and `status` shows under it.
  * - **The conversation resumes.** On opening, the panel reads the learner's latest tutor conversation on this synth
  *   (`GET /api/v1/tutor/conversation`) and carries it on, so a visit does not add one more against the admin's
@@ -18,6 +18,8 @@
  * - **An answer shows its sources**: the databank rows and web pages the turn's searches found (`f-tutor-knowledge`
  *   t-60), read from each `search_databank` and `web_search` result as it arrives, and from a resumed conversation's
  *   stored ones, which the conversation read attaches to their answer.
+ * - **A pattern waits for Apply too** (t-84), and is for the pattern the turn sent: it applies while the sequencer
+ *   still holds that one, and its Undo puts back the one it replaced while the sequencer still holds what it applied.
  * - **A failure stays in the panel.** Every error ends the turn with a line in the transcript, and nothing else on the
  *   page waits on a turn.
  */
@@ -32,12 +34,15 @@ import {
   combine,
   panelInput,
   readDesign,
+  readPatternProposal,
   readProposal,
   samePanel,
+  type PatternProposal,
   type Proposal,
   type TutorDesign,
 } from '@/components/app/tutor/apply';
 import { apiClient } from '@/lib/api/client';
+import type { Pattern } from '@/lib/app/sequencer/pattern';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import {
@@ -46,6 +51,7 @@ import {
   TutorSourceSchema,
   type TutorSource,
 } from '@/lib/app/tutor/sources';
+import { samePattern } from '@/lib/app/tutor/pattern-edit';
 import { logger } from '@/lib/logging';
 
 /** What the page lends the tutor: the panel as it is now, and the two ways the tutor may change it. */
@@ -58,6 +64,10 @@ export interface TutorHost {
   setPanel: (panel: PanelState) => void;
   /** Open a designed sound on the panel with its lesson. Returns what puts back what was there before. */
   openDesign: (design: TutorDesign) => () => void;
+  /** The pattern open in the sequencer, or null when there is none. */
+  pattern: Pattern | null;
+  /** Put this pattern in the sequencer, as an edit there would. */
+  setPattern: (pattern: Pattern) => void;
 }
 
 /** A proposal the turn ended with, and whether it is on the panel. */
@@ -67,6 +77,15 @@ export interface ProposalChip {
   basis: PanelState;
   /** While applied: the panel before (what Undo restores) and after (what makes Undo still mean it). */
   applied: { before: PanelState; after: PanelState } | null;
+}
+
+/** A pattern the turn ended with, and whether it is in the sequencer. */
+export interface PatternChip {
+  change: PatternProposal;
+  /** The pattern the turn sent, which the proposal was made from. */
+  basis: Pattern | null;
+  /** While applied: the pattern it replaced, which Undo puts back. */
+  applied: { before: Pattern | null } | null;
 }
 
 /** The sound(s) a turn designed and opened. */
@@ -90,6 +109,7 @@ export interface TutorMessage {
   /** The tutor is still answering: its proposal waits for the turn's last step before it can be applied. */
   answering?: boolean;
   proposal?: ProposalChip;
+  pattern?: PatternChip;
   design?: DesignChip;
   /** What the turn's searches found, in the order found. None means the answer is the tutor's own knowledge. */
   sources?: TutorSource[];
@@ -192,6 +212,10 @@ function httpError(status: number, code: string | null, message: string | null):
   return TUTOR_ERRORS.generic;
 }
 
+/** Whether the sequencer, holding `now`, holds `p`: the same pattern, or no pattern in both. */
+const holds = (now: Pattern | null, p: Pattern | null) =>
+  now === p || (!!now && !!p && samePattern(now, p));
+
 let nextId = 0;
 const newId = () => `t${++nextId}`;
 
@@ -199,6 +223,8 @@ const newId = () => `t${++nextId}`;
 interface Turn {
   assistantId: string;
   basis: PanelState;
+  /** The pattern the turn sent. */
+  pattern: Pattern | null;
   /** A design opened this turn: what one Undo calls to go back to before the first. */
   undo: (() => void) | null;
 }
@@ -224,6 +250,12 @@ export interface TutorChat {
   /** Whether the proposal chip's Undo still means that change: the panel still shows it. */
   canUndoProposal: (m: TutorMessage) => boolean;
   undoProposal: (m: TutorMessage) => void;
+  /** As `canApply`, for the turn's pattern: the sequencer still holds the pattern it was made from. */
+  canApplyPattern: (m: TutorMessage) => boolean;
+  applyPattern: (m: TutorMessage) => void;
+  /** Whether the pattern chip's Undo still means it: the sequencer still holds the pattern it applied. */
+  canUndoPattern: (m: TutorMessage) => boolean;
+  undoPattern: (m: TutorMessage) => void;
   /**
    * Whether the design chip's Undo still means it: the turn has finished (a later step may open another design, which
    * the same Undo takes back too), that design is open and the panel still shows it.
@@ -331,6 +363,17 @@ export function useTutorChat(host: TutorHost): TutorChat {
           proposal: { change, basis: turn.basis, applied: null },
         }));
       }
+      // Patterns do not combine: each is a whole pattern, so the last one proposed is the one offered.
+      const patterns = results.flatMap((r) => {
+        const p = readPatternProposal(r.capabilitySlug, r.result, turn.pattern);
+        return p ? [p] : [];
+      });
+      const lastPattern = patterns[patterns.length - 1];
+      if (lastPattern)
+        patch(turn.assistantId, (m) => ({
+          ...m,
+          pattern: { change: lastPattern, basis: turn.pattern, applied: null },
+        }));
       for (const r of results) {
         const design = readDesign(def, r.capabilitySlug, r.result);
         if (!design) continue;
@@ -367,6 +410,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
         body: JSON.stringify({
           synthId,
           panel: panelInput(turn.basis),
+          ...(turn.pattern ? { pattern: turn.pattern } : {}),
           message,
           ...(conversationId.current ? { conversationId: conversationId.current } : {}),
         }),
@@ -454,7 +498,12 @@ export function useTutorChat(host: TutorHost): TutorChat {
       const message = text.trim();
       if (!message || busy || resuming) return;
       const host = hostRef.current;
-      const turn: Turn = { assistantId: newId(), basis: host.panel, undo: null };
+      const turn: Turn = {
+        assistantId: newId(),
+        basis: host.panel,
+        pattern: host.pattern,
+        undo: null,
+      };
       setBusy(true);
       setStatus(null);
       setMessages((prev) => [
@@ -541,6 +590,43 @@ export function useTutorChat(host: TutorHost): TutorChat {
     [patch]
   );
 
+  const canApplyPattern = useCallback(
+    (m: TutorMessage) =>
+      !m.answering && !!m.pattern && !m.pattern.applied && holds(host.pattern, m.pattern.basis),
+    [host.pattern]
+  );
+
+  const applyPattern = useCallback(
+    (m: TutorMessage) => {
+      const h = hostRef.current;
+      const p = m.pattern;
+      if (m.answering || !p || p.applied || !holds(h.pattern, p.basis)) return;
+      const before = h.pattern;
+      h.setPattern(p.change.pattern);
+      patch(m.id, (x) =>
+        x.pattern ? { ...x, pattern: { ...x.pattern, applied: { before } } } : x
+      );
+    },
+    [patch]
+  );
+
+  const canUndoPattern = useCallback(
+    (m: TutorMessage) =>
+      !!m.pattern?.applied?.before && holds(host.pattern, m.pattern.change.pattern),
+    [host.pattern]
+  );
+
+  const undoPattern = useCallback(
+    (m: TutorMessage) => {
+      const p = m.pattern;
+      const before = p?.applied?.before;
+      if (!p || !before || !holds(hostRef.current.pattern, p.change.pattern)) return;
+      hostRef.current.setPattern(before);
+      patch(m.id, (x) => (x.pattern ? { ...x, pattern: { ...x.pattern, applied: null } } : x));
+    },
+    [patch]
+  );
+
   const canUndoDesign = useCallback(
     (m: TutorMessage) => {
       const d = m.design;
@@ -578,6 +664,10 @@ export function useTutorChat(host: TutorHost): TutorChat {
     apply,
     canUndoProposal,
     undoProposal,
+    canApplyPattern,
+    applyPattern,
+    canUndoPattern,
+    undoPattern,
     canUndoDesign,
     undoDesign,
   };

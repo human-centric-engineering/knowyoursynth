@@ -1,6 +1,6 @@
 {
   "name": "Tutor: sourcing and scope",
-  "description": "The synth tutor's eval set (f-tutor-knowledge t-61): databank, meaning-based, web, general sound-design and off-topic questions. Each case's expected output is the expectation the tutor_* graders read. Written by the seed: edit prisma/seeds/app-knowyoursynth/data/tutor-evals.json, not this dataset.",
+  "description": "The synth tutor's eval set (f-tutor-knowledge t-61): databank, meaning-based, web, general sound-design and off-topic questions, and requests for a sequencer pattern (t-84). Each case's expected output is the expectation the tutor_* graders read. Written by the seed: edit prisma/seeds/app-knowyoursynth/data/tutor-evals.json, not this dataset.",
   "cases": [
     {
       "input": "Who designed the Roland TB-303?",
@@ -274,6 +274,36 @@
       "input": "Write me a Python function that sorts a list.",
       "expect": {
         "kind": "off_topic"
+      }
+    },
+    {
+      "input": "Write me a 16-step acid bassline for the sequencer.",
+      "expect": {
+        "kind": "pattern"
+      }
+    },
+    {
+      "input": "Give me a four-on-the-floor kick pattern I can play in the sequencer.",
+      "expect": {
+        "kind": "pattern"
+      }
+    },
+    {
+      "input": "Make a slow arpeggio pattern over an A minor chord.",
+      "expect": {
+        "kind": "pattern"
+      }
+    },
+    {
+      "input": "Write a syncopated funk bassline pattern with a couple of accents.",
+      "expect": {
+        "kind": "pattern"
+      }
+    },
+    {
+      "input": "Can you put a simple two-bar chord progression into the sequencer?",
+      "expect": {
+        "kind": "pattern"
       }
     }
   ]

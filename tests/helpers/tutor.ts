@@ -4,6 +4,7 @@
  *
  * @see lib/app/tutor/panel.ts · lib/app/tutor/allowance.ts
  */
+import { newPattern, type Pattern } from '@/lib/app/sequencer/pattern';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { CapabilityContext } from '@/lib/orchestration/capabilities/types';
@@ -15,10 +16,18 @@ export function synth(id: string): AppSynthDef {
   return def;
 }
 
+/** A 16-step pattern as the sequencer holds one: a note on steps 1 and 9, the second accented, at 100 BPM. */
+export function testPattern(): Pattern {
+  const p = newPattern(16, '1/16', 100);
+  p.parts[0].steps[0] = { on: true, notes: [{ note: 36, gate: 2 }] };
+  p.parts[0].steps[8] = { on: true, notes: [{ note: 48, gate: 1, velocity: 0.7 }], accent: true };
+  return p;
+}
+
 /** A tool's context for this panel on this synth: values over the init, and the cables in. */
 export function panelContext(
   def: AppSynthDef,
-  panel: { values?: ControlValues; cables?: CablePair[] } = {},
+  panel: { values?: ControlValues; cables?: CablePair[]; pattern?: Pattern } = {},
   overrides: Partial<CapabilityContext> = {}
 ): CapabilityContext {
   return {
@@ -28,6 +37,7 @@ export function panelContext(
       synthId: def.id,
       version: def.version,
       panel: { values: panel.values ?? {}, cables: panel.cables ?? [] },
+      ...(panel.pattern ? { pattern: panel.pattern } : {}),
     },
     ...overrides,
   };

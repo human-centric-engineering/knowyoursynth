@@ -40,6 +40,7 @@ import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
 import type { PublicSound, UserSoundDetail } from '@/lib/app/sounds/data';
 import type { PublicPattern } from '@/lib/app/patterns/data';
+import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
@@ -1222,6 +1223,16 @@ function Synth({
     (p: PanelState) => patch((s) => ({ ...s, values: p.values, cables: p.cables })),
     [patch]
   );
+  // A pattern the learner applied from the tutor lands as an edit in the sequencer would, so its own Undo takes it back
+  // too. From `lg` up the module opens to show it; below, its sheet would cover the tutor's, so it waits for the button.
+  const { edit: seqEdit } = seq;
+  const setTutorPattern = useCallback(
+    (p: Pattern) => {
+      seqEdit(p);
+      if (!small) setSeqOpen(true);
+    },
+    [seqEdit, small]
+  );
   const tutorPanel = useMemo(
     () => ({ values: sess.values, cables: sess.cables }),
     [sess.values, sess.cables]
@@ -1631,6 +1642,8 @@ function Synth({
       signInHref={signInHref}
       setPanel={setTutorPanel}
       openDesign={openDesign}
+      pattern={seq.pattern}
+      setPattern={setTutorPattern}
       ask={tutorAsk}
       fill
     />

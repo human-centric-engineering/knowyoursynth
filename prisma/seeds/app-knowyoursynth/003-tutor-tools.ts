@@ -66,6 +66,18 @@ export const TUTOR_TOOL_ROWS: Record<
       'Designs a whole sound with its lesson, checked against the synth. The learner keeps it or not; the tool changes nothing.',
     executionHandler: 'DesignSoundCapability',
   },
+  get_pattern: {
+    name: 'Tutor: read the pattern',
+    description:
+      'Reads the pattern open in the sequencer, as the tutor route passed it, as its settings and one line per step that holds notes. Read-only.',
+    executionHandler: 'GetPatternCapability',
+  },
+  propose_pattern: {
+    name: 'Tutor: propose a pattern',
+    description:
+      'Proposes a pattern for the sequencer, new or an edit to the open one, checked against the pattern rules. The learner applies it; the tool changes nothing.',
+    executionHandler: 'ProposePatternCapability',
+  },
   search_databank: {
     name: 'Tutor: search the databank',
     description:
@@ -85,6 +97,8 @@ const unit: SeedUnit = {
   hashInputs: [
     ...tsIn('lib/app/tutor'),
     '../../../lib/app/synths/contract.ts',
+    // propose_pattern's definition advertises the pattern model's limits and lists.
+    '../../../lib/app/sequencer/pattern.ts',
     '../../../lib/app/bank/read.ts',
     // search_databank's definition advertises its MAX_QUERY_LENGTH.
     '../../../lib/app/bank/search.ts',

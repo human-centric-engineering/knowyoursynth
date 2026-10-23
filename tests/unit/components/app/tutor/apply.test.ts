@@ -9,18 +9,29 @@ import { describe, expect, it } from 'vitest';
 import {
   applyProposal,
   combine,
+  patternLabel,
+  patternRows,
   proposalLabel,
   proposalRows,
   readDesign,
+  readPatternProposal,
   readProposal,
   samePanel,
+  stepRanges,
   type Proposal,
 } from '@/components/app/tutor/apply';
+import { ProposePatternCapability } from '@/lib/app/tutor/propose-pattern';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
 import type { CablePair, Control } from '@/lib/app/synths/contract';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
-import { darkBassDesign, manyCables, panelContext, synth } from '@/tests/helpers/tutor';
+import {
+  darkBassDesign,
+  manyCables,
+  panelContext,
+  synth,
+  testPattern,
+} from '@/tests/helpers/tutor';
 
 const modelD = synth('model-d');
 const pro1 = synth('pro-1');
@@ -265,5 +276,55 @@ describe('the chip', () => {
     expect(rows).toHaveLength(2);
     expect(rows[0]).toMatch(/^CUTOFF.*: .+ → .+$/i);
     expect(rows[1]).toMatch(/^Unplug .+ → .+$/);
+  });
+});
+
+describe('readPatternProposal (t-84)', () => {
+  const tool = new ProposePatternCapability();
+  const open = testPattern();
+  const resultFor = (args: unknown) =>
+    tool.execute(tool.validate(args), panelContext(synth('model-d'), { pattern: open }));
+  const edit = { start: 'open', steps: [{ step: 16, notes: [{ note: 39, gate: 1 }] }] };
+
+  it("makes the tool's own result into the pattern, from the pattern the turn sent", async () => {
+    const p = readPatternProposal('propose_pattern', await resultFor(edit), open);
+    expect(p?.pattern.parts[0].steps[15]).toEqual({ on: true, notes: [{ note: 39, gate: 1 }] });
+    expect(p?.pattern.parts[0].steps.slice(0, 15)).toEqual(open.parts[0].steps.slice(0, 15));
+    expect(p && patternLabel(p)).toBe('Apply to the pattern');
+    expect(p && patternRows(p)).toEqual(['Writes step 16']);
+  });
+
+  it('takes nothing from a refusal, another tool, or an edit the basis cannot take', async () => {
+    const good = await resultFor(edit);
+    expect(readPatternProposal('propose_panel_change', good, open)).toBeNull();
+    expect(
+      readPatternProposal('propose_pattern', await resultFor({ start: 'open' }), open)
+    ).toBeNull();
+    // made against a 16-step pattern, it does not fit an 8-step one
+    const shorter = { ...open, parts: [{ steps: open.parts[0].steps.slice(0, 8) }] };
+    expect(readPatternProposal('propose_pattern', good, shorter)).toBeNull();
+    // an edit of the open pattern, with none held
+    expect(readPatternProposal('propose_pattern', good, null)).toBeNull();
+    // a result that does not carry an edit the schema takes
+    const forged = { success: true, data: { edit: { start: 'open', chain: [0, 1] } } };
+    expect(readPatternProposal('propose_pattern', forged, open)).toBeNull();
+  });
+
+  it('says what a new pattern is and which steps it writes, as runs', async () => {
+    const result = await resultFor({
+      start: 'blank',
+      length: 32,
+      bpm: 90,
+      swing: 58,
+      steps: [1, 2, 3, 4, 9, 17, 18].map((step) => ({ step, notes: [{ note: 40, gate: 1 }] })),
+    });
+    const p = readPatternProposal('propose_pattern', result, open);
+    expect(p && patternLabel(p)).toBe('Load into the sequencer');
+    expect(p && patternRows(p)).toEqual([
+      'New pattern: 32 steps of 1/16 at 90 BPM',
+      'Swing: 58',
+      'Writes steps 1–4, 9, 17–18',
+    ]);
+    expect(stepRanges([5, 3, 4, 10])).toBe('3–5, 10');
   });
 });

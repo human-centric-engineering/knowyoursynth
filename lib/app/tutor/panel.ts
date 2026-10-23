@@ -12,17 +12,22 @@
  * the same whoever sent it, so no tool reads `CapabilityContext.userId` or takes a user from its arguments.
  */
 import { z } from 'zod';
+import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { PanelInputSchema, SynthIdSchema } from '@/lib/app/sounds/data';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validateSound } from '@/lib/app/synths/validate';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { CapabilityContext } from '@/lib/orchestration/capabilities/types';
 
-/** What the stream route passes as `entityContext`: the synth, the definition version, and the panel. */
+/**
+ * What the stream route passes as `entityContext`: the synth, the definition version, the panel, and the pattern open
+ * in the sequencer (t-84), which a page that has none leaves out.
+ */
 export const TutorEntityContextSchema = z.object({
   synthId: SynthIdSchema,
   version: z.number().int().positive(),
   panel: PanelInputSchema,
+  pattern: PatternSchema.optional(),
 });
 export type TutorEntityContext = z.input<typeof TutorEntityContextSchema>;
 
@@ -101,6 +106,32 @@ export function readPanel(context: CapabilityContext): PanelRead {
     ok: true,
     panel: { def, values: { ...def.init, ...checked.value.values }, cables: checked.value.cables },
   };
+}
+
+export type PatternRead =
+  { ok: true; pattern: Pattern | null } | { ok: false; code: 'invalid_panel'; message: string };
+
+/**
+ * The pattern open in the sequencer this turn, checked as `readPanel` checks the panel; `null` when none came with it.
+ * No synth is read: a pattern is not tied to one, so a turn with no panel at all (an eval run) can still write a new
+ * pattern.
+ */
+export function readOpenPattern(context: CapabilityContext): PatternRead {
+  if (context.entityContext === undefined) return { ok: true, pattern: null };
+  const parsed = z.object({ pattern: PatternSchema.optional() }).safeParse(context.entityContext);
+  if (!parsed.success)
+    return {
+      ok: false,
+      code: 'invalid_panel',
+      message: refusal(
+        'The pattern that came with this conversation is not one the sequencer can hold:',
+        parsed.error.issues.map((issue) => ({
+          path: issue.path.map(String).join('.'),
+          message: issue.message,
+        }))
+      ),
+    };
+  return { ok: true, pattern: parsed.data.pattern ?? null };
 }
 
 /** The values that differ from the synth's init, in the definition's control order. */

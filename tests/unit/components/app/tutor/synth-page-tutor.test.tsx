@@ -24,6 +24,8 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
 import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
+import { ProposePatternCapability } from '@/lib/app/tutor/propose-pattern';
+import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { TUTOR_ERRORS } from '@/components/app/tutor/use-tutor-chat';
 import { OWN_KNOWLEDGE } from '@/components/app/tutor/sources';
 import type { DatabankSearchData } from '@/lib/app/tutor/search-databank';
@@ -161,6 +163,7 @@ const frame = (e: Event) => `event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`;
 interface TurnBody {
   synthId: string;
   panel: { values: ControlValues; cables: CablePair[] };
+  pattern?: Pattern;
   message: string;
   conversationId?: string;
 }
@@ -511,6 +514,77 @@ describe('a proposal', () => {
     expect(
       screen.getAllByRole('slider', { name: /EMPHASIS/ })[0].getAttribute('aria-valuenow')
     ).toBe('4');
+  });
+});
+
+// ── a pattern (t-84) ─────────────────────────────────────────────────────────
+
+describe('a pattern', () => {
+  const patternTool = new ProposePatternCapability();
+  /** "Make the end busier": the last step of the pattern the turn sent gets a note. The turns after it just answer. */
+  const busier = () => {
+    let turns = 0;
+    answer(async (body) => {
+      turns++;
+      if (turns > 1) return [start, { type: 'content', delta: 'Sure.' }, done];
+      const result = await patternTool.execute(
+        patternTool.validate({
+          start: 'open',
+          steps: [
+            {
+              step: body.pattern?.parts[0].steps.length ?? 1,
+              notes: [{ note: 31, gate: 1 }],
+              accent: true,
+            },
+          ],
+        }),
+        panelContext(def, { ...body.panel, pattern: body.pattern })
+      );
+      return [
+        start,
+        { type: 'capability_result', capabilitySlug: 'propose_pattern', result },
+        done,
+      ];
+    });
+  };
+  /** The pattern the page sends with each turn: the one the sequencer holds. */
+  const sentPattern = (i: number) => sentBodies()[i]?.pattern;
+
+  it('sends the open pattern, applies the proposal into the sequencer, and Undo puts the old one back', async () => {
+    busier();
+    page();
+    await ask('Make the end busier');
+
+    const apply = await within(tutor()).findByRole('button', { name: 'Apply to the pattern' });
+    const before = sentPattern(0);
+    // The sound's one-beat riff, as the sequencer imported it.
+    const last = before?.parts[0].steps.length ?? 0;
+    expect(last).toBeGreaterThan(1);
+    expect(within(tutor()).getByText(`Writes step ${last}`)).toBeTruthy();
+    expect(screen.queryByRole('region', { name: 'Sequencer' })).toBeNull();
+
+    fireEvent.click(apply);
+    expect(within(tutor()).getByText('In the sequencer')).toBeTruthy();
+    // From `lg` up the module opens to show it.
+    expect(screen.getByRole('region', { name: 'Sequencer' })).toBeTruthy();
+    await ask('And now?');
+    await waitFor(() => expect(sentBodies()).toHaveLength(2));
+    const after = sentPattern(1);
+    expect(after?.parts[0].steps[last - 1]).toEqual({
+      on: true,
+      notes: [{ note: 31, gate: 1 }],
+      accent: true,
+    });
+    expect(after?.parts[0].steps.slice(0, last - 1)).toEqual(
+      before?.parts[0].steps.slice(0, last - 1)
+    );
+
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Undo' }));
+    // back as it was, so it can go on again
+    expect(within(tutor()).getByRole('button', { name: 'Apply to the pattern' })).toBeEnabled();
+    await ask('And now?');
+    await waitFor(() => expect(sentBodies()).toHaveLength(3));
+    expect(sentPattern(2)).toEqual(before);
   });
 });
 
