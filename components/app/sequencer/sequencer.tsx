@@ -15,6 +15,8 @@
  * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, under the keys. **Mod** shows them.
  *
  * - The patterns strip (`pattern-library.tsx`, t-81): save to My patterns, open one, or start from any synth's library.
+ * - Playing into it (t-86): the Keys row says what notes played do. They edit the chosen step, step record (a note or
+ *   chord on the chosen step, then the next), live record over the loop, or play the arp through the steps.
  *
  * The pattern, its Undo and the transport are the page's (`use-sequencer.ts`), so closing the module loses nothing
  * and the bar's play button and this one are one transport. The rules the pattern plays by are in
@@ -91,6 +93,16 @@ import {
   PatternLibrary,
   type PatternLibraryProps,
 } from '@/components/app/sequencer/pattern-library';
+import { ARP_ORDERS, MAX_ARP_OCTAVES } from '@/lib/app/sequencer/arp';
+import {
+  LIVE_MODES,
+  nextStep,
+  playedVelocity,
+  restAt,
+  tieOver,
+  writeChord,
+} from '@/lib/app/sequencer/record';
+import { KEY_MODES } from '@/components/app/sequencer/use-sequencer';
 import { HelpButton } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
@@ -143,6 +155,18 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
     'The chosen step: on, accent, slide, ratchet, chance and condition, and each note’s pitch, gate, velocity and nudge.',
   ],
   [
+    'Keys',
+    'What notes played on the piano, the computer keyboard or MIDI do. Edit step puts each on the chosen step. Step record puts a note or chord on the chosen step and moves to the next; Rest and Tie move on too. Live record writes what you play over the loop while it plays. Arp plays the keys you hold through the steps, one note a step.',
+  ],
+  [
+    'Live record',
+    'Quantise puts each note on the nearest step; off, it keeps how late it was. Overdub adds to what a step plays; Replace puts the note in its place.',
+  ],
+  [
+    'Arp',
+    'The steps that play keep the rhythm, gate, accent, ratchet and chance; the notes come from the keys held, in the order and over the octaves chosen. A key pressed with the pattern stopped starts it, and letting go stops it, unless Hold is on.',
+  ],
+  [
     'Mod lanes',
     'Mod shows them. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
   ],
@@ -193,8 +217,11 @@ export function Sequencer({
   library,
   def,
   panel,
+  hold,
 }: {
   seq: SequencerState;
+  /** The page's Hold, which arp mode reads. Left out, the arp row has no Hold. */
+  hold?: { on: boolean; set: (on: boolean) => void };
   /** The synth on the panel and its values, for the mod lanes. Left out, the module has no lanes. */
   def?: SynthDef;
   panel?: ControlValues;
@@ -306,20 +333,6 @@ export function Sequencer({
   const setP = <K extends keyof Pattern>(k: K, v: Pattern[K], group?: string) =>
     seq.edit((q) => ({ ...q, [k]: v }), { group });
 
-  // A note played (the piano, the computer keyboard, MIDI) goes on the chosen step: a rest gets it, and a step's first
-  // note becomes it. Read through a ref, so the handler registered once always edits the step chosen now.
-  const putNote = useRef<(n: number) => void>(() => undefined);
-  useEffect(() => {
-    putNote.current = (n: number) =>
-      changeStep(sel, (s) =>
-        s.notes.length === 0
-          ? { ...s, on: true, notes: [{ note: n, gate: 1 }] }
-          : { ...s, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note: n } : x)) }
-      );
-  });
-  const { onNoteIn } = seq;
-  useEffect(() => onNoteIn((n) => putNote.current(n)), [onNoteIn]);
-
   const defaultNote = nearbyNote(steps, sel, p.root);
   const toggle = (i: number) =>
     changeStep(i, (s) =>
@@ -336,6 +349,61 @@ export function Sequencer({
     setChosen(to);
     setHeld(Math.floor(to / PAGE));
   };
+  // A note played (the piano, the computer keyboard, MIDI) goes on the chosen step: a rest gets it, and a step's first
+  // note becomes it. In step record (t-86) the keys down together are the step's chord, and the step after is chosen
+  // once they are all up. Read through a ref, so the handler registered once always edits the step chosen now.
+  const stepDown = useRef<{ keys: Set<number>; chord: { note: number; velocity?: number }[] }>({
+    keys: new Set(),
+    chord: [],
+  });
+  const noteTarget = useRef<{ on: (n: number, v?: number) => void; off: (n: number) => void }>({
+    on: () => undefined,
+    off: () => undefined,
+  });
+  useEffect(() => {
+    noteTarget.current = {
+      on: (n, v) => {
+        if (seq.keys !== 'step') {
+          changeStep(sel, (s) =>
+            s.notes.length === 0
+              ? { ...s, on: true, notes: [{ note: n, gate: 1 }] }
+              : { ...s, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note: n } : x)) }
+          );
+          return;
+        }
+        const down = stepDown.current;
+        if (down.keys.size === 0) down.chord = [];
+        down.keys.add(n);
+        down.chord = [
+          ...down.chord.filter((c) => c.note !== n),
+          { note: n, velocity: playedVelocity(v) },
+        ];
+        const chord = down.chord;
+        changeStep(sel, (s) => writeChord(s, chord), `rec:${editing}:${sel}`);
+      },
+      off: (n) => {
+        const down = stepDown.current;
+        if (!down.keys.delete(n) || down.keys.size > 0 || seq.keys !== 'step') return;
+        down.chord = [];
+        choose(nextStep(sel, len), false);
+      },
+    };
+  });
+  const { onNoteIn } = seq;
+  useEffect(
+    () =>
+      onNoteIn({
+        on: (n, v) => noteTarget.current.on(n, v),
+        off: (n) => noteTarget.current.off(n),
+      }),
+    [onNoteIn]
+  );
+  // Step record's Rest and Tie: the chosen step, then the next.
+  const restOrTie = (tie: boolean) => {
+    setSteps(tie ? tieOver(steps, sel) : restAt(steps, sel));
+    choose(nextStep(sel, len), false);
+  };
+
   const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
     if (e.key in by) choose(i + by[e.key], true);
@@ -861,6 +929,13 @@ export function Sequencer({
               <HelpButton title="How the sequencer works" items={SEQ_HELP} wide />
             </div>
           </div>
+          <KeysRow
+            seq={seq}
+            hold={hold}
+            step={sel}
+            onRest={() => restOrTie(false)}
+            onTie={() => restOrTie(true)}
+          />
         </div>
         <StepInspector
           key={`${editing}:${sel}`}
@@ -872,6 +947,141 @@ export function Sequencer({
         />
       </div>
     </section>
+  );
+}
+
+const KEY_MODE_LABELS: Record<SequencerState['keys'], string> = {
+  edit: 'Edit step',
+  step: 'Step record',
+  live: 'Live record',
+  arp: 'Arp',
+};
+const ARP_ORDER_LABELS: Record<SequencerState['arp']['order'], string> = {
+  up: 'Up',
+  down: 'Down',
+  upDown: 'Up-down',
+  played: 'As played',
+  random: 'Random',
+};
+const LIVE_MODE_LABELS: Record<SequencerState['liveMode'], string> = {
+  overdub: 'Overdub',
+  replace: 'Replace',
+};
+
+/**
+ * What notes played do (t-86), and the controls of the mode chosen: Rest and Tie for step record, Quantise and Overdub
+ * or Replace for live record, and the arp's order, octaves and Hold.
+ */
+function KeysRow({
+  seq,
+  hold,
+  step,
+  onRest,
+  onTie,
+}: {
+  seq: SequencerState;
+  hold?: { on: boolean; set: (on: boolean) => void };
+  step: number;
+  onRest: () => void;
+  onTie: () => void;
+}) {
+  const hint =
+    seq.keys === 'step'
+      ? `Play a note or a chord: it goes on step ${step + 1}, then the next step is chosen.`
+      : seq.keys === 'live'
+        ? seq.playing
+          ? 'Recording what you play over the loop.'
+          : 'Press Play, then play over the loop.'
+        : seq.keys === 'arp'
+          ? seq.arpHeld.length > 0
+            ? `Playing ${seq.arpHeld.map((n) => noteName(n)).join(' ')}`
+            : 'Hold keys to play them through the steps.'
+          : null;
+  return (
+    <div className="kys-seq-keys-row" role="group" aria-label="Playing into the sequencer">
+      <Select
+        label="Keys"
+        help="What notes played on the piano, the computer keyboard or MIDI do."
+        value={seq.keys}
+        options={KEY_MODES.map((k) => [k, KEY_MODE_LABELS[k]])}
+        onChange={(v) => {
+          const k = KEY_MODES.find((x) => x === v);
+          if (k) seq.setKeys(k);
+        }}
+      />
+      {seq.keys === 'step' && (
+        <div className="kys-seq-tool-group">
+          <PlayerTip name="Rest" help="Makes the chosen step a rest, and moves to the next.">
+            <button type="button" className="kys-seq-tool" aria-label="Rest" onClick={onRest}>
+              Rest
+            </button>
+          </PlayerTip>
+          <PlayerTip
+            name="Tie"
+            help="Holds the notes before the chosen step on over it, and moves to the next."
+          >
+            <button type="button" className="kys-seq-tool" aria-label="Tie" onClick={onTie}>
+              Tie
+            </button>
+          </PlayerTip>
+        </div>
+      )}
+      {seq.keys === 'live' && (
+        <>
+          <Toggle
+            label="Quantise"
+            on={seq.quantise}
+            help="On, each note goes on the nearest step. Off, it goes on the step it falls in and keeps how late it was."
+            onClick={() => seq.setQuantise(!seq.quantise)}
+          />
+          <Select
+            label="Record"
+            help="Overdub adds what you play to a step’s notes; Replace puts it in their place."
+            value={seq.liveMode}
+            options={LIVE_MODES.map((m) => [m, LIVE_MODE_LABELS[m]])}
+            onChange={(v) => {
+              const m = LIVE_MODES.find((x) => x === v);
+              if (m) seq.setLiveMode(m);
+            }}
+          />
+        </>
+      )}
+      {seq.keys === 'arp' && (
+        <>
+          <Select
+            label="Order"
+            help="The order the held notes play in."
+            value={seq.arp.order}
+            options={ARP_ORDERS.map((o) => [o, ARP_ORDER_LABELS[o]])}
+            onChange={(v) => {
+              const order = ARP_ORDERS.find((x) => x === v);
+              if (order) seq.setArp({ ...seq.arp, order });
+            }}
+          />
+          <Encoder
+            label="Octaves"
+            value={seq.arp.octaves}
+            min={1}
+            max={MAX_ARP_OCTAVES}
+            help="How many octaves the held notes are played over."
+            onChange={(octaves) => seq.setArp({ ...seq.arp, octaves })}
+          />
+          {hold && (
+            <Toggle
+              label="Hold"
+              on={hold.on}
+              help="Keys let go keep playing. A press with every key up starts a fresh chord."
+              onClick={() => hold.set(!hold.on)}
+            />
+          )}
+        </>
+      )}
+      {hint && (
+        <span className="kys-seq-keys-hint" aria-live="polite">
+          {hint}
+        </span>
+      )}
+    </div>
   );
 }
 
