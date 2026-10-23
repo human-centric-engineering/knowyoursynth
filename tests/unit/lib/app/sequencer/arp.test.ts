@@ -126,7 +126,7 @@ describe('compileLoop with the arp', () => {
     const c = compileLoop(pattern(), {
       loop: 0,
       rng: rng(),
-      arp: { notes: [48, 52, 55], random: false },
+      arp: { notes: [48, 52, 55] },
     });
     expect(c.notes).toEqual([
       // step 1: the first arp note, nudged a quarter step, half a step long, at the step's velocity
@@ -142,16 +142,14 @@ describe('compileLoop with the arp', () => {
     const c = compileLoop(pattern(), {
       loop: 1,
       rng: rng(),
-      arp: { notes: [48, 52, 55], random: false, from: 2 },
+      arp: { notes: [48, 52, 55], from: 2 },
     });
     expect(c.notes.map((n) => n[1])).toEqual([55, 48, 48]);
     expect(c.arpTo).toBe(1);
   });
 
   it('plays nothing with no keys held, and the steps’ own notes without the arp', () => {
-    expect(
-      compileLoop(pattern(), { loop: 0, rng: rng(), arp: { notes: [], random: false } }).notes
-    ).toEqual([]);
+    expect(compileLoop(pattern(), { loop: 0, rng: rng(), arp: { notes: [] } }).notes).toEqual([]);
     expect(compileLoop(pattern(), { loop: 0, rng: rng() }).notes.map((n) => n[1])).toEqual([
       60, 62, 62,
     ]);
@@ -163,16 +161,28 @@ describe('compileLoop with the arp', () => {
     const notes = compileLoop(p, {
       loop: 0,
       rng: rng(),
-      arp: { notes: [48, 52, 55], random: true },
+      arp: { notes: [48, 52, 55], random: seededRng(2) },
     }).notes.map((n) => n[1]);
     expect(notes).toHaveLength(16);
     expect(new Set(notes)).toEqual(new Set([48, 52, 55]));
   });
 
+  it('moves no step’s chance with a random order: the same steps play as in order', () => {
+    const p = newPattern(16);
+    p.parts[0].steps = p.parts[0].steps.map(() => on(60, { probability: 0.5 }));
+    const starts = (arp: { notes: number[]; random?: () => number }) =>
+      compileLoop(p, { loop: 0, rng: rng(), arp }).notes.map((n) => n[0]);
+    const inOrder = starts({ notes: [48, 52, 55] });
+    // A coin toss on every step: some play and some rest, so the comparison has something to compare
+    expect(inOrder.length).toBeGreaterThan(0);
+    expect(inOrder.length).toBeLessThan(16);
+    expect(starts({ notes: [48, 52, 55], random: seededRng(2) })).toEqual(inOrder);
+  });
+
   it('keeps the arp’s notes to the pattern’s scale', () => {
     const p = { ...pattern(), scale: 'major' as const };
     // C# is off C major, and goes down to C
-    const c = compileLoop(p, { loop: 0, rng: rng(), arp: { notes: [49], random: false } });
+    const c = compileLoop(p, { loop: 0, rng: rng(), arp: { notes: [49] } });
     expect(c.notes.map((n) => n[1])).toEqual([48, 48, 48]);
   });
 });

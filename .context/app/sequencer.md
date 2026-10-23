@@ -286,7 +286,7 @@ up writes the note, with its length (`edit`, so a loop playing is sent again and
 round). The page still sounds the key as it is played.
 
 - **Quantise on** (the default): the start goes on the nearest step, by `placeHit`. Past the middle of the last
-  step, that is the next loop's first. The length is whole steps, at least one (`liveGate`).
+  step, that is the first step of the part the next loop plays. The length is whole steps, at least one (`liveGate`).
 - **Quantise off**: the start goes on the step it falls in, and how late it was is its `nudge` (kept below a whole
   step). The length is as played, at least 0.1 steps.
 - Swing is read: a swung step starts late, so a note just before it falls in the step before.
@@ -295,7 +295,8 @@ round). The page still sounds the key as it is played.
   playing six keeps them.
 - **Replace** puts the note in place of the step's notes. Notes on the same step in the same loop are a chord, in
   either mode.
-- Nothing is recorded while stopped, or for a key still down at Stop.
+- Nothing is recorded while stopped, or for a key still down at Stop. A new run's loops count from 0 again, so a
+  step struck in the run before is not part of this run's chord.
 - Notes recorded within 1.2 s of each other are one Undo, as an encoder's turn is.
 
 ### Arp
@@ -308,18 +309,21 @@ It goes through the pattern player like any loop, so nothing is added to the eng
 poly-only.
 
 - **Order** (`arpSequence`): up, down, up-down (neither end twice in a row: C E G E, round to C), as played (the order
-  the keys went down), or random (drawn from the up notes per step, after the step's own chance). **Octaves**, 1–4,
+  the keys went down), or random (drawn from the up notes per step, from a stream of its own seeded from the loop's, so it moves no step's
+  chance). **Octaves**, 1–4,
   repeat the notes an octave up each time, leaving out any past the top of MIDI.
 - The notes go through the pattern's transpose and scale, as a step's do.
 - A change to the keys held, the order or the octaves sends the loop playing again (`patternEdit`) from the same
   draws.
-- **Starting and stopping.** A key pressed with the pattern stopped starts it, and the last key let go stops what the
-  press started. A pattern started with Play keeps running, silent, with no keys held.
+- **Starting and stopping.** A key pressed with the pattern stopped starts it, even with Hold keeping keys from before
+  a Stop, and the last key let go stops what the press started. Let go before the sound is ready, the run is stopped
+  as soon as it starts. A pattern started with Play keeps running, silent, with no keys held.
 - **Hold** is the page's Hold, the same one as the keyboard's (`ArpKeys`). With it on, keys let go keep playing. A
   press with every key up starts a fresh set, and one while others are down joins it. Hold turned off keeps only the
   keys still down.
 - **The page doesn't sound a key the arp takes.** `noteIn` says so, and the page sends the key no `noteOn`, and no
-  `noteOff` when it comes up.
+  `noteOff` when it comes up. The page counts presses per note, so a note held on two inputs (MIDI and the computer
+  keyboard) stays in the arp until the last of them lets go.
 - **Not saved.** The order and octaves are a way of playing the pattern, not part of it, so `PatternSchema` is
   unchanged. A saved pattern can't hold the keys, so an arp saved in one would play nothing when opened.
 - Choosing another mode lets go of the arp's keys, and the steps play their own notes again.

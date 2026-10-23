@@ -818,13 +818,14 @@ function Synth({
   // always reaches the sequencer, so an arp key held as the sequencer closes is let go there.
   const noteToSeq = useRef<(n: number, v: number) => boolean>(() => false);
   const seqNoteOut = useRef<(n: number) => void>(() => undefined);
-  const seqTook = useRef(new Set<number>());
+  // Presses per note, like `downRef`: the arp lets a note go when its last key does.
+  const seqTook = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
       if (!engine) return;
       void ensureAudio();
       if (noteToSeq.current(n, v)) {
-        seqTook.current.add(n);
+        seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
         return;
       }
       if (hold) {
@@ -843,8 +844,16 @@ function Synth({
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
     (n: number) => {
+      const took = seqTook.current.get(n);
+      if (took !== undefined) {
+        if (took > 1) seqTook.current.set(n, took - 1);
+        else {
+          seqTook.current.delete(n);
+          seqNoteOut.current(n);
+        }
+        return;
+      }
       seqNoteOut.current(n);
-      if (seqTook.current.delete(n)) return;
       const presses = (downRef.current.get(n) ?? 0) - 1;
       // Another input still pressing this note keeps it sounding.
       if (presses > 0) {

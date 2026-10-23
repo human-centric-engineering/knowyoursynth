@@ -302,6 +302,26 @@ describe('the sequencer on the synth page', () => {
     expect(after).not.toContain('noteOff');
   });
 
+  it('in arp mode, keeps a note playing while another input still holds it', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Arp' }));
+    // C3 on the computer keyboard and on the piano
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    });
+    fireEvent.pointerDown(button('Note 48'));
+    engine.send.mockClear();
+    fireEvent.keyUp(window, { key: 'a', code: 'KeyA' });
+    // the piano still holds C3: the arp plays on, and the page sounds nothing of its own
+    expect(sent().map((m) => m.type)).not.toContain('stopPattern');
+    expect(sent().map((m) => m.type)).not.toContain('noteOff');
+    fireEvent.pointerUp(button('Note 48'));
+    expect(sent().map((m) => m.type)).toContain('stopPattern');
+    expect(sent().map((m) => m.type)).not.toContain('noteOff');
+  });
+
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
     phone();
     page();

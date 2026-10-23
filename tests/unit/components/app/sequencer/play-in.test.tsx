@@ -156,6 +156,33 @@ describe('step record', () => {
     expect(chosen()).toBe(3);
   });
 
+  it('puts a key pressed before the move is drawn on the step after, not over the one just written', () => {
+    open(null);
+    pick('Keys', 'Step record');
+    press(60);
+    // let go and the next pressed in one go, before React draws step 2 chosen
+    act(() => {
+      state.noteOut(60);
+      state.noteIn(62);
+    });
+    expect(label(1)).toBe('Step 1: C4, on');
+    expect(label(2)).toBe('Step 2: D4, on');
+  });
+
+  it('still moves on after a key pressed here is let go in another mode', () => {
+    open(null);
+    pick('Keys', 'Step record');
+    press(60);
+    pick('Keys', 'Live record');
+    release(60);
+    pick('Keys', 'Step record');
+    press(62);
+    release(62);
+    // 62 went on step 1, alone (no stale 60 in its chord), and step record moved on
+    expect(label(1)).toBe('Step 1: D4, on');
+    expect(chosen()).toBe(2);
+  });
+
   it('rests and ties, moving on each time, and one Undo takes back each step', () => {
     open(null);
     pick('Keys', 'Step record');
@@ -264,6 +291,43 @@ describe('live record', () => {
     expect(steps()[0].notes.map((n) => n.note)).toEqual([55, 59]);
   });
 
+  it('puts a note quantised past the last step on the first step of the part the next loop plays', async () => {
+    open(null);
+    act(() => {
+      state.edit((q) => ({
+        ...q,
+        parts: [q.parts[0], structuredClone(q.parts[0])],
+        chain: [0, 1],
+      }));
+    });
+    pick('Keys', 'Live record');
+    await play();
+    fire(loopEvent({ beats: 4 }));
+    at(15.7);
+    press(60);
+    at(16.2);
+    release(60);
+    expect(state.pattern.parts[1].steps[0].notes.map((n) => n.note)).toEqual([60]);
+    expect(state.pattern.parts[0].steps[0].notes).toEqual([]);
+  });
+
+  it('replaces a step’s notes again after Stop and Play: the last run’s strikes are not this run’s chord', async () => {
+    await start();
+    pick('Record', 'Replace');
+    at(2);
+    press(48);
+    at(2.5);
+    release(48);
+    fireEvent.click(button('Stop'));
+    await play();
+    fire(loopEvent({ beats: 4 }));
+    at(2);
+    press(52);
+    at(2.5);
+    release(52);
+    expect(steps()[2].notes.map((n) => n.note)).toEqual([52]);
+  });
+
   it('records nothing while stopped, or for a key still down at Stop', async () => {
     open(null);
     pick('Keys', 'Live record');
@@ -350,6 +414,39 @@ describe('arp mode', () => {
     expect(playingNotes()).toEqual([48, 55, 48, 55]);
     fireEvent.click(button('Hold'));
     expect(state.playing).toBe(false);
+  });
+
+  it('starts again on a press after Stop, with Hold keeping keys from before', async () => {
+    open(RIFF, true);
+    pick('Keys', 'Arp');
+    await pressNow(48);
+    release(48);
+    fireEvent.click(button('Stop'));
+    expect(state.playing).toBe(false);
+    await pressNow(52);
+    expect(state.playing).toBe(true);
+  });
+
+  it('stops the run a tap started when the key is up before the sound is ready', async () => {
+    open(RIFF);
+    pick('Keys', 'Arp');
+    await act(async () => {
+      state.noteIn(48);
+      state.noteOut(48);
+    });
+    expect(state.playing).toBe(false);
+    expect(lastOf('stopPattern')).toBeTruthy();
+  });
+
+  it('sends nothing again when Hold changes what nobody holds', async () => {
+    open(RIFF);
+    pick('Keys', 'Arp');
+    await play();
+    fire(loopEvent());
+    const before = sentOf('patternEdit').length;
+    fireEvent.click(button('Hold'));
+    fireEvent.click(button('Hold'));
+    expect(sentOf('patternEdit')).toHaveLength(before);
   });
 
   it('leaves a pattern started with Play running, silent, when the keys are let go', async () => {

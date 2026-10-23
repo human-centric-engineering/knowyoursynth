@@ -360,11 +360,16 @@ export function Sequencer({
     on: () => undefined,
     off: () => undefined,
   });
+  // The step notes go on, moved on at once by step record's release: a press that comes before React draws the move
+  // still lands on the step after, not on the one just written.
+  const recAt = useRef(sel);
   useEffect(() => {
+    recAt.current = sel;
     noteTarget.current = {
       on: (n, v) => {
+        const at = recAt.current;
         if (seq.keys !== 'step') {
-          changeStep(sel, (s) =>
+          changeStep(at, (s) =>
             s.notes.length === 0
               ? { ...s, on: true, notes: [{ note: n, gate: 1 }] }
               : { ...s, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note: n } : x)) }
@@ -379,13 +384,14 @@ export function Sequencer({
           { note: n, velocity: playedVelocity(v) },
         ];
         const chord = down.chord;
-        changeStep(sel, (s) => writeChord(s, chord), `rec:${editing}:${sel}`);
+        changeStep(at, (s) => writeChord(s, chord), `rec:${editing}:${at}`);
       },
       off: (n) => {
         const down = stepDown.current;
         if (!down.keys.delete(n) || down.keys.size > 0 || seq.keys !== 'step') return;
         down.chord = [];
-        choose(nextStep(sel, len), false);
+        recAt.current = nextStep(recAt.current, len);
+        choose(recAt.current, false);
       },
     };
   });

@@ -235,6 +235,8 @@ interface Snapshot {
 }
 
 const newSeed = () => Math.floor(Math.random() * 2 ** 32);
+/** Mixed into a loop's seed for its random arp's own stream. */
+const ARP_SEED = 0x5bd1e995;
 
 /** A riff as a pattern; a riff the pattern model cannot hold (none in the library) opens an empty pattern instead. */
 function fromRiff(ph: Phrase, bpm: number | null): Pattern {
@@ -362,13 +364,16 @@ export function useSequencer({
     setLiveModeState(m);
   }, []);
 
-  /** What a loop's arp plays: nothing outside arp mode. */
-  const arpInput = useCallback((from: number | undefined): ArpInput | undefined => {
+  /**
+   * What a loop's arp plays: nothing outside arp mode. A random order draws from a stream of its own, seeded from the
+   * loop's, so the arp moves no step's chance and the loop compiled again draws the same notes.
+   */
+  const arpInput = useCallback((from: number | undefined, seed: number): ArpInput | undefined => {
     if (keysRef.current !== 'arp') return undefined;
     const settings = arpRef.current;
     return {
       notes: arpSequence(arpKeys.current.held, settings),
-      random: settings.order === 'random',
+      ...(settings.order === 'random' && { random: seededRng(seed ^ ARP_SEED) }),
       from,
     };
   }, []);
@@ -398,7 +403,7 @@ export function useSequencer({
       from: number | undefined,
       arpFrom: number | undefined
     ) => {
-      const opts = { loop: index, from, fill: fillRef.current, arp: arpInput(arpFrom) };
+      const opts = { loop: index, from, fill: fillRef.current, arp: arpInput(arpFrom, seed) };
       const c = compileLoop(p, { ...opts, rng: seededRng(seed) });
       const info: LoopInfo = {
         seed,
@@ -668,6 +673,8 @@ export function useSequencer({
   const [modShown, setModShown] = useState<ControlValues | null>(null);
 
   const liveHits = useRef(new Map<number, LiveHit>());
+  /** Which steps live record has written on this time round, so notes struck together are a chord. */
+  const liveStruck = useRef(new Set<string>());
   const halt = useCallback(() => {
     playingRef.current = false;
     setPlaying(false);
@@ -675,6 +682,8 @@ export function useSequencer({
     loops.current.clear();
     // A key still down when the pattern stops has nowhere to be placed: it is not recorded.
     liveHits.current.clear();
+    // A run's loops count from 0 again, so a step struck in the last run is not one this run struck.
+    liveStruck.current.clear();
     arpStarted.current = false;
   }, []);
 
@@ -727,17 +736,24 @@ export function useSequencer({
   }, [engine]);
 
   // The arp's keys changed: what it plays is compiled into the loop playing now. A press with the pattern stopped
-  // starts it, and the last key let go stops what a press started.
+  // starts it (whatever Hold kept from before a Stop), and the last key let go stops what a press started: also when
+  // it is let go before the sound is ready, in which case the run is stopped as soon as it starts.
   const setArpKeys = useCallback(
-    (k: ArpKeys) => {
-      const had = arpKeys.current.held.length > 0;
+    (k: ArpKeys, pressed: boolean) => {
       arpKeys.current = k;
       setArpHeld(k.held);
-      if (k.held.length > 0 && !had && !playingRef.current && !arpStarted.current) {
+      if (pressed && k.held.length > 0 && !playingRef.current && !arpStarted.current) {
         arpStarted.current = true;
-        void play().then((ok) => {
-          if (!ok) arpStarted.current = false;
-        });
+        play().then(
+          (ok) => {
+            if (!ok) arpStarted.current = false;
+            else if (arpStarted.current && arpKeys.current.held.length === 0) stop();
+          },
+          (err: unknown) => {
+            arpStarted.current = false;
+            logger.warn('sequencer: the arp could not start the pattern', { err: String(err) });
+          }
+        );
       } else if (k.held.length === 0 && arpStarted.current && playingRef.current) stop();
       else replay();
     },
@@ -748,7 +764,7 @@ export function useSequencer({
     (n: number, velocity?: number) => {
       const mode = keysRef.current;
       if (mode === 'arp') {
-        setArpKeys(arpPress(arpKeys.current, n, holdRef.current));
+        setArpKeys(arpPress(arpKeys.current, n, holdRef.current), true);
         return true;
       }
       if (mode === 'live') {
@@ -762,21 +778,18 @@ export function useSequencer({
     [heardAt, setArpKeys]
   );
 
-  /** Which steps live record has written on this time round, so notes struck together are a chord. */
-  const liveStruck = useRef(new Set<string>());
   const noteOut = useCallback(
     (n: number) => {
+      // Step record counts the keys down: a key pressed there and let go in another mode is let go there too.
+      noteTarget.current?.off(n);
       if (keysRef.current === 'arp') {
         if (arpKeys.current.down.includes(n))
-          setArpKeys(arpRelease(arpKeys.current, n, holdRef.current));
+          setArpKeys(arpRelease(arpKeys.current, n, holdRef.current), false);
         return;
       }
       const hit = liveHits.current.get(n);
       liveHits.current.delete(n);
-      if (keysRef.current !== 'live') {
-        noteTarget.current?.off(n);
-        return;
-      }
+      if (keysRef.current !== 'live') return;
       const now = heardAt();
       if (!hit || !now) return;
       const p = patternRef.current;
@@ -784,8 +797,10 @@ export function useSequencer({
       const { slot, nudge } = placeHit(hit.at, len, p.swing, quantiseRef.current);
       // Quantised up past the last slot, it is the first step of the loop after.
       const wraps = quantiseRef.current && slot === 0 && hit.at > len / 2;
-      const step = hit.info.order[slot];
-      const part = hit.info.part;
+      // The loop after was compiled when this one started, so its order and part are known.
+      const info = (wraps && loops.current.get(hit.index + 1)) || hit.info;
+      const step = info.order[slot];
+      const part = info.part;
       if (step === undefined || !p.parts[part]) return;
       const held = (now.index - hit.index) * len + now.at - hit.at;
       const gate = liveGate(held, quantiseRef.current);
@@ -844,8 +859,12 @@ export function useSequencer({
     [replay]
   );
   useEffect(() => {
+    if (holdRef.current === hold) return;
     holdRef.current = hold;
-    if (keysRef.current === 'arp') setArpKeys(arpHold(arpKeys.current, hold));
+    if (keysRef.current !== 'arp') return;
+    const k = arpHold(arpKeys.current, hold);
+    if (k.held.join() !== arpKeys.current.held.join()) setArpKeys(k, false);
+    else arpKeys.current = k;
   }, [hold, setArpKeys]);
 
   const position = useCallback((): SeqPosition | null => {

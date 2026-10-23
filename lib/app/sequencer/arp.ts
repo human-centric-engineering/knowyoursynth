@@ -12,6 +12,8 @@
  * Shapes and pure functions only. The rules are in `.context/app/sequencer.md`.
  */
 
+import type { Rng } from '@/lib/app/sequencer/compile';
+
 /** The orders an arp plays the held notes in. `played` is the order the keys went down. */
 export const ARP_ORDERS = ['up', 'down', 'upDown', 'played', 'random'] as const;
 export type ArpOrder = (typeof ARP_ORDERS)[number];
@@ -86,7 +88,11 @@ export function arpHold(k: ArpKeys, hold: boolean): ArpKeys {
 /** What compiling a loop needs of the arp: the notes it plays in order, and where the loop before left off. */
 export interface ArpInput {
   notes: readonly number[];
-  random: boolean;
+  /**
+   * Random order: each step's note is drawn from this, a stream apart from the loop's, so the arp moves no step's
+   * chance. Absent, the notes go in order.
+   */
+  random?: Rng;
   /** The index of the note the loop's first played step plays. */
   from?: number;
 }

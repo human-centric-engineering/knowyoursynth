@@ -204,11 +204,13 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
         mods.push([slotStart(slot) / perBeat, set]);
     }
     if (!step || !stepPlays(step, opts)) return;
-    // The arp's note. A random one is drawn after the step's own chance, so the arp changes no step's mind.
+    // The arp's note. A random one is drawn from the arp's own stream, so the arp changes no step's mind.
     let played = step.notes;
     if (arp) {
       if (arp.notes.length === 0) return;
-      const k = arp.random ? Math.floor(opts.rng() * arp.notes.length) : arpAt++ % arp.notes.length;
+      const k = arp.random
+        ? Math.floor(arp.random() * arp.notes.length)
+        : arpAt++ % arp.notes.length;
       played = [{ ...step.notes[0], note: arp.notes[k] }];
     }
     const ratchet = step.ratchet ?? 1;
