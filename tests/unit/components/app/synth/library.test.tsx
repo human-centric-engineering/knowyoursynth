@@ -37,7 +37,7 @@ beforeAll(async () => {
 
 const list = () => screen.getByRole('list', { name: '' });
 const rows = () => within(list()).getAllByRole('button');
-const search = () => screen.getByRole('searchbox', { name: 'Search the sound library' });
+const search = () => screen.getByRole('searchbox', { name: 'Search the patch library' });
 
 function setup(currentId: string | null = null) {
   const onSelect = vi.fn();
@@ -108,7 +108,7 @@ describe('Library', () => {
     setup();
     fireEvent.change(search(), { target: { value: 'zzzz-no-such-sound' } });
     expect(screen.getByText('0 of 99')).toBeTruthy();
-    const empty = screen.getByText(/No library sound matches that/);
+    const empty = screen.getByText(/No library patch matches that/);
     expect(empty.textContent).not.toMatch(/tutor/i);
   });
 });

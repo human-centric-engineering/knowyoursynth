@@ -75,14 +75,14 @@ describe('MapLegend', () => {
   it('counts progress while the first map is worked out', () => {
     act(() => mapStore.set({ ...MAP_OFF, status: 'working', progress: 0.42 }));
     render(legend());
-    expect(screen.getByRole('status').textContent).toBe('Working out what is in this sound… 42%');
+    expect(screen.getByRole('status').textContent).toBe('Working out what is in this patch… 42%');
   });
 
   it('says the map could not be worked out, with no key and no progress', () => {
     act(() => mapStore.set({ ...MAP_OFF, status: 'failed', key: 'model-d/x/null' }));
     render(legend());
     expect(screen.getByRole('status').textContent).toBe(
-      'Could not work out what is in this sound. Changing the sound tries again.'
+      'Could not work out what is in this patch. Changing the patch tries again.'
     );
     expect(screen.queryByText(/Working out/)).toBeNull();
     expect(screen.queryByText('Bright:')).toBeNull();
@@ -120,7 +120,7 @@ describe('MapLegend', () => {
   it('says so when no control changes the sound much', () => {
     act(() => mapStore.set(ready({ ranked: [] })));
     render(legend({ dimOn: false }));
-    expect(screen.getByText('No control changes this sound much with a small move.')).toBeTruthy();
+    expect(screen.getByText('No control changes this patch much with a small move.')).toBeTruthy();
   });
 
   it('keeps the old map up, marked as updating, while a new one is worked out', () => {

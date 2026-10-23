@@ -33,11 +33,11 @@ async function getReconciliation(): Promise<CatalogueReconciliation | null> {
 const PATH = [
   {
     title: 'Seed data',
-    text: 'JSON files in the repository, one set per synth: its sounds, history and notes. They change only through a deploy.',
+    text: 'JSON files in the repository, one set per synth: its patches, history and notes. They change only through a deploy.',
   },
   {
     title: 'The seed',
-    text: 'A deploy step (npm run db:seed) that does work only when the data or the code it depends on has changed. It checks every sound against its synth, then creates missing rows and updates ones nobody has edited. It never overwrites an admin’s edit and never deletes. It also records what it planned for every row, which is what this page compares against.',
+    text: 'A deploy step (npm run db:seed) that does work only when the data or the code it depends on has changed. It checks every patch against its synth, then creates missing rows and updates ones nobody has edited. It never overwrites an admin’s edit and never deletes. It also records what it planned for every row, which is what this page compares against.',
   },
   {
     title: 'The tables',
@@ -45,7 +45,7 @@ const PATH = [
   },
   {
     title: 'One read layer',
-    text: 'Everything that shows the catalogue reads the tables through the same code, and leaves out any sound that no longer fits its synth.',
+    text: 'Everything that shows the catalogue reads the tables through the same code, and leaves out any patch that no longer fits its synth.',
   },
   {
     title: 'The API and the pages',

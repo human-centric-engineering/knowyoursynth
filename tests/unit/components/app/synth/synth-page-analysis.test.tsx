@@ -245,7 +245,7 @@ describe('the sound map', () => {
     await settle(300); // the first sound's analysis is under way, its answers held
     const other = detail.sounds[1];
     openSide('Sounds');
-    const library = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
+    const library = screen.getByRole('heading', { name: 'Patch library' }).closest('section');
     if (!library) throw new Error('no library');
     fireEvent.click(within(library).getByText(other.name));
     const replaced = mapStore.get().key;
@@ -272,12 +272,12 @@ describe('the sound map', () => {
     });
     page();
     fireEvent.click(button('Dim unused parts'));
-    expect(screen.getByText(/Working out what is in this sound/)).toBeTruthy();
+    expect(screen.getByText(/Working out what is in this patch/)).toBeTruthy();
     await settle(400 + 40 * 400);
     expect(n).toBe(5);
     expect(mapStore.get()).toMatchObject({ status: 'failed', state: null, heat: null });
-    expect(screen.queryByText(/Working out what is in this sound/)).toBeNull();
-    expect(screen.getByText(/Could not work out what is in this sound/)).toBeTruthy();
+    expect(screen.queryByText(/Working out what is in this patch/)).toBeNull();
+    expect(screen.getByText(/Could not work out what is in this patch/)).toBeTruthy();
     expect(error).toHaveBeenCalledWith('Sound-map analysis failed', expect.anything());
   });
 
@@ -357,7 +357,7 @@ describe('the sound map', () => {
     openSide('Sounds');
     fireEvent.click(
       within(
-        screen.getByRole('heading', { name: 'Sound library' }).closest('section') ?? document.body
+        screen.getByRole('heading', { name: 'Patch library' }).closest('section') ?? document.body
       ).getByText(other.name)
     );
     await settle(400);

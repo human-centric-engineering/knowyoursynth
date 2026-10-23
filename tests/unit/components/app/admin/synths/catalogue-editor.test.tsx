@@ -266,7 +266,7 @@ describe("a synth's library", () => {
       'href',
       '/admin/synths/catalogue/model-d/sounds/bass'
     );
-    expect(screen.queryByRole('link', { name: 'Add a sound' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Add a patch' })).not.toBeInTheDocument();
   });
 });
 
@@ -288,7 +288,7 @@ describe('editing a sound', () => {
     await user.clear(values);
     // `{` and `[` open key descriptors in user-event; the doubled ones type the character.
     await user.type(values, '{{"osc1.range": "8"}');
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(patch).toHaveBeenCalledWith('/api/v1/admin/synths/model-d/sounds/funk-bass', {
       body: {
@@ -308,7 +308,7 @@ describe('editing a sound', () => {
 
     await user.click(screen.getByRole('button', { name: 'Remove step 1' }));
     await user.clear(within(screen.getByTestId('step-0')).getByLabelText(/Values \(JSON\)/, INPUT));
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     const [, options] = patch.mock.calls[0];
     expect(options?.body).toMatchObject({
@@ -338,7 +338,7 @@ describe('editing a sound', () => {
     );
     render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
 
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     const step2 = within(screen.getByTestId('step-1'));
     expect(await step2.findByText('cutoff must be between 0 and 10')).toBeInTheDocument();
@@ -365,7 +365,7 @@ describe('editing a sound', () => {
     const cables = within(screen.getByTestId('step-1')).getByLabelText(/Cables \(JSON\)/, INPUT);
     await user.clear(cables);
     await user.type(cables, '[[oops');
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(patch).not.toHaveBeenCalled();
     expect(within(screen.getByTestId('step-1')).getByText(/^Not valid JSON/)).toBeInTheDocument();
@@ -378,7 +378,7 @@ describe('editing a sound', () => {
 
     await user.type(screen.getByLabelText(/^Id/, INPUT), 'wobble');
     await user.type(screen.getByLabelText(/^Name/, INPUT), 'Wobble');
-    await user.click(screen.getByRole('button', { name: 'Add sound' }));
+    await user.click(screen.getByRole('button', { name: 'Add patch' }));
 
     expect(post).toHaveBeenCalledWith('/api/v1/admin/synths/model-d/sounds', {
       body: expect.objectContaining({
@@ -396,7 +396,7 @@ describe('editing a sound', () => {
   it('refuses to show a stored sound in a shape it cannot read, rather than dropping its steps', () => {
     render(<SoundForm synthId="model-d" mode="edit" sound={{ ...STORED, steps: 'nope' }} />);
     expect(screen.getByRole('alert')).toHaveTextContent('cannot be edited here');
-    expect(screen.queryByRole('button', { name: 'Save sound' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Save patch' })).not.toBeInTheDocument();
   });
 });
 
@@ -505,7 +505,7 @@ describe("a synth's library, refused and undone", () => {
 
   it('says a synth with no sounds has none, and marks an edited sound', () => {
     const { unmount } = render(<SoundLibrary synthId="model-d" canAdd sounds={[]} />);
-    expect(screen.getByText('This synth has no sounds yet.')).toBeInTheDocument();
+    expect(screen.getByText('This synth has no patches yet.')).toBeInTheDocument();
     unmount();
 
     render(
@@ -544,7 +544,7 @@ describe('editing a sound, row by row', () => {
 
     await user.type(screen.getByLabelText(/^Tags/, INPUT), ', , classic');
     await user.selectOptions(screen.getByLabelText(/^Level/, INPUT), '2');
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     const body = patch.mock.calls[0][1]?.body as Record<string, unknown>;
     expect(body.steps).toEqual([
@@ -568,7 +568,7 @@ describe('editing a sound, row by row', () => {
 
     await user.click(screen.getByRole('button', { name: 'Remove' }));
     await user.click(screen.getByRole('button', { name: 'Remove tweak 1' }));
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(patch.mock.calls[0][1]?.body).toMatchObject({ context: {}, tweaks: [] });
   });
@@ -579,7 +579,7 @@ describe('editing a sound, row by row', () => {
 
     await user.click(screen.getByRole('button', { name: 'Add a control' }));
     await user.type(screen.getByLabelText('Control 2'), 'cutoff');
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(patch).not.toHaveBeenCalled();
     expect(screen.getAllByText('cutoff is listed twice')).not.toHaveLength(0);
@@ -592,7 +592,7 @@ describe('editing a sound, row by row', () => {
 
     await user.click(screen.getByRole('button', { name: 'Add a control' }));
     await user.click(screen.getByRole('button', { name: 'Add a control' }));
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(patch).not.toHaveBeenCalled();
     expect(screen.getAllByText('Every control row needs a control id')).not.toHaveLength(0);
@@ -608,7 +608,7 @@ describe('editing a sound, row by row', () => {
     );
     render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
 
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
     expect(await screen.findByText('cutoff must be between 0 and 10')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Remove step 1' }));
@@ -625,10 +625,10 @@ describe('editing a sound, row by row', () => {
     patch.mockRejectedValue(new Error('network'));
     render(<SoundForm synthId="model-d" mode="edit" sound={STORED} />);
 
-    await user.click(screen.getByRole('button', { name: 'Save sound' }));
+    await user.click(screen.getByRole('button', { name: 'Save patch' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Could not save the sound. Try again.'
+      'Could not save the patch. Try again.'
     );
   });
 

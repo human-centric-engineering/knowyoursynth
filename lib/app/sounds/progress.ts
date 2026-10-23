@@ -87,8 +87,8 @@ export async function recordProgress(
     select: { id: true, steps: true },
   });
   if (!sound)
-    throw new ValidationError(`${def.id} has no library sound ${slug}`, {
-      errors: [{ path: 'slug', message: `No library sound ${slug} on ${def.id}` }],
+    throw new ValidationError(`${def.id} has no library patch ${slug}`, {
+      errors: [{ path: 'slug', message: `No library patch ${slug} on ${def.id}` }],
     });
   const n = stepCount(sound.steps);
   if (input.step >= n)

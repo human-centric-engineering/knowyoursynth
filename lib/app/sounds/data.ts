@@ -27,7 +27,7 @@ export const MAX_CABLES = 500;
 export const SynthIdSchema = z.string().regex(/^[a-z0-9-]{1,64}$/, 'Not a synth id');
 
 /** A library sound's slug within its synth (`stacked-night-bass`). */
-export const SoundSlugSchema = z.string().regex(/^[a-z0-9-]{1,120}$/, 'Not a library sound id');
+export const SoundSlugSchema = z.string().regex(/^[a-z0-9-]{1,120}$/, 'Not a library patch id');
 
 /** A user sound's id, as Prisma's `cuid()` writes them. Anything else cannot be one, so it is not looked up. */
 export const UserSoundIdSchema = z.string().regex(/^[a-z0-9]{1,40}$/);
@@ -47,7 +47,7 @@ export const SoundTagSchema = z.string().regex(/^[a-z0-9][a-z0-9 &'-]{0,39}$/, '
 export const MAX_SOUND_TAGS = 3;
 
 /** A sound's name and notes, as the API takes them. Exported so the save dialog checks them the same way. */
-export const NameSchema = z.string().trim().min(1, 'Name the sound').max(120);
+export const NameSchema = z.string().trim().min(1, 'Name the patch').max(120);
 export const NotesSchema = z.string().trim().max(2000);
 
 /** A panel as the page sends it: control values and the cables in, before they are checked against the synth. */
@@ -84,10 +84,10 @@ export const CreateUserSoundSchema = z
       .optional(),
   })
   .refine((v) => v.panel || v.source, {
-    message: 'Send the panel, or name the library sound to copy',
+    message: 'Send the panel, or name the library patch to copy',
     path: ['panel'],
   })
-  .refine((v) => v.name || v.source, { message: 'Name the sound', path: ['name'] });
+  .refine((v) => v.name || v.source, { message: 'Name the patch', path: ['name'] });
 export type CreateUserSound = z.infer<typeof CreateUserSoundSchema>;
 
 /**
@@ -125,7 +125,7 @@ export type UpdateUserSound = z.infer<typeof UpdateUserSoundSchema>;
  * had.
  */
 export const PublishUserSoundSchema = z.object({
-  confirm: z.literal(true, { error: 'Confirm the sound is yours to publish' }),
+  confirm: z.literal(true, { error: 'Confirm the patch is yours to publish' }),
   tags: z
     .array(SoundTagSchema)
     .max(MAX_SOUND_TAGS, `At most ${MAX_SOUND_TAGS} tags`)

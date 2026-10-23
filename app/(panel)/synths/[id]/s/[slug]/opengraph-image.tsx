@@ -13,7 +13,7 @@ import { BRAND } from '@/lib/brand';
  * catalogue stops serving, stops having a card when it stops having a page.
  */
 
-export const alt = `A sound shared on ${BRAND.name}`;
+export const alt = `A patch shared on ${BRAND.name}`;
 export const size = SOCIAL_CARD_SIZE;
 export const contentType = 'image/png';
 

@@ -14,8 +14,8 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: 'Add a sound · Catalogue',
-  description: "Add a sound and its lesson to a synth's library.",
+  title: 'Add a patch · Catalogue',
+  description: "Add a patch and its lesson to a synth's library.",
 };
 
 /**
@@ -34,7 +34,7 @@ export default async function NewCatalogueSoundPage({ params }: Props) {
         <Link href={back} className="text-muted-foreground text-sm hover:underline">
           ← {detail ? `${detail.synth.maker} ${detail.synth.name}` : id} sounds
         </Link>
-        <h1 className="text-2xl font-semibold">Add a sound</h1>
+        <h1 className="text-2xl font-semibold">Add a patch</h1>
       </header>
 
       <SharedSettingsReadOnlyNotice />
@@ -45,7 +45,7 @@ export default async function NewCatalogueSoundPage({ params }: Props) {
         </p>
       ) : detail.definitionVersion === null ? (
         <p className="text-muted-foreground text-sm">
-          {detail.synth.name} is not built yet, so a sound cannot be checked against it.
+          {detail.synth.name} is not built yet, so a patch cannot be checked against it.
         </p>
       ) : (
         <>

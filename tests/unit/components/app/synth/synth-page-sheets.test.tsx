@@ -245,12 +245,12 @@ describe('at lg and up', () => {
     expect(screen.queryByRole('navigation', { name: 'Beside the panel' })).toBeNull();
     expect(screen.queryByRole('dialog')).toBeNull();
     // Nothing is open on a first visit: the library waits behind the sound picker, and there is no card.
-    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Patch library' })).toBeNull();
     expect(screen.queryByTestId('lesson-card')).toBeNull();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
 
     openSide('Sounds');
-    expect(screen.getByRole('heading', { name: 'Sound library' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Patch library' })).toBeTruthy();
 
     // One card at a time over the panel: the inspector, then the effects in its place.
     openSide('Inspect');
@@ -283,8 +283,8 @@ describe('at lg and up', () => {
     fireEvent.click(first);
     expect(stepShown()).toBe('step 1 of 1');
     openSide('Sounds');
-    fireEvent.click(screen.getByRole('button', { name: /^Choose a sound/ }));
-    expect(screen.queryByRole('heading', { name: 'Sound library' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /^Choose a patch/ }));
+    expect(screen.queryByRole('heading', { name: 'Patch library' })).toBeNull();
     expect(stepShown()).toBe('step 1 of 1');
     expect(screen.getByTestId('lesson-card').textContent).toContain('Step 1 of 1');
   });
@@ -305,12 +305,12 @@ describe('below lg', () => {
         .getAllByRole('button')
         .map((b) => b.textContent)
     ).toEqual(['Library', 'Lesson', 'Inspector', 'Tutor']);
-    expect(screen.queryByRole('region', { name: 'Sound library' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Patch library' })).toBeNull();
     expect(screen.queryByRole('article', { name: /Fat bass/ })).toBeNull();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
 
     fireEvent.click(within(bar()).getByRole('button', { name: 'Library' }));
-    expect(within(sheet('Library')).getByRole('region', { name: 'Sound library' })).toBeTruthy();
+    expect(within(sheet('Library')).getByRole('region', { name: 'Patch library' })).toBeTruthy();
     expect(
       screen.getByRole('button', { name: 'Library', expanded: true, hidden: true }).closest('nav')
     ).not.toBeNull();

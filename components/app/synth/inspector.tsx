@@ -308,7 +308,7 @@ export function Tooltip({ enabled = true, def, values, target, preset, cables }:
       )}
       {ctxLine && (
         <p className="mt-2 border-t border-(--kys-line) pt-2 leading-snug">
-          <span className="font-semibold text-(--kys-accent)">In this sound: </span>
+          <span className="font-semibold text-(--kys-accent)">In this patch: </span>
           {ctxLine}
         </p>
       )}
@@ -584,7 +584,7 @@ export function Inspector({
         <section className="rounded-xl border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
           <h2 className="kys-label mb-1 text-(--kys-muted)">Control inspector</h2>
           Hover or touch any knob, switch, jack or cable on the panel. This card explains what it
-          does in general, and what it is doing in the sound you have loaded. For a cable it says
+          does in general, and what it is doing in the patch you have loaded. For a cable it says
           what the output carries, what the input does with it, and how the sound changes.
         </section>
         {list}
@@ -612,14 +612,14 @@ export function Inspector({
         {c && <MapNote def={def} c={c} values={values} link className="mt-3 text-[14.5px]" />}
         {ctxLine && (
           <p className="mt-3 rounded-lg bg-(--kys-ground) p-3 text-[14.5px] leading-relaxed">
-            <span className="font-semibold text-(--kys-accent)">In this sound: </span>
+            <span className="font-semibold text-(--kys-accent)">In this patch: </span>
             {ctxLine}
           </p>
         )}
         {differs && (
           <div className="mt-3 flex items-center justify-between gap-2 text-sm">
             <span className="text-(--kys-muted)">
-              The sound has this at{' '}
+              The patch has this at{' '}
               <span className="font-mono text-(--kys-accent)">{formatValue(c, target[c.id])}</span>
             </span>
             <button

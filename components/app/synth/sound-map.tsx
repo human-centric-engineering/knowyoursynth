@@ -52,12 +52,12 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
     <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-3 py-2 text-xs text-(--kys-muted)">
       {map.status === 'failed' && (
         <span role="status">
-          Could not work out what is in this sound. Changing the sound tries again.
+          Could not work out what is in this patch. Changing the patch tries again.
         </span>
       )}
       {!map.state && map.status !== 'failed' && (
         <span role="status">
-          Working out what is in this sound… {Math.round(map.progress * 100)}%
+          Working out what is in this patch… {Math.round(map.progress * 100)}%
         </span>
       )}
       {map.state && dimOn && (
@@ -95,7 +95,7 @@ export function MapLegend({ def, values, dimOn, heatOn, outline }: MapLegendProp
           <span className="font-semibold text-(--kys-text)">
             {top.length
               ? 'A small move changes the sound most here:'
-              : 'No control changes this sound much with a small move.'}
+              : 'No control changes this patch much with a small move.'}
           </span>
           {top.map((c, i) => (
             <button

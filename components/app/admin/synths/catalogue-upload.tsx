@@ -23,7 +23,7 @@ import type { UploadProblem, UploadReport } from '@/lib/app/catalogue/upload';
 const MAX_MB = `${MAX_CONTENT_BYTES / (1024 * 1024)} MB`;
 
 const TABLES: { key: keyof UploadReport; label: string }[] = [
-  { key: 'sounds', label: 'Sounds' },
+  { key: 'sounds', label: 'Patches' },
   { key: 'lineage', label: 'History' },
   { key: 'notes', label: 'Notes' },
 ];

@@ -85,8 +85,8 @@ export function SoundLibrary({ synthId, sounds: initial, canAdd }: SoundLibraryP
         <FieldHelp title="Library order" ariaLabel="About the library order">
           <p>
             The order the synth&apos;s page lists its sounds in, first at the top. Move rows, then
-            save the order. Ordering does not mark a sound edited, so the seed still updates any
-            sound nobody has changed.
+            save the order. Ordering does not mark a patch edited, so the seed still updates any
+            patch nobody has changed.
           </p>
         </FieldHelp>
         {dirty && (
@@ -94,7 +94,7 @@ export function SoundLibrary({ synthId, sounds: initial, canAdd }: SoundLibraryP
         )}
         {canAdd && (
           <Button asChild size="sm" variant="outline" className="ml-auto">
-            <Link href={newSoundPath(synthId)}>Add a sound</Link>
+            <Link href={newSoundPath(synthId)}>Add a patch</Link>
           </Button>
         )}
       </div>
@@ -104,7 +104,7 @@ export function SoundLibrary({ synthId, sounds: initial, canAdd }: SoundLibraryP
         </p>
       )}
       {sounds.length === 0 ? (
-        <p className="text-muted-foreground text-sm">This synth has no sounds yet.</p>
+        <p className="text-muted-foreground text-sm">This synth has no patches yet.</p>
       ) : (
         <ol className="divide-y rounded-md border">
           {sounds.map((s, index) => (

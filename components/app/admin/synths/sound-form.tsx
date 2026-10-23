@@ -220,7 +220,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
   if (!draft) {
     return (
       <p role="alert" className="text-destructive text-sm">
-        The stored sound is not in a shape this form can show, so it cannot be edited here.
+        The stored patch is not in a shape this form can show, so it cannot be edited here.
       </p>
     );
   }
@@ -286,7 +286,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
       if (next) setDraft(next);
       setSavedNote('Saved.');
     } catch (err) {
-      setRefusal(refusalOf(err, 'Could not save the sound. Try again.'));
+      setRefusal(refusalOf(err, 'Could not save the patch. Try again.'));
     } finally {
       setSaving(false);
     }
@@ -354,13 +354,13 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
               'id',
               'Id',
               <p>
-                The sound&apos;s permanent id within this synth: lowercase letters, digits and
+                The patch&apos;s permanent id within this synth: lowercase letters, digits and
                 hyphens, for example <code>rubber-funk-bass</code>. Users&apos; copies and the seed
                 match on it, so it cannot be changed later.
               </p>
             )
           : field('id', 'Id', (p) => <Input {...p} value={draft.id} readOnly disabled />)}
-        {textInput('name', 'Name', <p>What the library lists the sound as.</p>)}
+        {textInput('name', 'Name', <p>What the library lists the patch as.</p>)}
         {textInput(
           'ref',
           'Reference',
@@ -369,7 +369,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
             be the exact patch.
           </p>
         )}
-        {textInput('artist', 'Artist', <p>The player the sound is in the style of.</p>)}
+        {textInput('artist', 'Artist', <p>The player the patch is in the style of.</p>)}
         {textInput(
           'tags',
           'Tags',
@@ -408,7 +408,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
             onChange={(e) => setField('blurb')(e.target.value)}
           />
         ),
-        <p>One sentence describing the sound, shown in the library.</p>
+        <p>One sentence describing the patch, shown in the library.</p>
       )}
       {field(
         'how',
@@ -428,7 +428,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
         'Phrase (JSON)',
         json(draft.phrase, setField('phrase'), 6),
         <p>
-          The short riff that shows the sound off:{' '}
+          The short riff that shows the patch off:{' '}
           <code>{'{ "bpm": 104, "loop": true, "steps": [[0, 36, 0.4], …] }'}</code>. Each step is{' '}
           <code>[beat, MIDI note, length in beats]</code>.
         </p>
@@ -439,7 +439,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
           Lesson steps{' '}
           <FieldHelp title="Lesson steps" ariaLabel="About lesson steps">
             <p>
-              The sound is built a step at a time, each on top of the last, from the synth&apos;s
+              The patch is built a step at a time, each on top of the last, from the synth&apos;s
               starting state. A step says what it does (title, module, why) and what it changes on
               the panel.
             </p>
@@ -571,7 +571,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
           What each control is doing{' '}
           <FieldHelp title="Control context" ariaLabel="About control context">
             <p>
-              Shown when a learner points at a control: its id, and what it is doing in this sound.
+              Shown when a learner points at a control: its id, and what it is doing in this patch.
               Each control once.
             </p>
           </FieldHelp>
@@ -634,7 +634,7 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
           Tweaks{' '}
           <FieldHelp title="Tweaks" ariaLabel="About tweaks">
             <p>
-              Suggestions once the sound is built: which control to move, what to try with it, and
+              Suggestions once the patch is built: which control to move, what to try with it, and
               what to listen for.
             </p>
           </FieldHelp>
@@ -711,12 +711,12 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
       </fieldset>
 
       <p className="text-muted-foreground text-xs">
-        Saving checks the whole sound against the synth and marks it edited: the seed stops updating
+        Saving checks the whole patch against the synth and marks it edited: the seed stops updating
         it from its data file.
       </p>
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={readOnly || saving}>
-          {saving ? 'Saving…' : mode === 'new' ? 'Add sound' : 'Save sound'}
+          {saving ? 'Saving…' : mode === 'new' ? 'Add patch' : 'Save patch'}
         </Button>
         {savedNote && <span className="text-muted-foreground text-sm">{savedNote}</span>}
       </div>

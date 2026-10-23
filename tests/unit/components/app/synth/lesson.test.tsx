@@ -88,7 +88,7 @@ describe('Lesson header and overview', () => {
 
   it('shows the modules the sound uses, in the order its steps first reach them', () => {
     setup();
-    const chain = within(panel()).getByLabelText('Parts of the synth this sound uses, in order');
+    const chain = within(panel()).getByLabelText('Parts of the synth this patch uses, in order');
     const firstSeen = [...new Set(sound.steps.map((s) => s.module))];
     expect(chain.querySelectorAll('.rounded-full')).toHaveLength(firstSeen.length);
   });

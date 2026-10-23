@@ -69,7 +69,7 @@ describe('/explore/patterns', () => {
     expect(list.getByText('@moog_fan').closest('a')).toBeNull();
     // the tabs between Explore's two lists
     expect(screen.getByRole('link', { name: 'Patterns' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: 'Sounds' })).toHaveAttribute('href', '/explore');
+    expect(screen.getByRole('link', { name: 'Patches' })).toHaveAttribute('href', '/explore');
   });
 
   it('asks the read for the sort and page in the address, and drops what does not parse', async () => {

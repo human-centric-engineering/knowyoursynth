@@ -86,7 +86,7 @@ export function Library({
     <section aria-labelledby="lib-h" className="flex min-h-0 flex-col gap-3">
       <div className="flex items-baseline justify-between">
         <h2 id="lib-h" className="kys-label text-(--kys-muted)">
-          Sound library
+          Patch library
         </h2>
         <span className="font-mono text-xs text-(--kys-faint)">
           {shown.length} of {presets.length}
@@ -98,7 +98,7 @@ export function Library({
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search artist, song, style…"
-        aria-label="Search the sound library"
+        aria-label="Search the patch library"
         className="w-full rounded-md border border-(--kys-line) bg-(--kys-surface) px-3 py-2 text-sm text-(--kys-text) placeholder:text-(--kys-faint)"
       />
       <div className="flex flex-wrap gap-1.5">
@@ -168,7 +168,7 @@ export function Library({
           <li className="rounded-lg border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
             {onAskTutor && words.length ? (
               <>
-                No library sound matches that. Clear the search
+                No library patch matches that. Clear the search
                 {elsewhere ? ', pick another category' : ''}, or{' '}
                 <button
                   type="button"
@@ -180,7 +180,7 @@ export function Library({
                 .
               </>
             ) : (
-              'No library sound matches that. Clear the search or pick another category.'
+              'No library patch matches that. Clear the search or pick another category.'
             )}
           </li>
         )}

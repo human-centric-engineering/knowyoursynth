@@ -120,7 +120,7 @@ export function initAppSubjectSources(): void {
         section: SOUNDS_SECTION,
         disposition: 'export',
         description:
-          'Sounds you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a sound and whether the tutor designed it, the library sound each copy credits, whether and when you shared or published each, with its address and tags, when moderators unlisted one, and the pattern each plays by default.',
+          'Patches you saved: the synth, the name and notes, the panel settings and cables, the lesson saved with a patch and whether the tutor designed it, the library patch each copy credits, whether and when you shared or published each, with its address and tags, when moderators unlisted one, and the pattern each plays by default.',
       },
       {
         model: 'UserPattern',
@@ -141,14 +141,14 @@ export function initAppSubjectSources(): void {
         section: REPORTS_SECTION,
         disposition: 'export',
         description:
-          "Reports you filed about other people's shared sounds: the sound's address, the reason and your note, and whether it is still open. Not who resolved it.",
+          "Reports you filed about other people's shared patches: the patch's address, the reason and your note, and whether it is still open. Not who resolved it.",
       },
       {
         model: 'SynthPreference',
         section: PANELS_SECTION,
         disposition: 'export',
         description:
-          'The panel you last left on each synth: the library sound and lesson step, your sound if one was open, and the settings and cables.',
+          'The panel you last left on each synth: the library patch and lesson step, your patch if one was open, and the settings and cables.',
       },
       {
         model: 'UserPreference',
@@ -162,20 +162,20 @@ export function initAppSubjectSources(): void {
         section: PROGRESS_SECTION,
         disposition: 'export',
         description:
-          'How far you got through each lesson: the library sound, the furthest step and when you finished it.',
+          'How far you got through each lesson: the library patch, the furthest step and when you finished it.',
       },
       {
         model: 'Favourite',
         section: FAVOURITES_SECTION,
         disposition: 'export',
-        description: 'What you starred: synths, library sounds and your own sounds.',
+        description: 'What you starred: synths, library patches and your own patches.',
       },
       {
         model: 'SynthProfile',
         section: PROFILE_SECTION,
         disposition: 'export',
         description:
-          'Your synth profile: your username and when you last changed it, your links, who can see your page, and when you first published each sound in the last day.',
+          'Your synth profile: your username and when you last changed it, your links, who can see your page, and when you first published each patch in the last day.',
       },
       {
         model: 'OwnedInstrument',

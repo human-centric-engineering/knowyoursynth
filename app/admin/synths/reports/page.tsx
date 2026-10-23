@@ -13,8 +13,8 @@ import type { QueuePattern } from '@/lib/app/patterns/report-data';
 import { logger } from '@/lib/logging';
 
 export const metadata: Metadata = {
-  title: 'Reported sounds',
-  description: 'Shared sounds and patterns people reported: unlist, restore or dismiss each.',
+  title: 'Reported patches',
+  description: 'Shared patches and patterns people reported: unlist, restore or dismiss each.',
 };
 
 /** Where the queue lives, for the tabs. */
@@ -27,7 +27,7 @@ interface Props {
 /** What is queued: shared sounds (`f-sharing` h4), or shared patterns (`f-step-sequencer` t-83). */
 type Kind = 'sounds' | 'patterns';
 const KINDS: readonly [Kind, string][] = [
-  ['sounds', 'Sounds'],
+  ['sounds', 'Patches'],
   ['patterns', 'Patterns'],
 ];
 
@@ -71,15 +71,15 @@ export default async function ReportedSoundsAdminPage({ searchParams }: Props) {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">
-          Reported sounds{' '}
-          <FieldHelp title="Reported sounds">
+          Reported patches{' '}
+          <FieldHelp title="Reported patches">
             <p>
-              Shared sounds and patterns signed-in users reported from their pages. Who reported one
-              is never shown.
+              Shared patches and patterns signed-in users reported from their pages. Who reported
+              one is never shown.
             </p>
             <p className="mt-2">
               <strong>Unlist</strong> takes it off its page, Explore, its owner&apos;s profile and
-              the sitemap, and stops its owner sharing it again; My sounds or My patterns tells
+              the sitemap, and stops its owner sharing it again; My patches or My patterns tells
               them. <strong>Restore</strong> puts it back as they left it. <strong>Dismiss</strong>{' '}
               closes the reports and leaves it up. Every action is in the audit log.
             </p>

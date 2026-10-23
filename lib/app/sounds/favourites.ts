@@ -91,7 +91,7 @@ async function targetOf(
       where: { id: input.soundId, userId },
       select: { id: true },
     });
-    if (!own) throw new NotFoundError('Sound not found');
+    if (!own) throw new NotFoundError('Patch not found');
     return { userSoundId: own.id };
   }
   const def = await playableSynth(input.synthId);
@@ -101,8 +101,8 @@ async function targetOf(
     select: { id: true },
   });
   if (!sound)
-    throw new ValidationError(`${def.id} has no library sound ${input.slug}`, {
-      errors: [{ path: 'slug', message: `No library sound ${input.slug} on ${def.id}` }],
+    throw new ValidationError(`${def.id} has no library patch ${input.slug}`, {
+      errors: [{ path: 'slug', message: `No library patch ${input.slug} on ${def.id}` }],
     });
   return { synthSoundId: sound.id };
 }

@@ -204,7 +204,7 @@ export function Lineage({ synth, lineage: l, sounds, open, onClose, onSelect }: 
                             }}
                             className="mt-2.5 self-start rounded-md border border-(--kys-line) px-2.5 py-1 text-left text-sm text-(--kys-muted) hover:border-(--kys-muted) hover:text-(--kys-text)"
                           >
-                            Load a sound in this style:{' '}
+                            Load a patch in this style:{' '}
                             <span className="text-(--kys-text)">{sound}</span>
                           </button>
                         )}

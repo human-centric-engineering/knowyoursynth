@@ -15,8 +15,8 @@ function hrefOf(f: Favourite): string {
 
 const KIND_LABEL: Record<Favourite['kind'], string> = {
   synth: 'Synth',
-  sound: 'Library sound',
-  mine: 'Your sound',
+  sound: 'Library patch',
+  mine: 'Your patch',
 };
 
 /**
@@ -31,14 +31,14 @@ export async function FavouritesCard({ userId }: { userId: string }) {
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="space-y-1.5">
           <CardTitle>Favourites</CardTitle>
-          <CardDescription>Synths and sounds you starred, most recent first.</CardDescription>
+          <CardDescription>Synths and patches you starred, most recent first.</CardDescription>
         </div>
         <Star className="text-muted-foreground h-4 w-4" aria-hidden="true" />
       </CardHeader>
       <CardContent>
         {favourites.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            No favourites yet. Press the star beside a synth&apos;s name, or beside a sound in its
+            No favourites yet. Press the star beside a synth&apos;s name, or beside a patch in its
             library, and it will show up here.
           </p>
         ) : (

@@ -22,7 +22,7 @@ export function openSide(tab: SideTab): void {
   // `hidden`: a modal sheet that is up takes the bottom bar out of the accessibility tree, but it is still there.
   if (screen.queryByRole('navigation', { name: 'Beside the panel', hidden: true })) return;
   if (tab === 'Sounds') {
-    const b = screen.getByRole('button', { name: /^Choose a sound/ });
+    const b = screen.getByRole('button', { name: /^Choose a patch/ });
     if (!pressed(b, 'aria-expanded')) fireEvent.click(b);
     return;
   }

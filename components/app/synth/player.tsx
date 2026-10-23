@@ -99,10 +99,10 @@ export function SoundPicker({
         className="kys-sound-pick"
         onClick={onChooseSound}
         aria-expanded={soundsOpen}
-        aria-label={`Choose a sound (now: ${soundName})`}
-        title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a sound from the library'}
+        aria-label={`Choose a patch (now: ${soundName})`}
+        title={soundRef ? `${soundName}: ${soundRef}` : 'Choose a patch from the library'}
       >
-        <span className="kys-sound-pick-eyebrow">Sound</span>
+        <span className="kys-sound-pick-eyebrow">Patch</span>
         <span className="kys-sound-pick-name">{soundName}</span>
         <ChevronDown size={16} className="kys-sound-pick-caret" aria-hidden="true" />
       </button>
@@ -111,7 +111,7 @@ export function SoundPicker({
           ref={pop}
           className="kys-sounds-pop kys-scroll"
           role="dialog"
-          aria-label="Sounds"
+          aria-label="Patches"
           hidden={!soundsOpen}
         >
           {sounds}
@@ -161,7 +161,7 @@ export function SoundDesign({
           n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
         ) : (
           <p className="kys-design-sub">
-            This sound has no walkthrough. Choose a library sound to learn how one is built.
+            This patch has no walkthrough. Choose a library patch to learn how one is built.
           </p>
         )}
       </div>
@@ -223,7 +223,7 @@ export function Chapters({
           type="button"
           onClick={() => onStep(null)}
           aria-current={walking ? undefined : 'step'}
-          aria-label="The finished sound"
+          aria-label="The finished patch"
         >
           <span className="kys-chapter-track" />
           <span className="kys-chapter-label" aria-hidden="true">
@@ -250,7 +250,7 @@ export function PlayButton({ playing, onClick }: { playing: boolean; onClick: ()
       help={
         playing
           ? undefined
-          : 'A short phrase that suits the sound, played through the panel. With the sequencer open, its pattern.'
+          : 'A short phrase that suits the patch, played through the panel. With the sequencer open, its pattern.'
       }
     >
       <button type="button" onClick={onClick} className={`kys-play ${playing ? 'is-playing' : ''}`}>

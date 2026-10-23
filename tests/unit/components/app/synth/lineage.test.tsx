@@ -133,10 +133,10 @@ describe('Lineage', () => {
     const name = sounds.find((p) => p.id === withSound.sound)?.name ?? '';
     const { dialog, onSelect, onClose } = setup();
     fireEvent.click(tab(/Heard on/));
-    const buttons = screen.getAllByRole('button', { name: /^Load a sound in this style/ });
+    const buttons = screen.getAllByRole('button', { name: /^Load a patch in this style/ });
     expect(buttons).toHaveLength(heard.filter((h) => sounds.some((p) => p.id === h.sound)).length);
     fireEvent.click(
-      screen.getAllByRole('button', { name: `Load a sound in this style: ${name}` })[0]
+      screen.getAllByRole('button', { name: `Load a patch in this style: ${name}` })[0]
     );
     expect(onSelect).toHaveBeenCalledWith(withSound.sound);
     expect(dialog.open).toBe(false);
@@ -171,7 +171,7 @@ describe('Lineage', () => {
     const first = (lineage.heard ?? [])[0];
     setup({ heard: [{ ...first, sound: 'not-in-the-library' }] });
     fireEvent.click(tab(/Heard on/));
-    expect(screen.queryByRole('button', { name: /^Load a sound/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Load a patch/ })).toBeNull();
   });
 
   it('has no Heard on tab when there are neither records nor players', () => {

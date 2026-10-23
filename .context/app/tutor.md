@@ -555,7 +555,7 @@ as it arrives, and a designed sound opens as it arrives, as the prototype's did.
 - **The meter** reads the allowance when the panel opens and after every turn. At zero, or on a 429
   `TUTOR_ALLOWANCE_SPENT` (whose `details` it takes), the composer closes.
 - **The library's empty search** offers "ask the tutor to design one", which scrolls to the panel and
-  puts "Design a sound: _the search_" in the composer, cut to the 4,000 characters the route takes.
+  puts "Design a patch: _the search_" in the composer, cut to the 4,000 characters the route takes.
   It does not send it: each question counts. With a category chosen and the search matching sounds
   in another, it says to pick another category too.
 

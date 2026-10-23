@@ -294,7 +294,7 @@ describe('SynthPage layout', () => {
     page();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     expect(button('Blank patch')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     // Fat bass closes the filter: the panel's cutoff knob reads the sound's value.
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       '-2'
@@ -470,10 +470,10 @@ describe('SynthPage patch', () => {
     fireEvent.click(button('MAIN OUT'));
     expect(screen.getByText('2 controls moved')).toBeTruthy();
 
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
 
     expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       '-2'
     );
@@ -507,7 +507,7 @@ describe('SynthPage patch', () => {
     expect(stepShown()).toBeNull();
     openSide('Lesson');
     const card = screen.getByTestId('lesson-card');
-    expect(card.textContent).toContain('The finished sound');
+    expect(card.textContent).toContain('The finished patch');
     expect(within(card).getByRole('button', { name: /Build it step by step/ })).toBeTruthy();
   });
 
@@ -1300,22 +1300,22 @@ describe('SynthPage player', () => {
     ).toEqual([
       'Lesson step 1: Open the mixer',
       'Lesson step 2: Close the filter',
-      'The finished sound',
+      'The finished patch',
     ]);
-    // The finished sound is where it opens.
-    expect(button('The finished sound').getAttribute('aria-current')).toBe('step');
+    // The finished patch is where it opens.
+    expect(button('The finished patch').getAttribute('aria-current')).toBe('step');
 
-    // The finished sound has the second step's cutoff on the panel.
+    // The finished patch has the second step's cutoff on the panel.
     expect(cutoff()).toBe('-2');
 
     fireEvent.click(button('Lesson step 1: Open the mixer'));
     expect(stepShown()).toBe('step 1 of 2');
     expect(button('Lesson step 1: Open the mixer').getAttribute('aria-current')).toBe('step');
-    expect(button('The finished sound').getAttribute('aria-current')).toBeNull();
+    expect(button('The finished patch').getAttribute('aria-current')).toBeNull();
     // The panel is at the first step: the cutoff the second step sets is not on it yet.
     expect(cutoff()).not.toBe('-2');
 
-    fireEvent.click(button('The finished sound'));
+    fireEvent.click(button('The finished patch'));
     expect(stepShown()).toBeNull();
     expect(cutoff()).toBe('-2');
   });
@@ -1332,7 +1332,7 @@ describe('SynthPage player', () => {
 
   it('starts, steps through and finishes the lesson from the card', () => {
     twoSteps();
-    fireEvent.click(button('The finished sound'));
+    fireEvent.click(button('The finished patch'));
     fireEvent.click(button('Build it step by step'));
     expect(stepShown()).toBe('step 1 of 2');
     expect(button('Previous lesson step').hasAttribute('disabled')).toBe(true);
@@ -1365,9 +1365,9 @@ describe('SynthPage player', () => {
 
   it('keeps the step in a card between Previous and Next, and invites a start with the finished sound on', () => {
     twoSteps();
-    fireEvent.click(button('The finished sound'));
+    fireEvent.click(button('The finished patch'));
     const card = within(player()).getByTestId('lesson-card');
-    expect(card.textContent).toMatch(/The finished sound/);
+    expect(card.textContent).toMatch(/The finished patch/);
     fireEvent.click(within(card).getByRole('button', { name: /Build it step by step/ }));
     expect(card.textContent).toMatch(/Step 1 of 2 · Mixer/);
     expect(card.textContent).toMatch(/Loud\./);
@@ -1377,7 +1377,7 @@ describe('SynthPage player', () => {
 
   it('opens the library over the bar from the sound’s name, and closes it from there again', async () => {
     twoSteps();
-    const pick = within(player()).getByRole('button', { name: 'Choose a sound (now: Two steps)' });
+    const pick = within(player()).getByRole('button', { name: 'Choose a patch (now: Two steps)' });
     expect(pick.getAttribute('title')).toContain('In the style of two people');
     expect(screen.queryByRole('searchbox')).toBeNull();
     fireEvent.click(pick);
@@ -1411,7 +1411,7 @@ describe('SynthPage player', () => {
 
   it('describes the library sound on the panel under the player', () => {
     twoSteps();
-    const about = screen.getByRole('region', { name: 'About the sound' });
+    const about = screen.getByRole('region', { name: 'About the patch' });
     expect(within(about).getByText('In the style of two people')).toBeTruthy();
     expect(within(about).getByText('A sound in two moves.')).toBeTruthy();
   });
@@ -1486,7 +1486,7 @@ describe('SynthPage riff and engine events', () => {
     expect(button('Stop')).toBeTruthy();
   });
 
-  it('plays the riff again when "Restore sound" is pressed while it plays', async () => {
+  it('plays the riff again when "Restore patch" is pressed while it plays', async () => {
     page();
     await act(async () => {
       fireEvent.click(button('Play'));
@@ -1495,17 +1495,17 @@ describe('SynthPage riff and engine events', () => {
     engine.send.mockClear();
 
     await act(async () => {
-      fireEvent.click(button('Restore sound'));
+      fireEvent.click(button('Restore patch'));
     });
 
     expect(engine.send).toHaveBeenCalledWith({ type: 'phrase', phrase: FAT_BASS.phrase });
   });
 
-  it('does not start a riff when "Restore sound" is pressed while none plays', () => {
+  it('does not start a riff when "Restore patch" is pressed while none plays', () => {
     page();
     fireEvent.click(button('A-440'));
     engine.send.mockClear();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(engine.send.mock.calls.some((c) => (c[0] as { type: string }).type === 'phrase')).toBe(
       false
     );
@@ -1563,7 +1563,7 @@ describe('SynthPage sounds', () => {
   it('with no sounds it opens on a blank patch with nothing to restore or play', () => {
     page({ detail: { ...detail, sounds: [] } });
     expect(loadedName()).toBe('Blank patch');
-    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Play' })).toBeNull();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
@@ -1577,7 +1577,7 @@ describe('SynthPage sounds', () => {
     });
     expect(readStored(SESSION_KEY)).toMatchObject({ presetId: null, step: null });
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: 'Restore sound' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
   });
 
   it('falls back to the first sound when the stored sound is not in the list', () => {
@@ -1587,7 +1587,7 @@ describe('SynthPage sounds', () => {
     // The first sound is the target: the stored cutoff (init 1) is off its -2.
     expect(screen.getByText(/moved/)).toBeTruthy();
 
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
 
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       '-2'

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * The app's cards on `/dashboard`: My sounds, then Favourites and Lessons (`f-my-sounds` s2, s4), each for the signed-in
+ * The app's cards on `/dashboard`: My patches, then Favourites and Lessons (`f-my-sounds` s2, s4), each for the signed-in
  * user. The cards are stubbed; each has its own test.
  *
  * @see components/app/dashboard/synth-cards.tsx

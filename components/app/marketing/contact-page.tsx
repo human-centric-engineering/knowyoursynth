@@ -37,7 +37,7 @@ export default function ContactPage() {
             everything, though we can&apos;t always reply.
           </p>
           <p>
-            To report a published sound, use <strong className="text-(--kys-text)">Report</strong>{' '}
+            To report a published patch, use <strong className="text-(--kys-text)">Report</strong>{' '}
             on its page. It reaches us faster.
           </p>
         </div>

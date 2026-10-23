@@ -129,24 +129,24 @@ describe('Inspector', () => {
   it('shows what the control is doing in this sound, from the preset context', () => {
     inspector({ preset: { context: { 'filter.cutoff': 'Almost closed for a dull thud.' } } });
     focus(control('filter.cutoff'));
-    expect(screen.getByText('In this sound:')).toBeTruthy();
+    expect(screen.getByText('In this patch:')).toBeTruthy();
     expect(screen.getByText('Almost closed for a dull thud.')).toBeTruthy();
 
     focus(control('filter.emphasis'));
-    expect(screen.queryByText('In this sound:')).toBeNull();
+    expect(screen.queryByText('In this patch:')).toBeNull();
   });
 
   it('offers no "Put it back" while the value is where the sound has it', () => {
     inspector();
     focus(control('filter.cutoff'));
     expect(screen.queryByRole('button', { name: 'Put it back' })).toBeNull();
-    expect(screen.queryByText(/The sound has this at/)).toBeNull();
+    expect(screen.queryByText(/The patch has this at/)).toBeNull();
   });
 
   it('offers "Put it back" when the value differs, saying where the sound had it, and puts it back with null', () => {
     const { props } = inspector({ values: { ...def.init, 'filter.cutoff': 3 }, target: def.init });
     focus(control('filter.cutoff'));
-    expect(screen.getByText(/The sound has this at/).textContent).toContain(CUT_AT_INIT);
+    expect(screen.getByText(/The patch has this at/).textContent).toContain(CUT_AT_INIT);
     expect(props.onChange).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: 'Put it back' }));

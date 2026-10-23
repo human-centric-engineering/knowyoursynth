@@ -44,7 +44,7 @@ export function PublicProfileView({ profile }: { profile: PublicProfile }) {
       </header>
       {sounds.length > 0 && (
         <section className="mt-6">
-          <h2 className="kys-label mb-2 text-(--kys-muted)">Sounds ({sounds.length})</h2>
+          <h2 className="kys-label mb-2 text-(--kys-muted)">Patches ({sounds.length})</h2>
           <SoundCards sounds={sounds} showAuthor={false} />
         </section>
       )}

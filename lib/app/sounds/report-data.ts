@@ -12,7 +12,7 @@ export type SoundReportReason = (typeof SOUND_REPORT_REASONS)[number];
 /** What each reason is called, on the report button and in the queue. */
 export const SOUND_REPORT_REASON_LABELS: Record<SoundReportReason, string> = {
   offensive: 'Offensive or hateful',
-  not_theirs: "It's someone else's sound",
+  not_theirs: "It's someone else's patch",
   spam: 'Spam',
   other: 'Something else',
 };

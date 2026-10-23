@@ -49,8 +49,8 @@ describe('NewCatalogueSoundPage', () => {
 
     render(await NewCatalogueSoundPage(props));
 
-    expect(screen.getByRole('heading', { name: 'Add a sound' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Add sound' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Add a patch' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add patch' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Moog Model D sounds/ })).toHaveAttribute(
       'href',
       '/admin/synths/catalogue/model-d?tab=sounds'
@@ -63,7 +63,7 @@ describe('NewCatalogueSoundPage', () => {
     render(await NewCatalogueSoundPage(props));
 
     expect(screen.getByText(/Model D is not built yet/)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Add sound' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add patch' })).not.toBeInTheDocument();
   });
 
   it('says the synth could not be loaded, naming it by its id', async () => {
@@ -73,7 +73,7 @@ describe('NewCatalogueSoundPage', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('The synth could not be loaded.');
     expect(screen.getByRole('link', { name: /model-d sounds/ })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Add sound' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add patch' })).not.toBeInTheDocument();
   });
 
   it('is a 404 for a synth that does not exist', async () => {

@@ -65,7 +65,7 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="The short version">
         <ul>
           <li>
-            We keep what you make and do here (your account, your sounds, your profile, your lists
+            We keep what you make and do here (your account, your patches, your profile, your lists
             of synths and how far you got through the lessons) so it is there when you come back, on
             any device.
           </li>
@@ -94,9 +94,9 @@ export default function PrivacyPolicyPage() {
           safe.
         </p>
         <p>
-          <strong>What you make.</strong> The sounds you save: the synth, the name and notes, the
-          panel settings and cables, and the lesson that comes with a sound the tutor designed.
-          Whether each one is private, shared or published, its tags, and the sound it was copied
+          <strong>What you make.</strong> The patches you save: the synth, the name and notes, the
+          panel settings and cables, and the lesson that comes with a patch the tutor designed.
+          Whether each one is private, shared or published, its tags, and the patch it was copied
           from, so the credit can link to it.
         </p>
         <p>
@@ -114,24 +114,24 @@ export default function PrivacyPolicyPage() {
           See <a href="#the-tutor">The tutor</a> below.
         </p>
         <p>
-          <strong>Reports, suggestions and messages.</strong> Reports you file about shared sounds,
+          <strong>Reports, suggestions and messages.</strong> Reports you file about shared patches,
           synths you suggest for the databank, and anything you send through the contact form, so we
           can act on them and answer you.
         </p>
         <p>
           We use this data to run {BRAND.name} for you, which is the contract between us. We keep
-          your account secure and shared sounds free of abuse because we have a legitimate interest
+          your account secure and shared patches free of abuse because we have a legitimate interest
           in doing so. Analytics run only with your consent.
         </p>
       </LegalSection>
 
       <LegalSection title="What is public">
         <p>
-          Your sounds are private until you share them. A sound shared with a link can be opened by
+          Your patches are private until you share them. A patch shared with a link can be opened by
           anyone who has the link, signed in or not. It is not listed anywhere and is hidden from
-          search engines. A sound you publish is listed on Explore, on your public page and in the
+          search engines. A patch you publish is listed on Explore, on your public page and in the
           site map search engines read, and anyone can play it. Anyone signed in can save a copy of
-          a shared or published sound to their own account. A copy of a published sound credits it,
+          a shared or published patch to their own account. A copy of a published patch credits it,
           under your username; a copy of a link share credits nobody, so your link is never passed
           on.
         </p>
@@ -142,8 +142,8 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           Your profile page is private until you switch it on in Settings. Once it is on, it shows
-          your username, your links and your published sounds, and your owned and wanted synths only
-          if you switch each list on as well.
+          your username, your links and your published patches, and your owned and wanted synths
+          only if you switch each list on as well.
         </p>
         <p>
           Links to your channels open the other site in a new tab. Nothing from YouTube, Spotify,
@@ -158,7 +158,7 @@ export default function PrivacyPolicyPage() {
           the provider your message, the synth you are on, the panel as you have it (its settings
           and cables), the conversation so far, and what the tutor looked up to answer you. We do
           not send your name, your email address or your username. The provider sends back the
-          answer, and any change or sound it suggests.
+          answer, and any change or patch it suggests.
         </p>
         <p>
           <OwnerField>
@@ -193,7 +193,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           <strong>What the synth page keeps in your browser.</strong> The last synth you opened and
-          the view you chose, each synth&apos;s panel as you left it and the shared sound it was
+          the view you chose, each synth&apos;s panel as you left it and the shared patch it was
           opened from, your display choices (hover help, the sound map, the harmonics strip and the
           effects rack, and whether the rack is open), whether to reconnect your MIDI device, and
           when and under which account those settings last changed. Signed in, the settings and each
@@ -294,8 +294,8 @@ export default function PrivacyPolicyPage() {
           <Link href="/settings" className={legalLink}>
             Settings
           </Link>
-          , deletes your account and what is in it, published sounds included. Copies other people
-          saved of your sounds are theirs and stay with them, without the credit that named you. A
+          , deletes your account and what is in it, published patches included. Copies other people
+          saved of your patches are theirs and stay with them, without the credit that named you. A
           report you filed, a synth you suggested, and the record of what each tutor turn cost are
           kept but no longer say who they came from. Contact messages go too, unless you never
           confirmed your email address (see <em>How long we keep it</em>). Nobody you report is ever

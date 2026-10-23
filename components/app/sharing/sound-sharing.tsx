@@ -43,7 +43,7 @@ const soundPath = (id: string) => `/api/v1/sounds/${encodeURIComponent(id)}`;
 function failureOf(err: unknown, doing: string): string {
   if (err instanceof APIClientError) {
     if (err.status === 401) return `Your session has ended. Sign in again to ${doing}.`;
-    if (err.status === 404) return 'That sound is no longer in your account.';
+    if (err.status === 404) return 'That patch is no longer in your account.';
     return err.message;
   }
   return `Could not ${doing}. Check your connection and try again.`;
@@ -398,9 +398,9 @@ export function PublishDialog({
         ) : needsName ? (
           <>
             <DialogDescription className="text-sm text-(--kys-muted)">
-              Published sounds go under your username, so choose one first. It does not have to be
+              Published patches go under your username, so choose one first. It does not have to be
               your real name, and your account name and email are never shown. You will come back to
-              this sound afterwards.
+              this patch afterwards.
             </DialogDescription>
             <DialogFooter>
               <button type="button" onClick={onClose} className={buttonClass}>
@@ -422,7 +422,7 @@ export function PublishDialog({
             <DialogDescription className="text-sm text-(--kys-muted)">
               Anyone can find it on Explore and your profile, play it and save a copy, which credits
               you. It appears as <strong className="text-(--kys-text)">by @{username}</strong>, with
-              its notes{sound.lesson ? ' and its lesson' : ''}. What is published is the sound as
+              its notes{sound.lesson ? ' and its lesson' : ''}. What is published is the patch as
               last saved. You can unpublish it whenever you like; copies people have saved stay
               theirs.
             </DialogDescription>
@@ -433,7 +433,7 @@ export function PublishDialog({
                   <FieldHelp title="Tags">
                     <p>
                       How people find it on Explore. Chosen from the tags this synth&apos;s library
-                      sounds use.
+                      patches use.
                     </p>
                   </FieldHelp>
                 </legend>
@@ -466,7 +466,7 @@ export function PublishDialog({
                 onChange={(e) => setTicked(e.target.checked)}
                 className="mt-1"
               />
-              <span>I made this, or the sound it came from is credited on it.</span>
+              <span>I made this, or the patch it came from is credited on it.</span>
             </label>
             {failure && (
               <p role="alert" className="text-sm text-(--kys-warn)">
@@ -475,7 +475,7 @@ export function PublishDialog({
             )}
             {lessonRefused && (
               <div className="flex flex-wrap items-center gap-2 text-sm text-(--kys-muted)">
-                <span>Removing it takes the lesson off this sound for good. The panel stays.</span>
+                <span>Removing it takes the lesson off this patch for good. The panel stays.</span>
                 <button
                   type="button"
                   disabled={busy || removing}
@@ -488,7 +488,7 @@ export function PublishDialog({
             )}
             {lessonRemoved && (
               <p role="status" className="text-sm text-(--kys-good)">
-                The lesson is removed. Publish the sound without it.
+                The lesson is removed. Publish the patch without it.
               </p>
             )}
             <DialogFooter>

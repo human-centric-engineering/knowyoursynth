@@ -47,7 +47,7 @@ function failureOf(err: unknown, doing: string, existing: boolean): string {
     if (err.status === 429) return `Too many changes at once. Wait a minute, then ${doing} again.`;
     if (err.status === 401) return `Your session has ended. Sign in again to ${doing}.`;
     // Only a request about a sound they have can say it has gone; a new one's 404 is the synth's, said as the API says it.
-    if (err.status === 404 && existing) return 'That sound is no longer in your account.';
+    if (err.status === 404 && existing) return 'That patch is no longer in your account.';
     return err.message;
   }
   return `Could not ${doing}. Check your connection and try again.`;
@@ -134,31 +134,31 @@ export function MySoundsList({
     <section aria-labelledby="mine-h" className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between">
         <h2 id="mine-h" className="kys-label text-(--kys-muted)">
-          My sounds
+          My patches
         </h2>
         {sounds && sounds.length > 0 && (
           <span className="font-mono text-xs text-(--kys-faint)">{sounds.length}</span>
         )}
       </div>
       {signedIn === null ? (
-        <p className="text-sm text-(--kys-faint)">Loading your sounds…</p>
+        <p className="text-sm text-(--kys-faint)">Loading your patches…</p>
       ) : !signedIn ? (
         <p className="text-sm text-(--kys-muted)">
           <Link href={signInHref} className="text-(--kys-accent) underline underline-offset-2">
             Sign in
           </Link>{' '}
-          to keep your own sounds and copies of these.
+          to keep your own patches and copies of these.
         </p>
       ) : failed ? (
         <p role="alert" className="text-sm text-(--kys-warn)">
-          Your sounds could not be loaded. Reload the page to try again.
+          Your patches could not be loaded. Reload the page to try again.
         </p>
       ) : !sounds ? (
-        <p className="text-sm text-(--kys-faint)">Loading your sounds…</p>
+        <p className="text-sm text-(--kys-faint)">Loading your patches…</p>
       ) : !sounds.length ? (
         <p className="text-sm text-(--kys-muted)">
-          You haven&apos;t saved a sound on the {synthName} yet. Save the panel as it is, or save a
-          copy of a library sound below.
+          You haven&apos;t saved a patch on the {synthName} yet. Save the panel as it is, or save a
+          copy of a library patch below.
         </p>
       ) : (
         <ul className="kys-scroll -mr-1 flex max-h-[240px] flex-col gap-1.5 overflow-y-auto pr-1">
@@ -289,8 +289,8 @@ export function SoundActions({
   // What the button is for, in its tooltip: a library sound is never changed, so keeping it means a copy of one's own.
   const newHelp =
     credit && !open
-      ? `Keep this sound, as the panel has it now, in My sounds as your own: rename it, change it and come back to it. ${credit.name} in the library stays as it is.`
-      : 'Keep the panel as it is now as a new sound in My sounds, to rename, change and come back to.';
+      ? `Keep this patch, as the panel has it now, in My patches as your own: rename it, change it and come back to it. ${credit.name} in the library stays as it is.`
+      : 'Keep the panel as it is now as a new patch in My patches, to rename, change and come back to.';
 
   if (!signedIn)
     return (
@@ -360,7 +360,7 @@ export function SoundActions({
             },
           });
           onSaved(d, 'created');
-          setStatus(`Saved ${d.name} to My sounds.`);
+          setStatus(`Saved ${d.name} to My patches.`);
         }
         setForm(null);
       },
@@ -384,7 +384,7 @@ export function SoundActions({
               disabled={busy || midLesson}
               title={
                 midLesson
-                  ? 'Finish the lesson first: Save writes the panel over this sound'
+                  ? 'Finish the lesson first: Save writes the panel over this patch'
                   : undefined
               }
               onClick={() => void save()}
@@ -437,10 +437,10 @@ export function SoundActions({
       {confirmDelete && open && (
         <div
           role="group"
-          aria-label="Delete this sound"
+          aria-label="Delete this patch"
           className="flex flex-wrap items-center gap-2"
         >
-          <span>Delete {open.name} from My sounds? The panel stays as it is.</span>
+          <span>Delete {open.name} from My patches? The panel stays as it is.</span>
           <button
             type="button"
             disabled={busy}
@@ -527,12 +527,12 @@ function SoundForm({
 
   const heading =
     mode === 'rename'
-      ? 'Rename this sound'
+      ? 'Rename this patch'
       : mode === 'saveAs'
-        ? 'Save as a new sound'
+        ? 'Save as a new patch'
         : credit
           ? `Save a copy of ${credit.name}`
-          : 'Save this sound';
+          : 'Save this patch';
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -557,12 +557,13 @@ function SoundForm({
       </h3>
       {mode !== 'rename' && credit && (
         <p className="text-sm text-(--kys-muted)">
-          It goes into My sounds with the panel as it is now, and keeps the credit to {credit.name}.
+          It goes into My patches with the panel as it is now, and keeps the credit to {credit.name}
+          .
         </p>
       )}
       {mode === 'new' && !credit && design && (
         <p className="text-sm text-(--kys-muted)">
-          It goes into My sounds with the panel as it is now, and keeps the tutor&apos;s lesson for{' '}
+          It goes into My patches with the panel as it is now, and keeps the tutor&apos;s lesson for{' '}
           {design.name}.
         </p>
       )}
@@ -570,7 +571,7 @@ function SoundForm({
         <label htmlFor="sound-name" className="text-sm text-(--kys-text)">
           Name{' '}
           <FieldHelp title="Name">
-            <p>What My sounds lists it as, here and on your dashboard. Up to 120 characters.</p>
+            <p>What My patches lists it as, here and on your dashboard. Up to 120 characters.</p>
           </FieldHelp>
         </label>
         <input
@@ -594,7 +595,7 @@ function SoundForm({
           <FieldHelp title="Notes">
             <p>
               Anything you want to remember about it: what it is for, what you changed, how to play
-              it. Only you see them, until you share the sound: then they go with it. Up to 2,000
+              it. Only you see them, until you share the patch: then they go with it. Up to 2,000
               characters.
             </p>
           </FieldHelp>

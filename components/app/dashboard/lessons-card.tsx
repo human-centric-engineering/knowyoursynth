@@ -60,7 +60,7 @@ export async function LessonsCard({ userId }: { userId: string }) {
       <CardContent className="space-y-3">
         {entries.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            No lessons started yet. Open a sound in a synth&apos;s library and press{' '}
+            No lessons started yet. Open a patch in a synth&apos;s library and press{' '}
             <strong>Build it step by step</strong>. How far you got is kept here.
           </p>
         ) : (

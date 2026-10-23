@@ -150,12 +150,12 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
           </li>
           <li>
             <span className="text-(--kys-text)">Dim unused parts</span> darkens everything that is
-            doing nothing in the sound you have loaded, which is the fastest way to see a patch as a
+            doing nothing in the patch you have loaded, which is the fastest way to see a patch as a
             picture.
           </li>
           <li>
             <span className="text-(--kys-text)">Show sensitive controls</span> glows behind the
-            knobs that change this sound most, so you know which one to reach for first.
+            knobs that change this patch most, so you know which one to reach for first.
           </li>
           <li>
             The search box finds a control by what it does, so{' '}
@@ -163,7 +163,7 @@ function StopBody({ def, stop }: { def: SynthDef; stop: TourStop }) {
             it.
           </li>
           <li>
-            Pick a sound on the left and open <span className="text-(--kys-text)">Build it</span> to
+            Pick a patch on the left and open <span className="text-(--kys-text)">Build it</span> to
             put the panel together one module at a time.
           </li>
         </ul>

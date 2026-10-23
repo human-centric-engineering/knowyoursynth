@@ -146,7 +146,7 @@ describe('BankForm', () => {
     await user.click(screen.getAllByRole('button', { name: 'Add an app synth' })[1]);
     await user.type(screen.getAllByLabelText('Synth', INPUT)[2], 'model-d');
     await user.click(screen.getAllByLabelText('Listed under it')[2]);
-    await user.type(screen.getAllByLabelText(/^Sound/, INPUT)[2], 'fat-bass');
+    await user.type(screen.getAllByLabelText(/^Patch/, INPUT)[2], 'fat-bass');
     await user.click(screen.getByRole('button', { name: 'Move part 2 up' }));
     // The first part's System 15 row, now in part 2.
     await user.click(screen.getAllByRole('button', { name: 'Remove synth' })[2]);

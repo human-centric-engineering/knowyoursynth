@@ -166,23 +166,23 @@ describe('coming from Publish with no username (f-sharing h3)', () => {
     put.mockResolvedValue({ ...SAVED, links: NO_LINKS });
     render(<SynthProfileForm profile={null} />);
     // no username yet: nothing to go back and publish with
-    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Back to your patch' })).toBeNull();
     await userEvent.type(screen.getByRole('textbox', { name: /^Username/ }), 'tape_loops');
     await userEvent.click(screen.getByRole('button', { name: 'Create profile' }));
     expect(
-      (await screen.findByRole('link', { name: 'Back to your sound' })).getAttribute('href')
+      (await screen.findByRole('link', { name: 'Back to your patch' })).getAttribute('href')
     ).toBe(BACK);
   });
 
   it('offers no way back to anywhere but a sound', () => {
     at(`?back=${encodeURIComponent('https://evil.example/')}`);
     render(<SynthProfileForm profile={SAVED} />);
-    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Back to your patch' })).toBeNull();
   });
 
   it('offers none when not sent from a sound', () => {
     at('');
     render(<SynthProfileForm profile={SAVED} />);
-    expect(screen.queryByRole('link', { name: 'Back to your sound' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Back to your patch' })).toBeNull();
   });
 });

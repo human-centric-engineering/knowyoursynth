@@ -172,7 +172,7 @@ export function assertNotUnlisted(row: { unlistedAt: Date | null }): void {
     refuse(
       'UNLISTED',
       409,
-      'Moderators unlisted this sound after a report, so it cannot be shared again for now.'
+      'Moderators unlisted this patch after a report, so it cannot be shared again for now.'
     );
 }
 
@@ -200,7 +200,7 @@ export function assertPublishableText(text: {
     refuse(
       'LESSON_NOT_ALLOWED',
       422,
-      "The lesson saved with this sound has wording that can't be published. Remove the lesson to publish the sound without it."
+      "The lesson saved with this patch has wording that can't be published. Remove the lesson to publish the patch without it."
     );
 }
 
@@ -236,7 +236,7 @@ export async function assertChanged(
       refuse(
         'DUPLICATE',
         409,
-        `This plays the same as “${shared.name}”, the sound it was copied from. Change something first.`
+        `This plays the same as “${shared.name}”, the patch it was copied from. Change something first.`
       );
   }
   if (sound.sourceSoundId) {

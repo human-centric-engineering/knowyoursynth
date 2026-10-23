@@ -94,7 +94,7 @@ describe('ReportButton', () => {
     const send = within(dialog).getByRole('button', { name: 'Send report' });
     expect(send).toBeDisabled();
 
-    await userEvent.click(within(dialog).getByRole('radio', { name: "It's someone else's sound" }));
+    await userEvent.click(within(dialog).getByRole('radio', { name: "It's someone else's patch" }));
     await userEvent.type(
       within(dialog).getByRole('textbox', { name: /Anything to add/ }),
       '  The Lead preset  '
@@ -132,8 +132,8 @@ describe('ReportButton', () => {
     [new APIClientError('x', 'UNAUTHORIZED', 401), 'Your session has ended'],
     [new APIClientError('x', 'NOT_FOUND', 404), 'This sound is not shared any more.'],
     [
-      new APIClientError("You can't report your own sound.", 'OWN_SOUND', 400),
-      "You can't report your own sound.",
+      new APIClientError("You can't report your own patch.", 'OWN_SOUND', 400),
+      "You can't report your own patch.",
     ],
     [new Error('offline'), 'Check your connection'],
   ])('says what went wrong: %s', async (err, words) => {

@@ -77,7 +77,7 @@ export const toJson = (value: unknown): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 const notFound = (): never => {
-  throw new NotFoundError('Sound not found');
+  throw new NotFoundError('Patch not found');
 };
 
 /** The synth a new sound (or a last panel, `preferences.ts`) is saved on: a listed synth the app can play. */
@@ -278,8 +278,8 @@ async function sharedCopySource(
     where: { slug, synthId: def.id, visibility: { in: ['link', 'published'] }, unlistedAt: null },
   });
   if (!row)
-    return refuse('That sound is not shared any more', [
-      { path: 'source.shared', message: `No shared ${def.id} sound at ${slug}` },
+    return refuse('That patch is not shared any more', [
+      { path: 'source.shared', message: `No shared ${def.id} patch at ${slug}` },
     ]);
   const stored =
     row.definitionVersion === def.version
@@ -331,7 +331,7 @@ export async function createUserSound(
     }
     if (!panel) {
       if (!shared.panel)
-        refuse(`That sound cannot be played on ${def.id} as it is now`, [
+        refuse(`That patch cannot be played on ${def.id} as it is now`, [
           { path: 'source.shared', message: 'Open it, then save the panel you have' },
         ]);
       panel = shared.panel;
@@ -342,8 +342,8 @@ export async function createUserSound(
       where: { synthId_slug: { synthId: def.id, slug } },
     });
     if (!row)
-      refuse(`${def.id} has no library sound ${slug}`, [
-        { path: 'source.slug', message: `No library sound ${slug} on ${def.id}` },
+      refuse(`${def.id} has no library patch ${slug}`, [
+        { path: 'source.slug', message: `No library patch ${slug} on ${def.id}` },
       ]);
     source = { id: row.id, slug: row.slug, name: row.name, ref: row.ref };
     sourceName = row.name;
@@ -352,7 +352,7 @@ export async function createUserSound(
       const preset = libraryPanel(def, row);
       if (!preset)
         refuse(`${slug} cannot be played on ${def.id} as it is now`, [
-          { path: 'source.slug', message: `${slug} is not a sound the catalogue serves` },
+          { path: 'source.slug', message: `${slug} is not a patch the catalogue serves` },
         ]);
       panel = preset;
     }
@@ -360,7 +360,7 @@ export async function createUserSound(
   if (!panel) return refuse('Send the panel', [{ path: 'panel', message: 'Send the panel' }]);
 
   const name = input.name ?? sourceName;
-  if (!name) return refuse('Name the sound', [{ path: 'name', message: 'Name the sound' }]);
+  if (!name) return refuse('Name the patch', [{ path: 'name', message: 'Name the patch' }]);
 
   const row = await prisma.userSound.create({
     data: {

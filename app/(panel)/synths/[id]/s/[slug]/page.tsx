@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const def = getSynthDef(id);
   if (!sound || !def) return { title: 'Not found' };
   const by = sound.author ? ` by @${sound.author}` : '';
-  const description = `${sound.name}, a sound on the ${def.name}${by}. Play it in your browser.`;
+  const description = `${sound.name}, a patch on the ${def.name}${by}. Play it in your browser.`;
   return {
     title: `${sound.name} · ${def.name}`,
     description,

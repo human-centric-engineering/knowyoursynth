@@ -23,7 +23,7 @@ export const PUT = withAuth<Params>(
     const synthId = SynthIdSchema.safeParse(raw.synthId);
     const slug = SoundSlugSchema.safeParse(raw.slug);
     if (!synthId.success || !slug.success)
-      return errorResponse('Not a library sound', { code: 'VALIDATION_ERROR', status: 400 });
+      return errorResponse('Not a library patch', { code: 'VALIDATION_ERROR', status: 400 });
     const input = await validateRequestBody(request, ProgressInputSchema);
     return successResponse(await recordProgress(session.user.id, synthId.data, slug.data, input));
   },

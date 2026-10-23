@@ -9,7 +9,7 @@ import { logger } from '@/lib/logging';
 
 export const metadata: Metadata = {
   title: 'Synth catalogue',
-  description: 'Order and list the synths, and edit their sounds, lessons, lineage and notes.',
+  description: 'Order and list the synths, and edit their patches, lessons, lineage and notes.',
 };
 
 /**

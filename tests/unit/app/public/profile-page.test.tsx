@@ -77,7 +77,7 @@ describe('/u/[username]', () => {
 
   it('lists their published sounds, each opening its page, and never a link share or a private one', async () => {
     await renderPage('moog_fan');
-    const sounds = within(screen.getByRole('heading', { name: /Sounds/ }).parentElement!);
+    const sounds = within(screen.getByRole('heading', { name: /Patches/ }).parentElement!);
     expect(sounds.getAllByRole('link').map((a) => a.textContent)).toEqual(['Night bass']);
     expect(sounds.getByRole('link', { name: 'Night bass' })).toHaveAttribute(
       'href',

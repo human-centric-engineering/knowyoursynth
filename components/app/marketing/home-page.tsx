@@ -19,7 +19,7 @@ import { BRAND } from '@/lib/brand';
  */
 
 const description =
-  "Play a synth's panel in your browser, find out what every control does, and work through its sounds one step at a time. Free to use.";
+  "Play a synth's panel in your browser, find out what every control does, and work through its patches one step at a time. Free to use.";
 
 export const metadata: Metadata = {
   // Absolute: the `(public)` template would append the brand a second time.
@@ -37,21 +37,21 @@ const features: { title: string; body: string[]; link: { href: string; label: st
   {
     title: 'Hear what each control does',
     body: [
-      'Point at a knob and the panel tells you what it is for, what it does to the sound on the panel now, and anything unusual about it on this synth. Turn it and listen. The sound map shows which parts of the panel the current sound is using, and which controls change it most.',
+      'Point at a knob and the panel tells you what it is for, what it does to the patch on the panel now, and anything unusual about it on this synth. Turn it and listen. The sound map shows which parts of the panel the current patch is using, and which controls change it most.',
     ],
     link: { href: '/synths', label: 'Open a synth' },
   },
   {
-    title: 'Learn the sounds one step at a time',
+    title: 'Learn the patches one step at a time',
     body: [
-      'Each synth comes with a library of sounds, and every one is a lesson. Start from a basic patch and add one change at a time, with a line on why, until you have the whole sound. Then the lesson suggests what to try next to make it your own.',
+      'Each synth comes with a library of patches, and every one is a lesson. Start from a basic patch and add one change at a time, with a line on why, until you have the whole patch. Then the lesson suggests what to try next to make it your own.',
     ],
     link: { href: '/synths', label: 'Open a synth' },
   },
   {
     title: 'Ask the tutor',
     body: [
-      'The tutor knows the panel in front of you. Ask why a sound behaves the way it does, or how to make it darker, and it suggests changes you can apply and undo. Describe a sound and it builds one on this synth, with its own lesson. Under each answer it says where the answer came from, or that it came from what the tutor already knows.',
+      'The tutor knows the panel in front of you. Ask why a patch behaves the way it does, or how to make it darker, and it suggests changes you can apply and undo. Describe a patch and it builds one on this synth, with its own lesson. Under each answer it says where the answer came from, or that it came from what the tutor already knows.',
       "It can be wrong. Treat what it says as a starting point and trust your ears. It's free with an account, up to a daily allowance.",
     ],
     link: { href: '/signup', label: 'Create a free account' },
@@ -59,14 +59,14 @@ const features: { title: string; body: string[]; link: { href: string; label: st
   {
     title: 'Look things up in the databank',
     body: [
-      'Instruments, artists and records, joined up. Find out who played what on which record, which synths came from which designers, and which modern instruments are modelled on older ones. From a record, load a sound in its style on the synth that played it.',
+      'Instruments, artists and records, joined up. Find out who played what on which record, which synths came from which designers, and which modern instruments are modelled on older ones. From a record, load a patch in its style on the synth that played it.',
     ],
     link: { href: '/bank', label: 'Open the databank' },
   },
   {
-    title: 'Keep your sounds, and share the good ones',
+    title: 'Keep your patches, and share the good ones',
     body: [
-      'Save sounds to your account and pick up where you left off on any computer. Mark the synths you own and the ones you want. Share a sound with a link, or publish it to Explore for other people to play and learn from. It appears under a username you choose, never your name or email.',
+      'Save patches to your account and pick up where you left off on any computer. Mark the synths you own and the ones you want. Share a patch with a link, or publish it to Explore for other people to play and learn from. It appears under a username you choose, never your name or email.',
     ],
     link: { href: '/explore', label: 'See what people have made' },
   },
@@ -75,7 +75,7 @@ const features: { title: string; body: string[]; link: { href: string; label: st
 const questions: { q: string; a: React.ReactNode }[] = [
   {
     q: 'Do I need an account?',
-    a: "No, to play a synth and work through its lessons. Your panel is kept in your browser. An account saves your sounds and your progress, lets you ask the tutor, and lets you share. It's free.",
+    a: "No, to play a synth and work through its lessons. Your panel is kept in your browser. An account saves your patches and your progress, lets you ask the tutor, and lets you share. It's free.",
   },
   {
     q: 'Do I need the hardware?',
@@ -129,7 +129,7 @@ export default async function HomePage() {
           </h1>
           <p className="mt-5 max-w-[34rem] text-[17px] leading-relaxed text-(--kys-muted)">
             Play the panel in your browser. Point at any control to find out what it does. Then
-            build the sounds one step at a time, until you could make them on the hardware without
+            build the patches one step at a time, until you could make them on the hardware without
             the app.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">

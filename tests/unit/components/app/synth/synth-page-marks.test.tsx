@@ -3,7 +3,7 @@
 /**
  * The synth page with lesson progress and favourites (`f-my-sounds` s4): steps recorded as a signed-in user walks a
  * lesson, Finish from the last step finishing it, progress shown in the library and the lesson, and the stars on the
- * chooser, the library and My sounds. The panel, library and lesson are real; the router, the audio engine, the session
+ * chooser, the library and My patches. The panel, library and lesson are real; the router, the audio engine, the session
  * and the API client are fakes.
  *
  * @see components/app/synth/synth-page.tsx
@@ -189,7 +189,7 @@ const walk = (text: string) => {
 // At `lg` and up the library and the lesson open over the panel (t-74): each helper opens the one it reads.
 const library = () => {
   openSide('Sounds');
-  return screen.getByRole('region', { name: 'Sound library' });
+  return screen.getByRole('region', { name: 'Patch library' });
 };
 // The lesson opens in the card over the panel, from its chapter in the Sound Design strip (t-74).
 const lesson = () => {

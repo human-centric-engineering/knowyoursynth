@@ -15,8 +15,8 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-  title: 'Edit sound · Catalogue',
-  description: 'Edit a library sound and its lesson steps.',
+  title: 'Edit patch · Catalogue',
+  description: 'Edit a library patch and its lesson steps.',
 };
 
 /**
@@ -49,13 +49,13 @@ export default async function CatalogueSoundPage({ params }: Props) {
 
       {!detail || !sound ? (
         <p role="alert" className="text-destructive text-sm">
-          The sound could not be loaded. Reload the page to try again.
+          The patch could not be loaded. Reload the page to try again.
         </p>
       ) : (
         <>
           {sound.problems.length > 0 && (
             <div role="status" className="border-destructive/50 rounded-md border p-3 text-sm">
-              <p className="font-medium">The public page leaves this sound out:</p>
+              <p className="font-medium">The public page leaves this patch out:</p>
               <ul className="text-destructive mt-1 list-disc pl-5 text-xs">
                 {sound.problems.map((p, i) => (
                   <li key={i}>{p.message}</li>
