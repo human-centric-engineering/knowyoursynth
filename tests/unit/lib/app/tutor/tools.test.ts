@@ -5,7 +5,7 @@
  * daily allowance, because each search counts against it; `web-search.test.ts` holds it to that and no more.
  *
  * FORK NOTE — this reads the real `lib/app/capabilities.ts` on purpose: a mock would hold the rules to a list of its own
- * and let a new tool slip past them. Adding or removing a tutor tool in that seam fails "are the six in the plan"
+ * and let a new tool slip past them. Adding or removing a tutor tool in that seam fails "are the eight in the plan"
  * until the expected slugs here are updated; the rules then cover the new tool without another test.
  *
  * @see lib/app/tutor/tools.ts · lib/app/capabilities.ts
@@ -26,10 +26,11 @@ import { initAppCapabilities } from '@/lib/app/capabilities';
 import { TUTOR_TOOL_SLUGS } from '@/lib/app/tutor/agent';
 import { TUTOR_TOOLS } from '@/lib/app/tutor/tools';
 import type { BaseCapability } from '@/lib/orchestration/capabilities/base-capability';
-import { panelContext, synth } from '@/tests/helpers/tutor';
+import { panelContext, synth, testPattern } from '@/tests/helpers/tutor';
 
 const OWNER_WORDS = /user|owner|account|author|email/i;
 const modelD = synth('model-d');
+const PATTERN = testPattern();
 
 /** Arguments each tool accepts, so its result can be compared across two callers. */
 const GOOD_ARGS: Record<string, unknown> = {
@@ -45,6 +46,8 @@ const GOOD_ARGS: Record<string, unknown> = {
     steps: [{ title: 'Close it', module: 'filter', why: 'Darker.', set: { 'filter.cutoff': -2 } }],
     phrase: { bpm: 100, steps: [[0, 48, 1]] },
   },
+  get_pattern: {},
+  propose_pattern: { start: 'open', steps: [{ step: 3, notes: [{ note: 43, gate: 1 }] }] },
   search_databank: { query: 'Vangelis' },
   web_search: { query: 'Vangelis Blade Runner' },
 };
@@ -59,14 +62,16 @@ const READS_THE_CALLER = new Set([
 const tools = TUTOR_TOOLS.map((t): readonly [string, BaseCapability] => [t.slug, t]);
 
 describe('the tutor tools', () => {
-  it('are the six in the plan, and the ones the agent is bound to', () => {
+  it('are the eight in the plan, and the ones the agent is bound to', () => {
     expect(TUTOR_TOOLS.map((t) => t.slug)).toEqual([...TUTOR_TOOL_SLUGS]);
     expect([...TUTOR_TOOL_SLUGS].sort()).toEqual(
       [
         'describe_synth',
         'design_sound',
         'get_panel',
+        'get_pattern',
         'propose_panel_change',
+        'propose_pattern',
         'search_databank',
         'web_search',
       ].sort()
@@ -110,7 +115,7 @@ describe('the tutor tools', () => {
   it.each(tools.filter(([slug]) => !READS_THE_CALLER.has(slug)))(
     '%s answers the same whoever the caller is',
     async (slug, tool) => {
-      const panel = { values: { 'filter.cutoff': 2 } };
+      const panel = { values: { 'filter.cutoff': 2 }, pattern: PATTERN };
       const args = tool.validate(GOOD_ARGS[slug]);
       const asOne = await tool.execute(args, panelContext(modelD, panel, { userId: 'user-1' }));
       const asOther = await tool.execute(args, panelContext(modelD, panel, { userId: 'user-2' }));

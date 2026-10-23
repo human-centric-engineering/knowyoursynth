@@ -3,7 +3,7 @@
 /**
  * The tutor panel on the synth page (`f-tutor` t-56), under the Inspector where the prototype's sat
  * (`prototype/src/ui/Tutor.jsx`): the conversation, suggested questions to start from, a chip under each answer that
- * proposed a change or designed a sound, the sources under each answer (`f-tutor-knowledge` t-60), and the day's
+ * proposed a change, a pattern (t-84) or designed a sound, the sources under each answer (`f-tutor-knowledge` t-60), and the day's
  * allowance.
  *
  * The prototype had two modes, Ask and Design a sound, because each sent its own prompt. Here the tutor picks its tool
@@ -15,14 +15,22 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 
-import { proposalLabel, proposalRows, type TutorDesign } from '@/components/app/tutor/apply';
+import {
+  patternLabel,
+  patternRows,
+  proposalLabel,
+  proposalRows,
+  type TutorDesign,
+} from '@/components/app/tutor/apply';
 import { TutorSources } from '@/components/app/tutor/sources';
 import {
   useTutorChat,
   type TutorChat,
+  type TutorHost,
   type TutorMessage,
 } from '@/components/app/tutor/use-tutor-chat';
 import { FieldHelp } from '@/components/ui/field-help';
+import type { Pattern } from '@/lib/app/sequencer/pattern';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import type { PanelState } from '@/lib/app/synths/lib/patch';
 import { MAX_TUTOR_MESSAGE_CHARS } from '@/lib/app/tutor/request';
@@ -50,6 +58,11 @@ export interface TutorPanelProps {
   signInHref: string;
   setPanel: (panel: PanelState) => void;
   openDesign: (design: TutorDesign) => () => void;
+  /** The pattern open in the sequencer, which the tutor reads and may propose a new one for. */
+  pattern: Pattern | null;
+  /** The tempo a knob on the panel sets, which a pattern plays at; null on a synth without one. */
+  tempo: number | null;
+  setPattern: TutorHost['setPattern'];
   /** A question to put in the composer (the library's "ask the tutor"); `n` makes the same text ask again. */
   ask?: { text: string; n: number } | null;
   /** In a bottom sheet (`f-phone-and-tablet` t-66): fill it, the conversation taking the room the composer leaves. */
@@ -92,10 +105,22 @@ function SignedInTutor({
   designedId,
   setPanel,
   openDesign,
+  pattern,
+  tempo,
+  setPattern,
   ask,
   fill = false,
 }: TutorPanelProps) {
-  const chat = useTutorChat({ def, panel, designedId, setPanel, openDesign });
+  const chat = useTutorChat({
+    def,
+    panel,
+    designedId,
+    setPanel,
+    openDesign,
+    pattern,
+    tempo,
+    setPattern,
+  });
   const [draft, setDraft] = useState('');
   const input = useRef<HTMLTextAreaElement>(null);
   const log = useRef<HTMLDivElement>(null);
@@ -117,7 +142,15 @@ function SignedInTutor({
   useEffect(() => {
     const el = log.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [chat.messages.length, last?.text, last?.proposal, last?.design, last?.sources, last?.error]);
+  }, [
+    chat.messages.length,
+    last?.text,
+    last?.proposal,
+    last?.pattern,
+    last?.design,
+    last?.sources,
+    last?.error,
+  ]);
 
   const submit = () => {
     if (!draft.trim() || chat.busy || closed) return;
@@ -219,7 +252,9 @@ function SignedInTutor({
               Ask why the sound is the way it is, how to change it, or for a new sound
               (&ldquo;Design a warm pad&rdquo;). A change it suggests waits for you to apply it, and
               a sound it designs opens on the panel with its lesson. Either can be undone while the
-              panel still shows it.
+              panel still shows it. It can also write a pattern for the sequencer, or change the one
+              you have (&ldquo;Make the second half busier&rdquo;), which waits for you to apply it
+              in the same way.
             </p>
             <p className="mt-2">
               Each question counts towards today&apos;s allowance, including one the tutor could not
@@ -291,6 +326,7 @@ function Message({
     <div className="rounded-lg bg-(--kys-ground) px-3 py-2.5 text-[14px] leading-relaxed">
       {m.text && <p className="whitespace-pre-wrap">{m.text}</p>}
       {m.proposal && <ProposalChip message={m} chat={chat} def={def} />}
+      {m.pattern && <PatternChip message={m} chat={chat} />}
       {m.design && <DesignChip message={m} chat={chat} />}
       {(!!m.sources?.length || ownKnowledge) && <TutorSources sources={m.sources ?? []} />}
       {m.error && (
@@ -357,6 +393,64 @@ function ProposalChip({
                 chat.canUndoProposal(m)
                   ? undefined
                   : 'The panel has moved on since this was applied'
+              }
+              className={smallBtn}
+            >
+              Undo
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PatternChip({ message: m, chat }: { message: TutorMessage; chat: TutorChat }) {
+  const p = m.pattern;
+  if (!p) return null;
+  const rows = patternRows(p.change);
+  const applied = !!p.applied;
+  const waiting = !!m.answering;
+  // Whether the sequencer still holds the pattern it was made from, the turn aside.
+  const fits = chat.canApplyPattern({ ...m, answering: false });
+  const stale = !applied && !fits;
+  return (
+    <div className="mt-2 flex flex-col gap-1.5 rounded-md border border-(--kys-line) p-2">
+      <ul className="font-mono text-[12px] text-(--kys-muted)">
+        {rows.slice(0, MAX_ROWS).map((r) => (
+          <li key={r}>{r}</li>
+        ))}
+        {rows.length > MAX_ROWS && <li>and {rows.length - MAX_ROWS} more</li>}
+      </ul>
+      {stale ? (
+        <p className="text-[13px] text-(--kys-warn)">
+          The pattern in the sequencer has changed since the tutor worked this out, so it was not
+          applied. Ask again and the tutor works from the pattern as it is now.
+        </p>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          {applied ? (
+            <span className="text-[13px] text-(--kys-good)">In the sequencer</span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => chat.applyPattern(m)}
+              disabled={waiting}
+              className="rounded-md border border-(--kys-accent) px-2.5 py-1 text-[13px] font-semibold text-(--kys-accent) enabled:hover:bg-(--kys-accent) enabled:hover:text-(--kys-accent-ink) disabled:opacity-40"
+            >
+              {patternLabel(p.change)}
+            </button>
+          )}
+          {waiting && !applied && <WaitingNote />}
+          {applied && (
+            <button
+              type="button"
+              onClick={() => chat.undoPattern(m)}
+              disabled={!chat.canUndoPattern(m)}
+              title={
+                chat.canUndoPattern(m)
+                  ? undefined
+                  : 'The pattern has moved on since this was applied'
               }
               className={smallBtn}
             >

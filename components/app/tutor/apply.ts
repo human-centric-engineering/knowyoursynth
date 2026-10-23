@@ -12,6 +12,9 @@
  *   proposal, so a second is a correction.
  * - **A proposal is for the panel it was made against** (its basis, the panel the turn sent). Applied to any other it
  *   would silently undo what the learner did since, so it applies only while the panel is still that one.
+ * - **A pattern is made again here** (t-84): a `propose_pattern` result carries the edit, which `applyPatternEdit`
+ *   makes into a pattern from the one the turn sent, as the tool did. The last one a turn proposes is the one it offers,
+ *   and it is for the pattern it was made from, as a panel change is for its panel.
  */
 import { z } from 'zod';
 import {
@@ -31,9 +34,23 @@ import {
 } from '@/lib/app/synths/lib/patch';
 import { CablePairSchema, checkCables, checkSettings } from '@/lib/app/synths/validate';
 import type { CablePair, ControlValues, Preset, SynthDef } from '@/lib/app/synths/contract';
+import { patternLength, type Pattern } from '@/lib/app/sequencer/pattern';
+import {
+  PatternEditSchema,
+  applyPatternEdit,
+  patternEditKeys,
+  type PatternEdit,
+} from '@/lib/app/tutor/pattern-edit';
+import {
+  DIRECTION_LABELS,
+  ROOT_NAMES,
+  SCALE_LABELS,
+  STEP_SIZE_LABELS,
+} from '@/components/app/sequencer/labels';
 
 export const PROPOSE_TOOL = 'propose_panel_change';
 export const DESIGN_TOOL = 'design_sound';
+export const PATTERN_TOOL = 'propose_pattern';
 
 /** A change to the panel: controls to set, cables to plug in and to take out. */
 export interface Proposal {
@@ -215,4 +232,82 @@ export function proposalRows(def: SynthDef, basis: PanelState, p: Proposal): str
   for (const [from, to] of p.removeCables) rows.push(`Unplug ${jack(from)} → ${jack(to)}`);
   for (const [from, to] of p.addCables) rows.push(`Plug ${jack(from)} → ${jack(to)}`);
   return rows;
+}
+
+/** A pattern the tutor proposed: the edit, and the pattern it makes from the one the turn sent. */
+export interface PatternProposal {
+  edit: PatternEdit;
+  pattern: Pattern;
+}
+
+const PatternResultSchema = z.object({
+  success: z.literal(true),
+  data: z.object({ edit: z.unknown() }),
+});
+
+/**
+ * A `propose_pattern` result as the pattern it makes from `basis` (the pattern the turn sent), or null when it is not
+ * one: not that tool, refused, or an edit that does not make a pattern from this basis.
+ */
+export function readPatternProposal(
+  slug: string,
+  result: unknown,
+  basis: Pattern | null
+): PatternProposal | null {
+  if (slug !== PATTERN_TOOL) return null;
+  const parsed = PatternResultSchema.safeParse(result);
+  if (!parsed.success) return null;
+  const edit = PatternEditSchema.safeParse(parsed.data.data.edit);
+  if (!edit.success) return null;
+  const made = applyPatternEdit(basis, edit.data);
+  return made.ok ? { edit: edit.data, pattern: made.pattern } : null;
+}
+
+/** What the pattern chip's button says. */
+export const patternLabel = (p: PatternProposal): string =>
+  p.edit.start === 'blank' ? 'Load into the sequencer' : 'Apply to the pattern';
+
+/** The proposal one line per thing it does, for the chip: the pattern's shape, the settings it sets, the steps it writes. */
+export function patternRows(p: PatternProposal): string[] {
+  const { edit, pattern } = p;
+  const rows: string[] = [];
+  if (edit.start === 'blank')
+    rows.push(
+      `New pattern: ${patternLength(pattern)} steps of ${STEP_SIZE_LABELS[pattern.stepSize]} at ${pattern.bpm} BPM`
+    );
+  else if (edit.length !== undefined) rows.push(`Length: ${patternLength(pattern)} steps`);
+  const keys = patternEditKeys(edit);
+  if (edit.start === 'open') {
+    if (keys.includes('stepSize')) rows.push(`Step size: ${STEP_SIZE_LABELS[pattern.stepSize]}`);
+    if (keys.includes('bpm')) rows.push(`Tempo: ${pattern.bpm} BPM`);
+  }
+  if (keys.includes('swing')) rows.push(`Swing: ${pattern.swing}`);
+  if (keys.includes('direction')) rows.push(`Direction: ${DIRECTION_LABELS[pattern.direction]}`);
+  if (keys.includes('loop')) rows.push(pattern.loop ? 'Loops' : 'Plays once');
+  if (keys.includes('transpose')) rows.push(`Transpose: ${pattern.transpose} semitones`);
+  if (keys.includes('root') || keys.includes('scale'))
+    rows.push(`Scale: ${ROOT_NAMES[pattern.root]} ${SCALE_LABELS[pattern.scale]}`);
+  if (edit.steps.length) {
+    const parts = (['A', 'B'] as const).flatMap((part) => {
+      const steps = edit.steps.filter((s) => s.part === part).map((s) => s.step);
+      if (!steps.length) return [];
+      const ranges = stepRanges(steps);
+      return [pattern.parts.length > 1 ? `${part} ${ranges}` : ranges];
+    });
+    rows.push(`Writes ${edit.steps.length === 1 ? 'step' : 'steps'} ${parts.join('; ')}`);
+  }
+  return rows;
+}
+
+/** Step numbers as runs: `1–8, 10, 13–16`. */
+export function stepRanges(steps: readonly number[]): string {
+  const sorted = [...new Set(steps)].sort((a, b) => a - b);
+  const runs: string[] = [];
+  for (let i = 0; i < sorted.length;) {
+    let j = i;
+    while (j + 1 < sorted.length && sorted[j + 1] === sorted[j] + 1) j++;
+    runs.push(j > i ? `${sorted[i]}–${sorted[j]}` : String(sorted[i]));
+    i = j + 1;
+  }
+  return runs.join(', ');
 }

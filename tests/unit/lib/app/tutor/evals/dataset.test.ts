@@ -43,7 +43,7 @@ describe('the eval set', () => {
   it('covers each kind of question, at least five of each', () => {
     const counts = new Map<string, number>();
     for (const c of cases) counts.set(c.expect.kind, (counts.get(c.expect.kind) ?? 0) + 1);
-    for (const kind of ['databank', 'meaning', 'web', 'general', 'off_topic']) {
+    for (const kind of ['databank', 'meaning', 'web', 'general', 'off_topic', 'pattern']) {
       expect(counts.get(kind) ?? 0, kind).toBeGreaterThanOrEqual(5);
     }
   });

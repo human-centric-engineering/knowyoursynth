@@ -32,7 +32,7 @@ export const TutorExpectationSchema = z.discriminatedUnion('kind', [
       rows: z.array(z.string().regex(/^\/bank\/[a-z]+\/[a-z0-9-]+$/)).min(1),
     })
     .strict(),
-  z.object({ kind: z.enum(['web', 'general', 'off_topic']) }).strict(),
+  z.object({ kind: z.enum(['web', 'general', 'off_topic', 'pattern']) }).strict(),
 ]);
 export type TutorExpectation = z.infer<typeof TutorExpectationSchema>;
 
@@ -145,6 +145,20 @@ export function gradeDeclinedOffTopic(input: GraderInput): GraderResult {
   return verdict(true, 'Declined without searching.');
 }
 
+/**
+ * Pattern cases (t-84): a request for a riff, a bassline or a beat ends with a pattern the sequencer can load, so a
+ * `propose_pattern` call came back with one. An eval run sends no panel and no pattern, so these cases ask for new
+ * patterns only; an edit to the open one is the owner's check in the app.
+ */
+export function gradePatternProposed(input: GraderInput): GraderResult {
+  if (expectationOf(input)?.kind !== 'pattern') return notApplicable('Not a pattern case.');
+  const calls = callsTo(input, 'propose_pattern');
+  if (calls.length === 0) return verdict(false, 'propose_pattern was not called.');
+  if (calls.some((c) => c.success === true)) return verdict(true, 'Proposed a pattern.');
+  const codes = calls.map((c) => c.errorCode ?? 'unknown').join(', ');
+  return verdict(false, `propose_pattern was called but every call refused (${codes}).`);
+}
+
 const OWN_KNOWLEDGE = /\bown knowledge\b|\bfrom (?:my )?memory\b/i;
 
 /**
@@ -200,6 +214,11 @@ export const TUTOR_GRADERS: readonly Grader<Config>[] = [
     'tutor_declined_off_topic',
     'Tutor: on an off-topic question, the answer briefly says it is outside what the tutor does, and nothing was searched.',
     gradeDeclinedOffTopic
+  ),
+  grader(
+    'tutor_pattern_proposed',
+    'Tutor: on a request for a pattern, propose_pattern came back with one the sequencer can load.',
+    gradePatternProposed
   ),
   grader(
     'tutor_own_knowledge',

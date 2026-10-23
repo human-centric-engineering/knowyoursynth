@@ -7,6 +7,7 @@
  * panel, the message, and which conversation it carries on.
  */
 import { z } from 'zod';
+import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import { PanelInputSchema, SynthIdSchema } from '@/lib/app/sounds/data';
 import { cuidSchema } from '@/lib/validations/common';
 
@@ -15,7 +16,8 @@ export const MAX_TUTOR_MESSAGE_CHARS = 4000;
 
 /**
  * The most a turn's request body can be, checked from `Content-Length` before the body is read. The largest real one,
- * the DeepMind's whole panel with a message at the limit, is about 40 KB.
+ * the DeepMind's whole panel with a message at the limit, is about 40 KB; the largest library riff as a pattern adds
+ * under 4 KB (measured at t-84).
  */
 export const MAX_TUTOR_BODY_BYTES = 256 * 1024;
 
@@ -24,6 +26,11 @@ export const TutorStreamRequestSchema = z.object({
   synthId: SynthIdSchema,
   /** The panel as the page has it now, checked against the synth's current definition before the model is called. */
   panel: PanelInputSchema,
+  /**
+   * The pattern open in the sequencer (t-84), which the tutor reads and edits. Held to `PatternSchema`, the rule the
+   * sequencer holds it to; a page with none leaves it out.
+   */
+  pattern: PatternSchema.optional(),
   message: z
     .string()
     .trim()

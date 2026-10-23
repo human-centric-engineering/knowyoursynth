@@ -118,6 +118,16 @@ describe('readAllowance', () => {
     expect((await readAllowance('user-1', NOW)).used).toBe(3);
   });
 
+  it('counts a turn that proposed a pattern as one turn, as any other: the tool call is not one more (t-84)', async () => {
+    withMessages([
+      ...tutorTurns('user-1', 2, TODAY),
+      ...tutorSearches('user-1', 2, TODAY, { slug: 'get_pattern' }),
+      ...tutorSearches('user-1', 3, TODAY, { slug: 'propose_pattern' }),
+    ]);
+
+    expect(await readAllowance('user-1', NOW)).toMatchObject({ used: 2, remaining: 28 });
+  });
+
   it('takes its limit from TUTOR_DAILY_TURNS, so production can tune it without a release', async () => {
     appEnv.TUTOR_DAILY_TURNS = 5;
     withMessages(tutorTurns('user-1', 4, TODAY));

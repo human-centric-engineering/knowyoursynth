@@ -51,7 +51,7 @@ import { MAX_TUTOR_BODY_BYTES } from '@/lib/app/tutor/request';
 import { streamChat } from '@/lib/orchestration/chat';
 import { agentChatLimiter, consumerChatLimiter } from '@/lib/security/rate-limit';
 import { createMockAuthSession } from '@/tests/helpers/auth';
-import { fakeMessageTable, tutorTurns, type MessageRow } from '@/tests/helpers/tutor';
+import { fakeMessageTable, testPattern, tutorTurns, type MessageRow } from '@/tests/helpers/tutor';
 
 const USER_ID = 'cmjbv4i3x00003wsloputgwul';
 const AGENT_ID = 'agent-tutor';
@@ -337,6 +337,26 @@ describe('POST /api/v1/tutor/stream', () => {
       const res = await POST(turn({ panel: { values: {}, cables: [['nowhere', 'nothing']] } }));
 
       expect(res.status).toBe(400);
+      expect(streamChat).not.toHaveBeenCalled();
+    });
+
+    it('passes the open pattern to the tools, and sends none when the page has none (t-84)', async () => {
+      const pattern = testPattern();
+      await POST(turn({ pattern }));
+      await POST(turn());
+
+      const [withOne, without] = vi.mocked(streamChat).mock.calls.map(([r]) => r.entityContext);
+      expect(withOne).toMatchObject({ synthId: 'model-d', pattern });
+      expect(without).not.toHaveProperty('pattern');
+    });
+
+    it('refuses a pattern the sequencer could not hold, naming where it is', async () => {
+      const pattern = { ...testPattern(), bpm: 1000 };
+      const res = await POST(turn({ pattern }));
+
+      expect(res.status).toBe(400);
+      const { error } = await json(res);
+      expect(error?.details?.errors?.map((e) => e.path)).toEqual(['pattern.bpm']);
       expect(streamChat).not.toHaveBeenCalled();
     });
 

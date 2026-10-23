@@ -1,7 +1,7 @@
 /**
  * The tutor: one turn, streamed (`f-tutor` t-54).
  *
- * POST /api/v1/tutor/stream — `{ synthId, panel, message, conversationId? }` in; Sunrise's chat SSE stream out.
+ * POST /api/v1/tutor/stream — `{ synthId, panel, pattern?, message, conversationId? }` in; Sunrise's chat SSE stream out.
  *
  * Why the app owns this rather than using `/api/v1/chat/stream`: that route carries no per-turn context, and the
  * tutor is no use without the synth and the panel on screen. Here both are checked before the model is called and
@@ -118,7 +118,14 @@ export const POST = withAuth(
       turnsUsed: allowance.used + 1,
     });
 
-    const entityContext: TutorEntityContext = { synthId: def.id, version: def.version, panel };
+    const entityContext: TutorEntityContext = {
+      synthId: def.id,
+      version: def.version,
+      panel,
+      // The sequencer's pattern, for `get_pattern` and `propose_pattern`. It names no synth, so nothing to check it
+      // against beyond the schema the body passed.
+      ...(body.pattern ? { pattern: body.pattern } : {}),
+    };
     const events = streamChat({
       message: body.message,
       agentSlug: TUTOR_AGENT_SLUG,
