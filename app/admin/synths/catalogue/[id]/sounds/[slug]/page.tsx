@@ -35,7 +35,7 @@ export default async function CatalogueSoundPage({ params }: Props) {
     <div className="space-y-6">
       <header className="space-y-1">
         <Link href={back} className="text-muted-foreground text-sm hover:underline">
-          ← {detail ? `${detail.synth.maker} ${detail.synth.name}` : id} sounds
+          ← {detail ? `${detail.synth.maker} ${detail.synth.name}` : id} patches
         </Link>
         {sound && (
           <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold">

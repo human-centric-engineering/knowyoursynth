@@ -130,7 +130,7 @@ describe('ReportButton', () => {
 
   it.each([
     [new APIClientError('x', 'UNAUTHORIZED', 401), 'Your session has ended'],
-    [new APIClientError('x', 'NOT_FOUND', 404), 'This sound is not shared any more.'],
+    [new APIClientError('x', 'NOT_FOUND', 404), 'This patch is not shared any more.'],
     [
       new APIClientError("You can't report your own patch.", 'OWN_SOUND', 400),
       "You can't report your own patch.",

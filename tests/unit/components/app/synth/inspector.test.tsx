@@ -310,13 +310,13 @@ describe('Tooltip', () => {
     const card = screen.getByRole('tooltip');
     expect(within(card).getByText(CUT_AT_3)).toBeTruthy();
     expect(within(card).getByText('Closed down for the dull thud.')).toBeTruthy();
-    expect(within(card).getByText(`Sound setting: ${CUT_AT_INIT}`)).toBeTruthy();
+    expect(within(card).getByText(`Patch setting: ${CUT_AT_INIT}`)).toBeTruthy();
   });
 
   it('omits the sound setting when the knob is where the sound has it', () => {
     tooltip({ target: def.init });
     focus(control('filter.cutoff'));
-    expect(screen.queryByText(/Sound setting/)).toBeNull();
+    expect(screen.queryByText(/Patch setting/)).toBeNull();
   });
 
   it('is hidden when info cards are off', () => {

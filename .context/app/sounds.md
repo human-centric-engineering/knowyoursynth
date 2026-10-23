@@ -75,7 +75,7 @@ through `eraseUser()`, and the export.
 `components/app/synth/my-sounds.tsx`, wired into `synth-page.tsx`; tested in
 `tests/unit/components/app/synth/synth-page-mine.test.tsx`.
 
-- **My sounds sits above the library**: this synth's sounds, from one `GET ?synthId=`, kept in step
+- **My patches sits above the library**: this synth's sounds, from one `GET ?synthId=`, kept in step
   with what each save returns rather than re-read.
 - **Which buttons show depends on what is on the panel.** One of the user's sounds: Save (`PATCH`
   the panel), Save as… (a new sound), Rename… (name and notes, panel untouched) and Delete… (asks
@@ -213,8 +213,8 @@ and a star on a synth, a library sound or one of their own sounds. Signed out, n
     chooser** for the synth on show: the chooser's entries are listbox options, which cannot hold a
     button, so its list only marks the starred ones. A star changes at once and is put back if the
     request fails; while one is on its way, pressing it again does nothing.
-- **On `/dashboard`**, Favourites and Lessons sit under My sounds
-  (`components/app/dashboard/favourites-card.tsx`, `lessons-card.tsx`, drawn with My sounds by
+- **On `/dashboard`**, Favourites and Lessons sit under My patches
+  (`components/app/dashboard/favourites-card.tsx`, `lessons-card.tsx`, drawn with My patches by
   `synth-cards.tsx`, the one fork element in the platform's page). A favourite opens its synth with
   the sound on the panel (`?sound=`, `?mine=`); a lesson opens its library sound, where the lesson
   offers to continue. One on a synth no longer listed shows without a link.
@@ -268,7 +268,7 @@ tweak would throw away the steps the owner ruled are kept. Also rejected: rewrit
 so the lesson ends on the new panel, which would put words in the lesson that nobody wrote.
 
 So the page tells the two apart. **Finish** at the end of the lesson builds the sound as designed;
-"_n_ controls moved" counts from the sound as saved, and **Restore sound** puts the saved panel
+"_n_ controls moved" counts from the sound as saved, and **Restore patch** puts the saved panel
 back.
 
 ### On the synth page

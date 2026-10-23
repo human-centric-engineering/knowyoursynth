@@ -32,7 +32,7 @@ export default async function NewCatalogueSoundPage({ params }: Props) {
     <div className="space-y-6">
       <header className="space-y-1">
         <Link href={back} className="text-muted-foreground text-sm hover:underline">
-          ← {detail ? `${detail.synth.maker} ${detail.synth.name}` : id} sounds
+          ← {detail ? `${detail.synth.maker} ${detail.synth.name}` : id} patches
         </Link>
         <h1 className="text-2xl font-semibold">Add a patch</h1>
       </header>

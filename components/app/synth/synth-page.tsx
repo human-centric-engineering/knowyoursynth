@@ -1803,7 +1803,7 @@ function Synth({
                         short="Dim unused"
                         icon={<EyeOff size={17} aria-hidden="true" />}
                         on={dimOn}
-                        title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
+                        title="Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in."
                         onClick={() => setDimOn(!dimOn)}
                       />
                       <LayerToggle
@@ -1811,7 +1811,7 @@ function Synth({
                         short="Sensitive"
                         icon={<Flame size={17} aria-hidden="true" />}
                         on={heatOn}
-                        title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                        title="Put a glow behind the controls where a small move changes this patch most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
                         onClick={() => setHeatOn(!heatOn)}
                       />
                     </div>

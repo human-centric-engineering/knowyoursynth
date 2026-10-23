@@ -30,6 +30,9 @@ import {
 /** What is reported: a shared sound, or a shared pattern. */
 export type ReportKind = 'sound' | 'pattern';
 
+/** What a user reads for each kind: a sound is a patch on screen (t-93). */
+const NOUN: Record<ReportKind, string> = { sound: 'patch', pattern: 'pattern' };
+
 const reasonLabel = (r: SoundReportReason, kind: ReportKind): string =>
   kind === 'pattern' && r === 'not_theirs'
     ? "It's someone else's pattern"
@@ -38,7 +41,7 @@ const reasonLabel = (r: SoundReportReason, kind: ReportKind): string =>
 function failureOf(err: unknown, kind: ReportKind): string {
   if (err instanceof APIClientError) {
     if (err.status === 401) return 'Your session has ended. Sign in again to report it.';
-    if (err.status === 404) return `This ${kind} is not shared any more.`;
+    if (err.status === 404) return `This ${NOUN[kind]} is not shared any more.`;
     if (err.status === 429) return "That's as many reports as you can send today. Try tomorrow.";
     return err.message;
   }
@@ -120,8 +123,8 @@ export function ReportButton({
                   What is wrong with it?
                   <FieldHelp title="Reasons">
                     <p>
-                      <strong>Someone else&apos;s {kind}</strong>: it is put up as theirs but was
-                      made by somebody else, and not credited.
+                      <strong>Someone else&apos;s {NOUN[kind]}</strong>: it is put up as theirs but
+                      was made by somebody else, and not credited.
                     </p>
                     <p className="mt-2">
                       <strong>Offensive or hateful</strong>:{' '}
@@ -149,8 +152,8 @@ export function ReportButton({
                   </label>
                   <FieldHelp title="Note">
                     <p>
-                      Only admins read it. For someone else&apos;s {kind}, say whose it is, if you
-                      know.
+                      Only admins read it. For someone else&apos;s {NOUN[kind]}, say whose it is, if
+                      you know.
                     </p>
                   </FieldHelp>
                 </div>

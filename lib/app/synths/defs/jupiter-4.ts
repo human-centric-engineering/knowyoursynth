@@ -1091,7 +1091,7 @@ const areas: Area[] = [
     module: 'util',
     keywords: 'compu-memory preset patch write protect store recall',
     rects: [R(1253, 408, 1588, 527), R(300, 527, 1588, 620)],
-    help: 'MANUAL plays the panel as set; COMPU-MEMORY 1 to 8 recall stored sounds and the ten PRE-SET buttons Roland’s fixed ones. Writing needs MEMORY WRITE and PROTECTION pressed together. Printed only: this app keeps its sounds in the library.',
+    help: 'MANUAL plays the panel as set; COMPU-MEMORY 1 to 8 recall stored sounds and the ten PRE-SET buttons Roland’s fixed ones. Writing needs MEMORY WRITE and PROTECTION pressed together. Printed only: this app keeps its patches in the library.',
   },
   {
     id: 'ensemble',

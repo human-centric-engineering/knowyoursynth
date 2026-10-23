@@ -785,7 +785,7 @@ const areas: Area[] = [
     module: 'util',
     keywords: 'display keypad preset memory bank number',
     rects: [R(33, 0, 318, 652)],
-    help: 'The display and the number keys. On the hardware they choose one of 400 stored programs and edit the settings in the menus. Printed only: this app keeps its sounds in the library instead.',
+    help: 'The display and the number keys. On the hardware they choose one of 400 stored programs and edit the settings in the menus. Printed only: this app keeps its patches in the library instead.',
   },
   {
     id: 'programmer',

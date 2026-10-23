@@ -1481,7 +1481,7 @@ const areas: Area[] = [
     module: 'util',
     keywords: 'preset bank number manual write protect tape save load',
     rects: [R(812, TY1, 1383, BY1)],
-    help: 'The patch memory: 48 patches in banks A to F and 32 patch presets that also store the key mode and performance settings, MANUAL to play the panel as set, WRITE, and the tape save and load. Printed only: this app keeps its sounds in the library.',
+    help: 'The patch memory: 48 patches in banks A to F and 32 patch presets that also store the key mode and performance settings, MANUAL to play the panel as set, WRITE, and the tape save and load. Printed only: this app keeps its patches in the library.',
   },
   {
     id: 'bend',

@@ -314,7 +314,7 @@ export function Tooltip({ enabled = true, def, values, target, preset, cables }:
       )}
       {c && target && target[c.id] !== values[c.id] && (
         <p className="mt-2 font-mono text-xs text-(--kys-accent)">
-          Sound setting: {formatValue(c, target[c.id])}
+          Patch setting: {formatValue(c, target[c.id])}
         </p>
       )}
       {here.length > 0 && (

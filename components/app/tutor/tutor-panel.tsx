@@ -207,7 +207,7 @@ function SignedInTutor({
       {chat.messages.length === 0 && !chat.busy && !chat.resuming && (
         <>
           <p className="text-[14px] text-(--kys-muted)">
-            Ask about the sound on the panel, or describe one and the tutor builds it on the{' '}
+            Ask about the patch on the panel, or describe a sound and the tutor builds it on the{' '}
             {def.name} with a step-by-step lesson. You choose whether to apply each change, and
             every change can be undone. It can be wrong, so trust your ears.
           </p>
