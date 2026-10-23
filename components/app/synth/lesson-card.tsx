@@ -197,10 +197,10 @@ export function LessonCard({
     body = inspector;
   } else if (!preset) {
     eyebrow = <span className="text-(--kys-accent)">Lesson</span>;
-    title = 'No lesson for this sound';
+    title = 'No lesson for this patch';
     body = (
       <p className="text-(--kys-muted)">
-        Choose a library sound to learn how one is built, a step at a time.
+        Choose a library patch to learn how one is built, a step at a time.
       </p>
     );
   } else if (current && step != null) {
@@ -303,7 +303,7 @@ export function LessonCard({
     const order = tweakBadges(preset);
     eyebrow = (
       <span className="flex items-center gap-1.5 text-(--kys-accent)">
-        <Check size={12} strokeWidth={3} aria-hidden="true" /> The finished sound
+        <Check size={12} strokeWidth={3} aria-hidden="true" /> The finished patch
       </span>
     );
     title = preset.name;
@@ -333,7 +333,7 @@ export function LessonCard({
         <p className="leading-relaxed">{preset.how}</p>
         <div
           className="mt-3 flex flex-wrap items-center gap-1.5"
-          aria-label="Parts of the synth this sound uses, in order"
+          aria-label="Parts of the synth this patch uses, in order"
         >
           {chain.map((m, i) => (
             <span key={m} className="flex items-center gap-1.5">
@@ -384,7 +384,7 @@ export function LessonCard({
               })}
             </ol>
             <p className="mt-3 text-[13px] text-(--kys-faint)">
-              Lost your place? The amber marker on each control shows where this sound had it.
+              Lost your place? The amber marker on each control shows where this patch had it.
               Double-click a knob to send it back.
             </p>
           </>

@@ -92,7 +92,7 @@ beforeEach(() => {
 // The library opens over the bar from the sound picker (t-74).
 const library = () => {
   openSide('Sounds');
-  const section = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
+  const section = screen.getByRole('heading', { name: 'Patch library' }).closest('section');
   if (!section) throw new Error('no library');
   return section;
 };

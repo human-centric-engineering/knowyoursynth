@@ -596,7 +596,7 @@ export function BankForm({ kind, detail }: BankFormProps) {
                 What a synth plays on the work, at least one. Each part names the instruments it is
                 played on (their ids), how the record prints it, who played it, and a sentence or
                 two. A synth row ties the part to one of the app&apos;s synths: listed under it
-                whatever the instruments, a library sound in its style, or its own text there.
+                whatever the instruments, a library patch in its style, or its own text there.
               </p>
             </FieldHelp>
           </legend>
@@ -691,11 +691,11 @@ export function BankForm({ kind, detail }: BankFormProps) {
                       <div className="grid gap-2">
                         <div className="grid gap-1">
                           <Label htmlFor={`${prefix}-sound`} className="text-xs">
-                            Sound{' '}
-                            <FieldHelp title="Sound" ariaLabel="About the sound">
+                            Patch{' '}
+                            <FieldHelp title="Patch" ariaLabel="About the patch">
                               <p>
-                                The id of a sound in this synth&apos;s library, in the part&apos;s
-                                style: &quot;Load a sound in this style&quot;. Optional.
+                                The id of a patch in this synth&apos;s library, in the part&apos;s
+                                style: &quot;Load a patch in this style&quot;. Optional.
                               </p>
                             </FieldHelp>
                           </Label>

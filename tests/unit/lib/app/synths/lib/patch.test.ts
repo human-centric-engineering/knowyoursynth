@@ -391,7 +391,7 @@ describe('sanitizePreset', () => {
   it('falls back to defaults for name, level, tags and riff', () => {
     const r = sanitizePreset(def, { steps: [{ set: { 'mix.osc1': 2 } }], level: 7 });
 
-    expect(r?.name).toBe('AI sound');
+    expect(r?.name).toBe('AI patch');
     expect(r?.level).toBe(2);
     expect(r?.tags).toEqual(['ai', 'ai']);
     expect(r?.phrase.bpm).toBe(100);

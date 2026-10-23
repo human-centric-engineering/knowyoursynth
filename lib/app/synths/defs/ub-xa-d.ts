@@ -930,7 +930,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'display preset bank memory recall select encoder menu',
     rects: [R(975, 772, 1935, 925)],
-    help: 'The display, the SELECT encoder, the PRESET/VALUE buttons and four switches that recall chosen presets (with SHIFT they open the USB/MIDI, velocity, voice and modulation menus). Printed only: this app keeps its sounds in the library instead.',
+    help: 'The display, the SELECT encoder, the PRESET/VALUE buttons and four switches that recall chosen presets (with SHIFT they open the USB/MIDI, velocity, voice and modulation menus). Printed only: this app keeps its patches in the library instead.',
   },
 ];
 

@@ -248,7 +248,7 @@ const lessonPanel = () => {
 };
 const library = () => {
   openSide('Sounds');
-  return screen.getByRole('region', { name: 'Sound library' });
+  return screen.getByRole('region', { name: 'Patch library' });
 };
 
 /** What the allowance route answers now: a test spends the day's turns by changing it. */
@@ -653,7 +653,7 @@ describe('a designed sound', () => {
     expect(within(lesson).getByText(darkBassDesign().how)).toBeTruthy();
     expect(within(lesson).getByRole('button', { name: /Build it step by step/ })).toBeTruthy();
     expect(
-      within(screen.getByRole('region', { name: 'About the sound' })).getByText(
+      within(screen.getByRole('region', { name: 'About the patch' })).getByText(
         darkBassDesign().blurb
       )
     ).toBeTruthy();
@@ -686,7 +686,7 @@ describe('a designed sound', () => {
     fireEvent.click(button('Finish the lesson'));
     expect(cutoff()).toBe('-2');
     fireEvent.click(button('A-440'));
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     expect(loadedName()).toBe('Dark round bass');
   });
@@ -730,7 +730,7 @@ describe('a designed sound', () => {
     expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Dark round bass');
     expect(screen.getByText(/keeps the tutor's lesson/)).toBeTruthy();
     fireEvent.click(
-      within(screen.getByRole('form', { name: 'Save this sound' })).getByRole('button', {
+      within(screen.getByRole('form', { name: 'Save this patch' })).getByRole('button', {
         name: 'Save',
       })
     );
@@ -869,7 +869,7 @@ describe("the library's empty search", () => {
 
     fireEvent.click(within(library()).getByRole('button', { name: 'ask the tutor to design one' }));
 
-    expect(tutorInput).toHaveValue('Design a sound: glassy bell');
+    expect(tutorInput).toHaveValue('Design a patch: glassy bell');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
@@ -1195,7 +1195,7 @@ describe('asking the tutor from the library', () => {
     page();
     const tutorInput = within(tutor()).getByRole('textbox', { name: /Ask the tutor/ });
     await waitFor(() => expect(tutorInput).toBeEnabled());
-    const prefix = 'Design a sound: ';
+    const prefix = 'Design a patch: ';
     // the emoji's first half lands on the last character the route takes
     const query = `${'x'.repeat(MAX_TUTOR_MESSAGE_CHARS - prefix.length - 1)}🎹${'y'.repeat(50)}`;
     fireEvent.change(within(library()).getByRole('searchbox'), { target: { value: query } });
@@ -1628,7 +1628,7 @@ describe('in a bottom sheet, below lg', () => {
 
     expect(screen.queryByRole('dialog', { name: 'Library' })).toBeNull();
     expect(within(tutorSheet()).getByRole('textbox', { name: /Ask the tutor/ })).toHaveValue(
-      'Design a sound: glassy bell'
+      'Design a patch: glassy bell'
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });

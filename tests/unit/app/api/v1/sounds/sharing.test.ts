@@ -298,7 +298,7 @@ describe('sharing by link', () => {
     expect(rowOf(sound.id)).toMatchObject({ visibility: 'private', slug: null });
   });
 
-  it("is a 404 on someone else's sound, which is left as it was", async () => {
+  it("is a 404 on someone else's patch, which is left as it was", async () => {
     const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
     signIn('user-2');
     expect((await patch(String(sound.id), { visibility: 'link' })).status).toBe(404);
@@ -376,10 +376,19 @@ describe('publishing', () => {
     expect(await refused(sound.id, {})).toMatchObject({ status: 400 });
   });
 
-  it("is a 404 on someone else's sound", async () => {
+  it("is a 404 on someone else's patch", async () => {
     const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
     signIn('user-2');
     expect(await refused(sound.id)).toEqual({ status: 404, code: 'NOT_FOUND' });
+  });
+
+  it('is a 404 on an id that is not one', async () => {
+    const res = await publishIt('NOT_AN_ID!');
+    expect(res.status).toBe(404);
+    expect((await json(res)).error).toMatchObject({
+      code: 'NOT_FOUND',
+      message: 'Patch not found',
+    });
   });
 
   it('needs a username', async () => {

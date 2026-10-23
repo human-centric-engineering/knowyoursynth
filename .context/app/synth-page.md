@@ -3,6 +3,12 @@
 `/synths/[id]`: play a synth, patch it and read about it. Plan §4 "The synth page". It keeps the
 prototype's layout, split from `prototype/src/App.jsx` (D3).
 
+**Patch, not sound, on screen.** A saved or library panel setting is a **patch** everywhere a user reads it: My
+patches, the Patch library, Save this patch, Explore's patches (owner ruling, 2026-10-23, t-93). The code, the URLs
+(`?sound=`, `/s/<slug>`), the API (`/api/v1/sounds`) and the database still say `sound`, and stay so: renaming them would
+break shared links for no visible gain. "Sound" on screen means what you hear ("Turn the sound on", the sound map), and
+**Sound design** keeps its name.
+
 ## Where things are
 
 | File                                     | What it is                                                                |
@@ -18,7 +24,7 @@ prototype's layout, split from `prototype/src/App.jsx` (D3).
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
 | `components/app/synth/storage.ts`        | What a signed-out visitor's browser keeps                                 |
 | `components/app/synth/routes.ts`         | `?view=`, `?sound=` and the prototype's hash links                        |
-| `components/app/synth/my-sounds.tsx`     | My sounds, and Save / Save as / Rename / Delete / Save a copy             |
+| `components/app/synth/my-sounds.tsx`     | My patches, and Save / Save as / Rename / Delete / Save a copy            |
 | `components/app/synth/with-notes.ts`     | Puts the API's "Unusual on…" notes back on the definition                 |
 | `components/app/synth/library.tsx`       | The sound library: search, categories, the loaded sound                   |
 | `components/app/tutor/tutor-panel.tsx`   | The tutor, in its drawer ([`tutor.md`](./tutor.md#the-panel))             |
@@ -102,8 +108,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 ┌ the page from `lg` up ─────────────────────────────────────────────────────────────────────┐
 │ ┌ the player (`section`, "<synth> panel") ─────────────────────┐ ┌ drawer ───────┐ ┌rail┐ │
 │ │ ● KNOW YOUR SYNTH                 [Find a control…][Tour][?]  │ │ SOUNDS      ✕ │ │Snds│ │
-│ │ BEHRINGER · Model D ▾ ☆ · heritage · ABOUT › · HISTORY › · …  │ │ My sounds     │ │Lssn│ │
-│ │               ┌──────────── the panel ────────────┐           │ │ Sound library │ │Insp│ │
+│ │ BEHRINGER · Model D ▾ ☆ · heritage · ABOUT › · HISTORY › · …  │ │ My patches    │ │Lssn│ │
+│ │               ┌──────────── the panel ────────────┐           │ │ Patch library │ │Insp│ │
 │ │               └───────────────────────────────────┘           │ │  …            │ │Tutr│ │
 │ │ ● KNOW YOUR SYNTH  DRAWN AS·MAGNIFIER·HOVER HELP [🔍 Find…]    │ │               │ └────┘ │
 │ │ map legend · why is it dark? · engine error                   │ │               │        │
@@ -150,7 +156,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   and shows only while the pointer is within `STRIP_REACH` px of the dock (`data-near` on the dock,
   set without a render) or focus is in it; it is headed "Learn sound design"; it is hidden by opacity, so Tab still reaches it. On
   touch and below `lg` it sits in the dock's flow.
-- **The sound picker opens the bar** (`SoundPicker`), next to Play, with Restore sound and
+- **The patch picker opens the bar** (`SoundPicker`), next to Play, with Restore patch and
   Blank patch: the sound's name opens the library over the bar (or the Library sheet below `lg`)
   and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
@@ -285,12 +291,12 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   catalogue is planned (journal, `f-model-d`).
 - `?sound=<id>` opens the synth with that library sound loaded, over whatever the browser had
   stored, then drops out of the URL so a reload keeps what was done since. A sound the library
-  does not have is ignored. A databank record's "Load a sound in this style" links here.
+  does not have is ignored. A databank record's "Load a patch in this style" links here.
 - `?mine=<id>` opens one of the signed-in user's own sounds the same way, once the session is
   known; the dashboard links here. Signed out, or when a hash link is sending the visitor
   elsewhere, it opens nothing. See [`sounds.md`](./sounds.md).
 - Signed in, the library and the lesson show how far the user got through each lesson, and stars
-  beside the chooser, the library and My sounds add favourites (`f-my-sounds` s4, in
+  beside the chooser, the library and My patches add favourites (`f-my-sounds` s4, in
   [`sounds.md`](./sounds.md)).
 - The prototype's hash links (`#model-d`, `#model-d/outline`, `#model-d/long`) redirect from
   `/synths` and from any synth page. `#bank/<tab>/<id>` links redirect from the same places, and

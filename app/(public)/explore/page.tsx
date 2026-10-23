@@ -26,8 +26,8 @@ import { BRAND } from '@/lib/brand';
  */
 
 export const metadata: Metadata = {
-  title: 'Explore sounds',
-  description: `Sounds people made on ${BRAND.name}'s synths and published. Play any of them, and save a copy to change.`,
+  title: 'Explore patches',
+  description: `Patches people made on ${BRAND.name}'s synths and published. Play any of them, and save a copy to change.`,
   alternates: { canonical: '/explore' },
 };
 
@@ -70,10 +70,10 @@ export default async function ExploreRoute({ searchParams }: Props) {
     <article className="mx-auto w-full max-w-[960px] px-4 py-8 text-(--kys-text) sm:px-6">
       <header className="border-b border-(--kys-line) pb-5">
         <p className="kys-label text-(--kys-accent)">Explore</p>
-        <h1 className="kys-display mt-1 text-[24px] leading-tight">Published sounds</h1>
+        <h1 className="kys-display mt-1 text-[24px] leading-tight">Published patches</h1>
         <p className="mt-2 text-[15px] text-(--kys-muted)">
-          Sounds people made on these synths. Open one to play it; signed in, you can save a copy to
-          change.
+          Patches people made on these synths. Open one to play it; signed in, you can save a copy
+          to change.
         </p>
         <ExploreTabs current="sounds" />
       </header>
@@ -127,7 +127,7 @@ export default async function ExploreRoute({ searchParams }: Props) {
         )}
       </form>
 
-      <section className="mt-6" aria-label="Sounds">
+      <section className="mt-6" aria-label="Patches">
         {sounds.length === 0 ? (
           <p className="text-[15px] text-(--kys-muted)">
             {applied.page > pages ? (
@@ -142,10 +142,10 @@ export default async function ExploreRoute({ searchParams }: Props) {
                 .
               </>
             ) : filtered ? (
-              'No published sound matches these filters. Take one away, or try another synth.'
+              'No published patch matches these filters. Take one away, or try another synth.'
             ) : (
               <>
-                Nobody has published a sound yet. Open a{' '}
+                Nobody has published a patch yet. Open a{' '}
                 <Link href="/synths" className="underline hover:text-(--kys-accent)">
                   synth
                 </Link>

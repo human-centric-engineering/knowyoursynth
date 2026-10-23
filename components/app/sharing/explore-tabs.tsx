@@ -3,7 +3,7 @@ import Link from 'next/link';
 /** Explore's two lists (`f-step-sequencer` t-83): published sounds, and published patterns. */
 export function ExploreTabs({ current }: { current: 'sounds' | 'patterns' }) {
   const tabs = [
-    ['sounds', 'Sounds', '/explore'],
+    ['sounds', 'Patches', '/explore'],
     ['patterns', 'Patterns', '/explore/patterns'],
   ] as const;
   return (

@@ -261,7 +261,7 @@ describe('the publish dialog', () => {
     expect(within(dialog).getByRole('checkbox', { name: 'lead' })).not.toBeDisabled();
 
     await userEvent.click(
-      within(dialog).getByRole('checkbox', { name: /I made this, or the sound it came from/ })
+      within(dialog).getByRole('checkbox', { name: /I made this, or the patch it came from/ })
     );
     await userEvent.click(within(dialog).getByRole('button', { name: 'Publish' }));
 
@@ -310,7 +310,7 @@ describe('the publish dialog', () => {
     ],
     ['NOT_ALLOWED', 422, 'Its name or notes have a word that cannot be published.'],
     ['DUPLICATE', 409, 'It plays the same as the sound it was copied from. Change it first.'],
-    ['PUBLISH_LIMIT', 429, "That's 10 sounds published in a day, the limit. Try again tomorrow."],
+    ['PUBLISH_LIMIT', 429, "That's 10 patches published in a day, the limit. Try again tomorrow."],
     ['VALIDATION_ERROR', 400, "Model D's library has no tag bass"],
   ])('keeps the dialog open with the server’s words on %s', async (code, status, message) => {
     api.post.mockRejectedValue(new APIClientError(message, code, status));
@@ -350,7 +350,7 @@ describe('the publish dialog', () => {
     };
     const withLesson = summary({ lesson, fromTutor: true });
     const message =
-      "The lesson saved with this sound has wording that can't be published. Remove the lesson to publish the sound without it.";
+      "The lesson saved with this patch has wording that can't be published. Remove the lesson to publish the patch without it.";
     api.post
       .mockRejectedValueOnce(new APIClientError(message, 'LESSON_NOT_ALLOWED', 422))
       .mockResolvedValueOnce(detail({ visibility: 'published', slug: SLUG }));

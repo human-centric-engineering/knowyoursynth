@@ -35,15 +35,15 @@ export async function reportSound(
   slug: string,
   input: ReportSound
 ): Promise<{ id: string; created: boolean }> {
-  if (!SharedSlugSchema.safeParse(slug).success) throw new NotFoundError('Sound not found');
+  if (!SharedSlugSchema.safeParse(slug).success) throw new NotFoundError('Patch not found');
   const sound = await prisma.userSound.findUnique({
     where: { slug },
     select: { id: true, userId: true, visibility: true, unlistedAt: true },
   });
   if (!sound || sound.visibility === 'private' || sound.unlistedAt)
-    throw new NotFoundError('Sound not found');
+    throw new NotFoundError('Patch not found');
   if (sound.userId === userId)
-    throw new APIError("You can't report your own sound.", 'OWN_SOUND', 400);
+    throw new APIError("You can't report your own patch.", 'OWN_SOUND', 400);
 
   const note = input.note || null;
   return prisma.$transaction(async (tx) => {
@@ -55,7 +55,7 @@ export async function reportSound(
       select: { visibility: true, unlistedAt: true },
     });
     if (!locked || locked.visibility === 'private' || locked.unlistedAt)
-      throw new NotFoundError('Sound not found');
+      throw new NotFoundError('Patch not found');
     const open = await tx.soundReport.findFirst({
       where: { soundId: sound.id, reporterId: userId, status: 'open' },
       select: { id: true },

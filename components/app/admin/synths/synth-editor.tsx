@@ -28,7 +28,7 @@ export function SynthEditor({
     <Tabs defaultValue={tab} className="space-y-4">
       <TabsList>
         <TabsTrigger value="details">Details</TabsTrigger>
-        <TabsTrigger value="sounds">Sounds ({detail.sounds.length})</TabsTrigger>
+        <TabsTrigger value="sounds">Patches ({detail.sounds.length})</TabsTrigger>
         <TabsTrigger value="lineage">Lineage</TabsTrigger>
         <TabsTrigger value="notes">Notes</TabsTrigger>
       </TabsList>

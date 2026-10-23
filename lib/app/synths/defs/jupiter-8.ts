@@ -1573,7 +1573,7 @@ const areas: Area[] = [
     module: 'util',
     keywords: 'program preset memory store write tape display',
     rects: [RP(893, 416, 1910, 529)],
-    help: 'The display, the patch number buttons 11 to 88, MANUAL, the eight patch presets (which store a split or dual pair with the performance settings), WRITE with its protect lamp, and the tape memory. Printed only: this app keeps its sounds in the library.',
+    help: 'The display, the patch number buttons 11 to 88, MANUAL, the eight patch presets (which store a split or dual pair with the performance settings), WRITE with its protect lamp, and the tape memory. Printed only: this app keeps its patches in the library.',
   },
   {
     id: 'bend',

@@ -122,7 +122,7 @@ describe('lessonPreset', () => {
   it('carries no mark, and says the lesson is the sound’s own, when the tutor did not design it', () => {
     const preset = lessonPreset(checked, { id: 'mine:snd1', name: 'My lead', fromTutor: false });
     expect(preset).not.toHaveProperty('ai');
-    expect(preset.ref).toBe('A lesson saved with this sound');
+    expect(preset.ref).toBe('A lesson saved with this patch');
   });
 });
 

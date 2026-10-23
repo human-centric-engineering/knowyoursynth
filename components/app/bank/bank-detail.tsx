@@ -62,7 +62,7 @@ const WELCOME: Record<BankKind, string> = {
   makers:
     'The people who designed the instruments and founded the companies that made them, and the ideas each one brought in.',
   songs:
-    'Songs, albums and scores where the synthesizer used is well documented, oldest first. Each links to the artists, the instruments, and a sound in that style in this app.',
+    'Songs, albums and scores where the synthesizer used is well documented, oldest first. Each links to the artists, the instruments, and a patch in that style in this app.',
   instruments:
     'The synthesizers named on those records, and the originals the panels in this app are modelled on.',
 };
@@ -290,7 +290,7 @@ function Part({ p, names }: { p: BankPart; names: BankNames }) {
               href={soundHref(sid, soundId)}
               className="mt-2 block rounded-md border border-(--kys-line) px-2.5 py-1 text-left text-sm text-(--kys-muted) hover:border-(--kys-muted) hover:text-(--kys-text)"
             >
-              Load a sound in this style on the {synth.name}:{' '}
+              Load a patch in this style on the {synth.name}:{' '}
               <span className="text-(--kys-text)">{sound}</span>
             </Link>
           )

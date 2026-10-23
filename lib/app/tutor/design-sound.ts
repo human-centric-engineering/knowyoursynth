@@ -42,12 +42,12 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'design_sound',
     description:
-      "Design a whole new sound on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's init patch. Use only control ids, jack ids and legal values that describe_synth showed you. The sound is checked against the synth; if anything is wrong the whole sound is refused with the reason, so fix what it names and call again.",
+      "Design a whole new patch on this synth from the learner's description, with its lesson. The steps are applied in order on top of the synth's init patch. Use only control ids, jack ids and legal values that describe_synth showed you. The patch is checked against the synth; if anything is wrong the whole patch is refused with the reason, so fix what it names and call again.",
     parameters: {
       type: 'object',
       additionalProperties: false,
       properties: {
-        name: { type: 'string', maxLength: 60, description: "The sound's name." },
+        name: { type: 'string', maxLength: 60, description: "The patch's name." },
         blurb: { type: 'string', maxLength: 200, description: 'One sentence.' },
         level: {
           type: 'integer',
@@ -58,14 +58,14 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
         how: {
           type: 'string',
           maxLength: 900,
-          description: 'Two to four sentences on the idea behind the sound.',
+          description: 'Two to four sentences on the idea behind the patch.',
         },
         steps: {
           type: 'array',
           minItems: 1,
           maxItems: 9,
           description:
-            'Three to six steps in the order a person would build the sound: oscillators, mixer, filter, envelopes, modulation, cables, effects. Each sets at least one control or plugs in a cable.',
+            'Three to six steps in the order a person would build the patch: oscillators, mixer, filter, envelopes, modulation, cables, effects. Each sets at least one control or plugs in a cable.',
           items: {
             type: 'object',
             additionalProperties: false,
@@ -93,7 +93,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
           type: 'object',
           maxProperties: MAX_CONTEXT,
           description:
-            'Control id → what that control is doing in this sound, and what happens if the learner moves it (up to 400 characters).',
+            'Control id → what that control is doing in this patch, and what happens if the learner moves it (up to 400 characters).',
           additionalProperties: { type: 'string', maxLength: 400 },
         },
         tweaks: {
@@ -115,7 +115,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
           type: 'object',
           additionalProperties: false,
           description:
-            'A short original riff of 4 to 8 beats that suits the sound, not a copy of any song. Each note is [beat 0–16, MIDI note 24–96, length in beats 0.05–16].',
+            'A short original riff of 4 to 8 beats that suits the patch, not a copy of any song. Each note is [beat 0–16, MIDI note 24–96, length in beats 0.05–16].',
           properties: {
             bpm: { type: 'number', minimum: 40, maximum: 180 },
             steps: {
@@ -155,7 +155,7 @@ export class DesignSoundCapability extends BaseCapability<Args, DesignData> {
     if (!checked.ok)
       return Promise.resolve(
         this.error(
-          refusal('Sound refused, nothing was designed:', checked.problems),
+          refusal('Patch refused, nothing was designed:', checked.problems),
           'invalid_design'
         )
       );

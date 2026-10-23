@@ -236,9 +236,9 @@ describe('the sequencer on the synth page', () => {
   it('loads the next sound’s riff when another sound is chosen', () => {
     page();
     fireEvent.click(button('Sequencer'));
-    fireEvent.click(button(/^Choose a sound/));
+    fireEvent.click(button(/^Choose a patch/));
     fireEvent.click(
-      within(screen.getByRole('dialog', { name: 'Sounds' }))
+      within(screen.getByRole('dialog', { name: 'Patches' }))
         .getAllByRole('button')
         .filter((b) => b.textContent?.includes('Wobble lead'))[0]
     );

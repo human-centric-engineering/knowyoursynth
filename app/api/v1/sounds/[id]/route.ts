@@ -25,7 +25,7 @@ const OWNERSHIP = {
   because: "Every query is keyed on the caller's own user id as well as the sound's.",
 } as const;
 
-const notFound = () => errorResponse('Sound not found', { code: 'NOT_FOUND', status: 404 });
+const notFound = () => errorResponse('Patch not found', { code: 'NOT_FOUND', status: 404 });
 
 export const GET = withAuth<Params>(
   async (_request, session, { params }) => {

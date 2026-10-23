@@ -509,11 +509,11 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
         >
           {tab === 'how' && (
             <section className="rounded-xl border border-(--kys-line) bg-(--kys-surface) p-4">
-              <h3 className="kys-label mb-2 text-(--kys-muted)">How this sound works</h3>
+              <h3 className="kys-label mb-2 text-(--kys-muted)">How this patch works</h3>
               <p className="max-w-[68ch] leading-relaxed">{preset.how}</p>
               <div
                 className="mt-3 flex flex-wrap items-center gap-1.5"
-                aria-label="Parts of the synth this sound uses, in order"
+                aria-label="Parts of the synth this patch uses, in order"
               >
                 {chain.map((m, i) => (
                   <span key={m} className="flex items-center gap-1.5">
@@ -582,8 +582,8 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
               </div>
               <p className="mb-3 max-w-[68ch] text-sm text-(--kys-muted)">
                 {walking
-                  ? 'The panel now shows the sound only as far as this step. Play the keys or the riff after each step and listen to what changed.'
-                  : 'The panel is set to the finished sound. Step through to hear it come together from a plain tone, one module at a time.'}
+                  ? 'The panel now shows the patch only as far as this step. Play the keys or the riff after each step and listen to what changed.'
+                  : 'The panel is set to the finished patch. Step through to hear it come together from a plain tone, one module at a time.'}
               </p>
               {n > 0 && (
                 <StepCarousel
@@ -632,7 +632,7 @@ export function Lesson({ def, preset, step, onStep, mark = null }: LessonProps) 
               </ul>
               <p className="mt-2 text-sm text-(--kys-faint)">
                 Moved a control and lost your place? The amber marker on each control shows where
-                this sound had it. Double-click a knob to send it back.
+                this patch had it. Double-click a knob to send it back.
               </p>
             </section>
           )}

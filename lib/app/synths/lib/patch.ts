@@ -283,7 +283,7 @@ export function sanitizePreset(def: SynthDef, raw: unknown): Preset | null {
   }
   return {
     id: `ai-${Date.now().toString(36)}`,
-    name: str(raw.name, 60) || 'AI sound',
+    name: str(raw.name, 60) || 'AI patch',
     ref: 'Designed by the AI tutor from your description',
     artist: 'AI tutor',
     tags: [str(firstTag(raw.tags), 16) || 'ai', 'ai'],

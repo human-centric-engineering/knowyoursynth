@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       detail && detail !== 'missing'
         ? `${detail.synth.maker} ${detail.synth.name} · Catalogue`
         : 'Synth · Catalogue',
-    description: "Edit a synth's details, sounds, lessons, lineage and notes.",
+    description: "Edit a synth's details, patches, lessons, lineage and notes.",
   };
 }
 

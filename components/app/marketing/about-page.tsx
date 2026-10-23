@@ -49,7 +49,7 @@ export default function AboutPage() {
         <div className="mt-4 space-y-3 text-[16px] leading-relaxed text-(--kys-muted)">
           <p>
             {BRAND.name} is for people who own a synth, or are thinking about one, and want to
-            understand it properly. Not just which knob does what, but why a sound is made the way
+            understand it properly. Not just which knob does what, but why a patch is made the way
             it is, and how to make your own.
           </p>
           <p>
@@ -67,7 +67,7 @@ export default function AboutPage() {
           modular systems are patched with cables, as the hardware is.
         </p>
         <p>
-          Behind every panel is one shared digital voice. That is why a sound loads instantly and
+          Behind every panel is one shared digital voice. That is why a patch loads instantly and
           why the controls behave as they do on the hardware. It is also why the panel is a model
           and not a copy: component tolerances, tuning drift and the particular distortion of one
           circuit are approximated, not reproduced.
@@ -90,7 +90,7 @@ export default function AboutPage() {
           default it leaves out the maker&apos;s logos, wordmarks and model badges: the{' '}
           <strong className="text-(--kys-text)">neutral</strong> design. A synth whose maker has
           agreed to it can show its <strong className="text-(--kys-text)">faithful</strong> design,
-          with those marks in place. The sounds and lessons are the same on both. The app&apos;s
+          with those marks in place. The patches and lessons are the same on both. The app&apos;s
           text names every synth either way, so you know which instrument you are learning.
         </p>
       </Section>

@@ -21,7 +21,7 @@ type Params = { id: string };
 export const POST = withAuth<Params>(
   async (request, session, { params }) => {
     const id = UserSoundIdSchema.safeParse((await params).id);
-    if (!id.success) return errorResponse('Sound not found', { code: 'NOT_FOUND', status: 404 });
+    if (!id.success) return errorResponse('Patch not found', { code: 'NOT_FOUND', status: 404 });
     const log = await getRouteLogger(request);
     const input = await validateRequestBody(request, PublishUserSoundSchema);
     await publishUserSound(session.user.id, id.data, input);

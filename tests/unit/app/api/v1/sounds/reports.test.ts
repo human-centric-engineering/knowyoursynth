@@ -293,7 +293,7 @@ describe('POST /api/v1/public/sounds/:slug/report', () => {
     expect(reports).toHaveLength(0);
   });
 
-  it("stores a report on someone else's sound under the caller, after locking the sound's row", async () => {
+  it("stores a report on someone else's patch under the caller, after locking the sound's row", async () => {
     const sound = addSound();
     const res = await reportIt(sound.slug, {
       reason: 'not_theirs',

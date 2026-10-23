@@ -107,13 +107,13 @@ export function SharedSoundStrip({
 
   return (
     <section
-      aria-label="Shared sound"
+      aria-label="Shared patch"
       className="mb-3 rounded-2xl border border-(--kys-line) bg-(--kys-surface) px-4 py-3"
     >
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           <p className="kys-label text-(--kys-accent)">
-            {sound.visibility === 'published' ? 'Published sound' : 'Shared sound'}
+            {sound.visibility === 'published' ? 'Published patch' : 'Shared patch'}
           </p>
           <h2 className="text-[19px] font-semibold break-words">{sound.name}</h2>
           <p className="text-sm text-(--kys-muted)">
@@ -165,7 +165,7 @@ export function SharedSoundStrip({
           )}
           {viewer === 'owner' && (
             <>
-              <span className="text-(--kys-muted)">This is one of your sounds.</span>
+              <span className="text-(--kys-muted)">This is one of your patches.</span>
               <button type="button" onClick={onOpen} className={buttonClass}>
                 Open it to edit
               </button>
@@ -192,7 +192,7 @@ export function SharedSoundStrip({
       )}
       {copied && (
         <p role="status" className="mt-2 text-sm text-(--kys-good)">
-          {copied.note ?? 'Saved a copy to My sounds.'} It is open on the panel.
+          {copied.note ?? 'Saved a copy to My patches.'} It is open on the panel.
         </p>
       )}
       {error && (

@@ -64,7 +64,7 @@ describe('CatalogueUpload', () => {
     });
     const status = await screen.findByRole('status');
     expect(status).toHaveTextContent('Uploaded TB-303');
-    const sounds = within(status).getByRole('row', { name: /Sounds/ });
+    const sounds = within(status).getByRole('row', { name: /Patches/ });
     expect(
       within(sounds)
         .getAllByRole('cell')

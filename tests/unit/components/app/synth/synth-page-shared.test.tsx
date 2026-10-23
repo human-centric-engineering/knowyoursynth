@@ -253,7 +253,7 @@ const reload = (view: ReturnType<typeof render>, again: () => ReturnType<typeof 
   view.unmount();
   return again();
 };
-const strip = () => screen.getByRole('region', { name: 'Shared sound' });
+const strip = () => screen.getByRole('region', { name: 'Shared patch' });
 
 describe('signed out', () => {
   it('opens with the shared sound on the panel, and says whose it is', () => {
@@ -290,7 +290,7 @@ describe('signed out', () => {
     shared();
     fireEvent.click(button('A-440'));
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(screen.queryByText(/control moved/)).toBeNull();
     expect(cutoff()).toBe('-3');
   });
@@ -314,7 +314,7 @@ describe('signed out', () => {
     // the edit survived, still counted from the shared sound, which Restore still puts back
     expect(loadedName()).toBe('Glass pluck');
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(screen.queryByText(/control moved/)).toBeNull();
   });
 
@@ -372,7 +372,7 @@ describe('signed out', () => {
 
   it('says who made a link share only as the read gives it', () => {
     shared({ shared: { ...SHARED, visibility: 'link', author: null, authorProfile: false } });
-    expect(within(strip()).getByText('Shared sound')).toBeTruthy();
+    expect(within(strip()).getByText('Shared patch')).toBeTruthy();
     expect(within(strip()).getByText('Shared by its maker')).toBeTruthy();
     expect(within(strip()).queryByRole('link', { name: /^@/ })).toBeNull();
   });
@@ -409,18 +409,18 @@ describe('signed in', () => {
     await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
     expect(loadedName()).toBe('Glass pluck');
     expect(screen.queryByText(/control moved/)).toBeNull();
-    expect(within(strip()).getByText(/Saved a copy to My sounds/)).toBeTruthy();
+    expect(within(strip()).getByText(/Saved a copy to My patches/)).toBeTruthy();
     // and is not offered again, so a second click is not a second copy
     expect(within(strip()).queryByRole('button', { name: 'Save a copy' })).toBeNull();
   });
 
   it("saves the panel alone when the original has stopped being shared: never its owner's name or notes", async () => {
     serve([]);
-    const NEW: UserSoundDetail = { ...NIGHT_BASS, id: 'cmnew1', name: 'Untitled sound' };
+    const NEW: UserSoundDetail = { ...NIGHT_BASS, id: 'cmnew1', name: 'Untitled patch' };
     api.post
       .mockRejectedValueOnce(
-        new APIClientError('That sound is not shared any more', 'VALIDATION_ERROR', 400, {
-          errors: [{ path: 'source.shared', message: `No shared model-d sound at ${SLUG}` }],
+        new APIClientError('That patch is not shared any more', 'VALIDATION_ERROR', 400, {
+          errors: [{ path: 'source.shared', message: `No shared model-d patch at ${SLUG}` }],
         })
       )
       .mockResolvedValueOnce(NEW);
@@ -433,7 +433,7 @@ describe('signed in', () => {
     // no source to credit, a name of no one's, no notes, and the panel as it was sent the first time
     expect(second.body).toEqual({
       synthId: 'model-d',
-      name: 'Untitled sound',
+      name: 'Untitled patch',
       panel: (api.post.mock.calls[0] as [string, { body: Record<string, unknown> }])[1].body.panel,
     });
     expect(second.body.name).not.toBe(SHARED.name);
@@ -441,7 +441,7 @@ describe('signed in', () => {
     await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
     const said = within(strip()).getByRole('status').textContent ?? '';
     expect(said).toMatch(
-      /not shared any more, so your panel was saved to My sounds as a new sound of yours/
+      /not shared any more, so your panel was saved to My patches as a new patch of yours/
     );
     expect(said).toMatch(/without the original's name or notes/);
     expect(said).not.toContain(SHARED.name);
@@ -475,7 +475,7 @@ describe('signed in', () => {
     reload(first, () => page());
     await waitFor(() => expect(screen.getByText('mine')).toBeTruthy());
     expect(loadedName()).toBe('Glass pluck');
-    expect(screen.queryByRole('region', { name: 'Shared sound' })).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Shared patch' })).toBeNull();
   });
 
   it('does not fall back to a plain sound on any other refusal', async () => {
@@ -581,7 +581,7 @@ describe("a shared sound's lesson (f-tutor t-55)", () => {
     fireEvent.click(button('Finish the lesson'));
     // the lesson ends at 2; the shared sound as published is at -3
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(cutoff()).toBe('-3');
   });
 

@@ -95,7 +95,7 @@ const button = (name: string | RegExp) => screen.getByRole('button', { name });
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const library = () => {
   openSide('Sounds');
-  const section = screen.getByRole('heading', { name: 'Sound library' }).closest('section');
+  const section = screen.getByRole('heading', { name: 'Patch library' }).closest('section');
   if (!section) throw new Error('no library');
   return section;
 };
@@ -107,7 +107,7 @@ describe('the library on the page', () => {
     const order = [...detail.sounds.slice(1), detail.sounds[0]];
     // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 99 times over.
     const lib = library();
-    const picker = button(/^Choose a sound/);
+    const picker = button(/^Choose a patch/);
     for (const p of order) {
       const row = [...lib.querySelectorAll('button')].find(
         (b) => b.querySelector('.font-semibold')?.textContent === p.name
@@ -116,7 +116,7 @@ describe('the library on the page', () => {
       fireEvent.click(row);
       expect(loadedName()).toBe(p.name);
       expect(row.getAttribute('aria-current')).toBe('true');
-      expect(picker.getAttribute('aria-label')).toBe(`Choose a sound (now: ${p.name})`);
+      expect(picker.getAttribute('aria-label')).toBe(`Choose a patch (now: ${p.name})`);
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
     // 99 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.

@@ -44,7 +44,7 @@ describe('CatalogueSoundPage', () => {
     vi.clearAllMocks();
   });
 
-  it("shows the sound's form, named, linking back to the synth's sounds", async () => {
+  it("shows the sound's form, named, linking back to the synth's patches", async () => {
     getDetail.mockResolvedValue(adminSynthDetail());
 
     render(await CatalogueSoundPage(props()));
@@ -52,9 +52,9 @@ describe('CatalogueSoundPage', () => {
     const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toHaveTextContent('Rubber Funk Bass');
     expect(heading).not.toHaveTextContent('Edited');
-    expect(screen.getByRole('button', { name: 'Save sound' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save patch' })).toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Moog Model D sounds/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Moog Model D patches/ })).toHaveAttribute(
       'href',
       '/admin/synths/catalogue/model-d?tab=sounds'
     );
@@ -76,7 +76,7 @@ describe('CatalogueSoundPage', () => {
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Edited');
     const status = screen.getByRole('status');
-    expect(status).toHaveTextContent('The public page leaves this sound out');
+    expect(status).toHaveTextContent('The public page leaves this patch out');
     expect(status).toHaveTextContent('cutoff must be between 0 and 10');
   });
 
@@ -97,8 +97,8 @@ describe('CatalogueSoundPage', () => {
 
     render(await CatalogueSoundPage(props()));
 
-    expect(screen.getByRole('alert')).toHaveTextContent('The sound could not be loaded.');
-    expect(screen.getByRole('link', { name: /model-d sounds/ })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Save sound' })).not.toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveTextContent('The patch could not be loaded.');
+    expect(screen.getByRole('link', { name: /model-d patches/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Save patch' })).not.toBeInTheDocument();
   });
 });

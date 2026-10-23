@@ -212,7 +212,7 @@ export function SynthProfileForm({ profile }: { profile: ProfileView | null }) {
       {back && saved ? (
         <p className="text-sm">
           <Link href={back} className="underline underline-offset-2">
-            Back to your sound
+            Back to your patch
           </Link>{' '}
           to publish it.
         </p>

@@ -53,7 +53,7 @@ export class GetPanelCapability extends BaseCapability<Args, PanelData> {
   readonly functionDefinition: CapabilityFunctionDefinition = {
     name: 'get_panel',
     description:
-      "Read the synth panel as the learner has it now: the controls that differ from the synth's init patch (id, panel label and value) and the cables in. Call it before explaining or changing the sound. Read-only.",
+      "Read the synth panel as the learner has it now: the controls that differ from the synth's init patch (id, panel label and value) and the cables in. Call it before explaining or changing the patch. Read-only.",
     parameters: { type: 'object', additionalProperties: false, properties: {} },
   };
 

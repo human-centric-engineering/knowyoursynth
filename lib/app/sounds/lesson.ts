@@ -90,7 +90,7 @@ function asPreset(lesson: SoundLessonInput, sound: LessonSound) {
   return {
     id: sound.id,
     name: sound.name,
-    ref: sound.fromTutor ? 'Designed by the AI tutor' : 'A lesson saved with this sound',
+    ref: sound.fromTutor ? 'Designed by the AI tutor' : 'A lesson saved with this patch',
     artist: sound.fromTutor ? 'AI tutor' : 'Its owner',
     tags: [lesson.category],
     level: lesson.level,

@@ -36,7 +36,8 @@ export function initAppNav(): void {
         href: '/admin/synths/catalogue',
         label: 'Catalogue',
         icon: Library,
-        description: 'Order and list the synths, and edit their sounds, lessons, lineage and notes',
+        description:
+          'Order and list the synths, and edit their patches, lessons, lineage and notes',
       },
       {
         href: '/admin/synths/bank',
@@ -52,9 +53,9 @@ export function initAppNav(): void {
       },
       {
         href: '/admin/synths/reports',
-        label: 'Reported sounds',
+        label: 'Reported patches',
         icon: Flag,
-        description: 'Shared sounds people reported: unlist, restore or dismiss each',
+        description: 'Shared patches people reported: unlist, restore or dismiss each',
       },
       {
         href: '/admin/synths/data',

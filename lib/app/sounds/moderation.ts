@@ -132,7 +132,7 @@ export async function moderateSound(
       where: { id: soundId },
       select: { name: true, unlistedAt: true },
     });
-    if (!sound) throw new NotFoundError('Sound not found');
+    if (!sound) throw new NotFoundError('Patch not found');
     const before = { unlistedAt: sound.unlistedAt?.toISOString() ?? null };
     const resolved = { resolvedById: adminId, resolvedAt: now };
 
@@ -141,7 +141,7 @@ export async function moderateSound(
         where: { soundId, status: 'open' },
         data: { status: 'dismissed', ...resolved },
       });
-      if (count === 0) throw new ConflictError('This sound has no open reports');
+      if (count === 0) throw new ConflictError('This patch has no open reports');
       return { name: sound.name, before, after: before, reportsClosed: count };
     }
 
@@ -153,7 +153,7 @@ export async function moderateSound(
     });
     if (count === 0)
       throw new ConflictError(
-        unlisting ? 'This sound is already unlisted' : 'This sound is not unlisted'
+        unlisting ? 'This patch is already unlisted' : 'This patch is not unlisted'
       );
 
     let reportsClosed = 0;

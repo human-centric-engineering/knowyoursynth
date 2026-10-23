@@ -86,8 +86,8 @@ export function TutorPanel(props: TutorPanelProps) {
           <p className="text-sm text-(--kys-faint)">Loading the tutor…</p>
         ) : (
           <p className="text-sm text-(--kys-muted)">
-            The tutor explains the sound on the panel, suggests changes you can apply and undo, and
-            designs new sounds with a lesson.{' '}
+            The tutor explains the patch on the panel, suggests changes you can apply and undo, and
+            designs new patches with a lesson.{' '}
             <Link href={signInHref} className="text-(--kys-accent) underline underline-offset-2">
               Sign in
             </Link>{' '}
@@ -207,7 +207,7 @@ function SignedInTutor({
       {chat.messages.length === 0 && !chat.busy && !chat.resuming && (
         <>
           <p className="text-[14px] text-(--kys-muted)">
-            Ask about the sound on the panel, or describe one and the tutor builds it on the{' '}
+            Ask about the patch on the panel, or describe a sound and the tutor builds it on the{' '}
             {def.name} with a step-by-step lesson. You choose whether to apply each change, and
             every change can be undone. It can be wrong, so trust your ears.
           </p>
@@ -249,9 +249,9 @@ function SignedInTutor({
           </label>
           <FieldHelp title="Asking the tutor">
             <p>
-              Ask why the sound is the way it is, how to change it, or for a new sound
+              Ask why the patch sounds the way it does, how to change it, or for a new patch
               (&ldquo;Design a warm pad&rdquo;). A change it suggests waits for you to apply it, and
-              a sound it designs opens on the panel with its lesson. Either can be undone while the
+              a patch it designs opens on the panel with its lesson. Either can be undone while the
               panel still shows it. It can also write a pattern for the sequencer, or change the one
               you have (&ldquo;Make the second half busier&rdquo;), which waits for you to apply it
               in the same way.
@@ -271,7 +271,7 @@ function SignedInTutor({
           rows={2}
           maxLength={MAX_TUTOR_MESSAGE_CHARS}
           disabled={closed}
-          placeholder={chat.resuming ? 'Loading the conversation…' : 'Ask about this sound…'}
+          placeholder={chat.resuming ? 'Loading the conversation…' : 'Ask about this patch…'}
           className="min-w-0 resize-y rounded-md border border-(--kys-line) bg-(--kys-ground) px-3 py-2 text-sm text-(--kys-text) placeholder:text-(--kys-faint) disabled:opacity-60 pointer-coarse:resize-none"
         />
         <div className="flex justify-end">

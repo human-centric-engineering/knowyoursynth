@@ -84,7 +84,7 @@ describe('CatalogueSynthPage', () => {
 
     render(await CatalogueSynthPage(props('sounds')));
 
-    expect(screen.getByRole('tab', { name: 'Sounds (1)' })).toHaveAttribute(
+    expect(screen.getByRole('tab', { name: 'Patches (1)' })).toHaveAttribute(
       'aria-selected',
       'true'
     );

@@ -360,10 +360,10 @@ export const SoundCreateSchema = z.record(z.string(), z.unknown());
 /** Check a sound against its synth's current definition; the checked sound, or a refusal naming every problem. */
 function checkSound(def: AppSynthDef, input: unknown): Preset {
   const result = validatePreset(def, input);
-  if (!result.ok) refuse(`The sound does not fit ${def.id}`, fromSoundProblems(result.problems));
+  if (!result.ok) refuse(`The patch does not fit ${def.id}`, fromSoundProblems(result.problems));
   if (result.value.ai)
-    refuse('A library sound cannot be marked as designed by the tutor', [
-      { path: 'ai', message: 'Leave ai out of a library sound' },
+    refuse('A library patch cannot be marked as designed by the tutor', [
+      { path: 'ai', message: 'Leave ai out of a library patch' },
     ]);
   return result.value;
 }
@@ -391,7 +391,7 @@ export async function editSound(
   const def = defOrRefuse(synthId);
   return prisma.$transaction(async (tx) => {
     const row = await tx.synthSound.findUnique({ where: { synthId_slug: { synthId, slug } } });
-    if (!row) throw new NotFoundError('Sound not found');
+    if (!row) throw new NotFoundError('Patch not found');
     if (row.definitionVersion !== def.version)
       // No definition has a mapping between versions yet; the first rename ships one (plan §5).
       refuse(`${slug} was made on an older definition of ${synthId}`, [
@@ -422,7 +422,7 @@ export async function createSound(
   const def = defOrRefuse(synthId);
   const sound = checkSound(def, input);
   if (!SoundSlugSchema.safeParse(sound.id).success)
-    refuse('A sound id is lowercase letters, digits and hyphens', [
+    refuse('A patch id is lowercase letters, digits and hyphens', [
       { path: 'id', message: `${sound.id} is not a usable id` },
     ]);
   return prisma.$transaction(async (tx) => {
@@ -432,7 +432,7 @@ export async function createSound(
       where: { synthId_slug: { synthId, slug: sound.id } },
       select: { slug: true },
     });
-    if (taken) throw new ConflictError(`${synthId} already has a sound with the id ${sound.id}`);
+    if (taken) throw new ConflictError(`${synthId} already has a patch with the id ${sound.id}`);
     const last = await tx.synthSound.aggregate({ where: { synthId }, _max: { order: true } });
     const row = await tx.synthSound.create({
       data: {

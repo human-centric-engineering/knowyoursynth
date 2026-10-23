@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * My sounds on `/dashboard` (`f-my-sounds` s2): the user's sounds, each opening on its synth. The two reads are
+ * My patches on `/dashboard` (`f-my-sounds` s2): the user's sounds, each opening on its synth. The two reads are
  * fakes; what is checked is what the card makes of them.
  *
  * @see components/app/dashboard/my-sounds-card.tsx
@@ -135,7 +135,7 @@ describe('MySoundsCard', () => {
     vi.mocked(listUserSounds).mockResolvedValue([]);
     await renderCard();
     expect(screen.queryByRole('list')).toBeNull();
-    expect(screen.getByText(/^You haven't saved a sound yet\./)).toBeTruthy();
+    expect(screen.getByText(/^You haven't saved a patch yet\./)).toBeTruthy();
     expect(screen.getByRole('link', { name: 'synth' }).getAttribute('href')).toBe('/synths');
   });
 });

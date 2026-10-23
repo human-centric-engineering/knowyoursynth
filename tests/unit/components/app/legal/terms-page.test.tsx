@@ -33,7 +33,7 @@ describe('terms page', () => {
       'Who these are with',
       'Your account',
       'The panels',
-      'Sounds you make',
+      'Patches you make',
       'What you may not do',
       'The tutor and the databank',
       'The service',
@@ -77,7 +77,7 @@ describe('terms page', () => {
   });
 
   it('says what moderators may do', () => {
-    expect(pageText()).toMatch(/We may unlist a shared sound that breaks these rules/);
+    expect(pageText()).toMatch(/We may unlist a shared patch that breaks these rules/);
   });
 
   it('links the privacy policy', () => {

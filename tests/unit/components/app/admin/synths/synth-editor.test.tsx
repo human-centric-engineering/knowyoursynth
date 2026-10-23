@@ -25,9 +25,9 @@ describe('SynthEditor', () => {
 
     expect(screen.getByRole('button', { name: 'Save details' })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: 'Sounds (1)' }));
+    await user.click(screen.getByRole('tab', { name: 'Patches (1)' }));
     expect(screen.getByTestId('sound-row-funk-bass')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Add a sound' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Add a patch' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: 'Lineage' }));
     expect(screen.getByDisplayValue('Where the Model D comes from')).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('SynthEditor', () => {
     const user = userEvent.setup();
     render(<SynthEditor detail={adminSynthDetail({ definitionVersion: null })} tab="sounds" />);
 
-    expect(screen.queryByRole('link', { name: 'Add a sound' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Add a patch' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: 'Notes' }));
     expect(screen.queryByRole('button', { name: 'Add note' })).not.toBeInTheDocument();
   });

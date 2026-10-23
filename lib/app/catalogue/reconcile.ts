@@ -119,7 +119,7 @@ export async function getCatalogueReconciliation(): Promise<CatalogueReconciliat
       table: 'SOUND' as const,
       key: catalogueKey.SOUND(r),
       synthId: r.synthId,
-      label: `Sound: ${r.name}`,
+      label: `Patch: ${r.name}`,
       rank: i,
       editedAt: r.editedAt,
       row: r,
@@ -217,7 +217,7 @@ function compare(planned: unknown, row: Values): FieldDifference[] {
 function missingLabel(table: CatalogueTable, key: string, values: unknown): string {
   const name =
     values !== null && typeof values === 'object' && 'name' in values ? String(values.name) : key;
-  if (table === 'SOUND') return `Sound: ${name}`;
+  if (table === 'SOUND') return `Patch: ${name}`;
   if (table === 'SYNTH') return 'Details';
   if (table === 'LINEAGE') return 'History';
   return `Note: ${key}`;

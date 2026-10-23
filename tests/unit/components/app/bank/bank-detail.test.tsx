@@ -61,10 +61,10 @@ describe('ArtistPage', () => {
 
   it('links a sound in the style of a record to its synth, opening with that sound', () => {
     render(<ArtistPage d={d} names={names} />);
-    expect(hrefsOf('Load a sound in this style on the Model D: Baroque Line Voice')).toEqual([
+    expect(hrefsOf('Load a patch in this style on the Model D: Baroque Line Voice')).toEqual([
       '/synths/model-d?sound=baroque-line-voice',
     ]);
-    expect(hrefsOf('Load a sound in this style on the System 15: S15 Brass')).toEqual([
+    expect(hrefsOf('Load a patch in this style on the System 15: S15 Brass')).toEqual([
       '/synths/system-15?sound=s15-brass',
     ]);
   });
@@ -72,7 +72,7 @@ describe('ArtistPage', () => {
   it('offers no sound on a synth that is not listed, or that the library does not have', () => {
     const fewer = namesFrom(bank, [SYNTHS[0]], { 'model-d': {} });
     render(<ArtistPage d={d} names={fewer} />);
-    expect(screen.queryAllByRole('link', { name: /^Load a sound/ })).toEqual([]);
+    expect(screen.queryAllByRole('link', { name: /^Load a patch/ })).toEqual([]);
   });
 
   it('links each instrument they used to its page', () => {

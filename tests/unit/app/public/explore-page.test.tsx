@@ -54,7 +54,7 @@ async function renderPage(searchParams: Record<string, string | string[]> = {}) 
 describe('/explore', () => {
   it('lists the sounds, each opening its page, with its byline and saves', async () => {
     await renderPage();
-    const list = within(screen.getByRole('region', { name: 'Sounds' }));
+    const list = within(screen.getByRole('region', { name: 'Patches' }));
     expect(list.getByRole('link', { name: 'Night bass' })).toHaveAttribute(
       'href',
       '/synths/model-d/s/abcdefghjk'
@@ -93,7 +93,7 @@ describe('/explore', () => {
       applied: query,
     }));
     await renderPage({ tag: 'bass' });
-    expect(screen.getByText('No published sound matches these filters. Take one away, or try another synth.')).toBeInTheDocument();
+    expect(screen.getByText('No published patch matches these filters. Take one away, or try another synth.')).toBeInTheDocument();
   });
 
   it('says when nothing is published, and where to start', async () => {
@@ -103,7 +103,7 @@ describe('/explore', () => {
       applied: query,
     }));
     await renderPage();
-    expect(screen.getByText(/^Nobody has published a sound yet\./)).toBeInTheDocument();
+    expect(screen.getByText(/^Nobody has published a patch yet\./)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'synth' })).toHaveAttribute('href', '/synths');
   });
 

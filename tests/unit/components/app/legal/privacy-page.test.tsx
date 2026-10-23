@@ -158,7 +158,7 @@ describe('what a reader relies on', () => {
     );
     expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute('href', '/settings');
     const text = (document.body.textContent ?? '').replace(/\s+/g, ' ');
-    expect(text).toMatch(/deletes your account and what is in it, published sounds included/);
+    expect(text).toMatch(/deletes your account and what is in it, published patches included/);
     expect(text).toMatch(/kept but no longer say who they came from/);
   });
 });

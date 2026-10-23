@@ -131,7 +131,7 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ['Transpose', 'Moves every note by semitones, before the scale.'],
   [
     'Patterns',
-    'Save keeps the pattern in My patterns, to open again on any synth. My patterns opens one of yours; Library opens any synth’s riff as a starting point. With one of your sounds open, With sound makes the sound open the sequencer on the saved pattern.',
+    'Save keeps the pattern in My patterns, to open again on any synth. My patterns opens one of yours; Library opens any synth’s riff as a starting point. With one of your patches open, With patch makes the patch open the sequencer on the saved pattern.',
   ],
   ['A and B', 'Two variations of the pattern, chained: A A A B plays A three times, then B.'],
   [

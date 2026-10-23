@@ -116,11 +116,11 @@ describe('ReportQueue', () => {
 
   it("shows a refusal in the server's words and lets the admin try again", async () => {
     post.mockRejectedValueOnce(
-      new APIClientError('This sound is already unlisted', 'CONFLICT', 409)
+      new APIClientError('This patch is already unlisted', 'CONFLICT', 409)
     );
     render(<ReportQueue sounds={[REPORTED]} />);
     await userEvent.click(screen.getByRole('button', { name: 'Unlist' }));
-    expect(screen.getByRole('alert')).toHaveTextContent('This sound is already unlisted');
+    expect(screen.getByRole('alert')).toHaveTextContent('This patch is already unlisted');
     expect(screen.getByRole('button', { name: 'Unlist' })).toBeEnabled();
     expect(mockRefresh).not.toHaveBeenCalled();
   });

@@ -17,7 +17,7 @@ import { BRAND } from '@/lib/brand';
 
 export const TERMS_UPDATED = '19 October 2026';
 
-const description = `The terms for using ${BRAND.name}: your account, the sounds you make and share, the tutor, and what we may do when a rule is broken.`;
+const description = `The terms for using ${BRAND.name}: your account, the patches you make and share, the tutor, and what we may do when a rule is broken.`;
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
@@ -69,9 +69,9 @@ export default function TermsOfServicePage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Sounds you make">
+      <LegalSection title="Patches you make">
         <p>
-          A sound you make is yours. Keeping it private gives nobody any rights in it. Sharing it
+          A patch you make is yours. Keeping it private gives nobody any rights in it. Sharing it
           with a link lets anyone with the link play it and, signed in, save a copy of their own to
           learn from.
         </p>
@@ -81,17 +81,17 @@ export default function TermsOfServicePage() {
           {BRAND.name} shows. You can unpublish it whenever you like. That stops new copies, and
           copies people have already saved stay with them.
         </p>
-        <p>A sound the tutor designed for you is yours in the same way, lesson included.</p>
+        <p>A patch the tutor designed for you is yours in the same way, lesson included.</p>
       </LegalSection>
 
       <LegalSection title="What you may not do">
         <ul>
           <li>
-            Publish someone else&apos;s sound as your own. A copy has to be changed before it can be
-            published, and it keeps the credit to the sound it came from.
+            Publish someone else&apos;s patch as your own. A copy has to be changed before it can be
+            published, and it keeps the credit to the patch it came from.
           </li>
           <li>
-            Use a sound&apos;s name, notes or lesson, or a username, to abuse or harass anyone, or
+            Use a patch&apos;s name, notes or lesson, or a username, to abuse or harass anyone, or
             for anything offensive.
           </li>
           <li>
@@ -102,9 +102,9 @@ export default function TermsOfServicePage() {
           <li>Try to get into accounts or parts of {BRAND.name} that are not yours.</li>
         </ul>
         <p>
-          We may unlist a shared sound that breaks these rules, which takes it off every page and
+          We may unlist a shared patch that breaks these rules, which takes it off every page and
           stops its link working for anyone but you, and we may close an account that keeps breaking
-          them. Anyone can report a shared sound they think breaks them, and a moderator looks at
+          them. Anyone can report a shared patch they think breaks them, and a moderator looks at
           every report.
         </p>
       </LegalSection>
@@ -126,8 +126,8 @@ export default function TermsOfServicePage() {
 
       <LegalSection title="The service">
         <p>
-          {BRAND.name} is provided as it is. We work to keep it running and your sounds safe, but we
-          cannot promise it will always be available or free of errors, and we may change or stop
+          {BRAND.name} is provided as it is. We work to keep it running and your patches safe, but
+          we cannot promise it will always be available or free of errors, and we may change or stop
           parts of it. Download your data from the{' '}
           <Link href="/privacy" className={legalLink}>
             privacy policy

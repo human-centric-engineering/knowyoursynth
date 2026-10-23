@@ -276,7 +276,7 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
   another. `USERNAME_REQUIRED` from the server turns the dialog to the same step.
 - **`back` takes one shape only** (`backToSound` in `components/app/synth/routes.ts`): one of the
   synth page, default view. Anything else, another site included, offers no link.
-- **My sounds** says each sound's state under its name, and a shared one has ↗ to its page. The
+- **My patches** says each sound's state under its name, and a shared one has ↗ to its page. The
   dashboard's card says the same, the state linking to the page (`VISIBILITY_LABELS`,
   `components/app/sharing/visibility.ts`, a plain module so the server card can read it).
 
@@ -285,7 +285,7 @@ Copy link copies the full address; where the browser blocks it, it says to copy 
 The strip's Save a copy (h2) sends `source: { shared }`. If the sound stopped being shared after
 the page opened (made private, unlisted, deleted, or its owner erased), the copy route refuses on
 `source.shared` (`sharedSourceGone`). The page then saves the same panel as a **plain new sound**
-called "Untitled sound" (`UNNAMED_COPY`), with no notes, no lesson and no credit, and says so (t-52, owner
+called "Untitled patch" (`UNNAMED_COPY`), with no notes, no lesson and no credit, and says so (t-52, owner
 ruling). The owner's name and notes were withdrawn with the sound. The notes were written when only
 the owner could read them, so they do not survive into another account. The visitor keeps their
 panel and renames the sound themselves. Any other refusal is just reported: nothing else falls back.
@@ -341,7 +341,7 @@ outlives the person who filed it and the admin who resolved it: it is the record
   (`SELECT … FOR UPDATE` on `user_sound`), so two sent together are one.
 - **Each action is a conditional write**, so two admins at once cannot both win: the second is a
   409, as a decided suggestion is.
-- **The owner is told in the app, not by email** (planning ruling): My sounds and the dashboard say
+- **The owner is told in the app, not by email** (planning ruling): My patches and the dashboard say
   _Unlisted by moderators_ and drop the ↗ link; the sharing controls say why and offer only Stop
   sharing.
 - **Report** on the sound page (`components/app/sharing/report-button.tsx`) is shown to a
@@ -394,7 +394,7 @@ database).
 
 h3: `tests/unit/components/app/sharing/sound-sharing.test.tsx` (each state's buttons and requests,
 Copy link, the dialog: the tick, the three-tag cap, no username, an unreadable profile, each refusal
-kept in the dialog); `synth-page-mine.test.tsx` (the states in My sounds, sharing the open sound);
+kept in the dialog); `synth-page-mine.test.tsx` (the states in My patches, sharing the open sound);
 `synth-page-shared.test.tsx` (the copy falling back to a plain sound, and only on that refusal);
 `my-sounds-card.test.tsx`; `routes.test.ts` (`backToSound`); `synth-profile-form.test.tsx` (Back
 to your sound).

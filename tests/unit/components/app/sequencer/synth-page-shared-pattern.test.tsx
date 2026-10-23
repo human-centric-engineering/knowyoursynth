@@ -234,9 +234,9 @@ describe('signed out', () => {
 
   it('keeps the pattern when another sound is chosen', async () => {
     page();
-    fireEvent.click(button(/^Choose a sound/));
+    fireEvent.click(button(/^Choose a patch/));
     fireEvent.click(
-      within(screen.getByRole('dialog', { name: 'Sounds' }))
+      within(screen.getByRole('dialog', { name: 'Patches' }))
         .getAllByRole('button')
         .filter((b) => b.textContent?.includes('Wobble lead'))[0]
     );

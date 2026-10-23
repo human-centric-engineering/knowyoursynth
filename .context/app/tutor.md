@@ -1,7 +1,7 @@
 # The tutor
 
-`f-tutor`. An AI tutor on the synth page that explains the sound on the panel, proposes changes
-the learner applies, and designs new sounds with their lesson (D6, plan §8). The prototype's tutor
+`f-tutor`. An AI tutor on the synth page that explains the patch on the panel, proposes changes
+the learner applies, and designs new patches with their lesson (D6, plan §8). The prototype's tutor
 (`prototype/src/ui/Tutor.jsx`) called Claude through `window.claude` and asked for JSON in the
 reply. Here it runs through Sunrise's orchestration. **The model proposes, the server validates,
 and the learner applies. The model never writes to the panel.**
@@ -555,7 +555,7 @@ as it arrives, and a designed sound opens as it arrives, as the prototype's did.
 - **The meter** reads the allowance when the panel opens and after every turn. At zero, or on a 429
   `TUTOR_ALLOWANCE_SPENT` (whose `details` it takes), the composer closes.
 - **The library's empty search** offers "ask the tutor to design one", which scrolls to the panel and
-  puts "Design a sound: _the search_" in the composer, cut to the 4,000 characters the route takes.
+  puts "Design a patch: _the search_" in the composer, cut to the 4,000 characters the route takes.
   It does not send it: each question counts. With a category chosen and the search matching sounds
   in another, it says to pick another category too.
 

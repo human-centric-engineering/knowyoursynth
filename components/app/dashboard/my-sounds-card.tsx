@@ -24,9 +24,9 @@ export async function MySoundsCard({ userId }: { userId: string }) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="space-y-1.5">
-          <CardTitle>My sounds</CardTitle>
+          <CardTitle>My patches</CardTitle>
           <CardDescription>
-            Sounds you have saved on a synth&apos;s page, most recently changed first.
+            Patches you have saved on a synth&apos;s page, most recently changed first.
           </CardDescription>
         </div>
         <AudioLines className="text-muted-foreground h-4 w-4" aria-hidden="true" />
@@ -34,12 +34,12 @@ export async function MySoundsCard({ userId }: { userId: string }) {
       <CardContent>
         {sounds.length === 0 ? (
           <p className="text-muted-foreground text-sm">
-            You haven&apos;t saved a sound yet. Open a{' '}
+            You haven&apos;t saved a patch yet. Open a{' '}
             <Link href="/synths" className="underline underline-offset-2">
               synth
             </Link>
             , get it sounding the way you like and press <strong>Save</strong>. Or save a copy of a
-            library sound and change it from there.
+            library patch and change it from there.
           </p>
         ) : (
           <ul className="divide-y">

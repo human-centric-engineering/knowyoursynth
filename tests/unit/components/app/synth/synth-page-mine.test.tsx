@@ -2,7 +2,7 @@
 
 /**
  * The synth page with the user's own sounds (`f-my-sounds` s2): Save, Save as, Rename, Delete and Save a copy over the
- * panel, My sounds beside the library, `?mine=` from the dashboard, and the trip through sign-in when signed out. A
+ * panel, My patches beside the library, `?mine=` from the dashboard, and the trip through sign-in when signed out. A
  * sound saved with its lesson (`f-tutor` t-55) shows that lesson in the Lesson panel. The panel, library and lesson are
  * real; the router, the audio engine, the session and the API client are fakes.
  *
@@ -189,14 +189,14 @@ const button = (name: string | RegExp) => screen.getByRole('button', { name });
 /** The library, opening its drawer at `lg` and up (t-70). */
 const soundLibrary = () => {
   openSide('Sounds');
-  return screen.getByRole('region', { name: 'Sound library' });
+  return screen.getByRole('region', { name: 'Patch library' });
 };
 const loadedName = () => screen.getByText('Loaded:').nextElementSibling?.textContent;
 const cutoff = () =>
   screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow');
 const mySounds = () => {
   openSide('Sounds');
-  return screen.getByRole('region', { name: 'My sounds' });
+  return screen.getByRole('region', { name: 'My patches' });
 };
 
 /** The API's answers: the list, and each sound by id. */
@@ -267,7 +267,7 @@ describe('signed out', () => {
     expect(screen.getByText('1 control moved')).toBeTruthy();
     await waitFor(() =>
       expect(
-        within(mySounds()).getByText(/^You haven't saved a sound on the Model D yet\./)
+        within(mySounds()).getByText(/^You haven't saved a patch on the Model D yet\./)
       ).toBeTruthy()
     );
   });
@@ -277,13 +277,13 @@ describe('signed out', () => {
     page();
     expect(screen.queryByRole('link', { name: 'Save a copy…' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Save a copy…' })).toBeNull();
-    expect(within(mySounds()).getByText('Loading your sounds…')).toBeTruthy();
+    expect(within(mySounds()).getByText('Loading your patches…')).toBeTruthy();
   });
 });
 
 // ── signed in ───────────────────────────────────────────────────────────────
 
-describe('My sounds', () => {
+describe('My patches', () => {
   beforeEach(() => {
     auth.signedIn = true;
   });
@@ -375,7 +375,7 @@ describe('My sounds', () => {
 
     fireEvent.click(button('A-440'));
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     expect(cutoff()).toBe('4');
   });
@@ -543,7 +543,7 @@ describe('saving', () => {
     await waitFor(() => expect(loadedName()).toBe('My fat bass'));
     expect(within(mySounds()).getByRole('button', { name: /My fat bass/ })).toBeTruthy();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
-    expect(screen.getByRole('status').textContent).toBe('Saved My fat bass to My sounds.');
+    expect(screen.getByRole('status').textContent).toBe('Saved My fat bass to My patches.');
   });
 
   it('refuses an empty name before sending anything', () => {
@@ -551,7 +551,7 @@ describe('saving', () => {
     fireEvent.click(button('Save a copy…'));
     fireEvent.change(screen.getByRole('textbox', { name: /^Name/ }), { target: { value: '   ' } });
     fireEvent.click(button('Save'));
-    expect(screen.getByText('Name the sound')).toBeTruthy();
+    expect(screen.getByText('Name the patch')).toBeTruthy();
     expect(api.post).not.toHaveBeenCalled();
   });
 
@@ -670,7 +670,7 @@ describe('saving', () => {
     expect(screen.getByText('1 control moved')).toBeTruthy();
   });
 
-  it('shares the open sound with a link, and My sounds says so, leaving the panel alone', async () => {
+  it('shares the open sound with a link, and My patches says so, leaving the panel alone', async () => {
     serve([summary()], { cmmine1: NIGHT_BASS });
     api.patch.mockResolvedValue({ ...NIGHT_BASS, visibility: 'link', slug: 'abcdefghjk' });
     page();
@@ -704,7 +704,7 @@ describe('saving', () => {
     );
     await waitFor(() =>
       expect(
-        within(mySounds()).getByText(/^You haven't saved a sound on the Model D yet\./)
+        within(mySounds()).getByText(/^You haven't saved a patch on the Model D yet\./)
       ).toBeTruthy()
     );
     expect(cutoff()).toBe('4');
@@ -792,7 +792,7 @@ describe('a reload with one of theirs open', () => {
     api.get.mockImplementation(() => new Promise(() => undefined));
     reload();
     page();
-    await waitFor(() => expect(within(mySounds()).getByText('Loading your sounds…')).toBeTruthy());
+    await waitFor(() => expect(within(mySounds()).getByText('Loading your patches…')).toBeTruthy());
     expect(screen.queryByRole('button', { name: /^Save/ })).toBeNull();
   });
 
@@ -901,7 +901,7 @@ describe('a sound saved with its lesson', () => {
     expect(within(lesson).queryByText('Fat bass')).toBeNull();
     // Its blurb is under its name beside the panel, as the library's are.
     expect(
-      within(screen.getByRole('region', { name: 'About the sound' })).getByText(LESSON.blurb)
+      within(screen.getByRole('region', { name: 'About the patch' })).getByText(LESSON.blurb)
     ).toBeTruthy();
     // No library sound is the one on show.
     const library = soundLibrary();
@@ -933,7 +933,7 @@ describe('a sound saved with its lesson', () => {
     // The lesson builds the sound as the tutor designed it; the sound as saved differs, and Restore puts it back.
     expect(cutoff()).toBe('-1');
     expect(screen.getByText('1 control moved')).toBeTruthy();
-    fireEvent.click(button('Restore sound'));
+    fireEvent.click(button('Restore patch'));
     expect(cutoff()).toBe('4');
   });
 
@@ -1061,7 +1061,7 @@ describe('a sound that plays a pattern by default (f-step-sequencer t-81)', () =
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
     fireEvent.click(button('Sequencer'));
-    expect(strip().getByText('The sound’s riff')).toBeTruthy();
+    expect(strip().getByText('The patch’s riff')).toBeTruthy();
     expect(askedFor('/api/v1/sounds')).toBe(true);
     expect(api.get.mock.calls.some(([p]) => String(p).startsWith('/api/v1/patterns'))).toBe(false);
   });

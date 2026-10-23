@@ -67,7 +67,7 @@ export async function publishUserSound(
     prisma.$transaction(async (tx) => {
       await lockOwnersSounds(tx, userId);
       const row = await tx.userSound.findFirst({ where: { id, userId } });
-      if (!row) throw new NotFoundError('Sound not found');
+      if (!row) throw new NotFoundError('Patch not found');
       assertNotUnlisted(row);
 
       const profile = await tx.synthProfile.findUnique({
@@ -78,7 +78,7 @@ export async function publishUserSound(
         return refuse(
           'USERNAME_REQUIRED',
           409,
-          'Choose a username first: it is the name people will see on your published sounds.'
+          'Choose a username first: it is the name people will see on your published patches.'
         );
 
       const def = await playableSynth(row.synthId);
@@ -86,14 +86,14 @@ export async function publishUserSound(
         refuse(
           'NOT_PLAYABLE',
           409,
-          `This sound was saved on an older ${def.name}. Open it and save it again before publishing.`
+          `This patch was saved on an older ${def.name}. Open it and save it again before publishing.`
         );
       const panel = validateSound(def, { values: row.values, cables: row.cables });
       if (!panel.ok)
         return refuse(
           'NOT_PLAYABLE',
           409,
-          `Some of this sound's settings no longer fit ${def.name}. Open it, check the panel and save it again before publishing.`
+          `Some of this patch's settings no longer fit ${def.name}. Open it, check the panel and save it again before publishing.`
         );
 
       // the lesson as stored, whether or not the synth can use it now: one that passes later is shown without a check
@@ -122,7 +122,7 @@ export async function publishUserSound(
           refuse(
             'PUBLISH_LIMIT',
             429,
-            `That's ${PUBLISH_DAILY_CAP} sounds published in a day, the limit. Try again tomorrow.`
+            `That's ${PUBLISH_DAILY_CAP} patches published in a day, the limit. Try again tomorrow.`
           );
         await tx.synthProfile.update({
           where: { userId },
@@ -142,7 +142,7 @@ export async function publishUserSound(
           tags,
         },
       });
-      if (count === 0) throw new NotFoundError('Sound not found');
+      if (count === 0) throw new NotFoundError('Patch not found');
     })
   );
 }

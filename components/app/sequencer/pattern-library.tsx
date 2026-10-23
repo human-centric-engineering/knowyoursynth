@@ -226,7 +226,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
   const playsWithSound = !!sound && !!own && sound.patternId === own.id;
   const toggleDefault = () => {
     if (!sound || !own) return;
-    void run('change the sound', async () => {
+    void run('change the patch', async () => {
       await sound.setPattern(playsWithSound ? null : own.id);
       setStatus(
         playsWithSound
@@ -264,7 +264,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
       <div className="kys-seq-lib-row" role="toolbar" aria-label="Patterns">
         <p className="kys-seq-lib-name" aria-live="polite">
           <span className="kys-seq-lib-label">Pattern</span>
-          <span className="kys-seq-lib-value">{loaded?.name ?? 'The sound’s riff'}</span>
+          <span className="kys-seq-lib-value">{loaded?.name ?? 'The patch’s riff'}</span>
           {edited && <span className="kys-seq-lib-edited">edited</span>}
         </p>
         <div className="kys-seq-tool-group">
@@ -309,7 +309,7 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
               )}
               {button(
                 'Delete',
-                'Removes the pattern from My patterns. Sounds that played it play their own riff.',
+                'Removes the pattern from My patterns. Patches that played it play their own riff.',
                 <Trash2 size={14} aria-hidden="true" />,
                 () => own && setConfirmDelete({ id: own.id, name: own.name }),
                 { disabled: !own }
@@ -356,10 +356,10 @@ export function PatternLibrary({ seq, library }: { seq: Sequencer; library: Patt
               `Play with ${sound.name}`,
               own
                 ? `Opens the sequencer on this pattern whenever ${sound.name} opens.`
-                : 'Save the pattern first: a sound plays one of My patterns.',
+                : 'Save the pattern first: a patch plays one of My patterns.',
               <Link2 size={15} aria-hidden="true" />,
               toggleDefault,
-              { disabled: !own, pressed: playsWithSound, text: 'With sound' }
+              { disabled: !own, pressed: playsWithSound, text: 'With patch' }
             )}
         </div>
       </div>

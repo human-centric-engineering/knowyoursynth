@@ -171,11 +171,11 @@ import {
 const PANEL_HELP = [
   [
     'Knobs',
-    'Drag up or down to turn. Hold Shift for fine moves. Double-click to put it back where the sound had it.',
+    'Drag up or down to turn. Hold Shift for fine moves. Double-click to put it back where the patch had it.',
   ],
   [
     'Sliders',
-    'Drag along the slot. Hold Shift for fine moves. Double-click to put it back where the sound had it.',
+    'Drag along the slot. Hold Shift for fine moves. Double-click to put it back where the patch had it.',
   ],
   ['Switches', 'Click to change.'],
   [
@@ -206,7 +206,7 @@ const PLAY_HELP = [
   ],
   [
     'Play',
-    'Plays a short original phrase that suits the sound, so you can turn the knobs and hear what they do.',
+    'Plays a short original phrase that suits the patch, so you can turn the knobs and hear what they do.',
     <Play key="play" size={13} />,
   ],
   [
@@ -240,7 +240,7 @@ const STRIP_REACH = 160;
 const TAP_SLOP = 10;
 
 /** What a copy is called when the shared sound it was of has gone, and its name with it (t-52). The visitor renames it. */
-const UNNAMED_COPY = 'Untitled sound';
+const UNNAMED_COPY = 'Untitled patch';
 /** What a new pattern the tutor wrote is called in the sequencer until it is saved. */
 const TUTOR_PATTERN_NAME = 'Tutor’s pattern';
 
@@ -1246,7 +1246,7 @@ function Synth({
   // The library's "ask the tutor to design one": the question goes in the tutor's composer, for the learner to send.
   const [tutorAsk, setTutorAsk] = useState<{ text: string; n: number } | null>(null);
   const askTutor = (query: string) => {
-    setTutorAsk((a) => ({ text: `Design a sound: ${query}`, n: (a?.n ?? 0) + 1 }));
+    setTutorAsk((a) => ({ text: `Design a patch: ${query}`, n: (a?.n ?? 0) + 1 }));
     if (small) openSheet('tutor');
     else setTutorOpen(true);
   };
@@ -1261,7 +1261,7 @@ function Synth({
       d = await apiClient.get<UserSoundDetail>(`/api/v1/sounds/${encodeURIComponent(id)}`);
     } catch {
       if (seq === openSeq.current)
-        setMineNotice('That sound could not be opened. It may have been deleted.');
+        setMineNotice('That patch could not be opened. It may have been deleted.');
       return;
     }
     if (seq !== openSeq.current) return;
@@ -1401,7 +1401,7 @@ function Synth({
   // is nothing to credit: the panel alone is saved as a new sound of theirs, under a name of no one's, and says so. Its
   // owner's name and notes stay out of it: they were withdrawn with the sound (t-52).
   const copyShared = async (): Promise<SharedCopyResult> => {
-    if (!shared) return { ok: false, error: 'There is no shared sound to copy.' };
+    if (!shared) return { ok: false, error: 'There is no shared patch to copy.' };
     const seq = openSeq.current;
     const panel = panelInput();
     let gone = false;
@@ -1429,7 +1429,7 @@ function Synth({
     return {
       ok: true,
       note: gone
-        ? `This sound is not shared any more, so your panel was saved to My sounds as a new sound of yours called “${UNNAMED_COPY}”, without the original's name or notes. You can rename it.`
+        ? `This patch is not shared any more, so your panel was saved to My patches as a new patch of yours called “${UNNAMED_COPY}”, without the original's name or notes. You can rename it.`
         : null,
     };
   };
@@ -1621,7 +1621,7 @@ function Synth({
     />
   ) : (
     <p className="text-sm text-(--kys-muted)">
-      There are no library sounds for the {def.name} yet, so there&apos;s no lesson to show. The
+      There are no library patches for the {def.name} yet, so there&apos;s no lesson to show. The
       panel still plays.
     </p>
   );
@@ -1803,7 +1803,7 @@ function Synth({
                         short="Dim unused"
                         icon={<EyeOff size={17} aria-hidden="true" />}
                         on={dimOn}
-                        title="Darken every part of the panel that is not part of the sound as it is set now. Point at a dark control to see what would bring it in."
+                        title="Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in."
                         onClick={() => setDimOn(!dimOn)}
                       />
                       <LayerToggle
@@ -1858,7 +1858,7 @@ function Synth({
                       hoverFill
                       icon={<Sparkles size={17} aria-hidden="true" />}
                       on={tutorOpen}
-                      title="Ask the tutor about this synth, or have it design a sound. It slides in over the panel."
+                      title="Ask the tutor about this synth, or have it design a patch. It slides in over the panel."
                       onClick={() => (tutorOpen ? closeTutor() : setTutorOpen(true))}
                     />
                   )}
@@ -1902,7 +1902,7 @@ function Synth({
               <div className="px-3 pt-4 pb-3 sm:px-6">
                 <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
                   <section
-                    aria-label="The sound on the panel"
+                    aria-label="The patch on the panel"
                     className="max-w-full min-w-0 max-md:flex-1"
                   >
                     {/* The sound's name, and beside it what can be done with it: keep it, or unplug its cables. */}
@@ -1992,7 +1992,7 @@ function Synth({
                   <div className="mt-3 min-w-0">
                     {described && (
                       <section
-                        aria-label="About the sound"
+                        aria-label="About the patch"
                         className="mt-1 max-w-[80ch] text-sm leading-relaxed text-(--kys-muted)"
                       >
                         <p className="kys-label text-(--kys-faint)">{described.ref}</p>
@@ -2083,7 +2083,7 @@ function Synth({
                     short="Sequencer"
                     icon={<Columns4 size={17} aria-hidden="true" />}
                     on={seqShown}
-                    title="Open the step sequencer under the panel, holding this sound's riff: edit it step by step, and hear each change as it plays."
+                    title="Open the step sequencer under the panel, holding this patch's riff: edit it step by step, and hear each change as it plays."
                     onClick={toggleSequencer}
                   />
                   {/* Named for what it will do, as a video's mute button is: Mute while the sound is on. */}
@@ -2120,12 +2120,12 @@ function Synth({
                   </PlayerTip>
                   {restoreFrom && (
                     <PlayerTip
-                      name="Restore sound"
-                      help="Put the sound back as it was before you moved its controls."
+                      name="Restore patch"
+                      help="Put the patch back as it was before you moved its controls."
                     >
                       <button type="button" onClick={restoreSound} className="kys-layer">
                         <RotateCcw size={16} aria-hidden="true" />
-                        Restore sound
+                        Restore patch
                       </button>
                     </PlayerTip>
                   )}
