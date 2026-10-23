@@ -241,6 +241,8 @@ const TAP_SLOP = 10;
 
 /** What a copy is called when the shared sound it was of has gone, and its name with it (t-52). The visitor renames it. */
 const UNNAMED_COPY = 'Untitled sound';
+/** What a new pattern the tutor wrote is called in the sequencer until it is saved. */
+const TUTOR_PATTERN_NAME = 'Tutor’s pattern';
 
 /** A panel with the synth's first sound loaded and no lesson step: how a synth opens the first time. */
 function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Session {
@@ -1224,14 +1226,18 @@ function Synth({
     [patch]
   );
   // A pattern the learner applied from the tutor lands as an edit in the sequencer would, so its own Undo takes it back
-  // too. From `lg` up the module opens to show it; below, its sheet would cover the tutor's, so it waits for the button.
-  const { edit: seqEdit } = seq;
+  // too, and the tutor's Undo is that Undo. A new one opens as a riff from the library does, so the saved pattern that
+  // was open is not saved over with it, and on a synth with a tempo knob it plays at the knob's tempo. From `lg` up the
+  // module opens to show it; below, its sheet would cover the tutor's, so it waits for the button.
+  const { edit: seqEdit, load: seqLoad, undo: seqUndo } = seq;
   const setTutorPattern = useCallback(
-    (p: Pattern) => {
-      seqEdit(p);
+    (p: Pattern, o: { blank: boolean }) => {
+      const held = o.blank ? seqLoad(p, { id: null, name: TUTOR_PATTERN_NAME }) : seqEdit(p);
+      if (!held) return null;
       if (!small) setSeqOpen(true);
+      return { held, undo: seqUndo };
     },
-    [seqEdit, small]
+    [seqEdit, seqLoad, seqUndo, small]
   );
   const tutorPanel = useMemo(
     () => ({ values: sess.values, cables: sess.cables }),
@@ -1643,6 +1649,7 @@ function Synth({
       setPanel={setTutorPanel}
       openDesign={openDesign}
       pattern={seq.pattern}
+      tempo={tempoBpm}
       setPattern={setTutorPattern}
       ask={tutorAsk}
       fill

@@ -178,6 +178,17 @@ describe('propose_pattern: refusals the model can act on', () => {
   it('refuses a pattern that plays nothing', () =>
     expectRefused({ start: 'blank', length: 8 }, 'empty_pattern', ['plays nothing']));
 
+  it('refuses a pattern whose every note has no chance of playing', () =>
+    expectRefused(
+      {
+        start: 'blank',
+        length: 8,
+        steps: [{ step: 1, notes: [{ note: 36, gate: 1 }], probability: 0 }],
+      },
+      'empty_pattern',
+      ['plays nothing']
+    ));
+
   it('refuses a note outside MIDI, a gate past the longest, and an unknown field at the schema', () => {
     // The dispatcher turns these into the refusal the model reads, before `execute`.
     expect(() =>
@@ -239,6 +250,6 @@ describe('get_pattern', () => {
     const bad = { ...open, bpm: 1000 };
     const result = await read.execute(read.validate({}), withPattern(bad));
     expect(result.success).toBe(false);
-    expect(result.error?.code).toBe('invalid_panel');
+    expect(result.error?.code).toBe('invalid_pattern');
   });
 });

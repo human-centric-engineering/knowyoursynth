@@ -250,8 +250,8 @@ takes a deploy: the cost the owner accepted for keeping them in step with the to
 | `describe_synth`       | `section?`, `prefix?`                                             | `describeSynth` text for the whole synth, a section or a prefix, or an index to narrow by                                                       | the above, `unknown_section`, `unknown_prefix`                                                       |
 | `propose_panel_change` | `set`, `addCables`, `removeCables`                                | the controls that change, the cables, and a row per change (label, from, to, as shown)                                                          | the above, `empty_proposal`, `invalid_proposal`, `no_change`                                         |
 | `design_sound`         | name, blurb, level, category, how, steps, context, tweaks, phrase | the whole sound as a `Preset`, credited to the tutor, `ai: true`                                                                                | the above, `invalid_design`                                                                          |
-| `get_pattern`          | none                                                              | the open pattern's settings, and one line per step that holds notes (`9: 48 g1 v0.7 acc`)                                                       | `no_pattern`, `invalid_panel`                                                                        |
-| `propose_pattern`      | `start` (`open` or `blank`), settings, `length`, `steps`          | the edit as checked, the pattern's length, how many steps it writes                                                                             | `no_pattern`, `empty_proposal`, `invalid_proposal`, `no_change`, `empty_pattern`                     |
+| `get_pattern`          | none                                                              | the open pattern's settings, and one line per step that holds notes (`9: 48 g1 v0.7 acc`)                                                       | `no_pattern`, `invalid_pattern`                                                                      |
+| `propose_pattern`      | `start` (`open` or `blank`), settings, `length`, `steps`          | the edit as checked, the pattern's length, how many steps it writes                                                                             | `invalid_pattern`, `no_pattern`, `empty_proposal`, `invalid_proposal`, `no_change`, `empty_pattern`  |
 | `search_databank`      | `query`, `kind?`                                                  | at most six databank rows, each with its page, a line that places it, an excerpt, its links and `matchedBy`; `search`; a `note` when none match | a bad argument only (it reads no panel)                                                              |
 | `web_search`           | `query`                                                           | at most five web results, each its `title`, `url` and `snippet`; a `note` when none match                                                       | `web_search_not_configured`, `web_search_no_user`, `web_search_allowance_spent`, `web_search_failed` |
 
@@ -313,7 +313,7 @@ an edit to it, which the learner applies or not, as a panel change.
   the result stays small, and the page loads what the tool checked.
 - **Refused, never repaired.** A step past the end (with the length to set), a part the pattern does not have, a step
   listed twice, an edit of the open pattern with none open, an empty edit (`empty_proposal`, which is also what a call
-  cut off arrives as), one that changes nothing (`no_change`), and a pattern with no note to play (`empty_pattern`).
+  cut off arrives as), one that changes nothing (`no_change`), and a pattern with no note to play (`empty_pattern`; a note at chance 0 plays none).
   Anything else the result breaks is `PatternSchema`'s refusal, with its path.
 - **Without a panel.** The tool reads no synth, so `start: 'blank'` works on a turn with no `entityContext`, as an eval
   run is.
@@ -615,10 +615,12 @@ above the number of synths.
   opens the earlier one again, so its Undo comes back: designs undo in the order they opened.
 - **A pattern** (t-84) waits for Apply too, under its own chip: "Writes steps 9–16", and "Apply to the pattern", or
   "Load into the sequencer" for a new one. One a turn, the last proposed: a pattern is whole, so two don't combine.
-  It is for the pattern the turn sent, and is offered only while the sequencer still holds that one. Apply puts it in
-  the sequencer as an edit there would, so the module's own Undo takes it back too, and from `lg` up opens the module
-  to show it (below `lg` its sheet would cover the tutor's). The chip's **Undo** puts back the pattern it replaced,
-  while the sequencer still holds what it applied.
+  An edit is for the pattern the turn sent, and is offered only while the sequencer still holds that one; a new
+  pattern is offered whatever is open. Apply puts an edit in the sequencer as an edit there would, and a new pattern as
+  one opened from the library (named "Tutor’s pattern", so Save does not write it over the saved pattern that was
+  open). On a synth with a tempo knob it plays, and the chip reads, at the knob's tempo. From `lg` up Apply opens the
+  module to show it (below `lg` its sheet would cover the tutor's). The chip's **Undo** is the module's Undo, enabled
+  while the sequencer still holds what it applied, so one Undo in either place takes it back.
 - **Save keeps the lesson and the mark.** With a designed sound open, Save… makes a new sound named
   after it and sends its lesson with `fromTutor: true`; once saved, it is one of the user's, with its
   lesson ([`sounds.md`](./sounds.md#a-sounds-lesson-t-55)).

@@ -109,7 +109,7 @@ export function readPanel(context: CapabilityContext): PanelRead {
 }
 
 export type PatternRead =
-  { ok: true; pattern: Pattern | null } | { ok: false; code: 'invalid_panel'; message: string };
+  { ok: true; pattern: Pattern | null } | { ok: false; code: 'invalid_pattern'; message: string };
 
 /**
  * The pattern open in the sequencer this turn, checked as `readPanel` checks the panel; `null` when none came with it.
@@ -122,7 +122,7 @@ export function readOpenPattern(context: CapabilityContext): PatternRead {
   if (!parsed.success)
     return {
       ok: false,
-      code: 'invalid_panel',
+      code: 'invalid_pattern',
       message: refusal(
         'The pattern that came with this conversation is not one the sequencer can hold:',
         parsed.error.issues.map((issue) => ({

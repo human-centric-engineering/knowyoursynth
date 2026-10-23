@@ -39,9 +39,14 @@ import {
   PatternEditSchema,
   applyPatternEdit,
   patternEditKeys,
-  rootName,
   type PatternEdit,
 } from '@/lib/app/tutor/pattern-edit';
+import {
+  DIRECTION_LABELS,
+  ROOT_NAMES,
+  SCALE_LABELS,
+  STEP_SIZE_LABELS,
+} from '@/components/app/sequencer/labels';
 
 export const PROPOSE_TOOL = 'propose_panel_change';
 export const DESIGN_TOOL = 'design_sound';
@@ -268,20 +273,20 @@ export function patternRows(p: PatternProposal): string[] {
   const rows: string[] = [];
   if (edit.start === 'blank')
     rows.push(
-      `New pattern: ${patternLength(pattern)} steps of ${pattern.stepSize} at ${pattern.bpm} BPM`
+      `New pattern: ${patternLength(pattern)} steps of ${STEP_SIZE_LABELS[pattern.stepSize]} at ${pattern.bpm} BPM`
     );
   else if (edit.length !== undefined) rows.push(`Length: ${patternLength(pattern)} steps`);
   const keys = patternEditKeys(edit);
   if (edit.start === 'open') {
-    if (keys.includes('stepSize')) rows.push(`Step size: ${pattern.stepSize}`);
+    if (keys.includes('stepSize')) rows.push(`Step size: ${STEP_SIZE_LABELS[pattern.stepSize]}`);
     if (keys.includes('bpm')) rows.push(`Tempo: ${pattern.bpm} BPM`);
   }
   if (keys.includes('swing')) rows.push(`Swing: ${pattern.swing}`);
-  if (keys.includes('direction')) rows.push(`Direction: ${pattern.direction}`);
+  if (keys.includes('direction')) rows.push(`Direction: ${DIRECTION_LABELS[pattern.direction]}`);
   if (keys.includes('loop')) rows.push(pattern.loop ? 'Loops' : 'Plays once');
   if (keys.includes('transpose')) rows.push(`Transpose: ${pattern.transpose} semitones`);
   if (keys.includes('root') || keys.includes('scale'))
-    rows.push(`Scale: ${rootName(pattern.root)} ${pattern.scale}`);
+    rows.push(`Scale: ${ROOT_NAMES[pattern.root]} ${SCALE_LABELS[pattern.scale]}`);
   if (edit.steps.length) {
     const parts = (['A', 'B'] as const).flatMap((part) => {
       const steps = edit.steps.filter((s) => s.part === part).map((s) => s.step);

@@ -447,9 +447,11 @@ tests.
 ## The tutor's patterns
 
 The tutor reads the pattern the module holds and proposes a new one or an edit to it (t-84,
-[`tutor.md`](./tutor.md#patterns)). The page sends the pattern with each turn. A proposal the learner applies goes
+[`tutor.md`](./tutor.md#patterns)). The page sends the pattern with each turn. An edit the learner applies goes
 through `edit`, as any edit in the module does, so the module's Undo takes it back and Save saves it as the pattern it
-was loaded as. From `lg` up applying it opens the module.
+was loaded as. A new pattern goes through `load` as a library riff does, unsaved and named "Tutor’s pattern", at the
+tempo knob's tempo. `edit` and `load` return the pattern now held (null when refused or, for `edit`, unchanged), and
+the tutor's Undo is the module's `undo`. From `lg` up applying it opens the module.
 
 ## Not yet
 

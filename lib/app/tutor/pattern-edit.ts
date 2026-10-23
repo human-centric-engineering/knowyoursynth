@@ -193,13 +193,16 @@ export function applyPatternEdit(open: Pattern | null, edit: PatternEdit): Patte
 export const samePattern = (a: Pattern, b: Pattern): boolean =>
   a === b || JSON.stringify(a) === JSON.stringify(b);
 
-/** Whether a pattern plays anything at all: a step that is on and has a note. */
+/** Whether a pattern plays anything at all: a step that is on, has a note, and has some chance of playing. */
 export const hasNotes = (p: Pattern): boolean =>
-  p.parts.some((part) => part.steps.some((s) => s.on && s.notes.length > 0));
+  p.parts.some((part) =>
+    part.steps.some((s) => s.on && s.notes.length > 0 && (s.probability ?? 1) > 0)
+  );
 
+// The model reads and writes ASCII sharps; the module's own labels (`components/app/sequencer/labels.ts`) use ♯.
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'] as const;
 
-/** A root as a note name, C = 0. */
+/** A root as a note name for the model, C = 0. */
 export const rootName = (root: number): string => NOTE_NAMES[root] ?? String(root);
 
 const round = (n: number) => Math.round(n * 1000) / 1000;

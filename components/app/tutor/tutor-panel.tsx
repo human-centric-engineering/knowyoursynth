@@ -26,6 +26,7 @@ import { TutorSources } from '@/components/app/tutor/sources';
 import {
   useTutorChat,
   type TutorChat,
+  type TutorHost,
   type TutorMessage,
 } from '@/components/app/tutor/use-tutor-chat';
 import { FieldHelp } from '@/components/ui/field-help';
@@ -59,7 +60,9 @@ export interface TutorPanelProps {
   openDesign: (design: TutorDesign) => () => void;
   /** The pattern open in the sequencer, which the tutor reads and may propose a new one for. */
   pattern: Pattern | null;
-  setPattern: (pattern: Pattern) => void;
+  /** The tempo a knob on the panel sets, which a pattern plays at; null on a synth without one. */
+  tempo: number | null;
+  setPattern: TutorHost['setPattern'];
   /** A question to put in the composer (the library's "ask the tutor"); `n` makes the same text ask again. */
   ask?: { text: string; n: number } | null;
   /** In a bottom sheet (`f-phone-and-tablet` t-66): fill it, the conversation taking the room the composer leaves. */
@@ -103,11 +106,21 @@ function SignedInTutor({
   setPanel,
   openDesign,
   pattern,
+  tempo,
   setPattern,
   ask,
   fill = false,
 }: TutorPanelProps) {
-  const chat = useTutorChat({ def, panel, designedId, setPanel, openDesign, pattern, setPattern });
+  const chat = useTutorChat({
+    def,
+    panel,
+    designedId,
+    setPanel,
+    openDesign,
+    pattern,
+    tempo,
+    setPattern,
+  });
   const [draft, setDraft] = useState('');
   const input = useRef<HTMLTextAreaElement>(null);
   const log = useRef<HTMLDivElement>(null);

@@ -115,9 +115,9 @@ export interface Sequencer {
   /**
    * Replaces the pattern with `p`, from `from`. An edited pattern it replaces is one Undo away, as it is when another
    * sound's riff arrives, and that Undo names it as it was named. A pattern that would not be valid is refused and
-   * logged: false.
+   * logged: null. Returns the pattern now held, which on a synth with a tempo knob plays at the knob's tempo.
    */
-  load: (p: Pattern, from: LoadedPattern) => boolean;
+  load: (p: Pattern, from: LoadedPattern) => Pattern | null;
   /**
    * Which pattern is held: it changes whenever the whole pattern is replaced (one opened, another sound's riff, an Undo
    * past either). A save, rename or delete takes it as it sends, and names what is held only if it is unchanged.
@@ -133,8 +133,11 @@ export interface Sequencer {
    * stands. False, naming nothing, when another pattern is held since.
    */
   relabel: (as: LoadedPattern, at: number) => boolean;
-  /** Changes the pattern. An edit that would not make a valid pattern is refused and logged. */
-  edit: (next: Pattern | ((p: Pattern) => Pattern), o?: EditOptions) => void;
+  /**
+   * Changes the pattern. An edit that would not make a valid pattern is refused and logged. Returns the pattern now held,
+   * or null when it was refused or changed nothing.
+   */
+  edit: (next: Pattern | ((p: Pattern) => Pattern), o?: EditOptions) => Pattern | null;
   undo: () => void;
   canUndo: boolean;
   playing: boolean;
@@ -350,11 +353,11 @@ export function useSequencer({
     (p: Pattern, o: EditOptions) => {
       const prev = patternRef.current;
       // An edit that changes nothing (a tool on a part of rests) is not one: nothing to undo, nothing to resend.
-      if (p === prev || JSON.stringify(p) === JSON.stringify(prev)) return;
+      if (p === prev || JSON.stringify(p) === JSON.stringify(prev)) return null;
       const ok = PatternSchema.safeParse(p);
       if (!ok.success) {
         logger.warn('sequencer: edit refused', { issue: ok.error.issues[0]?.message });
-        return;
+        return null;
       }
       patternRef.current = p;
       setPattern(p);
@@ -371,6 +374,7 @@ export function useSequencer({
         }
       }
       if (playingRef.current) resend(p, prev);
+      return p;
     },
     [resend]
   );
@@ -429,7 +433,7 @@ export function useSequencer({
       const ok = PatternSchema.safeParse(p);
       if (!ok.success) {
         logger.warn('sequencer: pattern refused', { issue: ok.error.issues[0]?.message });
-        return false;
+        return null;
       }
       // On a synth with a tempo knob the knob sets the tempo, as it does for the sound's riff.
       const next = tempoRef.current ? { ...ok.data, bpm: clampBpm(tempoRef.current) } : ok.data;
@@ -443,7 +447,7 @@ export function useSequencer({
       setUndoable(true);
       lastGroup.current = null;
       if (playingRef.current) start(next);
-      return true;
+      return next;
     },
     [start, replaced, setLoaded, setBaseline]
   );

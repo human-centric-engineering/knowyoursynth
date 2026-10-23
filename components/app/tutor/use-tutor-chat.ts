@@ -19,7 +19,8 @@
  *   t-60), read from each `search_databank` and `web_search` result as it arrives, and from a resumed conversation's
  *   stored ones, which the conversation read attaches to their answer.
  * - **A pattern waits for Apply too** (t-84), and is for the pattern the turn sent: it applies while the sequencer
- *   still holds that one, and its Undo puts back the one it replaced while the sequencer still holds what it applied.
+ *   still holds that one (a new pattern applies whatever is open). It goes in as the sequencer's own edit or open would,
+ *   so the tutor's Undo is the sequencer's Undo, offered while the sequencer still holds what it applied.
  * - **A failure stays in the panel.** Every error ends the turn with a line in the transcript, and nothing else on the
  *   page waits on a turn.
  */
@@ -42,7 +43,7 @@ import {
   type TutorDesign,
 } from '@/components/app/tutor/apply';
 import { apiClient } from '@/lib/api/client';
-import type { Pattern } from '@/lib/app/sequencer/pattern';
+import { MAX_BPM, MIN_BPM, type Pattern } from '@/lib/app/sequencer/pattern';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import {
@@ -51,7 +52,6 @@ import {
   TutorSourceSchema,
   type TutorSource,
 } from '@/lib/app/tutor/sources';
-import { samePattern } from '@/lib/app/tutor/pattern-edit';
 import { logger } from '@/lib/logging';
 
 /** What the page lends the tutor: the panel as it is now, and the two ways the tutor may change it. */
@@ -66,8 +66,16 @@ export interface TutorHost {
   openDesign: (design: TutorDesign) => () => void;
   /** The pattern open in the sequencer, or null when there is none. */
   pattern: Pattern | null;
-  /** Put this pattern in the sequencer, as an edit there would. */
-  setPattern: (pattern: Pattern) => void;
+  /** The tempo a knob on the panel sets (the TB-303's TEMPO), which a pattern plays at; null on a synth without one. */
+  tempo: number | null;
+  /**
+   * Put this pattern in the sequencer: a new one (`blank`) as one opened there, an edit of the open one as an edit there.
+   * Returns the pattern it now holds and what takes it back out, or null when the sequencer did not take it.
+   */
+  setPattern: (
+    pattern: Pattern,
+    o: { blank: boolean }
+  ) => { held: Pattern; undo: () => void } | null;
 }
 
 /** A proposal the turn ended with, and whether it is on the panel. */
@@ -82,10 +90,10 @@ export interface ProposalChip {
 /** A pattern the turn ended with, and whether it is in the sequencer. */
 export interface PatternChip {
   change: PatternProposal;
-  /** The pattern the turn sent, which the proposal was made from. */
+  /** The pattern the turn sent, which an edit of it was made from. A new pattern is for whatever is open. */
   basis: Pattern | null;
-  /** While applied: the pattern it replaced, which Undo puts back. */
-  applied: { before: Pattern | null } | null;
+  /** While applied: the pattern the sequencer took, and what takes it back out. */
+  applied: { held: Pattern; undo: () => void } | null;
 }
 
 /** The sound(s) a turn designed and opened. */
@@ -212,9 +220,30 @@ function httpError(status: number, code: string | null, message: string | null):
   return TUTOR_ERRORS.generic;
 }
 
-/** Whether the sequencer, holding `now`, holds `p`: the same pattern, or no pattern in both. */
+// A chip asks on every render, and a streaming answer renders on every token, so each pattern is written out once.
+const keys = new WeakMap<Pattern, string>();
+const patternKey = (p: Pattern) => {
+  let k = keys.get(p);
+  if (k === undefined) keys.set(p, (k = JSON.stringify(p)));
+  return k;
+};
+/** Whether the sequencer, holding `now`, holds `p`. */
 const holds = (now: Pattern | null, p: Pattern | null) =>
-  now === p || (!!now && !!p && samePattern(now, p));
+  now === p || (!!now && !!p && patternKey(now) === patternKey(p));
+
+/** Whether the chip's pattern goes in now: a new one whatever is open, an edit while its basis is. */
+const fits = (now: Pattern | null, chip: PatternChip) =>
+  chip.change.edit.start === 'blank' || holds(now, chip.basis);
+
+/** A proposal as it plays on a synth whose knob sets the tempo: at the knob's, the tempo it names aside. */
+function atTempo(p: PatternProposal, tempo: number | null): PatternProposal {
+  if (!tempo) return p;
+  const { bpm: _bpm, ...edit } = p.edit;
+  return {
+    edit,
+    pattern: { ...p.pattern, bpm: Math.min(MAX_BPM, Math.max(MIN_BPM, tempo)) },
+  };
+}
 
 let nextId = 0;
 const newId = () => `t${++nextId}`;
@@ -372,7 +401,11 @@ export function useTutorChat(host: TutorHost): TutorChat {
       if (lastPattern)
         patch(turn.assistantId, (m) => ({
           ...m,
-          pattern: { change: lastPattern, basis: turn.pattern, applied: null },
+          pattern: {
+            change: atTempo(lastPattern, hostRef.current.tempo),
+            basis: turn.pattern,
+            applied: null,
+          },
         }));
       for (const r of results) {
         const design = readDesign(def, r.capabilitySlug, r.result);
@@ -592,7 +625,7 @@ export function useTutorChat(host: TutorHost): TutorChat {
 
   const canApplyPattern = useCallback(
     (m: TutorMessage) =>
-      !m.answering && !!m.pattern && !m.pattern.applied && holds(host.pattern, m.pattern.basis),
+      !m.answering && !!m.pattern && !m.pattern.applied && fits(host.pattern, m.pattern),
     [host.pattern]
   );
 
@@ -600,28 +633,24 @@ export function useTutorChat(host: TutorHost): TutorChat {
     (m: TutorMessage) => {
       const h = hostRef.current;
       const p = m.pattern;
-      if (m.answering || !p || p.applied || !holds(h.pattern, p.basis)) return;
-      const before = h.pattern;
-      h.setPattern(p.change.pattern);
-      patch(m.id, (x) =>
-        x.pattern ? { ...x, pattern: { ...x.pattern, applied: { before } } } : x
-      );
+      if (m.answering || !p || p.applied || !fits(h.pattern, p)) return;
+      const applied = h.setPattern(p.change.pattern, { blank: p.change.edit.start === 'blank' });
+      if (!applied) return;
+      patch(m.id, (x) => (x.pattern ? { ...x, pattern: { ...x.pattern, applied } } : x));
     },
     [patch]
   );
 
   const canUndoPattern = useCallback(
-    (m: TutorMessage) =>
-      !!m.pattern?.applied?.before && holds(host.pattern, m.pattern.change.pattern),
+    (m: TutorMessage) => !!m.pattern?.applied && holds(host.pattern, m.pattern.applied.held),
     [host.pattern]
   );
 
   const undoPattern = useCallback(
     (m: TutorMessage) => {
-      const p = m.pattern;
-      const before = p?.applied?.before;
-      if (!p || !before || !holds(hostRef.current.pattern, p.change.pattern)) return;
-      hostRef.current.setPattern(before);
+      const applied = m.pattern?.applied;
+      if (!applied || !holds(hostRef.current.pattern, applied.held)) return;
+      applied.undo();
       patch(m.id, (x) => (x.pattern ? { ...x, pattern: { ...x.pattern, applied: null } } : x));
     },
     [patch]

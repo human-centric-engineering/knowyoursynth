@@ -586,6 +586,46 @@ describe('a pattern', () => {
     await waitFor(() => expect(sentBodies()).toHaveLength(3));
     expect(sentPattern(2)).toEqual(before);
   });
+
+  it('loads a new pattern as one opened from the library, and its Undo is the sequencer’s Undo', async () => {
+    let turns = 0;
+    answer(async (body) => {
+      turns++;
+      if (turns > 1) return [start, { type: 'content', delta: 'Sure.' }, done];
+      const result = await patternTool.execute(
+        patternTool.validate({
+          start: 'blank',
+          length: 8,
+          steps: [{ step: 1, notes: [{ note: 40, gate: 1 }] }],
+        }),
+        panelContext(def, { ...body.panel, pattern: body.pattern })
+      );
+      return [
+        start,
+        { type: 'capability_result', capabilitySlug: 'propose_pattern', result },
+        done,
+      ];
+    });
+    page();
+    await ask('Write me a new riff');
+
+    const load = await within(tutor()).findByRole('button', { name: 'Load into the sequencer' });
+    const before = sentPattern(0);
+    fireEvent.click(load);
+    const seqRegion = screen.getByRole('region', { name: 'Sequencer' });
+    // Named as a new pattern, so Save does not write it over a saved one that was open.
+    expect(within(seqRegion).getByText('Tutor’s pattern')).toBeTruthy();
+    const seqUndo = within(seqRegion).getByRole('button', { name: 'Undo' });
+    expect(seqUndo).toBeEnabled();
+
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Undo' }));
+    // The tutor's Undo took the load off the sequencer's history rather than adding to it.
+    expect(seqUndo).toBeDisabled();
+    expect(within(tutor()).getByRole('button', { name: 'Load into the sequencer' })).toBeEnabled();
+    await ask('And now?');
+    await waitFor(() => expect(sentBodies()).toHaveLength(2));
+    expect(sentPattern(1)).toEqual(before);
+  });
 });
 
 // ── a designed sound ────────────────────────────────────────────────────────
