@@ -35,7 +35,7 @@ function picker(open = true) {
   if (!(pop instanceof HTMLElement)) throw new Error('the library is in a dialog');
   return {
     onClose,
-    pick: screen.getByRole('button', { name: 'Choose a sound (now: Night bass)' }),
+    pick: screen.getByRole('button', { name: 'Choose a patch (now: Night bass)' }),
     search,
     pop,
     elsewhere: screen.getByRole('button', { name: 'Elsewhere' }),

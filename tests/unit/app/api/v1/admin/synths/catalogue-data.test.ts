@@ -251,7 +251,7 @@ describe('GET /api/v1/admin/synths/data', () => {
     expect(res.status).toBe(201);
 
     expect(rowOf(await reconciliation(), 'model-d/admin-sound')).toMatchObject({
-      label: 'Sound: Admin sound',
+      label: 'Patch: Admin sound',
       status: 'not-in-seed',
     });
   });

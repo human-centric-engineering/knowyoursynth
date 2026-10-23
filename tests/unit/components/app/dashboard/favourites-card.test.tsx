@@ -42,8 +42,8 @@ describe('FavouritesCard', () => {
     const items = screen.getAllByRole('listitem');
     expect(items.map((li) => li.textContent)).toEqual([
       'Model DSynth',
-      'Fat bassLibrary sound',
-      'My bassYour sound',
+      'Fat bassLibrary patch',
+      'My bassYour patch',
     ]);
     expect(items.map((li) => within(li).getByRole('link').getAttribute('href'))).toEqual([
       '/synths/model-d',
