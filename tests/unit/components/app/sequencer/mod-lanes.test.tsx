@@ -402,8 +402,9 @@ describe('following the playhead across pages', () => {
   const playheadOn = (step: number) => {
     engine.frame = (step * 0.125 + 0.01) * 48000;
   };
-
-  it('turns the keys and the lanes to the page being heard, and holds a page chosen by hand until the next turn', async () => {
+  /** One frame: the module's own frame read is queued before this one, so it has run when this resolves. */
+  const aFrame = () => act(async () => void (await new Promise(requestAnimationFrame)));
+  const playLong = async () => {
     render(<Harness />);
     const p = newPattern(48);
     p.lanes = ['cutoff'];
@@ -412,23 +413,72 @@ describe('following the playhead across pages', () => {
     await act(async () => void (await state.play()));
     act(() => state.onEvent(loopEvent({ beats: 12 })));
     playheadOn(0);
+    await aFrame();
+  };
+
+  it('turns the keys and the lanes to the page being heard, leaving the chosen step where it is', async () => {
+    await playLong();
+    fireEvent.click(stepKeys()[2]);
     expect(firstKey()).toMatch(/^Step 1:/);
 
     playheadOn(16);
     await waitFor(() => expect(firstKey()).toMatch(/^Step 17:/));
     expect(firstCell()).toBe('cutoff, step 17');
+    // the chosen step is off the page: none is current, and Tab reaches the key in its place
+    expect(stepKeys().some((k) => k.getAttribute('aria-current'))).toBe(false);
+    expect(
+      stepKeys()
+        .map((k) => k.tabIndex)
+        .indexOf(0)
+    ).toBe(2);
 
-    // chosen by hand, page 1 holds while the playhead stays on page 2
+    // stopped, the keys go back to the page of the chosen step, which is still step 3
+    act(() => state.stop());
+    await waitFor(() => expect(firstKey()).toMatch(/^Step 1:/));
+    expect(stepKeys()[2]).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('holds a page chosen by hand while the playhead stays on its page, and gives way at its next turn', async () => {
+    await playLong();
+    playheadOn(16);
+    await waitFor(() => expect(firstKey()).toMatch(/^Step 17:/));
+
     fireEvent.click(screen.getByRole('button', { name: /^Page 1/ }));
     expect(firstKey()).toMatch(/^Step 1:/);
     playheadOn(20);
-    await act(async () => await new Promise((r) => setTimeout(r, 50)));
+    await aFrame();
+    expect(state.position()).toEqual({ step: 20, part: 0 });
     expect(firstKey()).toMatch(/^Step 1:/);
 
-    // and gives way when it moves on to page 3
     playheadOn(33);
     await waitFor(() => expect(firstKey()).toMatch(/^Step 33:/));
     expect(firstCell()).toBe('cutoff, step 33');
+  });
+
+  it('keeps focus on the keys as the page turns under a key holding it', async () => {
+    await playLong();
+    stepKeys()[4].focus();
+    playheadOn(16);
+    await waitFor(() => expect(firstKey()).toMatch(/^Step 17:/));
+    expect(document.activeElement).toBe(stepKeys()[4]);
+    expect(stepKeys()[4].getAttribute('aria-label')).toMatch(/^Step 21:/);
+  });
+
+  it('holds the page still while a lane is being drawn on, so the stroke stays on the steps it started on', async () => {
+    await playLong();
+    const strip = screen.getByRole('group', { name: 'cutoff lane' });
+    fireEvent.pointerDown(strip, { button: 0, clientX: 0, clientY: 0, pointerId: 1 });
+    playheadOn(16);
+    await aFrame();
+    expect(state.position()).toEqual({ step: 16, part: 0 });
+    expect(firstCell()).toBe('cutoff, step 1');
+    fireEvent.pointerMove(strip, { clientX: 0, clientY: 0, pointerId: 1 });
+    fireEvent.pointerUp(strip, { pointerId: 1 });
+    expect(valueOn(16)).toBeUndefined();
+
+    // the stroke over, the next turn shows the page being heard
+    playheadOn(33);
+    await waitFor(() => expect(firstCell()).toBe('cutoff, step 33'));
   });
 });
 
