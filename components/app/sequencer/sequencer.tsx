@@ -6,7 +6,8 @@
  *
  * - The head: the transport (Play and Stop, Fill) and the pattern's controls: tempo, swing, length, transpose, step
  *   size, direction, root and scale, the parts (A and B) and the order they chain in.
- * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them. A key is
+ * - The step keys, sixteen to a page, lit where a step plays and with the playhead running across them, turning to the
+ *   page it is on while it plays (t-87). A key is
  *   chosen by a press (or the arrows), and turned on or off by a press on the chosen key (or Enter or Space).
  * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
  *   paste of a step or a page, clear, and Undo.
@@ -20,7 +21,7 @@
  * `.context/app/sequencer.md`.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 import {
   ArrowLeftRight,
@@ -104,7 +105,7 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
   [
     'Pages',
-    'A pattern longer than 16 steps is shown 16 at a time. The page the playhead is on is lit.',
+    'A pattern longer than 16 steps is shown 16 at a time. The page the playhead is on is lit, and while it plays the keys turn to it; the chosen step stays chosen. A page you choose holds until the playhead moves on to the next.',
   ],
   [
     'Play and Stop',
@@ -216,7 +217,6 @@ export function Sequencer({
   const steps = p.parts[editing].steps;
   const [chosen, setChosen] = useState(0);
   const sel = Math.min(chosen, len - 1);
-  const page = Math.floor(sel / PAGE);
   const pages = Math.ceil(len / PAGE);
   const [hitsSet, setHits] = useState(4);
   // What Hits shows is what Euclid uses: never more hits than the part has steps.
@@ -228,8 +228,10 @@ export function Sequencer({
   // A pattern that replaces the whole one (opened, or a sound's riff) shows its lanes if it has any.
   const replacedAt = seq.held();
   const [shownFor, setShownFor] = useState(replacedAt);
+  const [held, setHeld] = useState<number | null>(null);
   if (shownFor !== replacedAt) {
     setShownFor(replacedAt);
+    setHeld(null);
     if (laneCount > 0) setLanesOpen(true);
   }
   const moveFocus = useRef(false);
@@ -251,6 +253,29 @@ export function Sequencer({
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [seq.playing, position]);
+
+  // While the part on show plays, its keys (and the lanes under them) show the page the playhead is on (t-87). The
+  // chosen step stays where it is, so notes and tools still land on it. A page chosen by hand (or one a lane is being
+  // drawn on) is held until the playhead turns from one page to the next while the part is on show; coming onto the
+  // part, or Play, is not a turn.
+  const atPage = at !== null && at.part === editing ? Math.floor(at.step / PAGE) : null;
+  const [laneDrawing, setLaneDrawing] = useState(false);
+  const [turnFrom, setTurnFrom] = useState(atPage);
+  if (turnFrom !== atPage) {
+    setTurnFrom(atPage);
+    if (turnFrom !== null && atPage !== null && !laneDrawing) setHeld(null);
+  }
+  const page = Math.min(pages - 1, held ?? atPage ?? Math.floor(sel / PAGE));
+  const selShown = Math.floor(sel / PAGE) === page;
+
+  // The keys are keyed by their place on the page, so a key holding focus keeps it as the page turns; one past the end
+  // of a short last page hands it to the page's last key.
+  const keyFocus = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const k = keyFocus.current;
+    if (k === null || document.activeElement !== document.body) return;
+    keyRefs.current.get(Math.min(len - 1, page * PAGE + k))?.focus();
+  }, [page, len]);
 
   useEffect(() => {
     if (!moveFocus.current) return;
@@ -309,6 +334,7 @@ export function Sequencer({
     // change to the chosen step (Length shortened) would otherwise pay by taking focus off the control in use.
     moveFocus.current = focus && to !== sel;
     setChosen(to);
+    setHeld(Math.floor(to / PAGE));
   };
   const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };
@@ -586,13 +612,18 @@ export function Sequencer({
               const n = s.notes[0];
               return (
                 <button
-                  key={i}
+                  key={k}
                   ref={(el) => {
                     if (el) keyRefs.current.set(i, el);
                     else keyRefs.current.delete(i);
                   }}
                   type="button"
-                  tabIndex={i === sel ? 0 : -1}
+                  // With the chosen step on another page, the key in its place is the one Tab reaches.
+                  tabIndex={
+                    i === sel || (!selShown && k === Math.min(sel % PAGE, shown.length - 1))
+                      ? 0
+                      : -1
+                  }
                   aria-current={i === sel ? 'true' : undefined}
                   aria-label={keyLabel(s, i)}
                   data-beat={i % 4 === 0 || undefined}
@@ -604,6 +635,12 @@ export function Sequencer({
                   // touch screen is not reliably a double click).
                   onClick={() => (i === sel ? toggle(i) : choose(i, false))}
                   onKeyDown={(e) => onKeyKey(e, i)}
+                  onFocus={() => {
+                    keyFocus.current = k;
+                  }}
+                  onBlur={() => {
+                    keyFocus.current = null;
+                  }}
                 >
                   <span className="kys-seq-key-led" aria-hidden="true" />
                   <span className="kys-seq-key-num" aria-hidden="true">
@@ -635,6 +672,10 @@ export function Sequencer({
               first={page * PAGE}
               count={shown.length}
               at={at}
+              onDrawing={(on) => {
+                setLaneDrawing(on);
+                if (on) setHeld(page);
+              }}
               onEdit={(fn, group) => seq.edit(fn, { group })}
             />
           )}

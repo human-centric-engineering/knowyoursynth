@@ -68,6 +68,7 @@ export function ModLanes({
   count,
   at,
   onEdit,
+  onDrawing,
 }: {
   pattern: Pattern;
   /** The synth on the panel: the controls a lane can move, and what they take. */
@@ -81,6 +82,8 @@ export function ModLanes({
   count: number;
   at: SeqPosition | null;
   onEdit: (fn: (p: Pattern) => Pattern, group?: string) => void;
+  /** A stroke starting and ending on a lane: the page above holds still while one is drawn. */
+  onDrawing?: (on: boolean) => void;
 }) {
   const lanes = useMemo(() => pattern.lanes ?? [], [pattern.lanes]);
   const names = useMemo(() => controlNames(def), [def]);
@@ -102,6 +105,7 @@ export function ModLanes({
           count={count}
           at={at}
           onEdit={onEdit}
+          onDrawing={onDrawing}
         />
       ))}
       {lanes.length < MAX_LANES && (
@@ -137,6 +141,7 @@ function Lane({
   count,
   at,
   onEdit,
+  onDrawing,
 }: {
   id: string;
   control: Control | null;
@@ -150,6 +155,7 @@ function Lane({
   count: number;
   at: SeqPosition | null;
   onEdit: (fn: (p: Pattern) => Pattern, group?: string) => void;
+  onDrawing?: (on: boolean) => void;
 }) {
   const steps = pattern.parts[part].steps;
   const [cursor, setCursor] = useState(0);
@@ -183,6 +189,12 @@ function Lane({
     if (!hit || !drawing.current) return;
     setShownAt(hit[0]);
     if (valueOf(hit[0]) !== hit[1]) set(hit[0], hit[1], drawing.current);
+  };
+
+  const endStroke = () => {
+    if (!drawing.current) return;
+    drawing.current = null;
+    onDrawing?.(false);
   };
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>, k: number) => {
@@ -259,15 +271,12 @@ function Lane({
           if (!again) stroke.current++;
           e.currentTarget.setPointerCapture?.(e.pointerId);
           drawing.current = `lane:${id}:stroke:${stroke.current}`;
+          onDrawing?.(true);
           draw(e);
         }}
         onPointerMove={draw}
-        onPointerUp={() => {
-          drawing.current = null;
-        }}
-        onPointerCancel={() => {
-          drawing.current = null;
-        }}
+        onPointerUp={endStroke}
+        onPointerCancel={endStroke}
         onPointerLeave={() => {
           if (!drawing.current) setShownAt(null);
         }}
