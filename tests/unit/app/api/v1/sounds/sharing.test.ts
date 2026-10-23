@@ -382,6 +382,15 @@ describe('publishing', () => {
     expect(await refused(sound.id)).toEqual({ status: 404, code: 'NOT_FOUND' });
   });
 
+  it('is a 404 on an id that is not one', async () => {
+    const res = await publishIt('NOT_AN_ID!');
+    expect(res.status).toBe(404);
+    expect((await json(res)).error).toMatchObject({
+      code: 'NOT_FOUND',
+      message: 'Patch not found',
+    });
+  });
+
   it('needs a username', async () => {
     signIn('user-3');
     const sound = await save({ synthId: 'model-d', name: 'Night bass', panel });
