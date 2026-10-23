@@ -1,6 +1,7 @@
 /**
  * A small stateful fake of the tables a public profile reads (`f-profiles` r3): users, synth profiles, the synths on
- * their lists and the databank's instruments, and their sounds with the catalogue's synths (`f-sharing` h2).
+ * their lists and the databank's instruments, and their sounds with the catalogue's synths (`f-sharing` h2), and their
+ * patterns (`f-step-sequencer` t-83).
  *
  * It honours `select` the way Prisma does, including a join to the user's own row, so a read that asked for the
  * account would carry its name and email into the answer and the tests' absence checks would see them.
@@ -18,6 +19,8 @@ export interface PublicProfileDb {
   sounds: Row[];
   /** The catalogue's synths. */
   synths: Row[];
+  /** Users' patterns: `u1` has one published, one link share and one published but unlisted. */
+  patterns: Row[];
 }
 
 /** The account's private name and email, seeded so a test can assert they never appear. */
@@ -86,6 +89,11 @@ export function seedPublicProfileDb(): PublicProfileDb {
       sound('s3', 'u1', 'private', 'Unshared pad'),
       sound('s4', 'u2', 'published', 'Quiet drone'),
     ],
+    patterns: [
+      pattern('p1', 'u1', 'published', 'Acid walk'),
+      pattern('p2', 'u1', 'link', 'Link-only riff'),
+      { ...pattern('p3', 'u1', 'published', 'Unlisted riff'), unlistedAt: new Date(5) },
+    ],
     synths: [
       {
         id: 'model-d',
@@ -111,6 +119,21 @@ function sound(id: string, userId: string, visibility: string, name: string): Ro
     slug: visibility === 'private' ? null : `${id}${'x'.repeat(10 - id.length)}`,
     publishedAt: visibility === 'published' ? new Date(Date.UTC(2026, 9, 16)) : null,
     tags: [],
+  };
+}
+
+function pattern(id: string, userId: string, visibility: string, name: string): Row {
+  return {
+    id,
+    userId,
+    synthId: 'model-d',
+    name,
+    visibility,
+    slug: `${id}${'y'.repeat(10 - id.length)}`,
+    publishedAt: visibility === 'published' ? new Date(Date.UTC(2026, 9, 22)) : null,
+    unlistedAt: null,
+    version: 1,
+    pattern: { not: 'read by the card' },
   };
 }
 
@@ -156,6 +179,23 @@ export function publicProfileDelegates(db: PublicProfileDb) {
               const out = project(r, args.select, () => null);
               return { ...out, _count: { copies: 0 } };
             })
+      ),
+    },
+    userPattern: {
+      findMany: vi.fn(
+        async (args: {
+          where: { userId: string; visibility: string; unlistedAt: null };
+          select?: Row;
+        }) =>
+          db.patterns
+            .filter(
+              (r) =>
+                r.userId === args.where.userId &&
+                r.visibility === args.where.visibility &&
+                r.slug !== null &&
+                (args.where.unlistedAt !== null || r.unlistedAt === null)
+            )
+            .map((r) => ({ ...project(r, args.select, () => null), _count: { copies: 0 } }))
       ),
     },
     synthProfile: {

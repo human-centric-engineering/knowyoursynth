@@ -159,8 +159,8 @@ the same PR**, and each row names what deletes it.
   `GLOBAL_CONFIG_MODELS`, under a one-line comment. The thirteen databank tables (`BankMaker` …
   `BankRemoval`, `f-databank` t-34 and t-36) follow under a second one. `SynthSuggestion` (t-37),
   `UserSound` (`f-my-sounds` s1), `UserPattern` (`f-step-sequencer` t-81), `SynthPreference` and `UserPreference` (s3), `LessonProgress` and
-  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2) and `SoundReport`
-  (`f-sharing` h4) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
+  `Favourite` (s4), `SynthProfile` and `HeldUsername` (`f-profiles` r1), `OwnedInstrument` (r2), `SoundReport`
+  (`f-sharing` h4) and `PatternReport` (`f-step-sequencer` t-83) are appended to `SYSTEM_MODELS` after `ContactSubmission`, under their own comment.
 - **Why:** `model-classification.test.ts` fails on any model that is neither tenant-owned nor on
   one of the two lists, and the lists have no fork seam. The catalogue and the databank are
   product content every org shares, so they are global config (owner ruling on `f-model-d`,
@@ -172,13 +172,13 @@ the same PR**, and each row names what deletes it.
   own sounds are theirs whichever org they act in, and are never a shared setting either, so
   `UserSound` joins it there with no `orgId` (owner ruling on `f-my-sounds`, 2026-10-15). Their last
   panels, settings, lesson progress, favourites, profiles, patterns and owned synths follow the same ruling, and so do the
-  usernames held after a change, which record a name and no person. Reports about shared sounds are an inbound queue
-  about those sounds, decided from one place, so they sit beside them.
+  usernames held after a change, which record a name and no person. Reports about shared sounds and patterns are an inbound
+  queue about them, decided from one place, so they sit beside them.
 - **On conflict:** take theirs, re-append our eighteen names (and the two comments) to the end
-  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
+  of `GLOBAL_CONFIG_MODELS`, and re-add `SynthSuggestion`, `UserSound`, `UserPattern`, `SoundReport`, `PatternReport`, `SynthPreference`, `UserPreference`, `LessonProgress`, `Favourite`, `SynthProfile`, `HeldUsername` and `OwnedInstrument` (and their comment) after
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
-- **Delete when:** sunrise#964 lands. Move the twenty-nine names (eighteen global, eleven system) into the new seam's scaffold.
+- **Delete when:** sunrise#964 lands. Move the thirty names (eighteen global, twelve system) into the new seam's scaffold.
 
 ### The real-registry counts, pinned to the tutor
 

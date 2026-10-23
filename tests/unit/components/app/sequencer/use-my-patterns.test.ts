@@ -86,3 +86,33 @@ describe('useMyPatterns', () => {
     expect(api.get).toHaveBeenCalledWith('/api/v1/patterns/p%201');
   });
 });
+
+describe('useMyPatterns, sharing (t-83)', () => {
+  it('saves a copy of a shared pattern with its source, and puts it at the top', async () => {
+    api.get.mockResolvedValue([summary('p1', 'One')]);
+    const { result } = renderHook(() => useMyPatterns());
+    await act(() => result.current.refresh());
+    api.post.mockResolvedValue(detail('p2', 'Their riff'));
+    await act(async () => void (await result.current.copy('abcdefghjk', newPattern(), 'model-d')));
+    expect(api.post).toHaveBeenCalledWith('/api/v1/patterns', {
+      body: { source: { shared: 'abcdefghjk' }, pattern: newPattern(), synthId: 'model-d' },
+    });
+    expect(result.current.patterns?.map((p) => p.id)).toEqual(['p2', 'p1']);
+  });
+
+  it('publishes through the publish route with the tick, and shares or hides through PATCH', async () => {
+    const { result } = renderHook(() => useMyPatterns());
+    api.post.mockResolvedValue(detail('p1', 'One'));
+    await act(async () => void (await result.current.share('p1', 'published')));
+    expect(api.post).toHaveBeenCalledWith('/api/v1/patterns/p1/publish', {
+      body: { confirm: true },
+    });
+    api.patch.mockResolvedValue(detail('p1', 'One'));
+    await act(async () => void (await result.current.share('p1', 'link')));
+    expect(api.patch).toHaveBeenCalledWith('/api/v1/patterns/p1', {
+      body: { visibility: 'link' },
+    });
+    // a list never read is not written into
+    expect(result.current.patterns).toBeNull();
+  });
+});

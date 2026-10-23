@@ -6,6 +6,8 @@ import type { OwnedEntry } from '@/lib/app/profile/instruments-data';
 import { usernameProblem } from '@/lib/app/profile/username';
 import type { PublishedSoundCard } from '@/lib/app/sounds/data';
 import { publishedSoundsOf } from '@/lib/app/sounds/public';
+import type { PublishedPatternCard } from '@/lib/app/patterns/data';
+import { publishedPatternsOf } from '@/lib/app/patterns/public';
 import { prisma } from '@/lib/db/client';
 
 /**
@@ -43,6 +45,8 @@ export interface PublicProfile {
   wishlist?: PublicSynth[];
   /** Their published sounds, newest first (`f-sharing` h2). Never a link share: sharing a link is not listing it. */
   sounds: PublishedSoundCard[];
+  /** Their published patterns, newest first (`f-step-sequencer` t-83). Never a link share. */
+  patterns: PublishedPatternCard[];
 }
 
 const PROFILE_SELECT = {
@@ -73,8 +77,11 @@ export async function getPublicProfile(username: string): Promise<PublicProfile 
     const link = readStoredLink(platform, row[platform]);
     return link ? [{ platform, ...link }] : [];
   });
-  const sounds = await publishedSoundsOf(row.userId);
-  const profile: PublicProfile = { username: row.username, links, sounds };
+  const [sounds, patterns] = await Promise.all([
+    publishedSoundsOf(row.userId),
+    publishedPatternsOf(row.userId),
+  ]);
+  const profile: PublicProfile = { username: row.username, links, sounds, patterns };
 
   if (!row.showOwned && !row.showWishlist) return profile;
 

@@ -39,6 +39,7 @@ import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
 import type { PublicSound, UserSoundDetail } from '@/lib/app/sounds/data';
+import type { PublicPattern } from '@/lib/app/patterns/data';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
@@ -74,7 +75,12 @@ import {
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
-import { useSequencer, type LaneTarget } from '@/components/app/sequencer/use-sequencer';
+import {
+  useSequencer,
+  type LaneTarget,
+  type LoadedPattern,
+} from '@/components/app/sequencer/use-sequencer';
+import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-strip';
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
@@ -111,6 +117,7 @@ import {
   DEFAULT_VIEW,
   hashTarget,
   parseView,
+  sharedPatternHref,
   sharedSoundHref,
   synthHref,
 } from '@/components/app/synth/routes';
@@ -261,6 +268,11 @@ export interface SynthPageProps {
   mineParam?: string | null;
   /** On a shared sound's page: that sound, from `GET /api/v1/public/sounds/:slug`, on this synth. */
   shared?: PublicSound | null;
+  /**
+   * On a shared pattern's page (`f-step-sequencer` t-83): that pattern, from `GET /api/v1/public/patterns/:slug`, in the
+   * sequencer, which opens with it.
+   */
+  sharedPattern?: PublicPattern | null;
 }
 
 /**
@@ -290,6 +302,7 @@ function Synth({
   soundParam = null,
   mineParam = null,
   shared = null,
+  sharedPattern = null,
 }: SynthPageProps & { baseDef: AppSynthDef }) {
   const router = useRouter();
   const synthId = baseDef.id;
@@ -318,10 +331,15 @@ function Synth({
   });
   // The shared sound stopped being shared while the page was open (found by Save a copy): its address now 404s.
   const sharedGone = useRef(false);
+  const patternSlug = sharedPattern?.slug ?? null;
   const hereHref = useCallback(
     (v: PanelView) =>
-      sharedSlug ? sharedSoundHref(synthId, sharedSlug, v) : synthHref(synthId, v),
-    [synthId, sharedSlug]
+      sharedSlug
+        ? sharedSoundHref(synthId, sharedSlug, v)
+        : patternSlug
+          ? sharedPatternHref(synthId, patternSlug, v)
+          : synthHref(synthId, v),
+    [synthId, sharedSlug, patternSlug]
   );
   const setView = useCallback(
     (next: PanelView) => {
@@ -887,7 +905,8 @@ function Synth({
   const seq = useSequencer({
     engine,
     ensureAudio,
-    riff: shown?.phrase ?? null,
+    // On a shared pattern's page the sequencer is there for the pattern: choosing a sound changes the panel, not it.
+    riff: sharedPattern ? null : (shown?.phrase ?? null),
     tempo: tempoBpm,
     lanes: laneTarget,
   });
@@ -932,6 +951,8 @@ function Synth({
   useEffect(() => {
     const sameSound = patternFor.current === openSoundId;
     patternFor.current = openSoundId;
+    // On a shared pattern's page the sequencer is there for that pattern, as the riff above is not passed to it.
+    if (sharedPattern) return undefined;
     if (!soundPatternId || (sameSound && seqLoadedId.current === soundPatternId)) return undefined;
     let live = true;
     openPattern(soundPatternId)
@@ -942,9 +963,74 @@ function Synth({
     return () => {
       live = false;
     };
-  }, [openSoundId, soundPatternId, openPattern, loadPattern]);
+  }, [openSoundId, soundPatternId, openPattern, loadPattern, sharedPattern]);
+  // ── a shared pattern (`f-step-sequencer` t-83) ──
+  // It opens in the sequencer, and the sequencer opens with it. What the sequencer holds is the shared pattern while
+  // `loaded` is the object it was loaded as: an edit keeps it, anything opened over it does not.
+  const sharedFrom = useMemo<LoadedPattern | null>(
+    () => (sharedPattern ? { id: null, name: sharedPattern.name } : null),
+    [sharedPattern]
+  );
+  const [patternGone, setPatternGone] = useState(false);
+  const sharedPatternHeld = sharedFrom !== null && seqLoaded === sharedFrom && !patternGone;
+  const loadSharedPattern = () => {
+    if (!sharedPattern?.pattern || !sharedFrom) return;
+    loadPattern(sharedPattern.pattern, sharedFrom);
+    setSeqOpen(true);
+    if (small) openSheet('sequencer');
+  };
+  useEffect(() => {
+    loadSharedPattern();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+  // Whose it is, from the visitor's own list, which carries each pattern's address: read once the session is known.
+  const { refresh: refreshPatterns, patterns: myPatternList } = myPatterns;
+  useEffect(() => {
+    if (sharedPattern && signedIn) refreshPatterns().catch(() => undefined);
+  }, [sharedPattern, signedIn, refreshPatterns]);
+  const ownSharedPattern = sharedPattern
+    ? myPatternList?.find((p) => p.slug === sharedPattern.slug)
+    : undefined;
+  const patternViewer = sharedViewerOf({
+    slug: sharedPattern?.slug ?? '',
+    authPending,
+    signedIn,
+    mine: myPatternList,
+  });
+  const copySharedPattern = async (): Promise<SharedCopyResult> => {
+    if (!sharedPattern || !sharedPatternHeld)
+      return { ok: false, error: 'The shared pattern is not in the sequencer now.' };
+    // what was sent is what is saved, as Save in the sequencer does
+    const sent = seq.pattern;
+    const at = seq.held();
+    try {
+      const d = await myPatterns.copy(sharedPattern.slug, sent, synthId);
+      seq.markSaved({ id: d.id, name: d.name }, sent, at);
+      return { ok: true, note: null };
+    } catch (err) {
+      if (!sharedSourceGone(err))
+        return { ok: false, error: err instanceof Error ? err.message : 'Could not save a copy.' };
+      // its owner stopped sharing it: Save in the sequencer keeps it, under a name of the visitor's own, with no credit
+      setPatternGone(true);
+      return {
+        ok: false,
+        error:
+          'This pattern is not shared any more, so a copy can’t credit it. Save it to My patterns from the sequencer, under a name of your own.',
+      };
+    }
+  };
+  const openOwnSharedPattern = () => {
+    if (!ownSharedPattern) return;
+    openPattern(ownSharedPattern.id)
+      .then((d) => {
+        if (d.pattern) loadPattern(d.pattern, { id: d.id, name: d.name });
+      })
+      .catch(() => undefined);
+  };
+
   const seqLibrary: PatternLibraryProps = {
     signedIn: authPending ? null : signedIn,
+    // Save a copy is offered to someone else's pattern only; its owner saves it as any pattern of theirs.
+    sharedHeld: sharedPatternHeld && patternViewer !== 'owner',
     signInHref,
     synthId,
     synths,
@@ -1599,6 +1685,20 @@ function Synth({
       className="kys-synth mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 pt-4 pb-10 sm:px-6"
     >
       <RotatePrompt />
+      {sharedPattern && (
+        <SharedPatternStrip
+          pattern={sharedPattern}
+          synthId={synthId}
+          synths={synths}
+          held={sharedPatternHeld}
+          onLoad={loadSharedPattern}
+          viewer={patternViewer}
+          signInHref={signInHref}
+          onCopy={copySharedPattern}
+          onOpen={openOwnSharedPattern}
+          buttonClass={smallBtn}
+        />
+      )}
       {shared && (
         <SharedSoundStrip
           sound={shared}

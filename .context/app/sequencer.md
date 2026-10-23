@@ -3,7 +3,7 @@
 One sequencer works on every synth. You edit a riff step by step, starting from any riff in the library, and play it
 on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it
 (`lib/app/sequencer/`, t-78), the engine's pattern player (t-79) and the module on the synth page
-(`components/app/sequencer/`, t-80). Saving and sharing come in later tasks of §21, and each adds its section here.
+(`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82) and sharing (t-83) each have their section here.
 
 ## Riffs and patterns
 
@@ -345,10 +345,98 @@ another control, which clears its values. A dashed line marks the panel's value,
   panel's (Page Up and Page Down by more; a switch or a choice by one option a press), Home and End go to either end, and Delete clears.
 - Hovering or focusing a cell shows its value at the head of the lane.
 
+## Sharing and publishing patterns
+
+A pattern can be private, shared by a link, or published, as a sound can (t-83, owner ruling: patterns too). The rules
+are sounds' ([`sharing.md`](./sharing.md)), re-derived for a pattern in `lib/app/patterns/sharing.ts`, `public.ts`,
+`reports.ts` and `moderation.ts`. Where a sound's reason didn't carry over, the rule changed, and this section says why.
+
+### Anti-patterns first
+
+- **Don't write `visibility: 'published'` outside `publishUserPattern`.** The PATCH takes `private` and `link` only.
+- **Don't keep a copy's credit.** It is read through `sourceUserPatternId` on every read (`sharedPatternSourcesOf`),
+  never stored, so it cannot outlive the erasure of the user it names.
+- **Don't read a shared pattern for anyone else without `unlistedAt: null`.** An unlisted pattern keeps its
+  visibility. Every public read, the credit, the copy source and the report route filter on it.
+- **Don't put the owner's id, the row's id or the source's id in a public read.** `getSharedPattern` is the only one.
+- **Don't save a shared pattern through the sequencer's own Save.** It would keep no credit. While the page's shared
+  pattern is held and it isn't the visitor's own, Save and Save as give way to the strip's Save a copy (`sharedHeld`).
+  Its owner keeps Save. A sound of the visitor's that plays a pattern by default doesn't replace it either.
+
+### What carried over, and what didn't
+
+| Rule                           | For a pattern                                                                                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| The slug                       | The same: ten characters, minted the first time it leaves private, kept after (`visibilityData`, `withFreshSlug`).                            |
+| The owner's lock               | The same lock as their sounds (`lockOwnersSounds`, their user row), around every change and publish.                                          |
+| Publishing needs a username    | The same, `USERNAME_REQUIRED` (409): a published pattern is listed under it.                                                                  |
+| The byline                     | The same: always on a published pattern, on a link share only when the owner's profile is public.                                             |
+| The word check                 | The name only. A pattern has no notes and no lesson. At publish, and on a rename of a published pattern.                                      |
+| "Plays the same" (`DUPLICATE`) | The pattern itself, key by key (`patternKey`), against the shared pattern it was copied from. Exact, because a pattern is discrete.           |
+| Tags                           | None. A sound's tags are its synth's library's, and a pattern has no synth.                                                                   |
+| The daily cap                  | Ten first publications a day, counted in a list of its own (`SynthProfile.recentPatternPublishes`), so patterns don't spend the day's sounds. |
+| `NOT_PLAYABLE`                 | A pattern saved as a shape version the sequencer no longer reads, or one that no longer passes `PatternSchema`.                               |
+| Reports and unlisting          | The same queue, reasons, statuses and actions, in a table of their own (`PatternReport`), on `/admin/synths/reports?kind=patterns`.           |
+
+**Not caught:** a library riff opened in the sequencer and published unchanged. A pattern doesn't record the riff it was
+opened from (t-81), and the riff is the app's own, credited to nobody here. If that changes, the riff needs recording
+on the pattern first.
+
+### Copies
+
+`POST /api/v1/patterns` with `source: { shared: <slug> }`: a new private pattern for the caller, from any link or
+published pattern. With no name or steps sent, it takes the shared pattern's. A source that is private, unlisted or
+unknown is a 400 on `source.shared`. A copy of your own records no source. `basedOn` on the owner's reads and the
+public read is `{ name, username, slug }` while the source is published, not unlisted, and its owner has a username.
+
+### The public pattern page
+
+A pattern belongs to no synth, so its page is the synth page of whichever synth the visitor plays it on:
+
+- **`/patterns/<slug>`** is the address its owner copies. It sends the visitor to the pattern on the synth it was made
+  on, or the catalogue's first synth when that one isn't served (`patternHomeSynth`).
+- **`/synths/<id>/p/<slug>`** is the synth page with the pattern in the sequencer, which opens with it. It renders
+  signed out, and Play plays it. The strip above the panel (`shared-pattern-strip.tsx`) has the name, byline and
+  credit, **Play it on** (another synth's page for the same pattern), and Save a copy, Sign in to save a copy, Report,
+  or Open it to edit, by who is looking. Who it belongs to comes from the visitor's own patterns list, as for a sound.
+- **The sequencer is there for the pattern.** On this page the sound's riff isn't loaded into it (`riff: null`), so
+  choosing a sound changes the panel and leaves the pattern. Load it again puts it back after anything else is opened.
+- **Metadata:** a link share is `noindex`. A published pattern is canonical at its home synth's page, from every synth's
+  page for it. The sitemap lists that address.
+- No social card of its own yet: the site's default card is used.
+
+### Explore, profiles and the sitemap
+
+`/explore/patterns` (`GET /api/v1/public/patterns?sort=&page=`) lists published patterns, newest or most saved, 24 a
+page. It has no synth filter: a pattern plays on any synth. Explore's two pages have tabs between them. A profile lists
+the user's published patterns under its sounds. The sitemap adds `/explore/patterns` and every published pattern.
+
+### In the module
+
+**Share** in the patterns strip (`pattern-sharing.tsx`) acts on the saved pattern held, as last saved: Share with a
+link, Copy link, Publish… (who it appears as, and the "I made this" tick), Unpublish and Stop sharing. With no username
+the one step is Choose a username. An unlisted pattern says so and offers only Stop sharing. My patterns says each shared
+pattern's state.
+
+### Erasure and export
+
+Erasing a user deletes their patterns and the reports about them. Other people's copies stay, with no credit. Reports
+they filed or resolved stay, with the id nulled. The export's `patterns` section carries `visibility`, `slug`,
+`publishedAt` and `unlistedAt`, never `sourceUserPatternId`. `patternReportsFiled` is the reports they filed, each
+pattern named by its address. The profile section carries `recentPatternPublishes`.
+
+### Tests
+
+`tests/unit/app/api/v1/patterns/sharing.test.ts` (visibility and the slug, each publish refusal, copies and the live
+credit, the public read, reports, unlist and restore across every public read);
+`tests/unit/app/panel/shared-pattern-page.test.tsx` (both pages, their 404s and metadata);
+`tests/unit/components/app/sequencer/synth-page-shared-pattern.test.tsx` (the page opens and plays the pattern signed
+out, keeps it when a sound is chosen, Play it on, Save a copy and the owner's view); the sitemap, export and profile
+tests.
+
 ## Not yet
 
 Coming in later tasks of §21:
 
-- Sharing and publishing patterns (t-83).
 - Playing into it: step record, live record and arp mode (t-86).
 - The tutor writing patterns (t-84), and the TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).

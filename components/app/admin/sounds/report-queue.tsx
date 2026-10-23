@@ -6,6 +6,9 @@
  * Each action is `POST /api/v1/admin/sounds/[id]`: **Unlist** (a sound that is up), **Restore** (one that is
  * unlisted), **Dismiss** (one with open reports). The owner is named by their username; **who reported a sound is
  * never shown**, and the queue's data does not carry it.
+ *
+ * Reported patterns (`f-step-sequencer` t-83) are the same queue, `patterns` in place of `sounds`, acted on with
+ * `POST /api/v1/admin/patterns/[id]`.
  */
 
 import { useState } from 'react';
@@ -13,7 +16,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { VISIBILITY_LABELS } from '@/components/app/sharing/visibility';
-import { sharedSoundHref } from '@/components/app/synth/routes';
+import { patternHref, sharedSoundHref } from '@/components/app/synth/routes';
 import { Button } from '@/components/ui/button';
 import { APIClientError, apiClient } from '@/lib/api/client';
 import {
@@ -21,13 +24,50 @@ import {
   type ModerationAction,
   type QueueSound,
 } from '@/lib/app/sounds/report-data';
+import type { QueuePattern } from '@/lib/app/patterns/report-data';
 
-export function ReportQueue({ sounds }: { sounds: QueueSound[] }) {
-  if (sounds.length === 0) return <p className="text-muted-foreground text-sm">Nothing here.</p>;
+/** A queued sound or pattern, as its card shows it. */
+interface QueueItem extends Pick<
+  QueueSound,
+  'id' | 'name' | 'visibility' | 'slug' | 'owner' | 'unlistedAt' | 'reports'
+> {
+  /** The synth it is on, or a pattern was made on. */
+  context: string | null;
+  notes: string | null;
+  /** Its public page, or null. */
+  href: string | null;
+  /** Where its actions are sent. */
+  action: string;
+}
+
+const soundItem = (s: QueueSound): QueueItem => ({
+  ...s,
+  context: s.synthName,
+  href: s.slug ? sharedSoundHref(s.synthId, s.slug) : null,
+  action: `/api/v1/admin/sounds/${encodeURIComponent(s.id)}`,
+});
+
+const patternItem = (p: QueuePattern): QueueItem => ({
+  ...p,
+  context: p.synthName ? `pattern made on the ${p.synthName}` : 'pattern',
+  notes: null,
+  href: p.slug ? patternHref(p.slug) : null,
+  action: `/api/v1/admin/patterns/${encodeURIComponent(p.id)}`,
+});
+
+export function ReportQueue({
+  sounds = [],
+  patterns = [],
+}: {
+  sounds?: QueueSound[];
+  patterns?: QueuePattern[];
+}) {
+  const items = [...sounds.map(soundItem), ...patterns.map(patternItem)];
+  if (items.length === 0) return <p className="text-muted-foreground text-sm">Nothing here.</p>;
   return (
     <ul className="space-y-4">
-      {sounds.map((s) => (
-        <li key={s.id}>
+      {items.map((s) => (
+        <li key={s.action}>
           <QueueCard sound={s} />
         </li>
       ))}
@@ -35,20 +75,18 @@ export function ReportQueue({ sounds }: { sounds: QueueSound[] }) {
   );
 }
 
-function QueueCard({ sound: s }: { sound: QueueSound }) {
+function QueueCard({ sound: s }: { sound: QueueItem }) {
   const router = useRouter();
   const [busy, setBusy] = useState<ModerationAction | null>(null);
   const [failure, setFailure] = useState<string | null>(null);
   const open = s.reports.filter((r) => r.status === 'open');
-  const live = s.unlistedAt === null && s.visibility !== 'private' && s.slug;
+  const live = s.unlistedAt === null && s.visibility !== 'private' && s.href;
 
   const act = async (action: ModerationAction) => {
     setBusy(action);
     setFailure(null);
     try {
-      await apiClient.post(`/api/v1/admin/sounds/${encodeURIComponent(s.id)}`, {
-        body: { action },
-      });
+      await apiClient.post(s.action, { body: { action } });
       // Stays busy until the refresh moves this card, so an action cannot be sent twice.
       router.refresh();
     } catch (err) {
@@ -61,17 +99,14 @@ function QueueCard({ sound: s }: { sound: QueueSound }) {
     <article className="rounded-md border p-4" aria-labelledby={`sound-${s.id}`}>
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id={`sound-${s.id}`} className="font-medium">
-          {live && s.slug ? (
-            <Link
-              href={sharedSoundHref(s.synthId, s.slug)}
-              className="underline-offset-2 hover:underline"
-            >
+          {live && s.href ? (
+            <Link href={s.href} className="underline-offset-2 hover:underline">
               {s.name}
             </Link>
           ) : (
             s.name
-          )}{' '}
-          <span className="text-muted-foreground font-normal">· {s.synthName}</span>
+          )}
+          {s.context && <span className="text-muted-foreground font-normal"> · {s.context}</span>}
         </h2>
         <span className="text-muted-foreground text-xs">
           by {s.owner ? `@${s.owner}` : 'an owner with no username'} ·{' '}

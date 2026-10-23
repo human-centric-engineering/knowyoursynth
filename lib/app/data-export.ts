@@ -127,7 +127,14 @@ export function initAppSubjectSources(): void {
         section: PATTERNS_SECTION,
         disposition: 'export',
         description:
-          'Patterns you saved from the sequencer: the name, the steps and settings, and the synth each was made on.',
+          'Patterns you saved from the sequencer: the name, the steps and settings, the synth each was made on, whether and when you shared or published each, with its address, and when moderators unlisted one.',
+      },
+      {
+        model: 'PatternReport',
+        section: PATTERN_REPORTS_SECTION,
+        disposition: 'export',
+        description:
+          "Reports you filed about other people's shared patterns: the pattern's address, the reason and your note, and whether it is still open. Not who resolved it.",
       },
       {
         model: 'SoundReport',
@@ -239,6 +246,9 @@ const PATTERNS_SECTION = 'patterns';
 /** The export section for the reports a user filed about shared sounds (`f-sharing` h4). */
 const REPORTS_SECTION = 'soundReportsFiled';
 
+/** The export section for the reports a user filed about shared patterns (`f-step-sequencer` t-83). */
+const PATTERN_REPORTS_SECTION = 'patternReportsFiled';
+
 /** The export sections for a user's last panels and their settings (`f-my-sounds` s3). */
 const PANELS_SECTION = 'synthPanels';
 const SETTINGS_SECTION = 'synthSettings';
@@ -257,7 +267,8 @@ const SYNTHS_SECTION = 'ownedSynths';
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
  * profile (`f-profiles` r1), the synths they own and want (r2), the reports they filed about shared sounds
- * (`f-sharing` h4), and the patterns they saved (`f-step-sequencer` t-81). Every declared section is returned, empty when they have none.
+ * (`f-sharing` h4), the patterns they saved (`f-step-sequencer` t-81) and the reports they filed about shared patterns
+ * (t-83). Every declared section is returned, empty when they have none.
  */
 export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promise<AppSubjectData> {
   const [
@@ -271,6 +282,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     profile,
     synths,
     patterns,
+    patternReports,
   ] = await Promise.all([
     collectSuggestions(userId),
     collectSounds(userId),
@@ -282,6 +294,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     collectProfile(userId),
     collectOwnedSynths(userId),
     collectPatterns(userId),
+    collectPatternReportsFiled(userId),
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
@@ -294,6 +307,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     [PROFILE_SECTION]: profile,
     [SYNTHS_SECTION]: synths,
     [PATTERNS_SECTION]: patterns,
+    [PATTERN_REPORTS_SECTION]: patternReports,
   };
 }
 
@@ -333,6 +347,7 @@ function collectProfile(userId: string) {
       showOwned: true,
       showWishlist: true,
       recentPublishes: true,
+      recentPatternPublishes: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -474,10 +489,34 @@ function collectPatterns(userId: string) {
       pattern: true,
       version: true,
       synthId: true,
+      // Not `sourceUserPatternId`: that is the row id of a pattern someone else shared, about them, not this subject.
+      visibility: true,
+      slug: true,
+      publishedAt: true,
+      unlistedAt: true,
       createdAt: true,
       updatedAt: true,
     },
   });
+}
+
+/** The reports this subject filed about shared patterns, the pattern named by its public address only. */
+async function collectPatternReportsFiled(userId: string) {
+  const rows = await prisma.patternReport.findMany({
+    where: { reporterId: userId },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      reason: true,
+      note: true,
+      status: true,
+      resolvedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      pattern: { select: { slug: true } },
+    },
+  });
+  return rows.map(({ pattern, ...report }) => ({ ...report, patternSlug: pattern.slug }));
 }
 
 function collectSuggestions(userId: string) {

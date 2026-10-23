@@ -11,6 +11,10 @@
  * steps to open, with the reason.
  *
  * Deleting a pattern leaves the sounds that played it by default with none: the pointer is `ON DELETE SET NULL`.
+ *
+ * **Shared** (t-83, `sharing.ts`): a PATCH may move it between private and a link share, and a copy may be made from
+ * anyone's shared pattern. Every change runs under the owner's lock, so it is checked as the row it lands on: a
+ * published pattern's new name gets the word check, and its new steps the unchanged-copy check.
  */
 import type { Prisma, UserPattern } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
@@ -20,10 +24,22 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { PATTERN_VERSION, PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import type {
   CreateUserPattern,
+  SharedPatternSource,
   UpdateUserPattern,
   UserPatternDetail,
   UserPatternSummary,
 } from '@/lib/app/patterns/data';
+import {
+  assertPatternChanged,
+  assertPatternNotUnlisted,
+  assertPublishableName,
+  lockOwnersPatterns,
+  patternVisibilityData,
+  readablePattern,
+  sharedCopySource,
+  sharedPatternSourcesOf,
+} from '@/lib/app/patterns/sharing';
+import { withFreshSlug } from '@/lib/app/sounds/sharing';
 
 const notFound = (): never => {
   throw new NotFoundError('Pattern not found');
@@ -34,7 +50,7 @@ const toJson = (value: Pattern): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 
 /** The stored pattern as the sequencer can read it now, or why not. */
-function patternOf(
+export function patternOf(
   row: UserPattern,
   log: boolean
 ): Pick<UserPatternDetail, 'pattern' | 'problems'> {
@@ -56,7 +72,11 @@ function patternOf(
   return { pattern: null, problems: parsed.error.issues.slice(0, 5).map((i) => i.message) };
 }
 
-function toDetail(row: UserPattern, log: boolean): UserPatternDetail {
+function toDetail(
+  row: UserPattern,
+  log: boolean,
+  credits: Map<string, SharedPatternSource>
+): UserPatternDetail {
   const { pattern, problems } = patternOf(row, log);
   return {
     id: row.id,
@@ -64,11 +84,21 @@ function toDetail(row: UserPattern, log: boolean): UserPatternDetail {
     synthId: row.synthId,
     steps: pattern ? pattern.parts[0].steps.length : 0,
     parts: pattern ? pattern.parts.length : 0,
+    visibility: row.visibility,
+    slug: row.slug,
+    publishedAt: row.publishedAt?.toISOString() ?? null,
+    unlisted: row.unlistedAt !== null,
+    basedOn: row.sourceUserPatternId ? (credits.get(row.sourceUserPatternId) ?? null) : null,
     pattern,
     problems,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
+}
+
+/** One row as its owner reads it, with its credit. */
+async function detailOf(row: UserPattern): Promise<UserPatternDetail> {
+  return toDetail(row, true, await sharedPatternSourcesOf([row.sourceUserPatternId]));
 }
 
 function toSummary(detail: UserPatternDetail): UserPatternSummary {
@@ -82,16 +112,24 @@ export async function listUserPatterns(userId: string): Promise<UserPatternSumma
     where: { userId },
     orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
   });
-  return rows.map((row) => toSummary(toDetail(row, false)));
+  // every credit in two queries, however long the list
+  const credits = await sharedPatternSourcesOf(rows.map((r) => r.sourceUserPatternId));
+  return rows.map((row) => toSummary(toDetail(row, false, credits)));
 }
 
 /** One of the caller's patterns, or a 404 when they have none with that id. */
 export async function getUserPattern(userId: string, id: string): Promise<UserPatternDetail> {
   const row = await prisma.userPattern.findFirst({ where: { id, userId } });
-  return row ? toDetail(row, true) : notFound();
+  return row ? detailOf(row) : notFound();
 }
 
-/** Save a new pattern. The synth it was made on has to be one the app knows, though the pattern plays on any. */
+/**
+ * Save a new pattern. The synth it was made on has to be one the app knows, though the pattern plays on any.
+ *
+ * With `source.shared`, a copy of someone's shared pattern (t-83): the name and steps not sent are the source's, and
+ * it records the source, so the copy credits it while it stays published. A copy of the caller's own records none. A
+ * source the sequencer can no longer read needs the steps sent.
+ */
 export async function createUserPattern(
   userId: string,
   input: CreateUserPattern
@@ -100,32 +138,76 @@ export async function createUserPattern(
     throw new ValidationError(`${input.synthId} is not a synth the app knows`, {
       errors: [{ path: 'synthId', message: `No synth has the id ${input.synthId}` }],
     });
+  const source = input.source ? await sharedCopySource(input.source.shared) : null;
+  const pattern = input.pattern ?? (source ? readablePattern(source) : null);
+  if (!pattern)
+    throw new ValidationError('A pattern is needed', {
+      errors: [
+        {
+          path: 'pattern',
+          message: source
+            ? 'The shared pattern cannot be read as it is now: send the steps to save'
+            : 'A pattern is needed',
+        },
+      ],
+    });
+  const name = input.name ?? source?.name;
+  if (name === undefined)
+    throw new ValidationError('Name the pattern', {
+      errors: [{ path: 'name', message: 'Name the pattern' }],
+    });
   const row = await prisma.userPattern.create({
     data: {
       userId,
-      name: input.name,
-      pattern: toJson(input.pattern),
-      version: input.pattern.version,
-      synthId: input.synthId ?? null,
+      name,
+      pattern: toJson(pattern),
+      version: pattern.version,
+      // a copy keeps the synth its source was made on while the app still knows it
+      synthId:
+        input.synthId ?? (source?.synthId && getSynthDef(source.synthId) ? source.synthId : null),
+      sourceUserPatternId: source && source.userId !== userId ? source.id : null,
     },
   });
-  return toDetail(row, true);
+  return detailOf(row);
 }
 
-/** Rename one of the caller's patterns, or save new steps over it. */
+/**
+ * Rename one of the caller's patterns, save new steps over it, or move it between private and a link share. Under the
+ * owner's lock, read first, so the checks run against the row the write lands on:
+ *
+ * - a link share of a pattern moderators unlisted is refused (`UNLISTED`); making it private never is;
+ * - a published pattern's new name gets the word check, and its new steps the unchanged-copy check. An edit that also
+ *   takes it off Explore (`visibility` in the same PATCH) runs neither.
+ */
 export async function updateUserPattern(
   userId: string,
   id: string,
   input: UpdateUserPattern
 ): Promise<UserPatternDetail> {
-  const data: Prisma.UserPatternUpdateManyMutationInput = {};
-  if (input.name !== undefined) data.name = input.name;
-  if (input.pattern !== undefined) {
-    data.pattern = toJson(input.pattern);
-    data.version = input.pattern.version;
-  }
-  const { count } = await prisma.userPattern.updateMany({ where: { id, userId }, data });
-  if (count === 0) notFound();
+  await withFreshSlug(() =>
+    prisma.$transaction(async (tx) => {
+      await lockOwnersPatterns(tx, userId);
+      const row = await tx.userPattern.findFirst({ where: { id, userId } });
+      if (!row) return notFound();
+      const data: Prisma.UserPatternUpdateManyMutationInput = {};
+      if (input.visibility !== undefined) {
+        if (input.visibility === 'link') assertPatternNotUnlisted(row);
+        Object.assign(data, patternVisibilityData(row, input.visibility));
+      }
+      const staysPublished = row.visibility === 'published' && input.visibility === undefined;
+      if (input.name !== undefined) {
+        if (staysPublished && input.name !== row.name) assertPublishableName(input.name);
+        data.name = input.name;
+      }
+      if (input.pattern !== undefined) {
+        if (staysPublished) await assertPatternChanged(input.pattern, row.sourceUserPatternId, tx);
+        data.pattern = toJson(input.pattern);
+        data.version = input.pattern.version;
+      }
+      const { count } = await tx.userPattern.updateMany({ where: { id, userId }, data });
+      if (count === 0) notFound();
+    })
+  );
   return getUserPattern(userId, id);
 }
 
