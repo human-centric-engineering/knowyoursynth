@@ -828,6 +828,8 @@ function Synth({
         seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
         return;
       }
+      // The page sounds this one: an arp count left for the note (a release that never arrived) is not its release.
+      seqTook.current.delete(n);
       if (hold) {
         // A fresh press, with every key up, replaces what is held.
         if (downRef.current.size === 0) {
@@ -875,6 +877,7 @@ function Synth({
       heldRef.current.clear();
       // And a release that never arrived (a key let go outside the window) is forgotten, so Hold starts clean.
       downRef.current.clear();
+      seqTook.current.clear();
     }
   };
 

@@ -322,6 +322,25 @@ describe('the sequencer on the synth page', () => {
     expect(sent().map((m) => m.type)).not.toContain('noteOff');
   });
 
+  it('sends the note-off for a key the page sounds after an arp key whose release never came', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    const keysTo = (mode: string) => {
+      fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+      fireEvent.click(screen.getByRole('option', { name: mode }));
+    };
+    keysTo('Arp');
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    });
+    // its key-up is lost; back in Edit step, C3 is played on the piano
+    keysTo('Edit step');
+    fireEvent.pointerDown(button('Note 48'));
+    engine.send.mockClear();
+    fireEvent.pointerUp(button('Note 48'));
+    expect(sent().map((m) => m.type)).toContain('noteOff');
+  });
+
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
     phone();
     page();

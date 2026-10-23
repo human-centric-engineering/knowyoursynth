@@ -629,10 +629,15 @@ export function useSequencer({
     setBaseline(atTempo(baselineRef.current));
   }, [tempo, setBaseline]);
 
+  /** A Play waiting for the sound: an arp press then joins it rather than starting a run of its own. */
+  const starting = useRef(false);
   const play = useCallback(async () => {
     // A Stop (or a riff) while the sound is still starting cancels this Play: it is a newer run than this one.
     const run = ++runs.current;
-    if (!engine || !(await ensureAudio()) || run !== runs.current) return false;
+    if (!engine) return false;
+    starting.current = true;
+    const ready = await ensureAudio().finally(() => (starting.current = false));
+    if (!ready || run !== runs.current) return false;
     playingRef.current = true;
     setPlaying(true);
     start(patternRef.current);
@@ -742,7 +747,13 @@ export function useSequencer({
     (k: ArpKeys, pressed: boolean) => {
       arpKeys.current = k;
       setArpHeld(k.held);
-      if (pressed && k.held.length > 0 && !playingRef.current && !arpStarted.current) {
+      if (
+        pressed &&
+        k.held.length > 0 &&
+        !playingRef.current &&
+        !starting.current &&
+        !arpStarted.current
+      ) {
         arpStarted.current = true;
         play().then(
           (ok) => {
@@ -797,8 +808,14 @@ export function useSequencer({
       const { slot, nudge } = placeHit(hit.at, len, p.swing, quantiseRef.current);
       // Quantised up past the last slot, it is the first step of the loop after.
       const wraps = quantiseRef.current && slot === 0 && hit.at > len / 2;
-      // The loop after was compiled when this one started, so its order and part are known.
-      const info = (wraps && loops.current.get(hit.index + 1)) || hit.info;
+      // The loop after was compiled when this one started, so its order and part are known. With none queued (a pattern
+      // that doesn't loop), it is the next part in the chain, in this loop's order.
+      const info = wraps
+        ? (loops.current.get(hit.index + 1) ?? {
+            ...hit.info,
+            part: p.chain[(hit.index + 1) % p.chain.length],
+          })
+        : hit.info;
       const step = info.order[slot];
       const part = info.part;
       if (step === undefined || !p.parts[part]) return;

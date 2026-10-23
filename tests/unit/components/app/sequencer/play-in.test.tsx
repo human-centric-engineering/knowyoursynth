@@ -311,6 +311,27 @@ describe('live record', () => {
     expect(state.pattern.parts[0].steps[0].notes).toEqual([]);
   });
 
+  it('with nothing queued after (a pattern that doesn’t loop), puts it on the next part in the chain', async () => {
+    open(null);
+    act(() => {
+      state.edit((q) => ({
+        ...q,
+        loop: false,
+        parts: [q.parts[0], structuredClone(q.parts[0])],
+        chain: [0, 1],
+      }));
+    });
+    pick('Keys', 'Live record');
+    await play();
+    fire(loopEvent({ beats: 4 }));
+    at(15.7);
+    press(60);
+    at(16.2);
+    release(60);
+    expect(state.pattern.parts[1].steps[0].notes.map((n) => n.note)).toEqual([60]);
+    expect(state.pattern.parts[0].steps[0].notes).toEqual([]);
+  });
+
   it('replaces a step’s notes again after Stop and Play: the last run’s strikes are not this run’s chord', async () => {
     await start();
     pick('Record', 'Replace');
@@ -424,6 +445,18 @@ describe('arp mode', () => {
     fireEvent.click(button('Stop'));
     expect(state.playing).toBe(false);
     await pressNow(52);
+    expect(state.playing).toBe(true);
+  });
+
+  it('joins a Play still waiting for the sound, and leaves that run playing when the key is let go', async () => {
+    open(RIFF);
+    pick('Keys', 'Arp');
+    await act(async () => {
+      fireEvent.click(button('Play'));
+      state.noteIn(48);
+    });
+    expect(state.playing).toBe(true);
+    release(48);
     expect(state.playing).toBe(true);
   });
 

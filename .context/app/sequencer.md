@@ -309,9 +309,9 @@ It goes through the pattern player like any loop, so nothing is added to the eng
 poly-only.
 
 - **Order** (`arpSequence`): up, down, up-down (neither end twice in a row: C E G E, round to C), as played (the order
-  the keys went down), or random (drawn from the up notes per step, from a stream of its own seeded from the loop's, so it moves no step's
-  chance). **Octaves**, 1–4,
-  repeat the notes an octave up each time, leaving out any past the top of MIDI.
+  the keys went down), or random (drawn from the up notes per step, from a stream of its own seeded from the loop's,
+  so it moves no step's chance). **Octaves**, 1–4, repeat the notes an octave up each time, leaving out any past the
+  top of MIDI.
 - The notes go through the pattern's transpose and scale, as a step's do.
 - A change to the keys held, the order or the octaves sends the loop playing again (`patternEdit`) from the same
   draws.
