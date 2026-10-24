@@ -49,6 +49,7 @@ import {
   MIN_BPM,
   SCALE_NAMES,
   STEP_SIZE_NAMES,
+  MAX_RATCHET,
   emptyStep,
   patternLength,
   type Pattern,
@@ -103,6 +104,7 @@ import {
   writeChord,
 } from '@/lib/app/sequencer/record';
 import { KEY_MODES } from '@/components/app/sequencer/use-sequencer';
+import { noteInOctave, type StepButton } from '@/components/app/sequencer/panel-buttons';
 import { HelpButton } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
@@ -409,6 +411,49 @@ export function Sequencer({
     setSteps(tie ? tieOver(steps, sel) : restAt(steps, sel));
     choose(nextStep(sel, len), false);
   };
+
+  // A sequencer synth's own buttons (t-85, `SynthDef.seqButtons`): the TB-303's keys, TIME MODE, ACCENT, SLIDE, BACK
+  // and WRITE/NEXT, the B1's step keys. Each works on the chosen step, as the same press in the module would. Read
+  // through a ref, as notes are, so the handler registered always works on the step chosen now.
+  const panelPress = useRef<(b: StepButton) => void>(() => undefined);
+  useEffect(() => {
+    panelPress.current = (b) => {
+      if (b === 'toggle') toggle(sel);
+      else if (b === 'rest') restOrTie(false);
+      else if (b === 'accent')
+        changeStep(sel, (s) => ({ ...s, accent: s.accent ? undefined : true }));
+      else if (b === 'slide') changeStep(sel, (s) => ({ ...s, slide: s.slide ? undefined : true }));
+      else if (b === 'ratchet')
+        changeStep(sel, (s) => {
+          const r = ((s.ratchet ?? 1) % MAX_RATCHET) + 1;
+          return { ...s, ratchet: r > 1 ? r : undefined };
+        });
+      else if (b === 'octaveDown' || b === 'octaveUp')
+        changeStep(sel, (s) => shiftOctave([s], b === 'octaveUp' ? 1 : -1)[0]);
+      else if (b === 'back') choose((sel - 1 + len) % len, false);
+      else if (b === 'next') choose(nextStep(sel, len), false);
+      else if (b === 'clear') setSteps(keepMods(steps, clearSteps(steps)));
+      else if ('step' in b) {
+        const i = page * PAGE + b.step;
+        if (i >= len) return;
+        if (i === sel) toggle(i);
+        else choose(i, false);
+      } else {
+        changeStep(sel, (s) => {
+          const note = noteInOctave(s, defaultNote, b.note);
+          return s.notes.length === 0
+            ? { ...s, on: true, notes: [{ note, gate: 1 }] }
+            : { ...s, on: true, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note } : x)) };
+        });
+        choose(nextStep(sel, len), false);
+      }
+    };
+  });
+  const { onPanelIn } = seq;
+  useEffect(
+    () => onPanelIn({ press: (b) => panelPress.current(b), part: editing, step: sel, page }),
+    [onPanelIn, editing, sel, page]
+  );
 
   const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };

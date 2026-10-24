@@ -75,7 +75,8 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
-import { Sequencer } from '@/components/app/sequencer/sequencer';
+import { PAGE as SEQ_PAGE, Sequencer } from '@/components/app/sequencer/sequencer';
+import { seqButtonFor, seqLamps } from '@/components/app/sequencer/panel-buttons';
 import {
   useSequencer,
   type LaneTarget,
@@ -1093,6 +1094,12 @@ function Synth({
     // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
     if (opening && playing) void playPattern();
   };
+  // Opened by a panel button (t-85): where the bar's Sequencer button would open it, handing over from the riff as that does.
+  const openSequencer = () => {
+    if (small) openSheet('sequencer');
+    else setSeqOpen(true);
+    if (playing) void playPattern();
+  };
   const playRiff = useCallback(
     async (ph: Phrase) => {
       if (!engine || !(await ensureAudio())) return;
@@ -1165,6 +1172,44 @@ function Synth({
         return { ...s, values: { ...s.values, [id]: nv } };
       }),
     [patch]
+  );
+  // A sequencer synth's own buttons (`SynthDef.seqButtons`, t-85) drive the sequencer: RUN/STOP starts and stops it,
+  // HOLD is the page's Hold, and the rest open the sequencer and work on it there. A press the sequencer takes leaves
+  // the button's own value alone; its lamp shows what it drives (`seqLamps`). Read through a ref, so the panel is handed
+  // one function and does not redraw for it.
+  const seqPress = useRef<(id: string, v: ControlValue | null) => void>(() => undefined);
+  useEffect(() => {
+    seqPress.current = (id, v) => {
+      const b = seqButtonFor(synthDef, id, seqShown);
+      if (!b) onChange(id, v);
+      else if (b === 'run') {
+        if (seq.playing) stopRiff();
+        else void playPattern();
+      } else if (b === 'hold') setHoldMode(!hold);
+      else {
+        if (!seqShown) openSequencer();
+        if (b === 'arp') seq.setKeys(seq.keys === 'arp' ? 'edit' : 'arp');
+        else if (b === 'record') seq.setKeys(seq.keys === 'step' ? 'edit' : 'step');
+        else seq.panelIn(b);
+      }
+    };
+  });
+  const onPanelChange = useCallback(
+    (id: string, v: ControlValue | null) => seqPress.current(id, v),
+    []
+  );
+  const panelValues = useMemo(
+    () =>
+      seqLamps(synthDef, sess.values, {
+        open: seqShown,
+        playing: seq.playing,
+        keys: seq.keys,
+        hold,
+        pattern: seq.pattern,
+        chosen: seq.chosen,
+        pageSize: SEQ_PAGE,
+      }),
+    [synthDef, sess.values, seqShown, seq.playing, seq.keys, hold, seq.pattern, seq.chosen]
   );
   const onConnect = useCallback(
     (from: string, to: string) =>
@@ -1902,7 +1947,7 @@ function Synth({
                 >
                   <SynthPanel
                     def={def}
-                    values={sess.values}
+                    values={panelValues}
                     moved={modShown}
                     target={step == null ? target : null}
                     cables={sess.cables}
@@ -1911,7 +1956,7 @@ function Synth({
                     areasOn={areasOn}
                     dimOn={dimOn}
                     heatOn={heatOn}
-                    onChange={onChange}
+                    onChange={synthDef.seqButtons ? onPanelChange : onChange}
                     onConnect={onConnect}
                     onRemoveCable={onRemoveCable}
                     onMoveCable={onMoveCable}
