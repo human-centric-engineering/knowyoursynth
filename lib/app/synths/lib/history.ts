@@ -31,12 +31,18 @@ export const emptyHistory = (): PanelHistory => ({ past: [], future: [], at: nul
 /**
  * The history after the panel changed from `before` at time `now`: `before` kept as a step back (unless the change is
  * part of the gesture the last one began), the oldest dropped past `HISTORY_MAX`, and redo gone, as a new change
- * leaves the undone ones behind.
+ * leaves the undone ones behind. A change `alone` (a new patch set) is never part of a gesture: not of the one before,
+ * nor of the next.
  */
-export function recordChange(h: PanelHistory, before: PanelSnap, now: number): PanelHistory {
-  const grouped = h.at !== null && now - h.at < HISTORY_GROUP_MS && h.past.length > 0;
+export function recordChange(
+  h: PanelHistory,
+  before: PanelSnap,
+  now: number,
+  alone = false
+): PanelHistory {
+  const grouped = !alone && h.at !== null && now - h.at < HISTORY_GROUP_MS && h.past.length > 0;
   const past = grouped ? h.past : [...h.past, before].slice(-HISTORY_MAX);
-  return { past, future: [], at: now };
+  return { past, future: [], at: alone ? null : now };
 }
 
 /** One step back from `current`: the state to put on the panel, and the history after; `null` with none to go to. */

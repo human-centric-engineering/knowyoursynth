@@ -4,7 +4,8 @@
  * Undo and redo for the panel (`lib/app/synths/lib/history.ts`): the page's session update wrapped, so a change made
  * through it is recorded and one that is not (the stored panel restored) is not. A different patch on the panel (a
  * sound or a lesson step loaded) starts the history afresh: Undo goes back through what was done to this one. ⌘Z (Ctrl+Z)
- * undoes and ⇧⌘Z (or Ctrl+Y) redoes, except in a field, a dialog or the sequencer, which has an Undo of its own.
+ * undoes and ⇧⌘Z (or Ctrl+Y) redoes, except in a field, a dialog or the sequencer, which has an Undo of its own. A save
+ * (the sound's id changing, the panel not) keeps the history; a new patch set is a change of its own, never grouped.
  *
  * An undo or redo is shown being done: what it changes is lit (`HISTORY_LIGHT_MS`), then each control turns to its
  * value as a hand would (`HISTORY_TURN_MS`, `tweenValues`: a stepped knob through its steps, then snapped home), the
@@ -67,7 +68,9 @@ interface Panelled {
 export function usePanelHistory<S extends Panelled>(
   sess: S,
   setSess: (fn: (s: S) => S) => void,
-  def: SynthDef
+  def: SynthDef,
+  /** Called as an undo or redo begins: whatever the page still has under way on the panel (Unplug all) stops. */
+  onStep?: () => void
 ): {
   /** The session as the panel shows it: during a glide, its controls and cables part of the way there. */
   sess: S;
@@ -87,9 +90,11 @@ export function usePanelHistory<S extends Panelled>(
   const prev = useRef<{ snap: PanelSnap; ident: string } | null>(null);
   // Set by a change made through `patch` (recorded) or by Undo and Redo (not), read by the effect after it renders.
   const made = useRef<'change' | 'glide' | 'history' | null>(null);
+  const onStepRef = useRef(onStep);
 
   useEffect(() => {
     historyRef.current = history;
+    onStepRef.current = onStep;
   });
 
   // The undo or redo being shown, or the glide, which `finish` completes at once.
@@ -171,13 +176,14 @@ export function usePanelHistory<S extends Panelled>(
       const { at, delay } = gliding.current.halt();
       runGlide(at, snap, delay);
     } else if (moved && by === 'glide') runGlide(p.snap, snap, 0);
-    if (p.ident !== ident) {
+    // Saved, the panel is the same one: only a different patch on it starts the history afresh.
+    if (p.ident !== ident && (moved || by !== 'change')) {
       setHistory(emptyHistory());
       return;
     }
     if (!moved) return;
     if (by === 'change' || by === 'glide')
-      setHistory((h) => recordChange(h, p.snap, performance.now()));
+      setHistory((h) => recordChange(h, p.snap, performance.now(), by === 'glide'));
   }, [sess, def.id]); // eslint-disable-line react-hooks/exhaustive-deps -- `runGlide` follows `def`, as `def.id` does
 
   // The synth arriving (the page is keyed by synth, so this is once per synth): its patch is set on the blank panel
@@ -191,7 +197,12 @@ export function usePanelHistory<S extends Panelled>(
     (fn: (s: S) => S) => {
       finishShowing();
       made.current = 'change';
-      setSess(fn);
+      // Nothing changed, nothing renders, and so the mark would wait for the next session that lands from elsewhere.
+      setSess((s) => {
+        const next = fn(s);
+        if (next === s && made.current === 'change') made.current = null;
+        return next;
+      });
     },
     [setSess, finishShowing]
   );
@@ -208,6 +219,7 @@ export function usePanelHistory<S extends Panelled>(
 
   const step = useCallback(
     (fn: typeof undoStep, which: 'undo' | 'redo') => {
+      onStepRef.current?.();
       finishShowing();
       const from = current.current;
       const r = fn(historyRef.current, from);
@@ -226,6 +238,9 @@ export function usePanelHistory<S extends Panelled>(
         setShown(null);
         highlightStore.set(lit);
         made.current = 'history';
+        // The panel is there now, before it renders: a press or a change straight after starts from it.
+        current.current = to;
+        if (prev.current) prev.current = { ...prev.current, snap: to };
         put(to.values, to.cables);
       };
       if (reducedMotion()) {
@@ -277,7 +292,9 @@ export function usePanelHistory<S extends Panelled>(
       if (!isUndo && !isRedo) return;
       if (
         e.target instanceof Element &&
-        e.target.closest('input, textarea, select, [contenteditable="true"], dialog, .kys-seq')
+        e.target.closest(
+          'input, textarea, select, [contenteditable="true"], dialog, [role="dialog"], .kys-seq'
+        )
       )
         return;
       e.preventDefault();

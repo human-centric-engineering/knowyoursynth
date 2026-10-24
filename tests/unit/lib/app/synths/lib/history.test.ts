@@ -46,6 +46,13 @@ describe('the panel history', () => {
     expect(h.past).toEqual([snap(1), snap(4)]);
   });
 
+  it('keeps a new patch set as a change of its own, apart from the moves either side of it', () => {
+    let h = recordChange(emptyHistory(), snap(1), 0);
+    h = recordChange(h, snap(2), HISTORY_GROUP_MS / 4, true);
+    h = recordChange(h, snap(3), HISTORY_GROUP_MS / 2);
+    expect(h.past).toEqual([snap(1), snap(2), snap(3)]);
+  });
+
   it('keeps only the last 20', () => {
     let h = emptyHistory();
     for (let k = 0; k < HISTORY_MAX + 5; k++)

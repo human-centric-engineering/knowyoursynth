@@ -437,6 +437,12 @@ function Synth({
     () => freshSession(synthDef, sounds[0]),
     userId
   );
+  // The cables Unplug all has still to take out (below): an undo or redo stops it where it has got to.
+  const unplugging = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const stopUnplugging = useCallback(() => {
+    unplugging.current.forEach(clearTimeout);
+    unplugging.current = [];
+  }, []);
   // Every change to the panel goes through `patch`, which the undo history records (the last 20, a knob's turn as one),
   // or `glide`, which shows a new patch being set. `sess` is the panel as shown, part of the way there during a glide;
   // `stored` is where it is going, what a save sends.
@@ -449,7 +455,7 @@ function Synth({
     canUndo,
     canRedo,
     shown: historyShown,
-  } = usePanelHistory(stored, setSess, synthDef);
+  } = usePanelHistory(stored, setSess, synthDef, stopUnplugging);
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -594,7 +600,6 @@ function Synth({
   // Unplug all takes the cables out one by one, in the order they were plugged, each dropping away from its jack: the
   // first at once, then every `UNPLUG_GAP_MS` (closer for many, so all are out in `UNPLUG_ALL_MS`). They come out within
   // the history's grouping of each other, so one Undo plugs them all back, one by one again.
-  const unplugging = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => unplugging.current.forEach(clearTimeout), []);
   const unplugAll = () => {
     if (unplugging.current.length > 0) return;

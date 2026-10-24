@@ -339,7 +339,7 @@ function Lane({
 }: {
   /**
    * In the module, the lane is the tab panel of the tabs, which take the head's lead in place of its select (a lane
-   * is moved to another control by removing it and adding that one). In View all, each lane has its select.
+   * is moved to another control from its tab, pressed again). In View all, each lane has its select.
    */
   tabbed?: { lead: ReactNode; panelId: string };
   def: SynthDef;
@@ -437,7 +437,7 @@ function Lane({
         ) : (
           <Select
             label="Lane"
-            help="The panel control this lane moves. Choosing another clears its values."
+            help="The panel control this lane moves. Choosing another moves its values to the same heights there."
             value={id}
             options={[
               [id, c ? name : `${id} (not on this synth)`],
