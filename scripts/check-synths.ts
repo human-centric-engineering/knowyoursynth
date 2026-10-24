@@ -112,10 +112,12 @@ const isBaseline = (v: unknown): v is Baseline =>
  * The first place a ported definition differs from the prototype's, as data, or `null` when they match. Functions
  * compare by presence only (the baseline renders `toEngine`; the explainer runs `hear` and `check`). What the port
  * changes on purpose is left out: the content it no longer carries (presets, lineage, unusual notes), its `version`,
- * and the `brand` tags.
+ * the `brand` tags, what it says about a control or area (`help`, which says how the app works: the sequencer took
+ * over the riff's transport in t-80, and the sequencer synths' buttons in t-85), and the buttons that drive the app's
+ * sequencer (`seqButtons`), which the prototype has no sequencer for. None of these changes the sound.
  */
 function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
-  const OMIT = new Set(['presets', 'lineage', 'unusual', 'version', 'brand']);
+  const OMIT = new Set(['presets', 'lineage', 'unusual', 'version', 'brand', 'help', 'seqButtons']);
   const plain = (def: SynthDef): unknown =>
     JSON.parse(
       JSON.stringify(def, (k, v: unknown) =>

@@ -73,6 +73,7 @@ import {
   type PatternLoop,
 } from '@/lib/app/synths/audio/pattern-player';
 import { logger } from '@/lib/logging';
+import type { ChosenStep, StepButton } from '@/components/app/sequencer/panel-buttons';
 
 /** What the sequencer needs of the page's engine: `Engine` has all three. */
 export interface SequencerEngine {
@@ -211,6 +212,17 @@ export interface Sequencer {
   noteOut: (n: number) => void;
   /** The module's handler for notes played in `edit` and `step` modes. Returns the undo. */
   onNoteIn: (f: NoteTarget) => () => void;
+  /**
+   * A sequencer synth's panel button for the chosen step (t-85). With no module there to take it, it does nothing: a
+   * press while the sequencer is closed only opens it, and edits no step the player cannot see.
+   */
+  panelIn: (b: StepButton) => void;
+  /** The module's handler for the panel's buttons. Returns the undo, which also forgets the chosen step. */
+  onPanelIn: (press: (b: StepButton) => void) => () => void;
+  /** The module tells the page the step it has chosen and the page it shows, for the panel's lamps. */
+  showChosen: (c: ChosenStep) => void;
+  /** The step the module has chosen and the page it shows; null while it is not there. */
+  chosen: ChosenStep | null;
   /** What notes played do (t-86). */
   keys: KeyMode;
   setKeys: (k: KeyMode) => void;
@@ -732,6 +744,26 @@ export function useSequencer({
     };
   }, []);
 
+  // The panel's step buttons (t-85): the module's handler, and the step it has chosen, kept as state for the lamps.
+  const panelPress = useRef<((b: StepButton) => void) | null>(null);
+  const [chosen, setChosen] = useState<ChosenStep | null>(null);
+  const onPanelIn = useCallback((press: (b: StepButton) => void) => {
+    panelPress.current = press;
+    return () => {
+      if (panelPress.current !== press) return;
+      panelPress.current = null;
+      setChosen(null);
+    };
+  }, []);
+  const showChosen = useCallback((c: ChosenStep) => {
+    setChosen((was) =>
+      was && was.part === c.part && was.step === c.step && was.page === c.page ? was : c
+    );
+  }, []);
+  const panelIn = useCallback((b: StepButton) => {
+    panelPress.current?.(b);
+  }, []);
+
   /** Where the playhead is being heard: the loop, the steps from its start, and what the loop was compiled as. */
   const heardAt = useCallback(() => {
     if (!playingRef.current || !engine?.ctx) return null;
@@ -945,6 +977,10 @@ export function useSequencer({
     noteIn,
     noteOut,
     onNoteIn,
+    panelIn,
+    onPanelIn,
+    showChosen,
+    chosen,
     modShown,
     keys,
     setKeys,

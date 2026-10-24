@@ -19,6 +19,7 @@ import type {
   KnobControl,
   LitWhen,
   RectDecor,
+  SeqButton,
   SynthDef,
   TextDecor,
   ViewRect,
@@ -269,7 +270,7 @@ knob('seq.tempo', 121, 568, 32, {
   label: 'TEMPO',
   name: 'TEMPO',
   fmt: (v) => `${Math.round(v)} BPM`,
-  help: 'Speed of the pattern. Here it sets the speed of the riff, and each sound starts at its own riff’s tempo.',
+  help: 'Speed of the pattern. Here it sets the speed of the riff and of the sequencer’s pattern, and each sound starts at its own riff’s tempo.',
 });
 text(88, 616, 'SLOW', 14);
 text(160, 616, 'FAST', 14);
@@ -306,7 +307,7 @@ knob('seq.track', 378, 568, 32, {
   ui: true,
   label: 'TRACK / PATTERN GROUP',
   name: 'TRACK / PATTERN GROUP',
-  help: 'In the track modes it picks TRACK 1 to 7, a song built from a chain of patterns. In the pattern modes it picks PATTERN GROUP I to IV (positions 1–2, 3–4, 5–6 and 7). This app plays one riff per sound, so the switch does not change it.',
+  help: 'In the track modes it picks TRACK 1 to 7, a song built from a chain of patterns. In the pattern modes it picks PATTERN GROUP I to IV (positions 1–2, 3–4, 5–6 and 7). Not modelled here: the app’s sequencer holds one pattern at a time, and patterns are kept in My patterns, so the switch does not change it.',
 });
 TRACK_A.forEach((a, i) => {
   const rad = (a * Math.PI) / 180;
@@ -334,7 +335,7 @@ knob('seq.mode', 548, 568, 32, {
   ui: true,
   label: 'MODE',
   name: 'MODE',
-  help: 'What the sequencer is doing: writing or playing a track, or playing or writing a pattern. Patterns are written in PATTERN WRITE and played in PATTERN PLAY. This app has no pattern memory, so the switch does not change the sound.',
+  help: 'What the sequencer is doing: writing or playing a track, or playing or writing a pattern. Patterns are written in PATTERN WRITE and played in PATTERN PLAY. Not modelled here: the app’s sequencer is always ready to edit and play, and patterns are kept in My patterns, so the switch does not change it.',
 });
 box(606, 529, 34, 11, 'WRITE', 13, { fill: INK, ink: YEL });
 box(615, 553, 26, 11, 'PLAY', 13, { fill: INK, ink: YEL });
@@ -413,14 +414,14 @@ text(119, 680, 'CLEAR', 16, { weight: 600 });
 btn('seq.clear', 119, 705, 46, 26, {
   label: 'CLEAR',
   name: 'CLEAR (BAR RESET / D.C.)',
-  help: 'Clears the pattern being written. In a track it goes back to the first measure (BAR RESET) and marks a track’s last measure (D.C.). It also starts the metronome for tap writing. Not modelled here.',
+  help: 'Clears the pattern being written. In a track it goes back to the first measure (BAR RESET) and marks a track’s last measure (D.C.). It also starts the metronome for tap writing. Here it clears the sequencer’s pattern; Undo in the sequencer brings it back.',
 });
 box(155, 731, 30, 11, 'RAND', 12, { fill: YEL });
 led(117, 741, { id: 'seq.run', eq: true });
 btn('seq.run', 117, 777, 50, 44, {
   label: 'START/STOP',
   name: 'START/STOP',
-  help: 'Starts and stops the pattern or track. In this app, use Play on the player bar instead.',
+  help: 'Starts and stops the pattern or track. Here it starts and stops the sequencer under the panel, and its lamp lights while the sequencer runs.',
 });
 text(119, 821, 'START/STOP', 15, { fill: YEL, weight: 700 });
 
@@ -429,7 +430,7 @@ led(240, 668, { id: 'seq.pitch', eq: true });
 btn('seq.pitch', 240, 706, 46, 26, {
   label: 'PITCH MODE',
   name: 'PITCH MODE',
-  help: 'Enters the notes of a pattern on the 13 keys, one press per note, with TRANSPOSE DOWN and UP for octaves. Held while a pattern plays, a key press transposes the pattern.',
+  help: 'Enters the notes of a pattern on the 13 keys, one press per note, with TRANSPOSE DOWN and UP for octaves. Held while a pattern plays, a key press transposes the pattern. Not needed here: the keys always enter notes into the sequencer.',
 });
 text(222, 743, 'FUNCTION', 17, { weight: 700 });
 led(270, 740, { id: 'seq.pitch', eq: false });
@@ -437,7 +438,7 @@ text(274, 760, 'NORMAL\nMODE', 13);
 btn('seq.function', 205, 777, 28, 44, {
   label: 'FUNCTION',
   name: 'FUNCTION',
-  help: 'Returns the sequencer to normal mode. Held, it gives second functions: the step count of a pattern, and inserting, deleting, copying and pasting in tracks and patterns.',
+  help: 'Returns the sequencer to normal mode. Held, it gives second functions: the step count of a pattern, and inserting, deleting, copying and pasting in tracks and patterns. Not modelled here: set the length, copy and paste in the sequencer.',
 });
 box(205, 818, 28, 11, 'BAR', 13, { fill: INK, ink: YEL });
 
@@ -491,18 +492,21 @@ const EDIT_HELP: Record<string, string> = {
   'A#': 'It is also PASTE, for pasting a copied pattern.',
 };
 let white = 0;
-NAMES.forEach((k) => {
+// The keys enter notes into the app's sequencer, on the step it has chosen, and move on (t-85).
+const seqButtons: Record<string, SeqButton> = {};
+NAMES.forEach((k, semitone) => {
   const x = KEY_X[k];
   const black = k.includes('#');
   text(x, 653, k === 'C2' ? 'C' : k, 17, { fill: YEL, weight: 700 });
   const id = `seq.key${k.replace('#', 's')}`;
+  seqButtons[id] = { note: semitone };
   if (black) {
     led(x, 668, { id, eq: true });
     btn(id, x, 706, 26, 50, {
       cap: 'black',
       label: k,
       name: `${k} key`,
-      help: `Enters ${SPOKEN[k]} in PITCH MODE. ${EDIT_HELP[k]}`,
+      help: `Enters ${SPOKEN[k]} in PITCH MODE. ${EDIT_HELP[k]} Here it puts ${SPOKEN[k]} on the sequencer’s chosen step, in that step’s octave, and moves to the next step.`,
     });
     text(x, 745, EDIT[k], 13, { weight: 700 });
   } else {
@@ -513,7 +517,7 @@ NAMES.forEach((k) => {
     btn(id, x, 778, 28, 44, {
       label: k === 'C2' ? 'C' : k,
       name: `${k === 'C2' ? 'Upper C' : k} key / PATTERN ${n}`,
-      help: `Enters ${SPOKEN[k]} in PITCH MODE. It is also PATTERN ${n}, which picks a pattern to play or write, and selector digit ${n} for measure numbers. In the sync settings it chooses ${SYNC[n - 1]}.`,
+      help: `Enters ${SPOKEN[k]} in PITCH MODE. It is also PATTERN ${n}, which picks a pattern to play or write, and selector digit ${n} for measure numbers. In the sync settings it chooses ${SYNC[n - 1]}. Here it puts ${SPOKEN[k]} on the sequencer’s chosen step, in that step’s octave, and moves to the next step.`,
     });
     text(x, 821, String(n), 15);
     box(x, 845, 22, 11, String(n), 14, { fill: INK, ink: YEL });
@@ -555,7 +559,7 @@ decor.push(
 btn('seq.time', 987, 683, 46, 26, {
   label: 'TIME MODE',
   name: 'TIME MODE',
-  help: 'Gives each step its timing: a note, a tie that holds the note before, or a rest. Pitches go in first in PITCH MODE; timing follows here.',
+  help: 'Gives each step its timing: a note, a tie that holds the note before, or a rest. Pitches go in first in PITCH MODE; timing follows here. Here it turns the sequencer’s chosen step on or off: a note or a rest.',
 });
 box(838, 716, 110, 20, '', 12);
 text(838, 712, 'TRANSPOSE', 12, { weight: 600 });
@@ -570,26 +574,26 @@ led(987, 741, { id: 'seq.slide', eq: true });
 btn('seq.down', 808, 778, 28, 44, {
   label: 'DOWN',
   name: 'TRANSPOSE DOWN / NOTE / STEP',
-  help: 'In PITCH MODE it puts the next note an octave down. In TIME MODE it enters a note on this step. With FUNCTION held it counts the steps in a pattern.',
+  help: 'In PITCH MODE it puts the next note an octave down. In TIME MODE it enters a note on this step. With FUNCTION held it counts the steps in a pattern. Here it moves the notes of the sequencer’s chosen step an octave down, so press it before a key to enter the next note lower.',
 });
 btn('seq.up', 868, 778, 28, 44, {
   label: 'UP',
   name: 'TRANSPOSE UP / TIE / TRIPLET',
-  help: 'In PITCH MODE it puts the next note an octave up. In TIME MODE it enters a tie, so the note before is held through this step. It also sets triplet timing.',
+  help: 'In PITCH MODE it puts the next note an octave up. In TIME MODE it enters a tie, so the note before is held through this step. It also sets triplet timing. Here it moves the notes of the sequencer’s chosen step an octave up, so press it before a key to enter the next note higher.',
 });
 btn('seq.accent', 928, 778, 28, 44, {
   ui: false,
   module: 'env',
   label: 'ACCENT',
   name: 'ACCENT button',
-  help: 'On the TD-3 this writes an accent into the step being edited, and selects pattern section A. In this app, while it is lit every note you play is accented, so you can hear the ACCENT knob. The riffs carry their own accents.',
+  help: 'On the TD-3 this writes an accent into the step being edited, and selects pattern section A. Here, with the sequencer open, it accents the chosen step or takes its accent off, and lights when that step is accented. With the sequencer closed, while it is lit every note you play is accented, so you can hear the ACCENT knob.',
 });
 btn('seq.slide', 987, 778, 28, 44, {
   ui: false,
   module: 'glide',
   label: 'SLIDE',
   name: 'SLIDE button',
-  help: 'On the TD-3 this writes a slide into the step being edited, and selects pattern section B. In this app, while it is lit every note glides from the one before. Without it, notes glide only when they overlap, as slid steps do in the riffs.',
+  help: 'On the TD-3 this writes a slide into the step being edited, and selects pattern section B. Here, with the sequencer open, it slides the chosen step into the next or takes the slide off, and lights when that step slides. With the sequencer closed, while it is lit every note glides from the one before; without it, notes glide only when they overlap, as slid steps do in the riffs.',
 });
 text(808, 821, 'STEP', 15);
 text(868, 821, '♪♪♪', 15);
@@ -612,17 +616,28 @@ text(1073, 680, 'BACK', 16, { weight: 600 });
 btn('seq.back', 1073, 705, 46, 26, {
   label: 'BACK',
   name: 'BACK',
-  help: 'Steps back one note while checking or editing a pattern.',
+  help: 'Steps back one note while checking or editing a pattern. Here it chooses the sequencer’s step before.',
 });
 box(1037, 731, 30, 11, 'SYNC', 12, { fill: YEL });
 box(1073, 741, 30, 12, 'D.S.', 12, { fill: YEL });
 btn('seq.write', 1073, 777, 50, 44, {
   label: 'WRITE/NEXT',
   name: 'WRITE/NEXT (TAP)',
-  help: 'Moves on to the next step while writing, writes a pattern into a track, and enters timing by tapping (TAP). Pressed with BACK after FUNCTION it opens the sync settings, where the keys choose the clock source and rate.',
+  help: 'Moves on to the next step while writing, writes a pattern into a track, and enters timing by tapping (TAP). Pressed with BACK after FUNCTION it opens the sync settings, where the keys choose the clock source and rate. Here it chooses the sequencer’s next step.',
 });
 box(1076, 818, 76, 12, 'WRITE/NEXT', 13, { fill: YEL });
 text(1073, 845, 'TAP', 15, { fill: YEL, weight: 700 });
+Object.assign(seqButtons, {
+  'seq.run': 'run',
+  'seq.clear': 'clear',
+  'seq.time': 'toggle',
+  'seq.down': 'octaveDown',
+  'seq.up': 'octaveUp',
+  'seq.accent': 'accent',
+  'seq.slide': 'slide',
+  'seq.back': 'back',
+  'seq.write': 'next',
+} satisfies Record<string, SeqButton>);
 
 // ── Areas (photo pixels, converted) ───────────────────────────────────────
 const R = (x: number, y: number, w: number, h: number): ViewRect => ({
@@ -678,7 +693,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'bpm speed clock',
     rects: [R(62, 485, 118, 140)],
-    help: 'TEMPO sets the speed of the sequencer. Here it sets the speed of the riff.',
+    help: 'TEMPO sets the speed of the sequencer. Here it sets the speed of the riff and of the sequencer’s pattern.',
   },
   {
     id: 'wave',
@@ -694,7 +709,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'song chain group bank',
     rects: [R(293, 485, 175, 140)],
-    help: 'Picks one of seven tracks (songs made of patterns) or one of four groups of patterns, depending on MODE. Not modelled: this app plays one riff per sound.',
+    help: 'Picks one of seven tracks (songs made of patterns) or one of four groups of patterns, depending on MODE. Not modelled: the app’s sequencer holds one pattern at a time, and patterns are kept in My patterns.',
   },
   {
     id: 'modesw',
@@ -702,7 +717,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'write play pattern track',
     rects: [R(470, 485, 212, 140)],
-    help: 'Chooses between writing and playing, for patterns or for tracks. Not modelled: there is no pattern memory here.',
+    help: 'Chooses between writing and playing, for patterns or for tracks. Not modelled: the app’s sequencer is always ready to edit and play.',
   },
   {
     id: 'volume',
@@ -718,7 +733,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'start stop run clear reset',
     rects: [R(60, 638, 116, 215)],
-    help: 'CLEAR empties the pattern being written, and in a track resets it to the first measure. START/STOP starts and stops the sequencer; its lamp lights while it runs.',
+    help: 'CLEAR empties the pattern being written, and in a track resets it to the first measure. START/STOP starts and stops the sequencer; its lamp lights while it runs. Here both work on the sequencer under the panel.',
   },
   {
     id: 'pitchfn',
@@ -726,7 +741,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'pitch entry normal mode function',
     rects: [R(177, 638, 127, 165)],
-    help: 'A pattern is written in two passes. PITCH MODE is the first: each press of a key enters the next note. FUNCTION returns to normal mode, and held it gives the second functions.',
+    help: 'A pattern is written in two passes. PITCH MODE is the first: each press of a key enters the next note. FUNCTION returns to normal mode, and held it gives the second functions. Here the keys always enter notes, so neither is needed.',
   },
   {
     id: 'keys',
@@ -734,7 +749,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'keyboard notes pattern select selector transpose midi channel clock sync',
     rects: [R(305, 638, 474, 215), R(177, 803, 128, 50)],
-    help: 'Thirteen keys, one octave from C to C. In PITCH MODE they enter notes. The eight white keys double as PATTERN 1 to 8 and as digits for measure numbers, and the black keys as DEL, INS, CH, COPY and PASTE. In the sync settings the white keys choose the clock source and rate printed above them. The on-screen keyboard plays the synth here.',
+    help: 'Thirteen keys, one octave from C to C. In PITCH MODE they enter notes. The eight white keys double as PATTERN 1 to 8 and as digits for measure numbers, and the black keys as DEL, INS, CH, COPY and PASTE. In the sync settings the white keys choose the clock source and rate printed above them. Here a key puts its note on the sequencer’s chosen step and moves to the next. The on-screen keyboard plays the synth.',
   },
   {
     id: 'timemode',
@@ -742,7 +757,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'timing note tie rest accent slide glide transpose octave',
     rects: [R(780, 638, 237, 215)],
-    help: 'TIME MODE is the second pass of writing a pattern: each step becomes a note, a tie or a rest. TRANSPOSE DOWN and UP set octaves while entering pitches. ACCENT and SLIDE mark steps: an accent makes a note louder and sharper, and a slide glides into the next note without starting it again. Here ACCENT and SLIDE also work on the notes you play.',
+    help: 'TIME MODE is the second pass of writing a pattern: each step becomes a note, a tie or a rest. TRANSPOSE DOWN and UP set octaves while entering pitches. ACCENT and SLIDE mark steps: an accent makes a note louder and sharper, and a slide glides into the next note without starting it again. Here, with the sequencer open, TIME MODE turns the chosen step on or off, DOWN and UP move it an octave, and ACCENT and SLIDE mark it. With it closed, ACCENT and SLIDE work on the notes you play.',
   },
   {
     id: 'backwrite',
@@ -750,7 +765,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'next tap write step back sync',
     rects: [R(1018, 638, 117, 215)],
-    help: 'BACK and WRITE/NEXT step back and forward through a pattern while it is written or checked. WRITE/NEXT also stores a pattern into a track, and can be tapped to enter timing in time.',
+    help: 'BACK and WRITE/NEXT step back and forward through a pattern while it is written or checked. WRITE/NEXT also stores a pattern into a track, and can be tapped to enter timing in time. Here they choose the sequencer’s step before and after.',
   },
 ];
 
@@ -852,6 +867,7 @@ const td3: SynthDef & { version: number } = {
     out: 'the output',
   },
   tempo: 'seq.tempo',
+  seqButtons,
   decor,
   areas,
   controls,

@@ -3,8 +3,8 @@
 One sequencer works on every synth. You edit a riff step by step, starting from any riff in the library, and play it
 on whichever synth is open (`f-step-sequencer`, §21). This page covers the pattern model under it
 (`lib/app/sequencer/`, t-78), the engine's pattern player (t-79) and the module on the synth page
-(`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82), sharing (t-83) and playing into it (t-86) each
-have their section here.
+(`components/app/sequencer/`, t-80). Saving (t-81), mod lanes (t-82), sharing (t-83), playing into it (t-86) and the sequencer synths' own buttons (t-85)
+each have their section here.
 The tutor reading and writing patterns (t-84) is in [`tutor.md`](./tutor.md#patterns).
 
 ## Riffs and patterns
@@ -540,8 +540,45 @@ was loaded as. A new pattern goes through `load` as a library riff does, unsaved
 tempo knob's tempo. `edit` and `load` return the pattern now held (null when refused or, for `edit`, unchanged), and
 the tutor's Undo is the module's `undo`. From `lg` up applying it opens the module.
 
-## Not yet
+## The sequencer synths' own buttons
 
-Coming in later tasks of §21:
+On the TB-303, TD-3 and Donner B1 the panel's sequencer buttons drive this sequencer (t-85). A definition maps its
+buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in `contract.ts`). The page routes a press
+(`seqButtonFor`, `components/app/sequencer/panel-buttons.ts`) and draws the panel with `seqLamps` over its values.
 
-- The TB-303, TD-3 and B1's own sequencer buttons driving it (t-85).
+| Does               | TB-303 / TD-3                         | Donner B1                         |
+| ------------------ | ------------------------------------- | --------------------------------- |
+| Start and stop     | RUN/STOP (START/STOP)                 | PLAY/STOP                         |
+| Choose a step      | BACK, WRITE/NEXT                      | ▼, ▲, a white key                 |
+| Turn a step on/off | TIME MODE                             | a white key, again                |
+| A note on a step   | the 13 keys (then the next step)      |                                   |
+| Octave of a step   | TRANSPOSE DOWN, UP                    |                                   |
+| Mark a step        | ACCENT, SLIDE                         | ACCENT, SLIDE, RATCHET            |
+| Rest, clear        | PATTERN CLEAR (CLEAR) clears the part | CLEAR/REST: a rest, then the next |
+| How keys play in   |                                       | ARP, REC/EDIT (step record), HOLD |
+
+- **A press the sequencer takes leaves the button's own value alone.** Its lamp shows what it drives: RUN while the
+  pattern or the riff plays, ARP, REC and HOLD while they are on, and with the module open the chosen step's marks, the
+  303 key of its note and each B1 step key while its step plays. A C lights both of the 303's C keys: the step holds
+  only the note, the top of one octave of keys as much as the bottom of the next. The page keeps the panel's values
+  while no lamp changes, so editing the pattern does not redraw the panel.
+- **RUN/STOP is the bar's Play and Stop**: it stops whatever is playing, riff or pattern, and otherwise runs the
+  pattern, without opening the module. HOLD is the page's Hold. ARP and REC/EDIT set the key mode, and turned off hand
+  back the mode each was turned on from. Every other button works in the module: pressed while it is closed, it only
+  opens it (handing over from a riff playing, as opening it does), and edits no step the player cannot see.
+- **The step buttons are the module's** (`seq.panelIn`). The module registers a handler once (`onPanelIn`) and tells
+  the page its chosen step and page (`showChosen`) for the lamps. Presses land where notes do (`recAt`), which each
+  move moves on at once, so two presses before a redraw go on two steps. A key held on a panel button is one press:
+  its repeats are ignored. A 303 key past the top of MIDI folds down an octave, as TRANSPOSE does. The B1's step keys
+  are the keys of the page on show.
+- **A button that changes the sound is the sequencer's only while it is open.** The 303's and B1's ACCENT and SLIDE
+  are not `ui`: with the module closed they accent or slide every note played, as before; open, they mark the chosen
+  step. A live accent left lit stays in the sound while the module is open.
+- **Not mapped**, with help that says so: MODE, TRACK, PITCH MODE and FUNCTION on the 303 and TD-3; TEMPO TAP, OCT,
+  PATTERN, SAVE and GATE LENGTH on the B1, and its black keys.
+- `scripts/check-synths.ts` leaves `help` and `seqButtons` out of its comparison with the prototype. The app rewrites
+  what a control's help says about the app, and neither changes the sound. The goldens still hold each synth to the
+  prototype's sound.
+
+Tests: `tests/unit/components/app/sequencer/panel-buttons.test.ts` (the maps name real buttons, which presses are
+taken, the lamps), and `synth-page-panel-buttons.test.tsx` (each synth's buttons through the page).

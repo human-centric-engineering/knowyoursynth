@@ -142,6 +142,12 @@ export interface SynthDef {
   destNames?: Record<EngineDest, string>;
   /** The control whose value is the riff's BPM (TB-303 and TD-3 `seq.tempo`). */
   tempo?: string;
+  /**
+   * Panel buttons that drive the app's sequencer, by control id (`f-step-sequencer` t-85): the TB-303's RUN/STOP and
+   * keys, the B1's step keys and ARP. A button the sequencer takes does not change its own value; its lamp shows what
+   * it drives. One that is not `ui` (it changes the sound) is the sequencer's only while the sequencer is open.
+   */
+  seqButtons?: Record<string, SeqButton>;
   /** The synth is silent with no cables, by design; the reason. The checker then accepts a silent init. */
   silentInit?: string;
   /** A pin matrix (EMS VCS3). */
@@ -154,6 +160,34 @@ export interface SynthDef {
    */
   layout?: PanelLayout;
 }
+
+/**
+ * What a panel button does to the sequencer (`SynthDef.seqButtons`).
+ *
+ * - `run` starts and stops it, `arp` turns arp mode on and off, `record` step record, and `hold` is the page's Hold.
+ * - On the chosen step: `toggle` turns it on or off, `rest` makes it a rest and moves on, `accent` and `slide` mark
+ *   it, `ratchet` counts it up 1–4 and round, and `octaveDown` / `octaveUp` move its notes an octave.
+ * - `back` and `next` choose the step before or after; `clear` clears the part.
+ * - `{ step }` is step key `step` (0-based): a press chooses it, and a press on the chosen step turns it on or off.
+ * - `{ note }` puts the note `note` semitones above C in the chosen step's octave on it, and moves on.
+ */
+export type SeqButton =
+  | 'run'
+  | 'arp'
+  | 'record'
+  | 'hold'
+  | 'toggle'
+  | 'rest'
+  | 'accent'
+  | 'slide'
+  | 'ratchet'
+  | 'octaveDown'
+  | 'octaveUp'
+  | 'back'
+  | 'next'
+  | 'clear'
+  | { step: number }
+  | { note: number };
 
 /** The second argument of `toEngine`. */
 export interface EngineContext {

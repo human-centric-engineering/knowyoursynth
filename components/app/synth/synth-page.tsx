@@ -75,9 +75,11 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { getEngine, listen } from '@/components/app/synth/engine';
-import { Sequencer } from '@/components/app/sequencer/sequencer';
+import { PAGE as SEQ_PAGE, Sequencer } from '@/components/app/sequencer/sequencer';
+import { sameValues, seqButtonFor, seqLamps } from '@/components/app/sequencer/panel-buttons';
 import {
   useSequencer,
+  type KeyMode,
   type LaneTarget,
   type LoadedPattern,
 } from '@/components/app/sequencer/use-sequencer';
@@ -1086,12 +1088,17 @@ function Synth({
     library: seqLibrary,
     hold: { on: hold, set: setHoldMode },
   };
-  const toggleSequencer = () => {
-    const opening = !seqShown;
-    if (small) openSheet(opening ? 'sequencer' : null);
-    else setSeqOpen(opening);
+  // Opened by the bar's Sequencer button or a panel button (t-85).
+  const openSequencer = () => {
+    if (small) openSheet('sequencer');
+    else setSeqOpen(true);
     // Opened while the riff plays, the pattern takes over: it is the riff, until it is edited.
-    if (opening && playing) void playPattern();
+    if (playing) void playPattern();
+  };
+  const toggleSequencer = () => {
+    if (!seqShown) openSequencer();
+    else if (small) openSheet(null);
+    else setSeqOpen(false);
   };
   const playRiff = useCallback(
     async (ph: Phrase) => {
@@ -1166,6 +1173,59 @@ function Synth({
       }),
     [patch]
   );
+  // A sequencer synth's own buttons (`SynthDef.seqButtons`, t-85) drive the sequencer: RUN/STOP starts and stops it,
+  // HOLD is the page's Hold, ARP and REC/EDIT set how keys play, and the rest work on the module's chosen step. One of
+  // those pressed while the sequencer is closed only opens it, so no step is edited out of sight. A press the sequencer
+  // takes leaves the button's own value alone; its lamp shows what it drives (`seqLamps`). Read through a ref, so the
+  // panel is handed one function and does not redraw for it.
+  const seqPress = useRef<(id: string, v: ControlValue | null) => void>(() => undefined);
+  // The key mode ARP and REC/EDIT each hand back when turned off: the one it was turned on from.
+  const keysBack = useRef<Record<'arp' | 'step', KeyMode>>({ arp: 'edit', step: 'edit' });
+  useEffect(() => {
+    const flipKeys = (k: 'arp' | 'step') => {
+      if (seq.keys === k) {
+        seq.setKeys(keysBack.current[k]);
+        return;
+      }
+      keysBack.current[k] = seq.keys;
+      seq.setKeys(k);
+    };
+    seqPress.current = (id, v) => {
+      const b = seqButtonFor(synthDef, id, seqShown);
+      if (!b) onChange(id, v);
+      else if (b === 'run') {
+        if (transportPlaying) stopRiff();
+        else void playPattern();
+      } else if (b === 'hold') setHoldMode(!hold);
+      else {
+        if (b === 'arp') flipKeys('arp');
+        else if (b === 'record') flipKeys('step');
+        if (!seqShown) openSequencer();
+        else if (b !== 'arp' && b !== 'record') seq.panelIn(b);
+      }
+    };
+  });
+  const onPanelChange = useCallback(
+    (id: string, v: ControlValue | null) => seqPress.current(id, v),
+    []
+  );
+  // The lamps, kept while none of them changes: a pattern edited or a step chosen redraws the panel only when a lamp
+  // goes on or off.
+  const lampsNow = useMemo(
+    () =>
+      seqLamps(synthDef, sess.values, {
+        open: seqShown,
+        playing: transportPlaying,
+        keys: seq.keys,
+        hold,
+        pattern: seq.pattern,
+        chosen: seq.chosen,
+        pageSize: SEQ_PAGE,
+      }),
+    [synthDef, sess.values, seqShown, transportPlaying, seq.keys, hold, seq.pattern, seq.chosen]
+  );
+  const [panelValues, setPanelValues] = useState(lampsNow);
+  if (panelValues !== lampsNow && !sameValues(panelValues, lampsNow)) setPanelValues(lampsNow);
   const onConnect = useCallback(
     (from: string, to: string) =>
       patch((s) =>
@@ -1902,7 +1962,7 @@ function Synth({
                 >
                   <SynthPanel
                     def={def}
-                    values={sess.values}
+                    values={synthDef.seqButtons ? panelValues : sess.values}
                     moved={modShown}
                     target={step == null ? target : null}
                     cables={sess.cables}
@@ -1911,7 +1971,7 @@ function Synth({
                     areasOn={areasOn}
                     dimOn={dimOn}
                     heatOn={heatOn}
-                    onChange={onChange}
+                    onChange={synthDef.seqButtons ? onPanelChange : onChange}
                     onConnect={onConnect}
                     onRemoveCable={onRemoveCable}
                     onMoveCable={onMoveCable}
