@@ -437,7 +437,7 @@ function Synth({
     () => freshSession(synthDef, sounds[0]),
     userId
   );
-  // The cables Unplug all has still to take out (below): an undo or redo stops it where it has got to.
+  // The cables Unplug all has still to take out (below): an undo, a redo or a new patch stops it where it has got to.
   const unplugging = useRef<ReturnType<typeof setTimeout>[]>([]);
   const stopUnplugging = useCallback(() => {
     unplugging.current.forEach(clearTimeout);
@@ -600,7 +600,7 @@ function Synth({
   // Unplug all takes the cables out one by one, in the order they were plugged, each dropping away from its jack: the
   // first at once, then every `UNPLUG_GAP_MS` (closer for many, so all are out in `UNPLUG_ALL_MS`). They come out within
   // the history's grouping of each other, so one Undo plugs them all back, one by one again.
-  useEffect(() => () => unplugging.current.forEach(clearTimeout), []);
+  useEffect(() => stopUnplugging, [stopUnplugging]);
   const unplugAll = () => {
     if (unplugging.current.length > 0) return;
     const keys = sess.cables.map((c) => `${c.from}>${c.to}`);

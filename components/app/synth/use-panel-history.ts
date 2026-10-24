@@ -4,7 +4,8 @@
  * Undo and redo for the panel (`lib/app/synths/lib/history.ts`): the page's session update wrapped, so a change made
  * through it is recorded and one that is not (the stored panel restored) is not. A different patch on the panel (a
  * sound or a lesson step loaded) starts the history afresh: Undo goes back through what was done to this one. ⌘Z (Ctrl+Z)
- * undoes and ⇧⌘Z (or Ctrl+Y) redoes, except in a field, a dialog or the sequencer, which has an Undo of its own. A save
+ * undoes and ⇧⌘Z (or Ctrl+Y) redoes, except in a field, a native dialog or the sequencer (its module and its View all
+ * dialog), which has an Undo of its own; the docked sheets leave it to the panel. A save
  * (the sound's id changing, the panel not) keeps the history; a new patch set is a change of its own, never grouped.
  *
  * An undo or redo is shown being done: what it changes is lit (`HISTORY_LIGHT_MS`), then each control turns to its
@@ -69,8 +70,8 @@ export function usePanelHistory<S extends Panelled>(
   sess: S,
   setSess: (fn: (s: S) => S) => void,
   def: SynthDef,
-  /** Called as an undo or redo begins: whatever the page still has under way on the panel (Unplug all) stops. */
-  onStep?: () => void
+  /** Called as an undo, a redo or a new patch begins: whatever the page has under way on the panel (Unplug all) stops. */
+  onTakeOver?: () => void
 ): {
   /** The session as the panel shows it: during a glide, its controls and cables part of the way there. */
   sess: S;
@@ -87,14 +88,14 @@ export function usePanelHistory<S extends Panelled>(
   const [history, setHistory] = useState<PanelHistory>(emptyHistory);
   const historyRef = useRef(history);
   const current = useRef<PanelSnap>({ values: sess.values, cables: sess.cables });
-  const prev = useRef<{ snap: PanelSnap; ident: string } | null>(null);
+  const prev = useRef<{ snap: PanelSnap; ident: string; sound: string | null } | null>(null);
   // Set by a change made through `patch` (recorded) or by Undo and Redo (not), read by the effect after it renders.
   const made = useRef<'change' | 'glide' | 'history' | null>(null);
-  const onStepRef = useRef(onStep);
+  const onTakeOverRef = useRef(onTakeOver);
 
   useEffect(() => {
     historyRef.current = history;
-    onStepRef.current = onStep;
+    onTakeOverRef.current = onTakeOver;
   });
 
   // The undo or redo being shown, or the glide, which `finish` completes at once.
@@ -165,9 +166,10 @@ export function usePanelHistory<S extends Panelled>(
   useEffect(() => {
     const snap = { values: sess.values, cables: sess.cables };
     current.current = snap;
-    const ident = `${def.id}|${sess.presetId ?? ''}|${sess.soundId ?? ''}|${sess.step ?? ''}`;
+    const ident = `${def.id}|${sess.presetId ?? ''}|${sess.step ?? ''}`;
+    const sound = sess.soundId ?? null;
     const p = prev.current;
-    prev.current = { snap, ident };
+    prev.current = { snap, ident, sound };
     const by = made.current;
     made.current = null;
     if (!p) return;
@@ -176,8 +178,10 @@ export function usePanelHistory<S extends Panelled>(
       const { at, delay } = gliding.current.halt();
       runGlide(at, snap, delay);
     } else if (moved && by === 'glide') runGlide(p.snap, snap, 0);
-    // Saved, the panel is the same one: only a different patch on it starts the history afresh.
-    if (p.ident !== ident && (moved || by !== 'change')) {
+    // Saved (the sound's id alone changing, through `patch`), the panel is the same one: only a different patch on it
+    // starts the history afresh.
+    const saved = p.ident === ident && !moved && by === 'change';
+    if (p.ident !== ident || (p.sound !== sound && !saved)) {
       setHistory(emptyHistory());
       return;
     }
@@ -193,34 +197,44 @@ export function usePanelHistory<S extends Panelled>(
     return finishShowing;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
 
+  // The change marked only when there is one: nothing changed, nothing renders, and a mark left would be read as this
+  // change by the next session that lands from elsewhere. Only ever set here, so a no-op batched after a change keeps
+  // the change's mark.
+  const marked = useCallback(
+    (fn: (s: S) => S, by: 'change' | 'glide') =>
+      (s: S): S => {
+        const next = fn(s);
+        if (next !== s) made.current = by;
+        return next;
+      },
+    []
+  );
+
   const patch = useCallback(
     (fn: (s: S) => S) => {
       finishShowing();
-      made.current = 'change';
-      // Nothing changed, nothing renders, and so the mark would wait for the next session that lands from elsewhere.
-      setSess((s) => {
-        const next = fn(s);
-        if (next === s && made.current === 'change') made.current = null;
-        return next;
-      });
+      setSess(marked(fn, 'change'));
     },
-    [setSess, finishShowing]
+    [setSess, finishShowing, marked]
   );
 
   const glide = useCallback(
     (fn: (s: S) => S) => {
       // An undo being shown is finished; a glide carries on to the new patch.
       if (!gliding.current) finishShowing();
-      made.current = 'glide';
-      setSess(fn);
+      onTakeOverRef.current?.();
+      setSess(marked(fn, 'glide'));
     },
-    [setSess, finishShowing]
+    [setSess, finishShowing, marked]
   );
 
   const step = useCallback(
     (fn: typeof undoStep, which: 'undo' | 'redo') => {
-      onStepRef.current?.();
+      // With nothing to step to, nothing under way is stopped.
+      if (!fn(historyRef.current, current.current)) return;
+      onTakeOverRef.current?.();
       finishShowing();
+      // Finished, the panel is where the one shown lands, and this steps on from there.
       const from = current.current;
       const r = fn(historyRef.current, from);
       if (!r) return;
@@ -293,7 +307,7 @@ export function usePanelHistory<S extends Panelled>(
       if (
         e.target instanceof Element &&
         e.target.closest(
-          'input, textarea, select, [contenteditable="true"], dialog, [role="dialog"], .kys-seq'
+          'input, textarea, select, [contenteditable="true"], dialog, .kys-seq, .kys-seq-skin'
         )
       )
         return;

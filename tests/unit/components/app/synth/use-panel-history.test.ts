@@ -38,10 +38,10 @@ beforeEach(() => {
 });
 
 function setup() {
-  const onStep = vi.fn();
+  const onTakeOver = vi.fn();
   const { result } = renderHook(() => {
     const [stored, setStored] = useState<Sess>(START);
-    return { stored, setStored, ...usePanelHistory(stored, setStored, def, onStep) };
+    return { stored, setStored, ...usePanelHistory(stored, setStored, def, onTakeOver) };
   });
   const cutoff = () => result.current.stored.values['filter.cutoff'];
   /** A change through `patch`, a while after the last. */
@@ -51,7 +51,7 @@ function setup() {
   };
   /** Finishes the undo or redo being shown, as any change through `patch` does; this one changes nothing. */
   const settle = () => act(() => result.current.patch((s) => s));
-  return { result, cutoff, turn, settle, onStep };
+  return { result, cutoff, turn, settle, onTakeOver };
 }
 
 describe('usePanelHistory', () => {
@@ -84,11 +84,23 @@ describe('usePanelHistory', () => {
     expect(cutoff()).toBe(1);
   });
 
-  it('records nothing for a change that changes nothing, nor for the session landing after it', () => {
+  it('records nothing for a change or a new patch that changes nothing, nor for the session landing after it', () => {
     const { result } = setup();
     act(() => result.current.patch((s) => s));
     act(() => result.current.setStored((s) => ({ ...s, values: at(4) })));
+    act(() => result.current.glide((s) => s));
+    act(() => result.current.setStored((s) => ({ ...s, values: at(5) })));
     expect(result.current.canUndo).toBe(false);
+  });
+
+  it('records a change followed in the same moment by one that changes nothing', () => {
+    const { result } = setup();
+    clock += 1000;
+    act(() => {
+      result.current.patch((s) => ({ ...s, values: at(1) }));
+      result.current.patch((s) => s);
+    });
+    expect(result.current.canUndo).toBe(true);
   });
 
   it('keeps the history through a save, and starts it afresh for another patch', () => {
@@ -97,6 +109,14 @@ describe('usePanelHistory', () => {
     act(() => result.current.patch((s) => ({ ...s, soundId: 'mine-1' })));
     expect(result.current.canUndo).toBe(true);
     act(() => result.current.glide((s) => ({ ...s, presetId: 'wobble', values: at(2) })));
+    expect(result.current.canUndo).toBe(false);
+  });
+
+  it('starts afresh when a sound deleted takes its lesson step with it, though the panel stays', () => {
+    const { result, turn } = setup();
+    act(() => result.current.setStored((s) => ({ ...s, soundId: 'mine-1', step: 2 })));
+    turn(1);
+    act(() => result.current.patch((s) => ({ ...s, soundId: null, step: null })));
     expect(result.current.canUndo).toBe(false);
   });
 
@@ -114,27 +134,38 @@ describe('usePanelHistory', () => {
     expect(cutoff()).toBe(1);
   });
 
-  it('tells the page an undo is beginning, so what it has under way stops', () => {
-    const { result, turn, onStep } = setup();
+  it('tells the page an undo or a new patch is beginning, so what it has under way stops; not a change, nor a step to nowhere', () => {
+    const { result, turn, onTakeOver } = setup();
     turn(1);
+    act(() => result.current.redo());
+    expect(onTakeOver).not.toHaveBeenCalled();
     act(() => result.current.undo());
-    expect(onStep).toHaveBeenCalledTimes(1);
+    expect(onTakeOver).toHaveBeenCalledTimes(1);
+    act(() => result.current.glide((s) => ({ ...s, values: at(2) })));
+    expect(onTakeOver).toHaveBeenCalledTimes(2);
   });
 
-  it('leaves ⌘Z in a dialog to the dialog, and takes it on the page', () => {
+  it('leaves ⌘Z in the sequencer’s View all dialog to it, and takes it in a docked sheet', () => {
     const { result, turn } = setup();
     turn(1);
-    const dialog = document.createElement('div');
-    dialog.setAttribute('role', 'dialog');
-    const inside = document.createElement('button');
-    dialog.appendChild(inside);
-    document.body.appendChild(dialog);
-    fireEvent.keyDown(inside, { key: 'z', metaKey: true });
-    dialog.remove();
+    const inside = (className: string) => {
+      const box = document.createElement('div');
+      box.setAttribute('role', 'dialog');
+      box.className = className;
+      const button = document.createElement('button');
+      box.appendChild(button);
+      document.body.appendChild(box);
+      return button;
+    };
+    const lanes = inside('kys-seq-skin');
+    fireEvent.keyDown(lanes, { key: 'z', metaKey: true });
+    lanes.parentElement?.remove();
     expect(result.current.canUndo).toBe(true);
+    const sheet = inside('kys-sheet');
     act(() => {
-      fireEvent.keyDown(window, { key: 'z', metaKey: true });
+      fireEvent.keyDown(sheet, { key: 'z', metaKey: true });
     });
+    sheet.parentElement?.remove();
     expect(result.current.canUndo).toBe(false);
   });
 });
