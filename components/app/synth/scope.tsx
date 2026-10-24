@@ -1119,11 +1119,13 @@ export function ScopeDialog({
   const [help, setHelp] = useState<Record<string, boolean>>({}); // which ? explanations are open — all folded away to start
   const toggleHelp = (k: string) => setHelp((h) => ({ ...h, [k]: !h[k] }));
   const [story, setStory] = useState<WaveStory | null>(null);
+  // Cleared on closing only, not on each move of the panel while closed: setting state on every frame of a glide (even
+  // to the same `null`) chains an update onto each, which React reports as an update loop.
   useEffect(() => {
-    if (!open) {
-      setStory(null);
-      return undefined;
-    }
+    if (!open) setStory(null);
+  }, [open]);
+  useEffect(() => {
+    if (!open) return undefined;
     const t = setTimeout(() => setStory(waveStory(def, values, cables, wheel)), 60);
     return () => clearTimeout(t);
   }, [open, def, values, cables, wheel]);

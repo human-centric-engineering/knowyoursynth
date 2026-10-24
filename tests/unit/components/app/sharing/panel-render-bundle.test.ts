@@ -65,7 +65,8 @@ describe('the panel renderer bundle', () => {
       onRemoveCable: noop,
     });
     expect(markup.startsWith('<svg')).toBe(true);
-    expect(markup).toContain(`viewBox="0 0 ${def.view.w} ${def.view.h}"`);
+    // The front panel only: the view leaves out the end cheeks.
+    expect(markup).toContain(`viewBox="40 0 ${def.view.w - 80} ${def.view.h}"`);
   });
 
   it('is written, as built, to the file it is given', async () => {

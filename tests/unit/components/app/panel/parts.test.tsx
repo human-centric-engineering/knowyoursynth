@@ -12,7 +12,7 @@ import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
-import { optionIndex, polar, valueAngle, wavePath } from '@/components/app/panel/parts';
+import { optionIndex, polar, swingStep, valueAngle, wavePath } from '@/components/app/panel/parts';
 import { focusStore, highlightStore, meterStore } from '@/components/app/synth/stores';
 import { allPartsDef } from '@/tests/fixtures/synths/all-parts';
 import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
@@ -508,5 +508,34 @@ describe('geometry helpers', () => {
 
   it('wavePath draws nothing for an unknown shape', () => {
     expect(wavePath('zigzag', 10)).toBe('');
+  });
+});
+
+describe('swingStep: a cable swinging and settling', () => {
+  /** Steps a belly let go `from` away from where it hangs (0, 0) for `seconds` at 60 frames a second. */
+  const run = (from: number, len: number, seconds: number) => {
+    let s = { px: from, py: 0, vx: 0, vy: 0 };
+    const xs: number[] = [];
+    for (let k = 0; k < seconds * 60; k++) {
+      s = swingStep(s, 0, 0, len, 1 / 60);
+      xs.push(s.px);
+    }
+    return xs;
+  };
+  /** The first frame on which the belly has crossed where it hangs. */
+  const firstCross = (xs: number[]) => xs.findIndex((x) => x < 0);
+
+  it('swings back past where it hangs, then settles there', () => {
+    const xs = run(30, 300, 4);
+    expect(Math.min(...xs)).toBeLessThan(0);
+    expect(Math.abs(xs[xs.length - 1])).toBeLessThan(0.5);
+  });
+
+  it('swings past by less than it was moved: a heavy cable, not a spring', () => {
+    expect(-Math.min(...run(30, 300, 4))).toBeLessThan(30 * 0.4);
+  });
+
+  it('swings slower the longer the cable', () => {
+    expect(firstCross(run(30, 800, 4))).toBeGreaterThan(firstCross(run(30, 100, 4)));
   });
 });

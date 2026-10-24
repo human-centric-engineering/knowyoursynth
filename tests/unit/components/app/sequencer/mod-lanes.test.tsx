@@ -16,7 +16,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useMemo } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
-import { nudged } from '@/components/app/sequencer/mod-lanes';
+import { controlNames, nudged } from '@/components/app/sequencer/mod-lanes';
+import { SYNTH_DEFS, getSynthDef } from '@/lib/app/synths/defs';
 import {
   useSequencer,
   type LaneTarget,
@@ -145,6 +146,20 @@ beforeEach(() => {
 });
 
 describe('the lanes in the module', () => {
+  it('names every control a lane can be given apart from the rest, on every synth', () => {
+    for (const def of SYNTH_DEFS) {
+      const names = [...controlNames(def).values()];
+      const twice = names.filter((n, i) => names.indexOf(n) !== i);
+      expect(twice, def.id).toEqual([]);
+    }
+    // The Pro-1's two OCTAVE knobs share their label and their module: each says which oscillator it is on.
+    const pro1 = controlNames(getSynthDef('pro-1')!);
+    expect([pro1.get('oscA.octave'), pro1.get('oscB.octave')]).toEqual([
+      'OCTAVE · osc A',
+      'OCTAVE · osc B',
+    ]);
+  });
+
   it('adds a lane for a control of the synth on the panel', () => {
     render(<Harness />);
     addCutoff();
@@ -200,12 +215,113 @@ describe('the lanes in the module', () => {
     p.lanes = ['cutoff', 'gone'];
     p.parts[0].steps[1] = { ...p.parts[0].steps[1], mod: { gone: 3 } };
     act(() => void state.load(p, { id: null, name: 'test' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'gone' }));
     expect(
       screen.getByText('Not on this synth: kept with the pattern, and silent here.')
     ).toBeTruthy();
+    fireEvent.click(screen.getByRole('tab', { name: 'cutoff' }));
     fireEvent.click(screen.getByRole('button', { name: 'Remove the cutoff lane' }));
     expect(state.pattern.lanes).toEqual(['gone']);
     expect(state.pattern.parts[0].steps[1].mod).toEqual({ gone: 3 });
+  });
+});
+
+/** The test synth with a second control, a stepped knob, for a lane to move to. */
+const RES: Control = { ...CUTOFF, id: 'res', min: 0, max: 10, def: 2, step: 1 };
+const DEF_RES = { ...DEF, controls: [CUTOFF, RES], init: { cutoff: 40, res: 2 } } as SynthDef;
+const PANEL_RES: ControlValues = { cutoff: 40, res: 2 };
+
+describe('the lane tabs', () => {
+  const twoLanes = () => {
+    const p = laned();
+    p.lanes = ['cutoff', 'gone'];
+    return p;
+  };
+
+  it('shows one lane at a time, the one whose tab is chosen', () => {
+    render(<Harness />);
+    act(() => void state.load(twoLanes(), { id: null, name: 'test' }));
+    expect(screen.getByRole('tab', { name: 'cutoff' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('group', { name: 'cutoff lane' })).toBeTruthy();
+    expect(screen.queryByRole('group', { name: 'gone lane' })).toBeNull();
+
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'cutoff' }), { key: 'ArrowRight' });
+    expect(screen.getByRole('tab', { name: 'gone' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('group', { name: 'gone lane' })).toBeTruthy();
+    expect(screen.queryByRole('group', { name: 'cutoff lane' })).toBeNull();
+  });
+
+  it('opens the tab of a lane just added', () => {
+    render(<Harness />);
+    const p = importPhrase(RIFF);
+    p.lanes = ['gone'];
+    p.parts[0].steps[1] = { ...p.parts[0].steps[1], mod: { gone: 3 } };
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Mod lane' }));
+    fireEvent.click(screen.getByRole('option', { name: 'cutoff' }));
+    expect(state.pattern.lanes).toEqual(['gone', 'cutoff']);
+    expect(screen.getByRole('tab', { name: 'cutoff' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('group', { name: 'cutoff lane' })).toBeTruthy();
+  });
+
+  it('opens the tab before when the last one is removed', () => {
+    render(<Harness />);
+    act(() => void state.load(twoLanes(), { id: null, name: 'test' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'gone' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Remove the gone lane' }));
+    expect(state.pattern.lanes).toEqual(['cutoff']);
+    expect(screen.getByRole('group', { name: 'cutoff lane' })).toBeTruthy();
+  });
+
+  it('shows every lane in View all, and offers it only with more than one lane', () => {
+    render(<Harness />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    expect(screen.queryByRole('button', { name: 'View all lanes' })).toBeNull();
+
+    act(() => void state.load(twoLanes(), { id: null, name: 'test' }));
+    // The tabs name the open lane, so the module has no select for it; View all gives each lane its own.
+    expect(screen.queryByRole('combobox', { name: 'Lane' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'View all lanes' }));
+    const dialog = screen.getByRole('dialog', { name: 'Mod lanes' });
+    expect(within(dialog).getByRole('group', { name: 'cutoff lane' })).toBeTruthy();
+    expect(within(dialog).getByRole('group', { name: 'gone lane' })).toBeTruthy();
+    expect(within(dialog).getAllByRole('combobox', { name: 'Lane' })).toHaveLength(2);
+  });
+
+  it('opens the control list on a second press of the open tab, not the first press of another', () => {
+    render(<Harness def={DEF_RES} panel={PANEL_RES} />);
+    const p = laned();
+    p.lanes = ['cutoff', 'res'];
+    p.parts[0].steps[1] = { ...p.parts[0].steps[1], mod: { res: 3 } };
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    fireEvent.click(screen.getByRole('tab', { name: /^res/ }));
+    expect(screen.queryByRole('listbox', { name: 'Move the lane to' })).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: /^res/ }));
+    const list = screen.getByRole('listbox', { name: 'Move the lane to' });
+    fireEvent.keyDown(list, { key: 'Escape' });
+    expect(screen.queryByRole('listbox', { name: 'Move the lane to' })).toBeNull();
+  });
+
+  it('moves the open lane to the control picked, its values carried to the same height', () => {
+    render(<Harness def={DEF_RES} panel={PANEL_RES} />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    fireEvent.click(screen.getByRole('tab', { name: /^cutoff/ }));
+    fireEvent.click(screen.getByRole('option', { name: 'res' }));
+    expect(state.pattern.lanes).toEqual(['res']);
+    // Cutoff 80 and 10 of 0..100 are 80% and 10% up the lane: res (0..10, by 1) there is 8 and 1.
+    expect(state.pattern.parts[0].steps[0].mod).toEqual({ res: 8 });
+    expect(state.pattern.parts[0].steps[2].mod).toEqual({ res: 1 });
+    expect(screen.getByRole('tab', { name: /^res/ })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('clears the open lane in the part with Clear all, and keeps the lane', () => {
+    render(<Harness />);
+    act(() => void state.load(laned(), { id: null, name: 'test' }));
+    const clear = screen.getByRole('button', { name: 'Clear the cutoff lane' });
+    fireEvent.click(clear);
+    expect(state.pattern.lanes).toEqual(['cutoff']);
+    expect(state.pattern.parts[0].steps.every((s) => !s.mod)).toBe(true);
+    expect(clear).toBeDisabled();
   });
 });
 
@@ -243,14 +359,14 @@ describe('editing around the lanes', () => {
     menu('Copy step');
     fireEvent.click(screen.getByRole('button', { name: 'Remove the cutoff lane' }));
     // The step emptied, so the paste is a change
-    act(() =>
+    act(() => {
       state.edit((q) => ({
         ...q,
         parts: [
           { steps: q.parts[0].steps.map((x, i) => (i === 0 ? { on: false, notes: [] } : x)) },
         ],
-      }))
-    );
+      }));
+    });
     menu('Paste step');
     const { mod: _mod, ...notes } = first;
     expect(state.pattern.parts[0].steps[0]).toEqual(notes);

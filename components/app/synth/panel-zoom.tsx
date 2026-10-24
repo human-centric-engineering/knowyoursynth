@@ -46,6 +46,17 @@ export function panelFrameStyle(
   return { width: `calc(${scale} * min(100%, ${cap}))` };
 }
 
+/**
+ * The panel's rails' width at a scale: the frame's, so they grow and shrink with it when it is zoomed, but never wider
+ * than the screen gives them. They are outside the scroller, so a panel wider than that scrolls under them.
+ */
+export function panelRailStyle(
+  view: { w: number; h: number } | null,
+  scale: PanelScale
+): CSSProperties {
+  return { width: `min(100%, ${String(panelFrameStyle(view, scale).width)})` };
+}
+
 /** The scroller's ref, keeping the middle of what is in view in the middle when the scale changes. */
 export function useKeepCentre(scale: PanelScale): RefObject<HTMLDivElement | null> {
   const scroller = useRef<HTMLDivElement>(null);

@@ -10,7 +10,8 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { Suspense } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { SynthPage } from '@/components/app/synth/synth-page';
+import { SynthPage, stripNear } from '@/components/app/synth/synth-page';
+import { INK, PAPER } from '@/components/app/panel/parts';
 import type { SynthPageProps } from '@/components/app/synth/synth-page';
 import {
   findStore,
@@ -25,6 +26,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { openSide, stepShown, tallScreen } from '@/tests/helpers/synth-side';
+import { glideMotion } from '@/components/app/synth/motion';
 
 const { router, engine, events } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -186,7 +188,7 @@ function page(over: Partial<SynthPageProps> = {}) {
 const storeSession = (s: object) => window.localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
-/** A control in the panel settings under the panel (t-72). */
+/** A control in the panel settings on the panel's foot rail (t-72). */
 const setting = (name: string | RegExp) =>
   within(screen.getByRole('group', { name: 'Panel settings' })).getByRole('button', { name });
 /** The sound named after "Loaded:" over the panel. The library and the lesson name it too. */
@@ -322,6 +324,25 @@ describe('SynthPage layout', () => {
 
     fireEvent.click(button('Fit the panel to the page'));
     expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
+  });
+
+  it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {
+    if (!def) throw new Error('model-d is not registered');
+    page();
+    const head = screen.getByRole('group', { name: 'Layers over the panel' }).parentElement;
+    const foot = screen.getByRole('group', { name: 'Panel settings' }).parentElement;
+    for (const rail of [head, foot]) {
+      if (!rail) throw new Error('the rail holds the group');
+      expect(rail.style.getPropertyValue('--rail-face')).toBe(def.theme.panel);
+      expect(rail.style.getPropertyValue('--rail-print')).toBe(def.theme.ink);
+    }
+
+    fireEvent.click(setting('Outline'));
+    for (const rail of [head, foot]) {
+      expect(rail?.style.getPropertyValue('--rail-face')).toBe(PAPER);
+      expect(rail?.style.getPropertyValue('--rail-print')).toBe(INK);
+      expect(rail?.className).toContain('is-outline');
+    }
   });
 
   it('puts the rotate note above the panel on a small screen, and not on a wide one', () => {
@@ -551,12 +572,12 @@ describe('SynthPage patch', () => {
       cables: [['j.lfoTri', 'j.cutCv']],
     });
     page();
-    expect(button('Unplug all')).toBeTruthy();
+    expect(button('Unplug all cables')).toBeTruthy();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
 
     fireEvent.click(button('Blank patch'));
 
-    expect(screen.queryByRole('button', { name: 'Unplug all' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
     expect(loadedName()).toBe('Wobble lead');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       String(def.init['filter.cutoff'])
@@ -564,9 +585,9 @@ describe('SynthPage patch', () => {
     expect(screen.getByText('1 control moved')).toBeTruthy(); // the sound has cutoff at 2
   });
 
-  it('offers "Unplug all" only when there are cables, and it removes them but keeps the knobs', () => {
+  it('offers "Unplug all cables" only when there are cables, and it removes them but keeps the knobs', () => {
     const { unmount } = page();
-    expect(screen.queryByRole('button', { name: 'Unplug all' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
     unmount();
 
     storeSession({
@@ -579,11 +600,119 @@ describe('SynthPage patch', () => {
     openSide('Inspect');
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
 
-    fireEvent.click(button('Unplug all'));
+    fireEvent.click(button('Unplug all cables'));
 
-    expect(screen.queryByRole('button', { name: 'Unplug all' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
     expect(screen.queryByText(/Cables in this patch/)).toBeNull();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
+  });
+
+  it('unplugs every cable one by one, in the order they were plugged, and one Undo plugs them all back', async () => {
+    storeSession({
+      presetId: 'wobble',
+      step: null,
+      values: {},
+      cables: [
+        ['j.lfoTri', 'j.cutCv'],
+        ['j.lfoSq', 'j.loudCv'],
+      ],
+    });
+    page();
+    openSide('Inspect');
+    expect(screen.getByRole('heading', { name: 'Cables in this patch · 2' })).toBeTruthy();
+
+    fireEvent.click(button('Unplug all cables'));
+    // The first plugged is out at once; the other follows.
+    expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
+    await waitFor(() => expect(screen.queryByText(/Cables in this patch/)).toBeNull());
+
+    fireEvent.click(button('Undo'));
+    await waitFor(
+      () => expect(screen.getByRole('heading', { name: 'Cables in this patch · 2' })).toBeTruthy(),
+      { timeout: 4000 }
+    );
+  }, 10_000);
+
+  it('undoes and redoes a change to the panel from the rail, showing it first', async () => {
+    page();
+    expect(button('Undo')).toBeDisabled();
+    openSide('Inspect');
+    act(() =>
+      focusStore.set({
+        kind: 'cable',
+        id: 'j.lfoTri>j.cutCv',
+        from: 'j.lfoTri',
+        to: 'j.cutCv',
+        x: 0,
+        y: 0,
+        tip: false,
+      })
+    );
+    fireEvent.click(button('Plug it in'));
+    expect(button('Unplug all cables')).toBeTruthy();
+
+    fireEvent.click(button('Undo'));
+    // First its LED lights and the cable's jacks are lit, the cable still in; then it goes.
+    expect(button('Undo').className).toContain('is-lit');
+    expect(highlightStore.get()).toEqual(expect.arrayContaining(['j.lfoTri', 'j.cutCv']));
+    expect(button('Unplug all cables')).toBeTruthy();
+    await waitFor(
+      () => expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull(),
+      { timeout: 3000 }
+    );
+    await waitFor(() => expect(button('Undo').className).not.toContain('is-lit'));
+    expect(button('Undo')).toBeDisabled();
+
+    fireEvent.click(button('Redo'));
+    expect(button('Redo').className).toContain('is-lit');
+    await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 3000 });
+    expect(button('Redo')).toBeDisabled();
+  }, 10_000);
+
+  it('undoes with ⌘Z and redoes with ⇧⌘Z or Ctrl+Y, but not from a field or with Alt, and at once with reduced motion', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(prefers-reduced-motion: reduce)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    openSide('Inspect');
+    act(() =>
+      focusStore.set({
+        kind: 'cable',
+        id: 'j.lfoTri>j.cutCv',
+        from: 'j.lfoTri',
+        to: 'j.cutCv',
+        x: 0,
+        y: 0,
+        tip: false,
+      })
+    );
+    fireEvent.click(button('Plug it in'));
+    const plugged = () => screen.queryByRole('button', { name: 'Unplug all cables' }) !== null;
+    expect(plugged()).toBe(true);
+
+    // Neither a key the history does not take, nor Alt, nor a press in a field undoes.
+    fireEvent.keyDown(window, { key: 'x', metaKey: true });
+    fireEvent.keyDown(window, { key: 'z', metaKey: true, altKey: true });
+    const field = document.createElement('input');
+    document.body.appendChild(field);
+    fireEvent.keyDown(field, { key: 'z', metaKey: true });
+    field.remove();
+    expect(plugged()).toBe(true);
+
+    fireEvent.keyDown(window, { key: 'z', metaKey: true });
+    expect(plugged()).toBe(false);
+    fireEvent.keyDown(window, { key: 'Z', metaKey: true, shiftKey: true });
+    expect(plugged()).toBe(true);
+    fireEvent.keyDown(window, { key: 'z', ctrlKey: true });
+    expect(plugged()).toBe(false);
+    fireEvent.keyDown(window, { key: 'y', ctrlKey: true });
+    expect(plugged()).toBe(true);
   });
 
   it('plugs a cable in from the inspector and lists it', () => {
@@ -604,7 +733,7 @@ describe('SynthPage patch', () => {
     fireEvent.click(button('Plug it in'));
 
     expect(screen.getByRole('heading', { name: 'Cables in this patch · 1' })).toBeTruthy();
-    expect(button('Unplug all')).toBeTruthy();
+    expect(button('Unplug all cables')).toBeTruthy();
     expect(paramsSent().at(-1)?.p?.cables).toHaveLength(1);
   });
 
@@ -675,6 +804,83 @@ describe('SynthPage patch', () => {
 });
 
 // ── the view ────────────────────────────────────────────────────────────────
+
+describe('SynthPage glides', () => {
+  // Off for every other test (`tests/setup.ts`), so the panel is set at once there.
+  beforeEach(() => vi.mocked(glideMotion).mockReturnValue(true));
+  afterEach(() => vi.mocked(glideMotion).mockReturnValue(false));
+
+  const valueOf = (name: RegExp) =>
+    screen.getAllByRole('slider', { name })[0].getAttribute('aria-valuenow');
+
+  it('arrives on the blank patch and sets the sound on it', async () => {
+    storeSession({ presetId: 'wobble', step: null, values: { 'filter.cutoff': 2 }, cables: [] });
+    page();
+    expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff']));
+    // The sound is the one on the panel already: its name, and nothing to restore, as it glides.
+    expect(loadedName()).toBe('Wobble lead');
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
+  }, 10_000);
+
+  it('Blank patch pulls the cables out first, then turns the oscillators before the filter', async () => {
+    storeSession({
+      presetId: 'wobble',
+      step: null,
+      values: { 'ctl.tune': 2, 'filter.cutoff': 2 },
+      cables: [['j.lfoTri', 'j.cutCv']],
+    });
+    page();
+    await waitFor(() => expect(button('Unplug all cables')).toBeTruthy(), { timeout: 5000 });
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
+
+    fireEvent.click(button('Blank patch'));
+    // Saved as blank at once (so it counts from there), shown being set meanwhile.
+    expect(screen.getByText('1 control moved')).toBeTruthy();
+    expect(valueOf(/^TUNE/)).toBe('2');
+
+    await waitFor(
+      () => expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull(),
+      { timeout: 3000 }
+    );
+    expect(valueOf(/CUTOFF/)).toBe('2');
+    await waitFor(() => expect(valueOf(/CUTOFF/)).not.toBe('2'), { timeout: 3000 });
+    expect(valueOf(/^TUNE/)).toBe(String(def.init['ctl.tune']));
+    // Only the controls move: nothing is lit around them.
+    expect(highlightStore.get()).toEqual([]);
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff'])), {
+      timeout: 3000,
+    });
+  }, 15_000);
+
+  it('runs a whole glide without the page chaining an update onto every frame', async () => {
+    // An effect that sets state on each move of the panel (even to the same value) chains an update onto every frame
+    // of a glide, which React reports as "Maximum update depth exceeded" a few seconds in.
+    const err = vi.spyOn(console, 'error');
+    storeSession({
+      presetId: 'wobble',
+      step: null,
+      values: { 'filter.cutoff': 2, 'ctl.tune': 2 },
+      cables: [['j.lfoTri', 'j.cutCv']],
+    });
+    page();
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe('2'), { timeout: 5000 });
+    fireEvent.click(button('Blank patch'));
+    await waitFor(() => expect(valueOf(/CUTOFF/)).toBe(String(def.init['filter.cutoff'])), {
+      timeout: 5000,
+    });
+    await new Promise((r) => setTimeout(r, 500));
+    const loops = err.mock.calls.filter((c) => String(c[0]).includes('Maximum update depth'));
+    expect(loops).toEqual([]);
+  }, 15_000);
+
+  it('a control turned during a glide finishes it at once', async () => {
+    storeSession({ presetId: 'wobble', step: null, values: { 'filter.cutoff': 2 }, cables: [] });
+    page();
+    const tune = screen.getAllByRole('slider', { name: /^TUNE/ })[0];
+    fireEvent.keyDown(tune, { key: 'ArrowUp' });
+    expect(valueOf(/CUTOFF/)).toBe('2');
+  });
+});
 
 describe('SynthPage view', () => {
   const outline = () => setting('Outline');
@@ -751,7 +957,9 @@ describe('SynthPage navigation', () => {
 
     fireEvent.click(screen.getByRole('option', { name: /OB-X/ }));
 
-    expect(router.push).toHaveBeenCalledExactlyOnceWith('/synths/ob-x?view=outline');
+    expect(router.push).toHaveBeenCalledExactlyOnceWith('/synths/ob-x?view=outline', {
+      transitionTypes: ['synth-change'],
+    });
   });
 
   it('does not navigate when the current synth is chosen again', () => {
@@ -1290,6 +1498,35 @@ describe('SynthPage player', () => {
     expect(within(player()).getByRole('button', { name: /Synth\s*Model D/ })).toBeTruthy();
   });
 
+  it('puts the Learn sound design drawer away from its head, a press elsewhere, or a press on the panel before a chapter', () => {
+    twoSteps();
+    const tab = () => button('Learn sound design');
+    const panel = () => screen.getByTestId('panel-frame');
+    const head = () => player().querySelector('.kys-design-head') as HTMLElement;
+
+    // Its head closes it.
+    fireEvent.click(tab());
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(head());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+
+    // A press anywhere else on the page closes it.
+    fireEvent.click(tab());
+    fireEvent.pointerDown(document.body);
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+
+    // A press on the panel before any chapter is chosen is other work: it closes it.
+    fireEvent.click(tab());
+    fireEvent.pointerDown(panel());
+    expect(tab()).toHaveAttribute('aria-expanded', 'false');
+
+    // With a chapter chosen, the panel is where the lesson is followed: it stays.
+    fireEvent.click(tab());
+    fireEvent.click(button('Lesson step 1: Open the mixer'));
+    fireEvent.pointerDown(panel());
+    expect(tab()).toHaveAttribute('aria-expanded', 'true');
+  });
+
   it('draws one chapter per lesson step and one for the finished sound, and goes to the one clicked', () => {
     twoSteps();
     const chapters = within(player()).getByRole('list', { name: 'Lesson steps' });
@@ -1741,5 +1978,22 @@ describe('SynthPage patch edge cases', () => {
     page();
     expect(replace).not.toHaveBeenCalled();
     expect(setting('Outline').getAttribute('aria-pressed')).toBe('false');
+  });
+});
+
+describe('stripNear: when the Sound Design tab lifts', () => {
+  const top = 800;
+  it('lifts over the dock, and within reach above it', () => {
+    expect(stripNear({ y: 820, top })).toBe(true);
+    expect(stripNear({ y: top - 230, top })).toBe(true);
+  });
+
+  it('keeps still out of reach', () => {
+    expect(stripNear({ y: top - 250, top })).toBe(false);
+  });
+
+  it('keeps still over the panel while it is being worked, and still lifts over the dock', () => {
+    expect(stripNear({ y: 760, top, busy: true })).toBe(false);
+    expect(stripNear({ y: 820, top, busy: true })).toBe(true);
   });
 });

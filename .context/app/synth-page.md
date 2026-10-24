@@ -18,7 +18,7 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
 | `components/app/synth/synth-page.tsx`    | Holds the page state (`App.jsx`'s) and lays out the regions               |
 | `components/app/synth/synth.css`         | The instrument's classes: `kys-label`, `kys-player`, `kys-pulse`, …       |
 | `components/app/synth/player.tsx`        | The player's pieces: wordmark, the Sound Design strip, play, full screen  |
-| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings under the panel            |
+| `components/app/synth/player-tools.tsx`  | The bar's layer toggles and the panel settings on the panel's rail        |
 | `components/app/synth/drawers.tsx`       | The tutor's drawer, sliding over the panel from `lg` up                   |
 | `components/app/synth/lesson-card.tsx`   | The card over the panel from `lg` up: lesson, inspector or effects        |
 | `components/app/synth/engine.ts`         | One audio engine for the visit                                            |
@@ -126,7 +126,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ ├───────────────────────────────────────────────────────────────┤ │               │        │
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
 │ └───────────────────────────────────────────────────────────────┘ │               │        │
-│ <name> [mine] 3 controls moved                       [Unplug all] │
+│ <name> [mine] 3 controls moved                                    │
 │ IN THE STYLE OF… · blurb                                          │               │        │
 │ Save / Save as / Rename / Share …                                 └───────────────┘        │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
@@ -152,12 +152,16 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `.kys-synth[data-idle]`), as a video player's do; focus inside one, or hovering it or the dock, brings
   it back.
 - **The Sound Design strip teaches the sound** (t-71), over the bar, where a video's chapters are
-  (`SoundDesign` in `player.tsx`). From `lg` up with a pointer it floats over the foot of the panel
-  and shows only while the pointer is within `STRIP_REACH` px of the dock (`data-near` on the dock,
-  set without a render) or focus is in it; it is headed "Learn sound design"; it is hidden by opacity, so Tab still reaches it. On
-  touch and below `lg` it sits in the dock's flow.
+  (`SoundDesign` in `player.tsx`). From `lg` up with a pointer it is a drawer over the foot of the
+  panel: its "Learn sound design" tab always shows at the right of the dock's top and lifts a little while the
+  pointer is within `STRIP_REACH` px of the dock (`stripNear`, `data-near` on the dock, set without a
+  render), but not while the panel is being worked (a drag, or a press or wheel on it in the last
+  `PANEL_QUIET_MS`). A press on the tab slides the strip up (`data-open`, the page's `designOpen`), the tab settling into the strip's head (the wordmark at its left) with an × that closes it,
+  and it stays up, whatever the pointer does, until its tab or its head is pressed, or a press lands outside the strip, the lesson card and the panel; a press on the panel puts it away too unless a chapter has been chosen since it opened (`chapterChosen`), when the panel is where the lesson is followed; closed it is
+  `visibility: hidden`, so Tab passes it. On touch and below `lg` there is no tab and the strip sits
+  in the dock's flow.
 - **The patch picker opens the bar** (`SoundPicker`), next to Play, with Restore patch and
-  Blank patch: the sound's name opens the library over the bar (or the Library sheet below `lg`)
+  Blank patch: the sound's name opens the library as a drawer down the left of the screen (or the Library sheet below `lg`)
   and puts focus in its search. Its "In the style of…" is its tooltip.
 - **The lesson's steps are the chapters**, one per step in its module's colour, each labelled with
   its number and the part of the synth it works on (`moduleOf(step.module).label`), and its title
@@ -178,12 +182,57 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   its button is "Build it step by step"; from the last step Next finishes. Their names ("Previous
   lesson step", "Next lesson step", "Finish the lesson", "Lesson step 1: …") differ from the Lesson
   region's own arrows so both can be on the page.
-- **The layers and the panel settings** (t-72, `player-tools.tsx`). Sections, Dim unused and Sensitive are
-  toggles over the panel, as a video player carries CC: an icon, with its word from `xl` up, and
-  the full name as the accessible name. How the panel is drawn (Hardware or Outline,
-  Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
-  control; `kys.tips`) are all on show under the panel, each switch under its name, which explains
-  it on hover. Harmonics is in the deck, beside the scope it extends.
+- **The layers and the panel settings** (t-72, `player-tools.tsx`) are on **the panel's rails**
+  (`.kys-rail`): strips of the faceplate along its head and foot, the width of the panel as it fits
+  the screen, as a hardware panel's lip carries its smaller switches. They take the synth's own
+  faceplate colour and print in its silkscreen ink (`theme.panel`, `panel2` and `ink`, passed as
+  `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
+  head (`.is-top`) carries Sections, Dim unused and Sensitive, the inspector, then the tour and its
+  help at the right; each layer is its icon (with its word from `xl` up and below `lg`) and an LED
+  lit while it is over the panel. The foot (`.is-foot`) carries how the panel is drawn (Hardware or
+  Outline, Modular or Long), the magnifier and Hover help (the card that pops up when you point at a
+  control; `kys.tips`): each its name in the panel's lettering, which explains it on hover, then its
+  choices, each a word with an LED lit for the one in use (`aria-pressed` buttons in a named group).
+  The foot's LEDs light in a sweep when the page loads (not with reduced motion). The search is at
+  the foot's right as an amber readout, and `/` outside a field puts the cursor in it. Under the
+  foot's right end, while cables are plugged, a key in the same faceplate colours and print
+  (`.kys-panel-key`) floats as a part of the synth: **Unplug all cables**, or **Remove all pins** on
+  a pin matrix (`synthDef.matrix`). At the head's right, before the tour, **Undo** and **Redo**
+  take back and put back the last 20 changes to the panel's controls and cables (`usePanelHistory`
+  over `lib/app/synths/lib/history.ts`): every change goes through the page's `patch`, which the
+  hook wraps, so a restore from storage is not one; moves within `HISTORY_GROUP_MS` are one change
+  (a knob's turn); a different patch or lesson step on the panel starts it afresh; ⌘Z / ⇧⌘Z
+  (Ctrl+Z / Ctrl+Y) work outside fields, dialogs and the sequencer. An undo or redo is shown being
+  done: its button's LED lights, what it changes is lit (`HISTORY_LIGHT_MS`), then the controls turn
+  there as a hand would (`HISTORY_TURN_MS`, `tweenValues`: a stepped knob through its steps, then
+  snapped home), the engine hearing the turn; another press or a change finishes it at once. A cable swings as its ends move
+  and settles (`swingStep`, `useSwing` in `parts.tsx`): its belly a damped pendulum as long as the
+  cable, so a long one swings slower and further; one just plugged in carries on the swing of the
+  one it replaces (the held cable, or the end moved), jolted a little as it seats. A cable unplugged on its own drops away
+  from the jack still holding it (`FallingCable`). **Unplug all cables** takes them out one by one,
+  in the order they were plugged (`UNPLUG_GAP_MS`), as one undo step; Undo and Redo walk cables one
+  by one too (`tweenCables`). A new patch (another sound, a lesson step, Blank) is walked in on the
+  panel: the old cables or pins out one by one, then the new in (`REPATCH_STEP_MS`), the engine
+  having the new patch at once; not as the page opens, on another synth, or with reduced motion.
+  A new patch from a sound opened (the library's, the user's, the tutor's, a shared one), **Blank
+  patch**, **Restore patch**, or the synth arriving (from its blank patch) is **glided** onto the
+  panel through the hook's `glide` (`glidePlan` / `glideAt` in `history.ts`): the cables the new
+  patch has not got come out first, then the controls turn a part at a time down the voice as the
+  lessons go (`GLIDE_ORDER`: oscillators, mixer, filter, envelopes, amplifier, modulation, … effects,
+  output), nothing lit around them (`GLIDE_STAGE_MS`, faster when many move, `GLIDE_KNOBS_MS`),
+  and the new cables go in last. The stored session holds the new patch at once (saved, counted
+  and recorded as one change); the hook hands back `sess` as the panel shows it, so the panel and
+  the engine follow the glide while a save sends `stored`. A session landing meanwhile (the stored
+  panel, the account's) carries the glide on to it; a change through `patch`, or Undo, finishes it.
+  Not with reduced motion (`glideMotion` in `motion.ts`, which `tests/setup.ts` turns off for every
+  test but the glides' own). The cables, changing one at a time, pass through the panel's walk-in
+  above unchanged; lesson steps still use that walk-in alone.
+  Choosing another synth turns the instrument on a turntable (`ViewTransition`, transition type
+  `synth-change`, `.kys-panel-turn`): the old turns away edge-on, the new turns in. The rails'
+  shadows are `box-shadow`s, not filters, and they set their own `--rail-*` variables rather than
+  the player's, because their tooltips are inside them. The foot's height (`RAIL_H`) is counted in
+  the room the panel is fitted to; the head is above the scroller, so it is counted already. The
+  tutor stays in the row over the panel. Harmonics is in the deck, beside the scope it extends.
 - **The player's buttons carry their own tooltip** (`PlayerTip`, `player-tip.tsx`): the button's
   name and a line on what it does, on hover or focus, in place of the browser's slow `title`. It
   is a Radix popup that is not portalled, so it works full screen.
@@ -194,9 +243,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 - **Under the panel, on the stage,** is the title row, as under a video: the loaded sound (on one
   line in the panel's label face, `.kys-sound-title`, truncated with its full name as the
   `title`), its marks, the save actions (Save a copy…, with a tooltip on what it keeps) and Unplug
-  all, then the panel settings and the search (`.kys-tools`). The name wins the row: as the screen
-  narrows the search gives up its width (to 160px), then the tools wrap under the name. Below
-  `xl`, while the search is in use, it takes the row and the settings step aside. The sound's "In
+  all. The sound's "In
   the style of…" and blurb run the whole width under both, as a video's description is under its
   title.
 - **The piano is out by default on a tall screen** (`min-height: 900px`) and put away on a short
@@ -205,9 +252,8 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   the theme; the faceplate keeps its own colours). **MIDI** is one button in the bar, opening a
   dialog with the status, Connect / Try again / Stop, and how to connect a keyboard.
 - **On a phone** the bar's buttons wrap rather than scroll, with their words, at 44px on a touch
-  screen; the header's layers share one even row; below `md` the panel settings fold behind a
-  settings button by the sound's name (`aria-expanded`, `data-settings` on `#kys-tools`), the
-  search staying on show; the wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
+  screen; the head rail's layers wrap as the rail narrows; below `md` the foot rail's search takes a line of its
+  own under the settings; the wordmark hides below `md`. The strip over the keys scrolls them by a drag the page handles, so a
   mouse drags it too. **Full screen** lifts the panel's 1560px cap (`--kys-fit-max`), so it takes
   the screen's width. The step the panel is at is not repeated here: the
   chapters and the card show it. The description is of the sound on

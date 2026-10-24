@@ -162,3 +162,123 @@ export function SeqSelect({
     </div>
   );
 }
+
+/**
+ * The list of a select without its cell, for a list another control opens (a lane's tab, pressed again). It takes the
+ * keys while it is open: focus moves to it, the arrows, Home and End move, a letter jumps, Enter or Space chooses, and
+ * Escape or Tab closes, handing focus back to `anchor`. A press outside it and outside `anchor` closes it. It opens
+ * upward unless there is no room above, from the nearest positioned ancestor.
+ */
+export function SeqPicker({
+  label,
+  value,
+  options,
+  anchor,
+  onChange,
+  onClose,
+}: {
+  label: string;
+  value: string;
+  options: readonly (readonly [string, string])[];
+  /** What opened it, which a press on does not close it (it toggles it itself), and focus goes back to. */
+  anchor: { current: HTMLElement | null };
+  onChange: (v: string) => void;
+  onClose: () => void;
+}) {
+  const id = useId();
+  const list = useRef<HTMLUListElement | null>(null);
+  const [active, setActive] = useState(() =>
+    Math.max(
+      0,
+      options.findIndex(([v]) => v === value)
+    )
+  );
+  const [down] = useState(
+    () => (anchor.current?.getBoundingClientRect().top ?? LIST_ROOM) < LIST_ROOM
+  );
+  const close = (refocus: boolean) => {
+    onClose();
+    if (refocus) anchor.current?.focus();
+  };
+  const choose = (i: number) => {
+    const o = options[i];
+    if (o && o[0] !== value) onChange(o[0]);
+    close(true);
+  };
+
+  useEffect(() => {
+    list.current?.focus();
+  }, []);
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      const t = e.target;
+      if (!(t instanceof Node) || list.current?.contains(t) || anchor.current?.contains(t)) return;
+      onClose();
+    };
+    document.addEventListener('pointerdown', onDown);
+    return () => document.removeEventListener('pointerdown', onDown);
+  }, [anchor, onClose]);
+  useEffect(() => {
+    list.current
+      ?.querySelector<HTMLElement>(`[data-i="${active}"]`)
+      ?.scrollIntoView?.({ block: 'nearest' });
+  }, [active]);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
+    const last = options.length - 1;
+    if (e.key === 'Tab') {
+      close(false);
+      return;
+    }
+    if (e.key === 'ArrowDown') setActive((a) => Math.min(last, a + 1));
+    else if (e.key === 'ArrowUp') setActive((a) => Math.max(0, a - 1));
+    else if (e.key === 'Home') setActive(0);
+    else if (e.key === 'End') setActive(last);
+    else if (e.key === 'Enter' || e.key === ' ') choose(active);
+    else if (e.key === 'Escape') close(true);
+    else if (/^\S$/.test(e.key)) {
+      const k = e.key.toLowerCase();
+      const next = [...options.keys()]
+        .map((n) => (active + 1 + n) % options.length)
+        .find((n) => options[n][1].toLowerCase().startsWith(k));
+      if (next === undefined) return;
+      setActive(next);
+    } else return;
+    e.preventDefault();
+    // The page plays notes from letters; while the list is open they are the list's.
+    e.stopPropagation();
+  };
+
+  return (
+    <ul
+      ref={list}
+      id={id}
+      role="listbox"
+      tabIndex={-1}
+      aria-label={label}
+      aria-activedescendant={`${id}-${active}`}
+      className="kys-seq-list"
+      data-down={down || undefined}
+      onKeyDown={onKeyDown}
+    >
+      {options.map(([v, l], i) => (
+        // The keys are the list's own (aria-activedescendant), so an option takes none.
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+        <li
+          key={v}
+          id={`${id}-${i}`}
+          data-i={i}
+          role="option"
+          aria-selected={v === value}
+          data-active={i === active || undefined}
+          className="kys-seq-option"
+          onPointerDown={(e) => e.preventDefault()}
+          onPointerEnter={() => setActive(i)}
+          onClick={() => choose(i)}
+        >
+          {l}
+        </li>
+      ))}
+    </ul>
+  );
+}

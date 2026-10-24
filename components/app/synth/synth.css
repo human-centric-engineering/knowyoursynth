@@ -57,6 +57,15 @@ svg .kys-hit:focus-visible {
 .kys-synth-shadow {
   filter: drop-shadow(0 28px 34px rgb(0 0 0 / 0.5)) drop-shadow(0 4px 6px rgb(0 0 0 / 0.4));
 }
+/* The outline drawing is light on a light grid: the same lift, softer. */
+.kys-synth-shadow.is-outline {
+  filter: drop-shadow(0 20px 28px rgb(0 0 0 / 0.18)) drop-shadow(0 3px 5px rgb(0 0 0 / 0.14));
+}
+/* A light faceplate (cream, red, yellow) on the light stage: the outline's softer lift, a little deeper, since the
+   face is coloured. A black panel keeps the deep shadow, which it needs to stand off a pale floor. */
+:root:not(.dark) .kys-synth-shadow.is-light {
+  filter: drop-shadow(0 22px 30px rgb(20 28 40 / 0.22)) drop-shadow(0 3px 5px rgb(20 28 40 / 0.16));
+}
 .kys-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--kys-line) transparent;
@@ -255,6 +264,7 @@ svg .kys-hit:focus-visible {
   margin: 0 0 6px;
 }
 .kys-design-h {
+  order: 1;
   margin: 0;
   white-space: nowrap;
   font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
@@ -276,6 +286,10 @@ svg .kys-hit:focus-visible {
   .kys-design-row > * {
     flex: 1 1 100%;
   }
+}
+/* The drawer's tab is drawn only where the strip is a drawer (from `lg` up, with a pointer). */
+.kys-design-tab {
+  display: none;
 }
 .kys-design-sub {
   margin: 0;
@@ -641,17 +655,7 @@ svg .kys-hit:focus-visible {
   fill: rgb(24 26 33 / 0.98);
 }
 
-/* The panel settings, on show under the panel: each switch under its name. */
-.kys-settings {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 6px 14px;
-  font-size: 12px;
-}
-/* The row under the panel: the sound's name, then the tools. The name is set in the
-   panel's label face, on one line, and wins the row: the search gives up its width
-   first, then the tools wrap under the name. */
+/* The sound's name, under the rail, set in the panel's label face, on one line. */
 .kys-sound-title {
   font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
   font-weight: 600;
@@ -660,74 +664,449 @@ svg .kys-hit:focus-visible {
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
-/* A zero basis with the settings and the narrowest search as its floor: the tools
-   share the name's row while they fit at that floor, and wrap under it once not. */
-.kys-tools {
+
+/* The panel's rails: strips of the faceplate along its head and foot, as a
+   hardware panel's lip carries its smaller switches. The head carries the layers
+   over the panel, the inspector and the tour; the foot how the panel is drawn and
+   the search. They are the faceplate's own colour and print in its silkscreen ink
+   (`--rail-face`, `--rail-face2`, `--rail-print`, set by the page from the synth's
+   theme, or the outline drawing's paper and ink). Quiet until the pointer or
+   focus comes to them. Their tooltips are inside them, so they set their own
+   variables rather than the player's. */
+.kys-rail {
+  --rail-ink: color-mix(in srgb, var(--rail-print, #ece9e2) 58%, var(--rail-face, #16181e));
+  --rail-ink-hi: color-mix(in srgb, var(--rail-print, #ece9e2) 85%, var(--rail-face, #16181e));
+  --rail-on: var(--rail-print, #ece9e2);
+  --rail-rule: color-mix(in srgb, var(--rail-print, #ece9e2) 22%, transparent);
+  --rail-led: #ffb547;
   display: flex;
-  flex: 1 1 0;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 12px 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+  min-height: 36px;
+  padding: 3px 6px 3px 14px;
+  color: var(--rail-on);
 }
-.kys-tools > .kys-settings {
-  flex: none;
+/* Their shadows are the panel's, as box-shadows: a filter would make them the
+   containing block of their tooltips, which are positioned fixed. */
+.kys-rail.is-foot {
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(
+    180deg,
+    var(--rail-face2, #16181e),
+    color-mix(in srgb, var(--rail-face2, #16181e) 86%, #000)
+  );
+  box-shadow:
+    inset 0 2px 2px -1px rgb(0 0 0 / 0.35),
+    inset 0 -1px 0 rgb(0 0 0 / 0.35),
+    0 22px 30px -12px rgb(0 0 0 / 0.55),
+    0 4px 6px rgb(0 0 0 / 0.35);
 }
-.kys-tools-find {
-  flex: 1 1 160px;
-  min-width: 160px;
-  max-width: 420px;
+.kys-rail.is-top {
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rail-face, #16181e) 90%, #fff),
+    var(--rail-face, #16181e)
+  );
+  box-shadow:
+    inset 0 -2px 2px -1px rgb(0 0 0 / 0.3),
+    0 -2px 10px rgb(0 0 0 / 0.25);
 }
-/* Squeezed, the search opens out to the row's width while it is in use, and the
-   settings step aside until it is left. */
-@media (max-width: 1279px) {
-  .kys-tools:has(.kys-tools-find:focus-within) > .kys-settings {
-    display: none;
-  }
-  .kys-tools:has(.kys-tools-find:focus-within) > .kys-tools-find {
-    max-width: none;
-  }
+.kys-rail.is-foot.is-outline {
+  box-shadow:
+    inset 0 2px 2px -1px rgb(0 0 0 / 0.12),
+    0 16px 24px -10px rgb(0 0 0 / 0.2),
+    0 3px 5px rgb(0 0 0 / 0.14);
 }
-@media (max-width: 767px) {
-  .kys-tools {
-    flex-basis: 100%;
-    flex-wrap: wrap;
-  }
-  .kys-tools > .kys-settings {
-    flex: 1 1 100%;
-  }
-  /* Behind the settings button by the sound's name until it is opened. */
-  .kys-tools[data-settings='closed'] > .kys-settings {
-    display: none;
-  }
-  .kys-tools-find {
-    max-width: none;
-  }
+.kys-rail.is-top.is-outline {
+  background: var(--rail-face);
+  box-shadow:
+    inset 0 -2px 2px -1px rgb(0 0 0 / 0.1),
+    0 -2px 8px rgb(0 0 0 / 0.08);
+}
+
+/* The rails of a light faceplate, by day: the same softer lift as the panel between them. */
+:root:not(.dark) .kys-rail.is-foot.is-light {
+  box-shadow:
+    inset 0 2px 2px -1px rgb(0 0 0 / 0.14),
+    inset 0 -1px 0 rgb(0 0 0 / 0.12),
+    0 18px 26px -12px rgb(20 28 40 / 0.24),
+    0 3px 5px rgb(20 28 40 / 0.16);
+}
+:root:not(.dark) .kys-rail.is-top.is-light {
+  box-shadow:
+    inset 0 -2px 2px -1px rgb(0 0 0 / 0.12),
+    0 -2px 8px rgb(20 28 40 / 0.1);
+}
+
+/* Under the rail, at its right end: a key in the faceplate's colours and print, lifted as the panel is, so it reads
+   as a part of the synth floating beneath it (Unplug all cables). */
+/* It takes no room: the strip is no height, and the key hangs from it, so what is under the rail (the patch's name)
+   stays where it is whether there are cables or not. */
+.kys-panel-under {
+  position: relative;
+  height: 0;
+}
+.kys-panel-key {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 0;
+  white-space: nowrap;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rail-print, #ece9e2);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rail-face, #16181e) 92%, #fff),
+    var(--rail-face2, #16181e)
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 10px 18px -8px rgb(0 0 0 / 0.55),
+    0 2px 4px rgb(0 0 0 / 0.35);
+  transition:
+    translate 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.12s ease;
+}
+.kys-panel-key:hover {
+  filter: brightness(1.08);
+}
+.kys-panel-key:active {
+  translate: 0 1px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 4px 8px -4px rgb(0 0 0 / 0.5);
+}
+.kys-panel-key:focus-visible {
+  outline: 2px solid var(--kys-accent);
+  outline-offset: 2px;
+}
+/* On a light faceplate (by day) or the outline drawing, the lift is softer, as the panel's is. */
+:root:not(.dark) .kys-panel-key.is-light,
+.kys-panel-key.is-outline {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -1px 0 rgb(0 0 0 / 0.12),
+    0 8px 14px -8px rgb(20 28 40 / 0.3),
+    0 2px 4px rgb(20 28 40 / 0.14);
+}
+
+/* The foot: each setting is its name, then its choices, each with an LED. */
+.kys-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 0;
 }
 .kys-setting {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 14px;
 }
-/* On a phone the settings are a grid the width of the screen, each switch filling
-   its cell, rather than a ragged row. */
-@media (max-width: 767px) {
-  .kys-settings {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
-  }
-  .kys-setting > [role='group'] {
-    width: 100%;
-  }
+.kys-setting:first-child {
+  padding-left: 0;
+}
+/* A hairline between settings, as the panel rules its sections. */
+.kys-setting + .kys-setting {
+  border-left: 1px solid var(--rail-rule);
 }
 .kys-setting-name {
   width: fit-content;
   font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
-  font-size: 9.5px;
+  font-size: 8.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--kys-faint);
+  white-space: nowrap;
+  color: var(--rail-ink);
   cursor: help;
+  transition: color 0.2s ease;
+}
+.kys-leds {
+  display: flex;
+  align-items: center;
+}
+.kys-led-opt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  color: var(--rail-ink);
+  transition: color 0.2s ease;
+}
+.kys-led-opt:hover {
+  color: var(--rail-ink-hi);
+}
+.kys-led-opt[aria-pressed='true'] {
+  color: var(--rail-on);
+}
+.kys-rail button:focus-visible {
+  outline: 1.5px solid var(--rail-on);
+  outline-offset: 1px;
+}
+/* An LED: dark in its socket, lit in amber. On the foot's choices and the head's
+   layers alike. */
+.kys-led-dot,
+.kys-rail .kys-layer::before {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--rail-face, #16181e) 55%, #000);
+  box-shadow:
+    inset 0 1px 1px rgb(0 0 0 / 0.7),
+    0 0 0 1px var(--rail-rule);
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.kys-led-opt[aria-pressed='true'] .kys-led-dot,
+.kys-rail .kys-layer.is-on::before {
+  background: radial-gradient(circle at 35% 35%, #ffe2a8, var(--rail-led) 60%);
+  box-shadow:
+    0 0 6px rgb(255 166 58 / 0.85),
+    0 0 0 1px rgb(120 60 0 / 0.5);
+}
+/* The rail wakes with the panel: its LEDs light one after another, then settle. */
+.kys-led-opt .kys-led-dot {
+  animation: kys-led-wake 0.5s ease-out both;
+  animation-delay: calc(250ms + var(--at, 0) * 150ms);
+}
+.kys-led-opt:nth-child(2) .kys-led-dot {
+  animation-delay: calc(300ms + var(--at, 0) * 150ms);
+}
+.kys-led-opt:nth-child(3) .kys-led-dot {
+  animation-delay: calc(350ms + var(--at, 0) * 150ms);
+}
+@keyframes kys-led-wake {
+  40% {
+    background: var(--rail-led);
+    box-shadow: 0 0 8px rgb(255 166 58 / 0.9);
+  }
+}
+/* Brighter while the pointer or focus is on the rail. */
+.kys-rail:hover .kys-setting-name,
+.kys-rail:focus-within .kys-setting-name {
+  color: var(--rail-ink-hi);
+}
+
+/* The head: the layers and the inspector, each an icon (with its word where
+   there is room) and an LED lit while it is over the panel; the tour and its
+   help at the right. */
+.kys-rail-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+.kys-rail-group + .kys-rail-group {
+  padding-left: 14px;
+  border-left: 1px solid var(--rail-rule);
+}
+.kys-rail .kys-layer {
+  height: 30px;
+  gap: 6px;
+  padding: 0 9px;
+  border-radius: 6px;
+  color: var(--rail-ink);
+}
+/* The words in the panel's silkscreen: condensed capitals, spaced, as the
+   section names on the faceplate are. */
+.kys-rail .kys-layer,
+.kys-led-opt {
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* The LED says it is on; a press turns it off, so it needs no close mark. */
+.kys-rail .kys-layer-x {
+  display: none;
+}
+.kys-rail .kys-layer::before {
+  content: '';
+}
+.kys-rail .kys-layer:hover {
+  color: var(--rail-ink-hi);
+  background: color-mix(in srgb, var(--rail-print, #ece9e2) 9%, transparent);
+}
+.kys-rail .kys-layer.is-on {
+  color: var(--rail-on);
+  background: color-mix(in srgb, var(--rail-print, #ece9e2) 10%, transparent);
+  box-shadow: none;
+}
+/* Undo and Redo: two quiet keys in the rail's print, before the tour, ruled off from it. */
+.kys-rail-history {
+  display: flex;
+  gap: 2px;
+  padding-right: 8px;
+  border-right: 1px solid var(--rail-rule);
+}
+.kys-rail .kys-rail-history .kys-layer {
+  padding: 0 7px;
+}
+.kys-rail .kys-layer:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: none;
+}
+/* Its LED lit while its undo or redo is shown on the panel, bright even if it has just run out of steps. */
+.kys-rail .kys-layer.is-lit::before {
+  background: radial-gradient(circle at 35% 35%, #ffe2a8, var(--rail-led) 60%);
+  box-shadow:
+    0 0 6px rgb(255 166 58 / 0.85),
+    0 0 0 1px rgb(120 60 0 / 0.5);
+}
+.kys-rail .kys-layer.is-lit:disabled {
+  opacity: 1;
+}
+.kys-rail-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.kys-rail-end > button {
+  height: 28px;
+  border: 1px solid color-mix(in srgb, var(--rail-print, #ece9e2) 45%, transparent);
+  border-radius: 6px;
+  padding: 0 12px;
+  font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rail-on);
+  background: transparent;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.kys-rail-end > button:hover {
+  background: color-mix(in srgb, var(--rail-print, #ece9e2) 12%, transparent);
+}
+.kys-rail-end > button[aria-pressed='true'] {
+  color: var(--rail-face, #16181e);
+  background: var(--rail-on);
+}
+/* The help: a round ? at the end. */
+.kys-rail-end > button:last-child {
+  width: 28px;
+  padding: 0;
+  border-radius: 50%;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+/* A finger needs a bigger target than a pointer. */
+@media (pointer: coarse) {
+  .kys-rail .kys-layer,
+  .kys-rail-end > button,
+  .kys-led-opt {
+    min-height: 40px;
+  }
+  .kys-rail-end > button:last-child {
+    width: 40px;
+  }
+}
+
+/* The search: a recessed amber readout at the rail's right, as the sequencer's. */
+.kys-rail-find {
+  flex: 1 1 200px;
+  min-width: 180px;
+  max-width: 340px;
+  margin-left: auto;
+  transition: max-width 0.2s ease;
+}
+.kys-rail-find:focus-within {
+  max-width: 460px;
+}
+.kys-rail-find input {
+  height: 28px;
+  border: 0;
+  border-radius: 5px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  color: #ffb547;
+  caret-color: #ffb547;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px), #0b0b0d;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.1);
+  transition: box-shadow 0.15s ease;
+}
+.kys-rail-find input::placeholder {
+  color: #9a7440;
+}
+.kys-rail-find input:hover {
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px rgb(255 181 71 / 0.28);
+}
+.kys-rail-find input:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.8),
+    inset 0 0 0 1px #ffb547,
+    0 0 12px -2px rgb(255 166 58 / 0.55);
+}
+.kys-rail-find > svg {
+  color: #9a7440;
+}
+.kys-find-key {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  color: #9a7440;
+  background: #1a1b20;
+  box-shadow:
+    inset 0 -1px 0 rgb(0 0 0 / 0.6),
+    0 0 0 1px rgb(255 181 71 / 0.15);
+  pointer-events: none;
+}
+.kys-rail-find:focus-within .kys-find-key {
+  display: none;
+}
+/* Narrow, the search takes a line of its own under the settings. */
+@media (max-width: 767px) {
+  .kys-rail {
+    padding: 4px 8px 8px;
+  }
+  .kys-settings {
+    width: 100%;
+  }
+  .kys-setting {
+    padding-inline: 10px;
+  }
+  .kys-rail-find {
+    flex-basis: 100%;
+    max-width: none;
+  }
 }
 
 /* The deck: the keyboard and the scope, under the bar. */
@@ -740,12 +1119,14 @@ svg .kys-hit:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .kys-card,
   .kys-sounds-pop,
+  .kys-led-dot,
   .kys-tip,
   .kys-play.is-playing .kys-play-dot {
     animation: none;
   }
   .kys-chapter-track,
-  .kys-dock .kys-design,
+  .kys-design-tab,
+  .kys-dock .kys-design-body,
   .kys-sound-pick,
   .kys-step-btn,
   .kys-autohide,
@@ -801,30 +1182,125 @@ svg .kys-hit:focus-visible {
     border-radius: 18px 18px 0 0;
   }
 }
-/* With a pointer, the strip floats over the foot of the panel instead of taking
-   room in the dock, and shows only while the pointer is near (`data-near`, set
-   by the page) or focus is in it. Hidden by opacity, not visibility, so Tab still
-   reaches it and brings it up. Its translate is its own: the bar's settings menu
-   is not inside it. */
+/* With a pointer, the strip is a drawer over the foot of the panel instead of
+   taking room in the dock. Its tab always shows on the dock's top, lifting a
+   little while the pointer is near (`data-near`, set by the page) to invite a
+   press; a press slides the strip up (`data-open`) by its own height, a grid row
+   going from 0fr to 1fr, and it stays up until the tab is pressed again. Closed,
+   the strip is `visibility: hidden` (after its slide), so Tab passes it by. */
 @media (hover: hover) and (min-width: 1024px) {
   .kys-dock .kys-design {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 100%;
-    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0;
+    background: none;
     pointer-events: none;
-    translate: 0 8px;
-    box-shadow: 0 -16px 32px -16px var(--kys-shadow);
-    transition:
-      opacity 0.2s ease,
-      translate 0.2s ease;
   }
-  .kys-dock[data-near] .kys-design,
-  .kys-dock .kys-design:focus-within {
-    opacity: 1;
+  .kys-dock .kys-design::before {
+    display: none;
+  }
+  .kys-dock .kys-design-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    height: 28px;
+    margin-right: 22px;
+    padding: 0 11px 1px 14px;
+    border-radius: 10px 10px 0 0;
+    font-family: 'Michroma', 'Eurostile', 'Arial Black', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--kys-accent);
+    background: var(--kys-stage-hi);
+    box-shadow:
+      inset 0 1px 0 rgb(var(--kys-wash) / 0.07),
+      0 -8px 18px -10px var(--kys-shadow);
     pointer-events: auto;
-    translate: 0 0;
+    transition:
+      height 0.2s ease,
+      translate 0.25s ease,
+      background-color 0.25s ease,
+      box-shadow 0.25s ease,
+      color 0.15s ease;
+  }
+  /* Open, the tab settles down into the strip's head (by its own height), its tab shape gone: the strip's title, at
+     its right, with the × that closes it. */
+  .kys-dock .kys-design[data-open] .kys-design-tab {
+    translate: 0 28px;
+    background: transparent;
+    box-shadow: none;
+  }
+  .kys-dock .kys-design-tab:hover {
+    color: var(--kys-text);
+  }
+  .kys-dock .kys-design-tab:focus-visible {
+    outline: 2px solid var(--kys-accent);
+    outline-offset: 2px;
+  }
+  /* The pointer near: the closed tab rises and glows, as a drawer's handle invites a pull. It grows upward rather than
+     moving, so its foot stays on the dock: the strip is anchored at its bottom, so a taller tab is a higher top. */
+  .kys-dock[data-near] .kys-design:not([data-open]) .kys-design-tab {
+    height: 33px;
+    box-shadow:
+      inset 0 1px 0 rgb(var(--kys-wash) / 0.1),
+      0 -6px 18px -6px rgb(246 166 58 / 0.45);
+  }
+  .kys-design-tab-icon {
+    flex: none;
+  }
+  .kys-dock .kys-design-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    align-self: stretch;
+    visibility: hidden;
+    border-radius: 18px 18px 0 0;
+    background:
+      radial-gradient(70% 140% at 50% 0%, rgb(246 166 58 / 0.07), transparent 70%),
+      linear-gradient(var(--kys-stage-hi), var(--kys-stage));
+    pointer-events: auto;
+    transition:
+      grid-template-rows 0.25s ease,
+      visibility 0s linear 0.25s;
+  }
+  .kys-dock .kys-design[data-open] .kys-design-body {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    box-shadow: 0 -16px 32px -16px var(--kys-shadow);
+    transition: grid-template-rows 0.25s ease;
+  }
+  .kys-dock .kys-design-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+  /* The tab names the drawer, so the heading inside it is for assistive technology only; the wordmark stays. */
+  /* The head's row is the tab's height, so the tab settles level with the wordmark. */
+  .kys-dock .kys-design-head {
+    justify-content: flex-start;
+    min-height: 28px;
+    margin: 0 0 4px;
+    padding: 0 12px;
+  }
+  .kys-dock .kys-design-head[data-closes] {
+    cursor: pointer;
+  }
+  .kys-dock .kys-design-h {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .kys-dock .kys-design-row {
+    padding: 0 12px 8px;
   }
   .kys-dock .kys-player-bar {
     border-radius: 18px 18px 0 0;
@@ -832,10 +1308,8 @@ svg .kys-hit:focus-visible {
   }
   /* With the strip up, the strip and the bar are one block: only its top is rounded,
      so the bar's corners do not notch the strip's square foot. */
-  .kys-dock[data-near],
-  .kys-dock:has(.kys-design:focus-within),
-  .kys-dock[data-near] .kys-player-bar,
-  .kys-dock:has(.kys-design:focus-within) .kys-player-bar {
+  .kys-dock:has(.kys-design[data-open]),
+  .kys-dock:has(.kys-design[data-open]) .kys-player-bar {
     border-radius: 0;
   }
 }
@@ -843,29 +1317,42 @@ svg .kys-hit:focus-visible {
    tutor's drawer stand on: the dock stacks over them meanwhile, so neither covers
    the chapters or the library. */
 @media (min-width: 1024px) {
-  .kys-dock[data-near],
-  .kys-dock:has(.kys-design:focus-within),
+  .kys-dock:has(.kys-design[data-open]),
   .kys-dock:has(.kys-sounds-pop:not([hidden])) {
     z-index: 46;
   }
 }
 
-/* The sounds: the library, opened over the strip from the sound picker. */
+/* The sounds: the library, opened from the sound picker as a drawer down the left
+   of the screen. It stands over the dock as well as the panel, so a tall dock (the
+   sequencer open) on a short screen does not squash it. */
 .kys-sounds-pop {
-  position: absolute;
+  position: fixed;
   z-index: 50;
-  left: 0;
-  bottom: calc(100% + 12px);
-  width: min(560px, calc(100vw - 48px));
-  max-height: calc(100vh - var(--kys-dock-h, 0px) - 48px);
+  top: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  width: clamp(360px, 34vw, 560px);
+  border: 1px solid var(--kys-line);
+  border-radius: 16px;
+  color: var(--kys-text);
+  background: var(--kys-surface);
+  box-shadow: 24px 0 60px -20px var(--kys-shadow);
+  animation: kys-sounds-in 0.22s ease-out;
+}
+@keyframes kys-sounds-in {
+  from {
+    opacity: 0;
+    translate: -32px 0;
+  }
+}
+.kys-sounds-pop-body {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding: 16px 18px 20px;
-  border-radius: 16px;
-  background: var(--kys-surface);
-  box-shadow:
-    0 0 0 1px rgb(var(--kys-wash) / 0.08),
-    0 24px 60px -16px var(--kys-shadow);
-  animation: kys-fade 0.15s ease-out;
 }
 .kys-sounds-pop[hidden] {
   display: none;
@@ -1053,7 +1540,8 @@ svg .kys-hit:focus-visible {
  * amber readout (its name, the value lit in the display's amber, a meter along
  * its foot), the steps are rubber keys with an LED each, and the tools are a
  * row of quiet buttons with copy and paste behind Edit. The readout and the keys
- * keep their own colours in the light theme, as hardware does.
+ * are drawn in the module's own skin: the tokens below, a dark unit with amber
+ * windows in the dark theme and a light one with pale windows in the light theme.
  *
  * From `lg` up (the dock) it is one row of two columns: the readout, the keys
  * and the tools on the left (Help at the end of the tools), the step inspector on
@@ -1067,11 +1555,108 @@ svg .kys-hit:focus-visible {
   border-top: 1px solid rgb(var(--kys-wash, 255 255 255) / 0.06);
   background: linear-gradient(var(--kys-stage), var(--kys-stage-hi));
 }
-.kys-seq {
+/* The module's skin. `.kys-seq-skin` carries it to what the module opens outside itself (View all's dialog). */
+.kys-seq,
+.kys-seq-skin {
+  /* The readout's windows: the glass, the lit value, a value not set, the names, and the tint of their edges. */
   --lcd: #0b0b0d;
   --lcd-ink: #ffb547;
   --lcd-dim: #9a7440;
   --lcd-label: #7c6849;
+  --lcd-tint: 255 181 71;
+  --lcd-glow: rgb(255 166 58 / 0.45);
+  --lcd-halo: rgb(255 166 58 / 0.55);
+  --lcd-scan: rgb(255 255 255 / 0.018);
+  --lcd-inset: rgb(0 0 0 / 0.75);
+  --lcd-pop: #101114;
+  --lcd-pop-shadow: rgb(0 0 0 / 0.85);
+  /* The well the keys and the lanes sit in. */
+  --well: #0b0c0f;
+  --well-inset: rgb(0 0 0 / 0.6);
+  /* The rubber step keys and their LEDs. */
+  --key-top: #2c3039;
+  --key-bot: #1d2027;
+  --key-beat-top: #353a45;
+  --key-beat-bot: #22262e;
+  --key-ink: #a2a8b5;
+  --key-ink-on: #ece9e2;
+  --key-num: #6d7688;
+  --key-hi: rgb(255 255 255 / 0.07);
+  --key-edge: #08090b;
+  --key-drop: rgb(0 0 0 / 0.45);
+  --key-here-top: #5d636f;
+  --key-here-bot: #3c414c;
+  --key-here-ring: rgb(255 255 255 / 0.5);
+  --key-here-glow: rgb(255 255 255 / 0.25);
+  --key-mark: #f6a63a;
+  --led-off: #3a2a14;
+  --led-on: #ffb547;
+  --led-glow: rgb(255 166 58 / 0.7);
+  --led-muted: #8a6020;
+  /* A lane's cells and bars. */
+  --lane-cell: #16181d;
+  --lane-cell-beat: #1b1e24;
+  --lane-here: rgb(255 255 255 / 0.45);
+  --lane-bar-top: #ffb547;
+  --lane-bar-bot: #b9741e;
+  --lane-bar-glow: rgb(255 166 58 / 0.35);
+  --lane-rest: rgb(255 181 71 / 0.45);
+  /* The keycaps: Fill, Loop, On, Accent, Slide, View all. */
+  --cap: linear-gradient(
+    rgb(var(--kys-wash, 255 255 255) / 0.06),
+    rgb(var(--kys-wash, 255 255 255) / 0.02)
+  );
+  --cap-ring: rgb(var(--kys-wash, 255 255 255) / 0.1);
+  --cap-drop: rgb(0 0 0 / 0.4);
+}
+/* By day: a light unit. Pale windows with the value in a deep amber, unlit (no glow by daylight), white keycaps and
+   keys on a pale grey well. Contrast is checked against the window: ink 4.9:1, names 4.6:1. */
+:root:not(.dark) .kys-seq,
+:root:not(.dark) .kys-seq-skin {
+  --lcd: #e7eaee;
+  --lcd-ink: #9a4e08;
+  --lcd-dim: #7a6650;
+  --lcd-label: #5f6878;
+  --lcd-tint: 154 78 8;
+  --lcd-glow: transparent;
+  --lcd-halo: rgb(184 95 6 / 0.3);
+  --lcd-scan: transparent;
+  --lcd-inset: rgb(20 28 40 / 0.16);
+  --lcd-pop: #ffffff;
+  --lcd-pop-shadow: rgb(20 28 40 / 0.25);
+  --well: #dfe3e8;
+  --well-inset: rgb(20 28 40 / 0.14);
+  --key-top: #ffffff;
+  --key-bot: #f0f2f5;
+  --key-beat-top: #f7f8fa;
+  --key-beat-bot: #e6e9ee;
+  --key-ink: #535d6f;
+  --key-ink-on: #161b25;
+  --key-num: #7f8999;
+  --key-hi: #ffffff;
+  --key-edge: #bcc4ce;
+  --key-drop: rgb(20 28 40 / 0.12);
+  --key-here-top: #fff4e3;
+  --key-here-bot: #fde3bf;
+  --key-here-ring: rgb(184 95 6 / 0.65);
+  --key-here-glow: rgb(246 166 58 / 0.25);
+  --key-mark: #b85f06;
+  --led-off: #e4dacd;
+  --led-on: #f59a1f;
+  --led-glow: rgb(245 154 31 / 0.55);
+  --led-muted: #c08a45;
+  --lane-cell: #f4f6f8;
+  --lane-cell-beat: #ebeef2;
+  --lane-here: rgb(184 95 6 / 0.6);
+  --lane-bar-top: #f5a640;
+  --lane-bar-bot: #d07514;
+  --lane-bar-glow: transparent;
+  --lane-rest: rgb(154 78 8 / 0.5);
+  --cap: linear-gradient(#ffffff, #f1f3f6);
+  --cap-ring: rgb(20 28 40 / 0.16);
+  --cap-drop: rgb(20 28 40 / 0.1);
+}
+.kys-seq {
   position: relative;
   padding: 12px 14px;
   color: var(--kys-text);
@@ -1134,10 +1719,10 @@ svg .kys-hit:focus-visible {
   padding: 3px 10px 7px;
   border-radius: 6px;
   background:
-    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px), var(--lcd);
+    repeating-linear-gradient(0deg, var(--lcd-scan) 0 1px, transparent 1px 3px), var(--lcd);
   box-shadow:
-    inset 0 1px 3px rgb(0 0 0 / 0.75),
-    inset 0 0 0 1px rgb(255 181 71 / 0.07),
+    inset 0 1px 3px var(--lcd-inset),
+    inset 0 0 0 1px rgb(var(--lcd-tint) / 0.07),
     0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.05);
   transition: box-shadow 0.15s ease;
 }
@@ -1149,8 +1734,8 @@ svg .kys-hit:focus-visible {
 .kys-cell-hit:hover,
 .kys-cell-select:hover {
   box-shadow:
-    inset 0 1px 3px rgb(0 0 0 / 0.75),
-    inset 0 0 0 1px rgb(255 181 71 / 0.28),
+    inset 0 1px 3px var(--lcd-inset),
+    inset 0 0 0 1px rgb(var(--lcd-tint) / 0.28),
     0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.05);
 }
 .kys-cell-hit:focus-visible,
@@ -1158,17 +1743,17 @@ svg .kys-hit:focus-visible {
 .kys-cell-select[aria-expanded='true'] {
   outline: none;
   box-shadow:
-    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 1px 3px var(--lcd-inset),
     inset 0 0 0 1px var(--lcd-ink),
-    0 0 12px -2px rgb(255 166 58 / 0.55);
+    0 0 12px -2px var(--lcd-halo);
 }
 /* Typing a value: the cell lit, a caret in the readout's amber. */
 .kys-cell-hit.is-typing {
   cursor: text;
   box-shadow:
-    inset 0 1px 3px rgb(0 0 0 / 0.75),
+    inset 0 1px 3px var(--lcd-inset),
     inset 0 0 0 1px var(--lcd-ink),
-    0 0 12px -2px rgb(255 166 58 / 0.55);
+    0 0 12px -2px var(--lcd-halo);
 }
 .kys-cell-type {
   width: 64px;
@@ -1199,7 +1784,7 @@ svg .kys-hit:focus-visible {
   font-weight: 600;
   line-height: 1.15;
   color: var(--lcd-ink);
-  text-shadow: 0 0 6px rgb(255 166 58 / 0.45);
+  text-shadow: 0 0 6px var(--lcd-glow);
   white-space: nowrap;
 }
 .kys-cell[data-unset] .kys-cell-value {
@@ -1213,7 +1798,7 @@ svg .kys-hit:focus-visible {
   bottom: 4px;
   height: 2px;
   border-radius: 1px;
-  background: rgb(255 181 71 / 0.12);
+  background: rgb(var(--lcd-tint) / 0.12);
 }
 .kys-cell-meter::after {
   content: '';
@@ -1222,7 +1807,7 @@ svg .kys-hit:focus-visible {
   width: var(--enc, 0%);
   border-radius: 1px;
   background: var(--lcd-ink);
-  box-shadow: 0 0 4px rgb(255 166 58 / 0.6);
+  box-shadow: 0 0 4px var(--lcd-glow);
 }
 /* A select in the readout: the value in amber, a caret at its right. */
 .kys-cell-select {
@@ -1259,10 +1844,10 @@ svg .kys-hit:focus-visible {
   overflow-y: auto;
   list-style: none;
   border-radius: 8px;
-  background: #101114;
+  background: var(--lcd-pop);
   box-shadow:
-    inset 0 0 0 1px rgb(255 181 71 / 0.25),
-    0 18px 40px -12px rgb(0 0 0 / 0.85);
+    inset 0 0 0 1px rgb(var(--lcd-tint) / 0.25),
+    0 18px 40px -12px var(--lcd-pop-shadow);
   animation: kys-fade 0.12s ease-out;
 }
 .kys-seq-list[data-down] {
@@ -1282,11 +1867,11 @@ svg .kys-hit:focus-visible {
 }
 .kys-seq-option[data-active] {
   color: var(--lcd-ink);
-  background: rgb(255 181 71 / 0.12);
+  background: rgb(var(--lcd-tint) / 0.12);
 }
 .kys-seq-option[aria-selected='true'] {
   color: var(--lcd-ink);
-  text-shadow: 0 0 6px rgb(255 166 58 / 0.45);
+  text-shadow: 0 0 6px var(--lcd-glow);
 }
 .kys-seq-option[aria-selected='true']::before {
   content: '';
@@ -1298,7 +1883,7 @@ svg .kys-hit:focus-visible {
   margin-top: -2.5px;
   border-radius: 999px;
   background: var(--lcd-ink);
-  box-shadow: 0 0 5px rgb(255 166 58 / 0.8);
+  box-shadow: 0 0 5px var(--lcd-glow);
 }
 /* A small cell with its name beside it: Hits, in the tool row. */
 .kys-cell[data-compact] .kys-cell-hit {
@@ -1336,15 +1921,15 @@ svg .kys-hit:focus-visible {
   font-size: 12px;
   font-weight: 700;
   color: var(--lcd-dim);
-  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.16);
+  box-shadow: inset 0 0 0 1px rgb(var(--lcd-tint) / 0.16);
 }
 .kys-seq-part:hover {
   color: var(--lcd-ink);
 }
 .kys-seq-part.is-on {
   color: var(--lcd-ink);
-  background: rgb(255 181 71 / 0.12);
-  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.5);
+  background: rgb(var(--lcd-tint) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--lcd-tint) / 0.5);
 }
 .kys-seq-part .kys-led {
   width: 5px;
@@ -1362,13 +1947,10 @@ svg .kys-hit:focus-visible {
   font-size: 12px;
   font-weight: 600;
   color: var(--kys-muted);
-  background: linear-gradient(
-    rgb(var(--kys-wash, 255 255 255) / 0.06),
-    rgb(var(--kys-wash, 255 255 255) / 0.02)
-  );
+  background: var(--cap);
   box-shadow:
-    inset 0 0 0 1px rgb(var(--kys-wash, 255 255 255) / 0.1),
-    0 1px 0 rgb(0 0 0 / 0.4);
+    inset 0 0 0 1px var(--cap-ring),
+    0 1px 0 var(--cap-drop);
 }
 .kys-seq-toggle:hover {
   color: var(--kys-text);
@@ -1416,15 +1998,15 @@ svg .kys-hit:focus-visible {
   font-size: 12px;
   font-weight: 700;
   color: var(--lcd-dim);
-  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.16);
+  box-shadow: inset 0 0 0 1px rgb(var(--lcd-tint) / 0.16);
 }
 .kys-seq-page:hover {
   color: var(--lcd-ink);
 }
 .kys-seq-page.is-on {
   color: var(--lcd-ink);
-  background: rgb(255 181 71 / 0.12);
-  box-shadow: inset 0 0 0 1px rgb(255 181 71 / 0.5);
+  background: rgb(var(--lcd-tint) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--lcd-tint) / 0.5);
 }
 .kys-seq-page .kys-led {
   width: 5px;
@@ -1438,9 +2020,9 @@ svg .kys-hit:focus-visible {
   gap: 5px;
   padding: 7px;
   border-radius: 10px;
-  background: #0b0c0f;
+  background: var(--well);
   box-shadow:
-    inset 0 1px 3px rgb(0 0 0 / 0.6),
+    inset 0 1px 3px var(--well-inset),
     0 1px 0 rgb(var(--kys-wash, 255 255 255) / 0.04);
 }
 @media (max-width: 700px) {
@@ -1462,47 +2044,47 @@ svg .kys-hit:focus-visible {
   height: 58px;
   padding: 5px 2px 6px;
   border-radius: 6px;
-  color: #a2a8b5;
-  background: linear-gradient(#2c3039, #1d2027);
+  color: var(--key-ink);
+  background: linear-gradient(var(--key-top), var(--key-bot));
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.07),
-    0 2px 0 #08090b,
-    0 3px 4px rgb(0 0 0 / 0.45);
+    inset 0 1px 0 var(--key-hi),
+    0 2px 0 var(--key-edge),
+    0 3px 4px var(--key-drop);
   transition:
     background-color 0.08s ease,
     box-shadow 0.08s ease;
 }
 .kys-seq-key[data-beat] {
-  background: linear-gradient(#353a45, #22262e);
+  background: linear-gradient(var(--key-beat-top), var(--key-beat-bot));
 }
 .kys-seq-key:active {
   translate: 0 1px;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.05),
-    0 1px 0 #08090b;
+    inset 0 1px 0 var(--key-hi),
+    0 1px 0 var(--key-edge);
 }
 .kys-seq-key-led {
   width: 55%;
   height: 4px;
   border-radius: 2px;
-  background: #3a2a14;
+  background: var(--led-off);
 }
 .kys-seq-key[data-plays] .kys-seq-key-led {
-  background: #ffb547;
-  box-shadow: 0 0 6px 1px rgb(255 166 58 / 0.7);
+  background: var(--led-on);
+  box-shadow: 0 0 6px 1px var(--led-glow);
 }
 .kys-seq-key[data-muted] .kys-seq-key-led {
   background: transparent;
-  box-shadow: inset 0 0 0 1px #8a6020;
+  box-shadow: inset 0 0 0 1px var(--led-muted);
 }
 .kys-seq-key[data-plays] {
-  color: #ece9e2;
+  color: var(--key-ink-on);
 }
 .kys-seq-key[data-here] {
-  background: linear-gradient(#5d636f, #3c414c);
+  background: linear-gradient(var(--key-here-top), var(--key-here-bot));
   box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.5),
-    0 0 14px rgb(255 255 255 / 0.25);
+    0 0 0 1px var(--key-here-ring),
+    0 0 14px var(--key-here-glow);
 }
 .kys-seq-key[aria-current] {
   outline: 2px solid var(--kys-accent);
@@ -1511,7 +2093,7 @@ svg .kys-hit:focus-visible {
 .kys-seq-key-num {
   font-size: 9px;
   line-height: 1;
-  color: #6d7688;
+  color: var(--key-num);
 }
 .kys-seq-key-note {
   font-family: var(--font-mono, ui-monospace, monospace);
@@ -1531,7 +2113,7 @@ svg .kys-hit:focus-visible {
   min-height: 9px;
   font-size: 8.5px;
   line-height: 1;
-  color: #f6a63a;
+  color: var(--key-mark);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -1542,14 +2124,75 @@ svg .kys-hit:focus-visible {
   flex-direction: column;
   gap: 6px;
 }
+/* The tabs' cell gives way before the rest of the row, its keys scrolling sideways rather than wrapping, so the
+   row stays one row however many lanes there are. */
+.kys-seq-lane-tabcell {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.kys-seq-lane-tabs {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.kys-seq-lane-tab {
+  flex: none;
+  max-width: 16ch;
+}
+/* The open tab and its remove read as one key: the name, a caret saying a second press lists the controls, then ×. */
+.kys-seq-lane-tabkey {
+  display: inline-flex;
+  flex: none;
+}
+.kys-seq-lane-tabkey:has(.kys-seq-lane-tab-x) .kys-seq-lane-tab {
+  padding-right: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.kys-seq-lane-tab-x {
+  padding: 0 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: 1px;
+}
+.kys-seq-lane-tab-x:hover {
+  background: rgb(var(--lcd-tint) / 0.24);
+}
+.kys-seq-lane-tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kys-seq-lane-tab[data-missing] {
+  font-style: italic;
+  opacity: 0.6;
+}
+.kys-seq-lane-tab:focus-visible {
+  outline: 1px solid var(--lcd-ink);
+  outline-offset: 1px;
+}
+/* View all: a keycap the height of the cells beside it, as Fill and Loop are. */
+.kys-seq-lane-all {
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  height: 44px;
+  min-width: 50px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* A lane's head: in the module, the tabs, Add lane and View all, then the readout and the remove; in View all, the
+   lane's select in place of the tabs. Where it is narrow the readout wraps under them. */
 .kys-seq-lane-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px 8px;
   min-width: 0;
 }
 .kys-seq-lane-readout {
-  flex: 1;
+  flex: 1 1 140px;
   min-width: 0;
   overflow: hidden;
   font-family: var(--font-mono, ui-monospace, monospace);
@@ -1568,8 +2211,8 @@ svg .kys-hit:focus-visible {
   margin-top: 4px;
   padding: 5px 7px;
   border-radius: 8px;
-  background: #0b0c0f;
-  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.6);
+  background: var(--well);
+  box-shadow: inset 0 1px 3px var(--well-inset);
   touch-action: none;
   cursor: crosshair;
 }
@@ -1592,13 +2235,13 @@ svg .kys-hit:focus-visible {
   height: 34px;
   overflow: hidden;
   border-radius: 3px;
-  background: #16181d;
+  background: var(--lane-cell);
 }
 .kys-seq-lane-cell[data-beat] {
-  background: #1b1e24;
+  background: var(--lane-cell-beat);
 }
 .kys-seq-lane-cell[data-here] {
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.45);
+  box-shadow: 0 0 0 1px var(--lane-here);
 }
 .kys-seq-lane-cell:focus-visible {
   outline: 2px solid var(--kys-accent);
@@ -1607,15 +2250,15 @@ svg .kys-hit:focus-visible {
 .kys-seq-lane-bar {
   width: 100%;
   border-radius: 2px 2px 0 0;
-  background: linear-gradient(#ffb547, #b9741e);
-  box-shadow: 0 0 6px rgb(255 166 58 / 0.35);
+  background: linear-gradient(var(--lane-bar-top), var(--lane-bar-bot));
+  box-shadow: 0 0 6px var(--lane-bar-glow);
 }
 .kys-seq-lane-rest {
   position: absolute;
   left: 2px;
   right: 2px;
   height: 0;
-  border-top: 1px dashed rgb(255 181 71 / 0.45);
+  border-top: 1px dashed var(--lane-rest);
   pointer-events: none;
 }
 .kys-seq-tool-count {
@@ -1624,7 +2267,7 @@ svg .kys-hit:focus-visible {
   border-radius: 8px;
   font-size: 10px;
   line-height: 15px;
-  color: #1a1206;
+  color: var(--kys-accent-ink);
   background: var(--kys-accent);
 }
 @media (pointer: coarse) {
@@ -2003,6 +2646,18 @@ svg .kys-hit:focus-visible {
   color: var(--kys-faint);
 }
 
+/* By day the quiet tools come up as keycaps under the pointer, and the error reads in the light theme's red. */
+:root:not(.dark) .kys-seq .kys-seq-tool:hover:enabled,
+:root:not(.dark) .kys-seq .kys-seq-tool.is-open {
+  background: var(--cap);
+  box-shadow:
+    inset 0 0 0 1px var(--cap-ring),
+    0 1px 0 var(--cap-drop);
+}
+:root:not(.dark) .kys-seq .kys-seq-lib-error {
+  color: var(--kys-warn);
+}
+
 /* A finger needs a bigger target than a pointer: 44px, as the platforms ask. */
 @media (pointer: coarse) {
   .kys-seq-tool,
@@ -2050,5 +2705,59 @@ svg .kys-hit:focus-visible {
   .kys-cell-select,
   .kys-seq-menu-caret {
     transition: none;
+  }
+}
+
+/* ==========================================================================
+ * Changing synth: the instrument on a turntable (`synth-page.tsx`, `synth-change`)
+ * ==========================================================================
+ * The old instrument turns away on its upright axis until it is edge-on, a
+ * little smaller and darker as it turns from the light; the new one turns in
+ * from the other side and settles. A turn says "another instrument", where a
+ * slide would say "the next in a list". The group between them morphs from one
+ * panel's size to the other's over the whole turn. None with reduced motion.
+ */
+::view-transition-group(.kys-panel-turn) {
+  animation-duration: 640ms;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+}
+::view-transition-image-pair(.kys-panel-turn) {
+  perspective: 2400px;
+}
+::view-transition-old(.kys-panel-turn) {
+  animation: kys-turn-away 260ms cubic-bezier(0.55, 0, 1, 0.45) both;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+::view-transition-new(.kys-panel-turn) {
+  animation: kys-turn-in 380ms cubic-bezier(0, 0.55, 0.45, 1) 260ms both;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+@keyframes kys-turn-away {
+  from {
+    transform: rotateY(0deg) scale(1);
+    filter: brightness(1);
+  }
+  to {
+    transform: rotateY(-90deg) scale(0.92);
+    filter: brightness(0.55);
+  }
+}
+@keyframes kys-turn-in {
+  from {
+    transform: rotateY(90deg) scale(0.92);
+    filter: brightness(0.55);
+  }
+  to {
+    transform: rotateY(0deg) scale(1);
+    filter: brightness(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(.kys-panel-turn),
+  ::view-transition-old(.kys-panel-turn),
+  ::view-transition-new(.kys-panel-turn) {
+    animation: none;
   }
 }

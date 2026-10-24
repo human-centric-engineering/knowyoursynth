@@ -34,8 +34,8 @@ export const MIN_BPM = 20;
 export const MAX_BPM = 300;
 /** The most mod lanes a pattern carries. */
 export const MAX_LANES = 8;
-/** What a panel control's id looks like: what a mod lane names. */
-export const CONTROL_ID = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
+/** What a panel control's id looks like (`vcf.cutoff`, `xm1_vco1.coarse`, `fx1.tc-deepvrb.pst`): what a mod lane names. */
+export const CONTROL_ID = /^(?=.{1,64}$)[A-Za-z][A-Za-z0-9_-]*(?:\.[A-Za-z0-9_-]+)*$/;
 /** The velocity a step's notes play at when nothing sets it, as the engine reads a riff note without one. */
 export const DEFAULT_VELOCITY = 0.85;
 /** The velocity of an accented step. */

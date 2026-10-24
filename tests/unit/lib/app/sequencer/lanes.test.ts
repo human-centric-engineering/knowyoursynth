@@ -9,6 +9,7 @@ import { describe, it, expect, vi } from 'vitest';
 
 import { compileLoop, seededRng, stepMods } from '@/lib/app/sequencer/compile';
 import {
+  carryLaneValue,
   laneControl,
   laneControls,
   lanePos,
@@ -19,6 +20,7 @@ import {
   resolveMods,
   stepOverrides,
 } from '@/lib/app/sequencer/lanes';
+import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import {
   MAX_LANES,
   PatternSchema,
@@ -28,6 +30,7 @@ import {
 } from '@/lib/app/sequencer/pattern';
 import {
   addLane,
+  clearLane,
   clearSteps,
   keepMods,
   onlyLanes,
@@ -137,6 +140,20 @@ describe('the pattern shape', () => {
     const many = Array.from({ length: MAX_LANES + 1 }, (_, i) => `c${i}`);
     expect(PatternSchema.safeParse({ ...newPattern(4), lanes: many }).success).toBe(false);
     expect(PatternSchema.safeParse({ ...newPattern(4), lanes: ['no spaces'] }).success).toBe(false);
+    expect(PatternSchema.safeParse({ ...newPattern(4), lanes: ['vcf..cutoff'] }).success).toBe(
+      false
+    );
+    expect(PatternSchema.safeParse({ ...newPattern(4), lanes: ['vcf.'] }).success).toBe(false);
+  });
+
+  it('takes a lane for every control a lane can be given on every synth', () => {
+    // Real control ids are dotted (`vcf.cutoff`): a shape that refused them refused every lane the page added.
+    for (const def of SYNTH_DEFS) {
+      const refused = laneControls(def)
+        .map((c) => c.id)
+        .filter((id) => !PatternSchema.safeParse(addLane(newPattern(4), id)).success);
+      expect(refused, def.id).toEqual([]);
+    }
   });
 
   it('keeps a lane for a control no synth here has, and its values, through a save and a read', () => {
@@ -326,6 +343,36 @@ describe('editing lanes', () => {
     expect(moved.lanes).toEqual(['res', 'wave']);
     expect(moved.parts[0].steps[0].mod).toBeUndefined();
     expect(retargetLane(p, 'cutoff', 'wave')).toBe(p);
+  });
+
+  it('carries the values into the new control when given a carry, and drops those it gives nothing for', () => {
+    const p = laned();
+    const moved = retargetLane(p, 'cutoff', 'res', (v) => (v === 500 ? 7 : null));
+    expect(moved.lanes).toEqual(['res']);
+    expect(moved.parts[0].steps[0].mod).toEqual({ res: 7 });
+    expect(moved.parts[0].steps[2].mod).toBeUndefined();
+    expect(PatternSchema.safeParse(moved).success).toBe(true);
+  });
+
+  it('clears a lane in one part only, keeping the other lanes and the other part', () => {
+    const p = { ...laned(), lanes: ['cutoff', 'res'] };
+    p.parts[0].steps[0].mod = { cutoff: 500, res: 4 };
+    p.parts.push(structuredClone(p.parts[0]));
+    p.chain = [0, 1];
+    const cleared = clearLane(p, 0, 'cutoff');
+    expect(cleared.lanes).toEqual(['cutoff', 'res']);
+    expect(cleared.parts[0].steps[0].mod).toEqual({ res: 4 });
+    expect(cleared.parts[0].steps[2].mod).toBeUndefined();
+    expect(cleared.parts[1].steps[0].mod).toEqual({ cutoff: 500, res: 4 });
+    expect(PatternSchema.safeParse(cleared).success).toBe(true);
+  });
+
+  it('carries a value to the same height on the new control', () => {
+    // 4000 on the log cutoff (20..20000) sits at about 77% of its travel; RES (0..10, step 1) there is 8.
+    expect(carryLaneValue(CUTOFF, RES, 4000)).toBe(8);
+    expect(carryLaneValue(RES, CUTOFF, 0)).toBe(20);
+    expect(carryLaneValue(RES, WAVE, 10)).toBe(laneValueAt(WAVE, 1));
+    expect(carryLaneValue(null, RES, 3)).toBeNull();
   });
 
   it('carries the values with their steps through rotate and reverse, and through Randomise', () => {

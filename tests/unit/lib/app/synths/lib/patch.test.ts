@@ -11,7 +11,9 @@ import {
   controlMap,
   describeSynth,
   displayName,
+  faceView,
   formatValue,
+  isLightFace,
   isShown,
   jackGain,
   jackMap,
@@ -44,6 +46,21 @@ describe('lookups', () => {
   it('cleanLabel flattens line breaks and falls back to the id', () => {
     expect(cleanLabel({ id: 'x', label: 'OSC 3\nCONTROL' })).toBe('OSC 3 CONTROL');
     expect(cleanLabel({ id: 'x.y' })).toBe('x.y');
+  });
+});
+
+describe('faceView', () => {
+  const view = { w: 2000, h: 600 };
+  it('leaves the end cheeks out of the view', () => {
+    const def = { view, theme: { cheeks: 'wood', cheekW: 56 } } as unknown as SynthDef;
+    expect(faceView(def)).toEqual({ x: 56, w: 1888, h: 600 });
+  });
+
+  it('takes a cheek without a width as 40 wide, and no cheeks as the whole view', () => {
+    const metal = { view, theme: { cheeks: 'metal' } } as unknown as SynthDef;
+    const none = { view, theme: { cheeks: 'none', cheekW: 56 } } as unknown as SynthDef;
+    expect(faceView(metal)).toEqual({ x: 40, w: 1920, h: 600 });
+    expect(faceView(none)).toEqual({ x: 0, w: 2000, h: 600 });
   });
 });
 
@@ -448,5 +465,26 @@ describe('displayName', () => {
     expect(displayName(def, { ...control(def, 'mix.osc2'), name: 'Osc 2 level' })).toBe(
       'Osc 2 level'
     );
+  });
+});
+
+describe('isLightFace', () => {
+  it('reads the black and dark grey faces as dark, so they keep the deep shadow', () => {
+    for (const hex of ['#1b1c1e', '#303133', '#353535', '#121316'])
+      expect(isLightFace(hex)).toBe(false);
+  });
+
+  it('reads cream, red, yellow and silver faces as light', () => {
+    for (const hex of ['#f7f1dc', '#d8231f', '#f2b21c', '#d3d3cf'])
+      expect(isLightFace(hex)).toBe(true);
+  });
+
+  it('takes the short form and either case', () => {
+    expect(isLightFace('#FFF')).toBe(true);
+    expect(isLightFace('#222')).toBe(false);
+  });
+
+  it('counts a colour it cannot read as dark', () => {
+    for (const v of ['', 'red', 'rgb(255 255 255)', '#ffff']) expect(isLightFace(v)).toBe(false);
   });
 });

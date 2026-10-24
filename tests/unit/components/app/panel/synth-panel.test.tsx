@@ -84,7 +84,9 @@ describe('Model D panel views', () => {
     const { container } = render(<SynthPanel {...props()} />);
     const svg = container.querySelector('svg');
     expect(svg?.getAttribute('aria-label')).toBe('Behringer Model D front panel');
-    expect(svg?.getAttribute('viewBox')).toBe('0 0 2000 716');
+    // The front panel only: the view leaves out the 40-wide wood cheek at each end, and they are not drawn.
+    expect(svg?.getAttribute('viewBox')).toBe('40 0 1920 716');
+    expect(container.querySelector('rect[fill="url(#kysWood)"]')).toBeNull();
     // Every control and jack has its hit area.
     expect(screen.getAllByRole('slider')).toHaveLength(
       modelD.controls.filter((c) => c.type === 'knob').length
@@ -95,8 +97,9 @@ describe('Model D panel views', () => {
   it('draws the outline view on paper', () => {
     const { container } = render(<SynthPanel {...props({ outline: true })} />);
     expect(container.querySelector('rect[fill="#f3f4ef"]')).not.toBeNull();
-    // The wood cheeks are dashed outlines, not wood.
+    // No cheeks here either: not wood, and not the dashed outlines they once were.
     expect(container.querySelector('rect[fill="url(#kysWood)"]')).toBeNull();
+    expect(container.querySelector('rect[stroke-dasharray="7 6"]')).toBeNull();
     expect(container.innerHTML).toMatchSnapshot();
   });
 
@@ -111,7 +114,6 @@ describe('Model D panel views', () => {
     expect(modularDef(modelD)).toBe(modelD);
     const { container } = render(<SynthPanel {...props()} />);
     expect(container.querySelector('rect[fill="url(#kysFace)"]')).not.toBeNull();
-    expect(container.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
   });
 
   it('draws the modular case, in both views, when the definition has a layout', () => {
@@ -170,7 +172,7 @@ describe('design prop (D11)', () => {
     expect(container.querySelectorAll('[aria-label$=" jack"]')).toHaveLength(branded.jacks.length);
   });
 
-  it("neutral keeps the synth's own colours, lettering and cheeks (D11 revised)", () => {
+  it("neutral keeps the synth's own colours and lettering (D11 revised)", () => {
     // Lettered in `helv` on a light face, so a swap to any house style would show.
     const light: SynthDef = {
       ...branded,
@@ -189,7 +191,6 @@ describe('design prop (D11)', () => {
         <SynthPanel {...props({ def: light, values: light.init, design })} />
       ).container;
       expect(face(c)).toEqual(['#d3d3cf', '#c4c4c0']);
-      expect(c.querySelector('rect[fill="url(#kysWood)"]')).not.toBeNull();
       const label = [...c.querySelectorAll('text')].find(
         (t) => t.getAttribute('fill') === '#262626'
       );
@@ -326,6 +327,45 @@ describe('cables', () => {
     { from: 'j.filtCont', to: 'j.cutCv', color: '#ffb020' },
     { from: 'j.mix', to: 'nowhere', color: '#38c6ff' },
   ];
+
+  it('walks a new patch in: the old cables out one by one, then the new in, while the patch is new at once', () => {
+    vi.useFakeTimers();
+    try {
+      const old: PatchCable[] = [
+        { from: 'j.filtCont', to: 'j.cutCv', color: '#aa0001' },
+        { from: 'j.mix', to: 'j.ext', color: '#aa0002' },
+      ];
+      const next: PatchCable[] = [
+        { from: 'j.lfoTri', to: 'j.loudCv', color: '#00aa01' },
+        { from: 'j.lfoSq', to: 'j.oscCv', color: '#00aa02' },
+      ];
+      const count = (c: HTMLElement, colour: string) =>
+        c.querySelectorAll(`path[stroke="${colour}"]`).length;
+      const { container, rerender } = render(<SynthPanel {...props({ cables: old })} />);
+      // Past the panel opening, when cables arriving are the stored panel and are just there.
+      act(() => {
+        vi.advanceTimersByTime(1500);
+      });
+      rerender(<SynthPanel {...props({ cables: next })} />);
+      // Still the old cables drawn, before the first step.
+      expect(count(container, '#aa0001')).toBe(1);
+      expect(count(container, '#00aa01')).toBe(0);
+
+      // Two steps out, then the first of the new is in, the other not yet.
+      act(() => {
+        vi.advanceTimersByTime(150 * 2 + 1);
+      });
+      expect(count(container, '#00aa01')).toBe(1);
+      expect(count(container, '#00aa02')).toBe(0);
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+      expect(count(container, '#00aa01')).toBe(1);
+      expect(count(container, '#00aa02')).toBe(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 
   it('draws a cable between its jacks, and skips one whose jack is unknown', () => {
     const { container } = render(<SynthPanel {...props({ cables })} />);

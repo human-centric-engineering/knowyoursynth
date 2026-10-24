@@ -432,8 +432,16 @@ control drawn at a lane's value changes the panel's by as much as it moved, a sw
 choice picked is picked (`rebase`). The panel is drawn from its own values again at Stop.
 
 **In the module** (`mod-lanes.tsx`). **Mod** on the tool row shows the lanes under the step keys, on the same grid,
-for the page of keys on show. A pattern opened with lanes shows them. **Add lane** picks a control of the synth on the panel. A lane's select moves it to
-another control, which clears its values. A dashed line marks the panel's value, which a cell with nothing set plays.
+for the page of keys on show. A pattern opened with lanes shows them. One lane shows at a time: a **Lanes** cell of
+tabs (as the Part cell's keys) picks it, in one row with **Add lane**, **View all**, the lane's readout and **Clear
+all** (every value off the lane in the part being edited). The tab opens by place, so removing the last lane opens
+the one before. The open tab carries the lane's remove (×), and a second press on it lists the controls, to move the
+lane to another: its values go to the same height on the new control's lane (`carryLaneValue`, through
+`retargetLane`'s `carry`), so the shape drawn stays; a lane for a control this synth has not got loses them. **Add
+lane** picks a control of the synth on the panel and opens its tab. **View all** (with more than one lane) opens every
+lane in a dialog, each drawn as in the module, with its own select (which moves it the same way) and remove. A dashed line marks the panel's value, which a cell
+with nothing set plays. In the light theme the module is a light unit with pale windows (the `--lcd-*`, `--key-*`,
+`--lane-*` and `--cap` tokens on `.kys-seq`, and on `.kys-seq-skin` for the dialog).
 
 - A press or a drag across the cells sets each to the height it is at, on the control's travel (a log knob by
   ratio, a choice by its drawn options). A stroke is one Undo. A double press clears a cell: its presses and the

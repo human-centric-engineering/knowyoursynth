@@ -4,7 +4,7 @@
 // Every part draws two ways: `hardware` (shaded, like the photo) and `outline` (ink on paper, like a patch sheet).
 //
 // Transliterated from the prototype file `prototype/src/panel/parts.jsx` (decision D3): same parts, same order, same drawing.
-import { Fragment, memo, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
 import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from 'react';
 import { focusStore, highlightStore, meterStore, useStore } from '@/components/app/synth/stores';
 import type { ItemFocus } from '@/components/app/synth/stores';
@@ -800,8 +800,8 @@ export function ModularCase({
   if (ctx.outline) {
     return (
       <g>
-        <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill={PAPER} />
-        <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill="url(#kysGrid)" />
+        <rect x="0" y="0" width={view.w} height={view.h} fill={PAPER} />
+        <rect x="0" y="0" width={view.w} height={view.h} fill="url(#kysGrid)" />
         {plates.map((p, i) => (
           <rect
             key={i}
@@ -838,7 +838,7 @@ export function ModularCase({
   const { theme } = ctx;
   return (
     <g>
-      <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill="#0b0b0c" />
+      <rect x="0" y="0" width={view.w} height={view.h} fill="#0b0b0c" />
       {rows.map(([y, h]) =>
         [y + 4, y + h - 16].map((ry) => (
           <g key={`${y}-${ry}`}>
@@ -3123,6 +3123,142 @@ export interface CableProps {
   hover?: CableHandlers | null;
   plugs?: [CableHandlers, CableHandlers] | null;
   passive?: boolean;
+  /** Just plugged in: it drops into place from a little above where it hangs, and settles. */
+  drop?: boolean;
+}
+
+/**
+ * Gravity for a cable's swing, in panel units per s². With the pendulum's length taken from the cable's, a cable across
+ * a panel swings about once a second and a short one quicker, as a real one does.
+ */
+const CABLE_G = 9000;
+/** The swing's damping ratio: a heavy cable, which swings past once or twice, a little, and settles. */
+const CABLE_DAMPING = 0.35;
+/** How far a belly may swing from where it hangs, as a share of its sag: a heavy cable only moves so far. */
+const CABLE_REACH = 0.3;
+/** How far above where it hangs a cable just plugged in starts, as a share of its sag. */
+const CABLE_DROP = 0.18;
+
+export interface Swing {
+  /** Where the belly is, and how fast it is going, in panel units (and per s). */
+  px: number;
+  py: number;
+  vx: number;
+  vy: number;
+}
+
+/**
+ * One step of a cable's swing: its belly a damped pendulum of length `len`, pulled towards `(rx, ry)`, where it hangs
+ * at rest. The ends moving moves that point; the belly lags, swings past and settles, further and slower the longer
+ * the cable. Semi-implicit Euler, which stays stable at a frame's step.
+ */
+export function swingStep(s: Swing, rx: number, ry: number, len: number, dt: number): Swing {
+  const w = Math.sqrt(CABLE_G / Math.max(20, len));
+  const ax = -w * w * (s.px - rx) - 2 * CABLE_DAMPING * w * s.vx;
+  const ay = -w * w * (s.py - ry) - 2 * CABLE_DAMPING * w * s.vy;
+  const vx = s.vx + ax * dt;
+  const vy = s.vy + ay * dt;
+  return { px: s.px + vx * dt, py: s.py + vy * dt, vx, vy };
+}
+
+/** Whether the visitor asks for less motion: the panel's animations are then done at once. */
+export const reducedMotion = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * How far a cable's belly is from where it hangs, while it swings: (0, 0) at rest, which is all a static render (a
+ * shared image, a test) ever sees. It runs a frame loop only while there is a swing.
+ */
+/**
+ * A swing handed on from a cable that has just gone, as its belly's distance from where it hung and its speed: a
+ * cable plugged in straight after (the held cable reaching its jack, or an end moved to another, either of which is a
+ * new cable) carries the swing on rather than starting another.
+ */
+let handed: { ox: number; oy: number; vx: number; vy: number; at: number } | null = null;
+/** How soon after one cable goes another plugged in takes its swing, in ms: the same plug, landing. */
+const HAND_ON_MS = 250;
+/** The jolt down a plug seating in its jack gives the swing it carries on, as a share of the cable's sag, per s. */
+const CABLE_SEAT = 0.6;
+
+const handedOn = () =>
+  handed && typeof performance !== 'undefined' && performance.now() - handed.at < HAND_ON_MS
+    ? handed
+    : null;
+
+function useSwing(rx: number, ry: number, len: number, sag: number, drop: boolean) {
+  // A cable plugged in carrying a swing on is drawn with it from its first frame.
+  const [off, setOff] = useState(() => {
+    const h = drop ? handedOn() : null;
+    return h ? { x: h.ox, y: h.oy } : { x: 0, y: 0 };
+  });
+  const rest = useRef({ rx, ry, len, sag });
+  useEffect(() => {
+    rest.current = { rx, ry, len, sag };
+  });
+  const body = useRef<Swing | null>(null);
+  const frame = useRef(0);
+
+  useEffect(() => {
+    if (reducedMotion()) return;
+    if (!body.current) {
+      // A cable just plugged in carries on the swing of the one it replaces, jolted a little as its plug seats, or
+      // with none to carry on, falls into place; one already there hangs still.
+      const h = drop ? handedOn() : null;
+      handed = null;
+      body.current = h
+        ? { px: rx + h.ox, py: ry + h.oy, vx: h.vx, vy: h.vy + sag * CABLE_SEAT }
+        : { px: rx, py: drop ? ry - sag * CABLE_DROP : ry, vx: 0, vy: 0 };
+      if (!drop) return;
+    }
+    if (frame.current) return;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min(1 / 30, Math.max(0, (now - last) / 1000));
+      last = now;
+      const r = rest.current;
+      const b = body.current;
+      if (!b) return;
+      let next = swingStep(b, r.rx, r.ry, r.len, dt);
+      // Never further from where it hangs than the cable allows.
+      const dx = next.px - r.rx;
+      const dy = next.py - r.ry;
+      const far = Math.hypot(dx, dy);
+      const reach = r.sag * CABLE_REACH;
+      if (far > reach) {
+        next = { ...next, px: r.rx + (dx / far) * reach, py: r.ry + (dy / far) * reach };
+      }
+      body.current = next;
+      const ox = next.px - r.rx;
+      const oy = next.py - r.ry;
+      if (Math.hypot(ox, oy) < 0.25 && Math.hypot(next.vx, next.vy) < 4) {
+        body.current = { px: r.rx, py: r.ry, vx: 0, vy: 0 };
+        frame.current = 0;
+        setOff({ x: 0, y: 0 });
+        return;
+      }
+      setOff({ x: Math.round(ox * 10) / 10, y: Math.round(oy * 10) / 10 });
+      frame.current = requestAnimationFrame(tick);
+    };
+    frame.current = requestAnimationFrame(tick);
+    // The loop reads where the cable hangs from `rest`, so a move of its ends only has to start it.
+  }, [rx, ry, drop, sag]);
+
+  useEffect(
+    () => () => {
+      if (frame.current) cancelAnimationFrame(frame.current);
+      frame.current = 0;
+      // Going while it swings, it hands its swing on (React runs a commit's cleanups before its new effects).
+      const b = body.current;
+      const r = rest.current;
+      if (b && (b.px !== r.rx || b.py !== r.ry || b.vx !== 0 || b.vy !== 0)) {
+        handed = { ox: b.px - r.rx, oy: b.py - r.ry, vx: b.vx, vy: b.vy, at: performance.now() };
+      }
+    },
+    []
+  );
+  return off;
 }
 
 /**
@@ -3141,10 +3277,19 @@ export function Cable({
   hover,
   plugs,
   passive,
+  drop = false,
 }: CableProps) {
   const dist = Math.hypot(b.x - a.x, b.y - a.y);
   const sag = (50 + dist * 0.32) * scale;
-  const d = `M${a.x} ${a.y} C${a.x} ${a.y + sag} ${b.x} ${b.y + sag} ${b.x} ${b.y}`;
+  // The belly (the curve's lowest point, three quarters of the way down to its handles) swings as a pendulum hung
+  // from between the ends, as long as the cable hangs: moving its handles by 4/3 of the swing moves the belly by it.
+  const swing = useSwing((a.x + b.x) / 2, (a.y + b.y) / 2 + sag * 0.75, dist / 2 + sag, sag, drop);
+  const hx = (swing.x * 4) / 3;
+  const hy = (swing.y * 4) / 3;
+  const d =
+    hx === 0 && hy === 0
+      ? `M${a.x} ${a.y} C${a.x} ${a.y + sag} ${b.x} ${b.y + sag} ${b.x} ${b.y}`
+      : `M${a.x} ${a.y} C${a.x + hx} ${a.y + sag + hy} ${b.x + hx} ${b.y + sag + hy} ${b.x} ${b.y}`;
   const pr = (a.r || 16) * 0.78;
   return (
     <g
@@ -3193,6 +3338,63 @@ export function Cable({
           <circle cx={p.x} cy={p.y} r={pr * 0.45} fill="#0007" />
         </g>
       ))}
+    </g>
+  );
+}
+
+/** How long an unplugged cable takes to drop away, in ms. */
+const FALL_MS = 650;
+
+/**
+ * A cable just unplugged, dropping away: its `b` plug pulled, it falls under gravity and swings in under the `a` end
+ * still plugged (the cable's own swing does the rest), fading as it goes, then `onDone`. Passive: it takes no
+ * pointer. With reduced motion, gone at once.
+ */
+export function FallingCable({
+  a,
+  b,
+  color,
+  scale = 1,
+  onDone,
+}: {
+  a: CablePoint;
+  b: CablePoint;
+  color: string;
+  scale?: number;
+  onDone: () => void;
+}) {
+  const [t, setT] = useState(0);
+  const done = useRef(onDone);
+  useEffect(() => {
+    done.current = onDone;
+  });
+  useEffect(() => {
+    if (reducedMotion()) {
+      done.current();
+      return undefined;
+    }
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const k = (now - start) / FALL_MS;
+      if (k >= 1) {
+        done.current();
+        return;
+      }
+      setT(k);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+  const secs = (t * FALL_MS) / 1000;
+  // Gravity's drop (½gt²), damped to the panel's scale, and a drift in under the plugged end as it swings.
+  const drop = Math.min(0.5 * CABLE_G * 0.06 * secs * secs, 260) * scale;
+  const drift = (a.x - b.x) * 0.4 * (1 - (1 - t) ** 2);
+  const loose: CablePoint = { x: b.x + drift, y: b.y + drop, r: b.r };
+  return (
+    <g opacity={t < 0.45 ? 1 : 1 - (t - 0.45) / 0.55} style={{ pointerEvents: 'none' }}>
+      <Cable a={a} b={loose} color={color} scale={scale} passive />
     </g>
   );
 }

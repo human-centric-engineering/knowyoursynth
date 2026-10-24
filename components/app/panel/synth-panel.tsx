@@ -11,6 +11,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, MouseEvent, PointerEvent } from 'react';
 import {
   Cable,
+  FallingCable,
+  reducedMotion,
   Fader,
   INK,
   Jack,
@@ -26,6 +28,7 @@ import {
   StaticDecor,
   Switch,
 } from '@/components/app/panel/parts';
+import { tweenCables } from '@/lib/app/synths/lib/history';
 import type {
   CableHandlers,
   CablePoint,
@@ -33,7 +36,7 @@ import type {
   JackPress,
   PanelCtx,
 } from '@/components/app/panel/parts';
-import { controlMap, isShown } from '@/lib/app/synths/lib/patch';
+import { controlMap, faceView, isShown } from '@/lib/app/synths/lib/patch';
 import { rebase } from '@/lib/app/sequencer/lanes';
 import {
   AreaLayer,
@@ -114,6 +117,12 @@ export interface SynthPanelProps {
 type PressEvent = MouseEvent<SVGElement> | KeyboardEvent<SVGElement> | PointerEvent<SVGElement>;
 
 /** Focus a cable so the tooltip and inspector explain it. `sticky` cards stay up until the next press anywhere (touch has no hover). */
+/** The time between the cables a new patch takes out and puts in, in ms, and the most it takes for them all. */
+const REPATCH_STEP_MS = 150;
+const REPATCH_ALL_MS = 3000;
+/** How long after the panel opens a change of cables is the stored panel arriving, not a patch chosen, in ms. */
+const REPATCH_SETTLE_MS = 1000;
+
 const cableFocus = (
   e: PressEvent,
   from: string,
@@ -186,7 +195,9 @@ export function SynthPanel({
   // What the faceplate looks like; `def` stays the source for geometry, jacks and cables.
   const shown = useMemo(() => (design === 'neutral' ? neutralDef(def) : def), [design, def]);
   const { theme, decor } = shown;
-  const cheekW = theme.cheeks && theme.cheeks !== 'none' ? theme.cheekW || 40 : 0;
+  // The front panel only: the end cheeks inside `view.w` are left out of the view, and not drawn.
+  const face = faceView(shown);
+  const cheekW = face.x;
   const scale = view.w / 2000;
 
   const ctx = useMemo<PanelCtx>(
@@ -221,6 +232,80 @@ export function SynthPanel({
     [def]
   );
   const isPin = (cb: PatchCable) => inMatrix.has(cb.from) && inMatrix.has(cb.to);
+
+  // The cables as drawn, a step behind the patch's: when it changes by more than one at once (another sound, a lesson
+  // step, Blank patch), the old come out one by one, in the order they were plugged, each dropping away, then the new go
+  // in, each dropping into place (`tweenCables`). The engine has the new patch at once; only the drawing walks. Not as
+  // the page opens (the stored panel arriving), on another synth, or with reduced motion: then they are just there.
+  const cableKey = (cb: PatchCable) => `${cb.from}>${cb.to}`;
+  const patchKey = cables.map(cableKey).join('|');
+  const [drawnCables, setDrawnCables] = useState(cables);
+  const drawnRef = useRef(drawnCables);
+  useEffect(() => {
+    drawnRef.current = drawnCables;
+  });
+  const openedAt = useRef<number | null>(null);
+  const drawnFor = useRef(def.id);
+  useEffect(() => {
+    openedAt.current ??= performance.now();
+    const from = drawnRef.current;
+    const to = cables;
+    const sameSynth = drawnFor.current === def.id;
+    drawnFor.current = def.id;
+    const had = new Set(from.map(cableKey));
+    const has = new Set(to.map(cableKey));
+    const n =
+      from.filter((cb) => !has.has(cableKey(cb))).length +
+      to.filter((cb) => !had.has(cableKey(cb))).length;
+    const settling = performance.now() - openedAt.current < REPATCH_SETTLE_MS;
+    if (n <= 1 || !sameSynth || settling || reducedMotion()) {
+      setDrawnCables(to);
+      return undefined;
+    }
+    const gap = Math.min(REPATCH_STEP_MS, REPATCH_ALL_MS / n);
+    const timers = Array.from({ length: n }, (_, k) =>
+      setTimeout(
+        () => setDrawnCables(k === n - 1 ? to : tweenCables(from, to, (k + 0.5) / n)),
+        k * gap
+      )
+    );
+    return () => timers.forEach(clearTimeout);
+    // `cables` is read through its key: a new array with the same cables is no change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patchKey, def.id]);
+  // Where a drawn cable is in the patch, for what is done to it; -1 for one drawn on its way out.
+  const patchIndex = (cb: PatchCable) => cables.findIndex((c) => cableKey(c) === cableKey(cb));
+  // The cable just plugged in (or an end just moved to another jack, which makes it another cable): the one new cable
+  // since the last render, which drops into place. A sound loaded brings many at once, and they hang still.
+  const cableIds = drawnCables.filter((cb) => !isPin(cb)).map((cb) => `${cb.from}>${cb.to}`);
+  // Kept from the last render (state, not a ref, so it is read in render): a change of cables names the one new one.
+  const cablesKey = cableIds.join('|');
+  // And the one cable gone, unplugged on its own (a click, or Unplug all taking them one by one): it is drawn falling
+  // from the jack still holding it (`FallingCable`) until it has dropped away. Many gone at once (a sound loaded) just go.
+  const [lastCables, setLastCables] = useState({
+    key: cablesKey,
+    ids: cableIds,
+    cables: drawnCables.filter((cb) => !isPin(cb)),
+    plugged: null as string | null,
+    seq: 0,
+  });
+  const [leaving, setLeaving] = useState<{ k: number; cable: PatchCable }[]>([]);
+  let plugged = lastCables.plugged;
+  if (lastCables.key !== cablesKey) {
+    const fresh = cableIds.filter((x) => !lastCables.ids.includes(x));
+    const gone = lastCables.cables.filter((cb) => !cableIds.includes(`${cb.from}>${cb.to}`));
+    plugged = fresh.length === 1 ? fresh[0] : null;
+    const seq = lastCables.seq + 1;
+    if (gone.length === 1 && fresh.length === 0)
+      setLeaving((l) => [...l, { k: seq, cable: gone[0] }]);
+    setLastCables({
+      key: cablesKey,
+      ids: cableIds,
+      cables: drawnCables.filter((cb) => !isPin(cb)),
+      plugged,
+      seq,
+    });
+  }
 
   useEffect(() => {
     setPending(null);
@@ -386,7 +471,7 @@ export function SynthPanel({
   return (
     <svg
       ref={svgRef}
-      viewBox={`0 0 ${view.w} ${view.h}`}
+      viewBox={`${face.x} 0 ${face.w} ${face.h}`}
       className="block h-auto w-full select-none"
       role="group"
       aria-label={`${def.maker} ${def.name} front panel`}
@@ -411,33 +496,18 @@ export function SynthPanel({
           <ModularCase layout={shown.layout} view={view} ctx={ctx} />
         ) : outline ? (
           <g>
-            <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill={PAPER} />
-            <rect x="0" y="0" width={view.w} height={view.h} rx="10" fill="url(#kysGrid)" />
+            <rect x="0" y="0" width={view.w} height={view.h} fill={PAPER} />
+            <rect x="0" y="0" width={view.w} height={view.h} fill="url(#kysGrid)" />
             <rect
-              x={cheekW}
+              x={cheekW + 3}
               y="3"
-              width={view.w - cheekW * 2}
+              width={view.w - cheekW * 2 - 6}
               height={view.h - 6}
               rx="6"
               fill="none"
               stroke={INK}
               strokeWidth="3"
             />
-            {cheekW > 0 &&
-              [0, view.w - cheekW].map((x) => (
-                <rect
-                  key={x}
-                  x={x + 3}
-                  y="3"
-                  width={cheekW - 6}
-                  height={view.h - 6}
-                  rx="5"
-                  fill="none"
-                  stroke={INK}
-                  strokeWidth="2"
-                  strokeDasharray="7 6"
-                />
-              ))}
           </g>
         ) : (
           <g>
@@ -468,29 +538,6 @@ export function SynthPanel({
               fill="#000"
               opacity="0.35"
             />
-            {cheekW > 0 &&
-              [0, view.w - cheekW].map((x) => (
-                <g key={x}>
-                  <rect
-                    x={x}
-                    y="0"
-                    width={cheekW}
-                    height={view.h}
-                    rx="5"
-                    fill={theme.cheeks === 'wood' ? 'url(#kysWood)' : 'url(#kysMetal)'}
-                  />
-                  <rect
-                    x={x}
-                    y="0"
-                    width={cheekW}
-                    height={view.h}
-                    rx="5"
-                    fill="none"
-                    stroke="#0008"
-                    strokeWidth="2"
-                  />
-                </g>
-              ))}
           </g>
         )}
         <StaticDecor decor={decor} ctx={ctx} />
@@ -537,22 +584,26 @@ export function SynthPanel({
         {def.matrix && (
           <Matrix
             def={def}
-            cables={cables}
+            cables={drawnCables}
             ctx={ctx}
             onConnect={onConnect}
-            onRemoveCable={onRemoveCable}
+            onRemoveCable={(k) => {
+              const i = patchIndex(drawnCables[k]);
+              if (i >= 0) onRemoveCable(i);
+            }}
             faded={dimOn && !areasOn && mapState ? (id) => mapState[id] === 'dead' : null}
           />
         )}
         <g>
-          {cables.map((cb, i) => {
+          {drawnCables.map((cb) => {
             if (isPin(cb)) return null;
+            const i = patchIndex(cb);
             const a = jackById[cb.from];
             const b = jackById[cb.to];
             if (!a || !b) return null;
             const id = `${cb.from}>${cb.to}`;
             const lifted: CablePoint | null =
-              drag && drag.i === i
+              drag && i >= 0 && drag.i === i
                 ? drag.snap
                   ? jackById[drag.snap]
                   : { x: drag.x, y: drag.y, r: 12 }
@@ -582,12 +633,17 @@ export function SynthPanel({
                 active={focusedCable === id || !!lifted}
                 faded={dimOn && !areasOn && !lifted && !!mapState && mapState[id] === 'dead'}
                 hover={hover}
-                plugs={pending || !onMoveCable ? null : [plugProps(i, 'from'), plugProps(i, 'to')]}
-                passive={!!pending}
+                plugs={
+                  pending || !onMoveCable || i < 0
+                    ? null
+                    : [plugProps(i, 'from'), plugProps(i, 'to')]
+                }
+                passive={!!pending || i < 0}
+                drop={id === plugged}
                 onRemove={(e) => {
                   e.stopPropagation();
                   focusStore.set((s) => (s && s.id === id ? null : s));
-                  onRemoveCable(i);
+                  if (i >= 0) onRemoveCable(i);
                 }}
               />
             );
@@ -603,6 +659,18 @@ export function SynthPanel({
               strokeWidth="3"
               pointerEvents="none"
             />
+          )}
+          {leaving.map(({ k, cable }) =>
+            jackById[cable.from] && jackById[cable.to] ? (
+              <FallingCable
+                key={k}
+                a={jackById[cable.from]}
+                b={jackById[cable.to]}
+                color={cable.color}
+                scale={scale}
+                onDone={() => setLeaving((l) => l.filter((x) => x.k !== k))}
+              />
+            ) : null
           )}
           {pending && mouse && jackById[pending] && (
             <Cable a={jackById[pending]} b={mouse} color="#ffffff" scale={scale} ghost />

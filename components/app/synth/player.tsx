@@ -13,9 +13,9 @@
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
-import { Check, ChevronDown, Maximize, Minimize, Play, Square } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Maximize, Minimize, Play, Square, X } from 'lucide-react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import type { PresetStep } from '@/lib/app/synths/contract';
 import { stepIds } from '@/components/app/synth/lesson';
@@ -35,7 +35,8 @@ export function Wordmark({ lit }: { lit: boolean }) {
 
 /**
  * The sound picker (t-74): the sound's name as a button at the start of the player bar, next to the riff, as a video's
- * title opens its list. It opens the library over the bar (a bottom sheet below `lg`).
+ * title opens its list. It opens the library as a drawer down the left of the screen, over the panel and the dock, so it
+ * has the screen's height whatever the dock holds (a bottom sheet below `lg`).
  */
 export function SoundPicker({
   soundName,
@@ -109,12 +110,27 @@ export function SoundPicker({
       {sounds !== undefined && (
         <div
           ref={pop}
-          className="kys-sounds-pop kys-scroll"
+          className="kys-sounds-pop"
           role="dialog"
           aria-label="Patches"
           hidden={!soundsOpen}
         >
-          {sounds}
+          <div className="kys-drawer-head">
+            <p className="kys-drawer-title">Patches</p>
+            {/* The drawer covers the picker, so it carries its own way out. */}
+            <button
+              type="button"
+              className="kys-pbtn"
+              aria-label="Close the patches"
+              onClick={() => {
+                onCloseSounds?.();
+                pick.current?.focus();
+              }}
+            >
+              <X size={17} aria-hidden="true" />
+            </button>
+          </div>
+          <div className="kys-sounds-pop-body kys-scroll">{sounds}</div>
         </div>
       )}
     </div>
@@ -125,8 +141,11 @@ export function SoundPicker({
  * The Sound Design strip (t-74): the lesson as a video's chapters, over the player bar. Each step is in its module's
  * colour (filled up to the step the panel is at), then the finished sound. Choosing one moves the panel to it and
  * opens it in the lesson card. The finished sound's card is the overview: how the sound works and the ways to make it
- * yours. From `lg` up, with a pointer, it floats over the foot of the panel and shows only while the pointer comes
- * down towards the dock (or focus is in it), as a video's chapters do.
+ * yours. From `lg` up, with a pointer, it is a drawer over the foot of the panel: its tab always shows at the right
+ * of the dock's top, lifting a little as the pointer comes near (`data-near` on the dock, set by the page), and a
+ * press on it slides the strip up, the tab settling into the strip's head with an × that closes it again. The
+ * wordmark is at the head's left. Below that, the tab is not drawn and the strip is in
+ * the dock's flow.
  */
 export function SoundDesign({
   steps,
@@ -135,6 +154,8 @@ export function SoundDesign({
   hasLesson,
   mark,
   lit = [],
+  open = false,
+  onToggle,
 }: {
   steps: readonly PresetStep[];
   /** The step the panel is at, or `null` for the finished sound. */
@@ -146,24 +167,60 @@ export function SoundDesign({
   mark?: ReactNode;
   /** The controls the page has lit for the step the panel is at, put back when a hovered step is left. */
   lit?: readonly string[];
+  /** Whether the drawer is up (from `lg` up, with a pointer). */
+  open?: boolean;
+  onToggle?: () => void;
 }) {
   const n = steps.length;
+  const bodyId = useId();
   return (
-    <section aria-labelledby="kys-design-h" className="kys-design">
-      <div className="kys-design-head">
-        <h2 id="kys-design-h" className="kys-design-h">
-          Learn sound design
-        </h2>
-        {mark}
-      </div>
-      <div className="kys-design-row">
-        {hasLesson ? (
-          n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
+    <section aria-labelledby="kys-design-h" className="kys-design" data-open={open || undefined}>
+      <button
+        type="button"
+        className="kys-design-tab"
+        aria-expanded={open}
+        aria-controls={bodyId}
+        onClick={onToggle}
+      >
+        Learn sound design
+        {/* Closed, a caret inviting the pull; open, the tab is in the strip's head and closes it. */}
+        {open ? (
+          <X size={13} strokeWidth={2.5} className="kys-design-tab-icon" aria-hidden="true" />
         ) : (
-          <p className="kys-design-sub">
-            This patch has no walkthrough. Choose a library patch to learn how one is built.
-          </p>
+          <ChevronUp
+            size={13}
+            strokeWidth={2.5}
+            className="kys-design-tab-icon"
+            aria-hidden="true"
+          />
         )}
+      </button>
+      {/* The body's two wrappers let the drawer slide by its own height (a grid row from 0fr to 1fr). */}
+      <div id={bodyId} className="kys-design-body">
+        <div className="kys-design-inner">
+          {/* Open, the whole head closes it, as its tab (over the head's right) does: the tab is the way from the
+              keyboard, so the head takes the pointer only. */}
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+          <div
+            className="kys-design-head"
+            data-closes={open || undefined}
+            onClick={open ? onToggle : undefined}
+          >
+            <h2 id="kys-design-h" className="kys-design-h">
+              Learn sound design
+            </h2>
+            {mark}
+          </div>
+          <div className="kys-design-row">
+            {hasLesson ? (
+              n > 0 && <Chapters steps={steps} step={step} onStep={onStep} lit={lit} />
+            ) : (
+              <p className="kys-design-sub">
+                This patch has no walkthrough. Choose a library patch to learn how one is built.
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

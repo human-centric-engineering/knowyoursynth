@@ -32,8 +32,9 @@
  */
 
 import { z } from 'zod';
-import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import { use, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import { INK, PAPER } from '@/components/app/panel/parts';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api/client';
@@ -48,7 +49,13 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { cablesToEngine, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
+import {
+  cablesToEngine,
+  faceView,
+  isLightFace,
+  presetState,
+  type PanelState,
+} from '@/lib/app/synths/lib/patch';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
 import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
@@ -57,6 +64,7 @@ import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/sy
 import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
+import { usePanelHistory } from '@/components/app/synth/use-panel-history';
 import {
   AudioWaveform,
   Columns4,
@@ -65,12 +73,13 @@ import {
   Eraser,
   Piano,
   Play,
+  Redo2,
   RotateCcw,
   ScanSearch,
-  Settings2,
   Shapes,
   SlidersHorizontal,
   Sparkles,
+  Undo2,
   Volume2,
   VolumeX,
 } from 'lucide-react';
@@ -95,7 +104,12 @@ import { Lesson, stepIds } from '@/components/app/synth/lesson';
 import { Library } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { About } from '@/components/app/synth/about';
-import { PanelZoom, panelFrameStyle, useKeepCentre } from '@/components/app/synth/panel-zoom';
+import {
+  PanelZoom,
+  panelFrameStyle,
+  panelRailStyle,
+  useKeepCentre,
+} from '@/components/app/synth/panel-zoom';
 import { PlayerTip, PlayerTips } from '@/components/app/synth/player-tip';
 import { LayerToggle, PlayerSettings } from '@/components/app/synth/player-tools';
 import { TutorDrawer } from '@/components/app/synth/drawers';
@@ -186,6 +200,10 @@ const PANEL_HELP = [
   ],
   ['Move a cable', 'Drag the plug at either end to another jack.'],
   ['Unplug a cable', 'Click the cable.'],
+  [
+    'Undo and Redo',
+    'The arrows at the right of the rail above the panel take back the last 20 changes to its controls and cables, and put them back again. ⌘Z (Ctrl+Z) undoes and ⇧⌘Z (Ctrl+Y) redoes. Loading another patch or lesson step starts afresh.',
+  ],
 ] as const;
 
 const PLAY_HELP = [
@@ -236,10 +254,35 @@ const TALL_QUERY = '(min-height: 900px)';
 const CardSideSchema = z.enum(['left', 'right']);
 /** How long the pointer may rest before the player's secondary controls fade, as a video's do, in ms. */
 const IDLE_MS = 2500;
-/** How far above the dock the pointer brings up the Sound Design strip, in px: the strip's height and a little more. */
-const STRIP_REACH = 160;
+/** How far above the dock the pointer lifts the Sound Design tab, inviting a press, in px. */
+const STRIP_REACH = 240;
+/** How long after a press or a wheel on the panel the tab keeps still, in ms: the panel is still being worked. */
+const PANEL_QUIET_MS = 1500;
+/** The time between cables Unplug all takes out, in ms, and the most it takes for them all. */
+const UNPLUG_GAP_MS = 180;
+const UNPLUG_ALL_MS = 2500;
+
+/**
+ * Whether the Sound Design tab lifts, for the pointer at `y` with the dock's top at `top`: within `STRIP_REACH` px
+ * above it or over it, unless the panel is `busy` (being dragged on, or just pressed or wheeled), when it keeps still
+ * over the panel and lifts only over the dock.
+ */
+export function stripNear({
+  y,
+  top,
+  busy = false,
+}: {
+  y: number;
+  top: number;
+  busy?: boolean;
+}): boolean {
+  if (y >= top) return true;
+  return !busy && y >= top - STRIP_REACH;
+}
 /** How far a press may move and still be a tap, in px. */
 const TAP_SLOP = 10;
+/** The panel's rail, on one line: its height is taken from the room the panel is fitted to. */
+const RAIL_H = 36;
 
 /** What a copy is called when the shared sound it was of has gone, and its name with it (t-52). The visitor renames it. */
 const UNNAMED_COPY = 'Untitled patch';
@@ -389,7 +432,30 @@ function Synth({
   const { data: auth, isPending: authPending } = useSession();
   const signedIn = !!auth;
   const userId = auth?.user.id ?? null;
-  const [sess, patch] = useStoredSession(synthDef, () => freshSession(synthDef, sounds[0]), userId);
+  const [stored, setSess] = useStoredSession(
+    synthDef,
+    () => freshSession(synthDef, sounds[0]),
+    userId
+  );
+  // The cables Unplug all has still to take out (below): an undo, a redo or a new patch stops it where it has got to.
+  const unplugging = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const stopUnplugging = useCallback(() => {
+    unplugging.current.forEach(clearTimeout);
+    unplugging.current = [];
+  }, []);
+  // Every change to the panel goes through `patch`, which the undo history records (the last 20, a knob's turn as one),
+  // or `glide`, which shows a new patch being set. `sess` is the panel as shown, part of the way there during a glide;
+  // `stored` is where it is going, what a save sends.
+  const {
+    sess,
+    patch,
+    glide,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    shown: historyShown,
+  } = usePanelHistory(stored, setSess, synthDef, stopUnplugging);
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -401,7 +467,7 @@ function Synth({
     const away = hashTarget(hash, (id) => synths.some((s) => s.id === id));
     if (bankHashRoute(hash) || (away && away.id !== synthId)) return;
     const p = sounds.find((x) => x.id === soundParam);
-    if (p) patch(() => freshSession(synthDef, p));
+    if (p) glide(() => freshSession(synthDef, p));
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
     window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
@@ -519,14 +585,62 @@ function Synth({
     setSheet(id);
     setDockSnap('half');
   };
-  // From `lg` up (t-74): the lesson card over the panel, the sounds over the strip, the tutor's drawer over the panel,
+  // From `lg` up (t-74): the lesson card over the panel, the sounds in a drawer on the left, the tutor's drawer over the panel,
   // and the dock's piano. The card's side and the piano are remembered in this browser.
   const [card, setCard] = useState<CardId | null>(null);
   const [cardSide, setCardSide] = useStoredPref(STORAGE_KEYS.cardSide, CardSideSchema, 'right');
   const [soundsOpen, setSoundsOpen] = useState(false);
+  // The Sound Design drawer (from `lg` up, with a pointer): up from a press on its tab until the next, so it stays
+  // while a lesson is being followed, whatever the pointer does meanwhile.
+  const [designOpen, setDesignOpen] = useState(false);
+  // Whether a chapter has been chosen since the drawer opened: then the panel is where the lesson is being followed,
+  // and a press on it leaves the drawer up; before, a press on the panel is other work, and puts it away.
+  const chapterChosen = useRef(false);
+
+  // Unplug all takes the cables out one by one, in the order they were plugged, each dropping away from its jack: the
+  // first at once, then every `UNPLUG_GAP_MS` (closer for many, so all are out in `UNPLUG_ALL_MS`). They come out within
+  // the history's grouping of each other, so one Undo plugs them all back, one by one again.
+  useEffect(() => stopUnplugging, [stopUnplugging]);
+  const unplugAll = () => {
+    if (unplugging.current.length > 0) return;
+    const keys = sess.cables.map((c) => `${c.from}>${c.to}`);
+    const out = (key: string) =>
+      patch((s) => ({ ...s, cables: s.cables.filter((c) => `${c.from}>${c.to}` !== key) }));
+    if (
+      keys.length < 2 ||
+      (typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    ) {
+      patch((s) => ({ ...s, cables: [] }));
+      return;
+    }
+    const gap = Math.min(UNPLUG_GAP_MS, UNPLUG_ALL_MS / keys.length);
+    out(keys[0]);
+    unplugging.current = keys.slice(1).map((key, k) =>
+      setTimeout(
+        () => {
+          out(key);
+          if (k === keys.length - 2) unplugging.current = [];
+        },
+        (k + 1) * gap
+      )
+    );
+  };
+  useEffect(() => {
+    if (!designOpen || small) return undefined;
+    const onDown = (e: PointerEvent) => {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      // The strip handles its own presses (its tab, its head, its chapters), and the lesson card is the lesson's.
+      if (t.closest('.kys-design, .kys-card')) return;
+      if (scrollerRef.current?.contains(t) && chapterChosen.current) return;
+      setDesignOpen(false);
+    };
+    document.addEventListener('pointerdown', onDown, true);
+    return () => document.removeEventListener('pointerdown', onDown, true);
+  }, [designOpen, small, scrollerRef]);
   const [tutorOpen, setTutorOpen] = useState(false);
   // On a phone the panel settings are behind a button by the sound's name; from `md` up they are always on show.
-  const [settingsOpen, setSettingsOpen] = useState(false);
   // The piano is out by default on a tall screen and put away on a short one, until the Piano button says otherwise.
   const tall = useMediaQuery(TALL_QUERY);
   const [deckChoice, setDeckOn] = useStoredPref(STORAGE_KEYS.deck, DeckSchema, null);
@@ -578,8 +692,9 @@ function Synth({
         ? scroller.getBoundingClientRect().top - full.getBoundingClientRect().top + full.scrollTop
         : scroller.getBoundingClientRect().top + window.scrollY;
       root.style.setProperty('--kys-dock-h', `${dockH}px`);
-      // The space over the panel and under it: what is above it on the page, the scroller's padding and the dock.
-      root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40)}px`);
+      // The space over the panel and under it: what is above it on the page, the scroller's padding, the panel's
+      // rail and the dock.
+      root.style.setProperty('--kys-fit-chrome', `${Math.round(top + dockH + 40 + RAIL_H)}px`);
     };
     measure();
     // Written on the next frame, not inside the observer's callback: a tall dock (the sequencer open) refits the
@@ -599,8 +714,9 @@ function Synth({
     };
   }, [small, scrollerRef]);
 
-  // The Sound Design strip shows while the pointer comes down towards the dock, as a video's chapters do: within
-  // `STRIP_REACH` px above it, or over it. Set on the element, not in state, so a pointer move does not render the page.
+  // The Sound Design tab lifts as the pointer comes near the dock (`stripNear`), inviting a press: not while the panel
+  // is being worked (a drag, or a press or wheel on it within `PANEL_QUIET_MS`), so a turn of a knob at the panel's
+  // foot does not set it moving. Set on the element, not in state, so a pointer move does not render the page.
   useEffect(() => {
     const dock = dockRef.current;
     if (small || !dock) return undefined;
@@ -612,23 +728,37 @@ function Synth({
     };
     const ro = new ResizeObserver(remeasure);
     ro.observe(dock);
+    let workedAt = -Infinity;
+    const onWork = (e: Event) => {
+      if (e.target instanceof Node && scrollerRef.current?.contains(e.target)) {
+        workedAt = performance.now();
+        if (dock.hasAttribute('data-near') && !dock.matches(':hover'))
+          dock.removeAttribute('data-near');
+      }
+    };
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
-      const near = e.clientY >= top - STRIP_REACH;
-      if (near !== dock.hasAttribute('data-near')) dock.toggleAttribute('data-near', near);
+      const shown = dock.hasAttribute('data-near');
+      const busy = e.buttons !== 0 || performance.now() - workedAt < PANEL_QUIET_MS;
+      const near = stripNear({ y: e.clientY, top, busy });
+      if (near !== shown) dock.toggleAttribute('data-near', near);
     };
     const onLeave = () => dock.removeAttribute('data-near');
     window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerdown', onWork, true);
+    window.addEventListener('wheel', onWork, { capture: true, passive: true });
     window.addEventListener('resize', remeasure);
     document.documentElement.addEventListener('pointerleave', onLeave);
     return () => {
       ro.disconnect();
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerdown', onWork, true);
+      window.removeEventListener('wheel', onWork, true);
       window.removeEventListener('resize', remeasure);
       document.documentElement.removeEventListener('pointerleave', onLeave);
       dock.removeAttribute('data-near');
     };
-  }, [small]);
+  }, [small, scrollerRef]);
 
   // The video feel: with the pointer at rest, the player's secondary controls fade until it moves again. Not while
   // the sounds are open. Set on the element, not in state, so resting and waking do not render the page.
@@ -705,15 +835,21 @@ function Synth({
     [synthDef, sess.cables, wheel]
   );
 
+  // The error is set only when it changes: this runs on every frame of a glide, and setting state each time (even to
+  // the same '') chains an update onto every one, which React reports as an update loop.
+  const engineErrorRef = useRef('');
   useEffect(() => {
     if (!engine) return;
+    let error = '';
     try {
       const p = engineParams(sess.values);
       engine.send({ type: 'params', p });
-      setEngineError('');
     } catch (err) {
-      setEngineError(err instanceof Error ? err.message : String(err));
+      error = err instanceof Error ? err.message : String(err);
     }
+    if (error === engineErrorRef.current) return;
+    engineErrorRef.current = error;
+    setEngineError(error);
   }, [engineParams, sess.values, engine]);
 
   // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
@@ -1275,19 +1411,19 @@ function Synth({
     focusStore.set(null);
     leaveShared();
     setDesigned(null);
-    patch(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
+    glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     if (playing) void playRiff(p.phrase);
   };
 
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
   // tutor's Undo is handed what puts back everything that was on the panel before, its lesson and step included.
   const openDesign = (d: TutorDesign) => {
-    const before = { sess, designed, sharedPanel };
+    const before = { sess: stored, designed, sharedPanel };
     openSeq.current++;
     focusStore.set(null);
     leaveShared();
     setDesigned(d);
-    patch(() => ({
+    glide(() => ({
       presetId: null,
       step: null,
       soundId: null,
@@ -1301,7 +1437,7 @@ function Synth({
         setSharedPanel(before.sharedPanel);
         writeStored(sharedFromKey(synthId), shared.slug);
       }
-      patch(() => before.sess);
+      glide(() => before.sess);
     };
   };
   // A change the learner applied from the tutor lands as turning the controls would: the step and the sound stay.
@@ -1324,8 +1460,8 @@ function Synth({
     [seqEdit, seqLoad, seqUndo, small]
   );
   const tutorPanel = useMemo(
-    () => ({ values: sess.values, cables: sess.cables }),
-    [sess.values, sess.cables]
+    () => ({ values: stored.values, cables: stored.cables }),
+    [stored.values, stored.cables]
   );
   // The library's "ask the tutor to design one": the question goes in the tutor's composer, for the learner to send.
   const [tutorAsk, setTutorAsk] = useState<{ text: string; n: number } | null>(null);
@@ -1366,7 +1502,7 @@ function Synth({
     focusStore.set(null);
     leaveShared();
     setDesigned(null);
-    patch(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
+    glide(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     setSaved({ id: d.id, ...panel });
     mine.put(d);
     if (!d.panel)
@@ -1424,7 +1560,7 @@ function Synth({
     setDesigned(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
-    else patch(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+    else glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
     writeStored(sharedFromKey(synthId), shared.slug);
     setSharedPanel(panel);
     setSharedNotice(
@@ -1454,10 +1590,10 @@ function Synth({
   // The panel as the sounds API takes it, remembered so a save can count from exactly what was sent.
   const sentRef = useRef<Pick<Session, 'values' | 'cables'> | null>(null);
   const panelInput = () => {
-    sentRef.current = { values: sess.values, cables: sess.cables };
+    sentRef.current = { values: stored.values, cables: stored.cables };
     return {
-      values: sess.values,
-      cables: sess.cables.map((c): [string, string] => [c.from, c.to]),
+      values: stored.values,
+      cables: stored.cables.map((c): [string, string] => [c.from, c.to]),
     };
   };
   const onSaved = (d: UserSoundDetail, how: 'created' | 'saved' | 'renamed' | 'shared') => {
@@ -1610,6 +1746,17 @@ function Synth({
   // the primary pointer, and its arrival ends the first one's tap.
   const tapRef = useRef<{ x: number; y: number } | null>(null);
   const focusBefore = useRef<ReturnType<typeof focusStore.get>>(null);
+  // The rails along the panel's head and foot are of its faceplate: its colour and its silkscreen ink, or the outline
+  // drawing's paper and ink. The width of the panel, zoomed with it, up to the screen's.
+  // A light faceplate takes a softer shadow on the light stage: the dark one a black panel casts reads as a smudge.
+  const lightFace = !view.outline && isLightFace(def.theme.panel);
+  const railStyle: CSSProperties & Record<'--rail-face' | '--rail-face2' | '--rail-print', string> =
+    {
+      ...panelRailStyle(faceView(def), scale),
+      '--rail-face': view.outline ? PAPER : def.theme.panel,
+      '--rail-face2': view.outline ? PAPER : def.theme.panel2 || def.theme.panel,
+      '--rail-print': view.outline ? INK : def.theme.ink,
+    };
   const panelTaps = small
     ? {
         onPointerOverCapture: (e: ReactPointerEvent) => {
@@ -1643,12 +1790,13 @@ function Synth({
   const closeTour = useCallback(() => setTourOn(false), []);
   const switchSynth = (id: string) => {
     if (id === synthId) return;
-    router.push(synthHref(id, view));
+    router.push(synthHref(id, view), { transitionTypes: ['synth-change'] });
   };
 
-  // Nothing to count from while the open sound's saved panel is still being fetched, or could not be.
+  // Nothing to count from while the open sound's saved panel is still being fetched, or could not be. Counted from
+  // where a glide is going, so Restore does not come and go as one runs.
   const changed = def.controls.filter(
-    (c) => step == null && (!openSound || savedOpen) && sess.values[c.id] !== target[c.id]
+    (c) => step == null && (!openSound || savedOpen) && stored.values[c.id] !== target[c.id]
   ).length;
   const toggleAudio = async () => {
     if (!engine) return;
@@ -1775,11 +1923,11 @@ function Synth({
               : null;
   const restoreSound = () => {
     if (restoreFrom === 'shared' && sharedPanel)
-      patch((s) => ({ ...s, step: null, ...sharedPanel }));
+      glide((s) => ({ ...s, step: null, ...sharedPanel }));
     else if (restoreFrom === 'saved' && savedOpen)
-      patch((s) => ({ ...s, step: null, values: savedOpen.values, cables: savedOpen.cables }));
+      glide((s) => ({ ...s, step: null, values: savedOpen.values, cables: savedOpen.cables }));
     else if (restoreFrom === 'designed' && designed)
-      patch((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }));
+      glide((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }));
     else if (restoreFrom === 'library' && preset) selectPreset(preset.id);
   };
 
@@ -1822,9 +1970,9 @@ function Synth({
           <section ref={playerRef} aria-label={`${def.name} panel`} className="kys-player">
             <div className="kys-player-stage">
               {/* The row over the panel: the synth and what it is on the left, with its history and what is not
-              modelled under the description; the layers, the inspector, the tutor and the tour on the
-              right, with their words from `xl` up. The secondary parts fade with the bar while the pointer rests. From
-              `lg` up it never wraps, so the panel keeps the height: the description is cut at two lines. */}
+              modelled under the description; the tutor on the right. The description fades with the bar while the
+              pointer rests. From `lg` up it never wraps, so the panel keeps the height: the description is cut at two
+              lines. */}
               <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 px-4 pt-3 pb-1 sm:px-5 lg:flex-nowrap lg:items-center lg:gap-x-4 lg:pt-2 lg:pb-2.5">
                 <div className="flex min-w-0 flex-wrap items-end gap-x-5 gap-y-1 lg:flex-nowrap lg:items-center lg:gap-x-4">
                   <h1 className="sr-only">
@@ -1861,79 +2009,9 @@ function Synth({
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 max-sm:w-full lg:shrink-0">
-                  {/* On a phone: the layers share one row, evenly, with the tour and its help under them. */}
-                  <div className="kys-autohide flex flex-wrap items-center gap-1 max-sm:flex-1 max-sm:gap-2">
-                    <div
-                      role="group"
-                      aria-label="Layers over the panel"
-                      className="flex items-center gap-1 max-sm:grid max-sm:w-full max-sm:grid-cols-3"
-                    >
-                      <LayerToggle
-                        label="Explain sections"
-                        short="Sections"
-                        icon={<Shapes size={17} aria-hidden="true" />}
-                        on={areasOn}
-                        title="Colour in every named part of the panel, and explain what it does when you point at it."
-                        onClick={() => {
-                          setAreasOn(!areasOn);
-                          setTourOn(false);
-                          findStore.set(null);
-                          focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                        }}
-                      />
-                      <LayerToggle
-                        label="Dim unused parts"
-                        short="Dim unused"
-                        icon={<EyeOff size={17} aria-hidden="true" />}
-                        on={dimOn}
-                        title="Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in."
-                        onClick={() => setDimOn(!dimOn)}
-                      />
-                      <LayerToggle
-                        label="Show sensitive controls"
-                        short="Sensitive"
-                        icon={<Flame size={17} aria-hidden="true" />}
-                        on={heatOn}
-                        title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                        onClick={() => setHeatOn(!heatOn)}
-                      />
-                    </div>
-                    {!small && (
-                      <div
-                        role="group"
-                        aria-label="Over the panel"
-                        className="flex items-center gap-1"
-                      >
-                        <LayerToggle
-                          label="Inspector"
-                          short="Inspect"
-                          icon={<ScanSearch size={17} aria-hidden="true" />}
-                          on={card === 'inspector'}
-                          title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                          onClick={() => openSection('inspector')}
-                        />
-                      </div>
-                    )}
-                    <span className="ml-1 flex items-center gap-2 max-sm:ml-0 max-sm:w-full max-sm:[&>*:first-child]:flex-1">
-                      <PanelSwitch
-                        label="Orientation tour"
-                        short="Tour"
-                        tone="start"
-                        on={tourOn}
-                        title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
-                        onClick={() => {
-                          setTourOn(!tourOn);
-                          setAreasOn(false);
-                          findStore.set(null);
-                        }}
-                      />
-                      <HelpButton title="How to use the panel" items={PANEL_HELP} />
-                    </span>
-                  </div>
-                  {/* The tutor at the far right, named and always on show: it does not fade with the tools when the
-                  pointer rests. */}
-                  {!small && (
+                {/* The tutor at the far right, named and always on show. The layers are on the panel's top rail. */}
+                {!small && (
+                  <div className="flex items-center lg:shrink-0">
                     <LayerToggle
                       ref={tutorBtnRef}
                       label="Ask AI tutor"
@@ -1945,51 +2023,201 @@ function Synth({
                       title="Ask the tutor about this synth, or have it design a patch. It slides in over the panel."
                       onClick={() => (tutorOpen ? closeTutor() : setTutorOpen(true))}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
               </header>
 
-              <div
-                ref={scrollerRef}
-                className="kys-scroll kys-panel-scroller overflow-x-auto p-2"
-                {...panelTaps}
+              {/* The instrument (its rails and the panel between them) turns on a turntable when another synth is
+              chosen: the old one turns away edge-on and the new one turns in (`synth-change`, `.kys-panel-turn`). */}
+              {/* Named, because the route keys the page by synth: the old page goes and a new one comes, and the name
+              pairs their instruments so the turn runs between them (`share`). */}
+              <ViewTransition
+                name="kys-instrument"
+                share={{ 'synth-change': 'kys-panel-turn', default: 'none' }}
+                update={{ 'synth-change': 'kys-panel-turn', default: 'none' }}
+                enter={{ 'synth-change': 'kys-panel-turn', default: 'none' }}
+                exit={{ 'synth-change': 'kys-panel-turn', default: 'none' }}
+                default="none"
               >
-                <div
-                  ref={frameRef}
-                  data-testid="panel-frame"
-                  className={`mx-auto ${view.outline ? '' : 'kys-synth-shadow'}`}
-                  style={panelFrameStyle(def.view, scale)}
-                >
-                  <SynthPanel
-                    def={def}
-                    values={synthDef.seqButtons ? panelValues : sess.values}
-                    moved={modShown}
-                    target={step == null ? target : null}
-                    cables={sess.cables}
-                    outline={view.outline}
-                    zoom={zoom}
-                    areasOn={areasOn}
-                    dimOn={dimOn}
-                    heatOn={heatOn}
-                    onChange={synthDef.seqButtons ? onPanelChange : onChange}
-                    onConnect={onConnect}
-                    onRemoveCable={onRemoveCable}
-                    onMoveCable={onMoveCable}
-                    design={detail.synth.design}
-                  />
+                <div className="kys-instrument">
+                  {/* The panel's top rail: the layers over the panel, the inspector, the tour and its help, on a strip of
+              the faceplate along its head, as the rail at its foot carries how it is drawn. */}
+                  <div className="px-2 pt-2">
+                    <div
+                      className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                      style={railStyle}
+                    >
+                      <div
+                        role="group"
+                        aria-label="Layers over the panel"
+                        className="kys-rail-group"
+                      >
+                        <LayerToggle
+                          label="Explain sections"
+                          short="Sections"
+                          icon={<Shapes size={17} aria-hidden="true" />}
+                          on={areasOn}
+                          title="Colour in every named part of the panel, and explain what it does when you point at it."
+                          onClick={() => {
+                            setAreasOn(!areasOn);
+                            setTourOn(false);
+                            findStore.set(null);
+                            focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+                          }}
+                        />
+                        <LayerToggle
+                          label="Dim unused parts"
+                          short="Dim unused"
+                          icon={<EyeOff size={17} aria-hidden="true" />}
+                          on={dimOn}
+                          title="Darken every part of the panel that is not part of the patch as it is set now. Point at a dark control to see what would bring it in."
+                          onClick={() => setDimOn(!dimOn)}
+                        />
+                        <LayerToggle
+                          label="Show sensitive controls"
+                          short="Sensitive"
+                          icon={<Flame size={17} aria-hidden="true" />}
+                          on={heatOn}
+                          title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                          onClick={() => setHeatOn(!heatOn)}
+                        />
+                      </div>
+                      {!small && (
+                        <div role="group" aria-label="Over the panel" className="kys-rail-group">
+                          <LayerToggle
+                            label="Inspector"
+                            short="Inspect"
+                            icon={<ScanSearch size={17} aria-hidden="true" />}
+                            on={card === 'inspector'}
+                            title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                            onClick={() => openSection('inspector')}
+                          />
+                        </div>
+                      )}
+                      <span className="kys-rail-end">
+                        {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
+                        <span role="group" aria-label="History" className="kys-rail-history">
+                          <PlayerTip
+                            name="Undo"
+                            help="Take back the last change to the panel's controls or cables. ⌘Z"
+                          >
+                            <button
+                              type="button"
+                              className={`kys-layer ${historyShown === 'undo' ? 'is-lit' : ''}`}
+                              aria-label="Undo"
+                              disabled={!canUndo}
+                              onClick={undo}
+                            >
+                              <Undo2 size={16} aria-hidden="true" />
+                            </button>
+                          </PlayerTip>
+                          <PlayerTip name="Redo" help="Put back the change last undone. ⇧⌘Z">
+                            <button
+                              type="button"
+                              className={`kys-layer ${historyShown === 'redo' ? 'is-lit' : ''}`}
+                              aria-label="Redo"
+                              disabled={!canRedo}
+                              onClick={redo}
+                            >
+                              <Redo2 size={16} aria-hidden="true" />
+                            </button>
+                          </PlayerTip>
+                        </span>
+                        <PanelSwitch
+                          label="Orientation tour"
+                          short="Tour"
+                          tone="start"
+                          on={tourOn}
+                          title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}
+                          onClick={() => {
+                            setTourOn(!tourOn);
+                            setAreasOn(false);
+                            findStore.set(null);
+                          }}
+                        />
+                        <HelpButton title="How to use the panel" items={PANEL_HELP} />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    ref={scrollerRef}
+                    className="kys-scroll kys-panel-scroller overflow-x-auto px-2"
+                    {...panelTaps}
+                  >
+                    <div
+                      ref={frameRef}
+                      data-testid="panel-frame"
+                      className={`kys-synth-shadow mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                      style={panelFrameStyle(faceView(def), scale)}
+                    >
+                      <SynthPanel
+                        def={def}
+                        values={synthDef.seqButtons ? panelValues : sess.values}
+                        moved={modShown}
+                        target={step == null ? target : null}
+                        cables={sess.cables}
+                        outline={view.outline}
+                        zoom={zoom}
+                        areasOn={areasOn}
+                        dimOn={dimOn}
+                        heatOn={heatOn}
+                        onChange={synthDef.seqButtons ? onPanelChange : onChange}
+                        onConnect={onConnect}
+                        onRemoveCable={onRemoveCable}
+                        onMoveCable={onMoveCable}
+                        design={detail.synth.design}
+                      />
+                    </div>
+                  </div>
+                  {/* The panel's rail: how it is drawn and find a control, on a strip along its foot as a hardware
+              panel's lip carries its smaller switches, the width of the panel as it fits the screen. */}
+                  <div className="px-2">
+                    <div
+                      className={`kys-rail is-foot mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                      style={railStyle}
+                    >
+                      <PlayerSettings
+                        view={view}
+                        onView={setView}
+                        modular={!!synthDef.modular}
+                        zoom={zoom}
+                        onZoom={setZoom}
+                        tipsOn={tipsOn}
+                        onTips={setTipsOn}
+                      />
+                      <Search
+                        def={def}
+                        up
+                        slashKey={!small}
+                        placeholder="Find a knob, jack or section"
+                        className="kys-rail-find"
+                      />
+                    </div>
+                    {/* Unplugging everything is the panel's own: a key in its colours under the rail's right end, as a
+                floating part of the synth. A pin matrix's are pins. */}
+                    {sess.cables.length > 0 && (
+                      <div className="kys-panel-under mx-auto" style={railStyle}>
+                        <button
+                          type="button"
+                          className={`kys-panel-key ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
+                          onClick={unplugAll}
+                        >
+                          {synthDef.matrix ? 'Remove all pins' : 'Unplug all cables'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              {/* Under the panel, on the stage with it: the sound's name and what you can do with it on the left; how the
-              panel is drawn and find a control on the right; and what the sound is under both. The name comes first:
-              it stays on one line, and as the screen narrows the search gives up its width, then the tools wrap
-              under the name. */}
+              </ViewTransition>
+              {/* Under the rail, on the stage with the panel: the sound's name and what you can do with it, and what the
+              sound is under both. */}
               <div className="px-3 pt-4 pb-3 sm:px-6">
                 <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
                   <section
                     aria-label="The patch on the panel"
                     className="max-w-full min-w-0 max-md:flex-1"
                   >
-                    {/* The sound's name, and beside it what can be done with it: keep it, or unplug its cables. */}
+                    {/* The sound's name, and beside it what can be done with it: keep it. */}
                     <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
                       <p className="flex max-w-full min-w-0 items-baseline gap-x-2.5">
                         <span className="sr-only">Loaded:</span>
@@ -2033,43 +2261,8 @@ function Synth({
                             buttonClass={rowBtn}
                           />
                         )}
-                      {sess.cables.length > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => patch((s) => ({ ...s, cables: [] }))}
-                          className={rowBtn}
-                        >
-                          Unplug all
-                        </button>
-                      )}
                     </div>
                   </section>
-                  <button
-                    type="button"
-                    aria-label="Panel settings"
-                    aria-expanded={settingsOpen}
-                    aria-controls="kys-tools"
-                    onClick={() => setSettingsOpen(!settingsOpen)}
-                    className={`${rowBtn} ml-auto px-2.5 md:hidden ${settingsOpen ? 'text-(--kys-text)' : ''}`}
-                  >
-                    <Settings2 size={17} aria-hidden="true" />
-                  </button>
-                  <div
-                    id="kys-tools"
-                    data-settings={settingsOpen ? 'open' : 'closed'}
-                    className="kys-tools kys-autohide"
-                  >
-                    <PlayerSettings
-                      view={view}
-                      onView={setView}
-                      modular={!!synthDef.modular}
-                      zoom={zoom}
-                      onZoom={setZoom}
-                      tipsOn={tipsOn}
-                      onTips={setTipsOn}
-                    />
-                    <Search def={def} up className="kys-tools-find" />
-                  </div>
                 </div>
                 {/* What the sound is, under its name as a video's description is under its title. */}
                 {(described || mineNotice || sharedNotice) && (
@@ -2129,12 +2322,18 @@ function Synth({
                   steps={steps}
                   step={step}
                   onStep={(k) => {
+                    chapterChosen.current = true;
                     setStep(k);
                     openSection('build');
                   }}
                   hasLesson={!!shown}
                   mark={<Wordmark lit={audio === 'on'} />}
                   lit={chapterLit ? chapterLit.split('|') : []}
+                  open={designOpen}
+                  onToggle={() => {
+                    chapterChosen.current = false;
+                    setDesignOpen((o) => !o);
+                  }}
                 />
               )}
 
@@ -2220,7 +2419,7 @@ function Synth({
                     <button
                       type="button"
                       onClick={() =>
-                        patch((s) => ({ ...s, values: { ...synthDef.init }, cables: [] }))
+                        glide((s) => ({ ...s, values: { ...synthDef.init }, cables: [] }))
                       }
                       className="kys-layer"
                     >
