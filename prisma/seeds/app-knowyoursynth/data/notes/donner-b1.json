@@ -39,15 +39,15 @@
     }
   ],
   "limits": {
-    "intro": "The voice is modelled: the sawtooth or square oscillator with PITCH, the resonant filter with CUTOFF, RESONANCE and DEPTH, the one decay envelope, accent, slide, saturation with DRIVE and TONE, and the delay with LEVEL, TIME and FEEDBACK. The riffs carry accents, slides, gate lengths and ratchets per step, and the BPM setting sets their speed.",
+    "intro": "The voice is modelled: the sawtooth or square oscillator with PITCH, the resonant filter with CUTOFF, RESONANCE and DEPTH, the one decay envelope, accent, slide, saturation with DRIVE and TONE, and the delay with LEVEL, TIME and FEEDBACK. The riffs carry accents, slides, gate lengths and ratchets per step, and the BPM setting sets their speed and the sequencer’s. The sequencer buttons drive the app’s sequencer under the panel: PLAY/STOP starts and stops it, the sixteen white keys are its step keys, ▼ and ▲ move between steps, ACCENT, SLIDE and RATCHET set the chosen step, CLEAR/REST enters a rest, REC/EDIT turns on step record, ARP plays the keys you hold through the steps, and HOLD latches them.",
     "items": [
       {
         "title": "What is not modelled",
-        "text": "Step entry and pattern memory: REC/EDIT, PATTERN, SAVE, CLEAR/REST, GATE LENGTH, RATCHET, ▼, ▲, TEMPO TAP and PLAY/STOP change nothing, and each sound plays its own riff instead; pattern length and stored transpose with them. The arpeggiator, its eight orders and HOLD. MIDI channels, forwarding, soft through and local control; SYNC IN, SYNC OUT and the clock source; AUX IN. Key priority, multi-trigger and pattern waiting. A playable step sequencer is planned (f-step-sequencer)."
+        "text": "Pattern memory: PATTERN, SAVE and the 128 slots (the app’s sequencer holds one pattern at a time, and patterns are saved in My patterns instead). TEMPO TAP, OCT and GATE LENGTH on the panel: the tempo is the display, the on-screen keyboard has its own octave buttons, and gate length is set per step in the sequencer. The arpeggiator’s eight orders: the sequencer’s arp has its own orders and octaves. HOLD repeating a step while a pattern plays. MIDI channels, forwarding, soft through and local control; SYNC IN, SYNC OUT and the clock source; AUX IN. Key priority, multi-trigger and pattern waiting."
       },
       {
         "title": "ACCENT and SLIDE play live",
-        "text": "On the B1 these buttons write marks into steps, or apply to every step while held during playback. Here, lit, they accent or slide every note you play. Notes from a MIDI keyboard are accented here above velocity about 115; the B1’s own threshold is 96 by default and can be set in Donner’s app. Overlapping notes slide, as on the B1 with multi-trigger set to slide."
+        "text": "On the B1 these buttons write marks into steps, or apply to every step while held during playback. Here they mark the sequencer’s chosen step while the sequencer is open. With it closed, lit, they accent or slide every note you play. Notes from a MIDI keyboard are accented here above velocity about 115; the B1’s own threshold is 96 by default and can be set in Donner’s app. Overlapping notes slide, as on the B1 with multi-trigger set to slide."
       },
       {
         "title": "The circuit is approximated",

@@ -39,15 +39,15 @@
     }
   ],
   "limits": {
-    "intro": "The voice is modelled: the sawtooth or square oscillator, the resonant filter with CUT OFF FREQ, RESONANCE and ENV MOD, the decay envelope, the fixed volume envelope, accent (short decay, accent sweep and louder notes) and slide. The riffs carry accents and slides per step, and TEMPO sets their speed. MIX IN, CV, GATE, HEADPHONE and OUTPUT can be patched.",
+    "intro": "The voice is modelled: the sawtooth or square oscillator, the resonant filter with CUT OFF FREQ, RESONANCE and ENV MOD, the decay envelope, the fixed volume envelope, accent (short decay, accent sweep and louder notes) and slide. The riffs carry accents and slides per step, and TEMPO sets their speed and the sequencer’s. The sequencer buttons drive the app’s sequencer under the panel: RUN/STOP starts and stops it, the 13 keys put notes on its chosen step, TIME MODE turns a step on or off, TRANSPOSE DOWN and UP move it an octave, ACCENT and SLIDE mark it, BACK and WRITE/NEXT move between steps, and PATTERN CLEAR clears it. MIX IN, CV, GATE, HEADPHONE and OUTPUT can be patched.",
     "items": [
       {
         "title": "No pattern memory",
-        "text": "The sequencer is drawn and every button explains itself, but there are no patterns, tracks or modes to write: PITCH MODE, TIME MODE, the keys, FUNCTION, CLEAR, RUN/STOP, BACK, WRITE/NEXT, MODE and TRACK change nothing. Each sound plays its own riff instead, and the on-screen keyboard or a MIDI keyboard plays the voice directly."
+        "text": "The panel keeps no patterns or tracks: MODE, TRACK, PITCH MODE and FUNCTION change nothing. The app’s sequencer holds one pattern at a time, and patterns are saved in My patterns instead. Pitch and timing go in together, step by step, rather than in a pitch pass and a time pass, and a step’s length, ties, triplets and the pattern’s length are set in the sequencer."
       },
       {
         "title": "ACCENT and SLIDE play live",
-        "text": "On the TB-303 these buttons write marks into steps. Here, lit, they accent or slide every note you play. Notes from a MIDI keyboard are also accented when played hard (velocity above about 115), and overlapping notes slide."
+        "text": "On the TB-303 these buttons write marks into steps, and here they do that to the sequencer’s chosen step while the sequencer is open. With it closed, lit, they accent or slide every note you play. Notes from a MIDI keyboard are also accented when played hard (velocity above about 115), and overlapping notes slide."
       },
       {
         "title": "The circuit is approximated",
