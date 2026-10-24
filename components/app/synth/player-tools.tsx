@@ -7,16 +7,16 @@
  * - `LayerToggle`: one layer or tool over the panel (Sections, Dim unused, Sensitive, Inspect over it, Ask AI at its far right; Piano,
  *   Harmonics, Effects on the bar). An icon, with its word from `xl` up and below `lg` (a phone has no tooltips to name it); the full name is the
  *   accessible name and the tooltip at every width.
- * - `PlayerSettings`: under the panel, by the search. Hardware or Outline, Modular or Long, the magnifier and the
- *   hover help, all on show as a row of switches, each named, with what it does on hover.
+ * - `PlayerSettings`: on the panel's rail (the strip along its foot, by the search). Hardware or Outline, Modular or
+ *   Long, the magnifier and the hover help, each named in the panel's lettering with an LED by each choice, lit
+ *   for the one in use, as a hardware selector shows its position. What each does is on hover.
  *
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
 import { useId } from 'react';
-import type { ReactNode, Ref } from 'react';
+import type { CSSProperties, ReactNode, Ref } from 'react';
 import { X } from 'lucide-react';
-import { Segmented } from '@/components/app/synth/bar-controls';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 export function LayerToggle({
@@ -94,11 +94,12 @@ export function PlayerSettings({
   return (
     <div role="group" aria-label="Panel settings" className="kys-settings">
       <Setting
+        at={0}
         name="Drawn as"
         help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
       >
         {(d) => (
-          <Segmented
+          <LedSelect
             describedBy={d}
             label="Panel view"
             options={[
@@ -112,11 +113,12 @@ export function PlayerSettings({
       </Setting>
       {modular && (
         <Setting
+          at={1}
           name="Layout"
           help="Modular stacks the sections as modules; Long is the faceplate as it is on the keyboard."
         >
           {(d) => (
-            <Segmented
+            <LedSelect
               describedBy={d}
               label="Panel layout"
               options={[
@@ -129,9 +131,9 @@ export function PlayerSettings({
           )}
         </Setting>
       )}
-      <Setting name="Magnifier" help="A lens that follows the pointer over the panel.">
+      <Setting at={2} name="Magnifier" help="A lens that follows the pointer over the panel.">
         {(d) => (
-          <Segmented
+          <LedSelect
             describedBy={d}
             label="Magnifier"
             options={[
@@ -145,11 +147,12 @@ export function PlayerSettings({
         )}
       </Setting>
       <Setting
+        at={3}
         name="Hover help"
         help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
       >
         {(d) => (
-          <Segmented
+          <LedSelect
             describedBy={d}
             label="Hover help"
             options={[
@@ -166,21 +169,25 @@ export function PlayerSettings({
 }
 
 /**
- * One setting: its name, which explains it on hover, over its switch. The name cannot take focus, so what it says is
- * also the switch's description (`describedBy`), for a keyboard or screen reader.
+ * One setting: its name, which explains it on hover, beside its LEDs. The name cannot take focus, so what it says is
+ * also the choice's description (`describedBy`), for a keyboard or screen reader. `at` is its place on the rail, which
+ * times its LEDs in the sweep they light in when the panel is first shown.
  */
 function Setting({
+  at,
   name,
   help,
   children,
 }: {
+  at: number;
   name: string;
   help: string;
   children: (describedBy: string) => ReactNode;
 }) {
   const id = useId();
+  const place: CSSProperties & Record<'--at', number> = { '--at': at };
   return (
-    <div className="kys-setting">
+    <div className="kys-setting" style={place}>
       <PlayerTip name={name} help={help}>
         <span className="kys-setting-name">{name}</span>
       </PlayerTip>
@@ -188,6 +195,38 @@ function Setting({
         {help}
       </span>
       {children(id)}
+    </div>
+  );
+}
+
+/** A setting's choices: each a word with an LED before it, lit for the one in use. */
+function LedSelect<T extends string | number | boolean>({
+  label,
+  options,
+  value,
+  onChange,
+  describedBy,
+}: {
+  label: string;
+  options: readonly (readonly [value: T, text: string])[];
+  value: T;
+  onChange: (v: T) => void;
+  describedBy: string;
+}) {
+  return (
+    <div className="kys-leds" role="group" aria-label={label} aria-describedby={describedBy}>
+      {options.map(([v, l]) => (
+        <button
+          key={l}
+          type="button"
+          aria-pressed={value === v}
+          onClick={() => onChange(v)}
+          className="kys-led-opt"
+        >
+          <span className="kys-led-dot" aria-hidden="true" />
+          {l}
+        </button>
+      ))}
     </div>
   );
 }

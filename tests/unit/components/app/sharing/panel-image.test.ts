@@ -56,7 +56,8 @@ describe('panelSvg', () => {
       design: 'neutral',
     });
     expect(out.startsWith('<svg xmlns="http://www.w3.org/2000/svg"')).toBe(true);
-    expect([width, height]).toEqual([modelD.view.w, modelD.view.h]);
+    // The front panel only, without the 40-wide wood cheek at each end.
+    expect([width, height]).toEqual([modelD.view.w - 80, modelD.view.h]);
     expect(out).toContain(`width="${width}" height="${height}"`);
   });
 
@@ -134,7 +135,7 @@ describe('panelPng', () => {
 
   it('fits a wide panel to the box’s width', async () => {
     const { png, width, height } = await panelPng({
-      def: modelD,
+      def: getSynthDef('pro-1')!,
       values: {},
       cables: [],
       design: 'neutral',

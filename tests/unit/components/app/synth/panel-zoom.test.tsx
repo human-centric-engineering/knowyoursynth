@@ -13,9 +13,20 @@ import {
   PANEL_SCALES,
   PanelZoom,
   panelFrameStyle,
+  panelRailStyle,
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
+
+describe('panelRailStyle', () => {
+  it("is the frame's width at the same scale, never wider than the rail's container", () => {
+    for (const scale of [1, 2] as const) {
+      expect(panelRailStyle({ w: 4000, h: 1000 }, scale).width).toBe(
+        `min(100%, ${String(panelFrameStyle({ w: 4000, h: 1000 }, scale).width)})`
+      );
+    }
+  });
+});
 
 describe('panelFrameStyle', () => {
   it('fits a drawn panel to the scroller, up to 1560 px, with no minimum width', () => {

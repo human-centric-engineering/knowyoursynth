@@ -61,6 +61,36 @@ const byId = <T extends { id: string }>(list: readonly T[]): Record<string, T | 
   for (const x of list) m[x.id] = x;
   return m;
 };
+/**
+ * The part of `view` the panel shows: the faceplate, without the end cheeks the theme puts inside `view.w`. The page
+ * draws the front panel only, so the cheeks' width goes to the controls.
+ */
+export function faceView(def: Pick<SynthDef, 'view' | 'theme'>): {
+  x: number;
+  w: number;
+  h: number;
+} {
+  const { cheeks, cheekW } = def.theme;
+  const x = cheeks && cheeks !== 'none' ? cheekW || 40 : 0;
+  return { x, w: def.view.w - x * 2, h: def.view.h };
+}
+
+/**
+ * Whether a faceplate reads as light: its relative luminance (WCAG's) above that of the darkest greys a panel is
+ * painted in. A light face (cream, red, yellow, silver) on the light stage wants a softer shadow than a black one.
+ * A colour that is not `#rgb` or `#rrggbb` counts as dark, which keeps the shadow every panel had before.
+ */
+export function isLightFace(hex: string): boolean {
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return false;
+  const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join('') : m[1];
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const c = parseInt(h.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.1;
+}
+
 const controlMaps = new WeakMap<SynthDef, Record<string, Control | undefined>>();
 const jackMaps = new WeakMap<SynthDef, Record<string, Jack | undefined>>();
 

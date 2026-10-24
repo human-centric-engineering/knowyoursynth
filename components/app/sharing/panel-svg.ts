@@ -3,7 +3,7 @@ import type { SynthDesign } from '@/lib/app/catalogue/designs';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { modularDef } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
-import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
+import { faceView, sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 
 /**
  * A panel as standalone SVG: the synth page's own faceplate (`SynthPanel`), drawn with the given values and cables in
@@ -45,7 +45,8 @@ export function panelSvg({ def, values, cables, design }: PanelSvgInput): {
     onConnect: noop,
     onRemoveCable: noop,
   });
-  const { w, h } = shown.view;
+  // The front panel only, as the page draws it: the SVG's viewBox leaves the end cheeks out.
+  const { w, h } = faceView(shown);
   return {
     svg: markup.replace(
       /^<svg /,

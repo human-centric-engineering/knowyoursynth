@@ -227,6 +227,13 @@ import { expect, vi, afterEach } from 'vitest';
  * import here risks a use-before-initialization error. A dynamic import runs
  * when the factory does, which is after module init.
  */
+/**
+ * The synth panel sets a new patch at once in tests: a glide (a part of the panel at a time, over a few seconds) would
+ * leave every page test waiting to see the sound it opened. The glides' own tests turn it back on with
+ * `vi.mocked(glideMotion).mockReturnValue(true)`.
+ */
+vi.mock('@/components/app/synth/motion', () => ({ glideMotion: vi.fn(() => false) }));
+
 vi.mock('next/navigation', async () => {
   const { createMockRouter } = await import('@/tests/types/mocks');
   return {

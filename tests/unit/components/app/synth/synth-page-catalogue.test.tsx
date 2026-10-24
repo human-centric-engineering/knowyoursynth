@@ -19,7 +19,8 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { modularDef } from '@/lib/app/synths/lib/layout';
-import { isShown, presetState } from '@/lib/app/synths/lib/patch';
+import { faceView, isShown, presetState } from '@/lib/app/synths/lib/patch';
+import type { SynthDef } from '@/lib/app/synths/contract';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { patternLength } from '@/lib/app/sequencer/pattern';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
@@ -246,9 +247,13 @@ describe.each(MODULAR)('the %s page’s panel layout', (id) => {
 
   it('opens as modules, switches to the long faceplate, and back, drawing every control in each', () => {
     render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
-    const viewBox = (v: { w: number; h: number }) => `0 0 ${v.w} ${v.h}`;
-    const modules = viewBox(modularDef(def).view);
-    const long = viewBox(def.view);
+    // The front panel only: the long faceplate's view leaves its end cheeks out (the case has none).
+    const viewBox = (d: SynthDef) => {
+      const f = faceView(d);
+      return `${f.x} 0 ${f.w} ${f.h}`;
+    };
+    const modules = viewBox(modularDef(def));
+    const long = viewBox(def);
     expect(modules).not.toBe(long);
     const panel = () => frontPanel(def);
     const first = detail.sounds[0];

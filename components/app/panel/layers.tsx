@@ -18,7 +18,7 @@ import type { ItemFocus, MapCellState } from '@/components/app/synth/stores';
 import { panelCells } from '@/lib/app/synths/lib/cells';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import { areaMap, areaPath, rectsPath } from '@/lib/app/synths/lib/areas';
-import { controlMap, formatValue, isShown, jackMap } from '@/lib/app/synths/lib/patch';
+import { controlMap, faceView, formatValue, isShown, jackMap } from '@/lib/app/synths/lib/patch';
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import type {
   Area,
@@ -583,6 +583,7 @@ export function DoorRings({ def, values }: { def: SynthDef; values: ControlValue
     })
   );
   const r0 = doorReach(from) * 0.85;
+  const face = faceView(def);
   return (
     <g pointerEvents="none">
       <circle
@@ -600,7 +601,7 @@ export function DoorRings({ def, values }: { def: SynthDef; values: ControlValue
         const dist = Math.hypot(c.x - from.x, c.y - from.y) || 1;
         const [ux, uy] = [(c.x - from.x) / dist, (c.y - from.y) / dist];
         const w = tag.length * 9.6 + 22;
-        const tx = Math.max(w / 2 + 6, Math.min(def.view.w - w / 2 - 6, c.x));
+        const tx = Math.max(face.x + w / 2 + 6, Math.min(face.x + face.w - w / 2 - 6, c.x));
         const ty = c.y + r + 34 > def.view.h ? c.y - r - 22 : c.y + r + 22;
         return (
           <g key={c.id}>

@@ -267,15 +267,37 @@ export function removeLane(p: Pattern, id: string): Pattern {
 }
 
 /**
- * The lane for `from` moved to control `to`, in its place. Its values were in `from`'s units, which mean nothing to
- * `to`, so they go. A control that already has a lane changes nothing.
+ * The lane for `from` moved to control `to`, in its place. Its values were in `from`'s units, so each goes through
+ * `carry` into `to`'s (the lanes do it by height on the lane, so the shape drawn stays); one `carry` gives `null` for,
+ * or every one without a `carry`, goes. A control that already has a lane changes nothing.
  */
-export function retargetLane(p: Pattern, from: string, to: string): Pattern {
+export function retargetLane(
+  p: Pattern,
+  from: string,
+  to: string,
+  carry?: (v: StepMod[string]) => StepMod[string] | null
+): Pattern {
   const lanes = p.lanes ?? [];
   if (from === to || !lanes.includes(from) || lanes.includes(to)) return p;
-  const cleared = removeLane(p, from);
   const at = lanes.indexOf(from);
-  return { ...cleared, lanes: [...lanes.slice(0, at), to, ...lanes.slice(at + 1)] };
+  const parts = mapMods(p, (mod) => {
+    if (Object.hasOwn(mod, from)) {
+      const v = carry ? carry(mod[from]) : null;
+      if (v !== null) mod[to] = v;
+      delete mod[from];
+    }
+    return mod;
+  });
+  return { ...p, lanes: [...lanes.slice(0, at), to, ...lanes.slice(at + 1)], parts };
+}
+
+/** The pattern with nothing set on lane `id` in part `part`: every step there plays the panel's value. */
+export function clearLane(p: Pattern, part: number, id: string): Pattern {
+  const cleared = mapMods(p, (mod) => {
+    delete mod[id];
+    return mod;
+  });
+  return { ...p, parts: p.parts.map((pt, i) => (i === part ? cleared[i] : pt)) };
 }
 
 /** Lane `id`'s value on step `step` of part `part`: `null` takes it off, so the control plays the panel's value there. */

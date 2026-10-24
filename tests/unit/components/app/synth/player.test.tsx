@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * The player's sound picker, whose library closes on a press outside, Escape or Tab out of it, and the full-screen
+ * The player's sound picker, whose library closes on a press outside, Escape, Tab out of it or its close button, and the full-screen
  * button, which logs a refusal rather than throwing.
  *
  * @see components/app/synth/player.tsx
@@ -9,8 +9,8 @@
 
 import { useRef } from 'react';
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { FullscreenButton, SoundPicker } from '@/components/app/synth/player';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { FullscreenButton, SoundDesign, SoundPicker } from '@/components/app/synth/player';
 
 const { warn } = vi.hoisted(() => ({ warn: vi.fn() }));
 vi.mock('@/lib/logging', () => ({ logger: { warn } }));
@@ -60,6 +60,13 @@ describe('SoundPicker', () => {
     const { onClose, pick, search } = picker();
     search.focus();
     fireEvent.keyDown(search, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(document.activeElement).toBe(pick);
+  });
+
+  it('closes from its own close button, as the drawer covers the picker, and puts focus back on the picker', () => {
+    const { onClose, pick, pop } = picker();
+    fireEvent.click(within(pop).getByRole('button', { name: 'Close the patches' }));
     expect(onClose).toHaveBeenCalledTimes(1);
     expect(document.activeElement).toBe(pick);
   });
@@ -128,5 +135,30 @@ describe('FullscreenButton', () => {
       })
     );
     expect(screen.getByRole('button', { name: 'Full screen' })).toBeTruthy();
+  });
+});
+
+describe('SoundDesign: the drawer', () => {
+  it('names its tab, says whether it is up, and asks the page to toggle it', () => {
+    const onToggle = vi.fn();
+    const { rerender } = render(
+      <SoundDesign steps={[]} step={null} onStep={vi.fn()} hasLesson={false} onToggle={onToggle} />
+    );
+    const tab = screen.getByRole('button', { name: 'Learn sound design' });
+    expect(tab).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(tab);
+    expect(onToggle).toHaveBeenCalledTimes(1);
+    rerender(
+      <SoundDesign
+        steps={[]}
+        step={null}
+        onStep={vi.fn()}
+        hasLesson={false}
+        open
+        onToggle={onToggle}
+      />
+    );
+    expect(tab).toHaveAttribute('aria-expanded', 'true');
+    expect(document.getElementById(tab.getAttribute('aria-controls') ?? '')).not.toBeNull();
   });
 });

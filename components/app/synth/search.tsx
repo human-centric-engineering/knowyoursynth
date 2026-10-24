@@ -18,12 +18,17 @@ export function Search({
   def,
   up = false,
   className = 'w-full min-w-0 sm:w-[380px] lg:w-[240px] xl:w-[300px]',
+  placeholder = 'Find a knob, jack or section, e.g. resonance',
+  slashKey = false,
 }: {
   def: SynthDef;
   /** Open the matches above the box, for a search at the foot of the screen (the player bar). */
   up?: boolean;
   /** The box's width. */
   className?: string;
+  placeholder?: string;
+  /** `/` anywhere on the page, outside a field, puts the cursor in the box; its key cap shows while the box is empty. */
+  slashKey?: boolean;
 }) {
   const [q, setQ] = useState('');
   const [open, setOpen] = useState(false);
@@ -42,6 +47,23 @@ export function Search({
   useEffect(() => {
     findStore.set(null);
   }, [def]);
+
+  useEffect(() => {
+    if (!slashKey) return undefined;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== '/' || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      if (
+        t instanceof HTMLElement &&
+        (t.isContentEditable || t.closest('input, textarea, select, [role="slider"]'))
+      )
+        return;
+      e.preventDefault();
+      inputRef.current?.focus();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [slashKey]);
 
   // Light up whichever result is current while the list is open.
   const cur = open && results.length ? results[Math.min(active, results.length - 1)] : null;
@@ -106,7 +128,7 @@ export function Search({
         autoComplete="off"
         spellCheck="false"
         value={q}
-        placeholder="Find a knob, jack or section, e.g. resonance"
+        placeholder={placeholder}
         role="combobox"
         aria-expanded={open && q.trim() !== ''}
         aria-controls="kys-find-list"
@@ -123,6 +145,11 @@ export function Search({
         onKeyDown={onKeyDown}
         className="w-full rounded-md border border-(--kys-line) bg-(--kys-surface) py-1.5 pr-8 pl-8 text-sm text-(--kys-text) placeholder:text-(--kys-faint)"
       />
+      {slashKey && !q && (
+        <kbd className="kys-find-key" aria-hidden="true">
+          /
+        </kbd>
+      )}
       {q && (
         <button
           type="button"

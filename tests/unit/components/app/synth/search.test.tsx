@@ -215,3 +215,39 @@ describe('Search', () => {
     expect(findStore.get()).toEqual({ kind: 'jack', id: 'j.loudCv' });
   });
 });
+
+describe('the / key', () => {
+  it('puts the cursor in the box from anywhere on the page, and its key cap shows only while the box is empty', () => {
+    const { container } = render(<Search def={def} slashKey />);
+    const input = screen.getByRole('combobox');
+    expect(container.querySelector('kbd')).not.toBeNull();
+    const ev = fireEvent.keyDown(document.body, { key: '/' });
+    expect(ev).toBe(false); // the slash is taken, not typed
+    expect(document.activeElement).toBe(input);
+    fireEvent.change(input, { target: { value: 'cutoff' } });
+    expect(container.querySelector('kbd')).toBeNull();
+  });
+
+  it('leaves a / typed into another field, or with a modifier, alone', () => {
+    render(
+      <>
+        <input aria-label="Elsewhere" />
+        <Search def={def} slashKey />
+      </>
+    );
+    const other = screen.getByRole('textbox', { name: 'Elsewhere' });
+    other.focus();
+    fireEvent.keyDown(other, { key: '/' });
+    expect(document.activeElement).toBe(other);
+    other.blur();
+    fireEvent.keyDown(document.body, { key: '/', metaKey: true });
+    expect(document.activeElement).not.toBe(screen.getByRole('combobox'));
+  });
+
+  it('does nothing without slashKey', () => {
+    const { container } = render(<Search def={def} />);
+    fireEvent.keyDown(document.body, { key: '/' });
+    expect(document.activeElement).not.toBe(screen.getByRole('combobox'));
+    expect(container.querySelector('kbd')).toBeNull();
+  });
+});

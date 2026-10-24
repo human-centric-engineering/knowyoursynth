@@ -151,3 +151,16 @@ export function laneValueAt(c: Control, pos: number): ControlValue {
   if (c.step) return Math.min(c.max, Math.max(c.min, Math.round(v / c.step) * c.step));
   return Math.round(v * 1000) / 1000;
 }
+
+/**
+ * A lane value moved from control `from` to control `to`: the value at the same height on `to`'s lane, so a lane moved
+ * to another control keeps the shape drawn on it. Nothing (`null`) from a control this synth has not got, whose
+ * height is not known.
+ */
+export function carryLaneValue(
+  from: Control | null,
+  to: Control,
+  v: ControlValue
+): ControlValue | null {
+  return from ? laneValueAt(to, lanePos(from, v)) : null;
+}
