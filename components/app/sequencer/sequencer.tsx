@@ -414,46 +414,52 @@ export function Sequencer({
 
   // A sequencer synth's own buttons (t-85, `SynthDef.seqButtons`): the TB-303's keys, TIME MODE, ACCENT, SLIDE, BACK
   // and WRITE/NEXT, the B1's step keys. Each works on the chosen step, as the same press in the module would. Read
-  // through a ref, as notes are, so the handler registered always works on the step chosen now.
+  // through a ref, as notes are, and on the step notes go on (`recAt`), moved on at once: a second press before React
+  // draws the first lands on the step after, not on the same one.
   const panelPress = useRef<(b: StepButton) => void>(() => undefined);
   useEffect(() => {
+    const moveTo = (i: number) => {
+      recAt.current = i;
+      choose(i, false);
+    };
     panelPress.current = (b) => {
-      if (b === 'toggle') toggle(sel);
-      else if (b === 'rest') restOrTie(false);
-      else if (b === 'accent')
-        changeStep(sel, (s) => ({ ...s, accent: s.accent ? undefined : true }));
-      else if (b === 'slide') changeStep(sel, (s) => ({ ...s, slide: s.slide ? undefined : true }));
+      const at = recAt.current;
+      if (b === 'toggle') toggle(at);
+      else if (b === 'rest') {
+        changeStep(at, (s) => keepMods([s], [emptyStep()])[0]);
+        moveTo(nextStep(at, len));
+      } else if (b === 'accent')
+        changeStep(at, (s) => ({ ...s, accent: s.accent ? undefined : true }));
+      else if (b === 'slide') changeStep(at, (s) => ({ ...s, slide: s.slide ? undefined : true }));
       else if (b === 'ratchet')
-        changeStep(sel, (s) => {
+        changeStep(at, (s) => {
           const r = ((s.ratchet ?? 1) % MAX_RATCHET) + 1;
           return { ...s, ratchet: r > 1 ? r : undefined };
         });
       else if (b === 'octaveDown' || b === 'octaveUp')
-        changeStep(sel, (s) => shiftOctave([s], b === 'octaveUp' ? 1 : -1)[0]);
-      else if (b === 'back') choose((sel - 1 + len) % len, false);
-      else if (b === 'next') choose(nextStep(sel, len), false);
+        changeStep(at, (s) => shiftOctave([s], b === 'octaveUp' ? 1 : -1)[0]);
+      else if (b === 'back') moveTo((at - 1 + len) % len);
+      else if (b === 'next') moveTo(nextStep(at, len));
       else if (b === 'clear') setSteps(keepMods(steps, clearSteps(steps)));
       else if ('step' in b) {
         const i = page * PAGE + b.step;
         if (i >= len) return;
-        if (i === sel) toggle(i);
-        else choose(i, false);
+        if (i === at) toggle(i);
+        else moveTo(i);
       } else {
-        changeStep(sel, (s) => {
+        changeStep(at, (s) => {
           const note = noteInOctave(s, defaultNote, b.note);
           return s.notes.length === 0
             ? { ...s, on: true, notes: [{ note, gate: 1 }] }
             : { ...s, on: true, notes: s.notes.map((x, k) => (k === 0 ? { ...x, note } : x)) };
         });
-        choose(nextStep(sel, len), false);
+        moveTo(nextStep(at, len));
       }
     };
   });
-  const { onPanelIn } = seq;
-  useEffect(
-    () => onPanelIn({ press: (b) => panelPress.current(b), part: editing, step: sel, page }),
-    [onPanelIn, editing, sel, page]
-  );
+  const { onPanelIn, showChosen } = seq;
+  useEffect(() => onPanelIn((b) => panelPress.current(b)), [onPanelIn]);
+  useEffect(() => showChosen({ part: editing, step: sel, page }), [showChosen, editing, sel, page]);
 
   const onKeyKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const by: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 };

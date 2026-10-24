@@ -19,7 +19,7 @@ import {
 
 const clone = (steps: Step[]): Step[] => structuredClone(steps);
 /** A note moved by whole octaves back inside MIDI, so it keeps its place in the scale. */
-const foldIntoMidi = (n: number) => {
+export const foldIntoMidi = (n: number): number => {
   let x = n;
   while (x > 127) x -= 12;
   while (x < 0) x += 12;

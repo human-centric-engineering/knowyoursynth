@@ -149,6 +149,8 @@ describe('seqLamps', () => {
     expect(lamps['seq.keyC']).toBe(true);
     expect(lamps['seq.keyD']).toBe(false);
     expect(lamps['seq.time']).toBe(true);
+    // a C is the bottom of one octave of keys and the top of the one below: both C keys light
+    expect(lamps['seq.keyC2']).toBe(true);
     const muted = seqLamps(tb303, tb303.init, state({ chosen: { part: 0, step: 1, page: 0 } }));
     expect(muted['seq.keyE']).toBe(false);
     expect(muted['seq.time']).toBe(false);
@@ -177,8 +179,9 @@ describe('noteInOctave', () => {
     expect(noteInOctave({ on: true, notes: [{ note: 36, gate: 1 }] }, 60, 12)).toBe(48);
   });
 
-  it('takes the octave of the nearby note on a rest, and stays inside MIDI', () => {
+  it('takes the octave of the nearby note on a rest, and folds back inside MIDI keeping the note', () => {
     expect(noteInOctave({ on: true, notes: [] }, 62, 7)).toBe(67);
-    expect(noteInOctave({ on: true, notes: [{ note: 125, gate: 1 }] }, 60, 11)).toBe(127);
+    // B above C9 (120) is past MIDI: it folds down an octave and stays a B
+    expect(noteInOctave({ on: true, notes: [{ note: 125, gate: 1 }] }, 60, 11)).toBe(119);
   });
 });

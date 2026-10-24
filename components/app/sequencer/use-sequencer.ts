@@ -136,11 +136,6 @@ interface LiveHit {
 }
 
 /** What mod lanes play on: the synth on the panel, and its voice's settings with a lane's values in them. */
-/** The module's handler for the panel's step buttons (t-85), and the step it has chosen. */
-export interface PanelTarget extends ChosenStep {
-  press: (b: StepButton) => void;
-}
-
 export interface LaneTarget {
   def: SynthDef;
   /** The panel's settings with `set` in place of the panel's values for those controls. Null if they can't be made. */
@@ -218,13 +213,15 @@ export interface Sequencer {
   /** The module's handler for notes played in `edit` and `step` modes. Returns the undo. */
   onNoteIn: (f: NoteTarget) => () => void;
   /**
-   * A sequencer synth's panel button for the chosen step (t-85). Pressed before the module is there (it was closed,
-   * and the page is opening it), it waits for the module.
+   * A sequencer synth's panel button for the chosen step (t-85). With no module there to take it, it does nothing: a
+   * press while the sequencer is closed only opens it, and edits no step the player cannot see.
    */
   panelIn: (b: StepButton) => void;
-  /** The module's handler for the panel's buttons, and its chosen step. Returns the undo. */
-  onPanelIn: (t: PanelTarget) => () => void;
-  /** The step the module has chosen and the page it shows, for the panel's lamps; null while it is not there. */
+  /** The module's handler for the panel's buttons. Returns the undo, which also forgets the chosen step. */
+  onPanelIn: (press: (b: StepButton) => void) => () => void;
+  /** The module tells the page the step it has chosen and the page it shows, for the panel's lamps. */
+  showChosen: (c: ChosenStep) => void;
+  /** The step the module has chosen and the page it shows; null while it is not there. */
   chosen: ChosenStep | null;
   /** What notes played do (t-86). */
   keys: KeyMode;
@@ -747,33 +744,25 @@ export function useSequencer({
     };
   }, []);
 
-  // The panel's step buttons (t-85). The target is state as well as a ref, so the panel's lamps follow the chosen step.
-  const panelTarget = useRef<PanelTarget | null>(null);
-  const panelWaiting = useRef<StepButton | null>(null);
-  const [chosenTarget, setChosenTarget] = useState<PanelTarget | null>(null);
-  const onPanelIn = useCallback((t: PanelTarget) => {
-    panelTarget.current = t;
-    setChosenTarget(t);
-    const waiting = panelWaiting.current;
-    panelWaiting.current = null;
-    if (waiting) t.press(waiting);
+  // The panel's step buttons (t-85): the module's handler, and the step it has chosen, kept as state for the lamps.
+  const panelPress = useRef<((b: StepButton) => void) | null>(null);
+  const [chosen, setChosen] = useState<ChosenStep | null>(null);
+  const onPanelIn = useCallback((press: (b: StepButton) => void) => {
+    panelPress.current = press;
     return () => {
-      if (panelTarget.current !== t) return;
-      panelTarget.current = null;
-      setChosenTarget(null);
+      if (panelPress.current !== press) return;
+      panelPress.current = null;
+      setChosen(null);
     };
   }, []);
-  const panelIn = useCallback((b: StepButton) => {
-    if (panelTarget.current) panelTarget.current.press(b);
-    else panelWaiting.current = b;
+  const showChosen = useCallback((c: ChosenStep) => {
+    setChosen((was) =>
+      was && was.part === c.part && was.step === c.step && was.page === c.page ? was : c
+    );
   }, []);
-  const chosen = useMemo<ChosenStep | null>(
-    () =>
-      chosenTarget
-        ? { part: chosenTarget.part, step: chosenTarget.step, page: chosenTarget.page }
-        : null,
-    [chosenTarget]
-  );
+  const panelIn = useCallback((b: StepButton) => {
+    panelPress.current?.(b);
+  }, []);
 
   /** Where the playhead is being heard: the loop, the steps from its start, and what the loop was compiled as. */
   const heardAt = useCallback(() => {
@@ -990,6 +979,7 @@ export function useSequencer({
     onNoteIn,
     panelIn,
     onPanelIn,
+    showChosen,
     chosen,
     modShown,
     keys,

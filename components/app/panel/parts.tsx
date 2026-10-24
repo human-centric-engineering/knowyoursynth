@@ -2652,7 +2652,8 @@ export const Switch = memo(function Switch({
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            onChange(c.id, nextValue(c, value));
+            // A key held is one press: its repeats would enter note after note, or start and stop the sequencer.
+            if (!e.repeat) onChange(c.id, nextValue(c, value));
           }
         }}
       />

@@ -110,6 +110,13 @@ const pressPanel = async (name: string) => {
     fireEvent.click(panelButton(name));
   });
 };
+/** A button pressed with the sequencer closed opens it, and does nothing else. */
+const openWith = async (name: string) => {
+  await pressPanel(name);
+  expect(seqOpen()).toBe(true);
+  expect(stepKey(1)).toBe('Step 1: C2, on');
+  expect(chosenKey()).toBe('Step 1: C2, on');
+};
 const sequencer = () => screen.getByRole('region', { name: 'Sequencer' });
 const seqOpen = () => screen.queryByRole('region', { name: 'Sequencer' }) !== null;
 const stepKeys = () => within(sequencer()).getAllByRole('button', { name: /^Step \d+:/ });
@@ -163,12 +170,25 @@ describe.each([
     expect(lastSent('stopPattern')).toEqual({ type: 'stopPattern' });
     expect(lastSent('pattern')).toBeUndefined();
   });
+
+  it(`${run} stops the sound’s riff playing, as the bar’s Stop does, rather than starting the pattern`, async () => {
+    page(id);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Play' }));
+    });
+    expect(lastSent('phrase')).toBeDefined();
+    engine.send.mockClear();
+    await pressPanel(run);
+    expect(lastSent('stopPhrase')).toEqual({ type: 'stopPhrase' });
+    expect(lastSent('pattern')).toBeUndefined();
+  });
 });
 
 describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
-  it('TIME MODE opens the sequencer and turns the chosen step off, then on', async () => {
+  it('TIME MODE opens the sequencer, then turns the chosen step off and on', async () => {
     page(id);
     expect(seqOpen()).toBe(false);
+    await openWith('TIME MODE');
     await pressPanel('TIME MODE');
     expect(stepKey(1)).toBe('Step 1: C2, off');
     await pressPanel('TIME MODE');
@@ -177,8 +197,7 @@ describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
 
   it('a key puts its note on the chosen step in that step’s octave, and moves on', async () => {
     page(id);
-    await pressPanel('TIME MODE'); // opens it on step 1
-    await pressPanel('TIME MODE');
+    await openWith('TIME MODE'); // on step 1
     await pressPanel('E');
     expect(stepKey(1)).toBe('Step 1: E2, on');
     expect(chosenKey()).toBe('Step 2: rest');
@@ -187,8 +206,33 @@ describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
     expect(stepKey(2)).toBe('Step 2: G2, on');
   });
 
+  it('two keys pressed before the page redraws go on two steps, one after the other', async () => {
+    page(id);
+    await openWith('TIME MODE');
+    await act(async () => {
+      fireEvent.click(panelButton('E'));
+      fireEvent.click(panelButton('G'));
+    });
+    expect(stepKey(1)).toBe('Step 1: E2, on');
+    expect(stepKey(2)).toBe('Step 2: G2, on');
+    expect(chosenKey()).toBe('Step 3: rest');
+  });
+
+  it('a key held down is one press: its repeats enter nothing', async () => {
+    page(id);
+    await openWith('TIME MODE');
+    await act(async () => {
+      fireEvent.keyDown(panelButton('E'), { key: 'Enter' });
+      fireEvent.keyDown(panelButton('E'), { key: 'Enter', repeat: true });
+      fireEvent.keyDown(panelButton('E'), { key: 'Enter', repeat: true });
+    });
+    expect(stepKey(1)).toBe('Step 1: E2, on');
+    expect(chosenKey()).toBe('Step 2: rest');
+  });
+
   it('DOWN and UP move the chosen step an octave; BACK and WRITE/NEXT choose the step before and after', async () => {
     page(id);
+    await openWith('UP');
     await pressPanel('UP');
     expect(stepKey(1)).toBe('Step 1: C3, on');
     await pressPanel('DOWN');
@@ -203,8 +247,7 @@ describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
 
   it('ACCENT and SLIDE mark the chosen step while the sequencer is open, and leave the panel’s own value alone', async () => {
     page(id);
-    await pressPanel('TIME MODE'); // opens it
-    await pressPanel('TIME MODE');
+    await openWith('TIME MODE');
     engine.send.mockClear();
     await pressPanel('ACCENT');
     await pressPanel('SLIDE');
@@ -226,6 +269,7 @@ describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
 
   it('PATTERN CLEAR clears the pattern, and the sequencer’s Undo brings it back', async () => {
     page(id);
+    await openWith(id === 'tb-303' ? 'PATTERN CLEAR' : 'CLEAR');
     await pressPanel(id === 'tb-303' ? 'PATTERN CLEAR' : 'CLEAR');
     expect(stepKey(1)).toBe('Step 1: rest');
     expect(stepKey(5)).toBe('Step 5: rest');
@@ -244,6 +288,7 @@ describe.each(['tb-303', 'td-3'] as const)('%s: the step buttons', (id) => {
 describe('donner-b1: the step keys and the function buttons', () => {
   it('a white key chooses its step, and a second press turns it on or off', async () => {
     page('donner-b1');
+    await openWith('E2');
     await pressPanel('E2'); // step 4
     expect(chosenKey()).toBe('Step 4: rest');
     await pressPanel('E2');
@@ -255,6 +300,7 @@ describe('donner-b1: the step keys and the function buttons', () => {
 
   it('▼ and ▲ choose the step before and after, and CLEAR/REST makes a rest and moves on', async () => {
     page('donner-b1');
+    await openWith('▲');
     await pressPanel('▲');
     expect(chosenKey()).toBe('Step 2: rest');
     await pressPanel('▼');
@@ -266,6 +312,7 @@ describe('donner-b1: the step keys and the function buttons', () => {
 
   it('RATCHET counts the chosen step up to four plays and round to one', async () => {
     page('donner-b1');
+    await openWith('RATCHET');
     await pressPanel('RATCHET');
     const ratchet = () =>
       within(sequencer())
@@ -298,6 +345,18 @@ describe('donner-b1: the step keys and the function buttons', () => {
     expect(within(sequencer()).getByRole('combobox', { name: 'Keys' }).textContent).toContain(
       'Edit step'
     );
+  });
+
+  it('ARP turned off hands back the key mode it was turned on from', async () => {
+    page('donner-b1');
+    await pressPanel('REC/EDIT');
+    await pressPanel('ARP');
+    const keys = () => within(sequencer()).getByRole('combobox', { name: 'Keys' }).textContent;
+    expect(keys()).toContain('Arp');
+    await pressPanel('ARP');
+    expect(keys()).toContain('Step record');
+    await pressPanel('REC/EDIT');
+    expect(keys()).toContain('Edit step');
   });
 
   it('REC/EDIT turns step record on and off', async () => {

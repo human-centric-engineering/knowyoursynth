@@ -10,6 +10,7 @@
 
 import type { ControlValues, SeqButton, SynthDef } from '@/lib/app/synths/contract';
 import { patternLength, type Pattern, type Step } from '@/lib/app/sequencer/pattern';
+import { foldIntoMidi } from '@/lib/app/sequencer/tools';
 
 /** The presses the page makes itself; the rest are the module's, on the step it has chosen. */
 export type PageButton = 'run' | 'arp' | 'record' | 'hold';
@@ -54,8 +55,9 @@ const sounds = (s: Step | undefined) => !!s && s.on && s.notes.length > 0;
 /**
  * The panel's values with each button the sequencer takes set to what it shows: RUN while the pattern plays, ARP,
  * REC and HOLD while they are on, and with the module open the chosen step's marks, its note on the 303's keys and
- * each step key while its step plays. A button that changes the sound keeps its own value while the sequencer is
- * closed, since it is the panel's then.
+ * each step key while its step plays. A C lights both of the 303's C keys: the step holds only the note, which is the
+ * top of one octave of keys as much as the bottom of the next. A button that changes the sound keeps its own value
+ * while the sequencer is closed, since it is the panel's then.
  */
 export function seqLamps(def: SynthDef, values: ControlValues, s: LampState): ControlValues {
   const map = def.seqButtons;
@@ -79,7 +81,7 @@ export function seqLamps(def: SynthDef, values: ControlValues, s: LampState): Co
     else if (typeof b === 'object' && 'step' in b)
       lit = !!chosen && sounds(part?.steps[chosen.page * s.pageSize + b.step]);
     else if (typeof b === 'object' && 'note' in b)
-      lit = !!step && sounds(step) && step.notes[0].note % 12 === b.note;
+      lit = !!step && sounds(step) && step.notes[0].note % 12 === b.note % 12;
     out[id] = lit;
   }
   return out;
@@ -88,5 +90,11 @@ export function seqLamps(def: SynthDef, values: ControlValues, s: LampState): Co
 /** The note a `{ note }` key puts on a step: `semitone` above the C of the octave the step's note (or `near`) is in. */
 export function noteInOctave(step: Step, near: number, semitone: number): number {
   const from = step.notes[0]?.note ?? near;
-  return Math.min(127, Math.max(0, from - (from % 12) + semitone));
+  return foldIntoMidi(from - (from % 12) + semitone);
+}
+
+/** Two sets of panel values with every value the same: the lamps the page has drawn, and the lamps now. */
+export function sameValues(a: ControlValues, b: ControlValues): boolean {
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every((k) => a[k] === b[k]);
 }

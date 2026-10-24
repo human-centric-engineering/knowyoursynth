@@ -558,13 +558,19 @@ buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in 
 | How keys play in   |                                       | ARP, REC/EDIT (step record), HOLD |
 
 - **A press the sequencer takes leaves the button's own value alone.** Its lamp shows what it drives: RUN while the
-  pattern plays, ARP, REC and HOLD while they are on, and with the module open the chosen step's marks, the 303 key of
-  its note and each B1 step key while its step plays.
-- **RUN/STOP runs the pattern without opening the module**, as the bar's Play does with it open. HOLD is the page's
-  Hold. Every other button opens the module (handing over from a riff playing, as opening it does) and works there.
-- **The step buttons are the module's** (`seq.panelIn`). The module registers a handler (`onPanelIn`) with its chosen
-  step and page, as it does for notes. A press made while the module is closed waits until it opens. The B1's step
-  keys are the keys of the page on show.
+  pattern or the riff plays, ARP, REC and HOLD while they are on, and with the module open the chosen step's marks, the
+  303 key of its note and each B1 step key while its step plays. A C lights both of the 303's C keys: the step holds
+  only the note, the top of one octave of keys as much as the bottom of the next. The page keeps the panel's values
+  while no lamp changes, so editing the pattern does not redraw the panel.
+- **RUN/STOP is the bar's Play and Stop**: it stops whatever is playing, riff or pattern, and otherwise runs the
+  pattern, without opening the module. HOLD is the page's Hold. ARP and REC/EDIT set the key mode, and turned off hand
+  back the mode each was turned on from. Every other button works in the module: pressed while it is closed, it only
+  opens it (handing over from a riff playing, as opening it does), and edits no step the player cannot see.
+- **The step buttons are the module's** (`seq.panelIn`). The module registers a handler once (`onPanelIn`) and tells
+  the page its chosen step and page (`showChosen`) for the lamps. Presses land where notes do (`recAt`), which each
+  move moves on at once, so two presses before a redraw go on two steps. A key held on a panel button is one press:
+  its repeats are ignored. A 303 key past the top of MIDI folds down an octave, as TRANSPOSE does. The B1's step keys
+  are the keys of the page on show.
 - **A button that changes the sound is the sequencer's only while it is open.** The 303's and B1's ACCENT and SLIDE
   are not `ui`: with the module closed they accent or slide every note played, as before; open, they mark the chosen
   step. A live accent left lit stays in the sound while the module is open.
