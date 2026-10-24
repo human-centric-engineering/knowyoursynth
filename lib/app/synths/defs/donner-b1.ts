@@ -22,6 +22,7 @@ import type {
   Jack,
   KnobControl,
   RectDecor,
+  SeqButton,
   SynthDef,
   TextDecor,
   ViewRect,
@@ -386,7 +387,7 @@ controls.push({
   label: 'BPM',
   name: 'Tempo',
   fmt: (v) => String(Math.round(v)),
-  help: 'The display shows the tempo, set with TEMPO TAP and the arrow buttons. Here it sets the speed of the riff, and each sound starts at its own riff’s tempo.',
+  help: 'The display shows the tempo, set with TEMPO TAP and the arrow buttons. Here it sets the speed of the riff and of the sequencer’s pattern, and each sound starts at its own riff’s tempo.',
 });
 
 // ── Function buttons ──────────────────────────────────────────────────────
@@ -408,13 +409,13 @@ const btn = (id: string, x: number, y: number, w: number, h: number, rest: Butto
 };
 const COLS = [1261, 1338, 1414];
 const ROWS = [405, 452, 500, 548, 596];
-const NOT_HERE = 'Not modelled here: each sound’s riff plays its pattern.';
+const NOT_HERE = 'Not modelled here: set it in the sequencer under the panel.';
 const FUNCS: [id: string, label: string, help: string, rest?: Partial<ButtonRest>][][] = [
   [
     [
       'seq.down',
       '▼',
-      `Lowers whatever is being set (tempo, octave, gate length, ratchet, pattern, arpeggio order); otherwise steps back to the previous step. ${NOT_HERE}`,
+      `Lowers whatever is being set (tempo, octave, gate length, ratchet, pattern, arpeggio order); otherwise steps back to the previous step. Here it chooses the sequencer’s step before.`,
     ],
     [
       'kbd.octave',
@@ -424,41 +425,41 @@ const FUNCS: [id: string, label: string, help: string, rest?: Partial<ButtonRest
     [
       'seq.up',
       '▲',
-      `Raises whatever is being set; otherwise steps on to the next step. ${NOT_HERE}`,
+      `Raises whatever is being set; otherwise steps on to the next step. Here it chooses the sequencer’s next step.`,
     ],
   ],
   [
     [
       'seq.tap',
       'TEMPO TAP',
-      'Tap it two to four times in time to set the tempo, or press it once and set 40 to 240 BPM with ▼ and ▲. Here the tempo is the number on the display.',
+      'Tap it two to four times in time to set the tempo, or press it once and set 40 to 240 BPM with ▼ and ▲. Not modelled here: the tempo is the number on the display.',
     ],
     [
       'seq.play',
       'PLAY/STOP',
-      'Starts and stops the pattern. Playing, the keys transpose it live. In this app, use Play on the player bar instead.',
+      'Starts and stops the pattern. Playing, the keys transpose it live. Here it starts and stops the sequencer under the panel, and lights while it runs.',
     ],
     [
       'seq.rec',
       'REC/EDIT',
-      `Record mode: each key enters a note and moves to the next step. Held with a step key, it edits that one step, playing or not. ${NOT_HERE}`,
+      `Record mode: each key enters a note and moves to the next step. Held with a step key, it edits that one step, playing or not. Here it turns the sequencer’s step record on or off: a note or chord played goes on the chosen step, then the next is chosen.`,
     ],
   ],
   [
     [
       'seq.pattern',
       'PATTERN',
-      `Chooses one of 128 patterns with ▼ and ▲. Held for two seconds it reloads the saved pattern. ${NOT_HERE}`,
+      `Chooses one of 128 patterns with ▼ and ▲. Held for two seconds it reloads the saved pattern. Not modelled here: open patterns from My patterns in the sequencer.`,
     ],
     [
       'seq.save',
       'SAVE',
-      `Saves the pattern: SAVE, choose a slot, SAVE again. Edits that are not saved are lost when another pattern loads. The knobs are never saved. ${NOT_HERE}`,
+      `Saves the pattern: SAVE, choose a slot, SAVE again. Edits that are not saved are lost when another pattern loads. The knobs are never saved. Not modelled here: save to My patterns in the sequencer.`,
     ],
     [
       'seq.clear',
       'CLEAR/REST',
-      `Enters a rest while recording. Held for two seconds it clears the pattern; held while it plays it mutes it. ${NOT_HERE}`,
+      `Enters a rest while recording. Held for two seconds it clears the pattern; held while it plays it mutes it. Here it makes the sequencer’s chosen step a rest and moves to the next.`,
     ],
   ],
   [
@@ -470,34 +471,47 @@ const FUNCS: [id: string, label: string, help: string, rest?: Partial<ButtonRest
     [
       'seq.accent',
       'ACCENT',
-      'On the B1 this accents the step being recorded, or every step while held during playback. In this app, while it is lit every note you play is accented, so you can hear the ACCENT knob. The riffs carry their own accents.',
+      'On the B1 this accents the step being recorded, or every step while held during playback. Here, with the sequencer open, it accents the chosen step or takes its accent off, and lights when that step is accented. With the sequencer closed, while it is lit every note you play is accented, so you can hear the ACCENT knob.',
       { ui: false, module: 'env' },
     ],
     [
       'seq.ratchet',
       'RATCHET',
-      `Plays a step two, three or four times inside its own length, for rolls and stutters. Held while a pattern plays it ratchets every step. ${NOT_HERE}`,
+      `Plays a step two, three or four times inside its own length, for rolls and stutters. Held while a pattern plays it ratchets every step. Here each press counts the sequencer’s chosen step up from one play to four and back to one, and it lights while the step ratchets.`,
     ],
   ],
   [
     [
       'seq.slide',
       'SLIDE',
-      'On the B1 this marks a step to glide into the next one. In this app, while it is lit every note glides from the one before. Without it, notes glide only when they overlap, as slid steps do in the riffs.',
+      'On the B1 this marks a step to glide into the next one. Here, with the sequencer open, it slides the chosen step into the next or takes the slide off, and lights when that step slides. With the sequencer closed, while it is lit every note glides from the one before; without it, notes glide only when they overlap, as slid steps do in the riffs.',
       { ui: false, module: 'glide' },
     ],
     [
       'seq.arp',
       'ARP',
-      'Arpeggiator on or off: held keys play one after another in one of eight orders, chosen with ▼ and ▲, at the tempo. Not modelled here.',
+      'Arpeggiator on or off: held keys play one after another in one of eight orders, chosen with ▼ and ▲, at the tempo. Here it turns the sequencer’s arp on or off: the keys you hold play through the pattern’s steps, in the order and octaves set in the sequencer.',
     ],
     [
       'kbd.hold',
       'HOLD',
-      'With the keyboard it holds the note; with the arpeggiator it latches the held keys; while a pattern plays it repeats the current step. Not modelled here.',
+      'With the keyboard it holds the note; with the arpeggiator it latches the held keys; while a pattern plays it repeats the current step. Here it is the page’s Hold, the same as the keyboard’s: notes and arp keys keep playing after you let go. Repeating a step is not modelled.',
     ],
   ],
 ];
+// The function buttons the app's sequencer takes (t-85). TEMPO TAP, OCT, PATTERN, SAVE and GATE LENGTH are not.
+const seqButtons: Record<string, SeqButton> = {
+  'seq.down': 'back',
+  'seq.up': 'next',
+  'seq.play': 'run',
+  'seq.rec': 'record',
+  'seq.clear': 'rest',
+  'seq.accent': 'accent',
+  'seq.ratchet': 'ratchet',
+  'seq.slide': 'slide',
+  'seq.arp': 'arp',
+  'kbd.hold': 'hold',
+};
 FUNCS.forEach((row, r) =>
   row.forEach(([id, label, help, rest], c) => {
     btn(id, COLS[c], ROWS[r], 54, 21, { label, name: label, help, ...rest });
@@ -551,11 +565,12 @@ const spoken = (n: string): string => n.replace('#', ' sharp ');
 const keyId = (n: string): string => `kbd.key${n.replace('#', 's')}`;
 WHITE.forEach((n, i) => {
   const x = 130 + i * (1010 / 15);
+  seqButtons[keyId(n)] = { step: i };
   btn(keyId(n), x, 536, 54, 142, {
     lamp: 'blue',
     label: n,
     name: `${n} key / step ${i + 1}`,
-    help: `Plays ${spoken(n)}. It is also step ${i + 1}: held with REC/EDIT it edits that step, and held for two seconds while a pattern plays it turns the step into a rest or back. The on-screen keyboard plays the synth here.`,
+    help: `Plays ${spoken(n)}. It is also step ${i + 1}: held with REC/EDIT it edits that step, and held for two seconds while a pattern plays it turns the step into a rest or back. Here it is the sequencer’s step key ${i + 1}: a press chooses the step, a press on the chosen step turns it on or off, and it lights while the step is on. The on-screen keyboard plays the synth.`,
   });
   text(x, 624, String(i + 1), 13, { fill: DECK_INK, weight: 500 });
 });
@@ -645,7 +660,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'tempo bpm screen pattern number',
     rects: [R(1230, 285, 220, 90)],
-    help: 'Three digits that show the tempo, and the pattern, octave, gate length, ratchet or arpeggio order while each is set. Here it shows the tempo of the riff.',
+    help: 'Three digits that show the tempo, and the pattern, octave, gate length, ratchet or arpeggio order while each is set. Here it shows the tempo of the riff and of the sequencer’s pattern.',
   },
   {
     id: 'transport',
@@ -653,7 +668,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'octave tempo tap play stop record edit pattern save clear rest arrows',
     rects: [R(1225, 388, 228, 145)],
-    help: '▼ and ▲ change whatever is being set, OCT shifts the keyboard, TEMPO TAP sets the speed, PLAY/STOP runs the pattern and REC/EDIT writes it. PATTERN, SAVE and CLEAR/REST choose, store and empty patterns.',
+    help: '▼ and ▲ change whatever is being set, OCT shifts the keyboard, TEMPO TAP sets the speed, PLAY/STOP runs the pattern and REC/EDIT writes it. PATTERN, SAVE and CLEAR/REST choose, store and empty patterns. Here ▼ and ▲ choose the sequencer’s step, PLAY/STOP runs it, REC/EDIT turns step record on and CLEAR/REST enters a rest; patterns are kept in My patterns.',
   },
   {
     id: 'steps',
@@ -661,7 +676,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'gate length accent ratchet slide glide arpeggiator arp hold latch',
     rects: [R(1225, 534, 228, 100)],
-    help: 'What a step does: GATE LENGTH holds it for part of a step or ties it to the next, ACCENT makes it louder and brighter, RATCHET repeats it, and SLIDE glides into the next note. ARP turns the keys into an arpeggiator and HOLD latches it. Here ACCENT and SLIDE also work on the notes you play.',
+    help: 'What a step does: GATE LENGTH holds it for part of a step or ties it to the next, ACCENT makes it louder and brighter, RATCHET repeats it, and SLIDE glides into the next note. ARP turns the keys into an arpeggiator and HOLD latches it. Here, with the sequencer open, ACCENT, SLIDE and RATCHET set the chosen step, and ARP plays the keys you hold through the steps. With it closed, ACCENT and SLIDE work on the notes you play.',
   },
   {
     id: 'keys',
@@ -669,7 +684,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'keyboard notes touch keys steps sequencer transpose',
     rects: [R(95, 298, 1090, 340)],
-    help: 'Twenty-six touch keys from B1 to C4. They play the synth, write notes into a pattern, and transpose it while it plays. The sixteen white keys are also the steps of the pattern, numbered 1 to 16 under them. The on-screen keyboard plays the synth here.',
+    help: 'Twenty-six touch keys from B1 to C4. They play the synth, write notes into a pattern, and transpose it while it plays. The sixteen white keys are also the steps of the pattern, numbered 1 to 16 under them. Here the white keys are the sequencer’s step keys and light while their step is on; the on-screen keyboard plays the synth.',
   },
 ];
 
@@ -776,6 +791,7 @@ const donnerB1: SynthDef & { version: number } = {
     out: 'the output',
   },
   tempo: 'seq.tempo',
+  seqButtons,
   decor,
   areas,
   controls,
