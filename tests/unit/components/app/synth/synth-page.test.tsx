@@ -669,6 +669,52 @@ describe('SynthPage patch', () => {
     expect(button('Redo')).toBeDisabled();
   }, 10_000);
 
+  it('undoes with ⌘Z and redoes with ⇧⌘Z or Ctrl+Y, but not from a field or with Alt, and at once with reduced motion', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(prefers-reduced-motion: reduce)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    openSide('Inspect');
+    act(() =>
+      focusStore.set({
+        kind: 'cable',
+        id: 'j.lfoTri>j.cutCv',
+        from: 'j.lfoTri',
+        to: 'j.cutCv',
+        x: 0,
+        y: 0,
+        tip: false,
+      })
+    );
+    fireEvent.click(button('Plug it in'));
+    const plugged = () => screen.queryByRole('button', { name: 'Unplug all cables' }) !== null;
+    expect(plugged()).toBe(true);
+
+    // Neither a key the history does not take, nor Alt, nor a press in a field undoes.
+    fireEvent.keyDown(window, { key: 'x', metaKey: true });
+    fireEvent.keyDown(window, { key: 'z', metaKey: true, altKey: true });
+    const field = document.createElement('input');
+    document.body.appendChild(field);
+    fireEvent.keyDown(field, { key: 'z', metaKey: true });
+    field.remove();
+    expect(plugged()).toBe(true);
+
+    fireEvent.keyDown(window, { key: 'z', metaKey: true });
+    expect(plugged()).toBe(false);
+    fireEvent.keyDown(window, { key: 'Z', metaKey: true, shiftKey: true });
+    expect(plugged()).toBe(true);
+    fireEvent.keyDown(window, { key: 'z', ctrlKey: true });
+    expect(plugged()).toBe(false);
+    fireEvent.keyDown(window, { key: 'y', ctrlKey: true });
+    expect(plugged()).toBe(true);
+  });
+
   it('plugs a cable in from the inspector and lists it', () => {
     page();
     openSide('Inspect');
