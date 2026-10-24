@@ -65,7 +65,7 @@ function page(id: (typeof IDS)[number]) {
     name: id,
     maker: 'Nobody',
     year: 1981,
-    heritage: null,
+    heritage: 'A test heritage',
     summary: 'A test synth.',
     design: 'neutral',
     definitionVersion: def.version,
