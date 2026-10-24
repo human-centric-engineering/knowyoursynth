@@ -1692,6 +1692,22 @@ svg .kys-hit:focus-visible {
   cursor: default;
 }
 
+/* Playing into it (t-86): what the keys do, then that mode's controls, as readout cells, and a line saying what
+   happens next. */
+.kys-seq-keys-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 6px;
+}
+.kys-seq-keys-hint {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--kys-faint);
+}
+
 /* Edit: copy, paste and clear, in a menu that opens upward from the tool row. */
 .kys-seq-menu-wrap {
   position: relative;

@@ -813,13 +813,23 @@ function Synth({
   // The keys down now, held or not, as presses per note (a MIDI key and a computer key can both be on one note): under
   // Hold, a note pressed while another is down joins the chord.
   const downRef = useRef(new Map<number, number>());
-  // A note played goes to the sequencer too while it is open: it puts it on the step chosen there.
-  const noteToSeq = useRef<(n: number) => void>(() => undefined);
+  // A note played goes to the sequencer too while it is open: it puts it on the step chosen there, records it, or (in
+  // arp mode) plays it through the pattern, in which case the page does not sound it too (`seqTook`). A key let go
+  // always reaches the sequencer, so an arp key held as the sequencer closes is let go there.
+  const noteToSeq = useRef<(n: number, v: number) => boolean>(() => false);
+  const seqNoteOut = useRef<(n: number) => void>(() => undefined);
+  // Presses per note, like `downRef`: the arp lets a note go when its last key does.
+  const seqTook = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
       if (!engine) return;
-      noteToSeq.current(n);
       void ensureAudio();
+      if (noteToSeq.current(n, v)) {
+        seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
+        return;
+      }
+      // The page sounds this one: an arp count left for the note (a release that never arrived) is not its release.
+      seqTook.current.delete(n);
       if (hold) {
         // A fresh press, with every key up, replaces what is held.
         if (downRef.current.size === 0) {
@@ -836,6 +846,16 @@ function Synth({
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
     (n: number) => {
+      const took = seqTook.current.get(n);
+      if (took !== undefined) {
+        if (took > 1) seqTook.current.set(n, took - 1);
+        else {
+          seqTook.current.delete(n);
+          seqNoteOut.current(n);
+        }
+        return;
+      }
+      seqNoteOut.current(n);
       const presses = (downRef.current.get(n) ?? 0) - 1;
       // Another input still pressing this note keeps it sounding.
       if (presses > 0) {
@@ -857,6 +877,7 @@ function Synth({
       heldRef.current.clear();
       // And a release that never arrived (a key let go outside the window) is forgotten, so Hold starts clean.
       downRef.current.clear();
+      seqTook.current.clear();
     }
   };
 
@@ -912,6 +933,7 @@ function Synth({
     riff: sharedPattern ? null : (shown?.phrase ?? null),
     tempo: tempoBpm,
     lanes: laneTarget,
+    hold,
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
@@ -932,10 +954,11 @@ function Synth({
   const seqDocked = !small && seqOpen;
   const seqShown = small ? sheet === 'sequencer' : seqOpen;
   const transportPlaying = playing || seq.playing;
-  const { noteIn: seqNoteIn } = seq;
+  const { noteIn: seqNoteIn, noteOut: seqNoteOutFn } = seq;
   useEffect(() => {
-    noteToSeq.current = seqShown ? seqNoteIn : () => undefined;
-  }, [seqShown, seqNoteIn]);
+    noteToSeq.current = seqShown ? seqNoteIn : () => false;
+    seqNoteOut.current = seqNoteOutFn;
+  }, [seqShown, seqNoteIn, seqNoteOutFn]);
   // My patterns (`f-step-sequencer` t-81). One of the user's sounds that plays a pattern by default opens the sequencer
   // on it: read once the sound is open, after the sound's riff has been imported, so it replaces that riff. A pattern
   // the sequencer already holds while the same sound stays open (the user just pointed the sound at it) is not read
@@ -1061,6 +1084,7 @@ function Synth({
     onPlay: () => void playPattern(),
     onStop: stopRiff,
     library: seqLibrary,
+    hold: { on: hold, set: setHoldMode },
   };
   const toggleSequencer = () => {
     const opening = !seqShown;

@@ -275,6 +275,72 @@ describe('the sequencer on the synth page', () => {
     expect(first()).toBe('Step 1: C3, on');
   });
 
+  it('in arp mode, plays a key through the pattern instead of sounding it, and lets it go there', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Arp' }));
+    engine.send.mockClear();
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    });
+    // A is C3: the pattern starts with it on every step that plays, and the page sends no note of its own
+    const types = sent().map((m) => m.type);
+    expect(types).toContain('pattern');
+    expect(types).not.toContain('noteOn');
+    const start = sent().find(
+      (m): m is { type: 'pattern'; loop: { notes: number[][] } } => m.type === 'pattern'
+    );
+    const pitches = start?.loop.notes.map((n) => n[1]) ?? [];
+    expect(pitches.length).toBeGreaterThan(0);
+    expect(pitches.every((n) => n === 48)).toBe(true);
+    engine.send.mockClear();
+    fireEvent.keyUp(window, { key: 'a', code: 'KeyA' });
+    // letting go stops what the press started, and sends no note-off for a note the page never played
+    const after = sent().map((m) => m.type);
+    expect(after).toContain('stopPattern');
+    expect(after).not.toContain('noteOff');
+  });
+
+  it('in arp mode, keeps a note playing while another input still holds it', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Arp' }));
+    // C3 on the computer keyboard and on the piano
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    });
+    fireEvent.pointerDown(button('Note 48'));
+    engine.send.mockClear();
+    fireEvent.keyUp(window, { key: 'a', code: 'KeyA' });
+    // the piano still holds C3: the arp plays on, and the page sounds nothing of its own
+    expect(sent().map((m) => m.type)).not.toContain('stopPattern');
+    expect(sent().map((m) => m.type)).not.toContain('noteOff');
+    fireEvent.pointerUp(button('Note 48'));
+    expect(sent().map((m) => m.type)).toContain('stopPattern');
+    expect(sent().map((m) => m.type)).not.toContain('noteOff');
+  });
+
+  it('sends the note-off for a key the page sounds after an arp key whose release never came', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    const keysTo = (mode: string) => {
+      fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+      fireEvent.click(screen.getByRole('option', { name: mode }));
+    };
+    keysTo('Arp');
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'a', code: 'KeyA' });
+    });
+    // its key-up is lost; back in Edit step, C3 is played on the piano
+    keysTo('Edit step');
+    fireEvent.pointerDown(button('Note 48'));
+    engine.send.mockClear();
+    fireEvent.pointerUp(button('Note 48'));
+    expect(sent().map((m) => m.type)).toContain('noteOff');
+  });
+
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
     phone();
     page();

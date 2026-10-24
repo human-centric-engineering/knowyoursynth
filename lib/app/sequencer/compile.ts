@@ -9,6 +9,7 @@
  * condition, probability), then each of its notes: transpose and scale, ratchet, nudge, swing, slide and accent.
  */
 import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
+import type { ArpInput } from '@/lib/app/sequencer/arp';
 import {
   ACCENT_VELOCITY,
   SCALES,
@@ -48,6 +49,11 @@ export interface LoopOptions {
   fill?: boolean;
   /** Where a Brownian walk stood at the end of the loop before. Absent starts it before the first step. */
   from?: number;
+  /**
+   * Arp mode (t-86): each step that plays plays the arp's next note in place of its own, keeping its first note's gate,
+   * velocity and nudge. With no notes held, no step plays.
+   */
+  arp?: ArpInput;
 }
 
 export interface CompiledLoop {
@@ -61,6 +67,8 @@ export interface CompiledLoop {
   order: number[];
   /** Where the mod lanes' values change: empty for a pattern with no lanes. See {@link ModChange}. */
   mods: ModChange[];
+  /** In arp mode, the index of the arp's next note, for the next loop's `arp.from`. */
+  arpTo: number;
 }
 
 /**
@@ -182,6 +190,8 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
   const swing = (p.swing / 100) * 2 - 1;
   const slotStart = (slot: number) => slot + (slot % 2 === 1 ? swing : 0);
   const notes: PhraseNote[] = [];
+  const arp = opts.arp;
+  let arpAt = arp?.from ?? 0;
   // A lane is a row of CV: it moves on every slot, whether the step plays or not, so it never draws from `rng`. The
   // first slot always says what it sets, which puts back what the loop before left set.
   const lanes = p.lanes ?? [];
@@ -194,11 +204,20 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
         mods.push([slotStart(slot) / perBeat, set]);
     }
     if (!step || !stepPlays(step, opts)) return;
+    // The arp's note. A random one is drawn from the arp's own stream, so the arp changes no step's mind.
+    let played = step.notes;
+    if (arp) {
+      if (arp.notes.length === 0) return;
+      const k = arp.random
+        ? Math.floor(arp.random() * arp.notes.length)
+        : arpAt++ % arp.notes.length;
+      played = [{ ...step.notes[0], note: arp.notes[k] }];
+    }
     const ratchet = step.ratchet ?? 1;
     const start = slotStart(slot);
     // Where the next slot starts, swung or not: a slide has to reach past it to overlap the note there.
     const next = slotStart(slot + 1);
-    for (const n of step.notes) {
+    for (const n of played) {
       const note = placeNote(n.note + p.transpose, p.root, p.scale);
       const velocity = step.accent ? ACCENT_VELOCITY : n.velocity;
       for (let k = 0; k < ratchet; k++) {
@@ -214,5 +233,6 @@ export function compileLoop(p: Pattern, opts: LoopOptions): CompiledLoop {
     }
   });
   notes.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  return { notes, beats: len / perBeat, to, order, mods };
+  const arpTo = arp && arp.notes.length > 0 ? arpAt % arp.notes.length : 0;
+  return { notes, beats: len / perBeat, to, order, mods, arpTo };
 }
