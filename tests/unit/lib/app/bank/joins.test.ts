@@ -55,9 +55,9 @@ describe('heardFor over the seed data', () => {
 });
 
 describe('heardFor for a native synth', () => {
-  // No prototype list to hold these to, so each one's list is written here. The bank has no song with a Donner B1
-  // part yet: when one is added, this changes on purpose, alongside the data.
-  const expected: Record<string, HeardEntry[]> = { 'donner-b1': [] };
+  // No prototype list to hold these to, so each one's list is written here. The bank has no song with a Donner B1 or
+  // a Take 5 part yet: when one is added, this changes on purpose, alongside the data.
+  const expected: Record<string, HeardEntry[]> = { 'donner-b1': [], 'take-5': [] };
 
   it('has an expectation for every native synth', () => {
     expect(Object.keys(expected).sort()).toEqual([...NATIVE_SYNTHS].sort());

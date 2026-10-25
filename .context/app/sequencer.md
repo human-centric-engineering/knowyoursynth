@@ -550,20 +550,21 @@ the tutor's Undo is the module's `undo`. From `lg` up applying it opens the modu
 
 ## The sequencer synths' own buttons
 
-On the TB-303, TD-3 and Donner B1 the panel's sequencer buttons drive this sequencer (t-85). A definition maps its
-buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in `contract.ts`). The page routes a press
-(`seqButtonFor`, `components/app/sequencer/panel-buttons.ts`) and draws the panel with `seqLamps` over its values.
+On the TB-303, TD-3, Donner B1 and Take 5 the panel's sequencer buttons drive this sequencer (t-85, t-116). A
+definition maps its buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in `contract.ts`). The
+page routes a press (`seqButtonFor`, `components/app/sequencer/panel-buttons.ts`) and draws the panel with `seqLamps`
+over its values.
 
-| Does               | TB-303 / TD-3                         | Donner B1                         |
-| ------------------ | ------------------------------------- | --------------------------------- |
-| Start and stop     | RUN/STOP (START/STOP)                 | PLAY/STOP                         |
-| Choose a step      | BACK, WRITE/NEXT                      | ▼, ▲, a white key                 |
-| Turn a step on/off | TIME MODE                             | a white key, again                |
-| A note on a step   | the 13 keys (then the next step)      |                                   |
-| Octave of a step   | TRANSPOSE DOWN, UP                    |                                   |
-| Mark a step        | ACCENT, SLIDE                         | ACCENT, SLIDE, RATCHET            |
-| Rest, clear        | PATTERN CLEAR (CLEAR) clears the part | CLEAR/REST: a rest, then the next |
-| How keys play in   |                                       | ARP, REC/EDIT (step record), HOLD |
+| Does               | TB-303 / TD-3                         | Donner B1                         | Take 5                     |
+| ------------------ | ------------------------------------- | --------------------------------- | -------------------------- |
+| Start and stop     | RUN/STOP (START/STOP)                 | PLAY/STOP                         | PLAY                       |
+| Choose a step      | BACK, WRITE/NEXT                      | ▼, ▲, a white key                 |                            |
+| Turn a step on/off | TIME MODE                             | a white key, again                |                            |
+| A note on a step   | the 13 keys (then the next step)      |                                   |                            |
+| Octave of a step   | TRANSPOSE DOWN, UP                    |                                   |                            |
+| Mark a step        | ACCENT, SLIDE                         | ACCENT, SLIDE, RATCHET            |                            |
+| Rest, clear        | PATTERN CLEAR (CLEAR) clears the part | CLEAR/REST: a rest, then the next |                            |
+| How keys play in   |                                       | ARP, REC/EDIT (step record), HOLD | RECORD (step record), HOLD |
 
 - **A press the sequencer takes leaves the button's own value alone.** Its lamp shows what it drives: RUN while the
   pattern or the riff plays, ARP, REC and HOLD while they are on, and with the module open the chosen step's marks, the
@@ -583,7 +584,8 @@ buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in 
   are not `ui`: with the module closed they accent or slide every note played, as before; open, they mark the chosen
   step. A live accent left lit stays in the sound while the module is open.
 - **Not mapped**, with help that says so: MODE, TRACK, PITCH MODE and FUNCTION on the 303 and TD-3; TEMPO TAP, OCT,
-  PATTERN, SAVE and GATE LENGTH on the B1, and its black keys.
+  PATTERN, SAVE and GATE LENGTH on the B1, and its black keys. On the Take 5, ARPEGGIATOR ON plays the synth's own
+  arpeggiator rather than the sequencer's, and the sixteen program buttons are not step keys.
 - `scripts/check-synths.ts` leaves `help` and `seqButtons` out of its comparison with the prototype. The app rewrites
   what a control's help says about the app, and neither changes the sound. The goldens still hold each synth to the
   prototype's sound.

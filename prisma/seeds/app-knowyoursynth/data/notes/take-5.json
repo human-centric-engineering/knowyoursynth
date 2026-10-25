@@ -1,0 +1,58 @@
+{
+  "synth": "take-5",
+  "unusual": [
+    {
+      "target": "lfo",
+      "text": "One set of knobs and buttons serves two LFOs, and the LFO button chooses which one they set. LFO 1 is a single wave shared by all five voices (MONO); LFO 2 runs separately in each voice (POLY), so a chord can wobble out of step with itself."
+    },
+    {
+      "target": "env.routing",
+      "text": "The envelopes have no fixed jobs. ENV ROUTING picks one of three: Envelope 1 on the filter and Envelope 2 on the volume; Envelope 2 on both, freeing Envelope 1 for its own destination (Aux); or the same with the volume gated by the key instead of shaped by an envelope."
+    },
+    {
+      "target": "osc1.shape",
+      "text": "No waveform switch: SHAPE morphs continuously from sine through sawtooth to pulse, and past the square it narrows the pulse, so one knob does the job of a wave selector and a pulse-width knob."
+    },
+    {
+      "target": "osc.fm",
+      "text": "With FM 2→1 on, the OSC 2 mixer knob stops mixing Oscillator 2 in and becomes the FM amount instead."
+    },
+    {
+      "target": "osc1.sync",
+      "text": "Oscillator 1 is the one that is synced, to Oscillator 2. Many synths sync the second oscillator to the first, so the roles here are the other way round."
+    },
+    {
+      "target": "mix.noise",
+      "text": "One knob for two colours of noise: off at the centre, pink turned left and white turned right."
+    },
+    {
+      "target": "mix.sub",
+      "text": "The sub-oscillator follows Oscillator 1, an octave below it, with its own level in the mixer."
+    },
+    {
+      "target": "env1.amount",
+      "text": "Zero is in the middle, so the envelope can be turned upside down. Both envelopes’ AMOUNT knobs work this way."
+    },
+    {
+      "target": "voice.vintage",
+      "text": "VINTAGE deliberately makes the five voices differ from each other, the way an old polysynth’s hand-tuned voices did."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both oscillators with OCTAVE, PITCH and SHAPE, SYNC 2→1 and FM 2→1, the sub-oscillator and the pink-to-white noise, the filter with CUTOFF, RESONANCE and DRIVE, both envelopes with VELOCITY and all three ENV ROUTING settings, LFO 1 and LFO 2 with their shapes and amounts, VINTAGE, GLIDE, UNISON, OVERDRIVE, the effect and the reverb. The arpeggiator plays at the BPM and CLK DIV with its MODE and OCTAVE. The LFO destinations and Envelope 1’s Aux destination are rows on the display. HOLD is the page’s Hold, and RECORD and PLAY drive the app’s sequencer under the panel.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The 16-slot mod matrix (SRC ASSIGN and DEST ASSIGN): it is left empty, so the mod wheel, pressure and the pedals move nothing. Of the 56 destinations, an LFO or Envelope 1 can reach six here: the pitch of either or both oscillators, the cutoff and the resonance. The clock sync of the LFOs and the effect, TAP TEMPO, the arpeggiator’s REPEAT and relatch, and the Take 5’s own 64-step sequencer (the app’s sequencer stands in). Program memory: FACTORY, BANK, the sixteen program buttons, PRESET, compare and write, and the global and program menus with SELECT and VALUE. The unison voice count, detune and key priority, and chord memory: UNISON here always stacks all five voices with a fixed detune. Glide mode and per-oscillator glide, key follow on and off, pitch-bend range, low split, transpose and alternative tunings. Pan and the stereo spread of the voices; MIDI and the rear sockets."
+      },
+      {
+        "title": "Two LFOs on the shared knobs",
+        "text": "On the hardware the knobs pick up the chosen LFO’s settings as you switch. Here each LFO has its own knobs in the same spots, shown while it is chosen, and its shape is chosen by pressing a lamp. LFO 1 is one wave for all five voices on the Take 5; here each voice runs its own copy of it, started at a different point, so a chord’s voices do not move exactly together."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The guide gives no envelope or LFO times, and says nothing about the filter’s slope or circuit (retailers describe a Prophet-5-style 4-pole low-pass). Here the filter is the app’s 24 dB ladder with key tracking fixed at half, the envelope times run from 1 ms to 20 s, the LFOs from 0.05 to 50 Hz, and how far an LFO or envelope moves its destination is the app’s estimate. VINTAGE here only lets each voice’s pitch drift. OVERDRIVE drives each voice after its filter rather than the summed voices. With Envelope 2’s AMOUNT left of the centre, the guide does not say what the VCA does; here it stays shut. The effects run on the app’s DeepMind effects engine, each on the nearest algorithm, with the three knobs mapped onto it; the ring modulator has no equivalent there, so with it chosen the sound passes dry."
+      }
+    ]
+  }
+}

@@ -18,5 +18,5 @@ repo is public, and the manuals and photos are the makers’ copyright.
 | ----------------------------------- | ------ | ----------------------------------------------------- |
 | `Sequential Module 3510 Take 5.jpg` | 317 KB | `Sequential Take 5/Sequential Module 3510 Take 5.jpg` |
 
-The photo is of the desktop module; the panel is the same as the keyboard's above its keys. The
-spec's sources (the User's Guide 1.1 and the MIDI implementation) are not in the folder.
+The photo shows the desktop module, with no keyboard; the app's panel is drawn from it. The spec's
+sources (the User's Guide 1.1 and the MIDI implementation) are not in the folder.
