@@ -26,6 +26,15 @@
  * Full guide: CUSTOMIZATION.md §4 · .context/database/seeding.md
  */
 
+import { DescribeSynthCapability } from '@/lib/app/tutor/describe-synth';
+import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
+import { GetPanelCapability } from '@/lib/app/tutor/get-panel';
+import { GetPatternCapability } from '@/lib/app/tutor/get-pattern';
+import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
+import { ProposePatternCapability } from '@/lib/app/tutor/propose-pattern';
+import { SearchDatabankCapability } from '@/lib/app/tutor/search-databank';
+import { WebSearchCapability } from '@/lib/app/tutor/web-search';
+
 /** One capability slug and the class whose definition its seed must write. */
 export interface AppCapabilityPair {
   /** The capability slug; also its `functionDefinition.name`. */
@@ -48,7 +57,17 @@ export interface AppCapabilityPair {
  * ];
  * ```
  */
-export const APP_CAPABILITY_PAIRS: readonly AppCapabilityPair[] = [];
+export const APP_CAPABILITY_PAIRS: readonly AppCapabilityPair[] = [
+  // The tutor's tools, as `app-knowyoursynth/003-tutor-tools.ts` seeds them (t-77).
+  { slug: 'get_panel', instance: new GetPanelCapability() },
+  { slug: 'describe_synth', instance: new DescribeSynthCapability() },
+  { slug: 'propose_panel_change', instance: new ProposePanelChangeCapability() },
+  { slug: 'design_sound', instance: new DesignSoundCapability() },
+  { slug: 'get_pattern', instance: new GetPatternCapability() },
+  { slug: 'propose_pattern', instance: new ProposePatternCapability() },
+  { slug: 'search_databank', instance: new SearchDatabankCapability() },
+  { slug: 'web_search', instance: new WebSearchCapability() },
+];
 
 /**
  * Seeds of this fork's that the parity test cannot run under its strict mock
@@ -68,4 +87,9 @@ export const APP_CAPABILITY_PAIRS: readonly AppCapabilityPair[] = [];
  * };
  * ```
  */
-export const APP_UNCHECKED_SEEDS: Readonly<Record<string, string>> = {};
+export const APP_UNCHECKED_SEEDS: Readonly<Record<string, string>> = {
+  'app-knowyoursynth/001-catalogue.ts':
+    'places new synths after the highest `order` with synth.aggregate, which the mock does not model; writes the catalogue, no capability',
+  'app-knowyoursynth/002-bank.ts':
+    'validates the databank against the catalogue it reads, which the mock leaves empty, so it throws; writes the databank, no capability',
+};
