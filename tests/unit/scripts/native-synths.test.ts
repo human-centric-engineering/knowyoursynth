@@ -34,6 +34,7 @@ describe('nativeSynthProblems', () => {
   it('refuses a native synth that is not registered', () => {
     expect(nativeSynthProblems(['td-3'], ['td-3'])).toEqual([
       'native synth donner-b1 is not registered',
+      'native synth take-5 is not registered',
     ]);
   });
 

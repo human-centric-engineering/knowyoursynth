@@ -1,0 +1,43 @@
+{
+  "synth": "take-5",
+  "title": "From the Prophet-5 to the Take 5",
+  "intro": "The Take 5 is Sequential’s compact five-voice polysynth, built on the platform of the 2020 Prophet-5 Rev4 reissue. It keeps the Prophet’s idea, two oscillators and a resonant low-pass filter in each of five voices, and adds what a modern compact poly has: morphing wave shapes, a sub-oscillator, a mod matrix, an arpeggiator and sequencer, and digital effects.",
+  "timeline": [
+    {
+      "year": "1978",
+      "name": "Sequential Circuits Prophet-5",
+      "tag": "The ancestor",
+      "text": "Five voices of two oscillators each, and the first synthesizer that stored every setting of a sound in memory. The Take 5’s five voices, two oscillators and sync from Oscillator 2 to Oscillator 1 come from here."
+    },
+    {
+      "year": "2020",
+      "name": "Sequential Prophet-5 Rev4",
+      "tag": "Closest ancestor",
+      "text": "A recreation of the original Prophet-5, with two VCOs per voice and switchable filters from the earlier revisions. The Take 5 shares its platform."
+    },
+    {
+      "year": "2021",
+      "name": "Sequential Take 5",
+      "tag": "This synth",
+      "text": "Five analogue voices with a 44-key keyboard: two VCOs whose SHAPE morphs from sine to pulse, a sub-oscillator, a resonant low-pass filter with drive, two envelopes with switchable routing, two LFOs, a 16-slot mod matrix, overdrive, one of eleven effects plus reverb, an arpeggiator and a 64-step sequencer."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Oberheim TEO-5",
+      "years": "2024",
+      "text": "Built on the same platform with the same front-panel layout, with an SEM-style filter that morphs between low-pass, notch and high-pass in place of the Take 5’s low-pass."
+    },
+    {
+      "name": "Sequential Fourm",
+      "years": "2025",
+      "text": "A smaller four-voice Sequential poly with a Prophet-5-derived 4-pole filter and polyphonic aftertouch."
+    },
+    {
+      "name": "Behringer PRO-800",
+      "years": "2023",
+      "text": "Another affordable route to the Prophet sound: a copy of the 1982 Prophet-600, which this app also plays."
+    }
+  ],
+  "note": "None of the databank’s records name the Take 5 yet."
+}

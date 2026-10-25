@@ -1,0 +1,931 @@
+{
+  "synth": "take-5",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "t5-warm-pad",
+      "name": "Warm Pad",
+      "ref": "In the style of 1980s film-score synth pads",
+      "artist": "Various",
+      "tags": ["pad", "film", "80s"],
+      "level": 1,
+      "blurb": "A slow, warm chord wash that swells in and hangs in the air.",
+      "how": "Two sawtooth oscillators a few cents apart beat against each other, which is what makes a polysynth pad sound alive. Slow attacks on both envelopes fade each chord in, and Envelope 1 opens the filter as it swells. VINTAGE lets the five voices drift apart and the reverb puts the chords in a room.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.7],
+          [0, 55, 3.8, 0.7],
+          [0, 59, 3.8, 0.7],
+          [0, 64, 3.8, 0.7],
+          [4, 45, 3.8, 0.7],
+          [4, 52, 3.8, 0.7],
+          [4, 57, 3.8, 0.7],
+          [4, 60, 3.8, 0.7],
+          [8, 41, 3.8, 0.7],
+          [8, 48, 3.8, 0.7],
+          [8, 53, 3.8, 0.7],
+          [8, 57, 3.8, 0.7],
+          [12, 43, 3.8, 0.7],
+          [12, 50, 3.8, 0.7],
+          [12, 55, 3.8, 0.7],
+          [12, 62, 3.8, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, a few cents apart",
+          "module": "osc",
+          "why": "A pad starts with two oscillators that are nearly, but not quite, in tune.\n- OSC 2 at 60 % and OSC 1 at 60 %: both sawtooths (SHAPE at the middle), equally loud.\n- OSC 2 PITCH +0.1 st: a few cents sharp. The two waves drift in and out of step, so each note slowly swirls.\n- Listen for: a gentle, slow beating inside every note. Back to 0 and it goes flat and still.",
+          "set": {
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "osc2.pitch": 0.12
+          }
+        },
+        {
+          "title": "Fade each chord in and out",
+          "module": "env",
+          "why": "Envelope 2 runs the volume (ENV ROUTING is on its first setting, so Envelope 2 is Amp).\n- Envelope 2 ATTACK 1.1 s: each chord fades in rather than starting at once.\n- RELEASE 1.6 s: the chord lingers after you let go, so one chord melts into the next.\n- Listen for: soft beginnings and long tails. SUSTAIN stays at full, so held chords do not fade.",
+          "set": {
+            "env2.attack": 6.5,
+            "env2.release": 7
+          }
+        },
+        {
+          "title": "Let the filter swell open",
+          "module": "filter",
+          "why": "Envelope 1 runs the filter. Starting dark and opening slowly makes the pad bloom.\n- CUTOFF 216 Hz: dark at rest.\n- Envelope 1 AMOUNT +2.0, ATTACK 1.6 s, DECAY 1.6 s, SUSTAIN 40 %, RELEASE 1.6 s: the filter opens over about two seconds, then settles part way back.\n- Listen for: each chord getting brighter as it swells, then mellowing.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "env1.amount": 2,
+            "env1.attack": 7,
+            "env1.decay": 7,
+            "env1.sustain": 4,
+            "env1.release": 7
+          }
+        },
+        {
+          "title": "Age it and give it a room",
+          "module": "fx",
+          "why": "The last touches make it sound like an old instrument in a real space.\n- VINTAGE 40 %: each voice wanders slightly out of tune on its own, like the voices of an old polysynth.\n- REVERB on, MIX 40 %, DECAY 70 %: a long, soft tail.\n- Listen for: the chord sounding wider and further away.",
+          "set": {
+            "voice.vintage": 4,
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7
+          }
+        }
+      ],
+      "context": {
+        "osc2.pitch": "The detune. A few cents gives the slow swirl; more turns it sour.",
+        "env2.attack": "How slowly each chord fades in.",
+        "env1.attack": "How slowly the filter opens: the bloom.",
+        "voice.vintage": "How far the five voices drift from each other.",
+        "rev.mix": "How much room you hear."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.pitch",
+          "try": "Raise to +0.4",
+          "hear": "A faster, seasick chorus in every note."
+        },
+        {
+          "id": "env1.amount",
+          "try": "Raise to +4",
+          "hear": "The swell turns into a bright, brassy bloom."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 7.5 (square)",
+          "hear": "A hollower, more woody pad."
+        }
+      ]
+    },
+    {
+      "id": "t5-poly-brass",
+      "name": "Poly Brass",
+      "ref": "In the style of Van Halen — \"Jump\"",
+      "artist": "Van Halen",
+      "tags": ["brass", "rock", "80s"],
+      "level": 1,
+      "blurb": "Bright, punchy synth-brass chords with a quick swell at the front of each stab.",
+      "how": "Synth brass is two sawtooths through a filter that an envelope opens fast and closes part way: the bright \"blare\" at the front of each note is the filter, not the volume. A short attack on the filter envelope gives the slight swell a brass player makes. The stabs are short, so the decay shape is what you hear.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.4],
+          [0, 64, 0.4],
+          [0, 67, 0.4],
+          [0.5, 60, 0.4],
+          [0.5, 64, 0.4],
+          [0.5, 67, 0.4],
+          [1.5, 59, 0.4],
+          [1.5, 62, 0.4],
+          [1.5, 67, 0.4],
+          [2, 59, 0.4],
+          [2, 62, 0.4],
+          [2, 67, 0.4],
+          [3, 57, 0.9],
+          [3, 60, 0.9],
+          [3, 65, 0.9],
+          [4, 57, 0.4],
+          [4, 60, 0.4],
+          [4, 65, 0.4],
+          [4.5, 57, 0.4],
+          [4.5, 60, 0.4],
+          [4.5, 65, 0.4],
+          [5.5, 55, 0.4],
+          [5.5, 59, 0.4],
+          [5.5, 62, 0.4],
+          [6, 55, 1.6],
+          [6, 59, 1.6],
+          [6, 62, 1.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two bright sawtooths",
+          "module": "osc",
+          "why": "Brass needs a bright, buzzy start.\n- OSC 2 60 %, OSC 1 60 %: both sawtooths, which are full of the harmonics brass has.\n- OSC 2 PITCH -0.1 st: a touch flat of Oscillator 1, for thickness.\n- Listen for: a full, raw buzz.",
+          "set": {
+            "mix.osc1": 6,
+            "mix.osc2": 6,
+            "osc2.pitch": -0.08
+          }
+        },
+        {
+          "title": "Make the filter blare",
+          "module": "filter",
+          "why": "The brass \"blare\" is the filter opening fast at the start of each note and settling back.\n- CUTOFF 154 Hz: fairly dark between notes.\n- Envelope 1 AMOUNT +3.0: a big sweep upward.\n- ATTACK 48 ms: not instant, so each stab swells in like a breath.\n- DECAY 460 ms, SUSTAIN 30 %: it falls back to a mellower held tone.\n- Listen for: \"bwaah\" on every stab.",
+          "set": {
+            "vcf.cutoff": 3,
+            "env1.amount": 3,
+            "env1.attack": 3,
+            "env1.decay": 5.5,
+            "env1.sustain": 3
+          }
+        },
+        {
+          "title": "Shape the volume",
+          "module": "env",
+          "why": "Envelope 2 shapes the loudness.\n- ATTACK 8 ms: a tiny fade-in, so the stabs do not click.\n- RELEASE 75 ms: a short tail after each stab.\n- Listen for: tight, punchy chords.",
+          "set": {
+            "env2.attack": 1.5,
+            "env2.release": 3.5
+          }
+        },
+        {
+          "title": "A little room",
+          "module": "fx",
+          "why": "A short reverb takes the dryness off.\n- REVERB on, MIX 20 %, DECAY 30 %.\n- Listen for: the stabs ringing slightly into the gaps.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 2,
+            "rev.decay": 3
+          }
+        }
+      ],
+      "context": {
+        "env1.amount": "How far the filter blares open on each stab.",
+        "env1.attack": "The swell at the front of each note.",
+        "vcf.cutoff": "How dark the sound is between stabs."
+      },
+      "tweaks": [
+        {
+          "id": "env1.attack",
+          "try": "Lower to 0",
+          "hear": "A harder, more percussive stab with no swell."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 4",
+          "hear": "A nasal, more synthetic brass."
+        },
+        {
+          "id": "env1.vel",
+          "try": "Turn VELOCITY on",
+          "hear": "Softer notes from a MIDI keyboard blare less."
+        }
+      ]
+    },
+    {
+      "id": "t5-sync-lead",
+      "name": "Sync Sweep Lead",
+      "ref": "In the style of early 1980s new-wave sync leads",
+      "artist": "Various",
+      "tags": ["lead", "new wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing lead whose tone sweeps down at the start of every note.",
+      "how": "SYNC 2→1 makes Oscillator 1 restart with every cycle of Oscillator 2, so Oscillator 2 holds the note and Oscillator 1’s pitch changes only the tone. ENV ROUTING frees Envelope 1 to sweep Oscillator 1’s pitch, so each note starts with a tearing \"neow\". Envelope 2 then runs both the filter and the volume.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45],
+          [0.5, 67, 0.45],
+          [1, 69, 0.9],
+          [2, 72, 0.45],
+          [2.5, 71, 0.45],
+          [3, 67, 0.9],
+          [4, 64, 0.45],
+          [4.5, 62, 0.45],
+          [5, 64, 1.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Oscillator 1 alone, synced to Oscillator 2",
+          "module": "osc",
+          "why": "Hard sync is the core of this lead.\n- SYNC 2→1 on: Oscillator 1 restarts its wave every time Oscillator 2 starts a cycle. Oscillator 2 now sets the note, even though OSC 2 is down at 0 in the mixer.\n- Listen for: no change yet. Both oscillators are at the same pitch, so sync has nothing to tear. Turn OSC 1 PITCH up and the tone turns hard and nasal while the note stays put.",
+          "set": {
+            "osc1.sync": true
+          }
+        },
+        {
+          "title": "Free Envelope 1 to sweep Oscillator 1",
+          "module": "env",
+          "why": "ENV ROUTING decides what the envelopes do. Its second setting gives the filter and the volume to Envelope 2, and frees Envelope 1 for a destination of its own (Aux).\n- ENV ROUTING: Env 1 Aux / Env 2 Filter+Amp.\n- ENV 1 DEST (on the display): Osc 1 Freq.\n- Envelope 1 AMOUNT +5.0: at the peak it throws Oscillator 1 an octave above Oscillator 2.\n- ATTACK 0, DECAY 460 ms, SUSTAIN 0: the sweep falls away in under half a second.\n- Listen for: a tearing \"neow\" at the front of each note.",
+          "set": {
+            "env.routing": "aux-filteramp",
+            "env1.dest": "osc1",
+            "env1.amount": 5,
+            "env1.decay": 5.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Set the filter and the volume",
+          "module": "filter",
+          "why": "Envelope 2 now moves the filter and the volume together, by the same AMOUNT.\n- CUTOFF 304 Hz: with Envelope 2 at full AMOUNT and SUSTAIN, the filter opens wide while a key is held.\n- Envelope 2 RELEASE 48 ms: a short tail.\n- Listen for: the sweep coming through bright, with a quick close when you let go.",
+          "set": {
+            "vcf.cutoff": 4,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Glide and echo",
+          "module": "fx",
+          "why": "Two finishing touches for a lead.\n- GLIDE on, GLIDE 90 ms: each note slides briefly into the next.\n- EFFECT on, TYPE Stereo delay, TIME 50 %, DEPTH/MIX 25 %, FBACK/MISC 30 %: a few echoes behind the line.\n- Listen for: a lead that sings and trails off.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 1.5,
+            "fx.on": true,
+            "fx.type": "delay",
+            "fx.time": 5,
+            "fx.mix": 2.5,
+            "fx.misc": 3
+          }
+        }
+      ],
+      "context": {
+        "osc1.sync": "Locks Oscillator 1 to Oscillator 2: the source of the tear.",
+        "env.routing": "The second setting frees Envelope 1 to sweep the pitch.",
+        "env1.amount": "How far the sweep throws Oscillator 1: the size of the tear.",
+        "env1.decay": "How long the sweep takes to fall."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 7",
+          "hear": "A slow, vocal \"yeow\" on every note."
+        },
+        {
+          "id": "osc1.pitch",
+          "try": "Raise to +7",
+          "hear": "A harder, more nasal held tone under the sweep."
+        },
+        {
+          "id": "osc1.octave",
+          "try": "Turn to +1",
+          "hear": "The held tone jumps to a brighter overtone."
+        }
+      ]
+    },
+    {
+      "id": "t5-sub-bass",
+      "name": "Sub Bass",
+      "ref": "In the style of 2010s synthwave basslines",
+      "artist": "Various",
+      "tags": ["bass", "synthwave"],
+      "level": 1,
+      "blurb": "A round, heavy bass with a soft pluck at the front of each note.",
+      "how": "A square wave from Oscillator 1 with the sub-oscillator an octave below it gives weight without buzz. A dark filter and a short filter envelope add a soft pluck, and the volume envelope lets each note ring briefly.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.3],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 39, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4],
+          [4, 34, 0.4],
+          [4.5, 34, 0.4],
+          [5, 46, 0.3],
+          [5.5, 34, 0.4],
+          [6, 36, 0.9],
+          [7, 31, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square with a sub underneath",
+          "module": "osc",
+          "why": "Weight comes from the sub-oscillator.\n- OSC 1 SHAPE square: a square, hollow and round.\n- OSC 1 SUB 60 %: a square an octave lower, from Oscillator 1.\n- Listen for: a deep, solid low end.",
+          "set": {
+            "osc1.shape": 7.5,
+            "mix.sub": 6
+          }
+        },
+        {
+          "title": "Darken it and add a pluck",
+          "module": "filter",
+          "why": "A dark filter keeps the bass round; a short envelope puts a soft pluck on it.\n- CUTOFF 154 Hz.\n- Envelope 1 AMOUNT +2.0, DECAY 75 ms, SUSTAIN 0: a quick flick open on each note.\n- Listen for: a soft \"dum\" at the start of every note.",
+          "set": {
+            "vcf.cutoff": 3,
+            "env1.amount": 2,
+            "env1.decay": 3.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Tighten the volume",
+          "module": "env",
+          "why": "Envelope 2 shapes each note.\n- DECAY 460 ms, SUSTAIN 60 %: each note dips slightly after it starts.\n- RELEASE 15 ms: notes stop cleanly.\n- Listen for: tight, even notes.",
+          "set": {
+            "env2.decay": 5.5,
+            "env2.sustain": 6,
+            "env2.release": 2
+          }
+        }
+      ],
+      "context": {
+        "mix.sub": "The weight under the note.",
+        "vcf.cutoff": "How round or buzzy the bass is.",
+        "env1.amount": "The pluck at the front of each note."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 5 (sawtooth)",
+          "hear": "A brighter, buzzier bass."
+        },
+        {
+          "id": "vcf.drive",
+          "try": "Raise to 8",
+          "hear": "The filter saturates: thicker and grittier."
+        },
+        {
+          "id": "mix.sub",
+          "try": "Lower to 0",
+          "hear": "How much the weight came from the sub."
+        }
+      ]
+    },
+    {
+      "id": "t5-fm-bells",
+      "name": "FM Bells",
+      "ref": "In the style of 1980s digital bell sounds",
+      "artist": "Various",
+      "tags": ["keys", "bells", "80s"],
+      "level": 2,
+      "blurb": "Glassy, metallic bells that ring out and fade.",
+      "how": "FM 2→1 lets Oscillator 2 wobble Oscillator 1’s frequency at audio speed, which adds new, inharmonic tones: the clang of a bell. Both oscillators are sine waves, so every overtone comes from the FM. Oscillator 2 is tuned an octave and a fifth up, and the OSC 2 knob sets how hard it modulates.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5, 0.8],
+          [1, 76, 1.5, 0.7],
+          [2, 79, 1.5, 0.8],
+          [3, 84, 2.5, 0.7],
+          [5, 77, 1.5, 0.7],
+          [6, 72, 2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sine waves",
+          "module": "osc",
+          "why": "FM is easiest to hear starting from plain sines.\n- OSC 1 SHAPE and OSC 2 SHAPE sine: pure sines, with no overtones of their own.\n- OSC 2 OCTAVE +1, PITCH +7 st: an octave and a fifth above Oscillator 1, three times its frequency.\n- Listen for: a plain, flute-like tone (Oscillator 2 is still down at 0).",
+          "set": {
+            "osc1.shape": 0,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "osc2.pitch": 7
+          }
+        },
+        {
+          "title": "Turn on FM",
+          "module": "osc",
+          "why": "With FM 2→1 on, the OSC 2 knob no longer mixes Oscillator 2 in: it sets how hard Oscillator 2 modulates Oscillator 1.\n- FM 2→1 on.\n- OSC 2 40 %: enough for a metallic ring without turning harsh.\n- CUTOFF 9.1 kHz: the filter stays open so the new overtones come through.\n- Listen for: the flute turning into glass and metal.",
+          "set": {
+            "osc.fm": true,
+            "mix.osc2": 4,
+            "vcf.cutoff": 9
+          }
+        },
+        {
+          "title": "Make it ring and fade",
+          "module": "env",
+          "why": "A bell is struck, then rings away.\n- Envelope 2 DECAY 1.6 s, SUSTAIN 0, RELEASE 1.6 s: each note fades out over a couple of seconds whether you hold it or not.\n- Listen for: struck notes that ring.",
+          "set": {
+            "env2.decay": 7,
+            "env2.sustain": 0,
+            "env2.release": 7
+          }
+        },
+        {
+          "title": "Put it in a hall",
+          "module": "fx",
+          "why": "Bells ring in big spaces.\n- REVERB on, MIX 40 %, DECAY 70 %, PREDELAY 40 ms.\n- Listen for: the notes blooming into a shimmering tail.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 4,
+            "rev.decay": 7,
+            "rev.predelay": 2
+          }
+        }
+      ],
+      "context": {
+        "osc.fm": "Turns Oscillator 2 into a modulator of Oscillator 1.",
+        "mix.osc2": "With FM on, how hard Oscillator 2 modulates: the amount of clang.",
+        "osc2.pitch": "The ratio between the two oscillators, which decides which overtones appear."
+      },
+      "tweaks": [
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 7",
+          "hear": "A harsher, clangier gong."
+        },
+        {
+          "id": "osc2.pitch",
+          "try": "Lower to +3",
+          "hear": "An out-of-tune, more inharmonic bell."
+        },
+        {
+          "id": "osc2.octave",
+          "try": "Turn to 0",
+          "hear": "A softer, electric-piano-like tine."
+        }
+      ]
+    },
+    {
+      "id": "t5-unison-lead",
+      "name": "Unison Lead",
+      "ref": "In the style of 1980s synth-rock solos",
+      "artist": "Various",
+      "tags": ["lead", "rock", "80s"],
+      "level": 2,
+      "blurb": "A huge, slightly growling mono lead with vibrato and glide.",
+      "how": "UNISON stacks all five voices on one note, slightly detuned, so the lead is ten oscillators thick. Glide slides between notes, LFO 1 adds vibrato, and OVERDRIVE roughens the summed voices.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.95],
+          [1, 72, 0.45],
+          [1.5, 74, 0.45],
+          [2, 76, 1.9],
+          [4, 74, 0.45],
+          [4.5, 72, 0.45],
+          [5, 69, 0.95],
+          [6, 67, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack the voices",
+          "module": "osc",
+          "why": "UNISON plays every voice on the one note.\n- UNISON on: all five voices, each slightly detuned.\n- OSC 2 60 %, PITCH +0.1 st: Oscillator 2 joins in, a touch sharp.\n- Listen for: one note, but massive and moving.",
+          "set": {
+            "voice.unison": true,
+            "mix.osc2": 6,
+            "osc2.pitch": 0.1,
+            "mix.osc1": 6
+          }
+        },
+        {
+          "title": "Shape the tone",
+          "module": "filter",
+          "why": "A little resonance and a short filter envelope give the lead a vocal edge.\n- CUTOFF 843 Hz, RESONANCE 30 %.\n- Envelope 1 AMOUNT +1.5, DECAY 460 ms, SUSTAIN 40 %.\n- Listen for: a bright start to each note that settles to a singing tone.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 3,
+            "env1.amount": 1.5,
+            "env1.decay": 5.5,
+            "env1.sustain": 4
+          }
+        },
+        {
+          "title": "Glide and vibrato",
+          "module": "lfo",
+          "why": "The expression of a lead.\n- GLIDE on, GLIDE 160 ms: notes slide into each other.\n- LFO 1 (the LFO button on 1) FREQUENCY 2.23 Hz, AMOUNT +1.0, DEST Osc All Freq: a gentle vibrato on both oscillators.\n- Listen for: a lead that slides and wavers like a voice.",
+          "set": {
+            "glide.on": true,
+            "glide.time": 2,
+            "lfo1.freq": 5.5,
+            "lfo1.amt": 1
+          }
+        },
+        {
+          "title": "Rough it up",
+          "module": "fx",
+          "why": "OVERDRIVE drives the summed voices before the effects.\n- OVERDRIVE 30 %: a light growl.\n- EFFECT on, TYPE BBD delay, TIME 50 %, DEPTH/MIX 20 %: a dark echo behind the line.\n- Listen for: grit and space.",
+          "set": {
+            "drive.amount": 3,
+            "fx.on": true,
+            "fx.time": 5,
+            "fx.mix": 2
+          }
+        }
+      ],
+      "context": {
+        "voice.unison": "Stacks all five voices on one note.",
+        "glide.time": "How long each note takes to slide to the next.",
+        "lfo1.amt": "The depth of the vibrato.",
+        "drive.amount": "How much the stacked voices growl."
+      },
+      "tweaks": [
+        {
+          "id": "lfo1.amt",
+          "try": "Raise to 2",
+          "hear": "A wide, dramatic vibrato."
+        },
+        {
+          "id": "drive.amount",
+          "try": "Raise to 7",
+          "hear": "A fuzzy, guitar-like lead."
+        },
+        {
+          "id": "glide.time",
+          "try": "Raise to 5",
+          "hear": "Long, swooping slides."
+        }
+      ]
+    },
+    {
+      "id": "t5-bbd-arp",
+      "name": "Echoing Arpeggio",
+      "ref": "In the style of 1980s synth-pop arpeggios",
+      "artist": "Various",
+      "tags": ["seq", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A bright, plucky arpeggio that climbs two octaves and echoes off the beat.",
+      "how": "Hold a chord and the arpeggiator plays its notes one at a time, up and down over two octaves, in sixteenths at the BPM. A short, resonant filter pluck gives each note a click, and the BBD delay, set to a dotted eighth, throws the notes back off the beat.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.9],
+          [0, 60, 3.9],
+          [0, 64, 3.9],
+          [4, 53, 3.9],
+          [4, 57, 3.9],
+          [4, 60, 3.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Turn the arpeggiator on",
+          "module": "mode",
+          "why": "The riff holds chords; the arpeggiator breaks them into single notes.\n- ARPEGGIATOR ON.\n- MODE Up+Down, OCTAVE 2 octaves: up and back down, over two octaves.\n- CLK DIV 1/16, BPM 110 BPM: one note per sixteenth.\n- Listen for: a running pattern instead of chords.",
+          "set": {
+            "arp.on": true,
+            "arp.mode": "updown",
+            "arp.octave": "2",
+            "clock.bpm": 110
+          }
+        },
+        {
+          "title": "A plucked, resonant tone",
+          "module": "filter",
+          "why": "Each note gets a quick, resonant flick of the filter.\n- CUTOFF 427 Hz, RESONANCE 40 %.\n- Envelope 1 AMOUNT +3.0, DECAY 75 ms, SUSTAIN 0.\n- Envelope 2 DECAY 190 ms, SUSTAIN 0, RELEASE 48 ms: every note dies away on its own.\n- Listen for: a crisp \"pew\" on every step.",
+          "set": {
+            "vcf.cutoff": 4.5,
+            "vcf.resonance": 4,
+            "env1.amount": 3,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env2.decay": 4.5,
+            "env2.sustain": 0,
+            "env2.release": 3
+          }
+        },
+        {
+          "title": "Echo it off the beat",
+          "module": "fx",
+          "why": "The BBD delay is dark and warm, like the bucket-brigade chips of 1980s delays.\n- EFFECT on, TYPE BBD delay.\n- TIME 82 %: about a dotted eighth (410 ms) at this tempo, so the echoes fall between the notes.\n- DEPTH/MIX 35 %, FBACK/MISC 45 %: several echoes, a little under the dry sound.\n- Listen for: the pattern answering itself.",
+          "set": {
+            "fx.on": true,
+            "fx.time": 8.2,
+            "fx.mix": 3.5,
+            "fx.misc": 4.5
+          }
+        }
+      ],
+      "context": {
+        "arp.on": "Turns held chords into a running pattern.",
+        "arp.mode": "The order of the notes.",
+        "arp.octave": "How far the pattern climbs.",
+        "fx.time": "The echo time: set it against the tempo."
+      },
+      "tweaks": [
+        {
+          "id": "arp.mode",
+          "try": "Turn to Random",
+          "hear": "The same notes in a new order every time."
+        },
+        {
+          "id": "clock.div",
+          "try": "Turn to 1/16T",
+          "hear": "A rolling, triplet feel."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Raise to 7",
+          "hear": "Each note squelches."
+        }
+      ]
+    },
+    {
+      "id": "t5-velocity-pluck",
+      "name": "Velocity Pluck",
+      "ref": "In the style of modern synth-pop plucks",
+      "artist": "Various",
+      "tags": ["pluck", "pop"],
+      "level": 1,
+      "blurb": "A short, hollow pluck that brightens the harder you play.",
+      "how": "SHAPE between sawtooth and square gives a hollow, woody tone. Envelope 1 snaps the filter open and shut on every note, and VELOCITY makes how far it opens follow how hard each note is played: the riff’s accented notes come out brighter.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25, 1],
+          [0.5, 67, 0.25, 0.6],
+          [1, 69, 0.25, 0.75],
+          [1.5, 72, 0.25, 0.6],
+          [2, 76, 0.25, 1],
+          [2.75, 74, 0.25, 0.6],
+          [3, 72, 0.25, 0.75],
+          [3.5, 69, 0.25, 0.6],
+          [4, 71, 0.25, 1],
+          [4.5, 67, 0.25, 0.6],
+          [5, 64, 0.25, 0.75],
+          [6, 67, 0.25, 1],
+          [6.5, 69, 0.25, 0.6],
+          [7, 72, 0.5, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hollow wave",
+          "module": "osc",
+          "why": "Between sawtooth and square, SHAPE gives a tone that is bright but hollow.\n- OSC 1 SHAPE saw → square, OSC 1 90 %: up loud, since each pluck is short.\n- Listen for: a woody, slightly nasal buzz.",
+          "set": {
+            "osc1.shape": 6.25,
+            "mix.osc1": 9
+          }
+        },
+        {
+          "title": "Snap the filter",
+          "module": "filter",
+          "why": "A pluck is a filter that opens at once and closes fast.\n- CUTOFF 600 Hz: muted at rest.\n- Envelope 1 AMOUNT +4.0, ATTACK 0, DECAY 75 ms, SUSTAIN 0, RELEASE 75 ms.\n- Listen for: a quick \"plink\" on each note.",
+          "set": {
+            "vcf.cutoff": 5,
+            "env1.amount": 4,
+            "env1.decay": 3.5,
+            "env1.sustain": 0,
+            "env1.release": 3.5
+          }
+        },
+        {
+          "title": "Follow the touch",
+          "module": "env",
+          "why": "VELOCITY makes an envelope follow how hard each key is played.\n- Envelope 1 VELOCITY on: harder notes open the filter further.\n- Envelope 2 DECAY 700 ms, SUSTAIN 0, RELEASE 120 ms: each note dies away like a plucked string.\n- Listen for: the riff’s accented notes coming out brighter than the rest.",
+          "set": {
+            "env1.vel": true,
+            "env2.decay": 6,
+            "env2.sustain": 0,
+            "env2.release": 4
+          }
+        },
+        {
+          "title": "Room around it",
+          "module": "fx",
+          "why": "- REVERB on, MIX 30 %, DECAY 50 %, TONE thinner 40 %: a medium room with its bass cut so the plucks stay clear.\n- Listen for: the notes ringing into a soft tail.",
+          "set": {
+            "rev.on": true,
+            "rev.mix": 3,
+            "rev.decay": 5,
+            "rev.tone": 2
+          }
+        }
+      ],
+      "context": {
+        "env1.vel": "Makes the pluck brighter on harder notes.",
+        "env1.decay": "How long the pluck takes to close.",
+        "osc1.shape": "The hollow tone of the pluck."
+      },
+      "tweaks": [
+        {
+          "id": "env1.decay",
+          "try": "Raise to 5",
+          "hear": "A slower, more \"wah\" pluck."
+        },
+        {
+          "id": "osc1.shape",
+          "try": "Turn to 9",
+          "hear": "A thin, reedy pluck."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 4",
+          "hear": "Oscillator 2 thickens the pluck."
+        }
+      ]
+    },
+    {
+      "id": "t5-rotary-organ",
+      "name": "Rotary Organ",
+      "ref": "In the style of 1960s and 70s rock organ",
+      "artist": "Various",
+      "tags": ["keys", "organ", "rock"],
+      "level": 2,
+      "blurb": "A drawbar-style organ through a spinning rotary speaker.",
+      "how": "Sine waves at the note, an octave up and an octave down stand in for an organ’s drawbars. The third ENV ROUTING setting gates the volume, so notes switch on and off like an organ’s keys, and the rotating speaker effect swirls the sound.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.4],
+          [0, 60, 1.4],
+          [0, 64, 1.4],
+          [1.5, 55, 0.4],
+          [1.5, 60, 0.4],
+          [1.5, 64, 0.4],
+          [2, 53, 1.9],
+          [2, 58, 1.9],
+          [2, 62, 1.9],
+          [4, 53, 1.4],
+          [4, 57, 1.4],
+          [4, 60, 1.4],
+          [5.5, 53, 0.4],
+          [5.5, 57, 0.4],
+          [5.5, 60, 0.4],
+          [6, 55, 1.9],
+          [6, 59, 1.9],
+          [6, 62, 1.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sine \"drawbars\"",
+          "module": "osc",
+          "why": "An organ adds sine waves at different octaves.\n- OSC 1 SHAPE sine, OSC 1 35 %: the note itself.\n- OSC 2 SHAPE sine, OCTAVE +1, OSC 2 25 %: an octave above.\n- OSC 1 SUB 25 %: an octave below.\n- CUTOFF 6.5 kHz: the filter stays out of the way.\n- Listen for: a pure, round organ tone.",
+          "set": {
+            "osc1.shape": 0,
+            "mix.osc1": 3.5,
+            "osc2.shape": 0,
+            "osc2.octave": "+1",
+            "mix.osc2": 2.5,
+            "mix.sub": 2.5,
+            "vcf.cutoff": 8.5
+          }
+        },
+        {
+          "title": "Gate the volume",
+          "module": "env",
+          "why": "An organ note is on while the key is down and off when it comes up.\n- ENV ROUTING: Env 1 Aux / Env 2 Filter+Gate. The volume now simply opens with the key; Envelope 2 still moves the filter.\n- Envelope 2 AMOUNT 0: the filter stays where CUTOFF puts it.\n- Listen for: instant on, instant off.",
+          "set": {
+            "env.routing": "aux-filtergate",
+            "env2.amount": 0
+          }
+        },
+        {
+          "title": "Spin the speaker",
+          "module": "fx",
+          "why": "A rotating speaker throws the sound around the room.\n- EFFECT on, TYPE Rotating speaker.\n- TIME 30 %: the slow speed; above the middle it switches to fast.\n- DEPTH/MIX 100 %, FBACK/MISC 40 %: all through the speaker, at a middling distance.\n- OVERDRIVE 20 %: a little bite, like a driven organ amplifier.\n- Listen for: a slow swirl.",
+          "set": {
+            "fx.on": true,
+            "fx.type": "rotary",
+            "fx.time": 3,
+            "fx.mix": 10,
+            "fx.misc": 4,
+            "drive.amount": 2
+          }
+        }
+      ],
+      "context": {
+        "env.routing": "The gated setting makes the volume switch on and off like an organ.",
+        "fx.time": "The rotor speed: slow below the middle, fast above.",
+        "mix.sub": "The octave-below \"drawbar\"."
+      },
+      "tweaks": [
+        {
+          "id": "fx.time",
+          "try": "Raise to 7",
+          "hear": "The rotors speed up into a fast warble."
+        },
+        {
+          "id": "drive.amount",
+          "try": "Raise to 6",
+          "hear": "A growling rock organ."
+        },
+        {
+          "id": "osc2.octave",
+          "try": "Turn to +2",
+          "hear": "A brighter, whistling top drawbar."
+        }
+      ]
+    },
+    {
+      "id": "t5-noise-wind",
+      "name": "Wind",
+      "ref": "In the style of 1970s synthesizer sound effects",
+      "artist": "Various",
+      "tags": ["fx", "texture", "70s"],
+      "level": 3,
+      "blurb": "A howling wind made from filtered noise, gusting slowly.",
+      "how": "Pink noise through a resonant filter whistles at the cutoff, like air across an opening. LFO 1 sweeps the cutoff slowly up and down for the gusts, and slow envelopes and a long reverb blow it in and out. The oscillators are off: it is all noise.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 7.5, 0.8],
+          [8, 67, 7.5, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise instead of the oscillators",
+          "module": "mixer",
+          "why": "Wind is noise, not a pitch.\n- OSC 1 0 %: the oscillators are silent.\n- NOISE pink 70 %: pink noise, darker and softer than white.\n- Listen for: a steady hiss.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.noise": -3.5
+          }
+        },
+        {
+          "title": "Make it whistle",
+          "module": "filter",
+          "why": "Resonance turns the filter into a whistle at the cutoff.\n- CUTOFF 843 Hz, RESONANCE 80 %.\n- Listen for: a hollow, howling tone inside the hiss.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.resonance": 8
+          }
+        },
+        {
+          "title": "Gusts from LFO 1",
+          "module": "lfo",
+          "why": "A slow LFO on the cutoff moves the whistle up and down.\n- LFO 1 DEST Cutoff, FREQUENCY 0.28 Hz, AMOUNT +2.5, SHAPE triangle.\n- Listen for: the howl rising and falling every few seconds.",
+          "set": {
+            "lfo1.dest": "cutoff",
+            "lfo1.freq": 2.5,
+            "lfo1.amt": 2.5
+          }
+        },
+        {
+          "title": "Blow in and out",
+          "module": "env",
+          "why": "Slow envelopes and a long reverb make it rise and die away.\n- Envelope 2 ATTACK 1.6 s, RELEASE 2.5 s.\n- REVERB on, MIX 50 %, DECAY 80 %.\n- Listen for: wind that builds, gusts and fades into the distance.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 7.5,
+            "rev.on": true,
+            "rev.mix": 5,
+            "rev.decay": 8
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "The source of the wind: pink to the left, white to the right.",
+        "vcf.resonance": "The whistle in the wind.",
+        "lfo1.amt": "How strongly the wind gusts."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Turn to +3.5 (white)",
+          "hear": "A harsher, hissing wind."
+        },
+        {
+          "id": "lfo1.shape",
+          "try": "Choose sample and hold",
+          "hear": "The howl jumps between random pitches."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Lower to 3",
+          "hear": "A softer rush with no whistle."
+        }
+      ]
+    }
+  ]
+}

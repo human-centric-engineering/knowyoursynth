@@ -55,6 +55,7 @@ const EXPORTED: {
   { id: 'td-3', sounds: 20, timeline: 4, relatives: 3, unusual: 9, limits: 4 },
   // Written straight into the app (`scripts/native-synths.ts`), not exported: these counts are its own files'.
   { id: 'donner-b1', sounds: 10, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
+  { id: 'take-5', sounds: 10, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
   { id: 'jupiter-4', sounds: 19, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 18, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 20, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -80,7 +81,7 @@ describe('the exported content', () => {
     );
   });
 
-  it('lists each synth at its place in the prototype’s picker, with the Donner B1 after the TD-3', () => {
+  it('lists each synth at its place in the prototype’s picker, with the Donner B1 after the TD-3 and the Take 5 after the PRO-800', () => {
     expect(data.listing.synths).toEqual([
       { id: 'model-d', order: 0, listed: true },
       { id: 'neutron', order: 1, listed: true },
@@ -95,19 +96,20 @@ describe('the exported content', () => {
       { id: 'wasp-deluxe', order: 10, listed: true },
       { id: 'poly-d', order: 11, listed: true },
       { id: 'pro-800', order: 12, listed: true },
-      { id: 'ems-vcs3', order: 13, listed: true },
-      { id: 'buchla-easel', order: 14, listed: true },
-      { id: 'tb-303', order: 15, listed: true },
-      { id: 'td-3', order: 16, listed: true },
-      { id: 'donner-b1', order: 17, listed: true },
-      { id: 'jupiter-4', order: 18, listed: true },
-      { id: 'jupiter-6', order: 19, listed: true },
-      { id: 'jupiter-8', order: 20, listed: true },
-      { id: 'system-15', order: 21, listed: true },
-      { id: 'system-35', order: 22, listed: true },
-      { id: 'system-55', order: 23, listed: true },
-      { id: 'model-15', order: 24, listed: true },
-      { id: 'grandmother', order: 25, listed: true },
+      { id: 'take-5', order: 13, listed: true },
+      { id: 'ems-vcs3', order: 14, listed: true },
+      { id: 'buchla-easel', order: 15, listed: true },
+      { id: 'tb-303', order: 16, listed: true },
+      { id: 'td-3', order: 17, listed: true },
+      { id: 'donner-b1', order: 18, listed: true },
+      { id: 'jupiter-4', order: 19, listed: true },
+      { id: 'jupiter-6', order: 20, listed: true },
+      { id: 'jupiter-8', order: 21, listed: true },
+      { id: 'system-15', order: 22, listed: true },
+      { id: 'system-35', order: 23, listed: true },
+      { id: 'system-55', order: 24, listed: true },
+      { id: 'model-15', order: 25, listed: true },
+      { id: 'grandmother', order: 26, listed: true },
     ]);
   });
 
