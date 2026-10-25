@@ -23,6 +23,8 @@
  * Full guide: .context/auth/authorization.md "Owner classification"
  */
 
+import { registerAppOwnerClassification } from '@/lib/db/owner-classification';
+
 /**
  * Classify your tier's user-linked models.
  *
@@ -54,7 +56,42 @@
  *
  * Do not import the Prisma client (`@/lib/db`) from here: this runs while that
  * client is being built.
+ *
+ * Know Your Synth's user-linked models (t-77, taking Sunrise 0.15.0).
+ *
+ * Each personal model is its user's, and the fork's routes already scope it by `userId`. None is `enforced` yet: a
+ * published sound or pattern is read by everyone on `/explore`, a profile and its owned synths by anyone at `/u/`, so
+ * the owner layer would refuse reads the product means to allow until those call sites go through
+ * `runAcrossOwners()`. Until then they are guarded by the routes, as before.
  */
 export function initAppOwnerClassification(): void {
-  // No app owner classifications by default.
+  const own = { kind: 'personal', owner: { column: 'userId' } } as const;
+  registerAppOwnerClassification({
+    tier: 'app',
+    models: {
+      UserSound: own,
+      UserPattern: own,
+      SynthProfile: own,
+      OwnedInstrument: own,
+      SynthPreference: own,
+      UserPreference: own,
+      LessonProgress: own,
+      Favourite: own,
+      SynthSuggestion: {
+        kind: 'not-personal',
+        because:
+          'An inbound suggestion for the shared databank, decided from one admin queue; userId is who suggested it.',
+      },
+      SoundReport: {
+        kind: 'not-personal',
+        because:
+          'A report about a shared sound, decided from one admin queue; reporterId and resolvedById record who acted.',
+      },
+      PatternReport: {
+        kind: 'not-personal',
+        because:
+          'A report about a shared pattern, decided from one admin queue; reporterId and resolvedById record who acted.',
+      },
+    },
+  });
 }

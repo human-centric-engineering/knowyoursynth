@@ -146,7 +146,7 @@ function table(rows: Conversation[]) {
 
 interface FindManyArgs {
   where: {
-    conversationId: string;
+    conversation: { id: string; userId: string };
     role: string;
     capabilitySlug: { in: string[] };
     createdAt?: { gte: Date };
@@ -155,7 +155,7 @@ interface FindManyArgs {
   take: number;
 }
 interface FindFirstMessageArgs {
-  where: { conversationId: string; role: string; createdAt: { lte: Date } };
+  where: { conversation: { id: string; userId: string }; role: string; createdAt: { lte: Date } };
   orderBy: [{ createdAt: 'desc' }, { id: 'desc' }];
 }
 
@@ -164,11 +164,13 @@ const newestFirst = (a: Message, b: Message) =>
 
 /** `prisma.aiMessage` over the same conversations' messages, applying the reads' filters and order. */
 function messages(rows: Conversation[]) {
-  const of = (id: string) => rows.filter((c) => c.id === id).flatMap((c) => c.messages);
+  // Through the conversation's owner, as the reads name it for Sunrise's owner layer.
+  const of = ({ id, userId }: { id: string; userId: string }) =>
+    rows.filter((c) => c.id === id && c.userId === userId).flatMap((c) => c.messages);
   return {
     findFirst: async ({ where, orderBy }: FindFirstMessageArgs) => {
       expect(orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }]);
-      const hit = of(where.conversationId)
+      const hit = of(where.conversation)
         .filter(
           (x) => x.role === where.role && x.createdAt.getTime() <= where.createdAt.lte.getTime()
         )
@@ -177,7 +179,7 @@ function messages(rows: Conversation[]) {
     },
     findMany: async ({ where, orderBy, take }: FindManyArgs) => {
       expect(orderBy).toEqual([{ createdAt: 'desc' }, { id: 'desc' }]);
-      return of(where.conversationId)
+      return of(where.conversation)
         .filter(
           (x) =>
             x.role === where.role &&
