@@ -14,15 +14,15 @@ import { RouteErrorBoundary } from '@/components/errors/route-error-boundary';
 
 export default function PanelError({
   error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }): React.ReactElement {
   return (
     <RouteErrorBoundary
       error={error}
-      reset={reset}
+      retry={retry}
       boundaryName="PanelError"
       tag="panel"
       title="Something went wrong"
