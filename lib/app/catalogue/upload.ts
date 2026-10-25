@@ -207,7 +207,7 @@ async function bringIn<Row extends object>(
  */
 export async function writeSynthContent(id: string, rows: SynthContentRows): Promise<UploadReport> {
   try {
-    return await write(id, rows);
+    return await writeUpload(id, rows);
   } catch (err) {
     if (hasPrismaCode(err, 'P2002'))
       throw new ConflictError(
@@ -217,7 +217,7 @@ export async function writeSynthContent(id: string, rows: SynthContentRows): Pro
   }
 }
 
-async function write(id: string, rows: SynthContentRows): Promise<UploadReport> {
+async function writeUpload(id: string, rows: SynthContentRows): Promise<UploadReport> {
   return prisma.$transaction(
     async (tx: Tx) => {
       await lockSynth(tx, id);
