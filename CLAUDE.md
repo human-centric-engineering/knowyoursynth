@@ -41,7 +41,7 @@ Instructions for Claude Code when working in this repository.
 - **Server components by default** — add `'use client'` only when needed
 - **No N+1 client-side fetches** — list/table pages get all data from a single enriched list endpoint; never fire per-row API calls in `useEffect`
 - **Contextual help on form fields** — every non-trivial form field gets a `<FieldHelp>` ⓘ popover; see `.context/ui/contextual-help.md`
-- **New `User` relations need an `onDelete` policy _and_ an export disposition** — any new model with a `userId`/`createdBy` FK must (1) declare `onDelete: Cascade` (personal data) or `onDelete: SetNull` (retained config/audit, FK nullable) — omitting it defaults to `Restrict` and silently breaks GDPR erasure; and (2) be added to `SUBJECT_DATA_SOURCES` in `lib/privacy/export-sources.ts`, which decides what a data subject receives from it. The second is enforced — `tests/unit/lib/privacy/export-sources.test.ts` parses the schema and fails until the model is listed. **Never delete a row from that manifest to make the test pass**; that ships a silently short answer to a data subject. Never call `prisma.user.delete()` directly — route account deletion through `eraseUser()`, and subject access through `exportUserData()`. See `.context/privacy/data-erasure.md` and `.context/privacy/data-export.md`.
+- **New `User` relations need an `onDelete` policy _and_ an export disposition** — any new model with a `userId`/`createdBy` FK must (1) declare `onDelete: Cascade` (personal data) or `onDelete: SetNull` (retained config/audit, FK nullable) — omitting it defaults to `Restrict` and silently breaks GDPR erasure; and (2) be added to `SUBJECT_DATA_SOURCES` in `lib/privacy/export-sources.ts`, which decides what a data subject receives from it. The second is enforced — `tests/unit/lib/privacy/export-sources.test.ts` parses the schema and fails until the model is listed. **Never delete a row from that manifest to make the test pass**; that ships a silently short answer to a data subject. Never call `prisma.user.delete()` directly — route account deletion through `requestUserErasure()` (which records it, then runs `eraseUser()`), and subject access through `exportUserData()`. See `.context/privacy/data-erasure.md` and `.context/privacy/data-export.md`.
 - **`CHANGELOG.md` follows the public surface** — when a PR adds, removes, or changes a named seam, a documented public API, or a published Prisma model interface (see [`VERSIONING.md`](./VERSIONING.md#public-surface-contract-tight-definition)), append a bullet to `CHANGELOG.md`'s `## [Unreleased]` section as part of the same PR using [Keep-a-Changelog](https://keepachangelog.com/en/1.1.0/) categories (Added / Changed / Deprecated / Removed / Fixed / Security). PRs that don't touch the public surface (internal refactors, tests, docs, chores) deliberately do **not** belong in the CHANGELOG — adding noise dilutes the signal forks rely on. `/pre-pr` step 5d flags public-surface diffs that omit a CHANGELOG entry.
 
 ## MCP Integration
@@ -208,7 +208,7 @@ import { FormError } from './form-error'; // ❌ no exception for siblings
 | Rate-limit primitives | `authLimiter`, `apiLimiter`, `chatLimiter`, etc. (per-flow sub-caps) | `lib/security/rate-limit.ts`            |
 | Client IP             | `getClientIP()`                                                      | `lib/security/ip.ts`                    |
 | Sanitization          | `escapeHtml()`, `sanitizeUrl()`                                      | `lib/security/sanitize.ts`              |
-| User erasure (GDPR)   | `eraseUser()`                                                        | `lib/privacy/erase-user.ts`             |
+| User erasure (GDPR)   | `requestUserErasure()` → `eraseUser()`                               | `lib/privacy/erasure-requests.ts`       |
 | Subject access (GDPR) | `exportUserData()`                                                   | `lib/privacy/export-user.ts`            |
 | Server fetch          | `serverFetch()`                                                      | `lib/api/server-fetch.ts`               |
 | Logging               | `logger.info()`, `logger.error()`                                    | `lib/logging/index.ts`                  |
@@ -369,6 +369,7 @@ All commands default to branch diff mode but accept file/folder paths. The test-
 | Security                 | `.context/security/`                                      | Rate limiting, headers, CORS                                                                                                                     |
 | Privacy                  | `.context/privacy/`                                       | Consent, erasure (Art. 17), subject access (Art. 15) and its source manifest; org export / erasure and the org manifest (§106)                   |
 | Tenancy: Org Identity    | `.context/tenancy/identity.md`                            | `Org` / `OrgMembership`, the install-org invariant and its role rule, the lifecycle API and its rules, credential `orgId`, what a fork may add   |
+| Tenancy: Support Access  | `.context/tenancy/support-access.md`                      | An org's consent for vendor support to enter it: `OrgSupportGrant`, who may grant and revoke, levels, bounds, privacy                            |
 | Tenancy: Context         | `.context/tenancy/context.md`                             | `getTenantContext` / `runAsOrg` / `runAsSystem` / `forEachOrg`, the guards' read rule, the `x-sunrise-org` resolver seam, the data layer         |
 | Tenancy: Row Isolation   | `.context/tenancy/isolation.md`                           | The `org_isolation` policy, `db:tenancy:enable\|disable`, the required role split + `MIGRATE_DATABASE_URL`, the derived T-series drift probes    |
 | Logging                  | `.context/logging/`                                       | Structured logging, request ctx                                                                                                                  |
@@ -394,7 +395,7 @@ All commands default to branch diff mode but accept file/folder paths. The test-
 | Cost Estimation          | `.context/orchestration/cost-estimation.md`               | Generic pre-run USD estimate service; empirical/heuristic modes; trigger-UI recipe                                                               |
 | Step Provenance          | `.context/orchestration/provenance.md`                    | `output.sources` contract, engine capture, approval/trace UI pills, opt-in guard rule                                                            |
 | Agent Field Registry     | `.context/orchestration/agent-fields.md`                  | Single source of truth for `AiAgent` config fields; how to add a field, derived vs parity-tested surfaces, fork seam                             |
-| Platform Agents          | `.context/orchestration/platform-agents.md`               | Sunrise's own agents as code definitions, one instance per org; who owns which field; the reconcile, its three callers and its fork seam         |
+| Platform Agents          | `.context/orchestration/platform-agents.md`               | Sunrise's own agents as code definitions, one instance per org; who owns which field; the reconcile, its five callers and its fork seam          |
 | Patterns & Steps         | `.context/orchestration/patterns-and-steps.md`            | The 21 canonical patterns, step→pattern relationships, author guidance                                                                           |
 | Orchestration Engine     | `.context/orchestration/engine.md`                        | Runtime executor, registry, events, strategies                                                                                                   |
 | Tracing (OTEL plug-in)   | `.context/orchestration/tracing.md`                       | Tracer interface, no-op default, OTEL adapter, span tree, attributes                                                                             |
@@ -477,12 +478,10 @@ All commands default to branch diff mode but accept file/folder paths. The test-
 - Expected — `.npmrc` has `legacy-peer-deps=true`
 - No action required
 
-<!-- BEGIN:nextjs-agent-rules -->
+## Next.js agent rules
 
-# This is NOT the Next.js you know
+`next dev` (16.4+) keeps a version-matched agent-rules block in `AGENTS.md` and
+no longer writes one here. Commit that file when it changes; this import is how
+Claude Code reads it.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+@AGENTS.md
