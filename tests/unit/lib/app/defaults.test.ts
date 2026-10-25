@@ -182,6 +182,17 @@ const UNASSERTED_SEAMS = new Set([
   // The one seam that ships real logic (a classifier) rather than an empty
   // value, so "registers nothing" is not the contract. Covered by its own tests.
   'lib/app/surface.ts',
+  // FORK (Know Your Synth): the app's own code, not seams that ship empty, so there is no default to assert (t-77,
+  // taking Sunrise 0.15.0, whose scaffold classifier counts a lib/app/ directory as one). Ledger:
+  // .context/app/divergences.md.
+  'lib/app/bank/',
+  'lib/app/catalogue/',
+  'lib/app/patterns/',
+  'lib/app/profile/',
+  'lib/app/sequencer/',
+  'lib/app/sounds/',
+  'lib/app/synths/',
+  'lib/app/tutor/',
 ]);
 
 const SEAM_DEFAULTS: SeamDefault[] = [
@@ -492,7 +503,24 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     assert: () => {
       __resetAppOwnerClassificationForTests();
       // The read triggers the lazy init, so this exercises the REAL file.
-      expect(appOwnerClassifications()).toEqual({});
+      // FORK (Know Your Synth): pinned to our user-linked models (t-77), none enforced, rather than deleted, so a
+      // stray extra classification still fails. Ledger: .context/app/divergences.md.
+      expect(Object.keys(appOwnerClassifications()).sort()).toEqual([
+        'Favourite',
+        'LessonProgress',
+        'OwnedInstrument',
+        'PatternReport',
+        'SoundReport',
+        'SynthPreference',
+        'SynthProfile',
+        'SynthSuggestion',
+        'UserPattern',
+        'UserPreference',
+        'UserSound',
+      ]);
+      expect(
+        Object.values(appOwnerClassifications()).some((c) => c.kind === 'personal' && c.enforced)
+      ).toBe(false);
     },
   },
   {
@@ -686,8 +714,22 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/capability-seed-pairs.ts',
     risk: 'a stray pair fails the capability parity test on every install (for a slug no seed writes it is a pair nothing wrote, for a slug core already pairs a duplicate), and a stray unchecked seed switches the parity checks off for that seed',
     assert: () => {
-      expect(APP_CAPABILITY_PAIRS).toEqual([]);
-      expect(APP_UNCHECKED_SEEDS).toEqual({});
+      // FORK (Know Your Synth): pinned to the tutor's eight tools and our two content seeds (t-77) rather than
+      // deleted, so a stray pair or unchecked seed still fails. Ledger: .context/app/divergences.md.
+      expect(APP_CAPABILITY_PAIRS.map((p) => p.slug)).toEqual([
+        'get_panel',
+        'describe_synth',
+        'propose_panel_change',
+        'design_sound',
+        'get_pattern',
+        'propose_pattern',
+        'search_databank',
+        'web_search',
+      ]);
+      expect(Object.keys(APP_UNCHECKED_SEEDS)).toEqual([
+        'app-knowyoursynth/001-catalogue.ts',
+        'app-knowyoursynth/002-bank.ts',
+      ]);
     },
   },
   {

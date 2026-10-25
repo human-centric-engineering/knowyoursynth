@@ -486,6 +486,14 @@ small and conflict-free.)
 | `lib/app/tenant-resolver.ts`               | which org a request is acting in (`registerAppTenantResolver`)        | `proxy.ts` at module load → the `x-sunrise-org` header (proxy runtime)                                                |
 | `lib/app/platform-agents.ts`               | agents every org gets its own instance of (`initAppPlatformAgents`)   | the platform-agent registry → its reconcile (org creation, seed, maintenance tick)                                    |
 | `lib/app/provider-credentials.ts`          | where a provider's API key comes from (`initAppProviderCredentials`)  | the provider manager, every time a provider is fetched (server)                                                       |
+| `lib/app/bank/`                            | Know Your Synth: the databank, seeded and read                        | its seed unit and the bank routes (server)                                                                            |
+| `lib/app/catalogue/`                       | Know Your Synth: the synth catalogue, seeded and read                 | its seed unit and the catalogue routes (server)                                                                       |
+| `lib/app/patterns/`                        | Know Your Synth: users’ own sequencer patterns                        | the pattern routes (server)                                                                                           |
+| `lib/app/profile/`                         | Know Your Synth: synth profiles, synths owned and wanted              | the profile routes and account sections (server)                                                                      |
+| `lib/app/sequencer/`                       | Know Your Synth: the step-sequencer pattern model                     | the synth page (client) and the pattern routes (server)                                                               |
+| `lib/app/sounds/`                          | Know Your Synth: users’ own sounds and their sharing                  | the sound routes (server)                                                                                             |
+| `lib/app/synths/`                          | Know Your Synth: synth contract, engine and definitions               | the synth page (client) and the catalogue (server)                                                                    |
+| `lib/app/tutor/`                           | Know Your Synth: the tutor’s agent, tools and context                 | the capability, context and platform-agent seams (server)                                                             |
 
 > **Filling a seam is expected to fail one row of a core test.**
 > `tests/unit/lib/app/defaults.test.ts` asserts every seam ships empty — that
