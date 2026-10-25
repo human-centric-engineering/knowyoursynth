@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (26)
+## In the app (27)
 
 | Folder                                     | Synth                                                                                                                                                            | Spec schema |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -48,11 +48,12 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`system-35`](./system-35/README.md)       | Behringer System 35                                                                                                                                              | 0.10.0      |
 | [`system-55`](./system-55/README.md)       | Behringer System 55                                                                                                                                              | 0.10.0      |
 | [`tb-303`](./tb-303/README.md)             | Roland TB-303 Computer Controlled Bass Line                                                                                                                      | 0.10.0      |
+| [`take-5`](./take-5/README.md)             | Sequential Take 5                                                                                                                                                | 0.13.0      |
 | [`td-3`](./td-3/README.md)                 | Behringer TD-3 Analog Bass Line Synthesizer                                                                                                                      | 0.10.0      |
 | [`ub-xa-d`](./ub-xa-d/README.md)           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (27)
+## Not in the app yet (26)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -78,7 +79,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`pwm-mantis`](./pwm-mantis/README.md)                                                 | PWM (Paul Whittington Group) Mantis Hybrid-Analogue Synthesiser                                            | 0.13.0      |
 | [`sequential-circuits-prophet-5-rev3`](./sequential-circuits-prophet-5-rev3/README.md) | Sequential Circuits Prophet-5 (Model 1000), Revision 3.3                                                   | 0.12.0      |
 | [`sequential-fourm`](./sequential-fourm/README.md)                                     | Sequential Fourm                                                                                           | 0.12.0      |
-| [`sequential-take-5`](./sequential-take-5/README.md)                                   | Sequential Take 5                                                                                          | 0.13.0      |
 | [`udo-audio-super-6`](./udo-audio-super-6/README.md)                                   | UDO Audio Super 6                                                                                          | 0.12.0      |
 | [`udo-audio-super-gemini`](./udo-audio-super-gemini/README.md)                         | UDO Audio Super Gemini                                                                                     | 0.13.0      |
 | [`yamaha-cs-80`](./yamaha-cs-80/README.md)                                             | Yamaha CS-80 Polyphonic Synthesizer                                                                        | 0.13.0      |
