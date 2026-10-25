@@ -281,7 +281,7 @@ describe('Take 5 effect and reverb', () => {
     expect(p).toMatchObject({ MIX: 100, DMP: 1500, PD: 100, DCY: 10, HC: 1500, LC: 10 });
     expect(params(slots({ 'rev.on': true, 'rev.tone': 5 })[1])).toMatchObject({
       HC: 20000,
-      LC: 1000,
+      LC: 500,
     });
   });
 });

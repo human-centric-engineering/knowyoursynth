@@ -253,7 +253,7 @@ knob('drive.amount', 122, 500, 'OVERDRIVE', {
   label: 'OVERDRIVE',
   scale: TICKS,
   fmt: (v) => (v <= 0 ? 'off' : pct(v)),
-  help: 'Analogue-style overdrive after the voices, before the effect and the reverb. A little thickens the sound; turned up it growls and then fuzzes.',
+  help: 'Analogue-style overdrive on the summed voices, before the effect and the reverb. A little thickens the sound; turned up it growls and then fuzzes. Here it drives each voice on its own, after its filter, so a chord’s notes do not distort against each other.',
 });
 knob('voice.vintage', 122, 650, 'VINTAGE', {
   kind: 'cont',
@@ -425,7 +425,7 @@ btn('lfo.select', 436, 498, 'LFO', {
   name: 'LFO select',
   module: 'lfo',
   ui: true,
-  help: 'Chooses which LFO the knobs and buttons in this section set: LFO 1, one wave for all five voices, or LFO 2, a wave of its own in each voice. The lamps beside it show which.',
+  help: 'Chooses which LFO the knobs and buttons in this section set: LFO 1, one wave for all five voices, or LFO 2, a wave of its own in each voice. The lamps beside it show which. Here LFO 1 runs a copy in each voice too, each started at its own point, so the two differ only in their settings.',
 });
 led(490, 485, { id: 'lfo.select', eq: '1' });
 led(490, 512, { id: 'lfo.select', eq: '2' });
@@ -675,7 +675,7 @@ knob('fx.type', 1867, 355, 'TYPE', {
   module: 'fx',
   label: 'TYPE',
   name: 'Effect TYPE',
-  help: 'Chooses the effect: a stereo, bucket-brigade (BBD) or tape delay, chorus, flanger, phaser, high-pass filter, distortion, ring modulator or rotating speaker. The three knobs to its right change job with it.',
+  help: 'Chooses the effect: a stereo, bucket-brigade (BBD) or tape delay, chorus, flanger, phaser, high-pass filter, distortion, ring modulator or rotating speaker. The three knobs to its right change job with it. The ring modulator is not modelled here: with it chosen the sound passes dry.',
 });
 knob('fx.time', 1993, 353, 'TIME', {
   kind: 'cont',
@@ -1209,7 +1209,7 @@ const areas: Area[] = [
     module: 'lfo',
     keywords: 'lfo vibrato wobble tremolo wah modulation sync shape destination',
     rects: [R(198, 270, 549, 560)],
-    help: 'Two LFOs share these controls, and the LFO button chooses which one they set. LFO 1 is one wave for all the voices; LFO 2 runs on its own in each voice. FREQUENCY sets the speed, SHAPE the wave, AMOUNT the depth, and DEST, on the display, what it moves.',
+    help: 'Two LFOs share these controls, and the LFO button chooses which one they set. On the Take 5, LFO 1 is one wave for all the voices and LFO 2 runs on its own in each voice; here both run in each voice. FREQUENCY sets the speed, SHAPE the wave, AMOUNT the depth, and DEST, on the display, what it moves.',
   },
   {
     id: 'mod',
@@ -1233,7 +1233,7 @@ const areas: Area[] = [
     module: 'mode',
     keywords: 'tempo bpm clock divide tap',
     rects: [R(1101, 270, 1337, 560)],
-    help: 'The tempo of the arpeggiator and the sequencer. BPM sets the beats a minute and CLK DIV the note value of each step; TAP TEMPO sets the BPM by tapping.',
+    help: 'The tempo of the arpeggiator and the sequencer. BPM sets the beats a minute and CLK DIV the note value of each arpeggiator step; TAP TEMPO sets the BPM by tapping.',
   },
   {
     id: 'arp',
@@ -1355,10 +1355,15 @@ const envOf = (v: ControlValues, n: number): EnvParams => ({
   r: envTime(num(v, `env${n}.release`)),
 });
 
+/** Each effects algorithm's parameter defaults, by id. */
+const FX_DEFAULTS = new Map(
+  FX_ALGOS.map((a) => [a.id, Object.fromEntries(a.params.map((q) => [q.ref, q.def]))])
+);
 /** An effects algorithm's slot, with its defaults and `p` over them. */
 function slot(alg: string, p: Record<string, number | string>): FxSlot {
-  const def = FX_ALGOS.find((a) => a.id === alg);
-  const base = Object.fromEntries((def?.params || []).map((q) => [q.ref, q.def]));
+  const base = FX_DEFAULTS.get(alg);
+  // every id here is a literal below: a miss is an algorithm renamed in the effects table, not a value from a sound
+  if (!base) throw new Error(`Take 5: no effects algorithm ${alg}`);
   return { alg, level: 1, p: { ...base, ...p } };
 }
 /** The chosen effect, from TYPE and its three knobs (each 0..1). */
@@ -1443,7 +1448,7 @@ function reverbSlot(v: ControlValues): FxSlot {
     PD: Math.round(num(v, 'rev.predelay') * 20),
     DCY: Number(expMap(num(v, 'rev.decay') / 10, 0.5, 10).toFixed(2)),
     HC: tone < 0 ? Math.round(expMap(1 + tone, 1500, 20000)) : 20000,
-    LC: tone > 0 ? Math.round(expMap(tone, 10, 1000)) : 10,
+    LC: tone > 0 ? Math.round(expMap(tone, 10, 500)) : 10,
   });
 }
 
