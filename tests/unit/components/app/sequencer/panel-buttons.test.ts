@@ -55,9 +55,9 @@ const state = (over: Partial<LampState> = {}): LampState => ({
 });
 
 describe('every definition’s sequencer buttons', () => {
-  it('name buttons the synth has, and only the three sequencer synths map any', () => {
+  it('name buttons the synth has, and only the four synths with sequencer buttons map any', () => {
     const mapped = SYNTH_DEFS.filter((d) => d.seqButtons).map((d) => d.id);
-    expect(mapped.sort()).toEqual(['donner-b1', 'tb-303', 'td-3']);
+    expect(mapped.sort()).toEqual(['donner-b1', 'take-5', 'tb-303', 'td-3']);
     for (const d of SYNTH_DEFS) {
       for (const id of Object.keys(d.seqButtons ?? {})) {
         const c = d.controls.find((x) => x.id === id);
