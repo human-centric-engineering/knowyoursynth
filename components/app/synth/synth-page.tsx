@@ -332,14 +332,29 @@ export interface SynthPageProps {
  */
 export function SynthPage(props: SynthPageProps) {
   const id = props.detail.synth.id;
+  // A definition at hand renders at once, with no `use()`. One still loading is waited on by `AwaitSynthDef`, which
+  // calls `use()` on every render: a component that suspends on `use()` and then skips it once the definition is at
+  // hand is the conditional `use()` React warns about. Where React replays only the suspended `AwaitSynthDef`, the page
+  // commits having waited and keeps rendering through it, so its synth is not remounted (losing its state) on the
+  // page's next render. Where React renders the page afresh instead, the definition is at hand and the page renders
+  // directly. Every route keys the page by synth (and by the shared sound or pattern), so the id never changes under it.
+  const [atHand] = useState(() => loadedSynthDef(id));
+  if (atHand) return <SynthWithTips baseDef={atHand} {...props} />;
   const loading = loadSynthDef(id);
-  const baseDef = loadedSynthDef(id) ?? (loading ? use(loading) : null);
+  return loading ? <AwaitSynthDef loading={loading} {...props} /> : null;
+}
+
+function AwaitSynthDef({ loading, ...props }: SynthPageProps & { loading: Promise<AppSynthDef> }) {
+  return <SynthWithTips baseDef={use(loading)} {...props} />;
+}
+
+function SynthWithTips(props: SynthPageProps & { baseDef: AppSynthDef }) {
   // One provider for the player's tips, so moving along the bar opens each at once.
-  return baseDef ? (
+  return (
     <PlayerTips>
-      <Synth baseDef={baseDef} {...props} />
+      <Synth {...props} />
     </PlayerTips>
-  ) : null;
+  );
 }
 
 function Synth({
