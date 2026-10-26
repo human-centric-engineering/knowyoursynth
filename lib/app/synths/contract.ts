@@ -1335,6 +1335,8 @@ export interface GlideParams {
   time: number;
   /** Glide only on overlapping notes. */
   legato: boolean;
+  /** Glissando: the pitch moves in semitone steps over the glide instead of sliding (CS-80). */
+  steps?: boolean;
 }
 
 /** What fires an envelope: dest `gateIn`, a pulse on each rise of `trigIn` (or each note), or `envClk`. */
@@ -1489,6 +1491,56 @@ export interface OscAssignParams {
 export interface ChorusParams {
   on: boolean;
   mode: 0 | 1 | 2 | 3;
+}
+
+/**
+ * A second voice setting played on every note alongside the first, by the same note allocator (poly only; the CS-80's
+ * channel II). Each note then takes two voices, so `poly.voices` counts notes. The wrapper-level settings (`poly`, `arp`,
+ * `post`, `fx`, `chorus`, `ringMod`, `tremolo`, `volume`) are read from the top level only, and the mod wheel reaches
+ * both; cables reach the first only.
+ */
+export type LayerParams = Omit<
+  EngineParams,
+  'volume' | 'dual' | 'layer' | 'poly' | 'arp' | 'post' | 'fx' | 'chorus' | 'ringMod' | 'tremolo'
+>;
+
+/** Signal `velp`: each note's velocity, decaying from its key to nothing (the CS-80's key timing pulse). */
+export interface PulseParams {
+  /** Seconds for the pulse to fall to about a third. */
+  time: number;
+}
+
+/** Signals `kbdLo` / `kbdHi`: 0 from `mid` outwards, rising to 1 `span` semitones below / above it. */
+export interface KeyEndParams {
+  /** MIDI note. */
+  mid: number;
+  /** Semitones. */
+  span: number;
+}
+
+/**
+ * Ring modulator on the voice sum (poly only; the CS-80's): the sound times a sine at `hz`, blended in by `depth`. An
+ * attack-decay envelope raises the sine's speed by `env.amt` octaves; it starts again only on a key pressed after every
+ * key has been let go.
+ */
+export interface RingModParams {
+  /** Hz. */
+  hz: number;
+  /** 0..1: 0 the sound alone, 1 the ring-modulated sound alone. */
+  depth: number;
+  env: { a: number; d: number; amt: number };
+}
+
+/**
+ * Tremolo / chorus on the voice sum (poly only; the CS-80's): the level of the two sides moves in opposite phase, with a
+ * short swept delay, like a rotary speaker in stereo. `chorus` is the slow range of the same circuit.
+ */
+export interface TremoloParams {
+  on: boolean;
+  /** Hz. */
+  rate: number;
+  /** 0..1. */
+  depth: number;
 }
 
 /** TB-303 accent (mono voice). */
@@ -1715,6 +1767,16 @@ export interface EngineParams {
   dual?: DualParams;
   oscAssign?: OscAssignParams;
   chorus?: ChorusParams;
+  /** Poly only: a second voice setting on every note. */
+  layer?: LayerParams;
+  /** Signal `velp`, the key timing pulse. */
+  pulse?: PulseParams;
+  /** Signals `kbdLo` / `kbdHi`, the two ends of the keyboard. */
+  keyEnds?: KeyEndParams;
+  /** Poly only: ring modulator on the voice sum. */
+  ringMod?: RingModParams;
+  /** Poly only: tremolo / chorus on the voice sum. */
+  tremolo?: TremoloParams;
   acid?: AcidParams;
   trap?: TrapParams;
   /** Joystick position: signals `joyX`, `joyY`. */
