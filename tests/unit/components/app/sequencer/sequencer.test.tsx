@@ -617,7 +617,9 @@ describe('what it refuses, and a page that is late', () => {
     open();
     await play();
     const before = engine.sent.length;
-    act(() => state.edit((p) => ({ ...p, bpm: 1000 })));
+    act(() => {
+      state.edit((p) => ({ ...p, bpm: 1000 }));
+    });
     expect(slider('Tempo').getAttribute('aria-valuenow')).toBe('120');
     expect(engine.sent).toHaveLength(before);
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
@@ -630,7 +632,9 @@ describe('what it refuses, and a page that is late', () => {
   it('does nothing for an Undo with nothing to undo, or an edit that changes nothing', () => {
     open();
     act(() => state.undo());
-    act(() => state.edit((p) => p));
+    act(() => {
+      state.edit((p) => p);
+    });
     expect((button('Undo') as HTMLButtonElement).disabled).toBe(true);
     expect(labels()[0]).toBe('Step 1: C3, on');
   });
@@ -822,10 +826,14 @@ describe('the Edit menu', () => {
 describe('a note played', () => {
   it('goes on the chosen step: a rest gets it, a step’s first note becomes it, and Undo takes it back', () => {
     open();
-    act(() => state.noteIn(64));
+    act(() => {
+      state.noteIn(64);
+    });
     expect(labels()[0]).toBe('Step 1: E4, on');
     fireEvent.click(key(2));
-    act(() => state.noteIn(67));
+    act(() => {
+      state.noteIn(67);
+    });
     expect(labels()[1]).toBe('Step 2: G4, on');
     fireEvent.click(button('Undo'));
     expect(labels()[1]).toBe('Step 2: rest');

@@ -212,6 +212,15 @@ import { expect, vi, afterEach } from 'vitest';
 }
 
 /**
+ * FORK (Know Your Synth): this mock is ours, not Sunrise's. Ledger: .context/app/divergences.md.
+ *
+ * The synth panel sets a new patch at once in tests: a glide (a part of the panel at a time, over a few seconds) would
+ * leave every page test waiting to see the sound it opened. The glides' own tests turn it back on with
+ * `vi.mocked(glideMotion).mockReturnValue(true)`.
+ */
+vi.mock('@/components/app/synth/motion', () => ({ glideMotion: vi.fn(() => false) }));
+
+/**
  * Mock Next.js navigation hooks
  *
  * These are used frequently in components but need to be mocked for testing.
@@ -227,13 +236,6 @@ import { expect, vi, afterEach } from 'vitest';
  * import here risks a use-before-initialization error. A dynamic import runs
  * when the factory does, which is after module init.
  */
-/**
- * The synth panel sets a new patch at once in tests: a glide (a part of the panel at a time, over a few seconds) would
- * leave every page test waiting to see the sound it opened. The glides' own tests turn it back on with
- * `vi.mocked(glideMotion).mockReturnValue(true)`.
- */
-vi.mock('@/components/app/synth/motion', () => ({ glideMotion: vi.fn(() => false) }));
-
 vi.mock('next/navigation', async () => {
   const { createMockRouter } = await import('@/tests/types/mocks');
   return {
@@ -243,6 +245,7 @@ vi.mock('next/navigation', async () => {
     useParams: vi.fn(() => ({})),
     redirect: vi.fn(),
     notFound: vi.fn(),
+    unstable_rethrow: vi.fn(),
   };
 });
 
@@ -321,6 +324,23 @@ vi.mock('@/lib/app/brand', async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return Object.fromEntries(Object.keys(actual).map((key) => [key, null]));
 });
+
+/**
+ * Pin the email-override seam to "overrides nothing", for every test file (#895).
+ *
+ * Same class as the brand pin above: `emailOverrides` is read from
+ * `lib/app/emails.ts`, a committed file a fork fills, so a fork that overrides
+ * a template changes what `resolveEmailTemplate` returns inside the CORE suite
+ * and reds `tests/unit/lib/email/registry.test.tsx`, which asserts the platform
+ * default comes back. The fork has nothing of its own to change to fix it.
+ *
+ * Tests that need an override `vi.doMock` their own; restore this pin with
+ * another `vi.doMock`, never `vi.doUnmock`, which removes it. The one file that
+ * must read the real scaffold uses `vi.importActual`
+ * (tests/unit/lib/app/defaults.test.ts), which keeps "seams ship empty" able to
+ * fail in a fork.
+ */
+vi.mock('@/lib/app/emails', () => ({ emailOverrides: {} }));
 
 /**
  * Mock Analytics

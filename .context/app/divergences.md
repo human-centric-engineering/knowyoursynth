@@ -5,8 +5,9 @@ otherwise rediscover these as conflicts, or clobber them. The rule is `sunrise.d
 the Hub's `hub://process/sunrise-fork`: **an edit to a platform-owned file gets a row here in
 the same PR**, and each row names what deletes it.
 
-- **Base:** Sunrise `v0.14.0` (`13c6d292`). `lib/sunrise-version.ts` reads `0.14.0`. The fork
-  was cut from `main` at `0e685744` (`v0.13.0-29`) and took `v0.14.0` in t-16. The next sync
+- **Base:** Sunrise `v0.15.0` (`8b6b7c14`). `lib/sunrise-version.ts` reads `0.15.0`. The fork
+  was cut from `main` at `0e685744` (`v0.13.0-29`), took `v0.14.0` in t-16 and `v0.15.0` in
+  t-77. The next sync
   target is the next Sunrise tag. After a sync, move the base to the commit merged.
 - **Not rows:**
   - new files (but see "New files in platform directories" below);
@@ -17,7 +18,7 @@ the same PR**, and each row names what deletes it.
   Those are listed under "Excluded".
 
 - **Re-derive the list (modified and deleted files) with:**
-  `git diff --diff-filter=MD --name-only 13c6d292 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
+  `git diff --diff-filter=MD --name-only 8b6b7c14 HEAD -- . ':!lib/app' ':!components/app' ':!.context/app' ':!prisma/schema/app*.prisma' ':!prototype'`
 - **Row fields:** files · change · why · on conflict · upstream status · **delete when**.
 - **At a sync:** read the rows before you merge, not after. Read the release's changelog against
   the "Delete when" lines, and delete every row the release discharges. For each conflict in a
@@ -71,6 +72,18 @@ the same PR**, and each row names what deletes it.
 - **Upstream:** the FORK NOTE points at sunrise#636, the sweep that would make the file
   seam-independent.
 - **Delete when:** #636 lands, or the nav goes back to `null`.
+
+### The test setup turns the panel's patch glide off
+
+- **Files:** `tests/setup.ts`
+- **Change:** a `vi.mock` of `@/components/app/synth/motion` that makes `glideMotion()` answer
+  `false`, placed above the `next/navigation` mock's docblock.
+- **Why:** a glide would make every page test that opens a sound wait a few seconds for it. The
+  glides' own tests turn it back on. Sunrise has no seam for suite-wide app mocks.
+- **On conflict:** take theirs, and re-add the mock as its own block between other mocks, not
+  inside an upstream docblock. This merge (t-77) hit a conflict there.
+- **Upstream:** app-specific. A suite-wide app-mock seam would discharge it.
+- **Delete when:** the panel stops gliding, or Sunrise gains a setup seam for app mocks.
 
 ### Prototype exclusions in tool config
 
@@ -133,6 +146,20 @@ the same PR**, and each row names what deletes it.
 - **Delete when:** none while synth, catalogue, databank, sounds, profile, tutor, sequencer or patterns code lives in `lib/app/`, or when the guard
   reads fork scaffolds from a fork-owned file.
 
+### CUSTOMIZATION.md: our `lib/app/` directories in the seam table
+
+- **Files:** `CUSTOMIZATION.md`
+- **Change:** adds eight rows to §4's "Edit this file" table, after `lib/app/provider-credentials.ts`: `lib/app/bank/`,
+  `catalogue/`, `patterns/`, `profile/`, `sequencer/`, `sounds/`, `synths/` and `tutor/`, each padded to the table's
+  existing column widths so Prettier leaves the other rows alone.
+- **Why:** from Sunrise 0.15.0 (#734) the scaffold classifier counts each `lib/app/<name>/` directory as a scaffold, and
+  `versioning-seam-coverage.test.ts` fails on one with no row in that table. Its FORK NOTE names the row as the fix
+  (t-77).
+- **On conflict:** take theirs and re-insert our eight rows at the end of the table, in alphabetical order, keeping
+  them within the column widths.
+- **Upstream:** not raised. The same fork-owned list that would remove the VERSIONING.md row would remove this one.
+- **Delete when:** as for the VERSIONING.md row above.
+
 ### The reserved-tier test, pinned to our app models
 
 - **Files:** `tests/unit/reserved-fork-tiers.test.ts`
@@ -179,26 +206,6 @@ the same PR**, and each row names what deletes it.
   `ContactSubmission` in `SYSTEM_MODELS`.
 - **Upstream:** sunrise#964 asks for a fork seam for classification.
 - **Delete when:** sunrise#964 lands. Move the thirty names (eighteen global, twelve system) into the new seam's scaffold.
-
-### The real-registry counts, pinned to the tutor
-
-- **Files:** `tests/unit/lib/orchestration/agents/reconcile-platform-agents.test.ts`,
-  `scripts/smoke/tenancy-isolation.ts`
-- **Change:** the `materialises the real registry` case expects one more agent in the install org
-  than core defines (17, the tutor `synth-tutor` among them) and the tutor in no other org, under a
-  `FORK` comment (`f-tutor` t-53). The two-org smoke's step [11] check expects five install-only
-  agents, the tutor among them, not four.
-- **Why:** the case reads the real registry, which runs the fork's `initAppPlatformAgents()`, so
-  filling `lib/app/platform-agents.ts` necessarily changes its count (`HB2`). It reaches the seam
-  through the registry rather than importing it, so `fork-seam-coupling.test.ts` does not ask it
-  for a fork note, and a fork meets the failure with nothing to read.
-- **On conflict:** take theirs, and re-apply the pin to whichever case or check counts the real
-  registry's install-org agents.
-- **Upstream:** raised as
-  [sunrise#1032](https://github.com/human-centric-engineering/sunrise/issues/1032): mock the seam
-  in that case, or give it a fork note.
-- **Delete when:** upstream stops counting the fork's agents in both places, or the fork registers
-  no platform agent.
 
 ### The drift-probe scaffold test, pinned to our probe
 
@@ -310,13 +317,15 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `lib/orchestration/evaluations/run-worker.ts`,
   `lib/orchestration/evaluations/graders/types.ts`,
-  `lib/orchestration/evaluations/drain-stream-chat.ts`
+  `lib/orchestration/evaluations/drain-stream-chat.ts`,
+  `tests/unit/lib/orchestration/evaluations/drain-stream-chat.test.ts`
 - **Change:** `GraderInput.toolCalls` items gain optional `success`, `errorCode` and
   `resultPreview`, and `processOneCase` fills them from each agent subject's tool-call trace, under
   `FORK` comments (`f-tutor-knowledge` t-61). The stored `subjectMetadata.toolCalls` keeps
   `{ slug, args }` only. `drainStreamChat` also collects the traces of a `capability_results` frame
   (a turn's parallel tool calls), which it dropped, so a turn that searched the databank and the
-  web at once reached the graders with no tool calls.
+  web at once reached the graders with no tool calls. Its test gains one `FORK` case for the
+  `capability_results` batch.
 - **Why:** the tutor's eval graders check what its searches found (owner ruling, 2026-10-19,
   journaled on `f-tutor-knowledge`), and core passed graders only each call's name and arguments.
   Behaviour-neutral at rest: nothing stored changes, and core's graders ignore the new fields.
@@ -324,7 +333,8 @@ the same PR**, and each row names what deletes it.
 - **On conflict:** take theirs, and re-apply the three fields where `processOneCase` maps the
   trace, the `{ slug, args }` map where it stores `subjectMetadata`, and the `capability_results`
   case in `drainStreamChat` unless upstream now handles it. Keep the field names: the
-  graders read them.
+  graders read them. In the test, keep the `FORK` case beside upstream's, and drop it with the
+  `capability_results` case if upstream now covers it.
 - **Upstream:** raised as
   [sunrise#1044](https://github.com/human-centric-engineering/sunrise/issues/1044).
 - **Delete when:** upstream passes graders each call's result (switch the graders to its field
@@ -434,13 +444,17 @@ Before a sync, intersect that list with `git diff --diff-filter=A --name-only <b
   tools, synth context and agent, `f-tutor` t-53), and `lib/app/env.ts` (the tutor's daily allowance,
   `TUTOR_DAILY_TURNS`, t-54; the tutor's web search key, `BRAVE_SEARCH_API_KEY`, t-59), and
   `lib/app/evaluations.ts` (the tutor's four eval graders, `f-tutor-knowledge` t-61), and `lib/app/footer.ts` (the
-  not-affiliated notice, `f-front-door` t-63): fork-owned scaffolds,
-  filled.
+  not-affiliated notice, `f-front-door` t-63), and `lib/app/owner-classification.ts` (our user-linked models,
+  personal but none enforced, and the suggestion and report queues not-personal, t-77) and
+  `lib/app/capability-seed-pairs.ts` (the tutor's eight tools, and the catalogue and databank seeds the parity test
+  cannot run, t-77): fork-owned scaffolds, filled.
 - `app/brand-theme.css`: the consumer surface's palette. It ships empty for the fork
   (`.context/ui/surface-theming.md`).
 - `tests/unit/lib/app/defaults.test.ts`: the `SEAM_DEFAULTS` rows for the filled seams (`brand`,
   `ci`, `reserved-tiers`, `protected-nav`, `public-nav`, `auth-landing`, `data-export`, `admin-nav`,
   `account-sections`, `jobs`, `eslint.config`, `capabilities`, `context-contributors`,
-  `platform-agents`, `env`, `evaluations`, `footer`) are re-pinned to our values rather than deleted (`HB2`). CUSTOMIZATION
+  `platform-agents`, `env`, `evaluations`, `footer`, `owner-classification`, `capability-seed-pairs`) are re-pinned to
+  our values rather than deleted (`HB2`). Our eight `lib/app/` directories (the same list as the CUSTOMIZATION.md row
+  above) are on `UNASSERTED_SEAMS`, under a `FORK` comment: they are app code with no empty default to assert. CUSTOMIZATION
   §4 calls this the one unavoidable cost. The file is platform-owned, so expect it to conflict on
   a sync. Keep our assertions, and take upstream's new rows.

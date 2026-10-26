@@ -25,7 +25,9 @@ const ALLOWED = (path: string) =>
   path.startsWith(SEED_FOLDER) ||
   path === 'scripts/check-synths.ts' ||
   // Dev-only: checks the seeded tables read back as the seed data (f-databank b1).
-  path === 'scripts/smoke/bank.ts';
+  path === 'scripts/smoke/bank.ts' ||
+  // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
+  path === 'lib/app/capability-seed-pairs.ts';
 
 // Any mention of the seed folder in code: an import of the loader or a data file, or a path built to read one
 // (`'…/app-knowyoursynth/data'`, or `join('seeds', 'app-knowyoursynth', 'data')`).

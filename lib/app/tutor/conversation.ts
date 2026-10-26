@@ -100,7 +100,7 @@ export async function latestConversation(
   });
   if (!conversation) return null;
   const shown = conversation.messages.reverse();
-  const searches = shown[0] ? await searchesSince(conversation.id, shown[0]) : [];
+  const searches = shown[0] ? await searchesSince(conversation.id, userId, shown[0]) : [];
   return {
     conversationId: conversation.id,
     messages: withSources(shown, searches).flatMap((m): TutorTranscriptMessage[] => {
@@ -141,18 +141,30 @@ const MAX_SEARCHES = TRANSCRIPT_MESSAGES * 5;
  * `TRANSCRIPT_MESSAGES`. When the transcript opens on an answer, its question was cut off, and that answer's searches
  * were saved before it: they are read from that question on.
  */
-async function searchesSince(conversationId: string, first: Row): Promise<SearchRow[]> {
+async function searchesSince(
+  conversationId: string,
+  userId: string,
+  first: Row
+): Promise<SearchRow[]> {
   const question =
     first.role === 'user'
       ? first
       : await prisma.aiMessage.findFirst({
-          where: { conversationId, role: 'user', createdAt: { lte: first.createdAt } },
+          where: {
+            // Named through the owner, as the read below is: Sunrise's owner layer would refuse `conversationId` alone.
+            conversationId,
+            conversation: { userId },
+            role: 'user',
+            createdAt: { lte: first.createdAt },
+          },
           orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           select: { createdAt: true },
         });
   const rows = await prisma.aiMessage.findMany({
     where: {
+      // Named through the conversation's owner, so Sunrise's owner layer (0.15.0) sees the read is the caller's own.
       conversationId,
+      conversation: { userId },
       role: 'tool',
       capabilitySlug: { in: [...SOURCE_TOOLS] },
       ...(question ? { createdAt: { gte: question.createdAt } } : {}),
