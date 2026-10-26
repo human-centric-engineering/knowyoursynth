@@ -469,7 +469,8 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
   // glissando (`glide.steps`): the glide runs on `glideN` and the pitch takes it a semitone at a time
   let glideN = 60;
   // `pulse` (CS-80 key timing pulse): signal `velp`, the velocity of the last key, decaying from it
-  let velp = 0;
+  let velp = 0,
+    velpFire = false;
   let retrigFlag = false;
   // EngineParams `acid` (TB-303): whether the note playing is accented, and the accent sweep circuit's capacitor
   let accOn = false,
@@ -839,6 +840,8 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
     if (P.oscAssign) assignOscs(n);
     assignNotes(wasHeld);
     if (!wasHeld || P.trig.retrig) retrigFlag = true;
+    // the key timing pulse comes from every key, legato or not
+    velpFire = true;
     gate = 1;
     if (!part && onEvent) onEvent({ type: 'note', n, on: true });
   }
@@ -1582,8 +1585,9 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
       S[SI.wheel] = wheel;
       S[SI.vel] = vel;
       if (velpC) {
-        if (retrigFlag) velp = vel;
+        if (velpFire) velp = vel;
         else velp -= velp * velpC;
+        velpFire = false;
         S[SI.velp] = velp;
       } else S[SI.velp] = 0;
       if (ke) {
@@ -2299,6 +2303,7 @@ function createChorus(sr: number): {
  */
 function createTremolo(sr: number): {
   process: (L: Float32Array, R: Float32Array, n: number, t: TremoloParams) => void;
+  reset: () => void;
 } {
   const LEN = 1 << 10;
   const buf = new Float32Array(LEN);
@@ -2332,7 +2337,12 @@ function createTremolo(sr: number): {
       w++;
     }
   }
-  return { process };
+  /** Forget the sound from the last time it was on, so switching it on again does not replay it. */
+  function reset() {
+    buf.fill(0);
+    ph = 0;
+  }
+  return { process, reset };
 }
 
 /**
@@ -2390,6 +2400,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const fx = createFx(sr);
   const chorus = createChorus(sr);
   const tremolo = createTremolo(sr);
+  let tremOn = false;
   // `ringMod` (CS-80): the sine's phase, and its speed envelope (stage 0 idle, 1 rising, 2 falling), fired by `ringFire`
   let rmPh = 0,
     rmEnv = 0,
@@ -2421,19 +2432,19 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const emit = (e: SynthEvent): void => {
     if (onEvent) onEvent(e);
   };
+  const stackOf = (): number => Math.max(1, P!.poly!.stack || 1);
   const offsetOf = (j: number): number => {
-    const st = P!.poly!.stack || 1;
+    const st = stackOf();
     return st < 2 ? 0 : ((j - (st - 1) / 2) / ((st - 1) / 2)) * (P!.poly!.detune || 0);
   };
-  // `layer` (CS-80): each note takes a stack of voices with the top-level settings, then a stack with `layer`'s
-  const stackOf = (): number => Math.max(1, P!.poly!.stack || 1);
-  const blockOf = (): number => stackOf() * (P!.layer ? 2 : 1);
+  // `layer` (CS-80): each note takes a stack of voices with the top-level settings, then a stack with `layer`'s.
+  // `layerP` is the second stack's settings, built once per params message rather than once per voice.
+  let layerP: VoiceParams | null = null;
+  const blockOf = (): number => stackOf() * (layerP ? 2 : 1);
+  /** Voice `i` is in the first stack of its note (the top-level settings, which the meter follows). */
+  const firstStack = (i: number): boolean => i % blockOf() < stackOf();
   /** The settings voice `i` plays: the second layer's for the back half of each note's block. */
-  function paramsFor(i: number): VoiceParams {
-    const p = P!;
-    if (!p.layer || i % blockOf() < stackOf()) return p;
-    return { ...p.layer, wheel: p.wheel };
-  }
+  const paramsFor = (i: number): VoiceParams => (layerP && !firstStack(i) ? layerP : P!);
   function voice(i: number) {
     while (voices.length <= i) {
       const k = voices.length;
@@ -2459,8 +2470,9 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     P = p;
     fx.set(p.fx);
     const q = p.poly!;
-    const st = Math.max(1, q.stack || 1);
-    const want = `${q.voices}/${st}/${q.mono ? 'm' : 'p'}/${p.layer ? 2 : 1}`;
+    layerP = p.layer ? { ...p.layer, wheel: p.wheel } : null;
+    const st = stackOf();
+    const want = `${q.voices}/${st}/${q.mono ? 'm' : 'p'}/${layerP ? 2 : 1}`;
     if (want !== shape) {
       voices.forEach((v) => v.handle({ type: 'panic' }));
       shape = want;
@@ -2481,7 +2493,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       groupVoices(0, (v, i) => {
         v.handle({ type: 'offset', semi: offsetOf(i % stackOf()) });
         v.handle({ type: 'noteOn', n, v: vel });
-        lead = i;
+        if (firstStack(i)) lead = i;
       });
       return;
     }
@@ -2510,7 +2522,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     groupVoices(g, (v, i) => {
       if (x.held && x.note === n) v.handle({ type: 'noteOff', n });
       v.handle({ type: 'noteOn', n, v: vel });
-      lead = i;
+      if (firstStack(i)) lead = i;
     });
     x.note = n;
     x.held = true;
@@ -2770,10 +2782,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   }
 
   function keyDown(n: number, v?: number) {
+    // the ring modulator's speed envelope starts again only on a key pressed with no key down (not a key struck again)
+    if (!keys.length) ringFire = true;
     const i = keys.indexOf(n);
     if (i >= 0) keys.splice(i, 1);
-    // the ring modulator's speed envelope starts again only on a key pressed with no other key down
-    if (!keys.length) ringFire = true;
     keys.push(n);
     vel = v == null ? DEFAULT_VELOCITY : v;
     emit({ type: 'note', n, on: true });
@@ -3012,7 +3024,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     // the effects sit after the high-pass and before the output level, as on the hardware
     fx.process(out, fxL, fxR, n);
     if (P.chorus) chorus.process(fxL, fxR, n, P.chorus);
-    if (P.tremolo && P.tremolo.on) tremolo.process(fxL, fxR, n, P.tremolo);
+    const trem = !!(P.tremolo && P.tremolo.on);
+    if (trem && !tremOn) tremolo.reset();
+    tremOn = trem;
+    if (trem) tremolo.process(fxL, fxR, n, P.tremolo!);
     for (let s = 0; s < n; s++) {
       vol += (volT - vol) * volC;
       const l = Math.tanh(fxL[s] * vol * 1.35),

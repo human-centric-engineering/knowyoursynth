@@ -1335,7 +1335,10 @@ export interface GlideParams {
   time: number;
   /** Glide only on overlapping notes. */
   legato: boolean;
-  /** Glissando: the pitch moves in semitone steps over the glide instead of sliding (CS-80). */
+  /**
+   * Glissando: the pitch moves in semitone steps over the glide instead of sliding (CS-80). It steps the main pitch
+   * only: the second note of `paraphonic` and the `oscAssign` slots still slide.
+   */
   steps?: boolean;
 }
 
@@ -1497,7 +1500,8 @@ export interface ChorusParams {
  * A second voice setting played on every note alongside the first, by the same note allocator (poly only; the CS-80's
  * channel II). Each note then takes two voices, so `poly.voices` counts notes. The wrapper-level settings (`poly`, `arp`,
  * `post`, `fx`, `chorus`, `ringMod`, `tremolo`, `volume`) are read from the top level only, and the mod wheel reaches
- * both; cables reach the first only.
+ * both; cables reach the first only. The two are summed as they are, so the definition sets the blend through each
+ * one's `vca.gain` (the CS-80's MIX); the engine does not halve them. The meter follows the first.
  */
 export type LayerParams = Omit<
   EngineParams,

@@ -64,6 +64,15 @@ describe('layered poly (layer)', () => {
     expect(meters(two.events).some((m) => m.voices === 0b1111)).toBe(true);
   });
 
+  it('meters the first setting, not the layer', () => {
+    // the layer's loudness envelope is instant, the first setting's takes half a second
+    const slow = { ...layered().env2, a: 0.5 };
+    const r = render({ ...layered(), env2: slow }, { len: 9600 });
+    const m = meters(r.events);
+    expect(m.length).toBeGreaterThan(0);
+    expect(m[0].env2).toBeLessThan(0.3);
+  });
+
   it('counts notes, not voices: a third note on a two-note pool takes over the oldest', () => {
     const r = render(layered({ poly: { voices: 2, stack: 1, mono: false } }), {
       len: 9600,
@@ -110,6 +119,19 @@ describe('key timing pulse (pulse → velp)', () => {
     const soft = render(pulsed(0.05), { events: [[0, { type: 'noteOn', n: 60, v: 0.2 }]] });
     const hard = render(pulsed(0.05), { events: [[0, { type: 'noteOn', n: 60, v: 1 }]] });
     expect(rms(hard.out, 0, 960)).toBeGreaterThan(rms(soft.out, 0, 960) * 2);
+  });
+
+  it('fires again for a legato key, which does not start the envelopes again', () => {
+    const p = { ...pulsed(0.02), trig: { retrig: false, drone: false, repeat: false } };
+    const r = render(p, {
+      len: 9600,
+      events: [
+        [0, { type: 'noteOn', n: 60, v: 1 }],
+        [4096, { type: 'noteOn', n: 62, v: 1 }],
+      ],
+    });
+    // the first pulse has died away by the second key, which brings it back
+    expect(rms(r.out, 4096, 4576)).toBeGreaterThan(rms(r.out, 3500, 4000) * 5);
   });
 
   it('is nothing without `pulse`', () => {
@@ -171,6 +193,15 @@ describe('ring modulator on the voice sum (ringMod)', () => {
     ];
     const before = ratio(events, 12000, 23000);
     expect(Math.abs(before)).toBeGreaterThan(0.05);
+    expect(ratio(events, 30000, 47000)).toBeCloseTo(before, 2);
+  });
+
+  it('does not start it again for the only held key struck again', () => {
+    const events: Timed[] = [
+      [0, { type: 'noteOn', n: 60 }],
+      [24000, { type: 'noteOn', n: 60 }],
+    ];
+    const before = ratio(events, 12000, 23000);
     expect(ratio(events, 30000, 47000)).toBeCloseTo(before, 2);
   });
 
