@@ -30,7 +30,7 @@ import type {
   SynthDef,
   ViewRect,
 } from '@/lib/app/synths/contract';
-import { maxAtBottom } from '@/lib/app/synths/contract';
+import { movesUp } from '@/lib/app/synths/contract';
 
 const DIM = '#05060a';
 
@@ -559,10 +559,7 @@ const doorReach = (p: Control) =>
 function doorTag(c: Control, door: { v?: ControlValue }, values: ControlValues) {
   if (c.kind === 'bool') return door.v ? 'Switch on' : 'Switch off';
   if (c.kind === 'enum') return `Set to ${formatValue(c, door.v)}`;
-  const to = Number(door.v),
-    now = Number(values[c.id]);
-  // a lever with its maximum at the bottom (the CS-80's) moves down for more; with nothing to move, 'down' as before
-  const up = to !== now && to > now !== maxAtBottom(c);
+  const up = movesUp(c, Number(values[c.id]), Number(door.v));
   return `${c.type === 'fader' ? 'Move' : 'Turn'} ${up ? 'up' : 'down'}`;
 }
 

@@ -508,6 +508,10 @@ export type FaderControl = ControlCommon & {
 export const maxAtBottom = (c: Control): boolean =>
   c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom';
 
+/** Whether a control's cap moves up to go from `now` to `to`: up for more, or down for more with `maxAt: 'bottom'`. */
+export const movesUp = (c: Control, now: number, to: number): boolean =>
+  to !== now && to > now !== maxAtBottom(c);
+
 /**
  * A row of backlit buttons, one per option, each at the option's own x, y with
  * printed `text` above it.

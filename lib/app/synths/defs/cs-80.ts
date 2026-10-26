@@ -1144,7 +1144,7 @@ controls.push({
   kind: 'enum',
   options: [
     { v: 'exp', label: 'EXP', x: 78, y: 852, capColor: CAP.grey, caption: 'EXP' },
-    { v: 'wah', label: 'EXP/WAH', x: 78, y: 880, capColor: CAP.grey, caption: 'EXP/WAH' },
+    { v: 'wah', label: 'EXP/WAH', x: 78, y: 880, capColor: CAP.grey, caption: 'EXP/\nWAH' },
   ],
   def: 'exp',
   module: 'util',

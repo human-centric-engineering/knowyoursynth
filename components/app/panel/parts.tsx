@@ -9,7 +9,7 @@ import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent, ReactNode 
 import { focusStore, highlightStore, meterStore, useStore } from '@/components/app/synth/stores';
 import type { ItemFocus } from '@/components/app/synth/stores';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
-import { formatValue } from '@/lib/app/synths/lib/patch';
+import { formatValue, luminance } from '@/lib/app/synths/lib/patch';
 import type {
   ButtonControl,
   ContinuousValue,
@@ -1413,7 +1413,7 @@ export const Select = memo(function Select({
                 text={o.caption}
                 size={8}
                 weight={700}
-                fill={ctx.outline ? INK : captionInk(cap)}
+                fill={ctx.outline ? (!cap && lit ? PAPER : INK) : captionInk(cap)}
                 ctx={ctx}
               />
             )}
@@ -1464,12 +1464,18 @@ export const Select = memo(function Select({
   );
 });
 const cleanName = (c: Control) => (c.label || c.id).replace(/\n/g, ' ');
-/** Ink for a caption printed on a cap: dark on a light cap, light on a dark one (or on a lamp button, with no cap). */
+const CAPTION_DARK = '#1b1b1d',
+  CAPTION_LIGHT = '#f1f0e9';
+/**
+ * Ink for a caption printed on a cap: whichever of dark and light contrasts more with it (light on the CS-80's red,
+ * dark on its yellow and green). Light on a lamp button, with no cap, and on a colour that cannot be read.
+ */
 function captionInk(cap: string | undefined): string {
-  const m = cap && /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(cap);
-  if (!m) return '#1b1b1d';
-  const [r, g, b] = [m[1], m[2], m[3]].map((h) => parseInt(h, 16));
-  return 0.299 * r + 0.587 * g + 0.114 * b > 128 ? '#1b1b1d' : '#f1f0e9';
+  const l = cap ? luminance(cap) : null;
+  if (l === null) return CAPTION_LIGHT;
+  const dark = luminance(CAPTION_DARK) ?? 0,
+    light = luminance(CAPTION_LIGHT) ?? 1;
+  return (l + 0.05) / (dark + 0.05) >= (light + 0.05) / (l + 0.05) ? CAPTION_DARK : CAPTION_LIGHT;
 }
 /** `offValue`: pressing the lit button again sets that value (the Jupiter-8's arpeggio MODE buttons switch it off). */
 const pick = (c: SelectControl, o: ControlOption, value: ControlValue) =>
@@ -2684,7 +2690,8 @@ export const Switch = memo(function Switch({
         {...hover}
         onClick={(e) => {
           focusStore.set({ kind: 'control', id: c.id, x: e.clientX, y: e.clientY, tip: false });
-          const at = longSlide(c) ? slideAt(c, e) : null;
+          // a click with no pointer (assistive tech, `detail` 0) steps on, as a short switch does
+          const at = longSlide(c) && e.detail > 0 ? slideAt(c, e) : null;
           onChange(c.id, at ?? nextValue(c, value));
         }}
         onKeyDown={(e) => {

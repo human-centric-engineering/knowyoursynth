@@ -325,6 +325,38 @@ describe('faders', () => {
     expect(Number(cap!.getAttribute('y')) + Number(cap!.getAttribute('height')) / 2).toBe(470);
   });
 
+  it('prints a caption on a select’s cap in the ink that reads best on it', () => {
+    const select: Control = {
+      id: 'select.caps',
+      type: 'select',
+      x: 800,
+      y: 500,
+      w: 32,
+      h: 40,
+      kind: 'enum',
+      options: [
+        { v: 'red', label: 'Red', x: 780, y: 500, capColor: '#d9302b', caption: 'BRASS\n1' },
+        { v: 'yellow', label: 'Yellow', x: 820, y: 500, capColor: '#efd23c', caption: 'STRING' },
+        { v: 'lamp', label: 'Lamp', x: 860, y: 500, caption: 'PANEL' },
+      ],
+      def: 'red',
+      module: 'mode',
+      label: 'CAPS',
+      help: 'Captioned buttons.',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, select] };
+    const { container } = render(
+      <SynthPanel {...props({ def, values: { ...def.init, 'select.caps': 'red' } })} />
+    );
+    const ink = (t: string) =>
+      [...container.querySelectorAll('text')]
+        .find((x) => x.textContent?.startsWith(t))
+        ?.getAttribute('fill');
+    expect(ink('BRASS')).toBe('#f1f0e9');
+    expect(ink('STRING')).toBe('#1b1b1d');
+    expect(ink('PANEL')).toBe('#f1f0e9');
+  });
+
   it('a slide of more than three positions takes the one clicked, and steps by the arrow keys', () => {
     const onChange = vi.fn();
     const long: Control = {
@@ -348,12 +380,16 @@ describe('faders', () => {
     );
     const hit = screen.getByRole('button', { name: 'LONG' });
     // a panel drawn at its own scale: screen = view
-    const svg = hit.ownerSVGElement!;
+    const svg = hit.closest('svg');
+    if (!svg) throw new Error('the slide is drawn in an svg');
     const identity = new DOMMatrix();
     Object.defineProperty(svg, 'getScreenCTM', { value: () => identity, configurable: true });
     // the fifth sixth of the travel, from the top: option e
-    fireEvent.click(hit, { clientX: 700, clientY: 500 - 30 + 45 });
+    fireEvent.click(hit, { clientX: 700, clientY: 500 - 30 + 45, detail: 1 });
     expect(onChange).toHaveBeenLastCalledWith('slide.long', 'e');
+    // a click with no pointer (assistive tech) steps on from the value, as a short switch does
+    fireEvent.click(hit, { clientX: 0, clientY: 0, detail: 0 });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'c');
     fireEvent.keyDown(hit, { key: 'ArrowDown' });
     expect(onChange).toHaveBeenLastCalledWith('slide.long', 'c');
     fireEvent.keyDown(hit, { key: 'ArrowUp' });
