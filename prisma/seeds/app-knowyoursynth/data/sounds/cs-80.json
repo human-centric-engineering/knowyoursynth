@@ -1,0 +1,1016 @@
+{
+  "synth": "cs-80",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "cs-blade-brass",
+      "name": "Blade Runner Brass",
+      "ref": "In the style of Vangelis’s Blade Runner end titles (1982)",
+      "artist": "Vangelis",
+      "tags": ["brass", "film", "80s"],
+      "level": 2,
+      "blurb": "A huge, slow-breathing brass chord that swells, glows and hangs in the air.",
+      "how": "Both channels play the same sawtooth patch, channel II a little sharp, so every note is two voices beating against each other. The IL-AL filter envelope starts each note dark, swells it brighter than its resting tone and lets it settle: the brass \"blare\". A slow sub-oscillator vibrato and the chorus make it shimmer and spread.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 46, 3.8, 0.75],
+          [0, 53, 3.8, 0.75],
+          [0, 58, 3.8, 0.75],
+          [0, 61, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [4, 42, 3.8, 0.8],
+          [4, 49, 3.8, 0.8],
+          [4, 54, 3.8, 0.8],
+          [4, 58, 3.8, 0.8],
+          [4, 61, 3.8, 0.8],
+          [8, 44, 3.8, 0.75],
+          [8, 51, 3.8, 0.75],
+          [8, 56, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 63, 3.8, 0.75],
+          [12, 41, 3.8, 0.85],
+          [12, 48, 3.8, 0.85],
+          [12, 53, 3.8, 0.85],
+          [12, 57, 3.8, 0.85],
+          [12, 60, 3.8, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two channels on every note",
+          "module": "mixer",
+          "why": "Every key on the CS-80 plays both channels at once; MIX decides how much of each you hear.\n- MIX I 50 : II 50: both channels together, each a sawtooth at 8′.\n- DETUNE CH II +0.1 st: channel II a shade sharp, so the two voices of each note beat slowly against each other.\n- Listen for: one sawtooth, then a thicker, slowly swirling one as MIX comes down to the middle.",
+          "set": {
+            "mix.mix": 5,
+            "tune.detune": 0.6
+          }
+        },
+        {
+          "title": "The brass swell in the filter envelope",
+          "module": "env",
+          "why": "The CS-80’s filter envelope starts below the cutoff you set (IL), rises above it (AL) and settles on it. Set the same on both channels.\n- LPF 326 Hz: a dark resting tone.\n- IL −2.0, AL +3.0: each note starts darker still, then swells brighter than the resting tone.\n- A 500 ms, D 2.5 s, R 1.3 s: a slow swell and a slow settle.\n- Listen for: each chord opening up into a bright blare, then mellowing.",
+          "set": {
+            "ch1.lpf": 3.5,
+            "ch2.lpf": 3.5,
+            "ch1.il": 4,
+            "ch2.il": 4,
+            "ch1.al": 6,
+            "ch2.al": 6,
+            "ch1.fa": 9,
+            "ch2.fa": 9,
+            "ch1.fd": 8,
+            "ch2.fd": 8,
+            "ch1.fr": 7,
+            "ch2.fr": 7
+          }
+        },
+        {
+          "title": "Let the level breathe",
+          "module": "env",
+          "why": "The VCA envelope, on both channels, shapes the loudness to match the swell.\n- A 500 ms: each chord fades in.\n- D 2.5 s, S 80 %: a slight dip after the peak.\n- R 1.8 s: a long tail, so one chord melts into the next.\n- Listen for: soft beginnings and long, overlapping endings.",
+          "set": {
+            "ch1.a": 9,
+            "ch2.a": 9,
+            "ch1.d": 8,
+            "ch2.d": 8,
+            "ch1.s": 8,
+            "ch2.s": 8,
+            "ch1.r": 7.5,
+            "ch2.r": 7.5
+          }
+        },
+        {
+          "title": "Vibrato, chorus and touch",
+          "module": "lfo",
+          "why": "The finishing touches make it move.\n- SUB OSCILLATOR sine, SPEED 2.83 Hz, VCO 25 %: a gentle vibrato on every note.\n- TREMOLO / CHORUS: CHORUS and ON down, SPEED 1.26 Hz, DEPTH 60 %: the sound circles slowly between the speakers.\n- INITIAL BRILLIANCE 40 % on both channels: a harder chord flares brighter at its start.\n- Listen for: a wide, shimmering chord that seems to breathe.",
+          "set": {
+            "sub.speed": 5,
+            "sub.vco": 2.5,
+            "trem.on": "on",
+            "trem.chorus": "on",
+            "trem.speed": 4,
+            "trem.depth": 6,
+            "ch1.initBrill": 4,
+            "ch2.initBrill": 4
+          }
+        }
+      ],
+      "context": {
+        "tune.detune": "How far channel II sits from channel I: the slow beating inside each note.",
+        "ch1.al": "How far above its resting tone the filter swells: the blare.",
+        "ch1.fa": "How slowly the swell comes in.",
+        "sub.vco": "The depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "tune.detune",
+          "try": "Raise to 2",
+          "hear": "A wider, more unsettled chorus inside every chord."
+        },
+        {
+          "id": "ch1.al",
+          "try": "Raise to 10",
+          "hear": "A brighter, more aggressive blare at the top of each swell."
+        },
+        {
+          "id": "mix.mix",
+          "try": "Move to 0 (channel I only)",
+          "hear": "One voice per note: thinner and steadier."
+        }
+      ]
+    },
+    {
+      "id": "cs-fanfare",
+      "name": "Fanfare Brass",
+      "ref": "In the style of Vangelis’s Chariots of Fire (1981)",
+      "artist": "Vangelis",
+      "tags": ["brass", "film", "80s"],
+      "level": 1,
+      "blurb": "Two of the CS-80’s brass presets layered into one bright, stately fanfare.",
+      "how": "The TONE SELECTOR gives each channel its own preset: BRASS 1 on channel I and BRASS 3 on channel II, played together and slightly detuned. BRILLIANCE brightens both at once, and touch PITCHBEND makes a hard note start flat and lip up into pitch, like a player attacking the note.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 61, 0.9, 0.9],
+          [1, 66, 0.9, 0.8],
+          [2, 68, 0.9, 0.8],
+          [3, 70, 1.9, 0.95],
+          [5, 66, 2.9, 0.8],
+          [8, 61, 0.9, 0.9],
+          [9, 66, 0.9, 0.8],
+          [10, 68, 0.9, 0.8],
+          [11, 70, 1.9, 0.95],
+          [13, 68, 2.9, 0.8],
+          [0, 42, 3.9, 0.6],
+          [0, 49, 3.9, 0.6],
+          [4, 47, 3.9, 0.6],
+          [4, 54, 3.9, 0.6],
+          [8, 42, 3.9, 0.6],
+          [8, 49, 3.9, 0.6],
+          [12, 44, 3.9, 0.6],
+          [12, 51, 3.9, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A preset on each channel",
+          "module": "mode",
+          "why": "Each row of the TONE SELECTOR chooses one channel’s voice. A preset replaces that channel’s panel sliders with Yamaha’s own settings.\n- Row I: BRASS 1. Row II: BRASS 3.\n- MIX I 50 : II 50: both presets on every note.\n- Listen for: two related but different brasses blending into one.",
+          "set": {
+            "ch1.tone": "brass1",
+            "ch2.tone": "brass3",
+            "mix.mix": 5
+          }
+        },
+        {
+          "title": "Spread and brighten them",
+          "module": "filter",
+          "why": "The shared levers act on presets too, which is how CS-80 players changed a preset on the fly.\n- DETUNE CH II +0.1 st: the two brasses beat slightly.\n- BRILLIANCE +1.5: pulled down a little, both channels brighter.\n- Listen for: a more open, ringing fanfare.",
+          "set": {
+            "tune.detune": 0.5,
+            "global.brilliance": 1.5
+          }
+        },
+        {
+          "title": "Lip up into each note",
+          "module": "mod",
+          "why": "TOUCH RESPONSE PITCHBEND starts a hard-struck note below its pitch and slides it up.\n- PITCHBEND 30 %: a small scoop on the loud notes, almost none on the soft ones.\n- Listen for: the accented notes of the tune bending up into pitch, like a brass player’s attack.",
+          "set": {
+            "touch.pitchbend": 3
+          }
+        }
+      ],
+      "context": {
+        "ch1.tone": "Channel I’s preset.",
+        "ch2.tone": "Channel II’s preset.",
+        "global.brilliance": "Brightness of both channels, presets included."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.tone",
+          "try": "Press BRASS 2",
+          "hear": "A rounder, slower second layer."
+        },
+        {
+          "id": "ch2.feet",
+          "try": "Set to 16'",
+          "hear": "Channel II an octave down: a heavier, more orchestral fanfare."
+        }
+      ]
+    },
+    {
+      "id": "cs-strings",
+      "name": "Layered Strings",
+      "ref": "In the style of late-1970s polysynth string sections",
+      "artist": "Various",
+      "tags": ["strings", "pad", "70s"],
+      "level": 1,
+      "blurb": "A lush string section from two string presets, layered, detuned and chorused.",
+      "how": "STRING 1 and STRING 3 are layered on every note: one with a filter swell, the other slow and soft. A little detune and the chorus turn two voices per note into an ensemble.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.9, 0.7],
+          [0, 55, 3.9, 0.7],
+          [0, 60, 3.9, 0.7],
+          [0, 64, 3.9, 0.7],
+          [0, 67, 3.9, 0.7],
+          [4, 45, 3.9, 0.7],
+          [4, 52, 3.9, 0.7],
+          [4, 57, 3.9, 0.7],
+          [4, 60, 3.9, 0.7],
+          [4, 64, 3.9, 0.7],
+          [8, 41, 3.9, 0.7],
+          [8, 48, 3.9, 0.7],
+          [8, 53, 3.9, 0.7],
+          [8, 57, 3.9, 0.7],
+          [8, 65, 3.9, 0.7],
+          [12, 43, 3.9, 0.7],
+          [12, 50, 3.9, 0.7],
+          [12, 55, 3.9, 0.7],
+          [12, 59, 3.9, 0.7],
+          [12, 62, 3.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two string presets",
+          "module": "mode",
+          "why": "The strings in each row are similar but not the same; layering two makes a fuller section.\n- Row I: STRING 1. Row II: STRING 3.\n- MIX I 50 : II 50: both together.\n- Listen for: one string sound with a swell, one smooth and slow, heard as one section.",
+          "set": {
+            "ch1.tone": "string1",
+            "ch2.tone": "string3",
+            "mix.mix": 5
+          }
+        },
+        {
+          "title": "An ensemble",
+          "module": "fx",
+          "why": "Detune and chorus make two voices sound like many players.\n- DETUNE CH II +0.2 st.\n- TREMOLO / CHORUS: CHORUS and ON down, SPEED 1.00 Hz, DEPTH 50 %.\n- Listen for: the chords spreading wide and gently moving.",
+          "set": {
+            "tune.detune": 0.8,
+            "trem.on": "on",
+            "trem.chorus": "on",
+            "trem.speed": 3,
+            "trem.depth": 5
+          }
+        }
+      ],
+      "context": {
+        "tune.detune": "The width of the section.",
+        "trem.depth": "How much the chorus moves."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.tone",
+          "try": "Press STRING 2",
+          "hear": "A brighter, more immediate front to the section."
+        },
+        {
+          "id": "global.brilliance",
+          "try": "Push up to −3",
+          "hear": "Muted, distant strings."
+        }
+      ]
+    },
+    {
+      "id": "cs-sine-organ",
+      "name": "Sine Organ",
+      "ref": "In the style of 1970s organ ballads",
+      "artist": "Various",
+      "tags": ["keys", "organ", "70s"],
+      "level": 1,
+      "blurb": "A pure, round organ of two sine stops, whirling through the tremolo.",
+      "how": "The CS-80’s sine wave skips the filters and goes straight to the VCA, so it stays pure whatever the filters do. Channel I plays it at 8′ and channel II at 4′, like two drawbars, and the tremolo spins it like a rotary speaker.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.9, 0.7],
+          [0, 59, 1.9, 0.7],
+          [0, 62, 1.9, 0.7],
+          [0, 67, 1.9, 0.7],
+          [2, 57, 1.9, 0.7],
+          [2, 60, 1.9, 0.7],
+          [2, 64, 1.9, 0.7],
+          [2, 69, 1.9, 0.7],
+          [4, 53, 1.9, 0.7],
+          [4, 57, 1.9, 0.7],
+          [4, 60, 1.9, 0.7],
+          [4, 65, 1.9, 0.7],
+          [6, 55, 1.9, 0.7],
+          [6, 59, 1.9, 0.7],
+          [6, 62, 1.9, 0.7],
+          [6, 67, 1.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The sine skips the filters",
+          "module": "amp",
+          "why": "VCF LEVEL is the filtered sound into the VCA; the sine slider is the pure sine, which never goes through the filters.\n- VCF LEVEL 0 % and SINE 100 % on both channels: only sine waves.\n- R 20 ms: notes stop cleanly, like an organ.\n- Listen for: a plain, flute-like tone with no buzz.",
+          "set": {
+            "ch1.vcfLevel": 0,
+            "ch2.vcfLevel": 0,
+            "ch1.sine": 10,
+            "ch2.sine": 10,
+            "ch1.r": 1,
+            "ch2.r": 1
+          }
+        },
+        {
+          "title": "Two stops",
+          "module": "osc",
+          "why": "FEET sets each channel’s octave, in organ footages.\n- FEET II at 4′: channel II an octave above channel I.\n- MIX I 65 : II 35: mostly the 8′, with the 4′ underneath.\n- Listen for: a brighter, fuller organ, two stops pulled together.",
+          "set": {
+            "ch2.feet": "4",
+            "mix.mix": 3.5
+          }
+        },
+        {
+          "title": "Spin it",
+          "module": "fx",
+          "why": "The tremolo swings the level and sweeps a short delay, differently on each side: a rotary speaker’s sound.\n- TREMOLO and ON down, SPEED 8.71 Hz, DEPTH 50 %.\n- Listen for: the organ whirling round the room.",
+          "set": {
+            "trem.on": "on",
+            "trem.tremolo": "on",
+            "trem.speed": 4,
+            "trem.depth": 5
+          }
+        }
+      ],
+      "context": {
+        "ch1.sine": "The pure sine into the VCA.",
+        "ch2.feet": "The second stop’s octave."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.feet",
+          "try": "Set to 2⅔'",
+          "hear": "A twelfth above: a hollow, churchy organ."
+        },
+        {
+          "id": "trem.speed",
+          "try": "Turn to 10",
+          "hear": "The fast setting of a rotary speaker."
+        }
+      ]
+    },
+    {
+      "id": "cs-vocal-band",
+      "name": "Vocal Band",
+      "ref": "In the style of late-1970s synth choir pads",
+      "artist": "Various",
+      "tags": ["pad", "choir", "70s"],
+      "level": 2,
+      "blurb": "A breathy, vowel-like pad from the two filters squeezed into a narrow, resonant band.",
+      "how": "The CS-80 has a high-pass and a low-pass filter in every voice, each with its own resonance. Brought close together they pass only a narrow band, which sounds like a sung vowel. A pulse wave with slow PWM gives it movement, and the sub oscillator drifts the filters slowly, as if the vowel were changing.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 52, 3.9, 0.7],
+          [0, 59, 3.9, 0.7],
+          [0, 64, 3.9, 0.7],
+          [0, 67, 3.9, 0.7],
+          [4, 50, 3.9, 0.7],
+          [4, 57, 3.9, 0.7],
+          [4, 62, 3.9, 0.7],
+          [4, 65, 3.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A moving pulse wave",
+          "module": "osc",
+          "why": "Start with a square whose width moves.\n- SQUARE on, SAW off.\n- PWM 40 % at SPEED 0.80 Hz: the width sweeps slowly, which makes a single note sound like several.\n- Listen for: a hollow, shimmering tone.",
+          "set": {
+            "ch1.square": "on",
+            "ch1.saw": "off",
+            "ch1.pwm": 4,
+            "ch1.speed": 3
+          }
+        },
+        {
+          "title": "Squeeze the band",
+          "module": "filter",
+          "why": "Between the two filters lies the band the sound passes through.\n- HPF 260 Hz, RES H 50 %: the bottom taken away, with a peak at its edge.\n- LPF 800 Hz, RES L 60 %: the top taken away, with a peak too.\n- Listen for: an \"ahh\" or \"ooh\" where the two peaks sit.",
+          "set": {
+            "ch1.hpf": 4.5,
+            "ch1.resH": 5,
+            "ch1.lpf": 5,
+            "ch1.resL": 6
+          }
+        },
+        {
+          "title": "Breathe in and out",
+          "module": "env",
+          "why": "Slow the loudness so it swells like a choir.\n- A 500 ms, R 1.8 s.\n- Listen for: chords fading in and out.",
+          "set": {
+            "ch1.a": 9,
+            "ch1.r": 7.5
+          }
+        },
+        {
+          "title": "Let the vowel drift",
+          "module": "lfo",
+          "why": "The sub oscillator moves both filters slowly.\n- SUB OSCILLATOR sine, SPEED 0.27 Hz, VCF 15 %.\n- Listen for: the vowel slowly changing colour.",
+          "set": {
+            "sub.speed": 1.5,
+            "sub.vcf": 1.5
+          }
+        }
+      ],
+      "context": {
+        "ch1.hpf": "The bottom of the band.",
+        "ch1.lpf": "The top of the band.",
+        "ch1.resL": "The vowel’s strength."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.lpf",
+          "try": "Lower to 4",
+          "hear": "A darker \"ooh\" vowel."
+        },
+        {
+          "id": "global.resonance",
+          "try": "Pull down to 5",
+          "hear": "A thinner, whistling vowel."
+        }
+      ]
+    },
+    {
+      "id": "cs-touch-keys",
+      "name": "Touch Keys",
+      "ref": "In the style of 1970s electric keyboards",
+      "artist": "Various",
+      "tags": ["keys", "pluck"],
+      "level": 2,
+      "blurb": "A plucky keyboard sound that gets brighter and louder the harder you play.",
+      "how": "The CS-80 measures how fast each key goes down. INITIAL BRILLIANCE and INITIAL LEVEL turn that into a flash of brightness and loudness at the start of the note, which dies away as the note settles: soft notes are mellow, hard notes bite.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.45, 0.35],
+          [0.5, 64, 0.45, 0.5],
+          [1, 67, 0.45, 0.7],
+          [1.5, 72, 0.45, 1],
+          [2, 71, 0.45, 0.4],
+          [2.5, 67, 0.45, 0.6],
+          [3, 64, 0.9, 0.9],
+          [0, 48, 1.9, 0.5],
+          [2, 43, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plucked shape",
+          "module": "env",
+          "why": "Make each note die away even with the key held.\n- SQUARE on with the SAW.\n- LPF 326 Hz: fairly dark.\n- D 320 ms, S 30 %, R 160 ms: a quick fall to a low level.\n- Listen for: a soft, mellow pluck.",
+          "set": {
+            "ch1.square": "on",
+            "ch1.lpf": 3.5,
+            "ch1.d": 5,
+            "ch1.s": 3,
+            "ch1.r": 4
+          }
+        },
+        {
+          "title": "Brightness by touch",
+          "module": "filter",
+          "why": "INITIAL BRILLIANCE opens both filters for a moment, by how hard the key is struck.\n- INITIAL BRILLIANCE 80 %.\n- Listen for: the loud notes of the phrase flashing bright, the soft ones staying mellow.",
+          "set": {
+            "ch1.initBrill": 8
+          }
+        },
+        {
+          "title": "Loudness by touch",
+          "module": "amp",
+          "why": "INITIAL LEVEL does the same for loudness.\n- INITIAL LEVEL 60 %.\n- Listen for: a stronger difference between soft and hard notes, as on a piano.",
+          "set": {
+            "ch1.initLevel": 6
+          }
+        }
+      ],
+      "context": {
+        "ch1.initBrill": "How much a hard key brightens the note.",
+        "ch1.initLevel": "How much a hard key adds level."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.initBrill",
+          "try": "Raise to 10",
+          "hear": "Hard notes snap out almost like a clavinet."
+        },
+        {
+          "id": "touch.pitchbend",
+          "try": "Pull down to 3",
+          "hear": "Hard notes also scoop up into pitch."
+        }
+      ]
+    },
+    {
+      "id": "cs-ring-bells",
+      "name": "Ring Bells",
+      "ref": "In the style of late-1970s film and TV sound design",
+      "artist": "Various",
+      "tags": ["keys", "bells", "fx"],
+      "level": 2,
+      "blurb": "Clanging, swooping bells from the ring modulator.",
+      "how": "The ring modulator multiplies the sound by its own sine, which leaves new, unrelated pitches: a bell’s clang. Its ATTACK, DECAY and DEPTH sweep that sine’s speed up and back at the start of each phrase, for the CS-80’s swooping, pinging bells.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5, 0.8],
+          [2, 79, 1.5, 0.7],
+          [4, 76, 1.5, 0.8],
+          [6, 84, 1.5, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A struck tone",
+          "module": "amp",
+          "why": "Bells ring and fade, and sit high.\n- FEET I at 4′.\n- SINE 100 % with VCF LEVEL 40 %: mostly pure sine.\n- D 1.3 s, S 0 %, R 630 ms: a strike that dies away.\n- LEVEL 100 %: bells carry.\n- Listen for: a soft, chime-like tone.",
+          "set": {
+            "ch1.feet": "4",
+            "ch1.sine": 10,
+            "ch1.vcfLevel": 4,
+            "ch1.d": 7,
+            "ch1.s": 0,
+            "ch1.r": 6,
+            "ch1.level": 10
+          }
+        },
+        {
+          "title": "Ring modulate it",
+          "module": "fx",
+          "why": "The ring modulator works on the sound of both channels.\n- MODULATION 70 %: pulled well down.\n- SPEED 80 Hz: fast enough to make new pitches.\n- Listen for: the chime turning into a clanging bell.",
+          "set": {
+            "ring.mod": 7,
+            "ring.speed": 6
+          }
+        },
+        {
+          "title": "Swoop",
+          "module": "fx",
+          "why": "ATTACK, DECAY and DEPTH sweep the ring modulator’s speed when you play after letting go of every key.\n- DEPTH 50 %, ATTACK 10 ms, DECAY 280 ms.\n- Listen for: each phrase starting with a ping that swoops down to the bell.",
+          "set": {
+            "ring.depth": 5,
+            "ring.attack": 1,
+            "ring.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "ring.speed": "The ring modulator’s pitch: which clang you get.",
+        "ring.depth": "How far the swoop goes."
+      },
+      "tweaks": [
+        {
+          "id": "ring.speed",
+          "try": "Pull down to 8",
+          "hear": "A harsher, more gong-like clang."
+        },
+        {
+          "id": "ring.speed",
+          "try": "Push up to 2",
+          "hear": "A slow pulsing instead of a bell."
+        }
+      ]
+    },
+    {
+      "id": "cs-bend-lead",
+      "name": "Expressive Lead",
+      "ref": "In the style of late-1970s jazz-rock synth solos",
+      "artist": "Various",
+      "tags": ["lead", "jazz", "70s"],
+      "level": 2,
+      "blurb": "A singing brassy lead that scoops into hard notes and glides between them.",
+      "how": "A bright sawtooth and square with a resonant filter swell sing like a horn. Touch PITCHBEND makes hard notes start flat and slide up, portamento joins the notes, and a delayed-feeling vibrato from the sub oscillator keeps it alive.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.9, 1],
+          [1, 70, 0.4, 0.6],
+          [1.5, 72, 0.4, 0.7],
+          [2, 74, 1.9, 1],
+          [4, 72, 0.4, 0.6],
+          [4.5, 70, 0.4, 0.6],
+          [5, 67, 0.9, 0.9],
+          [6, 65, 1.9, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A horn-like tone",
+          "module": "filter",
+          "why": "Two waves, a resonant filter and a short swell.\n- SQUARE on with the SAW.\n- LPF 593 Hz, RES L 40 %.\n- AL +2.5, A 16 ms, D 320 ms: each note blares a little as it starts.\n- Listen for: a bright, slightly nasal lead.",
+          "set": {
+            "ch1.square": "on",
+            "ch1.lpf": 4.5,
+            "ch1.resL": 4,
+            "ch1.al": 5,
+            "ch1.fa": 4,
+            "ch1.fd": 5
+          }
+        },
+        {
+          "title": "Scoop and glide",
+          "module": "glide",
+          "why": "Touch PITCHBEND and portamento make the playing expressive.\n- PITCHBEND 40 %: hard notes start flat and slide up.\n- PORTAMENTO 130 ms / oct: each note slides from the last.\n- Listen for: the accented notes scooping up, and the run sliding between notes.",
+          "set": {
+            "touch.pitchbend": 4,
+            "porta.time": 2.5
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "A singer’s vibrato from the sub oscillator.\n- SUB OSCILLATOR sine, SPEED 3.95 Hz, VCO 20 %.\n- Listen for: the long notes wavering gently.",
+          "set": {
+            "sub.speed": 5.5,
+            "sub.vco": 2
+          }
+        }
+      ],
+      "context": {
+        "touch.pitchbend": "How far a hard note scoops.",
+        "porta.time": "How long the slide between notes takes."
+      },
+      "tweaks": [
+        {
+          "id": "porta.mode",
+          "try": "Rock to GLISSANDO",
+          "hear": "The slides step through every semitone."
+        },
+        {
+          "id": "touch.pitchbend",
+          "try": "Pull down to 8",
+          "hear": "Exaggerated, almost comic scoops."
+        }
+      ]
+    },
+    {
+      "id": "cs-glissando",
+      "name": "Glissando Harp",
+      "ref": "In the style of 1970s TV library music",
+      "artist": "Various",
+      "tags": ["fx", "harp"],
+      "level": 3,
+      "blurb": "Plucked notes that run up and down in chromatic steps between wide leaps.",
+      "how": "GLISSANDO makes the pitch step through every semitone on the way to the next note, instead of sliding. With a plucked envelope and leaps of an octave or more, each jump becomes a quick chromatic run, like a harp glissando.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.9, 0.8],
+          [1, 72, 0.9, 0.8],
+          [2, 55, 0.9, 0.8],
+          [3, 79, 0.9, 0.8],
+          [4, 60, 1.9, 0.8],
+          [6, 84, 1.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plucked note",
+          "module": "env",
+          "why": "Short and bright, like a plucked string.\n- LPF 3.6 kHz, SQUARE on with the SAW.\n- D 630 ms, S 30 %, R 320 ms, LEVEL 100 %.\n- Listen for: notes that strike and ring on quietly.",
+          "set": {
+            "ch1.lpf": 7.5,
+            "ch1.square": "on",
+            "ch1.d": 6,
+            "ch1.s": 3,
+            "ch1.r": 5,
+            "ch1.level": 10
+          }
+        },
+        {
+          "title": "Glissando",
+          "module": "glide",
+          "why": "The PORTAMENTO / GLISSANDO lever sets the time, and the rocker picks slide or steps.\n- PORTAMENTO / GLISSANDO 320 ms / oct.\n- The rocker forward: GLISSANDO.\n- Listen for: every leap turning into a chromatic run.",
+          "set": {
+            "porta.time": 4,
+            "porta.mode": "gliss"
+          }
+        },
+        {
+          "title": "Make it shimmer",
+          "module": "fx",
+          "why": "A slow chorus spreads the runs.\n- CHORUS and ON down, SPEED 1.00 Hz, DEPTH 60 %.\n- Listen for: the runs sweeping across the stereo field.",
+          "set": {
+            "trem.on": "on",
+            "trem.chorus": "on",
+            "trem.speed": 3,
+            "trem.depth": 6
+          }
+        }
+      ],
+      "context": {
+        "porta.time": "How long each run takes.",
+        "porta.mode": "Steps or a smooth slide."
+      },
+      "tweaks": [
+        {
+          "id": "porta.mode",
+          "try": "Rock back to PORTAMENTO",
+          "hear": "Smooth, swooping slides instead of runs."
+        },
+        {
+          "id": "porta.time",
+          "try": "Pull down to 7",
+          "hear": "Slow, deliberate chromatic climbs."
+        }
+      ]
+    },
+    {
+      "id": "cs-trill",
+      "name": "Trumpet Trill",
+      "ref": "In the style of the CS-80 manual’s trill example",
+      "artist": "Yamaha",
+      "tags": ["lead", "brass"],
+      "level": 2,
+      "blurb": "A bright brass note that trills between two pitches on its own.",
+      "how": "The sub oscillator’s square wave jumps between two values, so applied to the pitch it makes a trill, like a trumpeter’s. SPEED sets how fast it alternates and the VCO lever how wide it is.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 67, 1.9, 0.8],
+          [2, 72, 1.9, 0.8],
+          [4, 70, 3.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A brassy note",
+          "module": "filter",
+          "why": "A sawtooth with a filter swell.\n- LPF 800 Hz, AL +2.0, A 8 ms, D 320 ms.\n- Listen for: a short blare at the start of each note.",
+          "set": {
+            "ch1.lpf": 5,
+            "ch1.al": 4,
+            "ch1.fa": 3,
+            "ch1.fd": 5
+          }
+        },
+        {
+          "title": "A square-wave trill",
+          "module": "lfo",
+          "why": "The SUB OSCILLATOR’s square on the pitch alternates between two notes.\n- FUNCTION square, SPEED 5.52 Hz.\n- VCO 30 %: about a tone between the two pitches.\n- Listen for: a fast, even trill on every note.",
+          "set": {
+            "sub.function": "square",
+            "sub.speed": 6,
+            "sub.vco": 3
+          }
+        }
+      ],
+      "context": {
+        "sub.vco": "The width of the trill.",
+        "sub.speed": "Its speed."
+      },
+      "tweaks": [
+        {
+          "id": "sub.function",
+          "try": "Set to sine",
+          "hear": "A smooth vibrato instead of a trill."
+        },
+        {
+          "id": "sub.vco",
+          "try": "Pull down to 4.5",
+          "hear": "A wider, more comic trill."
+        }
+      ]
+    },
+    {
+      "id": "cs-bass",
+      "name": "Round Bass",
+      "ref": "In the style of late-1970s funk and soul synth bass",
+      "artist": "Various",
+      "tags": ["bass", "funk", "70s"],
+      "level": 1,
+      "blurb": "A round, punchy bass with a quick filter snap.",
+      "how": "Square and sawtooth together an octave down give weight. The filter envelope snaps open above the resting tone at each note and falls straight back, with a little resonance for bite.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4, 0.9],
+          [0.75, 36, 0.2, 0.6],
+          [1, 43, 0.4, 0.8],
+          [1.5, 46, 0.4, 0.7],
+          [2, 48, 0.4, 0.9],
+          [2.75, 46, 0.2, 0.6],
+          [3, 43, 0.9, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Weight",
+          "module": "osc",
+          "why": "Both waves, an octave down.\n- SQUARE on with the SAW.\n- FEET I at 16′.\n- Listen for: a full, buzzy low note.",
+          "set": {
+            "ch1.square": "on",
+            "ch1.feet": "16"
+          }
+        },
+        {
+          "title": "A filter snap",
+          "module": "filter",
+          "why": "AL with no IL: the filter jumps above its resting tone and falls straight back.\n- LPF 241 Hz, RES L 40 %.\n- AL +2.5, A 1 ms, D 110 ms.\n- Listen for: a \"dow\" at the start of every note.",
+          "set": {
+            "ch1.lpf": 3,
+            "ch1.resL": 4,
+            "ch1.al": 5,
+            "ch1.fa": 0,
+            "ch1.fd": 3.5
+          }
+        },
+        {
+          "title": "Tighten it",
+          "module": "env",
+          "why": "Short notes keep a bass line clear.\n- D 160 ms, S 60 %, R 20 ms.\n- Listen for: each note stopping cleanly.",
+          "set": {
+            "ch1.d": 4,
+            "ch1.s": 6,
+            "ch1.r": 1
+          }
+        }
+      ],
+      "context": {
+        "ch1.al": "The size of the snap.",
+        "ch1.fd": "How fast it closes."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.resL",
+          "try": "Raise to 7",
+          "hear": "A rubbery, squelchy bass."
+        },
+        {
+          "id": "ch2.tone",
+          "try": "Press BASS and set MIX to 5",
+          "hear": "The bass preset layered on top."
+        }
+      ]
+    },
+    {
+      "id": "cs-ep-balance",
+      "name": "Balanced Piano",
+      "ref": "The CS-80 manual’s acoustic keyboard balance",
+      "artist": "Yamaha",
+      "tags": ["keys", "piano"],
+      "level": 1,
+      "blurb": "The ELECTRIC PIANO preset, balanced across the keyboard like an acoustic instrument.",
+      "how": "An acoustic instrument is louder and duller low down, and quieter and brighter high up. The four KEYBOARD CONTROL levers shape the ELECTRIC PIANO preset that way, gradually towards each end of the keyboard, leaving the middle alone.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [
+          [0, 36, 1.9, 0.8],
+          [0, 43, 1.9, 0.8],
+          [0, 72, 0.9, 0.7],
+          [1, 76, 0.9, 0.7],
+          [2, 41, 1.9, 0.8],
+          [2, 48, 1.9, 0.8],
+          [2, 84, 0.9, 0.7],
+          [3, 79, 0.9, 0.7],
+          [4, 55, 1.9, 0.7],
+          [4, 59, 1.9, 0.7],
+          [4, 62, 1.9, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The ELECTRIC PIANO preset",
+          "module": "mode",
+          "why": "Press ELECTRIC PIANO in row I.\n- Listen for: an even, bell-like piano across the whole range.",
+          "set": {
+            "ch1.tone": "epiano"
+          }
+        },
+        {
+          "title": "Balance the brightness",
+          "module": "mod",
+          "why": "KEYBOARD CONTROL BRILLIANCE: pulled down brighter, pushed up duller, towards its end of the keyboard.\n- BRILLIANCE LOW −2.0: the bass mellower.\n- BRILLIANCE HIGH +2.0: the treble brighter.\n- Listen for: a softer low end and a sparkling top.",
+          "set": {
+            "kbd.brillLow": -2,
+            "kbd.brillHigh": 2
+          }
+        },
+        {
+          "title": "Balance the level",
+          "module": "mod",
+          "why": "KEYBOARD CONTROL LEVEL works the same way on the volume.\n- LEVEL LOW +2.0: the bass louder.\n- LEVEL HIGH −2.0: the treble quieter.\n- Listen for: the low notes carrying, the high notes delicate, the middle unchanged.",
+          "set": {
+            "kbd.levelLow": 2,
+            "kbd.levelHigh": -2
+          }
+        }
+      ],
+      "context": {
+        "kbd.brillLow": "The bass end’s brightness.",
+        "kbd.levelHigh": "The treble end’s volume."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.brillHigh",
+          "try": "Pull down to 5",
+          "hear": "A very glassy top end."
+        },
+        {
+          "id": "ch1.tone",
+          "try": "Press HARPSICHORD 1",
+          "hear": "The same balance on a harpsichord."
+        }
+      ]
+    },
+    {
+      "id": "cs-wind",
+      "name": "Night Wind",
+      "ref": "In the style of 1980s film soundtrack atmospheres",
+      "artist": "Various",
+      "tags": ["fx", "texture", "80s"],
+      "level": 3,
+      "blurb": "Gusting wind from filtered noise, slowly sweeping and circling.",
+      "how": "White noise through the two resonant filters makes a whistling band of wind; the keyboard sets its pitch, because the filters follow the keys. The sub oscillator slowly sweeps the band and the chorus spreads it round the room.",
+      "phrase": {
+        "bpm": 50,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.9, 0.6],
+          [4, 64, 3.9, 0.7],
+          [8, 57, 3.9, 0.6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "mixer",
+          "why": "Take the waves away and bring up the noise.\n- SAW off, NOISE 100 %.\n- Listen for: a plain hiss.",
+          "set": {
+            "ch1.saw": "off",
+            "ch1.noise": 10
+          }
+        },
+        {
+          "title": "A whistling band",
+          "module": "filter",
+          "why": "Resonant filters on either side of a narrow band make the hiss whistle.\n- HPF 83 Hz, RES H 60 %.\n- LPF 1.5 kHz, RES L 70 %.\n- LEVEL 100 %.\n- Listen for: wind with a pitch, higher as you play higher.",
+          "set": {
+            "ch1.hpf": 2.5,
+            "ch1.resH": 6,
+            "ch1.lpf": 6,
+            "ch1.resL": 7,
+            "ch1.level": 10
+          }
+        },
+        {
+          "title": "Gusts",
+          "module": "env",
+          "why": "Slow loudness and a slow sweep.\n- A 1.0 s, R 5.0 s.\n- SUB OSCILLATOR sine, SPEED 0.20 Hz, VCF 30 %.\n- Listen for: the wind rising, falling and changing pitch.",
+          "set": {
+            "ch1.a": 10,
+            "ch1.r": 9,
+            "sub.speed": 1,
+            "sub.vcf": 3
+          }
+        },
+        {
+          "title": "Spread it",
+          "module": "fx",
+          "why": "The chorus sends it round the room.\n- CHORUS and ON down, SPEED 0.79 Hz, DEPTH 80 %.\n- Listen for: the wind circling between the speakers.",
+          "set": {
+            "trem.on": "on",
+            "trem.chorus": "on",
+            "trem.speed": 2,
+            "trem.depth": 8
+          }
+        }
+      ],
+      "context": {
+        "ch1.resL": "How much the wind whistles.",
+        "sub.vcf": "How far it gusts."
+      },
+      "tweaks": [
+        {
+          "id": "sub.function",
+          "try": "Set to NOISE",
+          "hear": "Random, rough gusts instead of smooth sweeps."
+        },
+        {
+          "id": "ch1.resL",
+          "try": "Raise to 9",
+          "hear": "A ghostly, singing wind."
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (27)
+## In the app (28)
 
 | Folder                                     | Synth                                                                                                                                                            | Spec schema |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -29,6 +29,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`b2600`](./b2600/README.md)               | Behringer 2600                                                                                                                                                   | 0.5.0       |
 | [`buchla-easel`](./buchla-easel/README.md) | Buchla and Associates (Berkeley, California) Music Easel: Model 208 Stored Program Sound Source and Model 218 Touch Activated Voltage Source (original, 1973-74) | 0.10.0      |
 | [`cat`](./cat/README.md)                   | Behringer CAT                                                                                                                                                    | 0.7.0       |
+| [`cs-80`](./cs-80/README.md)               | Yamaha CS-80 Polyphonic Synthesizer                                                                                                                              | 0.13.0      |
 | [`deepmind-12d`](./deepmind-12d/README.md) | Behringer DeepMind 12D                                                                                                                                           | 0.7.0       |
 | [`donner-b1`](./donner-b1/README.md)       | Donner Essential B1 Analog Bass Sequencer                                                                                                                        | 0.11.0      |
 | [`ems-vcs3`](./ems-vcs3/README.md)         | EMS (Electronic Music Studios, London) VCS3 Mk 1 (Voltage Controlled Studio Mk 3)                                                                                | 0.9.0       |
@@ -53,7 +54,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (26)
+## Not in the app yet (25)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -81,7 +82,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`sequential-fourm`](./sequential-fourm/README.md)                                     | Sequential Fourm                                                                                           | 0.12.0      |
 | [`udo-audio-super-6`](./udo-audio-super-6/README.md)                                   | UDO Audio Super 6                                                                                          | 0.12.0      |
 | [`udo-audio-super-gemini`](./udo-audio-super-gemini/README.md)                         | UDO Audio Super Gemini                                                                                     | 0.13.0      |
-| [`yamaha-cs-80`](./yamaha-cs-80/README.md)                                             | Yamaha CS-80 Polyphonic Synthesizer                                                                        | 0.13.0      |
 | [`yamaha-dx7`](./yamaha-dx7/README.md)                                                 | Yamaha DX7 Digital Programmable Algorithm Synthesizer                                                      | 0.11.0      |
 
 ## Not synths

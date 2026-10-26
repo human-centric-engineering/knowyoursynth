@@ -22,10 +22,11 @@
     { "id": "jupiter-4", "order": 19, "listed": true },
     { "id": "jupiter-6", "order": 20, "listed": true },
     { "id": "jupiter-8", "order": 21, "listed": true },
-    { "id": "system-15", "order": 22, "listed": true },
-    { "id": "system-35", "order": 23, "listed": true },
-    { "id": "system-55", "order": 24, "listed": true },
-    { "id": "model-15", "order": 25, "listed": true },
-    { "id": "grandmother", "order": 26, "listed": true }
+    { "id": "cs-80", "order": 22, "listed": true },
+    { "id": "system-15", "order": 23, "listed": true },
+    { "id": "system-35", "order": 24, "listed": true },
+    { "id": "system-55", "order": 25, "listed": true },
+    { "id": "model-15", "order": 26, "listed": true },
+    { "id": "grandmother", "order": 27, "listed": true }
   ]
 }

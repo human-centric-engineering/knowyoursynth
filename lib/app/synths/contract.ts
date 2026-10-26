@@ -430,7 +430,7 @@ export type KnobControl = ControlCommon & {
 } & (ContinuousValue | EnumValue);
 
 /**
- * Slide switch: an enum of 2–3 options (top→bottom or left→right) or a bool
+ * Slide switch: an enum of 2–6 options (top→bottom or left→right) or a bool
  * (`true` at top/left unless `onAt: 'bottom'`). Position labels are decor.
  */
 export type SlideControl = ControlCommon & {
