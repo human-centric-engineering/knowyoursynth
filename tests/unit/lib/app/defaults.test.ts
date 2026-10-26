@@ -504,23 +504,21 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       __resetAppOwnerClassificationForTests();
       // The read triggers the lazy init, so this exercises the REAL file.
       // FORK (Know Your Synth): pinned to our user-linked models (t-77), none enforced, rather than deleted, so a
-      // stray extra classification still fails. Ledger: .context/app/divergences.md.
-      expect(Object.keys(appOwnerClassifications()).sort()).toEqual([
-        'Favourite',
-        'LessonProgress',
-        'OwnedInstrument',
-        'PatternReport',
-        'SoundReport',
-        'SynthPreference',
-        'SynthProfile',
-        'SynthSuggestion',
-        'UserPattern',
-        'UserPreference',
-        'UserSound',
-      ]);
-      expect(
-        Object.values(appOwnerClassifications()).some((c) => c.kind === 'personal' && c.enforced)
-      ).toBe(false);
+      // stray extra or changed classification still fails. Ledger: .context/app/divergences.md.
+      const own = { kind: 'personal', owner: { column: 'userId' } };
+      expect(appOwnerClassifications()).toEqual({
+        UserSound: own,
+        UserPattern: own,
+        SynthProfile: own,
+        OwnedInstrument: own,
+        SynthPreference: own,
+        UserPreference: own,
+        LessonProgress: own,
+        Favourite: own,
+        SynthSuggestion: { kind: 'not-personal', because: expect.any(String) },
+        SoundReport: { kind: 'not-personal', because: expect.any(String) },
+        PatternReport: { kind: 'not-personal', because: expect.any(String) },
+      });
     },
   },
   {

@@ -151,7 +151,9 @@ async function searchesSince(
       ? first
       : await prisma.aiMessage.findFirst({
           where: {
-            conversation: { id: conversationId, userId },
+            // Named through the owner, as the read below is: Sunrise's owner layer would refuse `conversationId` alone.
+            conversationId,
+            conversation: { userId },
             role: 'user',
             createdAt: { lte: first.createdAt },
           },
@@ -161,7 +163,8 @@ async function searchesSince(
   const rows = await prisma.aiMessage.findMany({
     where: {
       // Named through the conversation's owner, so Sunrise's owner layer (0.15.0) sees the read is the caller's own.
-      conversation: { id: conversationId, userId },
+      conversationId,
+      conversation: { userId },
       role: 'tool',
       capabilitySlug: { in: [...SOURCE_TOOLS] },
       ...(question ? { createdAt: { gte: question.createdAt } } : {}),

@@ -73,6 +73,18 @@ the same PR**, and each row names what deletes it.
   seam-independent.
 - **Delete when:** #636 lands, or the nav goes back to `null`.
 
+### The test setup turns the panel's patch glide off
+
+- **Files:** `tests/setup.ts`
+- **Change:** a `vi.mock` of `@/components/app/synth/motion` that makes `glideMotion()` answer
+  `false`, placed above the `next/navigation` mock's docblock.
+- **Why:** a glide would make every page test that opens a sound wait a few seconds for it. The
+  glides' own tests turn it back on. Sunrise has no seam for suite-wide app mocks.
+- **On conflict:** take theirs, and re-add the mock as its own block between other mocks, not
+  inside an upstream docblock. This merge (t-77) hit a conflict there.
+- **Upstream:** app-specific. A suite-wide app-mock seam would discharge it.
+- **Delete when:** the panel stops gliding, or Sunrise gains a setup seam for app mocks.
+
 ### Prototype exclusions in tool config
 
 - **Files:** `.gitignore`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`
@@ -305,13 +317,15 @@ the same PR**, and each row names what deletes it.
 
 - **Files:** `lib/orchestration/evaluations/run-worker.ts`,
   `lib/orchestration/evaluations/graders/types.ts`,
-  `lib/orchestration/evaluations/drain-stream-chat.ts`
+  `lib/orchestration/evaluations/drain-stream-chat.ts`,
+  `tests/unit/lib/orchestration/evaluations/drain-stream-chat.test.ts`
 - **Change:** `GraderInput.toolCalls` items gain optional `success`, `errorCode` and
   `resultPreview`, and `processOneCase` fills them from each agent subject's tool-call trace, under
   `FORK` comments (`f-tutor-knowledge` t-61). The stored `subjectMetadata.toolCalls` keeps
   `{ slug, args }` only. `drainStreamChat` also collects the traces of a `capability_results` frame
   (a turn's parallel tool calls), which it dropped, so a turn that searched the databank and the
-  web at once reached the graders with no tool calls.
+  web at once reached the graders with no tool calls. Its test gains one `FORK` case for the
+  `capability_results` batch.
 - **Why:** the tutor's eval graders check what its searches found (owner ruling, 2026-10-19,
   journaled on `f-tutor-knowledge`), and core passed graders only each call's name and arguments.
   Behaviour-neutral at rest: nothing stored changes, and core's graders ignore the new fields.
@@ -319,7 +333,8 @@ the same PR**, and each row names what deletes it.
 - **On conflict:** take theirs, and re-apply the three fields where `processOneCase` maps the
   trace, the `{ slug, args }` map where it stores `subjectMetadata`, and the `capability_results`
   case in `drainStreamChat` unless upstream now handles it. Keep the field names: the
-  graders read them.
+  graders read them. In the test, keep the `FORK` case beside upstream's, and drop it with the
+  `capability_results` case if upstream now covers it.
 - **Upstream:** raised as
   [sunrise#1044](https://github.com/human-centric-engineering/sunrise/issues/1044).
 - **Delete when:** upstream passes graders each call's result (switch the graders to its field

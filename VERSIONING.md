@@ -139,7 +139,7 @@ covered by the version contract.
   - `lib/app/sounds/` → `listUserSounds()` / `getUserSound()` / `createUserSound()` / `updateUserSound()` / `deleteUserSound()` (`store.ts`), `getSettings()` / `updateSettings()` / `getPanelPref()` / `putPanelPref()` (`preferences.ts`), `listProgress()` / `recordProgress()` (`progress.ts`), `listFavourites()` / `addFavourite()` / `removeFavourite()` (`favourites.ts`), the API shapes (`data.ts`, `preference-data.ts`, `progress-data.ts`, `favourite-data.ts`) — Know Your Synth's users' own sounds, settings, last panels, lesson progress and favourites, owner-scoped
   - `lib/app/surface.ts` → `classifySurface()` / `DEFAULT_SURFACE` — per-surface theming classifier
   - `lib/app/synths/` → `SynthDef` / `EngineParams` (`contract.ts`), `createSynth()` (`audio/`), `validateSound()` (`validate.ts`), `getSynthDef()` / `SYNTH_DEFS` (`defs/`) — Know Your Synth's synth contract, sound engine, shared library and definition registry
-  - `lib/app/tutor/` → `TUTOR_AGENT` (`agent.ts`), `TUTOR_TOOLS` (`tools.ts`), `readPanel()` / `TutorEntityContextSchema` (`panel.ts`), `synthContext()` (`context.ts`) — Know Your Synth's tutor: the platform agent, its four panel tools, the panel they read and the synth context
+  - `lib/app/tutor/` → `TUTOR_AGENT` (`agent.ts`), `TUTOR_TOOLS` (`tools.ts`), `readPanel()` / `TutorEntityContextSchema` (`panel.ts`), `synthContext()` (`context.ts`) — Know Your Synth's tutor: the platform agent, its eight tools, the panel (which the panel and pattern tools read) and the synth context
   - `lib/app/user-created.ts` → `initAppUserCreatedHooks()` — post-signup hook registry
 
   Outside `lib/app/` — **hand-maintained, so check it against the tree rather

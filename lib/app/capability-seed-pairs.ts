@@ -26,14 +26,7 @@
  * Full guide: CUSTOMIZATION.md §4 · .context/database/seeding.md
  */
 
-import { DescribeSynthCapability } from '@/lib/app/tutor/describe-synth';
-import { DesignSoundCapability } from '@/lib/app/tutor/design-sound';
-import { GetPanelCapability } from '@/lib/app/tutor/get-panel';
-import { GetPatternCapability } from '@/lib/app/tutor/get-pattern';
-import { ProposePanelChangeCapability } from '@/lib/app/tutor/propose-panel-change';
-import { ProposePatternCapability } from '@/lib/app/tutor/propose-pattern';
-import { SearchDatabankCapability } from '@/lib/app/tutor/search-databank';
-import { WebSearchCapability } from '@/lib/app/tutor/web-search';
+import { TUTOR_TOOLS } from '@/lib/app/tutor/tools';
 
 /** One capability slug and the class whose definition its seed must write. */
 export interface AppCapabilityPair {
@@ -56,18 +49,16 @@ export interface AppCapabilityPair {
  *   { slug: 'withdraw_task', instance: new WithdrawTaskCapability() },
  * ];
  * ```
+ *
+ * Know Your Synth pairs the tutor's tools, from the `TUTOR_TOOLS` list that
+ * `app-knowyoursynth/003-tutor-tools.ts` seeds (t-77). Seed and pairs both take the slug from the instance, so
+ * the parity test cannot catch a slug drifting from its class: the independent pins are the slug list in
+ * `tests/unit/lib/app/defaults.test.ts` and `TUTOR_TOOL_SLUGS` in `tests/unit/lib/app/tutor/tools.test.ts`.
  */
-export const APP_CAPABILITY_PAIRS: readonly AppCapabilityPair[] = [
-  // The tutor's tools, as `app-knowyoursynth/003-tutor-tools.ts` seeds them (t-77).
-  { slug: 'get_panel', instance: new GetPanelCapability() },
-  { slug: 'describe_synth', instance: new DescribeSynthCapability() },
-  { slug: 'propose_panel_change', instance: new ProposePanelChangeCapability() },
-  { slug: 'design_sound', instance: new DesignSoundCapability() },
-  { slug: 'get_pattern', instance: new GetPatternCapability() },
-  { slug: 'propose_pattern', instance: new ProposePatternCapability() },
-  { slug: 'search_databank', instance: new SearchDatabankCapability() },
-  { slug: 'web_search', instance: new WebSearchCapability() },
-];
+export const APP_CAPABILITY_PAIRS: readonly AppCapabilityPair[] = TUTOR_TOOLS.map((tool) => ({
+  slug: tool.slug,
+  instance: tool,
+}));
 
 /**
  * Seeds of this fork's that the parity test cannot run under its strict mock

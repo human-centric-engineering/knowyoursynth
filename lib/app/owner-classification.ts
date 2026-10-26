@@ -59,10 +59,12 @@ import { registerAppOwnerClassification } from '@/lib/db/owner-classification';
  *
  * Know Your Synth's user-linked models (t-77, taking Sunrise 0.15.0).
  *
- * Each personal model is its user's, and the fork's routes already scope it by `userId`. None is `enforced` yet: a
- * published sound or pattern is read by everyone on `/explore`, a profile and its owned synths by anyone at `/u/`, so
- * the owner layer would refuse reads the product means to allow until those call sites go through
- * `runAcrossOwners()`. Until then they are guarded by the routes, as before.
+ * Each personal model is its user's, and the fork's routes scope its private reads by `userId`. Four are also read
+ * across owners on purpose: a published sound or pattern by everyone on `/explore`, a profile and its owned synths by
+ * anyone at `/u/`. They are still personal, not `not-personal` — an unpublished sound is its owner's alone, and
+ * `alsoVisible` (core's way to say "and these rows too") is for core models only. So none is `enforced` yet: the owner
+ * layer would refuse the public reads until those call sites go through `runAcrossOwners()`. Until then the routes
+ * guard them, as before, and a `'policy'` route that reads one is not excused by the data layer.
  */
 export function initAppOwnerClassification(): void {
   const own = { kind: 'personal', owner: { column: 'userId' } } as const;
