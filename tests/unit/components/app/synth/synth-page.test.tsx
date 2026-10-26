@@ -260,6 +260,29 @@ describe('SynthPage layout', () => {
     expect(freshLoaded('model-d')).toBeDefined();
   });
 
+  it('calls use() again when it finishes waiting, with no boundary above it, as the route has none (t-131)', async () => {
+    // With no Suspense boundary the root retries the page from scratch once the definition loads, by which time it
+    // is at hand. A page that then skipped `use()` is the conditional `use()` React reports.
+    vi.resetModules();
+    const fresh = await import('@/components/app/synth/synth-page');
+    const err = vi.spyOn(console, 'error');
+
+    await act(async () => {
+      render(
+        <fresh.SynthPage detail={detail} synths={[MODEL_D_SYNTH, OTHER_SYNTH]} viewParam={null} />
+      );
+    });
+
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+      'Behringer Model D · Modelled on the 1970 Minimoog Model D'
+    );
+    const useWarnings = err.mock.calls.filter((args) =>
+      args.some((a) => String(a).includes('did not call use() when it finished'))
+    );
+    err.mockRestore();
+    expect(useWarnings).toEqual([]);
+  });
+
   it('shows the synth heading, the loaded sound, and About › for the summary', () => {
     page();
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
