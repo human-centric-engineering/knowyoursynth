@@ -15,6 +15,7 @@ import { controlMap, displayName, formatValue } from '@/lib/app/synths/lib/patch
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { Control, ControlValues, SynthDef } from '@/lib/app/synths/contract';
+import { maxAtBottom } from '@/lib/app/synths/contract';
 import { findStore, focusStore, mapStore, useStore } from '@/components/app/synth/stores';
 import type { Door, WhyAnswer } from '@/components/app/synth/stores';
 
@@ -255,9 +256,12 @@ function DoorStep({
       </>
     );
   const now = values[c.id];
-  const more = typeof door.v === 'number' && typeof now === 'number' && door.v > now;
-  // a lever with its maximum at the bottom (the CS-80's) moves down for more
-  const up = more !== (c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom');
+  // a lever with its maximum at the bottom (the CS-80's) moves down for more; with nothing to compare, say 'down' as before
+  const up =
+    typeof door.v === 'number' &&
+    typeof now === 'number' &&
+    door.v !== now &&
+    door.v > now !== maxAtBottom(c);
   return (
     <>
       {c.type === 'fader' ? 'move' : 'turn'} {name} {up ? 'up' : 'down'}

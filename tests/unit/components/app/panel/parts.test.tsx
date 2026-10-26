@@ -15,7 +15,7 @@ import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import { optionIndex, polar, swingStep, valueAngle, wavePath } from '@/components/app/panel/parts';
 import { focusStore, highlightStore, meterStore } from '@/components/app/synth/stores';
 import { allPartsDef } from '@/tests/fixtures/synths/all-parts';
-import type { ControlValues, FaderControl, PatchCable } from '@/lib/app/synths/contract';
+import type { Control, ControlValues, FaderControl, PatchCable } from '@/lib/app/synths/contract';
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -313,9 +313,9 @@ describe('faders', () => {
     fireEvent.pointerMove(fader, { clientX: 0, clientY: 50 });
     expect(onChange).toHaveBeenLastCalledWith('fader.lever', 7);
     fireEvent.pointerUp(fader);
-    // the arrow keys follow the cap: up moves it up, which is less
+    // the arrow keys keep up = more, as on any slider, whichever way the cap moves
     fireEvent.keyDown(fader, { key: 'ArrowUp' });
-    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 1.8);
+    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 2.2);
     // at 2 the cap sits near the top, a fifth of the travel down
     const cap = [...container.querySelectorAll('rect')].find(
       (r) => r.getAttribute('fill') === '#2f9a4a'
@@ -323,6 +323,44 @@ describe('faders', () => {
     expect(cap).toBeTruthy();
     // centre of the cap: top of the travel (500 − 50) plus 20 % of 100
     expect(Number(cap!.getAttribute('y')) + Number(cap!.getAttribute('height')) / 2).toBe(470);
+  });
+
+  it('a slide of more than three positions takes the one clicked, and steps by the arrow keys', () => {
+    const onChange = vi.fn();
+    const long: Control = {
+      id: 'slide.long',
+      type: 'slide',
+      x: 700,
+      y: 500,
+      w: 14,
+      h: 60,
+      orient: 'v',
+      kind: 'enum',
+      options: ['a', 'b', 'c', 'd', 'e', 'f'].map((v) => ({ v, label: v.toUpperCase() })),
+      def: 'b',
+      module: 'osc',
+      label: 'LONG',
+      help: 'A six-position slide.',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, long] };
+    render(
+      <SynthPanel {...props({ onChange, def, values: { ...def.init, 'slide.long': 'b' } })} />
+    );
+    const hit = screen.getByRole('button', { name: 'LONG' });
+    // a panel drawn at its own scale: screen = view
+    const svg = hit.ownerSVGElement!;
+    const identity = new DOMMatrix();
+    Object.defineProperty(svg, 'getScreenCTM', { value: () => identity, configurable: true });
+    // the fifth sixth of the travel, from the top: option e
+    fireEvent.click(hit, { clientX: 700, clientY: 500 - 30 + 45 });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'e');
+    fireEvent.keyDown(hit, { key: 'ArrowDown' });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'c');
+    fireEvent.keyDown(hit, { key: 'ArrowUp' });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'a');
+    onChange.mockClear();
+    fireEvent.keyDown(hit, { key: 'Tab' });
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('a horizontal fader moves right for more, and keys step it', () => {

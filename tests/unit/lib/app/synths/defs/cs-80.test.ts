@@ -208,6 +208,12 @@ describe('CS-80 VCF and its IL-AL-A-D-R envelope', () => {
     expect(p.hpf?.res).toBeCloseTo(0.15, 10);
   });
 
+  it('stops both filters’ resonance short of self-oscillation, whatever RESONANCE adds', () => {
+    const p = run({ 'ch1.resL': 10, 'ch1.resH': 10, 'global.resonance': 10 });
+    expect(p.filter.res).toBe(0.98);
+    expect(p.hpf?.res).toBe(0.98);
+  });
+
   it('turns the filtered sound down as the resonance rises, by VCF LEVEL', () => {
     const vcaIn = (p: EngineParams): [string, number] => {
       const n = p.normals?.vcaIn;

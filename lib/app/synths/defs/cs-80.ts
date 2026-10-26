@@ -1488,8 +1488,9 @@ function channel(v: ControlValues, c: number, gain: number): LayerParams {
   const al = (n('al') / 10) * AL_OCT;
   const span = al - il;
   const sus = span > 0 ? -il / span : 0;
-  const resH = clamp((n('resH') / 10) * 0.85 + resAdd, 0, 1);
-  const resL = clamp((n('resL') / 10) * 0.88 + resAdd, 0, 1.02);
+  const resH = clamp((n('resH') / 10) * 0.85 + resAdd, 0, 0.98);
+  // both stop short of self-oscillation (1), as the notes say
+  const resL = clamp((n('resL') / 10) * 0.88 + resAdd, 0, 0.98);
   // resonance piles level onto the cutoff; the filtered path is turned down to match, as a player would
   const resComp = 1 / (1 + 1.4 * resL + 0.6 * resH);
   const hp = hpfHz(n('hpf')) * Math.pow(2, il + bright);

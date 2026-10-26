@@ -106,7 +106,7 @@
       "tweaks": [
         {
           "id": "tune.detune",
-          "try": "Raise to 2",
+          "try": "Pull down to 2",
           "hear": "A wider, more unsettled chorus inside every chord."
         },
         {
@@ -855,9 +855,9 @@
           "hear": "A rubbery, squelchy bass."
         },
         {
-          "id": "ch2.tone",
-          "try": "Press BASS and set MIX to 5",
-          "hear": "The bass preset layered on top."
+          "id": "ch1.feet",
+          "try": "Set to 8'",
+          "hear": "A lighter bass, an octave up, for higher lines."
         }
       ]
     },

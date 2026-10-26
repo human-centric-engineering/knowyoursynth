@@ -480,7 +480,7 @@ export type FaderLed = 'red' | 'green' | 'blue' | 'yellow' | 'white' | 'amber';
 
 /**
  * Slider. (x, y) is the middle of the travel; vertical faders have max at the
- * top, horizontal at the right.
+ * top (at the bottom with `maxAt: 'bottom'`), horizontal at the right.
  */
 export type FaderControl = ControlCommon & {
   type: 'fader';
@@ -503,6 +503,10 @@ export type FaderControl = ControlCommon & {
   /** `'block'`: a plain rectangular cap in the `cap` colour, no lamp (the CS-80). */
   face?: 'block';
 } & ContinuousValue;
+
+/** A vertical fader whose maximum is at the bottom (`maxAt: 'bottom'`): moving its cap down raises its value. */
+export const maxAtBottom = (c: Control): boolean =>
+  c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom';
 
 /**
  * A row of backlit buttons, one per option, each at the option's own x, y with

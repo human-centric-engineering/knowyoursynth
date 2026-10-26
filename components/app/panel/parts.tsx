@@ -40,6 +40,7 @@ import type {
   Theme,
   ToggleControl,
 } from '@/lib/app/synths/contract';
+import { maxAtBottom } from '@/lib/app/synths/contract';
 
 export const PAPER = '#f3f4ef';
 export const INK = '#1c2530';
@@ -1412,7 +1413,7 @@ export const Select = memo(function Select({
                 text={o.caption}
                 size={8}
                 weight={700}
-                fill={ctx.outline ? INK : '#1b1b1d'}
+                fill={ctx.outline ? INK : captionInk(cap)}
                 ctx={ctx}
               />
             )}
@@ -1463,6 +1464,13 @@ export const Select = memo(function Select({
   );
 });
 const cleanName = (c: Control) => (c.label || c.id).replace(/\n/g, ' ');
+/** Ink for a caption printed on a cap: dark on a light cap, light on a dark one (or on a lamp button, with no cap). */
+function captionInk(cap: string | undefined): string {
+  const m = cap && /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(cap);
+  if (!m) return '#1b1b1d';
+  const [r, g, b] = [m[1], m[2], m[3]].map((h) => parseInt(h, 16));
+  return 0.299 * r + 0.587 * g + 0.114 * b > 128 ? '#1b1b1d' : '#f1f0e9';
+}
 /** `offValue`: pressing the lit button again sets that value (the Jupiter-8's arpeggio MODE buttons switch it off). */
 const pick = (c: SelectControl, o: ControlOption, value: ControlValue) =>
   c.offValue != null && o.v === value ? c.offValue : o.v;
@@ -2386,6 +2394,24 @@ function nextValue(c: SwitchControl, value: ControlValue): ControlValue {
   return c.options[(optionIndex(c, value) + 1) % c.options.length].v;
 }
 
+/** A slide switch of more than three positions (the CS-80's FEET): a click picks the position under the pointer. */
+const longSlide = (
+  c: SwitchControl
+): c is Extract<SwitchControl, { type: 'slide'; kind: 'enum' }> =>
+  c.type === 'slide' && c.kind === 'enum' && c.options.length > 3;
+
+/** The option under a click on a long slide, or null when the panel's geometry is not known. */
+function slideAt(c: SwitchControl, e: MouseEvent<SVGElement>): ControlValue | null {
+  if (!longSlide(c)) return null;
+  const svg = e.currentTarget.ownerSVGElement;
+  const m = svg && svg.getScreenCTM();
+  if (!m) return null;
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+  const along = c.orient === 'h' ? (p.x - (c.x - c.w / 2)) / c.w : (p.y - (c.y - c.h / 2)) / c.h;
+  const n = c.options.length;
+  return c.options[Math.min(n - 1, Math.max(0, Math.floor(along * n)))].v;
+}
+
 /** The switch's `orient`, for the switches that have one. */
 const orientOf = (c: SwitchControl) => ('orient' in c ? c.orient : undefined);
 
@@ -2658,14 +2684,28 @@ export const Switch = memo(function Switch({
         {...hover}
         onClick={(e) => {
           focusStore.set({ kind: 'control', id: c.id, x: e.clientX, y: e.clientY, tip: false });
-          onChange(c.id, nextValue(c, value));
+          const at = longSlide(c) ? slideAt(c, e) : null;
+          onChange(c.id, at ?? nextValue(c, value));
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             // A key held is one press: its repeats would enter note after note, or start and stop the sequencer.
             if (!e.repeat) onChange(c.id, nextValue(c, value));
+            return;
           }
+          // a long slide steps along its positions with the arrow keys
+          if (!longSlide(c)) return;
+          const step =
+            e.key === 'ArrowDown' || e.key === 'ArrowRight'
+              ? 1
+              : e.key === 'ArrowUp' || e.key === 'ArrowLeft'
+                ? -1
+                : 0;
+          if (!step) return;
+          e.preventDefault();
+          const i = optionIndex(c, value) + step;
+          if (i >= 0 && i < c.options.length) onChange(c.id, c.options[i].v);
         }}
       />
     </g>
@@ -2673,8 +2713,9 @@ export const Switch = memo(function Switch({
 });
 
 // ── Fader ───────────────────────────────────────────────────────────────────
-// A slide potentiometer. (x, y) is the centre of its travel, `len` the travel, `orient` 'v' (max at the top) or 'h'
-// (max on the right). `led` colours the lamp in the cap, as on the 2600 where it shows which module the slider belongs to.
+// A slide potentiometer. (x, y) is the centre of its travel, `len` the travel, `orient` 'v' (max at the top, or at the
+// bottom with `maxAt: 'bottom'`) or 'h' (max on the right). `led` colours the lamp in the cap, as on the 2600 where it
+// shows which module the slider belongs to.
 const FADER_LED: Record<string, string> = {
   blue: '#58a6ff',
   green: '#5ee872',
@@ -2698,8 +2739,9 @@ const FADER_BALL: Record<string, [string, string]> = {
 function useFaderDrag(c: FaderControl, value: number, onChange: ControlChange): DragHandlers {
   const drag = useRef<{ x: number; y: number; v: number; px: number } | null>(null);
   const vert = c.orient !== 'h';
-  // `maxAt: 'bottom'`: pulling the cap down (towards the player) raises the value
-  const span = (c.max - c.min) * (vert && c.maxAt === 'bottom' ? -1 : 1);
+  const span = c.max - c.min;
+  // `maxAt: 'bottom'`: dragging the cap down (towards the player) raises the value; the arrow keys keep up = more
+  const dir = maxAtBottom(c) ? -1 : 1;
   const set = (v: number) =>
     onChange(c.id, Math.round(Math.max(c.min, Math.min(c.max, v)) * 100) / 100);
   return {
@@ -2715,7 +2757,7 @@ function useFaderDrag(c: FaderControl, value: number, onChange: ControlChange): 
       const d = drag.current;
       if (!d) return;
       const moved = (vert ? d.y - e.clientY : e.clientX - d.x) / d.px; // in view units along the travel
-      set(d.v + (moved / (c.len || 200)) * span * (e.shiftKey ? 0.2 : 1));
+      set(d.v + (moved / (c.len || 200)) * span * dir * (e.shiftKey ? 0.2 : 1));
     },
     onPointerUp: (e) => {
       drag.current = null;
@@ -2749,7 +2791,7 @@ export const Fader = memo(function Fader({
   const drag = useFaderDrag(c, value, onChange);
   const vert = c.orient !== 'h';
   const len = c.len || 200;
-  const flip = vert && c.maxAt === 'bottom';
+  const flip = maxAtBottom(c);
   const at = (v: number) => {
     const f0 = (Math.max(c.min, Math.min(c.max, v)) - c.min) / (c.max - c.min);
     const f = flip ? 1 - f0 : f0;
@@ -2760,7 +2802,11 @@ export const Fader = memo(function Fader({
   const slot = vert
     ? { x: c.x - 7, y: c.y - len / 2 - pad, width: 14, height: len + pad * 2 }
     : { x: c.x - len / 2 - pad, y: c.y - 7, width: len + pad * 2, height: 14 };
-  const block = c.face === 'block';
+  // `face: 'block'`: a plain cap in `cap`, a named colour or any CSS colour, as [face, rim]
+  const block: [string, string] | null =
+    c.face === 'block'
+      ? FADER_BALL[c.cap || 'white'] || [c.cap || FADER_BALL.white[0], '#0008']
+      : null;
   const ball = c.cap && !block ? FADER_BALL[c.cap] || FADER_BALL.white : null;
   const capW = ball ? 34 : vert ? 26 : 20;
   const capH = ball ? 34 : vert ? 20 : 26;
@@ -2860,8 +2906,8 @@ export const Fader = memo(function Fader({
             width={capW}
             height={capH}
             rx="3"
-            fill={(FADER_BALL[c.cap || 'white'] || [c.cap])[0]}
-            stroke={(FADER_BALL[c.cap || 'white'] || [c.cap, '#0008'])[1]}
+            fill={block[0]}
+            stroke={block[1]}
             strokeWidth="1.5"
           />
           <rect
