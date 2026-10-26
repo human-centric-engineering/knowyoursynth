@@ -230,6 +230,38 @@ describe('ring modulator on the voice sum (ringMod)', () => {
     expect(rms(r.out, 14000, 24000)).toBeLessThan(rms(r.out, 2000, 11000) / 50);
   });
 
+  it('starts its speed envelope from rest when switched off and on again', () => {
+    // a slow envelope that would sweep the sine up ten octaves if it carried on where it was switched off
+    const at = (depth: number): EngineParams => ({
+      ...ringed(depth),
+      ringMod: { hz: 1e-3, depth, env: { a: 0.2, d: 1, amt: 20 } },
+    });
+    const play = (depth: number) => {
+      const { ringMod: _r, ...off } = at(depth);
+      return render(at(depth), {
+        len: 48000,
+        events: [
+          [0, { type: 'noteOn', n: 60 }],
+          [4800, { type: 'params', p: off }],
+          [9600, { type: 'params', p: at(depth) }],
+        ],
+      }).out;
+    };
+    const wet = play(1),
+      dry = play(0);
+    const ratioIn = (from: number, to: number) => {
+      let num = 0,
+        den = 0;
+      for (let i = from; i < to; i++) {
+        num += wet[i] * dry[i];
+        den += dry[i] * dry[i];
+      }
+      return num / den;
+    };
+    // at rest the sine stands almost still, so the ring output keeps the same share of the dry sound
+    expect(ratioIn(36000, 42000)).toBeCloseTo(ratioIn(12000, 18000), 2);
+  });
+
   it('leaves the sound alone at depth 0', () => {
     const p = ringed(0);
     const plain = { ...p, ringMod: undefined };

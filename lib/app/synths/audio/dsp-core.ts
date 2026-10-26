@@ -2411,7 +2411,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   let rmPh = 0,
     rmEnv = 0,
     rmStage = 0,
-    ringFire = false;
+    ringFire = false,
+    ringOn = false;
   const keys: number[] = []; // keys held down (the phrase player counts as keys)
   let vel = DEFAULT_VELOCITY;
   // arpeggiator
@@ -2847,6 +2848,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       x.note = -1;
     });
     parts.forEach((v) => v.handle({ type: 'panic' }));
+    rmStage = rmEnv = 0;
+    ringFire = false;
     partCur[0] = -1;
     partCur[1] = -1;
     emit({ type: 'allOff' });
@@ -3037,8 +3040,12 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       hLp += (x - hLp) * cH;
       out[s] = x - hLp;
     }
-    if (P.ringMod) ringModulate(out, n, P.ringMod);
-    else ringFire = false; // a key pressed while it is off does not fire it later
+    if (P.ringMod) {
+      // switched on again: its speed envelope starts from rest, not where it was when it went off
+      if (!ringOn) rmStage = rmEnv = 0;
+      ringModulate(out, n, P.ringMod);
+    } else ringFire = false; // a key pressed while it is off does not fire it later
+    ringOn = !!P.ringMod;
     // the effects sit after the high-pass and before the output level, as on the hardware
     fx.process(out, fxL, fxR, n);
     if (P.chorus) chorus.process(fxL, fxR, n, P.chorus);

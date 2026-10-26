@@ -1536,8 +1536,9 @@ export interface RingModParams {
 }
 
 /**
- * Tremolo / chorus on the voice sum (poly only; the CS-80's): the level of the two sides moves in opposite phase, with a
- * short swept delay, like a rotary speaker in stereo. `chorus` is the slow range of the same circuit.
+ * Tremolo / chorus on the voice sum (poly only; the CS-80's): the levels of the two sides swing a quarter cycle apart
+ * (so the mono sum swings too) and a short delay sweeps in opposite directions on each side, like a rotary speaker in
+ * stereo. `chorus` is the slow range of the same circuit.
  */
 export interface TremoloParams {
   on: boolean;
