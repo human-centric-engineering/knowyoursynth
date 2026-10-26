@@ -1405,6 +1405,17 @@ export const Select = memo(function Select({
                 ctx={ctx}
               />
             )}
+            {o.caption && (
+              <PanelText
+                x={ox}
+                y={oy + 4 - ((o.caption.split('\n').length - 1) * 8.5) / 2}
+                text={o.caption}
+                size={8}
+                weight={700}
+                fill={ctx.outline ? INK : '#1b1b1d'}
+                ctx={ctx}
+              />
+            )}
             {target === o.v && target !== value && (
               <circle
                 cx={ox + c.w / 2 + 5}
@@ -2687,7 +2698,8 @@ const FADER_BALL: Record<string, [string, string]> = {
 function useFaderDrag(c: FaderControl, value: number, onChange: ControlChange): DragHandlers {
   const drag = useRef<{ x: number; y: number; v: number; px: number } | null>(null);
   const vert = c.orient !== 'h';
-  const span = c.max - c.min;
+  // `maxAt: 'bottom'`: pulling the cap down (towards the player) raises the value
+  const span = (c.max - c.min) * (vert && c.maxAt === 'bottom' ? -1 : 1);
   const set = (v: number) =>
     onChange(c.id, Math.round(Math.max(c.min, Math.min(c.max, v)) * 100) / 100);
   return {
@@ -2737,8 +2749,10 @@ export const Fader = memo(function Fader({
   const drag = useFaderDrag(c, value, onChange);
   const vert = c.orient !== 'h';
   const len = c.len || 200;
+  const flip = vert && c.maxAt === 'bottom';
   const at = (v: number) => {
-    const f = (Math.max(c.min, Math.min(c.max, v)) - c.min) / (c.max - c.min);
+    const f0 = (Math.max(c.min, Math.min(c.max, v)) - c.min) / (c.max - c.min);
+    const f = flip ? 1 - f0 : f0;
     return vert ? [c.x, c.y + len / 2 - f * len] : [c.x - len / 2 + f * len, c.y];
   };
   const [cx, cy] = at(value);
@@ -2746,7 +2760,8 @@ export const Fader = memo(function Fader({
   const slot = vert
     ? { x: c.x - 7, y: c.y - len / 2 - pad, width: 14, height: len + pad * 2 }
     : { x: c.x - len / 2 - pad, y: c.y - 7, width: len + pad * 2, height: 14 };
-  const ball = c.cap ? FADER_BALL[c.cap] || FADER_BALL.white : null;
+  const block = c.face === 'block';
+  const ball = c.cap && !block ? FADER_BALL[c.cap] || FADER_BALL.white : null;
   const capW = ball ? 34 : vert ? 26 : 20;
   const capH = ball ? 34 : vert ? 20 : 26;
   const nTicks = c.ticks == null ? (vert ? 5 : 0) : c.ticks;
@@ -2826,6 +2841,38 @@ export const Fader = memo(function Fader({
               strokeWidth="3"
             />
           )}
+        </g>
+      ) : block ? (
+        <g>
+          <rect {...slot} rx="7" fill="#040405" stroke="#2c2d31" strokeWidth="1.5" />
+          <rect
+            x={cx - capW / 2 + 2}
+            y={cy - capH / 2 + 4}
+            width={capW}
+            height={capH}
+            rx="3"
+            fill="#000"
+            opacity="0.5"
+          />
+          <rect
+            x={cx - capW / 2}
+            y={cy - capH / 2}
+            width={capW}
+            height={capH}
+            rx="3"
+            fill={(FADER_BALL[c.cap || 'white'] || [c.cap])[0]}
+            stroke={(FADER_BALL[c.cap || 'white'] || [c.cap, '#0008'])[1]}
+            strokeWidth="1.5"
+          />
+          <rect
+            x={cx - capW / 2 + 3}
+            y={cy - capH / 2 + 3}
+            width={capW - 6}
+            height={capH * 0.35}
+            rx="2"
+            fill="#fff"
+            opacity="0.25"
+          />
         </g>
       ) : ball ? (
         <g>

@@ -15,7 +15,7 @@ import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import { optionIndex, polar, swingStep, valueAngle, wavePath } from '@/components/app/panel/parts';
 import { focusStore, highlightStore, meterStore } from '@/components/app/synth/stores';
 import { allPartsDef } from '@/tests/fixtures/synths/all-parts';
-import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
+import type { ControlValues, FaderControl, PatchCable } from '@/lib/app/synths/contract';
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -289,6 +289,40 @@ describe('faders', () => {
     onChange.mockClear();
     fireEvent.pointerMove(fader, { clientX: 0, clientY: 0 });
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('a lever with its maximum at the bottom moves down for more, with a block cap in its colour', () => {
+    const onChange = vi.fn();
+    const base = allPartsDef.controls.find((c): c is FaderControl => c.id === 'fader.v')!;
+    const lever: FaderControl = {
+      ...base,
+      id: 'fader.lever',
+      label: 'LEVER',
+      x: 600,
+      maxAt: 'bottom',
+      face: 'block',
+      cap: 'green',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, lever] };
+    const { container } = render(
+      <SynthPanel {...props({ onChange, def, values: { ...def.init, 'fader.lever': 2 } })} />
+    );
+    const fader = screen.getByRole('slider', { name: 'LEVER' });
+    fireEvent.pointerDown(fader, { clientX: 0, clientY: 0, pointerId: 1 });
+    // down by half the travel: 2 + 5
+    fireEvent.pointerMove(fader, { clientX: 0, clientY: 50 });
+    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 7);
+    fireEvent.pointerUp(fader);
+    // the arrow keys follow the cap: up moves it up, which is less
+    fireEvent.keyDown(fader, { key: 'ArrowUp' });
+    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 1.8);
+    // at 2 the cap sits near the top, a fifth of the travel down
+    const cap = [...container.querySelectorAll('rect')].find(
+      (r) => r.getAttribute('fill') === '#2f9a4a'
+    );
+    expect(cap).toBeTruthy();
+    // centre of the cap: top of the travel (500 − 50) plus 20 % of 100
+    expect(Number(cap!.getAttribute('y')) + Number(cap!.getAttribute('height')) / 2).toBe(470);
   });
 
   it('a horizontal fader moves right for more, and keys step it', () => {

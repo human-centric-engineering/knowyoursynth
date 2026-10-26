@@ -356,6 +356,8 @@ export interface ControlOption {
   y?: number;
   /** `select`: text printed above this option's button. */
   text?: string;
+  /** `select`: text printed on this option's cap (the CS-80's TONE SELECTOR); `\n` for a second line. */
+  caption?: string;
   /** `select`: a coloured square cap with a lamp in its top edge. */
   capColor?: string;
   /** `select`: this option's lamp colour, overriding the control's. */
@@ -496,6 +498,10 @@ export type FaderControl = ControlCommon & {
   tickEnds?: boolean;
   /** How far the slot runs past each end of the travel (default 12). */
   pad?: number;
+  /** `'bottom'` (vertical only): the maximum is at the bottom, as on the CS-80's levers, which do most pulled forward. */
+  maxAt?: 'bottom';
+  /** `'block'`: a plain rectangular cap in the `cap` colour, no lamp (the CS-80). */
+  face?: 'block';
 } & ContinuousValue;
 
 /**

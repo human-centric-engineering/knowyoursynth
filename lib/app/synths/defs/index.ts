@@ -40,6 +40,7 @@ import system35 from '@/lib/app/synths/defs/system-35';
 import system55 from '@/lib/app/synths/defs/system-55';
 import donnerB1 from '@/lib/app/synths/defs/donner-b1';
 import take5 from '@/lib/app/synths/defs/take-5';
+import cs80 from '@/lib/app/synths/defs/cs-80';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -73,6 +74,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   system55,
   donnerB1,
   take5,
+  cs80,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

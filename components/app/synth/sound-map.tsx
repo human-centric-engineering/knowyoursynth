@@ -255,7 +255,9 @@ function DoorStep({
       </>
     );
   const now = values[c.id];
-  const up = typeof door.v === 'number' && typeof now === 'number' && door.v > now;
+  const more = typeof door.v === 'number' && typeof now === 'number' && door.v > now;
+  // a lever with its maximum at the bottom (the CS-80's) moves down for more
+  const up = more !== (c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom');
   return (
     <>
       {c.type === 'fader' ? 'move' : 'turn'} {name} {up ? 'up' : 'down'}

@@ -558,7 +558,10 @@ const doorReach = (p: Control) =>
 function doorTag(c: Control, door: { v?: ControlValue }, values: ControlValues) {
   if (c.kind === 'bool') return door.v ? 'Switch on' : 'Switch off';
   if (c.kind === 'enum') return `Set to ${formatValue(c, door.v)}`;
-  return `${c.type === 'fader' ? 'Move' : 'Turn'} ${Number(door.v) > Number(values[c.id]) ? 'up' : 'down'}`;
+  const more = Number(door.v) > Number(values[c.id]);
+  // a lever with its maximum at the bottom (the CS-80's) moves down for more
+  const flip = c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom';
+  return `${c.type === 'fader' ? 'Move' : 'Turn'} ${more !== flip ? 'up' : 'down'}`;
 }
 
 /**
