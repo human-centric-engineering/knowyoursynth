@@ -84,6 +84,9 @@ const SIGNAL_NAMES: Record<string, string | undefined> = {
   hp6: 'the high-pass filter',
   joyX: 'the joystick’s left-right position',
   joyY: 'the joystick’s up-down position',
+  velp: 'the key timing pulse',
+  kbdLo: 'the low end of the keyboard',
+  kbdHi: 'the high end of the keyboard',
 };
 const WAVE_WORD: Record<string, string> = {
   saw: 'sawtooth',

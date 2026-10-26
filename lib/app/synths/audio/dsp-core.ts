@@ -1589,7 +1589,11 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
         else velp -= velp * velpC;
         velpFire = false;
         S[SI.velp] = velp;
-      } else S[SI.velp] = 0;
+      } else {
+        // a key played while the pulse is off does not fire it later
+        velpFire = false;
+        S[SI.velp] = 0;
+      }
       if (ke) {
         const span = Math.max(ke.span, 1);
         const lo = (ke.mid - note) / span,
@@ -2329,8 +2333,10 @@ function createTremolo(sr: number): {
       const sn = Math.sin(TWO_PI * ph);
       const dl = tap(mid + span * dep * sn),
         dr = tap(mid - span * dep * sn);
-      const gl = 1 - dep * 0.5 * (1 + sn),
-        gr = 1 - dep * 0.5 * (1 - sn);
+      // the sides swing a quarter cycle apart, so the mono sum swings too (the GENERAL output carries the effect)
+      const am = 0.6 * dep;
+      const gl = 1 - am * 0.5 * (1 + sn),
+        gr = 1 - am * 0.5 * (1 + Math.cos(TWO_PI * ph));
       const wet = 0.4 * dep;
       L[s] = (L[s] * (1 - wet) + dl * wet) * gl * 0.9;
       R[s] = (R[s] * (1 - wet) + dr * wet) * gr * 0.9;
@@ -2445,6 +2451,12 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const firstStack = (i: number): boolean => i % blockOf() < stackOf();
   /** The settings voice `i` plays: the second layer's for the back half of each note's block. */
   const paramsFor = (i: number): VoiceParams => (layerP && !firstStack(i) ? layerP : P!);
+  /** The meter's bit for voice `i`: a layer's voice lights its note's bit, so a panel's voice lamps count notes. */
+  const meterBit = (i: number): number => {
+    if (!layerP) return i;
+    const st = stackOf();
+    return Math.floor(i / (st * 2)) * st + (i % st);
+  };
   function voice(i: number) {
     while (voices.length <= i) {
       const k = voices.length;
@@ -2710,6 +2722,9 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     const dep = r.depth < 0 ? 0 : r.depth > 1 ? 1 : r.depth;
     const up = 1 / (Math.max(r.env.a, 0.001) * sr);
     const down = 1 - Math.exp(-1 / ((Math.max(r.env.d, 0.001) / 3) * sr));
+    const base = r.hz > 0 ? r.hz : 0;
+    // with the envelope at rest the speed is the set one, worked out once rather than per sample
+    const idleHz = Math.min(base, sr * 0.4);
     for (let s = 0; s < n; s++) {
       if (rmStage === 1) {
         rmEnv += up;
@@ -2724,9 +2739,11 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
           rmStage = 0;
         }
       }
-      const hz = Math.min(r.hz * Math.exp(rmEnv * r.env.amt * Math.LN2), sr * 0.4);
+      const hz = rmStage
+        ? Math.min(base * Math.exp(rmEnv * r.env.amt * Math.LN2), sr * 0.4)
+        : idleHz;
       rmPh += hz / sr;
-      if (rmPh >= 1) rmPh -= Math.floor(rmPh);
+      rmPh -= Math.floor(rmPh);
       const x = buf[s];
       buf[s] = x * (1 - dep) + x * Math.sin(TWO_PI * rmPh) * dep;
     }
@@ -3021,6 +3038,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       out[s] = x - hLp;
     }
     if (P.ringMod) ringModulate(out, n, P.ringMod);
+    else ringFire = false; // a key pressed while it is off does not fire it later
     // the effects sit after the high-pass and before the output level, as on the hardware
     fx.process(out, fxL, fxR, n);
     if (P.chorus) chorus.process(fxL, fxR, n, P.chorus);
@@ -3044,7 +3062,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         over = 0;
       voices.forEach((v, k) => {
         if (!v.idle()) {
-          mask |= 1 << k;
+          mask |= 1 << meterBit(k);
           if (meters[k]) over = Math.max(over, meters[k].overload);
         }
       });

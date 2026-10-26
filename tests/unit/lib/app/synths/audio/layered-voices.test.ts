@@ -51,9 +51,10 @@ describe('layered poly (layer)', () => {
     expect(rms(without.out, 0, 4800)).toBeLessThan(1e-4);
   });
 
-  it('gives each note two voices, so a note lights two voice bits and two notes four', () => {
+  it('lights one voice bit per note, though each note takes two voices', () => {
     const one = render(layered(), { len: 9600 });
-    expect(meters(one.events).some((m) => m.voices === 0b11)).toBe(true);
+    expect(meters(one.events).some((m) => m.voices === 0b1)).toBe(true);
+    expect(meters(one.events).every((m) => (m.voices ?? 0) <= 0b1)).toBe(true);
     const two = render(layered(), {
       len: 9600,
       events: [
@@ -61,7 +62,7 @@ describe('layered poly (layer)', () => {
         [0, { type: 'noteOn', n: 64 }],
       ],
     });
-    expect(meters(two.events).some((m) => m.voices === 0b1111)).toBe(true);
+    expect(meters(two.events).some((m) => m.voices === 0b11)).toBe(true);
   });
 
   it('meters the first setting, not the layer', () => {
@@ -83,9 +84,9 @@ describe('layered poly (layer)', () => {
       ],
     });
     const m = meters(r.events);
-    // never more than the four voices of two notes
-    expect(m.every((x) => (x.voices ?? 0) < 0b10000)).toBe(true);
-    expect(m.some((x) => x.voices === 0b1111)).toBe(true);
+    // never more than the two notes' bits
+    expect(m.every((x) => (x.voices ?? 0) <= 0b11)).toBe(true);
+    expect(m.some((x) => x.voices === 0b11)).toBe(true);
   });
 
   it('moves the voices onto the new setting when the layer is switched on while a voice exists', () => {
@@ -215,6 +216,20 @@ describe('ring modulator on the voice sum (ringMod)', () => {
     expect(Math.abs(ratio(events, 30000, 47000) - before)).toBeGreaterThan(0.05);
   });
 
+  it('does not fire when switched on under a key pressed while it was off', () => {
+    // its sine starts at phase 0 and stands still, so with no fire the ring output is silent
+    const { ringMod: _r, ...off } = ringed(1);
+    const r = render(off, {
+      len: 24000,
+      events: [
+        [0, { type: 'noteOn', n: 60 }],
+        [12000, { type: 'params', p: ringed(1) }],
+      ],
+    });
+    expect(rms(r.out, 2000, 11000)).toBeGreaterThan(0.001);
+    expect(rms(r.out, 14000, 24000)).toBeLessThan(rms(r.out, 2000, 11000) / 50);
+  });
+
   it('leaves the sound alone at depth 0', () => {
     const p = ringed(0);
     const plain = { ...p, ringMod: undefined };
@@ -242,7 +257,16 @@ describe('tremolo / chorus (tremolo)', () => {
     });
     const win = (a: number) => rms(r.out, a, a + 480);
     const levels = Array.from({ length: 20 }, (_, k) => win(4800 + k * 480));
-    expect(Math.max(...levels)).toBeGreaterThan(Math.min(...levels) * 3);
+    expect(Math.max(...levels)).toBeGreaterThan(Math.min(...levels) * 2);
+  });
+
+  it('swings the mono sum too, as the GENERAL output does', () => {
+    const r = render(poly({ on: true, rate: 5, depth: 1 }), {
+      len: 24000,
+      events: [[0, { type: 'noteOn', n: 60 }]],
+    });
+    const levels = Array.from({ length: 20 }, (_, k) => rms(r.out, 4800 + k * 480, 5280 + k * 480));
+    expect(Math.max(...levels)).toBeGreaterThan(Math.min(...levels) * 1.3);
   });
 });
 
