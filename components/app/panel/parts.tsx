@@ -1409,9 +1409,10 @@ export const Select = memo(function Select({
             {o.caption && (
               <PanelText
                 x={ox}
-                y={oy + 4 - ((o.caption.split('\n').length - 1) * 8.5) / 2}
+                // centred on the cap below its lamp, each line `CAPTION_SIZE × 1.08` below the last (PanelText)
+                y={oy + 5 - ((o.caption.split('\n').length - 1) * CAPTION_SIZE * 1.08) / 2}
                 text={o.caption}
-                size={8}
+                size={CAPTION_SIZE}
                 weight={700}
                 fill={ctx.outline ? (!cap && lit ? PAPER : INK) : captionInk(cap)}
                 ctx={ctx}
@@ -1466,6 +1467,9 @@ export const Select = memo(function Select({
 const cleanName = (c: Control) => (c.label || c.id).replace(/\n/g, ' ');
 const CAPTION_DARK = '#1b1b1d',
   CAPTION_LIGHT = '#f1f0e9';
+const CAPTION_SIZE = 8;
+const L_DARK = luminance(CAPTION_DARK) ?? 0,
+  L_LIGHT = luminance(CAPTION_LIGHT) ?? 1;
 /**
  * Ink for a caption printed on a cap: whichever of dark and light contrasts more with it (light on the CS-80's red,
  * dark on its yellow and green). Light on a lamp button, with no cap, and on a colour that cannot be read.
@@ -1473,9 +1477,9 @@ const CAPTION_DARK = '#1b1b1d',
 function captionInk(cap: string | undefined): string {
   const l = cap ? luminance(cap) : null;
   if (l === null) return CAPTION_LIGHT;
-  const dark = luminance(CAPTION_DARK) ?? 0,
-    light = luminance(CAPTION_LIGHT) ?? 1;
-  return (l + 0.05) / (dark + 0.05) >= (light + 0.05) / (l + 0.05) ? CAPTION_DARK : CAPTION_LIGHT;
+  return (l + 0.05) / (L_DARK + 0.05) >= (L_LIGHT + 0.05) / (l + 0.05)
+    ? CAPTION_DARK
+    : CAPTION_LIGHT;
 }
 /** `offValue`: pressing the lit button again sets that value (the Jupiter-8's arpeggio MODE buttons switch it off). */
 const pick = (c: SelectControl, o: ControlOption, value: ControlValue) =>
@@ -2683,7 +2687,18 @@ export const Switch = memo(function Switch({
         height={h + 10}
         fill="transparent"
         tabIndex={0}
-        role="button"
+        // a long slide is a slider of named positions; every other switch is a button that steps on
+        {...(longSlide(c)
+          ? {
+              role: 'slider',
+              'aria-valuemin': 0,
+              'aria-valuemax': c.options.length - 1,
+              'aria-valuenow': optionIndex(c, value),
+              'aria-valuetext': c.options[optionIndex(c, value)]?.label,
+              'aria-orientation':
+                c.orient === 'h' ? ('horizontal' as const) : ('vertical' as const),
+            }
+          : { role: 'button' })}
         aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         className="kys-hit"
         style={{ cursor: 'pointer' }}
@@ -2811,9 +2826,7 @@ export const Fader = memo(function Fader({
     : { x: c.x - len / 2 - pad, y: c.y - 7, width: len + pad * 2, height: 14 };
   // `face: 'block'`: a plain cap in `cap`, a named colour or any CSS colour, as [face, rim]
   const block: [string, string] | null =
-    c.face === 'block'
-      ? FADER_BALL[c.cap || 'white'] || [c.cap || FADER_BALL.white[0], '#0008']
-      : null;
+    c.face !== 'block' ? null : !c.cap ? FADER_BALL.white : FADER_BALL[c.cap] || [c.cap, '#0008'];
   const ball = c.cap && !block ? FADER_BALL[c.cap] || FADER_BALL.white : null;
   const capW = ball ? 34 : vert ? 26 : 20;
   const capH = ball ? 34 : vert ? 20 : 26;

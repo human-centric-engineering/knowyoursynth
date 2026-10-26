@@ -242,6 +242,9 @@ describe('CS-80 VCA, MIX and SUSTAIN', () => {
     expect(p.env2.s).toBe(0.5);
     expect(p.env2.r).toBeCloseTo(0.01, 10);
     expect(run({ 'ch1.r': 0, 'sustain.time': 10 }).env2.r).toBeCloseTo(10, 10);
+    // the filters die away with it, so a sustained note keeps its tone
+    expect(run({ 'ch1.fr': 0, 'sustain.time': 10 }).env1.r).toBeCloseTo(10, 10);
+    expect(run({ 'ch1.fr': 0 }).env1.r).toBeCloseTo(0.01, 10);
     expect(run({ 'ch1.r': 10, 'sustain.time': 2 }).env2.r).toBeCloseTo(10, 10);
   });
 });

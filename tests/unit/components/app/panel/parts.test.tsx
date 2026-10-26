@@ -378,7 +378,10 @@ describe('faders', () => {
     render(
       <SynthPanel {...props({ onChange, def, values: { ...def.init, 'slide.long': 'b' } })} />
     );
-    const hit = screen.getByRole('button', { name: 'LONG' });
+    const hit = screen.getByRole('slider', { name: 'LONG' });
+    // it says which of its six positions it is on
+    expect(hit.getAttribute('aria-valuetext')).toBe('B');
+    expect(hit.getAttribute('aria-valuenow')).toBe('1');
     // a panel drawn at its own scale: screen = view
     const svg = hit.closest('svg');
     if (!svg) throw new Error('the slide is drawn in an svg');

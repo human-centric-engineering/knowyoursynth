@@ -967,7 +967,6 @@ line(TONE_X0 + 8.4 * TONE_DX, STRIP_LABEL, TONE_X0 + 13 * TONE_DX + 18, STRIP_LA
     y,
     w: 32,
     h: 40,
-    lamp: 'amber',
     kind: 'enum',
     options: [
       ...ROW_PRESETS[c - 1].map(([v, cap, color], i) => ({
@@ -1136,15 +1135,15 @@ text(78, 806, 'FOOT PEDAL\nSELECTOR', 8);
 controls.push({
   id: 'pedal.select',
   type: 'select',
-  x: 78,
+  x: 66,
   y: 860,
   w: 34,
   h: 22,
   capColor: CAP.grey,
   kind: 'enum',
   options: [
-    { v: 'exp', label: 'EXP', x: 78, y: 852, capColor: CAP.grey, caption: 'EXP' },
-    { v: 'wah', label: 'EXP/WAH', x: 78, y: 880, capColor: CAP.grey, caption: 'EXP/\nWAH' },
+    { v: 'exp', label: 'EXP', x: 66, y: 852, capColor: CAP.grey },
+    { v: 'wah', label: 'EXP/WAH', x: 66, y: 880, capColor: CAP.grey },
   ],
   def: 'exp',
   module: 'util',
@@ -1153,6 +1152,8 @@ controls.push({
   labelPos: 'none',
   help: 'What the foot pedal does: EXP makes it a volume pedal, EXP/WAH a volume pedal that also sweeps both filters with resonance (wah-wah). This app has no foot pedal, so it changes nothing here.',
 });
+text(90, 852, 'EXP', 7.5, { anchor: 'start' });
+text(90, 880, 'EXP/WAH', 7.5, { anchor: 'start' });
 text(170, 806, 'SUSTAIN', 9);
 lever('sustain.time', 170, PY, 'yellow', {
   min: 0,
@@ -1561,7 +1562,13 @@ function channel(v: ControlValues, c: number, gain: number): LayerParams {
       envSrc: 'env1',
       kbd: 1,
     },
-    env1: { a: attTime(n('fa')), d: drTime(n('fd')), s: sus, r: drTime(n('fr')) },
+    // SUSTAIN lets the whole note die away slowly, so the filters' release stretches with the VCA's
+    env1: {
+      a: attTime(n('fa')),
+      d: drTime(n('fd')),
+      s: sus,
+      r: Math.max(drTime(n('fr')), sustain),
+    },
     env2: {
       a: attTime(n('a')),
       d: drTime(n('d')),
