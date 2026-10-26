@@ -73,8 +73,9 @@ export function renderGesture(p: EngineParams, notes: number[], short = false): 
     const len = Math.round(seconds * PROBE_SR);
     // A synth with an effects engine is stereo, and some of its controls (pan, width, ping-pong) change only the
     // difference between the sides. Its gesture is the left channel followed by the right, so those count too.
-    // A two-module synth (`dual`) is stereo too: each module has its own pan, and so is one with a stereo chorus.
-    const stereo = !!(p.fx || p.dual || p.chorus || p.outAmps);
+    // A two-module synth (`dual`) is stereo too: each module has its own pan, and so is one with a stereo chorus or
+    // the CS-80's tremolo.
+    const stereo = !!(p.fx || p.dual || p.chorus || p.outAmps || p.tremolo);
     const buf = new Float32Array(stereo ? len * 2 : len);
     const syn = createSynth(PROBE_SR, () => {});
     syn.handle({ type: 'params', p });

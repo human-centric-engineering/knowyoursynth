@@ -42,6 +42,14 @@ describe('renderGesture', () => {
       NOTES
     );
     expect(stereo.length).toBe(2 * Math.round(0.84 * PROBE_SR));
+    const tremolo = renderGesture(
+      monoParams({
+        poly: { voices: 2, stack: 1, mono: false },
+        tremolo: { on: true, rate: 6, depth: 1 },
+      }),
+      NOTES
+    );
+    expect(tremolo.length).toBe(2 * Math.round(0.84 * PROBE_SR));
   });
 
   it('puts Math.random back even when the render throws', () => {
