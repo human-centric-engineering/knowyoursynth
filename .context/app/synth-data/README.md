@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (28)
+## In the app (29)
 
 | Folder                                     | Synth                                                                                                                                                            | Spec schema |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -45,6 +45,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`poly-d`](./poly-d/README.md)             | Behringer Poly D                                                                                                                                                 | 0.7.0       |
 | [`pro-1`](./pro-1/README.md)               | Behringer PRO-1                                                                                                                                                  | 0.5.0       |
 | [`pro-800`](./pro-800/README.md)           | Behringer PRO-800                                                                                                                                                | 0.7.0       |
+| [`super-gemini`](./super-gemini/README.md) | UDO Audio Super Gemini                                                                                                                                           | 0.13.0      |
 | [`system-15`](./system-15/README.md)       | Behringer System 15                                                                                                                                              | 0.10.0      |
 | [`system-35`](./system-35/README.md)       | Behringer System 35                                                                                                                                              | 0.10.0      |
 | [`system-55`](./system-55/README.md)       | Behringer System 55                                                                                                                                              | 0.10.0      |
@@ -54,7 +55,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (25)
+## Not in the app yet (24)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -81,7 +82,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`sequential-circuits-prophet-5-rev3`](./sequential-circuits-prophet-5-rev3/README.md) | Sequential Circuits Prophet-5 (Model 1000), Revision 3.3                                                   | 0.12.0      |
 | [`sequential-fourm`](./sequential-fourm/README.md)                                     | Sequential Fourm                                                                                           | 0.12.0      |
 | [`udo-audio-super-6`](./udo-audio-super-6/README.md)                                   | UDO Audio Super 6                                                                                          | 0.12.0      |
-| [`udo-audio-super-gemini`](./udo-audio-super-gemini/README.md)                         | UDO Audio Super Gemini                                                                                     | 0.13.0      |
 | [`yamaha-dx7`](./yamaha-dx7/README.md)                                                 | Yamaha DX7 Digital Programmable Algorithm Synthesizer                                                      | 0.11.0      |
 
 ## Not synths

@@ -57,6 +57,7 @@ const EXPORTED: {
   { id: 'donner-b1', sounds: 10, timeline: 4, relatives: 3, unusual: 9, limits: 3 },
   { id: 'take-5', sounds: 10, timeline: 3, relatives: 3, unusual: 9, limits: 3 },
   { id: 'cs-80', sounds: 13, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
+  { id: 'super-gemini', sounds: 10, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'jupiter-4', sounds: 19, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 18, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 20, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -82,7 +83,7 @@ describe('the exported content', () => {
     );
   });
 
-  it('lists each synth at its place in the prototype’s picker, with the Donner B1 after the TD-3, the Take 5 after the PRO-800 and the CS-80 after the Jupiter-8', () => {
+  it('lists each synth at its place in the prototype’s picker, with the Donner B1 after the TD-3, the Take 5 after the PRO-800, the CS-80 after the Jupiter-8 and the Super Gemini after the CS-80', () => {
     expect(data.listing.synths).toEqual([
       { id: 'model-d', order: 0, listed: true },
       { id: 'neutron', order: 1, listed: true },
@@ -107,11 +108,12 @@ describe('the exported content', () => {
       { id: 'jupiter-6', order: 20, listed: true },
       { id: 'jupiter-8', order: 21, listed: true },
       { id: 'cs-80', order: 22, listed: true },
-      { id: 'system-15', order: 23, listed: true },
-      { id: 'system-35', order: 24, listed: true },
-      { id: 'system-55', order: 25, listed: true },
-      { id: 'model-15', order: 26, listed: true },
-      { id: 'grandmother', order: 27, listed: true },
+      { id: 'super-gemini', order: 23, listed: true },
+      { id: 'system-15', order: 24, listed: true },
+      { id: 'system-35', order: 25, listed: true },
+      { id: 'system-55', order: 26, listed: true },
+      { id: 'model-15', order: 27, listed: true },
+      { id: 'grandmother', order: 28, listed: true },
     ]);
   });
 

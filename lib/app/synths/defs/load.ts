@@ -51,6 +51,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'donner-b1': () => import('@/lib/app/synths/defs/donner-b1'),
   'take-5': () => import('@/lib/app/synths/defs/take-5'),
   'cs-80': () => import('@/lib/app/synths/defs/cs-80'),
+  'super-gemini': () => import('@/lib/app/synths/defs/super-gemini'),
 };
 
 /** Every id a loader exists for. */
