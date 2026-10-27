@@ -1,0 +1,370 @@
+{
+  "synth": "behringer-syncussion",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "electro-kick",
+      "name": "Electro Kick",
+      "ref": "In the style of the early-1980s electro kick",
+      "artist": "Electro drum synths",
+      "tags": ["perc", "electro", "80s"],
+      "level": 1,
+      "blurb": "A deep kick with a fast pitch drop: a thump, then a low boom.",
+      "how": "A kick is a low drum whose pitch drops very quickly as it is struck. One oscillator tuned near the bottom of TUNE, a fast, wide sweep and a dull filter give the thump; DECAY sets how long the boom hangs on.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.25],
+          [1, 48, 0.25],
+          [2, 48, 0.25],
+          [2.75, 48, 0.25],
+          [3, 48, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Tune it right down",
+          "module": "osc",
+          "why": "- CH 1 TUNE 0.5 (51 Hz): the bottom of the kick, the boom you feel.\n- Listen for: a soft low knock below middle C.",
+          "set": {
+            "ch1.tune": 0.5
+          }
+        },
+        {
+          "title": "The thump: a fast, wide drop",
+          "module": "mod",
+          "why": "SWEEP is DOWN. A very fast sweep across more than an octave is heard as a punch rather than a fall.\n- CH 1 SWEEP SPEED 7 (85 ms).\n- CH 1 SWEEP RANGE 4 (+14.4 st).\n- Listen for: a click-thump at the front of each hit. Slow SWEEP SPEED down and it turns into a tom.",
+          "set": {
+            "ch1.sweepSpeed": 7,
+            "ch1.sweepRange": 4
+          }
+        },
+        {
+          "title": "A dark boom",
+          "module": "env",
+          "why": "- CH 1 DECAY 6 (220 ms): long enough to boom, short enough to stay tight.\n- CH 1 WIDTH 1 (0.6 oct): almost no filter sweep, so the kick stays round.\n- Listen for: a clean, deep kick.",
+          "set": {
+            "ch1.decay": 6,
+            "ch1.width": 1
+          }
+        }
+      ],
+      "context": {
+        "ch1.sweepSpeed": "In this sound: the punch of the kick.",
+        "ch1.decay": "In this sound: how long the boom hangs on."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.decay",
+          "try": "Move between 4 and 8",
+          "hear": "From a short, tight kick to a long, booming one."
+        },
+        {
+          "id": "ch1.tune",
+          "try": "Move between 0 and 1.5",
+          "hear": "Deeper or punchier; on small speakers the higher kick carries better."
+        }
+      ]
+    },
+    {
+      "id": "noise-hats",
+      "name": "Noise Hats",
+      "ref": "Hi-hats from filtered noise",
+      "artist": "Electro drum synths",
+      "tags": ["perc", "electro", "80s"],
+      "level": 1,
+      "blurb": "Ticking hi-hats from a short burst of bright noise, louder on the accented notes.",
+      "how": "OSC MODE F is noise alone, and TUNE moves the filter, so a high TUNE leaves only the hiss at the top. A very short decay turns it into a tick; how hard each key is played sets how loud and bright it is.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0.0, 72, 0.12, 0.45],
+          [0.25, 72, 0.12, 0.45],
+          [0.5, 72, 0.12, 1],
+          [0.75, 72, 0.12, 0.45],
+          [1.0, 72, 0.12, 0.45],
+          [1.25, 72, 0.12, 0.45],
+          [1.5, 72, 0.12, 1],
+          [1.75, 72, 0.12, 0.45],
+          [2.0, 72, 0.12, 0.45],
+          [2.25, 72, 0.12, 0.45],
+          [2.5, 72, 0.12, 1],
+          [2.75, 72, 0.12, 0.45],
+          [3.0, 72, 0.12, 0.45],
+          [3.25, 72, 0.12, 0.45],
+          [3.5, 72, 0.12, 1],
+          [3.75, 72, 0.12, 0.45]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Noise only",
+          "module": "osc",
+          "why": "- CH 2 OSC MODE F: noise, no oscillators.\n- CH 2 TUNE 9.5 (2.1 kHz): the filter sits an octave above that, so only the top of the hiss is left.\n- CH 2 SWEEP OFF: noise has no pitch to sweep.\n- Listen for: a thin hiss from middle C up.",
+          "set": {
+            "ch2.mode": "F",
+            "ch2.tune": 9.5,
+            "ch2.sweep": "off"
+          }
+        },
+        {
+          "title": "Make it a tick",
+          "module": "env",
+          "why": "- CH 2 DECAY 2.5 (27 ms): a closed hat, gone almost at once.\n- CH 2 WIDTH 7 (4.2 oct): bright on the strike.\n- Listen for: the accented off-beats standing out from the quieter sixteenths. Raise DECAY to 5 for an open hat.",
+          "set": {
+            "ch2.decay": 2.5,
+            "ch2.width": 7
+          }
+        }
+      ],
+      "context": {
+        "ch2.decay": "In this sound: closed (short) or open (long) hats."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.decay",
+          "try": "Move between 1 and 6",
+          "hear": "From a tight tick to an open, washy hat."
+        },
+        {
+          "id": "ch2.tune",
+          "try": "Move between 6 and 10",
+          "hear": "From a dull shaker to a sizzling hat."
+        }
+      ]
+    },
+    {
+      "id": "vibraphone",
+      "name": "Synth Vibes",
+      "ref": "The Syncussion’s vibraphone-like mode",
+      "artist": "Behringer SYNCUSSION SY-1",
+      "tags": ["keys", "jazz", "experimental"],
+      "level": 2,
+      "blurb": "A soft, ringing mallet tone with a slow vibrato, tuned to the key with FINE.",
+      "how": "Mode C mixes the two oscillators, which sit a little apart (440 and 450 Hz on the original), so they beat slowly against each other like a vibraphone’s tremolo. A long decay with the sweep off lets it ring, and a gentle triangle LFO adds vibrato.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 1, 0.8],
+          [1.5, 72, 1, 0.8],
+          [2, 72, 1, 0.8],
+          [3, 72, 1, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators, a little apart",
+          "module": "osc",
+          "why": "- CH 2 OSC MODE C: both oscillators mixed, oscillator 1 a little quieter.\n- CH 2 TUNE 6.5 (615 Hz) and FINE 7 (+0.4 st): FINE trims the pitch to the key of the music once TUNE is close.\n- CH 2 SWEEP OFF: a mallet does not bend.\n- Listen for: a pure tone with a slow shimmer from the two oscillators beating.",
+          "set": {
+            "ch2.mode": "C",
+            "ch2.tune": 6.5,
+            "ch2.fine": 7,
+            "ch2.sweep": "off"
+          }
+        },
+        {
+          "title": "Ring like a bar",
+          "module": "env",
+          "why": "- CH 2 DECAY 9 (1.4 s): the long ring of a metal bar.\n- CH 2 WIDTH 3 (1.8 oct): a soft mallet, not a hard one.\n- Listen for: notes that overlap and fade slowly.",
+          "set": {
+            "ch2.decay": 9,
+            "ch2.width": 3
+          }
+        },
+        {
+          "title": "A slow vibrato",
+          "module": "lfo",
+          "why": "- CH 2 LFO WAVE triangle: a smooth swing.\n- CH 2 LFO SPEED 5 (4.47 Hz), DEPTH 2.5 (+0.8 st): a gentle wobble, like the vibraphone’s motor.\n- Listen for: the pitch swaying as each note rings. Switch the LFO OFF to hear how still it was.",
+          "set": {
+            "ch2.lfoWave": "triangle",
+            "ch2.lfoSpeed": 5,
+            "ch2.lfoDepth": 2.5
+          }
+        }
+      ],
+      "context": {
+        "ch2.fine": "In this sound: trims the tuning to the key.",
+        "ch2.lfoDepth": "In this sound: the depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.lfoSpeed",
+          "try": "Move between 3 and 7",
+          "hear": "From a lazy sway to a fast, nervous shimmer."
+        },
+        {
+          "id": "ch2.mode",
+          "try": "Try B",
+          "hear": "The same notes turn to struck metal."
+        }
+      ]
+    },
+    {
+      "id": "thin-metal",
+      "name": "Thin Metal",
+      "ref": "The Syncussion’s struck-thin-metal mode",
+      "artist": "Behringer SYNCUSSION SY-1",
+      "tags": ["perc", "industrial", "experimental"],
+      "level": 2,
+      "blurb": "A clanging, hissing hit like a struck sheet of metal, for industrial and electro beats.",
+      "how": "Mode E is the FM of mode B with noise added: the inharmonic clang and a hiss on top. A small, fast sweep gives the strike an edge, and a bright WIDTH lets the hiss through before the filter closes.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0.5, 72, 0.25],
+          [1.75, 72, 0.25],
+          [2.5, 72, 0.25],
+          [3.5, 72, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "FM and noise",
+          "module": "osc",
+          "why": "- CH 2 OSC MODE E: oscillator 1 bends oscillator 2 for the clang, and noise is mixed in.\n- CH 2 TUNE 7 (757 Hz).\n- Listen for: a harsh, hissing clang from middle C up.",
+          "set": {
+            "ch2.mode": "E",
+            "ch2.tune": 7
+          }
+        },
+        {
+          "title": "A sharp edge",
+          "module": "mod",
+          "why": "- CH 2 SWEEP SPEED 8 (53 ms), RANGE 1 (+3.6 st): a tiny, fast drop at the strike.\n- Listen for: a crisper front to each hit.",
+          "set": {
+            "ch2.sweepSpeed": 8,
+            "ch2.sweepRange": 1
+          }
+        },
+        {
+          "title": "Bright, then gone",
+          "module": "env",
+          "why": "- CH 2 DECAY 6 (220 ms).\n- CH 2 WIDTH 6 (3.6 oct): the strike opens the filter wide, so the hiss sizzles before it darkens.\n- Listen for: a metallic smack. Lower WIDTH for a duller, more distant one.",
+          "set": {
+            "ch2.decay": 6,
+            "ch2.width": 6
+          }
+        }
+      ],
+      "context": {
+        "ch2.mode": "In this sound: E, FM plus noise."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.tune",
+          "try": "Move between 5 and 9",
+          "hear": "From a dustbin lid to a small, ringing plate."
+        }
+      ]
+    },
+    {
+      "id": "square-trill",
+      "name": "Square Trill",
+      "ref": "A drum that trills between two notes",
+      "artist": "Behringer SYNCUSSION SY-1",
+      "tags": ["fx", "experimental", "70s"],
+      "level": 2,
+      "blurb": "A ringing tone that flips quickly between two pitches a minor third apart.",
+      "how": "The square LFO jumps the pitch between two levels instead of swinging smoothly. At LFO DEPTH 5 the jump is three semitones up and down from TUNE, so the drum trills like a bird or an old telephone.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 48, 1.5],
+          [2, 48, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A held tone",
+          "module": "osc",
+          "why": "- CH 1 TUNE 5 (330 Hz).\n- CH 1 SWEEP OFF.\n- CH 1 DECAY 8.5 (1.0 s): the trill needs time to be heard.\n- Listen for: a plain, ringing tone below middle C.",
+          "set": {
+            "ch1.tune": 5,
+            "ch1.sweep": "off",
+            "ch1.decay": 8.5
+          }
+        },
+        {
+          "title": "The square LFO",
+          "module": "lfo",
+          "why": "- CH 1 LFO WAVE square: the pitch jumps instead of gliding.\n- CH 1 LFO SPEED 6 (7.25 Hz): about seven flips a second.\n- CH 1 LFO DEPTH 5 (+3 st): three semitones either way.\n- Listen for: the trill. Switch to the triangle and it becomes a siren.",
+          "set": {
+            "ch1.lfoWave": "square",
+            "ch1.lfoSpeed": 6,
+            "ch1.lfoDepth": 5
+          }
+        }
+      ],
+      "context": {
+        "ch1.lfoWave": "In this sound: square, which jumps between two pitches."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.lfoSpeed",
+          "try": "Move between 4 and 9",
+          "hear": "From a slow two-note call to a buzzing warble."
+        }
+      ]
+    },
+    {
+      "id": "power-up",
+      "name": "Power-Up Blip",
+      "ref": "A rising video-game blip",
+      "artist": "Behringer SYNCUSSION SY-1",
+      "tags": ["fx", "chiptune", "80s"],
+      "level": 1,
+      "blurb": "A short blip that leaps up in pitch, the sound of collecting something in an arcade game.",
+      "how": "SWEEP UP starts each hit at TUNE and rises by RANGE. Fast and wide, it reads as a cheerful blip rather than a drum.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.2],
+          [0.5, 72, 0.2],
+          [1, 72, 0.2],
+          [2, 72, 0.2],
+          [2.25, 72, 0.2],
+          [2.5, 72, 0.2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sweep up",
+          "module": "mod",
+          "why": "- CH 2 SWEEP UP: the pitch rises from where it is struck.\n- CH 2 SWEEP SPEED 6 (140 ms), RANGE 7 (+25.2 st): two octaves up, quickly.\n- Listen for: little upward chirps from middle C up.",
+          "set": {
+            "ch2.sweep": "up",
+            "ch2.sweepSpeed": 6,
+            "ch2.sweepRange": 7
+          }
+        },
+        {
+          "title": "Pitch and length",
+          "module": "osc",
+          "why": "- CH 2 TUNE 6 (500 Hz): where the blip starts.\n- CH 2 DECAY 5 (120 ms) and WIDTH 5 (3.0 oct): short and bright.\n- Listen for: a crisp, chirpy blip.",
+          "set": {
+            "ch2.tune": 6,
+            "ch2.decay": 5,
+            "ch2.width": 5
+          }
+        }
+      ],
+      "context": {
+        "ch2.sweep": "In this sound: UP, a rising sweep."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.sweepRange",
+          "try": "Move between 3 and 10",
+          "hear": "From a small chirp to a leap of three octaves."
+        }
+      ]
+    }
+  ]
+}

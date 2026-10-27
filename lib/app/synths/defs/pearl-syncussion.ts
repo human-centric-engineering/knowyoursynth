@@ -36,7 +36,7 @@ const p: PanelParts = { controls: [], decor: [], areas: [] };
 p.decor.push(
   {
     t: 'text',
-    x: 790,
+    x: 730,
     y: 62,
     text: 'SYNCUSSION',
     size: 54,
@@ -47,7 +47,7 @@ p.decor.push(
   },
   {
     t: 'text',
-    x: 912,
+    x: 918,
     y: 62,
     text: 'SY-1',
     size: 24,

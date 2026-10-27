@@ -236,26 +236,29 @@ export function drawChannel(
     sw: 2,
   });
   text(145, 132, pearl ? `— CH. ${ch} —` : `— CH ${ch} —`, 17);
-  for (const [x0, x1] of [
-    [67, 93],
-    [197, 233],
-    [290, 302],
-    [373, 380],
-    [452, 500],
-    [562, 664],
-    [703, 790],
-    [838, 866],
-    [944, 962],
-  ])
-    p.decor.push({ t: 'rect', x: X(x0), y: Y(143), w: x1 - x0, h: 22, r: 0, fill: ink });
-  text(145, 161, pearl ? 'OSC. MODE' : 'OSC MODE', 19);
-  text(261, 161, 'TUNE', 19);
-  text(337, 161, 'DECAY', 19);
-  text(414, 161, 'WIDTH', 19);
-  text(528, 161, 'SWEEP', 19);
-  text(683, 161, pearl ? 'L.F.O.' : 'LFO', 19);
-  text(813, 161, 'S/H', 19);
-  text(905, 161, 'OUTPUT', 19);
+  // the solid strips fill the gaps between the legends, which sit at their columns
+  const legends: [number, string][] = [
+    [145, pearl ? 'OSC. MODE' : 'OSC MODE'],
+    [261, 'TUNE'],
+    [337, 'DECAY'],
+    [414, 'WIDTH'],
+    [528, 'SWEEP'],
+    [683, pearl ? 'L.F.O.' : 'LFO'],
+    [813, 'S/H'],
+    [905, 'OUTPUT'],
+  ];
+  const half = (t: string): number => t.length * 6.2 + 8;
+  const strip = (x0: number, x1: number): void => {
+    if (x1 - x0 > 4)
+      p.decor.push({ t: 'rect', x: X(x0), y: Y(143), w: x1 - x0, h: 22, r: 0, fill: ink });
+  };
+  let from = 67;
+  for (const [x, t] of legends) {
+    strip(from, x - half(t));
+    from = x + half(t);
+  }
+  strip(from, 962);
+  for (const [x, t] of legends) text(x, 161, t, 19);
   text(490, 198, 'SPEED', 14);
   text(566, 198, 'RANGE', 14);
   text(642, 198, 'SPEED', 14);

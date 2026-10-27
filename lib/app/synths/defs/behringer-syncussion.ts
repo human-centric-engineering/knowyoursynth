@@ -1,5 +1,5 @@
 /**
- * Behringer SYNCUSSION SY-1 (2023): the definition (D1). Positions are pixels on the panel drawing from the cover of
+ * Behringer SYNCUSSION SY-1 (2024): the definition (D1). Positions are pixels on the panel drawing from the cover of
  * the Quick Start Guide (`.context/app/synth-data/behringer-syncussion/raw/behringer-syncussion-panel.png`, 1950×620,
  * cut from page 1 rendered at 3×; local only), used directly as view units. The owner's spec is
  * `.context/app/synth-data/behringer-syncussion/behringer-syncussion.synth.json`.
@@ -229,7 +229,7 @@ const behringerSyncussion: SynthDef & { version: number } = {
   version: 1,
   name: 'SYNCUSSION SY-1',
   maker: 'Behringer',
-  year: 2023,
+  year: 2024,
   heritage: 'Based on the 1979 Pearl Syncussion SY-1',
   summary:
     'Two identical channels, each two oscillators (alone, mixed, frequency-modulated or with noise) → a pitch sweep, an LFO and a sample and hold on pitch → a low-pass filter swept by the decay → a VCA, each with its own output, struck from pads, triggers or MIDI.',

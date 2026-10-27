@@ -52,6 +52,7 @@ const PANEL_RECREATIONS: Record<string, { original: string; panel: string }> = {
   'behringer-system-15': { original: 'moog-modular', panel: 'system-15' },
   'behringer-system-35': { original: 'moog-modular', panel: 'system-35' },
   'behringer-system-55': { original: 'moog-modular', panel: 'system-55' },
+  'behringer-syncussion-sy-1': { original: 'pearl-syncussion-sy-1', panel: 'behringer-syncussion' },
 };
 
 describe('the reference list', () => {
