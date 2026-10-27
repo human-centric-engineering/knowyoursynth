@@ -22,6 +22,7 @@ const KNOB_STYLES: KnobStyle[] = [
   'wasp',
   'vcs3',
   'vcs3-dial',
+  'e7',
 ];
 
 const knobs: Control[] = KNOB_STYLES.map((style, i) => ({

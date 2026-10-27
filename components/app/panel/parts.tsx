@@ -1741,6 +1741,7 @@ const KNOB_GEOM: Record<KnobStyle, KnobGeom> = {
   wasp: { body: 1.02, tick: 1.36, num: 1.66 },
   vcs3: { body: 1.06, tick: 1.3, num: 1.62 },
   'vcs3-dial': { body: 1.3, tick: 1.4, num: 1.7 },
+  e7: { body: 1.08, tick: 1.34, num: 1.68 },
 };
 
 function KnobScale({ c, ctx, g }: { c: KnobControl; ctx: PanelCtx; g: KnobGeom }) {
@@ -2038,6 +2039,35 @@ function KnobBody({ c, angle, ctx }: { c: KnobControl; angle: number; ctx: Panel
         <circle r={r * 0.64} fill="#0d0d0e" />
         <circle r={r * 0.56} fill={cap} stroke="#0008" strokeWidth="1" />
         <circle r={r * 0.56} fill="url(#kysSheen)" opacity="0.55" />
+      </g>
+    );
+  }
+  if (st === 'e7') {
+    // GS Music e7: a white knob with a knurled skirt and a smooth domed cap, and a black line on the skirt for the pointer.
+    return (
+      <g transform={`translate(${c.x} ${c.y})`}>
+        <circle r={r * 1.08} fill="#000" opacity="0.35" transform="translate(3 5)" />
+        <circle r={r * 1.04} fill="#e6e6e1" stroke="#9c9c97" strokeWidth="1.2" />
+        <circle
+          r={r * 0.98}
+          fill="none"
+          stroke="#c9c9c3"
+          strokeWidth={r * 0.12}
+          strokeDasharray={`${r * 0.09} ${r * 0.1}`}
+        />
+        <g transform={`rotate(${angle})`}>
+          <line
+            x1="0"
+            y1={-r * 0.7}
+            x2="0"
+            y2={-r * 1.02}
+            stroke="#1b1b1b"
+            strokeWidth={r * 0.09}
+            strokeLinecap="round"
+          />
+        </g>
+        <circle r={r * 0.66} fill="#f4f4f1" stroke="#b5b5b0" strokeWidth="1" />
+        <circle r={r * 0.66} fill="url(#kysSheen)" opacity="0.45" />
       </g>
     );
   }

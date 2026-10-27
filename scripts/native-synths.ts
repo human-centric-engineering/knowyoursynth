@@ -16,6 +16,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'super-gemini',
   'pearl-syncussion',
   'behringer-syncussion',
+  'e7',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);
