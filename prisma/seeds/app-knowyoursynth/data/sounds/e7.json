@@ -1,0 +1,889 @@
+{
+  "synth": "e7",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "e7-poly-brass",
+      "name": "Analogue Brass",
+      "ref": "In the style of early-1980s analogue polysynth brass",
+      "artist": "Various",
+      "tags": ["brass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "Bright, swelling brass stabs from two detuned sawtooths.",
+      "how": "Two sawtooths a few cents apart beat against each other for width. EG 1 opens the filter with a short swell on every chord, which is what makes a synth sound brassy, and the Basic chorus spreads it out.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 57, 1.5, 0.8],
+          [0, 60, 1.5, 0.8],
+          [0, 64, 1.5, 0.8],
+          [0, 69, 1.5, 0.8],
+          [2, 55, 0.5, 0.8],
+          [2, 59, 0.5, 0.8],
+          [2, 62, 0.5, 0.8],
+          [2, 67, 0.5, 0.8],
+          [3, 57, 1, 0.8],
+          [3, 60, 1, 0.8],
+          [3, 64, 1, 0.8],
+          [3, 69, 1, 0.8],
+          [4, 53, 1.5, 0.8],
+          [4, 57, 1.5, 0.8],
+          [4, 60, 1.5, 0.8],
+          [4, 65, 1.5, 0.8],
+          [6, 55, 1.5, 0.8],
+          [6, 59, 1.5, 0.8],
+          [6, 62, 1.5, 0.8],
+          [6, 67, 1.5, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, a little apart",
+          "module": "osc",
+          "why": "VCO 2 joins VCO 1, tuned a few cents sharp.\n- MIXER OSC2 70 %: VCO 2 as loud as VCO 1.\n- VCO 2 TUNE +15 cents: just off VCO 1, so the two beat slowly.\n- Listen for: one sawtooth thickening into a moving, chorused pair.",
+          "set": {
+            "mix.osc2": 7,
+            "osc2.tune": 1.5
+          }
+        },
+        {
+          "title": "The brass swell",
+          "module": "filter",
+          "why": "Close the filter and let EG 1 open it on every chord.\n- CUTOFF 500 Hz: dark when no envelope is moving it.\n- FILTER EG1 MOD 50 %: EG 1 sweeps it open several octaves.\n- EG 1 ATTACK 120 ms: the sweep takes a moment: the brass \"blat\".\n- EG 1 SUSTAIN 40 %: it settles part-way down while the chord is held.\n- Listen for: each chord swelling bright, then mellowing.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.eg1": 5,
+            "env1.attack": 4,
+            "env1.sustain": 4
+          }
+        },
+        {
+          "title": "Shape the volume",
+          "module": "env",
+          "why": "EG 2 gives the chords a soft start and a short tail.\n- EG 2 ATTACK 48 ms: a quick fade in, like a breath.\n- EG 2 RELEASE 190 ms: the chords ring on briefly after the keys come up.\n- Listen for: stabs that breathe rather than click.",
+          "set": {
+            "env2.attack": 3,
+            "env2.release": 4.5
+          }
+        },
+        {
+          "title": "Widen it",
+          "module": "fx",
+          "why": "The Basic chorus adds a sense of space.\n- CHORUS MIX 40 %: enough chorus to spread the brass.\n- Listen for: the chords opening out across the speakers.",
+          "set": {
+            "chorus.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "osc2.tune": "How far VCO 2 is detuned from VCO 1: how fast the two beat.",
+        "vcf.eg1": "How far each chord swells open.",
+        "env1.attack": "How slowly the swell rises."
+      },
+      "tweaks": [
+        {
+          "id": "env1.attack",
+          "try": "Turn down to 0",
+          "hear": "A hard, instant bite instead of a swell."
+        },
+        {
+          "id": "vcf.eg1",
+          "try": "Raise to 8",
+          "hear": "A brighter, brassier blare."
+        },
+        {
+          "id": "osc2.tune",
+          "try": "Turn to 0",
+          "hear": "The beating stops: thinner and more static."
+        }
+      ]
+    },
+    {
+      "id": "e7-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of 1970s string-machine pads",
+      "artist": "Various",
+      "tags": ["strings", "70s"],
+      "level": 2,
+      "blurb": "A lush string section from two pulse waves whose width sweeps slowly.",
+      "how": "With the main wave off, each VCO plays only its pulse. LFO 1 sweeps the pulse width up and down, which makes one oscillator sound like several drifting against each other. A slow attack and release and the Ensemble chorus finish the string sound.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 55, 3.8, 0.7],
+          [0, 62, 3.8, 0.7],
+          [0, 67, 3.8, 0.7],
+          [0, 71, 3.8, 0.7],
+          [4, 52, 3.8, 0.7],
+          [4, 59, 3.8, 0.7],
+          [4, 64, 3.8, 0.7],
+          [4, 67, 3.8, 0.7],
+          [8, 48, 3.8, 0.7],
+          [8, 55, 3.8, 0.7],
+          [8, 64, 3.8, 0.7],
+          [8, 67, 3.8, 0.7],
+          [12, 50, 3.8, 0.7],
+          [12, 57, 3.8, 0.7],
+          [12, 62, 3.8, 0.7],
+          [12, 66, 3.8, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Pulse waves alone",
+          "module": "osc",
+          "why": "Turn both main waves off and both pulses on.\n- VCO 1 WAVEFORM None: no lamp lit: VCO 1’s main wave is out.\n- VCO 1 PULSE on: VCO 1 plays its pulse alone.\n- VCO 1 PULSE WIDTH 30 %: a mid-width pulse, reedy rather than hollow.\n- VCO 2 WAVEFORM None: VCO 2’s main wave out too.\n- VCO 2 PULSE on: VCO 2’s pulse on.\n- VCO 2 PULSE WIDTH 30 %: the same width.\n- MIXER OSC2 60 %: VCO 2 a little under VCO 1.\n- VCO 2 TUNE −10 cents: a few cents flat, for slow beating.\n- Listen for: a thin, nasal buzz, not yet like strings.",
+          "set": {
+            "osc1.wave": "off",
+            "osc1.pulse": true,
+            "osc1.pw": 5,
+            "osc2.wave": "off",
+            "osc2.pulse": true,
+            "osc2.pw": 5,
+            "mix.osc2": 6,
+            "osc2.tune": -1
+          }
+        },
+        {
+          "title": "Sweep the width",
+          "module": "lfo",
+          "why": "LFO 1 moves both pulses’ widths slowly: pulse-width modulation.\n- LFO 1 RATE 0.79 Hz: a slow sweep, under a cycle a second.\n- VCO 1 LFO1 PWM 40 %: how far VCO 1’s width moves.\n- VCO 2 LFO1 PWM 40 %: and VCO 2’s.\n- Listen for: the buzz starting to shimmer and swirl like a section.",
+          "set": {
+            "lfo1.rate": 3,
+            "osc1.lfo1pwm": 4,
+            "osc2.lfo1pwm": 4
+          }
+        },
+        {
+          "title": "Soften it",
+          "module": "filter",
+          "why": "A lower cutoff takes the edge off.\n- CUTOFF 1.1 kHz: warm, with the top end rolled away.\n- Listen for: the swirl staying, the fizz going.",
+          "set": {
+            "vcf.cutoff": 6
+          }
+        },
+        {
+          "title": "Bow it slowly",
+          "module": "env",
+          "why": "EG 2 makes the chords fade in and out.\n- EG 2 ATTACK 700 ms: each chord swells in.\n- EG 2 RELEASE 1.1 s: long tails that overlap the next chord.\n- Listen for: chords that rise and melt into each other.",
+          "set": {
+            "env2.attack": 6,
+            "env2.release": 6.5
+          }
+        },
+        {
+          "title": "Ensemble",
+          "module": "fx",
+          "why": "The Ensemble chorus runs four lines: the string-machine sound.\n- CHORUS TYPE Ensemble: four delay lines instead of two.\n- CHORUS MIX 50 %: half chorus, half dry.\n- Listen for: the strings growing wide and lush.",
+          "set": {
+            "chorus.type": "ensemble",
+            "chorus.mix": 5
+          }
+        }
+      ],
+      "context": {
+        "osc1.lfo1pwm": "How much the pulse width swirls.",
+        "lfo1.rate": "How fast it swirls.",
+        "chorus.type": "Ensemble is what makes it a string machine."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.lfo1pwm",
+          "try": "Turn down to 0",
+          "hear": "A static pulse: the life goes out of it."
+        },
+        {
+          "id": "lfo1.rate",
+          "try": "Raise to 5",
+          "hear": "A faster, more nervous shimmer."
+        },
+        {
+          "id": "chorus.type",
+          "try": "Switch to Basic",
+          "hear": "A narrower, plainer chorus."
+        }
+      ]
+    },
+    {
+      "id": "e7-sub-bass",
+      "name": "Tri-Saw Bass",
+      "ref": "In the style of 1980s analogue synth-pop basslines",
+      "artist": "Various",
+      "tags": ["bass", "synth-pop", "80s"],
+      "level": 1,
+      "blurb": "A round, punchy mono bass with its sub-oscillator underneath.",
+      "how": "The tri-saw wave is softer than a sawtooth but still has an edge. Sub 1 adds a square an octave down for weight, and a short EG 1 decay on a fairly closed filter gives each note its pluck. Mono mode plays one note at a time, as a bass should.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.4, 0.9],
+          [0.5, 33, 0.4, 0.9],
+          [1, 45, 0.4, 0.9],
+          [1.5, 33, 0.4, 0.9],
+          [2, 36, 0.4, 0.9],
+          [2.5, 33, 0.4, 0.9],
+          [3, 43, 0.4, 0.9],
+          [3.5, 45, 0.4, 0.9],
+          [4, 29, 0.4, 0.9],
+          [4.5, 29, 0.4, 0.9],
+          [5, 41, 0.4, 0.9],
+          [5.5, 29, 0.4, 0.9],
+          [6, 31, 0.4, 0.9],
+          [6.5, 29, 0.4, 0.9],
+          [7, 40, 0.4, 0.9],
+          [7.5, 43, 0.4, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One note at a time",
+          "module": "mode",
+          "why": "MODE to mono with multi trigger: every note restarts the envelopes.\n- MODE Mono, multi trigger: the MT lamp lights.\n- Listen for: a single line, each note cutting off the last.",
+          "set": {
+            "kbd.mode": "mono-mt"
+          }
+        },
+        {
+          "title": "Tri-saw and its sub",
+          "module": "osc",
+          "why": "A softer wave with a square an octave below.\n- VCO 1 WAVEFORM Tri-saw: tri-saw: rounder than a sawtooth.\n- MIXER SUB1 80 %: Sub 1, an octave down, for weight.\n- Listen for: the bass getting deeper and fuller.",
+          "set": {
+            "osc1.wave": "shark",
+            "mix.sub1": 8
+          }
+        },
+        {
+          "title": "The pluck",
+          "module": "filter",
+          "why": "Close the filter, and let a quick EG 1 snap it open.\n- CUTOFF 229 Hz: mostly closed.\n- RESONANCE 30 %: a little emphasis at the cutoff.\n- FILTER EG1 MOD 45 %: EG 1 opens it on each note.\n- EG 1 DECAY 75 ms: and closes it again quickly.\n- EG 1 SUSTAIN 10 %: almost shut while held.\n- Listen for: each note starting with a bright blip and settling deep.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.res": 3,
+            "vcf.eg1": 4.5,
+            "env1.decay": 3.5,
+            "env1.sustain": 1
+          }
+        }
+      ],
+      "context": {
+        "mix.sub1": "How much low end the sub adds.",
+        "env1.decay": "How long each note’s pluck lasts.",
+        "vcf.cutoff": "How dark the bass settles."
+      },
+      "tweaks": [
+        {
+          "id": "mix.sub1",
+          "try": "Turn down to 0",
+          "hear": "The bass loses its bottom octave."
+        },
+        {
+          "id": "env1.decay",
+          "try": "Raise to 5.5",
+          "hear": "A longer, squelchier pluck."
+        },
+        {
+          "id": "osc1.wave",
+          "try": "Step to Sawtooth",
+          "hear": "A buzzier, more aggressive bass."
+        }
+      ]
+    },
+    {
+      "id": "e7-sync-lead",
+      "name": "Sync Lead",
+      "ref": "In the style of early-1980s hard-sync synth leads",
+      "artist": "Various",
+      "tags": ["lead", "new-wave", "80s"],
+      "level": 2,
+      "blurb": "A tearing, vocal lead from VCO 2 synced to VCO 1, swept by EG 1.",
+      "how": "With SYNC on, VCO 2 restarts every cycle of VCO 1, so its own pitch changes only its tone. EG 1 sweeps VCO 2’s pitch down as each note starts, which is the classic sync rip, and ping-pong echoes bounce it across the speakers.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.5, 0.9],
+          [1.5, 72, 0.5, 0.8],
+          [2, 74, 1, 0.9],
+          [3, 72, 0.5, 0.8],
+          [3.5, 69, 0.5, 0.8],
+          [4, 67, 2, 0.9],
+          [6, 64, 1, 0.8],
+          [7, 67, 1, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One voice, gliding",
+          "module": "mode",
+          "why": "Mono with single trigger, and a short portamento.\n- MODE Mono, single trigger: one note at a time; legato notes do not restart the envelopes.\n- PORTAMENTO TIME 130 ms: a short slide between notes.\n- Listen for: a lead line that slides from note to note.",
+          "set": {
+            "kbd.mode": "mono-st",
+            "kbd.porta": 3
+          }
+        },
+        {
+          "title": "Hear VCO 2 alone",
+          "module": "mixer",
+          "why": "Swap the mixer over to VCO 2.\n- MIXER OSC1 0 %: VCO 1 out of the mix: it will be the sync master.\n- MIXER OSC2 80 %: VCO 2 in.\n- Listen for: the same sawtooth, now from VCO 2.",
+          "set": {
+            "mix.osc1": 0,
+            "mix.osc2": 8
+          }
+        },
+        {
+          "title": "Sync it",
+          "module": "osc",
+          "why": "With SHIFT, VCO 2’s pulse button is SYNC. Lift VCO 2 above VCO 1.\n- SYNC on: VCO 2 restarts with every cycle of VCO 1.\n- VCO 2 TRANSPOSE +7 st: VCO 2 a fifth up: now this changes the tone, not the note.\n- Listen for: a harder, hollower tone at the same pitch.",
+          "set": {
+            "osc2.sync": true,
+            "osc2.transpose": 7
+          }
+        },
+        {
+          "title": "The sync sweep",
+          "module": "env",
+          "why": "EG 1 sweeps VCO 2’s pitch as each note starts.\n- VCO 2 EG1 MOD 60 %: how far EG 1 pushes VCO 2 up.\n- EG 1 DECAY 190 ms: how fast the sweep falls back.\n- EG 1 SUSTAIN 0 %: it falls all the way.\n- Listen for: each note tearing in with a vocal \"yow\".",
+          "set": {
+            "osc2.eg1": 6,
+            "env1.decay": 4.5,
+            "env1.sustain": 0
+          }
+        },
+        {
+          "title": "Echoes",
+          "module": "fx",
+          "why": "A ping-pong delay bounces the lead side to side.\n- DELAY TYPE Ping-Pong: echoes alternate left and right.\n- DELAY TIME 361 ms: about a third of a second apart.\n- DELAY MIX 30 %: echoes under the dry lead.\n- Listen for: the line answering itself across the speakers.",
+          "set": {
+            "delay.type": "pingpong",
+            "delay.time": 6,
+            "delay.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "osc2.eg1": "How wide the sync sweep is.",
+        "osc2.transpose": "Where the sweep starts from.",
+        "env1.decay": "How fast each sweep falls."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.sync",
+          "try": "Switch off",
+          "hear": "Just a pitch blip: the tearing tone needs sync."
+        },
+        {
+          "id": "osc2.eg1",
+          "try": "Raise to 9",
+          "hear": "A wilder, screaming sweep."
+        },
+        {
+          "id": "kbd.porta",
+          "try": "Turn down to 0",
+          "hear": "Notes jump instead of sliding."
+        }
+      ]
+    },
+    {
+      "id": "e7-wheel-vibrato",
+      "name": "Mod Wheel Vibrato",
+      "ref": "In the style of expressive analogue solo leads",
+      "artist": "Various",
+      "tags": ["lead", "solo"],
+      "level": 2,
+      "blurb": "A clean lead whose vibrato and wah come in only as you push the mod wheel.",
+      "how": "LFO 3 is silent until the mod wheel brings it in. Its LFO3 MOD knobs, under SHIFT, set where it goes, here both oscillators’ pitch and a little of the filter, and its MOD WHEEL knob sets how far the wheel can take it. One wave serves every voice, so a chord wobbles together.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 3, 0.85],
+          [3, 71, 1, 0.8],
+          [4, 69, 2, 0.85],
+          [6, 67, 2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plain lead",
+          "module": "osc",
+          "why": "Two sawtooths an octave apart.\n- MIXER OSC2 50 %: VCO 2 under VCO 1.\n- VCO 2 TRANSPOSE +12 st: an octave up, for brightness.\n- Listen for: a bright, steady lead with no movement.",
+          "set": {
+            "mix.osc2": 5,
+            "osc2.transpose": 12
+          }
+        },
+        {
+          "title": "Set LFO 3",
+          "module": "lfo",
+          "why": "A vibrato speed, and the wheel’s full reach.\n- LFO 3 RATE 4.79 Hz: a singer’s vibrato speed.\n- LFO 3 MOD WHEEL 100 %: the wheel can bring LFO 3 all the way in.\n- Listen for: nothing yet: LFO 3 has nowhere to go.",
+          "set": {
+            "lfo3.rate": 5.6,
+            "lfo3.wheel": 10
+          }
+        },
+        {
+          "title": "Send it to the pitch and the filter",
+          "module": "osc",
+          "why": "With SHIFT, the LFO2 MOD knobs become LFO3 MOD.\n- VCO 1 LFO3 MOD 25 %: VCO 1’s vibrato depth.\n- VCO 2 LFO3 MOD 25 %: the same on VCO 2, so they stay in tune.\n- FILTER LFO3 MOD 30 %: a little wah in time with it.\n- Listen for: push the mod wheel up: the vibrato grows with it, and goes when you pull it down.",
+          "set": {
+            "osc1.lfo3": 2.5,
+            "osc2.lfo3": 2.5,
+            "vcf.lfo3": 3
+          }
+        }
+      ],
+      "context": {
+        "lfo3.wheel": "How far the mod wheel can bring LFO 3 in.",
+        "osc1.lfo3": "How deep the vibrato is at full wheel.",
+        "lfo3.rate": "How fast the vibrato is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo3.shape",
+          "try": "Step to Pulse",
+          "hear": "With the wheel up, a trill between two pitches."
+        },
+        {
+          "id": "vcf.lfo3",
+          "try": "Raise to 7",
+          "hear": "A pronounced wah on the wheel."
+        },
+        {
+          "id": "lfo3.wheel",
+          "try": "Turn down to 4",
+          "hear": "The wheel only brings in a gentle vibrato."
+        }
+      ]
+    },
+    {
+      "id": "e7-unison-lead",
+      "name": "Unison Lead",
+      "ref": "In the style of big analogue unison leads",
+      "artist": "Various",
+      "tags": ["lead", "electronic"],
+      "level": 1,
+      "blurb": "All seven voices stacked on one note for a huge, thick lead.",
+      "how": "Unison puts every voice on the note you play, each slightly detuned, so seven pairs of sawtooths beat against each other. A touch of glide and a delay make it sing.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 64, 1, 0.9],
+          [1, 67, 1, 0.9],
+          [2, 71, 2, 0.9],
+          [4, 69, 1, 0.9],
+          [5, 67, 1, 0.9],
+          [6, 64, 2, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Stack the voices",
+          "module": "mode",
+          "why": "MODE to unison: the Unison and MT lamps light.\n- MODE Unison, multi trigger: all seven voices on each note, detuned.\n- Listen for: one note turning into a thick, wide chorus of them.",
+          "set": {
+            "kbd.mode": "uni-mt"
+          }
+        },
+        {
+          "title": "Add VCO 2",
+          "module": "osc",
+          "why": "A second sawtooth in every voice.\n- MIXER OSC2 60 %: VCO 2 under VCO 1.\n- Listen for: even more weight.",
+          "set": {
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Glide and echo",
+          "module": "glide",
+          "why": "A short slide, and echoes behind it.\n- PORTAMENTO TIME 78 ms: the stack slides between notes.\n- DELAY MIX 30 %: echoes under the lead.\n- Listen for: a lead that soars and trails off.",
+          "set": {
+            "kbd.porta": 2.5,
+            "delay.mix": 3
+          }
+        }
+      ],
+      "context": {
+        "kbd.mode": "Unison is what makes it huge.",
+        "kbd.porta": "How far the notes slide.",
+        "delay.mix": "How loud the echoes are."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.mode",
+          "try": "Step to Poly",
+          "hear": "One voice a note: much thinner."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn down to 5.5",
+          "hear": "A darker, rounder lead."
+        },
+        {
+          "id": "delay.fb",
+          "try": "Raise to 7",
+          "hear": "A long trail of echoes."
+        }
+      ]
+    },
+    {
+      "id": "e7-moving-pad",
+      "name": "Moving Pad",
+      "ref": "In the style of slow-evolving ambient analogue pads",
+      "artist": "Various",
+      "tags": ["pad", "ambient"],
+      "level": 2,
+      "blurb": "A warm tri-saw pad whose filter breathes slowly, all its notes together.",
+      "how": "Both VCOs play tri-saw, slightly apart. LFO 2 in Monophonic mode is one wave for every voice, so it opens and closes the filter on the whole chord at once, a slow breath rather than notes moving separately. The Ensemble chorus widens it.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 50, 7.8, 0.7],
+          [0, 57, 7.8, 0.7],
+          [0, 62, 7.8, 0.7],
+          [0, 65, 7.8, 0.7],
+          [0, 69, 7.8, 0.7],
+          [8, 46, 7.8, 0.7],
+          [8, 53, 7.8, 0.7],
+          [8, 58, 7.8, 0.7],
+          [8, 62, 7.8, 0.7],
+          [8, 65, 7.8, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two tri-saws",
+          "module": "osc",
+          "why": "A softer wave on both oscillators, a little apart.\n- VCO 1 WAVEFORM Tri-saw: tri-saw on VCO 1.\n- VCO 2 WAVEFORM Tri-saw: and on VCO 2.\n- MIXER OSC2 60 %: VCO 2 under VCO 1.\n- VCO 2 TUNE +20 cents: just sharp, for slow beating.\n- Listen for: a warm, gently moving chord.",
+          "set": {
+            "osc1.wave": "shark",
+            "osc2.wave": "shark",
+            "mix.osc2": 6,
+            "osc2.tune": 2
+          }
+        },
+        {
+          "title": "Fade in and out",
+          "module": "env",
+          "why": "EG 2 makes it a pad.\n- EG 2 ATTACK 1.6 s: a slow swell.\n- EG 2 RELEASE 1.6 s: a long tail.\n- Listen for: chords that rise and fade.",
+          "set": {
+            "env2.attack": 7,
+            "env2.release": 7
+          }
+        },
+        {
+          "title": "One slow breath",
+          "module": "lfo",
+          "why": "LFO 2 in Monophonic mode (SHIFT and its wave-shape button), moving the filter.\n- LFO 2 MODE Monophonic: one wave for every voice.\n- LFO 2 RATE 0.28 Hz: one cycle every few seconds.\n- CUTOFF 739 Hz: a darker starting point.\n- FILTER LFO2 MOD 50 %: how far LFO 2 opens it.\n- Listen for: the whole chord brightening and darkening together.",
+          "set": {
+            "lfo2.mode": "mono",
+            "lfo2.rate": 1.5,
+            "vcf.cutoff": 5.5,
+            "vcf.lfo2": 5
+          }
+        },
+        {
+          "title": "Ensemble",
+          "module": "fx",
+          "why": "The four-line chorus.\n- CHORUS TYPE Ensemble: four lines.\n- CHORUS MIX 50 %: half and half.\n- Listen for: the pad filling the space.",
+          "set": {
+            "chorus.type": "ensemble",
+            "chorus.mix": 5
+          }
+        }
+      ],
+      "context": {
+        "lfo2.mode": "Monophonic keeps every note breathing together.",
+        "vcf.lfo2": "How deep the breath is.",
+        "lfo2.rate": "How slow it is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.mode",
+          "try": "Step to Polyphonic",
+          "hear": "Each note breathes on its own, out of step."
+        },
+        {
+          "id": "lfo2.rate",
+          "try": "Raise to 4",
+          "hear": "A faster, pulsing movement."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 5",
+          "hear": "A vocal, whistling edge on the sweep."
+        }
+      ]
+    },
+    {
+      "id": "e7-clocked-bleeps",
+      "name": "Clocked Random Bleeps",
+      "ref": "In the style of 1970s sample-and-hold sci-fi bleeps",
+      "artist": "Various",
+      "tags": ["seq", "electronic", "70s"],
+      "level": 3,
+      "blurb": "A held note turned into random, resonant steps locked to the clock, with synced echoes.",
+      "how": "LFO 2 on sample and hold picks a new random level each cycle. In Clock Sync mode the cycle is a note value of the e7’s clock (120 BPM with no MIDI clock), and it moves a resonant filter, so each step is a new bleep. The delay is synced too.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.8],
+          [4, 51, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Narrow and singing.\n- CUTOFF 739 Hz: low enough for the peak to sing.\n- RESONANCE 70 %: a strong, whistling peak.\n- Listen for: a held note with a ringing tone.",
+          "set": {
+            "vcf.cutoff": 5.5,
+            "vcf.res": 7
+          }
+        },
+        {
+          "title": "Random steps",
+          "module": "lfo",
+          "why": "LFO 2 on sample and hold, sending the filter.\n- LFO 2 WAVE SHAPE Sample and hold: a new random level each cycle.\n- FILTER LFO2 MOD 70 %: each level moves the cutoff.\n- Listen for: the filter jumping to a new place, at random.",
+          "set": {
+            "lfo2.shape": "sh",
+            "vcf.lfo2": 7
+          }
+        },
+        {
+          "title": "Lock it to the clock",
+          "module": "lfo",
+          "why": "With SHIFT, the wave-shape button sets the MODE; RATE then picks a note value.\n- LFO 2 MODE Clock Sync: one wave for every voice, on the clock.\n- LFO 2 RATE (CLOCK) 1/16 note: a new step every sixteenth note.\n- Listen for: the bleeps falling into a steady rhythm.",
+          "set": {
+            "lfo2.mode": "clock",
+            "lfo2.div": "1/16"
+          }
+        },
+        {
+          "title": "Synced echoes",
+          "module": "fx",
+          "why": "A ping-pong delay at a dotted eighth.\n- DELAY TYPE Ping-Pong Sync: ping-pong, set as a note value.\n- DELAY TIME (CLOCK) Dotted 1/8: a dotted eighth: echoes between the steps.\n- DELAY FEEDBACK 50 %: several repeats.\n- DELAY MIX 40 %: loud enough to fill the gaps.\n- Listen for: the pattern multiplying into a busy, bouncing sequence.",
+          "set": {
+            "delay.type": "pingpong-sync",
+            "delay.div": "1/8.",
+            "delay.fb": 5,
+            "delay.mix": 4
+          }
+        }
+      ],
+      "context": {
+        "lfo2.div": "How fast the steps come.",
+        "vcf.res": "How sharply each step rings.",
+        "vcf.lfo2": "How far apart the steps jump."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.div",
+          "try": "Step to 1/8 note",
+          "hear": "Steps at half the speed."
+        },
+        {
+          "id": "lfo2.shape",
+          "try": "Step to Descending ramp",
+          "hear": "A repeating falling sweep instead of random steps."
+        },
+        {
+          "id": "vcf.res",
+          "try": "Raise to 9",
+          "hear": "Each step rings like a struck bell."
+        }
+      ]
+    },
+    {
+      "id": "e7-velocity-keys",
+      "name": "Velocity Keys",
+      "ref": "In the style of 1980s analogue electric-piano-like keys",
+      "artist": "Various",
+      "tags": ["keys", "80s"],
+      "level": 2,
+      "blurb": "A plucky key sound that grows brighter and louder the harder you play.",
+      "how": "VELOCITY EG1 MOD makes the filter’s envelope follow how hard each key is played, and VELOCITY EG2 MOD does the same for the volume. EG 2’s keyboard tracking makes high notes die away sooner, as on a piano.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9, 0.45],
+          [0, 64, 0.9, 0.45],
+          [0, 67, 0.9, 0.45],
+          [1, 60, 0.9, 0.95],
+          [1, 64, 0.9, 0.95],
+          [1, 67, 0.9, 0.95],
+          [2, 57, 1.8, 0.6],
+          [2, 60, 1.8, 0.6],
+          [2, 64, 1.8, 0.6],
+          [4, 53, 0.9, 0.95],
+          [4, 57, 0.9, 0.95],
+          [4, 60, 0.9, 0.95],
+          [5, 53, 0.9, 0.4],
+          [5, 57, 0.9, 0.4],
+          [5, 60, 0.9, 0.4],
+          [6, 55, 1.8, 0.75],
+          [6, 59, 1.8, 0.75],
+          [6, 62, 1.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft wave with an edge",
+          "module": "osc",
+          "why": "Triangle on VCO 1, a sawtooth an octave up underneath.\n- VCO 1 WAVEFORM Triangle: a soft, hollow triangle.\n- MIXER OSC2 30 %: a little VCO 2 for edge.\n- VCO 2 TRANSPOSE +12 st: an octave up.\n- Listen for: a mellow tone with a little bite.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc2": 3,
+            "osc2.transpose": 12
+          }
+        },
+        {
+          "title": "A decaying key",
+          "module": "env",
+          "why": "EG 2 shapes a struck note that fades while held.\n- EG 2 DECAY 1.1 s: the note fades over a second or two.\n- EG 2 SUSTAIN 20 %: to a quiet hold.\n- EG 2 RELEASE 300 ms: a short ring after the key comes up.\n- EG 2 KEYBOARD TRACKING 60 %: higher notes fade sooner.\n- Listen for: notes that strike and fade like a piano.",
+          "set": {
+            "env2.decay": 6.5,
+            "env2.sustain": 2,
+            "env2.release": 5,
+            "env2.kbd": 6
+          }
+        },
+        {
+          "title": "Brightness from your touch",
+          "module": "filter",
+          "why": "EG 1 opens the filter, scaled by velocity.\n- CUTOFF 500 Hz: dark at rest.\n- FILTER EG1 MOD 50 %: EG 1 brightens each note’s start.\n- EG 1 DECAY 300 ms: and fades back.\n- EG 1 SUSTAIN 10 %: almost all the way.\n- FILTER VELOCITY EG1 MOD 70 %: most of that depends on how hard you play.\n- Listen for: hard chords bright and soft ones mellow.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.eg1": 5,
+            "env1.decay": 5,
+            "env1.sustain": 1,
+            "vcf.vel": 7
+          }
+        },
+        {
+          "title": "Loudness from your touch",
+          "module": "amp",
+          "why": "VELOCITY EG2 MOD makes the volume follow velocity too.\n- AMPLIFIER VELOCITY EG2 MOD 60 %: soft notes quieter, hard ones louder.\n- Listen for: the accented chords leaping out.",
+          "set": {
+            "vca.vel": 6
+          }
+        }
+      ],
+      "context": {
+        "vcf.vel": "How much brightness depends on your touch.",
+        "vca.vel": "How much loudness depends on your touch.",
+        "env2.kbd": "How much sooner high notes die away."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.vel",
+          "try": "Turn down to 0",
+          "hear": "Every chord equally bright."
+        },
+        {
+          "id": "env2.kbd",
+          "try": "Turn down to 0",
+          "hear": "High and low notes fade alike."
+        },
+        {
+          "id": "chorus.mix",
+          "try": "Raise to 4",
+          "hear": "A wider, electric-piano chorus."
+        }
+      ]
+    },
+    {
+      "id": "e7-key-sync-wobble",
+      "name": "Key-Synced Wobble",
+      "ref": "In the style of 2010s wobble bass",
+      "artist": "Various",
+      "tags": ["bass", "dubstep", "2010s"],
+      "level": 3,
+      "blurb": "A growling bass whose filter wobble restarts on every note and speeds up as it plays.",
+      "how": "LFO 2 in KB Sync mode restarts its wave each time a key goes down, so every note wobbles from the same point. Its EG1 MOD (under SHIFT) lets EG 1 speed the wobble up at the start of each note, which works in every mode but Monophonic and Clock Sync.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.4, 0.9],
+          [1.5, 31, 0.4, 0.9],
+          [2, 34, 1.9, 0.9],
+          [4, 29, 1.4, 0.9],
+          [5.5, 29, 0.4, 0.9],
+          [6, 26, 1.9, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A mono bass",
+          "module": "mode",
+          "why": "Mono, multi trigger, with two sawtooths and a sub.\n- MODE Mono, multi trigger: one note at a time.\n- MIXER OSC2 70 %: VCO 2 as loud as VCO 1.\n- VCO 2 TUNE +20 cents: slightly sharp, for growl.\n- MIXER SUB1 60 %: weight underneath.\n- Listen for: a heavy, buzzing bass.",
+          "set": {
+            "kbd.mode": "mono-mt",
+            "mix.osc2": 7,
+            "osc2.tune": 2,
+            "mix.sub1": 6
+          }
+        },
+        {
+          "title": "The wobble",
+          "module": "filter",
+          "why": "LFO 2 opens and closes a resonant filter.\n- CUTOFF 229 Hz: mostly closed.\n- RESONANCE 45 %: a vocal edge.\n- LFO 2 WAVE SHAPE Descending ramp: a descending ramp: open, then a falling sweep.\n- LFO 2 RATE 3.16 Hz: about three wobbles a second.\n- FILTER LFO2 MOD 80 %: a deep sweep.\n- Listen for: the bass going \"wow-wow-wow\".",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.res": 4.5,
+            "lfo2.shape": "rsaw",
+            "lfo2.rate": 5,
+            "vcf.lfo2": 8
+          }
+        },
+        {
+          "title": "Restart on each key",
+          "module": "lfo",
+          "why": "With SHIFT, LFO 2’s MODE to KB Sync.\n- LFO 2 MODE KB Sync: each note starts the wobble from the top.\n- Listen for: every note wobbling the same way, in time with the riff.",
+          "set": {
+            "lfo2.mode": "kbsync"
+          }
+        },
+        {
+          "title": "Speed it up with EG 1",
+          "module": "lfo",
+          "why": "With SHIFT, LFO 2’s RATE knob is its EG1 MOD.\n- LFO 2 EG1 MOD 50 %: EG 1 quickens the wobble.\n- EG 1 DECAY 300 ms: then lets it slow back down.\n- EG 1 SUSTAIN 0 %: all the way.\n- Listen for: each note starting with a fast flutter that slows into the wobble.",
+          "set": {
+            "lfo2.eg1": 5,
+            "env1.decay": 5,
+            "env1.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "lfo2.mode": "KB Sync restarts the wobble on every note.",
+        "lfo2.eg1": "How much faster the wobble starts.",
+        "vcf.lfo2": "How deep the wobble is."
+      },
+      "tweaks": [
+        {
+          "id": "lfo2.mode",
+          "try": "Step to Polyphonic",
+          "hear": "The wobble runs free and lands differently on each note."
+        },
+        {
+          "id": "lfo2.rate",
+          "try": "Lower to 4",
+          "hear": "A slower, heavier wobble."
+        },
+        {
+          "id": "lfo2.eg1",
+          "try": "Turn down to 0",
+          "hear": "A steady wobble with no flutter."
+        }
+      ]
+    }
+  ]
+}

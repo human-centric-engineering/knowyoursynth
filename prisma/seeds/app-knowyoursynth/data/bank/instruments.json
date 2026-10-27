@@ -809,6 +809,16 @@
       "source": "https://www.synthtopia.com/content/2023/11/28/udo-audio-super-gemini-synthesizer-hands-on-demo/"
     },
     {
+      "id": "gs-music-e7",
+      "name": "GS Music e7",
+      "maker": "GS Music",
+      "year": "2022",
+      "kind": "poly",
+      "app": ["e7"],
+      "text": "GS Music’s seven-voice analogue desktop polysynth, described as the first polyphonic and multitimbral analogue synthesizer made in Argentina: two VCOs with a pulse generator and a sub per voice, a 24 dB low-pass, two ADSRs and three LFOs, up to four multitimbral parts, stereo spread and motion, and a digital chorus and delay.",
+      "source": "https://www.synthtopia.com/content/2022/05/02/gs-music-intros-e7-multitimbral-analog-polyphonic-synthesizer/"
+    },
+    {
       "id": "donner-essential-b1",
       "name": "Donner Essential B1",
       "maker": "Donner",

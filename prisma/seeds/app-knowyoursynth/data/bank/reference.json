@@ -7759,6 +7759,24 @@
       "kind": "poly",
       "text": "A midrange synthesiser with the Montage M's AN-X, FM-X and AWM2 engines, eight faders and a Super Knob, in 61 and 76-key semi-weighted and 88-key hammer-action models.",
       "source": "https://usa.yamaha.com/news_events/2025/yamaha-unveils-modx-m-synthesizer.html"
+    },
+    {
+      "id": "gs-music-apollo-i",
+      "name": "GS Music Apollo I",
+      "maker": "GS Music",
+      "year": "2018",
+      "kind": "mono",
+      "text": "GS Music’s analogue monosynth: two VCOs with triangle, saw-tri, sawtooth and pulse, each with a sub-oscillator, a 24 dB low-pass, two envelopes and three LFOs, with digitally generated control signals.",
+      "source": "https://synthanatomy.com/2018/10/news-gs-apollo-i-monophonic-analog-synthesizer-made-in-argentina.html"
+    },
+    {
+      "id": "gs-music-bree6",
+      "name": "GS Music Bree6",
+      "maker": "GS Music",
+      "year": "2024",
+      "kind": "poly",
+      "text": "GS Music’s six-voice analogue polysynth, as a keyboard and a desktop, influenced by the e7.",
+      "source": "https://synthanatomy.com/2024/09/gs-music-bree6-new-keyboard-and-desktop-analog-polyphonic-synthesizer-knobcon-2024.html"
     }
   ]
 }

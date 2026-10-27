@@ -1,0 +1,43 @@
+{
+  "synth": "e7",
+  "title": "From the Apollo to the e7",
+  "intro": "GS Music was founded in Buenos Aires in 2014 by Guido Salaya. Its first instruments were monosynths, and the e7, shown in 2022, was described as the first polyphonic and multitimbral analogue synthesizer made in Argentina: seven fully analogue voices with digitally generated envelopes and LFOs, in a desktop case with wooden end cheeks.",
+  "timeline": [
+    {
+      "year": "2018",
+      "name": "GS Music Apollo I",
+      "tag": "Closest ancestor",
+      "text": "A monosynth with two VCOs offering triangle, saw-tri, sawtooth and pulse, each with a sub-oscillator, a 24 dB low-pass filter, two envelopes and three LFOs, its control signals generated digitally around an analogue audio path. The e7’s voice is the same recipe, seven times over."
+    },
+    {
+      "year": "2022",
+      "name": "GS Music e7",
+      "tag": "This synth",
+      "text": "Seven voices, each two VCOs with a pulse generator and a sub, noise or an external input, a 24 dB low-pass and a VCA, with two ADSRs and three LFOs; up to four multitimbral parts sharing the voices, stereo spread and motion, a digital chorus and delay, and 512 single presets."
+    },
+    {
+      "year": "2024",
+      "name": "GS Music Bree6",
+      "tag": "Successor",
+      "text": "A six-voice analogue polysynth, as a keyboard and a desktop, shown at Knobcon 2024 and described as influenced by the e7."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog Minimoog Model D",
+      "years": "1970",
+      "text": "Its oscillators had the same in-between wave as the e7’s tri-saw, a triangle with a sawtooth’s edge. This app plays the Behringer Model D."
+    },
+    {
+      "name": "Sequential Prophet-5",
+      "years": "1978",
+      "text": "The polysynth that set the pattern the e7 follows: two VCOs per voice, a 24 dB low-pass, two envelopes and a VCA, with every voice under one set of knobs."
+    },
+    {
+      "name": "Sequential Take 5",
+      "years": "2021",
+      "text": "Another compact modern analogue poly with a knob for nearly every function, two VCOs and a sub-oscillator per voice and digital effects after the voices. This app plays it."
+    }
+  ],
+  "note": "None of the databank’s records name the e7 yet."
+}

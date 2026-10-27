@@ -2,7 +2,7 @@
  * GS Music e7: the definition (D1). Positions are measured on the owner's 2400 × 2400 straight-on product photo
  * (`.context/app/synth-data/e7/raw/GS E7.jpg`, local only); X() and Y() take photo pixels and move them to the left
  * cheek's outer edge and the top of the cheeks, at the same scale. The owner's spec is
- * `.context/app/synth-data/e7/gs-music-e7.synth.json` (the e7 User Manual, 2022, also in `raw/`, and GS Music's MIDI
+ * `.context/app/synth-data/e7/e7.synth.json` (the e7 User Manual, 2022, also in `raw/`, and GS Music's MIDI
  * implementation of September 2022).
  *
  * Written straight into the app, with no prototype version (`f-next-synths`), following `defs/take-5.ts`, the nearest
@@ -225,7 +225,7 @@ const btn = (id: string, x: number, y: number, rest: ButtonRest, w = 52, h = 52)
     ...value,
   });
 };
-/** A 0–10 depth knob reading out in percent. */
+/** A 0–10 depth knob reading out in percent; `name` is `'<section>|<printed name>'`. */
 const depth = (
   id: string,
   x: number,
@@ -243,8 +243,8 @@ const depth = (
     max: 10,
     def,
     module,
-    label: name.replace(/^.*: /, ''),
-    name,
+    label: name.slice(name.indexOf('|') + 1),
+    name: name.replace('|', ' '),
     fmt: pct,
     help,
     ...(show ? { show } : {}),
@@ -345,7 +345,7 @@ depth(
   'lfo2.eg1',
   265,
   1302,
-  'LFO 2: EG1 MOD',
+  'LFO 2|EG1 MOD',
   'lfo',
   'How far EG 1 speeds LFO 2 up while it runs: a vibrato that quickens as the note starts, or slows as it fades. It works in every MODE but Monophonic and Clock Sync.',
   shiftOn
@@ -408,7 +408,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.lfo1`,
     COL[1],
     y1,
-    `${o}: LFO1 MOD`,
+    `${o}|LFO1 MOD`,
     'osc',
     `How far LFO 1 moves ${o}’s pitch: a little is vibrato, a lot a siren or a trill.`,
     shiftOff
@@ -417,7 +417,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.eg1`,
     COL[1],
     y1,
-    `${o}: EG1 MOD`,
+    `${o}|EG1 MOD`,
     'osc',
     `How far EG 1 raises ${o}’s pitch: a quick blip at the start of each note, or a slow rise, up to two octaves.`,
     shiftOn
@@ -426,7 +426,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.lfo2`,
     COL[2],
     y1,
-    `${o}: LFO2 MOD`,
+    `${o}|LFO2 MOD`,
     'osc',
     `How far LFO 2 moves ${o}’s pitch.`,
     shiftOff
@@ -435,7 +435,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.lfo3`,
     COL[2],
     y1,
-    `${o}: LFO3 MOD`,
+    `${o}|LFO3 MOD`,
     'osc',
     `How far LFO 3 moves ${o}’s pitch once the mod wheel brings LFO 3 in (by LFO 3’s MOD WHEEL knob): vibrato on the wheel.`,
     shiftOn
@@ -491,7 +491,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.eg1pwm`,
     COL[1],
     y2,
-    `${o}: EG1 PWM`,
+    `${o}|EG1 PWM`,
     'osc',
     `How far EG 1 widens ${o}’s pulse as each note plays.`
   );
@@ -499,7 +499,7 @@ function oscBlock(n: 1 | 2, y1: number, y2: number): void {
     `osc${n}.lfo1pwm`,
     COL[2],
     y2,
-    `${o}: LFO1 PWM`,
+    `${o}|LFO1 PWM`,
     'osc',
     `How far LFO 1 sweeps ${o}’s pulse width: a slow sweep is the classic chorus-like shimmer of pulse-width modulation.`
   );
@@ -540,7 +540,7 @@ const MIX: [string, number, number, string, number, string][] = [
   ],
 ];
 MIX.forEach(([id, x, y, lab, def, help]) => {
-  depth(id, x, y, `Mixer: ${lab.toUpperCase()}`, 'mixer', help, undefined, def);
+  depth(id, x, y, `Mixer|${lab.toUpperCase()}`, 'mixer', help, undefined, def);
   label(x, y + 62, lab);
 });
 // the display: the e7 draws EG 1 while it is edited
@@ -675,7 +675,7 @@ depth(
   'vcf.eg1',
   1406,
   878,
-  'Filter: EG1 MOD',
+  'Filter|EG1 MOD',
   'filter',
   'How far EG 1 opens the filter on each note: the shape of a pluck, a wah or a slow swell.',
   shiftOff
@@ -684,7 +684,7 @@ depth(
   'vcf.vel',
   1406,
   878,
-  'Filter: VELOCITY EG1 MOD',
+  'Filter|VELOCITY EG1 MOD',
   'filter',
   'How much of EG 1’s depth depends on how hard each key is played: at the right, soft notes barely open the filter and hard ones open it fully.',
   shiftOn
@@ -693,7 +693,7 @@ depth(
   'vcf.lfo1',
   1526,
   878,
-  'Filter: LFO1 MOD',
+  'Filter|LFO1 MOD',
   'filter',
   'How far LFO 1 moves the cutoff: a wah or a wobble.'
 );
@@ -701,7 +701,7 @@ depth(
   'vcf.lfo2',
   1646,
   878,
-  'Filter: LFO2 MOD',
+  'Filter|LFO2 MOD',
   'filter',
   'How far LFO 2 moves the cutoff.',
   shiftOff
@@ -710,7 +710,7 @@ depth(
   'vcf.lfo3',
   1646,
   878,
-  'Filter: LFO3 MOD',
+  'Filter|LFO3 MOD',
   'filter',
   'How far LFO 3 moves the cutoff once the mod wheel brings LFO 3 in.',
   shiftOn
@@ -719,7 +719,7 @@ depth(
   'vcf.kbd',
   1467,
   1018,
-  'Filter: KEYBOARD TRACKING',
+  'Filter|KEYBOARD TRACKING',
   'filter',
   'How far the cutoff follows the key played: at the right it follows one for one, so high notes are as bright as low ones; at the left it stays put and high notes sound duller.'
 );
@@ -727,7 +727,7 @@ depth(
   'vcf.wheel',
   1588,
   1018,
-  'Filter: MOD WHEEL',
+  'Filter|MOD WHEEL',
   'filter',
   'How far the mod wheel opens the filter, up to four octaves.',
   shiftOff
@@ -736,7 +736,7 @@ depth(
   'vcf.at',
   1588,
   1018,
-  'Filter: AFTERTOUCH',
+  'Filter|AFTERTOUCH',
   'filter',
   `How far pressing harder on a held key opens the filter. ${NOT_HERE} The app’s keyboard sends no aftertouch.`,
   shiftOn,
@@ -756,7 +756,7 @@ depth(
   'vca.lfo1',
   1804,
   878,
-  'Amplifier: LFO1 MOD',
+  'Amplifier|LFO1 MOD',
   'amp',
   'How far LFO 1 swells the volume up and down: tremolo.',
   shiftOff
@@ -777,7 +777,7 @@ depth(
   'vca.lfo2',
   1929,
   878,
-  'Amplifier: LFO2 MOD',
+  'Amplifier|LFO2 MOD',
   'amp',
   'How far LFO 2 swells the volume: tremolo.',
   shiftOff
@@ -786,7 +786,7 @@ depth(
   'vca.lfo3',
   1929,
   878,
-  'Amplifier: LFO3 MOD',
+  'Amplifier|LFO3 MOD',
   'amp',
   'How far LFO 3 swells the volume once the mod wheel brings it in.',
   shiftOn
@@ -795,7 +795,7 @@ depth(
   'vca.kbd',
   1804,
   1020,
-  'Amplifier: KEYBOARD TRACKING',
+  'Amplifier|KEYBOARD TRACKING',
   'amp',
   'How far the volume follows the key played: louder going up, quieter going down.',
   shiftOff
@@ -817,7 +817,7 @@ depth(
   'vca.vel',
   1929,
   1020,
-  'Amplifier: VELOCITY EG2 MOD',
+  'Amplifier|VELOCITY EG2 MOD',
   'amp',
   'How much the volume depends on how hard each key is played: at the left every note is equally loud.',
   shiftOff
@@ -910,7 +910,7 @@ function egBlock(n: 1 | 2, x0: number, x1: number, xs: number[]): void {
         `env${n}.kbd`,
         x,
         1220,
-        `${eg}: KEYBOARD TRACKING`,
+        `${eg}|KEYBOARD TRACKING`,
         'env',
         `How far ${eg}’s attack, decay and release shorten for higher notes, the way a high piano note dies sooner than a low one.`,
         shiftOn
@@ -920,7 +920,7 @@ function egBlock(n: 1 | 2, x0: number, x1: number, xs: number[]): void {
         `env${n}.vel${stage === 'attack' ? 'A' : 'R'}`,
         x,
         1220,
-        `${eg}: ${stage.toUpperCase()} VELOCITY MOD`,
+        `${eg}|${stage.toUpperCase()} VELOCITY MOD`,
         'env',
         `How far playing harder shortens ${eg}’s ${stage}. ${NOT_HERE} The ${stage} keeps its time.`,
         shiftOn,
@@ -980,7 +980,7 @@ depth(
   'lfo3.wheel',
   500,
   1478,
-  'LFO 3: MOD WHEEL',
+  'LFO 3|MOD WHEEL',
   'lfo',
   'How far the mod wheel brings LFO 3 in. LFO 3 is silent until it does: its LFO3 MOD knobs (under SHIFT on the oscillators, filter and amplifier) set where it goes, and the wheel how much. At the left the wheel does nothing to it.',
   shiftOff
@@ -989,7 +989,7 @@ depth(
   'lfo3.at',
   500,
   1478,
-  'LFO 3: AFTERTOUCH',
+  'LFO 3|AFTERTOUCH',
   'lfo',
   `How far pressing harder on a held key brings LFO 3 in. ${NOT_HERE} The app’s keyboard sends no aftertouch.`,
   shiftOn,
@@ -1085,7 +1085,7 @@ depth(
   'chorus.depth',
   1430,
   1478,
-  'Chorus: DEPTH',
+  'Chorus|DEPTH',
   'fx',
   'How far the copies drift out of tune: how strongly you hear the chorus.',
   undefined,
@@ -1095,7 +1095,7 @@ depth(
   'chorus.mix',
   1552,
   1478,
-  'Chorus: MIX',
+  'Chorus|MIX',
   'fx',
   'The balance of the dry sound and the chorus. At the left the chorus is off and its lamp is out.'
 );
@@ -1142,7 +1142,7 @@ depth(
   'delay.fb',
   1838,
   1478,
-  'Delay: FEEDBACK',
+  'Delay|FEEDBACK',
   'fx',
   'How much of each echo goes back into the delay: one echo at the left, a long trail of them turned up.',
   undefined,
@@ -1152,7 +1152,7 @@ depth(
   'delay.mix',
   1960,
   1478,
-  'Delay: MIX',
+  'Delay|MIX',
   'fx',
   'The balance of the dry sound and the echoes. At the left the delay is off and its lamp is out.'
 );
