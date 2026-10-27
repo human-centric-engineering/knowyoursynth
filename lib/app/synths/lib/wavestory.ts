@@ -111,7 +111,7 @@ const STAGES: [StageId, string, string[]][] = [
   [
     'move',
     'Movement while you watch',
-    ['lfo', 'lfo2', 'routes', 'cables', 'normals', 'wheel', 'sh', 'slew', 'att', 'envf'],
+    ['lfo', 'lfo2', 'lfo3', 'routes', 'cables', 'normals', 'wheel', 'sh', 'slew', 'att', 'envf'],
   ],
   ['dirt', 'Overdrive, chorus, echo and reverb', ['od', 'delay', 'rev', 'chorus']],
   ['level', 'Overall height', ['volume', 'a440']],

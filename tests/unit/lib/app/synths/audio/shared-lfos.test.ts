@@ -22,10 +22,10 @@ const shutVoice = (over: Partial<EngineParams> = {}): EngineParams =>
   });
 
 /** A 10 Hz square: +1 (VCA open) for the first 2400 samples of each 4800, −1 (shut) for the rest. */
-const square = (common?: boolean): Lfo2Params & { keySync: boolean } => ({
+const square = (common?: boolean, keySync = false): Lfo2Params & { keySync: boolean } => ({
   rate: 10,
   mix: { sq: 1 },
-  keySync: false,
+  keySync,
   ...(common == null ? {} : { common }),
 });
 
@@ -51,13 +51,16 @@ describe('third LFO (lfo3)', () => {
 });
 
 describe('LFOs shared by every voice (common)', () => {
-  /** A poly synth whose VCAs only the chosen LFO's square opens. */
+  /**
+   * A poly synth whose VCAs only the chosen LFO's square opens. Its `keySync` restarts each voice's square on its note,
+   * so without `common` the second voice is open while the first is shut, whatever phases the voices were given.
+   */
   function poly(which: 'lfo' | 'lfo2' | 'lfo3', common?: boolean): EngineParams {
     const base = shutVoice({ poly: { voices: 4, stack: 1, mono: false } });
     const routes = [{ src: which, dst: 'amp', amt: 1 }];
     // the main LFO is always there: it stays a slow sine on nothing when another LFO is under test
-    if (which === 'lfo') return { ...base, lfo: square(common), routes };
-    return { ...base, [which]: square(common), routes };
+    if (which === 'lfo') return { ...base, lfo: square(common, true), routes };
+    return { ...base, [which]: square(common, true), routes };
   }
   // the second key arrives in the shut half of the first one's cycle
   const keys: Timed[] = [
@@ -69,7 +72,7 @@ describe('LFOs shared by every voice (common)', () => {
     '%s: a voice that starts later follows the phase of the one already playing',
     (which) => {
       const shared = render(poly(which, true), { len: 9600, events: keys });
-      // both shut together, then both open together
+      // both shut together, then both open together: `keySync` is ignored on a common LFO
       expect(rms(shared.out, 3100, 4700)).toBeLessThan(1e-3);
       expect(rms(shared.out, 5000, 7000)).toBeGreaterThan(0.02);
       // without `common` each voice runs its own phase, so the later one is open while the first is shut
@@ -77,4 +80,18 @@ describe('LFOs shared by every voice (common)', () => {
       expect(rms(free.out, 3100, 4700)).toBeGreaterThan(0.01);
     }
   );
+
+  it('gives a voice that starts mid-cycle the sample and hold the playing one holds', () => {
+    // the held value is negative on the first cycle, so the route is inverted to open the VCA with it
+    const p = shutVoice({
+      poly: { voices: 4, stack: 1, mono: false },
+      lfo3: { rate: 10, mix: { sh: 1 }, keySync: false, common: true },
+      routes: [{ src: 'lfo3', dst: 'amp', amt: -1 }],
+    });
+    const one = render(p, { len: 4800, events: keys.slice(0, 1) });
+    const two = render(p, { len: 4800, events: keys });
+    // the second voice sounds at once, before the cycle ends, rather than holding nothing until it does
+    expect(rms(one.out, 3100, 4700)).toBeGreaterThan(0.02);
+    expect(rms(two.out, 3100, 4700)).toBeGreaterThan(1.2 * rms(one.out, 3100, 4700));
+  });
 });

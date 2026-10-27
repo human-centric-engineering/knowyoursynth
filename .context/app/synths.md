@@ -175,7 +175,7 @@ A synth whose sound path is `easel` or `moog` still returns the core stubs (`osc
 its own settings, so `poly.voices` counts notes; with `layer.split` a key below the split plays
 only the layer and one at or above it only the top-level settings. A `common` LFO keeps one phase
 for every voice of a poly synth (the wrapper hands it to a voice on each note), and its sample and hold
-gives every voice the same value; `keySync` is ignored on it, and nothing should route to `lfoRate`. `pulse` makes signal `velp` (each note's
+gives every voice the same value; `keySync` and `lfoTrig` are ignored on it, and nothing should route to `lfoRate`. `pulse` makes signal `velp` (each note's
 velocity, dying away from its key) and `keyEnds` makes `kbdLo` / `kbdHi` (0 mid-keyboard,
 rising to 1 at each end). `fx`, `dual`, `chorus`, `tremolo` and `outAmps` make the synth
 stereo, and the sound-map probe renders it in stereo. A one-voice synth that needs the arpeggiator or chorus uses

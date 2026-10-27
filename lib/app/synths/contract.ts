@@ -1336,7 +1336,7 @@ export interface LfoParams {
   vibDepth?: number;
   /**
    * Poly only: every voice follows one phase (the e7's Monophonic LFO mode), and its sample and hold gives every voice
-   * the same value. `keySync` is then ignored, and the rate is not modulated per voice: route nothing to `lfoRate`.
+   * the same value. `keySync` and `lfoTrig` are then ignored, and the rate is not modulated per voice: route nothing to `lfoRate`.
    */
   common?: boolean;
 }
