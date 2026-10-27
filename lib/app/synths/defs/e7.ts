@@ -236,20 +236,22 @@ const depth = (
   show?: ShowCondition,
   def = 0,
   ui = false
-): void =>
+): void => {
+  const [section, printed] = name.split('|');
   knob(id, x, y, {
     kind: 'cont',
     min: 0,
     max: 10,
     def,
     module,
-    label: name.slice(name.indexOf('|') + 1),
-    name: name.replace('|', ' '),
+    label: printed,
+    name: `${section} ${printed}`,
     fmt: pct,
     help,
     ...(show ? { show } : {}),
     ...(ui ? { ui } : {}),
   });
+};
 
 // ── Cheeks, logo ──────────────────────────────────────────────────────────
 label(2120, 1440, 'e', 92, { weight: 300, brand: true });
