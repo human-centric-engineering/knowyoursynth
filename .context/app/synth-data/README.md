@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (32)
+## In the app (33)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -51,6 +51,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`super-gemini`](./super-gemini/README.md)                 | UDO Audio Super Gemini                                                                                                                                           | 0.13.0      |
 | [`system-15`](./system-15/README.md)                       | Behringer System 15                                                                                                                                              | 0.10.0      |
 | [`system-35`](./system-35/README.md)                       | Behringer System 35                                                                                                                                              | 0.10.0      |
+| [`syntrx-ii`](./syntrx-ii/README.md)                       | Erica Synths SYNTRX II                                                                                                                                           | 0.12.0      |
 | [`system-55`](./system-55/README.md)                       | Behringer System 55                                                                                                                                              | 0.10.0      |
 | [`tb-303`](./tb-303/README.md)                             | Roland TB-303 Computer Controlled Bass Line                                                                                                                      | 0.10.0      |
 | [`take-5`](./take-5/README.md)                             | Sequential Take 5                                                                                                                                                | 0.13.0      |
@@ -58,7 +59,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (21)
+## Not in the app yet (20)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -68,7 +69,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`behringer-wave`](./behringer-wave/README.md)                                         | Behringer WAVE Legendary 8-Voice Multi-Timbral Hybrid Synthesizer                                          | 0.13.0      |
 | [`dreadbox-nymphes`](./dreadbox-nymphes/README.md)                                     | Dreadbox Nymphes                                                                                           | 0.12.0      |
 | [`elta-music-solar-42`](./elta-music-solar-42/README.md)                               | Elta Music SOLAR 42 Ambient Machine                                                                        | 0.12.0      |
-| [`erica-synths-syntrx-ii`](./erica-synths-syntrx-ii/README.md)                         | Erica Synths SYNTRX II                                                                                     | 0.12.0      |
 | [`gamechanger-audio-motor-synth-mkii`](./gamechanger-audio-motor-synth-mkii/README.md) | Gamechanger Audio MOTOR Synth MKII                                                                         | 0.13.0      |
 | [`korg-minilogue-xd`](./korg-minilogue-xd/README.md)                                   | Korg minilogue xd                                                                                          | 0.12.0      |
 | [`moog-matriarch`](./moog-matriarch/README.md)                                         | Moog Music Matriarch                                                                                       | 0.12.0      |

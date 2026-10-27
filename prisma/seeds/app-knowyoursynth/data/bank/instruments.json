@@ -819,6 +819,16 @@
       "source": "https://www.synthtopia.com/content/2022/05/02/gs-music-intros-e7-multitimbral-analog-polyphonic-synthesizer/"
     },
     {
+      "id": "erica-synths-syntrx-ii",
+      "name": "Erica Synths SYNTRX II",
+      "maker": "Erica Synths",
+      "year": "2022",
+      "kind": "semi-modular",
+      "app": ["syntrx-ii"],
+      "text": "Erica Synths’ successor to the SYNTRX, after the EMS Synthi: two audio oscillators and a third that is mainly an LFO, a sample and hold, two external inputs with an envelope follower, a high-pass and low-pass filter in series, a ring modulator, a looping trapezoid envelope with its own VCA, a delay and reverb, a recordable joystick and a 16 × 16 analogue matrix under digital control, with stored patches and a piano-roll sequencer.",
+      "source": "https://news.hummingbirdmedia.com/erica-synths-syntrx-ii-is-now-available"
+    },
+    {
       "id": "donner-essential-b1",
       "name": "Donner Essential B1",
       "maker": "Donner",

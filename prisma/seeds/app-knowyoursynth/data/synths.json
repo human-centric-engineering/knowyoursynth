@@ -31,6 +31,7 @@
     { "id": "grandmother", "order": 28, "listed": true },
     { "id": "pearl-syncussion", "order": 29, "listed": true },
     { "id": "behringer-syncussion", "order": 30, "listed": true },
-    { "id": "e7", "order": 31, "listed": true }
+    { "id": "e7", "order": 31, "listed": true },
+    { "id": "syntrx-ii", "order": 32, "listed": true }
   ]
 }

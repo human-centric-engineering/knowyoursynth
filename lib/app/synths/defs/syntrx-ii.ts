@@ -530,7 +530,7 @@ knob('vcf.level', 732, 1435, 36, {
   module: 'filter',
   name: 'Filter LEVEL',
   def: 0,
-  fmt: (v) => `×${Math.round(lvl(v, 1.5) * 100) / 100}`,
+  fmt: (v) => `×${Math.round(lvl(v, 2) * 100) / 100}`,
   help: 'How much of the filter’s output reaches matrix row 10.',
 });
 label(732, 1495, 'LEVEL');
@@ -741,7 +741,7 @@ knob('fx.level', 1728, 827, 32, {
   module: 'fx',
   name: 'Effects LEVEL',
   def: 0,
-  fmt: (v) => `×${Math.round(lvl(v, 1.5) * 100) / 100}`,
+  fmt: (v) => `×${Math.round(lvl(v, 2) * 100) / 100}`,
   help: 'How much of the effect reaches matrix row 14. The effect gives the wet signal only: for a mix, pin the dry sound and row 14 to the same output.',
 });
 label(1728, 885, 'LEVEL');
@@ -789,7 +789,7 @@ trapKnob('trap.level', 1555, 1172, 0, {
 label(1555, 1245, 'TRAPEZOID');
 trapKnob('trap.signal', 1708, 1172, 0, {
   name: 'Trapezoid SIGNAL',
-  fmt: (v) => `×${Math.round(lvl(v, 1.5) * 100) / 100}`,
+  fmt: (v) => `×${Math.round(lvl(v, 2) * 100) / 100}`,
   help: 'How much of the trapezoid’s VCA reaches matrix row 12: whatever is pinned into the Envelope Signal column, made louder and quieter by the envelope.',
 });
 label(1708, 1245, 'SIGNAL');
@@ -1179,7 +1179,7 @@ row(
   'r.vcf',
   'Filter',
   'vcf1',
-  (v) => lvl(num(v, 'vcf.level'), 1.5) * filterOscBoost(v),
+  (v) => lvl(num(v, 'vcf.level'), 2) * filterOscBoost(v),
   'The filter’s output, at the level of the filter LEVEL knob.',
   { check: levelCheck('vcf.level', 'Filter LEVEL', 10) }
 );
@@ -1197,7 +1197,7 @@ row(
   'r.envsig',
   'Env. signal',
   'vca',
-  (v) => lvl(num(v, 'trap.signal'), 1.5),
+  (v) => lvl(num(v, 'trap.signal'), 2),
   'Whatever is pinned into the Envelope Signal column, made louder and quieter by the trapezoid, at the level of the SIGNAL knob.',
   { check: levelCheck('trap.signal', 'The trapezoid SIGNAL level', 12) }
 );
@@ -1215,7 +1215,7 @@ row(
   'r.fx',
   'Effects',
   'att2',
-  (v) => lvl(num(v, 'fx.level'), 1.5),
+  (v) => lvl(num(v, 'fx.level'), 2),
   'The effect’s wet output: the delay, or the reverb, of whatever is pinned into the Effects column.',
   { check: levelCheck('fx.level', 'Effects LEVEL', 14) }
 );
@@ -1281,7 +1281,7 @@ col(
   'c.out1',
   'Ch1 Output',
   'out1In',
-  0.5,
+  1,
   'Output channel 1. Anything pinned here goes through its VCA and OUTPUT FILTER to the outputs. Every patch has to end in Ch1 Output or Ch2 Output to be heard.',
   { hear: outHear(1), check: outCheck(1) }
 );
@@ -1302,7 +1302,7 @@ col(
   'c.out2',
   'Ch2 Output',
   'out2In',
-  0.5,
+  1,
   'Output channel 2. Anything pinned here goes through its VCA and OUTPUT FILTER to the outputs.',
   { hear: outHear(2), check: outCheck(2) }
 );
@@ -1756,7 +1756,8 @@ function toEngine(v: ControlValues): EngineParams {
           on: true,
           unit: false,
           mix: 0,
-          decay: 0.55 + 0.3 * (num(v, 'fx.time') / 10) + 0.14 * fb,
+          // FEEDBACK at the top makes the reverb loop (the manual): it no longer dies away
+          decay: fb >= 0.98 ? 0.995 : 0.5 + 0.2 * (num(v, 'fx.time') / 10) + 0.25 * fb,
           damp: 0.5 - 0.3 * (num(v, 'fx.time') / 10),
         }
       : { on: false, mix: 0 },
