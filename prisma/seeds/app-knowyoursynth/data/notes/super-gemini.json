@@ -1,0 +1,66 @@
+{
+  "synth": "super-gemini",
+  "unusual": [
+    {
+      "target": "keyboard",
+      "text": "It is two complete synthesizers in one, an upper and a lower layer, each with its own full row of controls, rather than a single panel that edits one layer at a time. KEYBOARD plays one layer, both on every key, or one each side of a split."
+    },
+    {
+      "target": "osc",
+      "text": "The oscillators are digital (DDS, direct digital synthesis, running far above audio rate, so they are not band-limited) feeding analogue filters, and DDS 1 holds seven oscillators of its own that SUPER spreads apart."
+    },
+    {
+      "target": "ddsmod",
+      "text": "One fader does two jobs on different oscillators: PW/DETUNE narrows DDS 2’s pulse and spreads DDS 1’s super stack at the same time, and PW/WAVE morphs DDS 1’s wave while it modulates DDS 2’s pulse."
+    },
+    {
+      "target": "up.dds2Range",
+      "text": "DDS 2 can leave the sound altogether: turned to LFO it becomes a modulator of about 0.1–100 Hz, still reaching the filter, the VCA and CROSS MOD, and its place in the mixer goes to a sub-oscillator."
+    },
+    {
+      "target": "up.dds2Mode",
+      "text": "One switch with two meanings: NORM, RING or SYNC while DDS 2 is an oscillator, and no sub, a square sub or a sine sub while it is an LFO."
+    },
+    {
+      "target": "up.xmod",
+      "text": "CROSS MOD runs backwards with SYNC on: DDS 1 then modulates the synced DDS 2, which reshapes its wave rather than its pitch, like wave folding."
+    },
+    {
+      "target": "env",
+      "text": "Both envelopes have a hold at the peak (DH, under the decay fader with SHIFT), and envelope 1 a wait before its attack (AH) as well, so each is up to a six-stage envelope, from 1 ms to 10 s a stage."
+    },
+    {
+      "target": "up.env1Mode",
+      "text": "Envelope 1 can loop, repeating its attack and decay while the key is held: an LFO that starts with every note. In LOOP the SUSTAIN fader sets the level each repeat falls back to."
+    },
+    {
+      "target": "up.vcaMode",
+      "text": "The VCA does not have to use an envelope: two fixed envelopes, a plain gate and a gate with a short fade, free envelope 2 for the filter or anything else."
+    },
+    {
+      "target": "up.lfoWave",
+      "text": "LFO 1 reaches 20 kHz. Its HF settings make it a sine at audio rate, and HF TRK makes it follow the keyboard, so it can be tuned as a third oscillator or used for audio-rate modulation."
+    },
+    {
+      "target": "lfo2.trig",
+      "text": "LFO 2 is brought in by pushing the bender up, not by a mod wheel: the push sets its depth, and LFO2 RATE lets it speed the LFO up too."
+    }
+  ],
+  "limits": {
+    "intro": "Both layers are modelled, each a full voice: DDS 1 with its waves, RANGE and SUPER, DDS 2 with its waves, RANGE, TUNE and NORM, RING and SYNC, the LFO range with the square and sine sub-oscillators, MIX, the HPF, the LPF with RES and DRIVE, VCF ENV, LFO 1 and DDS 2 with the envelope switch and KEYTRACK, the VCA with ENV LEVEL, LFO 1, DDS 2, the fixed envelopes and DYNAMICS, both envelopes with their hold stages, invert, loop and keytracking, LFO 1 with its HF modes, the DDS modulator with CROSS MOD, DRIFT and each layer’s delay SEND. KEYBOARD plays SINGLE, DUAL and SPLIT, and LAYER picks the layer SINGLE plays. LFO 2 comes in with the mod wheel in place of the bender’s push. The voice assign modes, UNISON, the arpeggiator, CHORUS I and II, the delay’s TIME and FEEDBACK, PORTAMENTO, OCTAVE, DETUNE, PERF DETUNE and FINE ADJ all work.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The modulation matrix (MOD ASSIGN, MOD AMOUNT and the sixteen select buttons): it is left empty, so velocity reaches only what DYNAMICS sets, and aftertouch, expression, the ribbon and note number move nothing. The bender’s left-right movement (BENDER DDS and VCF) and the ribbon, since the app’s keyboard has neither pitch bend nor pressure. The 64-step sequencer (SEQ REC, TRACK and MODE on SEQ, which stops the arpeggiator here; the app’s sequencer under the panel stands in), SWING, SYNC of LFO 1 and the delay to the tempo, and HOLD without the arpeggiator. Program memory: PERF, PATCH, MANUAL, INIT PATCH and the 32 alternative waves, which play a sawtooth here. SHIFT + MIX (PAN), U. SIZE, global transpose, the split point (fixed at C4), delay freeze, the pedals, MIDI and the rear sockets."
+      },
+      {
+        "title": "Two layers in one engine",
+        "text": "Each layer here is a mono voice, so BINAURAL only halves the number of notes, and LR PHASE / SPREAD and the layer’s pan do nothing. The shared strip addresses one layer at a time on the hardware; here its voice assign, UNISON, arpeggiator, chorus and the delay’s TIME and FEEDBACK serve both layers at once, while each layer keeps its own SEND. The PORTAMENTO, OCTAVE and LFO 2 settings are one set here, sent to the layer or layers their switches name, where the hardware keeps a set per layer. UNISON stacks two voices a note in the poly modes and every voice in SOLO and LEGATO, slightly detuned; POLY 2 plays as POLY 1, and LFO 1’s ONCE as RESET."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "DDS 1’s super core is three oscillators here, the centre one and two sisters spread either side (one, when a sub-oscillator takes the third), rather than seven. PW/WAVE morphs DDS 1’s wave only by hand: with LFO 1 or ENV 1 as its source, only DDS 2’s pulse width moves. LFO 1’s HF modes do not add LFO 1 to an oscillator’s sound. The manual gives the envelope, LFO 1, portamento and delay ranges; the filters’ ranges (high-pass 10 Hz–5 kHz, low-pass 20 Hz–20 kHz), how far each fader moves its destination and the second fixed envelope’s fade (0.3 s) are this app’s estimates. DYNAMICS at 1/2 is as strong as ON on the level, and half as strong on the brightness. DRIFT moves only the pitch, and the low-pass is the app’s 24 dB ladder rather than the SSI chip."
+      }
+    ]
+  }
+}

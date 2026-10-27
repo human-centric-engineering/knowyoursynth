@@ -1,0 +1,875 @@
+{
+  "synth": "super-gemini",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "sg-super-pad",
+      "name": "Super Pad",
+      "ref": "In the style of late-1990s trance supersaw pads",
+      "artist": "Various",
+      "tags": ["pad", "trance", "90s"],
+      "level": 1,
+      "blurb": "A wide, shimmering wall of detuned sawtooths that swells in and hangs.",
+      "how": "DDS 1’s super mode spreads its sister oscillators either side of the centre one, so one sawtooth becomes a thick, beating stack. A slow attack and release make it a pad, a darker filter keeps it smooth, and both choruses together widen it into an ensemble.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 57, 3.8, 0.8],
+          [0, 60, 3.8, 0.8],
+          [0, 64, 3.8, 0.8],
+          [0, 69, 3.8, 0.8],
+          [4, 53, 3.8, 0.8],
+          [4, 57, 3.8, 0.8],
+          [4, 60, 3.8, 0.8],
+          [4, 65, 3.8, 0.8],
+          [8, 55, 3.8, 0.8],
+          [8, 59, 3.8, 0.8],
+          [8, 62, 3.8, 0.8],
+          [8, 67, 3.8, 0.8],
+          [12, 52, 3.8, 0.8],
+          [12, 55, 3.8, 0.8],
+          [12, 60, 3.8, 0.8],
+          [12, 64, 3.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One sawtooth becomes a stack",
+          "module": "osc",
+          "why": "DDS 1 holds seven oscillators; SUPER brings in the sisters and PW/DETUNE spreads them.\n- UPPER SUPER ON: the sisters join the centre oscillator.\n- UPPER PW/DETUNE 60 %: spread far enough to beat and shimmer.\n- Listen for: one plain sawtooth turning into a wide, moving chorus of them.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 6
+          }
+        },
+        {
+          "title": "Fade it in and out",
+          "module": "env",
+          "why": "Envelope 2 shapes the loudness.\n- UPPER ENV 2 A 1.0 s: each chord swells in.\n- UPPER ENV 2 R 1.6 s: a long tail, so the chords overlap.\n- Listen for: soft beginnings and long, melting endings.",
+          "set": {
+            "up.e2a": 7.5,
+            "up.e2r": 8
+          }
+        },
+        {
+          "title": "Darken it",
+          "module": "filter",
+          "why": "A lower cutoff takes the fizz off the stack.\n- UPPER LPF 1.8 kHz: warm rather than bright.\n- UPPER RES 20 %: a slight edge at the cutoff.\n- Listen for: the same pad, smoother and less buzzy.",
+          "set": {
+            "up.lpf": 6.5,
+            "up.res": 2
+          }
+        },
+        {
+          "title": "Widen it",
+          "module": "fx",
+          "why": "Both chorus buttons together give the dense ensemble.\n- CHORUS I on: the subtle chorus.\n- CHORUS II on: with II as well, the string-machine ensemble.\n- Listen for: the pad spreading out across the speakers.",
+          "set": {
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "up.pwDetune": "How wide and thick the super stack is.",
+        "up.e2a": "How slowly each chord fades in.",
+        "up.lpf": "How bright the pad is."
+      },
+      "tweaks": [
+        {
+          "id": "up.super",
+          "try": "Switch to OFF",
+          "hear": "Just the centre sawtooth: how much of the sound is the stack."
+        },
+        {
+          "id": "up.pwDetune",
+          "try": "Raise to 10",
+          "hear": "A wild, out-of-tune spread."
+        },
+        {
+          "id": "up.lpf",
+          "try": "Raise to 9",
+          "hear": "A brighter, cutting pad."
+        }
+      ]
+    },
+    {
+      "id": "sg-strings-over-brass",
+      "name": "Strings over Brass",
+      "ref": "In the style of 1980s film-score layered synth orchestras",
+      "artist": "Various",
+      "tags": ["strings", "brass", "film"],
+      "level": 2,
+      "blurb": "A slow string pad and a punchy brass on every key, played together.",
+      "how": "KEYBOARD on DUAL plays both layers on every key. The upper layer is a slow super-saw string pad; the lower is a brass, its filter swept open and shut by envelope 1 for the blare at the start of each chord. DETUNE puts the lower layer a fraction sharp, so the two beat together.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 50, 3.6, 0.85],
+          [0, 57, 3.6, 0.85],
+          [0, 62, 3.6, 0.85],
+          [0, 66, 3.6, 0.85],
+          [4, 48, 3.6, 0.85],
+          [4, 55, 3.6, 0.85],
+          [4, 60, 3.6, 0.85],
+          [4, 64, 3.6, 0.85],
+          [8, 46, 3.6, 0.85],
+          [8, 53, 3.6, 0.85],
+          [8, 58, 3.6, 0.85],
+          [8, 62, 3.6, 0.85],
+          [12, 45, 3.6, 0.85],
+          [12, 52, 3.6, 0.85],
+          [12, 57, 3.6, 0.85],
+          [12, 61, 3.6, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers on every key",
+          "module": "mode",
+          "why": "DUAL stacks the upper and lower layers.\n- KEYBOARD DUAL: both rows of controls play on every key.\n- DETUNE +0.1 st: the lower layer a shade sharp, so the layers beat slowly.\n- Listen for: one sawtooth getting thicker as the second layer joins it.",
+          "set": {
+            "kbd.mode": "dual",
+            "perf.lowerDetune": 0.08
+          }
+        },
+        {
+          "title": "The upper layer: strings",
+          "module": "env",
+          "why": "The top row becomes a slow, wide string pad.\n- UPPER SUPER ON: a thick sawtooth stack.\n- UPPER PW/DETUNE 50 %: a gentle spread.\n- UPPER ENV 2 A 630 ms: the strings fade in.\n- UPPER ENV 2 R 1.0 s: and fade away slowly.\n- UPPER LPF 1.8 kHz: soft and warm.\n- Listen for: a slow string swell under everything.",
+          "set": {
+            "up.super": "on",
+            "up.pwDetune": 5,
+            "up.e2a": 7,
+            "up.e2r": 7.5,
+            "up.lpf": 6.5
+          }
+        },
+        {
+          "title": "The lower layer: brass",
+          "module": "filter",
+          "why": "The bottom row is a brass: envelope 1 sweeps its filter open and back.\n- LOWER LPF 448 Hz: dark at rest.\n- LOWER VCF ENV 55 %: each chord opens it up.\n- LOWER ENV 1 A 63 ms: the sweep takes a moment, the brass “blare”.\n- LOWER ENV 1 D 250 ms: then settles.\n- LOWER ENV 1 S 30 %: to a mellow sustain.\n- Listen for: a bright, brassy push at the start of each chord, under the strings.",
+          "set": {
+            "lo.lpf": 4.5,
+            "lo.vcfEnv": 5.5,
+            "lo.e1a": 4.5,
+            "lo.e1d": 6,
+            "lo.e1s": 3
+          }
+        },
+        {
+          "title": "Balance and widen",
+          "module": "fx",
+          "why": "Set the layers’ levels and spread the whole thing.\n- LOWER VCA ENV LEVEL 70 %: the brass a little under the strings.\n- CHORUS I on: a gentle chorus over both.\n- Listen for: a full, blended orchestra.",
+          "set": {
+            "lo.vcaEnv": 7,
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "kbd.mode": "Both layers on every key.",
+        "lo.vcfEnv": "How hard the brass blares.",
+        "lo.vcaEnv": "The balance of brass against strings."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.mode",
+          "try": "Switch to SINGLE",
+          "hear": "The strings alone: what the brass was adding."
+        },
+        {
+          "id": "perf.lowerDetune",
+          "try": "Set to +7",
+          "hear": "The brass a fifth above: a big, open interval."
+        },
+        {
+          "id": "lo.e1a",
+          "try": "Lower to 2",
+          "hear": "A sharper, punchier brass stab."
+        }
+      ]
+    },
+    {
+      "id": "sg-split-bass-lead",
+      "name": "Split Bass and Lead",
+      "ref": "In the style of 1980s synth-pop played by one keyboardist",
+      "artist": "Various",
+      "tags": ["lead", "bass", "synth-pop"],
+      "level": 3,
+      "blurb": "A round bass under the left hand and a bright, gliding lead under the right.",
+      "how": "KEYBOARD on SPLIT gives the keys below C4 to the lower layer and the rest to the upper. The lower layer is a short square bass with its sub-oscillator; the upper a sawtooth lead with DDS 2 a fifth up and a touch of portamento. Each hand plays its own instrument.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.3],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 39, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4],
+          [4, 34, 0.4],
+          [4.5, 34, 0.4],
+          [5, 46, 0.3],
+          [5.5, 34, 0.4],
+          [6, 36, 0.9],
+          [7, 31, 0.9],
+          [0, 72, 1.4, 0.8],
+          [1.5, 74, 0.5, 0.8],
+          [2, 75, 1.9, 0.8],
+          [4, 79, 1, 0.8],
+          [5, 77, 0.5, 0.8],
+          [5.5, 75, 0.5, 0.8],
+          [6, 74, 2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One keyboard, two instruments",
+          "module": "mode",
+          "why": "SPLIT shares the keys out between the layers.\n- KEYBOARD SPLIT: the lower layer below C4, the upper from C4 up.\n- Listen for: the same sound either side of middle C, for now.",
+          "set": {
+            "kbd.mode": "split"
+          }
+        },
+        {
+          "title": "The left hand: a bass",
+          "module": "osc",
+          "why": "The lower layer becomes a short square bass with a sub-oscillator.\n- LOWER DDS 1 WAVEFORM square: hollow and round.\n- LOWER DDS 2 RANGE LFO: DDS 2 leaves the sound…\n- LOWER SUB OSC square (middle): …and the middle position brings in the square sub-oscillator.\n- LOWER MIX 60 : 40: the sub well up under DDS 1.\n- LOWER LPF 448 Hz: dark and round.\n- LOWER VCF ENV 30 %: a soft pluck on each note.\n- LOWER ENV 1 D 40 ms: a quick pluck.\n- LOWER ENV 1 S 0 %: that closes fully.\n- LOWER ENV 2 R 10 ms: the notes stop cleanly.\n- Listen for: a deep, tight bass in the left hand.",
+          "set": {
+            "lo.dds1Wave": "square",
+            "lo.dds2Range": "lfo",
+            "lo.dds2Mode": "ring",
+            "lo.mix": 4,
+            "lo.lpf": 4.5,
+            "lo.vcfEnv": 3,
+            "lo.e1d": 4,
+            "lo.e1s": 0,
+            "lo.e2r": 2.5
+          }
+        },
+        {
+          "title": "The right hand: a lead",
+          "module": "osc",
+          "why": "The upper layer becomes a bright lead, DDS 2 a fifth above DDS 1.\n- UPPER DDS 2 TUNE +7 st: a fifth up.\n- UPPER MIX 60 : 40: both oscillators heard.\n- UPPER RES 30 %: a little bite.\n- Listen for: a big, open lead above middle C.",
+          "set": {
+            "up.dds2Tune": 7,
+            "up.mix": 4,
+            "up.res": 3
+          }
+        },
+        {
+          "title": "Let the lead glide",
+          "module": "glide",
+          "why": "PORTAMENTO on the upper layer only, so the bass stays tight.\n- PORTAMENTO layer UPPER: portamento goes to the upper layer.\n- PORTAMENTO 270 ms: a short slide between lead notes.\n- Listen for: the lead sliding between notes while the bass stays put.",
+          "set": {
+            "perf.portaLayer": "upper",
+            "perf.porta": 3
+          }
+        }
+      ],
+      "context": {
+        "kbd.mode": "Bass below C4, lead above.",
+        "lo.mix": "How much sub-oscillator weight is in the bass.",
+        "perf.porta": "How far the lead slides between notes."
+      },
+      "tweaks": [
+        {
+          "id": "kbd.mode",
+          "try": "Switch to DUAL",
+          "hear": "Both sounds on every key: a thick, odd hybrid."
+        },
+        {
+          "id": "lo.dds2Mode",
+          "try": "Switch to SYNC (top)",
+          "hear": "The sine sub instead: a softer, rounder low end."
+        },
+        {
+          "id": "up.dds2Tune",
+          "try": "Set to 0",
+          "hear": "Unison oscillators: a narrower lead."
+        }
+      ]
+    },
+    {
+      "id": "sg-sync-lead",
+      "name": "Sync Lead",
+      "ref": "In the style of Daft Punk — “Robot Rock”",
+      "artist": "Daft Punk",
+      "tags": ["lead", "electronic", "2000s"],
+      "level": 2,
+      "blurb": "A tearing, vocal hard-sync lead that snarls at the start of every note.",
+      "how": "SYNC restarts DDS 2 with every cycle of DDS 1, so DDS 2’s pitch changes its tone rather than its note. Envelope 1 sweeps DDS 2’s pitch down on each key through the DDS modulator, which is the classic sync “tear”. SOLO and a little portamento make it a lead.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.45, 0.9],
+          [0.5, 64, 0.45, 0.9],
+          [1, 67, 0.45, 0.9],
+          [1.5, 64, 0.45, 0.9],
+          [2, 69, 0.9, 0.9],
+          [3, 67, 0.9, 0.9],
+          [4, 62, 0.45, 0.9],
+          [4.5, 62, 0.45, 0.9],
+          [5, 64, 0.45, 0.9],
+          [5.5, 62, 0.45, 0.9],
+          [6, 60, 1.8, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sync DDS 2 to DDS 1",
+          "module": "osc",
+          "why": "Hard sync, with DDS 2 tuned up and heard on its own.\n- UPPER DDS 2 MODE SYNC: DDS 2 restarts with each cycle of DDS 1.\n- UPPER DDS 2 TUNE +5 st: tuned up, so its waves are cut off mid-cycle.\n- UPPER MIX 0 : 100: only DDS 2.\n- Listen for: a hard, nasal edge instead of a plain sawtooth.",
+          "set": {
+            "up.dds2Mode": "sync",
+            "up.dds2Tune": 5,
+            "up.mix": 10
+          }
+        },
+        {
+          "title": "Sweep the sync",
+          "module": "mod",
+          "why": "Envelope 1 moves DDS 2’s pitch on every key: the tear.\n- UPPER DDS MOD destination DDS 2: the modulator acts on DDS 2.\n- UPPER DDS MOD ENV 1 60 %: a big sweep.\n- UPPER ENV 1 D 160 ms: over a fifth of a second or so.\n- UPPER ENV 1 S 0 %: and right down.\n- Listen for: each note snarling and settling.",
+          "set": {
+            "up.modDest": "dds2",
+            "up.modEnv": 6,
+            "up.e1d": 5.5,
+            "up.e1s": 0
+          }
+        },
+        {
+          "title": "Make it a lead",
+          "module": "mode",
+          "why": "One note at a time, sliding.\n- VOICE ASSIGN MODE SOLO: one note at a time.\n- PORTAMENTO 160 ms: a quick slide.\n- UPPER RES 30 %: a little more bite.\n- Listen for: a single, gliding, snarling lead.",
+          "set": {
+            "voice.mode": "solo",
+            "perf.porta": 2.5,
+            "up.res": 3
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "Where the sync tone sits.",
+        "up.modEnv": "How far each note sweeps."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Mode",
+          "try": "Switch to NORM",
+          "hear": "No sync: a pitch swoop instead of a tone sweep."
+        },
+        {
+          "id": "up.modEnv",
+          "try": "Lower to 3",
+          "hear": "A subtler bite."
+        },
+        {
+          "id": "up.xmod",
+          "try": "Raise to 4",
+          "hear": "With SYNC, CROSS MOD runs backwards and roughens DDS 2’s wave."
+        }
+      ]
+    },
+    {
+      "id": "sg-sub-bass",
+      "name": "Sub Bass",
+      "ref": "In the style of 2010s synthwave basslines",
+      "artist": "Various",
+      "tags": ["bass", "synthwave"],
+      "level": 1,
+      "blurb": "A deep, warm bass with a sine sub-oscillator underneath.",
+      "how": "Turning DDS 2’s RANGE to LFO frees its place in the mixer for the sub-oscillator; the switch at the top picks the sine sub, an octave below DDS 1. A square DDS 1, a dark filter and a short envelope pluck finish it.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.3],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 39, 0.4],
+          [3, 41, 0.4],
+          [3.5, 43, 0.4],
+          [4, 34, 0.4],
+          [4.5, 34, 0.4],
+          [5, 46, 0.3],
+          [5.5, 34, 0.4],
+          [6, 36, 0.9],
+          [7, 31, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sine an octave below",
+          "module": "osc",
+          "why": "DDS 2 at LFO range makes room for the sub-oscillator.\n- UPPER DDS 1 WAVEFORM square: a hollow square on top.\n- UPPER DDS 2 RANGE LFO: DDS 2 leaves the sound.\n- UPPER SUB OSC sine (top): the top position picks the sine sub.\n- UPPER MIX 50 : 50: equal parts square and sub.\n- Listen for: a deep, solid low end under the square.",
+          "set": {
+            "up.dds1Wave": "square",
+            "up.dds2Range": "lfo",
+            "up.dds2Mode": "sync",
+            "up.mix": 5
+          }
+        },
+        {
+          "title": "Darken and pluck",
+          "module": "filter",
+          "why": "A dark filter and a short envelope keep it round with a soft attack.\n- UPPER LPF 317 Hz: round, not buzzy.\n- UPPER VCF ENV 35 %: a little flick open on each note.\n- UPPER ENV 1 D 40 ms: quickly.\n- UPPER ENV 1 S 0 %: closing again.\n- Listen for: a soft “dum” on every note.",
+          "set": {
+            "up.lpf": 4,
+            "up.vcfEnv": 3.5,
+            "up.e1d": 4,
+            "up.e1s": 0
+          }
+        },
+        {
+          "title": "Tighten it",
+          "module": "env",
+          "why": "Short releases keep a fast bassline clean.\n- UPPER ENV 2 S 70 %: a slight dip after the start.\n- UPPER ENV 2 R 10 ms: notes stop cleanly.\n- Listen for: tight, even notes.",
+          "set": {
+            "up.e2s": 7,
+            "up.e2r": 2.5
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Mode": "Which sub-oscillator sits underneath.",
+        "up.mix": "How much of the weight is the sub."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Mode",
+          "try": "Switch to RING (middle)",
+          "hear": "The square sub: a buzzier, more present bottom."
+        },
+        {
+          "id": "up.drive",
+          "try": "Switch to 2",
+          "hear": "The filter overdriven: thicker and grittier."
+        },
+        {
+          "id": "up.mix",
+          "try": "Lower to 0",
+          "hear": "No sub: how much weight it was adding."
+        }
+      ]
+    },
+    {
+      "id": "sg-ring-bells",
+      "name": "Ring Mod Bells",
+      "ref": "In the style of 1970s electronic bell and gong sounds",
+      "artist": "Various",
+      "tags": ["keys", "bells", "70s"],
+      "level": 2,
+      "blurb": "Clangorous, inharmonic bells that ring and die away.",
+      "how": "RING multiplies DDS 1 by DDS 2, leaving their sum and difference pitches instead of either note: with DDS 2 tuned to an odd interval the result is metallic, like a bell. A fast attack and a long decay with no sustain make each key a strike.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 72, 1.5, 0.9],
+          [1, 79, 1.5, 0.8],
+          [2, 76, 1.5, 0.85],
+          [3, 84, 2, 0.8],
+          [5, 74, 1.5, 0.85],
+          [6, 67, 2, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Ring modulate the oscillators",
+          "module": "osc",
+          "why": "RING puts DDS 1 × DDS 2 in DDS 2’s place; MIX brings it in.\n- UPPER DDS 1 WAVEFORM sine: a pure tone.\n- UPPER DDS 2 WAVEFORM sine: another.\n- UPPER DDS 2 MODE RING: their product, not their sum.\n- UPPER DDS 2 RANGE 4′: DDS 2 an octave up…\n- UPPER DDS 2 TUNE +3.7 st: …and an odd interval more.\n- UPPER MIX 10 : 90: mostly the ring modulator.\n- Listen for: a clangy, bell-like tone that is no clear note.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Mode": "ring",
+            "up.dds2Range": "4",
+            "up.dds2Tune": 3.7,
+            "up.mix": 9
+          }
+        },
+        {
+          "title": "Strike and ring",
+          "module": "env",
+          "why": "No sustain and a long decay: each key is a strike.\n- UPPER ENV 2 D 1.6 s: a long ring.\n- UPPER ENV 2 S 0 %: dying away even while held.\n- UPPER ENV 2 R 1.0 s: and still ringing after the key.\n- UPPER LPF 10 kHz: open, so the clang is heard.\n- Listen for: bells that ring on and fade.",
+          "set": {
+            "up.e2d": 8,
+            "up.e2s": 0,
+            "up.e2r": 7.5,
+            "up.lpf": 9
+          }
+        },
+        {
+          "title": "A room for them",
+          "module": "fx",
+          "why": "Some delay gives the bells space.\n- UPPER DELAY SEND 40 %: a little of the layer to the delay.\n- DELAY TIME 440 ms: well-spaced echoes.\n- Listen for: the bells answering themselves.",
+          "set": {
+            "up.send": 4,
+            "dly.time": 8.8
+          }
+        }
+      ],
+      "context": {
+        "up.dds2Tune": "How inharmonic the bell is.",
+        "up.mix": "How much of the sound is the ring modulator."
+      },
+      "tweaks": [
+        {
+          "id": "up.dds2Tune",
+          "try": "Set to 0",
+          "hear": "A whole-number ratio: a hollow, nearly musical tone."
+        },
+        {
+          "id": "up.dds1Wave",
+          "try": "Set to sawtooth",
+          "hear": "A harsh, crowded clang from all the harmonics."
+        },
+        {
+          "id": "up.mix",
+          "try": "Lower to 3",
+          "hear": "The plain sine coming back under the clang."
+        }
+      ]
+    },
+    {
+      "id": "sg-cross-mod-keys",
+      "name": "Cross-Mod Keys",
+      "ref": "In the style of 1980s digital electric pianos",
+      "artist": "Various",
+      "tags": ["keys", "80s"],
+      "level": 2,
+      "blurb": "A glassy, bell-tinged electric-piano tone that mellows as it rings.",
+      "how": "CROSS MOD lets DDS 2 frequency-modulate DDS 1. With both on sines and DDS 2 two octaves up, a little FM gives the glassy “tine” of a digital piano. Envelope 1 sweeps DDS 2’s pitch so the attack is brighter, and DYNAMICS makes harder keys louder and brighter.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [
+          [0, 52, 1.8, 0.7],
+          [0, 59, 1.8, 0.7],
+          [0, 64, 1.8, 0.7],
+          [0, 67, 1.8, 0.7],
+          [2, 50, 1.8, 0.9],
+          [2, 57, 1.8, 0.9],
+          [2, 62, 1.8, 0.9],
+          [2, 66, 1.8, 0.9],
+          [4, 48, 1.8, 0.6],
+          [4, 55, 1.8, 0.6],
+          [4, 60, 1.8, 0.6],
+          [4, 64, 1.8, 0.6],
+          [6, 47, 1.8, 0.95],
+          [6, 55, 1.8, 0.95],
+          [6, 59, 1.8, 0.95],
+          [6, 62, 1.8, 0.95]
+        ]
+      },
+      "steps": [
+        {
+          "title": "FM from DDS 2 into DDS 1",
+          "module": "mod",
+          "why": "CROSS MOD frequency-modulates DDS 1 with DDS 2, whose level stays out of the mix.\n- UPPER DDS 1 WAVEFORM sine: a pure carrier.\n- UPPER DDS 2 WAVEFORM sine: a pure modulator.\n- UPPER DDS 2 RANGE 2′: two octaves up.\n- UPPER CROSS MOD 35 %: a touch of FM: glassy, not harsh.\n- Listen for: a bright, bell-like sheen on a sine.",
+          "set": {
+            "up.dds1Wave": "sine",
+            "up.dds2Wave": "sine",
+            "up.dds2Range": "2",
+            "up.xmod": 3.5
+          }
+        },
+        {
+          "title": "A piano’s decay",
+          "module": "env",
+          "why": "No sustain and a medium decay, like a struck note.\n- UPPER ENV 2 D 1.6 s: a long fade.\n- UPPER ENV 2 S 0 %: to silence.\n- UPPER ENV 2 R 250 ms: a short ring after the key.\n- Listen for: each chord fading like an electric piano.",
+          "set": {
+            "up.e2d": 8,
+            "up.e2s": 0,
+            "up.e2r": 6
+          }
+        },
+        {
+          "title": "Play it with feeling",
+          "module": "amp",
+          "why": "DYNAMICS makes harder keys louder and brighter.\n- UPPER DYNAMICS ON: full velocity response.\n- CHORUS I on: a gentle chorus.\n- Listen for: soft chords mellow, hard ones ringing out.",
+          "set": {
+            "up.dyn": "on",
+            "chorus.i": true
+          }
+        }
+      ],
+      "context": {
+        "up.xmod": "How glassy or clangy the tone is.",
+        "up.dyn": "How much playing harder changes the sound."
+      },
+      "tweaks": [
+        {
+          "id": "up.xmod",
+          "try": "Raise to 7",
+          "hear": "Heavy FM: a metallic clang."
+        },
+        {
+          "id": "up.dds2Range",
+          "try": "Set to 8′",
+          "hear": "The modulator at unison: a growlier, reedy tone."
+        },
+        {
+          "id": "up.dyn",
+          "try": "Switch to OFF",
+          "hear": "Every chord the same, however hard it is played."
+        }
+      ]
+    },
+    {
+      "id": "sg-looping-envelope",
+      "name": "Looping Envelope Pulse",
+      "ref": "In the style of 2010s ambient-electronic pulses",
+      "artist": "Various",
+      "tags": ["fx", "ambient"],
+      "level": 3,
+      "blurb": "Held chords that pulse and flutter by themselves, each note in its own time.",
+      "how": "ENV 1 in LOOP repeats its attack and decay for as long as the key is held: an LFO that starts with each note. Sent to the filter it makes every held chord pulse. Envelope 1’s KEYTRACK shortens the loop on higher notes, so the notes of a chord drift out of step.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 48, 7.6, 0.8],
+          [0, 55, 7.6, 0.8],
+          [0, 62, 7.6, 0.8],
+          [0, 67, 7.6, 0.8],
+          [0, 72, 7.6, 0.8],
+          [8, 46, 7.6, 0.8],
+          [8, 53, 7.6, 0.8],
+          [8, 60, 7.6, 0.8],
+          [8, 65, 7.6, 0.8],
+          [8, 70, 7.6, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Loop envelope 1",
+          "module": "env",
+          "why": "LOOP repeats attack and decay while the key is held.\n- UPPER ENV 1 MODE LOOP: envelope 1 repeats.\n- UPPER ENV 1 A 100 ms: a quick rise…\n- UPPER ENV 1 D 250 ms: …and fall, about three times a second.\n- UPPER ENV 1 S 0 %: down to nothing each time.\n- Listen for: nothing yet: the loop is not routed anywhere.",
+          "set": {
+            "up.env1Mode": "loop",
+            "up.e1a": 5,
+            "up.e1d": 6,
+            "up.e1s": 0
+          }
+        },
+        {
+          "title": "Pulse the filter",
+          "module": "filter",
+          "why": "Send the looping envelope to a dark, resonant filter.\n- UPPER LPF 224 Hz: dark between pulses.\n- UPPER RES 50 %: a squelchy peak.\n- UPPER VCF ENV 60 %: each pulse opens it.\n- Listen for: every held chord pulsing on its own.",
+          "set": {
+            "up.lpf": 3.5,
+            "up.res": 5,
+            "up.vcfEnv": 6
+          }
+        },
+        {
+          "title": "Out of step",
+          "module": "env",
+          "why": "KEYTRACK shortens the loop on higher notes.\n- UPPER ENV 1 KEYTRACK ON: each note pulses at its own speed.\n- UPPER DELAY SEND 40 %: some delay to blur it.\n- DELAY FEEDBACK 60 %: a long trail.\n- Listen for: the notes of a chord fluttering against each other.",
+          "set": {
+            "up.env1Key": "on",
+            "up.send": 4,
+            "dly.feedback": 6
+          }
+        }
+      ],
+      "context": {
+        "up.e1d": "How fast the pulses come.",
+        "up.vcfEnv": "How deep each pulse is."
+      },
+      "tweaks": [
+        {
+          "id": "up.env1Mode",
+          "try": "Switch to NORMAL",
+          "hear": "One sweep per key, then held: the loop is gone."
+        },
+        {
+          "id": "up.e1d",
+          "try": "Raise to 7.5",
+          "hear": "Slow, breathing swells."
+        },
+        {
+          "id": "up.env1Key",
+          "try": "Switch to OFF",
+          "hear": "All the notes pulsing together."
+        }
+      ]
+    },
+    {
+      "id": "sg-arp-echoes",
+      "name": "Arpeggio Echoes",
+      "ref": "In the style of 1980s synth-pop arpeggios",
+      "artist": "Various",
+      "tags": ["seq", "synth-pop", "80s"],
+      "level": 2,
+      "blurb": "A bright, plucked arpeggio climbing two octaves, its echoes filling the gaps.",
+      "how": "The arpeggiator plays the held chord one note at a time at the TEMPO and CLK DIV, here eighth notes over two octaves. A short, plucky filter envelope makes each step pop, and the delay, timed against the tempo by ear, fills in between.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 57, 7.8, 0.8],
+          [0, 60, 7.8, 0.8],
+          [0, 64, 7.8, 0.8],
+          [8, 53, 7.8, 0.8],
+          [8, 57, 7.8, 0.8],
+          [8, 60, 7.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Start the arpeggiator",
+          "module": "mode",
+          "why": "Held chords play one note at a time.\n- ARP on: the arpeggiator runs.\n- CLK DIV 1/8: a step every eighth note.\n- ARP RANGE 2: over two octaves.\n- ARP MODE U&D: up and back down.\n- Listen for: the chord turning into a running pattern.",
+          "set": {
+            "arp.on": true,
+            "arp.div": "1/8",
+            "arp.range": "2",
+            "arp.mode": "updown"
+          }
+        },
+        {
+          "title": "Make each step pluck",
+          "module": "filter",
+          "why": "A short filter envelope pops each note.\n- UPPER LPF 893 Hz: fairly dark at rest.\n- UPPER VCF ENV 50 %: popping open on each step.\n- UPPER ENV 1 D 100 ms: briefly.\n- UPPER ENV 1 S 0 %: closing between steps.\n- UPPER ENV 2 D 250 ms: each note dips…\n- UPPER ENV 2 S 50 %: …to half level.\n- Listen for: a bright plucked pattern.",
+          "set": {
+            "up.lpf": 5.5,
+            "up.vcfEnv": 5,
+            "up.e1d": 5,
+            "up.e1s": 0,
+            "up.e2d": 6,
+            "up.e2s": 5
+          }
+        },
+        {
+          "title": "Echo it",
+          "module": "fx",
+          "why": "The delay fills the gaps between steps.\n- UPPER DELAY SEND 50 %: half the layer to the delay.\n- DELAY TIME 410 ms: echoes about a dotted eighth apart at this tempo.\n- DELAY FEEDBACK 50 %: a few repeats.\n- Listen for: the pattern doubled and tangled by its echoes.",
+          "set": {
+            "up.send": 5,
+            "dly.time": 8.7,
+            "dly.feedback": 5
+          }
+        }
+      ],
+      "context": {
+        "arp.div": "How fast the steps run.",
+        "up.send": "How much of the arpeggio echoes."
+      },
+      "tweaks": [
+        {
+          "id": "arp.mode",
+          "try": "Set to RANDOM",
+          "hear": "The notes in no order."
+        },
+        {
+          "id": "arp.range",
+          "try": "Set to 4",
+          "hear": "A pattern sweeping four octaves."
+        },
+        {
+          "id": "hold.upper",
+          "try": "Turn on",
+          "hear": "The arpeggio keeps running after the keys are let go."
+        }
+      ]
+    },
+    {
+      "id": "sg-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "In the style of 1970s string-synth ensembles",
+      "artist": "Various",
+      "tags": ["strings", "70s"],
+      "level": 2,
+      "blurb": "A soft, swirling string section from one pulse wave.",
+      "how": "DDS 2’s pulse wave has its width swept by LFO 1 through PW/WAVE: pulse-width modulation, the classic swirling string movement. A slow attack and release, the high-pass taking off some bass, and both choruses finish the ensemble.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 55, 3.8, 0.75],
+          [0, 62, 3.8, 0.75],
+          [0, 67, 3.8, 0.75],
+          [0, 71, 3.8, 0.75],
+          [4, 52, 3.8, 0.75],
+          [4, 59, 3.8, 0.75],
+          [4, 64, 3.8, 0.75],
+          [4, 67, 3.8, 0.75],
+          [8, 48, 3.8, 0.75],
+          [8, 55, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 64, 3.8, 0.75],
+          [12, 50, 3.8, 0.75],
+          [12, 57, 3.8, 0.75],
+          [12, 62, 3.8, 0.75],
+          [12, 66, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse instead of DDS 1",
+          "module": "osc",
+          "why": "DDS 2’s pulse, alone in the mix.\n- UPPER DDS 2 WAVEFORM pulse: a pulse wave.\n- UPPER MIX 0 : 100: only DDS 2.\n- UPPER PW/DETUNE 30 %: a little narrower than square.\n- Listen for: a reedy, hollow tone.",
+          "set": {
+            "up.dds2Wave": "pulse",
+            "up.mix": 10,
+            "up.pwDetune": 3
+          }
+        },
+        {
+          "title": "Sweep its width",
+          "module": "mod",
+          "why": "LFO 1 swings the pulse width through PW/WAVE.\n- UPPER PW/WAVE source LFO 1: LFO 1 moves PW/WAVE.\n- UPPER PW/WAVE 60 %: a deep sweep.\n- UPPER LFO 1 RATE 0.40 Hz: slowly.\n- Listen for: the tone swirling and shimmering.",
+          "set": {
+            "up.pwSrc": "lfo1",
+            "up.pwWave": 6,
+            "up.lfoRate": 3.5
+          }
+        },
+        {
+          "title": "Make it a section",
+          "module": "env",
+          "why": "Slow in, slow out, and lighter in the bass.\n- UPPER ENV 2 A 630 ms: the strings bow in.\n- UPPER ENV 2 R 1.0 s: and fade.\n- UPPER HPF 120 Hz: some low end taken off.\n- UPPER LPF 2.5 kHz: soft on top.\n- CHORUS I on: the chorus…\n- CHORUS II on: …as an ensemble.\n- Listen for: a lush, moving string section.",
+          "set": {
+            "up.e2a": 7,
+            "up.e2r": 7.5,
+            "up.hpf": 4,
+            "up.lpf": 7,
+            "chorus.i": true,
+            "chorus.ii": true
+          }
+        }
+      ],
+      "context": {
+        "up.pwWave": "How much the strings swirl.",
+        "up.lfoRate": "How fast they swirl."
+      },
+      "tweaks": [
+        {
+          "id": "up.pwSrc",
+          "try": "Switch to MANUAL",
+          "hear": "A still pulse: the movement was all PWM."
+        },
+        {
+          "id": "up.lfoRate",
+          "try": "Raise to 6",
+          "hear": "A fast, nervous flutter."
+        },
+        {
+          "id": "up.hpf",
+          "try": "Lower to 0",
+          "hear": "Fuller, with the bass back."
+        }
+      ]
+    }
+  ]
+}

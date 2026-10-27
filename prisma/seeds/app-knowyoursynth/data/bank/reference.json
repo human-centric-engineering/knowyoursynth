@@ -6725,15 +6725,6 @@
       "source": "https://musictech.com/news/udo-super-6-is-now-shipping/"
     },
     {
-      "id": "udo-super-gemini",
-      "name": "UDO Audio Super Gemini",
-      "maker": "UDO Audio",
-      "year": "2023",
-      "kind": "poly",
-      "text": "A 20-voice bi-timbral analogue-hybrid flagship with FPGA oscillators, analogue low-pass filters, a stereo signal path, a five-octave polyphonic-aftertouch keyboard and a ribbon controller.",
-      "source": "https://www.synthtopia.com/content/2023/11/28/udo-audio-super-gemini-synthesizer-hands-on-demo/"
-    },
-    {
       "id": "vermona-mars",
       "name": "Vermona MARS",
       "maker": "Vermona",

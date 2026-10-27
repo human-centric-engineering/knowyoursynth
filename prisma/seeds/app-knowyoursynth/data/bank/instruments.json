@@ -799,6 +799,16 @@
       "source": "https://sequential.com/2021/08/take-5-compact-poly-synth/"
     },
     {
+      "id": "udo-super-gemini",
+      "name": "UDO Audio Super Gemini",
+      "maker": "UDO Audio",
+      "year": "2023",
+      "kind": "poly",
+      "app": ["super-gemini"],
+      "text": "UDO Audio’s 20-voice, two-layer analogue-hybrid flagship: in each layer a digital super-wave oscillator and a second that can ring-modulate, sync or become an LFO, a 6 dB high-pass into a 24 dB low-pass, two envelopes with hold stages and two LFOs, on a stereo signal path, with chorus, delay, an arpeggiator, a 64-step sequencer, a ribbon and a 61-key polyphonic-aftertouch keyboard.",
+      "source": "https://www.synthtopia.com/content/2023/11/28/udo-audio-super-gemini-synthesizer-hands-on-demo/"
+    },
+    {
       "id": "donner-essential-b1",
       "name": "Donner Essential B1",
       "maker": "Donner",

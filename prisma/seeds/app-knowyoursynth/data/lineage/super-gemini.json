@@ -1,0 +1,43 @@
+{
+  "synth": "super-gemini",
+  "title": "From the Super 6 to the Super Gemini",
+  "intro": "UDO Audio is a British company, and the Super Gemini is its flagship. It takes the voice of the Super 6, a digital super-wave oscillator and a second oscillator feeding analogue filters on a stereo signal path, and doubles it: two complete layers, upper and lower, each with its own full row of controls, played alone, stacked or split. Its panel was designed with Axel Hartmann.",
+  "timeline": [
+    {
+      "year": "1996",
+      "name": "Roland JP-8000",
+      "tag": "The idea",
+      "text": "Its Super Saw put seven detuned sawtooths in one oscillator and became the sound of trance. DDS 1’s super core, a centre oscillator and six sisters spread apart, is the same idea built into a hybrid voice."
+    },
+    {
+      "year": "2020",
+      "name": "UDO Audio Super 6",
+      "tag": "Closest ancestor",
+      "text": "A twelve-voice binaural analogue-hybrid polysynth: FPGA oscillators, a true-stereo analogue signal path and one layer of controls. The Super Gemini’s two layers are each a Super 6-style voice."
+    },
+    {
+      "year": "2023",
+      "name": "UDO Audio Super Gemini",
+      "tag": "This synth",
+      "text": "Twenty voices in two layers, each with DDS 1 and DDS 2, a 6 dB high-pass into a 24 dB low-pass with drive, a VCA, two envelopes with hold stages, LFO 1, chorus and delay, played in SINGLE, DUAL or SPLIT, with a performance LFO, a ribbon, polyphonic aftertouch, a modulation matrix, an arpeggiator and a sequencer. To the Super 6’s engine it adds wave morphing, a ring modulator, a sine sub-oscillator and a delay send."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Yamaha CS-80",
+      "years": "1977",
+      "text": "Another instrument whose every key can play two complete voices at once, with a ribbon above the keys and a pressure-sensitive keyboard. This app plays it."
+    },
+    {
+      "name": "Roland Jupiter-8",
+      "years": "1981",
+      "text": "An eight-voice analogue poly that holds two patches and plays them split or layered across its keyboard. This app plays it."
+    },
+    {
+      "name": "Oberheim OB-X8",
+      "years": "2022",
+      "text": "A modern analogue flagship that also plays two sounds split or stacked on its keyboard."
+    }
+  ],
+  "note": "None of the databank’s records name the Super Gemini yet."
+}
