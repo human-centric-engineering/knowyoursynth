@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (31)
+## In the app (32)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -33,6 +33,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`cs-80`](./cs-80/README.md)                               | Yamaha CS-80 Polyphonic Synthesizer                                                                                                                              | 0.13.0      |
 | [`deepmind-12d`](./deepmind-12d/README.md)                 | Behringer DeepMind 12D                                                                                                                                           | 0.7.0       |
 | [`donner-b1`](./donner-b1/README.md)                       | Donner Essential B1 Analog Bass Sequencer                                                                                                                        | 0.11.0      |
+| [`e7`](./e7/README.md)                                     | GS Music e7 Polyphonic Analog Synthesizer                                                                                                                        | 0.12.0      |
 | [`ems-vcs3`](./ems-vcs3/README.md)                         | EMS (Electronic Music Studios, London) VCS3 Mk 1 (Voltage Controlled Studio Mk 3)                                                                                | 0.9.0       |
 | [`grandmother`](./grandmother/README.md)                   | Moog Music Grandmother                                                                                                                                           | 0.10.0      |
 | [`jupiter-4`](./jupiter-4/README.md)                       | Roland Jupiter-4 Compuphonic (JP-4)                                                                                                                              | 0.10.0      |
@@ -57,7 +58,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (22)
+## Not in the app yet (21)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -69,7 +70,6 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`elta-music-solar-42`](./elta-music-solar-42/README.md)                               | Elta Music SOLAR 42 Ambient Machine                                                                        | 0.12.0      |
 | [`erica-synths-syntrx-ii`](./erica-synths-syntrx-ii/README.md)                         | Erica Synths SYNTRX II                                                                                     | 0.12.0      |
 | [`gamechanger-audio-motor-synth-mkii`](./gamechanger-audio-motor-synth-mkii/README.md) | Gamechanger Audio MOTOR Synth MKII                                                                         | 0.13.0      |
-| [`gs-music-e7`](./gs-music-e7/README.md)                                               | GS Music e7 Polyphonic Analog Synthesizer                                                                  | 0.12.0      |
 | [`korg-minilogue-xd`](./korg-minilogue-xd/README.md)                                   | Korg minilogue xd                                                                                          | 0.12.0      |
 | [`moog-matriarch`](./moog-matriarch/README.md)                                         | Moog Music Matriarch                                                                                       | 0.12.0      |
 | [`moog-sub-37`](./moog-sub-37/README.md)                                               | Moog Music Sub 37 Tribute Edition                                                                          | 0.11.0      |

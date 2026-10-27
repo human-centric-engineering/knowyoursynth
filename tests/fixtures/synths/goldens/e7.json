@@ -1,0 +1,4920 @@
+{
+  "id": "e7",
+  "readouts": {
+    "lfo1.rate": [
+      "0.10 Hz",
+      "0.20 Hz",
+      "0.40 Hz",
+      "0.79 Hz",
+      "1.58 Hz",
+      "3.16 Hz",
+      "6.31 Hz",
+      "13 Hz",
+      "25 Hz",
+      "50 Hz",
+      "100 Hz"
+    ],
+    "lfo2.rate": [
+      "0.10 Hz",
+      "0.20 Hz",
+      "0.40 Hz",
+      "0.79 Hz",
+      "1.58 Hz",
+      "3.16 Hz",
+      "6.31 Hz",
+      "13 Hz",
+      "25 Hz",
+      "50 Hz",
+      "100 Hz"
+    ],
+    "lfo2.eg1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.tune": [
+      "−50 cents",
+      "−40 cents",
+      "−30 cents",
+      "−20 cents",
+      "−10 cents",
+      "0 cents",
+      "+10 cents",
+      "+20 cents",
+      "+30 cents",
+      "+40 cents",
+      "+50 cents"
+    ],
+    "osc1.transpose": [
+      "-24 st",
+      "-19.2 st",
+      "-14.4 st",
+      "-9.6 st",
+      "-4.8 st",
+      "0 st",
+      "+4.8 st",
+      "+9.6 st",
+      "+14.4 st",
+      "+19.2 st",
+      "+24 st"
+    ],
+    "osc1.lfo1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.eg1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.lfo2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.lfo3": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.pw": [
+      "10 %",
+      "14 %",
+      "18 %",
+      "22 %",
+      "26 %",
+      "30 %",
+      "34 %",
+      "38 %",
+      "42 %",
+      "46 %",
+      "50 %"
+    ],
+    "osc1.eg1pwm": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc1.lfo1pwm": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.tune": [
+      "−50 cents",
+      "−40 cents",
+      "−30 cents",
+      "−20 cents",
+      "−10 cents",
+      "0 cents",
+      "+10 cents",
+      "+20 cents",
+      "+30 cents",
+      "+40 cents",
+      "+50 cents"
+    ],
+    "osc2.transpose": [
+      "-24 st",
+      "-19.2 st",
+      "-14.4 st",
+      "-9.6 st",
+      "-4.8 st",
+      "0 st",
+      "+4.8 st",
+      "+9.6 st",
+      "+14.4 st",
+      "+19.2 st",
+      "+24 st"
+    ],
+    "osc2.lfo1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.eg1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.lfo2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.lfo3": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.pw": [
+      "10 %",
+      "14 %",
+      "18 %",
+      "22 %",
+      "26 %",
+      "30 %",
+      "34 %",
+      "38 %",
+      "42 %",
+      "46 %",
+      "50 %"
+    ],
+    "osc2.eg1pwm": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "osc2.lfo1pwm": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "mix.osc1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "mix.sub1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "mix.osc2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "mix.sub2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "mix.noise": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "kbd.porta": [
+      "off",
+      "5 ms",
+      "40 ms",
+      "130 ms",
+      "320 ms",
+      "630 ms",
+      "1.1 s",
+      "1.7 s",
+      "2.6 s",
+      "3.6 s",
+      "5.0 s"
+    ],
+    "kbd.bend": [
+      "±0 semitones",
+      "±1 semitones",
+      "±2 semitones",
+      "±4 semitones",
+      "±5 semitones",
+      "±6 semitones",
+      "±7 semitones",
+      "±8 semitones",
+      "±10 semitones",
+      "±11 semitones",
+      "±12 semitones"
+    ],
+    "vcf.cutoff": [
+      "10 Hz",
+      "22 Hz",
+      "48 Hz",
+      "105 Hz",
+      "229 Hz",
+      "500 Hz",
+      "1.1 kHz",
+      "2.4 kHz",
+      "5.2 kHz",
+      "11 kHz",
+      "25 kHz"
+    ],
+    "vcf.res": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.eg1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.vel": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.lfo1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.lfo2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.lfo3": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.kbd": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.wheel": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vcf.at": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vca.lfo1": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vca.level": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vca.lfo2": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vca.lfo3": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "vca.kbd": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "stereo.spread": [
+      "100 %",
+      "80 %",
+      "60 %",
+      "40 %",
+      "20 %",
+      "centre",
+      "20 %",
+      "40 %",
+      "60 %",
+      "80 %",
+      "100 %"
+    ],
+    "vca.vel": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "stereo.motion": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "out.volume": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env1.attack": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env1.velA": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env1.decay": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env1.kbd": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env1.sustain": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env1.release": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env1.velR": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env2.attack": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env2.velA": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env2.decay": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env2.kbd": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env2.sustain": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "env2.release": [
+      "1 ms",
+      "4 ms",
+      "15 ms",
+      "48 ms",
+      "120 ms",
+      "300 ms",
+      "700 ms",
+      "1.6 s",
+      "3.6 s",
+      "7.3 s",
+      "15 s"
+    ],
+    "env2.velR": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "lfo3.rate": [
+      "0.10 Hz",
+      "0.20 Hz",
+      "0.40 Hz",
+      "0.79 Hz",
+      "1.58 Hz",
+      "3.16 Hz",
+      "6.31 Hz",
+      "13 Hz",
+      "25 Hz",
+      "50 Hz",
+      "100 Hz"
+    ],
+    "lfo3.wheel": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "lfo3.at": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "chorus.rate": [
+      "0.10 Hz",
+      "0.15 Hz",
+      "0.22 Hz",
+      "0.32 Hz",
+      "0.48 Hz",
+      "0.71 Hz",
+      "1.05 Hz",
+      "1.55 Hz",
+      "2.29 Hz",
+      "3.38 Hz",
+      "5.00 Hz"
+    ],
+    "chorus.depth": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "chorus.mix": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "delay.time": [
+      "50 ms",
+      "70 ms",
+      "97 ms",
+      "134 ms",
+      "187 ms",
+      "260 ms",
+      "361 ms",
+      "502 ms",
+      "698 ms",
+      "971 ms",
+      "1350 ms"
+    ],
+    "delay.fb": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ],
+    "delay.mix": [
+      "0 %",
+      "10 %",
+      "20 %",
+      "30 %",
+      "40 %",
+      "50 %",
+      "60 %",
+      "70 %",
+      "80 %",
+      "90 %",
+      "100 %"
+    ]
+  },
+  "engine": {
+    "init": {
+      "delay": { "on": false },
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 },
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      },
+      "fx": { "mode": "bypass" },
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 3.1622776601683795 },
+      "lfo2": {
+        "common": false,
+        "keySync": false,
+        "mix": { "tri": 1 },
+        "rate": 3.1622776601683795
+      },
+      "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 3.1622776601683795 },
+      "noise": { "level": 0 },
+      "normals": {},
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ],
+      "poly": { "detune": 0, "mono": false, "stack": 1, "voices": 7 },
+      "routes": [],
+      "sh": { "glide": 0, "rate": 5 },
+      "trig": { "drone": false, "repeat": false, "retrig": true },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env2", "gain": 1 },
+      "volume": 0.5453391388693143
+    },
+    "lfo1.shape=\"saw\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo1.shape=\"rsaw\"": {
+      "lfo2": {
+        "common": false,
+        "keySync": false,
+        "mix": { "rsaw": 1 },
+        "rate": 3.1622776601683795
+      }
+    },
+    "lfo1.shape=\"sq\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo1.shape=\"sh\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "sh": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo1.mode=\"mono\"": {
+      "lfo2": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo1.mode=\"kbtrack\"": {},
+    "lfo1.mode=\"kbsync\"": {
+      "lfo2": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo1.mode=\"clock\"": {
+      "lfo2": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "lfo1.mode=\"kbclock\"": {
+      "lfo2": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "lfo1.rate=0": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 }
+    },
+    "lfo1.rate=2.5": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "lfo1.rate=7.5": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 17.78279410038923 }
+    },
+    "lfo1.rate=10": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 100 }
+    },
+    "lfo1.div=\"1\"": {},
+    "lfo1.div=\"1/2.\"": {},
+    "lfo1.div=\"1T\"": {},
+    "lfo1.div=\"1/2\"": {},
+    "lfo1.div=\"1/4.\"": {},
+    "lfo1.div=\"1/2T\"": {},
+    "lfo1.div=\"1/8.\"": {},
+    "lfo1.div=\"1/4T\"": {},
+    "lfo1.div=\"1/8\"": {},
+    "lfo1.div=\"1/16.\"": {},
+    "lfo1.div=\"1/8T\"": {},
+    "lfo1.div=\"1/16\"": {},
+    "lfo1.div=\"1/16T\"": {},
+    "lfo1.div=\"1/32\"": {},
+    "lfo2.shape=\"saw\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.shape=\"rsaw\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "rsaw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.shape=\"sq\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.shape=\"sh\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "sh": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.mode=\"mono\"": {
+      "lfo": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.mode=\"kbtrack\"": { "routes": [{ "amt": 1, "dst": "lfoRate", "src": "kbd" }] },
+    "lfo2.mode=\"kbsync\"": {
+      "lfo": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo2.mode=\"clock\"": {
+      "lfo": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "lfo2.mode=\"kbclock\"": {
+      "lfo": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "lfo2.rate=0": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 }
+    },
+    "lfo2.rate=2.5": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "lfo2.rate=7.5": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 17.78279410038923 }
+    },
+    "lfo2.rate=10": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 100 }
+    },
+    "lfo2.div=\"1\"": {},
+    "lfo2.div=\"1/2.\"": {},
+    "lfo2.div=\"1T\"": {},
+    "lfo2.div=\"1/2\"": {},
+    "lfo2.div=\"1/4.\"": {},
+    "lfo2.div=\"1/2T\"": {},
+    "lfo2.div=\"1/8.\"": {},
+    "lfo2.div=\"1/4T\"": {},
+    "lfo2.div=\"1/8\"": {},
+    "lfo2.div=\"1/16.\"": {},
+    "lfo2.div=\"1/8T\"": {},
+    "lfo2.div=\"1/16\"": {},
+    "lfo2.div=\"1/16T\"": {},
+    "lfo2.div=\"1/32\"": {},
+    "lfo2.eg1=2.5": { "routes": [{ "amt": 1, "dst": "lfoRate", "src": "env1" }] },
+    "lfo2.eg1=5": { "routes": [{ "amt": 2, "dst": "lfoRate", "src": "env1" }] },
+    "lfo2.eg1=7.5": { "routes": [{ "amt": 3, "dst": "lfoRate", "src": "env1" }] },
+    "lfo2.eg1=10": { "routes": [{ "amt": 4, "dst": "lfoRate", "src": "env1" }] },
+    "osc1.wave=\"tri\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "tri": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.wave=\"shark\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "shark": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.wave=\"off\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.tune=-5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.tune=-2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.tune=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.tune=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.transpose=-24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -24,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.transpose=-12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.transpose=12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.transpose=24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.lfo1=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch1", "src": "lfo2" }] },
+    "osc1.lfo1=5": { "routes": [{ "amt": 3, "dst": "pitch1", "src": "lfo2" }] },
+    "osc1.lfo1=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch1", "src": "lfo2" }] },
+    "osc1.lfo1=10": { "routes": [{ "amt": 12, "dst": "pitch1", "src": "lfo2" }] },
+    "osc1.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "env1" }] },
+    "osc1.eg1=5": { "routes": [{ "amt": 6, "dst": "pitch1", "src": "env1" }] },
+    "osc1.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "env1" }] },
+    "osc1.eg1=10": { "routes": [{ "amt": 24, "dst": "pitch1", "src": "env1" }] },
+    "osc1.lfo2=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch1", "src": "lfo" }] },
+    "osc1.lfo2=5": { "routes": [{ "amt": 3, "dst": "pitch1", "src": "lfo" }] },
+    "osc1.lfo2=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch1", "src": "lfo" }] },
+    "osc1.lfo2=10": { "routes": [{ "amt": 12, "dst": "pitch1", "src": "lfo" }] },
+    "osc1.lfo3=2.5": {},
+    "osc1.lfo3=5": {},
+    "osc1.lfo3=7.5": {},
+    "osc1.lfo3=10": {},
+    "osc1.pulse=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "pulse": 1, "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc.autotune=true": {},
+    "osc1.pw=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.1,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.pw=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.2,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.pw=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.30000000000000004,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.pw=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.4,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc1.eg1pwm=2.5": { "routes": [{ "amt": 0.1, "dst": "pw1", "src": "env1" }] },
+    "osc1.eg1pwm=5": { "routes": [{ "amt": 0.2, "dst": "pw1", "src": "env1" }] },
+    "osc1.eg1pwm=7.5": { "routes": [{ "amt": 0.30000000000000004, "dst": "pw1", "src": "env1" }] },
+    "osc1.eg1pwm=10": { "routes": [{ "amt": 0.4, "dst": "pw1", "src": "env1" }] },
+    "osc1.lfo1pwm=2.5": { "routes": [{ "amt": 0.05, "dst": "pw1", "src": "lfo2" }] },
+    "osc1.lfo1pwm=5": { "routes": [{ "amt": 0.1, "dst": "pw1", "src": "lfo2" }] },
+    "osc1.lfo1pwm=7.5": { "routes": [{ "amt": 0.15000000000000002, "dst": "pw1", "src": "lfo2" }] },
+    "osc1.lfo1pwm=10": { "routes": [{ "amt": 0.2, "dst": "pw1", "src": "lfo2" }] },
+    "osc2.wave=\"tri\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.wave=\"shark\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "shark": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.wave=\"off\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "subLevel": 0, "syncTo": -1 }
+      ]
+    },
+    "osc2.tune=-5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.tune=-2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.tune=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.tune=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.transpose=-24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -24,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.transpose=-12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.transpose=12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.transpose=24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.lfo1=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch2", "src": "lfo2" }] },
+    "osc2.lfo1=5": { "routes": [{ "amt": 3, "dst": "pitch2", "src": "lfo2" }] },
+    "osc2.lfo1=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch2", "src": "lfo2" }] },
+    "osc2.lfo1=10": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "lfo2" }] },
+    "osc2.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch2", "src": "env1" }] },
+    "osc2.eg1=5": { "routes": [{ "amt": 6, "dst": "pitch2", "src": "env1" }] },
+    "osc2.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch2", "src": "env1" }] },
+    "osc2.eg1=10": { "routes": [{ "amt": 24, "dst": "pitch2", "src": "env1" }] },
+    "osc2.lfo2=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch2", "src": "lfo" }] },
+    "osc2.lfo2=5": { "routes": [{ "amt": 3, "dst": "pitch2", "src": "lfo" }] },
+    "osc2.lfo2=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch2", "src": "lfo" }] },
+    "osc2.lfo2=10": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "lfo" }] },
+    "osc2.lfo3=2.5": {},
+    "osc2.lfo3=5": {},
+    "osc2.lfo3=7.5": {},
+    "osc2.lfo3=10": {},
+    "osc2.pulse=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1, "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.sync=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "osc2.pw=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.1,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.pw=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.2,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.pw=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.30000000000000004,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.pw=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.4,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "osc2.eg1pwm=2.5": { "routes": [{ "amt": 0.1, "dst": "pw2", "src": "env1" }] },
+    "osc2.eg1pwm=5": { "routes": [{ "amt": 0.2, "dst": "pw2", "src": "env1" }] },
+    "osc2.eg1pwm=7.5": { "routes": [{ "amt": 0.30000000000000004, "dst": "pw2", "src": "env1" }] },
+    "osc2.eg1pwm=10": { "routes": [{ "amt": 0.4, "dst": "pw2", "src": "env1" }] },
+    "osc2.lfo1pwm=2.5": { "routes": [{ "amt": 0.05, "dst": "pw2", "src": "lfo2" }] },
+    "osc2.lfo1pwm=5": { "routes": [{ "amt": 0.1, "dst": "pw2", "src": "lfo2" }] },
+    "osc2.lfo1pwm=7.5": { "routes": [{ "amt": 0.15000000000000002, "dst": "pw2", "src": "lfo2" }] },
+    "osc2.lfo1pwm=10": { "routes": [{ "amt": 0.2, "dst": "pw2", "src": "lfo2" }] },
+    "mix.osc1=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.125,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.25,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.375,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc1=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.5,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.125,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.25,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.375,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub1=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.5,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc2=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.125,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc2=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.25,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc2=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.375,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.osc2=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.5,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub2=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.125,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub2=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub2=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.375,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.sub2=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.noise=2.5": { "noise": { "level": 0.07578582832551992 } },
+    "mix.noise=5": { "noise": { "level": 0.24622888266898327 } },
+    "mix.noise=7.5": { "noise": { "level": 0.490562260906208 } },
+    "mix.noise=10": { "noise": { "level": 0.8 } },
+    "kbd.mode=\"mono-st\"": {
+      "poly": { "detune": 0, "mono": true, "stack": 1, "voices": 7 },
+      "trig": { "drone": false, "repeat": false, "retrig": false }
+    },
+    "kbd.mode=\"mono-mt\"": { "poly": { "detune": 0, "mono": true, "stack": 1, "voices": 7 } },
+    "kbd.mode=\"uni-st\"": {
+      "poly": { "detune": 0.15, "mono": true, "stack": 7, "voices": 7 },
+      "trig": { "drone": false, "repeat": false, "retrig": false }
+    },
+    "kbd.mode=\"uni-mt\"": { "poly": { "detune": 0.15, "mono": true, "stack": 7, "voices": 7 } },
+    "kbd.porta=2.5": { "glide": { "legato": false, "time": 0.078125 } },
+    "kbd.porta=5": { "glide": { "legato": false, "time": 0.625 } },
+    "kbd.porta=7.5": { "glide": { "legato": false, "time": 2.109375 } },
+    "kbd.porta=10": { "glide": { "legato": false, "time": 5 } },
+    "kbd.bend=0": {},
+    "kbd.bend=3": {},
+    "kbd.bend=6": {},
+    "kbd.bend=9": {},
+    "kbd.bend=12": {},
+    "vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 10,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 70.71067811865476,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 500,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3535.533905932738,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=10": {
+      "filter": {
+        "cutoff": 25000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.275,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.55,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.8250000000000001,
+        "type": "ladder"
+      }
+    },
+    "vcf.res=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "vcf.eg1=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 2,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.eg1=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 4,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.eg1=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 6,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.eg1=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 8,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.vel=2.5": {},
+    "vcf.vel=5": {},
+    "vcf.vel=7.5": {},
+    "vcf.vel=10": {},
+    "vcf.lfo1=2.5": { "routes": [{ "amt": 0.25, "dst": "cutoff", "src": "lfo2" }] },
+    "vcf.lfo1=5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "lfo2" }] },
+    "vcf.lfo1=7.5": { "routes": [{ "amt": 2.25, "dst": "cutoff", "src": "lfo2" }] },
+    "vcf.lfo1=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo2" }] },
+    "vcf.lfo2=2.5": { "routes": [{ "amt": 0.25, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.lfo2=5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.lfo2=7.5": { "routes": [{ "amt": 2.25, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.lfo2=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo" }] },
+    "vcf.lfo3=2.5": {},
+    "vcf.lfo3=5": {},
+    "vcf.lfo3=7.5": {},
+    "vcf.lfo3=10": {},
+    "vcf.kbd=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.25,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.75,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.kbd=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.wheel=2.5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "wheel" }] },
+    "vcf.wheel=5": { "routes": [{ "amt": 2, "dst": "cutoff", "src": "wheel" }] },
+    "vcf.wheel=7.5": { "routes": [{ "amt": 3, "dst": "cutoff", "src": "wheel" }] },
+    "vcf.wheel=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "wheel" }] },
+    "vcf.at=2.5": {},
+    "vcf.at=5": {},
+    "vcf.at=7.5": {},
+    "vcf.at=10": {},
+    "vca.lfo1=2.5": { "routes": [{ "amt": 0.125, "by": "env2", "dst": "amp", "src": "lfo2" }] },
+    "vca.lfo1=5": { "routes": [{ "amt": 0.25, "by": "env2", "dst": "amp", "src": "lfo2" }] },
+    "vca.lfo1=7.5": { "routes": [{ "amt": 0.375, "by": "env2", "dst": "amp", "src": "lfo2" }] },
+    "vca.lfo1=10": { "routes": [{ "amt": 0.5, "by": "env2", "dst": "amp", "src": "lfo2" }] },
+    "vca.level=0": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0 } },
+    "vca.level=2.5": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0.09473228540689989 } },
+    "vca.level=5": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0.3077861033362291 } },
+    "vca.level=7.5": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0.61320282613276 } },
+    "vca.lfo2=2.5": { "routes": [{ "amt": 0.125, "by": "env2", "dst": "amp", "src": "lfo" }] },
+    "vca.lfo2=5": { "routes": [{ "amt": 0.25, "by": "env2", "dst": "amp", "src": "lfo" }] },
+    "vca.lfo2=7.5": { "routes": [{ "amt": 0.375, "by": "env2", "dst": "amp", "src": "lfo" }] },
+    "vca.lfo2=10": { "routes": [{ "amt": 0.5, "by": "env2", "dst": "amp", "src": "lfo" }] },
+    "vca.lfo3=2.5": {},
+    "vca.lfo3=5": {},
+    "vca.lfo3=7.5": {},
+    "vca.lfo3=10": {},
+    "vca.kbd=2.5": { "routes": [{ "amt": 0.0375, "by": "env2", "dst": "amp", "src": "kbd" }] },
+    "vca.kbd=5": { "routes": [{ "amt": 0.075, "by": "env2", "dst": "amp", "src": "kbd" }] },
+    "vca.kbd=7.5": {
+      "routes": [{ "amt": 0.11249999999999999, "by": "env2", "dst": "amp", "src": "kbd" }]
+    },
+    "vca.kbd=10": { "routes": [{ "amt": 0.15, "by": "env2", "dst": "amp", "src": "kbd" }] },
+    "stereo.spread=-5": {},
+    "stereo.spread=-2.5": {},
+    "stereo.spread=2.5": {},
+    "stereo.spread=5": {},
+    "vca.vel=2.5": {
+      "routes": [
+        { "amt": 0.75, "dst": "amp", "src": "env2" },
+        { "amt": 0.25, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "vca.vel=5": {
+      "routes": [
+        { "amt": 0.5, "dst": "amp", "src": "env2" },
+        { "amt": 0.5, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "vca.vel=7.5": {
+      "routes": [
+        { "amt": 0.25, "dst": "amp", "src": "env2" },
+        { "amt": 0.75, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "vca.vel=10": {
+      "routes": [{ "amt": 1, "dst": "amp", "src": "env2v" }],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "stereo.motion=2.5": {},
+    "stereo.motion=5": {},
+    "stereo.motion=7.5": {},
+    "stereo.motion=10": {},
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.09473228540689989 },
+    "out.volume=5": { "volume": 0.3077861033362291 },
+    "out.volume=7.5": { "volume": 0.61320282613276 },
+    "out.volume=10": { "volume": 1 },
+    "env1.attack=2.5": {
+      "env1": { "a": 0.03, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.attack=5": {
+      "env1": { "a": 0.3, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.attack=7.5": {
+      "env1": { "a": 2.5, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.attack=10": {
+      "env1": { "a": 15, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.velA=2.5": {},
+    "env1.velA=5": {},
+    "env1.velA=7.5": {},
+    "env1.velA=10": {},
+    "env1.decay=0": {
+      "env1": { "a": 0.001, "d": 0.001, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.03, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 2.5, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.decay=10": {
+      "env1": { "a": 0.001, "d": 15, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.kbd=2.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.25, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.kbd=5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.5, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.kbd=7.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.75, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.kbd=10": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 1, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env1.sustain=0": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0 }
+    },
+    "env1.sustain=2.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.25 }
+    },
+    "env1.sustain=7.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.75 }
+    },
+    "env1.sustain=10": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env1.release=0": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.001, "s": 0.5 } },
+    "env1.release=2.5": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.03, "s": 0.5 } },
+    "env1.release=5": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.3, "s": 0.5 } },
+    "env1.release=7.5": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 2.5, "s": 0.5 } },
+    "env1.release=10": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 15, "s": 0.5 } },
+    "env1.velR=2.5": {},
+    "env1.velR=5": {},
+    "env1.velR=7.5": {},
+    "env1.velR=10": {},
+    "env2.attack=2.5": {
+      "env2": { "a": 0.03, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.attack=5": { "env2": { "a": 0.3, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 } },
+    "env2.attack=7.5": {
+      "env2": { "a": 2.5, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.attack=10": { "env2": { "a": 15, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 } },
+    "env2.velA=2.5": {},
+    "env2.velA=5": {},
+    "env2.velA=7.5": {},
+    "env2.velA=10": {},
+    "env2.decay=0": {
+      "env2": { "a": 0.001, "d": 0.001, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.decay=2.5": {
+      "env2": { "a": 0.001, "d": 0.03, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.decay=7.5": {
+      "env2": { "a": 0.001, "d": 2.5, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.decay=10": { "env2": { "a": 0.001, "d": 15, "kf": 0, "r": 0.11943215116604916, "s": 1 } },
+    "env2.kbd=2.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0.25, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.kbd=5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0.5, "r": 0.11943215116604916, "s": 1 } },
+    "env2.kbd=7.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0.75, "r": 0.11943215116604916, "s": 1 }
+    },
+    "env2.kbd=10": { "env2": { "a": 0.001, "d": 0.3, "kf": 1, "r": 0.11943215116604916, "s": 1 } },
+    "env2.sustain=0": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0 }
+    },
+    "env2.sustain=2.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.25 }
+    },
+    "env2.sustain=5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "env2.sustain=7.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.75 }
+    },
+    "env2.release=0": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.001, "s": 1 } },
+    "env2.release=2.5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.03, "s": 1 } },
+    "env2.release=5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.3, "s": 1 } },
+    "env2.release=7.5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 2.5, "s": 1 } },
+    "env2.release=10": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 15, "s": 1 } },
+    "env2.velR=2.5": {},
+    "env2.velR=5": {},
+    "env2.velR=7.5": {},
+    "env2.velR=10": {},
+    "lfo3.shape=\"saw\"": {
+      "lfo3": { "common": true, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo3.shape=\"rsaw\"": {
+      "lfo3": { "common": true, "mix": { "rsaw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo3.shape=\"sq\"": {
+      "lfo3": { "common": true, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "lfo3.rate=0": { "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 0.1 } },
+    "lfo3.rate=2.5": {
+      "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "lfo3.rate=7.5": { "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 17.78279410038923 } },
+    "lfo3.rate=10": { "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 100 } },
+    "lfo3.wheel=2.5": {},
+    "lfo3.wheel=5": {},
+    "lfo3.wheel=7.5": {},
+    "lfo3.wheel=10": {},
+    "lfo3.at=2.5": {},
+    "lfo3.at=5": {},
+    "lfo3.at=7.5": {},
+    "lfo3.at=10": {},
+    "ui.shift=true": {},
+    "ui.bank=true": {},
+    "chorus.rate=0": {},
+    "chorus.rate=2.5": {},
+    "chorus.rate=5": {},
+    "chorus.rate=7.5": {},
+    "chorus.rate=10": {},
+    "chorus.type=\"ensemble\"": {},
+    "chorus.depth=0": {},
+    "chorus.depth=2.5": {},
+    "chorus.depth=7.5": {},
+    "chorus.depth=10": {},
+    "chorus.mix=2.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 25,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "chorus.mix=5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 50,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "chorus.mix=7.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 75,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "chorus.mix=10": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 100,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "delay.time=0": {},
+    "delay.time=2.5": {},
+    "delay.time=7.5": {},
+    "delay.time=10": {},
+    "delay.div=\"1\"": {},
+    "delay.div=\"1/2.\"": {},
+    "delay.div=\"1T\"": {},
+    "delay.div=\"1/2\"": {},
+    "delay.div=\"1/4.\"": {},
+    "delay.div=\"1/2T\"": {},
+    "delay.div=\"1/4\"": {},
+    "delay.div=\"1/4T\"": {},
+    "delay.div=\"1/8\"": {},
+    "delay.div=\"1/16.\"": {},
+    "delay.div=\"1/8T\"": {},
+    "delay.div=\"1/16\"": {},
+    "delay.div=\"1/16T\"": {},
+    "delay.div=\"1/32\"": {},
+    "delay.type=\"pingpong\"": {},
+    "delay.type=\"stereo-sync\"": {},
+    "delay.type=\"pingpong-sync\"": {},
+    "delay.fb=0": {},
+    "delay.fb=2.5": {},
+    "delay.fb=5": {},
+    "delay.fb=7.5": {},
+    "delay.fb=10": {},
+    "delay.mix=2.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 25,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "delay.mix=5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 50,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "delay.mix=7.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 75,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "delay.mix=10": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 100,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "wheel=1": {},
+    "patched:*": {},
+    "patched:* lfo1.shape=\"saw\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo1.shape=\"rsaw\"": {
+      "lfo2": {
+        "common": false,
+        "keySync": false,
+        "mix": { "rsaw": 1 },
+        "rate": 3.1622776601683795
+      }
+    },
+    "patched:* lfo1.shape=\"sq\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo1.shape=\"sh\"": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "sh": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo1.mode=\"mono\"": {
+      "lfo2": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo1.mode=\"kbtrack\"": {},
+    "patched:* lfo1.mode=\"kbsync\"": {
+      "lfo2": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo1.mode=\"clock\"": {
+      "lfo2": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "patched:* lfo1.mode=\"kbclock\"": {
+      "lfo2": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "patched:* lfo1.rate=0": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 }
+    },
+    "patched:* lfo1.rate=2.5": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "patched:* lfo1.rate=7.5": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 17.78279410038923 }
+    },
+    "patched:* lfo1.rate=10": {
+      "lfo2": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 100 }
+    },
+    "patched:* lfo1.div=\"1\"": {},
+    "patched:* lfo1.div=\"1/2.\"": {},
+    "patched:* lfo1.div=\"1T\"": {},
+    "patched:* lfo1.div=\"1/2\"": {},
+    "patched:* lfo1.div=\"1/4.\"": {},
+    "patched:* lfo1.div=\"1/2T\"": {},
+    "patched:* lfo1.div=\"1/8.\"": {},
+    "patched:* lfo1.div=\"1/4T\"": {},
+    "patched:* lfo1.div=\"1/8\"": {},
+    "patched:* lfo1.div=\"1/16.\"": {},
+    "patched:* lfo1.div=\"1/8T\"": {},
+    "patched:* lfo1.div=\"1/16\"": {},
+    "patched:* lfo1.div=\"1/16T\"": {},
+    "patched:* lfo1.div=\"1/32\"": {},
+    "patched:* lfo2.shape=\"saw\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.shape=\"rsaw\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "rsaw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.shape=\"sq\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.shape=\"sh\"": {
+      "lfo": { "common": false, "keySync": false, "mix": { "sh": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.mode=\"mono\"": {
+      "lfo": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.mode=\"kbtrack\"": { "routes": [{ "amt": 1, "dst": "lfoRate", "src": "kbd" }] },
+    "patched:* lfo2.mode=\"kbsync\"": {
+      "lfo": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo2.mode=\"clock\"": {
+      "lfo": { "common": true, "keySync": false, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "patched:* lfo2.mode=\"kbclock\"": {
+      "lfo": { "common": false, "keySync": true, "mix": { "tri": 1 }, "rate": 2 }
+    },
+    "patched:* lfo2.rate=0": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.1 }
+    },
+    "patched:* lfo2.rate=2.5": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "patched:* lfo2.rate=7.5": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 17.78279410038923 }
+    },
+    "patched:* lfo2.rate=10": {
+      "lfo": { "common": false, "keySync": false, "mix": { "tri": 1 }, "rate": 100 }
+    },
+    "patched:* lfo2.div=\"1\"": {},
+    "patched:* lfo2.div=\"1/2.\"": {},
+    "patched:* lfo2.div=\"1T\"": {},
+    "patched:* lfo2.div=\"1/2\"": {},
+    "patched:* lfo2.div=\"1/4.\"": {},
+    "patched:* lfo2.div=\"1/2T\"": {},
+    "patched:* lfo2.div=\"1/8.\"": {},
+    "patched:* lfo2.div=\"1/4T\"": {},
+    "patched:* lfo2.div=\"1/8\"": {},
+    "patched:* lfo2.div=\"1/16.\"": {},
+    "patched:* lfo2.div=\"1/8T\"": {},
+    "patched:* lfo2.div=\"1/16\"": {},
+    "patched:* lfo2.div=\"1/16T\"": {},
+    "patched:* lfo2.div=\"1/32\"": {},
+    "patched:* lfo2.eg1=2.5": { "routes": [{ "amt": 1, "dst": "lfoRate", "src": "env1" }] },
+    "patched:* lfo2.eg1=5": { "routes": [{ "amt": 2, "dst": "lfoRate", "src": "env1" }] },
+    "patched:* lfo2.eg1=7.5": { "routes": [{ "amt": 3, "dst": "lfoRate", "src": "env1" }] },
+    "patched:* lfo2.eg1=10": { "routes": [{ "amt": 4, "dst": "lfoRate", "src": "env1" }] },
+    "patched:* osc1.wave=\"tri\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "tri": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.wave=\"shark\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "shark": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.wave=\"off\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": {},
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.tune=-5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.tune=-2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.tune=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.tune=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.transpose=-24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -24,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.transpose=-12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.transpose=12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.transpose=24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.lfo1=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch1", "src": "lfo2" }] },
+    "patched:* osc1.lfo1=5": { "routes": [{ "amt": 3, "dst": "pitch1", "src": "lfo2" }] },
+    "patched:* osc1.lfo1=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch1", "src": "lfo2" }] },
+    "patched:* osc1.lfo1=10": { "routes": [{ "amt": 12, "dst": "pitch1", "src": "lfo2" }] },
+    "patched:* osc1.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch1", "src": "env1" }] },
+    "patched:* osc1.eg1=5": { "routes": [{ "amt": 6, "dst": "pitch1", "src": "env1" }] },
+    "patched:* osc1.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch1", "src": "env1" }] },
+    "patched:* osc1.eg1=10": { "routes": [{ "amt": 24, "dst": "pitch1", "src": "env1" }] },
+    "patched:* osc1.lfo2=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch1", "src": "lfo" }] },
+    "patched:* osc1.lfo2=5": { "routes": [{ "amt": 3, "dst": "pitch1", "src": "lfo" }] },
+    "patched:* osc1.lfo2=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch1", "src": "lfo" }] },
+    "patched:* osc1.lfo2=10": { "routes": [{ "amt": 12, "dst": "pitch1", "src": "lfo" }] },
+    "patched:* osc1.lfo3=2.5": {},
+    "patched:* osc1.lfo3=5": {},
+    "patched:* osc1.lfo3=7.5": {},
+    "patched:* osc1.lfo3=10": {},
+    "patched:* osc1.pulse=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "pulse": 1, "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc.autotune=true": {},
+    "patched:* osc1.pw=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.1,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.pw=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.2,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.pw=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.30000000000000004,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.pw=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.4,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc1.eg1pwm=2.5": { "routes": [{ "amt": 0.1, "dst": "pw1", "src": "env1" }] },
+    "patched:* osc1.eg1pwm=5": { "routes": [{ "amt": 0.2, "dst": "pw1", "src": "env1" }] },
+    "patched:* osc1.eg1pwm=7.5": {
+      "routes": [{ "amt": 0.30000000000000004, "dst": "pw1", "src": "env1" }]
+    },
+    "patched:* osc1.eg1pwm=10": { "routes": [{ "amt": 0.4, "dst": "pw1", "src": "env1" }] },
+    "patched:* osc1.lfo1pwm=2.5": { "routes": [{ "amt": 0.05, "dst": "pw1", "src": "lfo2" }] },
+    "patched:* osc1.lfo1pwm=5": { "routes": [{ "amt": 0.1, "dst": "pw1", "src": "lfo2" }] },
+    "patched:* osc1.lfo1pwm=7.5": {
+      "routes": [{ "amt": 0.15000000000000002, "dst": "pw1", "src": "lfo2" }]
+    },
+    "patched:* osc1.lfo1pwm=10": { "routes": [{ "amt": 0.2, "dst": "pw1", "src": "lfo2" }] },
+    "patched:* osc2.wave=\"tri\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.wave=\"shark\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "shark": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.wave=\"off\"": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        { "kbd": true, "level": 0, "mix": {}, "pw": 0.5, "semi": 0, "subLevel": 0, "syncTo": -1 }
+      ]
+    },
+    "patched:* osc2.tune=-5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.tune=-2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.tune=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.25,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.tune=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0.5,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.transpose=-24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -24,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.transpose=-12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.transpose=12": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 12,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.transpose=24": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 24,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.lfo1=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch2", "src": "lfo2" }] },
+    "patched:* osc2.lfo1=5": { "routes": [{ "amt": 3, "dst": "pitch2", "src": "lfo2" }] },
+    "patched:* osc2.lfo1=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch2", "src": "lfo2" }] },
+    "patched:* osc2.lfo1=10": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "lfo2" }] },
+    "patched:* osc2.eg1=2.5": { "routes": [{ "amt": 1.5, "dst": "pitch2", "src": "env1" }] },
+    "patched:* osc2.eg1=5": { "routes": [{ "amt": 6, "dst": "pitch2", "src": "env1" }] },
+    "patched:* osc2.eg1=7.5": { "routes": [{ "amt": 13.5, "dst": "pitch2", "src": "env1" }] },
+    "patched:* osc2.eg1=10": { "routes": [{ "amt": 24, "dst": "pitch2", "src": "env1" }] },
+    "patched:* osc2.lfo2=2.5": { "routes": [{ "amt": 0.75, "dst": "pitch2", "src": "lfo" }] },
+    "patched:* osc2.lfo2=5": { "routes": [{ "amt": 3, "dst": "pitch2", "src": "lfo" }] },
+    "patched:* osc2.lfo2=7.5": { "routes": [{ "amt": 6.75, "dst": "pitch2", "src": "lfo" }] },
+    "patched:* osc2.lfo2=10": { "routes": [{ "amt": 12, "dst": "pitch2", "src": "lfo" }] },
+    "patched:* osc2.lfo3=2.5": {},
+    "patched:* osc2.lfo3=5": {},
+    "patched:* osc2.lfo3=7.5": {},
+    "patched:* osc2.lfo3=10": {},
+    "patched:* osc2.pulse=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "pulse": 1, "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.sync=true": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* osc2.pw=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.1,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.pw=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.2,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.pw=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.30000000000000004,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.pw=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.4,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* osc2.eg1pwm=2.5": { "routes": [{ "amt": 0.1, "dst": "pw2", "src": "env1" }] },
+    "patched:* osc2.eg1pwm=5": { "routes": [{ "amt": 0.2, "dst": "pw2", "src": "env1" }] },
+    "patched:* osc2.eg1pwm=7.5": {
+      "routes": [{ "amt": 0.30000000000000004, "dst": "pw2", "src": "env1" }]
+    },
+    "patched:* osc2.eg1pwm=10": { "routes": [{ "amt": 0.4, "dst": "pw2", "src": "env1" }] },
+    "patched:* osc2.lfo1pwm=2.5": { "routes": [{ "amt": 0.05, "dst": "pw2", "src": "lfo2" }] },
+    "patched:* osc2.lfo1pwm=5": { "routes": [{ "amt": 0.1, "dst": "pw2", "src": "lfo2" }] },
+    "patched:* osc2.lfo1pwm=7.5": {
+      "routes": [{ "amt": 0.15000000000000002, "dst": "pw2", "src": "lfo2" }]
+    },
+    "patched:* osc2.lfo1pwm=10": { "routes": [{ "amt": 0.2, "dst": "pw2", "src": "lfo2" }] },
+    "patched:* mix.osc1=0": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.125,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.25,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.375,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc1=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.5,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub1=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.125,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub1=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.25,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub1=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.375,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub1=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.5,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc2=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.125,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc2=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.25,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc2=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.375,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.osc2=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0.5,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub2=2.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.125,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub2=5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.25,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub2=7.5": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.375,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.sub2=10": {
+      "osc": [
+        {
+          "kbd": true,
+          "level": 0.35,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0,
+          "syncTo": -1
+        },
+        {
+          "kbd": true,
+          "level": 0,
+          "mix": { "saw": 1 },
+          "pw": 0.5,
+          "semi": 0,
+          "subLevel": 0.5,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.noise=2.5": { "noise": { "level": 0.07578582832551992 } },
+    "patched:* mix.noise=5": { "noise": { "level": 0.24622888266898327 } },
+    "patched:* mix.noise=7.5": { "noise": { "level": 0.490562260906208 } },
+    "patched:* mix.noise=10": { "noise": { "level": 0.8 } },
+    "patched:* kbd.mode=\"mono-st\"": {
+      "poly": { "detune": 0, "mono": true, "stack": 1, "voices": 7 },
+      "trig": { "drone": false, "repeat": false, "retrig": false }
+    },
+    "patched:* kbd.mode=\"mono-mt\"": {
+      "poly": { "detune": 0, "mono": true, "stack": 1, "voices": 7 }
+    },
+    "patched:* kbd.mode=\"uni-st\"": {
+      "poly": { "detune": 0.15, "mono": true, "stack": 7, "voices": 7 },
+      "trig": { "drone": false, "repeat": false, "retrig": false }
+    },
+    "patched:* kbd.mode=\"uni-mt\"": {
+      "poly": { "detune": 0.15, "mono": true, "stack": 7, "voices": 7 }
+    },
+    "patched:* kbd.porta=2.5": { "glide": { "legato": false, "time": 0.078125 } },
+    "patched:* kbd.porta=5": { "glide": { "legato": false, "time": 0.625 } },
+    "patched:* kbd.porta=7.5": { "glide": { "legato": false, "time": 2.109375 } },
+    "patched:* kbd.porta=10": { "glide": { "legato": false, "time": 5 } },
+    "patched:* kbd.bend=0": {},
+    "patched:* kbd.bend=3": {},
+    "patched:* kbd.bend=6": {},
+    "patched:* kbd.bend=9": {},
+    "patched:* kbd.bend=12": {},
+    "patched:* vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 10,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 70.71067811865476,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 500,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3535.533905932738,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=10": {
+      "filter": {
+        "cutoff": 25000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.275,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.55,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.8250000000000001,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.res=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.eg1=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 2,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.eg1=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 4,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.eg1=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 6,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.eg1=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 8,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.vel=2.5": {},
+    "patched:* vcf.vel=5": {},
+    "patched:* vcf.vel=7.5": {},
+    "patched:* vcf.vel=10": {},
+    "patched:* vcf.lfo1=2.5": { "routes": [{ "amt": 0.25, "dst": "cutoff", "src": "lfo2" }] },
+    "patched:* vcf.lfo1=5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "lfo2" }] },
+    "patched:* vcf.lfo1=7.5": { "routes": [{ "amt": 2.25, "dst": "cutoff", "src": "lfo2" }] },
+    "patched:* vcf.lfo1=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo2" }] },
+    "patched:* vcf.lfo2=2.5": { "routes": [{ "amt": 0.25, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.lfo2=5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.lfo2=7.5": { "routes": [{ "amt": 2.25, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.lfo2=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "lfo" }] },
+    "patched:* vcf.lfo3=2.5": {},
+    "patched:* vcf.lfo3=5": {},
+    "patched:* vcf.lfo3=7.5": {},
+    "patched:* vcf.lfo3=10": {},
+    "patched:* vcf.kbd=2.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.25,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.5,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=7.5": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0.75,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.kbd=10": {
+      "filter": {
+        "cutoff": 2390.8812494750914,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 1,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.wheel=2.5": { "routes": [{ "amt": 1, "dst": "cutoff", "src": "wheel" }] },
+    "patched:* vcf.wheel=5": { "routes": [{ "amt": 2, "dst": "cutoff", "src": "wheel" }] },
+    "patched:* vcf.wheel=7.5": { "routes": [{ "amt": 3, "dst": "cutoff", "src": "wheel" }] },
+    "patched:* vcf.wheel=10": { "routes": [{ "amt": 4, "dst": "cutoff", "src": "wheel" }] },
+    "patched:* vcf.at=2.5": {},
+    "patched:* vcf.at=5": {},
+    "patched:* vcf.at=7.5": {},
+    "patched:* vcf.at=10": {},
+    "patched:* vca.lfo1=2.5": {
+      "routes": [{ "amt": 0.125, "by": "env2", "dst": "amp", "src": "lfo2" }]
+    },
+    "patched:* vca.lfo1=5": {
+      "routes": [{ "amt": 0.25, "by": "env2", "dst": "amp", "src": "lfo2" }]
+    },
+    "patched:* vca.lfo1=7.5": {
+      "routes": [{ "amt": 0.375, "by": "env2", "dst": "amp", "src": "lfo2" }]
+    },
+    "patched:* vca.lfo1=10": {
+      "routes": [{ "amt": 0.5, "by": "env2", "dst": "amp", "src": "lfo2" }]
+    },
+    "patched:* vca.level=0": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0 } },
+    "patched:* vca.level=2.5": {
+      "vca": { "bias": 0, "envSrc": "env2", "gain": 0.09473228540689989 }
+    },
+    "patched:* vca.level=5": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0.3077861033362291 } },
+    "patched:* vca.level=7.5": { "vca": { "bias": 0, "envSrc": "env2", "gain": 0.61320282613276 } },
+    "patched:* vca.lfo2=2.5": {
+      "routes": [{ "amt": 0.125, "by": "env2", "dst": "amp", "src": "lfo" }]
+    },
+    "patched:* vca.lfo2=5": {
+      "routes": [{ "amt": 0.25, "by": "env2", "dst": "amp", "src": "lfo" }]
+    },
+    "patched:* vca.lfo2=7.5": {
+      "routes": [{ "amt": 0.375, "by": "env2", "dst": "amp", "src": "lfo" }]
+    },
+    "patched:* vca.lfo2=10": {
+      "routes": [{ "amt": 0.5, "by": "env2", "dst": "amp", "src": "lfo" }]
+    },
+    "patched:* vca.lfo3=2.5": {},
+    "patched:* vca.lfo3=5": {},
+    "patched:* vca.lfo3=7.5": {},
+    "patched:* vca.lfo3=10": {},
+    "patched:* vca.kbd=2.5": {
+      "routes": [{ "amt": 0.0375, "by": "env2", "dst": "amp", "src": "kbd" }]
+    },
+    "patched:* vca.kbd=5": {
+      "routes": [{ "amt": 0.075, "by": "env2", "dst": "amp", "src": "kbd" }]
+    },
+    "patched:* vca.kbd=7.5": {
+      "routes": [{ "amt": 0.11249999999999999, "by": "env2", "dst": "amp", "src": "kbd" }]
+    },
+    "patched:* vca.kbd=10": {
+      "routes": [{ "amt": 0.15, "by": "env2", "dst": "amp", "src": "kbd" }]
+    },
+    "patched:* stereo.spread=-5": {},
+    "patched:* stereo.spread=-2.5": {},
+    "patched:* stereo.spread=2.5": {},
+    "patched:* stereo.spread=5": {},
+    "patched:* vca.vel=2.5": {
+      "routes": [
+        { "amt": 0.75, "dst": "amp", "src": "env2" },
+        { "amt": 0.25, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "patched:* vca.vel=5": {
+      "routes": [
+        { "amt": 0.5, "dst": "amp", "src": "env2" },
+        { "amt": 0.5, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "patched:* vca.vel=7.5": {
+      "routes": [
+        { "amt": 0.25, "dst": "amp", "src": "env2" },
+        { "amt": 0.75, "dst": "amp", "src": "env2v" }
+      ],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "patched:* vca.vel=10": {
+      "routes": [{ "amt": 1, "dst": "amp", "src": "env2v" }],
+      "vca": { "bias": 0, "envSrc": "none", "gain": 1 }
+    },
+    "patched:* stereo.motion=2.5": {},
+    "patched:* stereo.motion=5": {},
+    "patched:* stereo.motion=7.5": {},
+    "patched:* stereo.motion=10": {},
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.volume=5": { "volume": 0.3077861033362291 },
+    "patched:* out.volume=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.volume=10": { "volume": 1 },
+    "patched:* env1.attack=2.5": {
+      "env1": { "a": 0.03, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.attack=5": {
+      "env1": { "a": 0.3, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.attack=7.5": {
+      "env1": { "a": 2.5, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.attack=10": {
+      "env1": { "a": 15, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.velA=2.5": {},
+    "patched:* env1.velA=5": {},
+    "patched:* env1.velA=7.5": {},
+    "patched:* env1.velA=10": {},
+    "patched:* env1.decay=0": {
+      "env1": { "a": 0.001, "d": 0.001, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.03, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 2.5, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.decay=10": {
+      "env1": { "a": 0.001, "d": 15, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.kbd=2.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.25, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.kbd=5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.5, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.kbd=7.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0.75, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.kbd=10": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 1, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env1.sustain=0": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0 }
+    },
+    "patched:* env1.sustain=2.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.25 }
+    },
+    "patched:* env1.sustain=7.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.75 }
+    },
+    "patched:* env1.sustain=10": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env1.release=0": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.001, "s": 0.5 } },
+    "patched:* env1.release=2.5": {
+      "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.03, "s": 0.5 }
+    },
+    "patched:* env1.release=5": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.3, "s": 0.5 } },
+    "patched:* env1.release=7.5": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 2.5, "s": 0.5 } },
+    "patched:* env1.release=10": { "env1": { "a": 0.001, "d": 0.3, "kf": 0, "r": 15, "s": 0.5 } },
+    "patched:* env1.velR=2.5": {},
+    "patched:* env1.velR=5": {},
+    "patched:* env1.velR=7.5": {},
+    "patched:* env1.velR=10": {},
+    "patched:* env2.attack=2.5": {
+      "env2": { "a": 0.03, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.attack=5": {
+      "env2": { "a": 0.3, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.attack=7.5": {
+      "env2": { "a": 2.5, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.attack=10": {
+      "env2": { "a": 15, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.velA=2.5": {},
+    "patched:* env2.velA=5": {},
+    "patched:* env2.velA=7.5": {},
+    "patched:* env2.velA=10": {},
+    "patched:* env2.decay=0": {
+      "env2": { "a": 0.001, "d": 0.001, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.decay=2.5": {
+      "env2": { "a": 0.001, "d": 0.03, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.decay=7.5": {
+      "env2": { "a": 0.001, "d": 2.5, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.decay=10": {
+      "env2": { "a": 0.001, "d": 15, "kf": 0, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.kbd=2.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0.25, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.kbd=5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0.5, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.kbd=7.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0.75, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.kbd=10": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 1, "r": 0.11943215116604916, "s": 1 }
+    },
+    "patched:* env2.sustain=0": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0 }
+    },
+    "patched:* env2.sustain=2.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.25 }
+    },
+    "patched:* env2.sustain=5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.5 }
+    },
+    "patched:* env2.sustain=7.5": {
+      "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.11943215116604916, "s": 0.75 }
+    },
+    "patched:* env2.release=0": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.001, "s": 1 } },
+    "patched:* env2.release=2.5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.03, "s": 1 } },
+    "patched:* env2.release=5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 0.3, "s": 1 } },
+    "patched:* env2.release=7.5": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 2.5, "s": 1 } },
+    "patched:* env2.release=10": { "env2": { "a": 0.001, "d": 0.3, "kf": 0, "r": 15, "s": 1 } },
+    "patched:* env2.velR=2.5": {},
+    "patched:* env2.velR=5": {},
+    "patched:* env2.velR=7.5": {},
+    "patched:* env2.velR=10": {},
+    "patched:* lfo3.shape=\"saw\"": {
+      "lfo3": { "common": true, "mix": { "saw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo3.shape=\"rsaw\"": {
+      "lfo3": { "common": true, "mix": { "rsaw": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo3.shape=\"sq\"": {
+      "lfo3": { "common": true, "mix": { "sq": 1 }, "rate": 3.1622776601683795 }
+    },
+    "patched:* lfo3.rate=0": { "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 0.1 } },
+    "patched:* lfo3.rate=2.5": {
+      "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 0.5623413251903492 }
+    },
+    "patched:* lfo3.rate=7.5": {
+      "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 17.78279410038923 }
+    },
+    "patched:* lfo3.rate=10": { "lfo3": { "common": true, "mix": { "tri": 1 }, "rate": 100 } },
+    "patched:* lfo3.wheel=2.5": {},
+    "patched:* lfo3.wheel=5": {},
+    "patched:* lfo3.wheel=7.5": {},
+    "patched:* lfo3.wheel=10": {},
+    "patched:* lfo3.at=2.5": {},
+    "patched:* lfo3.at=5": {},
+    "patched:* lfo3.at=7.5": {},
+    "patched:* lfo3.at=10": {},
+    "patched:* ui.shift=true": {},
+    "patched:* ui.bank=true": {},
+    "patched:* chorus.rate=0": {},
+    "patched:* chorus.rate=2.5": {},
+    "patched:* chorus.rate=5": {},
+    "patched:* chorus.rate=7.5": {},
+    "patched:* chorus.rate=10": {},
+    "patched:* chorus.type=\"ensemble\"": {},
+    "patched:* chorus.depth=0": {},
+    "patched:* chorus.depth=2.5": {},
+    "patched:* chorus.depth=7.5": {},
+    "patched:* chorus.depth=10": {},
+    "patched:* chorus.mix=2.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 25,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* chorus.mix=5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 50,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* chorus.mix=7.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 75,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* chorus.mix=10": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "chorus",
+            "level": 1,
+            "p": {
+              "DLL": 12,
+              "DLR": 18,
+              "HC": 16000,
+              "LC": 50,
+              "MIX": 100,
+              "PHS": 90,
+              "SPD": 0.48,
+              "SPR": 50,
+              "WAV": 50,
+              "WDL": 50,
+              "WDR": 50
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* delay.time=0": {},
+    "patched:* delay.time=2.5": {},
+    "patched:* delay.time=7.5": {},
+    "patched:* delay.time=10": {},
+    "patched:* delay.div=\"1\"": {},
+    "patched:* delay.div=\"1/2.\"": {},
+    "patched:* delay.div=\"1T\"": {},
+    "patched:* delay.div=\"1/2\"": {},
+    "patched:* delay.div=\"1/4.\"": {},
+    "patched:* delay.div=\"1/2T\"": {},
+    "patched:* delay.div=\"1/4\"": {},
+    "patched:* delay.div=\"1/4T\"": {},
+    "patched:* delay.div=\"1/8\"": {},
+    "patched:* delay.div=\"1/16.\"": {},
+    "patched:* delay.div=\"1/8T\"": {},
+    "patched:* delay.div=\"1/16\"": {},
+    "patched:* delay.div=\"1/16T\"": {},
+    "patched:* delay.div=\"1/32\"": {},
+    "patched:* delay.type=\"pingpong\"": {},
+    "patched:* delay.type=\"stereo-sync\"": {},
+    "patched:* delay.type=\"pingpong-sync\"": {},
+    "patched:* delay.fb=0": {},
+    "patched:* delay.fb=2.5": {},
+    "patched:* delay.fb=5": {},
+    "patched:* delay.fb=7.5": {},
+    "patched:* delay.fb=10": {},
+    "patched:* delay.mix=2.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 25,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* delay.mix=5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 50,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* delay.mix=7.5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 75,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    },
+    "patched:* delay.mix=10": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          { "alg": null },
+          { "alg": null },
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 38,
+              "FBR": 38,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 5000,
+              "FLC": 50,
+              "HC": 8000,
+              "LC": 100,
+              "MIX": 100,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 260
+            }
+          },
+          { "alg": null }
+        ]
+      }
+    }
+  },
+  "checks": {},
+  "depths": {},
+  "hears": {}
+}

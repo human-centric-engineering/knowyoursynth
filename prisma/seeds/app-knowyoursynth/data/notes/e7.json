@@ -1,0 +1,66 @@
+{
+  "synth": "e7",
+  "unusual": [
+    {
+      "target": "lfo3",
+      "text": "LFO 3 is silent until you play it: its depth is zero until the mod wheel or aftertouch bring it in, and its LFO3 MOD knobs, under SHIFT in the oscillator, filter and amplifier sections, set where it goes. It is one wave shared by every voice."
+    },
+    {
+      "target": "lfo1.mode",
+      "text": "LFO 1 and LFO 2 each have six ways to run across the seven voices: one wave in step for all of them, one per voice, faster for higher keys, restarted by each key, locked to the MIDI clock, or locked to the clock and restarted by each key."
+    },
+    {
+      "target": "lfo2.eg1",
+      "text": "EG 1 can change LFO 2’s speed as each note plays, so a vibrato or wobble can quicken or slow; it works in every LFO mode except Monophonic and Clock Sync, where all the voices share one wave."
+    },
+    {
+      "target": "osc1.wave",
+      "text": "Each VCO’s main wave and its pulse are separate: the button steps through triangle, tri-saw and sawtooth, or no wave at all, and the pulse generator adds a variable-width pulse at the same level. With no main wave lit, the pulse plays alone."
+    },
+    {
+      "target": "osc2.sync",
+      "text": "Hard sync has no button of its own: it is the SHIFT function of VCO 2’s pulse button, and VCO 1’s pulse button runs the tuning calibration the same way."
+    },
+    {
+      "target": "ui.shift",
+      "text": "Many knobs have a second job, printed on a white plate under the first, and SHIFT swaps every knob to it until it is pressed again: TRANSPOSE behind TUNE, LEVEL behind the amplifier’s LFO1 MOD, the envelopes’ velocity and keyboard tracking behind their times."
+    },
+    {
+      "target": "env1",
+      "text": "Velocity changes the envelopes’ times as well as their depth: playing harder makes the attack faster and, separately, the release shorter. Keyboard tracking shortens the attack, decay and release of higher notes."
+    },
+    {
+      "target": "stereo.spread",
+      "text": "The seven voices are spread across the stereo field in two groups, voices 1–3 one way and 5–7 the other, and STEREO MOTION moves them from side to side at a fixed rate, most when the spread is at the centre."
+    },
+    {
+      "target": "kbd.mode",
+      "text": "Mono and unison each come in two kinds, single trigger (legato notes keep the envelopes going) and multi trigger (every note restarts them), and a menu chooses which voices play: all, the even or odd ones, or assigned left to right or right to left."
+    },
+    {
+      "target": "vcf.res",
+      "text": "RESONANCE is the one front-panel sound control with no MIDI controller number in GS Music’s MIDI implementation."
+    },
+    {
+      "target": "presets",
+      "text": "The e7 is multitimbral: up to four parts, each its own sound with its own MIDI channel, key range and velocity range, share the seven voices. The effects and the stereo spread and motion are shared by all four."
+    }
+  ],
+  "limits": {
+    "intro": "Every voice is modelled with both VCOs and their main waves, pulse generators and subs, TUNE, TRANSPOSE, PULSE WIDTH and SYNC, the noise, the 24 dB low-pass with RESONANCE, KEYBOARD TRACKING, EG1 MOD, VELOCITY EG1 MOD and the mod wheel, the VCA with LEVEL, KEYBOARD TRACKING and VELOCITY EG2 MOD, both ADSRs with their keyboard tracking, the three LFOs with every wave and the pitch, pulse-width, cutoff and tremolo depths, LFO 2’s EG1 MOD, LFO 3 on the mod wheel, MODE with poly, mono and unison in single and multi trigger, PORTAMENTO TIME, the chorus in both types and the delay in all four.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Aftertouch and pitch bend, since the app’s keyboard sends neither: the filter’s and LFO 3’s AFTERTOUCH and BEND RANGE do nothing. STEREO SPREAD and STEREO MOTION: the voices play in the centre. The envelopes’ VELOCITY MOD on the attack and release times. The NOISE/EXT knob is always the noise, as there is no external input. The CV inputs, AUTOTUNING, the preset memory (BANK, the buttons 1–8 and SAVE), the multitimbral parts, the voice options, the preset transpose and the global menus. The LFO 2 and LFO 3 pulse-width depths (in the MIDI chart only) and LFO 1’s EG 1 rate depth (in the preset data only) have no panel control and are left at zero."
+      },
+      {
+        "title": "Simplified here",
+        "text": "The clock modes of the LFOs and the delay run at 120 BPM, as the e7 does when no MIDI clock arrives, since the app sends none; a synced delay longer than 1.35 s, the delay’s longest, is held there. In Polyphonic mode each voice’s LFO runs at its own phase but the same rate, where the e7 gives each key a slightly different rate. KB Tracking follows the key on LFO 2’s rate only: LFO 1 keeps its RATE. Unison stacks the seven voices with a fixed detune."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The manual gives the oscillators’ tuning ranges, the pulse width (10–50 %), the cutoff range (10 Hz–25 kHz), the LFO rates (0.1–100 Hz) and the delay time (50 ms–1.35 s); the envelope times, the portamento time, the chorus speeds and how far each MOD knob moves its destination are this app’s estimates. The filter is the app’s 24 dB ladder. The chorus and delay run on the app’s effects engine: Basic is one stereo chorus and Ensemble two in a row, and the delay follows the chorus, as the panel suggests (the manual does not say)."
+      }
+    ]
+  }
+}

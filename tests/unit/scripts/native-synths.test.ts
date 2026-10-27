@@ -39,6 +39,7 @@ describe('nativeSynthProblems', () => {
       'native synth super-gemini is not registered',
       'native synth pearl-syncussion is not registered',
       'native synth behringer-syncussion is not registered',
+      'native synth e7 is not registered',
     ]);
   });
 

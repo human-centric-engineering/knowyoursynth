@@ -60,6 +60,7 @@ const EXPORTED: {
   { id: 'super-gemini', sounds: 10, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'pearl-syncussion', sounds: 6, timeline: 5, relatives: 3, unusual: 6, limits: 3 },
   { id: 'behringer-syncussion', sounds: 6, timeline: 4, relatives: 2, unusual: 7, limits: 3 },
+  { id: 'e7', sounds: 10, timeline: 3, relatives: 3, unusual: 11, limits: 3 },
   { id: 'jupiter-4', sounds: 19, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 18, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 20, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -118,6 +119,7 @@ describe('the exported content', () => {
       { id: 'grandmother', order: 28, listed: true },
       { id: 'pearl-syncussion', order: 29, listed: true },
       { id: 'behringer-syncussion', order: 30, listed: true },
+      { id: 'e7', order: 31, listed: true },
     ]);
   });
 
