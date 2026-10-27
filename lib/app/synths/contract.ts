@@ -1334,14 +1334,21 @@ export interface LfoParams {
   vibDelay?: number;
   /** 0..1 depth of the `vib` signal. */
   vibDepth?: number;
+  /**
+   * Poly only: every voice follows one phase (the e7's Monophonic LFO mode), and its sample and hold gives every voice
+   * the same value. `keySync` is then ignored, and the rate is not modulated per voice: route nothing to `lfoRate`.
+   */
+  common?: boolean;
 }
 
-/** A second LFO: signals `lfo2` and `lfo2Uni`. */
+/** A second LFO: signals `lfo2` and `lfo2Uni`. The same shape is the third LFO, `lfo3`. */
 export interface Lfo2Params {
   rate: number;
   mix: LfoMix;
   keySync?: boolean;
   delay?: number;
+  /** Poly only: every voice follows one phase and one sample and hold, as {@link LfoParams.common}. */
+  common?: boolean;
 }
 
 export interface GlideParams {
@@ -1744,6 +1751,8 @@ export interface EngineParams {
   vca: VcaParams;
   lfo: LfoParams;
   lfo2?: Lfo2Params;
+  /** A third LFO: signal `lfo3` (the e7's LFO 3, usually `common` and brought in by the mod wheel through a route's `by`). */
+  lfo3?: Lfo2Params;
   glide: GlideParams;
   trig: TrigParams;
   /** 0..1. */
