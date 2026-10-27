@@ -28,6 +28,8 @@
     { "id": "system-35", "order": 25, "listed": true },
     { "id": "system-55", "order": 26, "listed": true },
     { "id": "model-15", "order": 27, "listed": true },
-    { "id": "grandmother", "order": 28, "listed": true }
+    { "id": "grandmother", "order": 28, "listed": true },
+    { "id": "pearl-syncussion", "order": 29, "listed": true },
+    { "id": "behringer-syncussion", "order": 30, "listed": true }
   ]
 }

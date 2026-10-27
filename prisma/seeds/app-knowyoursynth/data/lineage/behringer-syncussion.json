@@ -1,0 +1,42 @@
+{
+  "synth": "behringer-syncussion",
+  "title": "From the Pearl Syncussion SY-1 to the Behringer SYNCUSSION SY-1",
+  "intro": "The SYNCUSSION SY-1 is Behringer’s analogue copy of the Pearl Syncussion, the 1979 drum synthesizer behind the falling toms of late-1970s disco. Each channel offers the original’s controls; Behringer puts the two side by side and adds what the original lacked: separate outputs, trigger sockets with sensitivity, FINE tuning, a TRIG button per channel, and MIDI.",
+  "timeline": [
+    {
+      "year": "1976",
+      "name": "Pollard Syndrum",
+      "text": "The first commercial drum synthesizer: an oscillator struck from a pad, with a pitch sweep and a decay. Its falling tom spread through disco."
+    },
+    {
+      "year": "1979",
+      "name": "Pearl Syncussion SY-1",
+      "tag": "The original",
+      "text": "Two channels, each two oscillators with six ways of combining them, a pitch sweep, an LFO, a sample and hold and a filter swept by the decay, played from Pearl’s CU-1 pads with dynamics from how hard they are hit."
+    },
+    {
+      "year": "1981",
+      "name": "Simmons SDS-V",
+      "text": "The hexagonal-pad Simmons kit, which took electronic drums from an effect to a whole drum set. The Syncussion is often named as a forerunner."
+    },
+    {
+      "year": "2024",
+      "name": "Behringer SYNCUSSION SY-1",
+      "text": "The Syncussion’s circuit with its two channels side by side, separate outputs, trigger, tune and mute sockets, MIDI and a Eurorack-sized case. Announced in 2021, shipped in 2024.",
+      "tag": "This synth"
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Pearl Syncussion SY-1",
+      "years": "1979",
+      "text": "The instrument this one copies, also in the app."
+    },
+    {
+      "name": "Pollard Syndrum",
+      "years": "1976",
+      "text": "The first drum synthesizer, which the Syncussion answered."
+    }
+  ],
+  "note": "None of the databank’s records name the Syncussion yet, and the records of its time were made on the Pearl original. The sounds here are in the general style of electro and disco percussion, not copies of parts."
+}

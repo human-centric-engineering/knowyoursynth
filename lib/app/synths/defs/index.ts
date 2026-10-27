@@ -42,6 +42,8 @@ import donnerB1 from '@/lib/app/synths/defs/donner-b1';
 import take5 from '@/lib/app/synths/defs/take-5';
 import cs80 from '@/lib/app/synths/defs/cs-80';
 import superGemini from '@/lib/app/synths/defs/super-gemini';
+import pearlSyncussion from '@/lib/app/synths/defs/pearl-syncussion';
+import behringerSyncussion from '@/lib/app/synths/defs/behringer-syncussion';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -77,6 +79,8 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   take5,
   cs80,
   superGemini,
+  pearlSyncussion,
+  behringerSyncussion,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

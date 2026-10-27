@@ -1,0 +1,50 @@
+{
+  "synth": "behringer-syncussion",
+  "unusual": [
+    {
+      "target": "ch1.mode",
+      "text": "There are no waveform or mixer controls: one six-position switch chooses the whole oscillator structure, from one oscillator through FM to noise alone. The two oscillators’ interval is fixed inside, by a trimmer (originally 440 and 450 Hz), so modes C and D always beat slightly."
+    },
+    {
+      "target": "ch1.tune",
+      "text": "TUNE moves both oscillators and the filter together, so it also sets the colour of the noise in mode F. The keys do not change the pitch: they only strike the drum."
+    },
+    {
+      "target": "ch1.width",
+      "text": "Not a cutoff knob: the cutoff follows TUNE, and WIDTH sets how far above it the decay envelope opens the filter on each strike before it closes back down."
+    },
+    {
+      "target": "ch1.sh",
+      "text": "The sample and hold has no rate of its own. It runs at LFO SPEED, moves the pitch by LFO DEPTH, and keeps working with the LFO wave switched off."
+    },
+    {
+      "target": "ch1.sweepRange",
+      "text": "RANGE sets where the sweep ends, relative to TUNE: the pitch is struck at TUNE and travels away from it. In mode D the sweep controls do nothing, because the strength of the hit sets the sweep."
+    },
+    {
+      "target": "ch1.fine",
+      "text": "FINE is the Behringer’s addition to the original’s single TUNE fader, a semitone either way, for matching a drum to a song’s key."
+    },
+    {
+      "target": "j.ch1Tune",
+      "text": "A socket for a pedal such as the original’s TP-01. It supplies no voltage, so a plain expression pedal needs a voltage of its own."
+    }
+  ],
+  "limits": {
+    "intro": "Both channels are modelled as the panel draws them: OSC MODE, TUNE and FINE, DECAY, WIDTH, the sweep with its SPEED, RANGE and switch, the LFO with its SPEED, DEPTH and wave switch, S/H and OUTPUT. Each channel is a voice of its own, and how hard a key is struck sets how loud and bright the drum is.",
+    "items": [
+      {
+        "title": "Playing it from the keys",
+        "text": "The keys play the SY-1 as its MIDI mode 1 does, widened to the keyboard: the keys below middle C strike channel 1 and middle C and above strike channel 2, whichever key you press, with the pitch from the panel. Velocity sets the loudness and brightness, as a pad’s hit does."
+      },
+      {
+        "title": "What is not modelled",
+        "text": "MIDI mode 2, where each channel takes its pitch from MIDI notes on its own channel, and CC 80 and 81 for the decays. The TRIG buttons (play the keys instead), the TRIG and TUNE sockets with the SENSE knobs, and the MUTE socket: a cable in them does nothing. The LFO lamps, which flash at the LFO rate on the hardware, stay dark. Calibration, firmware mode, MIDI THRU, USB and SynthTribe."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "Behringer’s guide gives the controls, not the circuit; the voice follows Pearl’s brochure and schematic-based notes on the original, and the guide does not contradict them. Where the two disagree, as on WIDTH, which the guide calls filter cutoff, the original’s description is used. Neither manual gives the oscillators’ waveform, the filter’s slope, or the sweep’s speeds and ranges, and both specs assume the sample and hold samples noise. Here the oscillators are triangles, the filter is the app’s 12 dB low-pass at an octave above TUNE, the sweep runs from 20 ms to 2.5 s over up to three octaves, the LFO and sample and hold move the pitch by up to an octave, mode B and E’s FM is a fixed depth, and mode D bends oscillator 1 by up to two octaves with the strike and oscillator 2 by one with the decay. The decay runs from 6 ms to 2.5 s, as the Behringer guide gives it, but does not change with the tuning as the guide says it does. Mode C’s ‘oscillator 1 lower’ is read as a quieter oscillator 1."
+      }
+    ]
+  }
+}

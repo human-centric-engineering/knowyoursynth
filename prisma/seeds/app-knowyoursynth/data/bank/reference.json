@@ -555,6 +555,16 @@
       "source": "https://www.gearnews.com/behringer-pro-1-and-crave-are-on-their-way"
     },
     {
+      "id": "behringer-syncussion-sy-1",
+      "name": "Behringer SYNCUSSION SY-1",
+      "maker": "Behringer",
+      "year": "2024",
+      "kind": "module",
+      "recreationOf": "pearl-syncussion-sy-1",
+      "text": "An analogue recreation of the Pearl Syncussion SY-1 with its two channels side by side, each with its own output, trigger and tune sockets, played from pads, triggers or MIDI, in a desktop case that also fits Eurorack.",
+      "source": "https://gearnews.com/?p=183313"
+    },
+    {
       "id": "behringer-td-3",
       "name": "Behringer TD-3",
       "maker": "Behringer",
@@ -1300,6 +1310,15 @@
       "kind": "poly",
       "text": "A 61-note velocity-sensitive polysynth with 12 DCOs that followed the Bit One under Crumar's Bit brand.",
       "source": "https://www.muzines.co.uk/articles/the-a-z-of-analogue/7586"
+    },
+    {
+      "id": "pearl-drum-x-drx-1",
+      "name": "Pearl Drum-X DRX-1",
+      "maker": "Pearl",
+      "year": "1985",
+      "kind": "module",
+      "text": "Pearl’s analogue electronic drum kit after the Syncussion: a rack brain of five voices (kick, snare and three toms) played from pads, with eight programmable kits.",
+      "source": "https://www.muzines.co.uk/articles/pearl-drx-1-electronic-kit/12495"
     },
     {
       "id": "sequential-evolver",

@@ -1,0 +1,46 @@
+{
+  "synth": "pearl-syncussion",
+  "unusual": [
+    {
+      "target": "ch1.mode",
+      "text": "There are no waveform or mixer controls: one six-position switch chooses the whole oscillator structure, from one oscillator through FM to noise alone. The two oscillators’ interval is fixed inside, by a trimmer (originally 440 and 450 Hz), so modes C and D always beat slightly."
+    },
+    {
+      "target": "ch1.tune",
+      "text": "TUNE moves both oscillators and the filter together, so it also sets the colour of the noise in mode F. The keys do not change the pitch: they only strike the drum."
+    },
+    {
+      "target": "ch1.width",
+      "text": "Not a cutoff knob: the cutoff follows TUNE, and WIDTH sets how far above it the decay envelope opens the filter on each strike before it closes back down."
+    },
+    {
+      "target": "ch1.sh",
+      "text": "The sample and hold has no rate of its own. It runs at LFO SPEED, moves the pitch by LFO DEPTH, and keeps working with the LFO wave switched off."
+    },
+    {
+      "target": "ch1.sweepRange",
+      "text": "RANGE sets where the sweep ends, relative to TUNE: the pitch is struck at TUNE and travels away from it. In mode D the sweep controls do nothing, because the strength of the hit sets the sweep."
+    },
+    {
+      "target": "sys.power",
+      "text": "The only control that is not a channel’s. There is no master level: the two OUTPUT faders are mixed straight to the one OUTPUT socket on the back."
+    }
+  ],
+  "limits": {
+    "intro": "Both channels are modelled: OSC MODE, TUNE, DECAY, WIDTH, the sweep with its SPEED, RANGE and switch, the LFO with its SPEED, DEPTH and wave switch, S/H, OUTPUT and POWER. Each channel is a voice of its own, and how hard a key is struck sets how loud and bright the drum is, as a pad did.",
+    "items": [
+      {
+        "title": "Playing it from the keys",
+        "text": "The original is struck from its CU-1 pads or microphones on the rear INPUT sockets. Here the keys below middle C strike channel 1 and middle C and above strike channel 2, whichever key you press, and the key’s velocity stands for how hard the pad is hit: it sets the loudness and the brightness, and in mode D the sweep."
+      },
+      {
+        "title": "What is not modelled",
+        "text": "The rear panel, which is not drawn: the two INPUT sockets and their SENSITIVITY knobs, the OUTPUT socket, the TUNE socket for the TP-01 tune pedal and the MUTE socket for the MP-01 mute pedal. A trigger lamp lights while its channel sounds rather than when a hit passes the sensitivity threshold."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The spec is drawn from Pearl’s four-page brochure and schematic-based notes, not a service manual. Neither manual gives the oscillators’ waveform, the filter’s slope, or the sweep’s speeds and ranges, and both specs assume the sample and hold samples noise. Here the oscillators are triangles, the filter is the app’s 12 dB low-pass at an octave above TUNE, the sweep runs from 20 ms to 2.5 s over up to three octaves, the LFO and sample and hold move the pitch by up to an octave, mode B and E’s FM is a fixed depth, and mode D bends oscillator 1 by up to two octaves with the strike and oscillator 2 by one with the decay. The decay runs from 6 ms to 2.5 s, as the Behringer guide gives it, but does not change with the tuning as the guide says it does. Mode C’s ‘oscillator 1 lower’ is read as a quieter oscillator 1."
+      }
+    ]
+  }
+}

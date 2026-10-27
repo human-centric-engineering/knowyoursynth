@@ -817,6 +817,16 @@
       "app": ["donner-b1"],
       "text": "Donner’s TB-303-inspired analogue bass synthesizer, also sold as the Syn Bass: one oscillator, a resonant low-pass filter and one decay envelope, with saturation and delay, 26 touch keys, a 16-step sequencer with 128 patterns and an eight-mode arpeggiator. Its sequencer, keyboard and effects are Donner’s own rather than a copy of the 303.",
       "source": "https://www.soundonsound.com/reviews/donner-essential-b1"
+    },
+    {
+      "id": "pearl-syncussion-sy-1",
+      "name": "Pearl Syncussion SY-1",
+      "maker": "Pearl",
+      "year": "1979",
+      "kind": "module",
+      "app": ["pearl-syncussion", "behringer-syncussion"],
+      "text": "Pearl’s two-channel analogue drum synthesizer, played from its CU-1 drum pads: each channel two oscillators (alone, mixed, frequency-modulated or with noise), a pitch sweep up or down, an LFO and a sample and hold on pitch, and a filter swept by the decay, louder and brighter the harder the pad is hit. The falling synth tom of late-1970s disco.",
+      "source": "https://en.wikipedia.org/wiki/Pearl_Drums"
     }
   ]
 }

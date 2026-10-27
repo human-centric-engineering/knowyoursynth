@@ -1,0 +1,402 @@
+{
+  "synth": "pearl-syncussion",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "disco-toms",
+      "name": "Disco Toms",
+      "ref": "In the style of the late-1970s disco synth tom",
+      "artist": "Disco-era synth drums",
+      "tags": ["perc", "disco", "70s"],
+      "level": 1,
+      "blurb": "Two tuned toms that fall in pitch as they ring, the “pew” of a 1979 dance record.",
+      "how": "Each channel is one oscillator struck by a key and sweeping down from where it is struck. A falling pitch over a third of a second is what the ear hears as a synth tom rather than a note. Channel 2 is tuned higher, so the fill moves between two drums.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.25],
+          [0.5, 48, 0.25],
+          [1, 72, 0.25],
+          [1.5, 48, 0.25],
+          [2, 72, 0.25],
+          [2.5, 48, 0.25],
+          [3, 72, 0.25],
+          [3.25, 48, 0.25],
+          [3.5, 72, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One oscillator, tuned low",
+          "module": "osc",
+          "why": "OSC MODE starts at A, one oscillator, the classic drum-synth sound. TUNE sets the pitch the drum is struck at.\n- Channel 1 TUNE 3.5 (177 Hz): a floor tom. The keys below middle C strike channel 1 at this pitch whichever key you press.\n- Listen for: a short, dull knock. It is still a click of a drum; the next steps give it length and its fall.",
+          "set": {
+            "ch1.tune": 3.5
+          }
+        },
+        {
+          "title": "Let it ring",
+          "module": "env",
+          "why": "DECAY sets how long the drum rings, and the same decay closes the filter as it fades.\n- Channel 1 DECAY 6.5 (300 ms): long enough to hear the pitch move.\n- Channel 1 WIDTH 3 (1.8 oct): the strike opens the filter almost two octaves above TUNE and it falls back as the drum dies, a soft attack rather than a crack.\n- Listen for: a round tone with a little brightness at the front. Play some keys softly: a gentle hit is quieter and duller, as on a pad.",
+          "set": {
+            "ch1.decay": 6.5,
+            "ch1.width": 3
+          }
+        },
+        {
+          "title": "The falling sweep",
+          "module": "mod",
+          "why": "SWEEP is already DOWN: every strike starts at TUNE and slides down by RANGE at SPEED. This fall is the sound of the Syncussion.\n- Channel 1 SWEEP SPEED 4 (360 ms): the time the fall takes. Slower is a lazy “peeew”, faster a thump.\n- Channel 1 SWEEP RANGE 3.5 (+12.6 st): a fall of just over an octave.\n- Listen for: each hit dropping in pitch as it fades. Set SWEEP to OFF and the tom turns into a plain knock.",
+          "set": {
+            "ch1.sweepSpeed": 4,
+            "ch1.sweepRange": 3.5
+          }
+        },
+        {
+          "title": "A second, higher tom",
+          "module": "osc",
+          "why": "Channel 2 is a whole second drum, played from middle C up. Set it like channel 1, a little higher.\n- Channel 2 TUNE 5 (330 Hz), DECAY 6 (220 ms), WIDTH 3 (1.8 oct): a rack tom, a little shorter.\n- Channel 2 SWEEP SPEED 4 (360 ms), RANGE 3.5 (+12.6 st): the same fall.\n- Listen for: the fill moving between a low and a high tom.",
+          "set": {
+            "ch2.tune": 5,
+            "ch2.decay": 6,
+            "ch2.width": 3,
+            "ch2.sweepSpeed": 4,
+            "ch2.sweepRange": 3.5
+          }
+        }
+      ],
+      "context": {
+        "ch1.sweepRange": "In this sound: how far each tom falls. More is a deeper “pew”.",
+        "ch1.tune": "In this sound: the pitch of the low tom."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.sweepSpeed",
+          "try": "Move between 2 and 7",
+          "hear": "From a long, lazy fall to a short thump."
+        },
+        {
+          "id": "ch1.sweep",
+          "try": "Switch to UP",
+          "hear": "The toms rise instead of fall, an odd, questioning sound."
+        }
+      ]
+    },
+    {
+      "id": "laser-zap",
+      "name": "Laser Zap",
+      "ref": "In the style of the space-disco laser shot",
+      "artist": "Disco-era synth drums",
+      "tags": ["fx", "disco", "70s"],
+      "level": 1,
+      "blurb": "A high strike that dives three octaves, the ray-gun effect of late-1970s dance floors.",
+      "how": "The pitch starts high and the sweep drags it down a long way, slowly enough to follow. With little filter movement the tone stays pure, so the ear hears a falling whistle rather than a drum.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25],
+          [1.5, 72, 0.25],
+          [2, 72, 0.25],
+          [3, 72, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Strike it high",
+          "module": "osc",
+          "why": "A laser starts where a tom would be a bell.\n- Channel 2 TUNE 9 (1.7 kHz): high and piercing.\n- Listen for: a short high ping on the keys from middle C up.",
+          "set": {
+            "ch2.tune": 9
+          }
+        },
+        {
+          "title": "A long, deep dive",
+          "module": "mod",
+          "why": "SWEEP is DOWN. Make the fall long and wide.\n- Channel 2 SWEEP RANGE 10 (+36 st): three octaves, the whole range.\n- Channel 2 SWEEP SPEED 3 (590 ms): slow enough to hear the whole dive.\n- Listen for: a “pyeeew” falling right down.",
+          "set": {
+            "ch2.sweepRange": 10,
+            "ch2.sweepSpeed": 3
+          }
+        },
+        {
+          "title": "Let it ring, keep it pure",
+          "module": "env",
+          "why": "DECAY has to outlast the dive, and a narrow WIDTH keeps the tone a clean whistle.\n- Channel 2 DECAY 7.5 (550 ms): the shot rings through its fall.\n- Channel 2 WIDTH 2 (1.2 oct): only a little brightness on the strike.\n- Listen for: the full laser. Raise WIDTH and it gains a harsher, buzzier edge.",
+          "set": {
+            "ch2.decay": 7.5,
+            "ch2.width": 2
+          }
+        }
+      ],
+      "context": {
+        "ch2.sweepRange": "In this sound: how far the laser dives.",
+        "ch2.sweepSpeed": "In this sound: how long the dive takes."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.sweepSpeed",
+          "try": "Move between 1 and 6",
+          "hear": "From a slow, sinking siren to a quick zap."
+        },
+        {
+          "id": "ch2.sweep",
+          "try": "Switch to UP",
+          "hear": "A rising blip, the sound of a power-up."
+        }
+      ]
+    },
+    {
+      "id": "fm-bell",
+      "name": "Metal Bell",
+      "ref": "The Syncussion’s metallic mode",
+      "artist": "Pearl Syncussion",
+      "tags": ["perc", "experimental", "70s"],
+      "level": 2,
+      "blurb": "A clangorous struck bell, the inharmonic ring of one oscillator bending another.",
+      "how": "In mode B oscillator 1 is not heard: it bends the pitch of oscillator 2 hundreds of times a second (frequency modulation). That adds partials that do not line up with the pitch, which the ear hears as metal. A long decay and no sweep let it ring like a bell.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25, 0.9],
+          [1.5, 72, 0.25, 0.9],
+          [2.5, 72, 0.25, 0.5],
+          [3, 72, 0.25, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Switch to FM",
+          "module": "osc",
+          "why": "OSC MODE B: oscillator 1 frequency-modulates oscillator 2, and only oscillator 2 is heard.\n- Channel 2 OSC MODE B: the tone turns hard and metallic at once.\n- Channel 2 TUNE 6 (500 Hz): a mid bell.\n- Listen for: a clang instead of a knock. Turn OSC MODE back to A to hear the plain oscillator again.",
+          "set": {
+            "ch2.mode": "B",
+            "ch2.tune": 6
+          }
+        },
+        {
+          "title": "Hold the pitch",
+          "module": "mod",
+          "why": "A bell does not fall in pitch, so turn the sweep off.\n- Channel 2 SWEEP OFF.\n- Listen for: a steady, ringing pitch.",
+          "set": {
+            "ch2.sweep": "off"
+          }
+        },
+        {
+          "title": "Let it ring bright",
+          "module": "env",
+          "why": "- Channel 2 DECAY 8.5 (1.0 s): a full second of ring.\n- Channel 2 WIDTH 5 (3.0 oct): the strike opens the filter three octaves, so the clang is bright, then mellows as it dies.\n- Listen for: the brightness fading while the bell keeps ringing. The soft hit in the riff is darker as well as quieter.",
+          "set": {
+            "ch2.decay": 8.5,
+            "ch2.width": 5
+          }
+        }
+      ],
+      "context": {
+        "ch2.mode": "In this sound: B, the FM mode that makes it metallic.",
+        "ch2.width": "In this sound: how bright the bell is when struck."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.tune",
+          "try": "Move between 4 and 8",
+          "hear": "The bell changes character, not just pitch: the clashing partials move against each other."
+        },
+        {
+          "id": "ch2.mode",
+          "try": "Try E",
+          "hear": "Noise joins the FM, like a struck sheet of thin metal."
+        }
+      ]
+    },
+    {
+      "id": "two-channel-snare",
+      "name": "Two-Channel Snare",
+      "ref": "In the style of the 808-style snare the Syncussion makes from both channels",
+      "artist": "Pearl Syncussion",
+      "tags": ["perc", "electro", "80s"],
+      "level": 2,
+      "blurb": "A snare built from two drums struck together: a tuned body on channel 1 and a burst of noise on channel 2.",
+      "how": "A real snare is a drum skin and a rattle of wires. Here channel 1 is the skin, one oscillator with a quick pitch drop, and channel 2 in mode F is the wires, filtered noise. Struck together, from two keys at once, they read as one drum.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 48, 0.25],
+          [1, 72, 0.25],
+          [3, 48, 0.25],
+          [3, 72, 0.25],
+          [3.75, 72, 0.2, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The body: a short, tuned knock",
+          "module": "osc",
+          "why": "Channel 1 is the drum skin.\n- Channel 1 TUNE 4.5 (268 Hz): the snare’s note.\n- Channel 1 DECAY 4.5 (91 ms): short, a knock not a tom.\n- Listen for: a woody tock on the keys below middle C.",
+          "set": {
+            "ch1.tune": 4.5,
+            "ch1.decay": 4.5
+          }
+        },
+        {
+          "title": "A quick drop on the body",
+          "module": "mod",
+          "why": "A fast, small sweep gives the skin its snap.\n- Channel 1 SWEEP SPEED 7 (85 ms), RANGE 2 (+7.2 st): a fifth down, very fast.\n- Listen for: a tighter, punchier tock.",
+          "set": {
+            "ch1.sweepSpeed": 7,
+            "ch1.sweepRange": 2
+          }
+        },
+        {
+          "title": "The wires: noise on channel 2",
+          "module": "osc",
+          "why": "OSC MODE F is noise alone. TUNE still sets the filter, so here it sets the noise’s colour.\n- Channel 2 OSC MODE F.\n- Channel 2 TUNE 7.5 (932 Hz): the filter sits about an octave above that, a mid hiss.\n- Channel 2 WIDTH 6 (3.6 oct) and DECAY 5 (120 ms): a bright burst that dies quickly.\n- Listen for: the two together on each beat. The riff strikes both channels at once, a key below middle C and one above.",
+          "set": {
+            "ch2.mode": "F",
+            "ch2.tune": 7.5,
+            "ch2.width": 6,
+            "ch2.decay": 5
+          }
+        }
+      ],
+      "context": {
+        "ch2.mode": "In this sound: F, noise only, the snare wires.",
+        "ch1.decay": "In this sound: the length of the drum body."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.decay",
+          "try": "Move between 3.5 and 7",
+          "hear": "From a tight electro snare to a long, washy one."
+        },
+        {
+          "id": "ch2.output",
+          "try": "Pull down to 5",
+          "hear": "Less rattle, more of the tuned body: a rimshot rather than a snare."
+        }
+      ]
+    },
+    {
+      "id": "robot-chatter",
+      "name": "Robot Chatter",
+      "ref": "The random-bleep sound of late-1970s sci-fi",
+      "artist": "Pearl Syncussion",
+      "tags": ["fx", "experimental", "70s"],
+      "level": 2,
+      "blurb": "A metallic voice that jumps to a new random pitch a dozen times a second while it rings.",
+      "how": "The sample and hold picks a random pitch at the LFO speed and holds it until the next one. Over a struck FM tone with a long decay it sounds like a machine talking to itself. It works with the LFO wave switched off, because it uses only the LFO’s speed.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.5],
+          [1, 48, 0.5],
+          [2, 48, 0.5],
+          [3, 48, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A ringing FM tone",
+          "module": "osc",
+          "why": "- Channel 1 OSC MODE B: the metallic FM mode.\n- Channel 1 TUNE 5.5 (406 Hz).\n- Channel 1 SWEEP OFF, so the pitch only moves where the sample and hold puts it.\n- Listen for: a steady clang below middle C.",
+          "set": {
+            "ch1.mode": "B",
+            "ch1.tune": 5.5,
+            "ch1.sweep": "off"
+          }
+        },
+        {
+          "title": "Ring long enough to talk",
+          "module": "env",
+          "why": "- Channel 1 DECAY 7 (410 ms).\n- Listen for: each hit ringing on through the beat.",
+          "set": {
+            "ch1.decay": 7
+          }
+        },
+        {
+          "title": "Switch on the sample and hold",
+          "module": "lfo",
+          "why": "S/H takes a new random pitch at LFO SPEED, by up to LFO DEPTH. The LFO WAVE switch stays OFF.\n- Channel 1 S/H ON.\n- Channel 1 LFO SPEED 7 (12 Hz): twelve new pitches a second.\n- Channel 1 LFO DEPTH 6 (+4.3 st): up to a third either way.\n- Listen for: the chatter. Slow the LFO SPEED right down and it becomes a random melody instead.",
+          "set": {
+            "ch1.sh": true,
+            "ch1.lfoSpeed": 7,
+            "ch1.lfoDepth": 6
+          }
+        }
+      ],
+      "context": {
+        "ch1.sh": "In this sound: on, the random pitch steps.",
+        "ch1.lfoSpeed": "In this sound: how fast the robot chatters."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.lfoDepth",
+          "try": "Move between 3 and 10",
+          "hear": "From a nervous flutter to wild leaps across an octave."
+        },
+        {
+          "id": "ch1.lfoWave",
+          "try": "Switch to the square",
+          "hear": "The LFO’s trill adds to the random steps."
+        }
+      ]
+    },
+    {
+      "id": "struck-harder",
+      "name": "Struck Harder",
+      "ref": "The Syncussion’s touch-sensitive mode D",
+      "artist": "Pearl Syncussion",
+      "tags": ["perc", "experimental", "70s"],
+      "level": 3,
+      "blurb": "A two-tone drum whose pitch bend follows how hard each hit is, soft hits low and hard hits swooping.",
+      "how": "Mode D mixes both oscillators and replaces the sweep with the strike itself: oscillator 1 bends by as much as the hit is hard, and oscillator 2 bends with the decay. Played with soft and hard notes, one drum gives a whole range of sounds, as it did from the pads.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.4, 0.35],
+          [0.5, 48, 0.4, 0.6],
+          [1, 48, 0.4, 1],
+          [2, 48, 0.4, 0.35],
+          [2.5, 48, 0.4, 0.8],
+          [3, 48, 0.4, 1],
+          [3.5, 48, 0.3, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Switch to mode D",
+          "module": "osc",
+          "why": "OSC MODE D mixes the two oscillators, and the SWEEP faders no longer do anything: the hit sets the sweep.\n- Channel 1 OSC MODE D.\n- Channel 1 TUNE 4 (217 Hz).\n- Listen for: two tones, slightly apart, swooping up into pitch as they are struck.",
+          "set": {
+            "ch1.mode": "D",
+            "ch1.tune": 4
+          }
+        },
+        {
+          "title": "Give the hits room",
+          "module": "env",
+          "why": "- Channel 1 DECAY 6.5 (300 ms).\n- Channel 1 WIDTH 5 (3.0 oct): hard hits are brighter as well as louder, because the hit also sets how far the decay opens the filter.\n- Listen for: the riff’s soft and hard notes. Soft ones are quiet thuds; the hard ones on the beat swoop and crack.",
+          "set": {
+            "ch1.decay": 6.5,
+            "ch1.width": 5
+          }
+        }
+      ],
+      "context": {
+        "ch1.mode": "In this sound: D, where how hard you hit sets the sweep."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.tune",
+          "try": "Move between 2 and 6",
+          "hear": "The swoop keeps its shape at any pitch, from a deep boom to a tight ping."
+        }
+      ]
+    }
+  ]
+}

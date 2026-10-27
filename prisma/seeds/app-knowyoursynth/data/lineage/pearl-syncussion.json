@@ -1,0 +1,51 @@
+{
+  "synth": "pearl-syncussion",
+  "title": "The Pearl Syncussion SY-1",
+  "intro": "The Syncussion is Pearl’s drum synthesizer of 1979, the drum company’s answer to the Syndrum. It was sold with a pair of pads to strike, and its two channels made the falling toms, lasers and metallic hits of late-1970s disco. It led towards the electronic drum kits of the 1980s.",
+  "timeline": [
+    {
+      "year": "1976",
+      "name": "Pollard Syndrum",
+      "text": "The first commercial drum synthesizer: an oscillator struck from a pad, with a pitch sweep and a decay. Its falling tom spread through disco."
+    },
+    {
+      "year": "1979",
+      "name": "Pearl Syncussion SY-1",
+      "tag": "This synth",
+      "text": "Two channels, each two oscillators with six ways of combining them, a pitch sweep, an LFO, a sample and hold and a filter swept by the decay, played from Pearl’s CU-1 pads with dynamics from how hard they are hit."
+    },
+    {
+      "year": "1981",
+      "name": "Simmons SDS-V",
+      "text": "The hexagonal-pad Simmons kit, which took electronic drums from an effect to a whole drum set. The Syncussion is often named as a forerunner."
+    },
+    {
+      "year": "1985",
+      "name": "Pearl Drum-X DRX-1",
+      "text": "Pearl’s own follow-up: a five-voice analogue kit in a rack brain, with programmable kits."
+    },
+    {
+      "year": "2024",
+      "name": "Behringer SYNCUSSION SY-1",
+      "text": "The Syncussion’s circuit with its two channels side by side, separate outputs, trigger, tune and mute sockets, MIDI and a Eurorack-sized case. Announced in 2021, shipped in 2024."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Pollard Syndrum",
+      "years": "1976",
+      "text": "The drum synthesizer it answered, with the same struck, sweeping voice."
+    },
+    {
+      "name": "Simmons SDS-V",
+      "years": "1981",
+      "text": "The electronic kit that followed, with a voice per drum."
+    },
+    {
+      "name": "Behringer SYNCUSSION SY-1",
+      "years": "2024",
+      "text": "A modern recreation of the same circuit, also in the app."
+    }
+  ],
+  "note": "None of the databank’s records name the Syncussion yet. Its sounds here are in the general style of disco and electro percussion, not copies of parts."
+}
