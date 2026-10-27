@@ -1735,9 +1735,135 @@ export interface MoogParams {
 }
 
 /**
+ * One SOLAR 42 voice's envelope. `asr` rises over `a`, holds while gated and falls over `r` (the drones' attack and
+ * release); `adsr` adds a decay over `d` to `s`; `ad` rises and falls once on each gate; `loop` repeats the AD while
+ * gated. Times in seconds, `s` 0..1.
+ */
+export interface SolarEnv {
+  mode: 'asr' | 'adsr' | 'ad' | 'loop';
+  a: number;
+  d: number;
+  s: number;
+  r: number;
+  /** HOLD: open without a gate. */
+  hold: boolean;
+}
+
+/** What every SOLAR 42 voice has: its gate, its envelope and its mixer channel. */
+interface SolarVoiceCommon {
+  /** The voice's push-button (a drone) is down. The VCO voices also open from their side of the keyboard. */
+  gate: boolean;
+  env: SolarEnv;
+  /** Mixer channel: VOL 0..1, PAN −1 (left) .. 1 (right). */
+  level: number;
+  pan: number;
+}
+
+/** A classic drone: five fixed-pitch saws tuned by ear. */
+export interface SolarDrone extends SolarVoiceCommon {
+  kind: 'drone';
+  /** The five generators: MIDI note (fractional), whether it is switched in, and whether the photosensor bends it (MOD). */
+  gens: { note: number; on: boolean; mod: boolean }[];
+  /** VOLT 0..1: the generators fall together to the knee, each at its own rate, then cross-modulate. */
+  volt: number;
+  /** Semitones the photosensor raises the pitch at full light. */
+  photo: number;
+}
+
+/** A Papa Srapa voice: a square tone under a low-frequency square modulator, with noise and a sample and hold. */
+export interface SolarSrapa extends SolarVoiceCommon {
+  kind: 'srapa';
+  /** The tone, MIDI note. */
+  note: number;
+  /** The modulator, Hz. */
+  rate: number;
+  fm: boolean;
+  am: boolean;
+  /** Octaves the modulator moves the tone with `fm` (the FM AMOUNT and DIVIDER together). */
+  dev: number;
+  /** White noise blended in, 0..1. */
+  noise: number;
+}
+
+/** An AS3340 VCO voice, played from the keyboard. */
+export interface SolarVco extends SolarVoiceCommon {
+  kind: 'vco';
+  /** Offset in semitones from the key (octave and tune). */
+  semi: number;
+  wave: 'sine' | 'tri' | 'saw' | 'square' | 'sawInv' | 'sineTri';
+  /** 0..1: the square's width, or how far a morph has gone. Dest `solPw<n>` adds to it. */
+  shape: number;
+  /** The −1 SUB switch: a square an octave below, added in. */
+  sub: boolean;
+  /** FM depth 0..1 (24 semitones at full scale of the input). */
+  fm: number;
+}
+
+export type SolarVoice = SolarDrone | SolarSrapa | SolarVco;
+
+/** One side of the dual Polivoks filter. */
+export interface SolarFilterSide {
+  mode: 'lp' | 'bp';
+  /** Cutoff, Hz. */
+  cutoff: number;
+  /** 0..1; self-oscillates near 1. */
+  res: number;
+  /** Drive into the filter, 0..1. */
+  drive: number;
+}
+
+/** One knob of the effector (X, Y or Z) on its cartridge's algorithm parameter. */
+export interface SolarFxKnob {
+  /** The `FX_FACTORY` parameter it turns. */
+  ref: string;
+  /** Its value at 0 and at full turn, in the parameter's display units. */
+  lo: number;
+  hi: number;
+  /** The knob, 0..1. */
+  v: number;
+}
+
+/**
+ * The Elta Music SOLAR 42's own sound path, run in place of the fixed voice: eight voices of three kinds, each with
+ * its own gate and envelope, a ten-channel stereo mixer, a dual 12 dB filter (left and right) and a stereo effector.
+ * The voice writes both sides itself.
+ */
+export interface SolarParams {
+  /** In panel order: their signals and destinations are numbered 1–8 in this order. */
+  voices: SolarVoice[];
+  /**
+   * The keyboard: `single` plays every VCO voice; `split` gives keys below `split` to the first, the rest to the
+   * second. `glide` is the portamento, seconds. Signals `solKbd1` / `solKbd2` (octaves from middle C) and `solKg1` /
+   * `solKg2` (gates) carry each side.
+   */
+  keys: { mode: 'single' | 'split'; split: number; glide: number };
+  /** The EXT.AUDIO and PREAMP mixer channels (dest `solExt` and signal `preamp`). */
+  ext: { level: number; pan: number };
+  pre: { level: number; pan: number };
+  vcf: { l: SolarFilterSide; r: SolarFilterSide; link: boolean };
+  /** Two cartridges, left and right: an `FX_FACTORY` algorithm (or none) with its parameters and its X/Y/Z knobs. */
+  fx: {
+    l: { alg: string | null; p: Record<string, number | string> };
+    r: { alg: string | null; p: Record<string, number | string> };
+    xyz: SolarFxKnob[];
+    /** BLEND, 0 dry .. 1 effect only. */
+    blend: number;
+  };
+  /** MASTER VOLUME, 0..1. */
+  master: number;
+  /** LFO A and B: Hz, and the wave from 0 square to 1 triangle. Signals `solLfoA` / `solLfoB`, 0..1. */
+  lfo: { a: { hz: number; wave: number }; b: { hz: number; wave: number } };
+  /**
+   * The 5-step sequencer: step levels 0..1, gates, 3–5 stages, clocked by the pulser at `hz` (signal `solPulser`)
+   * or by dest `solSeqClk` once cabled. Signals `solSeqCv`, `solSeqGate`.
+   */
+  seq: { hz: number; levels: number[]; gates: boolean[]; stages: number };
+}
+
+/**
  * What `toEngine()` returns: one voice's settings plus the opt-in features.
  * Everything optional is off (or at its default) when absent. A synth whose
- * sound path is `easel` or `moog` still supplies the stubs (`osc: []`,
+ * sound path is `easel`, `moog` or `solar` still supplies the stubs (`osc: []`,
  * `filter`, `vca`, `lfo`, `glide`, `trig`, `env1`, `env2`).
  */
 export interface EngineParams {
@@ -1824,6 +1950,8 @@ export interface EngineParams {
   outAmps?: [OutAmpParams, OutAmpParams];
   easel?: EaselParams;
   moog?: MoogParams;
+  /** The SOLAR 42's sound path, in place of the fixed voice (see `audio/solar-core.ts`). */
+  solar?: SolarParams;
   /** Set by the app after `toEngine()`, from the cables (`cablesToEngine()`). Not returned by a definition. */
   cables?: EngineCable[];
   /** Set by the app after `toEngine()`: the mod wheel. Not returned by a definition. */
