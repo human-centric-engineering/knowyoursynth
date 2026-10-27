@@ -127,7 +127,8 @@ for (const ch of [1, 2] as const) {
   text(135 + dx, LOW - 30, `CH ${ch} TRIG`, 15);
   p.decor.push(
     { t: 'line', x1: 135 + dx, y1: 466, x2: 135 + dx, y2: 482, w: 2 },
-    // the LFO lamp, the dot between SPEED and DEPTH: it flashes at the LFO rate on the hardware
+    // the LFO lamp, the dot between SPEED and DEPTH: it flashes at the LFO rate on the hardware. Dark here: the app's
+    // LFO lamp follows one LFO, and this panel has one per channel
     { t: 'led', x: 680 + dx, y: 193, r: 6, color: 'red' }
   );
 }

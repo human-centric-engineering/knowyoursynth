@@ -83,13 +83,15 @@ export function channelVoice(v: ControlValues, ch: Channel): Voice {
   const [l1, l2, ln] = MIX[mode] ?? MIX.A;
   const note = tuneNote(c('tune'), typeof fine === 'number' ? fine : 5);
   const decay = decayS(c('decay'));
+  const sweep = sweepS(c('sweepSpeed'));
+  const rate = lfoHz(c('lfoSpeed'));
   const routes: EngineRoute[] = [];
   const both = (src: string, amt: number): void => {
     if (amt) routes.push({ src, dst: 'pitch1', amt }, { src, dst: 'pitch2', amt });
   };
 
-  // the pitch sweep: from the struck pitch towards TUNE ± RANGE, so the oscillators start offset and the envelope
-  // pulls them back. Mode D replaces it with its own (b01).
+  // the pitch sweep: struck at TUNE, travelling to TUNE ± RANGE. The oscillators rest at TUNE ± RANGE and the sweep
+  // envelope lifts them back to TUNE on each strike, then lets them go. Mode D replaces it with its own (b01).
   const dir = v[`ch${ch}.sweep`];
   const sign = dir === 'up' ? 1 : dir === 'down' ? -1 : 0;
   const range = mode === 'D' ? 0 : sign * sweepSemi(c('sweepRange'));
@@ -127,16 +129,17 @@ export function channelVoice(v: ControlValues, ch: Channel): Voice {
     },
     // one decay, no sustain: letting go of the key changes nothing
     env1: { a: 0.001, d: decay, s: 0, r: decay },
-    env2: { a: 0.001, d: sweepS(c('sweepSpeed')), s: 0, r: sweepS(c('sweepSpeed')) },
+    env2: { a: 0.001, d: sweep, s: 0, r: sweep },
     vca: { envSrc: 'env1v', bias: 0 },
     lfo: {
-      rate: lfoHz(c('lfoSpeed')),
+      rate,
       mix: wave === 'square' ? { sq: 1 } : wave === 'triangle' ? { tri: 1 } : {},
       keySync: false,
     },
-    sh: { rate: lfoHz(c('lfoSpeed')), glide: 0 },
+    sh: { rate, glide: 0 },
     glide: { time: 0, legato: false },
-    trig: { retrig: true, drone: false, repeat: false },
+    // no retrigger: a key let go while another on the same side is held hands the channel back without striking it
+    trig: { retrig: false, drone: false, repeat: false },
     routes,
     tune: 0,
   };

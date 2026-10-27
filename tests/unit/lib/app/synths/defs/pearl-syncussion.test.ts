@@ -91,6 +91,10 @@ describe('Pearl Syncussion toEngine at the init patch', () => {
     expect(p.filter).toMatchObject({ type: 'svf', mode: 'lp', res: 0, envSrc: 'env1v', kbd: 0 });
   });
 
+  it('strikes on every new key but never on a key let go (no retrigger)', () => {
+    expect(p.trig).toEqual({ retrig: false, drone: false, repeat: false });
+  });
+
   it('puts the filter an octave above TUNE and opens it by WIDTH', () => {
     expect(p.filter.cutoff).toBeCloseTo(hz(28 + 7.2 * 3) * 2, 6);
     expect(p.filter.envAmt).toBeCloseTo(2.4, 10);

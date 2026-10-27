@@ -219,7 +219,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -257,7 +257,7 @@
         { "amt": 14.4, "dst": "pitch2", "src": "env2" }
       ],
       "sh": { "glide": 0, "rate": 4.47213595499958 },
-      "trig": { "drone": false, "repeat": false, "retrig": true },
+      "trig": { "drone": false, "repeat": false, "retrig": false },
       "tune": 0,
       "vca": { "bias": 0, "envSrc": "env1v" },
       "volume": 0.8
@@ -648,7 +648,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -691,7 +691,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -734,7 +734,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -777,7 +777,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -820,7 +820,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -900,7 +900,7 @@
             { "amt": 24, "dst": "pitch2", "src": "osc1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -943,7 +943,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -986,7 +986,7 @@
             { "amt": -12, "dst": "pitch2", "src": "env1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1030,7 +1030,7 @@
             { "amt": 24, "dst": "pitch2", "src": "osc1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1073,7 +1073,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1116,7 +1116,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1159,7 +1159,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1202,7 +1202,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1245,7 +1245,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1288,7 +1288,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1331,7 +1331,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1374,7 +1374,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1417,7 +1417,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1460,7 +1460,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1503,7 +1503,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1546,7 +1546,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1589,7 +1589,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1632,7 +1632,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1675,7 +1675,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1718,7 +1718,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1761,7 +1761,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1804,7 +1804,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1847,7 +1847,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1890,7 +1890,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1930,7 +1930,7 @@
           ],
           "routes": [],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -1973,7 +1973,7 @@
             { "amt": 9, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2016,7 +2016,7 @@
             { "amt": 18, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2059,7 +2059,7 @@
             { "amt": 27, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2102,7 +2102,7 @@
             { "amt": 36, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2145,7 +2145,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 0.4 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2188,7 +2188,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 1.337480609952844 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2231,7 +2231,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 14.953487812212206 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2274,7 +2274,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 50 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2321,7 +2321,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2364,7 +2364,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2407,7 +2407,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2450,7 +2450,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2493,7 +2493,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2536,7 +2536,7 @@
             { "amt": -14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2576,7 +2576,7 @@
           ],
           "routes": [],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2619,7 +2619,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -2662,7 +2662,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3061,7 +3061,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3104,7 +3104,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3147,7 +3147,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3190,7 +3190,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3233,7 +3233,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3313,7 +3313,7 @@
             { "amt": 24, "dst": "pitch2", "src": "osc1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3356,7 +3356,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3399,7 +3399,7 @@
             { "amt": -12, "dst": "pitch2", "src": "env1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3443,7 +3443,7 @@
             { "amt": 24, "dst": "pitch2", "src": "osc1" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3486,7 +3486,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3529,7 +3529,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3572,7 +3572,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3615,7 +3615,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3658,7 +3658,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3701,7 +3701,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3744,7 +3744,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3787,7 +3787,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3830,7 +3830,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3873,7 +3873,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3916,7 +3916,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -3959,7 +3959,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4002,7 +4002,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4045,7 +4045,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4088,7 +4088,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4131,7 +4131,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4174,7 +4174,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4217,7 +4217,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4260,7 +4260,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4303,7 +4303,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4343,7 +4343,7 @@
           ],
           "routes": [],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4386,7 +4386,7 @@
             { "amt": 9, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4429,7 +4429,7 @@
             { "amt": 18, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4472,7 +4472,7 @@
             { "amt": 27, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4515,7 +4515,7 @@
             { "amt": 36, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4558,7 +4558,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 0.4 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4601,7 +4601,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 1.337480609952844 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4644,7 +4644,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 14.953487812212206 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4687,7 +4687,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 50 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4734,7 +4734,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4777,7 +4777,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4820,7 +4820,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4863,7 +4863,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4906,7 +4906,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4949,7 +4949,7 @@
             { "amt": -14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -4989,7 +4989,7 @@
           ],
           "routes": [],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -5032,7 +5032,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
@@ -5075,7 +5075,7 @@
             { "amt": 14.4, "dst": "pitch2", "src": "env2" }
           ],
           "sh": { "glide": 0, "rate": 4.47213595499958 },
-          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "trig": { "drone": false, "repeat": false, "retrig": false },
           "tune": 0,
           "vca": { "bias": 0, "envSrc": "env1v" }
         },
