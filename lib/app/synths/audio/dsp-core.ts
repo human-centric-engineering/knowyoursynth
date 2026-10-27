@@ -27,6 +27,7 @@ import type {
 } from '@/lib/app/synths/contract';
 import { createFx } from '@/lib/app/synths/audio/dm-fx';
 import { createMoog, MOOG_SIGNALS, MOOG_DESTS } from '@/lib/app/synths/audio/moog-core';
+import { createSolar, SOLAR_SIGNALS, SOLAR_DESTS } from '@/lib/app/synths/audio/solar-core';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
@@ -285,6 +286,7 @@ export const SIGNALS: string[] = [
   'kbdHi',
   'lfo3',
   ...MOOG_SIGNALS,
+  ...SOLAR_SIGNALS,
 ];
 export const DESTS: string[] = [
   'pitchAll',
@@ -367,6 +369,7 @@ export const DESTS: string[] = [
   'inv10In',
   'hp6In',
   ...MOOG_DESTS,
+  ...SOLAR_DESTS,
 ];
 
 /** Audio path and gates the voice always has unless a SynthDef's `normals` or a cable overrides them. */
@@ -693,6 +696,8 @@ function createVoice(
   };
   // Moog 900-series modular (EngineParams `moog`): its own sound path of separate modules, see moog-core.js.
   const moog = createMoog(sr, S, SI, DI, (d) => ev(d), cabled);
+  // Elta Music SOLAR 42 (EngineParams `solar`): eight voices, a stereo mixer, a dual filter and an effector, see solar-core.ts.
+  const solar = createSolar(sr, S, SI, DI, (d) => ev(d), cabled);
   // phrase player
   let phrase: VoicePhrase | null = null,
     phrasePos = 0,
@@ -745,6 +750,7 @@ function createVoice(
     P = p;
     compile();
     if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
+    if (p.solar) solar.set(p.solar);
     nOsc = Math.min(4, p.osc.length);
     for (let i = 0; i < 4; i++) {
       const o = osc[i];
@@ -866,6 +872,7 @@ function createVoice(
     // the key timing pulse comes from every key, legato or not
     velpFire = true;
     gate = 1;
+    if (P.solar) solar.key(n, true);
     if (!part && onEvent) onEvent({ type: 'note', n, on: true });
   }
   function noteOff(n: number) {
@@ -873,6 +880,7 @@ function createVoice(
     if (i < 0) return;
     held.splice(i, 1);
     if (P!.oscAssign) releaseOsc(n);
+    if (P!.solar) solar.key(n, false);
     if (held.length) assignNotes(true);
     else gate = 0;
     if (!part && onEvent) onEvent({ type: 'note', n, on: false });
@@ -975,6 +983,7 @@ function createVoice(
   function panic() {
     held.length = 0;
     gate = 0;
+    solar.panic();
     phraseHeld.clear();
     slotKey.fill(-1);
     slotHeld.fill(0);
@@ -1574,6 +1583,7 @@ function createVoice(
     const assign = !!p.oscAssign;
     const ez = p.easel || null;
     const mg = !!p.moog;
+    const sol = !!p.solar;
     // TB-303 accent (EngineParams `acid`): an accented note decays Envelope 1 over `decay` instead of its own time,
     // charges the accent sweep from Envelope 1 (rising over `rise`, falling over `fall`, so a run of accents climbs),
     // which lifts the cutoff by `cut` octaves, and adds Envelope 1 × `amp` to the VCA.
@@ -1843,6 +1853,10 @@ function createVoice(
         }
         if (mg) {
           moog.step(note, gate > 0);
+          break core;
+        }
+        if (sol) {
+          solar.step();
           break core;
         }
         // ── oscillators ──
@@ -2213,10 +2227,10 @@ function createVoice(
           fo += w * rvMix;
         }
       }
-      if (oa) {
+      if (oa || sol) {
         // Two output amplifiers (VCS3): signal in on out1In / out2In, a level that is itself a control voltage (panel
         // setting plus out1Lvl / out2Lvl), a tone control, and a pan between the left and right outputs.
-        for (let c = 0; c < 2; c++) {
+        for (let c = 0; c < 2 && oa; c++) {
           let g = oa[c].level + ev(c ? DI.out2Lvl : DI.out1Lvl);
           g = g < 0 ? 0 : g > 1.6 ? 1.6 : g;
           oaG[c] += (g - oaG[c]) * vcaC;
@@ -2230,8 +2244,9 @@ function createVoice(
           oaY[c] = yc;
         }
         for (let k = 0; k < 4; k++) oaPan[k] += (oaPanT[k] - oaPan[k]) * sm;
-        const l = oaY[0] * oaPan[0] + oaY[1] * oaPan[2],
-          r = oaY[0] * oaPan[1] + oaY[1] * oaPan[3];
+        // the SOLAR 42's path writes its two sides itself
+        const l = sol ? S[SI.solL] : oaY[0] * oaPan[0] + oaY[1] * oaPan[2],
+          r = sol ? S[SI.solR] : oaY[0] * oaPan[1] + oaY[1] * oaPan[3];
         fo = (l + r) * 0.5;
         S[SI.master] = fo;
         if (part) {
@@ -2284,6 +2299,7 @@ function createVoice(
           ...(P.easel ? { gate: gate > 0, seq: ezSeqSt, pulser: ezPul } : null),
           // the 960's lamps: its stage (0-based) while it has one
           ...(P.moog && moog.seqState() ? { seq: moog.seqState()!.stage } : null),
+          ...(P.solar ? { seq: solar.seqStage() } : null),
         });
       overloadPeak = 0;
     }
@@ -2462,7 +2478,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   let P: EngineParams | null = null;
   let polyOn = false;
   let dualOn = false;
-  let monoStereo = false; // a one-voice synth whose voice writes both sides itself (EngineParams `outAmps`)
+  let monoStereo = false; // a one-voice synth whose voice writes both sides itself (EngineParams `outAmps`, `solar`)
   const parts: Voice[] = [];
   const partCur = [-1, -1]; // the note each voice of a dual synth is playing, −1 for none
   const partT = [0, 0]; // when each last took or let go of a note: DUO gives a new key to the voice free longest
@@ -3032,7 +3048,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
           stopPhrase(true);
           polyOn = false;
         }
-        monoStereo = !!m.p.outAmps;
+        monoStereo = !!(m.p.outAmps || m.p.solar);
         mono.handle(m);
         return;
       }
