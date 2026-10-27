@@ -104,6 +104,71 @@ describe('layered poly (layer)', () => {
   });
 });
 
+describe('split layers (layer.split, t-133)', () => {
+  /** The first setting a saw, the layer silent, or the other way round with `layerLoud`. */
+  function sides(layerLoud: boolean, split?: number): EngineParams {
+    const loud = monoParams({ osc: [{ level: 0.8, mix: { saw: 1 }, semi: 0 }] });
+    const quiet = monoParams({ osc: [{ level: 0, mix: { saw: 1 }, semi: 0 }] });
+    const top = layerLoud ? quiet : loud;
+    const { volume: _v, ...b } = layerLoud ? loud : quiet;
+    const layer: LayerParams = split == null ? b : { ...b, split };
+    return { ...top, poly: { voices: 4, stack: 1, mono: false }, layer };
+  }
+  const key = (n: number): Timed[] => [
+    [0, { type: 'noteOn', n }],
+    [4800, { type: 'noteOff', n }],
+  ];
+
+  it('plays a key below the split on the layer only', () => {
+    // the layer is silent: a low key is silent with the split, and heard (the first setting) without it
+    expect(rms(render(sides(false, 60), { events: key(48) }).out, 0, 4800)).toBeLessThan(1e-4);
+    expect(rms(render(sides(false), { events: key(48) }).out, 0, 4800)).toBeGreaterThan(0.02);
+    // the layer is the loud one: the low key is heard
+    expect(rms(render(sides(true, 60), { events: key(48) }).out, 0, 4800)).toBeGreaterThan(0.02);
+  });
+
+  it('plays the split note and above on the top-level settings only', () => {
+    expect(rms(render(sides(true, 60), { events: key(60) }).out, 0, 4800)).toBeLessThan(1e-4);
+    expect(rms(render(sides(true), { events: key(72) }).out, 0, 4800)).toBeGreaterThan(0.02);
+    expect(rms(render(sides(false, 60), { events: key(72) }).out, 0, 4800)).toBeGreaterThan(0.02);
+  });
+
+  it('lets go of both sides: no note hangs after a split chord is released', () => {
+    const both: EngineParams = {
+      ...sides(true, 60),
+      osc: [{ level: 0.8, mix: { saw: 1 }, semi: 0 }],
+    };
+    const r = render(both, {
+      len: 28800,
+      events: [
+        [0, { type: 'noteOn', n: 48 }],
+        [0, { type: 'noteOn', n: 72 }],
+        [4800, { type: 'noteOff', n: 48 }],
+        [4800, { type: 'noteOff', n: 72 }],
+      ],
+    });
+    expect(rms(r.out, 0, 4800)).toBeGreaterThan(0.02);
+    expect(rms(r.out, 24000, 28800)).toBeLessThan(1e-4);
+  });
+
+  it('starts afresh when the split moves under a held key, so its note-off still reaches what sounds', () => {
+    // held in DUAL on both settings, then switched to SPLIT: the key would otherwise be let go on one side only
+    const loudBoth: EngineParams = {
+      ...sides(true),
+      osc: [{ level: 0.8, mix: { saw: 1 }, semi: 0 }],
+    };
+    const r = render(loudBoth, {
+      len: 28800,
+      events: [
+        [0, { type: 'noteOn', n: 72 }],
+        [2400, { type: 'params', p: { ...loudBoth, layer: { ...loudBoth.layer!, split: 60 } } }],
+        [4800, { type: 'noteOff', n: 72 }],
+      ],
+    });
+    expect(rms(r.out, 24000, 28800)).toBeLessThan(1e-4);
+  });
+});
+
 describe('key timing pulse (pulse → velp)', () => {
   const pulsed = (time: number): EngineParams =>
     shutVoice({ pulse: { time }, routes: [{ src: 'velp', dst: 'amp', amt: 1 }] });
