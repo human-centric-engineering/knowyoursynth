@@ -52,6 +52,8 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   'take-5': () => import('@/lib/app/synths/defs/take-5'),
   'cs-80': () => import('@/lib/app/synths/defs/cs-80'),
   'super-gemini': () => import('@/lib/app/synths/defs/super-gemini'),
+  'pearl-syncussion': () => import('@/lib/app/synths/defs/pearl-syncussion'),
+  'behringer-syncussion': () => import('@/lib/app/synths/defs/behringer-syncussion'),
 };
 
 /** Every id a loader exists for. */

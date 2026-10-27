@@ -1,0 +1,5093 @@
+{
+  "id": "pearl-syncussion",
+  "readouts": {
+    "ch1.tune": [
+      "41 Hz",
+      "62 Hz",
+      "95 Hz",
+      "143 Hz",
+      "217 Hz",
+      "330 Hz",
+      "500 Hz",
+      "757 Hz",
+      "1.1 kHz",
+      "1.7 kHz",
+      "2.6 kHz"
+    ],
+    "ch1.decay": [
+      "6 ms",
+      "11 ms",
+      "20 ms",
+      "37 ms",
+      "67 ms",
+      "120 ms",
+      "220 ms",
+      "410 ms",
+      "750 ms",
+      "1.4 s",
+      "2.5 s"
+    ],
+    "ch1.width": [
+      "0.0 oct",
+      "0.6 oct",
+      "1.2 oct",
+      "1.8 oct",
+      "2.4 oct",
+      "3.0 oct",
+      "3.6 oct",
+      "4.2 oct",
+      "4.8 oct",
+      "5.4 oct",
+      "6.0 oct"
+    ],
+    "ch1.sweepSpeed": [
+      "2.5 s",
+      "1.5 s",
+      "950 ms",
+      "590 ms",
+      "360 ms",
+      "220 ms",
+      "140 ms",
+      "85 ms",
+      "53 ms",
+      "32 ms",
+      "20 ms"
+    ],
+    "ch1.sweepRange": [
+      "0 st",
+      "+3.6 st",
+      "+7.2 st",
+      "+10.8 st",
+      "+14.4 st",
+      "+18 st",
+      "+21.6 st",
+      "+25.2 st",
+      "+28.8 st",
+      "+32.4 st",
+      "+36 st"
+    ],
+    "ch1.lfoSpeed": [
+      "0.40 Hz",
+      "0.65 Hz",
+      "1.05 Hz",
+      "1.70 Hz",
+      "2.76 Hz",
+      "4.47 Hz",
+      "7.25 Hz",
+      "12 Hz",
+      "19 Hz",
+      "31 Hz",
+      "50 Hz"
+    ],
+    "ch1.lfoDepth": [
+      "0 st",
+      "+0.1 st",
+      "+0.5 st",
+      "+1.1 st",
+      "+1.9 st",
+      "+3 st",
+      "+4.3 st",
+      "+5.9 st",
+      "+7.7 st",
+      "+9.7 st",
+      "+12 st"
+    ],
+    "ch2.tune": [
+      "41 Hz",
+      "62 Hz",
+      "95 Hz",
+      "143 Hz",
+      "217 Hz",
+      "330 Hz",
+      "500 Hz",
+      "757 Hz",
+      "1.1 kHz",
+      "1.7 kHz",
+      "2.6 kHz"
+    ],
+    "ch2.decay": [
+      "6 ms",
+      "11 ms",
+      "20 ms",
+      "37 ms",
+      "67 ms",
+      "120 ms",
+      "220 ms",
+      "410 ms",
+      "750 ms",
+      "1.4 s",
+      "2.5 s"
+    ],
+    "ch2.width": [
+      "0.0 oct",
+      "0.6 oct",
+      "1.2 oct",
+      "1.8 oct",
+      "2.4 oct",
+      "3.0 oct",
+      "3.6 oct",
+      "4.2 oct",
+      "4.8 oct",
+      "5.4 oct",
+      "6.0 oct"
+    ],
+    "ch2.sweepSpeed": [
+      "2.5 s",
+      "1.5 s",
+      "950 ms",
+      "590 ms",
+      "360 ms",
+      "220 ms",
+      "140 ms",
+      "85 ms",
+      "53 ms",
+      "32 ms",
+      "20 ms"
+    ],
+    "ch2.sweepRange": [
+      "0 st",
+      "+3.6 st",
+      "+7.2 st",
+      "+10.8 st",
+      "+14.4 st",
+      "+18 st",
+      "+21.6 st",
+      "+25.2 st",
+      "+28.8 st",
+      "+32.4 st",
+      "+36 st"
+    ],
+    "ch2.lfoSpeed": [
+      "0.40 Hz",
+      "0.65 Hz",
+      "1.05 Hz",
+      "1.70 Hz",
+      "2.76 Hz",
+      "4.47 Hz",
+      "7.25 Hz",
+      "12 Hz",
+      "19 Hz",
+      "31 Hz",
+      "50 Hz"
+    ],
+    "ch2.lfoDepth": [
+      "0 st",
+      "+0.1 st",
+      "+0.5 st",
+      "+1.1 st",
+      "+1.9 st",
+      "+3 st",
+      "+4.3 st",
+      "+5.9 st",
+      "+7.7 st",
+      "+9.7 st",
+      "+12 st"
+    ]
+  },
+  "engine": {
+    "init": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      },
+      "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+      "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+      "ext": { "level": 0 },
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+      "noise": { "color": "white", "level": 0 },
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+      ],
+      "sh": { "glide": 0, "rate": 4.47213595499958 },
+      "trig": { "drone": false, "repeat": false, "retrig": true },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "env1v" },
+      "volume": 0.8
+    },
+    "ch1.mode=\"B\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+        { "amt": 24, "dst": "pitch2", "src": "osc1" }
+      ]
+    },
+    "ch1.mode=\"C\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.mode=\"D\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": [
+        { "amt": -24, "dst": "pitch1", "src": "env1v" },
+        { "amt": -12, "dst": "pitch2", "src": "env1" }
+      ]
+    },
+    "ch1.mode=\"E\"": {
+      "noise": { "color": "white", "level": 0.5 },
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+        { "amt": 24, "dst": "pitch2", "src": "osc1" }
+      ]
+    },
+    "ch1.mode=\"F\"": {
+      "noise": { "color": "white", "level": 1 },
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.tune=0": {
+      "filter": {
+        "cutoff": 82.4068892282175,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 28, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 28,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.tune=2.5": {
+      "filter": {
+        "cutoff": 233.08188075904496,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 46, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 46,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.tune=5": {
+      "filter": {
+        "cutoff": 659.2551138257398,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 64, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 64,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.tune=7.5": {
+      "filter": {
+        "cutoff": 1864.6550460723597,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 82, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 82,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.tune=10": {
+      "filter": {
+        "cutoff": 5274.04091060592,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 100, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 100,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "ch1.decay=0": { "env1": { "a": 0.001, "d": 0.006, "r": 0.006, "s": 0 } },
+    "ch1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.027108060108295348, "r": 0.027108060108295348, "s": 0 }
+    },
+    "ch1.decay=5": {
+      "env1": { "a": 0.001, "d": 0.12247448713915891, "r": 0.12247448713915891, "s": 0 }
+    },
+    "ch1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 0.5533409598501609, "r": 0.5533409598501609, "s": 0 }
+    },
+    "ch1.decay=10": { "env1": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 } },
+    "ch1.width=0": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 0,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "ch1.width=2.5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 1.5,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "ch1.width=5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 3,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "ch1.width=7.5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 4.5,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "ch1.width=10": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 6,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "ch1.sweepSpeed=0": { "env2": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 } },
+    "ch1.sweepSpeed=2.5": {
+      "env2": { "a": 0.001, "d": 0.7476743906106103, "r": 0.7476743906106103, "s": 0 }
+    },
+    "ch1.sweepSpeed=7.5": {
+      "env2": { "a": 0.001, "d": 0.0668740304976422, "r": 0.0668740304976422, "s": 0 }
+    },
+    "ch1.sweepSpeed=10": { "env2": { "a": 0.001, "d": 0.02, "r": 0.02, "s": 0 } },
+    "ch1.sweepRange=0": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": []
+    },
+    "ch1.sweepRange=2.5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -9 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -8.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 9, "dst": "pitch1", "src": "env2" },
+        { "amt": 9, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "ch1.sweepRange=5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -18 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -17.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 18, "dst": "pitch1", "src": "env2" },
+        { "amt": 18, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "ch1.sweepRange=7.5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -27 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -26.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 27, "dst": "pitch1", "src": "env2" },
+        { "amt": 27, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "ch1.sweepRange=10": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -36 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -35.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 36, "dst": "pitch1", "src": "env2" },
+        { "amt": 36, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "ch1.lfoSpeed=0": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 0.4 },
+      "sh": { "glide": 0, "rate": 0.4 }
+    },
+    "ch1.lfoSpeed=2.5": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 1.337480609952844 },
+      "sh": { "glide": 0, "rate": 1.337480609952844 }
+    },
+    "ch1.lfoSpeed=7.5": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 14.953487812212206 },
+      "sh": { "glide": 0, "rate": 14.953487812212206 }
+    },
+    "ch1.lfoSpeed=10": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 50 },
+      "sh": { "glide": 0, "rate": 50 }
+    },
+    "ch1.lfoDepth=2.5": {},
+    "ch1.lfoDepth=5": {},
+    "ch1.lfoDepth=7.5": {},
+    "ch1.lfoDepth=10": {},
+    "ch1.output=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch1.output=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.15157165665103983, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch1.output=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.49245776533796654, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch1.output=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.981124521812416, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch1.output=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.6, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch1.sweep=\"up\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 14.78905773230853
+        }
+      ],
+      "routes": [
+        { "amt": -14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": -14.4, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "ch1.sweep=\"off\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": []
+    },
+    "ch1.lfoWave=\"square\"": {
+      "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 4.47213595499958 }
+    },
+    "ch1.lfoWave=\"triangle\"": {
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 4.47213595499958 }
+    },
+    "ch1.sh=true": {},
+    "ch2.mode=\"B\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+            { "amt": 24, "dst": "pitch2", "src": "osc1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.mode=\"C\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.mode=\"D\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [
+            { "amt": -24, "dst": "pitch1", "src": "env1v" },
+            { "amt": -12, "dst": "pitch2", "src": "env1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.mode=\"E\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0.5 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+            { "amt": 24, "dst": "pitch2", "src": "osc1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.mode=\"F\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 1 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.tune=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 82.4068892282175,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 28, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 28,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.tune=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 233.08188075904496,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 46, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 46,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.tune=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 659.2551138257398,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 64, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 64,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.tune=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 1864.6550460723597,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 82, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 82,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.tune=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 5274.04091060592,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 100, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 100,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.decay=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.006, "r": 0.006, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.decay=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.027108060108295348, "r": 0.027108060108295348, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.decay=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.12247448713915891, "r": 0.12247448713915891, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.decay=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.5533409598501609, "r": 0.5533409598501609, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.decay=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.width=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 0,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.width=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 1.5,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.width=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 3,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.width=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 4.5,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.width=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 6,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepSpeed=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepSpeed=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.7476743906106103, "r": 0.7476743906106103, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepSpeed=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.0668740304976422, "r": 0.0668740304976422, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepSpeed=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.02, "r": 0.02, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepRange=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepRange=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -9 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -8.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 9, "dst": "pitch1", "src": "env2" },
+            { "amt": 9, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepRange=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -18 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -17.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 18, "dst": "pitch1", "src": "env2" },
+            { "amt": 18, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepRange=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -27 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -26.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 27, "dst": "pitch1", "src": "env2" },
+            { "amt": 27, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweepRange=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -36 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -35.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 36, "dst": "pitch1", "src": "env2" },
+            { "amt": 36, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoSpeed=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 0.4 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 0.4 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoSpeed=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 1.337480609952844 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 1.337480609952844 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoSpeed=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 14.953487812212206 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 14.953487812212206 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoSpeed=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 50 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 50 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoDepth=2.5": {},
+    "ch2.lfoDepth=5": {},
+    "ch2.lfoDepth=7.5": {},
+    "ch2.lfoDepth=10": {},
+    "ch2.output=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.output=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.15157165665103983],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.output=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.49245776533796654],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.output=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.981124521812416],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.output=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.6],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweep=\"up\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 14.78905773230853
+            }
+          ],
+          "routes": [
+            { "amt": -14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": -14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sweep=\"off\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoWave=\"square\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.lfoWave=\"triangle\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "ch2.sh=true": {},
+    "sys.power=false": { "volume": 0 },
+    "wheel=1": {},
+    "patched:*": {},
+    "patched:* ch1.mode=\"B\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+        { "amt": 24, "dst": "pitch2", "src": "osc1" }
+      ]
+    },
+    "patched:* ch1.mode=\"C\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.mode=\"D\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": [
+        { "amt": -24, "dst": "pitch1", "src": "env1v" },
+        { "amt": -12, "dst": "pitch2", "src": "env1" }
+      ]
+    },
+    "patched:* ch1.mode=\"E\"": {
+      "noise": { "color": "white", "level": 0.5 },
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+        { "amt": 24, "dst": "pitch2", "src": "osc1" }
+      ]
+    },
+    "patched:* ch1.mode=\"F\"": {
+      "noise": { "color": "white", "level": 1 },
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.tune=0": {
+      "filter": {
+        "cutoff": 82.4068892282175,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 28, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 28,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.tune=2.5": {
+      "filter": {
+        "cutoff": 233.08188075904496,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 46, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 46,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.tune=5": {
+      "filter": {
+        "cutoff": 659.2551138257398,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 64, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 64,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.tune=7.5": {
+      "filter": {
+        "cutoff": 1864.6550460723597,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 82, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 82,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.tune=10": {
+      "filter": {
+        "cutoff": 5274.04091060592,
+        "envAmt": 2.4000000000000004,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      },
+      "osc": [
+        { "fixedNote": 100, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+        {
+          "fixedNote": 100,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -14.01094226769147
+        }
+      ]
+    },
+    "patched:* ch1.decay=0": { "env1": { "a": 0.001, "d": 0.006, "r": 0.006, "s": 0 } },
+    "patched:* ch1.decay=2.5": {
+      "env1": { "a": 0.001, "d": 0.027108060108295348, "r": 0.027108060108295348, "s": 0 }
+    },
+    "patched:* ch1.decay=5": {
+      "env1": { "a": 0.001, "d": 0.12247448713915891, "r": 0.12247448713915891, "s": 0 }
+    },
+    "patched:* ch1.decay=7.5": {
+      "env1": { "a": 0.001, "d": 0.5533409598501609, "r": 0.5533409598501609, "s": 0 }
+    },
+    "patched:* ch1.decay=10": { "env1": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 } },
+    "patched:* ch1.width=0": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 0,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* ch1.width=2.5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 1.5,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* ch1.width=5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 3,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* ch1.width=7.5": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 4.5,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* ch1.width=10": {
+      "filter": {
+        "cutoff": 286.95745534842416,
+        "envAmt": 6,
+        "envSrc": "env1v",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "svf"
+      }
+    },
+    "patched:* ch1.sweepSpeed=0": { "env2": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 } },
+    "patched:* ch1.sweepSpeed=2.5": {
+      "env2": { "a": 0.001, "d": 0.7476743906106103, "r": 0.7476743906106103, "s": 0 }
+    },
+    "patched:* ch1.sweepSpeed=7.5": {
+      "env2": { "a": 0.001, "d": 0.0668740304976422, "r": 0.0668740304976422, "s": 0 }
+    },
+    "patched:* ch1.sweepSpeed=10": { "env2": { "a": 0.001, "d": 0.02, "r": 0.02, "s": 0 } },
+    "patched:* ch1.sweepRange=0": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": []
+    },
+    "patched:* ch1.sweepRange=2.5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -9 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -8.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 9, "dst": "pitch1", "src": "env2" },
+        { "amt": 9, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "patched:* ch1.sweepRange=5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -18 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -17.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 18, "dst": "pitch1", "src": "env2" },
+        { "amt": 18, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "patched:* ch1.sweepRange=7.5": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -27 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -26.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 27, "dst": "pitch1", "src": "env2" },
+        { "amt": 27, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "patched:* ch1.sweepRange=10": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -36 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -35.61094226769147
+        }
+      ],
+      "routes": [
+        { "amt": 36, "dst": "pitch1", "src": "env2" },
+        { "amt": 36, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "patched:* ch1.lfoSpeed=0": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 0.4 },
+      "sh": { "glide": 0, "rate": 0.4 }
+    },
+    "patched:* ch1.lfoSpeed=2.5": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 1.337480609952844 },
+      "sh": { "glide": 0, "rate": 1.337480609952844 }
+    },
+    "patched:* ch1.lfoSpeed=7.5": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 14.953487812212206 },
+      "sh": { "glide": 0, "rate": 14.953487812212206 }
+    },
+    "patched:* ch1.lfoSpeed=10": {
+      "lfo": { "keySync": false, "mix": {}, "rate": 50 },
+      "sh": { "glide": 0, "rate": 50 }
+    },
+    "patched:* ch1.lfoDepth=2.5": {},
+    "patched:* ch1.lfoDepth=5": {},
+    "patched:* ch1.lfoDepth=7.5": {},
+    "patched:* ch1.lfoDepth=10": {},
+    "patched:* ch1.output=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch1.output=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.15157165665103983, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch1.output=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.49245776533796654, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch1.output=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [0.981124521812416, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch1.output=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.6, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch1.sweep=\"up\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 14.4 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 14.78905773230853
+        }
+      ],
+      "routes": [
+        { "amt": -14.4, "dst": "pitch1", "src": "env2" },
+        { "amt": -14.4, "dst": "pitch2", "src": "env2" }
+      ]
+    },
+    "patched:* ch1.sweep=\"off\"": {
+      "osc": [
+        { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+        {
+          "fixedNote": 49.6,
+          "kbd": false,
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 0.3890577323085291
+        }
+      ],
+      "routes": []
+    },
+    "patched:* ch1.lfoWave=\"square\"": {
+      "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 4.47213595499958 }
+    },
+    "patched:* ch1.lfoWave=\"triangle\"": {
+      "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 4.47213595499958 }
+    },
+    "patched:* ch1.sh=true": {},
+    "patched:* ch2.mode=\"B\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+            { "amt": 24, "dst": "pitch2", "src": "osc1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.mode=\"C\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.mode=\"D\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0.6, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [
+            { "amt": -24, "dst": "pitch1", "src": "env1v" },
+            { "amt": -12, "dst": "pitch2", "src": "env1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.mode=\"E\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0.5 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 1,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" },
+            { "amt": 24, "dst": "pitch2", "src": "osc1" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.mode=\"F\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 1 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 0, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.tune=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 82.4068892282175,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 28, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 28,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.tune=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 233.08188075904496,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 46, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 46,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.tune=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 659.2551138257398,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 64, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 64,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.tune=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 1864.6550460723597,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 82, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 82,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.tune=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 5274.04091060592,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 100, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 100,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.decay=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.006, "r": 0.006, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.decay=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.027108060108295348, "r": 0.027108060108295348, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.decay=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.12247448713915891, "r": 0.12247448713915891, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.decay=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.5533409598501609, "r": 0.5533409598501609, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.decay=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.width=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 0,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.width=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 1.5,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.width=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 3,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.width=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 4.5,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.width=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 6,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepSpeed=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 2.5, "r": 2.5, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepSpeed=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.7476743906106103, "r": 0.7476743906106103, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepSpeed=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.0668740304976422, "r": 0.0668740304976422, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepSpeed=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.02, "r": 0.02, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepRange=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepRange=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -9 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -8.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 9, "dst": "pitch1", "src": "env2" },
+            { "amt": 9, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepRange=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -18 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -17.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 18, "dst": "pitch1", "src": "env2" },
+            { "amt": 18, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepRange=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -27 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -26.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 27, "dst": "pitch1", "src": "env2" },
+            { "amt": 27, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweepRange=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -36 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -35.61094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 36, "dst": "pitch1", "src": "env2" },
+            { "amt": 36, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoSpeed=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 0.4 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 0.4 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoSpeed=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 1.337480609952844 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 1.337480609952844 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoSpeed=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 14.953487812212206 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 14.953487812212206 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoSpeed=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 50 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 50 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoDepth=2.5": {},
+    "patched:* ch2.lfoDepth=5": {},
+    "patched:* ch2.lfoDepth=7.5": {},
+    "patched:* ch2.lfoDepth=10": {},
+    "patched:* ch2.output=0": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.output=2.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.15157165665103983],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.output=5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.49245776533796654],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.output=7.5": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 0.981124521812416],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.output=10": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.6],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweep=\"up\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 14.78905773230853
+            }
+          ],
+          "routes": [
+            { "amt": -14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": -14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sweep=\"off\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": {}, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": 0 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": 0.3890577323085291
+            }
+          ],
+          "routes": [],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoWave=\"square\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": { "sq": 1 }, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.lfoWave=\"triangle\"": {
+      "dual": {
+        "assign": "split",
+        "b": {
+          "env1": { "a": 0.001, "d": 0.03665117294278764, "r": 0.03665117294278764, "s": 0 },
+          "env2": { "a": 0.001, "d": 0.223606797749979, "r": 0.223606797749979, "s": 0 },
+          "ext": { "level": 0 },
+          "filter": {
+            "cutoff": 286.95745534842416,
+            "envAmt": 2.4000000000000004,
+            "envSrc": "env1v",
+            "kbd": 0,
+            "mode": "lp",
+            "res": 0,
+            "type": "svf"
+          },
+          "glide": { "legato": false, "time": 0 },
+          "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 4.47213595499958 },
+          "noise": { "color": "white", "level": 0 },
+          "osc": [
+            { "fixedNote": 49.6, "kbd": false, "level": 1, "mix": { "tri": 1 }, "semi": -14.4 },
+            {
+              "fixedNote": 49.6,
+              "kbd": false,
+              "level": 0,
+              "mix": { "tri": 1 },
+              "semi": -14.01094226769147
+            }
+          ],
+          "routes": [
+            { "amt": 14.4, "dst": "pitch1", "src": "env2" },
+            { "amt": 14.4, "dst": "pitch2", "src": "env2" }
+          ],
+          "sh": { "glide": 0, "rate": 4.47213595499958 },
+          "trig": { "drone": false, "repeat": false, "retrig": true },
+          "tune": 0,
+          "vca": { "bias": 0, "envSrc": "env1v" }
+        },
+        "level": [1.0948962303909766, 1.0948962303909766],
+        "pan": [0, 0],
+        "split": 60
+      }
+    },
+    "patched:* ch2.sh=true": {},
+    "patched:* sys.power=false": { "volume": 0 }
+  },
+  "checks": {},
+  "depths": {},
+  "hears": {}
+}
