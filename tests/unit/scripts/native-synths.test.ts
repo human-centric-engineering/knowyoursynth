@@ -36,6 +36,7 @@ describe('nativeSynthProblems', () => {
       'native synth donner-b1 is not registered',
       'native synth take-5 is not registered',
       'native synth cs-80 is not registered',
+      'native synth super-gemini is not registered',
     ]);
   });
 
