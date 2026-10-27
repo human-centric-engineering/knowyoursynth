@@ -55,7 +55,7 @@
       },
       {
         "title": "Simplified here",
-        "text": "The clock modes of the LFOs and the delay run at 120 BPM, as the e7 does when no MIDI clock arrives, since the app sends none; a synced delay longer than 1.5 s is held at 1.5 s. In Polyphonic mode each voice’s LFO runs at its own phase but the same rate, where the e7 gives each key a slightly different rate. KB Tracking follows the key on LFO 2’s rate only: LFO 1 keeps its RATE. Unison stacks the seven voices with a fixed detune."
+        "text": "The clock modes of the LFOs and the delay run at 120 BPM, as the e7 does when no MIDI clock arrives, since the app sends none; a synced delay longer than 1.35 s, the delay’s longest, is held there. In Polyphonic mode each voice’s LFO runs at its own phase but the same rate, where the e7 gives each key a slightly different rate. KB Tracking follows the key on LFO 2’s rate only: LFO 1 keeps its RATE. Unison stacks the seven voices with a fixed detune."
       },
       {
         "title": "The circuit is approximated",

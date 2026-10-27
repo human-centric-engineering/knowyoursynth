@@ -280,7 +280,7 @@ describe('e7 effects', () => {
     ).toMatchObject({ TIM: 375, MOD: 'P-P' });
     expect(
       params(slots({ 'delay.mix': 5, 'delay.type': 'stereo-sync', 'delay.div': '1' })[2]).TIM
-    ).toBe(1500);
+    ).toBe(1350);
   });
 
   it('turns each effect off with its MIX at 0', () => {

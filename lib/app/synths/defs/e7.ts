@@ -1125,7 +1125,7 @@ knob('delay.div', 1717, 1478, {
   label: 'Delay Time',
   name: 'DELAY TIME (clock)',
   show: [shiftOff, { id: 'delay.type', in: SYNCED }],
-  help: 'In the synced types, the time between the echoes as a note value of the clock. Here the clock is the e7’s own 120 BPM, and echoes longer than 1.5 s are held at 1.5 s.',
+  help: 'In the synced types, the time between the echoes as a note value of the clock. Here the clock is the e7’s own 120 BPM, and echoes longer than the delay’s 1.35 s are held at 1.35 s.',
 });
 knob('delay.type', 1717, 1478, {
   kind: 'enum',
@@ -1189,7 +1189,7 @@ const areas: Area[] = [
     label: 'Mixer',
     module: 'mixer',
     keywords: 'mixer level sub oscillator noise external input',
-    rects: [R(885, 785, 1138, 1228)],
+    rects: [R(885, 785, 1138, 1105), R(885, 1105, 1015, 1228)],
     help: 'The levels into the filter: each VCO, its sub (a square an octave below), and the noise, or on the hardware the external input in its place.',
   },
   {
@@ -1373,7 +1373,7 @@ function delaySlot(v: ControlValues): FxSlot {
   if (mix <= 0) return { alg: null };
   const type = String(v['delay.type']);
   const ms = SYNCED.includes(type)
-    ? Math.min(1500, (60000 / BPM) * beatsOf(v['delay.div']))
+    ? Math.min(1350, (60000 / BPM) * beatsOf(v['delay.div']))
     : delayMs(num(v, 'delay.time'));
   const fb = Math.round(u(v, 'delay.fb') * 95);
   return slot('delay', {
