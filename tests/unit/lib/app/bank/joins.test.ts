@@ -75,6 +75,7 @@ describe('heardFor for a native synth', () => {
     'pearl-syncussion': [],
     'behringer-syncussion': [],
     e7: [],
+    'syntrx-ii': [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));
