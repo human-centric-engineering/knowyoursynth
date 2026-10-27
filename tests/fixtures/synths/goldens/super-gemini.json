@@ -1083,6 +1083,7 @@
         "res": 0,
         "type": "ladder"
       },
+      "fx": { "mode": "bypass" },
       "glide": { "legato": false, "time": 0 },
       "hpf": { "cutoff": 10, "envAmt": 0, "envSrc": "env1", "kbd": 0, "poles": 1, "res": 0 },
       "lfo": { "delay": 0, "keySync": false, "mix": { "tri": 1 }, "rate": 1.2247448713915892 },
@@ -2339,13 +2340,121 @@
     "up.e2r=7.5": { "env2": { "a": 0.001, "d": 0.1, "hold": 0, "r": 1, "s": 1 } },
     "up.e2r=10": { "env2": { "a": 0.001, "d": 0.1, "hold": 0, "r": 10, "s": 1 } },
     "up.send=2.5": {
-      "delay": { "fb": 0.38, "mix": 0.175, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 18,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
-    "up.send=5": { "delay": { "fb": 0.38, "mix": 0.35, "on": true, "time": 0.06309573444801932 } },
+    "up.send=5": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 35,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
     "up.send=7.5": {
-      "delay": { "fb": 0.38, "mix": 0.5249999999999999, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 53,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
-    "up.send=10": { "delay": { "fb": 0.38, "mix": 0.7, "on": true, "time": 0.06309573444801932 } },
+    "up.send=10": {
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 70,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
+    },
     "lo.lfoRate=0": {},
     "lo.lfoRate=2.5": {},
     "lo.lfoRate=7.5": {},
@@ -2636,9 +2745,8 @@
         "split": 60,
         "trig": { "drone": false, "repeat": false, "retrig": true },
         "tune": 0,
-        "vca": { "bias": 0, "envSrc": "env2", "gain": 0.5132326079957703 }
-      },
-      "vca": { "bias": 0, "envSrc": "env2", "gain": 0.5132326079957703 }
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0.6843101439943604 }
+      }
     },
     "layer.select=\"lower\"": {},
     "voice.mode=\"solo\"": { "poly": { "detune": 0, "mono": true, "stack": 1, "voices": 10 } },
@@ -4072,16 +4180,120 @@
     "patched:* up.e2r=7.5": { "env2": { "a": 0.001, "d": 0.1, "hold": 0, "r": 1, "s": 1 } },
     "patched:* up.e2r=10": { "env2": { "a": 0.001, "d": 0.1, "hold": 0, "r": 10, "s": 1 } },
     "patched:* up.send=2.5": {
-      "delay": { "fb": 0.38, "mix": 0.175, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 18,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
     "patched:* up.send=5": {
-      "delay": { "fb": 0.38, "mix": 0.35, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 35,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
     "patched:* up.send=7.5": {
-      "delay": { "fb": 0.38, "mix": 0.5249999999999999, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 53,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
     "patched:* up.send=10": {
-      "delay": { "fb": 0.38, "mix": 0.7, "on": true, "time": 0.06309573444801932 }
+      "fx": {
+        "mode": "insert",
+        "routing": 1,
+        "slots": [
+          {
+            "alg": "delay",
+            "level": 1,
+            "p": {
+              "FBL": 40,
+              "FBR": 40,
+              "FCL": "1",
+              "FCR": "1",
+              "FHC": 20000,
+              "FLC": 50,
+              "HC": 20000,
+              "LC": 10,
+              "MIX": 70,
+              "MOD": "ST",
+              "OFS": 0,
+              "TIM": 63
+            }
+          },
+          { "alg": null },
+          { "alg": null },
+          { "alg": null }
+        ]
+      }
     },
     "patched:* lo.lfoRate=0": {},
     "patched:* lo.lfoRate=2.5": {},
@@ -4373,9 +4585,8 @@
         "split": 60,
         "trig": { "drone": false, "repeat": false, "retrig": true },
         "tune": 0,
-        "vca": { "bias": 0, "envSrc": "env2", "gain": 0.5132326079957703 }
-      },
-      "vca": { "bias": 0, "envSrc": "env2", "gain": 0.5132326079957703 }
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0.6843101439943604 }
+      }
     },
     "patched:* layer.select=\"lower\"": {},
     "patched:* voice.mode=\"solo\"": {

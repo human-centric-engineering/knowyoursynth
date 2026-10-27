@@ -90,6 +90,7 @@ describe('Super Gemini toEngine at the init patch', () => {
     expect(p.arp).toMatchObject({ on: false, bpm: 120, mode: 'up', octaves: 1, hold: false });
     expect(p.chorus).toEqual({ on: false, mode: 0 });
     expect(p.delay).toEqual({ on: false });
+    expect(p.fx).toEqual({ mode: 'bypass' });
     expect(routes(p)).toEqual([]);
     expect(p.tune).toBe(0);
     expect(p.volume).toBeCloseTo(level(7, 1), 10);
@@ -112,10 +113,13 @@ describe('Super Gemini KEYBOARD and LAYER', () => {
     expect(p.layer?.vca.gain).toBeCloseTo(level(8, 1) * 0.75, 10);
   });
 
-  it('SPLIT gives the lower layer the keys below C4, five notes a side', () => {
+  it('SPLIT gives the lower layer the keys below C4, ten notes between the sides, each at full level', () => {
     const p = run({ 'kbd.mode': 'split' });
     expect(p.layer?.split).toBe(60);
     expect(p.poly?.voices).toBe(10);
+    // a key plays one layer in SPLIT, so neither is turned down as in DUAL
+    expect(p.vca.gain).toBeCloseTo(level(8, 1), 10);
+    expect(p.layer?.vca.gain).toBeCloseTo(level(8, 1), 10);
   });
 
   it('doubles the notes with BINAURAL off', () => {
@@ -205,6 +209,15 @@ describe('Super Gemini oscillators', () => {
 
   it('at LFO range plays a square sub (middle) or a sine sub (top) an octave below DDS 1 on the third oscillator', () => {
     const sq = run({ 'up.dds2Range': 'lfo', 'up.dds2Mode': 'ring', 'up.mix': 10 });
+    // the sub takes the third oscillator, so SUPER's one sister and the centre sit either side of the pitch
+    const sup = run({
+      'up.dds2Range': 'lfo',
+      'up.dds2Mode': 'ring',
+      'up.super': 'on',
+      'up.pwDetune': 10,
+    });
+    expect(sup.osc[0].semi).toBeCloseTo(-0.3, 10);
+    expect(sup.osc[1].semi).toBeCloseTo(0.3, 10);
     expect(sq.osc[2]).toMatchObject({ mix: { pulse: 1 }, semi: -12 });
     expect(sq.osc[2].level).toBeCloseTo(0.45, 10);
     expect(run({ 'up.dds2Range': 'lfo', 'up.dds2Mode': 'sync', 'up.mix': 10 }).osc[2].mix).toEqual({
@@ -214,6 +227,20 @@ describe('Super Gemini oscillators', () => {
     expect(run({ 'up.dds2Range': 'lfo', 'up.dds2Mode': 'sync', 'up.mix': 10 }).osc[3].syncTo).toBe(
       -1
     );
+  });
+});
+
+describe('Super Gemini DDS 2 as a modulator', () => {
+  it('modulates from the noise generator when DDS 2 is on noise, whose oscillator is silent', () => {
+    const p = run({
+      'up.dds2Range': 'lfo',
+      'up.dds2Wave': 'noise',
+      'up.vcfDds2': 10,
+      'up.vcaDds2': 5,
+    });
+    expect(routeTo(p, 'noise', 'cutoff')?.amt).toBe(4);
+    expect(routeTo(p, 'noise', 'amp')?.amt).toBeCloseTo(0.4, 10);
+    expect(routeTo(p, 'osc4', 'cutoff')).toBeUndefined();
   });
 });
 
@@ -411,12 +438,39 @@ describe('Super Gemini performance controls, voice assign and effects', () => {
     expect(run({ 'hold.lower': true }).arp?.hold).toBe(true);
   });
 
-  it('sets the chorus mode from I and II, and each layer’s delay by its SEND', () => {
+  it('sets the chorus mode from I and II', () => {
     expect(run({ 'chorus.i': true, 'chorus.ii': true }).chorus).toEqual({ on: true, mode: 3 });
     expect(run({ 'chorus.ii': true }).chorus).toEqual({ on: true, mode: 2 });
-    const d = run({ 'up.send': 10, 'dly.time': 10, 'dly.feedback': 10 }).delay;
-    expect(d).toMatchObject({ on: true, mix: 0.7, fb: 0.95 });
-    expect(d?.time).toBeCloseTo(1, 10);
+  });
+
+  it('runs the delay after the voices, so its echoes outlast them, by TIME, FEEDBACK and SEND', () => {
+    const p = run({ 'up.send': 10, 'dly.time': 10, 'dly.feedback': 10 });
+    // not the voice's own delay, which stops with the voice
+    expect(p.delay).toEqual({ on: false });
+    expect(p.fx?.mode).toBe('insert');
+    const slot = p.fx?.slots?.[0];
+    expect(slot && slot.alg).toBe('delay');
+    expect(slot && slot.alg !== null ? slot.p : {}).toMatchObject({
+      MIX: 70,
+      TIM: 1000,
+      FBL: 100,
+      FBR: 100,
+      FCL: '1',
+      FCR: '1',
+      MOD: 'ST',
+    });
+    expect(run({ 'dly.time': 0, 'up.send': 1 }).fx?.slots?.[0]).toMatchObject({ p: { TIM: 1 } });
+  });
+
+  it('takes the larger SEND of the layers that sound', () => {
+    const mix = (set: ControlValues): unknown => {
+      const s = run(set).fx?.slots?.[0];
+      return s && s.alg !== null ? s.p.MIX : undefined;
+    };
+    // SINGLE on the upper layer hears only its SEND
+    expect(mix({ 'lo.send': 10 })).toBeUndefined();
+    expect(mix({ 'lo.send': 10, 'layer.select': 'lower' })).toBe(70);
+    expect(mix({ 'kbd.mode': 'dual', 'up.send': 2, 'lo.send': 5 })).toBe(35);
   });
 });
 

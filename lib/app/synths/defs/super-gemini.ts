@@ -43,6 +43,7 @@ import type {
   EngineParams,
   EngineRoute,
   EnumValue,
+  FxParams,
   FaderControl,
   KnobScale,
   LayerParams,
@@ -57,6 +58,7 @@ import type {
   ViewRect,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { FX_ALGOS } from '@/lib/app/synths/defs/deepmind-12d-fx';
 import { num } from '@/lib/app/synths/lib/def-kit';
 import { clamp, expMap, fmtHz, fmtSemi, fmtTime, level10 } from '@/lib/app/synths/lib/maps';
 
@@ -1026,7 +1028,7 @@ function layerRow(s: Side): void {
     {
       module: 'fx',
       name: nm('DELAY SEND'),
-      help: 'How much of this layer goes into the delay; TIME and FEEDBACK in the strip below set the echoes.',
+      help: 'How much of this layer goes into the delay; TIME and FEEDBACK in the strip below set the echoes. Here the two layers share one delay, which takes the larger SEND of the layers that sound.',
       fmt: pct,
     },
     'SEND'
@@ -1796,7 +1798,7 @@ const areas: Area[] = [
     module: 'fx',
     keywords: 'delay echo send',
     rects: [R(2680, 60, 2765, 440)],
-    help: 'How much of each layer goes into the delay; the delay’s TIME and FEEDBACK are in the strip below.',
+    help: 'How much of each layer goes into the delay; the delay’s TIME and FEEDBACK are in the strip below. Here one delay serves both layers at the larger of their SENDs.',
   },
   {
     id: 'manual',
@@ -1853,7 +1855,7 @@ const areas: Area[] = [
     module: 'fx',
     keywords: 'delay echo time feedback',
     rects: [R(2566, 466, 2748, 608)],
-    help: 'A stereo delay after the chorus: TIME from 1 ms to 1 s and FEEDBACK up to endless repeats. Each layer’s SEND fader sets how much reaches it.',
+    help: 'A stereo delay: TIME from 1 ms to 1 s and FEEDBACK up to endless repeats. Each layer’s SEND fader sets how much reaches it (here the larger of the two). On the hardware it follows the chorus; here it comes before it.',
   },
   {
     id: 'porta',
@@ -2038,8 +2040,17 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
         syncTo: -1,
       }
     : dds1(sisters ? SISTER : 0, -spread);
-  const osc: OscParams[] = [dds1(CENTRE, 0), dds1(sisters ? SISTER : 0, spread), third, dds2];
+  // with the sub on the third oscillator, the centre and the one sister sit either side of the pitch, so it stays in tune
+  const half = sub ? spread / 2 : 0;
+  const osc: OscParams[] = [
+    dds1(CENTRE, -half),
+    dds1(sisters ? SISTER : 0, sub ? half : spread),
+    third,
+    dds2,
+  ];
   const noiseLevel = 0.5 * (noise1 * ga + (!lfoRange && !ring && w2 === 'noise' ? gb : 0));
+  // DDS 2 as a modulation source: on its noise wave the engine's oscillator is silent, so the noise generator stands in
+  const dds2Src = w2 === 'noise' ? 'noise' : 'osc4';
 
   // ── envelopes ──
   const env1Mode = e('env1Mode');
@@ -2080,7 +2091,7 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
   // CROSS MOD: DDS 2 frequency-modulates DDS 1, or the other way round with SYNC
   const xm = 36 * Math.pow(n('xmod') / 10, 2);
   if (sync) route('osc1', 'pitch4', xm);
-  else for (const d of ['pitch1', 'pitch2', 'pitch3']) route('osc4', d, xm);
+  else for (const d of ['pitch1', 'pitch2', 'pitch3']) route(dds2Src, d, xm);
 
   // ── filter ──
   const dyn = e('dyn');
@@ -2091,7 +2102,7 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
   const driveOf: Record<string, number> = { off: 0.8, '1': 1.6, '2': 3.2 };
   if (src === 'both') route(vel ? 'env2v' : 'env2', 'cutoff', envAmt);
   route('lfo', 'cutoff', 4 * (n('vcfLfo') / 10));
-  route('osc4', 'cutoff', 4 * (n('vcfDds2') / 10));
+  route(dds2Src, 'cutoff', 4 * (n('vcfDds2') / 10));
   // DYNAMICS: a harder key opens the filter further
   route('vel', 'cutoff', dyn === 'on' ? 2 : dyn === 'half' ? 1 : 0);
 
@@ -2100,7 +2111,7 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
   const fixed = vm !== 'env2';
   const ampEnv = fixed ? 'env3' : vel ? 'env2v' : 'env2';
   route('lfo', 'amp', 0.8 * (n('vcaLfo') / 10), ampEnv);
-  route('osc4', 'amp', 0.8 * (n('vcaDds2') / 10), ampEnv);
+  route(dds2Src, 'amp', 0.8 * (n('vcaDds2') / 10), ampEnv);
 
   // ── LFO 1 ──
   const lw = e('lfoWave');
@@ -2119,7 +2130,6 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
     lfo2Hz(num(v, 'lfo2.rate')) *
     (1 + 3 * (num(v, 'lfo2.rateMod') / 10) * (trig === 'on' ? 0 : wheel));
 
-  const send = n('send');
   return {
     osc,
     noise: { level: noiseLevel, color: 'white' },
@@ -2155,17 +2165,48 @@ function layerVoice(v: ControlValues, s: Side, ctx: EngineContext, o: LayerOpts)
     glide: { time: o.glide, legato: false },
     trig: { retrig: !o.legato, drone: false, repeat: false },
     drift: { depth: 0.5 * (n('drift') / 10), rate: 0.8 },
-    delay:
-      send > 0
-        ? {
-            on: true,
-            time: delayTime(num(v, 'dly.time')),
-            fb: 0.95 * (num(v, 'dly.feedback') / 10),
-            mix: 0.7 * (send / 10),
-          }
-        : { on: false },
+    delay: { on: false },
     routes,
     tune: o.tune,
+  };
+}
+
+const DELAY_DEFAULTS: Record<string, number | string> = Object.fromEntries(
+  (FX_ALGOS.find((a) => a.id === 'delay')?.params ?? []).map((q) => [q.ref, q.def])
+);
+/**
+ * The delay, after the voices on the effects engine (`audio/dm-fx.ts`), so its echoes outlast the notes. One delay
+ * serves the layers that sound, at the larger of their SENDs; its TIME and FEEDBACK are the strip's.
+ */
+function delayFx(v: ControlValues, sides: Side[]): FxParams {
+  const send = Math.max(...sides.map((s) => num(v, `${s}.send`)));
+  if (send <= 0) return { mode: 'bypass' };
+  const fb = Math.round(num(v, 'dly.feedback') * 10);
+  return {
+    mode: 'insert',
+    routing: 1,
+    slots: [
+      {
+        alg: 'delay',
+        level: 1,
+        p: {
+          ...DELAY_DEFAULTS,
+          MIX: Math.round(send * 7),
+          TIM: Math.max(1, Math.round(delayTime(num(v, 'dly.time')) * 1000)),
+          MOD: 'ST',
+          FCL: '1',
+          FCR: '1',
+          FBL: fb,
+          FBR: fb,
+          LC: 10,
+          HC: 20000,
+          FHC: 20000,
+        },
+      },
+      { alg: null },
+      { alg: null },
+      { alg: null },
+    ],
   };
 }
 
@@ -2181,17 +2222,18 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
   const stack = unison ? (mono ? perLayer : 2) : 1;
   const voices = mode === 'split' ? perLayer * 2 : perLayer;
   // PORTAMENTO, OCTAVE and LFO 2 act on the layers their switches name
-  const portaOn = (s: Side): boolean => {
-    const l = String(v['perf.portaLayer']);
-    return l === 'both' || l === (s === 'up' ? 'upper' : 'lower');
-  };
-  const modOn = (s: Side): boolean => {
-    const l = String(v['perf.modLayer']);
-    return l === 'both' || l === (s === 'up' ? 'upper' : 'lower');
-  };
+  const names =
+    (id: string) =>
+    (s: Side): boolean => {
+      const l = String(v[id]);
+      return l === 'both' || l === (s === 'up' ? 'upper' : 'lower');
+    };
+  const portaOn = names('perf.portaLayer');
+  const modOn = names('perf.modLayer');
   const oct = Number(v['perf.octave']) || 0;
   const common = num(v, 'perf.detune') + num(v, 'kbd.fine') / 100;
-  const gain = single ? 1 : 0.75;
+  // two layers on every key are summed, so DUAL turns each down; SPLIT plays one a key
+  const gain = mode === 'dual' ? 0.75 : 1;
   const opts = (s: Side): LayerOpts => ({
     gain,
     tune: (portaOn(s) ? oct * 12 : 0) + common + (s === 'lo' ? num(v, 'perf.lowerDetune') : 0),
@@ -2219,6 +2261,7 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
       hold: v['hold.upper'] === true || v['hold.lower'] === true,
     },
     chorus: { on: chorusMode > 0, mode: chorusMode as 0 | 1 | 2 | 3 },
+    fx: delayFx(v, single ? (top === lo ? ['lo'] : ['up']) : ['up', 'lo']),
     volume: level10(num(v, 'out.volume'), 1),
   };
 }
