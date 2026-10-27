@@ -1,0 +1,51 @@
+{
+  "synth": "cs-80",
+  "title": "From the GX-1 to the CS-80",
+  "intro": "The CS-80 was Yamaha’s flagship synthesizer of the late 1970s, at the top of the CS series of 1977 beside the smaller CS-50 and CS-60. It followed the organ-sized GX-1, with which it shares two oscillators per voice, a keyboard that answers to pressure as well as velocity, and a ribbon. Each of its eight notes plays two complete channels at once, which gives it its famously rich sound.",
+  "timeline": [
+    {
+      "year": "1975",
+      "name": "Yamaha GX-1",
+      "tag": "The ancestor",
+      "text": "Yamaha’s first polyphonic synthesizer, built into an organ console: two eight-voice keyboards of two oscillators per voice, a solo keyboard with a ribbon, a pedalboard and a keyboard that responds to pressure. Fewer than a hundred were made."
+    },
+    {
+      "year": "1977",
+      "name": "Yamaha CS-60",
+      "tag": "Sibling",
+      "text": "An eight-voice polysynth of one oscillator per voice, with the same resonant high-pass and low-pass filters and a 61-key keyboard: a smaller CS-80 without its second channel and its pressure-sensitive keys."
+    },
+    {
+      "year": "1977",
+      "name": "Yamaha CS-80",
+      "tag": "This synth",
+      "text": "Eight notes of two channels each, every channel a VCO giving square, sawtooth and sine, a high-pass and a low-pass filter moved by the IL-AL-A-D-R envelope, and a VCA. Twenty-two presets, four memories, a keyboard that senses velocity and pressure on each key, a ribbon, a sub oscillator, a ring modulator and a stereo tremolo/chorus. It weighs about 100 kg."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Yamaha CS-50",
+      "years": "1977",
+      "text": "The smallest of the three CS polysynths: four voices, with a simpler panel than the CS-80."
+    },
+    {
+      "name": "Arturia CS-80V",
+      "years": "2003",
+      "text": "A software recreation of the CS-80 for computers, which brought its sound to many players who would never own the hardware."
+    },
+    {
+      "name": "Black Corporation Deckard’s Dream",
+      "years": "2018",
+      "text": "An eight-voice analogue polysynth modelled on the CS-80, with two layers per voice and polyphonic aftertouch, in a rack-style case."
+    }
+  ],
+  "users": [
+    "Vangelis",
+    "Steve Porcaro (Toto)",
+    "Kate Bush",
+    "Peter Howell (BBC Radiophonic Workshop)",
+    "Billy Currie (Visage, Ultravox)",
+    "Hans Zimmer"
+  ],
+  "note": "The CS-80 was in many studios of the late 1970s and early 1980s, but which synth played which part is often not documented. Only records where the CS-80’s part is widely reported are listed; the other sounds here are general techniques."
+}

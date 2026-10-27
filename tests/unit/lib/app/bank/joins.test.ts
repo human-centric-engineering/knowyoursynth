@@ -55,9 +55,24 @@ describe('heardFor over the seed data', () => {
 });
 
 describe('heardFor for a native synth', () => {
-  // No prototype list to hold these to, so each one's list is written here. The bank has no song with a Donner B1 or
-  // a Take 5 part yet: when one is added, this changes on purpose, alongside the data.
-  const expected: Record<string, HeardEntry[]> = { 'donner-b1': [], 'take-5': [] };
+  // No prototype list to hold these to, so each one's list is written here: the records in order, and the library
+  // sound each links to. The bank has no song with a Donner B1 or a Take 5 part yet; the CS-80's are the databank's
+  // records of the Yamaha CS-80, two of them linked to its lessons. A change to the data changes this on purpose.
+  const expected: Record<string, [song: string, sound?: string][]> = {
+    'donner-b1': [],
+    'take-5': [],
+    'cs-80': [
+      ['bbc-radiophonic-workshop-doctor-who-theme-1980'],
+      ['kate-bush-never-for-ever'],
+      ['visage-visage'],
+      ['vangelis-chariots-of-fire', 'cs-fanfare'],
+      ['toto-africa'],
+      ['vangelis-blade-runner', 'cs-blade-brass'],
+      ['hans-zimmer-blade-runner-2049'],
+    ],
+  };
+  const records = (list: HeardEntry[]): [string, string?][] =>
+    list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));
 
   it('has an expectation for every native synth', () => {
     expect(Object.keys(expected).sort()).toEqual([...NATIVE_SYNTHS].sort());
@@ -65,7 +80,7 @@ describe('heardFor for a native synth', () => {
 
   it.each([...NATIVE_SYNTHS])('%s: is registered and lists what is written here', (id) => {
     expect(SYNTH_DEFS.map((d) => d.id)).toContain(id);
-    expect(heardFor(bank, id)).toEqual(expected[id]);
+    expect(records(heardFor(bank, id))).toEqual(expected[id]);
   });
 });
 

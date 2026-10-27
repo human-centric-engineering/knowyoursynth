@@ -15,7 +15,7 @@ import type { SynthPanelProps } from '@/components/app/panel/synth-panel';
 import { optionIndex, polar, swingStep, valueAngle, wavePath } from '@/components/app/panel/parts';
 import { focusStore, highlightStore, meterStore } from '@/components/app/synth/stores';
 import { allPartsDef } from '@/tests/fixtures/synths/all-parts';
-import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
+import type { Control, ControlValues, FaderControl, PatchCable } from '@/lib/app/synths/contract';
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
 
@@ -288,6 +288,117 @@ describe('faders', () => {
     fireEvent.pointerUp(fader);
     onChange.mockClear();
     fireEvent.pointerMove(fader, { clientX: 0, clientY: 0 });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('a lever with its maximum at the bottom moves down for more, with a block cap in its colour', () => {
+    const onChange = vi.fn();
+    const base = allPartsDef.controls.find((c): c is FaderControl => c.id === 'fader.v')!;
+    const lever: FaderControl = {
+      ...base,
+      id: 'fader.lever',
+      label: 'LEVER',
+      x: 600,
+      maxAt: 'bottom',
+      face: 'block',
+      cap: 'green',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, lever] };
+    const { container } = render(
+      <SynthPanel {...props({ onChange, def, values: { ...def.init, 'fader.lever': 2 } })} />
+    );
+    const fader = screen.getByRole('slider', { name: 'LEVER' });
+    fireEvent.pointerDown(fader, { clientX: 0, clientY: 0, pointerId: 1 });
+    // down by half the travel: 2 + 5
+    fireEvent.pointerMove(fader, { clientX: 0, clientY: 50 });
+    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 7);
+    fireEvent.pointerUp(fader);
+    // the arrow keys keep up = more, as on any slider, whichever way the cap moves
+    fireEvent.keyDown(fader, { key: 'ArrowUp' });
+    expect(onChange).toHaveBeenLastCalledWith('fader.lever', 2.2);
+    // at 2 the cap sits near the top, a fifth of the travel down
+    const cap = [...container.querySelectorAll('rect')].find(
+      (r) => r.getAttribute('fill') === '#2f9a4a'
+    );
+    expect(cap).toBeTruthy();
+    // centre of the cap: top of the travel (500 − 50) plus 20 % of 100
+    expect(Number(cap!.getAttribute('y')) + Number(cap!.getAttribute('height')) / 2).toBe(470);
+  });
+
+  it('prints a caption on a select’s cap in the ink that reads best on it', () => {
+    const select: Control = {
+      id: 'select.caps',
+      type: 'select',
+      x: 800,
+      y: 500,
+      w: 32,
+      h: 40,
+      kind: 'enum',
+      options: [
+        { v: 'red', label: 'Red', x: 780, y: 500, capColor: '#d9302b', caption: 'BRASS\n1' },
+        { v: 'yellow', label: 'Yellow', x: 820, y: 500, capColor: '#efd23c', caption: 'STRING' },
+        { v: 'lamp', label: 'Lamp', x: 860, y: 500, caption: 'PANEL' },
+      ],
+      def: 'red',
+      module: 'mode',
+      label: 'CAPS',
+      help: 'Captioned buttons.',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, select] };
+    const { container } = render(
+      <SynthPanel {...props({ def, values: { ...def.init, 'select.caps': 'red' } })} />
+    );
+    const ink = (t: string) =>
+      [...container.querySelectorAll('text')]
+        .find((x) => x.textContent?.startsWith(t))
+        ?.getAttribute('fill');
+    expect(ink('BRASS')).toBe('#f1f0e9');
+    expect(ink('STRING')).toBe('#1b1b1d');
+    expect(ink('PANEL')).toBe('#f1f0e9');
+  });
+
+  it('a slide of more than three positions takes the one clicked, and steps by the arrow keys', () => {
+    const onChange = vi.fn();
+    const long: Control = {
+      id: 'slide.long',
+      type: 'slide',
+      x: 700,
+      y: 500,
+      w: 14,
+      h: 60,
+      orient: 'v',
+      kind: 'enum',
+      options: ['a', 'b', 'c', 'd', 'e', 'f'].map((v) => ({ v, label: v.toUpperCase() })),
+      def: 'b',
+      module: 'osc',
+      label: 'LONG',
+      help: 'A six-position slide.',
+    };
+    const def = { ...allPartsDef, controls: [...allPartsDef.controls, long] };
+    render(
+      <SynthPanel {...props({ onChange, def, values: { ...def.init, 'slide.long': 'b' } })} />
+    );
+    const hit = screen.getByRole('slider', { name: 'LONG' });
+    // it says which of its six positions it is on
+    expect(hit.getAttribute('aria-valuetext')).toBe('B');
+    expect(hit.getAttribute('aria-valuenow')).toBe('1');
+    // a panel drawn at its own scale: screen = view
+    const svg = hit.closest('svg');
+    if (!svg) throw new Error('the slide is drawn in an svg');
+    const identity = new DOMMatrix();
+    Object.defineProperty(svg, 'getScreenCTM', { value: () => identity, configurable: true });
+    // the fifth sixth of the travel, from the top: option e
+    fireEvent.click(hit, { clientX: 700, clientY: 500 - 30 + 45, detail: 1 });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'e');
+    // a click with no pointer (assistive tech) steps on from the value, as a short switch does
+    fireEvent.click(hit, { clientX: 0, clientY: 0, detail: 0 });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'c');
+    fireEvent.keyDown(hit, { key: 'ArrowDown' });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'c');
+    fireEvent.keyDown(hit, { key: 'ArrowUp' });
+    expect(onChange).toHaveBeenLastCalledWith('slide.long', 'a');
+    onChange.mockClear();
+    fireEvent.keyDown(hit, { key: 'Tab' });
     expect(onChange).not.toHaveBeenCalled();
   });
 

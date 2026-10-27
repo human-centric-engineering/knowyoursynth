@@ -1,0 +1,66 @@
+{
+  "synth": "cs-80",
+  "unusual": [
+    {
+      "target": "mix.mix",
+      "text": "Every key plays two complete voices at once, channel I and channel II, each with its own oscillator, filters and envelopes. MIX balances them, and they can be two quite different sounds."
+    },
+    {
+      "target": "tone",
+      "text": "The presets are chosen per channel, one row of buttons each, and a preset on one channel can be layered with the programmable panel on the other. A channel’s panel sliders are only heard while that row’s PANEL button is lit."
+    },
+    {
+      "target": "vcf",
+      "text": "The filter envelope is Yamaha’s own IL-AL-A-D-R. Instead of starting at the cutoff you set and rising from it, the filters start below it (IL), rise above it (AL), settle on it, and return below it when the key is let go."
+    },
+    {
+      "target": "ch1.sine",
+      "text": "The sine wave skips the filters and goes straight to the VCA, so a pure fundamental can be mixed under a filtered sound, however the filters are set."
+    },
+    {
+      "target": "ch1.hpf",
+      "text": "Every voice has a resonant high-pass filter before its resonant low-pass filter, so the two together make a band-pass whose width and peaks you set by hand."
+    },
+    {
+      "target": "sub",
+      "text": "The levers of the lower strip do most when pulled towards you and nothing pushed away, the opposite of most synths’ sliders. The programmable panels’ sliders read the usual way, 10 at the top."
+    },
+    {
+      "target": "kbdctl",
+      "text": "KEYBOARD CONTROL sets brightness and volume separately for the low and the high end of the keyboard, each fading in gradually from the middle, which is never affected."
+    },
+    {
+      "target": "ring",
+      "text": "The ring modulator’s speed has its own attack and decay, but they start again only on a note played after every key has been let go, so a legato phrase swoops once."
+    },
+    {
+      "target": "touch",
+      "text": "The keyboard senses pressure on each key separately, not one pressure for the whole keyboard, so one note of a chord can be made brighter, louder or wobblier than the others."
+    },
+    {
+      "target": "feet",
+      "text": "Octaves are set in organ footages, 16′ to 2′, including the fifths 5⅓′ and 2⅔′, separately for each channel."
+    },
+    {
+      "target": "cover",
+      "text": "The four memories are not electronic: they are miniature copies of a channel’s panel under the cover, set by hand with tiny sliders and copied from the full-size panel by eye."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both channels on every note, each with the square and sawtooth with PW and PWM, noise, the sine past the filters, the high-pass and low-pass filters with their resonance and the IL-AL-A-D-R envelope, and the VCA with its ADSR and LEVEL. The TONE SELECTOR plays the 22 presets and the PANEL on either channel, with FEET, MIX and DETUNE CH II. BRILLIANCE, RESONANCE, KEYBOARD CONTROL, INITIAL touch and PITCHBEND, the sub oscillator, the ring modulator with its speed envelope, SUSTAIN, portamento and glissando, and the tremolo/chorus all work. The app’s keyboard plays every key at one velocity; the sequencer plays softer and harder notes.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Anything that needs pressure on a key: the AFTER BRILLIANCE and AFTER LEVEL sliders and the three AFTER levers of TOUCH RESPONSE (SPEED, VCO, VCF), because the app’s keyboard senses no pressure. The ribbon controller, drawn only. The four memories, whose buttons are printed: the library keeps sounds instead. The foot switch and foot pedal: sustain and portamento are always on, as on the hardware with no foot switch plugged in, so the two FOOT SW rockers change nothing, and the FOOT PEDAL SELECTOR does nothing. SUSTAIN II (a new note cutting off the last one’s sustain), the sub oscillator’s EXT input, and the rear panel’s outputs and HIGH/LOW switch."
+      },
+      {
+        "title": "The presets are the manual’s charts",
+        "text": "On the hardware each preset is a set of fixed components measured from a panel setting. Here each is the manual’s own chart of the panel settings that duplicate it (pp. 28–30), measured from the scan to the nearest half step. The manual warns that some need fine-tuning by ear to match (Clavichord 1, Guitar 1 and 2, Funky 1 and 3), so these come close to the presets rather than reproducing them."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The manual gives the envelope times (attack 1 ms to 1 s, decay and release 10 ms to 10 s), sustain up to about 10 s, portamento up to about 2 s an octave, DETUNE CH II and the fine PITCH about a semitone, and the chorus and tremolo ranges (0.5–5 and 5–20 Hz). It does not give the filter ranges or slopes, how far IL and AL move the filters, the PWM, sub oscillator and ring modulator speeds, or how long the key timing pulse lasts: those are the app’s estimates. Here the high-pass filter is 24 dB and the low-pass 12 dB; resonance stops short of self-oscillation and the filtered sound is turned down as it rises; and the sub oscillator runs separately in each voice, so a chord’s vibrato is not exactly in step. The small differences between the hardware’s sixteen voice circuits are not modelled."
+      }
+    ]
+  }
+}

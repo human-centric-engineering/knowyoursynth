@@ -2892,6 +2892,7 @@
       "parts": [
         {
           "instruments": ["yamaha-cs-80"],
+          "sounds": { "cs-80": "cs-fanfare" },
           "on": "Yamaha CS-80, with acoustic piano",
           "text": "Vangelis recorded the score in 1980 at Nemo Studios, his London studio, playing every instrument himself. In the opening “Titles” a CS-80 melody sits over a repeated piano figure; released as a single, it reached number one in the US."
         }
@@ -2967,6 +2968,7 @@
       "parts": [
         {
           "instruments": ["yamaha-cs-80"],
+          "sounds": { "cs-80": "cs-blade-brass" },
           "on": "Yamaha CS-80",
           "text": "The CS-80 carries most of the score. In the main titles Vangelis bends the melody down with the ribbon controller, “Blush Response” uses the pressure sensitivity of each key, and “Blade Runner Blues” uses its high register. The soundtrack album was not released officially until 1994."
         }

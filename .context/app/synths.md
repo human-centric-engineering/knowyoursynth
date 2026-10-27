@@ -99,11 +99,11 @@ for values (`cont` → `min/max/def: number`, `enum` → `options/def`, `bool` �
 | `type`     | kinds      | Notes                                                                                 |
 | ---------- | ---------- | ------------------------------------------------------------------------------------- |
 | `knob`     | cont, enum | `style` picks the cap; `scale` prints numbers or labels; enum options carry angle `a` |
-| `slide`    | enum, bool | 2–3 positions, order top→bottom / left→right; bool `true` is top/left unless `onAt`   |
+| `slide`    | enum, bool | 2–6 positions, order top→bottom / left→right; bool `true` is top/left unless `onAt`   |
 | `rocker`   | bool, enum | First option = left/top pressed; three options draw as one three-segment paddle       |
 | `button`   | bool, enum | bool toggles, enum cycles; light it with `lamp`, `capLamp`, or `led` decor            |
-| `fader`    | cont       | (x, y) is mid-travel; max at top / right                                              |
-| `select`   | enum       | One backlit button per option, at the option's own x, y                               |
+| `fader`    | cont       | (x, y) is mid-travel; max at top / right, or bottom with `maxAt`; `face: 'block'` cap |
+| `select`   | enum       | One backlit button per option, at its own x, y; `caption` prints on the cap           |
 | `menu`     | enum, cont | One row of a display page; pair with `lcd` decor and `show`                           |
 | `toggle`   | bool, enum | Bat handle seen from above; enum of three = up–centre–down                            |
 | `joystick` | cont       | Two cont −1..1 controls; the drawn one names the other in `pair`, which has `pairOf`  |

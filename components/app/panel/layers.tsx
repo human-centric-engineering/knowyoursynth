@@ -30,6 +30,7 @@ import type {
   SynthDef,
   ViewRect,
 } from '@/lib/app/synths/contract';
+import { movesUp } from '@/lib/app/synths/contract';
 
 const DIM = '#05060a';
 
@@ -558,7 +559,8 @@ const doorReach = (p: Control) =>
 function doorTag(c: Control, door: { v?: ControlValue }, values: ControlValues) {
   if (c.kind === 'bool') return door.v ? 'Switch on' : 'Switch off';
   if (c.kind === 'enum') return `Set to ${formatValue(c, door.v)}`;
-  return `${c.type === 'fader' ? 'Move' : 'Turn'} ${Number(door.v) > Number(values[c.id]) ? 'up' : 'down'}`;
+  const up = movesUp(c, Number(values[c.id]), Number(door.v));
+  return `${c.type === 'fader' ? 'Move' : 'Turn'} ${up ? 'up' : 'down'}`;
 }
 
 /**

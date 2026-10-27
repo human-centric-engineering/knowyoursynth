@@ -195,7 +195,8 @@
       "maker": "Yamaha",
       "year": "1977",
       "kind": "poly",
-      "text": "An eight-voice polysynth of two layered voices per note, with a ribbon controller and a keyboard that responds to velocity and to pressure on each key. Heard on Vangelis’s Blade Runner score."
+      "text": "An eight-voice polysynth of two layered voices per note, with a ribbon controller and a keyboard that responds to velocity and to pressure on each key. Heard on Vangelis’s Blade Runner score.",
+      "app": ["cs-80"]
     },
     {
       "id": "roland-jupiter-4",

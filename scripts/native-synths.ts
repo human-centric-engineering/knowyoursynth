@@ -9,7 +9,7 @@
  *
  * Adding a synth: [`.context/app/adding-a-synth.md`](../.context/app/adding-a-synth.md).
  */
-export const NATIVE_SYNTHS: readonly string[] = ['donner-b1', 'take-5'];
+export const NATIVE_SYNTHS: readonly string[] = ['donner-b1', 'take-5', 'cs-80'];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);
 

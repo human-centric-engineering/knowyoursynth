@@ -356,6 +356,8 @@ export interface ControlOption {
   y?: number;
   /** `select`: text printed above this option's button. */
   text?: string;
+  /** `select`: text printed on this option's cap (the CS-80's TONE SELECTOR); `\n` for a second line. */
+  caption?: string;
   /** `select`: a coloured square cap with a lamp in its top edge. */
   capColor?: string;
   /** `select`: this option's lamp colour, overriding the control's. */
@@ -428,7 +430,7 @@ export type KnobControl = ControlCommon & {
 } & (ContinuousValue | EnumValue);
 
 /**
- * Slide switch: an enum of 2–3 options (top→bottom or left→right) or a bool
+ * Slide switch: an enum of 2–6 options (top→bottom or left→right) or a bool
  * (`true` at top/left unless `onAt: 'bottom'`). Position labels are decor.
  */
 export type SlideControl = ControlCommon & {
@@ -478,7 +480,7 @@ export type FaderLed = 'red' | 'green' | 'blue' | 'yellow' | 'white' | 'amber';
 
 /**
  * Slider. (x, y) is the middle of the travel; vertical faders have max at the
- * top, horizontal at the right.
+ * top (at the bottom with `maxAt: 'bottom'`), horizontal at the right.
  */
 export type FaderControl = ControlCommon & {
   type: 'fader';
@@ -496,7 +498,19 @@ export type FaderControl = ControlCommon & {
   tickEnds?: boolean;
   /** How far the slot runs past each end of the travel (default 12). */
   pad?: number;
+  /** `'bottom'` (vertical only): the maximum is at the bottom, as on the CS-80's levers, which do most pulled forward. */
+  maxAt?: 'bottom';
+  /** `'block'`: a plain rectangular cap in the `cap` colour, no lamp (the CS-80). */
+  face?: 'block';
 } & ContinuousValue;
+
+/** A vertical fader whose maximum is at the bottom (`maxAt: 'bottom'`): moving its cap down raises its value. */
+export const maxAtBottom = (c: Control): boolean =>
+  c.type === 'fader' && c.orient !== 'h' && c.maxAt === 'bottom';
+
+/** Whether a control's cap moves up to go from `now` to `to`: up for more, or down for more with `maxAt: 'bottom'`. */
+export const movesUp = (c: Control, now: number, to: number): boolean =>
+  to !== now && to > now !== maxAtBottom(c);
 
 /**
  * A row of backlit buttons, one per option, each at the option's own x, y with

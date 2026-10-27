@@ -9,7 +9,7 @@ import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent, ReactNode 
 import { focusStore, highlightStore, meterStore, useStore } from '@/components/app/synth/stores';
 import type { ItemFocus } from '@/components/app/synth/stores';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
-import { formatValue } from '@/lib/app/synths/lib/patch';
+import { formatValue, luminance } from '@/lib/app/synths/lib/patch';
 import type {
   ButtonControl,
   ContinuousValue,
@@ -40,6 +40,7 @@ import type {
   Theme,
   ToggleControl,
 } from '@/lib/app/synths/contract';
+import { maxAtBottom } from '@/lib/app/synths/contract';
 
 export const PAPER = '#f3f4ef';
 export const INK = '#1c2530';
@@ -1405,6 +1406,18 @@ export const Select = memo(function Select({
                 ctx={ctx}
               />
             )}
+            {o.caption && (
+              <PanelText
+                x={ox}
+                // centred on the cap below its lamp, each line `CAPTION_SIZE × 1.08` below the last (PanelText)
+                y={oy + 5 - ((o.caption.split('\n').length - 1) * CAPTION_SIZE * 1.08) / 2}
+                text={o.caption}
+                size={CAPTION_SIZE}
+                weight={700}
+                fill={ctx.outline ? (!cap && lit ? PAPER : INK) : captionInk(cap)}
+                ctx={ctx}
+              />
+            )}
             {target === o.v && target !== value && (
               <circle
                 cx={ox + c.w / 2 + 5}
@@ -1452,6 +1465,22 @@ export const Select = memo(function Select({
   );
 });
 const cleanName = (c: Control) => (c.label || c.id).replace(/\n/g, ' ');
+const CAPTION_DARK = '#1b1b1d',
+  CAPTION_LIGHT = '#f1f0e9';
+const CAPTION_SIZE = 8;
+const L_DARK = luminance(CAPTION_DARK) ?? 0,
+  L_LIGHT = luminance(CAPTION_LIGHT) ?? 1;
+/**
+ * Ink for a caption printed on a cap: whichever of dark and light contrasts more with it (light on the CS-80's red,
+ * dark on its yellow and green). Light on a lamp button, with no cap, and on a colour that cannot be read.
+ */
+function captionInk(cap: string | undefined): string {
+  const l = cap ? luminance(cap) : null;
+  if (l === null) return CAPTION_LIGHT;
+  return (l + 0.05) / (L_DARK + 0.05) >= (L_LIGHT + 0.05) / (l + 0.05)
+    ? CAPTION_DARK
+    : CAPTION_LIGHT;
+}
 /** `offValue`: pressing the lit button again sets that value (the Jupiter-8's arpeggio MODE buttons switch it off). */
 const pick = (c: SelectControl, o: ControlOption, value: ControlValue) =>
   c.offValue != null && o.v === value ? c.offValue : o.v;
@@ -2375,6 +2404,24 @@ function nextValue(c: SwitchControl, value: ControlValue): ControlValue {
   return c.options[(optionIndex(c, value) + 1) % c.options.length].v;
 }
 
+/** A slide switch of more than three positions (the CS-80's FEET): a click picks the position under the pointer. */
+const longSlide = (
+  c: SwitchControl
+): c is Extract<SwitchControl, { type: 'slide'; kind: 'enum' }> =>
+  c.type === 'slide' && c.kind === 'enum' && c.options.length > 3;
+
+/** The option under a click on a long slide, or null when the panel's geometry is not known. */
+function slideAt(c: SwitchControl, e: MouseEvent<SVGElement>): ControlValue | null {
+  if (!longSlide(c)) return null;
+  const svg = e.currentTarget.ownerSVGElement;
+  const m = svg && svg.getScreenCTM();
+  if (!m) return null;
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+  const along = c.orient === 'h' ? (p.x - (c.x - c.w / 2)) / c.w : (p.y - (c.y - c.h / 2)) / c.h;
+  const n = c.options.length;
+  return c.options[Math.min(n - 1, Math.max(0, Math.floor(along * n)))].v;
+}
+
 /** The switch's `orient`, for the switches that have one. */
 const orientOf = (c: SwitchControl) => ('orient' in c ? c.orient : undefined);
 
@@ -2640,21 +2687,47 @@ export const Switch = memo(function Switch({
         height={h + 10}
         fill="transparent"
         tabIndex={0}
-        role="button"
+        // a long slide is a slider of named positions; every other switch is a button that steps on
+        {...(longSlide(c)
+          ? {
+              role: 'slider',
+              'aria-valuemin': 0,
+              'aria-valuemax': c.options.length - 1,
+              'aria-valuenow': optionIndex(c, value),
+              'aria-valuetext': c.options[optionIndex(c, value)]?.label,
+              'aria-orientation':
+                c.orient === 'h' ? ('horizontal' as const) : ('vertical' as const),
+            }
+          : { role: 'button' })}
         aria-label={(c.label || c.id).replace(/\n/g, ' ')}
         className="kys-hit"
         style={{ cursor: 'pointer' }}
         {...hover}
         onClick={(e) => {
           focusStore.set({ kind: 'control', id: c.id, x: e.clientX, y: e.clientY, tip: false });
-          onChange(c.id, nextValue(c, value));
+          // a click with no pointer (assistive tech, `detail` 0) steps on, as a short switch does
+          const at = longSlide(c) && e.detail > 0 ? slideAt(c, e) : null;
+          onChange(c.id, at ?? nextValue(c, value));
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             // A key held is one press: its repeats would enter note after note, or start and stop the sequencer.
             if (!e.repeat) onChange(c.id, nextValue(c, value));
+            return;
           }
+          // a long slide steps along its positions with the arrow keys
+          if (!longSlide(c)) return;
+          const step =
+            e.key === 'ArrowDown' || e.key === 'ArrowRight'
+              ? 1
+              : e.key === 'ArrowUp' || e.key === 'ArrowLeft'
+                ? -1
+                : 0;
+          if (!step) return;
+          e.preventDefault();
+          const i = optionIndex(c, value) + step;
+          if (i >= 0 && i < c.options.length) onChange(c.id, c.options[i].v);
         }}
       />
     </g>
@@ -2662,8 +2735,9 @@ export const Switch = memo(function Switch({
 });
 
 // ── Fader ───────────────────────────────────────────────────────────────────
-// A slide potentiometer. (x, y) is the centre of its travel, `len` the travel, `orient` 'v' (max at the top) or 'h'
-// (max on the right). `led` colours the lamp in the cap, as on the 2600 where it shows which module the slider belongs to.
+// A slide potentiometer. (x, y) is the centre of its travel, `len` the travel, `orient` 'v' (max at the top, or at the
+// bottom with `maxAt: 'bottom'`) or 'h' (max on the right). `led` colours the lamp in the cap, as on the 2600 where it
+// shows which module the slider belongs to.
 const FADER_LED: Record<string, string> = {
   blue: '#58a6ff',
   green: '#5ee872',
@@ -2688,6 +2762,8 @@ function useFaderDrag(c: FaderControl, value: number, onChange: ControlChange): 
   const drag = useRef<{ x: number; y: number; v: number; px: number } | null>(null);
   const vert = c.orient !== 'h';
   const span = c.max - c.min;
+  // `maxAt: 'bottom'`: dragging the cap down (towards the player) raises the value; the arrow keys keep up = more
+  const dir = maxAtBottom(c) ? -1 : 1;
   const set = (v: number) =>
     onChange(c.id, Math.round(Math.max(c.min, Math.min(c.max, v)) * 100) / 100);
   return {
@@ -2703,7 +2779,7 @@ function useFaderDrag(c: FaderControl, value: number, onChange: ControlChange): 
       const d = drag.current;
       if (!d) return;
       const moved = (vert ? d.y - e.clientY : e.clientX - d.x) / d.px; // in view units along the travel
-      set(d.v + (moved / (c.len || 200)) * span * (e.shiftKey ? 0.2 : 1));
+      set(d.v + (moved / (c.len || 200)) * span * dir * (e.shiftKey ? 0.2 : 1));
     },
     onPointerUp: (e) => {
       drag.current = null;
@@ -2737,8 +2813,10 @@ export const Fader = memo(function Fader({
   const drag = useFaderDrag(c, value, onChange);
   const vert = c.orient !== 'h';
   const len = c.len || 200;
+  const flip = maxAtBottom(c);
   const at = (v: number) => {
-    const f = (Math.max(c.min, Math.min(c.max, v)) - c.min) / (c.max - c.min);
+    const f0 = (Math.max(c.min, Math.min(c.max, v)) - c.min) / (c.max - c.min);
+    const f = flip ? 1 - f0 : f0;
     return vert ? [c.x, c.y + len / 2 - f * len] : [c.x - len / 2 + f * len, c.y];
   };
   const [cx, cy] = at(value);
@@ -2746,7 +2824,10 @@ export const Fader = memo(function Fader({
   const slot = vert
     ? { x: c.x - 7, y: c.y - len / 2 - pad, width: 14, height: len + pad * 2 }
     : { x: c.x - len / 2 - pad, y: c.y - 7, width: len + pad * 2, height: 14 };
-  const ball = c.cap ? FADER_BALL[c.cap] || FADER_BALL.white : null;
+  // `face: 'block'`: a plain cap in `cap`, a named colour or any CSS colour, as [face, rim]
+  const block: [string, string] | null =
+    c.face !== 'block' ? null : !c.cap ? FADER_BALL.white : FADER_BALL[c.cap] || [c.cap, '#0008'];
+  const ball = c.cap && !block ? FADER_BALL[c.cap] || FADER_BALL.white : null;
   const capW = ball ? 34 : vert ? 26 : 20;
   const capH = ball ? 34 : vert ? 20 : 26;
   const nTicks = c.ticks == null ? (vert ? 5 : 0) : c.ticks;
@@ -2826,6 +2907,38 @@ export const Fader = memo(function Fader({
               strokeWidth="3"
             />
           )}
+        </g>
+      ) : block ? (
+        <g>
+          <rect {...slot} rx="7" fill="#040405" stroke="#2c2d31" strokeWidth="1.5" />
+          <rect
+            x={cx - capW / 2 + 2}
+            y={cy - capH / 2 + 4}
+            width={capW}
+            height={capH}
+            rx="3"
+            fill="#000"
+            opacity="0.5"
+          />
+          <rect
+            x={cx - capW / 2}
+            y={cy - capH / 2}
+            width={capW}
+            height={capH}
+            rx="3"
+            fill={block[0]}
+            stroke={block[1]}
+            strokeWidth="1.5"
+          />
+          <rect
+            x={cx - capW / 2 + 3}
+            y={cy - capH / 2 + 3}
+            width={capW - 6}
+            height={capH * 0.35}
+            rx="2"
+            fill="#fff"
+            opacity="0.25"
+          />
         </g>
       ) : ball ? (
         <g>

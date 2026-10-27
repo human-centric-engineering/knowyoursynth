@@ -15,6 +15,7 @@ import { controlMap, displayName, formatValue } from '@/lib/app/synths/lib/patch
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { Control, ControlValues, SynthDef } from '@/lib/app/synths/contract';
+import { movesUp } from '@/lib/app/synths/contract';
 import { findStore, focusStore, mapStore, useStore } from '@/components/app/synth/stores';
 import type { Door, WhyAnswer } from '@/components/app/synth/stores';
 
@@ -255,7 +256,7 @@ function DoorStep({
       </>
     );
   const now = values[c.id];
-  const up = typeof door.v === 'number' && typeof now === 'number' && door.v > now;
+  const up = typeof door.v === 'number' && typeof now === 'number' && movesUp(c, now, door.v);
   return (
     <>
       {c.type === 'fader' ? 'move' : 'turn'} {name} {up ? 'up' : 'down'}
