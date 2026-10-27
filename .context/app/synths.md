@@ -166,10 +166,14 @@ when absent**, added synth by synth:
 | West Coast voice                       | `easel` (replaces the fixed voice)                                       | Music Easel        |
 | Moog 900 modular, in volts             | `moog` (replaces the fixed voice)                                        | System 15/35/55    |
 | Sub out, pink noise, utility high-pass | osc `subLevel`, `subOut`, `hp6`                                          | Model 15           |
+| Two voices per note and their effects  | `layer`, `pulse`, `keyEnds`, `ringMod`, `tremolo`, `glide.steps`         | Yamaha CS-80       |
 
 A synth whose sound path is `easel` or `moog` still returns the core stubs (`osc: []` etc.).
-`fx`, `dual`, `chorus` and `outAmps` make the synth stereo, and the sound-map probe renders it
-in stereo. A one-voice synth that needs the arpeggiator or chorus uses
+`layer`, `ringMod` and `tremolo` are poly only: `layer` gives every note a second voice with
+its own settings, so `poly.voices` counts notes. `pulse` makes signal `velp` (each note's
+velocity, dying away from its key) and `keyEnds` makes `kbdLo` / `kbdHi` (0 mid-keyboard,
+rising to 1 at each end). `fx`, `dual`, `chorus`, `tremolo` and `outAmps` make the synth
+stereo, and the sound-map probe renders it in stereo. A one-voice synth that needs the arpeggiator or chorus uses
 `poly: { voices: 1, stack: 1, mono: true }`. The app adds `cables` and `wheel` to the params
 after `toEngine()`; a definition never returns them.
 

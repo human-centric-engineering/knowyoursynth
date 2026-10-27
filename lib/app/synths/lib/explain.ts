@@ -84,6 +84,9 @@ const SIGNAL_NAMES: Record<string, string | undefined> = {
   hp6: 'the high-pass filter',
   joyX: 'the joystick’s left-right position',
   joyY: 'the joystick’s up-down position',
+  velp: 'the key timing pulse',
+  kbdLo: 'the low end of the keyboard',
+  kbdHi: 'the high end of the keyboard',
 };
 const WAVE_WORD: Record<string, string> = {
   saw: 'sawtooth',
@@ -531,9 +534,21 @@ const lfoShape = (ctx: Ctx, root: string): string => {
   return Object.keys(mix).sort((a, b) => (mix[b] ?? 0) - (mix[a] ?? 0))[0] || 'tri';
 };
 const unipolar = (leaf: Leaf) =>
-  ['env1', 'env2', 'env1v', 'env2v', 'gate', 'lfoUni', 'kbd', 'envf', 'shClk', 'one'].includes(
-    leaf.root
-  );
+  [
+    'env1',
+    'env2',
+    'env1v',
+    'env2v',
+    'gate',
+    'lfoUni',
+    'kbd',
+    'envf',
+    'shClk',
+    'one',
+    'velp',
+    'kbdLo',
+    'kbdHi',
+  ].includes(leaf.root);
 
 /** "the LFO (triangle, 5.2 Hz)" – the real source with the facts that matter right now. */
 function liveSource(ctx: Ctx, leaf: Leaf): string {

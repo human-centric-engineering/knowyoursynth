@@ -380,6 +380,26 @@ describe('useStoredSession', () => {
     expect(JSON.parse(String(writes[0]?.[1]))).toMatchObject({ step: 7 });
   });
 
+  it('keeps a change made just as the delay ends for an earlier one, so leaving still writes it', () => {
+    vi.useFakeTimers();
+    const { result, unmount } = renderHook(() => useStoredSession(def, fresh));
+    act(() => {
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+
+    act(() => result.current[1]((s) => ({ ...s, step: 1 })));
+    // The earlier change's delay ends after the next change is made but before it renders.
+    act(() => {
+      result.current[1]((s) => ({ ...s, step: 5 }));
+      vi.advanceTimersByTime(SESSION_WRITE_DELAY_MS);
+    });
+    unmount();
+
+    expect(JSON.parse(window.localStorage.getItem(sessionKey(def.id)) ?? 'null')).toMatchObject({
+      step: 5,
+    });
+  });
+
   it('writes it when the tab is hidden for good (pagehide), and not twice', () => {
     vi.useFakeTimers();
     const { result } = renderHook(() => useStoredSession(def, fresh));
