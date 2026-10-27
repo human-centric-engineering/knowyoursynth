@@ -398,7 +398,7 @@ knob('osc2.shape', 590, 945, 34, {
   name: 'Oscillator 2 SHAPE',
   def: 0,
   fmt: (v) => (v < 0.3 ? 'square and saw' : `pulse ${Math.round(50 - v * 4.5)} %, super saw`),
-  help: 'Changes both of Oscillator 2’s waves at once: the pulse narrows from a square at 0, and the saw thickens from a plain saw at 0 into a “dual super saw” at 10, a second saw drifting further out of tune against it.',
+  help: 'Changes both of Oscillator 2’s waves at once: the pulse narrows from a square at 0, and the saw thickens from a plain saw at 0 into a “dual super saw” at 10, a second saw drifting further out of tune against it. With SYNC on, both saws restart with Oscillator 1, so the drift is gone.',
 });
 label(590, 1002, 'SHAPE');
 [
@@ -429,7 +429,7 @@ label(590, 1002, 'SHAPE');
 slide('osc2.sync', 478, 820, opts(['free', 'Free'], ['sync', 'OSC2 → OSC1']), 'free', {
   module: 'osc',
   name: 'SYNC switch',
-  help: 'Right, Oscillator 2 is hard-synced to Oscillator 1: it restarts with every cycle of Oscillator 1, so its pitch follows Oscillator 1 and tuning Oscillator 2 changes its tone instead, the classic sync sweep.',
+  help: 'Down, Oscillator 2 is hard-synced to Oscillator 1: it restarts with every cycle of Oscillator 1, so its pitch follows Oscillator 1 and tuning Oscillator 2 changes its tone instead, the classic sync sweep.',
 });
 label(478, 776, 'SYNC');
 label(478, 865, 'OSC2 → OSC1', 12);
@@ -629,7 +629,7 @@ const panWord = (p: number): string =>
 // ── Ring modulator and output filters ─────────────────────────────────────
 tab(1380, 575, 'RINGMODULATOR');
 const SOURCE_B: [string, string, number, NormalSource][] = [
-  ['osc2', 'OSC2', -90, 'sum1'],
+  ['osc2', 'OSC2', -90, 'o2saw'],
   ['osc3', 'OSC3', -60, 'o3tri'],
   ['in1', 'IN1', -30, 'mult'],
   ['in2', 'IN2', 0, 'preamp'],
@@ -652,7 +652,7 @@ controls.push({
   labelPos: 'none',
   scale: { size: 9, numR: 1.75 },
   name: 'Ring modulator SOURCE B',
-  help: 'Chooses the ring modulator’s second signal, B, inside the instrument: Oscillator 2, Oscillator 3’s triangle, Input 1, Input 2, the noise or the filter. The manual does not say what SIGN is, so in this app it gives no B, and the ring modulator is silent there.',
+  help: 'Chooses the ring modulator’s second signal, B, inside the instrument: Oscillator 2’s saw (before its LEVEL knob), Oscillator 3’s triangle, Input 1, Input 2, the noise or the filter. The manual does not say what SIGN is, so in this app it gives no B, and the ring modulator is silent there.',
 });
 label(1315, 707, 'SOURCE B');
 knob('ring.level', 1448, 648, 36, {
@@ -869,7 +869,7 @@ label(1703, 1505, 'GATE');
 // ── Patch memory and the encoders ─────────────────────────────────────────
 const MEM =
   'The SYNTRX II keeps 256 patches of the matrix, the sequence and the settings (but not the knobs). Patch memory is not modelled in this app: use the app’s own sounds and saving instead.';
-knob('ui.encX', 920, 1408, 34, {
+knob('ui.encY', 920, 1408, 34, {
   module: 'mode',
   ui: true,
   name: 'Left (Y) encoder',
@@ -877,7 +877,7 @@ knob('ui.encX', 920, 1408, 34, {
   scale: { ticks: 0 },
   help: 'On the hardware this encoder moves up and down the matrix, and a push sets the point under it: gain 1, then 0.7, then 0.3, then off. Here you click a point of the matrix instead, and every point is gain 1.',
 });
-knob('ui.encY', 1220, 1408, 34, {
+knob('ui.encX', 1220, 1408, 34, {
   module: 'mode',
   ui: true,
   name: 'Right (X) encoder',
@@ -1424,7 +1424,7 @@ col(
   'What the sample and hold samples. Its stepped output is on row 5 when the OSC 3 / S&H switch is at S&H. Noise gives random steps, a slow wave a staircase, and an audio signal at a high S&H RATE a bit-crushed sound.',
   {
     hear: (v, x) =>
-      `The sample and hold now samples ${x.src} ${fmtHz(shHz(num(v, 'snh.rate')))} times a second.${v['snh.select'] !== 'snh' ? ' Switch OSC 3 / S&H to S&H to put its steps on row 5.' : ''}`,
+      `The sample and hold now samples ${x.src} at ${fmtHz(shHz(num(v, 'snh.rate')))}.${v['snh.select'] !== 'snh' ? ' Switch OSC 3 / S&H to S&H to put its steps on row 5.' : ''}`,
   }
 );
 col(
@@ -1679,8 +1679,8 @@ function toEngine(v: ControlValues): EngineParams {
     // column I: Oscillator 2 and its partner, through `inv1` (which turns it over, so the routes turn it back)
     { src: 'inv1', dst: 'pitch2', amt: -12 },
     { src: 'inv1', dst: 'pitch4', amt: -12 },
-    // the mod wheel opens the low-pass (MIDI CC 1); the depth is this app's estimate
-    { src: 'wheel', dst: 'cutoff', amt: 3 },
+    // the mod wheel moves the filter the HPF / LPF switch picks (MIDI CC 1); the depth is this app's estimate
+    { src: 'wheel', dst: t === 'hpf' ? 'cutoffHp' : 'cutoff', amt: 3 },
   ];
   if (ss.mix > 0) routes.push({ src: 'osc4', dst: 'sum1B', amt: o2saw * ss.mix });
   // column K: the shape CV to the pulse widths the switches choose

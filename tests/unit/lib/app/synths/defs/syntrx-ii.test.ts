@@ -135,6 +135,14 @@ describe('SYNTRX II toEngine at the init patch', () => {
     ]);
   });
 
+  it('sends the mod wheel to the high-pass when the switch is at HPF', () => {
+    expect(run({ 'vcf.cvTarget': 'hpf' }).routes).toContainEqual({
+      src: 'wheel',
+      dst: 'cutoffHp',
+      amt: 3,
+    });
+  });
+
   it('is silent with no points, by design', () => {
     expect(syntrx.silentInit).toMatch(/no points it is silent/);
   });
@@ -278,7 +286,7 @@ describe('SYNTRX II switches elsewhere', () => {
   it('chooses the ring modulator’s B inside, with nothing at SIGN', () => {
     const b = (pos: string) => run({ 'ring.sourceB': pos }).normals?.ringB;
     expect(['osc2', 'osc3', 'in1', 'in2', 'noise', 'vcf', 'sign'].map(b)).toEqual([
-      'sum1',
+      'o2saw',
       'o3tri',
       'mult',
       'preamp',
