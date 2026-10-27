@@ -256,9 +256,12 @@ export function useStoredSession(
   useEffect(() => {
     latest.current = session;
   });
+  // Counts the visitor's changes, so a write that lands after a newer change (made, not yet rendered) leaves it dirty.
+  const changes = useRef(0);
   const toAccount = useRef(false);
   const update = useCallback((fn: (s: Session) => Session) => {
     dirty.current = true;
+    changes.current += 1;
     movedAt.current = Date.now();
     toAccount.current = true;
     setSession(fn);
@@ -313,10 +316,12 @@ export function useStoredSession(
 
   useEffect(() => {
     if (!dirty.current) return undefined;
+    const at = changes.current;
     const t = setTimeout(() => {
       // Unless a change of user has written it already.
       if (dirty.current) writeStored(key, storedSession(session, stamp()));
-      dirty.current = false;
+      // A change made since is still to write: its own delay, or leaving the page, writes it.
+      if (changes.current === at) dirty.current = false;
     }, SESSION_WRITE_DELAY_MS);
     return () => clearTimeout(t);
   }, [key, session, stamp]);
