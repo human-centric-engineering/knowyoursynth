@@ -325,23 +325,6 @@ header(2018, 2215, 248, 'VCA');
 header(2226, 2670, 248, 'ENVELOPES');
 header(2685, 2760, 248, 'DLY', 11);
 header(335, 435, 248, 'LOWER', 11);
-// the rear sockets, printed along the top edge
-const REAR: [number, string][] = [
-  [155, 'R  UPPER  L'],
-  [305, 'R  LOWER  L'],
-  [465, 'R  MIX OUTPUTS  L'],
-  [600, 'DELAY FREEZE'],
-  [1100, 'SUS'],
-  [1165, 'EXPR'],
-  [1205, 'VOL'],
-  [1260, 'THRU  OUT  IN'],
-  [1385, 'USB'],
-];
-for (const [x, t] of REAR) text(x, 44, t, 7.5, { fill: DIM, hw: true });
-text(230, 56, 'LAYER OUTPUTS', 7.5, { fill: DIM, hw: true });
-text(1130, 56, 'PEDALS', 7.5, { fill: DIM, hw: true });
-text(1300, 56, 'MIDI', 7.5, { fill: DIM, hw: true });
-decor.push({ t: 'circle', x: 2600, y: 40, r: 5, fill: 'none', stroke: DIM, sw: 1.2 });
 
 // ── Master volume, and the lower layer's detune ───────────────────────────
 knob('out.volume', 380, 150, 24, '#3a3b3e', {
