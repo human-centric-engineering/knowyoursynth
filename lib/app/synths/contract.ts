@@ -240,6 +240,8 @@ export interface PinMatrix {
   cols: string[];
   /** Hit-box sizes `[w, h]` centred on each row / column jack, which sit at their printed legends. */
   legend: { row: [number, number]; col: [number, number] };
+  /** `'led'`: a grid of lamps, lit red where a point is set (SYNTRX II), in place of holes and pins. */
+  look?: 'led';
 }
 
 /** The modular case layout. Built into a renderable layout by `modularDef()` (the layout library). */

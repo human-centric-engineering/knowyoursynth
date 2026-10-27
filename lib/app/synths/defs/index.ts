@@ -45,6 +45,7 @@ import superGemini from '@/lib/app/synths/defs/super-gemini';
 import pearlSyncussion from '@/lib/app/synths/defs/pearl-syncussion';
 import behringerSyncussion from '@/lib/app/synths/defs/behringer-syncussion';
 import e7 from '@/lib/app/synths/defs/e7';
+import syntrxII from '@/lib/app/synths/defs/syntrx-ii';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -83,6 +84,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   pearlSyncussion,
   behringerSyncussion,
   e7,
+  syntrxII,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

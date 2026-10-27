@@ -1,0 +1,74 @@
+{
+  "synth": "syntrx-ii",
+  "unusual": [
+    {
+      "target": "matrix",
+      "text": "There are no patch cables and nothing is wired inside: every connection is a point in this 16 × 16 matrix, joining a source row to a destination column. It is an analogue mixer under digital control, so points in one column add without loss, a whole patch can be stored, and on the hardware each point can be set at three gains, shown by its brightness."
+    },
+    {
+      "target": "c.scope",
+      "text": "The SCOPE OUTPUT is normalled to both external inputs. Anything pinned into the Scope column therefore comes back on the Input 1, envelope follower and Input 2 rows, which is how the manual turns a voltage upside down: through Input 2 set to INVERT."
+    },
+    {
+      "target": "r.osc2",
+      "text": "Oscillator 2’s pulse and saw share one row, already mixed by their LEVEL knobs, where Oscillator 1 gives each of its waves a row of its own."
+    },
+    {
+      "target": "r.osc3sh",
+      "text": "The matrix has only 16 rows, so Oscillator 3’s pulse and the sample and hold share row 5, and a switch in the RANDOM section chooses which is on it."
+    },
+    {
+      "target": "osc1.shape",
+      "text": "One SHAPE knob works on both of Oscillator 1’s waves: the pulse width, and the sine, which bends into a sharkfin one way and an upside-down sharkfin the other."
+    },
+    {
+      "target": "osc2.shape",
+      "text": "SHAPE takes Oscillator 2’s saw from a plain saw to a “dual super saw”, the thick, detuned sound usually made with several oscillators or a digital one."
+    },
+    {
+      "target": "filter",
+      "text": "The filter is a high-pass and a low-pass in series, not a multimode filter with a switch: HPF at 0 gives a low-pass, LPF at 10 a high-pass, and anything between a band-pass whose width and centre the two knobs set."
+    },
+    {
+      "target": "trap.off",
+      "text": "The trapezoid loops on its own by default, as the Synthi’s did. Most synth envelopes wait for a key; here OFF has to be turned above 9 for that."
+    },
+    {
+      "target": "trap.signal",
+      "text": "The envelope has its own VCA: pin a sound into the Envelope Signal column and it comes out shaped on row 12. On most synths the envelope only controls a separate VCA."
+    },
+    {
+      "target": "fx.level",
+      "text": "The effects give the wet sound only. For a mix, pin the dry sound and the effects row into the same output column."
+    },
+    {
+      "target": "ring.sourceB",
+      "text": "Only the ring modulator’s A input is on the matrix; B is chosen by a rotary switch from the oscillators, inputs, noise and filter, which leaves the matrix’s columns for other things."
+    },
+    {
+      "target": "in1.ef",
+      "text": "EF LEVEL is an attenuverter: left of centre the envelope follower’s voltage falls as Input 1 gets louder, which is how one sound ducks another."
+    },
+    {
+      "target": "joystick",
+      "text": "The joystick’s two voltages go anywhere the matrix reaches. On the hardware two MIDI CCs and the sequencer’s stepped lanes add to them, and 8 seconds of stick motion can be recorded and looped."
+    }
+  ],
+  "limits": {
+    "intro": "The whole analogue voice is modelled point for point on the matrix: all three oscillators with their SHAPE, OCTAVE, TUNE, SYNC and KEY FOL, the shared Oscillator 3 / S&H row, the sample and hold, the noise with its TONE, both inputs (carrying the SCOPE OUTPUT, as they do with nothing plugged in) with Input 2’s gain, overdrive and INVERT and the envelope follower, the high-pass and low-pass filter with its CV switch, the ring modulator with SOURCE B, the trapezoid and its VCA, the delay and reverb, the joystick, and both output channels with their VCAs, tone controls and pan, in stereo.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The patch memory, the sequencer and its stepped lanes, and motion recording: RECALL, SAVE, SHIFT, the PATCH buttons, the encoders and REC/CLEAR are drawn and explained but do nothing; click the matrix to patch. The envelope follower’s gate, so THRESH and TO GATE do nothing, and its DECAY knob, as the follower here has one fixed fall. The S&H’s GATE setting: it always runs on its own clock. The meter’s needle. The CV, CV2 and gate jacks, so no paraphonic patches, and the configuration pages, so portamento, velocity and key tracking of the filter stay off."
+      },
+      {
+        "title": "Simplified here",
+        "text": "Every matrix point is gain 1: the hardware’s 0.7 and 0.3 points are not offered. The Oscillator Shape column moves the pulse widths only, so the OSC1 SHAPE and OSC2 SHAPE switches’ SINE and SAW settings take nothing from it. The delay runs in its default short range and tape mode, 50 ms to half a second. RESONANCE works on the low-pass. The manual does not say what SOURCE B’s SIGN position is, so here it gives the ring modulator nothing. The mod wheel opens the low-pass by up to three octaves, an estimate."
+      },
+      {
+        "title": "The circuit is approximated",
+        "text": "The manual gives the oscillator ranges, the trapezoid’s stage times, the delay times and the internal levels (about 3.7 V peak to peak for audio, ±5 V for control voltages); the filter’s range and sensitivity, the S&H RATE range, the knob laws and the output levels are this app’s estimates. The “dual super saw” is Oscillator 2’s saw with a second saw drifting further out of tune as SHAPE goes up. The reverb is the app’s own, not 112dB’s algorithm, and the filter is the app’s ladder low-pass after a resonant high-pass."
+      }
+    ]
+  }
+}

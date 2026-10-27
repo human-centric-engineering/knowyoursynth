@@ -3910,7 +3910,8 @@ export function Matrix({
       empty: !pinned && !sticky,
     });
   };
-  const hr = Math.max(2.5, P * 0.16);
+  const led = m.look === 'led' && !ctx.outline;
+  const hr = led ? P * 0.36 : Math.max(2.5, P * 0.16);
   const holes = [];
   for (let i = 0; i < m.rows.length; i++) {
     for (let j = 0; j < m.cols.length; j++) {
@@ -3920,8 +3921,8 @@ export function Matrix({
           cx={hx(j)}
           cy={hy(i)}
           r={hr}
-          fill={ctx.outline ? PAPER : '#020203'}
-          stroke={ctx.outline ? INK : '#3d3e42'}
+          fill={ctx.outline ? PAPER : led ? '#cfc9bd' : '#020203'}
+          stroke={ctx.outline ? INK : led ? '#8e897f' : '#3d3e42'}
           strokeWidth={ctx.outline ? 1.2 : 0.8}
         />
       );
@@ -3951,6 +3952,19 @@ export function Matrix({
           <g>
             <circle cx={x} cy={y} r={pr} fill={INK} />
             <circle cx={x} cy={y} r={pr * 0.4} fill={PAPER} />
+          </g>
+        ) : led ? (
+          // a lit lamp of the SYNTRX II's matrix: red, with a glow round it
+          <g>
+            <circle cx={x} cy={y} r={hr * 1.7} fill="#ff4b2e" opacity="0.28" />
+            <circle cx={x} cy={y} r={hr} fill="#ff5a3a" stroke="#b8321d" strokeWidth="0.8" />
+            <circle
+              cx={x - hr * 0.3}
+              cy={y - hr * 0.3}
+              r={hr * 0.35}
+              fill="#ffd2c4"
+              opacity="0.8"
+            />
           </g>
         ) : (
           <g>
