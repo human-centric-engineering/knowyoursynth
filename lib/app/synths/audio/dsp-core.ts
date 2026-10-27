@@ -2519,7 +2519,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         if (!plays(i, n)) return;
         v.handle({ type: 'offset', semi: offsetOf(i % stackOf()) });
         v.handle({ type: 'noteOn', n, v: vel });
-        if (firstStack(i)) lead = i;
+        // the meter follows the top-level voice, or with a split whichever side plays the key
+        if (firstStack(i) || split !== null) lead = i;
       });
       return;
     }
@@ -2552,7 +2553,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       if (!plays(i, n)) return;
       if (x.held && x.note === n) v.handle({ type: 'noteOff', n });
       v.handle({ type: 'noteOn', n, v: vel });
-      if (firstStack(i)) lead = i;
+      if (firstStack(i) || split !== null) lead = i;
     });
     x.note = n;
     x.held = true;

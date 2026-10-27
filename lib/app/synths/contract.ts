@@ -1524,7 +1524,8 @@ export type LayerParams = Omit<
   /**
    * A split point (MIDI note) instead of playing both on every note (the Super Gemini's SPLIT): keys below it play only
    * the layer, keys at or above it only the top-level settings. Each note still takes a block of both, so `poly.voices`
-   * still counts notes across the whole keyboard.
+   * still counts notes across the whole keyboard. With `poly.mono` each side holds its own note, as the two layers of a
+   * split keyboard do, and the meter follows the side of the last key played.
    */
   split?: number;
 };

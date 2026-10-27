@@ -133,6 +133,14 @@ describe('split layers (layer.split, t-133)', () => {
     expect(rms(render(sides(false, 60), { events: key(72) }).out, 0, 4800)).toBeGreaterThan(0.02);
   });
 
+  it('meters the side that plays the key: a low key shows the layer', () => {
+    // only the layer plays 48, so a meter on the idle top-level voice would read 0
+    const r = render(sides(true, 60), { events: key(48) });
+    const m = meters(r.events);
+    expect(m.length).toBeGreaterThan(0);
+    expect(Math.max(...m.map((x) => x.env2 ?? 0))).toBeGreaterThan(0.5);
+  });
+
   it('lets go of both sides: no note hangs after a split chord is released', () => {
     const both: EngineParams = {
       ...sides(true, 60),
