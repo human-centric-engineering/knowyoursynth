@@ -427,3 +427,222 @@ describe('SOLAR 42 mixer, filter and effector', () => {
     expect(peak(wet.out, 0, 48000)).toBeLessThan(1);
   });
 });
+
+describe('SOLAR 42 envelopes', () => {
+  /** VCO A alone on the left, its key held from the start for `hold` samples. */
+  const env = (e: Partial<SolarEnv>, hold = 48000, len = 48000) =>
+    play(
+      withVoice(solar(), 6, vco({ level: 1, pan: -1, env: { ...asr, ...e } })),
+      [
+        [0, { type: 'noteOn', n: 57 }],
+        [hold, { type: 'noteOff', n: 57 }],
+      ],
+      len
+    ).out;
+
+  it('decays to the sustain level with adsr', () => {
+    const o = env({ mode: 'adsr', a: 0.005, d: 0.05, s: 0.3 });
+    const early = rms(o, 300, 1200),
+      late = rms(o, 24000, 48000);
+    expect(late).toBeGreaterThan(0.02);
+    expect(late).toBeLessThan(early * 0.5);
+  });
+
+  it('rises and falls once on a held gate with ad', () => {
+    const o = env({ mode: 'ad', a: 0.005, d: 0.05 });
+    expect(rms(o, 300, 1200)).toBeGreaterThan(0.05);
+    expect(rms(o, 24000, 48000)).toBeLessThan(1e-3);
+  });
+
+  it('repeats the AD while the gate is held with loop', () => {
+    const o = env({ mode: 'loop', a: 0.05, d: 0.05 });
+    // each cycle is about 0.05 s up and 0.05 s down: still sounding long after a single AD would have ended
+    expect(rms(o, 24000, 48000)).toBeGreaterThan(0.05);
+    const ad = env({ mode: 'ad', a: 0.05, d: 0.05 });
+    expect(rms(ad, 24000, 48000)).toBeLessThan(1e-3);
+  });
+
+  it('releases to silence when the key is let go', () => {
+    const o = env({ mode: 'asr', r: 0.02 }, 12000);
+    expect(rms(o, 6000, 12000)).toBeGreaterThan(0.05);
+    expect(rms(o, 24000, 48000)).toBeLessThan(1e-4);
+  });
+});
+
+describe('SOLAR 42 VCO waves, glide and sync', () => {
+  const one = (
+    q: Partial<SolarVco>,
+    keys: Timed[] = [[0, { type: 'noteOn', n: 57 }]],
+    over: Partial<SolarParams> = {}
+  ) => play({ ...withVoice(solar(over), 6, vco({ level: 1, pan: -1, ...q })) }, keys, 24000).out;
+  const apart = (a: Float32Array, b: Float32Array): number => {
+    let d = 0;
+    for (let i = 2400; i < 24000; i++) d += Math.abs(a[i] - b[i]);
+    return d / 21600;
+  };
+
+  it('plays each wave at the key pitch, each a different shape', () => {
+    const waves = ['sine', 'tri', 'saw', 'square', 'sawInv', 'sineTri'] as const;
+    const out = waves.map((wave) => one({ wave, shape: 0.2 }));
+    for (const o of out) {
+      expect(allFinite(o)).toBe(true);
+      expect(hz(o, 2400, 24000)).toBeCloseTo(220, -1);
+    }
+    for (let i = 0; i < out.length; i++)
+      for (let j = i + 1; j < out.length; j++) expect(apart(out[i], out[j])).toBeGreaterThan(0.02);
+  });
+
+  it('turns the saw into its inverse through a triangle with sawInv', () => {
+    const tri = one({ wave: 'tri' });
+    // the middle of the morph is a triangle (up to the phase it started at, so compare loudness, not samples)
+    expect(rms(one({ wave: 'sawInv', shape: 0.5 }), 2400, 24000)).toBeCloseTo(
+      rms(tri, 2400, 24000),
+      2
+    );
+  });
+
+  it('glides from one key to the next', () => {
+    const keys: Timed[] = [
+      [0, { type: 'noteOn', n: 45 }],
+      [9600, { type: 'noteOn', n: 69 }],
+    ];
+    const keys2: SolarParams['keys'] = { mode: 'single', split: 60, glide: 0.3 };
+    const slow = play(
+      withVoice(solar({ keys: keys2 }), 6, vco({ level: 1, pan: -1 })),
+      keys,
+      48000
+    ).out;
+    const fast = play(withVoice(solar(), 6, vco({ level: 1, pan: -1 })), keys, 48000).out;
+    // just after the second key the glide is still on its way up from 110 Hz to 440 Hz
+    const mid = hz(slow, 9600, 14400);
+    expect(mid).toBeGreaterThan(130);
+    expect(mid).toBeLessThan(400);
+    expect(hz(fast, 9600, 14400)).toBeCloseTo(440, -1);
+  });
+
+  it('restarts the second VCO with sync', () => {
+    let s = solar();
+    s = withVoice(s, 6, vco({ level: 0, semi: -12 }));
+    s = withVoice(s, 7, vco({ level: 1, pan: 1, wave: 'sine', semi: 5 }));
+    const keys: Timed[] = [[0, { type: 'noteOn', n: 69 }]];
+    const free = play(s, keys, 24000).right!;
+    const synced = render(
+      { ...params(s), routes: [{ src: 'solOsc7', dst: 'solSync8', amt: 1 }] },
+      { sr: SR, len: 24000, events: keys, stereo: true }
+    ).right!;
+    // synced to VCO A (220 Hz), VCO B repeats every 220 Hz cycle; free, a fourth above 440 Hz, it does not
+    const lag = Math.round(SR / 220);
+    const unlike = (b: Float32Array): number => {
+      let d = 0;
+      for (let i = 4800; i < 24000 - lag; i++) d += Math.abs(b[i] - b[i + lag]);
+      return d / (19200 - lag);
+    };
+    expect(unlike(synced)).toBeLessThan(0.15);
+    expect(unlike(free)).toBeGreaterThan(0.3);
+  });
+});
+
+describe('SOLAR 42 sequencer, effector knobs and filter mode', () => {
+  it('steps the sequencer CV on the pulser, round the chosen number of stages', () => {
+    // 4 Hz pulser: a new stage every 12000 samples; the CV moves VCO A up 12 semitones per unit
+    const s = (stages: number) =>
+      withVoice(
+        solar({
+          seq: {
+            hz: 4,
+            levels: [0, 0.25, 0.5, 0.75, 1],
+            gates: [true, true, true, true, true],
+            stages,
+          },
+        }),
+        6,
+        vco({ level: 1, pan: -1 })
+      );
+    const at = (stages: number) =>
+      render(
+        { ...params(s(stages)), routes: [{ src: 'solSeqCv', dst: 'solP7', amt: 12 }] },
+        { sr: SR, len: 96000, events: [[0, { type: 'noteOn', n: 45 }]], stereo: true }
+      ).out;
+    const steps = (o: Float32Array) =>
+      Array.from({ length: 7 }, (_, k) => hz(o, 12000 * k + 2000, 12000 * k + 11000));
+    const three = steps(at(3));
+    // three different pitches, then the same three again
+    expect(Math.abs(three[0] - three[1])).toBeGreaterThan(10);
+    expect(Math.abs(three[1] - three[2])).toBeGreaterThan(10);
+    expect(three[3]).toBeCloseTo(three[0], -1);
+    expect(three[4]).toBeCloseTo(three[1], -1);
+    // with five stages the fourth step is a new pitch
+    const five = steps(at(5));
+    expect(Math.abs(five[3] - five[0])).toBeGreaterThan(30);
+  });
+
+  it('turns a cartridge parameter with an X knob, and with its CV', () => {
+    const delay = {
+      alg: 'delay',
+      p: {
+        MIX: 100,
+        TIM: 300,
+        OFS: 0,
+        FBL: 0,
+        FBR: 0,
+        LC: 20,
+        HC: 18000,
+        FLC: 20,
+        FHC: 12000,
+        FCL: '1',
+        FCR: '1',
+        MOD: 'ST',
+      },
+    };
+    const tone = withVoice(solar(), 2, srapa({ gate: true, level: 1, note: 57 }));
+    const echo = (v: number, cv = 0) => {
+      const p = params({
+        ...tone,
+        fx: { l: delay, r: delay, xyz: [{ ref: 'TIM', lo: 150, hi: 500, v }], blend: 1 },
+      });
+      const o = render(cv ? { ...p, routes: [{ src: 'solKg1', dst: 'solFxX', amt: cv }] } : p, {
+        sr: SR,
+        len: 48000,
+        events: cv ? [[0, { type: 'noteOn', n: 60 }]] : noKeys,
+        stereo: true,
+      }).out;
+      // the first sample the echo is heard: the delay time the knob set. A new cartridge fades in from dry over
+      // its first ~70 ms (dm-fx's MIX smoothing), so look from 0.12 s on
+      const from = Math.round(0.12 * SR);
+      return from + o.subarray(from).findIndex((x) => Math.abs(x) > 0.05);
+    };
+    const short = echo(0),
+      long = echo(1);
+    expect(short).toBeGreaterThan(0.13 * SR);
+    expect(short).toBeLessThan(0.22 * SR);
+    expect(long).toBeGreaterThan(0.45 * SR);
+    // the knob at 0 with full CV reaches the far end too
+    expect(echo(0, 1)).toBeGreaterThan(0.45 * SR);
+  });
+
+  it('passes only the highs with the filter on band-pass at the top', () => {
+    const at = (mode: 'lp' | 'bp') =>
+      play({
+        ...withVoice(solar(), 2, srapa({ gate: true, level: 1, pan: -1, note: 45 })),
+        vcf: {
+          l: { mode, cutoff: 12000, res: 0.2, drive: 0 },
+          r: { mode: 'lp', cutoff: 18000, res: 0, drive: 0 },
+          link: false,
+        },
+      }).out;
+    expect(rms(at('bp'), 2400, 9600)).toBeLessThan(rms(at('lp'), 2400, 9600) * 0.5);
+  });
+
+  it('takes new settings while it plays', () => {
+    const on = withVoice(solar(), 0, drone({ gate: true, level: 1 }));
+    const off = withVoice(solar(), 0, drone({ gate: false, level: 1 }));
+    const r = render(params(on), {
+      sr: SR,
+      len: 24000,
+      events: [[9600, { type: 'params', p: params(off) }]],
+      stereo: true,
+    });
+    expect(rms(r.out, 4800, 9600)).toBeGreaterThan(0.02);
+    expect(rms(r.out, 14400, 24000)).toBeLessThan(1e-3);
+  });
+});
