@@ -2243,7 +2243,7 @@ function createVoice(
           }
           oaY[c] = yc;
         }
-        for (let k = 0; k < 4; k++) oaPan[k] += (oaPanT[k] - oaPan[k]) * sm;
+        if (oa) for (let k = 0; k < 4; k++) oaPan[k] += (oaPanT[k] - oaPan[k]) * sm;
         // the SOLAR 42's path writes its two sides itself
         const l = sol ? S[SI.solL] : oaY[0] * oaPan[0] + oaY[1] * oaPan[2],
           r = sol ? S[SI.solR] : oaY[0] * oaPan[1] + oaY[1] * oaPan[3];

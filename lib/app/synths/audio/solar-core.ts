@@ -172,7 +172,8 @@ export function createSolar(
   let lfoA = 0,
     lfoB = 0,
     pul = 0,
-    clkPrev = 0,
+    // starts high, so a pulser that starts high plays stage 0 first rather than stepping off it at once
+    clkPrev = 1,
     stage = 0;
 
   function set(p: SolarParams) {
@@ -248,13 +249,13 @@ export function createSolar(
 
   function key(n: number, on: boolean) {
     if (!P) return;
-    const s = P.keys.mode === 'split' && n >= P.keys.split ? 1 : 0;
-    const h = held[s];
-    const i = h.indexOf(n);
-    if (i >= 0) h.splice(i, 1);
-    if (on) h.push(n);
-    if (h.length) kNoteT[s] = h[h.length - 1];
-    if (on && P.keys.glide <= 0.001) kNote[s] = kNoteT[s];
+    // a key is taken off both sides: the split may have moved since it went down
+    for (const h of held) {
+      const i = h.indexOf(n);
+      if (i >= 0) h.splice(i, 1);
+    }
+    if (on) held[P.keys.mode === 'split' && n >= P.keys.split ? 1 : 0].push(n);
+    for (let s = 0; s < 2; s++) if (held[s].length) kNoteT[s] = held[s][held[s].length - 1];
   }
 
   function panic() {
@@ -262,13 +263,16 @@ export function createSolar(
     held[1].length = 0;
   }
 
+  const rate = (t: number): number => 1 / (Math.max(t, 0.0005) * sr);
+  const lfo = (ph: number, w: number): number =>
+    (ph < 0.5 ? 1 : 0) * (1 - w) + (1 - 2 * Math.abs(ph - 0.5)) * w;
+
   /** One sample of an envelope. `gate` = open; a new gate starts an `ad` or `loop` from the top. */
   function envStep(e: Env, q: SolarEnv, gate: boolean): number {
     const g = gate || q.hold;
     if (g && !e.prev) e.st = 1;
     if (!g && e.prev && q.mode !== 'ad') e.st = e.st === 0 ? 0 : 4;
     e.prev = g;
-    const rate = (t: number): number => 1 / (Math.max(t, 0.0005) * sr);
     switch (e.st) {
       case 1:
         e.lvl += rate(q.a);
@@ -450,8 +454,6 @@ export function createSolar(
     if (lfoA >= 1) lfoA -= 1;
     lfoB += p.lfo.b.hz / sr;
     if (lfoB >= 1) lfoB -= 1;
-    const lfo = (ph: number, w: number): number =>
-      (ph < 0.5 ? 1 : 0) * (1 - w) + (1 - 2 * Math.abs(ph - 0.5)) * w;
     S[SI.solLfoA] = lfo(lfoA, p.lfo.a.wave);
     S[SI.solLfoB] = lfo(lfoB, p.lfo.b.wave);
     pul += p.seq.hz / sr;
@@ -477,12 +479,16 @@ export function createSolar(
     // ── voices into the mixer ──
     let mL = 0,
       mR = 0,
-      firstVco = -1;
+      firstVco = -1,
+      vcoN = 0;
     for (let i = 0; i < VOICES; i++) {
       const q = p.voices[i];
       const x = v[i];
       if (!q) {
-        S[x.o[0]] = 0;
+        for (const o of x.o) S[o] = 0;
+        x.env.st = 0;
+        x.env.lvl = 0;
+        x.env.prev = false;
         continue;
       }
       const keyGate = x.side >= 0 && held[x.side].length > 0;
@@ -491,11 +497,13 @@ export function createSolar(
       S[x.o[2]] = e;
       let y = 0;
       if (q.kind === 'vco') {
-        y = vco(q, x, firstVco >= 0 ? S[v[firstVco].o[1]] : 0);
-        if (firstVco < 0) firstVco = i;
+        // only the second VCO has the first one's oscillator normalled into its FM input
+        y = vco(q, x, vcoN === 1 ? S[v[firstVco].o[1]] : 0);
+        if (vcoN++ === 0) firstVco = i;
       } else if (q.kind === 'srapa') {
         y = srapa(q, x, white);
-      } else if (e > 0) {
+      } else {
+        // the drone's raw oscillator runs free, gate or no gate, like the other voices'
         y = drone(q, x);
       }
       S[x.o[1]] = y;
@@ -507,13 +515,13 @@ export function createSolar(
       mL += y * x.level * Math.cos(a);
       mR += y * x.level * Math.sin(a);
     }
-    const chan = (c: { level: number; pan: number }, y: number) => {
-      const a = ((c.pan < -1 ? -1 : c.pan > 1 ? 1 : c.pan) + 1) * (Math.PI / 4);
-      mL += y * c.level * Math.cos(a);
-      mR += y * c.level * Math.sin(a);
-    };
-    chan(p.ext, ev(DI.solExt));
-    chan(p.pre, S[SI.preamp]);
+    for (let c = 0; c < 2; c++) {
+      const ch = c ? p.pre : p.ext,
+        y = c ? S[SI.preamp] : ev(DI.solExt);
+      const a = ((ch.pan < -1 ? -1 : ch.pan > 1 ? 1 : ch.pan) + 1) * (Math.PI / 4);
+      mL += y * ch.level * Math.cos(a);
+      mR += y * ch.level * Math.sin(a);
+    }
     S[SI.solMixL] = mL;
     S[SI.solMixR] = mR;
 
