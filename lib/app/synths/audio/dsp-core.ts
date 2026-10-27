@@ -2363,7 +2363,8 @@ function createTremolo(sr: number): {
  * process(out, n, outR): with `outR` the output is stereo; without it, `out` gets the mono sum.
  *
  * With `poly` and `layer` each note takes two voices (two stacks), one with the top-level settings and one with
- * `layer`'s (the CS-80's channels I and II). `ringMod` and `tremolo` (the CS-80's) work on the voice sum, the ring
+ * `layer`'s (the CS-80's channels I and II). With `layer.split` a key plays only one of the two: the layer below the
+ * split, the top-level settings from it up (the Super Gemini's SPLIT). `ringMod` and `tremolo` (the CS-80's) work on the voice sum, the ring
  * modulator before the effects engine and the tremolo after the chorus.
  *
  * With EngineParams `dual` it is two different voices side by side (the 2-XM's two modules): the top-level params are
@@ -2447,6 +2448,8 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   // `layer` (CS-80): each note takes a stack of voices with the top-level settings, then a stack with `layer`'s.
   // `layerP` is the second stack's settings, built once per params message rather than once per voice.
   let layerP: VoiceParams | null = null;
+  // `layer.split` (Super Gemini SPLIT): a key plays only one of its block's two stacks, the layer's below the split
+  let split: number | null = null;
   const blockOf = (): number => stackOf() * (layerP ? 2 : 1);
   /** Voice `i` is in the first stack of its note (the top-level settings, which the meter follows). */
   const firstStack = (i: number): boolean => i % blockOf() < stackOf();
@@ -2478,14 +2481,23 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     const b = blockOf();
     for (let j = 0; j < b; j++) f(voice(g * b + j), g * b + j);
   };
+  /** Voice `i` plays key `n`: always, unless a split gives the key to the other stack of the block. */
+  const plays = (i: number, n: number): boolean => split === null || firstStack(i) === n >= split;
 
   function setParams(p: EngineParams) {
     P = p;
     fx.set(p.fx);
     const q = p.poly!;
-    layerP = p.layer ? { ...p.layer, wheel: p.wheel } : null;
+    let layerSplit: number | undefined;
+    if (p.layer) {
+      const { split: s, ...lp } = p.layer;
+      layerP = { ...lp, wheel: p.wheel };
+      layerSplit = s;
+    } else layerP = null;
+    split = layerP && layerSplit != null ? layerSplit : null;
     const st = stackOf();
-    const want = `${q.voices}/${st}/${q.mono ? 'm' : 'p'}/${layerP ? 2 : 1}`;
+    // a new split point starts afresh too: a held key's note-off would otherwise miss a stack it had been played on
+    const want = `${q.voices}/${st}/${q.mono ? 'm' : 'p'}/${layerP ? 2 : 1}/${split ?? ''}`;
     if (want !== shape) {
       voices.forEach((v) => v.handle({ type: 'panic' }));
       shape = want;
@@ -2504,9 +2516,11 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   function voiceOn(n: number) {
     if (P!.poly!.mono) {
       groupVoices(0, (v, i) => {
+        if (!plays(i, n)) return;
         v.handle({ type: 'offset', semi: offsetOf(i % stackOf()) });
         v.handle({ type: 'noteOn', n, v: vel });
-        if (firstStack(i)) lead = i;
+        // the meter follows the top-level voice, or with a split whichever side plays the key
+        if (firstStack(i) || split !== null) lead = i;
       });
       return;
     }
@@ -2531,11 +2545,15 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
       g = best;
     }
     const x = groups[g];
-    if (x.held && x.note !== n) groupVoices(g, (v) => v.handle({ type: 'noteOff', n: x.note }));
+    if (x.held && x.note !== n)
+      groupVoices(g, (v, i) => {
+        if (plays(i, x.note)) v.handle({ type: 'noteOff', n: x.note });
+      });
     groupVoices(g, (v, i) => {
+      if (!plays(i, n)) return;
       if (x.held && x.note === n) v.handle({ type: 'noteOff', n });
       v.handle({ type: 'noteOn', n, v: vel });
-      if (firstStack(i)) lead = i;
+      if (firstStack(i) || split !== null) lead = i;
     });
     x.note = n;
     x.held = true;
@@ -2543,14 +2561,18 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   }
   function voiceOff(n: number) {
     if (P!.poly!.mono) {
-      groupVoices(0, (v) => v.handle({ type: 'noteOff', n }));
+      groupVoices(0, (v, i) => {
+        if (plays(i, n)) v.handle({ type: 'noteOff', n });
+      });
       return;
     }
     groups.forEach((x, g) => {
       if (x.held && x.note === n) {
         x.held = false;
         x.t = ++clock;
-        groupVoices(g, (v) => v.handle({ type: 'noteOff', n }));
+        groupVoices(g, (v, i) => {
+          if (plays(i, n)) v.handle({ type: 'noteOff', n });
+        });
       }
     });
   }
