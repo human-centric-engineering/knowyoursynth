@@ -47,7 +47,8 @@ export type SynthMessage =
   | { type: 'stopPhrase' }
   | { type: 'panic' }
   | { type: 'offset'; semi?: number }
-  | { type: 'phase'; lfo?: number; lfo2?: number }
+  /** LFO phases. A value past 1 also counts the cycles, which a `common` LFO's sample and hold is drawn from. */
+  | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
   | PatternMessage;
 
 /** A message to one voice: as {@link SynthMessage}, but its params may be a `dual` module's. */
@@ -282,6 +283,7 @@ export const SIGNALS: string[] = [
   'velp',
   'kbdLo',
   'kbdHi',
+  'lfo3',
   ...MOOG_SIGNALS,
 ];
 export const DESTS: string[] = [
@@ -382,10 +384,28 @@ const TWO_PI = Math.PI * 2;
 const LN2_12 = Math.LN2 / 12;
 
 /**
+ * −1..1 from an LFO's cycle count: a `common` LFO's sample and hold, the same value in every voice on the same cycle.
+ * `k` picks the LFO, so the three do not move together.
+ */
+function cycleRandom(cycle: number, k: number): number {
+  let x = Math.imul((cycle * 3 + k) ^ 0x9e3779b9, 0x85ebca6b);
+  x ^= x >>> 13;
+  x = Math.imul(x, 0xc2b2ae35);
+  x ^= x >>> 16;
+  return ((x >>> 0) / 4294967296) * 2 - 1;
+}
+
+/**
  * One voice. `part` = it is one of the voices of a polyphonic synth (EngineParams `poly`): the wrapper below owns the
  * phrase player, the note events and the output stage, and this voice hands back its signal before volume and clipping.
+ * `shared` = that wrapper keeps the phase of the `common` LFOs; without it `common` is ignored.
  */
-function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false): Voice {
+function createVoice(
+  sr: number,
+  onEvent: SynthEventHandler | null,
+  part = false,
+  shared = false
+): Voice {
   const SI: Record<string, number> = {};
   SIGNALS.forEach((n, i) => {
     SI[n] = i;
@@ -516,6 +536,9 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
     lfoSh = 0,
     lfoShg = 0;
   const lfo2 = { phase: 0, t: 0, sh: 0, shg: 0 };
+  // `lfo3` (the e7's LFO 3), and each LFO's cycle count: a `common` LFO's sample and hold is drawn from it
+  const lfo3 = { phase: 0, sh: 0, shg: 0 };
+  const lfoCyc = [0, 0, 0];
   let vOff = 0,
     drift = 0,
     driftT = 0,
@@ -1016,8 +1039,24 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
         vOff = m.semi || 0;
         break;
       case 'phase':
-        lfoPhase = m.lfo || 0;
-        lfo2.phase = m.lfo2 || 0;
+        // a `common` LFO also takes up the sample and hold the other voices hold on this cycle
+        if (m.lfo != null) {
+          lfoCyc[0] = Math.floor(m.lfo);
+          lfoPhase = m.lfo - lfoCyc[0];
+          if (shared && P && P.lfo.common) lfoSh = lfoShg = cycleRandom(lfoCyc[0], 0);
+        }
+        if (m.lfo2 != null) {
+          lfoCyc[1] = Math.floor(m.lfo2);
+          lfo2.phase = m.lfo2 - lfoCyc[1];
+          if (shared && P && P.lfo2 && P.lfo2.common)
+            lfo2.sh = lfo2.shg = cycleRandom(lfoCyc[1], 1);
+        }
+        if (m.lfo3 != null) {
+          lfoCyc[2] = Math.floor(m.lfo3);
+          lfo3.phase = m.lfo3 - lfoCyc[2];
+          if (shared && P && P.lfo3 && P.lfo3.common)
+            lfo3.sh = lfo3.shg = cycleRandom(lfoCyc[2], 2);
+        }
         break;
       default:
         break;
@@ -1514,6 +1553,15 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
     const l2Sh = L2 ? (m2!.sh || 0) !== 0 || (m2!.shg || 0) !== 0 : false;
     const shgC2 = l2Sh ? expCoef(0.3 / Math.max(L2!.rate, 0.01)) : 0;
     const l2Dly = L2 ? L2.delay || 0 : 0;
+    const L3 = p.lfo3 || null;
+    const m3: LfoMix | null = L3 ? L3.mix || {} : null;
+    const l3Sh = L3 ? (m3!.sh || 0) !== 0 || (m3!.shg || 0) !== 0 : false;
+    const shgC3 = l3Sh ? expCoef(0.3 / Math.max(L3!.rate, 0.01)) : 0;
+    const l3Dly = L3 ? L3.delay || 0 : 0;
+    // `common` (poly): the voices share one phase, kept by the wrapper, so neither a note nor `lfoTrig` restarts it
+    const lCom = shared && !!p.lfo.common,
+      l2Com = shared && !!(L2 && L2.common),
+      l3Com = shared && !!(L3 && L3.common);
     const fadeOf = (t: number, D: number): number =>
       t < 0.4 * D ? 0 : t >= D ? 1 : (t - 0.4 * D) / (0.6 * D);
     const dAmt = p.drift ? p.drift.depth || 0 : 0;
@@ -1611,22 +1659,26 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
       // ── LFO ──
       const lfoHz = Math.min(p.lfo.rate * Math.exp(ev(DI.lfoRate) * Math.LN2), sr * 0.4);
       const trig = ev(DI.lfoTrig);
-      if ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && p.lfo.keySync)) lfoPhase = 0;
+      if (!lCom && ((trig > 0.5 && lfoTrigPrev <= 0.5) || (retrigFlag && p.lfo.keySync)))
+        lfoPhase = 0;
       lfoTrigPrev = trig;
       lfoPhase += lfoHz / sr;
       const lfoWrapped = lfoPhase >= 1;
-      if (lfoWrapped) lfoPhase -= Math.floor(lfoPhase);
+      if (lfoWrapped) {
+        lfoCyc[0] += Math.floor(lfoPhase);
+        lfoPhase -= Math.floor(lfoPhase);
+      }
       const triV = lfoPhase < 0.5 ? 4 * lfoPhase - 1 : 3 - 4 * lfoPhase;
       const sqV = lfoPhase < 0.5 ? 1 : -1;
       const sawV = 2 * lfoPhase - 1;
       const sineV = Math.sin(TWO_PI * lfoPhase);
       let lfoV = triV * lTri + sawV * lSaw - sawV * lRsaw + sqV * lSq + sineV * lSine;
       if (lShOn) {
-        if (lfoWrapped) lfoSh = Math.random() * 2 - 1;
+        if (lfoWrapped) lfoSh = lCom ? cycleRandom(lfoCyc[0], 0) : Math.random() * 2 - 1;
         lfoShg += (lfoSh - lfoShg) * shgC1;
         lfoV += lfoSh * lShM + lfoShg * lShgM;
       }
-      if (lDly > 0 || l2Dly > 0) {
+      if (lDly > 0 || l2Dly > 0 || l3Dly > 0) {
         // LFO DELAY: silent for the first 40 % of the time from each new note, then a fade-in over the rest
         if ((gate && !lfoGatePrev) || retrigFlag) lfoT = 0;
         lfoGatePrev = gate;
@@ -1640,10 +1692,11 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
       S[SI.lfo] = lfoV;
       S[SI.lfoUni] = (lfoV + 1) * 0.5;
       if (L2) {
-        if (retrigFlag && L2.keySync) lfo2.phase = 0;
+        if (retrigFlag && L2.keySync && !l2Com) lfo2.phase = 0;
         lfo2.phase += Math.min(L2.rate, sr * 0.4) / sr;
         let w2 = false;
         if (lfo2.phase >= 1) {
+          lfoCyc[1] += Math.floor(lfo2.phase);
           lfo2.phase -= Math.floor(lfo2.phase);
           w2 = true;
         }
@@ -1656,7 +1709,7 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
           sq2 * (m2!.sq || 0) +
           (m2!.sine ? Math.sin(TWO_PI * q) * m2!.sine : 0);
         if (l2Sh) {
-          if (w2) lfo2.sh = Math.random() * 2 - 1;
+          if (w2) lfo2.sh = l2Com ? cycleRandom(lfoCyc[1], 1) : Math.random() * 2 - 1;
           lfo2.shg += (lfo2.sh - lfo2.shg) * shgC2;
           y2 += lfo2.sh * (m2!.sh || 0) + lfo2.shg * (m2!.shg || 0);
         }
@@ -1664,6 +1717,30 @@ function createVoice(sr: number, onEvent: SynthEventHandler | null, part = false
         S[SI.lfo2] = y2;
         S[SI.lfo2Uni] = (y2 + 1) * 0.5;
       }
+      if (L3) {
+        if (retrigFlag && L3.keySync && !l3Com) lfo3.phase = 0;
+        lfo3.phase += Math.min(L3.rate, sr * 0.4) / sr;
+        let w3 = false;
+        if (lfo3.phase >= 1) {
+          lfoCyc[2] += Math.floor(lfo3.phase);
+          lfo3.phase -= Math.floor(lfo3.phase);
+          w3 = true;
+        }
+        const q = lfo3.phase;
+        const saw3 = 2 * q - 1;
+        let y3 =
+          (q < 0.5 ? 4 * q - 1 : 3 - 4 * q) * (m3!.tri || 0) +
+          saw3 * ((m3!.saw || 0) - (m3!.rsaw || 0)) +
+          (q < 0.5 ? 1 : -1) * (m3!.sq || 0) +
+          (m3!.sine ? Math.sin(TWO_PI * q) * m3!.sine : 0);
+        if (l3Sh) {
+          if (w3) lfo3.sh = l3Com ? cycleRandom(lfoCyc[2], 2) : Math.random() * 2 - 1;
+          lfo3.shg += (lfo3.sh - lfo3.shg) * shgC3;
+          y3 += lfo3.sh * (m3!.sh || 0) + lfo3.shg * (m3!.shg || 0);
+        }
+        if (l3Dly > 0) y3 *= fadeOf(lfoT, l3Dly);
+        S[SI.lfo3] = y3;
+      } else S[SI.lfo3] = 0;
       // delayed vibrato: the sine fades in over `vibDelay` seconds from the start of each note
       if ((gate && !vibGatePrev) || retrigFlag) vibT = 0;
       vibGatePrev = gate;
@@ -2408,6 +2485,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
   const chorus = createChorus(sr);
   const tremolo = createTremolo(sr);
   let tremOn = false;
+  // `common` LFOs (poly): the one phase every voice follows, in cycles (lfo, lfo2, lfo3), handed to a voice on each note
+  const lfoShared = [0, 0, 0];
+  // their rates, 0 for one that is not shared: set with the params, read on every chunk of the render
+  const lfoRates = [0, 0, 0];
   // `ringMod` (CS-80): the sine's phase, and its speed envelope (stage 0 idle, 1 rising, 2 falling), fired by `ringFire`
   let rmPh = 0,
     rmEnv = 0,
@@ -2469,10 +2550,12 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         (e) => {
           if (e.type === 'meter') meters[k] = e;
         },
+        true,
         true
       );
       if (P) v.handle({ type: 'params', p: paramsFor(k) });
-      v.handle({ type: 'phase', lfo: Math.random(), lfo2: Math.random() }); // each voice's LFOs run free of the others
+      // each voice's LFOs run free of the others; a `common` one is set from the shared phase on each note
+      v.handle({ type: 'phase', lfo: Math.random(), lfo2: Math.random(), lfo3: Math.random() });
       voices.push(v);
     }
     return voices[i];
@@ -2486,6 +2569,10 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
 
   function setParams(p: EngineParams) {
     P = p;
+    const r = (on: boolean | undefined, hz: number): number => (on ? Math.min(hz, sr * 0.4) : 0);
+    lfoRates[0] = r(p.lfo.common, p.lfo.rate);
+    lfoRates[1] = p.lfo2 ? r(p.lfo2.common, p.lfo2.rate) : 0;
+    lfoRates[2] = p.lfo3 ? r(p.lfo3.common, p.lfo3.rate) : 0;
     fx.set(p.fx);
     const q = p.poly!;
     let layerSplit: number | undefined;
@@ -2513,11 +2600,24 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     if (!(p.arp && p.arp.on) && arpRun) arpStop();
   }
 
+  /** A voice about to play a note picks up the `common` LFOs where they are: it ran no LFO while it was silent. */
+  function syncLfos(v: Voice) {
+    const p = P!;
+    if (!p.lfo.common && !(p.lfo2 && p.lfo2.common) && !(p.lfo3 && p.lfo3.common)) return;
+    v.handle({
+      type: 'phase',
+      lfo: p.lfo.common ? lfoShared[0] : undefined,
+      lfo2: p.lfo2 && p.lfo2.common ? lfoShared[1] : undefined,
+      lfo3: p.lfo3 && p.lfo3.common ? lfoShared[2] : undefined,
+    });
+  }
+
   function voiceOn(n: number) {
     if (P!.poly!.mono) {
       groupVoices(0, (v, i) => {
         if (!plays(i, n)) return;
         v.handle({ type: 'offset', semi: offsetOf(i % stackOf()) });
+        syncLfos(v);
         v.handle({ type: 'noteOn', n, v: vel });
         // the meter follows the top-level voice, or with a split whichever side plays the key
         if (firstStack(i) || split !== null) lead = i;
@@ -2552,6 +2652,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
     groupVoices(g, (v, i) => {
       if (!plays(i, n)) return;
       if (x.held && x.note === n) v.handle({ type: 'noteOff', n });
+      syncLfos(v);
       v.handle({ type: 'noteOn', n, v: vel });
       if (firstStack(i) || split !== null) lead = i;
     });
@@ -3042,6 +3143,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         voices[v].process(buf, k);
         for (let s = 0; s < k; s++) out[i + s] += buf[s];
       }
+      for (let j = 0; j < 3; j++) if (lfoRates[j]) lfoShared[j] += (lfoRates[j] * k) / sr;
       if (phrase) phrasePos += k;
       if (arpRun) {
         arpWait -= k;
