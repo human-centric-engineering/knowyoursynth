@@ -169,8 +169,12 @@ when absent**, added synth by synth:
 | Two voices per note and their effects  | `layer`, `pulse`, `keyEnds`, `ringMod`, `tremolo`, `glide.steps`         | Yamaha CS-80       |
 | Split layers                           | `layer.split`                                                            | UDO Super Gemini   |
 | Third LFO, LFOs shared by the voices   | `lfo3`, `common` on `lfo` / `lfo2` / `lfo3`                              | GS Music e7        |
+| Eight-voice drone machine, in stereo   | `solar` (replaces the fixed voice)                                       | Elta SOLAR 42N     |
 
-A synth whose sound path is `easel` or `moog` still returns the core stubs (`osc: []` etc.).
+A synth whose sound path is `easel`, `moog` or `solar` still returns the core stubs (`osc: []` etc.).
+`solar` runs eight voices of three kinds (`drone`, `srapa`, `vco`), each with its own gate and envelope, into
+a stereo mixer, a dual filter and two `dm-fx` cartridges; its signals and destinations are numbered by the
+voice's place in `solar.voices` (`sol3`, `solG3`), and `audio/solar-core.ts` documents them.
 `layer`, `ringMod` and `tremolo` are poly only: `layer` gives every note a second voice with
 its own settings, so `poly.voices` counts notes; with `layer.split` a key below the split plays
 only the layer and one at or above it only the top-level settings. A `common` LFO keeps one phase
