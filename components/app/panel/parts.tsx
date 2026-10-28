@@ -1742,6 +1742,7 @@ const KNOB_GEOM: Record<KnobStyle, KnobGeom> = {
   vcs3: { body: 1.06, tick: 1.3, num: 1.62 },
   'vcs3-dial': { body: 1.3, tick: 1.4, num: 1.7 },
   e7: { body: 1.08, tick: 1.34, num: 1.68 },
+  solar: { body: 1.08, tick: 1.36, num: 1.7 },
 };
 
 function KnobScale({ c, ctx, g }: { c: KnobControl; ctx: PanelCtx; g: KnobGeom }) {
@@ -2068,6 +2069,37 @@ function KnobBody({ c, angle, ctx }: { c: KnobControl; angle: number; ctx: Panel
         </g>
         <circle r={r * 0.66} fill="#f4f4f1" stroke="#b5b5b0" strokeWidth="1" />
         <circle r={r * 0.66} fill="url(#kysSheen)" opacity="0.45" />
+      </g>
+    );
+  }
+  if (st === 'solar') {
+    // Elta Music SOLAR 42N: a black knurled skirt under a big cap in its block's colour (`cap`), with a white line on
+    // the cap for the pointer.
+    const cap = c.cap || '#d9dde2';
+    return (
+      <g transform={`translate(${c.x} ${c.y})`}>
+        <circle r={r * 1.08} fill="#000" opacity="0.4" transform="translate(3 5)" />
+        <circle r={r * 1.04} fill="url(#kysBlack)" stroke="#000" strokeWidth="1.2" />
+        <circle
+          r={r * 0.96}
+          fill="none"
+          stroke="#2c2d31"
+          strokeWidth={r * 0.12}
+          strokeDasharray={`${r * 0.09} ${r * 0.1}`}
+        />
+        <circle r={r * 0.8} fill={cap} stroke="#0009" strokeWidth="1" />
+        <circle r={r * 0.8} fill="url(#kysSheen)" opacity="0.5" />
+        <g transform={`rotate(${angle})`}>
+          <line
+            x1="0"
+            y1={-r * 0.12}
+            x2="0"
+            y2={-r * 0.72}
+            stroke="#f4f4ef"
+            strokeWidth={r * 0.12}
+            strokeLinecap="round"
+          />
+        </g>
       </g>
     );
   }

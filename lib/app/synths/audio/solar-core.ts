@@ -1,5 +1,5 @@
 // Elta Music SOLAR 42 (EngineParams `solar`, see contract.ts): a sound path of eight independent voices, run by
-// dsp-core.ts in place of its fixed voice. The spec is `.context/app/synth-data/elta-music-solar-42/`: modules
+// dsp-core.ts in place of its fixed voice. The spec is `.context/app/synth-data/solar-42n/`: modules
 // `v1`–`v8`, `mixer`, `vcf`, `fx`, `lfo` and `seq`, behaviours b01–b07.
 //
 // - Three kinds of voice. A classic drone is five fixed-pitch saws; VOLT lowers them together to a knee, each by its

@@ -388,7 +388,7 @@ export interface BoolValue {
 
 export type ControlKind = 'cont' | 'enum' | 'bool';
 
-/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over. */
+/** Knob skirts and caps, one or more per maker. `vcs3` takes its cap colour from `cap`; `vcs3-dial` is a slow-motion dial; `e7` is white all over; `solar` is a black skirt under a big cap coloured by `cap`. */
 export type KnobStyle =
   | 'd-silver'
   | 'd-chicken'
@@ -401,7 +401,8 @@ export type KnobStyle =
   | 'wasp'
   | 'vcs3'
   | 'vcs3-dial'
-  | 'e7';
+  | 'e7'
+  | 'solar';
 
 /**
  * Printing round a knob. `nums` are panel values printed at their true angle;
@@ -428,7 +429,7 @@ export type KnobControl = ControlCommon & {
   scale?: KnobScale;
   /** `false` leaves this knob out of `theme.knobRing` (e.g. one with its own printed arc). */
   ring?: boolean;
-  /** Cap colour for `vcs3` knobs. */
+  /** Cap colour for `vcs3` and `solar` knobs. */
   cap?: string;
 } & (ContinuousValue | EnumValue);
 

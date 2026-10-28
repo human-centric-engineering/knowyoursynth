@@ -46,6 +46,7 @@ import pearlSyncussion from '@/lib/app/synths/defs/pearl-syncussion';
 import behringerSyncussion from '@/lib/app/synths/defs/behringer-syncussion';
 import e7 from '@/lib/app/synths/defs/e7';
 import syntrxII from '@/lib/app/synths/defs/syntrx-ii';
+import solar42n from '@/lib/app/synths/defs/solar-42n';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -85,6 +86,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   behringerSyncussion,
   e7,
   syntrxII,
+  solar42n,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
